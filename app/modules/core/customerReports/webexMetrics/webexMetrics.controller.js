@@ -22,13 +22,15 @@
     // vm.allReports = 'all';
     vm.webexReportInMashup = 'webexReportInMashup';
     vm.webexReportInQlikApp = 'webexReportInQlikApp';
+    vm.sparkReportInMashup = 'sparkReportInMashup';
     vm.meetingUsage = 'meetingUsage';
     vm.joinMeetingTime = 'joinMeetingTime';
     vm.currentFilter = vm.webexReportInMashup;
-    vm.displayMeetingUsage = true;
-    vm.displayJoinMeetingTime = true;
+    vm.displayMeetingUsage = false;
+    vm.displayJoinMeetingTime = false;
     vm.displayWebexReportInMashup = true;
-    vm.displayWebexReportInQlikApp = true;
+    vm.displayWebexReportInQlikApp = false;
+    vm.displaySparkReportInMashup = true;
 
 
     vm.webexMetricsOptions = [
@@ -42,6 +44,14 @@
       },
       {
         'id': '1',
+        'label': $translate.instant('reportsPage.webexMetrics.sparkReportInMashup'),
+        'selected': false,
+        toggle: function () {
+          resetIframe(vm.sparkReportInMashup);
+        },
+      },
+      /*{
+        'id': '2',
         'label': $translate.instant('reportsPage.webexMetrics.webexReportInQlikApp'),
         'selected': false,
         toggle: function () {
@@ -49,7 +59,7 @@
         },
       },
       {
-        'id': '2',
+        'id': '3',
         'label': $translate.instant('reportsPage.webexMetrics.meetingUsage'),
         'selected': false,
         toggle: function () {
@@ -57,25 +67,29 @@
         },
       },
       {
-        'id': '3',
+        'id': '4',
         'label': $translate.instant('reportsPage.webexMetrics.joinMeetingTime'),
         'selected': false,
         toggle: function () {
           resetIframe(vm.joinMeetingTime);
         },
-      },
+      },*/
     ];
     vm.webexMetricsOptions[0].url = UrlConfig.getWebexReportInMashupUrl();
     vm.webexMetricsOptions[0].filterType = 'webexReportInMashup';
 
-    vm.webexMetricsOptions[1].url = UrlConfig.getWebexReportInQlikAppUrl();
-    vm.webexMetricsOptions[1].filterType = 'webexReportInQlikApp';
 
-    vm.webexMetricsOptions[2].url = UrlConfig.getMeetingUsageUrl();
-    vm.webexMetricsOptions[2].filterType = 'meetingUsage';
+    vm.webexMetricsOptions[1].url = UrlConfig.getSparkReportInMashupUrl();
+    vm.webexMetricsOptions[1].filterType = 'sparkReportInMashup';
 
-    vm.webexMetricsOptions[3].url = UrlConfig.getJoinMeetingTimeUrl();
-    vm.webexMetricsOptions[3].filterType = 'joinMeetingTime';
+    /*vm.webexMetricsOptions[2].url = UrlConfig.getWebexReportInQlikAppUrl();
+    vm.webexMetricsOptions[2].filterType = 'webexReportInQlikApp';
+
+    vm.webexMetricsOptions[3].url = UrlConfig.getMeetingUsageUrl();
+    vm.webexMetricsOptions[3].filterType = 'meetingUsage';
+
+    vm.webexMetricsOptions[4].url = UrlConfig.getJoinMeetingTimeUrl();
+    vm.webexMetricsOptions[4].filterType = 'joinMeetingTime';*/
 
     updateIframe();
 
@@ -85,8 +99,12 @@
         vm.displayWebExReportInQlik = false;
         vm.displayMeetingUsage = false;
         vm.displayJoinMeetingTime = false;
+        vm.displaySparkReportInMashup = false;
         if (filter === vm.webexReportInMashup) {
           vm.displayWebexReportInMashup = true;
+        }
+        if (filter === vm.sparkReportInMashup) {
+          vm.displaySparkReportInMashup = true;
         }
         if (filter === vm.webexReportInQlikApp) {
           vm.displayWebExReportInQlik = true;

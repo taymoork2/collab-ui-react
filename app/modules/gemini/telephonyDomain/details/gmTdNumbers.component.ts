@@ -3,18 +3,28 @@ import { TelephonyDomainService } from '../telephonyDomain.service';
 
 class GmTdNumbersCtrl implements ng.IComponentController {
 
+  public panelTitle: string;
+
+  private currentTD: any = {};
+
   /* @ngInject */
   public constructor(
     private gemService,
     private $window: ng.IWindowService,
+    private $state: ng.ui.IStateService,
     private $modal: IToolkitModalService,
+    private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
   ) {
+    this.currentTD = this.gemService.getStorage('currentTelephonyDomain');
+    this.panelTitle = this.currentTD.domainName || this.gemService.getStorage('panelTitle');
+    if (this.currentTD) {
 
+    }
   }
 
   public $onInit() {
-    //TODO, for xiaoyuan
+    this.$state.current.data.displayName = this.$translate.instant('gemini.cbgs.overview');
   }
 
   public onDownload() {

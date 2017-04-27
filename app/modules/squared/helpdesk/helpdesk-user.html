@@ -154,6 +154,18 @@
         </div>
       </div>
 
+      <div class="row" ng-if="helpdeskUserCtrl.isAuthorizedForLog() && helpdeskUserCtrl.isCare"">
+        <div class="medium-5 columns details-heading">
+          <span translate="helpdesk.lastCareLog"></span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span ng-if="helpdeskUserCtrl.lastPushedCareLog">
+            <a ng-click="helpdeskUserCtrl.downloadLog(helpdeskUserCtrl.lastPushedCareLog.filename)">{{helpdeskUserCtrl.lastPushedCareLog.timestamp | date:'yyyy-MM-dd HH:mm':'UTC'}} UTC ({{helpdeskUserCtrl.lastPushedCareLog.platform}})</a>
+          </span>
+          <span ng-if="!helpdeskUserCtrl.lastPushedCareLog" translate="helpdesk.noLog"></span>
+        </div>
+      </div>
+
       <div class="row">
         <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.userId' | translate}}:</span>

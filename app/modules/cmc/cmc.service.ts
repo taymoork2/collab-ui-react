@@ -1,69 +1,103 @@
 import { CmcUserData } from './cmcUserData';
-
-
-class CmcUser {
-  public id;
-  public cmcUserData;
-}
+import { ICmcUser } from './cmcUser.interface';
 
 export class CmcService {
-
-  private existingCmcUsers: CmcUser[];
 
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
+    private $q: ng.IQService,
     private Orgservice,
+    private Config,
+    private UrlConfig,
+    private $http: ng.IHttpService,
   ) {
-    this.existingCmcUsers = new Array();
   }
 
-  // TODO: Replace by proper backend call when available...
-  public setData(id, data: CmcUserData) {
-    this.$log.warn('Setting data ', data, ',id=', id);
-    let existingUser = _.find(this.existingCmcUsers, { id: id });
-    this.$log.warn('existing user', existingUser);
-    if (existingUser) {
-      this.$log.warn('Found and updating existing user = ', existingUser);
-      existingUser.cmcUserData.cmcEntitled = data.cmcEntitled;
-      existingUser.cmcUserData.mobileNumber = data.mobileNumber;
-    } else {
-      this.$log.warn('User ', id , 'not found...');
-    }
+  public setData(user: ICmcUser, data: CmcUserData) {
+    this.setMobileNumber(user, data.mobileNumber);
+    this.setEntitlement(user);
+    // TODO: Handler error properly
   }
 
-  // TODO: Replace by proper backend call when available...
-  //       Currently just create a user when reading nonexisting
-  public getData(id): CmcUserData {
-    this.$log.warn('Getting data for id=', id);
-    let existingUser = _.find(this.existingCmcUsers, { id: id });
-    if (existingUser) {
-      this.$log.warn('Found and returning existing user');
-      return existingUser.cmcUserData;
-    } else {
-      let newUser = new CmcUser();
-      newUser.id = id;
-      newUser.cmcUserData = new CmcUserData('', false);
-      this.existingCmcUsers.push(newUser);
-      this.$log.warn('Returned new user ', newUser, ', there are now ', this.existingCmcUsers.length, ' users');
-      return newUser.cmcUserData;
-    }
+  public getData(user: ICmcUser): CmcUserData {
+    this.$log.warn('Getting data for user=', user);
+    let entitled = this.extractCmcEntitlement(user);
+    let mobileNumber = this.extractMobileNumber(user);
+    return new CmcUserData(mobileNumber, entitled);
   }
 
   // TODO: Find out when cmc settings should be unavailable...
-  public allowCmcSettings(orgId: string): boolean {
-
+  public allowCmcSettings(orgId: string) {
     // based on org entitlements ?
+    let deferred = this.$q.defer();
     this.Orgservice.getOrg((data, success) => {
       if (success) {
-        this.$log.debug('org', data);
+        deferred.resolve(true);
+        this.$log.debug('org data:', data);
+      } else {
+        deferred.resolve(false);
       }
     }, orgId, {
       basicInfo: true,
     });
-    this.$log.debug('orgId', orgId);
+    return deferred.promise;
+  }
 
-    // For now, just return true...
-    return true;
+  private extractMobileNumber(user: ICmcUser): any {
+    if (user.phoneNumbers) {
+      let nbr = _.find<any>(user.phoneNumbers, (nbr) => {
+        return nbr.type === 'mobile';
+      });
+      return nbr !== undefined ? nbr.value : null;
+    } else {
+      return null;
+    }
+  }
+
+  private extractCmcEntitlement(user: ICmcUser): boolean {
+    return _.includes(user.entitlements, 'cmc');
+  }
+
+  private setEntitlement(user: ICmcUser) {
+
+    //TODO: Add functionality
+    let url = this.UrlConfig.getAdminServiceUrl() + 'organization/' + user.meta.organizationID + '/users/' + user.id + '/actions/onboardcmcuser/invoke';
+    this.$http.post(url, {}).then( (res) => {
+      this.$log.warn('cmcentitlement request result:', res);
+    });
+  }
+
+  private updateUserData(user: ICmcUser, userMobileData) {
+    let scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
+    this.$log.info('Updating user', user);
+    this.$log.info('User data', userMobileData);
+    this.$log.info('Using scim url:', scimUrl);
+    return this.$http({
+      method: 'PATCH',
+      url: scimUrl,
+      data: userMobileData,
+    });
+  }
+
+  private setMobileNumber(user: ICmcUser, number: string) {
+    let userMobileData = {
+      schemas: this.Config.scimSchemas,
+      phoneNumbers: [
+        {
+          type: 'mobile',
+          value: number,
+        },
+      ],
+    };
+
+    return this.updateUserData(user, userMobileData)
+      .then((res) => {
+        this.$log.info('User updated with new data:', res);
+      })
+      .catch((error) => {
+        // TODO: what to do when mobile number update fails
+        this.$log.warn('Update user failed:', error);
+      });
   }
 }

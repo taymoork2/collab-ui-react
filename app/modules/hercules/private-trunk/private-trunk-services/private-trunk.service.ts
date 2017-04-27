@@ -91,4 +91,16 @@ export class PrivateTrunkService {
     }).$promise;
   }
 
+  public removePrivateTrunkResources(): void {
+    this.listPrivateTrunkResources().then((res) => {
+      if (res) {
+        let resources = _.get(res, 'resources');
+        _.forEach(resources, dest => {
+          this.removePrivateTrunkResource(dest.uuid || '');
+        });
+      }
+    });
+
+  }
+
 }

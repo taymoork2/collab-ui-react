@@ -11,7 +11,7 @@ var TrialWebexService = require('./trialWebex.service');
       require('modules/core/scripts/services/logmetricsservice'),
       require('modules/core/notifications').default,
       require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.service'),
-      require('modules/huron/pstnSetup/pstnSetup.service'),
+      require('modules/huron/pstn/pstn.service').default,
       require('modules/core/scripts/services/userlist.service'),
     ])
     .factory('TrialService', TrialService.TrialService)

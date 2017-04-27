@@ -88,7 +88,7 @@ describe('Service: TelephonyDomainService', () => {
     it('should get correct data when call getNotes', function () {
       const notes = [{ id: '9ce78fcf-1dff-499c-9bae-57ccef22e660', userId: 'feng5@mailinator.com', userName: 'Feng Wu-Partner Admin', objectID: null, objectName: 'note', siteID: '8a607bdb59baadf5015a650a2003157e', action: 'add_note' }];
       const mockData = setData.call(this, 'content.data.body', notes);
-      const url = `${this.UrlConfig.getGeminiUrl()}telephonydomain/activityLogs/${this.customerId}/${this.ccaDomainId}/add_note`;
+      const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${this.customerId}/${this.ccaDomainId}/add_note_td`;
       this.$httpBackend.expectGET(url).respond(200, mockData);
 
       this.TelephonyDomainService.getNotes(this.customerId, this.ccaDomainId).then((res) => {
@@ -100,7 +100,7 @@ describe('Service: TelephonyDomainService', () => {
     it('should get correct data when add new note for call postNotes', function () {
       const note = '';
       const mockData = setData.call(this, 'content.data.body', note);
-      const url = `${this.UrlConfig.getGeminiUrl()}telephonydomain/activityLogs`;
+      const url = `${this.UrlConfig.getGeminiUrl()}activityLogs`;
       this.$httpBackend.expectPOST(url).respond(200, mockData);
 
       this.TelephonyDomainService.postNotes().then((res) => {
@@ -112,7 +112,7 @@ describe('Service: TelephonyDomainService', () => {
     it('should get correct data when call getHistories', function () {
       const histories = [{ id: '9ce78fcf-1dff-499c-9bae-57ccef22e660', userId: 'feng5@mailinator.com', objectID: '0520_Bing_TD_02', objectName: 'comment', siteID: '8a607bdb59baadf5015a650a2003157e', action: 'rejected' }];
       const mockData = setData.call(this, 'content.data.body', histories);
-      const url = `${this.UrlConfig.getGeminiUrl()}telephonydomain/activityLogs/${this.customerId}/${this.ccaDomainId}/Telephony%20Domain/${this.domainName}`;
+      const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${this.customerId}/${this.ccaDomainId}/Telephony%20Domain/${this.domainName}`;
       this.$httpBackend.expectGET(url).respond(200, mockData);
 
       this.TelephonyDomainService.getHistories(this.customerId, this.ccaDomainId, this.domainName).then((res) => {

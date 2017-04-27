@@ -1,29 +1,51 @@
-<cs-sp-container class="side-panel-numbers">
-  <cs-page-sub-header>
-    <cs-page-sub-header-left></cs-page-sub-header-left>
+<div class="gemini-side-panel">
+  <div>
+    <div ui-view="header"></div>
 
-    <cs-page-sub-header-right>
-      <div class="page-option-buttons" ng-if="$ctrl.gridData.length > 0">
-        <a ng-csv="$ctrl.exportToCSV()" filename="{{$ctrl.exportFileName}}">
-          <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.exportLoading"
-                ng-disabled="$ctrl.exportLoading">
-            <span translate="gemini.tds.numbers.export.exportToCSV"></span>
-          </button>
-        </a>
+    <cs-sp-container class="side-panel-numbers">
+      <gm-td-header show-remedy-ticket="true" td-base-info="$ctrl.currentTD"></gm-td-header>
+      <cs-page-sub-header>
+        <cs-page-sub-header-left>
+          <span class="section-name" translate="gemini.tds.phoneNumbers"></span>
+        </cs-page-sub-header-left>
+
+        <cs-page-sub-header-right>
+          <h6 class="text-left">
+            <a translate="gemini.tds.request.download.csvTemplate" ng-click="$ctrl.onDownloadTemplate()"></a>
+          </h6>
+          <a ng-csv="$ctrl.exportToCSV()" filename="{{$ctrl.exportFileName}}" quote-strings="true"
+             class="export-users ng-cloak no-animate" ng-show="$ctrl.gridData.length>0"
+             tooltip="{{'gemini.tds.numbers.export.exportToCSV' | translate}}">
+            <button class="btn--none" cs-btn
+                    loading="$ctrl.exportLoading"
+                    ng-disabled="$ctrl.exportLoading">
+              <i class="icon icon-download icon-lg"></i>
+            </button>
+          </a>
+          <a class="export-users disabled" ng-show="$ctrl.gridData.length==0">
+              <button type="button" class="btn--none no-animate ng-cloak">
+                <i class="icon icon-download icon-lg"></i>
+              </button>
+          </a>
+        </cs-page-sub-header-right>
+      </cs-page-sub-header>
+
+      <div id="phoneNumbersViewPanel" class="gridStyle col-md-12"
+           ui-grid="$ctrl.gridOptions">
       </div>
-    </cs-page-sub-header-right>
-  </cs-page-sub-header>
+      <div class="refresh-box" ng-if="$ctrl.loading">
+        <div class="grid-refresh">
+          <i class="icon icon-spinner icon-2x"></i>
+        </div>
+      </div>
 
-  <div id="phoneNumbersViewPanel" class="gridStyle col-md-12" ng-style="{height: $ctrl.gridHeight}"
-       ui-grid="$ctrl.gridOptions" gridscrollbar  ui-grid-infinite-scroll>
+      <gm-td-notes-view></gm-td-notes-view>
+      <gm-td-histories></gm-td-histories>
+
+      <cs-sp-buttons>
+        <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
+      </cs-sp-buttons>
+    </cs-sp-container>
   </div>
-  <div class="grid-refresh" ng-if="$ctrl.loading">
-    <i class="icon icon-spinner icon-2x"></i>
-  </div>
+</div>
 
-  <gm-td-histories></gm-td-histories>
-
-  <cs-sp-buttons>
-    <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
-  </cs-sp-buttons>
-</cs-sp-container>

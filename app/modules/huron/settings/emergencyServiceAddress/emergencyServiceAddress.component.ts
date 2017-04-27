@@ -1,11 +1,12 @@
 import { E911_ADDRESS_PENDING } from 'modules/huron/settings';
 import { Notification } from 'modules/core/notifications';
+import { PstnModel } from '../../pstn/pstn.model';
 
 const UPDATE_ADDRESS_WAIT_MS: number = 100;
 
 class EmergencyServiceAddressCtrl implements ng.IComponentController {
   public countryCode: string;
-  public carrierId: string;
+  public carrierId: String;
   public emergencyAddressForm: ng.IFormController;
   public loadingInit: boolean = false;
   public loadingValidate: boolean = false;
@@ -22,14 +23,14 @@ class EmergencyServiceAddressCtrl implements ng.IComponentController {
     private $timeout: ng.ITimeoutService,
     private Notification: Notification,
     private PstnServiceAddressService,
-    private PstnSetup,
+    private PstnModel: PstnModel,
     private Authinfo,
   ) { }
 
   public $onInit(): void {
     this.addressStatus = this.PstnServiceAddressService.getStatus();
-    this.countryCode = this.PstnSetup.getCountryCode();
-    this.carrierId = this.PstnSetup.getProviderId();
+    this.countryCode = this.PstnModel.getCountryCode();
+    this.carrierId = this.PstnModel.getProviderId();
     return this.PstnServiceAddressService.getAddress(this.Authinfo.getOrgId())
     .then(address => {
       if (address) {

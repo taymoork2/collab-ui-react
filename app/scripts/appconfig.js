@@ -323,9 +323,8 @@
             }
 
             var template = '<cs-sidepanel';
-            template += options.type ? ' size=' + options.type : '';
+            template += options.type ? ' size="' + options.type + '"' : '';
             template += '></cs-sidepanel>';
-
             $state.sidepanel = $modal.open({
               template: template,
               // TODO(pajeter): remove inline template when cs-modal is updated
@@ -343,7 +342,8 @@
                 $state.sidepanel = null;
                 var previousState = $previousState.get(sidepanelMemo);
                 if (previousState) {
-                  if (isStateInSidepanel($state)) {
+                  var isStateInLargepanel = $state.current.parent === 'largepanel';
+                  if (isStateInSidepanel($state) || isStateInLargepanel) {
                     return $previousState.go(sidepanelMemo).then(function () {
                       $previousState.forget(sidepanelMemo);
                     });
@@ -2150,10 +2150,13 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gmTdLargePanel', {
+          .state('gmTdNumbers', {
             data: {},
             parent: 'largepanel',
-            views: { 'sidepanel@': { template: '<gm-td-large-panel></gm-td-large-panel>' } },
+            views: {
+              'sidepanel@': { template: '<gm-td-numbers></gm-td-numbers>' },
+              'header@gmTdNumbers': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
+            },
           })
           .state('gmTdDetails', {
             data: {},
@@ -2721,21 +2724,21 @@
                   done(require('modules/huron/pstn/pstnWizard'));
                 }, 'pstn-wizard');
               }),
-              customerSetup: /* @ngInject */ function ($stateParams, PstnSetup, PstnSetupService, Notification) {
-                PstnSetup.setCustomerId($stateParams.customerId);
-                PstnSetup.setCustomerName($stateParams.customerName);
-                PstnSetup.setCustomerEmail($stateParams.customerEmail);
-                PstnSetup.setIsTrial($stateParams.customerCommunicationLicenseIsTrial && $stateParams.customerRoomSystemsLicenseIsTrial);
+              customerSetup: /* @ngInject */ function ($stateParams, PstnModel, PstnService, Notification) {
+                PstnModel.setCustomerId($stateParams.customerId);
+                PstnModel.setCustomerName($stateParams.customerName);
+                PstnModel.setCustomerEmail($stateParams.customerEmail);
+                PstnModel.setIsTrial($stateParams.customerCommunicationLicenseIsTrial && $stateParams.customerRoomSystemsLicenseIsTrial);
                 //Reset Carriers
-                PstnSetup.setCarriers([]);
+                PstnModel.setCarriers([]);
 
                 //Verify the the Terminus Reseller is setup, otherwise setup the Reseller
-                if (!PstnSetup.isResellerExists()) {
-                  PstnSetupService.getResellerV2().then(function () {
-                    PstnSetup.setResellerExists(true);
+                if (!PstnModel.isResellerExists()) {
+                  PstnService.getResellerV2().then(function () {
+                    PstnModel.setResellerExists(true);
                   }).catch(function () {
-                    PstnSetupService.createResellerV2().then(function () {
-                      PstnSetup.setResellerExists(true);
+                    PstnService.createResellerV2().then(function () {
+                      PstnModel.setResellerExists(true);
                     }).catch(function (response) {
                       Notification.errorResponse(response, 'pstnSetup.resellerCreateError');
                     });
@@ -3270,13 +3273,14 @@
             },
           })
           .state('private-trunk-overview', {
+            url: '/private-trunk-overview',
             parent: 'main',
             template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/hercules/private-trunk/overview'));
-                }, 'private-trunk');
+                }, 'private-trunk-overview');
               }),
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
@@ -3818,6 +3822,16 @@
               },
               hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
+              },
+            },
+          })
+          .state('private-trunk-settings', {
+            parent: 'main',
+            url: '/private-trunk-settings/:id',
+            template: '<private-trunk-settings-page trunk-id="$resolve.id"></private-trunk-settings-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
               },
             },
           })
