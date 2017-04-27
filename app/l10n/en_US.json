@@ -7004,7 +7004,7 @@
       }
     },
     "created": {
-      "heading": "{{name}} has been created.",
+      "heading": "{{name}} has been created",
       "desc": "A new partner organization has been created and an email has been sent to the customer admin."
     },
     "orgExists": {
@@ -7012,8 +7012,8 @@
       "desc": "The email, {{email}}, has been claimed by the following partner organization. This user cannot be added to another organization."
     },
     "orgClaimed": {
-      "heading": "This user is already in an organization ",
-      "desc": "Based on the email address, the user has been matched to an exiting user account in the following partner organization.  Please have the user contact an Admin of this organization if they want access to the CCM portal."
+      "heading": "This user is already in an organization",
+      "desc": "Based on the email address, the user has been matched to an exiting user account in the {{name}} organization.  Please have the user contact an Admin of this organization if they want access to the CCM portal."
     },
     "contactAdmin": {
       "heading": "An admin of {{name}} must add the user",

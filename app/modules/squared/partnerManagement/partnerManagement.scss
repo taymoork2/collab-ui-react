@@ -5,16 +5,31 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .partner-main {
-  padding-top: 1rem;
+  font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: $brand-white;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding-top: 5rem;
+  padding-bottom: 2rem;
+  min-height: 100vh;
   text-align: center;
   outline: none;
   box-shadow: none;
+
+  a:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .icon-exit {
+    display: none;
+  }
 
   .main-heading {
     padding-top: 74px;
     display: inline-block;
     text-align: left;
-    min-height: 583px;
+    min-height: 560px;
 
     .results-header {
       float: left;
@@ -28,7 +43,7 @@
 
     .desc-panel {
       padding-top: 17px;
-      padding-bottom: 3px;
+      padding-bottom: 4px;
     }
 
     .desc-text {
@@ -39,6 +54,7 @@
 
     .create-form {
       padding-top: 16px;
+      padding-bottom: 16px;
     }
 
     .input-checked {
@@ -63,9 +79,17 @@
       }
     }
 
+    .orgClaimed-panel {
+      margin-top: 10px;
+      max-height: 356px;
+      overflow-y: auto;
+    }
+
     .card-panel {
       padding-top: 17px;
-      padding-bottom: 32px;
+      padding-bottom: 120px;
+      padding-left: 0px;
+      margin-left: -8px;
     }
 
     .card-article {
@@ -106,6 +130,10 @@
     }
   }
 
+  .orgExists-heading {
+    padding-top: 64px;
+  }
+
   h2 {
     color: $color-primary-base;
   }
@@ -123,6 +151,7 @@
   }
 
   .pm-rule {
+    margin-top: 0;
     margin-bottom: 1rem;
   }
 
@@ -141,7 +170,7 @@
   }
 
   .pm-spinner--large {
-    font-size: 1rem;
+    font-size: 4rem;
   }
 
   .pm-16 {

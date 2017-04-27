@@ -64,11 +64,12 @@ require('./partnerManagement.scss');
                   'partnerManagement.orgExists' : 'partnerManagement.orgClaimed');
                 break;
 
+/* $TODO - backend does not support this case yet, but will soon...
               case "DOMAIN":
                 vm.data.domainMatches = resp.data.organizations;
                 $state.go('partnerManagement.searchResults');
                 break;
-
+*/
               case "NO_MATCH":
                 $state.go('partnerManagement.create');
                 break;
@@ -140,15 +141,20 @@ require('./partnerManagement.scss');
       vm.showSpinner = true;
       svc.getOrgDetails(org).then(function (resp) {
         vm.data.orgRaw = resp.data;
+        // Alpha sort data...
+        vm.data.orgRaw.claimedDomains = _.sortBy(vm.data.orgRaw.claimedDomains);
+        vm.data.orgRaw.fullAdmins = _.sortBy(vm.data.orgRaw.fullAdmins,
+          ['displayName', 'primaryEmail']);
+
         vm.data.orgDetails = [];
         pushDetail('createDate', new Date(vm.data.orgRaw.createdDate).toLocaleString());
         pushDetail('activeSubs', vm.data.orgRaw.numOfSubscriptions, 0);
         pushDetail('managedCusts', vm.data.orgRaw.numOfManagedOrg, 0);
         pushDetail('domains', vm.data.orgRaw.claimedDomains, '');
         pushDetail('users', vm.data.orgRaw.numOfUsers, 0);
-        pushDetail('admins',_.sortBy(_.map(vm.data.orgRaw.fullAdmins, 'displayName'),
-            ['displayName', 'primaryEmail']), '');
+        pushDetail('admins', _.map(vm.data.orgRaw.fullAdmins, 'displayName'), '');
         pushDetail('orgId', org);
+
         vm.showSpinner = false;
       }).catch(function (resp) {
         Notification.errorWithTrackingId(resp,

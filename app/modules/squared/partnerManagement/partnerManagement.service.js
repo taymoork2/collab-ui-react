@@ -7,7 +7,8 @@
 
     svc.search = function (email) {
       return $http.get(UrlConfig.getAdminServiceUrl() +
-        'organizations/search?emailAddress=' + encodeURIComponent(email));
+        'organizations/search?emailAddress=' + encodeURIComponent(email),
+        { timeout: 120000 });
     };
 
     svc.create = function (data) {
@@ -37,7 +38,8 @@
 
     svc.getOrgDetails = function (org) {
       return $http.get(UrlConfig.getAdminServiceUrl() +
-        'organizations/' + org + '/onboardinfo');
+        'organizations/' + org + '/onboardinfo',
+        { timeout: 120000 });
     };
 
     return svc;
