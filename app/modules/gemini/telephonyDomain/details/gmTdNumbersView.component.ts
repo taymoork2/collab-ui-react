@@ -1,39 +1,35 @@
 import { Notification } from 'modules/core/notifications';
+import { IToolkitModalService } from 'modules/core/modal';
 import { TelephonyDomainService } from '../telephonyDomain.service';
 
-const GRID_HEIGHT: number = 8 * 44 + 68;
-
 class GmTdNumbersViewCtrl implements ng.IComponentController {
+  public currentTD;
   public gridData = [];
   public gridOptions = {};
-  public gridHeight: number;
-  public customerId: string;
   public domainName: string;
+  public customerId: string;
   public ccaDomainId: string;
   public exportFileName: string;
   public loading: boolean = false;
+  public countryId2NameMapping = {};
   public exportLoading: boolean = false;
-
-  private windowResizeInterval;
-  private countries: Object = {};
 
   /* @ngInject */
   public constructor (
+    private $state,
     private gemService,
-    private PreviousState,
     private Notification: Notification,
-    private $state: ng.ui.IStateService,
+    private $window: ng.IWindowService,
+    private $modal: IToolkitModalService,
     private $timeout: ng.ITimeoutService,
-    private $interval: ng.IIntervalService,
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
   ) {
-    this.gridHeight = GRID_HEIGHT;
-    let currentTD = this.gemService.getStorage('currentTelephonyDomain');
-    if (currentTD) {
-      this.domainName = currentTD.domainName;
-      this.customerId = currentTD.customerId;
-      this.ccaDomainId = currentTD.ccaDomainId;
+    this.currentTD = this.gemService.getStorage('currentTelephonyDomain');
+    if (this.currentTD) {
+      this.customerId = this.currentTD.customerId;
+      this.ccaDomainId = this.currentTD.ccaDomainId;
+      this.domainName = this.currentTD.domainName;
     }
     this.exportFileName = this.$translate.instant('gemini.tds.numbers.export.csvFilename');
   }
@@ -41,15 +37,16 @@ class GmTdNumbersViewCtrl implements ng.IComponentController {
   public $onInit() {
     this.getCountries();
     this.setGridOptions();
+    this.initData();
     this.$state.current.data.displayName = this.$translate.instant('gemini.tds.phoneNumbers');
   }
 
-  public $onDestroy() {
-    this.$interval.cancel(this.windowResizeInterval);
+  private getCountries(): void {
+    this.countryId2NameMapping = this.gemService.getStorage('countryId2NameMapping');
   }
 
   public onCancel(): void {
-    this.PreviousState.go();
+    this.$state.sidepanel.dismiss();
   }
 
   public exportToCSV() {
@@ -66,36 +63,31 @@ class GmTdNumbersViewCtrl implements ng.IComponentController {
     });
   }
 
-
-  private getCountries() {
-    this.gemService.getCountries()
-      .then((res) => {
-        let countries = _.get(res, 'content.data');
-        _.forEach(countries, (item) => {
-          this.countries[item.countryId] = item;
-        });
-        this.setGridData();
-      });
+  public onDownloadTemplate() {
+    this.$modal.open({
+      type: 'dialog',
+      templateUrl: 'modules/gemini/telephonyDomain/details/downloadConfirm.html',
+    }).result.then(() => {
+      this.$window.open(this.TelephonyDomainService.getDownloadUrl());
+    });
   }
 
-  private setGridData(): void {
+  private initData(): void {
     this.loading = true;
 
     this.TelephonyDomainService.getNumbers(this.customerId, this.ccaDomainId).then((res) => {
       this.loading = false;
-      let resJson: any = _.get(res, 'content.data');
+      const resJson: any = _.get(res, 'content.data');
       if (resJson.returnCode) {
         this.Notification.notify(this.gemService.showError(resJson.returnCode));
         return;
       }
 
-      let data = resJson.body;
+      const data = resJson.body;
       _.forEach(data, (item) => {
-        this.formatGridData(item);
+        this.makeNumberItemReadable(item);
       });
       this.gridData = data;
-
-      this.gridHeight = this.gridData.length <= 8 ? this.gridHeight = this.gridData.length * 44 + 68 : this.gridHeight;
     });
   }
 
@@ -103,7 +95,7 @@ class GmTdNumbersViewCtrl implements ng.IComponentController {
     return this.TelephonyDomainService.getNumbers(customerId, ccaDomainId).then((response) => {
       let lines: any = _.get(response, 'content.data');
       let exportedLines: any[] = [];
-      let headerLine = {
+      const headerLine = {
         phoneNumber: this.$translate.instant('gemini.tds.numbers.field.phoneNumber').toUpperCase(),
         phoneLabel: this.$translate.instant('gemini.tds.numbers.field.phoneLabel').toUpperCase(),
         accessNumber: this.$translate.instant('gemini.tds.numbers.field.accessNumber').toUpperCase(),
@@ -118,7 +110,7 @@ class GmTdNumbersViewCtrl implements ng.IComponentController {
         return exportedLines;
       }
       _.forEach(lines.body, (line) => {
-        this.formatGridData(line);
+        this.makeNumberItemReadable(line);
         exportedLines = exportedLines.concat(this.formatNumbersData(line));
       });
       return exportedLines;
@@ -127,19 +119,26 @@ class GmTdNumbersViewCtrl implements ng.IComponentController {
 
   private formatNumbersData(data: any) {
     let oneLine = {
-      phoneNumber: this.TelephonyDomainService.transformCSVNumber(data.phone),
-      phoneLabel: this.TelephonyDomainService.transformCSVNumber(data.label),
-      accessNumber: this.TelephonyDomainService.transformCSVNumber(data.dnisNumber),
-      tollType: this.TelephonyDomainService.transformCSVNumber(data.tollType),
-      callType: this.TelephonyDomainService.transformCSVNumber(data.phoneType),
-      country: this.TelephonyDomainService.transformCSVNumber(data.countryName),
-      hiddenOnClient: this.TelephonyDomainService.transformCSVNumber(data.isHidden),
+      phoneNumber: this.formatAsCsvString(data.phone),
+      phoneLabel: this.formatAsCsvString(data.label),
+      accessNumber: this.formatAsCsvString(data.dnisNumber),
+      tollType: this.formatAsCsvString(data.tollType),
+      callType: this.formatAsCsvString(data.phoneType),
+      country: this.formatAsCsvString(data.countryName),
+      hiddenOnClient: this.formatAsCsvString(data.isHidden),
     };
 
     return oneLine;
   }
 
-  private formatGridData(item): void {
+  private formatAsCsvString(data: any) {
+    if (data === null) {
+      data = '';
+    }
+    return '="' + data + '"';
+  }
+
+  private makeNumberItemReadable(item): void {
     if (item.defaultNumber === '1') {
       switch (item.tollType) {
         case 'CCA Toll':
@@ -164,11 +163,11 @@ class GmTdNumbersViewCtrl implements ng.IComponentController {
       ? this.$translate.instant('gemini.tds.numbers.field.values.hiddenForHiddenOnClient')
       : this.$translate.instant('gemini.tds.numbers.field.values.displayForHiddenOnClient');
 
-    item.countryName = this.countries[item.countryId].countryName;
+    item.countryName = this.countryId2NameMapping[item.countryId];
   }
 
   private setGridOptions(): void {
-    let columnDefs = [{
+    const columnDefs = [{
       width: '13%',
       sortable: true,
       cellTooltip: true,
@@ -212,22 +211,16 @@ class GmTdNumbersViewCtrl implements ng.IComponentController {
     }, {
       field: 'isHidden',
       cellTooltip: true,
-      cellClass: 'text-center',
       displayName: this.$translate.instant('gemini.tds.numbers.field.hiddenOnClient'),
     }];
 
     this.gridOptions = {
-      rowHeight: 44,
+      rowHeight: 42,
       data: '$ctrl.gridData',
-      multiSelect: false,
       columnDefs: columnDefs,
       enableColumnMenus: false,
-      enableColumnResizing: true,
-      enableRowHeaderSelection: false,
-      onRegisterApi: (gridApi) => {
-        let api = gridApi;
-        this.windowResizeInterval = this.$interval(() => api.core.handleWindowResize(), 10, 500);
-      },
+      enableVerticalScrollbar: 0,
+      virtualizationThreshold: 500,
     };
   }
 }

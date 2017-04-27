@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, Orgservice, PstnSetup) {
+  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, Orgservice, PstnModel) {
     var vm = this;
     vm.loading = true;
 
@@ -50,6 +50,7 @@
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
     var VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL';
+    var VOICE_VOICEMAIL = 'VOICE_VOICEMAIL';
     var NO_VOICEMAIL_NUMBER = 'NONE';
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
@@ -68,7 +69,7 @@
     vm.avrilDialPlanUpdated = false;
     vm.avrilLanguageUpdated = false;
     vm.voicemailAvrilCustomer = false;
-    vm.isAvrilVoiceEnabled = false;
+    vm.voicemailAvrilMailboxCustomer = false;
     vm.init = init;
     vm.save = save;
     vm.resetSettings = resetSettings;
@@ -168,7 +169,7 @@
     vm.previousModel = _.cloneDeep(vm.model);
     vm.isTerminusCustomer = false;
 
-    PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
+    PstnService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
     });
 
@@ -177,7 +178,7 @@
     };
     Orgservice.getOrg(function (data) {
       if (data.countryCode) {
-        PstnSetup.setCountryCode(data.countryCode);
+        PstnModel.setCountryCode(data.countryCode);
       }
     }, null, params);
 
@@ -1115,7 +1116,8 @@
             } else if (siteData.disableVoicemail) {
               vm.model.site.voicemailPilotNumber = undefined;
             }
-            if (vm.voicemailAvrilCustomer && (vm.isAvrilVoiceEnabled || vm.customer.servicePackage === 'VOICE_VOICEMAIL_AVRIL')) {
+            if ((vm.voicemailAvrilCustomer && vm.customer.servicePackage === VOICE_VOICEMAIL_AVRIL)
+              || (vm.voicemailAvrilMailboxCustomer && (vm.customer.servicePackage === VOICE_VOICEMAIL && vm.model.companyVoicemail.companyVoicemailEnabled))) {
               var setupSites = ServiceSetup.sites[0];
               var currentSetupSite = vm.model.site;
 
@@ -1268,9 +1270,10 @@
     function updateCustomerServicePackage(companyVoicemailNumber) {
       var customer = {};
       if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-        if (vm.voicemailAvrilCustomer) {
+        if (vm.voicemailAvrilMailboxCustomer) {
+          customer.servicePackage = VOICE_VOICEMAIL;
+        } else if (vm.voicemailAvrilCustomer) {
           customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
-          vm.isAvrilVoiceEnabled = true;
         } else {
           customer.servicePackage = DEMO_STANDARD;
         }
@@ -1314,10 +1317,10 @@
     }
 
     function loadServiceAddress() {
-      return PstnSetupService.listCustomerCarriers(Authinfo.getOrgId())
+      return PstnService.listCustomerCarriers(Authinfo.getOrgId())
         .then(function (carriers) {
           if (_.get(carriers, '[0].apiImplementation') !== "SWIVEL") {
-            PstnSetup.setProvider(_.get(carriers, '[0]'));
+            PstnModel.setProvider(_.get(carriers, '[0]'));
             showServiceAddress();
           }
         })
@@ -1915,7 +1918,7 @@
     }
 
     function updateVoicemailOptions() {
-      if (vm.voicemailAvrilCustomer) {
+      if (vm.voicemailAvrilCustomer || vm.voicemailAvrilMailboxCustomer) {
         var featureOptions = {
           features: {
             VM2E: false,
@@ -2030,6 +2033,10 @@
 
       FeatureToggleService.supports(FeatureToggleService.features.hRegionalTones).then(function (result) {
         vm.ftHRegionalTones = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.avrilVmMailboxEnable).then(function (result) {
+        vm.voicemailAvrilMailboxCustomer = result;
       });
 
       return $q.resolve();

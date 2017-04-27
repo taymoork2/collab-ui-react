@@ -1,0 +1,66 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss();"></button>
+  <h3 class="modal-title" translate="autoAttendant.configureRestApi"></h3>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="large-4 medium-4 small-12 columns">
+      <label class="h4" translate="autoAttendant.URL"></label>
+    </div>
+    <div class="large-8 medium-8 small-12 columns">
+      <div class="row">
+        <div class="large-11 medium-11 small-11 columns">
+          <textarea class="aa-message-textarea" id="configureApiUrl" ng-model="aaConfigureApiModal.url" cols="20" rows="7" maxlength="2000"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="large-4 medium-4 small-12 columns">
+      <label class="h4 ng-scope" translate="autoAttendant.variableAssignment"></label>
+    </div>
+    <div class="large-8 medium-8 small-12 columns">
+      <div ng-repeat="variable in aaConfigureApiModal.variableSet">
+        <div class="row">
+          <div class="large-8 medium-8 small-12 columns">
+            <p translate="autoAttendant.responseDataBlock"></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-11 medium-11 small-11 columns">
+            <input id="responseSelect" type="text" ng-model="variable.value" name="response" class="large-4 medium-4 small-4">
+          </div>
+          <div class="small-1 columns">
+            <i ng-if="aaConfigureApiModal.variableSet.length > 1" class="icon icon-trash aa-trash-icon" aria-label="common.delete" ng-click="aaConfigureApiModal.deleteVariableSet($index);"></i>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-4 medium-4 small-6 columns">
+            <p translate="autoAttendant.sessionVariable"></p>
+          </div>
+          <div class="large-6 medium-6 small-12 medium-pull-1 columns" ng-if="aaConfigureApiModal.isNewVariable(variable.variableName);">
+            <p translate="autoAttendant.name"></p>
+          </div>
+        </div>
+        <div class="row aa-rest-var">
+          <div class="large-4 medium-4 small-8 columns">
+            <cs-select id="sessionVar" ng-model="variable.variableName" name="sessionVar" options="aaConfigureApiModal.sessionVarOptions" placeholder="aaConfigureApiModal.selectVariablePlaceholder" icon="icon-chevron-down">
+            </cs-select>
+          </div>
+          <div  ng-if="aaConfigureApiModal.isNewVariable(variable.variableName);" class="large-5 medium-5 small-10 medium-pull-2 columns">
+            <input class="large-4 medium-4 small-4" type="text" ng-model="variable.newVariableValue">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <a class="large-4 medium-4 small-4 medium-offset-4 columns" id="addVariableToSet" ng-click="aaConfigureApiModal.addVariableSet()">
+    <i class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.addVariableToSet' | translate }}</a>
+  </div>
+</div>
+<div class="modal-footer">
+  <button id="cancelBtn" class="btn" ng-click="$dismiss();">{{ :: 'common.cancel' | translate }}</button>
+  <button id="saveBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.save()">{{ :: 'common.save' | translate }}</button>
+</div>

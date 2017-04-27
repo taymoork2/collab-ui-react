@@ -97,6 +97,22 @@ describe('Service: AAUtilityService', function () {
       expect(check).toEqual(expected);
     });
 
+    it('should return function formatted on test elements well formatted returned caller', function () {
+      var condition = 'callerReturned';
+      var elements = 'test0,test1';
+      var expected = 'var func = function () {return (parseInt(this[\'CURRENT_TIME\']) - parseInt(this[\'CS_LAST_CALL_TIME\']) < ' + elements + '); };';
+      var check = AAUtilityService.generateFunction(condition, elements);
+      expect(check).toEqual(expected);
+    });
+
+    it('should return false function formatted on zero elements', function () {
+      var condition = 'callerReturned';
+      var elements = '';
+      var expected = AAUtilityService.CONSTANTS.js.func + ' { return this[\'' + condition + '\'] != this[\'' + condition + '\']; };';
+      var check = AAUtilityService.generateFunction(condition, elements);
+      expect(check).toEqual(expected);
+    });
+
     it('should return function formatted on test elements well formatted with apostrophes', function () {
       var condition = 'test';
       var elements = ['test0,test1', 'test2', 'test3', 'test4', 'test5', 'test6, test7', '     ', 'test8 test9 test 10', 'test11 "test12" test13', 'test14 O\'test15'];

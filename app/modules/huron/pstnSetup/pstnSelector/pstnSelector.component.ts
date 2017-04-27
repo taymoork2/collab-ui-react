@@ -1,4 +1,4 @@
-import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, MIN_BLOCK_QUANTITY, MAX_BLOCK_QUANTITY } from './index';
+import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, MIN_BLOCK_QUANTITY, MAX_BLOCK_QUANTITY } from '../../pstn/index';
 class PstnSelectorCtrl implements ng.IComponentController {
   public search: Function;
   public addToCart: Function;
@@ -163,7 +163,6 @@ export class PstnSelectorComponent implements ng.IComponentOptions {
   public bindings = {
     search: '&',
     addToCart: '&',
-    resultChange: '&',
     searchResults: '<',
     addLoading: '<',
     addDisabled: '<',

@@ -5,7 +5,7 @@
     .controller('PstnToSCtrl', PstnToSCtrl);
 
   /* @ngInject */
-  function PstnToSCtrl($rootScope, $scope, $translate, $resource, Orgservice, PstnSetupService) {
+  function PstnToSCtrl($rootScope, $scope, $translate, $resource, Orgservice, PstnService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -64,15 +64,15 @@
     }
 
     function getToSInfo() {
-      PstnSetupService.getCustomerV2(vm.orgData.id).then(function (customer) {
+      PstnService.getCustomerV2(vm.orgData.id).then(function (customer) {
         if (customer.trial) {
           var carriers = [{ 'uuid': customer.pstnCarrierId }];
           vm.isTrial = true;
-          PstnSetupService.getCarrierDetails(carriers).then(function (carrier) {
+          PstnService.getCarrierDetails(carriers).then(function (carrier) {
             loadCarrier(carrier[0]);
             vm.initComplete = true;
           });
-          PstnSetupService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
+          PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
             if (_.has(trial, 'termsOfServiceUrl')) {
               vm.tosUrl = _.get(trial, 'termsOfServiceUrl');
             }
@@ -98,7 +98,7 @@
     function onAgreeClick() {
       vm.loading = true;
 
-      PstnSetupService.setCustomerTrialV2(vm.orgData.id, vm.firstName, vm.lastName, vm.email)
+      PstnService.setCustomerTrialV2(vm.orgData.id, vm.firstName, vm.lastName, vm.email)
         .then(function () {
           $rootScope.$broadcast(PSTN_TOS_ACCEPT);
           $scope.$close();

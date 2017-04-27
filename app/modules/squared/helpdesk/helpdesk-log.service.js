@@ -4,15 +4,19 @@
   /* @ngInject */
   function HelpdeskLogService($q, LogService, HelpdeskMockData, HelpdeskService) {
 
-    function searchForLastPushedLog(term) {
+    function searchLogs(term, _searchOptions) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(findLastLog(HelpdeskMockData.logs.search));
       }
-      // request backend to return logs sorted by descending timestamp, and only one
-      return LogService.searchLogs(term, {
+      var searchOptions = _.extend({
         timeSortOrder: 'descending',
         limit: 1,
-      }).then(function (response) {
+      }, _searchOptions);
+      return LogService.searchLogs(term, searchOptions);
+    }
+
+    function searchForLastPushedLog(term) {
+      return searchLogs(term).then(function (response) {
         var metadataList = _.get(response, 'data.metadataList');
         if (_.size(metadataList)) {
           return cleanLogMetadata(metadataList[0]);
@@ -87,9 +91,11 @@
     }
 
     return {
+      searchLogs: searchLogs,
       searchForLastPushedLog: searchForLastPushedLog,
       getLastPushedLogForUser: getLastPushedLogForUser,
       downloadLog: downloadLog,
+      cleanLogMetadata: cleanLogMetadata,
     };
 
   }

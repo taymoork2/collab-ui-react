@@ -40,10 +40,6 @@ export interface IcertificatesAsMap {
   C: string;
 }
 
-export interface ICertificateFileNameIdMap {
-  certId: string;
-  fileName: string;
-}
 export class CertificateFormatterService {
 
   /* @ngInject */

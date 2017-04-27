@@ -15,6 +15,7 @@
       $scope.isCareEnabled = careStatus && Authinfo.isCare();
     });
 
+
     // for legacy reasons, we always stick to using the 'exportType' property if already set
     $scope.exportCSV = function (exportType, activeFilter) {
       $scope.exportType = $scope.exportType || exportType;

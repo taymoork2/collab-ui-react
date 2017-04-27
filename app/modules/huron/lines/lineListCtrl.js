@@ -23,6 +23,8 @@
     vm.getLineList = getLineList;
     vm.showProviderDetails = showProviderDetails;
     vm.isBYOPSTNCarrier = isBYOPSTNCarrier;
+    vm.exportCsv = exportCsv;
+
     $scope.gridData = [];
     $scope.canShowActionsMenu = canShowActionsMenu;
     $scope.canShowExternalNumberDelete = canShowExternalNumberDelete;
@@ -43,7 +45,7 @@
       filterValue: 'all',
     };
 
-    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') && Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
+    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') || Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
 
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
@@ -83,6 +85,13 @@
         }
       }, vm.timeoutVal);
     };
+
+    function exportCsv() {
+      return LineListService.exportCSV($scope)
+        .catch(function (response) {
+          Notification.errorResponse(response, 'linesPage.lineListError');
+        });
+    }
 
     function deleteExternalNumber($event, number) {
       $event.stopPropagation();

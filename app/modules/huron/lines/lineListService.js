@@ -1,12 +1,14 @@
 (function () {
   'use strict';
 
+  var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
+
   angular
     .module('Huron')
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnSetupService, UserLineAssociationService, PstnSetup) {
+  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnService, UserLineAssociationService, PstnModel) {
 
     var customerId = Authinfo.getOrgId();
     var apiImplementation = undefined;
@@ -55,7 +57,7 @@
       var linesPromise = UserLineAssociationService.query(queryString).$promise;
 
       return ExternalNumberService.isTerminusCustomer(customerId).then(function () {
-        var orderPromise = PstnSetupService.listPendingOrdersWithDetail(customerId);
+        var orderPromise = PstnService.listPendingOrdersWithDetail(customerId);
         var carrierInfoPromise;
 
         if (_.isUndefined(apiImplementation)) {
@@ -80,16 +82,16 @@
           }
 
           _.forEach(orders, function (order) {
-            if (_.get(order, 'operation') === PstnSetupService.BLOCK_ORDER) {
+            if (_.get(order, 'operation') === BLOCK_ORDER) {
               if (!_.isUndefined(order.attributes.npa)) {
                 var areaCode = order.attributes.npa;
               } else {
-                areaCode = PstnSetupService.getAreaCode(order);
+                areaCode = PstnService.getAreaCode(order);
               }
               nonProvisionedPendingLines.push({
                 externalNumber: '(' + areaCode + ') XXX-XXXX ' + $translate.instant('linesPage.quantity', { count: order.numbers.length }),
                 status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
-                tooltip: PstnSetupService.translateStatusMessage(order),
+                tooltip: PstnService.translateStatusMessage(order),
               });
             } else {
               var numbers = _.get(order, 'numbers', []);
@@ -100,13 +102,13 @@
                 if (lineFound) {
                   dedupGrid(lineFound, gridData);
                   lineFound.status = order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
-                  lineFound.tooltip = PstnSetupService.translateStatusMessage(order);
+                  lineFound.tooltip = PstnService.translateStatusMessage(order);
                   pendingLines.push(lineFound);
                 } else {
                   nonProvisionedPendingLines.push({
                     externalNumber: number.number,
                     status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
-                    tooltip: PstnSetupService.translateStatusMessage(order),
+                    tooltip: PstnService.translateStatusMessage(order),
                   });
                 }
               });
@@ -213,10 +215,10 @@
     } // end of exportCSV
 
     function isResellerExists() {
-      if (!PstnSetup.isResellerExists()) {
-        return PstnSetupService.getResellerV2().then(function () {
-          // to avoid a re-check later on in pstnSetup state.
-          PstnSetup.setResellerExists(true);
+      if (!PstnModel.isResellerExists()) {
+        return PstnService.getResellerV2().then(function () {
+          // to avoid a re-check later on in PstnModel state.
+          PstnModel.setResellerExists(true);
           return true;
         })
         .catch(function () {

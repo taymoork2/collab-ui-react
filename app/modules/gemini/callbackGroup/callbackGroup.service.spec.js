@@ -168,13 +168,7 @@ describe('Service: cbgService', function () {
   });
 
   it('should return correct download URL', function () {
-    var mockData = setData('content.data.body', 'https://atlascca1.qa.webex.com');
-    var url = UrlConfig.getGeminiUrl() + 'callbackgroup/countryRegionTemplate';
-    $httpBackend.expectGET(url).respond(200, mockData);
-
-    cbgService.getDownloadCountryUrl().then(function (res) {
-      expect(res.content.data.body).toBe('https://atlascca1.qa.webex.com');
-    });
-    $httpBackend.flush();
+    var url = UrlConfig.getGeminiUrl() + 'files/templates/country_regions_template';
+    expect(cbgService.getDownloadCountryUrl()).toBe(url);
   });
 });

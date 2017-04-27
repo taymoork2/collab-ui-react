@@ -1,7 +1,12 @@
 <div ng-if="$ctrl.loading" class="text-center spinner-container">
   <i class="icon icon-spinner icon-2x"></i>
 </div>
-<div class="text-center" ng-if="!$ctrl.loading && $ctrl.data.nodes.length === 0" translate="hercules.nodesPage.noNodes"></div>
+
+<div class="none_found" ng-if="!$ctrl.loading && $ctrl.data.nodes.length === 0">
+  <i class="icon icon-circle-data"></i>
+  <span class="h2" translate="hercules.nodesPage.noNodes"></span>
+</div>
+
 <table ng-if="!$ctrl.loading && $ctrl.data.nodes.length > 0">
   <thead>
     <tr>
@@ -10,7 +15,7 @@
       <th scope="col" translate="hercules.nodesPage.version"></th>
     </tr>
   </thead>
-  <tbody ng-repeat="node in $ctrl.data.nodes | orderBy:'name'">
+  <tbody ng-repeat="node in $ctrl.data.nodes | orderBy:'name' track by node.serial">
     <tr class="hostname">
       <td colspan="4">
         {{::node.name}}
@@ -32,6 +37,16 @@
               <li ng-if="$ctrl.displayGoToNodeMenuItem($ctrl.data.targetType)">
                 <a target="_blank" ng-href="https://{{::node.name}}/">
                   <span translate="hercules.nodesPage.goToNode"></span>
+                </a>
+              </li>
+              <li ng-if="$ctrl.displayMoveNodeMenuItem($ctrl.data.targetType)">
+                <a ng-click="$ctrl.openMoveNodeModal(node)">
+                  <span translate="hercules.nodesPage.moveNode"></span>
+                </a>
+              </li>
+              <li ng-if="$ctrl.displayDeregisterNodeMenuItem($ctrl.data.targetType)">
+                <a ng-click="$ctrl.openDeregisterNodeModal(node)">
+                  <span translate="hercules.nodesPage.deregisterNode"></span>
                 </a>
               </li>
             </ul>

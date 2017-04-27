@@ -166,8 +166,15 @@
         color: $color-attention-base;
       }
 
-      .date-error {
-        color: $color-negative-base;
+      .search-warning-text {
+        color: $color-attention-darker;
+      }
+
+      .search-error {
+        color: $color-alerts-base;
+      }
+
+      .date-validation {
         float: left;
         padding: 3px;
       }
@@ -453,7 +460,7 @@
         }
 
         .input-section {
-          padding-bottom: 1.5rem;
+          padding-bottom: 2.5rem;
 
           .report-name {
             width: 100%;

@@ -16,7 +16,6 @@ describe('Component: pgEdit', () => {
   let pg = getJSONFixture('huron/json/features/pagingGroup/pgWithMembersAndInitiators.json');
   let pg2 = getJSONFixture('huron/json/features/pagingGroup/pgWithEmptyInitiators.json');
   let pgUpdated = getJSONFixture('huron/json/features/pagingGroup/pgUpdated.json');
-  let pgUpdate = getJSONFixture('huron/json/features/pagingGroup/pgUpdate.json');
   let invalidName = 'Invalid &<>';
   let validName = 'Valid$#@';
   let pilotNumbers = getJSONFixture('huron/json/features/pagingGroup/numberList.json');
@@ -91,6 +90,36 @@ describe('Component: pgEdit', () => {
 
   let numberData3 = {
     extension: '2222',
+    extensionUUID: undefined,
+  };
+
+  let pgUpdate = {
+    groupId: 'bbcd1234-abcd-abcd-abcddef123456',
+    name: 'Test2',
+    extension: undefined,
+    members: [
+      {
+        memberId: '0002',
+        deviceIds: [],
+        type: 'PLACE',
+      },
+      {
+        memberId : '0001',
+        deviceIds: [],
+        type: 'USER',
+      },
+    ],
+    initiatorType: 'CUSTOM',
+    initiators: [
+      {
+        initiatorId: '0001',
+        type: 'USER',
+      },
+      {
+        initiatorId: '0002',
+        type: 'PLACE',
+      },
+    ],
   };
 
   beforeEach(function () {
@@ -216,6 +245,14 @@ describe('Component: pgEdit', () => {
       this.getPagingGroupDefer.reject(pagingServiceFailureResp);
       this.$scope.$apply();
       expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorUpdate', { message: '' });
+    });
+
+    it('should display Notification when getNumberExtension failed', function () {
+      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.reject(pagingServiceFailureResp);
+      this.getPagingGroupDefer.resolve(pg);
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).toHaveBeenCalledWith(pagingServiceFailureResp, pg.name);
     });
   });
 

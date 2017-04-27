@@ -221,6 +221,9 @@
           schedule: translatedLabel,
           at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
         });
+      } else if (_.isEqual(action.if.leftCondition, 'callerReturned')) {
+        //dropdown default is suitable, but we don't want the other errors
+        //to be set up
       } else if (_.isEmpty(action.if.rightCondition)) {
         validAction = false;
         AANotificationService.error(errMissingIsVariableMsg, {

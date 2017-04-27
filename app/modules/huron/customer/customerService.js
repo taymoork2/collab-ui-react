@@ -6,7 +6,7 @@
     .factory('HuronCustomer', HuronCustomer);
 
   /* @ngInject */
-  function HuronCustomer(Authinfo, CustomerCommonService, CustomerVoiceCmiService, PstnSetupService, $q) {
+  function HuronCustomer(Authinfo, CustomerCommonService, CustomerVoiceCmiService, PstnService, $q) {
 
     var customerPayload = {
       'uuid': null,
@@ -53,7 +53,7 @@
     }
 
     function getResellerCarrierName() {
-      return PstnSetupService.listResellerCarriers()
+      return PstnService.listResellerCarriers()
         .then(function (carriers) {
           if (_.isArray(carriers) && _.size(carriers) === 1) {
             return carriers[0].name;

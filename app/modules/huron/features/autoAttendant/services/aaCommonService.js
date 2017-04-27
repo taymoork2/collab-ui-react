@@ -20,7 +20,9 @@
     var callerInputToggle = false;
     var routeSIPAddressToggle = false;
     var dynAnnounceToggle = false;
+    var returnedCallerToggle = false;
     var uniqueId = 0;
+    var restApiToggle = false;
 
     var invalidList = {};
     var service = {
@@ -37,11 +39,15 @@
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
+      setRestApiToggle: setRestApiToggle,
+      isRestApiToggle: isRestApiToggle,
       setDynAnnounceToggle: setDynAnnounceToggle,
+      setReturnedCallerToggle: setReturnedCallerToggle,
       isDynAnnounceToggle: isDynAnnounceToggle,
       isCallerInputToggle: isCallerInputToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
+      isReturnedCallerToggle: isReturnedCallerToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -151,8 +157,24 @@
       routeSIPAddressToggle = status;
     }
 
+    function setReturnedCallerToggle(status) {
+      returnedCallerToggle = status;
+    }
+
+    function isReturnedCallerToggle() {
+      return returnedCallerToggle;
+    }
+
+    function setRestApiToggle(status) {
+      restApiToggle = status;
+    }
+
     function isDynAnnounceToggle() {
       return dynAnnounceToggle;
+    }
+
+    function isRestApiToggle() {
+      return restApiToggle;
     }
 
     function isMediaUploadToggle() {

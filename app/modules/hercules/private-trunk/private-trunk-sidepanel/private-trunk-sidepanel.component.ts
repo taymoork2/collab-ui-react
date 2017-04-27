@@ -4,7 +4,7 @@ import { IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
 
 class PrivateTrunkSidepanelComponentCtrl implements ng.IComponentController {
 
-  private trunkId: string;
+  public trunkId: string;
   public name: string;
   public address: string;
   public alarms: IConnectorAlarm[] = [];

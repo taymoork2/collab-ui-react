@@ -637,7 +637,8 @@
       "meetingUsage": "Meeting Usage",
       "joinMeetingTime": "Join Meeting Time",
       "webexReportInMashup": "CHP Reports",
-      "webexReportInQlikApp": "Qlik app"
+      "webexReportInQlikApp": "Qlik app",
+      "sparkReportInMashup": "Spark Reports"
     }
   },
   "sharedMeetingReports": {
@@ -1700,7 +1701,8 @@
       "removeNode": "Remove Node",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
       "actions": "Actions",
-      "no_nodes": "No nodes registered."
+      "no_nodes": "No nodes registered.",
+      "goToNodes": "Perform actions on Node"
     },
     "export": {
       "modalTitle": "User Status Report",
@@ -1989,6 +1991,7 @@
     },
     "softwareUpgrade": {
       "editSettingsLink": "Edit cluster settings",
+      "editTrunkSettingsLink": "Edit resource settings",
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
@@ -2029,19 +2032,23 @@
       "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page."
     },
     "renameAndDeregisterComponent": {
-      "clusterNameWatermark": "Enter cluster name…",
-      "renameClusterParagraph": "Rename the {{clusterType}} cluster.",
+      "clusterNameWatermark": "Enter name…",
+      "renameClusterParagraph": "Enter a new name for the cluster.",
+      "renameSipDestinationParagraph": "Enter a new name for the SIP Destination.",
       "clusterNameSaved": "Cluster name saved successfully.",
+      "sipDestinationNameSaved": "SIP Destination name saved successfully.",
       "clusterNameCannotBeSaved": "Cluster name could not be saved. Try again later.",
-      "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
-      "renameClusterDescription": "The cluster name is used for display purposes in Cloud Collaboration Managment and in email notifications.",
+      "sipDestinationNameCannotBeSaved": "SIP Destination name could not be saved. Try again later.",
+      "clusterNameCannotByEmpty": "Name cannot be empty.",
+      "renameClusterDescription": "The name is for display purposes only.",
       "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
+      "deregisterSipDestinationExplanation": "Remove this SIP Destination from Cisco Collaboration Cloud. This step removes all related configuration.",
       "deregisterMediaClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
       "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
       "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
       "couldNotDeregisterCluster": "Could not deregister cluster.",
       "deregisterConfirmRemoval": "Confirm Removal",
-      "deregisterConfirmationText": "You are about to deregister the cluster <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
+      "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
       "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
     },
     "deactivateServiceComponent": {
@@ -2552,6 +2559,8 @@
       "enableMaintenanceMode": "Enable maintenance mode",
       "disableMaintenanceMode": "Disable maintenance mode",
       "goToNode": "Go to node",
+      "moveNode": "Move node",
+      "deregisterNode": "Deregister node",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
         "message": "Are you sure you want to enable maintenance mode for this node?"
@@ -2824,13 +2833,14 @@
   "ediscovery": {
     "browserTabHeaderTitle": "Cisco Spark Activity Reports",
     "heading": "Search Cisco Spark Space Activity",
-    "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas",
+    "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
     "searchTip": "Search data by room ID",
     "unableToDownloadFile": "Unable to download file",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future",
-      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past."
+      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past.",
+      "InvalidEndDate": "The end date cannot be changed from the current date."
     },
     "searchingPleaseWait": "Finding information, please wait...",
     "reportStates": {
@@ -2891,7 +2901,7 @@
       "search": "Search",
       "searchPlaceholder": "Email Address",
       "searchEmailPlaceholder": "Enter Email Address",
-      "searchEmailHelpText": "e.g. johnsmith@email.com, jansmit@email.com",
+      "searchEmailHelpText": "e.g. johnsmith@email.com, jansmith@email.com",
       "searchRoomPlaceholder": "Enter space ID",
       "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
       "messages": "Where <b>Messages</b> contains",
@@ -3183,8 +3193,7 @@
     "messagingSetupDataRetentionOption5": "Keep Forever",
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
-    "mapDirectLineWithExt": "Map Direct Line With Extension",
-    "mapDirectLineWithExtIfPossible": "Map phone number to extension, where possible",
+    "mapPhoneNumberWithExt": "Map Phone Number with Extension",
     "reset": "Reset",
     "tosReadAndAgree": "I have read and agree to these",
     "tosTermsAndConditions": "terms and conditions",
@@ -3291,10 +3300,12 @@
     "decisionCallerAreaCode": "The Caller's Area Code",
     "decisionSessionVariable": "The Session Variable",
     "decisionMissingCustomVariable": "The selected variable is undefined in this call tree. Null values will result in negative results.",
+    "callerReturned1Min": "1 Minute",
     "callerReturned5Mins": "5 Minutes",
+    "callerReturned30Mins": "30 Minutes",
+    "callerReturned1Hour": "1 Hour",
     "callerReturnedOneDay": "1 Day",
     "callerReturnedOneWeek": "1 Week",
-    "callerReturnedTwoWeeks": "2 Weeks",
     "callerReturnedOneMonth": "1 Month",
     "callerReturnedWhen": "Within the last",
     "callerNumberInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: +12065551212, +11115551212",
@@ -3307,6 +3318,9 @@
     "actionDialByExtensionHint": "Prompt the caller for an internal extension and route the call.",
     "actionDialByExtensionHelp": "Enter the message used to prompt the caller for the extension to dial. Select the language and the voice for this phrase.",
     "actionEndCall": "Disconnect",
+    "actionRestApi": "REST API",
+    "configureApi": "Configure API",
+    "configureRestApi": "Configure REST API",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
     "scheduleOpen": "Open Hours",
@@ -3406,6 +3420,16 @@
     },
     "languageAndVoice": "Language and Voice",
     "langaugeAndVoiceHelp": "These selections apply to Say and Error Messages.",
+    "method": "Method:",
+    "url": "URL:",
+    "URL": "URL",
+    "name": "Name",
+    "newVariable": "New Variable",
+    "variableAssignment": "Variable Assignment",
+    "addDynamicText": "Add Dynamic Text",
+    "addVariableToSet": "Add Variable to set",
+    "responseDataBlock": "Response Data Block",
+    "sessionVariable": "Session Variable",
     "initialAnnouncement": "Initial Announcement",
     "mediaUploadFileInfo": "Audio files must be in .wav format.  Recommended format is 8bit, 8Khz u-law.  Maximum message file size is 5MB.",
     "queueMaxMusicSize": "Maximum music file size is 120MB.",
@@ -3916,7 +3940,8 @@
     "pendingNumbers": "{count, plural, =1{There is # number} other{There are # numbers}} pending for this order",
     "searchPlaceholder": "Search Phone Numbers",
     "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer",
-    "orderCreationDate": "On {{date}} by {{createdBy}}",
+    "orderCreationDate": "On {{date}} ",
+    "createdBy": "by {{createdBy}}",
     "orderCreatedBy": "Partner"
   },
   "serviceAddress": {
@@ -4083,6 +4108,14 @@
     "feature4": "Number port/Transfer fee included",
     "feature5": "Basic 911 included",
     "feature6": "Taxes additional"
+  },
+  "westucFeatures": {
+    "feature1": "Unlimited* calling in the U.S.",
+    "feature2": "1 DID telephone number (new or ported)",
+    "feature3": "Caller ID",
+    "feature4": "Directory listing",
+    "feature5": "E911",
+    "feature6": "No set-up fees"
   },
   "partnerHomePage": {
     "trialsHeading": "Trials",
@@ -5613,11 +5646,17 @@
     "customBrandingExample": "Custom Branding Examples",
     "companyLogo": "{{name}} Logo",
     "brandingExampleIntro": "After uploading, your logo will automatically be sized and appear as shown in the following examples.",
+    "uploadLogo": "Upload logo",
     "logoOnAbout": "{{name}} example logo shown on the Spark About tab.",
     "logoOnSupprt": "{{name}} example logo shown on the Spark Support tab.",
     "logoOnWebEx": "{{name}} example logo shown on the Webex Site.",
     "partner": "Partner",
-    "customer": "Customer"
+    "customer": "Customer",
+    "alt": {
+      "about": "Custom Branding Example About Image",
+      "support": "Custom Branding Example Support Image",
+      "webex": "Custom Branding Example WebEx Image"
+    }
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -5988,6 +6027,7 @@
     "assignedLines": "Assigned",
     "pending": "Pending",
     "csvBtnTitle": "Export to CSV",
+    "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_lines.csv",
     "internalNumberHeader": "Internal Extension",
     "externalNumberHeader": "Direct Line",
@@ -6749,6 +6789,7 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
+    "care": "Care",
     "rooms": "Rooms",
     "claimedDomain": "Claimed Domains",
     "hybridServices": "Hybrid Services",
@@ -6760,10 +6801,13 @@
       "squared-room-moderation.free": "Free Spark Messaging",
       "ciscouc.paid": "Advanced Spark Call",
       "ciscouc.free": "Free 1:1 Spark Call",
-      "meetings": "WebEx Meetings (WebEx 11)"
+      "meetings": "WebEx Meetings (WebEx 11)",
+      "cloud-contact-center-digital": "Chat and Callback",
+      "cloud-contact-center-inbound-voice": "Chat, Callback and Inbound Call"
     },
     "lastLog": "Last Log",
     "lastClientLog": "Last Spark Client Log",
+    "lastCareLog": "Last Spark Care Log:",
     "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
@@ -7117,7 +7161,10 @@
           "invalidChars": "Invalid character is not allowed in address domain. Allowed set is \"[a-z] [A-Z] [0-9]_-.\"",
           "invalidPort": "Port can only range between {{min}} and {{max}}",
           "invalidUniqueEntry": "This SIP Destination address already exists",
-          "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found"
+          "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found",
+          "resourceError": "Add Private trunk resource error",
+          "privateTrunkError": "Add Private trunk Domain error",
+          "certUploadError": "Certificate Upload error"
         },
         "prereqTitle": "Enterprise Private Trunking prerequisites",
         "setupTitle": "Set up Enterprise Private Trunking ",
@@ -7159,7 +7206,14 @@
         "fileReadyForImport": "File ready for import",
         "certificateDelete": "Are you sure you want to remove this certificate?",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
-        "cancelBody": "Are you sure you want to cancel?"
+        "cancelBody": "Are you sure you want to cancel?",
+        "setupCompete": "Set up complete",
+        "great": "Great! You configured private trunking for your Cisco Spark organization.",
+        "callSelection": "Your call selections",
+        "interSite": "Inter-site dialling between your on premise endpoints and Spark call endpoints.",
+        "pstn": "PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•",
+        "pstnConnectivity": "PSTN connectivity",
+        "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:"
       }
     },
     "showMore": "View all",
@@ -7280,7 +7334,7 @@
         "customerPlaceholder": "Who is the Telephony Domain for",
         "partnerPlaceholder": "Enter a nickname for this Telephony Domain",
         "customerHelpText": "Once approved by Cisco team, this name cannot be changed",
-        "customerNameLengthError": "your customer name should be less than 15 characters",
+        "customerNameLengthError": "Your customer name should be less than 15 characters",
         "importNumber": {
           "fromTd": "Import TD",
           "fromCsv": "Import CSV"

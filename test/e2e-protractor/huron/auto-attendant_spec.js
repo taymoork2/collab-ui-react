@@ -55,6 +55,50 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+    it('should add REST API via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      // REST API
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // 5th menu option is REST API
+      utils.click(autoattendant.newStepSelectRestApi);
+
+      // stop here as the complete menu has been tested elsewhere
+      utils.expectIsDisplayed(autoattendant.restApi);
+
+    });
+
+    it('should click configureApi hyperlink and a modal is opened with components for rest api url and dynamic feature"' + deleteUtils.testAAName + '"', function () {
+
+      // REST API
+      autoattendant.scrollIntoView(autoattendant.restApi);
+
+      utils.click(autoattendant.configureApi);
+      utils.expectIsDisplayed(autoattendant.configureApiURL);
+      utils.expectIsDisplayed(autoattendant.addDynamicFeature);
+      utils.expectIsDisplayed(autoattendant.sessionVar);
+      utils.expectIsDisplayed(autoattendant.addVariableToSet);
+      utils.expectIsDisplayed(autoattendant.saveBtn);
+      utils.click(autoattendant.saveBtn);
+
+    });
+
+    it('should add url and it should be visible in REST API new step upon save "' + deleteUtils.testAAName + '"', function () {
+
+      // REST API
+      autoattendant.scrollIntoView(autoattendant.restApi);
+
+      utils.click(autoattendant.configureApi);
+      utils.click(autoattendant.configureApiURL);
+      utils.wait(autoattendant.configureApiURL, 12000);
+      utils.sendKeys(autoattendant.configureApiURL, "This is test URL");
+      utils.click(autoattendant.saveBtn);
+      utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
+    });
+
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.lanesWrapper);
@@ -583,6 +627,15 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.scheduleInfoClosedHours);
       utils.expectIsDisplayed(autoattendant.scheduleInfoHolidayHours);
     }, 60000);
+
+    it('should dismiss schedule modal on browser back button', function () {
+      utils.wait(autoattendant.schedule, 12000);
+      utils.click(autoattendant.schedule);
+      utils.expectIsDisplayed(autoattendant.modalsave);
+      browser.driver.navigate().back();
+      utils.expectIsNotDisplayed(autoattendant.modalsave);
+    }, 60000);
+
     it('should be able to change time zone for AA', function () {
       utils.click(autoattendant.schedule);
       utils.click(autoattendant.timeZone);

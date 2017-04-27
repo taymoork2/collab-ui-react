@@ -21,6 +21,7 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.searchByParameters = searchByParameters;
     vm.resetSearchPageToInitialState = resetSearchPageToInitialState;
     vm.advancedSearch = advancedSearch;
+    vm.dateErrors = dateErrors;
     vm.validateDate = validateDate;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
@@ -33,13 +34,15 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.downloadReport = downloadReport;
     vm.retrySearch = retrySearch;
     vm.ediscoveryToggle = false;
-    vm.itProPackToggle = false;
+    vm.itProPackPurchased = false;
+    vm.itProPackEnabled = false;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
     vm.ongoingSearch = false;
     vm.limitError = false;
+    vm.showHover = showHover;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchEmailPlaceholder');
@@ -80,17 +83,20 @@ var Spark = require('@ciscospark/spark-core').default;
       disableAvalonPolling();
     });
 
-    FeatureToggleService.atlasEdiscoveryGetStatus().then(function (result) {
-      vm.ediscoveryToggle = result;
-    });
-
-    ITProPackService.hasITProPackPurchased().then(function (result) {
-      vm.itProPackToggle = result;
-    });
-
     function init(report, reRun) {
       vm.report = null;
       vm.error = null;
+
+      $q.all([
+        FeatureToggleService.atlasEdiscoveryGetStatus(),
+        ITProPackService.hasITProPackEnabled(),
+        ITProPackService.hasITProPackPurchased(),
+      ]).then(function (toggles) {
+        vm.ediscoveryToggle = toggles[0];
+        vm.itProPackEnabled = toggles[1];
+        vm.itProPackPurchased = toggles[2];
+      });
+
       if (report) {
         vm.roomInfo = {
           id: report.roomQuery.roomId,
@@ -151,19 +157,34 @@ var Spark = require('@ciscospark/spark-core').default;
         errors.push($translate.instant('ediscovery.dateError.StartDateCannotBeInTheFuture'));
       }
 
-      if (moment(start).isBefore(ninetyDayLimit) && !vm.itProPackToggle) {
+      if (moment(start).isBefore(ninetyDayLimit) && !vm.itProPackPurchased) {
         errors.push($translate.instant('ediscovery.dateError.InvalidDateRange'));
       }
 
       return errors;
     }
 
+    function dateWarnings(end) {
+      var warnings = [];
+      if (end !== moment().endOf('day').format('YYYY-MM-DD') && !vm.itProPackPurchased) {
+        warnings.push($translate.instant('ediscovery.dateError.InvalidEndDate'));
+      }
+      return warnings;
+    }
+
     function validateDate() {
       vm.dateValidationError = null;
+      vm.dateValidationWarning = null;
       var errors = dateErrors(getStartDate(), getEndDate());
+      var warnings = dateWarnings(getEndDate());
       if (errors.length > 0) {
         vm.dateValidationError = {
           errors: errors,
+        };
+        return false;
+      } else if (warnings.length > 0) {
+        vm.dateValidationWarning = {
+          warnings: warnings,
         };
         return false;
       } else {
@@ -355,7 +376,7 @@ var Spark = require('@ciscospark/spark-core').default;
               encryptionKeyUrl: vm.encryptionKeyUrl,
               responseUri: res.url,
               startDate: formatDate('api', getStartDate()),
-              endDate: formatDate('api', getEndDate()),
+              endDate: formatDate('api', getEndDate(), true),
             };
             Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.GENERATE_REPORT);
             generateReport(reportParams);
@@ -397,7 +418,7 @@ var Spark = require('@ciscospark/spark-core').default;
     function searchButtonDisabled(_error) {
       var error = !_.isUndefined(_error) ? _error : false;
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (error || vm.dateValidationError) : disable;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError || vm.dateValidationWarning) : disable;
     }
 
     function pollAvalonReport() {
@@ -505,6 +526,10 @@ var Spark = require('@ciscospark/spark-core').default;
     }
 
     /* Helper Functions */
+    function showHover() {
+      return vm.itProPackEnabled && !vm.itProPackPurchased;
+    }
+
     function splitWords(_words) {
       var words = _words ? (_words).split(',').map(
         function (s) {

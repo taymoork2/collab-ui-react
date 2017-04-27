@@ -52,7 +52,6 @@ class TelephonyDomains implements ng.IComponentController {
       this.gridData = [];
       this.gridRefresh = true;
       this.setGridData();
-      this.setGridOptions();
     });
     this.$scope.$on('$destroy', deregister);
   }
@@ -74,7 +73,7 @@ class TelephonyDomains implements ng.IComponentController {
       type: 'full',
       template: '<gm-td-modal-request dismiss="$dismiss()" close="$close()" class="new-field-modal"></gm-td-modal-request>',
     }).result.then(() => {
-      this.$state.go('gmTdLargePanel');
+      this.$state.go('gmTdNumbers');
     });
   }
 
