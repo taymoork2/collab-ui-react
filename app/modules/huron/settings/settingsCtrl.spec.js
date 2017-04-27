@@ -152,6 +152,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
       expect(ServiceSetup.listCosRestrictions).toHaveBeenCalled();
       expect(controller.model.callerId.callerIdName).toEqual('Cisco');
+      expect(ServiceSetup.getMediaOnHoldList).toHaveBeenCalled();
     });
 
     it('should save new internal number range', function () {
@@ -348,6 +349,18 @@ describe('Controller: HuronSettingsCtrl', function () {
       $scope.$apply();
 
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+    });
+
+    it('should update the Company Media on Hold when changed', function () {
+      controller.model.mediaOnHold = {
+        label: 'Fake Music',
+        value: '1234-dcba',
+      };
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.setCompanyMediaOnHold).toHaveBeenCalled();
       expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
