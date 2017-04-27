@@ -59,6 +59,7 @@
         name: 'Premium IT Pro Pack',
         eventNames: {
           BMMP_DISMISSAL: 'BMMP Banner dismissal',
+          LEARN_MORE: 'Learn More option selected',
           PREMIUM_FILTER: 'Customer Overview Filtering',
         },
         persistentProperties: null,
