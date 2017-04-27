@@ -6,7 +6,8 @@
     "license": "使用 Cisco Spark 服务即表明您接受服务条款和隐私声明。",
     "tos": "服务条款",
     "privacy": "隐私权声明",
-    "copyright": "Cisco 和/或附属公司。保留所有权利。"
+    "copyright": "Cisco 和/或附属公司。保留所有权利。",
+    "expired": "由于不活动，您的会话已过期。"
   },
   "termsOfService": {
     "title": "服务条款",
@@ -14,7 +15,7 @@
     "agree": "接受 ",
     "ciscoSpark": "Cisco Spark",
     "version": "版本：{{version}}",
-    "copyright1": "版权所有 © 2016 思科系统公司。",
+    "copyright1": "版权所有 © 2017 Cisco Systems。",
     "copyright2": "保留所有权利。",
     "description": "Cisco Spark 是一个提供消息（IM）、语音和视频呼叫功能的团队协作应用程序。",
     "loggingOut": "正在注销..."
@@ -26,9 +27,9 @@
     "convertUsers": "转换用户",
     "errorWarningMessages": "警告和错误",
     "skipErrorsAndFinish": "跳过错误并结束",
-    "newUsers": "{newusers, plural, =1{# 个新用户} other{# 个新用户}}",
-    "updatedUsers": "{updatedusers, plural, =1{# 个已更新用户} other{# 个已更新用户}}",
-    "errors": "{errors, plural, =1{# 个错误} other{# 个错误}}",
+    "newUsers": "{newusers, plural, other{# 个新用户}}",
+    "updatedUsers": "{updatedusers, plural, other{# 个已更新用户}}",
+    "errors": "{errors, plural, other{# 个错误}}",
     "pageTitle": "用户",
     "subTitleAdd": "管理用户",
     "subTitleEnable": "为用户授权",
@@ -146,7 +147,8 @@
     "insufficientEntitlementsError": "无法添加 {{email}}。许可证不足以创建此用户。",
     "telstraAppRedirect": "正在连接至 Telstra Apps Marketplace",
     "careAddUserError": "向 Care 添加用户失败。",
-    "careAddUserRoleError": "为用户添加角色时出错。"
+    "careAddUserRoleError": "为用户添加角色时出错。",
+    "loadError": "加载用户列表时出错。"
   },
   "userManage": {
     "org": {
@@ -246,7 +248,7 @@
       "retryUsers": "重试",
       "retrying": "正在重试...",
       "retryingIn": "在以下时间后重试：",
-      "retryingUsers": "{users, plural, =1{# 个用户} other{# 个用户}}",
+      "retryingUsers": "{users, plural, other{# 个用户}}",
       "exportUserList": "导出用户列表。"
     },
     "advanced": {
@@ -358,12 +360,14 @@
     "editServices": "编辑服务",
     "editServiceTitle": "已为 {{name}} 启用服务",
     "siteUris": "WebEx 站点",
-    "pmrTitle": "个人协作室",
+    "pmrTitle": "个人会议室",
     "webex": "WebEx",
     "spark": "Spark",
     "calling": "正在呼叫",
     "enabledBetaFeatures": "已启用的测试版功能",
-    "otpShareButton": "共享"
+    "otpShareButton": "共享",
+    "userDetails": "用户详情",
+    "userPreferredLanguageError": "未能获取用户首选语言。原因："
   },
   "tabs": {
     "overviewTab": "概览",
@@ -466,7 +470,7 @@
     "customerOrgName": "公司 / 合作伙伴名称",
     "customerAdminEmail": "管理员电子邮件",
     "partnerAdminEmail": "合作伙伴管理电子邮件",
-    "collab": "标准团队协作室 + 25 方会议",
+    "collab": "标准团队空间 + 25 方会议",
     "squaredUC": "高级 Spark 呼叫",
     "duration": "试用期（天）",
     "ninetyDays": "90",
@@ -503,7 +507,6 @@
     "title": "管理模板"
   },
   "reportsPage": {
-    "title": "组织报告",
     "pageTitle": "报告",
     "all": "全部",
     "engagement": "参与度",
@@ -518,6 +521,7 @@
     "week2": "最近 7 天",
     "month": "最近 4 周",
     "month2": "最近 4 周",
+    "oneMonth": "上月",
     "threeMonths": "最近 3 个月",
     "threeMonths2": "最近 3 个月",
     "lastTwelveWeeks": "最近 12 周",
@@ -556,7 +560,6 @@
       "distribution": "分布",
       "timeline": "时间轴",
       "overview": "概览",
-      "all": "全部",
       "deviceMetrics": "协作室设备指标",
       "downloadFullReport": "下载完整报告",
       "mostUsed": "最常用",
@@ -575,7 +578,9 @@
       "last7Days": "最近 7 天",
       "last4Weeks": "最近 4 周的每周 ",
       "last3Months": "最近 3 个月的每月",
-      "missingDays": " （丢失 {{nbrOfMissingDays}} 天的数据）",
+      "missingDays": "有 {{nbrOfMissingDays}} 天无可用数据",
+      "nameNotFoundFor": "未找到名称：",
+      "selectModelsToFilterOn": "选择要过滤的型号",
       "deviceOptions": {
         "all": "全部",
         "roomSystems": "DX、MX 和 SX 设备",
@@ -591,6 +596,32 @@
         "deviceUsageExportFailedOrCancelled": "设备使用导出失败或被取消。"
       }
     }
+  },
+  "sharedMeetingReports": {
+    "title": "已共享的会议使用情况",
+    "link": "查看报告",
+    "hostsSharingLicenses": "{{usage}} 主持人使用 {{volume}} 个共享许可证",
+    "availableSharedLicenses": "可用的共享许可证： ",
+    "sharedMeetingReport": "已共享的会议报告",
+    "sharedMeetingUsage": "已共享的会议使用情况",
+    "sharedMeetingDescription": "此图表显示了每月并发会议的数量。",
+    "concurrentMeetingsTitle": "实际举办的并发会议的数量",
+    "concurrentMeetings": "并发会议",
+    "maxMeetingsTitle": "允许举办的并发会议的最大数量",
+    "errorLoadingSharedMeetingData": "加载“已共享的会议报告”数据时出现问题。",
+    "errorLoadingSharedMeetingDetails": "加载“已共享的会议报告”详细信息数据时出现问题。",
+    "siteUrlError": "站点 URL 未定义。无法检索到已共享的会议报告。",
+    "csvPageError": "无法检索到供下载的详细报告。",
+    "downloadHref": "下载已共享的会议使用情况的<a href=\"{{href}}\" download=\"{{download}}\">详细报告</a>。",
+    "downloadClick": "下载已共享的会议使用情况的<a ng-click=\"{{onclick}}\">详细报告</a>。",
+    "csvMeetingTopic": "会议主题",
+    "csvStartTime": "开始时间",
+    "csvEndTime": "结束时间",
+    "csvConfId": "会议标识",
+    "csvDuration": "会议持续时间（秒）",
+    "csvMeetingType": "会议类型",
+    "csvHostId": "主持人标识",
+    "csvHostName": "主机名称"
   },
   "careReportsPage": {
     "tasks": "联系人",
@@ -1036,21 +1067,23 @@
   },
   "common": {
     "add": "添加",
+    "agree": "同意",
     "alert": "提示",
     "all": "全部",
     "and": "和",
     "apply": "应用",
     "assign": "分配",
-    "agree": "同意",
+    "assigned": "已分配",
     "back": "上一步",
     "begin": "开始",
     "cancel": "取消",
     "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
-    "cluster": "群集",
     "close": "关闭",
+    "cluster": "群集",
     "confirm": "确认",
     "continue": "继续",
     "dateRange": "日期范围",
+    "deactivate": "停用",
     "delete": "删除",
     "description": "描述",
     "devices": "设备",
@@ -1066,9 +1099,10 @@
     "firstName": "名字",
     "general": "常规",
     "help": "帮助",
+    "hideAllAdminUsers": "隐藏管理员",
     "id": "标识",
-    "deactivate": "停用",
     "incorrectFormat": "错误的格式",
+    "info": "INFO",
     "invalidEmail": "此电子邮件地址无效。",
     "invalidMax": "最大值为 {{max}}。",
     "invalidMaxLength": "字符长度不能大于 {{max}}。",
@@ -1084,7 +1118,6 @@
     "metrics": "度量",
     "modal": "模式",
     "modify": "修改",
-    "info": "INFO",
     "new": "全新",
     "next": "下一步",
     "no": "否",
@@ -1105,8 +1138,8 @@
     "postpone": "推迟",
     "proceed": "继续",
     "quantity": "数量",
-    "remove": "删除",
     "releaseChannel": "发布通道",
+    "remove": "删除",
     "rename": "重命名",
     "required": "必填",
     "reset": "重置",
@@ -1117,14 +1150,16 @@
     "search": "搜索",
     "select": "选择",
     "selectLanguage": "选择语言",
+    "service": "服务",
     "settings": "设置",
+    "showAllAdminUsers": "显示全部 {{numUsers}} 位管理员",
     "status": "状态",
     "submit": "提交",
     "to": "收件人",
     "trackingId": "追踪 ID：{{trackingId}}。",
     "tryAgain": "请重试",
     "turnOff": "关闭",
-    "assigned": "已分配",
+    "type": "类型",
     "unassigned": "未分配",
     "unknown": "未知",
     "update": "更新",
@@ -1133,22 +1168,21 @@
     "users": "用户",
     "voice": "语音",
     "warning": "警告",
-    "yes": "是",
-    "type": "类型",
-    "service": "服务"
+    "yes": "是"
   },
   "notifications": {
     "success": "成功通知数",
     "error": "错误通知数",
-    "successTotal": "{total, plural, =1{# 个成功} other{# 个成功}}",
-    "errorTotal": "{total, plural, =1{# 个错误} other{# 个错误}}",
+    "successTotal": "{total, plural, other{# 个成功}}",
+    "errorTotal": "{total, plural, other{# 个错误}}",
     "successDelete": "删除 {{item}} 成功。",
-    "errorDelete": "删除 {{item}} 失败。"
+    "errorDelete": "删除 {{item}} 失败。",
+    "genericError": "发生意外错误。请稍后重试。"
   },
   "time": {
-    "seconds": "{time, plural, =1{# 秒} other{# 秒}}",
-    "minutes": "{time, plural, =1{# 分钟} other{# 分钟}}",
-    "hours": "{time, plural, =1{# 小时} other{# 小时}}"
+    "seconds": "{time, plural, other{# 秒}}",
+    "minutes": "{time, plural, other{# 分钟}}",
+    "hours": "{time, plural, other{# 小时}}"
   },
   "callDestination": {
     "numberFormat": "号码格式",
@@ -1225,7 +1259,11 @@
     "setUpHybridMediaService": "混合媒体服务可用。扩展云媒体以使用内建式资源来呼叫和开会。",
     "getStarted": "入门",
     "urgentUpgrade": "<a ui-sref='{{link}}'>{{connector}}</a> 有紧急升级可用，此升级将在下次安排的升级中进行。",
-    "setUpHybridDataSecurity": "使用本地的“数据安全”服务进行加密。"
+    "setUpHybridDataSecurity": "使用本地的“数据安全”服务进行加密。",
+    "careLicenseMsgMissingText": "“消息”对于 Care 服务是必需的。要启用“消息”，",
+    "careLicenseCallMissingText": "“呼叫”对于基于语音的 Care 服务是必需的。要启用“呼叫”，",
+    "careLicenseMsgAndCallMissingText": "“消息”和“呼叫”各自对于聊天和语音交互之类的 Care 服务是必需的。要启用“消息”和“呼叫”，",
+    "careLicenseLinkText": "联系您的合作伙伴或 Cisco 销售部门。"
   },
   "inviteModal": {
     "title": "服务授权",
@@ -1374,6 +1412,23 @@
     "localDialingTitle": "本地拨号",
     "localDialingDesc": "在电话呼叫中自动添加国家代码和区号前缀，以简化本地拨号。对于有多个区号的地点，建议不要使用此设置。",
     "localDialingNumberTitle": "附加的区号",
+    "cos": {
+      "title": "拨号限制",
+      "desc": "限制组织整体的某些拨号功能。您可以重写单个用户的每一设置。",
+      "nationalTitle": "全国拨号",
+      "nationalDesc": "选择是否允许用户拨打全国免费号码。",
+      "mobileTitle": "手机拨号",
+      "mobileDesc": "选择是否允许用户拨打手机号码",
+      "internationalTitle": "国际拨号",
+      "internationalDesc": "选择是否允许用户拨打国际号码。缺省情况下，支持 Spark 呼叫的用户和地方沿用此设置。",
+      "premiumTitle": "高级帐户拨号",
+      "premiumDesc": "选择是否允许用户拨打需付费拨入和拨出的号码。这些号码包括以 {{premiumNumbers}} 开头的号码。",
+      "neverAllow": "从不允许",
+      "alwaysAllow": "始终允许",
+      "orgSetting": "组织设置（{{state}}）",
+      "success": "已成功保存拨号限制设置。",
+      "error": "拨号限制更新失败"
+    },
     "error": {
       "siteSteering": "语音邮件访问前缀的首位数与所选的外拨数字相冲突。",
       "outboundDialDigit": "外拨数字与语音邮件访问前缀的首位数相冲突。",
@@ -1504,11 +1559,11 @@
     "reset": "重置",
     "rsuKeyWasReset": "已重设 Remote Support 密钥。您先前可能与 Cisco 支持部门共享的所有密钥现在都无法再使用。",
     "rsuKeyResetFailed": "Remote Support 密钥重设失败，设备未及时返回新密钥。",
-    "nothingHere": "尚无任何设备。",
-    "nothingHerePlaces": "尚无任何地方。",
-    "noDevices": "启用设备",
+    "nothingHere": "尚无任何设备",
+    "nothingHerePlaces": "尚无任何地方",
+    "noDevices": "激活 Cisco 座机和协作室设备之后，您将看到它们在此处列出。",
     "noneFound": "找不到任何设备",
-    "tryAgain": "尝试其他搜索",
+    "tryAgain": "尝试其他搜索。",
     "licenseWarningTitle": "许可证",
     "licenseWarningHeader": "该服务的许可证存在问题",
     "licenseSuspendedWarning": "您的协作室设备许可证已被冻结。",
@@ -1569,11 +1624,12 @@
       "alarms": "警报",
       "hosts": "节点",
       "goToHost": "转至节点",
-      "removeButton": "删除",
-      "removeSectionHeader": "删除",
-      "removeSectionBody": "将此节点从 Cisco Collaboration Cloud 中删除。",
+      "moveNode": "移动节点",
+      "deregisterNode": "取消注册节点",
+      "removeNode": "删除节点",
       "localizedConnectorAndHostHeader": "{{hostname}} 上的 {{connectorName}}",
-      "actions": "操作"
+      "actions": "操作",
+      "no_nodes": "未注册任何节点。"
     },
     "export": {
       "modalTitle": "用户状态报告",
@@ -1604,7 +1660,7 @@
       "confirmationDialogBody": "确定要删除此节点吗？",
       "successNodeRemoval": "已成功删除节点。",
       "failedNodeRemoval": "删除节点失败。"
-  },
+    },
     "addResourceDialog": {
       "title": "{{ServiceName}} 设置",
       "alreadyBeenSetupTitle": "添加 Expressway 集群",
@@ -1641,7 +1697,8 @@
       "selectGroup": "选择…",
       "couldNotReadResourceGroups": "无法读取资源组。",
       "CouldNotSaveResourceGroup": "无法保存资源组。继续注册过程并在稍后尝试重新分配资源组。",
-      "hostnameRegistered": "此 FQDN 属于一个已经注册到 Cisco Collaboration Cloud 的 Expressway 集群。如果您想添加更多的服务，没有必要将它注册为一个新的资源。"
+      "hostnameRegistered": "此 FQDN 属于一个已经注册到 Cisco Collaboration Cloud 的 Expressway 集群。如果您想添加更多的服务，没有必要将它注册为一个新的资源。",
+      "partnersCannotConfigureClusters": "合作伙伴管理员查看客户组织时可能不会设置混合服务或添加集群。"
     },
     "activateService": {
       "ingress": "将云扩展到内部部署环境",
@@ -1665,7 +1722,7 @@
     },
     "clusters": {
       "listing": {
-        "no_clusters_heading": "未注册 Cisco Expressway 集群",
+        "no_clusters_heading": "未注册任何集群",
         "no_clusters_text": "请参见上文的所需操作和文档以开始。"
       }
     },
@@ -1690,6 +1747,7 @@
       "initializing": "正在初始化",
       "not_operational": "运行不正常",
       "not_registered": "未完成注册",
+      "no_nodes_registered": "未注册任何节点",
       "urgentUpgradeAvailable": "紧急升级可用",
       "registrationTimeout": "注册超时"
     },
@@ -1732,14 +1790,15 @@
       "squared-fusion-cal": "混合日历服务",
       "squared-fusion-gcal": "混合日历 (Google)",
       "spark-hybrid-datasecurity": "混合数据安全",
-      "squared-fusion-media": "混合媒体服务"
+      "squared-fusion-media": "混合媒体服务",
+      "hybrid-context": "Hybrid Context Service"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
       "squared-fusion-uc.full": "Call Connector",
       "squared-fusion-cal": "Calendar Connector",
       "squared-fusion-media": "媒体服务",
-      "contact-center-context": "Context Center 服务",
+      "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector"
     },
@@ -1747,12 +1806,17 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "hds_app": "混合数据安全连接器"
+      "mf_mgmt": "媒体服务",
+      "hds_app": "混合数据安全",
+      "cs_mgmt": "Management Connector",
+      "cs_context": "Context Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "日历服务",
       "c_ucmc": "呼叫服务",
-      "c_mgmt": "管理服务"
+      "c_mgmt": "管理服务",
+      "cs_mgmt": "Management Connector",
+      "cs_context": "Context Connector"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
@@ -1770,7 +1834,7 @@
       "squared-fusion-mgmt": "“管理服务”是“日历服务”和“呼叫服务”的全局配置服务。您激活其中一个服务后，此页面将激活。"
     },
     "serviceHelpInfo": {
-      "servicePrivacyStatement": "Cisco Hybrid Service 连接器将收集关于您的 Hybrid Service 部署的某些信息并发送给 Cisco Collaboration Cloud。要了解详细信息，请<a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>单击此处</a>。"
+      "servicePrivacyStatement": "Cisco 混合服务连接器将收集关于您的混合服务部署的某些信息并发送给 Cisco Collaboration Cloud。要了解详细信息，请<a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>单击此处</a>。"
     },
     "errors": {
       "enableServiceEntitlementFailure": "失败了！您的组织没有添加 {{serviceName}} 所需的权限。请联系您的支持代表来解决此问题。",
@@ -1803,6 +1867,7 @@
       "sinceTime": "自 {{timestamp}} 起"
     },
     "alarms": {
+      "affectedNodes": "受影响的节点",
       "alarms": "警报",
       "critical": "紧急",
       "error": "错误",
@@ -1813,7 +1878,10 @@
       "lastReported": "最后一次报告",
       "description": "描述",
       "noAlarms": "未报告警报",
-      "action": "操作"
+      "action": "操作",
+      "info": "INFO",
+      "new": "全新",
+      "todo": "待办事项"
     },
     "softwareUpgrade": {
       "editSettingsLink": "编辑集群设置",
@@ -1826,6 +1894,7 @@
       "pending": "待解决",
       "upgrade": "升级",
       "upgradeNow": "立即升级",
+      "upgradesAutomatically": "自动升级",
       "upgradeProcessInitiating": "正在启动版本 {{version}} 升级…",
       "upgradingHost": "正在将 {{host}} 升级至 {{version}}",
       "upgradeDone": "已完成升级！",
@@ -1885,6 +1954,7 @@
       "clusters-title-squared-fusion-uc": "Expressway 集群",
       "clusters-title-squared-fusion-media": "媒体集群",
       "clusters-title-spark-hybrid-datasecurity": "HDS 集群",
+      "clusters-title-contact-center-context": "Context 集群",
       "status-title": "服务状态"
     },
     "hybridVoicemailUserSection": {
@@ -1910,8 +1980,13 @@
       "emailNotificationsSavingError": "对电子邮件订阅者列表的更改无法保存。请稍后重试。",
       "emailUserNotificationsSavingSuccess": "已成功保存用户电子邮件通知的开关设置。",
       "emailUserNotificationsSavingError": "无法保存对用户电子邮件通知的更改。请稍后重试。",
+      "defaultWebExSiteOrgLevelHeading": "缺省 WebEx 站点",
+      "setDefaultWebExSiteOrgLevel": "为您的组织选择或输入缺省 WebEx 站点（使用“site.domain.com”的格式）。在用户将 @webex 添加到会议邀请时将使用此缺省站点。",
+      "defaultWebExSiteOrgLevelSelectPlaceholder": "选择或输入缺省 WebEx 站点",
+      "defaultWebExSiteOrgLevelSavingSuccess": "用于组织级别的缺省 WebEx 站点已成功保存。",
+      "defaultWebExSiteOrgLevelSavingError": "无法将更改保存到用于用于组织级别的缺省 WebEx 站点。请稍后重试。",
       "oneButtonToPushIntervalHeading": "提前加入时间",
-      "oneButtonToPushInterval": "会议开始前，Spark 设备和客户端上会出现“加入”按钮。您可以选择会议开始前多长时间显示这个按钮。缺省情况下为 5 分钟。",
+      "oneButtonToPushInterval": "会议开始前，Spark 设备和客户端上会出现“加入”按钮。您可以选择会议开始前多长时间显示这个按钮。如果不设置，缺省情况下为 1 分钟。",
       "oneButtonToPushIntervalSecondaryLabel": "会议开始前所剩分钟数",
       "oneButtonToPushIntervalMinutesSavingSuccess": "已成功保存提前加入时间。",
       "oneButtonToPushIntervalMinutesSavingError": "无法保存对提前加入时间的更改。请稍后重试。",
@@ -1966,6 +2041,8 @@
         "serviceAccountHeader": "服务帐户",
         "serviceAccountText": "此服务帐户用于将组织的谷歌日历连接到 Cisco Collaboration Cloud。",
         "serviceAccountHelpText": "要更改服务帐户，请在以下部分上传一个新的私有密钥",
+        "aclAccountHeader": "ACL 管理员帐户（可选）",
+        "aclAccountText": "如果使用协作室资源，可能需要对其日历作 ACL 更改。为了使混合日历服务能自动执行此更改，您可以提供用于此目的的授权账户名称。",
         "privateKeyHeader": "私有密钥",
         "privateKeyText": "上传新的私有密钥。",
         "deactivateHeader": "停用谷歌日历",
@@ -1973,7 +2050,9 @@
         "googleCalendarConfigWillBeWiped": "此项操作将删除 Cisco Collaboration Cloud 上所有的谷歌日历设置。",
         "uploadNewPrivateKey": "上传私有密钥",
         "uploadNewPrivateKeyPlaceholder": "输入服务帐户名",
+        "uploadNewAclAccountPlaceholder": "输入 ACL 管理员帐户名（可选）",
         "serviceAccountName": "服务帐户名",
+        "aclAccountName": "ACL 管理员帐户名",
         "uploadNewPrivateKeyExplanation": "输入服务帐户名并上传您从谷歌开发者管理界面下载的私有密钥。",
         "dragAndDropKeyFileHere": "将包含私有密钥的文件拖放到此处或",
         "clickToBrowse": "单击以浏览",
@@ -1999,7 +2078,7 @@
         "selectCalendarType": "选择日历类型",
         "exchangeInfo": "Microsoft Exchange 和 Exchange Online (Office 365) 需要 Expressway 集群。",
         "serviceInto": "混合日历支持通过本地部署 Expressway 集群实现的 Exchange 日历，以及谷歌日历。",
-        "smallprint": "Cisco Hybrid Service 连接器将收集关于您的 Hybrid Service 部署的某些信息并发送给 Cisco Collaboration Cloud。要了解详细信息请单击<a href=\"https://example.org/\" target=\"_blank\">此处</a>。"
+        "smallprint": "Cisco Hybrid Service 连接器将收集关于您的 Hybrid Service 部署的某些信息并发送给 Cisco Collaboration Cloud。要了解详细信息，请单击<a href=\"https://example.org/\" target=\"_blank\">此处</a>。"
       },
       "scheduleUpgrade": {
         "title": "升级安排",
@@ -2027,15 +2106,15 @@
       "no-notifications": "没有通知。",
       "callAware": {
         "title": "为用户启用呼叫服务认知",
-        "navigateToUsers": "转至<a ng-click=\"{{onclick}}\">用户和组管理</a>为用户启用呼叫服务认知。"
+        "navigateToUsers": "转至<a ng-click=\"{{onclick}}\">用户</a>页面为用户启用“呼叫服务感知”。"
       },
       "calendar": {
         "title": "为用户启用日历服务",
-        "navigateToUsers": "转至<a ng-click=\"{{onclick}}\">用户和组管理</a>为用户启用日历服务。"
+        "navigateToUsers": "转至<a ng-click=\"{{onclick}}\">用户</a>页面为用户启用“日历服务”。"
       },
       "connect": {
         "title": "为用户启用“呼叫服务连接”",
-        "navigateToUsers": "您已经成功地配置了“呼叫服务连接”。转至<a ng-click=\"{{onclick}}\">用户和组管理</a>可为用户启用呼叫服务连接。请确保您在 Expressway 中为用户选择了创建 CTI 远程设备的适用方法。 ",
+        "navigateToUsers": "您已经成功地配置了“呼叫服务连接”。转至<a ng-click=\"{{onclick}}\">用户</a>页面可为用户启用呼叫服务连接。请确保您在 Expressway 中为用户选择了创建 CTI 远程设备的适用方法。 ",
         "connectEnabled": "已启用呼叫服务连接",
         "connectDisabled": "已禁用呼叫服务连接"
       },
@@ -2083,12 +2162,13 @@
       "heading": "注册"
     },
     "notificationDropdown": {
-      "label": "{number, plural, =1{# 个通知} other{# 个通知}}"
+      "label": "{number, plural, other{# 个通知}}"
     },
     "fusion": {
       "types": {
         "expressway": "Expressway",
-        "mediafusion": "媒体"
+        "mediafusion": "媒体",
+        "context": "上下文"
       },
       "urgentUpgrade": {
         "title": "紧急升级安排"
@@ -2097,10 +2177,12 @@
         "title": "集群",
         "empty": "找不到集群。",
         "upgrade-schedule": "升级安排",
+        "upgrades-automatically": "自动升级",
         "clusters": "集群",
+        "context": "上下文",
         "users": "用户",
         "release-channel": "发布通道",
-        "nodes": "{count, plural, =1{# 个节点} other{# 个节点}}",
+        "nodes": "{count, plural, other{# 个节点}}",
         "nodesBtn": "节点",
         "settings": "设置",
         "all": "全部",
@@ -2127,7 +2209,9 @@
           "expressway-description": "能够运行混合呼叫服务或混合日历服务",
           "expressway-not-setup": "未设置 Expressway",
           "mediafusion-description": "能够运行混合媒体服务",
-          "mediafusion-not-setup": "未设置媒体服务"
+          "mediafusion-not-setup": "未设置媒体服务",
+          "context-description": "可以运行 Hybrid Context",
+          "context-not-setup": "未设置 Context"
         },
         "expressway": {
           "services": {
@@ -2148,6 +2232,10 @@
             "help": "集群名称仅用于显示目的。"
           },
           "end": {}
+        },
+        "context": {
+          "register": "通过您的本地部署应用程序注册 Context Service。单击“了解方法”来了解更多信息。",
+          "learn-how": "了解方法"
         }
       },
       "add-resource-group": {
@@ -2267,7 +2355,44 @@
       "status": "状态",
       "serial": "序列",
       "version": "版本",
-      "loadingError": "无法加载集群数据"
+      "noNodes": "未找到节点",
+      "loadingError": "无法加载集群数据",
+      "viewList": "查看列表"
+    },
+    "hybridServicesConnectorSidepanel": {
+      "alarmDetails": "警报详情"
+    }
+  },
+  "context": {
+    "pageTitle": "Hybrid Context Service",
+    "clusters": {
+      "listing": {
+        "no_clusters_heading": "尚未注册任何 Context 集群",
+        "no_clusters_text": "通过本地部署应用程序注册 Context Service。",
+        "learn_how": "了解方法。"
+      }
+    },
+    "dictionary": {
+      "welcome": "欢迎使用 Context Dictionary",
+      "fieldPage": {
+        "fieldId": "字段标识",
+        "dataType":"数据类型",
+        "classification": "数据隐私权",
+        "searchable": "可搜索",
+        "lastUpdated":"更新日期",
+        "startSearching": "要开始，请搜索字段",
+        "noSearchResults": "搜索未生成任何结果",
+        "fieldReadFailed": "无法检索到字段。刷新您的浏览器以重试。",
+        "piiEncrypted": "PII 加密",
+        "encrypted": "非 PII 加密",
+        "unencrypted": "不加密",
+        "dateFormat": "MM/dd/yyyy"
+      },
+      "fieldsetPage": {
+        "fieldsetId": "字段集标识",
+        "numOfFields": "字段数",
+        "fieldsetReadFailed": "无法检索到字段集。刷新您的浏览器以重试。"
+      }
     }
   },
   "hds": {
@@ -2365,12 +2490,23 @@
     "resources": {
       "settings": {
         "servicestatusTitle": "服务状态",
+        "servicePreTrialModeTitle": "开始试用",
+        "serviceNodeDesc": "当前有 <strong>{{nodes}} 个节点</strong>已注册混合数据安全服务。<br/>建议组织中每 100 人使用至少 3 个节点。<br/>使用<a ng-click=\"{{onclick}}\">添加资源</a>流程以添加更多节点。",
+        "serviceDomainDesc": "试用域：{{trial}}<br/>生产域：{{prod}}",
+        "serviceUserDesc": "试用版混合数据安全服务中当前存在 <strong>{{users}} 位用户</strong>。向试用版<br/><a ng-click=\"{{onclick}}\">添加用户</a>或<a ng-click=\"{{onclick1}}\">查看并编辑</a>您的试用用户。",
+        "serviceUser0Desc": "试用版混合数据安全服务中当前存在 <strong>{{users}} 位用户</strong>。向试用版<br/><a ng-click=\"{{onclick}}\">添加用户</a>。",
+        "serviceProdMoveDesc": "您的混合数据安全服务进入生产模式后，将无法回复到试用模式。",
         "serviceTrialModeTitle": "试用模式",
         "serviceTrialModeDesc": "试用起始时间为 YYYY 年 Month 月 DD 日下午 HH:MM",
         "serviceProductionModeTitle": "生产模式",
         "serviceProductionModeDesc": "在此模式下组织中的所有用户都将使用这项服务",
+        "moveToProduction": "进入生产模式",
         "addTrialUsers": "添加试用用户",
-        "editTrialUsers": "在试用模式下编辑用户"
+        "editTrialUsers": "在试用模式下编辑用户",
+        "confirmProdMoveDialogHeader": "转入生产模式？",
+        "confirmProdMoveDialogBody": "无法撤销操作或返回到试用模式。由于种种原因，此操作执行后不能反悔。",
+        "confirmProdMoveDialogButton": "生产模式",
+        "hdsModeGetError": "获取 HDS 模式失败： "
       },
       "addTrialUsers": {
         "modalTitle": "将用户添加到试用模式",
@@ -2378,6 +2514,7 @@
         "modalDesc": "输入将要分配到混合数据安全服务的用户的电子邮件地址。",
         "emailNotificationsWatermark": "电子邮件地址",
         "emailExample": "例如：john.doe@example.com",
+        "refreshOtherServices": "刷新其他服务以避免 24 小时的延迟。",
         "modalSST": "添加用户"
       },
       "editTrialUsers": {
@@ -2385,6 +2522,7 @@
         "modalHeading": "编辑用户",
         "emailNotificationsWatermark": "新增...",
         "tooManyUsers": "<i class='icon icon-error'></i> 已达到最大用户数量，请删除一些现有用户再添加更多。",
+        "invalidUsers": " 将不会保存此组织中的无效用户。",
         "modalDesc": "要删除用户，请单击该用户字段中的“X”，即可将他们从混合数据安全服务中删除。"
       },
       "page_title": "混合数据安全服务",
@@ -2485,9 +2623,9 @@
       "backToSearch": "返回搜索",
       "searchInfo": "搜索信息",
       "emailId": "电子邮件 ID",
+      "roomId": "协作室 ID",
       "dateRange": "日期范围",
-      "textMessage": "文本消息包含",
-      "fileName": "文件名包含",
+      "textAndFileName": "文本消息或文件名包含",
       "reportSummary": "报告摘要",
       "rooms": "个协作室",
       "messages": "消息",
@@ -2527,6 +2665,7 @@
     }
   },
   "firstTimeWizard": {
+    "required": "此字段为必填项。",
     "termsAndConditions": "条款和条件",
     "simple": "手动添加用户",
     "manualEntryStep": "手动",
@@ -2634,15 +2773,36 @@
     "setSipDomainLink": "Spark SIP 地址是什么？",
     "setSipDomainMsg": "输入子域名",
     "setSipDomainTitle": "Spark SIP 地址",
-    "setSipDomainCompNames": "将为您保留{count, plural, =1{此子域} other{这些子域}}：",
-    "setSipDomainAsssignedNames": "已为您保留{count, plural, =1{此子域} other{这些子域}}",
+    "saveSipDomainTitle": "保存 Spark SIP 地址",
+    "editSipDomainTitle": "编辑 Spark SIP 地址",
+    "setSipDomainCompNames": "将为您保留{count, plural, other{这些子域}}：",
+    "setSipDomainAsssignedNames": "已为您保留{count, plural, other{这些子域}}",
     "setSipDomainCheckAvailability": "检查可用性",
     "setSipDomainPlaceholder": "输入子域名",
-    "setSipDomainErrorMessage": "不可用。请尝试其他名称",
+    "setSipDomainErrorMessage": "不可用。请尝试其他名称。",
     "setSipDomainErrorMessageInvalidDomain": "无效域。请尝试其他名称",
     "setSipDomainSuccessMessage": "已成功保存此 Spark SIP 地址",
     "setSipDomainConfirmText": "我确认此项设置为一次性设置，以后不能更改。",
     "sparkDomainManagementServiceErrorMessage": "未能访问 Spark Domain Management Service",
+    "currentSubdomainDescription": "下面的{count, plural, other{子域}}正用于公司 Spark SIP {count, plural, other{地址}}。",
+    "subdomainChangesDescription": "完成子域更改可能最多花费数小时。",
+    "subdomainDescription": "选择能够识别您公司的子域。该子域将用于创建 {count, plural, other{Spark SIP 地址}}。之后您可在帐户设置中更改子域名。",
+    "updateSubdomainMessage": "完成子域更改可能最多花费数小时。更改完成后，用户将无法继续使用先前的 Spark SIP 地址进行呼叫。",
+    "cscUpdateSubdomainMessage": "完成子域更改可能最多花费数小时。经过更改后，先前的 Spark SIP 地址将无法再用于“呼叫服务连接”呼叫。",
+    "subdomainUpdateConfirmation": "我们建议您在非工作时间执行此步骤。您确实要保存更改吗？",
+    "cscWarningMessage": "更改 Spark SIP Address 地址将导致“呼叫服务连接”中断。请参见<a ng-click=\"{{onclick}}\">文档获取指导</a>。",
+    "editCSCPartOne": "要使 SIP 域更改生效，必须从 Expressway-C 禁用并重新启用所有活动的呼叫连接器。",
+    "editCSCPartTwo": "我们建议您在非工作时间执行此步骤。请参见<a ng-click=\"{{onclick}}\">文档获取指导</a>。",
+    "editCSCPartThree": "您仍然要编辑 Spark SIP 地址吗？",
+    "enterSubdomain": "输入子域名",
+    "subdomainInvalid": "子域名无效。",
+    "longSubdomain": "子域名过长。请输入至多包含 40 个字符的子域名。",
+    "subdomainUnavailable": "子域名不可用。",
+    "reservedSubdomains": "保留的子域名",
+    "subdomain401And403Error": "用户无权修改子域名。",
+    "subdomainSaveError": "保存新的子域名时发生错误。请再次检查可用性并重试。",
+    "subdomainSaveSuccess": "已成功更新 Spark SIP 地址。",
+    "editSubdomain": "编辑子域",
     "messageSettings": "消息设置",
     "callSettings": "呼叫设置",
     "enterpriseSettings": "企业设置",
@@ -2711,7 +2871,7 @@
     "messengerSetupDesc": "Webex 信使 (Jabber) 用户可以向组织中的 Spark 用户发送消息。",
     "messengerSetupLabel": "启用 Webex 信使集成",
     "dataRetentionTitle": "数据保留（删除组织后）",
-    "dataRetentionDesc": "从系统中删除用户（或试用）后，系统会将该用户的团队协作室保留多久？",
+    "dataRetentionDesc": "从系统中删除用户（或试用用户）后，系统会将该用户的团队空间保留多久？",
     "dataShareTitle": "发送至 Cisco 合作伙伴的使用数据",
     "dataShareLabel": "与您的 Cisco 合作伙伴共享服务质量和参与度数据，以启用更高级别的合作伙伴支持。",
     "appSecurity": "应用程序安全性",
@@ -2724,7 +2884,7 @@
     "domainSubDesc": "输入 Active Directory 域：",
     "connectorSteps": "遵循这些步骤以安装 Directory Connector：",
     "readyToGo": "您已准备好开始！",
-    "finishDesc": "您已完成设置向导。如果已跳过步骤或需要更改任何设置，请单击页面右上角的齿轮图标来再次访问这个面板。",
+    "finishDesc": "您已完成设置向导。如果需要修改您做出的任何选择，请访问“设置”或“服务”标签页。",
     "finish": "完成",
     "finishSub": "完成设置",
     "completeRequired": "必须填写 {{name}}。",
@@ -2817,18 +2977,42 @@
     "actionSayMessage": "说出留言",
     "actionSayMessageHint": "播放不间断留言。",
     "actionCallerInput": "主叫输入",
-    "actionCallerInputHint": "收集主叫输入",
-    "actionCallerInputHelp": "设置 AA 以捕获主叫输入",
-    "callerInputCnvtDigit": "将数字输入转换为文本字符串值",
+    "actionCallerInputHint": "存储呼叫者提供的信息。",
+    "actionCallerInputHelp": "存储呼叫者提供的信息。",
+    "callerInputCnvtDigit": "将数字输入转换为文本字符串值。",
     "callerInputMaxLenStr": "字符串最大长度",
     "callerInputVariableTooLongMsg": "超出了输入变量的最大长度",
     "callerInputValue": "输入值",
     "callerInputLabel": "名称",
     "callerInputNamePlaceHolder": "名称变量",
-    "callerNameInputHelpText": "传递标签的名称",
+    "callerNameInputHelpText": "所提供变量的名称",
     "callerInputMaxLength": "# 用作低于最大值的字符串的终结符",
     "actionPhoneMenu": "电话菜单",
     "actionPhoneMenuHint": "播放留言并根据呼叫者的输入采取措施。",
+    "actionDecision": "决策",
+    "actionDecisionHint": "根据主叫属性设置呼叫路由。",
+    "actionDecisionHelp": "根据主叫属性设置呼叫路由。",
+    "actionIfDecision": "如果",
+    "actionIs": "是",
+    "thenDecision": "操作",
+    "selectConditionPlaceholder": "选择条件",
+    "selectActionPlaceholder": "选择操作",
+    "decisionCallerReturned": "呼叫者已返回",
+    "decisionNumberDialed": "被叫号码",
+    "decisionCallerNumber": "主叫号码",
+    "decisionCallerName": "呼叫者姓名",
+    "decisionCallerCountryCode": "呼叫者的国家/地区代码",
+    "decisionCallerAreaCode": "呼叫者的区号",
+    "callerReturned5Mins": "5 分钟",
+    "callerReturnedOneDay": "1 天",
+    "callerReturnedOneWeek": "1 周",
+    "callerReturnedTwoWeeks": "2 周",
+    "callerReturnedOneMonth": "1 个月",
+    "callerReturnedWhen": "最近一段时间内：",
+    "callerNumberInfo": "在此处输入一个或多个号码；使用逗号分隔多个条目。例如：+12065551212, +11115551212",
+    "callerNameInfo": "在此处输入一个或多个主叫姓名；使用逗号分隔多个条目。例如：John Smith, Jane Doe",
+    "countryCodeInfo": "在此处输入一个或多个号码；使用逗号分隔多个条目。例如：1, 20",
+    "areaCodeInfo": "在此处输入一个或多个号码；使用逗号分隔多个条目。例如：206, 425",
     "actionRouteCall": "转接呼叫",
     "actionRouteCallHint": "将呼叫转接至寻线组、自动语音应答或分机。",
     "actionDialByExtensionHint": "提示呼叫者有内部分机并转接呼叫。",
@@ -2868,7 +3052,7 @@
     "phoneMenuRouteVM": "路由到语音邮件",
     "phoneMenuRouteAA": "路由到自动语音应答",
     "phoneMenuGoBack": "返回",
-    "phoneMenuRouteQueue": "队列呼叫",
+    "phoneMenuRouteQueue": "路由到 Spark Care",
     "phoneMenuRouteToSipEndpoint": "路由至 SIP 终端",
     "phoneMenuListening": "在侦听下列用户输入时",
     "phoneMenuRepeatOnce": "一次",
@@ -2881,6 +3065,9 @@
     "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} 安排在“电话菜单” {{at}}：输入号位 {{key}}：子菜单输入号位 {{subkey}} 缺失“路由到队列”目标。",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} 安排在“电话菜单” {{at}}：输入号位 {{key}} 缺失“路由到自动语音应答”目标。",
     "callerInputMenuErrorVariableNameMissing": "“主叫输入菜单” {{at}} 处的 {{Schedule}} 安排缺少变量名 ",
+    "conditionalThenTargetMissing": "“决策菜单” {{at}} 处的 {{Schedule}} 安排缺少“操作”条目的目标",
+    "conditionalIsEntryVariableMissing": "“决策菜单” {{at}} 处的 {{Schedule}} 安排缺少“是”的条目",
+    "conditionalIfEntryVariableMissing": "“决策菜单” {{at}} 处的 {{Schedule}} 安排缺少“If”的条目",
     "phoneMenuMenuErrorNoInputValuesEntered": "“电话菜单” {{at}} 处的 {{Schedule}} 安排没有输入值输入",
     "subMenuErrorNoInputValuesEntered": "“电话菜单” {{at}} 处的 {{Schedule}} 安排：输入数字 {{key}}：子菜单没有输入值输入",
     "callerInputMenuErrorNoInputValuesEntered": "“主叫输入菜单” {{at}} 处的 {{Schedule}} 安排没有输入值输入",
@@ -2903,7 +3090,10 @@
     "routeCallPopover": "选择转接呼叫方式。",
     "selectPlaceHolder": "搜索或选择",
     "validSip": "请输入有效的 SIP 地址",
-    "routeToSipPlaceHolder": "例如：x-x-xxx-xxxx@voip-provider.eg.net",
+    "routeToSipInputShort": "输入的地址过短，因此 SIP URI 无效。例如：“sip:x-x-xxx-xxxx@voip-provider.eg.net”",
+    "routeToSipInputLong": "输入的地址过长，因此 SIP URI 无效。例如：“sip:x-x-xxx-xxxx@voip-provider.eg.net”",
+    "routeToSipInputInvalid": "输入的地址是无效的 SIP URI。例如：“sip:x-x-xxx-xxxx@voip-provider.eg.net”",
+    "routeToSipPlaceHolder": "sip:x-xx-xxxx@voip-provider.eg.net",
     "selectNumberPlaceHolder": "搜索或选择号码",
     "inputPlaceHolder": "在此处开始输入",
     "sayMessage": "消息",
@@ -2926,9 +3116,12 @@
     "languageAndVoice": "语言和语音",
     "langaugeAndVoiceHelp": "这些选择适用于说出留言和错误消息。",
     "initialAnnouncement": "首次通告",
+    "mediaUploadFileInfo": "音频文件的格式必须为 .wav。推荐格式为 8 位、8Khz u-law。消息文件大小最大为 5 MB。",
+    "queueMaxMusicSize": "音乐文件大小最大为 120 MB。",
     "initialHelpText": "指定在主叫方进入队列时播放的消息。",
     "periodicHelpText": "指定主叫方在队列中等待期间播放的消息及其播放频率。",
-    "fallbackLabel": "回呼",
+    "periodicRestartMusicHelpText": "此次通告过后，音乐将从头开始重新播放。",
+    "timeoutLabel": "超时",
     "periodicAnnouncement": "定期通告",
     "uploadedFile": "上传文件",
     "uploadFailed": "文件上传失败，无法连接。请重试。",
@@ -2936,10 +3129,10 @@
     "import": "导入",
     "sayAndError": "这些选择适用于说出留言和错误消息",
     "callAssociatedAAPreview": "与此自动语音应答关联的呼叫号码，用于预览。",
-    "holdMusic": "等待音乐",
+    "holdMusic": "音乐",
     "standardTransferMusic": "使用 Cisco 缺省值",
     "uploadYourOwn": "上传您自己的文件",
-    "fileUploadSizeIncorrect": "上传小于 5 MB 的文件。",
+    "fileUploadSizeIncorrect": "上传小于 {{fileSize}} MB 的文件。",
     "musicOnHoldHelp": "选择在主叫方等待接听期间播放的音频。",
     "cancelUpload": "确定要取消此次上传吗？",
     "deleteUpload": "确定要删除当前文件吗？",
@@ -3180,7 +3373,7 @@
     "numberHint": "呼叫该号码时，也会呼叫该寻呼群组。",
     "memberPlaceholder": "选择成员",
     "memberHint": "选择要寻呼的用户或地方。",
-    "memberWarning": "要使寻呼有效工作，请确保这些设备属于同一个多播组。",
+    "memberWarning": "要使寻呼有效工作，成员必须在同一个多播组中拥有座机。",
     "cancelHeader": "取消创建寻呼群组",
     "cancelDialog": "确定要取消创建寻呼群组吗？不会保存此寻呼群组。",
     "confirmButton": "取消创建",
@@ -3188,20 +3381,34 @@
     "createHelpText": "创建",
     "numberFetchFailure": "无法获取号码。",
     "memberFetchFailure": "无法获取成员。",
+    "initiatorFetchFailure": "无法获取发起方。",
     "pagingGroupName": "寻呼群组名称",
     "pagingGroupNumber": "寻呼群组号码",
     "pagingGroupMembers": "寻呼群组成员",
-    "memberEditHint": "选择要寻呼的用户或地方。要使寻呼有效工作，请确保这些设备属于同一个多播组。",
+    "memberEditHint": "选择要寻呼的用户或地方。要使寻呼有效工作，成员必须在同一个多播组中拥有座机。",
     "editMemberPlaceholder": "添加成员",
+    "pagingGroupInitiator": "寻呼群组发起方",
+    "initiatorEditHint": "这些设备是将可以对此群组进行寻呼的设备。要使寻呼有效工作，请确保这些设备属于同一个多播组。",
+    "editInitiatorPlaceholder": "添加发起方",
     "users": " 用户",
     "places": " 地方",
+    "initiators": " 发起方",
     "search": "搜索成员",
+    "searchInitiators": "搜索发起方",
+    "initiatorTitle": "选择发起方",
+    "initiatorHint": "选择可以发起寻呼的用户或地方。",
+    "initiatorWarning": "要使寻呼有效工作，发起方必须在同一个多播组中拥有座机。",
+    "all": "所有用户和地方",
+    "allMembers": "所有寻呼群组成员",
+    "custom": "自定义",
+    "addInitiatorPlaceholder": "添加发起方",
     "saveLabel": "要保存更改吗？",
     "successUpdate": "“{{pagingGroupName}}”寻呼群组已成功更新",
     "successSave": "“{{pagingGroupName}}”寻呼群组已成功创建",
     "errorUpdate": "寻呼群组更新失败：“{{message}}”",
     "errorSave": "寻呼群组创建失败：“{{message}}”",
-    "errorSavePartial": "“{{pagingGroupName}}”寻呼群组已成功创建，但没有添加以下成员 ID：“{{message}}”"
+    "errorSaveMemeberPartial": "“{{pagingGroupName}}”寻呼群组已成功创建，但没有添加以下成员标识：“{{message}}”",
+    "errorSaveInitiatorPartial": "“{{pagingGroupName}}”寻呼群组已成功创建，但没有添加以下发起方标识：“{{message}}”"
   },
   "telephonyPreview": {
     "lines": "线路",
@@ -3214,6 +3421,18 @@
     "showMore": "显示更多内容",
     "showLess": "显示更少内容",
     "localDialing": "本地拨号"
+  },
+  "preferredLanguage": {
+    "title": "首选语言",
+    "description": "选择此地方的首选语言。此操作将重写缺省组织设置。",
+    "placeholder": "选择语言",
+    "organizationSettingLabel": "组织设置 - ",
+    "descriptionForCloudberryDevice": "配置协作室设备页面的首选语言。",
+    "placesCallOverviewSaveSuccess": "已成功保存首选语言",
+    "failedToSaveChanges": "未能保存首选语言。原因：",
+    "failedToFetchCmiPlacesInfo": "未能获取地点信息。原因：",
+    "failedToFetchSiteLanguages": "未能获取语言。原因：",
+    "failedToFetchSiteLevelLanguage": "未能获取站点级别语言。原因："
   },
   "directoryNumberPanel": {
     "title": "线路配置",
@@ -3270,7 +3489,10 @@
     "forwardExternal": "以不同方式转移外部呼叫",
     "addNew": "新增",
     "forwardVoicemailDisabled": "呼叫转移设置为“语音邮件”，此设置当前处于禁用状态。请更新呼叫转移设置。",
-    "directVoicemail": "直接转移到语音邮件"
+    "directVoicemail": "直接转移到语音邮件",
+    "forwardBusyNoAnswerTimerSeconds": "秒",
+    "forwardBusyNoAnswerTimerDescription": "转移呼叫前的等待时间",
+    "ringDurationTimer.validation.error": "必须为介于 1 和 300 之间的数字"
   },
   "multipleCalls": {
     "title": "同步呼叫数",
@@ -3296,8 +3518,8 @@
   "autoAnswerPanel": {
     "title": "自动应答",
     "description": "支持用户选择使用哪些设备对此线路上的呼入呼叫进行自动应答。",
-    "userSharedLineDescription": "此线路是共享的，为这一 {{ownerType}} 设置自动应答将关闭 {{name}} 的 {{type}} 的自动应答。",
-    "multiDeviceLineDescription": "如果设置了自动应答，呼叫将由选定的电话应答。其他电话不会响铃。",
+    "userSharedLineDescription": "此线路是共享的。为这一 {{ownerType}} 开启自动应答将关闭 {{name}} 的 {{type}} 的自动应答",
+    "multiDeviceLineDescription": "将由选中的电话应答呼叫。",
     "speaker": "扬声器",
     "headset": "耳机",
     "noSupportedDevices": "没有支持的设备"
@@ -3374,10 +3596,10 @@
     "deleteNumber": "删除号码",
     "deleteConfirmation": "确定要删除 {{pattern}} 吗？",
     "deleteWarning": "此操作无法撤消。您将永远失去此号码。",
-    "allNumbers": "{count, plural, =1{# 个号码} other{# 个号码}}",
-    "pendingNumbers": "{count, plural, =1{# 个待处理号码} other{# 个待处理号码}}",
-    "unassignedNumbers": "{count, plural, =1{# 个未分配号码} other{# 个未分配号码}}",
-    "searchResults": "{count, plural, =1{# 个搜索结果} other{# 个搜索结果}}",
+    "allNumbers": "{count, plural, other{# 个号码}}",
+    "pendingNumbers": "{count, plural, other{# 个待处理号码}}",
+    "unassignedNumbers": "{count, plural, other{# 个未分配号码}}",
+    "searchResults": "{count, plural, other{# 个搜索结果}}",
     "findNumber": "查找号码..."
   },
   "pstnOrderOverview": {
@@ -3394,16 +3616,16 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "订单 #{{orderId}}",
-    "pendingNumbers": "{count, plural, =1{# 个号码} other{# 个号码}} 待批准此订单",
+    "pendingNumbers": "{count, plural, other{# 个号码}} 待批准此订单",
     "searchPlaceholder": "搜索电话号码",
     "waitOnTOSAcceptance": "客户接受的等待 ToS"
   },
   "serviceAddress": {
-    "streetAddress": "街道地址",
-    "unit": "单元",
-    "city": "县/市",
-    "state": "州/省",
+    "streetAddress": "地址行 1",
+    "unit": "地址行 2",
+    "city": "市 / 镇",
     "zipCode": "邮政编码",
+    "country": "国家／地区",
     "pending": "紧急服务地址等待验证。"
   },
   "pstnSetup": {
@@ -3419,6 +3641,7 @@
     "portNumbersLabel": "传输号码",
     "manualAdd": "手动添加新数字",
     "state": "州/省",
+    "province": "省",
     "selectState": "选择州/省",
     "searchStates": "搜索州/省",
     "areaCode": "区号",
@@ -3434,7 +3657,7 @@
     "package": "软件包",
     "adding": "添加",
     "numbersTitle": "号",
-    "numbers": "{count, plural, =1{# 个号码} other{# 个号码}}",
+    "numbers": "{count, plural, other{# 个号码}}",
     "newNumbers": "新增数 {{count}}",
     "portNumbers": "{{count}} 端口",
     "thankYou": "谢谢",
@@ -3506,13 +3729,14 @@
       "textLink": "立即接受"
     },
     "tos": {
-      "titleIntelepeer": "Intelepeer 服务条款",
-      "copyright": "版权所有 2016 Cisco Systems。保留所有权利。",
+      "title": "服务条款",
+      "copyright": "版权所有 2017 Cisco Systems。保留所有权利。",
       "info": "Cisco Spark 是一个提供消息（IM）、语音和视频呼叫功能的团队协作应用程序。",
       "noticeTitle": "重要声明与免责声明",
       "notice": "请重定向至以下页面，阅读您的电信运营商协议。我们将在您阅读并同意这些协议后发放 PSTN 号码。",
       "confirmHeading": "请确认接受这些条款的法律联系人。",
       "agreeInstructions": "单击“同意”即表明您已经阅读并同意遵守这些条款和条件。",
+      "agreeInstructionsCanadaThinkTel": "单击“同意”表示您已阅读、理解、接受并同意遵守条款和条件，其中明确包括条款和条件的附录 1 中所述的对 ThinkTel 网络语音 9-1-1 紧急拨号服务的限制。",
       "viewTos": "查看服务条款"
     }
   },
@@ -3537,7 +3761,15 @@
     "feature4": "主叫号码名称传输和注册",
     "feature5": "E911"
   },
-  "partnerHomePage": {
+  "thinktelFeatures": {
+    "feature1": "每位用户 1 个电话号码",
+    "feature2": "服务在所有省/区域皆可用",
+    "feature3": "本地和加拿大/美国长途呼叫",
+    "feature4": "包含携号转网/号码转发费",
+    "feature5": "包含基本 911",
+    "feature6": "附加税收"
+  },
+    "partnerHomePage": {
     "trialsHeading": "试用",
     "onboardingTitle": "加载",
     "activity-title": "活动",
@@ -3590,7 +3822,7 @@
     "invalidTrialLicenseCount": "许可证数应大于 0 并小于 1000。",
     "invalidTrialRoomSystemQuantity": "许可证数应介于 1 和 20 之间。",
     "invalidTrialSparkBoardQuantity": "许可证数应介于 1 和 20 之间。",
-    "invalidTrialCareQuantity": "许可证数必须介于 1 和消息许可证数或最大值 50 之间。",
+    "invalidTrialCareQuantity": "K1 和 K2 许可证数应该分别介于 1 和 50 之间，而且合计不超过“许可证数量”。",
     "careLicenseCountExceedsTotalCount": "请求的 Care 许可证超过了消息许可证数。",
     "individualUserServices": "个人用户服务",
     "roomSystems": "协作室设备",
@@ -3664,7 +3896,7 @@
       "address": "街道地址",
       "unit": "单元",
       "city": "县/市",
-      "state": "州/省",
+      "state": "州/省/自治区",
       "zip": "邮政编码",
       "province": "州/省/自治区",
       "dealId": "交易标识（仅限美国）",
@@ -3684,7 +3916,7 @@
       "pleaseAdd": "请为客户添加电话号码",
       "pleaseAdd10": "请至多为客户添加 10 个电话号码",
       "pleaseAdd5": "请至多为客户添加 5 个电话号码",
-      "state": "州/省",
+      "state": "州 / 省 / 自治区",
       "areaCode": "区号",
       "numbers": "号",
       "contract": "PSTN 合约信息",
@@ -3694,14 +3926,14 @@
       "email": "签署人的电子邮件地址",
       "esa": "紧急服务地址",
       "esaDesc": "发出紧急呼叫时，当地的应急响应人员会使用此地址来找到呼叫者。",
-      "address": "地址",
+      "address": "街道地址",
       "unit": "单元",
-      "city": "县/市",
+      "city": "市 / 镇",
       "zip": "邮政编码",
       "skip": "跳过",
       "popover": "请提供负责签署合同的法律联系人的相关信息",
       "addrRetry": "使用其他地址",
-      "addrFound": "这是在系统中找到的地址。",
+      "addrFound": "我们已将提供的地址验证为：",
       "error": {
         "areaCodes": "未能获得所选省市的区域代码",
         "numbers": "未能获取所选区域代码的数字",
@@ -3717,7 +3949,7 @@
       "title": "已添加试用"
     },
     "trialSuccess": "您的试用已就绪",
-    "nextStepPrompt": "希望为客户设置服务？",
+    "nextStepPrompt": "要为客户设置服务吗？",
     "setupLater": "不，谢谢",
     "setupNow": "是的，设置服务",
     "skip": "跳过",
@@ -3738,7 +3970,7 @@
     "errorInvalidName": "输入名称包含无效字符。"
   },
   "trials": {
-    "collab": "标准团队协作室 + 25 方会议",
+    "collab": "标准团队空间 + 25 方会议",
     "squaredUC": "高级 Spark 呼叫",
     "licenses": "许可证",
     "licenseQuantity": "许可证数量",
@@ -3748,9 +3980,15 @@
     "meeting": "25 方会议",
     "webex": "带有 CMR/TNU+ 的 WebEx 企业版 200",
     "call": "呼叫",
-    "care": "服务",
+    "care": "K1",
+    "careHelp": "通过“聊天”和“回呼”提供客户服务",
+    "advanceCareHelp": "通过“聊天”、“回呼”和“入站呼叫”提供客户服务",
+    "advanceCare": "K2",
     "callUsOnly": "呼叫（现仅支持美国）",
     "supportSelectLocations": "Cisco Spark 在所选的位置受支持。<a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>了解更多</a>",
+    "supportedLocationsCertification1": "我证明此用户处于 ",
+    "supportedLocationsCertification2": " 对于 Cisco Spark",
+    "supportedLocationsCertificationLinkText": "支持的位置",
     "context": "启用 Cisco Unified 联络中心的 Context Service。",
     "roomSystem": "DX、MX 或 SX 系统",
     "sparkBoardSystem": "Cisco Spark Board",
@@ -3794,9 +4032,9 @@
     "notes": "笔记",
     "active": "活动",
     "free": "免费",
-    "daysRemaining": "剩余 {count, plural, =1{# 天} other{# 天}}",
-    "daysLeftToPurchase": "剩余 {count, plural, =1{# 天} other{# 天}}尚可购买",
-    "daysLeftToRenew": "剩余 {count, plural, =1{# 天} other{# 天}}尚可更新",
+    "daysRemaining": "剩余 {count, plural, other{# 天}}",
+    "daysLeftToPurchase": "剩余 {count, plural, other{# 天}}尚可购买",
+    "daysLeftToRenew": "剩余 {count, plural, other{# 天}}尚可更新",
     "expiringToday": "将于今天到期",
     "expired": "已过期",
     "expiredWithGracePeriod": "已过期。立即购买",
@@ -3830,7 +4068,7 @@
     "trialTerms": "试用条款",
     "trialOverview": "试用",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, =1{另 # 个站点} other{另 # 个站点}}",
+    "webexSiteCount": "{count, plural, other{另 # 个站点}}",
     "licenses": "许可证数",
     "totalQuantity": "总数",
     "totalLicenses": "总许可证数",
@@ -3880,7 +4118,7 @@
     "accountStatus": "帐户状态",
     "totalUsers": "用户总数",
     "purchased": "已购买",
-    "domain": "{count, plural, =1{个域} other{个域}}",
+    "domain": "{count, plural, other{个域}}",
     "domains": "域",
     "quantityWithValue": "数量：{{quantity}}",
     "anotherPartner": "（另一个合作伙伴）",
@@ -3908,16 +4146,17 @@
     "tooManyResultsError": "搜索返回的结果过多。请用更具体的条件查找用户"
   },
   "customerSubscriptions": {
-    "customerAdmin": "客户管理员",
-    "subscriptionInfo": "{{name}} 订阅信息",
-    "partnerAdmin": "合作伙伴管理",
-    "webexSubscriptions": "Webex 订阅",
+    "copyToClipboard": "复制到剪贴板",
+    "customerAdmin": "客户管理员：",
+    "emailSubscriptionInfoDetail1": "使用此页面上的客户订阅信息来开始试用对话或下其他 Cisco Spark 服务订单。",
+    "emailSubscriptionInfoDetail2": "为了开始试用对话或下单，请使用电子邮件客户端发送订单请求。您也可以将客户订阅信息复制到剪贴板里。",
     "noWebexSubscriptions": "无 Webex 订阅",
     "orderRequest": "订购请求",
+    "partnerAdmin": "合作伙伴管理员：",
     "sendOrderRequest": "发送订购请求",
-    "copyToClipboard": "复制到剪贴板",
-    "emailSubscriptionInfoDetail1": "使用此页面上的客户订阅信息来开始试用对话或下其他 Cisco Spark 服务订单。",
-    "emailSubscriptionInfoDetail2": "为了开始试用对话或下单，请使用电子邮件客户端发送订单请求。您也可以将客户订阅信息复制到剪贴板里。"
+    "subscriptionInfo": "订阅信息：",
+    "subscriptionInfoFor": "{{name}} 订阅信息：",
+    "webexSubscriptions": "Webex 订阅"
   },
   "didAddModal": {
     "title": "添加电话号码（可选）"
@@ -4052,14 +4291,18 @@
     "impedanceDescr": "调整频率响应级别以改善音质。",
     "input": "输入音频电平",
     "output": "输出音频电平",
-    "saved": "设置已保存。请重新启动设备使更改生效"
+    "saved": "设置已保存。请重新启动设备使更改生效",
+    "t38Warning": "警告：T.38 传真将不加密",
+    "t38Label": "T.38 传真协议",
+    "savedT38": "T.38 设置已更新"
   },
   "addDeviceWizard": {
     "newDevice": "新设备",
     "newCode": "新代码",
     "confirmRoomDeviceOnly": {
       "roomDeviceOnly": "仅用于协作室设备激活",
-      "noSparkCallService": "此用户没有 Spark 呼叫服务。"
+      "noSparkCallService": "此用户没有 Spark 呼叫服务。",
+      "noSparkCallWarning": "他们仍然可以使用 Spark 或 SIP 地址激活协作室设备和进行呼叫。但是对于电话拨号和座机，您需要在“用户”页面中为其分配 Spark 呼叫服务。"
     },
     "chooseDeviceType": {
       "deviceType": "您希望设置哪种设备？",
@@ -4174,7 +4417,6 @@
     "clipboardFallback": "按 cmd+c 复制下面的文字。",
     "emailSuccessTitle": "电子邮件已发送",
     "emailSuccess": "激活码已经发送给 {{address}}",
-    "emailErrorTitle": "未发送电子邮件",
     "emailError": "未能将激活码发送到 {{address}}",
     "clipboardSuccessTitle": "已复制到剪贴板",
     "clipboardSuccess": "已将激活码复制到剪贴板。",
@@ -4312,12 +4554,6 @@
     "report_title": "混合媒体服务报告",
     "add-resource-button": "添加资源",
     "genericError": "发生意外错误。请稍后重试。",
-    "connectors": {
-      "status": "状态",
-      "alarms": "警报",
-      "software": "软件",
-      "nodes": "节点"
-    },
     "sipconfiguration": {
       "success": "已成功保存 Unified CM SIP 中继。",
       "title": "Unified CM SIP 中继",
@@ -4330,14 +4566,6 @@
       "adoption-title": "应用",
       "resources-title": "资源",
       "custom": "自定义"
-    },
-    "settings": {
-      "deactivateBody_1": "您要删除组织的以下混合服务：",
-      "deactivateBody_2": "停用服务将删除用户的任一服务相关活动。必须执行其他步骤才能从内建资源中删除该服务。",
-      "removeCluster": "删除集群",
-      "schedule": "设置安排",
-      "softwareUpgrade": "软件升级",
-      "scheduleText": "选择您希望用于更新此集群的发行通道："
     },
     "deregister": {
       "header": "取消注册节点",
@@ -4379,8 +4607,9 @@
       "availableTitle": "可用",
       "unavailableTitle": "不可用",
       "partialTitle": "部分可用",
-      "utilizationTitle": "利用率",
+      "utilizationTitle": "资源利用",
       "participantDistributionTitle": "参加者通讯组",
+      "numberOfParticipantTitle": "参加者活动",
       "clusteravailability": "集群可用性",
       "overallUtilizationGraphError": "加载详细的利用率数据时出错",
       "overallParticipantDistributionGraphError": "加载详细的参加者通讯组数据时出错",
@@ -4389,6 +4618,8 @@
       "overallAverageUtilizationGraphError": "加载平均/峰值利用率数据时出错",
       "overallClusterAvailabilityGraphError": "加载集群可用性数据时出错",
       "overallTotalNumberOfCallsError": "加载呼叫总数时出错",
+      "overallClientTypeGraphError": "加载客户端类型数据时出错",
+      "overallMeetingLocationGraphError": "加载会议位置数据时出错",
       "total_calls": "呼叫总数",
       "onpremcalls": "内部托管",
       "cloudcalls": "溢入云端",
@@ -4398,9 +4629,11 @@
       "cloud_calls": "溢入云端",
       "cloud_participants": "云端参加者",
       "onprem_participants": "内部参加者",
+      "participants": "参加者",
       "nodata": "数据不可用",
       "allclusters": "所有集群",
       "percentage": "%",
+      "percentageTitle": "百分比",
       "utilization": "利用率",
       "avgutilization": "平均利用率",
       "errordata": "检索数据时出错",
@@ -4412,32 +4645,21 @@
       "availabilityStatus": "可用性状态",
       "clusterTitle": "群集",
       "lowAvailableClusters": "低可用性群集",
-      "clusterTakingMoreCalls": "托管更多呼叫数目的群集"
-    },
-    "serviceStatus": {
-      "unknown": "状态未知",
-      "not_configured": "未配置",
-      "installing": "正在安装",
-      "disabled": "已禁用",
-      "not_installed": "未安装",
-      "stopped": "已停止",
-      "offline": "离线",
-      "registered": "已注册",
-      "downloading": "正在下载",
-      "uninstalling": "正在卸载",
-      "running": "正在运行",
-      "needs_attention": "需要注意",
-      "alarm": "警报",
-      "Unknown": "正在注册",
-      "nohosts": "没有任何已注册的主机",
-      "no_hosts": "没有任何已注册的主机",
-      "has_alarms": "警报",
-      "upgrading": "正在升级",
-      "upgraded": "已升级",
-      "pending": "待解决",
-      "initializing": "正在初始化",
-      "not_operational": "运行不正常",
-      "nonodes": "未注册任何节点"
+      "clusterTakingMoreCalls": "托管更多呼叫数目的群集",
+      "totalMeetings": "会议总数",
+      "meetOnPrem": "会议主机类型",
+      "clientTypes": "客户端类型",
+      "clientType": "客户端类型",
+      "clients": "客户端",
+      "noOfMeet": "会议数",
+      "meetingLocationTitle": "各主机类型的会议总数",
+      "meetings": "会议",
+      "location": "位置",
+      "totalCloud": "云端参加者总数",
+      "clientTypeHeading": "客户端类型分部",
+      "onPremisesHeading": "本地部署",
+      "cloudHeading": "云",
+      "hybridHeading": "混合"
     },
     "deleteGroup": {
       "message": "确定要将 {{groupName}} 从 Cisco Collaboration Cloud 中删除吗？",
@@ -4445,10 +4667,6 @@
       "errorMessage": "无法删除 {{groupName}}。"
     },
     "clusters": {
-      "listing": {
-        "no_clusters_heading": "没有注册媒体服务群集",
-        "no_clusters_text": "请参见上文的所需操作和文档以开始。"
-      },
       "deregisterCancel": "取消",
       "deregisterConfirm": "确认",
       "deregisterErrorHeader": "未知错误",
@@ -4505,22 +4723,6 @@
       "deregister_host": "取消注册主机",
       "moveNode": "移动节点",
       "deregister_node": "取消注册节点"
-    },
-    "alarms": {
-      "alarms": "警报",
-      "critical": "紧急",
-      "error": "错误",
-      "warning": "警告",
-      "alert": "提示",
-      "severity": "严重级别",
-      "firstReported": "第一次报告",
-      "lastReported": "最后一次报告",
-      "description": "描述",
-      "noAlarms": "未报告警报",
-      "hostImpact": "主机受影响",
-      "nodeImpact": "节点受影响",
-      "nodesImpact": "节点受影响",
-      "raised": "已提高"
     },
     "deactivate": {
       "areYou": "是否确实要停用您的混合媒体服务？",
@@ -4730,7 +4932,7 @@
     "priviligesLable": "权限",
     "userPriviligesLabel": "用户权限",
     "teleCLIAuthEnabledLabel": "呼叫线路标识 (CLI)",
-    "pmrLabel": "个人协作室",
+    "pmrLabel": "个人会议室",
     "OtherPrivilegesLabel": "其他权限",
     "advancedLinkLabel": "高级设置"
   },
@@ -4938,14 +5140,14 @@
     "licenseUsage": "许可证使用情况",
     "lastSynced": "上次同步：",
     "messagingTitle": "消息",
-    "messagingSubtitle": "标准团队协作室",
-    "messagingDesc": "具有内容存储功能的团队协作室可让您轻松与组织内外的任何设备或用户协作。",
+    "messagingSubtitle": "标准团队空间",
+    "messagingDesc": "具有内容存储功能的团队空间可让您轻松与组织内外的任何设备或用户协作。",
     "communicationTitle": "呼叫",
     "communicationSubtitle": "高级 Spark 呼叫",
     "communicationDesc": "您的组织已启用基本外部呼叫和呼叫路由功能。",
     "conferencingTitle": "会议",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "在团队协作室同步中加入最多 25 个同事或在 WebEx Meeting Center 中加入更多。",
+    "conferencingDesc": "在团队空间同步中加入最多 25 个同事或在 WebEx Meeting Center 中加入更多。",
     "shared_devicesTitle": "协作室设备",
     "shared_devicesSubtitle": "已共享的设备",
     "MS": "消息",
@@ -5087,13 +5289,29 @@
   "processOrderPage": {
     "errOrgCreation": "订单正在处理中。请于 24 小时后再来核对。",
     "info": "状态",
-    "wait": "我们正在对您进行重定向，请稍候"
+    "wait": "我们正在对您进行重定向，请稍候",
+    "modalTitle": "PSTN 呼叫服务位置",
+    "modalDesc": "请输入您的大部分 Spark 呼叫服务电话所在的国家/地区。",
+    "countrySelectLabel": "请输入您的 PSTN 服务所在的国家/地区",
+    "countrySelectPlaceholder": "选择国家/地区"
   },
   "countries": {
     "greatBritain": "英国",
     "unitedStates": "美国",
     "canada": "加拿大",
-    "colombia": "哥伦比亚"
+    "colombia": "哥伦比亚",
+    "austria": "奥地利",
+    "belgium": "比利时",
+    "france": "法国",
+    "germany": "德国",
+    "italy": "意大利",
+    "netherlands": "荷兰",
+    "portugal": "葡萄牙",
+    "spain": "西班牙",
+    "sweden": "瑞典",
+    "switzerland": "瑞士",
+    "ireland": "爱尔兰",
+    "mexico": "墨西哥"
   },
   "languages": {
     "danish": "Dansk",
@@ -5367,14 +5585,14 @@
     "nameHeader": "名称",
     "typeHeader": "类型",
     "deviceHeader": "设备数",
-    "noneFound": "找不到地方",
+    "noneFound": "找不到任何地方",
     "actionHeader": "操作",
     "servicesHeader": "服务",
     "sparkCall": "Spark + Spark 呼叫",
     "sparkOnly": "仅 Spark",
     "placeAdd": "添加地方",
     "placesDefinition": "一个地方代表一个包含不为特定用户所拥有的设备的物理位置，如配备协作室设备的会议室或配备共享电话的接待区。",
-    "placesUses": "您将能够在此处看到您的地方，以及隶属于这些地方的设备和配置。",
+    "placesUses": "地方可以包含共享的设备。您将能够在此处看到您的地方，以及属于这些地方的设备和配置。",
     "deletePlace": "删除地方",
     "deletePlaceConfText": "确定要删除 {{ placeName }} 吗？",
     "failedToSaveChanges": "无法保存对地方的更改。原因：",
@@ -5472,7 +5690,8 @@
     "profile_callback": "品牌和标识",
     "profile_chatPlusCallback": "聊天品牌和标识",
     "overview": "模板概览",
-    "chatStatusMessages": "状态消息",
+    "chatStatusMessages_chat": "状态消息",
+    "chatStatusMessages_chatPlusCallback": "聊天状态消息",
     "customerInformation": "客户信息",
     "customerInfo_chat": "用于聊天的客户信息",
     "customerInfo_callback": "用于回呼的客户信息",
@@ -5561,7 +5780,7 @@
     "agentMsgTime": "10:10",
     "customerMsg": "好，乐意提供帮助。",
     "customerMsgTime": "10:11",
-    "agentEnteredStatus": "代理已进入聊天室",
+    "agentEnteredStatus": "正在与客服聊天",
     "typeNewMsg": "输入您的消息并按 enter。",
     "feedbackQuery": "请评价您对聊天的感受",
     "ratingHintText": "提示文字",
@@ -5623,8 +5842,8 @@
     "summary": "摘要",
     "summaryDesc": "您已配置模板。单击“完成”保存配置并生成嵌入代码，这样即可在组织网站上开始使用此模板。",
     "editSummaryDesc": "您已编辑模板。单击“完成”保存配置。这样即可在组织网站上开始使用这个新的模板。",
-    "editCodeWarnMsg2Line1": "最多可能需要等待 15 分钟聊天模板的更改才会生效。",
-    "editCodeWarnMsg2Line2":"之后，您可以在新的浏览器选项卡中打开聊天模板查看更改。",
+    "editCodeWarnMsg2Line1": "模板更改最多可能需要等待 15 分钟才会生效。",
+    "editCodeWarnMsg2Line2":"之后，您可以在新的浏览器选项卡中打开模板查看更改。",
     "summaryDesc_callback": "您已经配置回呼模板。单击“完成”保存配置并生成嵌入代码，这样，您可以在组织网站上开始使用此回呼模板。",
     "editSummaryDesc_callback": "您已编辑回呼模板。单击“完成”保存配置。这样即可在组织网站上开始使用这个新的回呼模板。",
     "copyEmbedCode": "复制嵌入代码",
@@ -5846,13 +6065,13 @@
       },
       "message": {
         "title": "消息",
-        "notEnabledText": " 使用具有内容存储功能的团队协作室可轻松与组织内外的任何设备或用户协作。",
-        "currentTitle": "本周的新协作室",
+        "notEnabledText": " 使用具有内容存储功能的团队空间可轻松与组织内外的任何设备或用户协作。",
+        "currentTitle": "本周的新空间",
         "previousTitle": "上周："
       },
       "meeting": {
         "title": "会议",
-        "notEnabledText": "在团队协作室同步中加入最多 25 个同事或在 WebEx Meeting Center 中加入更多。"
+        "notEnabledText": "在团队空间同步中加入最多 25 个同事或在 WebEx Meeting Center 中加入更多。"
       },
       "call": {
         "title": "呼叫",
@@ -5880,7 +6099,8 @@
           "squared-fusion-uc": "呼叫",
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "媒体",
-          "spark-hybrid-datasecurity": "数据安全"
+          "spark-hybrid-datasecurity": "数据安全",
+          "contact-center-context": "上下文"
         }
       },
       "licenses": {
@@ -5947,6 +6167,27 @@
       "problemReportsTextPlaceholder": "在此处输入其他支持联系信息，例如电话号码或电子邮件地址",
       "helpSiteLabel": "帮助站点",
       "useCustomHelpSite": "使用自定义帮助站点"
+    },
+    "dirsync" : {
+      "loading": "正在更新状态",
+      "title": "目录同步",
+      "syncTitle": "目录同步",
+      "status": "状态",
+      "enabled": "已启用",
+      "disabled": "已禁用",
+      "turnOffDirSync": "关闭目录同步",
+      "turnOnDirSync": "如何打开目录同步",
+      "connectorsTitle": "Directory Connector",
+      "deregister": "取消注册",
+      "register": "注册",
+      "emailNotifications": "电子邮件通知",
+      "manageNotifications": "管理通知",
+      "turnOffDirSyncWarning": "确定要关闭目录同步吗？只有从 Cisco Directory Connector 才能重新启用该功能。关闭它之后，您必须手动添加新用户。",
+      "disableDirSyncSuccess": "目录同步已关闭。",
+      "disableDirSyncFailed": "关闭目录同步时出错",
+      "deregisterWarning": "请先卸载 Directory Connector 再取消注册。",
+      "deregisterSuccess": "已成功取消注册 Directory Connector“{{name}}”。",
+      "deregisterFailed": "未能取消注册 Directory Connector“{{name}}”。"
     }
   },
   "my-company": {
@@ -5967,19 +6208,19 @@
     "numberedName": "订阅 {{number}}",
     "usage": "使用情况： ",
     "licenseUsageReport": "许可证使用报告",
-    "smpLicenseReportPeriod": "最近 3 个月",
     "more": "更多",
     "less": "更少",
     "quantity": "数量： ",
     "upgrade": "升级",
     "purchase": "购买",
     "changePlan": "更改计划",
+    "contact": "联系客户代表",
     "onlineTrialUpgradeUrlError": "无法检索到试用 {{trialId}} 的购买 URL。要购买付费订阅，请通过电子邮件联系您的合作伙伴，或使用试用横幅上的购买按钮让系统给您发送订阅。",
     "onlineProductInstanceError": "无法检索到试用 {{trialId}} 的产品实例。要购买付费订阅，请通过电子邮件联系您的合作伙伴，或使用试用横幅上的购买按钮让系统给您发送订阅。",
     "loadError": "加载订阅信息时发生错误。",
     "licenseTypes": {
-      "MS": "标准团队协作室",
-      "CF": "25 方会议",
+      "MS": "标准团队空间",
+      "CF": "Spark 25 人多方会议",
       "MC": "WebEx Meeting Center",
       "SC": "WebEx Support Center",
       "TC": "WebEx Training Center",
@@ -6001,17 +6242,21 @@
   },
   "myCompanyOrders": {
     "numberHeader": "订单号",
-    "descriptionHeader": "订单详情",
+    "descriptionHeader": "产品名",
     "priceHeader": "价格",
     "dateHeader": "订单日期",
     "actionsHeader": "操作",
+    "statusHeader": "状态",
     "downloadPdf": "下载 PDF",
+    "overview": "此表格仅显示通过 Cisco 在线市场收取的发票的支付历史记录。此处未列出 Cisco 和 Cisco 合作伙伴发票。",
     "loadError": "加载订单历史记录时发生错误。"
   },
   "ciRoles": {
     "atlas-portal.support": "支持",
     "atlas-portal.reports": "报告",
     "atlas-portal.billing": "计费",
+    "atlas-portal.cisco.partnermgmt": "合作伙伴管理",
+    "atlas-portal.cisco.partnermgmtTooltip": "访问“合作伙伴管理”",
     "atlas-portal.partner.helpdesk": "帮助台支持",
     "atlas-portal.partner.helpdeskTooltip": "访问“帮助台”",
     "atlas-portal.partner.orderadmin": "订单管理支持",
@@ -6103,7 +6348,7 @@
       "webex-squared": "免费 Spark 消息",
       "squared-syncup.paid": "25 方会议",
       "squared-syncup.free": "免费三方 Spark 会议",
-      "squared-room-moderation.paid": "标准团队协作室",
+      "squared-room-moderation.paid": "标准团队空间",
       "squared-room-moderation.free": "免费 Spark 消息",
       "ciscouc.paid": "高级 Spark 呼叫",
       "ciscouc.free": "免费一对一 Spark 呼叫",
@@ -6139,7 +6384,7 @@
     "licenseDisplayNames": {
       "MC": "Meeting Center {{capacity}}",
       "TC": "Training Center {{capacity}}",
-      "MS": "标准团队协作室",
+      "MS": "标准团队空间",
       "CF": "25 方会议",
       "EE": "企业版 {{capacity}}",
       "SC": "Support Center {{capacity}}",
@@ -6153,8 +6398,6 @@
     },
     "trial": "试用",
     "adminUsers": "管理员",
-    "showAllAdminUsers": "显示全部 {{numUsers}} 位管理员",
-    "hideAllAdminUsers": "隐藏管理员",
     "numDaysLeft": "剩余 {{days}} 天",
     "licenseStatus": {
       "active": "活动",
@@ -6438,10 +6681,19 @@
         }
       },
       "hybridContext": {
-        "title": "上下文",
-        "description": "启用存储设备，该设备将客户路程数据的存储库提供给 Cisco 联络中心客户。",
+        "title": "Hybrid Context",
+        "description": "将 Cisco 客户服务的客户使用过程数据存储在云中。",
         "buttons": {
-          "settings": "设置"
+          "resources": "资源",
+          "fields": "字段",
+          "fieldsets": "字段集"
+        }
+      },
+      "privateTrunk": {
+        "title": "企业专用中继 ",
+        "description": "扩展您的组织。",
+        "buttons": {
+          "verify": "验证前提条件"
         }
       }
     },
@@ -6495,6 +6747,24 @@
       "3008": "检查回呼组名称失败",
       "3009": "回呼组名称重复",
       "genericError": "发生意外错误。请稍后重试。"
+    },
+    "tds": {
+      "export": {
+        "csvFilename": "exported_telephonyDomain.csv",
+        "result": {
+          "success": "已成功导出电话域列表。",
+          "failed": "导出电话域列表时出错。"
+        }
+      },
+      "field": {
+        "status": "状态",
+        "sites": "站点 URL",
+        "bridgeSet": "网桥集",
+        "webDomain": "Web 域",
+        "description": "合作伙伴 TD 名称",
+        "totalSites": "已分配的站点",
+        "telephonyDomains": "电话域"
+      }
     },
     "cbgs": {
       "overview": "概览",
@@ -7011,7 +7281,7 @@
     "pageTitle": "状态管理",
     "services": "服务",
     "dashboard": "控制板",
-    "incidents": "事故",
+    "incidents": "事件",
     "components": "组件",
     "servicesPlaceholder": "请选择服务",
     "componentStatuses": "组件状态",
@@ -7117,7 +7387,11 @@
       "partialOutage": "部分中断",
       "majorOutage": "严重中断",
       "underMaintenance": "维护中"
-    }
+    },
+    "syncBtn": "同步",
+    "syncMessage": "请先同步数据再开始。",
+    "syncSucceed": "同步成功。",
+    "syncError": "尝试同步数据时发生错误，请重试。"
   },
   "machineTypes": {
     "bot": "Bot",

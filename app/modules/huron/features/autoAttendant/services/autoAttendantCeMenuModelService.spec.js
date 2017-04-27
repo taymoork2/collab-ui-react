@@ -69,6 +69,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     ceWelcomeNoDescriptionTemp = wmenu.ceWelcomeNoDescriptionTemp;
     welcomeMenu = wmenu.welcomeMenu;
     ceMenuFull = wmenu.ceMenuFull;
+    spyOn(AAUtilityService, 'pullJSPieces').and.returnValue({});
     spyOn(AAUtilityService, 'splitOnCommas').and.returnValue([]);
     spyOn(AAUtilityService, 'addQuotesAroundCommadQuotedValues').and.returnValue('');
   }));

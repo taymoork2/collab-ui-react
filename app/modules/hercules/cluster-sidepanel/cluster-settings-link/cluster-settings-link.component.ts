@@ -1,7 +1,7 @@
 export class ClusterSettingsLinkCtrl implements ng.IComponentController {
 
   private clusterId: string;
-  private clusterType: 'c_mgmt' | 'mf_mgmt' | 'hds_app';
+  public clusterType: 'c_mgmt' | 'mf_mgmt' | 'hds_app' | 'ept';
 
   /* @ngInject */
   constructor(
@@ -21,6 +21,10 @@ export class ClusterSettingsLinkCtrl implements ng.IComponentController {
       this.$state.go('hds-cluster.settings', {
         id: this.clusterId,
       });
+    } else if (this.clusterType === 'ept') {
+      this.$state.go('private-trunk-settings', {
+        id: this.clusterId,
+      });
     }
   }
 
@@ -28,9 +32,7 @@ export class ClusterSettingsLinkCtrl implements ng.IComponentController {
 
 export class ClusterSettingsLinkComponent implements ng.IComponentOptions {
   public controller = ClusterSettingsLinkCtrl;
-  public template = `<div class="small">
-  <a translate="hercules.softwareUpgrade.editSettingsLink" ng-click="$ctrl.goToClusterSettings()"></a>
-</div>`;
+  public templateUrl = 'modules/hercules/cluster-sidepanel/cluster-settings-link/cluster-settings-link.component.html';
   public bindings = {
     clusterId: '<',
     clusterType: '<',

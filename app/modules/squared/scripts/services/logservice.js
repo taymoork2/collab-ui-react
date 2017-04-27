@@ -37,7 +37,6 @@
       var whitelistedParams = _.pickBy(optionalGetParams, function (value, key) {
         return _.includes(['timeSortOrder', 'limit'], key);
       });
-
       _.set(whitelistedParams, 'search', searchInput);
       return $http.get(UrlConfig.getAdminServiceUrl() + 'logs', {
         params: whitelistedParams,

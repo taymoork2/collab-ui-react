@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: cbgService', function () {
-  var cbgService, GmHttpService, $scope, $q, mockResponse;
+  var cbgService, $httpBackend, UrlConfig, mockResponse;
   var groupId = 'ff8080815823e72c0158244952240022';
   var customerId = 'ff808081527ccb3f0152e39ec555010c';
   var preData = getJSONFixture('gemini/common.json');
@@ -12,157 +12,163 @@ describe('Service: cbgService', function () {
   beforeEach(initSpies);
 
   afterEach(function () {
-    cbgService = GmHttpService = $scope = $q = mockResponse = undefined;
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+    cbgService = $httpBackend = UrlConfig = mockResponse = undefined;
   });
 
   afterAll(function () {
     preData = undefined;
   });
 
-  function dependencies(_GmHttpService_, _$rootScope_, _$q_, _cbgService_) {
+  function dependencies(_$httpBackend_, _cbgService_, _UrlConfig_) {
+    UrlConfig = _UrlConfig_;
     cbgService = _cbgService_;
-    GmHttpService = _GmHttpService_;
-    $scope = _$rootScope_.$new();
-    $q = _$q_;
+    $httpBackend = _$httpBackend_;
+  }
+
+  function setData(key, value) {
+    var data = preData.common;
+    return _.set(data, key, value);
   }
 
   function initSpies() {
-    spyOn(GmHttpService, 'httpGet').and.returnValue($q.resolve());
-    spyOn(GmHttpService, 'httpPost').and.returnValue($q.resolve());
-    spyOn(GmHttpService, 'httpPut').and.returnValue($q.resolve());
-    spyOn(cbgService, 'getCallbackGroups').and.returnValue($q.resolve());
     mockResponse = preData.common;
   }
 
   it('should return correct data in getOneCallbackGroup', function () {
-    mockResponse.content.data.body = preData.getCurrentCallbackGroup;
-    GmHttpService.httpGet.and.returnValue($q.resolve(mockResponse));
+    var mockData = setData('content.data.body', preData.getCurrentCallbackGroup);
+    var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId + '/groupId/' + groupId;
+    $httpBackend.expectGET(url).respond(200, mockData);
 
     cbgService.getOneCallbackGroup(customerId, groupId).then(function (res) {
       var groupName = _.get(res.content.data.body, 'groupName');
       expect(groupName).toBe('CB_Atlas-Test1_Test-1125');
     });
+    $httpBackend.flush();
   });
 
   it('should return correct response data in updateCallbackGroup', function () {
-    mockResponse.content.data.body = 'ff8080815708077601581a417ded1a1e';
-    GmHttpService.httpPut.and.returnValue($q.resolve(mockResponse));
+    var mockData = setData('content.data.body', 'ff8080815708077601581a417ded1a1e');
+    var url = UrlConfig.getGeminiUrl() + 'callbackgroup/';
+    $httpBackend.expectPUT(url).respond(200, mockData);
 
     cbgService.updateCallbackGroup({}).then(function (res) {
       var returnCode = _.get(res.content.data, 'returnCode');
       expect(returnCode).toEqual(0);
     });
+    $httpBackend.flush();
   });
 
   it('should return correct response info in updateCallbackGroupStatus when status is decline', function () {
-    mockResponse.content.data.body = 'ff8080815708077601581a417ded1a1e';
-    GmHttpService.httpPut.and.returnValue($q.resolve(mockResponse));
+    var mockData = setData('content.data.body', 'ff8080815708077601581a417ded1a1e');
+    var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId + '/groupId/' + groupId + '/decline';
+    $httpBackend.expectPUT(url).respond(200, mockData);
 
     cbgService.updateCallbackGroupStatus(customerId, groupId, 'decline', {}).then(function (res) {
       expect(res.content.data.body).toBe('ff8080815708077601581a417ded1a1e');
     });
+    $httpBackend.flush();
   });
 
   it('should return correct response info in updateCallbackGroupStatus when status is approve and data is null', function () {
-    mockResponse.content.data.body = 'ff8080815708077601581a417ded1a1e';
-    GmHttpService.httpPut.and.returnValue($q.resolve(mockResponse));
+    var mockData = setData('content.data.body', 'ff8080815708077601581a417ded1a1e');
+    var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId + '/groupId/' + groupId + '/status/approve';
+    $httpBackend.expectPUT(url).respond(200, mockData);
 
     cbgService.updateCallbackGroupStatus(customerId, groupId, 'approve', '').then(function (res) {
       expect(res.content.data.body).toBe('ff8080815708077601581a417ded1a1e');
     });
+    $httpBackend.flush();
   });
 
   it('should return correct response info in getCountries', function () {
-    mockResponse = preData.getCountries;
-    GmHttpService.httpGet.and.returnValue($q.resolve(mockResponse));
+    var mockData = preData.getCountries;
+    var url = UrlConfig.getGeminiUrl() + 'countries';
+    $httpBackend.expectGET(url).respond(200, mockData);
 
     cbgService.getCountries().then(function (res) {
       expect(res.content.data.length).toBe(4);
     });
+    $httpBackend.flush();
   });
 
   it('should return correct response info in postRequest', function () {
-    GmHttpService.httpPost.and.returnValue($q.resolve(mockResponse));
+    var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId;
+    $httpBackend.expectPOST(url).respond(200, mockResponse);
 
     cbgService.postRequest(customerId, {}).then(function (res) {
       expect(res.content.health.status).toBe('OK');
     });
+    $httpBackend.flush();
   });
 
   it('should return correct response info in moveSite', function () {
-    GmHttpService.httpPut.and.returnValue($q.resolve(mockResponse));
+    var url = UrlConfig.getGeminiUrl() + 'callbackgroup/movesite';
+    $httpBackend.expectPUT(url).respond(200, mockResponse);
 
     cbgService.moveSite({}).then(function (res) {
       expect(res.content.health.code).toBeDefined(200);
     });
+    $httpBackend.flush();
   });
 
   it('should return correct response info in postNote', function () {
-    GmHttpService.httpPost.and.returnValue($q.resolve(mockResponse));
+    var url = UrlConfig.getGeminiUrl() + 'activityLogs';
+    $httpBackend.expectPOST(url).respond(200, mockResponse);
 
     cbgService.postNote({}).then(function (res) {
       expect(res.content.data.returnCode).toBe(0);
     });
+    $httpBackend.flush();
   });
 
   it('should return correct response info in getNotes', function () {
-    mockResponse.content.data.body = preData.getNotes;
-    GmHttpService.httpGet.and.returnValue($q.resolve(mockResponse));
+    var url = UrlConfig.getGeminiUrl() + 'activityLogs/' + customerId + '/' + groupId + '/add_notes_cg';
+    var mockData = setData('content.data.body', preData.getNotes);
+    $httpBackend.expectGET(url).respond(200, mockData);
 
     cbgService.getNotes(customerId, groupId).then(function (res) {
       expect(res.content.data.body.length).toBe(2);
     });
+    $httpBackend.flush();
   });
 
   it('should return correct response info in getHistories', function () {
-    var groupName = 'groupName';
-    mockResponse.content.data.body = preData.getHistories;
-    GmHttpService.httpGet.and.returnValue($q.resolve(mockResponse));
+    var mockData = setData('content.data.body', preData.getHistories);
+    var url = UrlConfig.getGeminiUrl() + 'activityLogs/' + customerId + '/' + groupId + '/Callback%20Group/groupName';
+    $httpBackend.expectGET(url).respond(200, mockData);
 
-    cbgService.getHistories(customerId, groupId, groupName).then(function (res) {
+    cbgService.getHistories(customerId, groupId, 'groupName').then(function (res) {
       expect(res.content.data.body.length).toBe(3);
     });
+    $httpBackend.flush();
   });
 
   it('should return empty array in cbgsExportCSV', function () {
-    var mockHttpResponse = {
-      data: mockResponse,
-    };
-
-    mockResponse.content.data.returnCode = 0;
-    mockResponse.content.data.body = [];
-    GmHttpService.httpGet.and.returnValue($q.resolve(mockHttpResponse));
-    cbgService.getCallbackGroups.and.returnValue($q.resolve(mockResponse));
+    var mockData = setData('content.data.body', []);
+    var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId;
+    $httpBackend.expectGET(url).respond(200, mockData);
 
     cbgService.cbgsExportCSV(customerId).then(function (res) {
       expect(res.length).toEqual(1);
     });
-    $scope.$apply();
+    $httpBackend.flush();
   });
 
   it('should return correct data in cbgsExportCSV', function () {
-    var mockHttpResponse = {
-      data: mockResponse,
-    };
-
-    mockResponse.content.data.returnCode = 0;
-    mockResponse.content.data.body = preData.getCallbackGroups;
-    GmHttpService.httpGet.and.returnValue($q.resolve(mockHttpResponse));
-    cbgService.getCallbackGroups.and.returnValue($q.resolve(mockResponse));
+    var mockData = setData('content.data.body', preData.getCallbackGroups);
+    var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId;
+    $httpBackend.expectGET(url).respond(200, mockData);
 
     cbgService.cbgsExportCSV(customerId).then(function (res) {
       expect(res.length).toEqual(4);
     });
-    $scope.$apply();
+    $httpBackend.flush();
   });
 
   it('should return correct download URL', function () {
-    mockResponse.content.data.returnCode = 0;
-    mockResponse.content.data.body = 'https://atlascca1.qa.webex.com';
-    GmHttpService.httpGet.and.returnValue($q.resolve(mockResponse));
-
-    cbgService.getDownloadCountryUrl().then(function (res) {
-      expect(res.content.data.body).toBe('https://atlascca1.qa.webex.com');
-    });
+    var url = UrlConfig.getGeminiUrl() + 'files/templates/country_regions_template';
+    expect(cbgService.getDownloadCountryUrl()).toBe(url);
   });
 });

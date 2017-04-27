@@ -5,7 +5,7 @@
     .controller('MediafusionEnterNameController', MediafusionEnterNameController);
 
   /* @ngInject */
-  function MediafusionEnterNameController($stateParams, $translate, FusionClusterService, Notification) {
+  function MediafusionEnterNameController($stateParams, $translate, FusionClusterService, HybridServicesExtrasService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     var clusterId = null;
@@ -35,7 +35,7 @@
           return cluster;
         })
         .then(function () {
-          return FusionClusterService.addPreregisteredClusterToAllowList(data.hostname, 3600, clusterId);
+          return HybridServicesExtrasService.addPreregisteredClusterToAllowList(data.hostname, 3600, clusterId);
         })
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');

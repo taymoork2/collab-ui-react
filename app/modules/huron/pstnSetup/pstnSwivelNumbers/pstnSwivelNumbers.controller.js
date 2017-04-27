@@ -5,16 +5,18 @@
     .controller('PstnSwivelNumbersCtrl', PstnSwivelNumbersCtrl);
 
   /* @ngInject */
-  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnSetup, PstnSetupService, Notification, TelephoneNumberService, FeatureToggleService) {
+  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnModel, Notification, TelephoneNumberService, FeatureToggleService) {
     var vm = this;
 
-    vm.hasCarriers = PstnSetup.isCarrierExists;
+    vm.hasCarriers = PstnModel.isCarrierExists;
     vm.hasBackButton = hasBackButton;
     vm.goBack = goBack;
     vm.validateSwivelNumbers = validateSwivelNumbers;
     vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
     vm.onChange = onChange;
     vm.onAcknowledge = onAcknowledge;
+    var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
+    var SWIVEL_ORDER = require('modules/huron/pstn').SWIVEL_ORDER;
 
     vm.tokenfieldid = 'swivelAddNumbers';
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
@@ -37,8 +39,8 @@
     ////////////////////////
 
     function init() {
-      vm.provider = PstnSetup.getProvider();
-      vm.swivelNumbers = PstnSetup.getNumbers();
+      vm.provider = PstnModel.getProvider();
+      vm.swivelNumbers = PstnModel.getNumbers();
       TelephoneNumberService.setRegionCode(vm.provider.country);
       $timeout(function () {
         setSwivelNumberTokens(vm.swivelNumbers);
@@ -113,7 +115,7 @@
           Notification.error('pstnSetup.orderNumbersPrompt');
         } else {
           //set numbers for if they go back
-          PstnSetup.setNumbers(tokens);
+          PstnModel.setNumbers(tokens);
           var numbers = _.map(tokens, function (number) {
             return number.value;
           });
@@ -121,10 +123,10 @@
             data: {
               numbers: numbers,
             },
-            numberType: PstnSetupService.NUMTYPE_DID,
-            orderType: PstnSetupService.SWIVEL_ORDER,
+            numberType: NUMTYPE_DID,
+            orderType: SWIVEL_ORDER,
           }];
-          PstnSetup.setOrders(swivelOrder);
+          PstnModel.setOrders(swivelOrder);
           $state.go('pstnSetup.review');
         }
       } else {
@@ -135,22 +137,22 @@
           Notification.error('pstnSetup.orderNumbersPrompt');
         } else {
           //set numbers for if they go back
-          PstnSetup.setNumbers(vm.swivelNumbers);
+          PstnModel.setNumbers(vm.swivelNumbers);
           swivelOrder = [{
             data: {
               numbers: vm.swivelNumbers,
             },
-            numberType: PstnSetupService.NUMTYPE_DID,
-            orderType: PstnSetupService.SWIVEL_ORDER,
+            numberType: NUMTYPE_DID,
+            orderType: SWIVEL_ORDER,
           }];
-          PstnSetup.setOrders(swivelOrder);
+          PstnModel.setOrders(swivelOrder);
           $state.go('pstnSetup.review');
         }
       }
     }
 
     function hasBackButton() {
-      return !PstnSetup.isCarrierExists() && !PstnSetup.isSingleCarrierReseller();
+      return !PstnModel.isCarrierExists() && !PstnModel.isSingleCarrierReseller();
     }
 
     function goBack() {

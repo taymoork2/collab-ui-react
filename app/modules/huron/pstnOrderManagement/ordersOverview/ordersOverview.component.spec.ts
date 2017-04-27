@@ -4,7 +4,7 @@ describe('Component: OrdersOverview', () => {
 
   beforeEach(function () {
     this.initModules(ordersOverviewModule);
-    this.injectDependencies('PstnSetupService',
+    this.injectDependencies('PstnService',
                             '$q',
                             '$stateParams',
                             '$translate',
@@ -14,7 +14,7 @@ describe('Component: OrdersOverview', () => {
     this.$scope.currentCustomer = _.cloneDeep(customer);
   });
   function initComponent() {
-    spyOn(this.PstnSetupService, 'getFormattedNumberOrders').and.returnValue(this.$q.when(_.cloneDeep(customerOrders)));
+    spyOn(this.PstnService, 'getFormattedNumberOrders').and.returnValue(this.$q.when(_.cloneDeep(customerOrders)));
     this.compileComponent('ucOrdersOverview', {
       currentCustomer: 'currentCustomer',
     });
@@ -22,8 +22,8 @@ describe('Component: OrdersOverview', () => {
 
   describe('Component: OrdersOverview', () => {
     beforeEach(initComponent);
-    it('should have called getFormattedNumberOrders pstnSetupService function', function () {
-      expect(this.PstnSetupService.getFormattedNumberOrders).toHaveBeenCalled();
+    it('should have called getFormattedNumberOrders PstnService function', function () {
+      expect(this.PstnService.getFormattedNumberOrders).toHaveBeenCalled();
     });
     it('should have the correct number of combined orders', function () {
       expect(this.controller.ordersWithDuplicates.length).toEqual(3);

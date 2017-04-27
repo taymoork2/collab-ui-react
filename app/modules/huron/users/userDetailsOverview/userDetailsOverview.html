@@ -1,0 +1,20 @@
+<cs-sp-buttons ng-class="{invisible: !$ctrl.onPrefLanguageChange}">
+  <button cs-btn loading="$ctrl.prefLanguageSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePreferredLanguage()" ng-disabled="$ctrl.prefLanguageSaveInProcess" type="click">
+    <span translate="common.save"></span>
+  </button>
+  <button cs-btn ng-click="$ctrl.onCancelPreferredLanguage()">
+    <span translate="common.cancel"></span>
+  </button>
+</cs-sp-buttons>
+<cs-sp-container>
+  <uc-preferred-language
+    pl-is-loaded="true"
+    has-spark-call="$ctrl.hasSparkCall"
+    on-pref-language-change="$ctrl.onPrefLanguageChange"
+    pref-language-save-in-process="$ctrl.prefLanguageSaveInProcess"
+    preferred-language="$ctrl.preferredLanguage"
+    preferred-language-options="$ctrl.preferredLanguageOptions"
+    on-change-fn="$ctrl.setPreferredLanguage(preferredLanguage)"
+    description="$ctrl.displayDescription">
+  </uc-preferred-language>
+</cs-sp-container>

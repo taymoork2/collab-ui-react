@@ -132,7 +132,7 @@
       value: 4,
       label: $translate.instant('mediaFusion.metrics.threeMonths'),
     }];
-    vm.timeSelected = vm.timeOptions[0];
+    vm.timeSelected = vm.timeOptions[1];
 
     vm.isFlipped = false;
     vm.clientTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.clientType');
@@ -363,7 +363,7 @@
         if (response === vm.ABORT) {
           return undefined;
         } else if (_.isUndefined(response.data)) {
-          AdoptionCardService.setDummyTotalParticipantsPiechart();
+          AdoptionCardService.setDummyTotalParticipantsPiechart(false);
           vm.totalParticipantschartOptions.noData = true;
         } else if (!_.isUndefined(response.data)) {
           var callsOverflow = 0;
@@ -379,8 +379,8 @@
           var cloudCalls = _.isUndefined(response.data.cloudCalls) ? 0 : response.data.cloudCalls;
 
           if (callsOnPremise === 0 && callsOverflow === 0 && cloudCalls === 0) {
-            AdoptionCardService.setDummyTotalParticipantsPiechart();
-            vm.totalParticipantschartOptions.noData = true;
+            AdoptionCardService.setDummyTotalParticipantsPiechart(true);
+            vm.totalParticipantschartOptions.noData = false;
           } else {
             AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, isAllCluster);
             vm.totalParticipantschartOptions.noData = false;

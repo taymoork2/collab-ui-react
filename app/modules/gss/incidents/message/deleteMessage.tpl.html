@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h3 class="modal-title" translate="gss.incidentsPage.deleteMessageTitle"></h3>
+</div>
+
+<div class="modal-body">
+    <span translate="gss.incidentsPage.deleteMessageConfirmMsg" translate-values="{messageId : ctrl.message.message}"></span>
+    <div class="delete-message">
+        <span translate="gss.incidentsPage.incidentStatus"></span><strong>{{ ctrl.message.status }}</strong>
+        <div>
+            <span translate="gss.incidentsPage.message"></span>
+            <div class="div-word-wrapper msg-inner-wrapper">{{ ctrl.message.message }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn" ng-click="$dismiss()" translate="common.cancel"></button>
+    <button class="btn btn--alert" ng-click="$close()" translate="gss.incidentsPage.deleteMessageTitle"></button>
+</div>

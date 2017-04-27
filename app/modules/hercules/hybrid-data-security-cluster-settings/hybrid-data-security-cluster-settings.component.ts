@@ -1,3 +1,5 @@
+require('./_hybrid-data-security-cluster-settings.scss');
+
 class HybridDataSecurityClusterSettingsPageCtrl implements ng.IComponentController {
 
   public cluster: any;

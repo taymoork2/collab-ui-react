@@ -8,7 +8,7 @@
     .controller('SoftwareUpgradeController', SoftwareUpgradeController);
 
   /* @ngInject */
-  function SoftwareUpgradeController($translate, $modalInstance, servicesId, connectorType, availableVersion, cluster, ClusterService, FusionClusterService, Notification) {
+  function SoftwareUpgradeController($translate, $modalInstance, servicesId, connectorType, availableVersion, cluster, ClusterService, HybridServicesExtrasService, Notification) {
     var vm = this;
     vm.upgrading = false;
     vm.availableVersion = availableVersion;
@@ -18,7 +18,7 @@
     vm.releaseNotes = '';
     vm.releaseNotesUrl = '';
 
-    FusionClusterService.getReleaseNotes(cluster.releaseChannel, connectorType)
+    HybridServicesExtrasService.getReleaseNotes(cluster.releaseChannel, connectorType)
       .then(function (res) {
         vm.releaseNotes = res;
         var urlParts = URL.parse(res);

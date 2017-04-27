@@ -6,7 +6,7 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, CryptoJS, Orgservice, TrialService, UserListService) {
+  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UserListService) {
 
     var token = {
       PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
@@ -125,6 +125,8 @@
           CONTEXT_CREATE_FIELDSET_FAILURE: 'Failed to create a new fieldset',
           CONTEXT_CREATE_FIELD_SUCCESS: 'Successfully created a new field',
           CONTEXT_CREATE_FIELD_FAILURE: 'Failed to create a new field',
+          CONTEXT_UPDATE_FIELD_SUCCESS: 'Successfully updated a field',
+          CONTEXT_UPDATE_FIELD_FAILURE: 'Failed to update a field',
         },
       },
     };

@@ -141,9 +141,17 @@
               <span>{{helpdeskOrgCtrl.callCard.areaCode}}</span>
             </div>
           </div>
-          <div ng-if="helpdeskOrgCtrl.callCard.voiceMailPrefix">
+          <div cr-feature-toggle feature-hide="i751-10d-ext" ng-if="helpdeskOrgCtrl.callCard.voiceMailPrefix">
             <h5 translate="helpdesk.vmprefix"></h5>
             <span>{{helpdeskOrgCtrl.callCard.voiceMailPrefix}}</span>
+          </div>
+          <div cr-feature-toggle feature-show="i751-10d-ext" ng-if="helpdeskOrgCtrl.callCard.routingPrefix">
+            <h5 translate="helpdesk.routingPrefix"></h5>
+            <span>{{helpdeskOrgCtrl.callCard.routingPrefix}}</span>
+          </div>
+          <div ng-if="helpdeskOrgCtrl.callCard.extensionLength">
+            <h5 translate="helpdesk.extensionLength"></h5>
+            <span>{{helpdeskOrgCtrl.callCard.extensionLength}}</span>
           </div>
           <div ng-if="helpdeskOrgCtrl.callCard.outboundDialDigit">
             <h5 translate="helpdesk.outboundDigit"></h5>
@@ -154,12 +162,12 @@
       <footer></footer>
     </article>
   </cs-card>
-  
-    <cs-card class="large header-bar cta-base" ng-show="helpdeskOrgCtrl.careCard.entitled">
+
+    <cs-card class="large header-bar care-base" ng-show="helpdeskOrgCtrl.careCard.entitled">
     <article>
       <header class="align-center">
         <div class="overview-header">
-          <i class="icon icon-circle-call"></i>{{'helpdesk.care' | translate}}
+          <i class="icon icon-circle-contact-centre"></i>{{'helpdesk.care' | translate}}
         </div>
       </header>
       <section>

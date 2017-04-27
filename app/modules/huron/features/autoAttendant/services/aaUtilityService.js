@@ -5,8 +5,19 @@
     .module('uc.autoattendant')
     .factory('AAUtilityService', AAUtilityService);
 
-  function AAUtilityService() {
+  function AAUtilityService(ASTParser, ASTWalker) {
     //methods and exposable vars
+    var CONSTANTS = {};
+    CONSTANTS.expressions = {};
+    CONSTANTS.js = {};
+    CONSTANTS.expressions.CallExpression = 'CallExpression';
+    CONSTANTS.expressions.ThisExpression = 'ThisExpression';
+    CONSTANTS.expressions.BinaryExpression = 'BinaryExpression';
+    CONSTANTS.js.func = 'var func = function ()';
+    CONSTANTS.js.conditionalArr = 'checks';
+    CONSTANTS.cs = {};
+    CONSTANTS.cs.currentTime = 'CURRENT_TIME';
+    CONSTANTS.cs.lastCallTime = 'CS_LAST_CALL_TIME';
     var service = {
       splitOnCommas: splitOnCommas,
       addQuotesAroundCommadQuotedValues: addQuotesAroundCommadQuotedValues,
@@ -14,7 +25,7 @@
       generateFunction: generateFunction,
       pullJSPieces: pullJSPieces,
       removeEscapeChars: removeEscapeChars,
-      JS_CONDITIONAL_ARR: 'checks',
+      CONSTANTS: CONSTANTS,
     };
     //private vars
     var commaSplitter = ','//match on comma
@@ -29,10 +40,6 @@
                        + '$)'//end string and close positive lookahead
                        ;
     var commaSplitterRegex = new RegExp(commaSplitter);//regex --> new RegRxp(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/)
-    var conditionGrabber = 'this[[][\']([^\']+)';
-    var conditionGrabberRegex = new RegExp(conditionGrabber);
-    var conditionIsTokensGrabber = service.JS_CONDITIONAL_ARR + '[.]push[(][\']([^)]+)[)]';
-    var conditionIsTokensGrabberRegex = new RegExp(conditionIsTokensGrabber, 'g');
 
     return service;
 
@@ -64,11 +71,11 @@
     //split string based on commas
     function splitOnCommas(string) {
       var separate = [];
-      if (string) {
+      if (string && string.split) {
         var lines = string.split(/\n/); //get each user applied carriage return
         _.each(lines, function (line) { //for each natural line
           var split = line.split(commaSplitterRegex); //apply the comma delimited regex
-          _.each(split, function (piece) { //
+          _.each(split, function (piece) {
             //compact
             if (piece) {
               separate.push(cleanOnQuotes(piece));
@@ -90,15 +97,30 @@
       return alter && insert && index ? alter.substr(0, index) + insert + alter.substr(index) : alter;
     }
 
+    /*
+     Here we want to generate a valid javascript function to send to the backend based on the elements and condition
+     if it's a callerReturned type function we are generating a type of function that checks for value < otherValue because we can't just check for exact match
+     like the other format. with the other format we are expecting to validate that one value in the array stored in the textarea matches the session variable in ces backend for if condition
+     if there is any problem with if condition or elements, we "fake" a function and generate something that will always be false.
+     see AAUtilityService.spec.js for function string examples
+    */
     function generateFunction(ifCondition, elementsToCheck) {
-      return ifCondition && elementsToCheck && elementsToCheck.length > 0 ? generateTrueFunction(ifCondition, elementsToCheck) : 'var func = function () { return this[\'' + ifCondition + '\'] != this[\'' + ifCondition + '\']; };';
+      if (_.isEqual(ifCondition, 'callerReturned') && elementsToCheck) {
+        return generateCallerReturnedFunction(elementsToCheck);
+      } else if (ifCondition && elementsToCheck && elementsToCheck.length > 0) {
+        return generateTrueFunction(ifCondition, elementsToCheck);
+      } else {
+        return service.CONSTANTS.js.func + ' { return this[\'' + ifCondition + '\'] != this[\'' + ifCondition + '\']; };';
+      }
     }
 
     function pullJSPieces(expression) {
-      var pieces = [];
+      var pieces = {
+        ifCondition: '',
+        isConditions: '',
+      };
       if (expression) {
-        pieces[0] = grabIfCondition(expression);
-        pieces[1] = grabIsConditions(expression);
+        return parseLeftRightExpression(pieces, expression);
       }
       return pieces;
     }
@@ -106,37 +128,102 @@
     /***********/
     //private helper methods
 
-    function grabIsConditions(expression) {
-      var isConditionString = '';
-      var match;
-      do {
-        match = conditionIsTokensGrabberRegex.exec(expression);
-        isConditionString = generateComponents(isConditionString, match);
-      } while (match);
-      return isConditionString;
-    }
-
-    function generateComponents(string, match) {
-      if (match) {
-        if (string.length != 0) {
-          string = string.concat(',').concat(' ');
+    function parseLeftRightExpression(pieces, expression) {
+      try {
+        var ast = ASTParser.parse(expression, []);
+        if (ast) {
+          pieces.ifCondition = grabThisCheckAgainstCondition(ast);
+          var checkConditions = grabCheckConditions(ast);
+          pieces.isConditions = checkConditions.length >= 0 ? checkConditions.join(', ') : checkConditions;
         }
-        string = string.concat(removeEscapeChars(addQuotesAroundCommadQuotedValues(match[1].substr(0, match[1].length - 1))));
+      } catch (exception) {
+        return pieces;
       }
-      return string;
+      return pieces;
     }
 
-    function grabIfCondition(expression) {
-      var condition = conditionGrabberRegex.exec(expression);
-      return condition && condition.length === 2 ? condition[1] : '';
+    function grabThisCheckAgainstCondition(abstractSyntaxTree) {
+      //innerfunction details guaranteed currently with var func = { ... };
+      var body = abstractSyntaxTree.body;
+      if (body) {
+        var declarations = body[0].declarations;
+        if (declarations) {
+          var init = declarations[0].init;
+          if (init) {
+            var innerFunctionDetails = init.body.body;
+            return checkPropertyHandler(innerFunctionDetails);
+          }
+        }
+      }
+      return '';
+    }
+
+    function grabCheckConditions(abstractSyntaxTree) {
+      var conditions = [];
+      ASTWalker.ancestor(abstractSyntaxTree, {
+        Literal: function (node, ancestors) {
+          var nodeValue = literalHandler(node, ancestors);
+          if (nodeValue) {
+            if (_.isNumber(nodeValue)) {
+              conditions = nodeValue;
+              return conditions;
+            } else {
+              conditions.push(removeEscapeChars(addQuotesAroundCommadQuotedValues(nodeValue)));
+            }
+          }
+        },
+      });
+      return conditions;
+    }
+
+    function literalHandler(node, ancestors) {
+      if (ancestors.length > 2 && ancestors[ancestors.length - 2].type === service.CONSTANTS.expressions.CallExpression) {
+        return node.value;
+      } else if (ancestors.length > 2 && ancestors[ancestors.length - 2].type === service.CONSTANTS.expressions.BinaryExpression) {
+        return node.value;
+      }
+    }
+
+    function checkPropertyHandler(innerFunctionDetails) {
+      var simpleLeftArgument = innerFunctionDetails[innerFunctionDetails.length - 1].argument.left;
+      if (simpleLeftArgument) {
+        var checkAgainstProperty = getCallerReturned(simpleLeftArgument);
+        return _.isUndefined(checkAgainstProperty) ? getCheckAgainstProperty(simpleLeftArgument.arguments) : checkAgainstProperty;
+      }
+      return '';
+    }
+
+    function getCallerReturned(simpleLeftArgument) {
+      var callerReturned = undefined;
+      ASTWalker.simple(simpleLeftArgument, {
+        Literal: function (node) {
+          if (node.value === service.CONSTANTS.cs.lastCallTime) {
+            callerReturned = 'callerReturned';
+          }
+        },
+      });
+      return callerReturned;
+    }
+
+    function getCheckAgainstProperty(argumentLeft) {
+      if (argumentLeft && argumentLeft.length > 0) {
+        if (argumentLeft[0].object.type === service.CONSTANTS.expressions.ThisExpression) {
+          return argumentLeft[0].property.value;
+        }
+      }
+      return '';
     }
 
     function generateTrueFunction(condition, elements) {
-      return 'var func = function () {' + generateList(['var ' + service.JS_CONDITIONAL_ARR + ' = []; '], elements).join('') + 'return ' + service.JS_CONDITIONAL_ARR + '.indexOf(this[\'' + condition + '\']) !== -1 };'; //cannot check > -1 -- invalid characters for request
+      return service.CONSTANTS.js.func + ' {' + generateList(['var ' + service.CONSTANTS.js.conditionalArr + ' = []; '], elements).join('') + 'return ' + service.CONSTANTS.js.conditionalArr + '.indexOf(this[\'' + condition + '\']) !== -1 };';
+    }
+
+    function generateCallerReturnedFunction(elements) {
+      return service.CONSTANTS.js.func + ' {' + 'return (parseInt(this[\'' + service.CONSTANTS.cs.currentTime + '\']) - parseInt(this[\'' + service.CONSTANTS.cs.lastCallTime + '\']) < ' + elements + '); };';//done in minutes
     }
 
     function generateList(arr, elements) {
-      _.each(elements, function (element) { arr.push(service.JS_CONDITIONAL_ARR + '.push(\'' + element + '\'); '); });
+      _.forEach(elements, function (element) { arr.push(service.CONSTANTS.js.conditionalArr + '.push(\'' + element + '\'); '); });
       return arr;
     }
 

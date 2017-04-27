@@ -303,49 +303,63 @@
           })
           .state('sidepanel', {
             abstract: true,
-            onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
-              if ($state.sidepanel) {
-                $state.sidepanel.stopPreviousState = true;
-              } else {
-                $previousState.memo(sidepanelMemo);
-              }
-              var template = '<cs-sidepanel';
-              if ($state.params.size) {
-                template = template + ' size="large"';
-              }
-              template = template + '></cs-sidepanel>';
-              $state.sidepanel = $modal.open({
-                template: template,
-                // TODO(pajeter): remove inline template when cs-modal is updated
-                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
-                'modal-animation-class="fade"' +
-                'modal-in-class="in"' +
-                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
-                '<div class="modal-content" modal-transclude></div>' +
-                ' </div>',
-                backdrop: false,
-                keyboard: false,
-              });
-              $state.sidepanel.result.finally(function () {
-                if (!this.stopPreviousState && !$state.modal) {
-                  $state.sidepanel = null;
-                  var previousState = $previousState.get(sidepanelMemo);
-                  if (previousState) {
-                    if (isStateInSidepanel($state)) {
-                      return $previousState.go(sidepanelMemo).then(function () {
-                        $previousState.forget(sidepanelMemo);
-                      });
-                    }
+            onExit: panelOnExit,
+            onEnter: panelOnEnter({ type: '' }),
+          })
+          .state('largepanel', {
+            abstract: true,
+            onExit: panelOnExit,
+            onEnter: panelOnEnter({ type: 'large' }),
+          });
+
+        // Enter and Exit functions for panel(large or side)
+        function panelOnEnter(options) {
+          options = options || {};
+          return /* @ngInject */ function ($modal, $state, $previousState) {
+            if ($state.sidepanel) {
+              $state.sidepanel.stopPreviousState = true;
+            } else {
+              $previousState.memo(sidepanelMemo);
+            }
+
+            var template = '<cs-sidepanel';
+            template += options.type ? ' size="' + options.type + '"' : '';
+            template += '></cs-sidepanel>';
+            $state.sidepanel = $modal.open({
+              template: template,
+              // TODO(pajeter): remove inline template when cs-modal is updated
+              windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
+              'modal-animation-class="fade"' +
+              'modal-in-class="in"' +
+              'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
+              '<div class="modal-content" modal-transclude></div>' +
+              ' </div>',
+              backdrop: false,
+              keyboard: false,
+            });
+            $state.sidepanel.result.finally(function () {
+              if (!this.stopPreviousState && !$state.modal) {
+                $state.sidepanel = null;
+                var previousState = $previousState.get(sidepanelMemo);
+                if (previousState) {
+                  var isStateInLargepanel = $state.current.parent === 'largepanel';
+                  if (isStateInSidepanel($state) || isStateInLargepanel) {
+                    return $previousState.go(sidepanelMemo).then(function () {
+                      $previousState.forget(sidepanelMemo);
+                    });
                   }
                 }
-              }.bind($state.sidepanel));
-            },
-            onExit: /* @ngInject */ function ($state) {
-              if ($state.sidepanel) {
-                $state.sidepanel.dismiss();
               }
-            },
-          });
+            }.bind($state.sidepanel));
+          };
+        }
+
+        /* @ngInject */
+        function panelOnExit($state) {
+          if ($state.sidepanel) {
+            $state.sidepanel.dismiss();
+          }
+        }
 
         // See http://angular-translate.github.io/docs/#/guide/19_security
         $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -386,11 +400,14 @@
             $state.modal.result.finally(function () {
               if (!this.stopPreviousState) {
                 $state.modal = null;
-                var previousState = $previousState.get(modalMemo);
-                if (previousState) {
-                  return $previousState.go(modalMemo).then(function () {
-                    $previousState.forget(modalMemo);
-                  });
+                //context-fields-sidepanel needs to update the view with new values after the update
+                if ($state.current.name !== 'context-fields-sidepanel') {
+                  var previousState = $previousState.get(modalMemo);
+                  if (previousState) {
+                    return $previousState.go(modalMemo).then(function () {
+                      $previousState.forget(modalMemo);
+                    });
+                  }
                 }
               }
             }.bind($state.modal));
@@ -1102,6 +1119,7 @@
               queryuserslist: {},
               currentUserId: '',
               orgInfo: {},
+              preferredLanguageDetails: {},
             },
             data: {
               displayName: 'Overview',
@@ -1121,6 +1139,26 @@
                   done(require('modules/huron/overview'));
                 }, 'user-call-overview');
               }),
+            },
+          })
+          .state('user-overview.userDetails', {
+            template: '<uc-user-details-overview preferred-language-details="$resolve.preferredLanguageDetails"></uc-user-details-overview>',
+            params: {
+              reloadToggle: false,
+            },
+            data: {},
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.userDetails').data.displayName = $translate.instant('usersPreview.userDetails');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/users/userDetailsOverview'));
+                }, 'uc-user-details-overview');
+              }),
+              preferredLanguageDetails: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'preferredLanguageDetails');
+              },
             },
           })
           .state('user-overview.csdmDevice', {
@@ -1423,6 +1461,24 @@
             controller: 'UserRolesCtrl',
             data: {
               displayName: 'Roles',
+            },
+          })
+
+          .state('user-overview.cmc', {
+            template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
+            params: {
+              service: 'CMC',
+            },
+            resolve: {
+              data: /* @ngInject */ function ($translate, $state) {
+                $state.get('user-overview.cmc').data.displayName = $translate.instant('cmc.menu.mobileConvergenceService');
+              },
+              user: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'currentUser');
+              },
+              hasCmcFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMobileConvergence);
+              },
             },
           })
 
@@ -1880,6 +1936,7 @@
               extensions: {},
               parentState: 'place-overview',
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-cal.history', {
@@ -1901,6 +1958,7 @@
               extensionId: {},
               extensions: {},
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-gcal.history', {
@@ -1922,6 +1980,7 @@
               extensionId: {},
               extensions: {},
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc.uc-history', {
@@ -2091,14 +2150,12 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gmTdLargePanel', {
+          .state('gmTdNumbers', {
             data: {},
-            parent: 'sidepanel',
-            views: { 'sidepanel@': { template: '<gm-td-large-panel></gm-td-large-panel>' } },
-            resolve: {
-              sideBarInfo: /* @ngInject */ function ($state) {
-                $state.params.size = 'large';
-              },
+            parent: 'largepanel',
+            views: {
+              'sidepanel@': { template: '<gm-td-numbers></gm-td-numbers>' },
+              'header@gmTdNumbers': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
             },
           })
           .state('gmTdDetails', {
@@ -2642,6 +2699,54 @@
               },
             },
           })
+          .state('pstnWizard', {
+            parent: 'modal',
+            params: {
+              customerId: {},
+              customerName: {},
+              customerEmail: {},
+              customerCommunicationLicenseIsTrial: {},
+              customerRoomSystemsLicenseIsTrial: {},
+            },
+            views: {
+              'modal@': {
+                template: '<uc-pstn-paid-wizard class="modal-content" customer-id="$resolve.customerId" customer-communication-license-is-trial="$resolve.customerCommunicationLicenseIsTrial" customer-room-systems-license-is-trial="$resolve.customerRoomSystemsLicenseIsTrial" dismiss="$dismiss()" close="$close()"></uc-pstn-paid-wizard>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'pstn-numbers';
+                  },
+                },
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/pstn/pstnWizard'));
+                }, 'pstn-wizard');
+              }),
+              customerSetup: /* @ngInject */ function ($stateParams, PstnModel, PstnService, Notification) {
+                PstnModel.setCustomerId($stateParams.customerId);
+                PstnModel.setCustomerName($stateParams.customerName);
+                PstnModel.setCustomerEmail($stateParams.customerEmail);
+                PstnModel.setIsTrial($stateParams.customerCommunicationLicenseIsTrial && $stateParams.customerRoomSystemsLicenseIsTrial);
+                //Reset Carriers
+                PstnModel.setCarriers([]);
+
+                //Verify the the Terminus Reseller is setup, otherwise setup the Reseller
+                if (!PstnModel.isResellerExists()) {
+                  PstnService.getResellerV2().then(function () {
+                    PstnModel.setResellerExists(true);
+                  }).catch(function () {
+                    PstnService.createResellerV2().then(function () {
+                      PstnModel.setResellerExists(true);
+                    }).catch(function (response) {
+                      Notification.errorResponse(response, 'pstnSetup.resellerCreateError');
+                    });
+                  });
+                }
+              },
+            },
+          })
           .state('pstnSetup', {
             parent: 'modal',
             params: {
@@ -2949,11 +3054,11 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
+              },
+              hasEnterprisePrivateTrunkingFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
               },
             },
           })
@@ -3018,16 +3123,20 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-field-modal>',
+                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" dismiss="$dismiss()" class="context-modal"></context-field-modal>',
               },
             },
             params: {
               existingFieldIds: [],
+              existingFieldData: {},
               callback: function () {},
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldIds;
+              },
+              existingFieldData: /* @ngInject */ function ($stateParams) {
+                return $stateParams.existingFieldData;
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
@@ -3038,7 +3147,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fields-sidepanel field="$resolve.field"></context-fields-sidepanel>',
+                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
                 templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
@@ -3049,10 +3158,18 @@
             },
             params: {
               field: {},
+              process: function () {},
+              callback: function () {},
             },
             resolve: {
               field: /* @ngInject */ function ($stateParams) {
                 return $stateParams.field;
+              },
+              process: /* @ngInject */ function ($stateParams) {
+                return $stateParams.process;
+              },
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })
@@ -3076,19 +3193,19 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" create-callback="$resolve.createCallback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
               },
             },
             params: {
               existingFieldsetIds: [],
-              createCallback: function () {},
+              callback: function () {},
             },
             resolve: {
               existingFieldsetIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldsetIds;
               },
-              createCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.createCallback;
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })
@@ -3156,13 +3273,14 @@
             },
           })
           .state('private-trunk-overview', {
+            url: '/private-trunk-overview',
             parent: 'main',
             template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/hercules/private-trunk/overview'));
-                }, 'private-trunk');
+                }, 'private-trunk-overview');
               }),
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
@@ -3173,7 +3291,15 @@
             url: '/private-trunk-overview/list',
             views: {
               sipDestinationList: {
-                template: '<hybrid-service-cluster-list service-id="\'ept\'"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+              },
+            },
+            params: {
+              clusterId: null,
+            },
+            resolve: {
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
               },
             },
           })
@@ -3187,6 +3313,11 @@
             params: {
               host: null,
               hostSerial: null,
+            },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           // Cluster settings and nodes
@@ -3210,12 +3341,7 @@
           })
           .state('expressway-cluster.settings', {
             url: '/settings',
-            template: '<expressway-cluster-settings-page cluster-id="$resolve.id" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></expressway-cluster-settings-page>',
-            resolve: {
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
-            },
+            template: '<expressway-cluster-settings-page cluster-id="$resolve.id"></expressway-cluster-settings-page>',
           })
           .state('hybrid-services-connector-sidepanel', {
             parent: 'sidepanel',
@@ -3290,7 +3416,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
@@ -3310,9 +3436,6 @@
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
               },
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
@@ -3328,6 +3451,11 @@
             params: {
               host: null,
               hostSerial: null,
+            },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           .state('hds-cluster-details.alarm-details', {
@@ -3697,6 +3825,16 @@
               },
             },
           })
+          .state('private-trunk-settings', {
+            parent: 'main',
+            url: '/private-trunk-settings/:id',
+            template: '<private-trunk-settings-page trunk-id="$resolve.id"></private-trunk-settings-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+            },
+          })
           .state('private-trunk-sidepanel', {
             parent: 'sidepanel',
             views: {
@@ -3734,7 +3872,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@expressway-cluster-sidepanel': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
@@ -3753,9 +3891,6 @@
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
               },
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
@@ -3773,6 +3908,11 @@
               // we inherit params from the parent, and because of management connectors we shouldn't override
               // the parent connectorType param…
               specificType: null,
+            },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           .state('expressway-cluster-sidepanel.alarm-details', {
@@ -3794,11 +3934,6 @@
             controller: 'ResourceGroupSettingsController',
             controllerAs: 'rgsCtrl',
             parent: 'main',
-            resolve: {
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
-            },
           });
 
         $stateProvider
@@ -3840,6 +3975,11 @@
             params: {
               host: null,
               hostSerial: null,
+            },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           .state('media-cluster-details.alarm-details', {

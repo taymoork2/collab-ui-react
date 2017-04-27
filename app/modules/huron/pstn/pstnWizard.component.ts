@@ -1,3 +1,5 @@
+import { PstnService } from './pstn.service';
+import { PstnModel } from './pstn.model';
 export class PstnWizardComponent implements ng.IComponentOptions {
   public controller = PstnWizardCtrl;
   public templateUrl = 'modules/huron/pstn/pstnWizard.html';
@@ -20,17 +22,17 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private PstnSetup,
-    private PstnSetupService,
+    private PstnModel: PstnModel,
+    private PstnService: PstnService,
     private Notification,
   ) {}
 
   public $onInit() {
-    this.PstnSetup.clear();
-    this.PstnSetup.setCustomerId(this.customerId);
-    this.PstnSetup.setCustomerName(this.customerName);
-    this.PstnSetup.setCustomerEmail(this.customerEmail);
-    this.PstnSetup.setIsTrial(this.customerCommunicationLicenseIsTrial && this.customerRoomSystemsLicenseIsTrial);
+    this.PstnModel.clear();
+    this.PstnModel.setCustomerId(this.customerId);
+    this.PstnModel.setCustomerName(this.customerName);
+    this.PstnModel.setCustomerEmail(this.customerEmail);
+    this.PstnModel.setIsTrial(this.customerCommunicationLicenseIsTrial && this.customerRoomSystemsLicenseIsTrial);
 
     this.checkReseller();
     this.checkCustomer();
@@ -46,9 +48,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   //PSTN check to verify if the Partner is registered with the Terminus service as a carrier reseller
   private checkReseller(): void {
-    if (!this.PstnSetup.isResellerExists()) {
-      this.PstnSetupService.getResellerV2().then( () => {
-        this.PstnSetup.setResellerExists(true);
+    if (!this.PstnModel.isResellerExists()) {
+      this.PstnService.getResellerV2().then( () => {
+        this.PstnModel.setResellerExists(true);
       }).catch( () => {
         this.createReseller();
       });
@@ -57,8 +59,8 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   //PSTN register the Partner as a carrier reseller
   private createReseller(): void {
-    this.PstnSetupService.createResellerV2().then( () => {
-      this.PstnSetup.setResellerExists(true);
+    this.PstnService.createResellerV2().then( () => {
+      this.PstnModel.setResellerExists(true);
     }).catch(error => {
       this.Notification.errorResponse(error, 'pstnSetup.resellerCreateError');
     });
@@ -66,9 +68,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   //PSTN check if customer is setup as a carrier customer.
   private checkCustomer() {
-    if (!this.PstnSetup.isCustomerExists()) {
-      this.PstnSetupService.getCustomer(this.PstnSetup.getCustomerId()).then( () => {
-        this.PstnSetup.setCustomerExists(true);
+    if (!this.PstnModel.isCustomerExists()) {
+      this.PstnService.getCustomer(this.PstnModel.getCustomerId()).then( () => {
+        this.PstnModel.setCustomerExists(true);
       });
     }
   }

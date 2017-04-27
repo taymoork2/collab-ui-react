@@ -10,6 +10,7 @@ class GmtdDetails implements ng.IComponentController {
   public ccaDomainId: string;
   public domainName: string;
   public totalSites: number;
+  public panelTitle: string;
   public tds: any[] = [];
   public notes: any[] = [];
   public allHistories: any[] = [];
@@ -32,10 +33,11 @@ class GmtdDetails implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
   ) {
+    this.tds = _.get(this.$stateParams, 'info.tds', []);
     this.customerId = _.get(this.$stateParams, 'info.customerId', '');
     this.ccaDomainId = _.get(this.$stateParams, 'info.ccaDomainId', '');
     this.domainName = _.get(this.$stateParams, 'info.domainName', '');
-    this.tds = _.get(this.$stateParams, 'info.tds', []);
+    this.panelTitle = this.domainName;
   }
 
   public $onInit(): void {

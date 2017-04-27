@@ -32,14 +32,12 @@ class CallForwardCtrl implements ng.IComponentController {
   public callForwardTimer: number = 25;
   public isError: boolean = false;
   public errorMsg: {};
-  public cfnaTimerFeatureToggleEnabled: boolean = false;
 
  /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private HuronCustomerService: HuronCustomerService,
     private TelephoneNumberService,
-    private FeatureToggleService,
   ) {
     this.customTranslations = {
       placeholderText: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
@@ -50,10 +48,6 @@ class CallForwardCtrl implements ng.IComponentController {
       min: this.$translate.instant('callForwardPanel.ringDurationTimer.validation.error'),
       max: this.$translate.instant('callForwardPanel.ringDurationTimer.validation.error'),
     };
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.huroncfnatimer).then((cfnaTimerEnabled) => {
-      this.cfnaTimerFeatureToggleEnabled = cfnaTimerEnabled;
-    });
-
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {

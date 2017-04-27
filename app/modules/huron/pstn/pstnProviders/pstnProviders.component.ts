@@ -1,3 +1,6 @@
+import { PstnService } from '../pstn.service';
+import { PstnModel } from '../pstn.model';
+
 import {
   IPstnCarrierGet,
   IPstnCarrierStatic,
@@ -23,8 +26,8 @@ export class PstnProvidersCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    public PstnSetup,
-    private PstnSetupService,
+    public PstnModel: PstnModel,
+    private PstnService: PstnService,
     private $resource: ng.resource.IResourceService,
     private $translate: ng.translate.ITranslateService,
   ) {}
@@ -45,7 +48,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
         pstnCarrier.selected = false;
       }
     });
-    this.PstnSetup.setProvider(carrier);
+    this.PstnModel.setProvider(carrier);
     this.onChangeFn();
   }
 
@@ -81,20 +84,20 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   //Get array of carriers from Terminus service
   private getCarriersNetwork(): void {
     //Are carriers already loaded
-    if (this.PstnSetup.isCarrierExists()) {
-      this.pstnCarriers = this.PstnSetup.getCarriers();
+    if (this.PstnModel.isCarrierExists()) {
+      this.pstnCarriers = this.PstnModel.getCarriers();
       this.onReady();
       return;
     }
 
-    if (this.PstnSetup.isCustomerExists()) {
+    if (this.PstnModel.isCustomerExists()) {
       //Get Customer Carriers (Most likely there is only 1, the previous selected carrier)
-      this.PstnSetupService.listCustomerCarriers(this.PstnSetup.getCustomerId()).then ( carriers => {
+      this.PstnService.listCustomerCarriers(this.PstnModel.getCustomerId()).then ( carriers => {
         if (_.isArray(carriers) && carriers.length > 0) {
           carriers.forEach(carrier => {
             this.addCarrier(<IPstnCarrierGet> carrier);
           });
-          this.PstnSetup.setCarriers(this.pstnCarriers);
+          this.PstnModel.setCarriers(this.pstnCarriers);
           this.onReady();
         } else {
           this.getCarriersNetworkDefault();
@@ -105,12 +108,12 @@ export class PstnProvidersCtrl implements ng.IComponentController {
       });
     } else {
       //Get Reseller Carriers
-      this.PstnSetupService.listResellerCarriersV2().then(carriers => {
+      this.PstnService.listResellerCarriersV2().then(carriers => {
         if (_.isArray(carriers) && carriers.length > 0) {
           carriers.forEach(carrier => {
             this.addCarrier(<IPstnCarrierGet> carrier);
           });
-          this.PstnSetup.setCarriers(this.pstnCarriers);
+          this.PstnModel.setCarriers(this.pstnCarriers);
           this.onReady();
         } else {
           this.getCarriersNetworkDefault();
@@ -123,11 +126,11 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   }
 
   private getCarriersNetworkDefault() {
-    this.PstnSetupService.listDefaultCarriersV2().then ( carriers => {
+    this.PstnService.listDefaultCarriersV2().then ( carriers => {
       carriers.forEach(carrier => {
         this.addCarrier(<IPstnCarrierGet> carrier);
       });
-      this.PstnSetup.setCarriers(this.pstnCarriers);
+      this.PstnModel.setCarriers(this.pstnCarriers);
       this.onReady();
     });
   }
@@ -147,7 +150,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
       }
     }
     //Get and add carrier capabilities
-    this.PstnSetupService.getCarrierCapabilities(carrier.uuid).then( (capabilities: Array<IPstnCarrierCapability>) => {
+    this.PstnService.getCarrierCapabilities(carrier.uuid).then( (capabilities: Array<IPstnCarrierCapability>) => {
       pstnCarrier.setCapabilities(capabilities);
     });
   }

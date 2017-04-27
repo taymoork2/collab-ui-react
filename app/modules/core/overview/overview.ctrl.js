@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnSetupService, HybridServicesUtils) {
+  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -55,7 +55,7 @@ require('./_overview.scss');
         Config.entitlements.hds,
       ])
       .filter(Authinfo.isEntitled)
-      .map(HybridServicesUtils.getAckFlagForHybridServiceId)
+      .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
       .value();
 
       HybridServicesFlagService
@@ -63,17 +63,17 @@ require('./_overview.scss');
         .then(function (flags) {
           _.forEach(flags, function (flag) {
             if (!flag.raised) {
-              if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_cal)) {
+              if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_cal)) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
-              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal) && hasGoogleCalendarFeatureToggle) {
-                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, HybridServicesFlagService, HybridServicesUtils));
-              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal) && hasGoogleCalendarFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, HybridServicesFlagService, HybridServicesUtilsService));
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
-              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_ec)) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_ec)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
-              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.mediafusion)) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.mediafusion)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
-              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
             }
@@ -167,9 +167,9 @@ require('./_overview.scss');
         return;
       }
       if (vm.orgData !== null) {
-        PstnSetupService.getCustomerV2(vm.orgData.id).then(function (customer) {
+        PstnService.getCustomerV2(vm.orgData.id).then(function (customer) {
           if (customer.trial) {
-            PstnSetupService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
+            PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
               if (!_.has(trial, 'acceptedDate')) {
                 vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
                 vm.notifications.push(vm.pstnToSNotification);

@@ -4,7 +4,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $rootScope, controller, cluster, connector, orgName, MediaClusterServiceV2, Notification, $q, $translate, modalInstanceMock, windowMock;
+  var $rootScope, controller, cluster, connectorId, orgName, MediaClusterServiceV2, Notification, $q, $translate, modalInstanceMock, windowMock;
 
   beforeEach(inject(function (_$rootScope_, $controller, _Notification_, _$q_, _$translate_) {
     $rootScope = _$rootScope_;
@@ -13,9 +13,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
       name: 'b',
     };
     orgName = '123';
-    connector = {
-      id: 'id',
-    };
+    connectorId = 'id';
     MediaClusterServiceV2 = {
 
       deleteCluster: sinon.stub(),
@@ -33,8 +31,8 @@ describe('Controller: HostDeregisterControllerV2', function () {
     };
     controller = $controller('HostDeregisterControllerV2', {
       $scope: $rootScope.$new(),
-      connector: connector,
-      cluster: cluster,
+      connectorId: connectorId,
+      clusterName: cluster.name,
       orgName: orgName,
       MediaClusterServiceV2: MediaClusterServiceV2,
       Notification: Notification,

@@ -5,7 +5,7 @@ describe('Controller: EdiscoverySearchController', function () {
   beforeEach(angular.mock.module('Huron'));
 
   var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, ITProPackService, Notification, TrialService;
-  var promiseUrl, promise;
+  var promiseUrl, promise, result, startDate, endDate;
 
   beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _ITProPackService_, _Notification_, _TrialService_) {
     $scope = _$rootScope_.$new();
@@ -27,6 +27,7 @@ describe('Controller: EdiscoverySearchController', function () {
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
     spyOn(ITProPackService, 'hasITProPackPurchased').and.returnValue($q.resolve(false));
+    spyOn(ITProPackService, 'hasITProPackEnabled').and.returnValue($q.resolve(false));
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
     spyOn(TrialService, 'getDaysLeftForCurrentUser');
 
@@ -57,6 +58,46 @@ describe('Controller: EdiscoverySearchController', function () {
     it('should contain default values', function () {
       expect(ediscoverySearchController.encryptedEmails).toBeNull();
       expect(ediscoverySearchController.unencryptedRoomIds).toBeNull();
+    });
+  });
+
+  describe('Date Validation', function () {
+    beforeEach(initController);
+
+    it('should not return an error', function () {
+      startDate = moment().subtract(30, 'days').format();
+      endDate = moment().format();
+
+      result = ediscoverySearchController.dateErrors(startDate, endDate);
+
+      expect(result).toEqual([]);
+    });
+
+    it('should not have end date be before start date', function () {
+      startDate = moment().format();
+      endDate = moment().subtract(2, 'days').format();
+
+      result = ediscoverySearchController.dateErrors(startDate, endDate);
+
+      expect(result).toEqual(['ediscovery.dateError.StartDateMustBeforeEndDate']);
+    });
+
+    it('should not have a start date that is in the future', function () {
+      startDate = moment().add(1, 'day').format();
+      endDate = moment().format();
+
+      result = ediscoverySearchController.dateErrors(startDate, endDate);
+
+      expect(result).toEqual(['ediscovery.dateError.StartDateMustBeforeEndDate', 'ediscovery.dateError.StartDateCannotBeInTheFuture']);
+    });
+
+    it('should not exceed a 90 day range if itProPack is not purchased', function () {
+      startDate = moment().subtract(91, 'days').format();
+      endDate = moment().format();
+
+      result = ediscoverySearchController.dateErrors(startDate, endDate);
+
+      expect(result).toEqual(['ediscovery.dateError.InvalidDateRange']);
     });
   });
 

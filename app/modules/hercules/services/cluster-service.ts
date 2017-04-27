@@ -142,8 +142,8 @@ export class ClusterService {
   }
 
   public upgradeSoftware(clusterId: string, connectorType: ConnectorType) {
-    const url = `${this.UrlConfig.getHerculesUrl()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/services/${connectorType}/upgrade`;
-    return this.$http.post(url, '{}')
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/update/invoke?connectorType=${connectorType}&forced=true`;
+    return this.$http.post(url, '')
       .then(this.extractDataFromResponse)
       .then((data) => {
         this.poller.forceAction();

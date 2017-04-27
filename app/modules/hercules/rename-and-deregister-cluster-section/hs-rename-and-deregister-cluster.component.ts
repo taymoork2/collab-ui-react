@@ -1,4 +1,7 @@
 import { Notification } from 'modules/core/notifications';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { IToolkitModalService } from 'modules/core/modal';
+import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 
 class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
@@ -28,15 +31,21 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $modal,
-    private $translate: ng.translate.ITranslateService,
+    private $modal: IToolkitModalService,
     private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
+    private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
-    private FusionClusterService,
   ) { }
 
   public $onInit() {
     this.clusterType = this.$translate.instant(`hercules.clusterTypeFromServiceId.${this.serviceId}`);
+    if (this.serviceId === 'ept') {
+      this.clusterSection = {
+        title: 'hercules.clusterListComponent.clusters-title-ept',
+      };
+    }
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
@@ -61,19 +70,35 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
       this.Notification.error('hercules.renameAndDeregisterComponent.clusterNameCannotByEmpty');
       return;
     }
-
     this.savingNameState = true;
-    this.FusionClusterService.setClusterName(this.clusterId, clusterName)
-      .then(() => {
-        this.Notification.success('hercules.renameAndDeregisterComponent.clusterNameSaved');
-        this.onNameUpdate({ name: clusterName });
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.renameAndDeregisterComponent.clusterNameCannotBeSaved');
-      })
-      .finally(() => {
-        this.savingNameState = false;
-      });
+    if (this.serviceId === 'ept') {
+      this.EnterprisePrivateTrunkService.updateTrunkName(this.clusterId, clusterName)
+        .then(() => {
+          this.Notification.success('hercules.renameAndDeregisterComponent.sipDestinationNameSaved');
+          this.onNameUpdate({ name: clusterName });
+          this.cluster.name = clusterName;
+        })
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'hercules.renameAndDeregisterComponent.sipDestinationNameCannotBeSaved');
+        })
+        .finally(() => {
+          this.savingNameState = false;
+        });
+    } else {
+      this.HybridServicesClusterService.setClusterInformation(this.clusterId, { name: clusterName })
+        .then(() => {
+          this.Notification.success('hercules.renameAndDeregisterComponent.clusterNameSaved');
+          this.onNameUpdate({ name: clusterName });
+          this.cluster.name = clusterName;
+        })
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'hercules.renameAndDeregisterComponent.clusterNameCannotBeSaved');
+        })
+        .finally(() => {
+          this.savingNameState = false;
+        });
+    }
+
   }
 
   public deregisterCluster(): void {

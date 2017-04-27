@@ -36,7 +36,14 @@
           </div>
           <!-- Date Range Row -->
           <div class="row">
-            <span class="search-spacing search-text small-gap" translate="common.dateRange"></span>
+            <div class="col-md-6 search-box">
+              <span class="search-spacing search-text small-gap">
+                <span translate="common.dateRange"></span>
+                <i ng-if="ediscoverySearchCtrl.showHover()" 
+                tooltip="{{'ediscovery.searchParameters.dateRangeTooltip' | translate}}" tooltip-placement="right"
+                class="icon icon-info"></i>
+              </span>
+            </div>
           </div>
           <div class="row">
             <div class="col-md-5 search-box">
@@ -48,9 +55,15 @@
             </cs-datepicker>
           </div>
           <div class="row" ng-if="ediscoverySearchCtrl.dateValidationError">
-            <i class="icon icon-error date-error"></i>
-            <span class="date-error" ng-repeat="error in ediscoverySearchCtrl.dateValidationError.errors">
+            <i class="icon icon-error date-validation search-error"></i>
+            <span class="date-validation search-error" ng-repeat="error in ediscoverySearchCtrl.dateValidationError.errors">
               {{error}}
+            </span>
+          </div>
+          <div class="row date-checks" ng-if="ediscoverySearchCtrl.dateValidationWarning">
+            <i class="icon icon-warning date-validation search-warning"></i>
+            <span class="date-validation search-warning-text" ng-repeat="warning in ediscoverySearchCtrl.dateValidationWarning.warnings">
+              {{warning}}
             </span>
           </div>
           <!-- Text Message and File Name Row -->
@@ -75,7 +88,7 @@
             ng-disabled="ediscoverySearchCtrl.searchButtonDisabled(qForm.qInput.$invalid && qForm.qInput.$touched)"></button>
             <div ng-if="ediscoverySearchCtrl.error" class="search-error">
               <i class="icon icon-warning search-warning"></i>
-              <span translate="ediscovery.searchParameters.noMatchesFound"></span>
+              <span class="search-warning-text" translate="ediscovery.searchParameters.noMatchesFound"></span>
             </div>
           </div>
         </div>

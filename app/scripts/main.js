@@ -97,21 +97,23 @@
     'huron.call-park',
     'huron.bulk-enable-vm',
     'huron.TerminusServices',
-    'huron.PstnSetup',
-    'huron.pstnsetupservice',
     'huron.telephoneNumberService',
     'huron.externalNumberService',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
     require('modules/huron/pstn').default,
+    require('modules/huron/pstn/pstn.service').default,
+    require('modules/huron/pstn/pstn.model').default,
     require('modules/huron/pstn/pstnProviders').default,
     require('modules/huron/pstn/pstnContactInfo').default,
     require('modules/huron/pstn/pstnSwivelNumbers').default,
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
     require('modules/huron/lines/deleteExternalNumber').default,
-  ]);
+  ])
+  .constant('ASTParser', require('acorn'))
+  .constant('ASTWalker', require('acorn/dist/walk'));
 
   angular.module('Hercules', [
     'Core',
@@ -120,10 +122,14 @@
     'ngTagsInput',
     require('modules/hercules/private-trunk/prereq').default,
     require('modules/hercules/private-trunk/setup').default,
-    require('modules/hercules/services/uss-service'),
-    require('modules/hercules/services/hybrid-services-utils').default,
+    require('modules/hercules/private-trunk/private-trunk-certificate').default,
     require('modules/hercules/services/cert-service').default,
     require('modules/hercules/services/certificate-formatter-service').default,
+    require('modules/hercules/services/hybrid-services-i18n.service').default,
+    require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/private-trunk/private-trunk-services').default,
+    require('modules/hercules/private-trunk/overview').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
@@ -153,6 +159,11 @@
 
   angular.module('Gemini', ['Core']);
 
+  angular.module('CMC', [
+    'Core',
+    require('modules/cmc').default,
+  ]);
+
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -169,6 +180,7 @@
     'GSS',
     'oc.lazyLoad',
     'Gemini',
+    'CMC',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

@@ -22,7 +22,7 @@
           <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
           <span>&nbsp;</span>
         </div>
-        <div class="errorBox" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.filteredView.isInState(choosePlace.filteredView.noplaces)">
+        <div class="errorBox" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.filteredView.isInState(choosePlace.filteredView.emptydatasource)">
           <i class="icon icon-warning"></i>
           <span translate="addDeviceWizard.chooseSharedSpace.noExistingPlaces" ng-if="choosePlace.showPersonal"></span>
           <span translate="addDeviceWizard.chooseSharedSpace.noExistingHuronPlaces" ng-if="choosePlace.deviceType === 'huron'"></span>
@@ -43,7 +43,7 @@
     </div>
   </div>
 
-  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || choosePlace.filteredView.isInState(choosePlace.filteredView.noplaces)">
+  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || choosePlace.filteredView.isInState(choosePlace.filteredView.emptydatasource)">
     <form class="chooseExistingPlaceForm" onsubmit="$('#next-button').click()">
       <h4 translate="addDeviceWizard.chooseSharedSpace.whichPlace"></h4>
       <p ng-show="choosePlace.deviceType === 'huron' && !choosePlace.showPersonal"
@@ -64,7 +64,7 @@
             <i class="icon icon icon-spinner"></i>
           </div>
         </span>
-        <span ng-if="choosePlace.filteredView.isInState(choosePlace.filteredView.emptyresult)" translate="placesPage.noneFound"></span>
+        <span ng-if="choosePlace.filteredView.isInState(choosePlace.filteredView.emptysearchresult)" translate="placesPage.noneFound"></span>
         <script type="text/ng-template" id="placeTemplate.html" ng-if="choosePlace.showPersonal">
           <a>
             <span ng-bind-html="match.label.displayName + ' (' + match.label.readablePlaceType + ')' | typeaheadHighlight:query" ></span>

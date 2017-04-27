@@ -18,6 +18,9 @@
     FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (result) {
       vm.isHuronSupportThinktel = result;
     });
+    FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (results) {
+      vm.hPstn = results;
+    });
     updatePhoneNumberCount();
 
     $scope.$watchCollection(function () {
@@ -49,7 +52,8 @@
     function isTerminusCustomer() {
       ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId).then(function (response) {
         if (response) {
-          return $state.go('pstnSetup', {
+          var state = vm.hPstn ? 'pstnWizard' : 'pstnSetup';
+          return $state.go(state, {
             customerId: vm.currentCustomer.customerOrgId,
             customerName: vm.currentCustomer.customerName,
             customerEmail: vm.currentCustomer.customerEmail,

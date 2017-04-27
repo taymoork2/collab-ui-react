@@ -1,7 +1,5 @@
-import {
-  IPstnCarrierGet,
-  PstnCarrierGet,
-} from './pstnProviders/pstnCarrier';
+import { PstnCarrier } from './pstnProviders/pstnCarrier';
+import { IOrder } from './pstnWizard/pstnWizard.service';
 
 export class PstnModel {
   private customerId: string;
@@ -14,25 +12,19 @@ export class PstnModel {
   private resellerExists: boolean;
   private carrierExists: boolean;
   private siteExists: boolean;
-  private provider: IPstnCarrierGet;
+  private provider: PstnCarrier = new PstnCarrier();
   private numbers: Array<Object>;
-  private orders: Array<Object>;
+  private orders: Array<IOrder>;
+  private carriers: Array<PstnCarrier>;
   private singleCarrierReseller: boolean;
   private isTrial: boolean;
+  private countryCode: string;
 
-  constructor() {
-    this.resetAll();
+  public constructor() {
+    this.clear();
   }
 
-  public clearProviderSpecificData() {
-    this.customerFirstName = '';
-    this.customerLastName = '';
-    this.numbers = [];
-    this.orders = [];
-    this.serviceAddress = {};
-  }
-
-  public resetAll(): void {
+  public clear(): void {
     this.customerId = '';
     this.customerName = '';
     this.customerFirstName = '';
@@ -43,14 +35,27 @@ export class PstnModel {
     this.resellerExists = false;
     this.carrierExists = false;
     this.siteExists = false;
-    this.provider = new PstnCarrierGet();
+    this.provider = new PstnCarrier();
     this.numbers = [];
     this.orders = [];
+    this.carriers = [];
     this.singleCarrierReseller = false;
     this.isTrial = true;
+    this.countryCode = 'US';
   }
 
-  public setCustomerId(_customerId): void {
+  public clearProviderSpecificData(): void {
+    this.customerFirstName = '';
+    this.customerLastName = '';
+    this.serviceAddress = {};
+    this.siteExists = false;
+    this.carrierExists = false;
+    this.carrierExists = false;
+    this.numbers = [];
+    this.orders = [];
+  }
+
+  public setCustomerId(_customerId: string): void {
     this.customerId = _customerId;
   }
 
@@ -58,7 +63,7 @@ export class PstnModel {
     return this.customerId;
   }
 
-  public setCustomerName(_customerName): void {
+  public setCustomerName(_customerName: string): void {
     this.customerName = _customerName;
   }
 
@@ -66,7 +71,7 @@ export class PstnModel {
     return this.customerName;
   }
 
-  public setCustomerFirstName(_customerFirstName): void {
+  public setCustomerFirstName(_customerFirstName: string): void {
     this.customerFirstName = _customerFirstName;
   }
 
@@ -74,7 +79,7 @@ export class PstnModel {
     return this.customerFirstName;
   }
 
-  public setCustomerLastName(_customerLastName): void {
+  public setCustomerLastName(_customerLastName: string): void {
     this.customerLastName = _customerLastName;
   }
 
@@ -82,7 +87,7 @@ export class PstnModel {
     return this.customerLastName;
   }
 
-  public setCustomerEmail(_customerEmail): void {
+  public setCustomerEmail(_customerEmail: string): void {
     this.customerEmail = _customerEmail;
   }
 
@@ -90,7 +95,7 @@ export class PstnModel {
     return this.customerEmail;
   }
 
-  public setServiceAddress(_serviceAddress): void {
+  public setServiceAddress(_serviceAddress: Object): void {
     this.serviceAddress = _serviceAddress;
   }
 
@@ -98,7 +103,7 @@ export class PstnModel {
     return this.serviceAddress;
   }
 
-  public setCustomerExists(_customerExists): void {
+  public setCustomerExists(_customerExists: boolean): void {
     this.customerExists = _customerExists;
   }
 
@@ -106,7 +111,7 @@ export class PstnModel {
     return this.customerExists;
   }
 
-  public setResellerExists(_resellerExists): void {
+  public setResellerExists(_resellerExists: boolean): void {
     this.resellerExists = _resellerExists;
   }
 
@@ -114,7 +119,7 @@ export class PstnModel {
     return this.resellerExists;
   }
 
-  public setCarrierExists(_carrierExists): void {
+  public setCarrierExists(_carrierExists: boolean): void {
     this.carrierExists = _carrierExists;
   }
 
@@ -122,7 +127,7 @@ export class PstnModel {
     return this.carrierExists;
   }
 
-  public setSiteExists(_siteExists): void {
+  public setSiteExists(_siteExists: boolean): void {
     this.siteExists = _siteExists;
   }
 
@@ -130,11 +135,11 @@ export class PstnModel {
     return this.siteExists;
   }
 
-  public setProvider(_provider: IPstnCarrierGet): void {
+  public setProvider(_provider: PstnCarrier): void {
     this.provider = _provider;
   }
 
-  public getProvider(): Object {
+  public getProvider(): PstnCarrier {
     return this.provider;
   }
 
@@ -142,7 +147,7 @@ export class PstnModel {
     return _.isObject(this.provider) ? this.provider.uuid : '';
   }
 
-  public setNumbers(_numbers): void {
+  public setNumbers(_numbers: Array<Object>): void {
     this.numbers = _numbers;
   }
 
@@ -150,27 +155,57 @@ export class PstnModel {
     return this.numbers;
   }
 
-  public setOrders(_orders): void {
+  public setOrders(_orders: Array<IOrder>): void {
     this.orders = _orders;
   }
 
-  public getOrders(): Array<Object> {
+  public getOrders(): Array<IOrder> {
     return _.cloneDeep(this.orders);
+  }
+
+  public setCarriers(_carriers: Array<PstnCarrier>): void {
+    if (_.isArray(_carriers) && _carriers.length > 0) {
+      this.carrierExists = true;
+      this.carriers = _carriers;
+    } else {
+      this.carrierExists = false;
+      this.carriers = [];
+    }
+  }
+
+  public getCarriers(): Array<PstnCarrier> {
+    return this.carriers;
   }
 
   public isSingleCarrierReseller(): boolean {
     return this.singleCarrierReseller;
   }
 
-  public setSingleCarrierReseller(_singleCarrierReseller): void {
+  public setSingleCarrierReseller(_singleCarrierReseller: boolean): void {
     this.singleCarrierReseller = _singleCarrierReseller;
   }
 
-  public setIsTrial(_isTrial): void {
+  public setIsTrial(_isTrial: boolean): void {
     this.isTrial = _isTrial;
   }
 
   public getIsTrial(): boolean {
     return this.isTrial;
   }
+
+  public getCountryCode(): string {
+    return this.countryCode;
+  }
+
+  public setCountryCode(_countryCode): void {
+    this.countryCode = _countryCode;
+  }
+
 }
+
+export default angular.module('huron.PstnSetup', [
+  require('angular-resource'),
+])
+.service('PstnModel', PstnModel)
+.name;
+

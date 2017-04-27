@@ -1,3 +1,6 @@
+import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+
 interface IAlarms {
   severity: 'critical' | 'error' | 'warning' | 'alert';
   title: string;
@@ -6,7 +9,7 @@ interface IAlarms {
 }
 
 class HsCloudAlarmsDropdownComponentCtrl implements ng.IComponentController {
-  private serviceId;
+  private serviceId: HybridServiceId;
 
   public open = false;
   public alarms: IAlarms[] = [];
@@ -16,12 +19,12 @@ class HsCloudAlarmsDropdownComponentCtrl implements ng.IComponentController {
     private $element: ng.IRootElementService,
     private $scope: ng.IScope,
     private $window: ng.IWindowService,
-    private FusionClusterService,
+    private HybridServicesExtrasService: HybridServicesExtrasService,
   ) {}
 
   public $onInit() {
     this.handleClick = this.handleClick.bind(this);
-    this.FusionClusterService.getAlarms(this.serviceId)
+    this.HybridServicesExtrasService.getAlarms(this.serviceId)
       .then((alarms: IAlarms[]) => {
         this.alarms = alarms;
       });

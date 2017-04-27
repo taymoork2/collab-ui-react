@@ -30,7 +30,6 @@ describe('Controller: PlacesCtrl', function () {
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasF237ResourceGroupGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve(true));
     spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
     spyOn(CsdmDataModelService, 'subscribeToChanges').and.returnValue(true);
@@ -77,8 +76,8 @@ describe('Controller: PlacesCtrl', function () {
 
       describe('listState', function () {
 
-        it('should be in bigorg state', function () {
-          expect(controller.filteredView.listState).toEqual(controller.filteredView.bigorg);
+        it('should be in searchonly state', function () {
+          expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
         });
 
         beforeEach(function () {
@@ -89,10 +88,10 @@ describe('Controller: PlacesCtrl', function () {
         describe('searched with short string', function () {
 
           it('should not search', function () {
-            expect(controller.filteredView.listState).toEqual(controller.filteredView.bigorg);
+            expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
             controller.filteredView.setCurrentSearch("a");
             $timeout.flush(10000);
-            expect(controller.filteredView.listState).toEqual(controller.filteredView.bigorg);
+            expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
           });
         });
 
@@ -134,10 +133,10 @@ describe('Controller: PlacesCtrl', function () {
                 expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
               });
 
-              it('should be in emptyresult state if next search is client-side with no matches', function () {
+              it('should be in emptysearchresult state if next search is client-side with no matches', function () {
                 controller.filteredView.setCurrentSearch(searchPart1 + "sdfdsfds");
                 $timeout.flush(10000);
-                expect(controller.filteredView.listState).toEqual(controller.filteredView.emptyresult);
+                expect(controller.filteredView.listState).toEqual(controller.filteredView.emptysearchresult);
               });
 
               it('should be in showresult state if next search is client-side with matches', function () {
@@ -146,10 +145,10 @@ describe('Controller: PlacesCtrl', function () {
                 expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
               });
 
-              it('should be in bigorg state if next search is too narrow', function () {
+              it('should be in searchonly state if next search is too narrow', function () {
                 controller.filteredView.setCurrentSearch('a');
                 $timeout.flush(10000);
-                expect(controller.filteredView.listState).toEqual(controller.filteredView.bigorg);
+                expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
               });
             });
           });
@@ -162,8 +161,8 @@ describe('Controller: PlacesCtrl', function () {
             });
 
             describe('listState', function () {
-              it('should be in emptyresult state', function () {
-                expect(controller.filteredView.listState).toEqual(controller.filteredView.emptyresult);
+              it('should be in emptysearchresult state', function () {
+                expect(controller.filteredView.listState).toEqual(controller.filteredView.emptysearchresult);
               });
             });
           });
@@ -207,10 +206,10 @@ describe('Controller: PlacesCtrl', function () {
           expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
         });
 
-        it('should be in emptyresult state if search with no matches', function () {
+        it('should be in emptysearchresult state if search with no matches', function () {
           controller.filteredView.setCurrentSearch("aasdfefsdfdsf");
           $timeout.flush(10000);
-          expect(controller.filteredView.listState).toEqual(controller.filteredView.emptyresult);
+          expect(controller.filteredView.listState).toEqual(controller.filteredView.emptysearchresult);
         });
 
         it('should be in showresult state if search with matches', function () {
@@ -229,8 +228,8 @@ describe('Controller: PlacesCtrl', function () {
       });
 
       describe('listState', function () {
-        it('should be in noplaces state', function () {
-          expect(controller.filteredView.listState).toEqual(controller.filteredView.noplaces);
+        it('should be in emptydatasource state', function () {
+          expect(controller.filteredView.listState).toEqual(controller.filteredView.emptydatasource);
         });
       });
 

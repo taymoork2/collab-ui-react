@@ -1,0 +1,34 @@
+scope.dynamicTags = ['DYNAMIC-EXAMPLE'] //array of upper case string values to represent elements to grab the 'modelValue' attribute string value from (else use textContent)
+scope.insertElement = function(html) //call function in parent controller AFTER element has been rendered in the DOM, like such: $scope.insertElement('<dynamic-example id="hello" value="linkText" modelValue="' + someVar + '"><dynamic-example>');
+scope.modelValues = [{}]; //array of model value objects
+scope.modelValues[i].model = 'string'; //the say value
+scope.modelValues[i].html = 'string'; //the say description, actual html (pre-compiled) version of this component, defined if dynamic, else says plain text
+
+currently only supporting span as the parent elements for insertion, future == div, and other parent types, undefined behavior if element to insert is not wrapped in <span contentEditable="false"></span>
+Keys (<,>) are disabled
+
+example of insert on button click
+$scope.buttonClick = function () {
+  var someVar = 'aVariableDynamic';
+  $scope.insertElement('<dynamic-example id="hello" value="' + 'textValue' + '" modelValue="' + someVar + '"><dynamic-example>');
+};
+requires ngModel
+$scope.tags = ['DYNAMIC-EXAMPLE'];
+$scope.values = [{ model: 'hello&nbsp;' }, { formatted: true, model: 'aVariableDynamic', html: '<dynamic-example id="hello" value="textValue" modelvalue="aVariableDynamic" class="ng-isolate-scope">' }, { model: '&nbsp;my name is' }];
+$scope.model = undefined;
+
+example of using dynamic prompt in html
+<div ng-if="vm.isDynamicAnnouncementEnabled" class="large-12 small-12 columns aa-message-only-type">
+  <div class="aa-dynamic-prompt">
+    <dynamic-prompt dynamic-tags="tags" class="aa-form-control-test" model-values="values" insert-element="insertElement" ng-model="selected" spellcheck="false" id="stateInput" data-placeholder="{{ :: aaMessageType.messageInputPlaceholder }}"></dynamic-prompt>
+  </div>
+  <button class="row" ng-click="buttonClick();"></button>
+</div>
+insert-element should not point at anything, it enables the $scope.insertElement(...) call on the child directive
+using the wrapper div with class aa-dynamic-prompt adds the default css for the dynamic prompt (and also enables the placeholder/box outline)
+  this may be changed later
+aa-form-control-test class controls the element css
+
+because dynamic prompt is transcluded, one can use any div contenteditable extra attributes, such as spellcheck
+the inserted element REQUIRES attribute modelValue to be set, else dynamic prompt will use the Node.textContent attribute to set up the model
+to prepopulate dynamic-prompt, point model-values to the pre-populated object array with html,model and model elements

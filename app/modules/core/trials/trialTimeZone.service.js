@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialTimeZoneService', TrialTimeZoneService);
+  module.exports = TrialTimeZoneService;
 
   function TrialTimeZoneService() {
     var service = {

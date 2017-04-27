@@ -130,8 +130,8 @@
 
     <div class="messages-section">
       <h3 translate="gss.previousUpdated"></h3>
-
-      <ul>
+      <span ng-show="updateIncidentCtrl.isLoadingMessage"><i class="icon icon-spinner icon-2x"></i></span>
+      <ul ng-show="!updateIncidentCtrl.isLoadingMessage">
         <li ng-repeat="message in updateIncidentCtrl.incidentForUpdate.messages">
           <div ng-init="updateIncidentCtrl.initMessageData(message)">
             <div ng-show="!message.isEditingMessage">
@@ -140,6 +140,9 @@
               <div>
                 <a class="edit-message-link" ng-click="updateIncidentCtrl.showEditMessage(message)"
                    translate="common.edit">
+                </a>
+                <a class="edit-message-link" ng-click="updateIncidentCtrl.deleteMessage(message)"
+                   translate="common.delete">
                 </a>
               </div>
             </div>

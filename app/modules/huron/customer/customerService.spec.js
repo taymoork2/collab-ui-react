@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: Huron Customer', function () {
-  var $httpBackend, $q, HuronCustomer, HuronConfig, PstnSetupService;
+  var $httpBackend, $q, HuronCustomer, HuronConfig, PstnService;
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -13,14 +13,14 @@ describe('Service: Huron Customer', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _HuronCustomer_, _HuronConfig_, _PstnSetupService_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _HuronCustomer_, _HuronConfig_, _PstnService_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     HuronCustomer = _HuronCustomer_;
     HuronConfig = _HuronConfig_;
-    PstnSetupService = _PstnSetupService_;
+    PstnService = _PstnService_;
 
-    spyOn(PstnSetupService, 'listResellerCarriers').and.returnValue($q.resolve());
+    spyOn(PstnService, 'listResellerCarriers').and.returnValue($q.resolve());
   }));
 
   afterEach(function () {
@@ -44,11 +44,11 @@ describe('Service: Huron Customer', function () {
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(201);
       HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com');
       $httpBackend.flush();
-      expect(PstnSetupService.listResellerCarriers).toHaveBeenCalled();
+      expect(PstnService.listResellerCarriers).toHaveBeenCalled();
     });
 
     it('should update voice customer when one pstn reseller carrier is found', function () {
-      PstnSetupService.listResellerCarriers.and.returnValue($q.resolve([{
+      PstnService.listResellerCarriers.and.returnValue($q.resolve([{
         name: 'AUDP_INT',
       }]));
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(201);
@@ -59,17 +59,17 @@ describe('Service: Huron Customer', function () {
       }).respond(200);
       HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com');
       $httpBackend.flush();
-      expect(PstnSetupService.listResellerCarriers).toHaveBeenCalled();
+      expect(PstnService.listResellerCarriers).toHaveBeenCalled();
     });
 
     it('should not update voice customer if pstn reseller is not found', function () {
-      PstnSetupService.listResellerCarriers.and.returnValue($q.reject({
+      PstnService.listResellerCarriers.and.returnValue($q.reject({
         status: 404,
       }));
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(201);
       HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com');
       $httpBackend.flush();
-      expect(PstnSetupService.listResellerCarriers).toHaveBeenCalled();
+      expect(PstnService.listResellerCarriers).toHaveBeenCalled();
     });
 
     it('should handle an error', function () {

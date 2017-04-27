@@ -6,7 +6,7 @@ describe('Controller: AADecisionCtrl', function () {
   var aaQueueService;
   var controller;
   var AAUiModelService, AAModelService, AutoAttendantCeMenuModelService;
-  var customVariableService;
+  var AASessionVariableService;
   var customVarJson = getJSONFixture('huron/json/autoAttendant/aaCustomVariables.json');
 
   var $rootScope, $scope;
@@ -42,7 +42,7 @@ describe('Controller: AADecisionCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AAModelService_, _CustomVariableService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_, _QueueHelperService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AAModelService_, _AASessionVariableService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_, _QueueHelperService_) {
 
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -75,7 +75,7 @@ describe('Controller: AADecisionCtrl', function () {
     featureToggleService = _FeatureToggleService_;
     aaCommonService = _AACommonService_;
     aaQueueService = _QueueHelperService_;
-    customVariableService = _CustomVariableService_;
+    AASessionVariableService = _AASessionVariableService_;
 
     AAUiModelService = _AAUiModelService_;
     AAModelService = _AAModelService_;
@@ -108,7 +108,7 @@ describe('Controller: AADecisionCtrl', function () {
     AAUiModelService = null;
     AutoAttendantCeMenuModelService = null;
     aaCommonService = null;
-    customVariableService = null;
+    AASessionVariableService = null;
     controller = null;
     aaUiModel = null;
     menu = null;
@@ -118,8 +118,33 @@ describe('Controller: AADecisionCtrl', function () {
 
   describe('Conditional tests', function () {
     beforeEach(inject(function () {
-      spyOn(customVariableService, 'listCustomVariables').and.returnValue(q.resolve(customVarJson));
+      spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve(customVarJson));
     }));
+
+    describe('activate', function () {
+      beforeEach(inject(function () {
+        spyOn(aaCommonService, 'isReturnedCallerToggle').and.returnValue(true);
+      }));
+
+      it('should add decision action object menuEntry and have 6 if options and 5 then options', function () {
+        var c;
+
+        var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+        aaUiModel['openHours'].addEntryAt(0, menu);
+
+        c = controller('AADecisionCtrl', {
+          $scope: $scope,
+        });
+
+        $scope.$apply();
+
+        expect(c.menuEntry.actions[0].name).toEqual('conditional');
+        expect(c.isWarn).toEqual(false);
+        expect(c.ifOptions.length).toEqual(7);
+        expect(c.thenOptions.length).toEqual(5);
+      });
+    });
 
     it('should add decision action object menuEntry', function () {
       var c;
@@ -199,6 +224,32 @@ describe('Controller: AADecisionCtrl', function () {
 
     });
 
+    it('should set the action entry from the ifOption buffer', function () {
+      spyOn(aaCommonService, 'isReturnedCallerToggle').and.returnValue(true);
+      var c;
+      action.if = {};
+      action.if.leftCondition = 'callerReturned';
+      action.if.rightCondition = 10080 * 60;
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      var b = _.find(c.ifOptions, { 'value': 'callerReturned' });
+      b.buffer = {
+        label: 'test',
+        value: 10080 * 60,
+      };
+
+      c.update('callerReturned');
+
+      expect(c.actionEntry.if.rightCondition).toEqual(b.buffer.value);
+      expect(c.isWarn).toEqual(false);
+
+    });
+
     it('should the conditional from ifOption value', function () {
       var c;
       action.if = {};
@@ -217,6 +268,32 @@ describe('Controller: AADecisionCtrl', function () {
       c.setIfDecision();
 
       expect(c.actionEntry.if.rightCondition).toEqual(c.ifOption.buffer);
+      expect(c.actionEntry.if.leftCondition).toEqual(c.ifOption.value);
+      expect(c.isWarn).toEqual(false);
+
+    });
+
+    it('should set the caller returned conditional from ifOption value', function () {
+      var c;
+      action.if = {};
+      action.if.leftCondition = 'callerReturned';
+      action.if.rightCondition = 10080 * 60;
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      c.ifOption.value = 'callerReturned';
+      c.ifOption.buffer = {
+        label: 'test',
+        value: 10080 * 60,
+      };
+
+      c.setIfDecision();
+
+      expect(c.actionEntry.if.rightCondition).toEqual(c.ifOption.buffer.value);
       expect(c.actionEntry.if.leftCondition).toEqual(c.ifOption.value);
       expect(c.isWarn).toEqual(false);
 
@@ -270,7 +347,6 @@ describe('Controller: AADecisionCtrl', function () {
   xdescribe('list Queues', function () {
     beforeEach(inject(function ($q) {
       spyOn(aaQueueService, 'listQueues').and.returnValue($q.resolve(queue));
-      aaCommonService.setRouteQueueToggle(true);
     }));
 
     it('should add the Queue option to the dropdown', function () {
@@ -303,7 +379,7 @@ describe('Controller: AADecisionCtrl', function () {
 
   describe('Warning Warning Warning', function () {
     beforeEach(inject(function () {
-      spyOn(customVariableService, 'listCustomVariables').and.returnValue(q.resolve([]));
+      spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve([]));
     }));
 
     it('should set the warning flag and add in the sessionVariable when missing custom variable', function () {

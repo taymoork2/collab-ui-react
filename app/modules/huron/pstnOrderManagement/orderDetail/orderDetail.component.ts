@@ -1,24 +1,28 @@
+import { PstnService } from '../../pstn/pstn.service';
 
 const BLOCK_ORDER = 'BLOCK_ORDER';
 const CUSTOMER = 'CUSTOMER';
+const PARTNER = 'PARTNER';
 export class OrderDetailCtrl implements ng.IComponentController {
   public currentOrder: any;
   public currentCustomer: any;
-  public loading = true;
   public allNumbersCount = 0;
   public info: Array<any> = [];
   public tosAccepted = true;
-  public createdBy = this.$translate.instant('pstnOrderDetail.orderCreatedBy');
+  public createdBy: string;
   /* @ngInject */
   constructor(
-    private PstnSetupService,
+    private PstnService: PstnService,
     private TelephoneNumberService,
     private $translate: angular.translate.ITranslateService,
   ) {
-    this.init();
+    if (_.isUndefined(this.currentOrder.createdBy) ||
+    (!_.isUndefined(this.currentOrder.createdBy) && this.currentOrder.createdBy.toUpperCase() === PARTNER)) {
+      this.createdBy = this.$translate.instant('pstnOrderDetail.orderCreatedBy');
+    }
   }
 
-  public init(): void {
+  public $onInit() {
     this.getToSStatus();
 
     //parse order
@@ -57,17 +61,16 @@ export class OrderDetailCtrl implements ng.IComponentController {
   }
 
   public getToSStatus() {
-    this.PstnSetupService.getCustomerV2(this.currentCustomer.customerOrgId).then((customer) => {
+    this.PstnService.getCustomerV2(this.currentCustomer.customerOrgId).then((customer) => {
       if (customer.trial) {
-        this.PstnSetupService.getCustomerTrialV2(this.currentCustomer.customerOrgId).then((trial) => {
+        this.PstnService.getCustomerTrialV2(this.currentCustomer.customerOrgId).then((trial) => {
           if (!_.has(trial, 'acceptedDate')) {
             this.tosAccepted = false;
           }
         });
       }
-      if (!_.isUndefined(this.currentOrder.createdBy)) {
-        this.createdBy = (this.currentOrder.createdBy).toUpperCase() === CUSTOMER ?
-                       customer.name : this.$translate.instant('pstnOrderDetail.orderCreatedBy');
+      if (!_.isUndefined(this.currentOrder.createdBy) && (this.currentOrder.createdBy).toUpperCase() === CUSTOMER ) {
+        this.createdBy = customer.name;
       }
     });
   }

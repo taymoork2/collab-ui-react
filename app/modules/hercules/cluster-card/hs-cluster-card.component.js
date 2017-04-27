@@ -11,20 +11,19 @@
     });
 
   /* @ngInject */
-  function ClusterCardController($state, FusionClusterService, FeatureToggleService, HybridServicesUtils, $window, $modal) {
+  function ClusterCardController($state, FeatureToggleService, HybridServicesI18NService, HybridServicesUtilsService, $window, $modal) {
     var ctrl = this;
 
     ctrl.countHosts = countHosts;
-    ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
+    ctrl.formatTimeAndDate = HybridServicesI18NService.formatTimeAndDate;
     ctrl.getHostnames = getHostnames;
-    ctrl.getLocalizedReleaseChannel = HybridServicesUtils.getLocalizedReleaseChannel;
+    ctrl.getLocalizedReleaseChannel = HybridServicesI18NService.getLocalizedReleaseChannel;
     ctrl.goToExpressway = goToExpressway;
     ctrl.hasAlarms = hasAlarms;
     ctrl.hasNodesViewFeatureToggle = false;
-    ctrl.hasResourceGroupFeatureToggle = false;
     ctrl.hasServices = hasServices;
     ctrl.hideFooter = hideFooter;
-    ctrl.hybridServicesComparator = HybridServicesUtils.hybridServicesComparator;
+    ctrl.hybridServicesComparator = HybridServicesUtilsService.hybridServicesComparator;
     ctrl.isInMaintenance = isInMaintenance;
     ctrl.hasUpgradeAvailable = hasUpgradeAvailable;
     ctrl.openDeleteConfirm = openDeleteConfirm;
@@ -33,10 +32,6 @@
     ctrl.openSettings = openSettings;
     ctrl.upgradesAutomatically = upgradesAutomatically;
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-      .then(function (supported) {
-        ctrl.hasResourceGroupFeatureToggle = supported;
-      });
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView)
       .then(function (supported) {
         ctrl.hasNodesViewFeatureToggle = supported;
@@ -88,6 +83,10 @@
           backState: 'cluster-list',
           clusterId: clusterId,
         });
+      } else if (serviceId === 'ept') {
+        $state.go('private-trunk-overview.list', {
+          clusterId: clusterId,
+        });
       }
     }
 
@@ -126,6 +125,10 @@
         });
       } else if (type === 'ucm_mgmt') {
         $state.go('cucm-cluster.settings', {
+          id: id,
+        });
+      } else if (type === 'ept') {
+        $state.go('private-trunk-settings', {
           id: id,
         });
       }
