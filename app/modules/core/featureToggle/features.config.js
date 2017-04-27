@@ -74,6 +74,7 @@ module.exports = {
   geoHintEnabled: 'geo-hint-enabled',
   huronAAMediaUpload: 'huron-aa-mediaupload',
   huronAACallerInput: 'huron-aa-callerinput',
+  huronAARestApi: 'huron-aa-restapi',
   huronAARouteRoom: 'huron-aa-routeroom',
   huronAADynannounce: 'huron-aa-dynannounce',
   huronAAReturnCaller: 'huron-aa-returncaller',
