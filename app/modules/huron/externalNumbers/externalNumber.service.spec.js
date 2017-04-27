@@ -1,19 +1,19 @@
 'use strict';
 
 describe('Service: ExternalNumberService', function () {
-  var $rootScope, $httpBackend, $translate, $q, ExternalNumberService, HuronConfig, PstnSetupService, ExternalNumberPool;
+  var $rootScope, $httpBackend, $translate, $q, ExternalNumberService, HuronConfig, PstnService, ExternalNumberPool;
   var allNumbers, pendingNumbers, pendingOrders, unassignedNumbers, assignedNumbers, externalNumbers, numberResponse, noNumberResponse, pendingList, pendingAdvanceOrder, malformedAdvanceOrder, malformedAdvanceOrderLabel;
   var customerId, externalNumber, carrierId;
 
   beforeEach(angular.mock.module('huron.externalNumberService'));
 
-  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _ExternalNumberService_, _HuronConfig_, _PstnSetupService_, _ExternalNumberPool_) {
+  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _ExternalNumberService_, _HuronConfig_, _PstnService_, _ExternalNumberPool_) {
     $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
     $translate = _$translate_;
     $q = _$q_;
     ExternalNumberService = _ExternalNumberService_;
-    PstnSetupService = _PstnSetupService_;
+    PstnService = _PstnService_;
     ExternalNumberPool = _ExternalNumberPool_;
     HuronConfig = _HuronConfig_;
 
@@ -78,10 +78,10 @@ describe('Service: ExternalNumberService', function () {
     allNumbers = pendingNumbers.concat(externalNumbers);
     pendingList = pendingNumbers.concat(pendingOrders);
 
-    spyOn(PstnSetupService, 'listPendingNumbers').and.returnValue($q.resolve(pendingList));
-    spyOn(PstnSetupService, 'isCarrierSwivel').and.returnValue($q.resolve(false));
-    spyOn(PstnSetupService, 'getCustomerV2').and.returnValue($q.resolve({ pstnCarrierId: carrierId }));
-    spyOn(PstnSetupService, 'deleteNumber');
+    spyOn(PstnService, 'listPendingNumbers').and.returnValue($q.resolve(pendingList));
+    spyOn(PstnService, 'isCarrierSwivel').and.returnValue($q.resolve(false));
+    spyOn(PstnService, 'getCustomerV2').and.returnValue($q.resolve({ pstnCarrierId: carrierId }));
+    spyOn(PstnService, 'deleteNumber');
     spyOn(ExternalNumberPool, 'deletePool');
     spyOn(ExternalNumberPool, 'getExternalNumbers').and.returnValue($q.resolve(externalNumbers));
     spyOn($translate, 'instant');
@@ -135,7 +135,7 @@ describe('Service: ExternalNumberService', function () {
 
   it('should only retrieve external numbers if not a terminus customer', function () {
     $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(numberResponse);
-    PstnSetupService.getCustomerV2.and.returnValue($q.reject());
+    PstnService.getCustomerV2.and.returnValue($q.reject());
 
     ExternalNumberService.refreshNumbers(customerId);
     $httpBackend.flush();
@@ -195,7 +195,7 @@ describe('Service: ExternalNumberService', function () {
   });
 
   it('should clear numbers on pending error', function () {
-    PstnSetupService.listPendingNumbers.and.returnValue($q.reject({}));
+    PstnService.listPendingNumbers.and.returnValue($q.reject({}));
     ExternalNumberService.refreshNumbers();
 
     $rootScope.$apply();
@@ -205,7 +205,7 @@ describe('Service: ExternalNumberService', function () {
   });
 
   it('should clear only pending numbers on pending 404', function () {
-    PstnSetupService.listPendingNumbers.and.returnValue($q.reject({
+    PstnService.listPendingNumbers.and.returnValue($q.reject({
       status: 404,
     }));
     ExternalNumberService.refreshNumbers();
@@ -230,18 +230,18 @@ describe('Service: ExternalNumberService', function () {
     ExternalNumberService.deleteNumber(customerId, externalNumber);
     $rootScope.$apply();
 
-    expect(PstnSetupService.deleteNumber).toHaveBeenCalledWith(customerId, externalNumber.number);
+    expect(PstnService.deleteNumber).toHaveBeenCalledWith(customerId, externalNumber.number);
     expect(ExternalNumberPool.deletePool).not.toHaveBeenCalled();
   });
 
   it('should delete numbers from cmi instead of Terminus', function () {
     $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(numberResponse);
-    PstnSetupService.getCustomerV2.and.returnValue($q.reject());
+    PstnService.getCustomerV2.and.returnValue($q.reject());
 
     ExternalNumberService.deleteNumber(customerId, externalNumber);
     $httpBackend.flush();
 
-    expect(PstnSetupService.deleteNumber).not.toHaveBeenCalled();
+    expect(PstnService.deleteNumber).not.toHaveBeenCalled();
     expect(ExternalNumberPool.deletePool).toHaveBeenCalledWith(customerId, externalNumber.uuid);
   });
 
@@ -258,7 +258,7 @@ describe('Service: ExternalNumberService', function () {
 
     it('should return true for no Terminus customer and has no numbers', function () {
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(noNumberResponse);
-      PstnSetupService.getCustomerV2.and.returnValue($q.reject());
+      PstnService.getCustomerV2.and.returnValue($q.reject());
       var value = ExternalNumberService.isTerminusCustomer(customerId);
       $httpBackend.flush();
       $q.resolve(value).then(function (response) {
@@ -268,7 +268,7 @@ describe('Service: ExternalNumberService', function () {
 
     it('should return false for no Terminus customer and has numbers', function () {
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(numberResponse);
-      PstnSetupService.getCustomerV2.and.returnValue($q.reject());
+      PstnService.getCustomerV2.and.returnValue($q.reject());
       var value = ExternalNumberService.isTerminusCustomer(customerId);
       $httpBackend.flush();
       $q.resolve(value).then(function (response) {

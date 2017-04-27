@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnSetupService, HybridServicesUtilsService) {
+  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -167,9 +167,9 @@ require('./_overview.scss');
         return;
       }
       if (vm.orgData !== null) {
-        PstnSetupService.getCustomerV2(vm.orgData.id).then(function (customer) {
+        PstnService.getCustomerV2(vm.orgData.id).then(function (customer) {
           if (customer.trial) {
-            PstnSetupService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
+            PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
               if (!_.has(trial, 'acceptedDate')) {
                 vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
                 vm.notifications.push(vm.pstnToSNotification);

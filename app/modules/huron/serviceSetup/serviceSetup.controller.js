@@ -9,7 +9,7 @@
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate,
     HuronCustomer, ValidationService, HuronCustomerService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
-    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2,
+    PstnService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2,
     CustomerDialPlanServiceV2, HuronCompassService) {
     var vm = this;
     vm.isTimezoneAndVoicemail = function () {
@@ -132,7 +132,7 @@
     vm.ftHRegionalTones = false;
     vm.supportRegionalSettings = supportRegionalSettings;
 
-    PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
+    PstnService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
     });
 

@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function HuronSettingsCtrl($q, $scope, $state, $log, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, Orgservice, PstnSetup) {
+  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CallerId, CeService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, Orgservice, PstnModel, PstnService, PstnServiceAddressService, ServiceSetup, TelephoneNumberService, TerminusUserDeviceE911Service, ValidationService, VoicemailMessageAction) {
     var vm = this;
     vm.loading = true;
 
@@ -178,7 +178,7 @@
     vm.previousModel = _.cloneDeep(vm.model);
     vm.isTerminusCustomer = false;
 
-    PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
+    PstnService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
     });
 
@@ -187,7 +187,7 @@
     };
     Orgservice.getOrg(function (data) {
       if (data.countryCode) {
-        PstnSetup.setCountryCode(data.countryCode);
+        PstnModel.setCountryCode(data.countryCode);
       }
     }, null, params);
 
@@ -1326,10 +1326,10 @@
     }
 
     function loadServiceAddress() {
-      return PstnSetupService.listCustomerCarriers(Authinfo.getOrgId())
+      return PstnService.listCustomerCarriers(Authinfo.getOrgId())
         .then(function (carriers) {
           if (_.get(carriers, '[0].apiImplementation') !== "SWIVEL") {
-            PstnSetup.setProvider(_.get(carriers, '[0]'));
+            PstnModel.setProvider(_.get(carriers, '[0]'));
             showServiceAddress();
           }
         })
@@ -1721,7 +1721,6 @@
     function loadMediaOnHold() {
       return ServiceSetup.getMediaOnHoldList()
         .then(function (response) {
-          $log.log('service successfully called');
           loadMediaOnHoldOptions(response);
           _.forEach(response, function (media) {
             if (media.entityIdSet && media.entityIdSet[0] === media.orgId) {
@@ -1730,7 +1729,6 @@
               });
             }
           });
-          $log.log('toggle value: ' + vm.companyMOHToggle);
         });
     }
 
@@ -2196,6 +2194,7 @@
       vm.model.companyVoicemail.voicemailToEmail = savedModel.companyVoicemail.voicemailToEmail;
       vm.model.companyVoicemail.externalVoicemail = savedModel.companyVoicemail.externalVoicemail;
 
+      vm.model.mediaOnHold = savedModel.mediaOnHold;
       vm.model.internationalDialingEnabled = savedModel.internationalDialingEnabled;
       vm.model.internationalDialingUuid = savedModel.internationalDialingUuid;
       vm.model.showServiceAddress = savedModel.showServiceAddress;
