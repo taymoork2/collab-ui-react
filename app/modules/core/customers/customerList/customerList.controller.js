@@ -750,9 +750,7 @@ require('./_customer-list.scss');
               customerRoomSystemsLicenseIsTrial: getIsTrial(org, 'roomSystems'),
             });
           } else {
-            return $state.go('didadd', {
-              currentOrg: org,
-            });
+            return Notification.error('pstnSetup.errors.customerNotFound');
           }
         });
     }
