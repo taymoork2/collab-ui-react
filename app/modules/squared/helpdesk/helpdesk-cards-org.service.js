@@ -71,7 +71,7 @@
         Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
       });
       if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal')) {
-        CloudConnectorService.getService('squared-fusion-gcal', org.id).then(function (service) {
+        CloudConnectorService.getService(org.id).then(function (service) {
           hybridServicesCard.services.push(service);
         }).catch(function (response) {
           Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');

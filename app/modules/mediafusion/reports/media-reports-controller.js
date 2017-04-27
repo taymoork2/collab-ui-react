@@ -132,7 +132,7 @@
       value: 4,
       label: $translate.instant('mediaFusion.metrics.threeMonths'),
     }];
-    vm.timeSelected = vm.timeOptions[0];
+    vm.timeSelected = vm.timeOptions[1];
 
     vm.isFlipped = false;
     vm.clientTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.clientType');

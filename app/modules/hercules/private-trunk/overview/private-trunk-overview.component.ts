@@ -10,7 +10,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
     state: 'private-trunk-overview.list',
   }, {
     title: 'Settings',
-    state: 'private-trunk-overview',
+    state: 'private-trunk-overview.settings',
   }];
   public certificates: ICertificate;
   public formattedCertList: Array<IformattedCertificate>;

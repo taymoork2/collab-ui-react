@@ -24,9 +24,6 @@ describe('Controller: CustomerListCtrl', function () {
       name: 'communications',
     }],
   };
-  var numberResponse = {
-    numbers: [1, 2, 3],
-  };
   var noNumberResponse = {
     numbers: [],
   };
@@ -201,16 +198,6 @@ describe('Controller: CustomerListCtrl', function () {
 
   describe('Click setup PSTN', function () {
     beforeEach(initController);
-
-    it('not Terminus customer and has e164 numbers, should route to DID add', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(404);
-      $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(numberResponse);
-      controller.addNumbers(testOrg);
-      $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('didadd', {
-        currentOrg: testOrg,
-      });
-    });
 
     it('not Terminus customer and has no e164 numbers, should route to PSTN setup', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(404);

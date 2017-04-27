@@ -254,6 +254,14 @@ describe('Component: pgEdit', () => {
       this.$scope.$apply();
       expect(this.Notification.errorResponse).toHaveBeenCalledWith(pagingServiceFailureResp, pg.name);
     });
+
+    it('should display Notification when getNumberExtension 2xx with empty number', function () {
+      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve({ data: [] });
+      this.getPagingGroupDefer.resolve(pg);
+      this.$scope.$apply();
+      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorGetNumber', { pagingGroupName: pg.name });
+    });
   });
 
   describe('Negative on getNumberSuggestions', function () {
