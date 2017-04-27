@@ -61,9 +61,7 @@
             customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems'),
           });
         } else {
-          return $state.go('didadd', {
-            currentOrg: vm.currentCustomer,
-          });
+          return Notification.error('pstnSetup.errors.customerNotFound');
         }
       });
     }

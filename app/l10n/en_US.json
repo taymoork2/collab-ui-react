@@ -4060,7 +4060,8 @@
       },
       "unsupportedNumberType": "The number type {{type}} for phone number {{number}} is currently not supported yet.",
       "unsupportedOrderType": "Error while adding your order to the order cart. The order type {{type}} is currently not supported yet.",
-      "phoneNumbers": "You can only add up to 10 phone numbers."
+      "phoneNumbers": "You can only add up to 10 phone numbers.",
+      "customerNotFound": "PSTN customer record not found. Please contact Cisco TAC for further assistance."
     },
     "orderStatus": {
       "pinRequired": "Customer needs to sign PSTN Contract.",
