@@ -278,7 +278,11 @@
         <h4 translate="partnerHomePage.nonTrialServices"></h4>
       </div>
       <div class="section__content">
-        <formly-form model="trial.trialData.trials" fields="trial.nonTrialServices"></formly-form>
+         <input type="checkbox" cs-input
+            ng-model="trial.contextTrial.enabled"
+            id="contextTrial" name="contextTrial"
+            cs-input-label="{{::'trials.context' | translate}}">
+        </div>
       </div>
     </div>
   </form>
