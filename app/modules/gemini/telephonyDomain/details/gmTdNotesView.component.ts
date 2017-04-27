@@ -1,23 +1,21 @@
 import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
 
-const NOTE_ACTION = 'add_notes_td';
-const NOTE_POST_ACTION_FOR = 'Telephony Domain';
-
 class GmTdNotesView implements ng.IComponentController {
-  private _model: any[];
-  private _displayCount: number = 5;
-  private _noteMaxByte: number = 2048;
+  private _getDataFromHttp: boolean = true;
+  private static readonly MAX_LENGTH_NOTE: number = 2048;
+  private static readonly NOTE_ACTION: string = 'add_notes_td';
+  private static readonly NOTE_POST_ACTION_FOR: string = 'Telephony Domain';
 
-  public model: any[];
   public newNote: any;
+  public model: any[] = [];
   public customerId: string;
   public ccaDomainId: string;
+  public displayCount: number = 5;
   public isLoaded: boolean = false;
   public isLoading: boolean = false;
   public isCollapsed: boolean = true;
   public isSubmitting: boolean = false;
-  public needToShowAll: boolean = false;
 
   /* @ngInject */
   public constructor(private gemService,
@@ -29,7 +27,11 @@ class GmTdNotesView implements ng.IComponentController {
     let currentTD = this.gemService.getStorage('currentTelephonyDomain');
     this.customerId = currentTD.customerId;
     this.ccaDomainId = currentTD.ccaDomainId;
-    this._model = _.get(this.$stateParams, 'info.notes', []);
+
+    if (_.has(this.$stateParams, 'info.notes')) {
+      this.model = _.get(this.$stateParams, 'info.notes', []);
+      this._getDataFromHttp = false;
+    }
   }
 
   public onCollapse() {
@@ -41,23 +43,20 @@ class GmTdNotesView implements ng.IComponentController {
   }
 
   public onShowAll() {
-    if (this.needToShowAll) {
-      this.model = this._model;
-      this.needToShowAll = false;
-    }
+    this.displayCount = this.model.length;
   }
 
   public onSave(): void {
     let postData = {
       customerID: this.customerId,
       siteID: this.ccaDomainId,
-      action: NOTE_ACTION,
-      actionFor: NOTE_POST_ACTION_FOR,
+      action: GmTdNotesView.NOTE_ACTION,
+      actionFor: GmTdNotesView.NOTE_POST_ACTION_FOR,
       objectName: this.newNote,
     };
 
     let notes = _.get(postData, 'objectName');
-    if (this.getByteLength(notes) > this._noteMaxByte) {
+    if (this.getByteLength(notes) > GmTdNotesView.MAX_LENGTH_NOTE) {
       this.Notification.error(this.$translate.instant('gemini.cbgs.notes.errorMsg.maxLength'));
       return;
     }
@@ -77,8 +76,10 @@ class GmTdNotesView implements ng.IComponentController {
         return;
       }
 
-      this._model.unshift(resJson.body);
-      this.setModel();
+      this.model.unshift(resJson.body);
+      if (this.displayCount === this.model.length - 1) {
+        this.displayCount = this.model.length;
+      }
       this.newNote = '';
     });
   }
@@ -101,16 +102,8 @@ class GmTdNotesView implements ng.IComponentController {
     return totalLength;
   }
 
-  private setModel(): void {
-    this.model = _.size(this._model) <= this._displayCount
-      ? this._model
-      : _.slice(this._model, 0, this._displayCount);
-    this.needToShowAll = (_.size(this._model) > this._displayCount);
-  }
-
   private getNotes() {
-    if (typeof this._model !== 'undefined') {
-      this.setModel();
+    if (!this._getDataFromHttp) {
       return;
     }
 
@@ -121,9 +114,7 @@ class GmTdNotesView implements ng.IComponentController {
           this.Notification.error(this.$translate.instant('getListError'));
           return;
         }
-        this._model = _.get(res, 'content.data.body', []);
-        this.setModel();
-
+        this.model = _.get(res, 'content.data.body', []);
         this.isLoading = false;
         this.isLoaded = true;
       })

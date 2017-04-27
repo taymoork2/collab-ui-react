@@ -17,14 +17,14 @@
       </div>
 
       <ul ng-if="!$ctrl.isLoading" class="history-ul">
-        <li ng-repeat="note in $ctrl.model track by $index">
+        <li ng-repeat="note in $ctrl.model | limitTo: $ctrl.displayCount track by $index">
           <small>{{note.actionTime}} {{'gemini.cbgs.by' | translate}} {{note.userName}} {{!note.email ? '' : '(' +
             note.email + ')'}}
           </small>
           <h6>{{note.objectName}}</h6>
         </li>
       </ul>
-      <p ng-if="$ctrl.needToShowAll" class="show-more">
+      <p ng-if="$ctrl.displayCount < $ctrl.model.length" class="show-more">
         <a class="primary-color" href ng-click="$ctrl.onShowAll()" translate="gemini.cbgs.showMore"></a>
       </p>
     </div>

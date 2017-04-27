@@ -1,22 +1,19 @@
 import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
 
-const HISTORY_ACTION: string = 'add_notes_td';
-const HISTORY_ACTION_MOVE_SITE: string = 'Edit_td_move_site';
-
 class GmTdHistories implements ng.IComponentController {
-  private _model;
-  private _displayCount: number = 5;
   private _getDataFromHttp: boolean = true;
+  private static readonly HISTORY_ACTION: string = 'add_notes_td';
+  private static readonly HISTORY_ACTION_MOVE_SITE: string = 'Edit_td_move_site';
 
-  public model;
+  public model: any[] = [];
   public domainName: string;
   public customerId: string;
   public ccaDomainId: string;
+  public displayCount: number = 5;
   public isLoaded: boolean = false;
   public isLoading: boolean = false;
   public isCollapsed: boolean = true;
-  public needToShowAll: boolean = false;
 
   /* @ngInject */
   public constructor(
@@ -32,7 +29,7 @@ class GmTdHistories implements ng.IComponentController {
     this.ccaDomainId = currentTD.ccaDomainId;
 
     if (_.has(this.$stateParams, 'info.histories')) {
-      this._model = _.get(this.$stateParams, 'info.histories', []);
+      this.model = _.get(this.$stateParams, 'info.histories', []);
       this._getDataFromHttp = false;
     }
   }
@@ -46,22 +43,11 @@ class GmTdHistories implements ng.IComponentController {
   }
 
   public onShowAll(): void {
-    if (this.needToShowAll) {
-      this.model = this._model;
-      this.needToShowAll = false;
-    }
-  }
-
-  public setModel(): void {
-    this.model = _.size(this._model) <= this._displayCount
-      ? this._model
-      : _.slice(this._model, 0, this._displayCount);
-    this.needToShowAll = (_.size(this._model) > this._displayCount);
+    this.displayCount = this.model.length;
   }
 
   private getHistories() {
     if (!this._getDataFromHttp) {
-      this.setModel();
       return;
     }
 
@@ -72,22 +58,28 @@ class GmTdHistories implements ng.IComponentController {
           this.Notification.error('error'); //TODO Wording
           return;
         }
-        this._model = _.get(res, 'content.data.body', []);
 
-        this._model = _.filter(this._model, (item: any) : boolean => {
-          return item.action !== HISTORY_ACTION;
+        let data: any[] = _.get(res, 'content.data.body', []);
+
+        data = _.filter(data, (item: any) : boolean => {
+          return item.action !== GmTdHistories.HISTORY_ACTION;
         });
-        _.forEach(this._model, (item) => {
-          item.action = _.upperFirst(item.action);
 
-          if (item.action === HISTORY_ACTION_MOVE_SITE) {
-            let moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID + ' to ' + item.objectName;
-            item.objectName = '';
-            item.moveSiteMsg = moveSiteMsg;
-            item.action = this.$translate.instant('gemini.cbgs.siteMoved');
+        this.model = _.map(data, (item) => {
+          let formattedItem = _.assignIn({}, item, {
+            action: _.upperFirst(item.action),
+          });
+
+          if (item.action === GmTdHistories.HISTORY_ACTION_MOVE_SITE) {
+            let moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID
+              + ' to ' + item.objectName;
+            formattedItem.objectName = '';
+            formattedItem.moveSiteMsg = moveSiteMsg;
+            formattedItem.action = this.$translate.instant('gemini.cbgs.siteMoved');
           }
+          return formattedItem;
         });
-        this.setModel();
+
         this.isLoaded = true;
         this.isLoading = false;
       }).catch((err) => {
