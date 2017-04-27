@@ -71,7 +71,7 @@ class GmTdHistories implements ng.IComponentController {
           });
 
           if (item.action === GmTdHistories.HISTORY_ACTION_MOVE_SITE) {
-            let moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID
+            const moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID
               + ' to ' + item.objectName;
             formattedItem.objectName = '';
             formattedItem.moveSiteMsg = moveSiteMsg;
