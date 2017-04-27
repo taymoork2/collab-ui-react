@@ -56,34 +56,29 @@
 
           // success
           // find differences between lists
-          // _.difference() won't work here because CMI and resources list have different structs
-          // let's just do it the straight-forward way...
 
-          // find resources not in CMI
-          var matchResourceNumber = function (obj) {
-            return _.replace(obj.number, /\D/g, '') === resources[i].getNumber();
-          };
-          var i = 0;
-          for (i = 0; i < resources.length; i++) {
-            // check to see if it's in the CMI assigned list
-            var cmiObj = cmiAssignedNumbers.filter(matchResourceNumber);
-            if (_.isUndefined(cmiObj) || cmiObj === null || cmiObj.length === 0) {
-              onlyResources.push(resources[i].getNumber());
-            }
-          }
-          // find CMI assigned numbers not in resources
-          var matchCmiAssignedNumber = function (obj) {
-            return obj.getNumber() === _.replace(cmiAssignedNumbers[i].number, /\D/g, '');
-          };
-          for (i = 0; i < cmiAssignedNumbers.length; i++) {
-            if (cmiAssignedNumbers[i].type != service.NUMBER_FORMAT_ENTERPRISE_LINE) {
-              // check to see if it's in the resource list
-              var rscObj = resources.filter(matchCmiAssignedNumber);
-              if (_.isUndefined(rscObj) || rscObj === null || rscObj.length === 0) {
-                onlyCMI.push(cmiAssignedNumbers[i].number);
-              }
-            }
-          }
+          // we only want to scan for external and extension numbers (NUMBER_FORMAT_DIRECT_LINE and NUMBER_FORMAT_EXTENSION) only
+
+          var CMInums = _.map(_.reject(cmiAssignedNumbers, { 'type': service.NUMBER_FORMAT_ENTERPRISE_LINE }), function (n) {
+            return _.replace(n.number, '+', '');
+          });
+
+          var numbersResources = _.map(resources, function (n) {
+            return _.replace(n.number, '+', '');
+          });
+
+          /* cannot use onlyCMi and onlyResource directly as it overwrites the reference. */
+          var onlyThisResources = _.difference(numbersResources, CMInums);
+          var onlyThisCMI = _.difference(CMInums, numbersResources);
+
+          _.forEach(onlyThisCMI, function (num) {
+            onlyCMI.push(num);
+          });
+
+          _.forEach(onlyThisResources, function (num) {
+            onlyResources.push(num);
+          });
+
           return cmiAssignedNumbers;
         },
         function (response) {
@@ -199,9 +194,24 @@
               }
 
             }
-
           }
+
         }
+
+        /* called from aaNumbersCtrl.js when new number is selected from list.
+         * we can take advantage of this query instead of re-querying to obtain
+         * the UUID from CMI
+         */
+        _.find(resources, function (resource) {
+          var cmiNumber = _.find(cmiAssignedNumbers, function (cmiNumber) {
+            return (_.trimStart(cmiNumber.number, '+') === _.trimStart(resource.getNumber(), '+'));
+
+          });
+          if (cmiNumber) {
+            resource.setUUID(cmiNumber.uuid);
+            resource.setNumber(cmiNumber.number);
+          }
+        });
 
         return resources;
 
