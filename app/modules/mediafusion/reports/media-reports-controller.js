@@ -445,7 +445,6 @@
     function setSneekPeekData() {
       MediaReportsService.getClusterAvailabilityTooltip(vm.timeSelected).then(function (response) {
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
-        //vm.availabilityTooltipOptions['tooltipModel'] = vm.availabilityTooltipOptions.values[0];
         vm.tooltipText = vm.availabilityTooltipOptions.values[0];
         vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
       }, function () {
