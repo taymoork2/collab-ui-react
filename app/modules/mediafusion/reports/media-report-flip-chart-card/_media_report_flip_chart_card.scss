@@ -20,7 +20,7 @@
   z-index: 1;
   position: relative;
   width: 100%;
-  min-height: 206px;
+  min-height: 240px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
@@ -35,7 +35,7 @@
   transform: rotateY(-180deg);
   position: relative;
   width: 100%;
-  min-height: 206px;
+  min-height: 240px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
@@ -71,4 +71,7 @@
 }
 .span-desc-small {
   font-size: 0.82rem !important;
+}
+.media-card-article {
+  min-height: 240px;
 }

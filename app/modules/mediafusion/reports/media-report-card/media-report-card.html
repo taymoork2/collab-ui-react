@@ -1,5 +1,5 @@
 <cs-card class="large-3 medium-6 small-12 menu-card header-bar overview-card {{$ctrl.headercolor}} {{$ctrl.cardClass}}">
-  <article>
+  <article class="media-card-article">
     <header>
       <div class="metrics-header"> {{$ctrl.headername}} </div>
     </header>
@@ -15,7 +15,7 @@
         <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}"></div>
         <div class="no-data-center-card" ng-if="$ctrl.chartOptions.noData">
           <p>
-            <h3 class="no-data-card"> 
+            <h3 class="no-data-card">
             <i class='icon icon-warning no-data-warning-card'></i>
             <span translate='mediaFusion.metrics.nodata'></span></h3>
           <p>

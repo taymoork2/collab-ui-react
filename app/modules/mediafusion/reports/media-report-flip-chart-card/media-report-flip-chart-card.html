@@ -25,7 +25,9 @@
     </article>
 
     <article class="face back" ng-class="{'no-display': !isFlipped}">
-      <header></header>
+      <header>
+        <div class="metrics-header"> {{$ctrl.headername}} </div>
+      </header>
       <section>
         <div class="metrics-info" ng-class="{'no-display': $ctrl.parentcntrl.displayAdoption==false}">
           <div class="card-desc-small">
