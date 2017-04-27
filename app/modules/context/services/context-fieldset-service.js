@@ -18,6 +18,7 @@
       createFieldset: createFieldset,
       createAndGetFieldset: createAndGetFieldset,
       getInUse: getInUse,
+      updateAndGetFieldset: updateAndGetFieldset,
     };
 
     return service;
@@ -86,6 +87,20 @@
             .then(function (response) {
               return _.get(response, 'data.status.inUse', false);
             });
+        });
+    }
+
+    function updateFieldset(data) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.put(dictionaryUrl + getPath + data.id, data);
+        });
+    }
+
+    function updateAndGetFieldset(data) {
+      return updateFieldset(data)
+        .then(function () {
+          return getFieldset(data.id);
         });
     }
   }

@@ -9,6 +9,9 @@ interface IFieldsetData {
   id: string;
   description: string;
   fields: string[];
+  lastUpdated?: string;
+  publiclyAccessible: Boolean;
+  publiclyAccessibleUI: string;
 }
 
 /**
@@ -50,6 +53,10 @@ class FieldsetModalCtrl implements ng.IComponentController {
   public allSelectableFields: IFieldData[];   // All Fields available for selection
   public fetchFailed: Boolean;                // Fetch status for loading all fields
 
+  public createMode: Boolean;                  //whether the modal is for create or edit
+  public existingFieldsetData: IFieldsetData;  //The fieldset passed in for edit
+  private publiclyAccessibleMap: Object;       //Map for publiclyAccessible
+
   /* @ngInject */
   constructor(
     protected $q: ng.IQService,
@@ -68,12 +75,6 @@ class FieldsetModalCtrl implements ng.IComponentController {
    * d) Load all fields for selection in typeahead
    */
   public $onInit() {
-    // Set initial fieldset data
-    this.fieldsetData = {
-      id: '',
-      description: '',
-      fields: [],
-    };
 
     // Setup validation messages and validators for field id
     this.validationMessages = {
@@ -95,6 +96,26 @@ class FieldsetModalCtrl implements ng.IComponentController {
     this.classificationMap['ENCRYPTED'] = this.localizedStrings['encrypted'];
     this.classificationMap['UNENCRYPTED'] = this.localizedStrings['unencrypted'];
     this.classificationMap['PII'] = this.localizedStrings['pii'];
+
+    //map publiclyAccessible to value that matches by api
+    this.publiclyAccessibleMap = {};
+    this.publiclyAccessibleMap[this.$translate.instant('context.dictionary.custom')] = false;
+    this.publiclyAccessibleMap[this.$translate.instant('context.dictonary.cisco')] = true;
+
+    //check if it is create or eidt
+    this.createMode = !Boolean(_.get(this.existingFieldsetData, 'id'));
+
+    // Set initial fieldset data
+    this.fieldsetData = this.createMode
+     ? {
+       id: '',
+       description: '',
+       fields: [],
+       publiclyAccessible: false,
+       publiclyAccessibleUI: '',
+     }
+     //make a copy of the existing fieldset
+     : _.cloneDeep(this.existingFieldsetData);
 
     // load existing fields
     this.loadFields();
@@ -121,6 +142,11 @@ class FieldsetModalCtrl implements ng.IComponentController {
       });
   }
 
+  public fixDataForApi() {
+    this.fieldsetData.publiclyAccessible = this.publiclyAccessibleMap[this.fieldsetData.publiclyAccessibleUI];
+    return this.fieldsetData;
+  }
+
   /**
    * Create a new fieldset
    * @returns {Promise<R>}
@@ -142,14 +168,30 @@ class FieldsetModalCtrl implements ng.IComponentController {
       });
   }
 
+  public update () {
+    this.actionInProgress = true;
+    return this.ContextFieldsetsService.updateAndGetFieldset(this.fixDataForApi())
+      .then(data => {
+        this.fieldsetData = _.cloneDeep(data);
+        this.callback(this.fieldsetData);
+        this.Notification.success('context.dictionary.fieldsetPage.fieldsetUpdateSuccess');
+        this.Analytics.trackEvent(this.Analytics.sections.CONTEXT.eventNames.CONTEXT_UPDATE_FIELDSET_SUCCESS);
+      }).catch(() => {
+        this.Notification.error('context.dictionary.fieldsetPage.fieldsetUpdateFailure');
+        this.Analytics.trackEvent(this.Analytics.sections.CONTEXT.eventNames.CONTEXT_UPDATE_FIELDSET_FAILURE);
+      }).then(() => {
+        this.actionInProgress = false;
+      });
+  }
+
   /**
-   * Checks if the conditions to enable Create button are satisfied or not
+   * Checks if the conditions to enable Create/Save button are satisfied or not
    * a) No other action is in progress i.e. another Create or Load Fields
    * b) Fieldset Id validation passes and
    * c) At least one field is added to the fieldset
    * @returns {Boolean}
    */
-  public createButtonEnabled() {
+  public createOrSaveButtonEnabled() {
     return Boolean(!this.actionInProgress &&
       this.nextButtonEnabled() && this.fieldsetData.fields.length > 0);
   }
@@ -272,11 +314,12 @@ class FieldsetModalCtrl implements ng.IComponentController {
    * Removes a field for the selected fields list and adds it to the list of fields available for selection.
    * @param field
    */
-  public removeFieldFromList(field: IFieldData) {
+  public removeFieldFromList(field: IFieldData, form: ng.IFormController) {
     _.pull(this.fields, field);
     _.pull(this.fieldsetData.fields, field.id);
     this.allSelectableFields.push(field);
     this.sortFields(this.allSelectableFields);
+    form.$setDirty();
   }
 
   /**
@@ -298,6 +341,7 @@ export class FieldsetModalComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/context/fieldsets/modal/fieldset-modal.html';
   public bindings = {
     existingFieldsetIds: '<',
+    existingFieldsetData: '<',
     callback: '<',
     dismiss: '&',
   };

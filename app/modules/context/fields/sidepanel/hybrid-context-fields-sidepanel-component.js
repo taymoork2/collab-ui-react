@@ -72,10 +72,7 @@ require('./_fields-sidepanel.scss');
         vm.hasDescription = true;
       }
 
-      //convert the UI friendly text to the actual boolean value
-      if (!_.isEmpty(vm.field.publiclyAccessible)) {
-        vm.publiclyAccessible = vm.field.publiclyAccessibleUI.toLowerCase() === 'cisco';
-      }
+      vm.publiclyAccessible = vm.field.publiclyAccessible;
     };
     vm.$onInit = function () {
       vm._fixFieldData();
