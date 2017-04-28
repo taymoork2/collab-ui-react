@@ -125,7 +125,7 @@ require('./_customer-overview.scss');
           actionFunction: openEditTrialModal,
         });
       } else {
-        if (!vm.currentCustomer.trialId) {
+        if (!vm.currentCustomer.trialId && _.get(vm.currentCustomer, 'licenseList.length', 0) > 0) {
           vm.trialActions.push({
             actionKey: 'customerPage.addTrial',
             actionFunction: openAddTrialModal,
