@@ -16,6 +16,7 @@
     on-change-fn="$ctrl.setResources(privateTrunkResource)">
   </private-trunk-destination>
   <private-trunk-certificate ng-if="$ctrl.currentStepIndex === 3"
+    is-settings = "false"
     is-certificate-default = "$ctrl.isCertificateDefault"
     is-importing = "$ctrl.isImporting"
     formatted-cert-list="$ctrl.formattedCertList"

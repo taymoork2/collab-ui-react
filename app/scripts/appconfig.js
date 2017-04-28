@@ -400,8 +400,8 @@
             $state.modal.result.finally(function () {
               if (!this.stopPreviousState) {
                 $state.modal = null;
-                //context-fields-sidepanel needs to update the view with new values after the update
-                if ($state.current.name !== 'context-fields-sidepanel') {
+                //context-fields-sidepanel needs to update the view with new values after the update; otherwise go back to previous state
+                if ($state.current.name !== 'context-fields-sidepanel' && $state.current.name !== 'context-fieldsets-sidepanel') {
                   var previousState = $previousState.get(modalMemo);
                   if (previousState) {
                     return $previousState.go(modalMemo).then(function () {
@@ -3193,16 +3193,20 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" existing-fieldset-data="$resolve.existingFieldsetData" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
               },
             },
             params: {
               existingFieldsetIds: [],
+              existingFieldsetData: {},
               callback: function () {},
             },
             resolve: {
               existingFieldsetIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldsetIds;
+              },
+              existingFieldsetData: /* @ngIngect */function ($stateParams) {
+                return $stateParams.existingFieldsetData;
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
@@ -3213,7 +3217,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset"></context-fieldsets-sidepanel>',
+                template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset" process="$resolve.process" callback="$resolve.callback" ></context-fieldsets-sidepanel>',
               },
               'header@context-fieldsets-sidepanel': {
                 templateUrl: 'modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html',
@@ -3224,10 +3228,18 @@
             },
             params: {
               fieldset: {},
+              process: function () {},
+              callback: function () {},
             },
             resolve: {
               fieldset: /* @ngInject */ function ($stateParams) {
                 return $stateParams.fieldset;
+              },
+              process: /* @ngInject */ function ($stateParams) {
+                return $stateParams.process;
+              },
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })
@@ -3285,6 +3297,21 @@
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
               },
+            },
+          })
+          .state('private-trunk-overview.settings', {
+            url: '/private-trunk-overview/settings',
+            views: {
+              'privateTrunkSettings': {
+                templateUrl: 'modules/hercules/private-trunk/overview/private-trunk-overview-settings.html',
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hercules/private-trunk/overview'));
+                }, 'private-trunk-overview');
+              }),
             },
           })
           .state('private-trunk-overview.list', {

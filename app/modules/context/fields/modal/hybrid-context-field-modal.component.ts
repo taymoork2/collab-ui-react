@@ -162,7 +162,7 @@ class FieldModalCtrl implements ng.IComponentController {
       });
   }
 
-  public buttonEnabled() {
+  public createOrSaveButtonEnabled() {
     return Boolean(!this.actionInProgress &&
       this.fieldData.id &&
       this.invalidCharactersValidation(this.fieldData.id) &&

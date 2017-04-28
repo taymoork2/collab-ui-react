@@ -252,4 +252,37 @@ describe('Service: contextFieldsetsService', function () {
     });
   });
 
+  describe('updateAndGetFieldset', function () {
+    it('should update and get the fieldset', function () {
+      this.$httpBackend.expectPUT(dictionaryUrl + '/dictionary/fieldset/v1/id/someId').respond(200, {});
+      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/id/someId').respond(200, {
+        id: 'someId',
+        data: 'someData',
+      });
+      this.ContextFieldsetsService.updateAndGetFieldset({
+        id: 'someId',
+        data: 'updateData',
+      }).then(function (fieldset) {
+        expect(fieldset.data).toBe('someData');
+      }).catch(function () {
+        fail('should not fail');
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('shoud reject if error happens', function () {
+      this.$httpBackend.expectPUT(dictionaryUrl + '/dictionary/fieldset/v1/id/someId').respond(400, 'someError');
+      this.ContextFieldsetsService.updateAndGetFieldset({
+        id: 'someId',
+        data: 'someData',
+      }).then(function () {
+        fail('should have failed');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.status).toBe(400);
+        expect(errorResponse.data).toBe('someError');
+      });
+      this.$httpBackend.flush();
+    });
+  });
+
 });

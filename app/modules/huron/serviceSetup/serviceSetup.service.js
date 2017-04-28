@@ -4,7 +4,7 @@
   module.exports = ServiceSetup;
 
   /* @ngInject */
-  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, SiteCountryService, SiteLanguageService, SiteService, TimeFormatService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
+  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, MediaManagerService, SiteCountryService, SiteLanguageService, SiteService, TimeFormatService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
     return {
       internalNumberRanges: [],
       sites: [],
@@ -69,6 +69,19 @@
         return CeSiteService.save({
           customerId: Authinfo.getOrgId(),
         }, site).$promise;
+      },
+
+      getMediaOnHoldList: function () {
+        return MediaManagerService.get({
+          orgId: Authinfo.getOrgId(),
+        }).$promise;
+      },
+
+      setCompanyMediaOnHold: function (mediaId) {
+        return MediaManagerService.save({
+          orgId: Authinfo.getOrgId(),
+          mediaFileId: mediaId,
+        }).$promise;
       },
 
       loadExternalNumberPool: function (pattern) {

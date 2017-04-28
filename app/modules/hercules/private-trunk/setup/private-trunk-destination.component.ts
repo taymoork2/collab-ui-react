@@ -28,9 +28,8 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private USSService,
     private Authinfo,
-   ) {
+  ) {}
 
-  }
   public $onInit(): void {
     this.isSetupFirstTime = false;
     if (_.isUndefined(this.privateTrunkResource)) {

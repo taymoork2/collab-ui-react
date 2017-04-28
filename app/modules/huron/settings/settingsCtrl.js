@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, Orgservice, PstnModel) {
+  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CallerId, CeService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, Orgservice, PstnModel, PstnService, PstnServiceAddressService, ServiceSetup, TelephoneNumberService, TerminusUserDeviceE911Service, ValidationService, VoicemailMessageAction) {
     var vm = this;
     vm.loading = true;
 
@@ -18,6 +18,7 @@
     }).length > 0;
 
     vm.ftHRegionalTones = false;
+    vm.companyMOHToggle = false;
     vm.supportRegionalSettings = supportRegionalSettings;
 
     var DEFAULT_SITE_INDEX = '000001';
@@ -40,6 +41,10 @@
     var DEFAULT_DF = {
       label: 'MM-DD-YY',
       value: Config.dateFormat.MDY_H,
+    };
+    var DEFAULT_MOH = {
+      label: 'System Default',
+      value: '1',
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -89,6 +94,7 @@
     vm._callerIdNumberWatcher = _callerIdNumberWatcher;
     vm._buildVoicemailPrefixOptions = _buildVoicemailPrefixOptions;
     vm.loadVoicemailNumber = loadVoicemailNumber;
+    vm.loadMediaOnHoldOptions = loadMediaOnHoldOptions;
     vm.loadAvrilVoicemailOptions = loadAvrilVoicemailOptions;
     vm.loadPreferredLanguageOptions = loadPreferredLanguageOptions;
     vm.loadSite = loadSite;
@@ -116,6 +122,8 @@
     vm.customerCountryCode = undefined;
     vm.generatedVoicemailNumber = undefined;
     vm.hideoptionalvmHelpText = false;
+    vm.loadMediaOnHold = loadMediaOnHold;
+    vm.mediaOnHoldOptions = [];
 
     vm.model = {
       site: {
@@ -154,6 +162,7 @@
         voicemailOptions: VM_SPARK,
         externalVoicemail: false,
       },
+      mediaOnHold: DEFAULT_MOH,
       internationalDialingEnabled: false,
       internationalDialingUuid: null,
       showServiceAddress: false,
@@ -1697,6 +1706,32 @@
         });
     }
 
+    function loadMediaOnHoldOptions(mediaList) {
+      _.forEach(mediaList, function (media) {
+        var option = {
+          label: media.displayName,
+          value: media.rhesosId,
+        };
+        vm.mediaOnHoldOptions.push(option);
+      });
+      vm.mediaOnHoldOptions.push(DEFAULT_MOH);
+    }
+
+
+    function loadMediaOnHold() {
+      return ServiceSetup.getMediaOnHoldList()
+        .then(function (response) {
+          loadMediaOnHoldOptions(response);
+          _.forEach(response, function (media) {
+            if (media.entityIdSet && media.entityIdSet[0] === media.orgId) {
+              vm.model.mediaOnHold = _.find(vm.mediaOnHoldOptions, function (option) {
+                return option.value === media.rhesosId;
+              });
+            }
+          });
+        });
+    }
+
     function loadCompanyInfo() {
       return loadCustomerServices()
         .then(function () {
@@ -1706,6 +1741,7 @@
           if (vm.hasVoiceService) {
             promises.push(loadDateFormatOptions());
             promises.push(loadTimeFormatOptions());
+            promises.push(loadMediaOnHold());
             promises.push(loadTimeZoneOptions()
               .then(loadDefaultCountryOptions)
               .then(loadSite)
@@ -1738,6 +1774,7 @@
         .then(updateVoicemailToEmail)
         .then(updateVoicemailOptions)
         .then(updateVoicemailPostalCode)
+        .then(assignMediaOnHold)
         .catch(_.noop);
     }
 
@@ -1975,6 +2012,10 @@
       }
     }
 
+    function assignMediaOnHold() {
+      return ServiceSetup.setCompanyMediaOnHold(vm.model.mediaOnHold.value);
+    }
+
     function shouldUpdateVoicemailPostalCode() {
       if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled) {
         if (vm.model.companyVoicemail.companyVoicemailEnabled && !vm.previousModel.companyVoicemail.companyVoicemailEnabled) {
@@ -2033,6 +2074,10 @@
 
       FeatureToggleService.supports(FeatureToggleService.features.hRegionalTones).then(function (result) {
         vm.ftHRegionalTones = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable).then(function (result) {
+        vm.companyMOHToggle = result;
       });
 
       FeatureToggleService.supports(FeatureToggleService.features.avrilVmMailboxEnable).then(function (result) {
@@ -2149,6 +2194,7 @@
       vm.model.companyVoicemail.voicemailToEmail = savedModel.companyVoicemail.voicemailToEmail;
       vm.model.companyVoicemail.externalVoicemail = savedModel.companyVoicemail.externalVoicemail;
 
+      vm.model.mediaOnHold = savedModel.mediaOnHold;
       vm.model.internationalDialingEnabled = savedModel.internationalDialingEnabled;
       vm.model.internationalDialingUuid = savedModel.internationalDialingUuid;
       vm.model.showServiceAddress = savedModel.showServiceAddress;
