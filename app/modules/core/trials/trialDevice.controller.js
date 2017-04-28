@@ -197,8 +197,11 @@
 
     function init() {
       var limitsPromise = TrialDeviceService.getLimitsPromise();
-      vm.usStates = vm.getStateList();
 
+      //if we go back and unselect the service -- zero out the devices
+      _resetDevicesIfNeeded(vm.canAddCallDevice, _trialCallData.details.phones);
+      _resetDevicesIfNeeded(vm.canAddRoomSystemDevice, _trialRoomSystemData.details.roomSystems);
+      vm.usStates = vm.getStateList();
       vm.shippingInfo.state = _.find(TrialDeviceService.getStates(), {
         abbr: vm.shippingInfo.state,
       });
@@ -318,6 +321,15 @@
         device.quantity = 0;
       } else if (device.quantity === 0) {
         device.quantity = limit.min;
+      }
+    }
+
+    function _resetDevicesIfNeeded(enabledCondition, devices) {
+      if (!enabledCondition) {
+        _.forEach(devices, function (device) {
+          device.enabled = false;
+          device.quantity = 0;
+        });
       }
     }
 

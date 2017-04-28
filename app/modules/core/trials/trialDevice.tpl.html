@@ -65,6 +65,7 @@
                 ng-model="callTrial.sx10.quantity"
                 id="trial--devices--cameraSX10Quantity"
                 name="trialDevicesCameraSX10Quantity"
+                min="0"
                 cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
                 cs-input-group-size="pull-left medium-5 label-left label-medium-6"
                 cs-input-size="medium-5 medium-offset-1"
@@ -97,6 +98,7 @@
                 ng-model="callTrial.dx80.quantity"
                 id="trial--devices--cameraDX80Quantity"
                 name="trialDevicesCameraDX80Quantity"
+                min="0"
                 cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
                 cs-input-group-size="pull-left medium-5 label-left label-medium-6"
                 cs-input-size="medium-5 medium-offset-1"
@@ -129,6 +131,7 @@
                 ng-model="callTrial.mx300.quantity"
                 id="trial--devices--cameraMX300Quantity"
                 name="trialDevicesCameraMX300Quantity"
+                min="0"
                 cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
                 cs-input-group-size="pull-left medium-5 label-left label-medium-6"
                 cs-input-size="medium-5 medium-offset-1"
@@ -164,6 +167,7 @@
                 ng-model="callTrial.phone8865.quantity"
                 id="trial--devices--phone8865Quantity"
                 name="trialDevicesPhone8865Quantity"
+                min="0"
                 cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
                 cs-input-group-size="pull-left medium-5 label-left label-medium-6"
                 cs-input-size="medium-5 medium-offset-1"
@@ -195,7 +199,8 @@
                 type="number"
                 ng-model="callTrial.phone8845.quantity"
                 id="trial--devices--phone8845Quantity"
-                name="phone8845Quantity"
+                name="trialDevicesPhone8845Quantity"
+                min="0"
                 cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
                 cs-input-group-size="pull-left medium-5 label-left label-medium-6"
                 cs-input-size="medium-5 medium-offset-1"
@@ -228,6 +233,7 @@
                 ng-model="callTrial.phone8841.quantity"
                 id="trial--devices--phone8841Quantity"
                 name="trialDevicesPhone8841Quantity"
+                min="0"
                 cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
                 cs-input-group-size="pull-left medium-5 label-left label-medium-6"
                 cs-input-size="medium-5 medium-offset-1"
@@ -260,6 +266,7 @@
                 ng-model="callTrial.phone7841.quantity"
                 id="trial--devices--phone7841Quantity"
                 name="trialDevicesPhone7841Quantity"
+                min="0"
                 cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
                 cs-input-group-size="pull-left medium-5 label-left label-medium-6"
                 cs-input-size="medium-5 medium-offset-1"
@@ -292,7 +299,7 @@
             ng-model="callTrial.shippingInfo.name"
             cs-input-group-size="pull-left medium-8 with-slim-offset"
             cs-input-label="{{:: 'trialModal.call.name' | translate}}"
-            ng-required>
+            ng-required="true">
           <input
             cs-input
             type="text"
@@ -304,7 +311,7 @@
             ng-model="callTrial.shippingInfo.phoneNumber"
             cs-input-group-size="pull-left medium-4 with-slim-offset offset-l"
             cs-input-label="{{:: 'trialModal.call.phone' | translate}}"
-            ng-required>
+            ng-required="true">
           <input
             cs-input
             type="text"
@@ -313,7 +320,7 @@
             ng-model="callTrial.shippingInfo.addressLine1"
             cs-input-group-size="pull-left medium-9 with-slim-offset"
             cs-input-label="{{:: 'trialModal.call.address' | translate}}"
-            ng-required>
+            ng-required="true">
           <input
             cs-input
             type="text"
@@ -330,7 +337,7 @@
             ng-model="callTrial.shippingInfo.city"
             cs-input-group-size="medium-12"
             cs-input-label="{{:: 'trialModal.call.city' | translate}}"
-            ng-required>
+            ng-required="true">
           <div class="pull-left medium-8 with-slim-offset" ng-hide="callTrial.selectedCountryCode !== 'US'">
             <label translate="trialModal.call.state" for="state"/>
             <cs-select
@@ -354,8 +361,7 @@
               name="trialDevicesState"
               ng-model="callTrial.shippingInfo.state"
               cs-input-group-size="pull-left medium-8 with-slim-offset"
-              cs-input-label="{{:: 'trialModal.call.province' | translate}}"
-              ng-required="callTrial.selectedCountryCode !== 'US'">
+              cs-input-label="{{:: 'trialModal.call.province' | translate}}">
           </div>
           <input
             cs-input
@@ -367,7 +373,7 @@
             ng-model="callTrial.shippingInfo.postalCode"
             cs-input-group-size="pull-left medium-4 with-slim-offset offset-l"
             cs-input-label="{{:: 'trialModal.call.zip' | translate}}"
-            ng-required>
+            ng-required="true">
           <div class="medium-12 cs-input-group">
             <label for="country" translate="trialModal.call.country"/>
             <cs-select
@@ -375,7 +381,7 @@
               id="trial--devices--country"
               name="trialDevicesCountry"
               options="callTrial.countries"
-              ng-required
+              ng-required="true"
               ng-change-fn="callTrial.countryChanged()">
             </cs-select>
           </div>
