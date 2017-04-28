@@ -273,13 +273,15 @@ export class UserOverviewService {
   public getUserPreferredLanguage(languageCode) {
     return this.ServiceSetup.getAllLanguages().then(languages => {
       let userLanguageDetails = {
-        language: this.DEFAULT_LANG,
+        language: {},
         translatedLanguages: [],
       };
       if (_.isEmpty(languages)) { return userLanguageDetails; }
       let translatedLanguages = this.ServiceSetup.getTranslatedSiteLanguages(languages);
-      let preferredLanguage = this.findPreferredLanguageByCode(translatedLanguages, languageCode);
-      userLanguageDetails.language = preferredLanguage;
+      if (languageCode) {
+        let preferredLanguage = this.findPreferredLanguageByCode(translatedLanguages, languageCode);
+        userLanguageDetails.language = preferredLanguage;
+      }
       userLanguageDetails.translatedLanguages = translatedLanguages;
 
       return userLanguageDetails;
