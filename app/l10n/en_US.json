@@ -5003,7 +5003,7 @@
       "unavailableTitle": "Unavailable",
       "partialTitle": "Partially Available",
       "utilizationTitle": "Resource Utilization",
-      "participantDistributionTitle": "Call Distribution",
+      "participantDistributionTitle": "Call Distribution across On-Premises clusters",
       "numberOfParticipantTitle": "Call Activity",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
