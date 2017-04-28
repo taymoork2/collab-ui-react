@@ -38,6 +38,9 @@
     vm.isEditFeature = $stateParams.isEditFeature;
     vm.getCustomerInformationFormFields = getCustomerInformationFormFields;
     vm.getLocalisedText = getLocalisedText;
+    vm.getLocalisedFeedbackText = getLocalisedFeedbackText;
+    vm.getFeedbackDesc = getFeedbackDesc;
+    vm.getFeedbackModel = getFeedbackModel;
     vm.getCustomerInformationBtnClass = getCustomerInformationBtnClass;
     vm.getTitle = getTitle;
     vm.isCategoryWarningRequired = isCategoryWarningRequired;
@@ -507,6 +510,21 @@
               timezone: vm.scheduleTimeZone.value,
             },
           },
+          feedbackCallback: {
+            enabled: true,
+            fields: {
+              feedbackQuery: {
+                displayText: $translate.instant('careChatTpl.feedbackQueryCall'),
+              },
+              comment: {
+                displayText: $translate.instant('careChatTpl.ratingComment'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingComments',
+                },
+              },
+            },
+          },
           // NOTE: Do NOT disable callbackConfirmation page as it is required in Bubble app.
           callbackConfirmation: {
             enabled: true,
@@ -734,6 +752,21 @@
               timezone: vm.scheduleTimeZone.value,
             },
           },
+          feedbackCallback: {
+            enabled: true,
+            fields: {
+              feedbackQuery: {
+                displayText: $translate.instant('careChatTpl.feedbackQueryCall'),
+              },
+              comment: {
+                displayText: $translate.instant('careChatTpl.ratingComment'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingComments',
+                },
+              },
+            },
+          },
           callbackConfirmation: {
             enabled: true,
             fields: {
@@ -812,6 +845,7 @@
       vm.template = $stateParams.template;
       // This will become dead once all the existing templates are saved with field4.
       populateCustomerInformationField4();
+      populateFeedbackInformation();
     }
 
     function populateCustomerInformationField4() {
@@ -844,6 +878,28 @@
         if (vm.template.configuration.pages.customerInformationCallback.fields.field4 === undefined) {
           vm.template.configuration.pages.customerInformationCallback.fields.field4 = _.cloneDeep(field4Default);
         }
+      }
+    }
+    function populateFeedbackInformation() {
+      var defaultFeedback =
+        {
+          enabled: false,
+          fields: {
+            feedbackQuery: {
+              displayText: $translate.instant('careChatTpl.feedbackQueryCall'),
+            },
+            comment: {
+              displayText: $translate.instant('careChatTpl.ratingComment'),
+              dictionaryType: {
+                fieldSet: 'cisco.base.ccc.pod',
+                fieldName: 'cccRatingComments',
+              },
+            },
+          },
+        };
+      if ((vm.selectedMediaType === vm.mediaTypes.chatPlusCallback || vm.selectedMediaType === vm.mediaTypes.callback) && vm.template.configuration.pages.feedbackCallback === undefined) {
+        vm.template.configuration.pages.feedbackCallback = _.cloneDeep(defaultFeedback);
+
       }
     }
 
@@ -936,10 +992,11 @@
     }
 
     function isFeedbackPageValid() {
-      return (isValidField(vm.template.configuration.pages.feedback.fields.feedbackQuery.displayText, vm.lengthConstants.multiLineMaxCharLimit)
-      && isValidField(vm.template.configuration.pages.feedback.fields.comment.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
-      && vm.isInputValid(vm.template.configuration.pages.feedback.fields.feedbackQuery.displayText)
-      && vm.isInputValid(vm.template.configuration.pages.feedback.fields.comment.displayText));
+      return ((isValidField(getFeedbackModel().fields.feedbackQuery.displayText, vm.lengthConstants.multiLineMaxCharLimit)
+      && isValidField(getFeedbackModel().fields.comment.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
+      && vm.isInputValid(getFeedbackModel().fields.feedbackQuery.displayText)
+      && vm.isInputValid(getFeedbackModel().fields.comment.displayText)));
+
     }
 
     function isStatusMessagesPageValid() {
@@ -1118,6 +1175,7 @@
           return isAgentUnavailablePageValid();
 
         case 'feedback':
+        case 'feedbackCallback':
           return isFeedbackPageValid();
         case 'chatStatusMessages':
           return isStatusMessagesPageValid();
@@ -1421,6 +1479,28 @@
       var type = (vm.cardMode) ? vm.cardMode : vm.selectedMediaType;
       return $translate.instant(name + '_' + type);
     }
+
+
+    function getFeedbackModel() {
+      if (vm.currentState === 'feedback') {
+        return vm.template.configuration.pages.feedback;
+      } else {
+        return vm.template.configuration.pages.feedbackCallback;
+      }
+    }
+
+    function getLocalisedFeedbackText() {
+      return getLocalisedText('careChatTpl.' + vm.currentState);
+    }
+
+    function getFeedbackDesc() {
+      if (vm.currentState === "feedbackCallback") {
+        return $translate.instant('careChatTpl.callFeedbackDesc');
+      } else {
+        return $translate.instant('careChatTpl.feedbackDesc');
+      }
+    }
+
 
     function getTitle() {
       if (vm.isEditFeature) {
