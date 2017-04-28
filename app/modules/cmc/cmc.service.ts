@@ -59,21 +59,21 @@ export class CmcService {
     return _.includes(user.entitlements, 'cmc');
   }
 
-  private setEntitlement(user: ICmcUser, entitle) {
+  private setEntitlement(user: ICmcUser, entitle: boolean) {
 
     let url = this.UrlConfig.getAdminServiceUrl() + 'organization/' + user.meta.organizationID + '/users/' + user.id + '/actions/onboardcmcuser/invoke';
-    //let url = '<a separate test server>' + 'organization/' + user.meta.organizationID + '/users/' + user.id + '/actions/onboardcmcuser/invoke';
+    //let url = 'http://localhost:8080/atlas-server/admin/api/v1/' + 'organization/' + user.meta.organizationID + '/users/' + user.id + '/actions/onboardcmcuser/invoke';
     if (!entitle) {
       url += '?removeEntitlement=true';
     }
-    this.$log.info("Updating cmc entitlement using url:", url);
+    this.$log.info('Updating cmc entitlement using url:', url);
     this.$http.post(url, {})
       .then((res) => {
         this.$log.info('cmc entitlement request result:', res);
       })
       .catch((error) => {
         this.$log.warn('cmc entitlement request failed:', error);
-      })
+      });
   }
 
   private updateUserData(user: ICmcUser, userMobileData) {
