@@ -87,8 +87,12 @@
             translate="common.search" ng-click="ediscoverySearchCtrl.searchByLimit()"
             ng-disabled="ediscoverySearchCtrl.searchButtonDisabled(qForm.qInput.$invalid && qForm.qInput.$touched)"></button>
             <div ng-if="ediscoverySearchCtrl.error" class="search-error">
+              <i class="icon icon-error search-error"></i>
+              <span class="search-error">{{ediscoverySearchCtrl.error}}</span>
+            </div>
+            <div ng-if="ediscoverySearchCtrl.warning" class="search-error">
               <i class="icon icon-warning search-warning"></i>
-              <span class="search-warning-text" translate="ediscovery.searchParameters.noMatchesFound"></span>
+              <span class="search-warning-text">{{ediscoverySearchCtrl.warning}}</span>
             </div>
           </div>
         </div>
@@ -108,7 +112,7 @@
 
         <p class="search-tip" translate="ediscovery.searchTip"></p>
 
-        <div class="search-error" ng-if="ediscoverySearchCtrl.error">
+        <div class="search-error" ng-if="ediscoverySearchCtrl.warning">
           <span>{{ediscoverySearchCtrl.error}}</span>
         </div>
       </div>
