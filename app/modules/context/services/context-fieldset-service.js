@@ -19,6 +19,7 @@
       createAndGetFieldset: createAndGetFieldset,
       getInUse: getInUse,
       updateAndGetFieldset: updateAndGetFieldset,
+      deleteFieldset: deleteFieldset,
     };
 
     return service;
@@ -101,6 +102,13 @@
       return updateFieldset(data)
         .then(function () {
           return getFieldset(data.id);
+        });
+    }
+
+    function deleteFieldset(id) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.delete(dictionaryUrl + getPath + id);
         });
     }
   }
