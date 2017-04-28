@@ -195,4 +195,5 @@ module.exports = {
   huronPstn: "h-pstn",
   csdmT38: "csdm-ata-t38",
   csdmPlaceUpgradeChannel: "csdm-place-upgrade-channel",
+  hI802: "h-i802",
 };

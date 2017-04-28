@@ -2873,6 +2873,14 @@
               }),
             },
           })
+          .state('huronrecords', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/huron/cdrReports/cdrReportsModal.html',
+              },
+            },
+          })
           .state('users.enableVoicemail', {
             parent: 'modal',
             views: {
