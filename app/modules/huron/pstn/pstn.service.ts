@@ -10,6 +10,7 @@ export class PstnService {
               private TerminusCustomerV2Service,
               private TerminusV2ResellerService,
               private TerminusCustomerService,
+              private TerminusCustomerNumberService,
               private TerminusCustomerTrialV2Service,
               private TerminusCarrierService,
               private $q: ng.IQService,
@@ -20,14 +21,13 @@ export class PstnService {
               private TerminusV2CarrierNumberCountService,
               private TerminusV2CarrierCapabilitiesService,
               private TerminusV2CarrierNumberService,
+              private TerminusV2CustomerNumberOrderBlockService,
               private TerminusV2CustomerNumberReservationService,
               private TerminusV2ResellerNumberReservationService,
-              private TerminusV2CustomerNumberOrderBlockService,
               private $translate: ng.translate.ITranslateService,
               private TerminusCustomerPortService,
               private TerminusV2ResellerCarrierNumberReservationService,
               private TerminusOrderV2Service,
-              private TerminusNumberService,
               private TerminusCustomerCarrierDidService,
               private Notification: Notification,
               private TelephoneNumberService) {
@@ -683,9 +683,9 @@ export class PstnService {
   }
 
   public deleteNumber(customerId: string, number: string): ng.IPromise<any> {
-    return this.TerminusNumberService.delete({
+    return this.TerminusCustomerNumberService.delete({
       customerId: customerId,
-      did: number,
+      number: number,
     }).$promise;
   }
 

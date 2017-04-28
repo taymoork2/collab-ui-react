@@ -12,12 +12,12 @@
     .factory('TerminusResellerCarrierService', TerminusResellerCarrierService)
     .factory('TerminusResellerCarrierV2Service', TerminusResellerCarrierV2Service)
     .factory('TerminusCustomerCarrierService', TerminusCustomerCarrierService)
+    .factory('TerminusCustomerNumberService', TerminusCustomerNumberService)
     .factory('TerminusCustomerSiteService', TerminusCustomerSiteService)
     .factory('TerminusCustomerCarrierDidService', TerminusCustomerCarrierDidService)
     .factory('TerminusCustomerPortService', TerminusCustomerPortService)
     .factory('TerminusOrderService', TerminusOrderService)
     .factory('TerminusOrderV2Service', TerminusOrderV2Service)
-    .factory('TerminusNumberService', TerminusNumberService)
     .factory('TerminusCarrierService', TerminusCarrierService)
     .factory('TerminusCarrierV2Service', TerminusCarrierV2Service)
     .factory('TerminusStateService', TerminusStateService)
@@ -108,8 +108,8 @@
   }
 
   /* @ngInject */
-  function TerminusNumberService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/dids/:did', {}, {});
+  function TerminusCustomerNumberService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/:number', {}, {});
   }
 
   /* @ngInject */
