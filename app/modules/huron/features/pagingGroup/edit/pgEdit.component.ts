@@ -72,8 +72,12 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
           this.PagingNumberService.getNumberExtension(this.pgId).then(
             (data: INumberData) => {
-              this.number = data;
-              this.originalNumber = data;
+              if (!_.isUndefined(data.extension)) {
+                this.number = data;
+                this.originalNumber = data;
+              } else {
+                this.Notification.error('pagingGroup.errorGetNumber', { pagingGroupName: this.pg.name });
+              }
             },
             (response) => {
               this.Notification.errorResponse(response, this.pg.name);

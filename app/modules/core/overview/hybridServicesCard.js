@@ -27,7 +27,7 @@
           }).then(function (featureToggles) {
             return $q.all({
               clusterList: FusionClusterService.getAll(),
-              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) && featureToggles.hasGoogleCalendarFeatureToggle ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({}),
+              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) && featureToggles.hasGoogleCalendarFeatureToggle ? CloudConnectorService.getService() : $q.resolve({}),
               featureToggles: featureToggles,
             });
           }).then(function (response) {

@@ -4,7 +4,7 @@
   </button>
   <h3 ng-if="$ctrl.createMode" class="modal-title" translate="context.dictionary.fieldPage.createNew"></h3>
   <h3 ng-if="!$ctrl.createMode" class="modal-title">
-    <span translate="context.dictionary.fieldPage.update"></span>
+    <span translate="context.dictionary.update"></span>
     <span>{{$ctrl.fieldData.id}}</span>
   </h3>
 </div>
@@ -96,11 +96,11 @@
     class="btn btn-primary"
     translate="common.create"
     ng-click="$ctrl.create()"
-    ng-disabled="!$ctrl.buttonEnabled()"></button>
+    ng-disabled="!$ctrl.createOrSaveButtonEnabled()"></button>
   <button
     ng-if="!$ctrl.createMode"
     class="btn btn-primary"
     translate="common.save"
     ng-click="$ctrl.update()"
-    ng-disabled="!$ctrl.buttonEnabled()"></button>
+    ng-disabled="!$ctrl.createOrSaveButtonEnabled() || newFieldForm.$pristine"></button>
 </div>

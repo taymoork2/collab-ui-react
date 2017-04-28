@@ -153,6 +153,34 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('getMediaOnHoldList', function () {
+
+    beforeEach(function () {
+      $httpBackend.expectGET(HuronConfig.getMmsUrl() + '/organizations/1/mohPrompts').respond(201);
+    });
+
+    it('should get Media on Hold list', function () {
+      ServiceSetup.getMediaOnHoldList();
+      $httpBackend.flush();
+    });
+
+  });
+
+  describe('setCompanyMediaOnHold', function () {
+    var media = {
+      mediaId: "dfba718d-f891-469d-8f2e-111848c34ff5",
+    };
+
+    beforeEach(function () {
+      $httpBackend.whenPOST(HuronConfig.getMmsUrl() + '/organizations/1/mohPrompts').respond(201);
+    });
+
+    it('should update mms with media', function () {
+      ServiceSetup.setCompanyMediaOnHold(media.mediaId);
+      $httpBackend.flush();
+    });
+  });
+
   describe('loadExternalNumberPool', function () {
     var extNumPool = [{
       uuid: '777-888-666',

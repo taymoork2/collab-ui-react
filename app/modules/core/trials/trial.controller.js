@@ -118,17 +118,6 @@
     vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call'];
     vm.navStates = ['trial.info'];
 
-    vm.nonTrialServices = [{
-      // Context Service Trial
-      model: vm.contextTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        label: $translate.instant('trials.context'),
-        id: 'contextTrial',
-      },
-    }];
-
     vm.isNewTrial = isNewTrial;
     vm.isEditTrial = isEditTrial;
     vm.isExistingOrg = isExistingOrg;

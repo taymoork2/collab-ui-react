@@ -181,12 +181,12 @@ require('./_fields-list.scss');
                 var fieldCopy = processField(_.cloneDeep(updatedField));
                 _.fill(vm.fieldsList.allFields, fieldCopy, index, index + 1);
                 vm.gridOptions.data = vm.fieldsList.allFields;
+                //need to select the row to reopen the side panel to update the view of side panel
+                vm.gridApi.grid.modifyRows(vm.gridOptions.data);
+                vm.gridApi.selection.selectRow(vm.gridOptions.data[index]);
+                filterList(vm.searchStr);
               }
               vm.gridRefresh = false;
-              //need to select the row to reopen the side panel to update the view of side panel
-              vm.gridApi.grid.modifyRows(vm.gridOptions.data);
-              vm.gridApi.selection.selectRow(vm.gridOptions.data[index]);
-              filterList(vm.searchStr);
             },
           });
         });

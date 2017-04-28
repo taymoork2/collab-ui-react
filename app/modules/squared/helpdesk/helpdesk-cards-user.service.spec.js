@@ -36,6 +36,7 @@ describe('HelpdeskCardsService', function () {
       gcal: entFalse,
       uc: entFalse,
       ec: entFalse,
+      voicemail: entFalse,
     };
   }
 

@@ -64,6 +64,10 @@
         return 'https://minerva.' + this.getBaseDomain() + '/api/v1';
       },
 
+      getMmsUrl: function () {
+        return 'https://mms.' + this.getBaseDomain() + '/api/v1';
+      },
+
       getAvrilUrl: function () {
         if (Config.isDev()) {
           return this.avrilUrl.dev;

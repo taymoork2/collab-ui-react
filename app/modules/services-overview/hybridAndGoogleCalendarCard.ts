@@ -2,6 +2,7 @@ import { ICardStatus, CardType } from './ServicesOverviewCard';
 import { IServiceStatus, filterAndGetCssStatus, filterAndGetTxtStatus, filterAndGetEnabledService } from './ServicesOverviewHybridCard';
 import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
 
 export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOverviewCard {
   private canDisplay: ng.IDeferred<boolean> = this.$q.defer();
@@ -57,12 +58,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
   }
 
   private firstTimeGoogleSetup() {
-    this.$modal.open({
-      controller: 'FirstTimeGoogleSetupController',
-      controllerAs: 'vm',
-      templateUrl: 'modules/hercules/service-settings/calendar-service-setup/first-time-google-setup.html',
-    })
-      .result
+    this.CloudConnectorService.openSetupModal()
       .then(() => {
         this.$state.go('google-calendar-service.settings');
       });
@@ -108,11 +104,11 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     this.display = this.Authinfo.isFusionCal() && this.Authinfo.isFusionGoogleCal() && hasFeature;
     if (this.display) {
       // We only get the status for Hybrid Calendar that way
-      this.CloudConnectorService.getService(serviceId)
+      this.CloudConnectorService.getService()
         .then(servicesStatus => {
-          const servicesStatuses = [servicesStatus];
+          const servicesStatuses = [servicesStatus] as IServiceStatus[];
           // .googleActive conveys the same meaning as .active for Hybrid Calendar
-          this.googleActive = servicesStatus.setup;
+          this.googleActive = servicesStatus.setup as boolean;
           this.googleStatus = {
             status: filterAndGetCssStatus(this.HybridServicesClusterStatesService, servicesStatuses, serviceId),
             text: filterAndGetTxtStatus(servicesStatuses, serviceId),
@@ -154,7 +150,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     private $q: ng.IQService,
     private $modal,
     private Authinfo,
-    private CloudConnectorService,
+    private CloudConnectorService: CloudConnectorService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
   ) {
     super({

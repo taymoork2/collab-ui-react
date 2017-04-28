@@ -12,7 +12,7 @@
           as-button="true">
         </section-title>
       </div>
-      <div ng-show="$ctrl.inUse">
+      <div ng-show="$ctrl.inUse || $ctrl.publiclyAccessible">
         <section-title title-key="context.dictionary.fieldPage.fieldAttributes"></section-title>
       </div>
 
