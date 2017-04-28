@@ -2079,7 +2079,7 @@
       "off": "Off",
       "pilot": "Pilot",
       "pilotNotConfigured": "Voicemail configuration not found.",
-      "mwi": "Message waiting indicator",
+      "mwi": "Message Waiting Indicator",
       "toTurnOn": "To turn on voicemail for your users, enable voicemail in <a ng-click=\"{{onclick}}\">Hybrid Call Settings</a>."
     },
     "gcalSetupModal": {
@@ -5006,7 +5006,7 @@
       "unavailableTitle": "Unavailable",
       "partialTitle": "Partially Available",
       "utilizationTitle": "Resource Utilization",
-      "participantDistributionTitle": "Call Distribution",
+      "participantDistributionTitle": "Call Distribution across On-Premises clusters",
       "numberOfParticipantTitle": "Call Activity",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
@@ -6561,7 +6561,8 @@
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
           "squared-fusion-khaos": "Management",
-          "ept": "Private Trunk"
+          "ept": "Private Trunk",
+          "voicemail": "Voicemail"
         }
       },
       "licenses": {
@@ -6992,7 +6993,12 @@
       "editNameSuccess": "Organization name successfully updated.",
       "editNameFailure": "Failed to update customer name."
     },
-    "care": "Care"
+    "care": "Care",
+    "hybridVoicemail": {
+      "cannotReadStatus": "Could not read Hybrid Voicemail status.",
+      "hybridVoicemail": "Voicemail",
+      "orgNotEnabled": "Organization not enabled."
+    }
   },
   "activation": {
     "verificationComplete": "Verification Complete",

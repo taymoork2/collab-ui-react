@@ -99,6 +99,9 @@
         ec: {
           entitled: false,
         },
+        voicemail: {
+          entitled: false,
+        },
       };
       if (LicenseService.userIsEntitledTo(user, 'squared-fusion-cal')) {
         hybridServicesCard.entitled = true;
@@ -112,6 +115,7 @@
         hybridServicesCard.entitled = true;
         hybridServicesCard.uc.entitled = true;
         hybridServicesCard.ec.entitled = LicenseService.userIsEntitledTo(user, 'squared-fusion-ec');
+        hybridServicesCard.voicemail.entitled = LicenseService.userIsEntitledTo(user, 'squared-fusion-ec');
       }
       return hybridServicesCard;
     }
