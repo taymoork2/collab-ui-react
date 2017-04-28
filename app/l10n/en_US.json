@@ -6157,6 +6157,8 @@
     "customerInfo_callback": "Customer Information for Callback",
     "feedback_chat": "Feedback",
     "feedback_chatPlusCallback": "Chat Feedback",
+    "feedbackCallback_callback": "Feedback",
+    "feedbackCallback_chatPlusCallback": "Call Feedback",
     "agentUnavailable_chat": "Agent Unavailable",
     "agentUnavailable_callback": "Agent Unavailable",
     "agentUnavailable_chatPlusCallback": "Agent Unavailable for Chat",
@@ -6172,6 +6174,7 @@
     "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
+    "callFeedbackDesc": "This screen is used to collect feedback from a customer after the call ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown to a customer during business off-hours",
     "offHoursMessage": "Message",
@@ -6243,6 +6246,7 @@
     "agentEnteredStatus": "Chatting with an Agent",
     "typeNewMsg": "Type your message and press enter.",
     "feedbackQuery": "Please rate your chat experience",
+    "feedbackQueryCall": "Please rate your previous callback experience",
     "ratingHintText": "Hint Text",
     "ratingComment": "Add comments",
     "submitFeedbackBtn": "Submit Feedback",
@@ -6287,10 +6291,15 @@
       },
       "feedback": {
         "title_chat": "Feedback",
-        "title_callback": "Feedback",
         "title_chatPlusCallback": "Chat Feedback",
         "desc_chat": "This screen is used to collect feedback from a customer after the chat ends",
         "desc_chatPlusCallback": "This screen is used to collect feedback from a customer after the chat ends"
+      },
+      "feedbackCallback": {
+        "title_callback": "Feedback",
+        "desc_callback": "This screen is used to collect feedback from a customer after the call ends",
+        "title_chatPlusCallback": "Callback Feedback",
+        "desc_chatPlusCallback": "This screen is used to collect feedback from a customer after the call ends"
       },
       "customerInformationChat": {
         "title_chatPlusCallback": "Customer Information for Chat",
