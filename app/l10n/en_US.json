@@ -5084,12 +5084,22 @@
       },
       "mobile": "Mobile",
       "cardDescription": {
-        "clientType": "Summary of the types of meeting clients that are in use at an organization.",
-        "cloudParticipants2": ": Number of calls made within an enterprise but overflowed to a cloud cluster.",
-        "cloudParticipants1": ": Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.",
-        "onpremDesc": ": Number of calls hosted on any of the enterprise clusters.",
-        "meetsHostType": "A breakdown of the number of meetings based on where the calls were hosted.",
+        "clientTypeDesc": "Summary of common categories of meeting clients that are used in an organization.<br><b>Desktop</b> : Windows , MAC OSX, Web Browser<br> <b>Mobile</b> : iPhone, Android, iPad.<br><b>Telepresence</b> : Telepresence room device, SIP Endpoints, Spark board.<br><b>Others</b> : Any unknown endpoints or clients that don’t fit the other categories.",
+        "totalCallsDesc": "<b>Cloud Calls</b> : Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.<br> <b>Overflowed to Cloud</b> : Number of calls made within an enterprise but overflowed to a cloud cluster.<br> <b>On-Premises</b>: Number of calls hosted on any of the enterprise clusters.",
+        "totalCallsClusterDesc": "<b>Redirected by this Cluster</b> : Number of calls that could not be hosted by this cluster and hence got redirected.<br><b>On-Premises</b> : Number of calls hosted on any of the enterprise clusters.",
+        "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
         "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected."
+      },
+      "graphDescription":{
+        "utilizationOrgDesc": "Average utilization trend for all clusters in an organization",
+        "utilizationClusterDesc": "Average utilization trend for the selected cluster in an organization, compared to the average utilization for all the clusters",
+        "callActivityDesc": "Provides a view of the call activity trend across the organization, showing the calls that were hosted on-premises and calls hosted on the cloud. The calls that overflowed to the cloud are represented as dots on the cloud call graph. Hover over a dot to show the number of calls that overflowed to the cloud at that instance.",
+        "calldistributionOrgDesc": "Provides a view of how calls are distributed across the different on-premise clusters in the organization. This information helps an admin plan an organization’s cluster capacity. Calls that cannot be hosted on a specific on-premises cluster are redirected to another on-premise cluster. These redirects are represented as dots on the graph. Hover over a dot to show the number of calls that were redirected from that specific cluster.",
+        "calldistributionClusterDesc": "Provides a view of the call activity trend on a specific cluster. This information helps an admin  plan an organization’s cluster capacity. Calls that cannot be hosted on this specific cluster are redirected to another on-premise cluster. These redirects are represented as dots on the graph. Hover over a dot to show the number of calls redirected from this specific cluster at that instance.",
+        "clusterInServiceOrgDesc": "Percentage of clusters that were  in service to host calls over the selected time period. Click any of the clusters in the Cluster Availability graph to directly navigate to the Nodes In Service graph.<br>Green: clusters that have all nodes in service.<br>Yellow: clusters that have 1 or more nodes that are not in service.<br>Red: clusters that have no available nodes in service.",
+        "clusterInServiceClusterDesc": "Percentage of nodes that are in service to host calls over the selected time period.<br>Green: node is in service.<br>Red: node is not in service.",
+        "meetHostTypeDesc": "Provides a trend of the number of meetings in an organization, based on where the calls were hosted",
+        "clientTypeDesc": "Provides usage trend of the various client types that are used in an organization"
       }
     },
     "deleteGroup": {
