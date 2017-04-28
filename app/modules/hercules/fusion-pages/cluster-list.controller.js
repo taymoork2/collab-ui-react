@@ -9,7 +9,7 @@
   function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, EnterprisePrivateTrunkService, FusionClusterService, HybridServicesClusterStatesService, Notification, ResourceGroupService, WizardFactory, hasCucmSupportFeatureToggle, hasEnterprisePrivateTrunkingFeatureToggle) {
     var vm = this;
     var groupsCache = [];
-    vm.displayedGroups = groupsCache;
+    vm.displayedGroups = _.cloneDeep(groupsCache);
 
     Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST);
 
@@ -198,14 +198,10 @@
 
     function setFilter(filter) {
       if (filter.filterValue === 'all') {
-        vm.displayedGroups = _.map(groupsCache, function (group) {
-          group.display = true;
-          return group;
-        });
+        vm.displayedGroups = _.cloneDeep(groupsCache);
       } else {
         vm.displayedGroups = _.map(groupsCache, function (group) {
-          group.display = filter.filterValue === group.targetType;
-          return group;
+          return _.extend({}, group, { display: filter.filterValue === group.targetType });
         });
       }
     }

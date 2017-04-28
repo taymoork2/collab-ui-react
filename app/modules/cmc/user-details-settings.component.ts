@@ -9,6 +9,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   public validDataChange: boolean = false;
   public mobileNumber: string;
   public invalid: boolean = false;
+  public invalidMessage: string | null;
   public messages = {
     pattern: 'Invalid Mobile Number',
   };
@@ -16,6 +17,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(private $log: ng.ILogService,
+              private $translate: ng.translate.ITranslateService,
               private CmcService: CmcService) {
     this.$log.debug('CmcUserDetailsSettingsController');
   }
@@ -69,6 +71,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     this.$log.debug('invalid', !valid, this.mobileChanged(), this.enableChanged());
     this.invalid = !valid && (this.mobileChanged() || this.enableChanged());
     this.validDataChange = valid;
+    this.invalidMessage = this.getInvalidMessage();
   }
 
   public entitle(toggleValue) {
@@ -77,6 +80,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     this.$log.debug('invalid', !valid, this.mobileChanged(), this.enableChanged());
     this.invalid = !valid && (this.mobileChanged() || this.enableChanged());
     this.validDataChange = valid;
+    this.invalidMessage = this.getInvalidMessage();
   }
 
   private mobileChanged(): boolean {
@@ -97,6 +101,16 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     let check2: boolean = !_.isNil(this.mobileNumber) && this.isE164() && (this.mobileChanged() || this.enableChanged());
     let check3: boolean = !_.isNil(this.mobileNumber) && this.isE164() && this.mobileChanged() && !this.entitled;
     return check1 || check2 || check3;
+  }
+
+  private getInvalidMessage(): string | null {
+    if (this.invalid) {
+      if (this.entitled && (_.isNil(this.mobileNumber) || this.mobileNumber.length === 0)) {
+        // return 'Always provide valid mobile number when enabling';
+        return this.$translate.instant('cmc.details.invalidInput');
+      }
+    }
+    return null;
   }
 }
 

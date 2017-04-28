@@ -1441,6 +1441,7 @@
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
     "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
+    "mediaOnHold": "Company Media on Hold",
     "voicemailToEmailLabel": "Voicemail to Email",
     "EmailNotificationAttached": "Email Notification with Attachment",
     "EmailNotificationWithoutAttached": "Email Notification without Attachment",
@@ -2078,8 +2079,42 @@
       "off": "Off",
       "pilot": "Pilot",
       "pilotNotConfigured": "Voicemail configuration not found.",
-      "mwi": "Message waiting indicator",
+      "mwi": "Message Waiting Indicator",
       "toTurnOn": "To turn on voicemail for your users, enable voicemail in <a ng-click=\"{{onclick}}\">Hybrid Call Settings</a>."
+    },
+    "gcalSetupModal": {
+      "clientName": "Client name",
+      "scope": "Scope",
+      "error": "Couldn't fetch API key",
+      "authorization": {
+        "title": "Authorize Cisco Collaboration Cloud on your G Suite account",
+        "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Collaboration Cloud on your G Suite account.",
+        "item1": "In a new tab, open your <a href=\"#\" target=\"_blank\">G Suite account dashboard</a> and then go to Sevurity.",
+        "item2": "Click <strong>Show more</strong> and then <strong>Advanced settings</strong>.",
+        "item3": "Click <strong>Manage API Client Access</strong>.",
+        "item4": "Copy the client name and scope to your clipboard.",
+        "item5": "Go to your G Suite account dashboard and paste the cient name and scope.",
+        "item6": "Click Authorize, and then return to this page to click Next."
+      },
+      "testAccount": {
+        "title": "Test account",
+        "line1": "Enter the G Suite account you want to use to test the connection with Google Calendar. The account will automatically be enabled for Hybrid Calendar Service.",
+        "title2": "Calendar resources",
+        "useResources": "My organization uses calendar resources (such as conference devices)",
+        "line2": "If you use room resources, you may need to make access control list (ACL) changes to their calendars.",
+        "line3": "To let Hybrid Calendar Service perform this change automatically, enter the information for an authorized ACL admin account.",
+        "subtitle": "ACL Admin Account",
+        "error": "Couldn't save the Google Calendar config"
+      },
+      "completion": {
+        "title": "Set up completed",
+        "line1": "Great! Google Calendar is correctly configured and the service was enabled for {{email}}",
+        "line2": "You can now enable Hybrid Calendar for all your other users.",
+        "line3": "To enable users, you can:",
+        "item1": "Enable them individually from the <a href=\"#\">users page</a>.",
+        "item2": "Enable them in bulk using the <a href=\"#\">CSV template</a>.",
+        "line4": "Refer to <a href=\"#\">documentation</a> if you need help enabling users."
+      }
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate {{ServiceName}}",
@@ -2203,39 +2238,12 @@
       },
       "googleCalendar": {
         "title": "Google Calendar",
-        "serviceAccountHeader": "Service Account",
-        "serviceAccountText": "The service account used for connecting from Cisco Collaboration Cloud to your Google Calendar organization.",
-        "serviceAccountHelpText": "To change the service account, upload a new private key in the section below",
-        "aclAccountHeader": "ACL Admin Account (optional)",
-        "aclAccountText": "If using room resources, ACL changes to their calendars may be required. To enable Hybrid Calendar Services to perform this change automatically, you may provide the name of an authorized account for this purpose.",
-        "privateKeyHeader": "Private Key",
-        "privateKeyText": "Upload a new private key.",
         "deactivateHeader": "Deactivate Google Calendar",
         "deactivateText": "Your users will no longer be able to use this service.",
         "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
-        "uploadNewPrivateKey": "Upload Private Key",
-        "uploadNewPrivateKeyPlaceholder": "Enter service account name",
-        "uploadNewAclAccountPlaceholder": "Enter ACL admin account name (optional)",
-        "serviceAccountName": "Service Account Name",
-        "aclAccountName": "ACL Admin Account Name",
-        "uploadNewPrivateKeyExplanation": "Enter your service account name and upload the private key you downloaded from Google Developer Console.",
-        "dragAndDropKeyFileHere": "Drag and drop the file containing the private key here or",
-        "clickToBrowse": "click to browse",
-        "fileReadyForImport": "File ready for import",
-        "removeFile": "Remove file",
-        "certificateWarning": "Warning: {{fileName}} does not appear to be a valid PKCS-12 file.",
-        "successfullyUploadedKey": "Service account saved successfully, and private key file {{filename}} uploaded.",
-        "failedToUploadKey": "Could not save service account name and/or certificate file.",
         "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status.",
-        "generateAPrivateKeyHeader": "Generate a Private Key",
-        "generateAPrivateKeyExplanation": "To enable Hybrid Calendar for your users, you need to generate a private key for Google Calendar. You can generate the key with the <a href=\"https://console.developers.google.com/\" target=\"_blank\">Google Developer Console</a>. Follow <a href=\"https://example.org/\" target=\"_blank\">documentation</a> to learn how to generate a key.",
-        "keyHasBeenGeneratedGoNext": "When you have generated your key, click Next.",
-        "googleCalendarSetupCompleted": "Google Calendar setup completed",
-        "great": "Great! {{fileName}} was successfully uploaded to Cisco Collaboration Cloud. You can now enable Hybrid Calendar Service for your users.",
-        "toEnableUsers": "To enable users, you can:",
-        "enableIndividually": "Enable them individually from the <a ng-click=\"{{onclick}}\">users</a> page.",
-        "enableInBulk": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
-        "referToDocumentation": "Refer to <a href=\"https://example.org/\" target=\"_blank\">documentation</a> if you need help enabling users.",
+        "apiClientAccess": "API Client Access",
+        "description": "Retrieve client name and scope for your G Suite organization API Client access below. If you need help configuring or updating your G Suite API Client access, refer to documentation.",
         "provisioningResults": {
           "OK": "Google Calendar is integrated with Hybrid Calendar Service.",
           "BAD_API_ACCESS_SETTINGS": "The site verification API is not enabled. Go to console.developers.google.com to enable it.",
@@ -2581,6 +2589,9 @@
   "cmc": {
     "menu": {
       "mobileConvergenceService": "Mobile Convergence Service"
+    },
+    "details": {
+      "invalidInput": "Always provide valid mobile number when enabling"
     }
   },
   "context": {
@@ -2607,7 +2618,9 @@
       "base": "Cisco",
       "custom": "Custom",
       "access": "Source",
+      "actions": "Actions",
       "dateUpdated": "Date Updated",
+      "update": "Edit",
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
         "associatedFieldsetsError": "Unable to retrieve associated fieldsets.",
@@ -2620,6 +2633,8 @@
         "fieldIdUniqueError": "Field ID exists. Enter a different ID",
         "fieldUpdateSuccess": "Field updated successfully!",
         "fieldUpdateFailure": "Unable to update field. Try again or contact customer support.",
+        "fieldDeleteSuccess": "Field deleted successfully!",
+        "fieldDeleteFailure": "Unable to delete field. Refresh your browser and try again.",
         "dataType": "Data Type",
         "dataTypePlaceholder": "Select Data Type",
         "descriptionPlaceholder": "Enter field details",
@@ -2638,12 +2653,13 @@
         "encryptedHelpText": "Is encrypted and contains no personally identifiable information",
         "unencrypted": "Unencrypted",
         "unencryptedHelpText": "Is not encrypted and contains no personally identifiable information",
-        "update": "Edit",
         "dateFormat": "MM/dd/yyyy",
         "noneFound": "No fields found",
         "fieldAttributes": "Field Attributes",
-        "inUseTooltip": "Field associated with fieldsets",
-        "notInUseTooltip": "Field not associated with any fieldsets"
+        "inUseTooltip": "Field associated with fieldsets.",
+        "notInUseTooltip": "Field not associated with any fieldsets.",
+        "deleteField": "Delete Field",
+        "deleteConfirmationText": "Are you sure you want to delete this field?"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -2661,12 +2677,18 @@
         "noFields": "No fields available",
         "fieldsetCreateSuccess": "Fieldset created successfully!",
         "fieldsetCreateFailure": "Unable to create fieldset. Try again or contact customer support.",
+        "fieldsetDeleteSuccess": "Fieldset deleted successfully!",
+        "fieldsetDeleteFailure": "Unable to delete fieldset. Refresh your browser and try again.",
         "fieldsetIdUniqueError": "Fieldset ID exists. Enter a different ID",
         "fieldsetIdInvalidCharactersError": "Only alpha-numeric characters, period(.), hyphen(-) or underscore (_) allowed",
         "noneFound": "No fieldsets found",
         "fieldsetAttributes": "Fieldset Attributes",
-        "inUseTooltip": "Fieldset associated with objects",
-        "notInUseTooltip": "Fieldset not associated with any objects"
+        "fieldsetUpdateSuccess": "Fieldset updated successfully!",
+        "fieldsetUpdateFailure": "Unable to update fieldset. Try again or contact customer support.",
+        "deleteFieldset": "Delete Fieldset",
+        "deleteConfirmationText": "Are you sure you want to delete this fieldset?",
+        "inUseTooltip": "Fieldset associated with objects.",
+        "notInUseTooltip": "Fieldset not associated with any objects."
       }
     }
   },
@@ -3726,9 +3748,11 @@
     "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
     "errorUpdate": "Failed to update the paging group: '{{message}}'",
     "errorSave": "Failed to create the paging group: '{{message}}'",
-    "errorSaveMemeberPartial": "'{{pagingGroupName}}' paging group has been created successfully but following members ids did not get added: '{{message}}'",
+    "errorSaveMemberPartial": "'{{pagingGroupName}}' paging group has been created successfully but following members ids did not get added: '{{message}}'",
     "errorSaveInitiatorPartial": "'{{pagingGroupName}}' paging group has been created successfully but following initiators ids did not get added: '{{message}}'",
-    "sayInvalidChar": "Invalid character. {{char}} is not allowed."
+    "sayInvalidChar": "Invalid character. {{char}} is not allowed.",
+    "errorGetNumber": "'{{pagingGroupName}}' paging group was not able to get the number assigned to this group.",
+    "loadError": "An error while loading the paging groups."
   },
   "telephonyPreview": {
     "lines": "Lines",
@@ -3815,6 +3839,10 @@
     "forwardBusyNoAnswerTimerSeconds": "Seconds",
     "forwardBusyNoAnswerTimerDescription": "Time before call is forwarded due to no answer",
     "ringDurationTimer.validation.error": "Must be a number between 1 and 300"
+  },
+  "mediaOnHoldPanel": {
+    "title": "Media on Hold",
+    "mediaManager": "Media Manager"
   },
   "multipleCalls": {
     "title": "Simultaneous Calls",
@@ -4049,7 +4077,8 @@
       },
       "unsupportedNumberType": "The number type {{type}} for phone number {{number}} is currently not supported yet.",
       "unsupportedOrderType": "Error while adding your order to the order cart. The order type {{type}} is currently not supported yet.",
-      "phoneNumbers": "You can only add up to 10 phone numbers."
+      "phoneNumbers": "You can only add up to 10 phone numbers.",
+      "customerNotFound": "PSTN customer record not found. Please contact Cisco TAC for further assistance."
     },
     "orderStatus": {
       "pinRequired": "Customer needs to sign PSTN Contract.",
@@ -4986,7 +5015,7 @@
       "unavailableTitle": "Unavailable",
       "partialTitle": "Partially Available",
       "utilizationTitle": "Resource Utilization",
-      "participantDistributionTitle": "Call Distribution",
+      "participantDistributionTitle": "Call Distribution across On-Premises clusters",
       "numberOfParticipantTitle": "Call Activity",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
@@ -5058,12 +5087,22 @@
       },
       "mobile": "Mobile",
       "cardDescription": {
-        "clientType": "Summary of the types of meeting clients that are in use at an organization.",
-        "cloudParticipants2": ": Number of calls made within an enterprise but overflowed to a cloud cluster.",
-        "cloudParticipants1": ": Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.",
-        "onpremDesc": ": Number of calls hosted on any of the enterprise clusters.",
-        "meetsHostType": "A breakdown of the number of meetings based on where the calls were hosted.",
+        "clientTypeDesc": "Summary of common categories of meeting clients that are used in an organization.<br><b>Desktop</b> : Windows , MAC OSX, Web Browser<br> <b>Mobile</b> : iPhone, Android, iPad.<br><b>Telepresence</b> : Telepresence room device, SIP Endpoints, Spark board.<br><b>Others</b> : Any unknown endpoints or clients that don’t fit the other categories.",
+        "totalCallsDesc": "<b>Cloud Calls</b> : Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.<br> <b>Overflowed to Cloud</b> : Number of calls made within an enterprise but overflowed to a cloud cluster.<br> <b>On-Premises</b>: Number of calls hosted on any of the enterprise clusters.",
+        "totalCallsClusterDesc": "<b>Redirected by this Cluster</b> : Number of calls that could not be hosted by this cluster and hence got redirected.<br><b>On-Premises</b> : Number of calls hosted on any of the enterprise clusters.",
+        "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
         "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected."
+      },
+      "graphDescription":{
+        "utilizationOrgDesc": "Average utilization trend for all clusters in an organization",
+        "utilizationClusterDesc": "Average utilization trend for the selected cluster in an organization, compared to the average utilization for all the clusters",
+        "callActivityDesc": "Provides a view of the call activity trend across the organization, showing the calls that were hosted on-premises and calls hosted on the cloud. The calls that overflowed to the cloud are represented as dots on the cloud call graph. Hover over a dot to show the number of calls that overflowed to the cloud at that instance.",
+        "calldistributionOrgDesc": "Provides a view of how calls are distributed across the different on-premise clusters in the organization. This information helps an admin plan an organization’s cluster capacity. Calls that cannot be hosted on a specific on-premises cluster are redirected to another on-premise cluster. These redirects are represented as dots on the graph. Hover over a dot to show the number of calls that were redirected from that specific cluster.",
+        "calldistributionClusterDesc": "Provides a view of the call activity trend on a specific cluster. This information helps an admin  plan an organization’s cluster capacity. Calls that cannot be hosted on this specific cluster are redirected to another on-premise cluster. These redirects are represented as dots on the graph. Hover over a dot to show the number of calls redirected from this specific cluster at that instance.",
+        "clusterInServiceOrgDesc": "Percentage of clusters that were  in service to host calls over the selected time period. Click any of the clusters in the Cluster Availability graph to directly navigate to the Nodes In Service graph.<br>Green: clusters that have all nodes in service.<br>Yellow: clusters that have 1 or more nodes that are not in service.<br>Red: clusters that have no available nodes in service.",
+        "clusterInServiceClusterDesc": "Percentage of nodes that are in service to host calls over the selected time period.<br>Green: node is in service.<br>Red: node is not in service.",
+        "meetHostTypeDesc": "Provides a trend of the number of meetings in an organization, based on where the calls were hosted",
+        "clientTypeDesc": "Provides usage trend of the various client types that are used in an organization"
       }
     },
     "deleteGroup": {
@@ -6128,6 +6167,8 @@
     "customerInfo_callback": "Customer Information for Callback",
     "feedback_chat": "Feedback",
     "feedback_chatPlusCallback": "Chat Feedback",
+    "feedbackCallback_callback": "Feedback",
+    "feedbackCallback_chatPlusCallback": "Call Feedback",
     "agentUnavailable_chat": "Agent Unavailable",
     "agentUnavailable_callback": "Agent Unavailable",
     "agentUnavailable_chatPlusCallback": "Agent Unavailable for Chat",
@@ -6143,6 +6184,7 @@
     "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
+    "callFeedbackDesc": "This screen is used to collect feedback from a customer after the call ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown to a customer during business off-hours",
     "offHoursMessage": "Message",
@@ -6214,6 +6256,7 @@
     "agentEnteredStatus": "Chatting with an Agent",
     "typeNewMsg": "Type your message and press enter.",
     "feedbackQuery": "Please rate your chat experience",
+    "feedbackQueryCall": "Please rate your previous callback experience",
     "ratingHintText": "Hint Text",
     "ratingComment": "Add comments",
     "submitFeedbackBtn": "Submit Feedback",
@@ -6258,10 +6301,15 @@
       },
       "feedback": {
         "title_chat": "Feedback",
-        "title_callback": "Feedback",
         "title_chatPlusCallback": "Chat Feedback",
         "desc_chat": "This screen is used to collect feedback from a customer after the chat ends",
         "desc_chatPlusCallback": "This screen is used to collect feedback from a customer after the chat ends"
+      },
+      "feedbackCallback": {
+        "title_callback": "Feedback",
+        "desc_callback": "This screen is used to collect feedback from a customer after the call ends",
+        "title_chatPlusCallback": "Callback Feedback",
+        "desc_chatPlusCallback": "This screen is used to collect feedback from a customer after the call ends"
       },
       "customerInformationChat": {
         "title_chatPlusCallback": "Customer Information for Chat",
@@ -6541,7 +6589,8 @@
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
           "squared-fusion-khaos": "Management",
-          "ept": "Private Trunk"
+          "ept": "Private Trunk",
+          "voicemail": "Voicemail"
         }
       },
       "licenses": {
@@ -6972,7 +7021,12 @@
       "editNameSuccess": "Organization name successfully updated.",
       "editNameFailure": "Failed to update customer name."
     },
-    "care": "Care"
+    "care": "Care",
+    "hybridVoicemail": {
+      "cannotReadStatus": "Could not read Hybrid Voicemail status.",
+      "hybridVoicemail": "Voicemail",
+      "orgNotEnabled": "Organization not enabled."
+    }
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -7084,7 +7138,8 @@
         "buttons": {
           "numbers": "Numbers",
           "features": "Features",
-          "settings": "Settings"
+          "settings": "Settings",
+          "records": "Records"
         }
       },
       "care": {
@@ -7200,6 +7255,8 @@
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "certificateTitle": "Certificates",
         "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
+        "certificateTitleSettings": "Certificates for Encrypted SIP Calls",
+        "certificateDescSettings": "Use certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure the hostnames are on a verified domain. For help, click here.",
         "certificateRadio1": "Use default trust list",
         "certificateRadio2": "I want to upload my own certificate",
         "dragAndDropKeyFileHere": "Drag and drop the certificate file here or ",

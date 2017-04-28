@@ -1,54 +1,63 @@
 import { Notification } from 'modules/core/notifications';
+import { CloudConnectorService, IApiKey } from 'modules/hercules/services/calendar-cloud-connector.service';
+// import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
+  public useResources: boolean;
   public calendarSectionTexts = {
     title: 'hercules.settings.googleCalendar.title',
   };
-  public aclAdminAccount;
-  public googleServiceAccount;
-  public localizedGoogleServiceAccountHelpText = this.$translate.instant('hercules.settings.googleCalendar.serviceAccountHelpText');
-  public localizedAclAccountHelpText = this.$translate.instant('hercules.settings.googleCalendar.aclAccountHelpText');
-
-  private serviceId = 'squared-fusion-gcal';
+  public apiKey: IApiKey;
+  public aclAdminAccount: string;
+  public errorMessages = {
+    aclAdminAccount: {
+      required: this.$translate.instant('common.invalidRequired'),
+      email: this.$translate.instant('common.invalidEmail'),
+    },
+  };
+  public testAccountForm: ng.IFormController;
+  public saving = false;
 
   /* @ngInject */
   constructor(
-    private $modal,
+    private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
-    private CloudConnectorService,
+    private CloudConnectorService: CloudConnectorService,
     private Notification: Notification,
-  ) {}
+  ) { }
 
   public $onInit() {
-    this.CloudConnectorService.getService(this.serviceId)
-      .then(service => {
-        if (service.setup) {
-          this.googleServiceAccount = service.serviceAccountId;
-          this.aclAdminAccount = service.aclAdminAccount;
-        }
+    this.$q.all([
+      this.CloudConnectorService.getApiKey(),
+      this.CloudConnectorService.getService(),
+    ])
+      .then(([ apiKey, { aclAdminAccount = '' } ]) => {
+        this.apiKey = apiKey;
+        this.aclAdminAccount = aclAdminAccount;
+        this.useResources = !!aclAdminAccount;
       })
       .catch(error => {
         this.Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
       });
   }
 
-  public uploadGooglePrivateKey() {
-    this.$modal.open({
-      templateUrl: 'modules/hercules/service-settings/upload-google-calendar-key.html',
-      controller: 'UploadGoogleCalendarKeyController',
-      controllerAs: 'uploadKey',
-      resolve: {
-        googleServiceAccount: () => this.googleServiceAccount,
-        aclAccount: () => this.aclAdminAccount,
-      },
-    })
-    .result
-    .then(newAccounts => {
-      this.googleServiceAccount = newAccounts.googleServiceAccount;
-      this.aclAdminAccount = newAccounts.aclAccount;
-    });
+  public updateConfig() {
+    this.saving = true;
+    // this.CloudConnectorService.updateConfig({
+    //   apiClientId: this.apiKey.apiClientId,
+    //   aclAdminAccount: this.data.adminAccount,
+    //   testEmailAccount: this.data.testAccount,
+    // })
+    //   .then(() => {
+    //     this.saving = false;
+    //   })
+    //   .catch((err) => {
+    //     this.Notification.errorWithTrackingId(err, 'hercules.settings.googleCalendar.setupModal.testAccount.error');
+    //   })
+    //   .finally(() => {
+    //     this.saving = false;
+    //   });
   }
-
 }
 
 export class GoogleCalendarConfigSectionComponent implements ng.IComponentOptions {

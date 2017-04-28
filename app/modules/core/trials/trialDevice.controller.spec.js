@@ -66,25 +66,6 @@ describe('Controller: TrialDeviceController', function () {
       expect(shippingInfo).toBeUndefined();
     });
 
-    // TODO: remove when MX300 support is official
-    describe('feature toggle for displaying new room systems', function () {
-      it('should show MX300 when feature toggle is true', function () {
-        spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-        initController();
-
-        expect(controller.showNewRoomSystems).toBe(true);
-        expect(FeatureToggleService.supports).toHaveBeenCalled();
-      });
-
-      it('should show MX300 when feature toggle is false', function () {
-        spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
-        initController();
-
-        expect(controller.showNewRoomSystems).toBe(true);
-        expect(FeatureToggleService.supports).toHaveBeenCalled();
-      });
-    });
-
     // the back end expects this as an enum and enums cant start with numbers
     it('should have all devices starting with \'CISCO_\'', function () {
       for (var i = 0; i < controller.details.roomSystems.length; i++) {
@@ -158,6 +139,30 @@ describe('Controller: TrialDeviceController', function () {
       expect(controller.calcQuantity(devices1)).toEqual(3);
       expect(controller.calcQuantity(devices1, devices2)).toEqual(7);
       expect(controller.calcQuantity(devices3)).toEqual(0);
+    });
+
+    it('should correctly calculate quantity by device type', function () {
+      // default data has quality 3 of CISCO_8865 and 2 of CISCO_SX10
+      bard.mockService(TrialCallService, {
+        getData: trialData.enabled.trials.callTrial,
+      });
+
+      bard.mockService(TrialRoomSystemService, {
+        getData: trialData.enabled.trials.roomSystemTrial,
+      });
+
+      controller.phone8841.quantity = 2;
+      controller.phone8841.enabled = true;
+      controller.phone8845.quantity = 1;
+      controller.phone8845.enabled = true;
+      controller.sx10.quantity = 1;
+      controller.sx10.enabled = true;
+      controller.mx300.quantity = 1;
+      controller.mx300.enabled = true;
+      var roomSystemsQuantity = controller.getTypeQuantity('roomSystems');
+      var phonesQuantity = controller.getTypeQuantity('phones');
+      expect(roomSystemsQuantity).toBe(2);
+      expect(phonesQuantity).toBe(3);
     });
 
     it('should set quantity to current value', function () {
@@ -267,7 +272,7 @@ describe('Controller: TrialDeviceController', function () {
         minQuantity: 1,
         maxQuantity: 3,
       };
-      device.quantity = controller.getQuantityInputDefault(device);
+      controller.setQuantityInputDefault(device);
       expect(device.quantity).toBe(0);
     });
 
@@ -281,7 +286,7 @@ describe('Controller: TrialDeviceController', function () {
         minQuantity: 1,
         maxQuantity: 3,
       };
-      device.quantity = controller.getQuantityInputDefault(device);
+      controller.setQuantityInputDefault(device);
       expect(device.quantity).toBe(1);
     });
 
@@ -295,257 +300,8 @@ describe('Controller: TrialDeviceController', function () {
         minQuantity: 1,
         maxQuantity: 3,
       };
-      device.quantity = controller.getQuantityInputDefault(device, 1);
+      controller.setQuantityInputDefault(device, 1);
       expect(device.quantity).toBe(3);
-    });
-
-  });
-
-  describe('input quantity validation', function () {
-    it('should validate when device is not enabled', function () {
-      var valid = controller.validateInputQuantity(2, 2, {
-        model: {
-          enabled: false,
-          minQuantity: 1,
-          maxQuantity: 3,
-        },
-      });
-      expect(valid).toBe(true);
-    });
-
-    it('should validate quantity between 1 and 4 for new trial', function () {
-      var valid1 = controller.validateInputQuantity(1, 1, {
-        model: {
-          enabled: true,
-          model: 'CISCO_8865',
-        },
-      });
-      var valid2 = controller.validateInputQuantity(4, 4, {
-        model: {
-          enabled: true,
-          model: 'CISCO_8865',
-        },
-      });
-
-      expect(valid1).toBe(true);
-      expect(valid2).toBe(true);
-    });
-
-
-    it('should validate quantity between 1 and 5 for trial prior to 9/1/2016', function () {
-      var stateParams = {
-        currentTrial: {
-          startDate: new Date(2016, 7, 1),
-        },
-      };
-
-      var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
-
-      var valid1 = controller.validateInputQuantity(1, 1, {
-        model: {
-          enabled: true,
-          model: 'CISCO_8845',
-        },
-      });
-      var valid2 = controller.validateInputQuantity(5, 5, {
-        model: {
-          enabled: true,
-          model: 'CISCO_8845',
-        },
-      });
-
-      expect(valid1).toBe(true);
-      expect(valid2).toBe(true);
-    });
-
-    it('should not validate quantity below 1 and above 5', function () {
-      var valid1 = controller.validateInputQuantity(0, 0, {
-        model: {
-          enabled: true,
-          model: 'CISCO_8845',
-        },
-      });
-      var valid2 = controller.validateInputQuantity(6, 6, {
-        model: {
-          enabled: true,
-          model: 'CISCO_8845',
-        },
-      });
-
-      expect(valid1).toBe(false);
-      expect(valid2).toBe(false);
-    });
-
-
-    it('should not validate quantity above 1 for mx300', function () {
-      var valid1 = controller.validateInputQuantity(1, 1, {
-        model: {
-          enabled: true,
-          model: 'CISCO_MX300',
-        },
-      });
-      var valid2 = controller.validateInputQuantity(2, 2, {
-        model: {
-          enabled: true,
-          model: 'CISCO_MX300',
-        },
-      });
-      expect(valid1).toBe(true);
-      expect(valid2).toBe(false);
-    });
-  });
-
-  describe('total quantity validation', function () {
-    var model = {
-      model: {
-        enabled: true,
-      },
-    };
-
-    it('should validate when quantity is between 1 and 5 for new trial', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 1, 0, 5);
-
-      var valid1 = controller.validateTotalQuantity(null, null, model);
-      var valid2 = controller.validateTotalQuantity(null, null, model);
-
-      expect(valid1).toBe(true);
-      expect(valid2).toBe(true);
-    });
-
-    it('should validate when quantity is between 1 and 7 for trial prior to 9/1/2016', function () {
-      var stateParams = {
-        currentTrial: {
-          startDate: new Date(2016, 7, 1),
-        },
-      };
-
-      var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 1, 0, 7);
-
-      var valid1 = controller.validateTotalQuantity(null, null, model);
-      var valid2 = controller.validateTotalQuantity(null, null, model);
-
-      expect(valid1).toBe(true);
-      expect(valid2).toBe(true);
-    });
-
-    // less than 1 condition is handled in controller by _getQuantityInputDefault
-    it('should not validate when quantity is greater than 7', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 8);
-
-      var valid1 = controller.validateTotalQuantity(null, null, model);
-
-      expect(valid1).toBe(false);
-    });
-
-    it('should validate when device is not enabled', function () {
-      var valid = controller.validateTotalQuantity(null, null, {
-        model: {
-          enabled: false,
-        },
-      });
-      expect(valid).toBe(true);
-    });
-  });
-
-  describe('room systems quantity validation', function () {
-    var model = {
-      model: {
-        enabled: true,
-        model: 'CISCO_DX80',
-      },
-    };
-
-    it('should validate when quantity is 3 or less', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(3);
-
-      var valid = controller.validateTypeQuantity(null, null, model);
-
-      expect(valid).toBe(true);
-    });
-
-    it('should not validate when quantity is greater than 5', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(6);
-
-      var valid = controller.validateTypeQuantity(null, null, model);
-
-      expect(valid).toBe(false);
-    });
-
-    it('should not validate when quantity is less than 1', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(0);
-
-      var valid = controller.validateTypeQuantity(null, null, model);
-
-      expect(valid).toBe(false);
-    });
-
-    it('should validate when device is not enabled', function () {
-      var valid = controller.validateTypeQuantity(null, null, {
-        model: {
-          enabled: false,
-        },
-      });
-      expect(valid).toBe(true);
-    });
-  });
-
-  describe('phones quantity validation', function () {
-    var model = {
-      model: {
-        enabled: true,
-        model: 'CISCO_8865',
-      },
-    };
-
-    it('should validate when quantity is 4 or less for new trial', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(4);
-
-      var valid = controller.validateTypeQuantity(null, null, model);
-
-      expect(valid).toBe(true);
-    });
-
-    it('should validate when quantity is 5 or less for trial prior to 9/1/16', function () {
-
-      var stateParams = {
-        currentTrial: {
-          startDate: new Date(2016, 7, 1),
-        },
-      };
-
-      var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
-
-      spyOn(controller, 'calcQuantity').and.returnValue(5);
-
-      var valid = controller.validateTypeQuantity(null, null, model);
-
-      expect(valid).toBe(true);
-    });
-
-    it('should not validate when quantity is greater than 5', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(6);
-
-      var valid = controller.validateTypeQuantity(null, null, model);
-
-      expect(valid).toBe(false);
-    });
-
-    it('should not validate when phone quantity is less than 1', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(0);
-
-      var valid = controller.validateTypeQuantity(null, null, model);
-
-      expect(valid).toBe(false);
-    });
-
-    it('should validate when device is not enabled', function () {
-      var valid = controller.validateTypeQuantity(null, null, {
-        model: {
-          enabled: false,
-        },
-      });
-      expect(valid).toBe(true);
     });
 
   });

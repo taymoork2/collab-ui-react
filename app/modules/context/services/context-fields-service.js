@@ -17,6 +17,7 @@
       createAndGetField: createAndGetField,
       updateField: updateField,
       updateAndGetField: updateAndGetField,
+      deleteField: deleteField,
     };
 
     return service;
@@ -75,5 +76,13 @@
           return getField(data.id);
         });
     }
+
+    function deleteField(id) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.delete(dictionaryUrl + idPath + id);
+        });
+    }
+
   }
 })();

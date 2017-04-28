@@ -110,10 +110,6 @@ describe('Component: settings', () => {
       expect(this.view).toContainElement('uc-settings-preferred-language');
     });
 
-    it('should have default country component', function() {
-      expect(this.view).toContainElement('uc-default-country');
-    });
-
     it('should have routing prefix component', function() {
       expect(this.view).toContainElement('uc-routing-prefix');
     });
@@ -166,10 +162,6 @@ describe('Component: settings', () => {
 
     it('should have preferred language component', function() {
       expect(this.view).toContainElement('uc-settings-preferred-language');
-    });
-
-    it('should have default country component', function() {
-      expect(this.view).toContainElement('uc-default-country');
     });
 
     it('should have routing prefix component', function() {

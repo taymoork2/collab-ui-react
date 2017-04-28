@@ -1,4 +1,4 @@
-import { PstnService } from '../../pstn/pstn.service';
+import { PstnService } from 'modules/huron/pstn/pstn.service';
 
 const BLOCK_ORDER = 'BLOCK_ORDER';
 const CUSTOMER = 'CUSTOMER';
@@ -78,7 +78,7 @@ export class OrderDetailCtrl implements ng.IComponentController {
 
 export class OrderDetailComponent implements ng.IComponentOptions {
   public controller = OrderDetailCtrl;
-  public templateUrl = 'modules/huron/pstnOrderManagement/orderDetail/orderDetail.html';
+  public templateUrl = 'modules/huron/pstn/pstnOrderManagement/orderDetail/orderDetail.html';
   public bindings = {
     currentOrder: '<',
     currentCustomer: '<',

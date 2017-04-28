@@ -15,6 +15,10 @@
     position: relative;
     text-align: center;
 
+    &:focus {
+      box-shadow: none;
+    }
+
     img {
       padding-left: 15%;
       padding-right: 15%;

@@ -136,6 +136,9 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   public changeOption(isCertificateDefault: boolean): void {
     this.isCertificateDefault = isCertificateDefault;
+    if (!this.isCertificateDefault) {
+      this.initCertificateInfo();
+    }
   }
 
   public isCertificateChoiceValid(): boolean {
@@ -146,6 +149,14 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       isValid = true;
     }
     return isValid;
+  }
+
+  public initCertificateInfo(): void {
+    this.PrivateTrunkCertificateService.readCerts()
+      .then((cert) => {
+        this.formattedCertList = cert.formattedCertList;
+        this.isImporting = cert.isImporting;
+      });
   }
 
   public createPrivateTrunk(): ng.IPromise<any> {
@@ -208,7 +219,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   public setupComplete(): void {
     this.PrivateTrunkPrereqService.dismissModal();
-    this.$state.go('private-trunk-overview');
+    this.$state.go('private-trunk-overview.settings');
   }
 
   public dismiss(): void {

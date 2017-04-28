@@ -7,14 +7,14 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService, $httpBackend;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
   var isCustomerLaunchedFromPartner = true;
 
   afterEach(function () {
-    controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
+    controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = $httpBackend = undefined;
   });
 
   afterAll(function () {
@@ -182,7 +182,7 @@ describe('Controller: OverviewCtrl', function () {
     }).head();
   }
 
-  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_, _SunlightReportService_) {
+  function defaultWireUpFunc(_$rootScope_, $controller, _$httpBackend_, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_, _SunlightReportService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -196,6 +196,7 @@ describe('Controller: OverviewCtrl', function () {
     TrialService = _TrialService_;
     FusionClusterService = _FusionClusterService_;
     SunlightReportService = _SunlightReportService_;
+    $httpBackend = _$httpBackend_;
 
     spyOn(SunlightReportService, 'getOverviewData');
     SunlightReportService.getOverviewData.and.returnValue({});
@@ -286,6 +287,8 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
     spyOn(PstnService, 'getCustomerTrialV2').and.callThrough();
 
+    $httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
+
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
       $rootScope: $rootScope,
@@ -303,6 +306,7 @@ describe('Controller: OverviewCtrl', function () {
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
       hasGoogleCalendarFeatureToggle: false,
+      $httpBackend: $httpBackend,
     });
 
     $scope.$apply();

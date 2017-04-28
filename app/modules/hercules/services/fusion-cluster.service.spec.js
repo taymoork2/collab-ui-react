@@ -198,7 +198,7 @@ describe('Service: FusionClusterService', function () {
     it('should call FMS to get a cluster', function () {
       $httpBackend
         .expectGET('http://elg.no/organizations/0FF1C3/clusters/clusterId?fields=@wide')
-        .respond(200, 'dummy response');
+        .respond(200, {});
       FusionClusterService.get('clusterId');
     });
   });
