@@ -5,9 +5,11 @@ describe('Service: HuronCountryService', () => {
       '$httpBackend',
       'HuronConfig',
       'HuronCountryService',
+      'Authinfo',
     );
 
     spyOn(this.HuronCountryService, 'fetchCountryList').and.callThrough();
+    spyOn(this.Authinfo, 'getUserOrgId').and.returnValue('123');
     let countryList = {
       countries: [
         {
@@ -31,7 +33,7 @@ describe('Service: HuronCountryService', () => {
   });
 
   it('should get the list of countries from the API.', function () {
-    this.$httpBackend.expectGET(`${this.HuronConfig.getCmiV2Url()}/lists/countries`)
+    this.$httpBackend.expectGET(`${this.HuronConfig.getCmiV2Url()}/customers/123/countries`)
       .respond(200, this.countryList);
     this.HuronCountryService.getCountryList().then(response => {
       expect(response).toEqual(jasmine.objectContaining(this.countryList.countries));
@@ -40,7 +42,7 @@ describe('Service: HuronCountryService', () => {
   });
 
   it('should get the list of countries from the service cached values.', function () {
-    this.$httpBackend.expectGET(`${this.HuronConfig.getCmiV2Url()}/lists/countries`)
+    this.$httpBackend.expectGET(`${this.HuronConfig.getCmiV2Url()}/customers/123/countries`)
       .respond(200, this.countryList);
     this.HuronCountryService.getCountryList().then(response => {
       expect(response).toEqual(jasmine.objectContaining(this.countryList.countries));

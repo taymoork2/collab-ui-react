@@ -12,8 +12,9 @@ export class HuronCountryService {
     private $resource: ng.resource.IResourceService,
     private HuronConfig,
     private $q: ng.IQService,
+    private Authinfo,
   ) {
-    this.countryResource = <ICountryResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/lists/countries`);
+    this.countryResource = <ICountryResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/countries`, { customerId: '@customerId' });
     this.hardCodedCountryResource = <ICountryResource>this.$resource('modules/huron/countries/countryList.json');
   }
 
@@ -41,7 +42,9 @@ export class HuronCountryService {
 
   private fetchCountryList(): ng.IPromise<Array<ICountry>> {
     let countries;
-    return this.countryResource.get({}).$promise
+    return this.countryResource.get({
+      customerId: this.Authinfo.getUserOrgId(),
+    }).$promise
       .then(countryList => {
         countries = _.get(countryList, 'countries', []);
         this.countries = countries;
