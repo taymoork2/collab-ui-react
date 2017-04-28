@@ -164,4 +164,25 @@ describe('Service: contextFieldsService', function () {
       this.$httpBackend.flush();
     });
   });
+
+  describe('deleteField', function () {
+    it('should return upon successful delete', function () {
+      this.$httpBackend.expectDELETE(dictionaryUrl + '/dictionary/field/v1/id/fieldId').respond(200);
+      this.ContextFieldsService.deleteField('fieldId').then(function (response) {
+        expect(response.status).toBe(200);
+      }).catch(fail);
+      this.$httpBackend.flush();
+    });
+
+    it('should reject if delete fails', function () {
+      this.$httpBackend.expectDELETE(dictionaryUrl + '/dictionary/field/v1/id/fieldId').respond(404, 'Not found');
+      this.ContextFieldsService.deleteField('fieldId').then(function () {
+        fail('ContextFieldsService.deleteField should have rejected');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.data).toBe('Not found');
+        expect(errorResponse.status).toBe(404);
+      });
+      this.$httpBackend.flush();
+    });
+  });
 });

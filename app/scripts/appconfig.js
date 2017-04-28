@@ -2272,7 +2272,7 @@
                 $state.get('customer-overview.ordersOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/ordersOverview'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/ordersOverview'], done);
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
@@ -2363,7 +2363,7 @@
                 $state.get('customerPstnOrdersOverview').data.displayName = $translate.instant('pstnOrderOverview.orderHistory');
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/customerPstnOrdersOverview'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/customerPstnOrdersOverview'], done);
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
@@ -2385,7 +2385,7 @@
                 $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.currentOrder.carrierOrderId;
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/orderDetail'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
               }),
               currentOrder: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentOrder;
@@ -2408,7 +2408,7 @@
                 $state.get('customer-overview.orderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/orderDetail'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;

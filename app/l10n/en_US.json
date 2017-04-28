@@ -2618,6 +2618,7 @@
       "base": "Cisco",
       "custom": "Custom",
       "access": "Source",
+      "actions": "Actions",
       "dateUpdated": "Date Updated",
       "update": "Edit",
       "fieldPage": {
@@ -2632,6 +2633,8 @@
         "fieldIdUniqueError": "Field ID exists. Enter a different ID",
         "fieldUpdateSuccess": "Field updated successfully!",
         "fieldUpdateFailure": "Unable to update field. Try again or contact customer support.",
+        "fieldDeleteSuccess": "Field deleted successfully!",
+        "fieldDeleteFailure": "Unable to delete field. Refresh your browser and try again.",
         "dataType": "Data Type",
         "dataTypePlaceholder": "Select Data Type",
         "descriptionPlaceholder": "Enter field details",
@@ -2654,7 +2657,9 @@
         "noneFound": "No fields found",
         "fieldAttributes": "Field Attributes",
         "inUseTooltip": "Field associated with fieldsets.",
-        "notInUseTooltip": "Field not associated with any fieldsets."
+        "notInUseTooltip": "Field not associated with any fieldsets.",
+        "deleteField": "Delete Field",
+        "deleteConfirmationText": "Are you sure you want to delete this field?"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -2672,14 +2677,18 @@
         "noFields": "No fields available",
         "fieldsetCreateSuccess": "Fieldset created successfully!",
         "fieldsetCreateFailure": "Unable to create fieldset. Try again or contact customer support.",
+        "fieldsetDeleteSuccess": "Fieldset deleted successfully!",
+        "fieldsetDeleteFailure": "Unable to delete fieldset. Refresh your browser and try again.",
         "fieldsetIdUniqueError": "Fieldset ID exists. Enter a different ID",
         "fieldsetIdInvalidCharactersError": "Only alpha-numeric characters, period(.), hyphen(-) or underscore (_) allowed",
         "noneFound": "No fieldsets found",
         "fieldsetAttributes": "Fieldset Attributes",
-        "inUseTooltip": "Fieldset associated with objects.",
-        "notInUseTooltip": "Fieldset not associated with any objects.",
         "fieldsetUpdateSuccess": "Fieldset updated successfully!",
-        "fieldsetUpdateFailure": "Unable to update fieldset. Try again or contact customer support."
+        "fieldsetUpdateFailure": "Unable to update fieldset. Try again or contact customer support.",
+        "deleteFieldset": "Delete Fieldset",
+        "deleteConfirmationText": "Are you sure you want to delete this fieldset?",
+        "inUseTooltip": "Fieldset associated with objects.",
+        "notInUseTooltip": "Fieldset not associated with any objects."
       }
     }
   },

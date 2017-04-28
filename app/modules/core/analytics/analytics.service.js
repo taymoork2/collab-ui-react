@@ -138,6 +138,10 @@
           CONTEXT_UPDATE_FIELD_FAILURE: 'Failed to update a field',
           CONTEXT_UPDATE_FIELDSET_SUCCESS: 'Successfully updated a fieldset',
           CONTEXT_UPDATE_FIELDSET_FAILURE: 'Failed to update a fieldset',
+          CONTEXT_DELETE_FIELD_SUCCESS: 'Successfully deleted a field',
+          CONTEXT_DELETE_FIELD_FAILURE: 'Failed to delete a field',
+          CONTEXT_DELETE_FIELDSET_SUCCESS: 'Successfully deleted a fieldset',
+          CONTEXT_DELETE_FIELDSET_FAILURE: 'Failed to delete a fieldset',
         },
       },
     };

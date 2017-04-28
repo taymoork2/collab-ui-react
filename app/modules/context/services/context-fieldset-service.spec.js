@@ -270,7 +270,7 @@ describe('Service: contextFieldsetsService', function () {
       this.$httpBackend.flush();
     });
 
-    it('shoud reject if error happens', function () {
+    it('should reject if error happens', function () {
       this.$httpBackend.expectPUT(dictionaryUrl + '/dictionary/fieldset/v1/id/someId').respond(400, 'someError');
       this.ContextFieldsetsService.updateAndGetFieldset({
         id: 'someId',
@@ -285,4 +285,24 @@ describe('Service: contextFieldsetsService', function () {
     });
   });
 
+  describe('deleteFieldset', function () {
+    it('should return upon successful delete', function () {
+      this.$httpBackend.expectDELETE(dictionaryUrl + '/dictionary/fieldset/v1/id/someId').respond(200);
+      this.ContextFieldsetsService.deleteFieldset('someId').then(function (response) {
+        expect(response.status).toBe(200);
+      }).catch(fail);
+      this.$httpBackend.flush();
+    });
+
+    it('should reject if delete fails', function () {
+      this.$httpBackend.expectDELETE(dictionaryUrl + '/dictionary/fieldset/v1/id/fieldsetId').respond(404, 'Not found');
+      this.ContextFieldsetsService.deleteFieldset('fieldsetId').then(function () {
+        fail('ContextFieldsetsService.deleteFieldset should have rejected');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.data).toBe('Not found');
+        expect(errorResponse.status).toBe(404);
+      });
+      this.$httpBackend.flush();
+    });
+  });
 });

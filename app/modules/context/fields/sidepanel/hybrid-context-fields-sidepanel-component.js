@@ -14,8 +14,8 @@ require('./_fields-sidepanel.scss');
       },
     });
 
-    /* @ngInject */
-  function ContextFieldsSidepanelCtrl(ContextFieldsetsService, $filter, $translate, $state) {
+  /* @ngInject */
+  function ContextFieldsSidepanelCtrl(Analytics, ContextFieldsService, ContextFieldsetsService, Notification, $filter, ModalService, $state, $translate) {
 
     var vm = this;
     vm.associatedFieldsets = [];
@@ -62,7 +62,6 @@ require('./_fields-sidepanel.scss');
         });
     };
 
-
     vm._fixFieldData = function () {
       // fix searchable field
       if (_.isString(vm.field.searchable)) {
@@ -74,6 +73,31 @@ require('./_fields-sidepanel.scss');
 
       vm.publiclyAccessible = vm.field.publiclyAccessible;
     };
+
+    vm.isEditable = function () {
+      return (!vm.publiclyAccessible && !vm.inUse);
+    };
+
+    vm.openDeleteConfirmDialog = function () {
+      ModalService.open({
+        title: $translate.instant('context.dictionary.fieldPage.deleteField'),
+        message: $translate.instant('context.dictionary.fieldPage.deleteConfirmationText'),
+        close: $translate.instant('common.delete'),
+        dismiss: $translate.instant('common.cancel'),
+        btnType: 'negative',
+      }).result.then(function () {
+        // delete the field
+        ContextFieldsService.deleteField(vm.field.id).then(function () {
+          Notification.success('context.dictionary.fieldPage.fieldDeleteSuccess');
+          Analytics.trackEvent(Analytics.sections.CONTEXT.eventNames.CONTEXT_DELETE_FIELD_SUCCESS);
+          $state.go('context-fields');
+        }).catch(function () {
+          Notification.error('context.dictionary.fieldPage.fieldDeleteFailure');
+          Analytics.trackEvent(Analytics.sections.CONTEXT.eventNames.CONTEXT_DELETE_FIELD_FAILURE);
+        });
+      });
+    };
+
     vm.$onInit = function () {
       vm._fixFieldData();
       vm._getAssociatedFieldsets();
