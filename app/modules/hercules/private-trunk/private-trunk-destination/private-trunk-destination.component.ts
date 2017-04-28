@@ -1,5 +1,5 @@
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq/private-trunk-prereq.service';
-import { PrivateTrunkResource, Destination } from 'modules/hercules/private-trunk/setup/private-trunk-setup';
+import { PrivateTrunkResource, Destination } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 export interface IDestination {
   address: string;
   name: string;
@@ -155,7 +155,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 }
 export class PrivateTrunkDestinationComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkDestinationCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/setup/private-trunk-destination.html';
+  public templateUrl = 'modules/hercules/private-trunk/private-trunk-destination/private-trunk-destination.html';
   public bindings = {
     privateTrunkResource: '<',
     onChangeFn: '&',

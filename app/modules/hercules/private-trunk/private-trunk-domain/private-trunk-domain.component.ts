@@ -1,5 +1,5 @@
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
-import { IOption } from './private-trunk-setup';
+import { IOption } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 
 export enum DomainRadioType {
   DOMAIN = <any>'domain',
@@ -99,7 +99,7 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
 
 export class PrivateTrunkDomainComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkDomainCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/setup/private-trunk-domain.html';
+  public templateUrl = 'modules/hercules/private-trunk/private-trunk-domain/private-trunk-domain.html';
   public bindings = {
     domains: '<',
     domainSelected: '<',
