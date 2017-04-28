@@ -902,24 +902,19 @@
     }
 
     function initClassOfService() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
-        .then(function (enabled) {
-          if (enabled) {
-            return CustomerCosRestrictionServiceV2.get({
-              customerId: Authinfo.getOrgId(),
-            }).$promise.then(function (cosRestrictions) {
-              vm.model.cosRestrictions = _.forEach(cosRestrictions.restrictions, function (restriction) {
-                if (_.has(restriction, 'url')) {
-                  delete restriction['url'];
-                }
+      return CustomerCosRestrictionServiceV2.get({
+        customerId: Authinfo.getOrgId(),
+      }).$promise.then(function (cosRestrictions) {
+        vm.model.cosRestrictions = _.forEach(cosRestrictions.restrictions, function (restriction) {
+          if (_.has(restriction, 'url')) {
+            delete restriction['url'];
+          }
 
-                if (_.has(restriction, 'uuid')) {
-                  delete restriction['uuid'];
-                }
-              });
-            });
+          if (_.has(restriction, 'uuid')) {
+            delete restriction['uuid'];
           }
         });
+      });
     }
 
     function initDialPlan() {
@@ -1556,16 +1551,11 @@
       }
 
       function updateClassOfService() {
-        return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
-          .then(function (enabled) {
-            if (enabled) {
-              return CustomerCosRestrictionServiceV2.update({
-                customerId: Authinfo.getOrgId(),
-              }, {
-                restrictions: vm.model.cosRestrictions,
-              });
-            }
-          });
+        return CustomerCosRestrictionServiceV2.update({
+          customerId: Authinfo.getOrgId(),
+        }, {
+          restrictions: vm.model.cosRestrictions,
+        });
       }
 
       // Saving the company site has to be in done in a particular order

@@ -173,7 +173,6 @@ module.exports = {
   cloudberryPersonalMode: 'ce-enable-personal-mode',
   huronFederatedSparkCall: 'huron-federated-spark-call',
   sparkCallTenDigitExt: 'i751-10d-ext',
-  huronCustomerCos: 'huron-customer-cos',
   huronNetworkLocaleGB: 'huron-l10n-network-locale-gb',
   huronNetworkLocaleCO: 'huron-l10n-network-locale-co',
   huronNetworkLocaleAT: 'huron-l10n-network-locale-at',

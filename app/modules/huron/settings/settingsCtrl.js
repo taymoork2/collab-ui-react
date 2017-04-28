@@ -57,7 +57,6 @@
     var VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL';
     var VOICE_VOICEMAIL = 'VOICE_VOICEMAIL';
     var NO_VOICEMAIL_NUMBER = 'NONE';
-    var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
     var COMPANY_NUMBER_TYPE = 'Company Number';
     var VM_SPARKPHONE = 'SparkPhoneVM';
@@ -1675,35 +1674,19 @@
     }
 
     function loadInternationalDialing() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
-        .then(function (enabled) {
-          if (enabled) {
-            return CustomerCosRestrictionServiceV2.get({
-              customerId: Authinfo.getOrgId(),
-            }).$promise.then(function (cosRestrictions) {
-              vm.previousModel.cosRestrictions = vm.model.cosRestrictions = _.forEach(cosRestrictions.restrictions, function (restriction) {
-                if (_.has(restriction, 'url')) {
-                  delete restriction['url'];
-                }
+      return CustomerCosRestrictionServiceV2.get({
+        customerId: Authinfo.getOrgId(),
+      }).$promise.then(function (cosRestrictions) {
+        vm.previousModel.cosRestrictions = vm.model.cosRestrictions = _.forEach(cosRestrictions.restrictions, function (restriction) {
+          if (_.has(restriction, 'url')) {
+            delete restriction['url'];
+          }
 
-                if (_.has(restriction, 'uuid')) {
-                  delete restriction['uuid'];
-                }
-              });
-            });
-          } else {
-            return ServiceSetup.listCosRestrictions()
-              .then(function (cosRestriction) {
-                if (_.get(cosRestriction, 'restrictions[0].restriction') === INTERNATIONAL_DIALING) {
-                  vm.model.internationalDialingEnabled = false;
-                  vm.model.internationalDialingUuid = cosRestriction.restrictions[0].uuid;
-                } else {
-                  vm.model.internationalDialingEnabled = true;
-                  vm.model.internationalDialingUuid = null;
-                }
-              });
+          if (_.has(restriction, 'uuid')) {
+            delete restriction['uuid'];
           }
         });
+      });
     }
 
     function loadMediaOnHoldOptions(mediaList) {
@@ -1913,29 +1896,11 @@
     }
 
     function saveInternationalDialing() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
-        .then(function (enabled) {
-          if (enabled) {
-            return CustomerCosRestrictionServiceV2.update({
-              customerId: Authinfo.getOrgId(),
-            }, {
-              restrictions: vm.model.cosRestrictions,
-            });
-          } else {
-            var cosType = {
-              restriction: INTERNATIONAL_DIALING,
-            };
-
-            return $q.resolve(true)
-              .then(InternationalDialing.isDisableInternationalDialing)
-              .then(function (isSaveDisabled) {
-                if (!isSaveDisabled) {
-                  return ServiceSetup.updateCosRestriction(vm.model.internationalDialingEnabled, vm.model.internationalDialingUuid, cosType)
-                    .then(loadInternationalDialing);
-                }
-              });
-          }
-        });
+      return CustomerCosRestrictionServiceV2.update({
+        customerId: Authinfo.getOrgId(),
+      }, {
+        restrictions: vm.model.cosRestrictions,
+      });
     }
 
     function updateVoicemailToEmail() {
