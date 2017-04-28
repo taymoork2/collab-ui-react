@@ -11,7 +11,9 @@ var ReportsPage = function () {
   this.allTypes = element(by.id('allReports'));
   this.engagement = element(by.id('engagementReports'));
   this.quality = element(by.id('qualityReports'));
-
+  this.mediaTypeAllFilter = element(by.cssContainingText('.customer-report-filter', 'All Tasks'));
+  this.mediaTypeChatFilter = element(by.cssContainingText('.customer-report-filter', 'Chat'));
+  this.mediaTypeCallbackFilter = element(by.cssContainingText('.customer-report-filter', 'Callback'));
   // Total Rooms
   this.totalRoomsHeader = element(by.cssContainingText('.report-section-header', 'Total Rooms'));
   this.totalRoomsDescription = element(by.id('avgRooms')).element(by.css('article section p'));

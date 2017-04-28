@@ -716,7 +716,7 @@
     "threeMonthsInterval": "given month",
     "threeMonthsDrilldownTitle": "in the Last Three Months",
     "threeMonthsDrilldownDescription": "During the three months",
-    "media_type_all": "All Contact Types",
+    "media_type_all": "All Tasks",
     "media_type_chat": "Chat",
     "media_type_callback": "Callback",
     "media_type_voice": "Inbound Call",
