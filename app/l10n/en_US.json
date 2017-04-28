@@ -2589,6 +2589,9 @@
   "cmc": {
     "menu": {
       "mobileConvergenceService": "Mobile Convergence Service"
+    },
+    "details": {
+      "invalidInput": "Always provide valid mobile number when enabling"
     }
   },
   "context": {
