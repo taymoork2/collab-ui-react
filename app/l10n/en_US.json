@@ -2917,7 +2917,9 @@
     },
     "searchErrors": {
       "queryLimit": "query must be 200 characters or less",
-      "invalidLimit": "search must be limited to less than 100 emails or room id's"
+      "invalidLimit": "search must be limited to less than 100 emails or room id's",
+      "noMatchesFound": "No Matches Found",
+      "requestFailed": "Request Failed: Tracking ID {{trackingId}}"
     },
     "searchParameters": {
       "search": "Search",
