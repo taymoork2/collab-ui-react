@@ -1,26 +1,12 @@
 <script type="text/ng-template" id="callFeatureMemberTemplate.html">
   <a class="member__name">
-    <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ng-if="match.label.firstName"></span>
-    <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ng-if="match.label.lastName"></span>
-    <span ng-show="match.label.lastName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
-    <span ng-show="!match.label.lastName && !match.label.displayName" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
-    <span ng-show="!match.label.userName" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
-  </a>
-  <div class="member__line">
-    <span ng-bind-html="(match.label.numbers | callFeatureMemberNumberFormatterFilter) | typeaheadHighlight:query"></span>
-  </div>
-</script>
-<script type="text/ng-template" id="callFeatureMemberLinesTemplate.html">
-  <div class="member__name">
     <span ng-if="match.label.showName" ng-bind-html="match.label.name | typeaheadHighlight:query"></span>
-  </div>
+  </a>
   <a class="member__line">
     <span ng-bind-html="match.label.number | typeaheadHighlight:query"></span>
   </a>
 </script>
-<div class="typeahead-large with-feature-title" ng-if="$ctrl.isNew">
-  <div class="feature-title" translate="common.selectMembers"></div>
-  <div class="feature-desc">{{::$ctrl.memberHint}}</div>
+<div class="typeahead-large" ng-if="$ctrl.isNew">
   <input
     ng-model="$ctrl.selectedMember"
     ng-class="{'error': $ctrl.errorMemberInput}"
@@ -29,10 +15,11 @@
     typeahead-template-url="callFeatureMemberTemplate.html"
     typeahead-min-length="3"
     typeahead-wait-ms="200"
-    placeholder="{{:: 'common.selectMembers' | translate}}"
+    placeholder="{{:: 'common.searchAddMembers' | translate}}"
     ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
     autocomplete="off"
     focus-on>
+  <p class="input-description">{{::$ctrl.memberHint}}</p>
 </div>
 <div ng-if="!$ctrl.isNew" class="typeahead call-feature-members">
   <div class="search-add">
@@ -42,7 +29,7 @@
       ng-model="$ctrl.selectedMember"
       typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
       typeahead-on-select="$ctrl.selectMember($item)"
-      typeahead-template-url="callFeatureMemberLinesTemplate.html"
+      typeahead-template-url="callFeatureMemberTemplate.html"
       typeahead-min-length="3"
       typeahead-wait-ms="200"
       placeholder="{{::'common.selectMembers' | translate}}"
@@ -64,14 +51,20 @@
     </div>
   </div>
 </div>
-<div ng-class="{'call-feature-members': !$ctrl.isNew}">
-  <div ng-if="!$ctrl.isNew">
-    <span translate="common.members"></span>
-    <div ng-if="$ctrl.dragAndDrop" class="members-header pull-right">
+<div class="call-feature-members" ng-class="{'call-feature-members': !$ctrl.isNew}">
+  <div class="members-header">
+    <span ng-if="$ctrl.dragAndDrop" translate="common.members"></span>
+    <span ng-if="$ctrl.dragAndDrop" class="drag-and-drop pull-right">
       <span ng-if="!$ctrl.reordering"><a class ng-click="$ctrl.onReorderClicked()" translate="common.reorder"></a></span>
       <span ng-if="$ctrl.reordering"><a class="cancel-reorder" ng-click="$ctrl.onCancelReorderClicked()" translate="common.cancel"></a></span>
       <span ng-if="$ctrl.reordering" class="apply-reorder"><a ng-click="$ctrl.onApplyReorderClicked()" translate="common.apply"></a></span>
-    </div>
+    </span>
+    <span
+      ng-if="$ctrl.getMemberCount() > 6 && $ctrl.isNew"
+      class="member-count"
+      translate="common.memberCount"
+      translate-values="{count: $ctrl.getMemberCount()}">
+    </span>
   </div>
   <cs-card-layout>
     <div  id="membersContainer" class="members-container" ng-class="{'members-reorder': $ctrl.reordering, 'members-reorderable': $ctrl.dragAndDrop}">
@@ -95,8 +88,9 @@
       </cs-card-member>
     </div>
   </cs-card-layout>
-  <div ng-if="!$ctrl.isNew" class="members-footer">
+  <div class="members-footer" ng-if="!$ctrl.isNew">
     <span
+      ng-if="$ctrl.getMemberCount()"
       class="member-count"
       translate="common.memberCount"
       translate-values="{count: $ctrl.getMemberCount()}">

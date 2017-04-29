@@ -1,21 +1,35 @@
-.cs-setupassistant--content {
-  .typeahead-large {
-    &.with-feature-title {
-      margin-top: calc(45vh - 143px);
-    }
+.cs-setupassistant {
+  &--content {
+    .typeahead-large {
+      &.with-feature-title {
+        margin-top: calc(53vh - 327px);
+      }
 
-    .feature-title {
-      @include vr-spacing(pt, 3);
+      &.fallback-destination-large {
+        margin-top: calc(32vh - 143px);
+      }
 
-      font-family: $brand-font-thin;
-      font-size: $font-size-h1;
-    }
+      .feature-title {
+        @include vr-spacing(pt, 3);
 
-    .feature-desc {
-      @include vr-spacing(pb, 2.75);
+        font-family: $brand-font-thin;
+        font-size: $font-size-h1;
+      }
 
-      font-family: $brand-font-light;
-      font-size: $font-size-h4;
+      .feature-desc {
+        @include vr-spacing(pb, 2.75);
+
+        font-family: $brand-font-light;
+        font-size: $font-size-h4;
+      }
     }
   }
+  form,
+  .cs-form {
+    margin-top: 0;
+  }
+}
+
+.save-feature {
+
 }

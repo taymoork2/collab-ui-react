@@ -15,9 +15,7 @@
   max-width: 100%;
   padding: 0 1rem;
 
-  .btn--right.saveCallPark:not(.disabled),
-  .btn--right.saveCallPickup:not(.disabled),
-  .btn--right.savePagingGroup:not(.disabled) {
+  .btn--right.save-call-feature:not(.disabled) {
     background: $color-cta;
   }
 

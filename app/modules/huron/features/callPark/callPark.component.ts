@@ -215,7 +215,7 @@ class CallParkCtrl implements ng.IComponentController {
       } else {
         this.pageIndex++;
         if (this.pageIndex === 2) {
-          this.applyElement(this.$window.document.getElementsByClassName('btn--circle btn--primary btn--right'), 'saveCallPark', 'add');
+          this.applyElement(this.$window.document.getElementsByClassName('btn--circle btn--primary btn--right'), 'save-call-feature', 'add');
           this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'active', 'add');
         }
       }
@@ -233,7 +233,7 @@ class CallParkCtrl implements ng.IComponentController {
     this.animation = 'slide-right';
     this.$timeout( () => {
       this.pageIndex--;
-      this.applyElement(this.$window.document.getElementsByClassName('btn--circle btn--primary btn--right'), 'saveCallPark', 'remove');
+      this.applyElement(this.$window.document.getElementsByClassName('btn--circle btn--primary btn--right'), 'save-call-feature', 'remove');
       this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'active', 'remove');
     }, CallParkCtrl.PAGE_TRANSITION_TIMEOUT);
   }

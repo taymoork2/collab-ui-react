@@ -32,6 +32,7 @@ class HuntGroupCtrl implements ng.IComponentController {
     private $window: ng.IWindowService,
     private HuntGroupService: HuntGroupService,
     private Notification: Notification,
+    private $translate: ng.translate.ITranslateService,
   ) {
     this.huntGroupId = _.get<string>(this.$stateParams.feature, 'id');
     this.title = _.get<string>(this.$stateParams.feature, 'cardName');
@@ -225,7 +226,7 @@ class HuntGroupCtrl implements ng.IComponentController {
       } else {
         this.pageIndex++;
         if (this.pageIndex === 4) {
-          this.applyElement(this.$window.document.getElementsByClassName('btn--circle btn--primary btn--right'), 'saveHuntGroup', 'add');
+          this.applyElement(this.$window.document.getElementsByClassName('btn--circle btn--primary btn--right'), 'save-call-feature', 'add');
           this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'active', 'add');
         }
       }
@@ -243,7 +244,7 @@ class HuntGroupCtrl implements ng.IComponentController {
     this.animation = 'slide-right';
     this.$timeout( () => {
       this.pageIndex--;
-      this.applyElement(this.$window.document.getElementsByClassName('btn--circle btn--primary btn--right'), 'saveHuntGroup', 'remove');
+      this.applyElement(this.$window.document.getElementsByClassName('btn--circle btn--primary btn--right'), 'save-call-feature', 'remove');
       this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'active', 'remove');
     }, HuntGroupCtrl.PAGE_TRANSITION_TIMEOUT);
   }
@@ -275,6 +276,11 @@ class HuntGroupCtrl implements ng.IComponentController {
     this.form.$setPristine();
     this.form.$setUntouched();
   }
+
+  public createHelpText(): string {
+    return this.$translate.instant('callPark.createHelpText');
+  }
+
 
 }
 
