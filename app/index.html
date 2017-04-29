@@ -8,10 +8,16 @@
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/png" href="images/favicon.ico">
     <link type="image/x-icon" rel="shortcut icon" href="images/favicon.ico"/>
+    <% for (var chunk in htmlWebpackPlugin.options.headChunks) { %>
+    <script src="<%= htmlWebpackPlugin.files.chunks[htmlWebpackPlugin.options.headChunks[chunk]].entry %>" type="text/javascript"></script>
+    <% } %>
     <% if (htmlWebpackPlugin.options.loadAdobeScripts) { %>
     <script src="//assets.adobedtm.com/2bcd47c09d46d6e1ea2fd7753b40afb656eb0683/satelliteLib-b40066032cf0a1b4f92efb2131e8178ab11ab006.js"></script>
     <% } %>
     <%= htmlWebpackPlugin.options.dllBundlesFrag %>
+    <% for (key in htmlWebpackPlugin.files.css) { %>
+    <link href="<%= htmlWebpackPlugin.files.css[key] %>" rel="stylesheet">
+    <% } %>
   </head>
   <body ng-controller="BodyCtrl as bodyCtrl" ng-class="{inverse: bodyCtrl.partner}" class="{{$root.bodyClass}}" cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
     <toaster-container></toaster-container>
@@ -28,6 +34,9 @@
     <![endif]-->
     <% if (htmlWebpackPlugin.options.loadAdobeScripts) { %>
     <script>if(typeof _satellite !== 'undefined'){_satellite.pageBottom();}</script>
+    <% } %>
+    <% for (var chunk in htmlWebpackPlugin.options.bodyChunks) { %>
+    <script src="<%= htmlWebpackPlugin.files.chunks[htmlWebpackPlugin.options.bodyChunks[chunk]].entry %>" type="text/javascript"></script>
     <% } %>
   </body>
 </html>

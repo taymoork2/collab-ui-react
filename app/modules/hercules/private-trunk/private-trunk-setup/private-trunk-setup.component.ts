@@ -3,7 +3,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 import { IOption, PrivateTrunkResource } from './private-trunk-setup';
 import { IformattedCertificate } from 'modules/hercules/services/certificate-formatter-service';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk.service';
-import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services//private-trunk';
+import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 import { PrivateTrunkCertificateService } from 'modules/hercules/private-trunk/private-trunk-certificate';
 import { Notification } from 'modules/core/notifications';
 
@@ -162,6 +162,10 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public createPrivateTrunk(): ng.IPromise<any> {
     this.isSetup = true;
     let promises: Array<ng.IPromise<any>> = [];
+    if (!_.isEmpty(this.privateTrunkResource.hybridDestination.name)) {
+      this.privateTrunkResource.destinations = [];
+      this.privateTrunkResource.destinations.push(this.privateTrunkResource.hybridDestination);
+    }
     _.forEach(this.privateTrunkResource.destinations, (dest) => {
       let addressPort: Array<string> = dest.address.split(':');
       let resource: IPrivateTrunkResource = {
@@ -224,7 +228,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   public dismiss(): void {
     this.$modal.open({
-      templateUrl: 'modules/hercules/private-trunk/setup/private-trunk-cancel-confirm.html',
+      templateUrl: 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html',
       type: 'dialog',
     })
       .result.then(() => {
@@ -238,5 +242,5 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
 export class PrivateTrunkSetupComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkSetupCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/setup/private-trunk-setup.html';
+  public templateUrl = 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup.html';
 }

@@ -5,7 +5,7 @@
 
   /* @ngInject */
   function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q,
-    Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService,
+    Authinfo, Config, DirSyncService, FeatureToggleService, Notification, SunlightConfigService,
     Userservice, UserOverviewService) {
     var vm = this;
 
@@ -286,22 +286,20 @@
     function initUserDetails() {
       vm.userDetailList = [];
       var ciLanguageCode = _.get(vm.currentUser, 'preferredLanguage');
-      var ciDirsyncEnabled = _.get(vm.orgInfo, 'dirsyncEnabled');
-      if (ciLanguageCode) {
-        var formattedLanguage = UserOverviewService.formatLanguage(ciLanguageCode);
-        UserOverviewService.getUserPreferredLanguage(formattedLanguage).then(function (userLanguageDetails) {
-          preferredLanguageState.detail = !_.isEmpty(userLanguageDetails.language) ? _.get(userLanguageDetails.language, 'label') : formattedLanguage;
-          preferredLanguageDetails.selectedLanguageCode = formattedLanguage;
-          preferredLanguageDetails.languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
-          preferredLanguageDetails.currentUserId = vm.currentUser.id;
-          preferredLanguageDetails.hasSparkCall = vm.hasSparkCall;
-        }).catch(function (error) {
-          Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
-        });
-      }
+      var ciDirsyncEnabled = DirSyncService.isUserAttributeSynced(vm.orgInfo, 'preferredLanguage');
+      var formattedLanguage = ciLanguageCode ? UserOverviewService.formatLanguage(ciLanguageCode) : ciLanguageCode;
+      UserOverviewService.getUserPreferredLanguage(formattedLanguage).then(function (userLanguageDetails) {
+        preferredLanguageState.detail = !_.isEmpty(userLanguageDetails.language) ? _.get(userLanguageDetails.language, 'label') : formattedLanguage;
+        preferredLanguageDetails.languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
+      }).catch(function (error) {
+        Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
+      });
       if (ciDirsyncEnabled) {
         preferredLanguageState.dirsyncEnabled = ciDirsyncEnabled;
       }
+      preferredLanguageDetails.selectedLanguageCode = formattedLanguage;
+      preferredLanguageDetails.currentUserId = vm.currentUser.id;
+      preferredLanguageDetails.hasSparkCall = vm.hasSparkCall;
       vm.userDetailList.push(preferredLanguageState);
     }
 

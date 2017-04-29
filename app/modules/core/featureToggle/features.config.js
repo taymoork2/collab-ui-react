@@ -35,6 +35,7 @@ module.exports = {
   atlasReadOnlyAdmin: 'atlas-read-only-admin',
   atlasReportsUpdate: 'atlas-reports-update',
   atlasComplianceRole: 'atlas-compliance-role',
+  atlasSendEmailViaBMMP: 'atlas-send-email-via-bmmp',
   atlasSipUriDomain: 'atlas-sip-uri-domain',
   atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
   atlasSubdomainUpdate: 'atlas-subdomain-update',
@@ -195,4 +196,5 @@ module.exports = {
   huronPstn: "h-pstn",
   csdmT38: "csdm-ata-t38",
   csdmPlaceUpgradeChannel: "csdm-place-upgrade-channel",
+  hI802: "h-i802",
 };

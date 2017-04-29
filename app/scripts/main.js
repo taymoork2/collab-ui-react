@@ -121,7 +121,10 @@
     'core.onboard',
     'ngTagsInput',
     require('modules/hercules/private-trunk/prereq').default,
-    require('modules/hercules/private-trunk/setup').default,
+    require('modules/hercules/private-trunk/private-trunk-setup').default,
+    require('modules/hercules/private-trunk/private-trunk-domain').default,
+    require('modules/hercules/private-trunk/private-trunk-destination').default,
+    require('modules/hercules/private-trunk/private-trunk-setup-complete').default,
     require('modules/hercules/private-trunk/private-trunk-certificate').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,
     require('modules/hercules/services/cert-service').default,
@@ -188,8 +191,8 @@
 
   // require all modules first
   requireAll(require.context("modules/", true, /\.module\.(js|ts)$/));
-  // require all other app files - ignore bootstrap.js and preload.js
-  requireAll(require.context("../", true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$)).*\.(js|ts)$/));
+  // require all other app files - ignore bootstrap.js, preload.js, newrelic
+  requireAll(require.context("../", true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
   // require all other assets
   requireAll(require.context("../", true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
 

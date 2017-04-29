@@ -1,7 +1,8 @@
 <cs-card id='number-of-participant-card' class="full media-metrics-report-card">
-  <article class="media-service-card">
+  <article class="media-service-card header-padding">
     <graphheader>
-              <h4 class='report-section-header' translate='mediaFusion.metrics.numberOfParticipantTitle'></h4>
+              <span class='report-section-header' translate='mediaFusion.metrics.numberOfParticipantTitle'></span>
+              <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.callActivityDesc' | translate}}" tooltip-class="metrics-tooltip"></i>
               <div id="number-of-participant-div"></div>
     </graphheader>
     <section>
@@ -12,7 +13,7 @@
         </div>
         <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.numberOfParticipantStatus)">
           <p>
-            <h3 class="no-data"> 
+            <h3 class="no-data">
             <i class='icon icon-warning no-data-warning'></i>
             <span translate='mediaFusion.metrics.nodata'></span>
           </h3>

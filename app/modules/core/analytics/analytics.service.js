@@ -43,6 +43,7 @@
           GENERATE_REPORT: 'eDiscovery: Generate Report Button Clicked',
           SEARCH_SECTION: 'eDiscovery: Search Section Viewed',
           REPORTS_SECTION: 'eDiscovery: Report Viewed',
+          SEARCH_ERROR: 'eDiscovery: Request Failed',
         },
         persistentProperties: null,
       },
@@ -138,6 +139,10 @@
           CONTEXT_UPDATE_FIELD_FAILURE: 'Failed to update a field',
           CONTEXT_UPDATE_FIELDSET_SUCCESS: 'Successfully updated a fieldset',
           CONTEXT_UPDATE_FIELDSET_FAILURE: 'Failed to update a fieldset',
+          CONTEXT_DELETE_FIELD_SUCCESS: 'Successfully deleted a field',
+          CONTEXT_DELETE_FIELD_FAILURE: 'Failed to delete a field',
+          CONTEXT_DELETE_FIELDSET_SUCCESS: 'Successfully deleted a fieldset',
+          CONTEXT_DELETE_FIELDSET_FAILURE: 'Failed to delete a fieldset',
         },
       },
     };
@@ -261,13 +266,14 @@
     /**
       * Ediscovery Events
       */
-    function trackEdiscoverySteps(eventName) {
-      if (!_.isString(eventName) && eventName.length !== 0) {
+    function trackEdiscoverySteps(eventName, trackingId) {
+      if (!_.isString(eventName) || eventName.length !== 0) {
         return $q.reject(NO_EVENT_NAME);
       }
 
       var properties = {
         from: _.get($state, '$current.name'),
+        trackingId: trackingId,
       };
 
       _getOrgData('EDISCOVERY').then(function (data) {

@@ -98,11 +98,9 @@ class UserDetailsOverview implements ng.IComponentController {
   }
 
   private setDisplayDescription() {
-    this.displayDescription = this.hasSparkCall ?
-        this.$translate.instant('preferredLanguage.description', {
-          module: this.$translate.instant('preferredLanguage.userModule'),
-        }) :
-        this.$translate.instant('preferredLanguage.descriptionForCloudberryDevice');
+    this.displayDescription = this.$translate.instant('preferredLanguage.description', {
+      module: this.$translate.instant('preferredLanguage.userModule'),
+    });
   }
 }
 

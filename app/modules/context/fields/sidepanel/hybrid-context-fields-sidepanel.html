@@ -5,14 +5,14 @@
   <!-- main side panel body -->
   <cs-sp-container>
     <cs-sp-section>
-      <div ng-show="!$ctrl.inUse && !$ctrl.publiclyAccessible">
+      <div ng-show="$ctrl.isEditable()">
         <section-title
           title-key="context.dictionary.fieldPage.fieldAttributes"
           action-list="$ctrl.actionList"
           as-button="true">
         </section-title>
       </div>
-      <div ng-show="$ctrl.inUse || $ctrl.publiclyAccessible">
+      <div ng-show="!$ctrl.isEditable()">
         <section-title title-key="context.dictionary.fieldPage.fieldAttributes"></section-title>
       </div>
 
@@ -94,6 +94,13 @@
           </div>
         </div>
 
+      </div>
+    </cs-sp-section>
+
+    <cs-sp-section ng-if="$ctrl.isEditable()">
+      <div class="section-title-row section-name" translate="context.dictionary.actions"></div>
+      <div>
+        <button class="btn btn--negative" ng-click="$ctrl.openDeleteConfirmDialog()" translate="common.delete"></button>
       </div>
     </cs-sp-section>
 

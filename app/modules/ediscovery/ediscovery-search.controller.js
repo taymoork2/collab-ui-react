@@ -16,33 +16,36 @@ var Spark = require('@ciscospark/spark-core').default;
     });
     var vm = this;
     var spark;
+    var avalonPoller;
+
+    /* Search Page Functions */
+    vm.showHover = showHover;
     vm.searchByLimit = searchByLimit;
-    vm.searchByErrors = searchByErrors;
     vm.searchByParameters = searchByParameters;
-    vm.resetSearchPageToInitialState = resetSearchPageToInitialState;
     vm.advancedSearch = advancedSearch;
+    vm.searchForRoom = searchForRoom;
     vm.dateErrors = dateErrors;
     vm.validateDate = validateDate;
-    vm.searchForRoom = searchForRoom;
+
+    /* Report Generation Functions */
     vm.createReport = createReport;
     vm.generateReport = generateReport;
     vm.runReport = runReport;
-    vm.cancelReport = cancelReport;
     vm.reportProgress = reportProgress;
+    vm.downloadReport = downloadReport;
+    vm.cancelReport = cancelReport;
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
-    vm.downloadReport = downloadReport;
     vm.retrySearch = retrySearch;
-    vm.ediscoveryToggle = false;
-    vm.itProPackPurchased = false;
-    vm.itProPackEnabled = false;
+    vm.resetSearchPageToInitialState = resetSearchPageToInitialState;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
     vm.ongoingSearch = false;
-    vm.limitError = false;
-    vm.showHover = showHover;
+    vm.ediscoveryToggle = false;
+    vm.itProPackPurchased = false;
+    vm.itProPackEnabled = false;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchEmailPlaceholder');
@@ -51,6 +54,7 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;
     vm.queryModel = null;
+    vm.limitError = false;
 
     vm.searchResults = {
       keywords: [],
@@ -86,6 +90,7 @@ var Spark = require('@ciscospark/spark-core').default;
     function init(report, reRun) {
       vm.report = null;
       vm.error = null;
+      vm.warning = null;
 
       $q.all([
         FeatureToggleService.atlasEdiscoveryGetStatus(),
@@ -204,6 +209,11 @@ var Spark = require('@ciscospark/spark-core').default;
       validateDate();
     });
 
+    /* Search Page Functions */
+    function showHover() {
+      return vm.itProPackEnabled && !vm.itProPackPurchased;
+    }
+
     function searchByLimit() {
       var limit = !_.isNull(vm.searchModel) ? splitWords(vm.searchModel) : null;
       if (_.isArray(limit) && _.isLength(limit.length) > 100) {
@@ -211,11 +221,6 @@ var Spark = require('@ciscospark/spark-core').default;
       } else {
         advancedSearch();
       }
-    }
-
-    function searchByErrors(_queryError) {
-      var queryError = !_.isUndefined(_queryError) ? _queryError : false;
-      return queryError;
     }
 
     function searchByParameters() {
@@ -226,27 +231,6 @@ var Spark = require('@ciscospark/spark-core').default;
         vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchRoomPlaceholder');
         vm.searchHelpText = $translate.instant('ediscovery.searchParameters.searchRoomHelpText');
       }
-    }
-
-    //advanced search section
-    function searchResults(result) {
-      var keywords = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? vm.unencryptedEmails : vm.unencryptedRoomIds;
-      keywords = keywords || [$translate.instant('ediscovery.searchResults.notApplicable')];
-      var queries = vm.queryModel ? splitWords(vm.queryModel) : [$translate.instant('ediscovery.searchResults.notApplicable')];
-      vm.roomInfo = result;
-      vm.searchCriteria = {
-        startDate: formatDate('display', getStartDate()),
-        endDate: formatDate('display', getEndDate()),
-      };
-      vm.searchResults = {
-        keywords: keywords,
-        queries: queries,
-        numRooms: result.data.numRooms,
-        numFiles: result.data.numFiles,
-        numMessages: result.data.numMessages,
-        totalSize: convertBytesToGB(result.data.totalSizeInBytes),
-      };
-      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailAddress') : $translate.instant('ediscovery.searchResults.spaceId');
     }
 
     function advancedSearch() {
@@ -290,15 +274,24 @@ var Spark = require('@ciscospark/spark-core').default;
           };
           return EdiscoveryService.getArgonautServiceUrl(argonautParam)
             .then(function (result) {
-              searchResults(result);
-              if (result.data.numRooms > 2500) {
-                vm.isReportMaxRooms = true;
-                vm.isReport = false;
+              if (result.data.numFiles === 0 && result.data.numMessages === 0) {
+                vm.warning = $translate.instant('ediscovery.searchErrors.noMatchesFound');
+                resetSearchPageToInitialState();
+              } else {
+                searchResults(result);
+                if (result.data.numRooms > 2500) {
+                  vm.isReportMaxRooms = true;
+                  vm.isReport = false;
+                }
+                Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.INITIAL_SEARCH);
               }
-              Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.INITIAL_SEARCH);
             })
             .catch(function (err) {
-              vm.error = _.get(err, 'data.message', $translate.instant('ediscovery.search.roomLookupError'));
+              vm.error = $translate.instant('ediscovery.searchErrors.requestFailed', {
+                trackingId: err.data.trackingId,
+              });
+              Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.SEARCH_ERROR, err.data.trackingId);
+              resetSearchPageToInitialState();
             })
             .finally(function () {
               vm.searchingForRoom = false;
@@ -348,6 +341,7 @@ var Spark = require('@ciscospark/spark-core').default;
         });
     }
 
+    /* Report Generation Functions */
     function createReport() {
       vm.isReport = false;
       vm.isReportGenerating = true;
@@ -404,8 +398,6 @@ var Spark = require('@ciscospark/spark-core').default;
         });
     }
 
-    var avalonPoller;
-
     function enableAvalonPolling() {
       $timeout.cancel(avalonPoller);
       pollAvalonReport();
@@ -413,12 +405,6 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function disableAvalonPolling() {
       $timeout.cancel(avalonPoller);
-    }
-
-    function searchButtonDisabled(_error) {
-      var error = !_.isUndefined(_error) ? _error : false;
-      var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (error || vm.dateValidationError || vm.dateValidationWarning) : disable;
     }
 
     function pollAvalonReport() {
@@ -454,6 +440,17 @@ var Spark = require('@ciscospark/spark-core').default;
       } else {
         return 0;
       }
+    }
+
+    function downloadReport(report) {
+      vm.downloadingReport = true;
+      EdiscoveryService.downloadReport(report)
+        .catch(function () {
+          Notification.error('ediscovery.unableToDownloadFile');
+        })
+        .finally(function () {
+          vm.downloadingReport = false;
+        });
     }
 
     function cancelReport(id) {
@@ -498,15 +495,10 @@ var Spark = require('@ciscospark/spark-core').default;
       }
     }
 
-    function downloadReport(report) {
-      vm.downloadingReport = true;
-      EdiscoveryService.downloadReport(report)
-        .catch(function () {
-          Notification.error('ediscovery.unableToDownloadFile');
-        })
-        .finally(function () {
-          vm.downloadingReport = false;
-        });
+    function searchButtonDisabled(_error) {
+      var error = !_.isUndefined(_error) ? _error : false;
+      var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError || vm.dateValidationWarning) : disable;
     }
 
     function retrySearch() {
@@ -526,10 +518,6 @@ var Spark = require('@ciscospark/spark-core').default;
     }
 
     /* Helper Functions */
-    function showHover() {
-      return vm.itProPackEnabled && !vm.itProPackPurchased;
-    }
-
     function splitWords(_words) {
       var words = _words ? (_words).split(',').map(
         function (s) {
@@ -550,6 +538,7 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.roomInfo = null;
       vm.report = null;
       vm.error = null;
+      vm.warning = null;
       vm.searchingForRoom = true;
       vm.searchResults.keywords = [];
     }
@@ -561,6 +550,26 @@ var Spark = require('@ciscospark/spark-core').default;
           access_token: vm.accessToken,
         },
       });
+    }
+
+    function searchResults(result) {
+      var keywords = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? vm.unencryptedEmails : vm.unencryptedRoomIds;
+      keywords = keywords || [$translate.instant('ediscovery.searchResults.notApplicable')];
+      var queries = vm.queryModel ? splitWords(vm.queryModel) : [$translate.instant('ediscovery.searchResults.notApplicable')];
+      vm.roomInfo = result;
+      vm.searchCriteria = {
+        startDate: formatDate('display', getStartDate()),
+        endDate: formatDate('display', getEndDate()),
+      };
+      vm.searchResults = {
+        keywords: keywords,
+        queries: queries,
+        numRooms: result.data.numRooms,
+        numFiles: result.data.numFiles,
+        numMessages: result.data.numMessages,
+        totalSize: convertBytesToGB(result.data.totalSizeInBytes),
+      };
+      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailAddress') : $translate.instant('ediscovery.searchResults.spaceId');
     }
 
     function createEncryptedEmails(_emails) {

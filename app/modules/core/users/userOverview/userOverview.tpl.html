@@ -17,6 +17,7 @@
   <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
   <uc-devices ng-if="userOverview.showDevices"></uc-devices>
   <uc-user-details
+    ng-show="userOverview.hasSparkCall"
     cr-feature-toggle feature-show="huron-l10n-user-locale-2"
     details="userOverview.userDetailList"
     on-user-detail-click="userOverview.clickUserDetailsService(userDetail)"></uc-user-details>

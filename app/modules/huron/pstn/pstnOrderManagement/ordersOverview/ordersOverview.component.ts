@@ -1,7 +1,7 @@
-import { PstnService } from '../../pstn/pstn.service';
+import { PstnService } from 'modules/huron/pstn/pstn.service';
 export class OrdersOverviewComponent implements ng.IComponentOptions {
   public controller = OrdersOverviewCtrl;
-  public templateUrl = 'modules/huron/pstnOrderManagement/ordersOverview/ordersOverview.html';
+  public templateUrl = 'modules/huron/pstn/pstnOrderManagement/ordersOverview/ordersOverview.html';
   public bindings = {
     currentCustomer: '<',
     isPartner: '<',
