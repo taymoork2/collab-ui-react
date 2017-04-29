@@ -5,9 +5,7 @@ const merge = require('webpack-merge');
 const dllDepsConfig = require('./dll-deps.config');
 const commonWebpack = require('./webpack.common');
 const plugins = require('./plugins');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const lsMostRecentFile = require('../utils/lsMostRecentFile');
-const sortOrder = require('../utils/sortOrder');
 const processEnvUtil = require('../utils/processEnvUtil')();
 
 const hotMiddlewareScript = 'webpack-hot-middleware/client?timeout=30000';
@@ -22,12 +20,9 @@ function webpackConfig(env) {
       styles: [hotMiddlewareScript],
     },
     plugins: plugins.commonsChunkPlugins.concat([
-      new HtmlWebpackPlugin({
-        template: 'index.html',
-        inject: 'body',
+      plugins.getHtmlWebpackPlugin({
         ngStrictDi: 'ng-strict-di',
         loadAdobeScripts: false,
-        chunksSortMode: sortOrder,
       }),
       new webpack.HotModuleReplacementPlugin(),
     ]),
@@ -60,10 +55,10 @@ function webpackConfig(env) {
   function modifyConfigForWebpackDll(config, dllEntryNames) {
     // replace html plugin with one that includes the html fragment for the dll bundles
     const htmlFrag = mkHtmlFragForDllBundles(dllEntryNames);
-    config.plugins[0] = new HtmlWebpackPlugin({
-      template: 'index.html',
-      inject: 'body',
+
+    config.plugins[0] = plugins.getHtmlWebpackPlugin({
       ngStrictDi: 'ng-strict-di',
+      loadAdobeScripts: false,
       dllBundlesFrag: htmlFrag,
     });
 

@@ -67,6 +67,7 @@ module.exports = csp({
       'http://dpm.demdex.net', // Adobe DTM Omniture
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
       'https://*.clouddrive.com', // CSV download
+      'https://bam.nr-data.net', // New Relic Browser
     ],
     fontSrc: [
       '\'self\'',
@@ -82,6 +83,7 @@ module.exports = csp({
       'http://webexglobal.112.2o7.net', // Adobe DTM Omniture
       'http://*.d1.sc.omtrdc.net', // Adobe DTM Omniture
       'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+      'https://bam.nr-data.net', // New Relic Browser
       // Webpack Dev
       'blob:',
     ],
@@ -99,6 +101,8 @@ module.exports = csp({
       'https://buy.ciscospark.com', // Digital River
       'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
       '127.0.0.1',
+      'https://js-agent.newrelic.com', // New Relic Browser
+      'https://bam.nr-data.net', // New Relic Browser
     ],
     styleSrc: [
       '\'self\'',

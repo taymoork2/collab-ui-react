@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var hostnameConfig = require('config/hostname.config');
+
   module.exports = angular
     .module('core.config', [
       require('modules/core/storage').default,
@@ -286,7 +288,7 @@
       isDevHostName: function (hostName) {
         var whitelistDevHosts = [
           '0.0.0.0',
-          '127.0.0.1',
+          hostnameConfig.LOCAL,
           'localhost',
           'server',
           'dev-admin.ciscospark.com',
@@ -313,15 +315,15 @@
       },
 
       isIntegration: function () {
-        return !config.forceProdForE2E() && getCurrentHostname() === 'int-admin.ciscospark.com';
+        return !config.forceProdForE2E() && getCurrentHostname() === hostnameConfig.INTEGRATION;
       },
 
       isProd: function () {
-        return config.forceProdForE2E() || getCurrentHostname() === 'admin.ciscospark.com';
+        return config.forceProdForE2E() || getCurrentHostname() === hostnameConfig.PRODUCTION;
       },
 
       isCfe: function () {
-        return !config.forceProdForE2E() && getCurrentHostname() === 'cfe-admin.ciscospark.com';
+        return !config.forceProdForE2E() && getCurrentHostname() === hostnameConfig.CFE;
       },
 
       getEnv: function () {

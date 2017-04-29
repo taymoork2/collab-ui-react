@@ -32,6 +32,7 @@ yarn.lock
 build
 coverage
 dist
+dist-source-map
 plato
 screenshots
 typings/index.d.ts
