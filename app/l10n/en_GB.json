@@ -624,7 +624,7 @@
     "csvHostName": "Host Name"
   },
   "careReportsPage": {
-    "tasks": "Contacts",
+    "tasks": "Tasks",
     "handled": "Handled",
     "assigned": "In-Progress",
     "in-queue": "Waiting",
@@ -672,7 +672,7 @@
     "threeMonthsInterval": "given month",
     "threeMonthsDrilldownTitle": "in the Last Three Months",
     "threeMonthsDrilldownDescription": "During the three months",
-    "media_type_all": "All Contact Types",
+    "media_type_all": "All Tasks",
     "media_type_chat": "Chat",
     "media_type_callback": "Callback",
     "media_type_voice": "Inbound Call",
@@ -776,24 +776,24 @@
     "loadingCustomer": "Sample Customer"
   },
   "taskIncoming": {
-    "title": "Total Completed Contacts",
-    "description": "The graph depicts the total number of customer contacts completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} contacts during a {{interval}}."
+    "title": "Total Completed Tasks",
+    "description": "The graph depicts the total number of customer tasks completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} tasks during a {{interval}}."
   },
   "taskIncoming": {
-    "title": "Total Completed Contacts",
-    "description": "The graph depicts the total number of customer contacts completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} contacts during a {{interval}}.",
+    "title": "Total Completed Tasks",
+    "description": "The graph depicts the total number of customer tasks completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} tasks during a {{interval}}.",
     "drilldownShow": "Show the most active users",
     "drilldownHide": "Hide most active users",
     "drilldownTitle": "Most Active Users {{time}}",
-    "drilldownDescription": "{{time}}, these are the most active users. The table can be sorted by user’s name or total number of contacts handled.",
+    "drilldownDescription": "{{time}}, these are the most active users. The table can be sorted by user’s name or total number of tasks handled.",
     "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check again shortly.",
     "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
-    "contactsHandled": "Contacts Handled",
+    "tasksHandled": "Tasks Handled",
     "user": "User",
     "drilldownSearchPlaceholder": "Search"
   },
   "taskTime": {
-    "title": "Contact Time Measure",
+    "title": "Task Time Measure",
     "description": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries handled {{time}}. Hover over the area chart for a breakdown of average waiting time and average time taken to handle a customer enquiry during a {{interval}}.",
     "drilldownShow": "Show the most efficient users",
     "drilldownHide": "Hide the most efficient users",
@@ -819,8 +819,8 @@
     "drilldownSearchPlaceholder": "Search"
   },
   "taskAggregate": {
-    "title": "Aggregated Contacts",
-    "description": "The graph depicts the number of waiting and in-progress customer contacts aggregated for today. Hover over the area chart to view the count of waiting and in-progress contacts aggregated from the start of business hours."
+    "title": "Aggregated Tasks",
+    "description": "The graph depicts the number of waiting and in-progress customer tasks aggregated for today. Hover over the area chart to view the count of waiting and in-progress tasks aggregated from the start of business hours."
   },
   "profilePage": {
     "userProfile": "User Profile",

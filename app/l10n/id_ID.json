@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}}, ini adalah pengguna paling aktif. Tabel dapat diurutkan berdasarkan nama pengguna atau total jumlah kontak yang ditangani.",
     "drilldownErrorDescription": "Data ini sementara tidak tersedia. Server kami akan kembali bekerja, periksa kembali lagi secepatnya.",
     "drilldownEmptyDescription": "{{time}}, tidak ada pengguna yang aktif. Untuk melihat status pengguna dan mengirim ulang undangan yang masih tertunda, buka tab pengguna.",
-    "contactsHandled": "Kontak yang Ditangani",
+    "tasksHandled": "Kontak yang Ditangani",
     "user": "Pengguna",
     "drilldownSearchPlaceholder": "Cari"
   },

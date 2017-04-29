@@ -103,7 +103,7 @@ describe('Controller: Care Reports Controller', function () {
   });
 
   describe('CareReportsController - Care Inbound feature enabled', function () {
-    it('should default to all contact types', function (done) {
+    it('should default to all tasks', function (done) {
       spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
       $timeout(function () {
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'all', true]);
@@ -115,7 +115,7 @@ describe('Controller: Care Reports Controller', function () {
   });
 
   describe('CareReportsController - Inbound disabled', function () {
-    it('should default to chat contact type', function (done) {
+    it('should default to chat task type', function (done) {
       spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(false));
       $timeout(function () {
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
@@ -385,8 +385,8 @@ describe('Controller: Care Reports Controller', function () {
       controller.mediaTypeSelected = mediaTypeOptions[1];
       controller.filtersUpdate().catch(function () {
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Contact Time Measure' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Contacts' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Task Time Measure' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Tasks' });
       }).finally(done());
     });
 
@@ -397,8 +397,8 @@ describe('Controller: Care Reports Controller', function () {
       controller.mediaTypeSelected = mediaTypeOptions[1];
       controller.filtersUpdate().catch(function () {
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Aggregated Contacts' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Contacts' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Aggregated Tasks' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Tasks' });
       }).finally(done());
     });
   });

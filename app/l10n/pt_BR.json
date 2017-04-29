@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}}, estes são os usuários mais ativos. A tabela pode ser classificada pelo nome do usuário ou número total de contatos atendidos.",
     "drilldownErrorDescription": "Estes dados estão temporariamente indisponíveis. Nossos servidores estão trabalhando para disponibilizá-los em breve. Verifique novamente em instantes.",
     "drilldownEmptyDescription": "{{time}}, não houve usuários ativos. Para ver o status do usuário e reenviar convites para aqueles que ainda estão pendentes, acesse a guia de usuários.",
-    "contactsHandled": "Contatos atendidos",
+    "tasksHandled": "Contatos atendidos",
     "user": "Usuário",
     "drilldownSearchPlaceholder": "Pesquisar"
   },

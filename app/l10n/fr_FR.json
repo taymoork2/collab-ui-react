@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}}, ces utilisateurs sont les plus actifs. Le tableau peut être trié par le nom d’utilisateur ou les nombre total de contacts traités.",
     "drilldownErrorDescription": "Ces données sont momentanément indisponibles. Nos serveurs tentent de les renvoyer au plus tôt, veuillez revérifier ultérieurement.",
     "drilldownEmptyDescription": "{{time}}, il n'y a eu aucun utilisateur actif. Pour afficher le statut utilisateur et renvoyer les invitations à ceux qui sont toujours en attente, visitez l'onglet Utilisateurs.",
-    "contactsHandled": "Contacts traités",
+    "tasksHandled": "Contacts traités",
     "user": "Utilisateur",
     "drilldownSearchPlaceholder": "Rechercher"
   },

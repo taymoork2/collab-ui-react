@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}}, 이는 가장 활동적인 사용자입니다. 해당 표는 사용자의 이름 또는 처리된 연락처의 총 수별로 정렬할 수 있습니다.",
     "drilldownErrorDescription": "이 데이터를 일시적으로 사용할 수 없습니다. 서버에서 반환하기 위해 작업하고 있습니다. 나중에 다시 확인하십시오.",
     "drilldownEmptyDescription": "{{time}}, 활동 중인 사용자가 없습니다. 사용자 상태를 확인하고 아직 보류 중인 사용자에게 초대장을 다시 보내려면 사용자 탭을 방문하십시오.",
-    "contactsHandled": "처리된 연락처",
+    "tasksHandled": "처리된 연락처",
     "user": "사용자",
     "drilldownSearchPlaceholder": "검색"
   },

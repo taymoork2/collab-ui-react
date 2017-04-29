@@ -185,9 +185,9 @@
           vm.dataStatus = EMPTY;
           Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Customer Satisfaction' }));
           if (!isToday) {
-            Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Contact Time Measure' }));
+            Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Task Time Measure' }));
           }
-          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Contacts' }));
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Tasks' }));
         });
     }
 
@@ -204,7 +204,7 @@
           }
         }, function (data) {
           vm.snapshotDataStatus = EMPTY;
-          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Aggregated Contacts' }));
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Aggregated Tasks' }));
         });
     }
 
