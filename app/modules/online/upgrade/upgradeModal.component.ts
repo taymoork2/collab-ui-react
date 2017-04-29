@@ -18,10 +18,14 @@ class OnlineUpgrade {
   ) {}
 
   public $onInit(): void {
-    this.OnlineUpgradeService.getProductInstance(this.Authinfo.getUserId(), this.OnlineUpgradeService.getSubscriptionId()).then((prodResponse: IProdInst) => {
+    this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: Array<IProdInst>) => {
+      const productInstance = _.find(productInstances, (instance: any) => {
+        return instance.subscriptionId === this.OnlineUpgradeService.getSubscriptionId();
+      });
+
       this.bmmpAttr = {
-        subscriptionId: this.OnlineUpgradeService.getSubscriptionId(),
-        productInstanceId: prodResponse.productInstanceId,
+        subscriptionId: productInstance.subscriptionId,
+        productInstanceId: productInstance.productInstanceId,
         changeplanOverride: '',
       };
     });
