@@ -6,7 +6,8 @@ interface IHeaderTab {
 class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
   public tabs: Array<IHeaderTab> = [];
   public title: string = 'huronDetails.title';
-  public back: boolean = false;
+  public back: boolean = true;
+  public backState: string = 'services-overview';
 
   /* @ngInject */
   constructor(
