@@ -6751,8 +6751,7 @@
     "statusHeader": "Payment Status",
     "viewInvoice": "View Invoice",
     "completed": "Completed",
-    "pending": "Pending",
-    "error": "Error",
+    "pending": "Pending Processing",
     "onlineOnly1": "Purchases from Cisco Online Marketplace only.",
     "onlineOnly2": "Cisco and Cisco Partner invoices are not listed here.",
     "loadError": "An error occurred while loading order history."
