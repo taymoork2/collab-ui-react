@@ -1,5 +1,3 @@
-declare const newrelic;
-
 export default class ExceptionHandlerConfig {
   public static readonly WARNING_DEBOUNCE_MS = 1000;
 
@@ -18,7 +16,7 @@ function extendExceptionHandler (
   return (exception: Error, cause?: string) => {
     $delegate(exception, cause);
 
-    if (newrelic) {
+    if (typeof newrelic !== 'undefined') {
       newrelic.noticeError(exception);
     }
   };
