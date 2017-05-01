@@ -71,38 +71,6 @@
       isUsrDel: true,
     };
 
-    vm.fields = [{
-      key: 'messengerOrgName',
-      type: 'input',
-      templateOptions: {
-        type: '',
-        label: $translate.instant(translatePrefix + 'labelOrgName'),
-        required: false,
-        disabled: true,
-        placeholder: '',
-      },
-    }, {
-      key: 'messengerOrgId',
-      type: 'input',
-      templateOptions: {
-        type: '',
-        label: $translate.instant(translatePrefix + 'labelOrgId'),
-        required: false,
-        disabled: true,
-        placeholder: '',
-      },
-    }, {
-      key: 'linkDate',
-      type: 'input',
-      templateOptions: {
-        type: 'input',
-        label: $translate.instant(translatePrefix + 'labelCILinkDate'),
-        required: false,
-        disabled: true,
-        placeholder: '',
-      },
-    }];
-
     vm.init = init;
 
     // Event handlers

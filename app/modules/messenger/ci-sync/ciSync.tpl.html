@@ -31,8 +31,27 @@
       <div class="col-md-4 sync-stats">
           <h3 translate="messengerCiSync.syncStatusHeading"></h3>
 
-          <formly-form model="sync.syncInfo" fields="sync.fields">
-          </formly-form>
+          <input cs-input type="text"
+            id="ciSyncOrgSettingsOrgName"
+            ng-model="sync.syncInfo.messengerOrgName"
+            cs-input-label="{{:: 'messengerCiSync.labelOrgName' | translate }}"
+            cs-input-group-size="medium-12"
+            disabled
+            read-only>
+          <input cs-input type="text"
+            id="ciSyncOrgSettingsOrgId"
+            ng-model="sync.syncInfo.messengerOrgId"
+            cs-input-label="{{:: 'messengerCiSync.labelOrgId' | translate }}"
+            cs-input-group-size="medium-12"
+            disabled
+            read-only>
+          <input cs-input type="text"
+            id="ciSyncOrgSettingsCiLinkDate"
+            ng-model="sync.syncInfo.linkDate"
+            cs-input-label="{{:: 'messengerCiSync.labelCILinkDate' | translate }}"
+            cs-input-group-size="medium-12"
+            disabled
+            read-only>
 
           <div ng-if="sync.syncInfo.isMessengerSyncRawMode"> <!-- Native Messenger Sync mode -->
             <p tooltip-placement="top" tooltip="{{sync.syncStatusTooltip}}" translate="messengerCiSync.syncStatusHeading"></p>
