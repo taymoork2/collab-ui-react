@@ -1692,7 +1692,7 @@
     });
 
     $scope.$watch(function () {
-      return _.get(vm, 'form.$invalid');
+      return _.get(vm, 'form.$invalid', true);
     }, function (invalid) {
       $scope.$emit('wizardNextButtonDisable', !!invalid);
     });
