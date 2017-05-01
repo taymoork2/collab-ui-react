@@ -309,20 +309,20 @@ describe('Controller: TrialDeviceController', function () {
   describe('total device quantity calculation', function () {
 
     it('should calculate total quantity 0 when nothing is enabled', function () {
-
       var total = controller.getTotalQuantity();
       expect(total).toBe(0);
     });
 
     it('should calculate total quantity correcty when not 0', function () {
-
       // default data has quality 3 of CISCO_8865 and 2 of CISCO_SX10
       bard.mockService(TrialCallService, {
         getData: trialData.enabled.trials.callTrial,
+        canAddCallDevice: true,
       });
 
       bard.mockService(TrialRoomSystemService, {
         getData: trialData.enabled.trials.roomSystemTrial,
+        canAddRoomSystemDevice: true,
       });
 
       initController();
@@ -330,6 +330,25 @@ describe('Controller: TrialDeviceController', function () {
 
       var total = controller.getTotalQuantity();
       expect(total).toBe(5);
+
+    });
+    it('should calculate total quantity correcty when not 0 but trail is not enabled', function () {
+      // default data has quality 3 of CISCO_8865 and 2 of CISCO_SX10
+      bard.mockService(TrialCallService, {
+        getData: trialData.enabled.trials.callTrial,
+        canAddCallDevice: true,
+      });
+
+      bard.mockService(TrialRoomSystemService, {
+        getData: trialData.enabled.trials.roomSystemTrial,
+        canAddRoomSystemDevice: false,
+      });
+
+      initController();
+      $rootScope.$apply();
+
+      var total = controller.getTotalQuantity();
+      expect(total).toBe(3);
 
     });
   });
