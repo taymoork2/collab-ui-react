@@ -32,6 +32,27 @@ require('./_overview.scss');
     vm.pstnToSNotification = null;
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
+    vm.notificationComparator = notificationComparator;
+
+    ////////////////////////////////
+
+    var notificationOrder = [
+      'alert',
+      'todo',
+      'info',
+      'new',
+    ];
+
+    // used to sort notifications in a specific order
+    function notificationComparator(a, b) {
+      var v1 = _.toLower(_.last(_.split(a.value, '.')));
+      var v2 = _.toLower(_.last(_.split(b.value, '.')));
+      if (_.isEqual(v1, v2)) {
+        return 0;
+      } else {
+        return (_.indexOf(notificationOrder, v1) < _.indexOf(notificationOrder, v2)) ? -1 : 1;
+      }
+    }
 
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {

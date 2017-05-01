@@ -1,5 +1,7 @@
 'use strict';
 
+/* global fit */
+
 describe('Controller: OverviewCtrl', function () {
 
   // load the controller's module
@@ -7,14 +9,14 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService, $httpBackend;
+  var controller, $filter, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService, $httpBackend;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
   var isCustomerLaunchedFromPartner = true;
 
   afterEach(function () {
-    controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = $httpBackend = undefined;
+    controller = $filter = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = $httpBackend = undefined;
   });
 
   afterAll(function () {
@@ -176,13 +178,40 @@ describe('Controller: OverviewCtrl', function () {
     });
   });
 
+  describe('Notifications - notificationComparator', function () {
+    beforeEach(inject(defaultWireUpFunc));
+
+    fit('should return correct sort values', function () {
+      // ensure comparator sorts correctly
+      var items = [
+        { badgeText: 'common.info' },
+        { badgeText: 'common.new' },
+        { badgeText: 'common.alert' },
+        { badgeText: 'homePage.todo' },
+        { badgeText: 'common.info' },
+        { badgeText: 'common.alert' },
+      ];
+      var sorted = $filter('orderBy')(items, 'badgeText', false, controller.notificationComparator);
+
+      expect(sorted).toEqual([
+        { badgeText: 'common.alert' },
+        { badgeText: 'common.alert' },
+        { badgeText: 'homePage.todo' },
+        { badgeText: 'common.info' },
+        { badgeText: 'common.info' },
+        { badgeText: 'common.new' },
+      ]);
+    });
+
+  });
+
   function getCard(filter) {
     return _(controller.cards).filter(function (card) {
       return card.name == filter;
     }).head();
   }
 
-  function defaultWireUpFunc(_$rootScope_, $controller, _$httpBackend_, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_, _SunlightReportService_) {
+  function defaultWireUpFunc(_$rootScope_, _$filter_, $controller, _$httpBackend_, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_, _SunlightReportService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -197,6 +226,7 @@ describe('Controller: OverviewCtrl', function () {
     FusionClusterService = _FusionClusterService_;
     SunlightReportService = _SunlightReportService_;
     $httpBackend = _$httpBackend_;
+    $filter = _$filter_;
 
     spyOn(SunlightReportService, 'getOverviewData');
     SunlightReportService.getOverviewData.and.returnValue({});
