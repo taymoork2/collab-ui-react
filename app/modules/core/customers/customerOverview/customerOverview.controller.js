@@ -204,6 +204,7 @@ require('./_customer-overview.scss');
       //   'Userservice.updateUsers()'
       // - this call is required in order to patch the partner-admin user as appropriate such that
       //   admin access to webex sites is enabled
+      vm.loadingCustomerPortal = true;
       var liclist = vm.currentCustomer.licenseList;
       var licIds = collectLicenseIdsForWebexSites(liclist);
       var partnerEmail = Authinfo.getPrimaryEmail();
@@ -264,6 +265,7 @@ require('./_customer-overview.scss');
     }
 
     function openCustomerPortal() {
+      vm.loadingCustomerPortal = false;
       return $window.open($state.href('login_swap', {
         customerOrgId: vm.customerOrgId,
         customerOrgName: vm.customerName,

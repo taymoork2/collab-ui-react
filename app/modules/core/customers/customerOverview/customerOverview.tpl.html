@@ -14,7 +14,7 @@
         <button class="btn btn--primary" ng-click="customerOverview.saveLogoSettings()" type="submit" translate="common.save"></button>
         <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
       </cs-sp-buttons>
-      <button id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people"
+      <button cs-btn loading="customerOverview.loadingCustomerPortal" id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people"
         ng-disabled="!customerOverview.currentCustomer.isAllowedToManage && !customerOverview.isPartnerAdmin"
         ng-click="customerOverview.launchCustomerPortal()">
         <span ng-if="customerOverview.isOrgSetup" translate="customerPage.launchButton"></span>
