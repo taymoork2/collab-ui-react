@@ -23,7 +23,6 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.searchByLimit = searchByLimit;
     vm.searchByParameters = searchByParameters;
     vm.advancedSearch = advancedSearch;
-    vm.searchForRoom = searchForRoom;
     vm.dateErrors = dateErrors;
     vm.validateDate = validateDate;
 
@@ -296,48 +295,6 @@ var Spark = require('@ciscospark/spark-core').default;
             .finally(function () {
               vm.searchingForRoom = false;
             });
-        });
-    }
-
-    function searchForRoom(roomId) {
-      searchSetup();
-      vm.searchCriteria.roomId = roomId;
-      EdiscoveryService.getAvalonServiceUrl(roomId)
-        .then(function (result) {
-          return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
-        })
-        .then(function (result) {
-          vm.roomInfo = result;
-          vm.searchCriteria.startDate = formatDate('display', getStartDate()) || formatDate('display', result.published);
-          vm.searchCriteria.endDate = result.lastRelevantActivityDate ? formatDate('display', result.lastRelevantActivityDate) : formatDate('display', getEndDate());
-          vm.searchCriteria.displayName = result.displayName;
-          _.forEach(result.participants.items, function (response) {
-            vm.searchResults.keywords.push(response.emailAddress);
-          });
-        })
-        .catch(function (err) {
-          var status = err && err.status ? err.status : 500;
-          switch (status) {
-            case 400:
-              vm.error = $translate.instant("ediscovery.search.invalidRoomId", {
-                roomId: roomId,
-              });
-              break;
-            case 404:
-              vm.error = $translate.instant("ediscovery.search.roomNotFound", {
-                roomId: roomId,
-              });
-              break;
-            default:
-              vm.error = $translate.instant("ediscovery.search.roomNotFound", {
-                roomId: roomId,
-              });
-              Notification.error('ediscovery.search.roomLookupError');
-              break;
-          }
-        })
-        .finally(function () {
-          vm.searchingForRoom = false;
         });
     }
 
