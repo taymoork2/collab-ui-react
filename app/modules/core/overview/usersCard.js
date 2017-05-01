@@ -94,6 +94,7 @@
             currentTab: 'enterpriseSettings',
             currentStep: 'init',
             onlyShowSingleTab: true,
+            showStandardModal: true,
           });
         };
 
