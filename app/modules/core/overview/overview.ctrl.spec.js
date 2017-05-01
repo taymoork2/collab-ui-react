@@ -1,7 +1,5 @@
 'use strict';
 
-/* global fit */
-
 describe('Controller: OverviewCtrl', function () {
 
   // load the controller's module
@@ -181,7 +179,7 @@ describe('Controller: OverviewCtrl', function () {
   describe('Notifications - notificationComparator', function () {
     beforeEach(inject(defaultWireUpFunc));
 
-    fit('should return correct sort values', function () {
+    it('should return correct sort values', function () {
       // ensure comparator sorts correctly
       var items = [
         { badgeText: 'common.info' },
