@@ -16,6 +16,7 @@ describe('Component: PrivateTrunkDomain component', () => {
     this.injectDependencies(
       '$scope',
       '$translate',
+      '$state',
     );
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.compileComponent('privateTrunkDomain', {
@@ -24,10 +25,13 @@ describe('Component: PrivateTrunkDomain component', () => {
       isDomain: true,
       onChangeFn: 'onChangeFn(selected)',
     });
+    this.$state.current.name = 'services-overview';
 
   });
 
   it('should have both radio buttons for Domain Selection', function () {
+    this.$scope.domainOptions = options;
+    this.$scope.$apply();
     expect(this.view).toContainElement(RADIO_OPTION1);
     expect(this.view).toContainElement(RADIO_OPTION2);
   });

@@ -1,4 +1,4 @@
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq/private-trunk-prereq.service';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
 import { IToolkitModalService } from 'modules/core/modal';
 import { IOption, PrivateTrunkResource } from './private-trunk-setup';
 import { IformattedCertificate } from 'modules/hercules/services/certificate-formatter-service';
@@ -43,7 +43,6 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   private errors: Array<any> = [];
 
-
   /* @ngInject */
   constructor(
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
@@ -58,7 +57,9 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.currentStepIndex = 1;
+    if (_.isUndefined(this.currentStepIndex)) {
+      this.currentStepIndex = 1;
+    }
     this.isDomain = true;
     this.initDomainInfo();
     if (_.isUndefined(this.domainSelected)) {
@@ -243,4 +244,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 export class PrivateTrunkSetupComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkSetupCtrl;
   public templateUrl = 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup.html';
+  public bindings = {
+    currentStepIndex: '<',
+  };
 }

@@ -1,12 +1,12 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
+import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 
 export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
   private hasDomain: boolean;
-
   private _buttons: Array<ICardButton> = [{
     name: 'servicesOverview.cards.privateTrunk.buttons.view',
     buttonClass: 'btn btn--link btn--expand',
@@ -16,9 +16,22 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
     buttonClass: 'btn btn--primary',
     buttonState: 'prereq',
   }];
+  private _activeButtons: Array<ICardButton> = [{
+    name: 'servicesOverview.cards.hybridCall.buttons.resources',
+    routerState: 'private-trunk-overview.list',
+    buttonClass: 'btn--link',
+  }, {
+    name: 'servicesOverview.cards.hybridCall.buttons.settings',
+    routerState: 'private-trunk-overview.settings',
+    buttonClass: 'btn--link',
+  }];
 
   public getButtons(): Array<ICardButton> {
-    this._buttons[1].buttonState = this.hasDomain ? 'setup' : 'prereq';
+    if (this.active) {
+      return this._activeButtons;
+    } else {
+      this._buttons[1].buttonState = this.hasDomain ? 'setup' : 'prereq';
+    }
     return this._buttons;
   }
 
@@ -28,6 +41,10 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
 
   public privateTrunkDomainEventHandler(hasDomain: boolean): void {
     this.hasDomain = hasDomain;
+  }
+
+  public sipDestinationsEventHandler(destinationList: Array<IPrivateTrunkResource>): void {
+    this.active = destinationList.length > 0 ;
   }
 
   public openModal(): void {
@@ -55,14 +72,12 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
   /* @ngInject */
   public constructor(
     private PrivateTrunkPrereqService,
-    HybridServicesClusterStatesService,
-  ) {
+    HybridServicesClusterStatesService ) {
     super({
       name: 'servicesOverview.cards.privateTrunk.title',
       description: 'servicesOverview.cards.privateTrunk.description',
-      active: true,
+      active: false,
       cardType: CardType.hybrid,
-      cardClass: 'private-trunk-nodomain',
       display : true,
       routerState: 'private-trunk-overview',
       service: 'cisco-uc',

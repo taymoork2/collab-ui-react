@@ -19,10 +19,10 @@ export class PrivateTrunkPrereqService {
     });
   }
 
-  public openSetupModal(): void {
+  public openSetupModal(currentStep: number = 1): void {
     this.dismissModal();
     this.domainModal = this.$modal.open({
-      template: '<private-trunk-setup class="modal-content"></private-trunk-setup>',
+      template: '<private-trunk-setup class="modal-content" currentStepIndex=' + currentStep + '></private-trunk-setup>',
       type: 'full',
       keyboard: false,
     });
