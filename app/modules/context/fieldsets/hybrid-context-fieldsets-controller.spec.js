@@ -2,7 +2,7 @@
 
 describe('HybridContextFieldsetsCtrl', function () {
 
-  var $controller, $scope, $state, $q, controller, ContextFieldsetsService, Log, Notification;
+  var $controller, $scope, $state, $q, controller, ContextFieldsetsService, Log, Notification, Authinfo;
   var fakeGridApi = {
     infiniteScroll: {
       dataLoaded: jasmine.createSpy('dataLoaded'),
@@ -24,10 +24,10 @@ describe('HybridContextFieldsetsCtrl', function () {
   beforeEach(initSpies);
 
   afterAll(function () {
-    $controller = $scope = $state = $q = controller = ContextFieldsetsService = Log = Notification = fakeGridApi = undefined;
+    $controller = $scope = $state = $q = controller = ContextFieldsetsService = Log = Notification = Authinfo = fakeGridApi = undefined;
   });
 
-  function dependencies($rootScope, _$controller_, _$q_, _$state_, _ContextFieldsetsService_, _Log_, _Notification_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$state_, _ContextFieldsetsService_, _Log_, _Notification_, _Authinfo_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -35,6 +35,7 @@ describe('HybridContextFieldsetsCtrl', function () {
     ContextFieldsetsService = _ContextFieldsetsService_;
     Log = _Log_;
     Notification = _Notification_;
+    Authinfo = _Authinfo_;
   }
 
   function initSpies() {
@@ -42,6 +43,7 @@ describe('HybridContextFieldsetsCtrl', function () {
     spyOn(ContextFieldsetsService, 'getFieldsets');
     spyOn(Log, 'debug');
     spyOn(Notification, 'error');
+    spyOn(Authinfo, 'getOrgName').and.returnValue('orgName');
   }
 
   function initController() {
@@ -139,14 +141,14 @@ describe('HybridContextFieldsetsCtrl', function () {
 
   describe('process fieldsets', function () {
 
-    it('should process fieldset data when data returned is missing lastUpdate', function () {
+    it('should process fieldset data when data returned and publiclyAccessible', function () {
       ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
         'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
         'description': 'aaa custom fieldset with some long description description description description description',
         'fields': [
           'AAA_TEST_FIELD',
         ],
-        'publiclyAccessibleUI': false,
+        'publiclyAccessible': true,
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -162,6 +164,35 @@ describe('HybridContextFieldsetsCtrl', function () {
       expect(controller.fieldsetsList.allFieldsets.length).toBe(1);
       expect(controller.fieldsetsList.allFieldsets[0].numOfFields).toBe(1);
       expect(controller.fieldsetsList.allFieldsets[0].lastUpdated).not.toExist();
+      expect(controller.fieldsetsList.allFieldsets[0].publiclyAccessible).toEqual(true);
+      expect(controller.fieldsetsList.allFieldsets[0].publiclyAccessibleUI).toEqual('context.dictionary.base');
+    });
+
+    it('should process fieldset data when data returned is missing lastUpdate', function () {
+      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
+        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        'description': 'aaa custom fieldset with some long description description description description description',
+        'fields': [
+          'AAA_TEST_FIELD',
+        ],
+        'publiclyAccessible': false,
+        'fieldDefinitions': [
+          {
+            'id': 'AAA_TEST_FIELD',
+            'lastUpdated': '2017-02-02T17:12:33.167Z',
+          },
+        ],
+        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+        'id': 'aaa_custom_fieldset',
+      }]));
+      controller = initController();
+      $scope.$apply();
+
+      expect(controller.fieldsetsList.allFieldsets.length).toBe(1);
+      expect(controller.fieldsetsList.allFieldsets[0].numOfFields).toBe(1);
+      expect(controller.fieldsetsList.allFieldsets[0].lastUpdated).not.toExist();
+      expect(controller.fieldsetsList.allFieldsets[0].publiclyAccessible).toEqual(false);
+      expect(controller.fieldsetsList.allFieldsets[0].publiclyAccessibleUI).toEqual('orgName');
     });
 
     it('should process fieldset data when data returned has multiple fields', function () {
