@@ -2588,7 +2588,11 @@
   },
   "cmc": {
     "menu": {
+      "mobileServices": "Mobile Services",
       "mobileConvergenceService": "Mobile Convergence Service"
+    },
+    "settings": {
+      "mobileNumber": "Mobile Number"
     },
     "details": {
       "invalidInput": "Always provide valid mobile number when enabling"
