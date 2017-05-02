@@ -83,6 +83,14 @@
       margin-top: 10px;
       max-height: 356px;
       overflow-y: auto;
+
+      .icon {
+        line-height: 15px;
+
+        &.icon-user {
+          bottom: -15px;
+        }
+      }
     }
 
     .card-panel {

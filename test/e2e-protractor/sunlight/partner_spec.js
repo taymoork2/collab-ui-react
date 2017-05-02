@@ -11,11 +11,6 @@ describe('Spark Care Partner flow', function () {
     });
 
     it('should add a new care trial', function () {
-<<<<<<< HEAD
-      //utils.click(partner.trialFilter);
-      browser.pause();
-=======
->>>>>>> upstream/master
       utils.click(partner.addButton);
 
       utils.expectIsDisplayed(partner.editTrialForm);

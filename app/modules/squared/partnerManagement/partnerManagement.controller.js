@@ -1,7 +1,5 @@
 require('./partnerManagement.scss');
 
-/* eslint-disable */
-
 (function () {
   'use strict';
 
@@ -19,12 +17,12 @@ require('./partnerManagement.scss');
     vm.isLoading = false;
 
     vm.partnerPlaceholder = $translate.instant('partnerManagement.create.selectPartnerPlaceholder');
-    vm.partnerTypes = ['DISTI', 'DVAR', 'RESELLER', 'NA'];
-    vm.partnerOptions = _.map(vm.partnerTypes, function (s) { 
-      return  { label: $translate.instant('partnerManagement.create.partnerTypes.' + s),
-                value: s,
-              };
-            });
+    vm.partnerTypes = ['DISTI', 'DVAR', 'RESELLER'];
+    vm.partnerOptions = _.map(vm.partnerTypes, function (s) {
+      return { label: $translate.instant('partnerManagement.create.partnerTypes.' + s),
+        value: s,
+      };
+    });
 
     // Error messages from validators
     vm.messages = {
@@ -48,7 +46,6 @@ require('./partnerManagement.scss');
     initData();
 
     vm.search = function () {
-      var targetState;
       vm.isLoading = true;
       svc.search(vm.data.email).then(function (resp) {
         vm.isLoading = false;
@@ -75,23 +72,23 @@ require('./partnerManagement.scss');
                 break;
 
               default:
-                  Notification.errorWithTrackingId(resp,
-                    'partnerManagement.error.searchFailed', 
-                    {msg: $translate.instant('partnerManagement.error.unexpectedResp')});
-              }
-              break;
+                Notification.errorWithTrackingId(resp,
+                  'partnerManagement.error.searchFailed',
+                  { msg: $translate.instant('partnerManagement.error.unexpectedResp') });
+            }
+            break;
 
-            default:
-              // Unexpected resp, but go on to create anyway
-              // (the create API will check email as well)
-              $state.go('partnerManagement.create');
+          default:
+            // Unexpected resp, but go on to create anyway
+            // (the create API will check email as well)
+            $state.go('partnerManagement.create');
         }
       }).catch(function (resp) {
         vm.isLoading = false;
         Notification.errorWithTrackingId(resp,
         'partnerManagement.error.searchFailed',
-        {msg: (_.isEmpty(resp.data)) ? 
-          $translate.instant('partnerManagement.error.timeout') : resp.data.message});
+          { msg: (_.isEmpty(resp.data)) ?
+          $translate.instant('partnerManagement.error.timeout') : resp.data.message });
       });
     };
 
@@ -109,8 +106,8 @@ require('./partnerManagement.scss');
         } else {
           Notification.errorWithTrackingId(resp,
             'partnerManagement.error.createFailed',
-            {msg: (_.isEmpty(resp.data)) ? 
-              $translate.instant('partnerManagement.error.timeout') : resp.data.message});
+            { msg: (_.isEmpty(resp.data)) ?
+              $translate.instant('partnerManagement.error.timeout') : resp.data.message });
         }
       });
     };
@@ -126,7 +123,7 @@ require('./partnerManagement.scss');
 
     function pushDetail(label, value, defValue) {
       value = value || defValue;
-      if ( Array.isArray(value) ) {
+      if (Array.isArray(value)) {
         value = value.join(', ');
       }
 
@@ -145,6 +142,13 @@ require('./partnerManagement.scss');
         vm.data.orgRaw.claimedDomains = _.sortBy(vm.data.orgRaw.claimedDomains);
         vm.data.orgRaw.fullAdmins = _.sortBy(vm.data.orgRaw.fullAdmins,
           ['displayName', 'primaryEmail']);
+        // put thumbnail on root of admin object...
+        _.forEach(vm.data.orgRaw.fullAdmins, function (o) {
+          var thumb = _.find(o.photos, { type: 'thumbnail' });
+          if (thumb) {
+            o.thumbnail = thumb.url;
+          }
+        });
 
         vm.data.orgDetails = [];
         pushDetail('createDate', new Date(vm.data.orgRaw.createdDate).toLocaleString());
@@ -159,9 +163,9 @@ require('./partnerManagement.scss');
       }).catch(function (resp) {
         Notification.errorWithTrackingId(resp,
           'partnerManagement.error.getOrgDetails',
-          {msg: (_.isEmpty(resp.data)) ? 
-            $translate.instant('partnerManagement.error.timeout') : resp.data.message});
-          vm.showSpinner = false;
+          { msg: (_.isEmpty(resp.data)) ?
+          $translate.instant('partnerManagement.error.timeout') : resp.data.message });
+        vm.showSpinner = false;
       });
     }
   }
@@ -190,7 +194,7 @@ require('./partnerManagement.scss');
       restrict: 'A',
       link: function (scope, elem, attrs, ngModelCtrl) {
         ngModelCtrl.$validators.unused = function (value) {
-          return _.isEmpty(scope.vm.duplicateName) || 
+          return _.isEmpty(scope.vm.duplicateName) ||
             (value !== scope.vm.duplicateName);
         };
       },
@@ -198,4 +202,3 @@ require('./partnerManagement.scss');
   }
 }());
 
-/* eslint-enable */

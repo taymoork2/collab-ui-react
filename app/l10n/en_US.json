@@ -6999,8 +6999,7 @@
       "partnerTypes": {
         "DISTI": "Distributor",
         "DVAR": "DVAR (Tier-1 Partner)",
-        "RESELLER": "Tier-2 Reseller",
-        "NA": "Not a Partner"
+        "RESELLER": "Tier-2 Reseller"
       }
     },
     "created": {
