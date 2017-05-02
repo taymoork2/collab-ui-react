@@ -6128,9 +6128,9 @@
     "labelOrgName": "Jabber Messenger Organization Name",
     "labelUnauthorizedUser": "Unauthorized User",
     "loading": "Loading Jabber Messenger Synchronization Status",
-    "orgAdminLinkText": "Launch Jabber Messenger Admin Tool",
+    "orgAdminLinkText": "Launch Cisco WebEx Messenger Admin Tool",
     "orgAdminLinkTooltip": "Continue to mange your Jabber users in the Messenger Org Admin tool",
-    "pageTitle": "Jabber Messenger",
+    "pageTitle": "WebEx Messenger",
     "patchSuccessful": "Jabber Messenger Sync updated successfully",
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
@@ -7131,7 +7131,7 @@
         "title": "Message",
         "description": "Cisco Spark configurations for your organization and individuals.",
         "buttons": {
-          "webexMessenger": "Webex Messenger"
+          "webexMessenger": "WebEx Messenger"
         }
       },
       "meeting": {
