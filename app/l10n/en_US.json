@@ -2357,7 +2357,7 @@
         "title": "Urgent Upgrade Schedule"
       },
       "list": {
-        "title": "Clusters",
+        "title": "On-Premises Resources",
         "empty": "No clusters found.",
         "empty-ept": "No SIP Destinations found.",
         "upgrade-schedule": "Upgrade Schedule",
@@ -7155,11 +7155,11 @@
         }
       },
       "clusterList": {
-        "title": "Clusters",
-        "description": "On-premises clusters and configuration for your organization.",
+        "title": "On-Premises Resources",
+        "description": "Manage resources that are registered to the cloud and view related configuration.",
         "buttons": {
-          "none": "0 Clusters",
-          "all": "All Clusters",
+          "none": "0 Resources",
+          "all": "All Resources",
           "expressway": "Expressway",
           "mediafusion": "Media Fusion",
           "context": "Context"
