@@ -12,8 +12,8 @@ var ReportsPage = function () {
   this.engagement = element(by.id('engagementReports'));
   this.quality = element(by.id('qualityReports'));
   this.mediaTypeAllFilter = element(by.cssContainingText('.customer-report-filter', 'All Tasks'));
-  this.mediaTypeChatFilter = element(by.cssContainingText('.customer-report-filter', 'Chat'));
-  this.mediaTypeCallbackFilter = element(by.cssContainingText('.customer-report-filter', 'Callback'));
+  this.mediaTypeChatFilter = element(by.cssContainingText('.customer-report-filter', 'Chats'));
+  this.mediaTypeCallbackFilter = element(by.cssContainingText('.customer-report-filter', 'Callbacks'));
   // Total Rooms
   this.totalRoomsHeader = element(by.cssContainingText('.report-section-header', 'Total Rooms'));
   this.totalRoomsDescription = element(by.id('avgRooms')).element(by.css('article section p'));
@@ -69,7 +69,7 @@ var ReportsPage = function () {
 
   // Task Incoming
   this.taskIncomingHeader = element(by.cssContainingText('.report-section-header', 'Total Completed Tasks'));
-  this.taskIncomingDescription = element(by.cssContainingText('.report-description', 'The graph depicts the total number of customer tasks completed for today. Hover over the area chart for a breakdown of handled and abandoned tasks during a one hour time interval.'));
+  this.taskIncomingDescription = element(by.cssContainingText('.report-description', 'The graph depicts the total number of tasks completed for today. Hover over the area chart for a breakdown of handled and abandoned tasks during a one hour time interval.'));
   this.taskIncomingGraph = element(by.id('taskIncomingdiv'));
 
   // Task Time
@@ -79,7 +79,7 @@ var ReportsPage = function () {
 
   // Task Aggregate
   this.taskAggregateHeader = element(by.cssContainingText('.report-section-header', 'Aggregated Tasks'));
-  this.taskAggregateDescription = element(by.cssContainingText('.report-description', 'The graph depicts the number of waiting and in-progress customer tasks aggregated for today. Hover over the area chart to view the count of waiting and in-progress tasks aggregated from the start of business hours.'));
+  this.taskAggregateDescription = element(by.cssContainingText('.report-description', 'The graph depicts the number of waiting and in-progress tasks aggregated for today. Hover over the area chart to view the count of waiting and in-progress tasks aggregated from the start of business hours.'));
   this.taskAggregateGraph = element(by.id('taskAggregateDiv'));
 
   // Average CSAT
