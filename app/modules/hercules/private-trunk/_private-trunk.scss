@@ -64,6 +64,15 @@
     @include vr-spacing(pb, .5);
   }
 
+  .cs-form__section {
+    padding-top: 0;
+    padding-bottom: 1rem;
+  }
+
+  .setting-section {
+    margin-bottom: -2rem;
+  }
+
   .columns .box {
     border: thin solid $gray-light-2;
     color: $gray-base;

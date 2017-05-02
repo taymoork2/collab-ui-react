@@ -1,5 +1,5 @@
 import { PrivateTrunkDomainComponent } from './private-trunk-domain.component';
-import privateTrunkPrereq from 'modules/hercules/private-trunk/prereq';
+import privateTrunkPrereq from 'modules/hercules/private-trunk/private-trunk-prereq';
 
 export default angular
   .module('hercules.private-trunk-domain', [
