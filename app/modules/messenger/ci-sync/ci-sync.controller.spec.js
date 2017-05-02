@@ -154,30 +154,4 @@
 
     });
   });
-
-  describe('Unit testing msgr-text-status-on directive', function () {
-    beforeEach(function () {
-      this.initModules('Messenger');
-      this.compileComponent('msgrTextStatusOn');
-    });
-
-    it('Replaces the element with the appropriate content', function () {
-      // Check that the compiled element contains the templated content
-      expect(this.view.html()).toContain("common.status");
-      expect(this.view.html()).toContain("common.on");
-    });
-  });
-  describe('Unit testing msgr-text-status-off directive', function () {
-    beforeEach(function () {
-      this.initModules('Messenger');
-      this.compileComponent('msgrTextStatusOff');
-    });
-
-    it('Replaces the element with the appropriate content', function () {
-      // Check that the compiled element contains the templated content
-      expect(this.view.html()).toContain("common.status");
-      expect(this.view.html()).toContain("common.off");
-    });
-  });
-
 })();
