@@ -225,8 +225,7 @@ require('../devices/_devices.scss');
         vm.deletePlace = function ($event, place) {
           $event.stopPropagation();
           RemPlaceModal
-            .open(place)
-            .then(vm.updateListAndFilter());
+            .open(place);
         };
 
         function getTemplate(name) {
