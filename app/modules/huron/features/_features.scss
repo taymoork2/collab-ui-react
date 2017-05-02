@@ -2,8 +2,8 @@
  *      Features Style imports
  ************************************/
 
-@import 'components/callFeatureEdit/call-feature-edit';
-@import 'components/callFeatureSetup/call-feature-setup';
+@import 'modules/call-features/shared/callFeatureEdit/call-feature-edit';
+@import 'modules/call-features/shared/callFeatureSetup/call-feature-setup';
 @import 'autoAttendant/aa';
 
 @import '~collab-ui/scss/settings/colors';
