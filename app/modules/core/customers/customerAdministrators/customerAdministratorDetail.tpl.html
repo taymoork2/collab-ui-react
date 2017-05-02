@@ -31,8 +31,8 @@
         <li class="feature" ng-repeat= "user in customerAdmin.assignedAdmins | orderBy: 'fullName'">
           <a>
             <span class="feature-name">{{user.fullName}}</span>
-            <span type="button" class="icon icon-close close-icon-height" ng-click="customerAdmin.removeCustomerAdmin(user.fullName)">
-            </span>
+            <i class="icon icon-close close-icon-height" ng-click="customerAdmin.removeCustomerAdmin(user.fullName)">
+            </i>
           </a>
         </li>
       </ul>
