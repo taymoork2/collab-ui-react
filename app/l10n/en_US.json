@@ -3753,7 +3753,7 @@
     "errorSaveMemberPartial": "'{{pagingGroupName}}' paging group has been created successfully but following members ids did not get added: '{{message}}'",
     "errorSaveInitiatorPartial": "'{{pagingGroupName}}' paging group has been created successfully but following initiators ids did not get added: '{{message}}'",
     "sayInvalidChar": "Invalid character. {{char}} is not allowed.",
-    "errorGetNumber": "'{{pagingGroupName}}' paging group was not able to get the number assigned to this group.",
+    "errorGetNumber": "'{{pagingGroupName}}' paging group was not able to get the number assigned to this group. Please contact the support team.",
     "loadError": "An error while loading the paging groups."
   },
   "telephonyPreview": {
