@@ -98,7 +98,7 @@ for arg in $@; do
     if [[ "$arg" = /* ]]; then
         fname="$arg"
     else
-        fname="$(pwd)/$arg"
+        fname="$(pwd -P)/$arg"
     fi
     ls -1 "$fname" >> "$flist" 2>/dev/null
 done
