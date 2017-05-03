@@ -583,13 +583,13 @@ describe('Component: pgEdit', () => {
     it('Test showMoreButton', function () {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = this.controller.cardThreshold;
-      expect(this.controller.showMoreButton('USER_REAL_USER', 'MEMBER')).toBeTruthy;
+      expect(this.controller.showMoreButton('USER_REAL_USER', 'MEMBER')).toBeFalsy();
     });
 
     it('Test showLessButton', function () {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = undefined;
-      expect(this.controller.showLessButton('USER_REAL_USER', 'MEMBER')).toBeTruthy;
+      expect(this.controller.showLessButton('USER_REAL_USER', 'MEMBER')).toBeFalsy();
     });
   });
 

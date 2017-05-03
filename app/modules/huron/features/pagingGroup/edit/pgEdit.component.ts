@@ -235,9 +235,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
   }
 
   public sortForUser(member: Member) {
-    return (member.displayName ? member.displayName.toLowerCase() : undefined,
-      member.lastName ? member.lastName.toLowerCase() : undefined,
-      member.firstName ? member.firstName.toLowerCase() : undefined);
+    return member.firstName ? member.firstName.toLowerCase() : undefined;
   }
 
   public sortForPlace(member: Member) {

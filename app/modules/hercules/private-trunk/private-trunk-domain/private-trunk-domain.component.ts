@@ -1,4 +1,4 @@
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq';
 import { IOption } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 
 export enum DomainRadioType {
@@ -13,11 +13,13 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
   public domainOptionRadio: DomainRadioType;
   public selectPlaceHolder: string;
   public onChangeFn: Function;
+  public domainDesc: { title: string, desc: string };
 
   /* @ngInject */
   constructor(
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private $translate: ng.translate.ITranslateService,
+    private $state: ng.ui.IStateService,
   ) {
   }
 
@@ -29,6 +31,21 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
     if (_.isUndefined(this.domainOptionRadio)) {
       this.domainOptionRadio = DomainRadioType.DOMAIN;
     }
+    if (this.isFirstTimeSetup()) {
+      this.domainDesc = {
+        title: this.$translate.instant('servicesOverview.cards.privateTrunk.select'),
+        desc: this.$translate.instant('servicesOverview.cards.privateTrunk.selectDomainDesc'),
+      };
+    } else {
+      this.domainDesc = {
+        title: this.$translate.instant('servicesOverview.cards.privateTrunk.domains'),
+        desc: this.$translate.instant('servicesOverview.cards.privateTrunk.domainDesc'),
+      };
+    }
+  }
+
+  public isFirstTimeSetup(): boolean {
+    return (this.$state.current.name === 'services-overview');
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
@@ -95,6 +112,14 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
   public dismiss(): void {
     this.PrivateTrunkPrereqService.dismissModal();
   }
+
+  public gotoSettings(): void {
+    this.PrivateTrunkPrereqService.dismissModal();
+    this.$state.go('settings', {
+      showSettings: 'domains',
+    });
+  }
+
 }
 
 export class PrivateTrunkDomainComponent implements ng.IComponentOptions {

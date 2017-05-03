@@ -44,6 +44,7 @@
     vm.errorMsg = '';
     vm.isDirSync = false;
     vm.orgAdminUrl = 'https://wapi.webexconnect.com/wbxconnect/acs/widgetserver/mashkit/apps/standalone.html?app=WBX.base.orgadmin';
+    vm.backState = 'services-overview';
 
     // Translated text
     vm.refresh = $translate.instant(translatePrefix + 'refresh');

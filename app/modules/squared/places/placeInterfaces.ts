@@ -1,19 +1,16 @@
-/**
- * Created by ngrodum on 29/03/2017.
- */
-
 declare namespace csdm {
 
-  interface IPlace {
+  interface IPlaceExtended extends IPlace {
+    readableType: string;
+  }
+
+  interface IPlace extends IDevicePlaceCommon {
+    externalNumber?: string;
+    directoryNumber?: string;
     devices: {};
-    cisUuid?: string;
     id?: string;
-    type?: string;
-    url?: string;
     entitlements?: Array<any>;
-    displayName?: string;
     externalLinkedAccounts?: any[];
-    tags: string[];
   }
 
   interface ICsdmDataModelService {

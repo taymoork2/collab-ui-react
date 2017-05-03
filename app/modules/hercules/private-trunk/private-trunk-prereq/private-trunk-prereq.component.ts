@@ -13,7 +13,7 @@ export class PrivateTrunkPrereqCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $state,
+    private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
   ) {
@@ -56,7 +56,7 @@ export class PrivateTrunkPrereqCtrl implements ng.IComponentController {
 }
 export class PrivateTrunkPrereqComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkPrereqCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/prereq/private-trunk-prereq.html';
+  public templateUrl = 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.html';
   public bindings = {
   };
 }

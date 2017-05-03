@@ -1878,7 +1878,8 @@
       "squared-fusion-gcal": "Hybrid Calendar (Google)",
       "spark-hybrid-datasecurity": "Hybrid Data Security",
       "squared-fusion-media": "Hybrid Media Service",
-      "hybrid-context": "Hybrid Context Service"
+      "hybrid-context": "Hybrid Context Service",
+      "ept": "Enterprise Private Trunking"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -2357,7 +2358,7 @@
         "title": "Urgent Upgrade Schedule"
       },
       "list": {
-        "title": "Clusters",
+        "title": "On-Premises Resources",
         "empty": "No clusters found.",
         "empty-ept": "No SIP Destinations found.",
         "upgrade-schedule": "Upgrade Schedule",
@@ -2588,7 +2589,11 @@
   },
   "cmc": {
     "menu": {
+      "mobileServices": "Mobile Services",
       "mobileConvergenceService": "Mobile Convergence Service"
+    },
+    "settings": {
+      "mobileNumber": "Mobile Number"
     },
     "details": {
       "invalidInput": "Always provide valid mobile number when enabling"
@@ -3749,7 +3754,7 @@
     "errorSaveMemberPartial": "'{{pagingGroupName}}' paging group has been created successfully but following members ids did not get added: '{{message}}'",
     "errorSaveInitiatorPartial": "'{{pagingGroupName}}' paging group has been created successfully but following initiators ids did not get added: '{{message}}'",
     "sayInvalidChar": "Invalid character. {{char}} is not allowed.",
-    "errorGetNumber": "'{{pagingGroupName}}' paging group was not able to get the number assigned to this group.",
+    "errorGetNumber": "'{{pagingGroupName}}' paging group was not able to get the number assigned to this group. Please contact the support team.",
     "loadError": "An error while loading the paging groups."
   },
   "telephonyPreview": {
@@ -6124,9 +6129,9 @@
     "labelOrgName": "Jabber Messenger Organization Name",
     "labelUnauthorizedUser": "Unauthorized User",
     "loading": "Loading Jabber Messenger Synchronization Status",
-    "orgAdminLinkText": "Launch Jabber Messenger Admin Tool",
+    "orgAdminLinkText": "Launch Cisco WebEx Messenger Admin Tool",
     "orgAdminLinkTooltip": "Continue to mange your Jabber users in the Messenger Org Admin tool",
-    "pageTitle": "Jabber Messenger",
+    "pageTitle": "WebEx Messenger",
     "patchSuccessful": "Jabber Messenger Sync updated successfully",
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
@@ -7127,7 +7132,7 @@
         "title": "Message",
         "description": "Cisco Spark configurations for your organization and individuals.",
         "buttons": {
-          "webexMessenger": "Webex Messenger"
+          "webexMessenger": "WebEx Messenger"
         }
       },
       "meeting": {
@@ -7155,11 +7160,11 @@
         }
       },
       "clusterList": {
-        "title": "Clusters",
-        "description": "On-premises clusters and configuration for your organization.",
+        "title": "On-Premises Resources",
+        "description": "Manage resources that are registered to the cloud and view related configuration.",
         "buttons": {
-          "none": "0 Clusters",
-          "all": "All Clusters",
+          "none": "0 Resources",
+          "all": "All Resources",
           "expressway": "Expressway",
           "mediafusion": "Media Fusion",
           "context": "Context"
@@ -7214,7 +7219,9 @@
         "description": "Extends your organization lorem ipsum dolor sit amet consectetur adipiscing elit cras ut imperdiet augue.",
         "buttons": {
           "verify": "Verify prerequisites",
-          "view": "View prerequisites"
+          "view": "View prerequisites",
+          "resources": "Resources",
+          "settings": "Settings"
         },
         "error": {
           "invalidMaxLength": "Domain/SRV length cannot be more than {{max}}.",
@@ -7231,9 +7238,11 @@
         "setupDescription": "Before you set up Private Trunking, complete the following prerequisites. See the <a ng-click=\"{{onclick}}\">documentation</a> for guidance.",
         "domainVerification": "Domain verification",
         "domainError": "You don't have any verified domain. You need at least one verified domain for setting up Enterprise Private Trunking. ",
+        "domains": "Domains",
         "verifyADomain": "Verify a domain",
         "verifiedDomain": "You have multiple verified domains.",
         "aVerifiedDomain": "is a verfied domain",
+        "domainDesc": "Select a domain that you want to use for private trunking. Click Settings and go to the Domains section to add and verify domains.",
         "basicConnectivity": "Basic connectivity between the cloud and on-premises",
         "certificateHelp": "The Spark Call certificate authority are in the Expresssway-E trust store. See ",
         "help": "<a ng-click=\"{{onclick}}\">help</a>.",
@@ -7275,7 +7284,11 @@
         "interSite": "Inter-site dialling between your on premise endpoints and Spark call endpoints.",
         "pstn": "PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•",
         "pstnConnectivity": "PSTN connectivity",
-        "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:"
+        "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
+        "deactivateTitle": "Deactivate Enterprise Private Trunk",
+        "deactivateConfirm": "Are you sure to deactivate Private Trunk?",
+        "deactivateSuccess": "Enterprise Private Trunk has been successfully deactivated",
+        "deactivateError": "Enterprise Private Trunk could not be deactivated"
       }
     },
     "showMore": "View all",

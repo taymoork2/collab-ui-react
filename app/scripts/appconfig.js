@@ -2808,7 +2808,7 @@
             templateUrl: 'modules/huron/details/huronDetails.html',
           })
           .state('hurondetails', {
-            url: '/hurondetails',
+            url: '/services/call',
             parent: 'hurondetailsBase',
             views: {
               'header': {
@@ -3299,7 +3299,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hercules/private-trunk/overview'));
+                  done(require('modules/hercules/private-trunk/private-trunk-overview'));
                 }, 'private-trunk-overview');
               }),
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -3308,22 +3308,25 @@
             },
           })
           .state('private-trunk-overview.settings', {
-            url: '/private-trunk-overview/settings',
+            url: '/settings',
             views: {
-              'privateTrunkSettings': {
-                templateUrl: 'modules/hercules/private-trunk/overview/private-trunk-overview-settings.html',
+              privateTrunkSettings: {
+                template: '<private-trunk-overview-settings has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview-settings>',
               },
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hercules/private-trunk/overview'));
-                }, 'private-trunk-overview');
+                  done(require('modules/hercules/private-trunk/private-trunk-overview-settings'));
+                }, 'private-trunk-overview-settings');
               }),
+              hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
+              },
             },
           })
           .state('private-trunk-overview.list', {
-            url: '/private-trunk-overview/list',
+            url: '/list',
             views: {
               sipDestinationList: {
                 template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',

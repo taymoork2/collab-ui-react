@@ -98,25 +98,6 @@
         </div>
       </div>
 
-      <!-- Original Search -->
-      <div ng-if="!ediscoverySearchCtrl.ediscoveryToggle">
-        <div class="main-heading">
-          <h1 translate="ediscovery.heading"></h1>
-          <span translate="ediscovery.subheading"></span>
-        </div>
-        <div class="typeahead-large">
-          <input maxlength="50" spellcheck="false" class="fit" type="search" tabindex="1" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
-          <button type="submit" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
-          <div class="input-description"></div>
-        </div>
-
-        <p class="search-tip" translate="ediscovery.searchTip"></p>
-
-        <div class="search-error" ng-if="ediscoverySearchCtrl.warning">
-          <span>{{ediscoverySearchCtrl.error}}</span>
-        </div>
-      </div>
-
       <div ng-show="ediscoverySearchCtrl.searchingForRoom">
         <span class="search-spinner">
           <i class="icon icon-spinner"></i>
