@@ -6177,7 +6177,7 @@
     "feedback_chat": "Feedback",
     "feedback_chatPlusCallback": "Chat Feedback",
     "feedbackCallback_callback": "Feedback",
-    "feedbackCallback_chatPlusCallback": "Call Feedback",
+    "feedbackCallback_chatPlusCallback": "Callback Feedback",
     "agentUnavailable_chat": "Agent Unavailable",
     "agentUnavailable_callback": "Agent Unavailable",
     "agentUnavailable_chatPlusCallback": "Agent Unavailable for Chat",
