@@ -78,8 +78,11 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button class="btn" ng-click="$ctrl.dismiss()">
+  <button class="btn" ng-if="!$ctrl.firstTimeSetup" ng-click="$ctrl.dismiss()">
     <span translate="common.cancel"></span>
+  </button>
+  <button class="btn" ng-if="$ctrl.firstTimeSetup && $ctrl.currentStep !== 'completion'" ng-click="$ctrl.back()">
+    <span translate="common.back"></span>
   </button>
   <button class="btn btn--primary" ng-if="$ctrl.currentStep !== 'completion'" ng-disabled="!$ctrl.canGoNext()" ng-click="$ctrl.next()" cs-btn loading="$ctrl.processing">
     <span translate="common.next"></span>
