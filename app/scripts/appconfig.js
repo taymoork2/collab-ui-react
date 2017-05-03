@@ -2821,7 +2821,6 @@
             templateUrl: 'modules/huron/details/huronDetails.html',
           })
           .state('hurondetails', {
-            url: '/hurondetails',
             parent: 'hurondetailsBase',
             views: {
               'header': {
@@ -2840,7 +2839,7 @@
             },
           })
           .state('huronlines', {
-            url: '/lines',
+            url: '/services/call-lines',
             parent: 'hurondetails',
             templateUrl: 'modules/huron/lines/lineList.tpl.html',
             controller: 'LinesListCtrl',
@@ -2867,7 +2866,7 @@
             },
           })
           .state('huronsettings', {
-            url: '/settings',
+            url: '/services/call-settings',
             parent: 'hurondetails',
             templateUrl: 'modules/huron/settings/settings.tpl.html',
             controller: 'HuronSettingsCtrl',
@@ -2875,7 +2874,7 @@
           })
           // TODO (jlowery): rename the huronsettingsnew to huronsettings state when sparkCallTenDigitExt is removed.
           .state('huronsettingsnew', {
-            url: '/settingsnew',
+            url: '/services/call-settingsnew',
             parent: 'hurondetails',
             template: '<uc-settings ftsw="false"></uc-settings>',
             resolve: {
@@ -2903,7 +2902,7 @@
             },
           })
           .state('huronfeatures', {
-            url: '/features',
+            url: '/services/call-features',
             parent: 'hurondetails',
             templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
             controller: 'HuronFeaturesCtrl',
