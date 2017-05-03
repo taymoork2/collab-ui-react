@@ -20,16 +20,18 @@
         'encryptedQueryString': encryptedParam,
       };
       $http.post(csadminUrl, csadminData)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
         });
     }
   }

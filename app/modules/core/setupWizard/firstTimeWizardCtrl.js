@@ -17,8 +17,8 @@
       }).then(function () {
         if (Authinfo.isAdmin()) {
           return Auth.getCustomerAccount(Authinfo.getOrgId())
-            .success(function (data, status) {
-              Authinfo.updateAccountInfo(data, status);
+            .then(function (response) {
+              Authinfo.updateAccountInfo(response.data, response.status);
             });
         }
       }).finally(function () {

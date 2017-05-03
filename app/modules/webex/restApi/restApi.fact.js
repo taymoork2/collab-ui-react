@@ -27,13 +27,13 @@
 
       $http(
         httpReq
-      ).success(
-        function (data) {
-          resolve(data);
+      ).then(
+        function (response) {
+          resolve(response.data);
         }
-      ).error(
-        function (data) {
-          reject(data);
+      ).catch(
+        function (response) {
+          reject(response.data);
         }
       );
     }; //sendRestApiReq()

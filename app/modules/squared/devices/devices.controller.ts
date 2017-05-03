@@ -101,15 +101,16 @@ export class DevicesController {
 
     this.huronDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
 
-    AccountOrgService.getAccount(Authinfo.getOrgId()).success((data) => {
-      let hasNoSuspendedLicense = !!_.find(data.accounts, {
-        licenses: [{
-          offerName: 'SD',
-          status: 'SUSPENDED',
-        }],
+    AccountOrgService.getAccount(Authinfo.getOrgId())
+      .then((response) => {
+        let hasNoSuspendedLicense = !!_.find(response.data.accounts, {
+          licenses: [{
+            offerName: 'SD',
+            status: 'SUSPENDED',
+          }],
+        });
+        this.licenseError = hasNoSuspendedLicense ? $translate.instant('spacesPage.licenseSuspendedWarning') : '';
       });
-      this.licenseError = hasNoSuspendedLicense ? $translate.instant('spacesPage.licenseSuspendedWarning') : '';
-    });
 
     this.gridOptions = {
       data: 'sc.filteredView.getResult()',

@@ -32,6 +32,7 @@ module.exports = {
     'angular/di-unused': 2,
     'angular/json-functions': 0,
     'angular/module-getter': 0,
+    'angular/no-http-callback': 2,
     'angular/no-private-call': 0,
     'angular/no-service-method': 0,
     'angular/no-services': 0,
@@ -39,6 +40,7 @@ module.exports = {
     'angular/timeout-service': 0,
     'angular/typecheck-array': 0,
     'angular/typecheck-function': 0,
+    'angular/service-name': 0,
     'angular/window-service': 0,
   },
   globals: {
