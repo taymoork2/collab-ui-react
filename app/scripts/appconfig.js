@@ -2808,7 +2808,7 @@
             templateUrl: 'modules/huron/details/huronDetails.html',
           })
           .state('hurondetails', {
-            url: '/services/call',
+            url: '/hurondetails',
             parent: 'hurondetailsBase',
             views: {
               'header': {

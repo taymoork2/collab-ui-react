@@ -49,7 +49,7 @@ export class Hub {
   constructor() {
   }
 
-  public on(event, listener, opts) {
+  public on = (event, listener, opts) => {
     let subscription = new Subscription(event, listener, this.channels, (subscription) => {
       this.emitListenerRemoved(subscription);
     });
