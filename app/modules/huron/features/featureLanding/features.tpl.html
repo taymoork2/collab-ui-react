@@ -28,9 +28,8 @@
       </div>
     </div>
     <!--Show Spinner Icon until controller receives data from back-end-->
-    <div ng-if="huronFeaturesCtrl.pageState == 'Loading'" class="spinner-icon">
-      <i class='icon icon-spinner icon-2x'></i>
-    </div>
+    <div grid-spinner="huronFeaturesCtrl.pageState == 'Loading'"></div>
+
     <!-- Show Cards whenever data is received by controller-->
     <feature-cards ng-if="huronFeaturesCtrl.pageState == 'showFeatures'"></feature-cards>
   </div>

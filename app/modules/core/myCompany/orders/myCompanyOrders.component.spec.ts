@@ -51,7 +51,7 @@ describe('Component: myCompanyOrders', () => {
   describe('before data loaded', () => {
     it('should have loading icon with no data', function () {
       expect(this.view).not.toContainElement('.ui-grid-row');
-      expect(this.view).toContainElement('.grid-refresh .icon-spinner');
+      expect(this.view).toContainElement('.grid-spinner');
     });
   });
 
@@ -66,7 +66,7 @@ describe('Component: myCompanyOrders', () => {
 
     it('should not have loading icon or data', function () {
       expect(this.view).not.toContainElement('.ui-grid-row');
-      expect(this.view).not.toContainElement('.grid-refresh .icon-spinner');
+      expect(this.view).not.toContainElement('.grid-spinner');
       expect(this.controller.orderDetailList).toEqual([]);
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(jasmine.any(Object), 'myCompanyOrders.loadError');
     });
@@ -89,7 +89,7 @@ describe('Component: myCompanyOrders', () => {
 
     it('should have a data row and no loading icon', function () {
       expect(this.view).toContainElement('.ui-grid-row');
-      expect(this.view).not.toContainElement('.grid-refresh .icon-spinner');
+      expect(this.view).not.toContainElement('.grid-spinner');
     });
 
     // TODO investigate more on unit testing ui-grid sorting

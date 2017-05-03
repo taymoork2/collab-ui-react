@@ -20,15 +20,11 @@
     </cs-page-sub-header-right>
 
   </cs-page-sub-header>
-  <div id="usersListPanel" class="row grid">
-    <div class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
-    <div class="grid-refresh" ng-if="gridRefresh">
-      <i class='icon icon-spinner icon-2x'></i>
-    </div>
-    <div class="too-many-users" ng-if="activeFilter === 'all' && tooManyUsers">
-      <p class="h2" translate="usersPage.searchUser"></p>
-      <p class="h4" translate="usersPage.tooManyUsers"></p>
-    </div>
+  <div class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll grid-spinner="gridRefresh">
+  </div>
+  <div class="too-many-users" ng-if="activeFilter === 'all' && tooManyUsers">
+    <p class="h2" translate="usersPage.searchUser"></p>
+    <p class="h4" translate="usersPage.tooManyUsers"></p>
   </div>
 </div>
 <div ng-class="{preview: userPreviewActive, details: userDetailsActive}" class="user-management">
