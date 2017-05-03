@@ -19,9 +19,9 @@
       listSites: function () {
         return SiteService.query({
           customerId: Authinfo.getOrgId(),
-        }, angular.bind(this, function (sites) {
+        }, _.bind(function (sites) {
           this.sites = sites;
-        })).$promise;
+        }, this)).$promise;
       },
 
       getSite: function (siteUuid) {
@@ -91,7 +91,7 @@
           pattern,
           ExternalNumberPool.UNASSIGNED_NUMBERS,
           ExternalNumberPool.FIXED_LINE_OR_MOBILE
-        ).then(angular.bind(this, function (extPool) {
+        ).then(_.bind(function (extPool) {
           _.forEach(extPool, function (extNum) {
             extNumPool.push({
               uuid: extNum.uuid,
@@ -99,7 +99,7 @@
             });
           });
           this.externalNumberPool = extNumPool;
-        }));
+        }, this));
       },
 
       listVoicemailTimezone: function () {
@@ -185,9 +185,9 @@
       listInternalNumberRanges: function () {
         return InternalNumberRangeService.query({
           customerId: Authinfo.getOrgId(),
-        }, angular.bind(this, function (internalNumberRanges) {
+        }, _.bind(function (internalNumberRanges) {
           this.internalNumberRanges = internalNumberRanges;
-        })).$promise;
+        }, this)).$promise;
       },
 
       getDateFormats: function () {
@@ -262,9 +262,9 @@
       listCosRestrictions: function () {
         return CustomerCosRestrictionServiceV2.get({
           customerId: Authinfo.getOrgId(),
-        }, angular.bind(this, function (cosRestrictions) {
+        }, _.bind(function (cosRestrictions) {
           this.cosRestrictions = cosRestrictions;
-        })).$promise;
+        }, this)).$promise;
       },
 
       updateCosRestriction: function (cosEnabled, cosUuid, cosType) {
