@@ -304,26 +304,40 @@
     }; // getEnableT30UnifiedAdmin()
 
     obj.getOrgWebexLicenses = function (orgInfo) {
+      var funcName = "getOrgWebexLicenses()";
+      var logMsg = "";
+
       var orgWebexLicenses = [];
 
       if (null != orgInfo) {
-        var customerInfo = _.get(orgInfo, 'data.customers[0]');
-        var custLicenses = customerInfo.licenses;
-        var custSubscriptions = customerInfo.subscriptions;
+        var customerOrderIDs = orgInfo.data.customers;
 
-        if (null != custLicenses) {
-          orgWebexLicenses = orgWebexLicenses.concat(custLicenses);
-        } else if (null != custSubscriptions) {
-          custSubscriptions.forEach(
-            function (custSubscription) {
-              var subscriptionLicenses = custSubscription.licenses;
-
-              if (null != subscriptionLicenses) {
-                orgWebexLicenses = orgWebexLicenses.concat(subscriptionLicenses);
-              }
-            }
-          );
+        if (1 < customerOrderIDs.size) {
+          logMsg = funcName + "\n" +
+            "customerOrderIDs.size=" + customerOrderIDs.size;
+          $log.log(logMsg);
         }
+
+        customerOrderIDs.forEach(
+          function customer(customerOrderID) {
+            var custLicenses = customerOrderID.licenses;
+            var custSubscriptions = customerOrderID.subscriptions;
+
+            if (null != custLicenses) {
+              orgWebexLicenses = orgWebexLicenses.concat(custLicenses);
+            } else if (null != custSubscriptions) {
+              custSubscriptions.forEach(
+                function (custSubscription) {
+                  var subscriptionLicenses = custSubscription.licenses;
+
+                  if (null != subscriptionLicenses) {
+                    orgWebexLicenses = orgWebexLicenses.concat(subscriptionLicenses);
+                  }
+                }
+              );
+            }
+          }
+        );
       }
 
       return orgWebexLicenses;
