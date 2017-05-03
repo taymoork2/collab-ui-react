@@ -3,6 +3,7 @@ import { Notification } from '../../../core/notifications/notification.service';
 import { PaginateOptions } from '../paging-option.model';
 import { PstnService } from '../pstn.service';
 import { PstnModel } from '../pstn.model';
+import { HuronCompassService } from '../../compass/compass.service';
 
 export class PstnTrialSetupComponent implements ng.IComponentOptions {
   public controller = PstnTrialSetupCtrl;
@@ -29,6 +30,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   public validation: boolean = false;
   public addressFound: boolean = false;
   public readOnly: boolean = false;
+  public dismiss: Function;
 
   /* @ngInject */
   constructor(private PstnModel: PstnModel,
@@ -40,7 +42,8 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
               private $timeout: ng.ITimeoutService,
               private Analytics,
               private PstnServiceAddressService,
-              private $translate: ng.translate.ITranslateService) {
+              private $translate: ng.translate.ITranslateService,
+              private HuronCompassService: HuronCompassService) {
     this.trialData = this.TrialPstnService.getData();
     this.SWIVEL = SWIVEL;
     this.parentTrialData = $scope.$parent.trialData;
@@ -245,6 +248,11 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
       this.TrialPstnService.resetAddress();
     }
     this.trial.previousStep();
+  }
+
+  public dismissModal() {
+    this.HuronCompassService.setIsCustomer(false);
+    this.dismiss();
   }
 
 }

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var LazyResource = require('modules/core/scripts/services/lazyResource').default;
+
   module.exports = angular
     .module('huron.resources', [
       require('angular-resource'),
@@ -126,7 +128,9 @@
 
   /* @ngInject */
   function CustomerCommonService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId', {
+    return LazyResource($resource, function () {
+      return HuronConfig.getCmiUrl() + '/common/customers/:customerId';
+    }, {
       customerId: '@customerId',
     }, {
       update: {
@@ -185,7 +189,9 @@
 
   /* @ngInject */
   function NumberSearchServiceV2($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers', {
+    return LazyResource($resource, function () {
+      return HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers';
+    }, {
       customerId: '@customerId',
       number: '@number',
       assigned: '@assigned',
@@ -295,7 +301,9 @@
 
   /* @ngInject */
   function ExternalNumberPoolService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId', {
+    return LazyResource($resource, function () {
+      return HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId';
+    }, {
       customerId: '@customerId',
       externalNumberId: '@externalNumberId',
     });

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var LazyResource = require('modules/core/scripts/services/lazyResource').default;
+
   module.exports = angular.module('huron.TerminusServices', [
     require('angular-resource'),
     require('modules/huron/telephony/telephonyConfig'),
@@ -38,7 +40,9 @@
 
   /* @ngInject */
   function TerminusCustomerService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId', {}, {
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusUrl() + '/customers/:customerId';
+    }, {}, {
       update: {
         method: 'PUT',
       },
@@ -47,7 +51,9 @@
 
   /* @ngInject */
   function TerminusCustomerV2Service($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId', {}, {
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/customers/:customerId';
+    }, {}, {
       update: {
         method: 'PUT',
       },
@@ -56,7 +62,9 @@
 
   /* @ngInject */
   function TerminusCustomerTrialV2Service($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/trials', {}, {
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/customers/:customerId/trials';
+    }, {}, {
       update: {
         method: 'PUT',
       },
@@ -65,22 +73,30 @@
 
   /* @ngInject */
   function TerminusResellerCarrierService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/resellers/:resellerId/carriers/:carrierId', {}, {});
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusUrl() + '/resellers/:resellerId/carriers/:carrierId';
+    }, {}, {});
   }
 
   /* @ngInject */
   function TerminusResellerCarrierV2Service($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/resellers/:resellerId/carriers/:carrierId', {}, {});
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/resellers/:resellerId/carriers/:carrierId';
+    }, {}, {});
   }
 
   /* @ngInject */
   function TerminusCustomerCarrierService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId', {}, {});
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId';
+    }, {}, {});
   }
 
   /* @ngInject */
   function TerminusCustomerSiteService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/sites/:siteId', {}, {
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusUrl() + '/customers/:customerId/sites/:siteId';
+    }, {}, {
       update: {
         method: 'PUT',
       },
@@ -89,12 +105,16 @@
 
   /* @ngInject */
   function TerminusCustomerCarrierDidService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/:type', {}, {});
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/:type';
+    }, {}, {});
   }
 
   /* @ngInject */
   function TerminusCustomerPortService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/ports', {}, {});
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/ports';
+    }, {}, {});
   }
 
   /* @ngInject */
@@ -104,22 +124,30 @@
 
   /* @ngInject */
   function TerminusOrderV2Service($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/:orderId', {}, {});
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/:orderId';
+    }, {}, {});
   }
 
   /* @ngInject */
   function TerminusCustomerNumberService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/:number', {}, {});
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/:number';
+    }, {}, {});
   }
 
   /* @ngInject */
   function TerminusCarrierService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {});
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusUrl() + '/carriers/:carrierId';
+    }, {});
   }
 
   /* @ngInject */
   function TerminusCarrierV2Service($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/carriers/:carrierId', {});
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/carriers/:carrierId';
+    }, {});
   }
 
   /* @ngInject */
@@ -135,7 +163,9 @@
 
     /* @ngInject */
   function TerminusV2LookupE911Service($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/e911/lookup');
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/e911/lookup';
+    });
   }
 
   /* @ngInject */
@@ -149,17 +179,23 @@
 
   /* @ngInject */
   function TerminusV2CarrierNumberService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/numbers');
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/numbers';
+    });
   }
 
   /* @ngInject */
   function TerminusV2CarrierNumberCountService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/numbers/count');
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/numbers/count';
+    });
   }
 
   /* @ngInject */
   function TerminusV2CarrierCapabilitiesService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/capabilities', {}, {
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/capabilities';
+    }, {}, {
       query: {
         method: 'GET',
         isArray: true,
@@ -175,7 +211,9 @@
 
   /* @ngInject */
   function TerminusV2CustomerNumberOrderBlockService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/blocks');
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/blocks';
+    });
   }
 
   /* @ngInject */
@@ -185,7 +223,9 @@
 
   /* @ngInject */
   function TerminusV2CustomerNumberReservationService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/reservations/:reservationId', {}, {
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/reservations/:reservationId';
+    }, {}, {
       save: {
         headers: {
           'Access-Control-Expose-Headers': 'Location',
@@ -202,12 +242,16 @@
 
   /* @ngInject */
   function TerminusV2ResellerService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/resellers/:resellerId');
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/resellers/:resellerId';
+    });
   }
 
   /* @ngInject */
   function TerminusV2ResellerCarrierNumberReservationService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/resellers/:resellerId/carriers/:carrierId/numbers/reservations', {}, {
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/resellers/:resellerId/carriers/:carrierId/numbers/reservations';
+    }, {}, {
       save: {
         headers: {
           'Access-Control-Expose-Headers': 'Location',
@@ -219,6 +263,8 @@
 
   /* @ngInject */
   function TerminusV2ResellerNumberReservationService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/resellers/:resellerId/numbers/reservations/:reservationId');
+    return LazyResource($resource, function () {
+      return HuronConfig.getTerminusV2Url() + '/resellers/:resellerId/numbers/reservations/:reservationId';
+    });
   }
 })();

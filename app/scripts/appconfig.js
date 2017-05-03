@@ -2239,6 +2239,16 @@
               currentCustomer: {},
             },
             data: {},
+            onEnter: /* @ngInject */ function (Orgservice, $stateParams, HuronCompassService) {
+              HuronCompassService.setIsCustomer(true);
+              Orgservice.isTestOrg($stateParams.currentCustomer.customerOrgId).then(function (result) {
+                $stateParams.isTestOrg = result;
+              });
+            },
+            onExit: /* @ngInject */ function (HuronCompassService) {
+              HuronCompassService.setIsCustomer(false);
+              HuronCompassService.setCustomerBaseDomain();
+            },
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
@@ -2604,6 +2614,9 @@
               currentTrial: {},
               details: {},
               mode: {},
+            },
+            onEnter: /* @ngInject */ function (HuronCompassService) {
+              HuronCompassService.setIsCustomer(true);
             },
           })
           .state('trial.info', {

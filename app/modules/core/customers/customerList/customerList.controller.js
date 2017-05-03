@@ -9,7 +9,7 @@ require('./_customer-list.scss');
   /* @ngInject */
   function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window,
     Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log,
-    Notification, Orgservice, PartnerService, TrialService, uiGridSelectionService) {
+    Notification, Orgservice, PartnerService, TrialService, uiGridSelectionService, HuronCompassService) {
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -732,6 +732,7 @@ require('./_customer-list.scss');
       }
 
       vm.currentTrial = customer;
+      HuronCompassService.setIsCustomer(true);
       $state.go('customer-overview', {
         currentCustomer: customer,
       });

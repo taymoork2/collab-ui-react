@@ -5,7 +5,7 @@
     .controller('TrialCtrl', TrialCtrl);
 
   /* @ngInject */
-  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService) {
+  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, HuronCompassService) {
     var vm = this;
     vm.careTypes = {
       K1: 1,
@@ -434,6 +434,7 @@
     }
 
     function closeDialogBox() {
+      cancelCustomer();
       sendToAnalytics(Analytics.sections.TRIAL.eventNames.NO);
       $state.modal.close();
     }
@@ -715,6 +716,7 @@
         customerOrgName: customerOrgName,
       }));
       $state.modal.close();
+      cancelCustomer();
     }
 
     function showDefaultFinish() {
@@ -737,7 +739,13 @@
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
     }
 
+    function cancelCustomer() {
+      HuronCompassService.setIsCustomer(false);
+      HuronCompassService.setCustomerBaseDomain();
+    }
+
     function cancelModal() {
+      cancelCustomer();
       $state.modal.dismiss();
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }

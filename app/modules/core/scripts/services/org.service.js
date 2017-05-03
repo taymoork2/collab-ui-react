@@ -25,7 +25,7 @@
     .name;
 
   /* @ngInject */
-  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Log, UrlConfig, Utils) {
+  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Log, UrlConfig, Utils, HuronCompassService) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -52,6 +52,7 @@
 
     var savedOrgSettingsCache = [];
     var isTestOrgCache = {};
+    var domainCache = {};
 
     return service;
 
@@ -258,10 +259,17 @@
         orgId = Authinfo.getOrgId();
       }
       if (_.isBoolean(isTestOrgCache[orgId])) {
+        HuronCompassService.setCustomerBaseDomain(domainCache[orgId]);
         return $q.resolve(isTestOrgCache[orgId]);
       }
       return getAdminOrgAsPromise(orgId, { basicInfo: true })
         .then(function (org) {
+          var orgSettings = _.get(org, 'data.orgSettings[0]');
+          if (orgSettings) {
+            var domain = JSON.parse(orgSettings).sparkCallBaseDomain;
+            HuronCompassService.setCustomerBaseDomain(domain);
+            domainCache[orgId] = domain;
+          }
           isTestOrgCache[orgId] = _.get(org, 'data.isTestOrg', false);
           return isTestOrgCache[orgId];
         });
