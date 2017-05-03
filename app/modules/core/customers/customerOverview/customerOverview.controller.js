@@ -38,7 +38,7 @@ require('./_customer-overview.scss');
     vm.isTest = false;
     vm.countryCode = 'US';
     vm.isDeleting = false;
-    vm.isOrgSetup = false;
+    vm.isOrgSetup = null;
     vm.isUpdateStatusEnabled = true;
 
     vm.partnerOrgId = Authinfo.getOrgId();
