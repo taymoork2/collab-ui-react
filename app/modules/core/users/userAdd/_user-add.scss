@@ -507,6 +507,11 @@
     height: calc(100vh - 370px);
     width: 100%;
 
+    .ui-grid-row,
+    .ui-grid-cell {
+      height: rem-calc(60);
+    }
+
     .ngTopPanel {
       width: 100% !important;
       background-color: $gray-lightest;
@@ -584,6 +589,8 @@
       font-family: Arial;
       font-size: 12px;
       text-align: left;
+      top: rem-calc(-4);
+      position: relative;
     }
   }
 
