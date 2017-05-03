@@ -140,10 +140,15 @@ describe('Controller: CustomerOverviewCtrl', function () {
   it('should display correct customer portal launch button via var isOrgSetup', function () {
     // isOrgSetup is false from spyOn in beforeEach
     expect(controller.isOrgSetup).toBe(false);
-
     Orgservice.isSetupDone.and.returnValue($q.resolve(true));
     initController();
     expect(controller.isOrgSetup).toBe(true);
+    Orgservice.isSetupDone.and.returnValue($q.reject());
+    initController();
+    expect(controller.isOrgSetup).toBe(null);
+    Orgservice.isSetupDone.and.returnValue($q.resolve(false));
+    initController();
+    expect(controller.isOrgSetup).toBe(false);
   });
 
   it('should display number of days left', function () {
