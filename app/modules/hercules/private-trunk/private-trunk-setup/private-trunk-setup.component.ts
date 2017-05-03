@@ -65,6 +65,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
     if (_.isUndefined(this.domainSelected)) {
       this.domainSelected = [];
     }
+    this.initCertificateInfo();
   }
 
   public initDomainInfo(): void {
@@ -155,8 +156,10 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public initCertificateInfo(): void {
     this.PrivateTrunkCertificateService.readCerts()
       .then((cert) => {
-        this.formattedCertList = cert.formattedCertList;
-        this.isImporting = cert.isImporting;
+        if (!_.isUndefined(cert)) {
+          this.formattedCertList = cert.formattedCertList;
+          this.isCertificateDefault =  (!_.isArray(this.formattedCertList) || this.formattedCertList.length === 0);
+        }
       });
   }
 
