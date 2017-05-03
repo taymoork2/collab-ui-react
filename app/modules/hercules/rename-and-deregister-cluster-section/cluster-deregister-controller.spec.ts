@@ -1,6 +1,6 @@
 describe('ClusterDeregisterController', () => {
 
-  let $controller, $scope, $q, EnterprisePrivateTrunkService, FusionClusterService;
+  let $controller, $scope, $q, PrivateTrunkService, FusionClusterService;
 
   const modalInstanceMock = {
     close: jasmine.createSpy('close'),
@@ -10,11 +10,11 @@ describe('ClusterDeregisterController', () => {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies (_$controller_, $rootScope, _$q_, _EnterprisePrivateTrunkService_, _FusionClusterService_): void {
+  function dependencies (_$controller_, $rootScope, _$q_, _PrivateTrunkService_, _FusionClusterService_): void {
     $controller = _$controller_;
     $scope = $rootScope.$new();
     $q = _$q_;
-    EnterprisePrivateTrunkService = _EnterprisePrivateTrunkService_;
+    PrivateTrunkService = _PrivateTrunkService_;
     FusionClusterService = _FusionClusterService_;
   }
 
@@ -26,7 +26,7 @@ describe('ClusterDeregisterController', () => {
   }
 
   function initSpies() {
-    spyOn(EnterprisePrivateTrunkService, 'deleteTrunk').and.returnValue($q.resolve({}));
+    spyOn(PrivateTrunkService, 'removePrivateTrunkResource').and.returnValue($q.resolve({}));
     spyOn(FusionClusterService, 'deregisterCluster').and.returnValue($q.resolve({}));
   }
 
@@ -42,7 +42,7 @@ describe('ClusterDeregisterController', () => {
       let controller: any = initController(trunkResource);
       controller.deregister();
       $scope.$apply();
-      expect(EnterprisePrivateTrunkService.deleteTrunk).toHaveBeenCalled();
+      expect(PrivateTrunkService.removePrivateTrunkResource).toHaveBeenCalled();
       expect(FusionClusterService.deregisterCluster).not.toHaveBeenCalled();
     });
 
@@ -60,7 +60,7 @@ describe('ClusterDeregisterController', () => {
       let controller: any = initController(trunkResource);
       controller.deregister();
       $scope.$apply();
-      expect(EnterprisePrivateTrunkService.deleteTrunk).not.toHaveBeenCalled();
+      expect(PrivateTrunkService.removePrivateTrunkResource).not.toHaveBeenCalled();
       expect(FusionClusterService.deregisterCluster).toHaveBeenCalled();
     });
 
@@ -74,7 +74,7 @@ describe('ClusterDeregisterController', () => {
       let controller: any = initController(trunkResource);
       controller.deregister();
       $scope.$apply();
-      expect(EnterprisePrivateTrunkService.deleteTrunk).not.toHaveBeenCalled();
+      expect(PrivateTrunkService.removePrivateTrunkResource).not.toHaveBeenCalled();
       expect(FusionClusterService.deregisterCluster).toHaveBeenCalled();
     });
 

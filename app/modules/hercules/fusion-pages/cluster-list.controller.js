@@ -68,7 +68,7 @@
           return _.map(destinations, function (destination) {
             return {
               name: destination.name,
-              id: destination.resourceId,
+              id: destination.uuid,
               targetType: 'ept',
               servicesStatuses: [{
                 serviceId: 'ept',

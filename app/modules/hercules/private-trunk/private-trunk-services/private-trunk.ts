@@ -10,6 +10,6 @@ export interface IPrivateTrunkDomain {
 }
 
 export interface IPrivateTrunkInfo {
-  resources: IPrivateTrunkResource;
+  resources: Array<IPrivateTrunkResource>;
   domains: Array<string> | undefined;
 }
