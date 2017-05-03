@@ -254,6 +254,57 @@
 
     });
 
+    describe('collectThisCeActionValue', function () {
+      it('should find the variable from runActionsOnInput (callerInput)', function () {
+
+        var aaUiModel = {};
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+        aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.inputType = 2;
+        action.variableName = 'My variable name';
+
+        aaUiModel['openHours'].entries[0].addAction(action);
+
+        var result = AACommonService.collectThisCeActionValue(aaUiModel, 'runActionsOnInput');
+        expect(result[0]).toEqual('My variable name');
+      });
+
+      it('should find the variable from conditional (decision)', function () {
+
+        var aaUiModel = {};
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+        aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
+        action.if = { 'leftCondition': 'My variable name' };
+
+        aaUiModel['openHours'].entries[0].addAction(action);
+
+        var result = AACommonService.collectThisCeActionValue(aaUiModel, 'conditional');
+        expect(result[0]).toEqual('My variable name');
+
+      });
+      it('should not find the variable from conditional (decision)', function () {
+
+        var aaUiModel = {};
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+        aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('some action name', '');
+
+        aaUiModel['openHours'].entries[0].addAction(action);
+
+        var result = AACommonService.collectThisCeActionValue(aaUiModel, 'conditional');
+        expect(result.length).toEqual(0);
+
+      });
+    });
+
     describe('keyActionAvailable', function () {
       it('should send back available keys minus 0, 1', function () {
         var expected = ['2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];

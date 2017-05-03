@@ -6,7 +6,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
+  function AABuilderActionsCtrl($scope, $translate, $controller, $modal, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, CustomVariableService) {
 
     var vm = this;
     var appendSpecialCharHelp = "<br><br>" + $translate.instant('autoAttendant.sayMessageSpecialChar');
@@ -112,16 +112,75 @@
         });
       }
     }
+    function openVarNamesModal(vname, thisCeHasVar) {
+      return $modal.open({
+        templateUrl: 'modules/huron/features/autoAttendant/builder/aaVarNames.tpl.html',
+        controller: 'AAVarNamesModalCtrl',
+        controllerAs: 'aaVarNamesModalCtrl',
+        type: 'dialog',
+        resolve: {
+          varNames: function () {
+            return vname;
+          },
+          ceHasVar: function () {
+            return thisCeHasVar;
+          },
+        },
+      }).result.then(function () {
+        // user clicked Ok
+        return true;
+      }, function () {
+        // user clicked cancel
+        return false;
+      });
+    }
+
+
+    function checkVarNameDependencies(varNameToCheck) {
+
+      var thisCeHasVar = AACommonService.collectThisCeActionValue(vm.ui, 'conditional').filter(function (value) {
+        return _.isEqual(value, varNameToCheck);
+      }).length > 0;
+
+      return CustomVariableService.getVariableDependencies(varNameToCheck).then(function (varNames) {
+        if (!_.isEmpty(varNames) || thisCeHasVar) {
+          // there are dependent Ce's
+          return openVarNamesModal(varNames, thisCeHasVar);
+        }
+        // no dependent Ces, good to go
+        return true;
+      }, function () {
+        // check for removal from this Ce
+        if (thisCeHasVar) {
+          // there are dependent Ce's
+          return openVarNamesModal([], thisCeHasVar);
+        }
+        return true;
+      });
+    }
 
     function removeAction(index) {
+
       var uiMenu = vm.ui[vm.schedule];
       var entryI = uiMenu.entries[index];
       if (AutoAttendantCeMenuModelService.isCeMenu(entryI)) {
         AutoAttendantCeMenuModelService.deleteCeMenuMap(entryI.getId());
       }
-      uiMenu.deleteEntryAt(index);
 
-      AACommonService.setActionStatus(true);
+      if (_.has(entryI, 'actions[0].variableName')) {
+        checkVarNameDependencies(entryI.actions[0].variableName).then(function (okToDelete) {
+          if (okToDelete) {
+            uiMenu.deleteEntryAt(index);
+            AACommonService.setActionStatus(true);
+          }
+        });
+
+      } else {
+
+        uiMenu.deleteEntryAt(index);
+
+        AACommonService.setActionStatus(true);
+      }
     }
 
     function setOption() {
@@ -166,6 +225,7 @@
     }
 
     function activate() {
+
       setFeatureToggledActions();
       vm.index = $scope.index;
       vm.schedule = $scope.schedule;
