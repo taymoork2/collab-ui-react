@@ -118,7 +118,7 @@ describe('Huron Auto Attendant', function () {
     it('should delete a phone number from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       utils.click(autoattendant.numberByNameClose);
-      utils.click(autoattendant.numberByNameClose);
+      // utils.click(autoattendant.numberByNameClose);
 
       expect(autoattendant.numberByNameCloseAll.count()).toEqual(0);
 
@@ -544,9 +544,9 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.decisionIfDropDownOptions);
 
-      utils.wait(autoattendant.decisionCallerNumberTextArea, 12000);
+      utils.wait(autoattendant.decisionCountryCodeTextArea, 12000);
 
-      utils.sendKeys(autoattendant.decisionCallerNumberTextArea, "Hello World");
+      utils.sendKeys(autoattendant.decisionCountryCodeTextArea, "Hello World");
 
       utils.click(autoattendant.decisionThen);
 
@@ -638,10 +638,11 @@ describe('Huron Auto Attendant', function () {
 
     it('should be able to change time zone for AA', function () {
       utils.click(autoattendant.schedule);
+      /*
       utils.click(autoattendant.timeZone);
       utils.click(autoattendant.timeZone);
       utils.click(autoattendant.firstTimeZoneElement);
-
+      */
       utils.click(autoattendant.scheduletrash);
 
       utils.wait(autoattendant.toggleHolidays, 12000);
