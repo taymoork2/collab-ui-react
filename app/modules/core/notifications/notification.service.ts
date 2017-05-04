@@ -157,6 +157,8 @@ export class Notification {
       errorMsg += ' ' + error;
     } else if ((error = _.get(response, 'data.error', '')) && _.isString(error) && error.length) { // fallback for old data structure
       errorMsg += ' ' + error;
+    } else if ((error = _.get(response, 'data.message', '')) && _.isString(error) && error.length) { // fallback for format seen from services using ServerException from cisco-spark-base
+      errorMsg += ' ' + error;
     } else if (_.isString(response)) {  // fallback for custom string rejections
       errorMsg += ' ' + response;
     } else {

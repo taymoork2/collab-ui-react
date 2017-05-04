@@ -8073,6 +8073,8 @@
   "deviceSettings": {
     "title": "Device Settings",
     "softwareUpgradeChannel": "Software Upgrade Channel",
-    "deviceNotSupported": "The {{deviceType}} is not yet able to observe this setting."
+    "deviceNotSupported": "The {{deviceType}} is not yet able to observe this setting.",
+    "guiSettings": "Settings Access In UI",
+    "guiSettingsUpdated": "Settings Access In UI updated"
   }
 }
