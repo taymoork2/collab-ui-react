@@ -52,7 +52,7 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
     //     this.saving = false;
     //   })
     //   .catch((err) => {
-    //     this.Notification.errorWithTrackingId(err, 'hercules.settings.googleCalendar.setupModal.testAccount.error');
+    //     this.Notification.errorWithTrackingId(err, 'hercules.gcalSetupModal.testAccount.error');
     //   })
     //   .finally(() => {
     //     this.saving = false;
