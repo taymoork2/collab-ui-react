@@ -2103,7 +2103,7 @@
       "authorization": {
         "title": "Authorize Cisco Collaboration Cloud on your G Suite account",
         "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Collaboration Cloud on your G Suite account.",
-        "item1": "In a new tab, open your <a href=\"#\" target=\"_blank\">G Suite account dashboard</a> and then go to Sevurity.",
+        "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to Sevurity.",
         "item2": "Click <strong>Show more</strong> and then <strong>Advanced settings</strong>.",
         "item3": "Click <strong>Manage API Client Access</strong>.",
         "item4": "Copy the client name and scope to your clipboard.",
@@ -2122,12 +2122,12 @@
       },
       "completion": {
         "title": "Set up completed",
-        "line1": "Great! Google Calendar is correctly configured and the service was enabled for {{email}}",
-        "line2": "You can now enable Hybrid Calendar for all your other users.",
+        "line1": "Great! Google Calendar is correctly configured.",
+        "line2": "You can now enable Hybrid Calendar for your users.",
         "line3": "To enable users, you can:",
         "item1": "Enable them individually from the <a href=\"#\">users page</a>.",
         "item2": "Enable them in bulk using the <a href=\"#\">CSV template</a>.",
-        "line4": "Refer to <a href=\"#\">documentation</a> if you need help enabling users."
+        "line4": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\">documentation</a> if you need help enabling users."
       }
     },
     "settings": {
