@@ -9,24 +9,27 @@ describe('Component: BooleanTextFieldComponent:', () => {
   });
 
   it('should render the element with the appropriate content', function () {
-    this.$scope.flag = true;
+    // - no label value? no problem, label should be 'Status'
+    // - set toggle value to true, text should be 'On'
+    this.$scope.isFakeToggleTrue = true;
     this.compileComponent('booleanTextField', {
-      ngModel: 'flag',
+      value: 'isFakeToggleTrue',
     });
     expect(this.view.html()).toContain('common.status');
     expect(this.view.html()).toContain('common.on');
 
-    this.$scope.flag = false;
-    this.compileComponent('booleanTextField', {
-      ngModel: 'flag',
-    });
+    // - set toggle value to false, text should be 'Off'
+    this.$scope.isFakeToggleTrue = false;
+    this.$scope.$apply();
     expect(this.view.html()).toContain('common.status');
     expect(this.view.html()).toContain('common.off');
 
-    delete this.$scope.flag;
+    // - pretranslated label is rendered if provided
+    // - no toggle value set? text should be 'Off'
+    delete this.$scope.isFakeToggleTrue;
     this.compileComponent('booleanTextField', {
       label: 'fake-pretranslated-label',
-      ngModel: 'flag',
+      value: 'isFakeToggleTrue',
     });
     expect(this.view.html()).toContain('fake-pretranslated-label');
     expect(this.view.html()).toContain('common.off');

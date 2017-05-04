@@ -2,6 +2,6 @@
   <span>
     {{:: $ctrl.label ? $ctrl.label : ('common.status' | translate) }}
     :
-    {{:: ($ctrl.ngModel ? 'common.on' : 'common.off') | translate }}
+    {{ ($ctrl.value ? 'common.on' : 'common.off') | translate }}
   </span>
 </div>

@@ -138,7 +138,10 @@
     require('modules/webex/xmlApi').default,
   ]);
 
-  angular.module('Messenger', ['Core', 'messenger.shared']);
+  angular.module('Messenger', [
+    'Core',
+    require('modules/shared').default,
+  ]);
 
   angular.module('Sunlight', [
     'Core',
