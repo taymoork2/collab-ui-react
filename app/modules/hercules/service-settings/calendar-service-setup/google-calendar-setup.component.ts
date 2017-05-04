@@ -10,6 +10,14 @@ interface IStep {
   canGoNext: () => boolean;
 }
 
+interface IData {
+  adminAccount: string;
+  clientName: string;
+  scope: string;
+  testAccount: string;
+  useResources: boolean;
+}
+
 export class GoogleCalendarSetupCtrl implements ng.IComponentController {
   private steps: IStep[] = [{
     name: 'loading',
@@ -52,7 +60,9 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
     canGoNext: () => false,
     back: () => {},
   }];
-  private data: any = {
+  private data: IData = {
+    clientName: '',
+    scope: '',
     testAccount: this.Authinfo.getPrimaryEmail(),
     adminAccount: '',
     useResources: false,
@@ -102,6 +112,12 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
   public canGoNext(): boolean {
     const currentStep = _.find(this.steps, step => step.name === this.currentStep);
     return currentStep.canGoNext();
+  }
+
+  public onCheckChange(): void {
+    if (!this.data.useResources) {
+      this.data.adminAccount = '';
+    }
   }
 
   public done(): void {

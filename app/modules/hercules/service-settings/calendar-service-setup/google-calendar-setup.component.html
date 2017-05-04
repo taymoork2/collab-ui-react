@@ -37,12 +37,12 @@
           cs-input-messages="$ctrl.errorMessages.testAccount">
       </div>
       <h4 class="section__title" translate="hercules.gcalSetupModal.testAccount.title2"></h4>
-      <!-- component? -->
       <p>
         <input
           cs-input
           type="checkbox"
           ng-model="$ctrl.data.useResources"
+          ng-change="$ctrl.onCheckChange()"
           id="resources"
           name="resources"
           cs-input-label="{{'hercules.gcalSetupModal.testAccount.useResources' | translate}}">
@@ -62,7 +62,6 @@
             cs-input-messages="$ctrl.errorMessages.adminAccount">
         </div>
       </div>
-      <!-- /component? -->
     </div>
   </div>
   <div ng-if="$ctrl.currentStep === 'completion'" class="modal-step">
