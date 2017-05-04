@@ -249,6 +249,13 @@
         <div cs-sticky>
           <h4 class="section__title" translate="companyCallerId.companyCallerId"></h4>
           <h6 class="section__description" translate="companyCallerId.companyCallerIdDesc"></h6>
+          <cs-toggle-switch
+            class="caller-id-toggle"
+            ng-model="settings.model.callerId.callerIdEnabled"
+            toggle-id="caller-id-toggle"
+            size="medium"
+            name="caller-id-toggle">
+          </cs-toggle-switch>
         </div>
       </div>
       <div class="section__content">
@@ -261,6 +268,13 @@
       <div class="section__info">
         <div cs-sticky>
           <h4 class="section__title" translate="serviceSetupModal.companyVoicemail"></h4>
+          <cs-toggle-switch
+            class="voicemail-toggle"
+            ng-model="settings.model.companyVoicemail.companyVoicemailEnabled"
+            toggle-id="voicemail-toggle"
+            size="medium"
+            name="voicemail-toggle">
+          </cs-toggle-switch>
         </div>
       </div>
       <div class="section__content">
