@@ -19,6 +19,7 @@
       postponeUpgradeSchedule: postponeUpgradeSchedule,
       deleteMoratoria: deleteMoratoria,
       deregisterCluster: deregisterCluster,
+      deregisterEcpNode: deregisterEcpNode,
       getAggregatedStatusForService: getAggregatedStatusForService,
       processClustersToAggregateStatusForService: processClustersToAggregateStatusForService,
       serviceIsSetUp: serviceIsSetUp,
@@ -428,5 +429,12 @@
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/hosts/' + serial;
       return $http.patch(url, params).then(extractData);
     }
+
+    function deregisterEcpNode(connectorId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregister/invoke?managementConnectorId=' + connectorId;
+      return $http.post(url)
+        .then(extractData);
+    }
+
   }
 })();

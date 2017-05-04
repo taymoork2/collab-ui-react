@@ -11,7 +11,7 @@
     var vm = this;
     var type = $stateParams.specificType || $stateParams.connectorType;
     var localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + type);
-    vm.deleteExpresswayOrHDSNode = deleteExpresswayOrHDSNode;
+    vm.deleteExpressway = deleteExpressway;
     vm.showReassignHostDialog = showReassignHostDialog;
     vm.showDeregisterHostDialog = showDeregisterHostDialog;
 
@@ -38,7 +38,7 @@
       }
     }, true);
 
-    function deleteExpresswayOrHDSNode() {
+    function deleteExpressway() {
       $modal.open({
         templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
         type: 'dialog',
@@ -77,7 +77,7 @@
         });
     }
 
-    /* Only used for Hybrid Media nodes  */
+    /* Only used for Hybrid Media nodes and Hybrid Data Security nodes  */
     function showDeregisterHostDialog() {
       $modal.open({
         resolve: {
@@ -88,14 +88,19 @@
             return vm.host.id;
           },
         },
-        type: 'small',
+        type: 'dialog',
         controller: 'HostDeregisterControllerV2',
         controllerAs: 'hostDeregister',
         templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',
       })
         .result
         .then(function () {
-          $state.go('media-service-v2.list');
+          if (vm.host.connectorType === 'mf_mgmt') {
+            $state.go('media-service-v2.list');
+          }
+          if (vm.host.connectorType === 'hds_app') {
+            $state.go('hds.list');
+          }
         });
     }
 
@@ -110,7 +115,7 @@
     };
 
     vm.showAction = function () {
-      return vm.host.connectorType !== 'cs_mgmt' && vm.host.connectorType !== 'cs_context' && vm.showHybridMediaAction();
+      return vm.host.connectorType !== 'cs_mgmt' && vm.host.connectorType !== 'cs_context' && (vm.showHybridMediaAction() || vm.showHdsAction());
     };
 
     vm.showGoToHostAction = function () {
@@ -121,8 +126,12 @@
       return !hasNodesViewFeatureToggle && vm.host.connectorType === 'mf_mgmt';
     };
 
+    vm.showHdsAction = function () {
+      return !hasNodesViewFeatureToggle && vm.host.connectorType === 'hds_app';
+    };
+
     vm.showDeleteNodeAction = function () {
-      return ((vm.host.state === 'offline' && vm.host.connectorType === 'c_mgmt') || vm.host.connectorType === 'hds_app');
+      return ((vm.host.state === 'offline' && vm.host.connectorType === 'c_mgmt'));
     };
   }
 }());

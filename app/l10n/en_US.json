@@ -4975,7 +4975,6 @@
     },
     "deregister": {
       "header": "Deregister Node",
-      "body": "Are you sure you want to deregister this node?",
       "body1": "If you proceed, this node will no longer be available.",
       "body2": "To make this node available again, you will need to reregister it."
     },
@@ -5120,6 +5119,7 @@
       "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}.",
+      "deregisterNodeErrorGeneric": "Unable to deregister node.",
       "clusterSettings": "Cluster Settings",
       "deletecluster": "Delete Cluster",
       "deleteclusterHeadding": "Delete Hybrid Media Cluster",
@@ -5247,8 +5247,8 @@
     "offline": "Offline",
     "active": "Active",
     "close": "Close",
-    "moveHostSuccess": "Node moved successfully, Please wait for a moment...",
-    "deleteNodeSuccess": "Node deregistered successfully, Please wait for a moment...",
+    "moveHostSuccess": "Node moved successfully.",
+    "deleteNodeSuccess": "Node deregistered successfully.",
     "installing": "Installing"
   },
   "webexUserSettings": {
