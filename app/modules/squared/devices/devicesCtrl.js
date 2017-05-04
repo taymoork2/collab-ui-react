@@ -158,6 +158,7 @@ require('./_devices.scss');
         vm.gridOptions = {
           data: 'sc.deviceList()',
           rowHeight: 45,
+          enableHorizontalScrollbar: 0,
           enableRowHeaderSelection: false,
           enableColumnMenus: false,
           multiSelect: false,
