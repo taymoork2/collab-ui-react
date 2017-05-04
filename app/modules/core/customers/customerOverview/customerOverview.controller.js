@@ -266,10 +266,19 @@ require('./_customer-overview.scss');
 
     function openCustomerPortal() {
       vm.loadingCustomerPortal = false;
-      return $window.open($state.href('login_swap', {
+      var openWindow = $window.open($state.href('login_swap', {
         customerOrgId: vm.customerOrgId,
         customerOrgName: vm.customerName,
       }));
+
+      if (!openWindow || openWindow.closed || typeof openWindow.closed === 'undefined') {
+        $modal.open({
+          type: 'dialog',
+          templateUrl: 'modules/core/customers/customerOverview/popUpBlocked.tpl.html',
+        });
+      }
+
+      return openWindow;
     }
 
     function openEditTrialModal() {

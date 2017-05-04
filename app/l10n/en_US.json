@@ -4523,7 +4523,9 @@
       "quantity": "Quantity {{quantity}}",
       "status": "Status {{status}}",
       "url": "URL {{url}}"
-    }
+    },
+    "popUpTitle": "Pop-up Blocked",
+    "popUpDesc": "To view this customer, update your browser settings to allow pop-up windows."
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",

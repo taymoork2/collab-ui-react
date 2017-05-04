@@ -98,13 +98,6 @@
               $state.modal = $modal.open({
                 template: '<div ui-view="modal"></div>',
                 controller: 'ModalWizardCtrl',
-                // TODO(pajeter): remove inline template when cs-modal is updated
-                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="modal-alt"' +
-                'modal-animation-class="fade"' +
-                'modal-in-class="in"' +
-                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\', position: \'relative\'}">' +
-                '<div class="modal-content" modal-transclude></div>' +
-                '</div>',
                 backdrop: 'static',
               });
               $state.modal.result.finally(function () {
@@ -2450,7 +2443,7 @@
             parent: 'wizardmodal',
             views: {
               'modal@': {
-                template: '<cr-wizard tabs="tabs" finish="finish"></cr-wizard>',
+                template: '<cr-wizard class="modal-content" tabs="tabs" finish="finish"></cr-wizard>',
                 controller: 'SetupWizardCtrl',
               },
             },
@@ -2460,6 +2453,7 @@
               currentStep: '',
               numberOfSteps: undefined,
               onlyShowSingleTab: false,
+              showStandardModal: false,
             },
             data: {
               firstTimeSetup: false,

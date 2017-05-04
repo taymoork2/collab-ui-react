@@ -59,6 +59,7 @@ require('./_wizard.scss');
     vm.currentStep = $stateParams.currentStep;
     vm.onlyShowSingleTab = $stateParams.onlyShowSingleTab;
     vm.numberOfSteps = $stateParams.numberOfSteps;
+    vm.showStandardModal = $stateParams.showStandardModal;
 
     vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
