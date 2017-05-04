@@ -215,49 +215,49 @@ class HuronDevice implements IDevice {
 
 class HuronHelper {
   public static huron_model_map = {
-    'MODEL_CISCO_7811': {
+    MODEL_CISCO_7811: {
       displayName: 'Cisco 7811',
     },
-    'MODEL_CISCO_7821': {
+    MODEL_CISCO_7821: {
       displayName: 'Cisco 7821',
     },
-    'MODEL_CISCO_7832': {
+    MODEL_CISCO_7832: {
       displayName: 'Cisco 7832',
     },
-    'MODEL_CISCO_7841': {
+    MODEL_CISCO_7841: {
       displayName: 'Cisco 7841',
     },
-    'MODEL_CISCO_7861': {
+    MODEL_CISCO_7861: {
       displayName: 'Cisco 7861',
     },
-    'MODEL_CISCO_8811': {
+    MODEL_CISCO_8811: {
       displayName: 'Cisco 8811',
     },
-    'MODEL_CISCO_8831': {
+    MODEL_CISCO_8831: {
       displayName: 'Cisco 8831',
     },
-    'MODEL_CISCO_8841': {
+    MODEL_CISCO_8841: {
       displayName: 'Cisco 8841',
     },
-    'MODEL_CISCO_8845': {
+    MODEL_CISCO_8845: {
       displayName: 'Cisco 8845',
     },
-    'MODEL_CISCO_8851': {
+    MODEL_CISCO_8851: {
       displayName: 'Cisco 8851',
     },
-    'MODEL_CISCO_8851NR': {
+    MODEL_CISCO_8851NR: {
       displayName: 'Cisco 8851NR',
     },
-    'MODEL_CISCO_8861': {
+    MODEL_CISCO_8861: {
       displayName: 'Cisco 8861',
     },
-    'MODEL_CISCO_8865': {
+    MODEL_CISCO_8865: {
       displayName: 'Cisco 8865',
     },
-    'MODEL_CISCO_8865NR': {
+    MODEL_CISCO_8865NR: {
       displayName: 'Cisco 8865NR',
     },
-    'MODEL_CISCO_ATA_190': {
+    MODEL_CISCO_ATA_190: {
       displayName: 'Cisco ATA190-SC Port 1',
     },
   };

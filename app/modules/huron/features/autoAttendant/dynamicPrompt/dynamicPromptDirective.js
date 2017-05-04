@@ -85,6 +85,10 @@
     function populatePlaceholderRule(element, html) {
       if (html === CONSTANTS.lastElement) {
         element.attr(CONSTANTS.placeHolderDataDiv, 'true');
+      } else if (html === '') {
+        element.attr(CONSTANTS.placeHolderDataDiv, 'true');
+      } else if (html === '<br>') {
+        element.attr(CONSTANTS.placeHolderDataDiv, 'true');
       } else {
         element.removeAttr(CONSTANTS.placeHolderDataDiv);
       }

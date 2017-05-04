@@ -23,11 +23,12 @@ describe ('Component: PrivateTrunkSetup', () => {
 
   function initComponent() {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('1234');
-    spyOn(this.PrivateTrunkPrereqService, 'getVerifiedDomains').and.returnValue(this.$q.when(['domain1']));
+    spyOn(this.PrivateTrunkPrereqService, 'getVerifiedDomains').and.returnValue(this.$q.resolve(['domain1']));
     spyOn(this.PrivateTrunkCertificateService, 'uploadCertificate');
     spyOn(this.PrivateTrunkCertificateService, 'deleteUploadedCerts');
     spyOn(this.PrivateTrunkService, 'createPrivateTrunkResource');
     spyOn(this.PrivateTrunkService, 'setPrivateTrunk');
+    spyOn(this.PrivateTrunkCertificateService, 'readCerts').and.returnValue(this.$q.resolve([]));
     this.compileComponent('privateTrunkSetup', {
     });
   }

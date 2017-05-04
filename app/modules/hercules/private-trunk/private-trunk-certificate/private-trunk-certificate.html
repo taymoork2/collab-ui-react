@@ -9,6 +9,7 @@
       id="certificateRadio1"
       name="certificateRadio1"
       ng-value="'default'"
+      ng-disabled="$ctrl.formattedCertList.length>0"
       cs-input-label="{{'servicesOverview.cards.privateTrunk.certificateRadio1' | translate}}"
       ng-change="$ctrl.changeOption()">
     <input

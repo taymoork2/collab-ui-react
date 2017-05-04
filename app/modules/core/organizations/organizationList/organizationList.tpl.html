@@ -7,10 +7,7 @@
     </cs-page-sub-header-left>
   </cs-page-sub-header>
   <div id="orgListPanel" class="row grid">
-    <div class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
-    <div class="grid-refresh" ng-if="gridRefresh">
-      <i class='icon icon-spinner icon-2x'></i>
-    </div>
+    <div class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll grid-spinner="gridRefresh"></div>
     <div class="start-search" ng-if="noSearchesYet">
       <span class="h2" translate="organizationsPage.startSearching"></span>
     </div>

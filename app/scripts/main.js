@@ -53,6 +53,7 @@
     require('modules/core/focus').default,
     require('modules/core/inlineEditText').default,
     require('modules/core/scrollIndicator').default,
+    require('modules/core/gridSpinner').default,
     require('modules/core/scripts/services/org.service'),
     require('modules/core/scripts/services/userlist.service'),
     require('modules/core/users/userCsv/userCsv.service'),
@@ -149,7 +150,7 @@
     require('modules/webex/xmlApi').default,
   ]);
 
-  angular.module('Messenger', ['Core']);
+  angular.module('Messenger', ['Core', 'messenger.shared']);
 
   angular.module('Sunlight', [
     'Core',

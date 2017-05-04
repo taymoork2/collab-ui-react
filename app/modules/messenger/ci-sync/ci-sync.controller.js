@@ -3,9 +3,7 @@
 
   angular
     .module('Messenger')
-    .controller('CiSyncCtrl', CiSyncCtrl)
-    .directive('msgrTextStatusOn', msgrTextStatusOn)
-    .directive('msgrTextStatusOff', msgrTextStatusOff);
+    .controller('CiSyncCtrl', CiSyncCtrl);
 
   /* @ngInject */
   function CiSyncCtrl($q, $translate, Authinfo, Log, Notification, CiService, SyncService) {
@@ -238,17 +236,5 @@
           });
       }
     }
-  }
-
-  function msgrTextStatusOn() {
-    return {
-      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOn.html',
-    };
-  }
-
-  function msgrTextStatusOff() {
-    return {
-      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOff.html',
-    };
   }
 })();

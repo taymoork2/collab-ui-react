@@ -10,7 +10,7 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
   public certificates: ICertificate;
   public formattedCertList: Array<IformattedCertificate>;
   public isImporting: boolean = false;
-  public isCertificateDefault: boolean = true;
+  public isCertificateDefault: boolean;
   public domains: Array<string>;
   public isDomain: boolean;
   public selectedVerifiedDomains: Array<string>;
@@ -29,7 +29,7 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
     if (!this.hasPrivateTrunkFeatureToggle) {
       this.$state.go(this.backState);
     } else {
-      this.initCertificates();
+      this.initCertificateInfo();
       this.initDomainInfo();
     }
   }
@@ -51,13 +51,13 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
     });
   }
 
-  public initCertificates(): void {
+  public initCertificateInfo(): void {
+    this.isCertificateDefault = true;
     this.PrivateTrunkCertificateService.readCerts()
       .then((cert) => {
-        this.formattedCertList = cert.formattedCertList;
-        this.isImporting = cert.isImporting;
-        if (_.isArray(this.formattedCertList) && this.formattedCertList.length) {
-          this.isCertificateDefault = false;
+        if (!_.isUndefined(cert)) {
+          this.formattedCertList = cert.formattedCertList;
+          this.isCertificateDefault =  (!_.isArray(this.formattedCertList) || this.formattedCertList.length === 0);
         }
       });
   }
@@ -89,6 +89,7 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
     .then( cert => {
       if (cert) {
         this.formattedCertList = cert.formattedCertList || [];
+        this.isCertificateDefault =  (!_.isArray(this.formattedCertList) || this.formattedCertList.length === 0);
       }
     });
   }

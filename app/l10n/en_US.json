@@ -638,7 +638,9 @@
       "joinMeetingTime": "Join Meeting Time",
       "webexReportInMashup": "CHP Reports",
       "webexReportInQlikApp": "Qlik app",
-      "sparkReportInMashup": "Spark Reports"
+      "sparkReportInMashup": "Spark Reports",
+      "webexReportWithTicket": "CHP Reports Login",
+      "sparkReportWithTicket": "Spark Reports Login"
     }
   },
   "sharedMeetingReports": {
@@ -717,9 +719,9 @@
     "threeMonthsDrilldownTitle": "in the Last Three Months",
     "threeMonthsDrilldownDescription": "During the three months",
     "media_type_all": "All Tasks",
-    "media_type_chat": "Chat",
-    "media_type_callback": "Callback",
-    "media_type_voice": "Inbound Call",
+    "media_type_chat": "Chats",
+    "media_type_callback": "Callbacks",
+    "media_type_voice": "Inbound Calls",
     "taskDataGetError": "There was an error while loading the {{dataType}} data.",
     "tableDataGetError": "There was an error while loading the detailed efficient user data."
   },
@@ -821,14 +823,14 @@
   },
   "taskIncoming": {
     "title": "Total Completed Tasks",
-    "description": "The graph depicts the total number of customer tasks completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} tasks during a {{interval}}.",
+    "description": "The graph depicts the total number of tasks completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} tasks during a {{interval}}.",
     "drilldownShow": "Show most active users",
     "drilldownHide": "Hide most active users",
     "drilldownTitle": "Most Active Users {{time}}",
     "drilldownDescription": "{{time}}, these are the most active users. The table can be sorted by user’s name or total number of tasks handled.",
     "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check back again shortly.",
     "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
-    "tasksHandled": "Tasks Handled",
+    "tasksHandled": "Handled",
     "user": "User",
     "drilldownSearchPlaceholder": "Search"
   },
@@ -860,7 +862,7 @@
   },
   "taskAggregate": {
     "title": "Aggregated Tasks",
-    "description": "The graph depicts the number of waiting and in-progress customer tasks aggregated for today. Hover over the area chart to view the count of waiting and in-progress tasks aggregated from the start of business hours."
+    "description": "The graph depicts the number of waiting and in-progress tasks aggregated for today. Hover over the area chart to view the count of waiting and in-progress tasks aggregated from the start of business hours."
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -3392,6 +3394,7 @@
     "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
     "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
+    "addDynamicText": "Add Dynamic Text",
     "callerInputMenuErrorVariableNameMissing": "{{schedule}} schedule at Caller Input Menu {{at}} is missing a variable name ",
     "conditionalThenTargetMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing a target for the 'Then' entry",
     "conditionalIsEntryVariableMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing an entry for 'Is'",
@@ -4442,8 +4445,9 @@
     "contactName": "Contact Name",
     "contactEmail": "Email",
     "contactPhone": "Phone",
-    "launchButton": "View Customer",
+    "viewButton": "View Customer",
     "setupButton": "Setup Customer",
+    "launchButton": "Launch Customer",
     "myOrgButton": "View My Organization",
     "edit": "Edit Trial",
     "errGetTrial": "Failed to retrieve trial {{user}}.",
@@ -6177,7 +6181,7 @@
     "feedback_chat": "Feedback",
     "feedback_chatPlusCallback": "Chat Feedback",
     "feedbackCallback_callback": "Feedback",
-    "feedbackCallback_chatPlusCallback": "Call Feedback",
+    "feedbackCallback_chatPlusCallback": "Callback Feedback",
     "agentUnavailable_chat": "Agent Unavailable",
     "agentUnavailable_callback": "Agent Unavailable",
     "agentUnavailable_chatPlusCallback": "Agent Unavailable for Chat",

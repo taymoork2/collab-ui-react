@@ -1,6 +1,6 @@
 import { ICluster } from 'modules/hercules/hybrid-services.types';
-import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { Notification } from 'modules/core/notifications/notification.service';
+import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk.service';
 
 export class ClusterDeregisterController {
 
@@ -12,29 +12,38 @@ export class ClusterDeregisterController {
     private $translate: ng.translate.ITranslateService,
     private cluster: ICluster,
     private FusionClusterService,
-    private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
+    private PrivateTrunkService: PrivateTrunkService,
     private Notification: Notification,
   ) { }
 
   public deregister() {
 
-    let deregisterCluster = this.FusionClusterService.deregisterCluster;
-    if (this.cluster.targetType === 'ept') {
-      deregisterCluster = this.EnterprisePrivateTrunkService.deleteTrunk;
-    }
-
     this.loading = true;
-    deregisterCluster(this.cluster.id)
-      .then(() => {
-        this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopup', {
-          clusterName: this.cluster.name,
-        }));
-        this.$modalInstance.close();
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-        this.loading = false;
-      });
+    if (this.cluster.targetType === 'ept') {
+      this.PrivateTrunkService.removePrivateTrunkResource(this.cluster.id)
+        .then(() => {
+          this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopup', {
+            clusterName: this.cluster.name,
+          }));
+          this.$modalInstance.close();
+        })
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          this.loading = false;
+        });
+    } else {
+      this.FusionClusterService.deregisterCluster(this.cluster.id)
+        .then(() => {
+          this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopup', {
+            clusterName: this.cluster.name,
+          }));
+          this.$modalInstance.close();
+        })
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          this.loading = false;
+        });
+    }
 
   }
 }

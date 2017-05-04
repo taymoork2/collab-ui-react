@@ -5,6 +5,8 @@ import {
 } from 'lodash';
 
 export class HuronCompassService {
+  public customerBaseDomain: string;
+  public isCustomer: boolean;
   public baseDomain: string;
   private countryCode: string;
   private static readonly SPARK_CALL_BASE_DOMAIN: string = 'sparkCallBaseDomain';
@@ -32,11 +34,26 @@ export class HuronCompassService {
     if (!this.baseDomain) {
       this.baseDomain = this.defaultDomain();
     }
+    if (this.isCustomer) {
+      this.baseDomain = this.customerBaseDomain;
+      if (!this.customerBaseDomain) {
+        this.customerBaseDomain = this.defaultDomain();
+      }
+      return this.customerBaseDomain;
+    }
     return this.baseDomain;
   }
 
   public getCountryCode(): string {
     return this.countryCode;
+  }
+
+  public setIsCustomer(isCustomer) {
+    this.isCustomer = isCustomer;
+  }
+
+  public setCustomerBaseDomain(domain: string): void {
+    this.customerBaseDomain = domain;
   }
 
   public fetchDomain(authData): string {

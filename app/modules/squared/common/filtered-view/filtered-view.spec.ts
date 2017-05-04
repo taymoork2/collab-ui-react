@@ -4,10 +4,10 @@ describe('Class: FilteredView', () => {
   let test: any = {};
 
   let serverSideSearchRes = {
-    'url1': { displayName: 'abc', devices: [{}, {}] },
-    'url2': { displayName: 'abcd' },
-    'url3': { displayName: 'abcde', devices: [{}, {}] },
-    'url4': { displayName: 'abcdef' },
+    url1: { displayName: 'abc', devices: [{}, {}] },
+    url2: { displayName: 'abcd' },
+    url3: { displayName: 'abcde', devices: [{}, {}] },
+    url4: { displayName: 'abcdef' },
   };
 
   beforeEach(function () {

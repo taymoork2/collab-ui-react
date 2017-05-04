@@ -1,4 +1,5 @@
 import { HuronCountryService } from 'modules/huron/countries';
+import { HuronCompassService } from '../../../huron/compass/compass.service';
 
 export class TrialRegionalSettingsComponent implements ng.IComponentOptions {
   public controller = TrialRegionalSettingsCtrl;
@@ -11,11 +12,11 @@ export class TrialRegionalSettingsComponent implements ng.IComponentOptions {
 }
 
 class TrialRegionalSettingsCtrl implements ng.IComponentController {
-  public defaultCountry: string;
+  public defaultCountry: ICountry;
   public countryList;
   public onChangeFn: Function;
   public placeholder: string;
-  private notApplicable: INotApplicable;
+  private notApplicable: ICountry;
   private ftHuronFederatedSparkCall: any;
 
   /* @ngInject */
@@ -25,6 +26,7 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
     private HuronCountryService: HuronCountryService,
     private FeatureToggleService,
     private $q: ng.IQService,
+    private HuronCompassService: HuronCompassService,
   ) { }
 
   public $onInit(): void {
@@ -74,13 +76,14 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
   }
 
   public onChange(): void {
+    this.HuronCompassService.setCustomerBaseDomain(this.defaultCountry.domain);
     this.onChangeFn({
       country: this.defaultCountry,
     });
   }
 }
 
-interface INotApplicable {
+interface ICountry {
   id: string;
   name: string;
   domain: string;

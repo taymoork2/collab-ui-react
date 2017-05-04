@@ -1,5 +1,6 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
+
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 
 export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard {
@@ -7,7 +8,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
     return undefined;
   }
   private hasDomain: boolean;
-  private _buttons: Array<ICardButton> = [{
+  private _buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.privateTrunk.buttons.view',
     buttonClass: 'btn btn--link btn--expand',
     buttonState: 'prereq',
@@ -16,17 +17,18 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
     buttonClass: 'btn btn--primary',
     buttonState: 'prereq',
   }];
-  private _activeButtons: Array<ICardButton> = [{
+
+  private _activeButtons: ICardButton[] = [{
     name: 'servicesOverview.cards.hybridCall.buttons.resources',
     routerState: 'private-trunk-overview.list',
-    buttonClass: 'btn--link',
+    buttonClass: 'btn-link',
   }, {
     name: 'servicesOverview.cards.hybridCall.buttons.settings',
     routerState: 'private-trunk-overview.settings',
-    buttonClass: 'btn--link',
+    buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.active) {
       return this._activeButtons;
     } else {
@@ -43,8 +45,9 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
     this.hasDomain = hasDomain;
   }
 
-  public sipDestinationsEventHandler(destinationList: Array<IPrivateTrunkResource>): void {
-    this.active = destinationList.length > 0 ;
+  public sipDestinationsEventHandler(destinationList: IPrivateTrunkResource[]): void {
+    this.active = destinationList.length > 0;
+    this.setupMode = !this.active;
   }
 
   public openModal(): void {
@@ -80,7 +83,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
       cardType: CardType.hybrid,
       display : true,
       routerState: 'private-trunk-overview',
-      service: 'cisco-uc',
+      service: 'ept',
       template: 'modules/services-overview/privateTrunkCard.html',
     }, HybridServicesClusterStatesService);
     this.hasDomain = false;
