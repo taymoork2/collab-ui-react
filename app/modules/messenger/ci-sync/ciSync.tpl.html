@@ -6,26 +6,33 @@
 
 <div class="container-ci-sync" ng-if="sync.authorized()">
 
-  <cs-page-header title-name="messengerCiSync.pageTitle" back="true" back-url="sync.backState"></cs-page-header>
+  <cs-page-header title-name="{{:: 'messengerCiSync.pageTitle' | translate }}" back="true" back-url="sync.backState"></cs-page-header>
 
   <div class="content">
     <!-- BEGIN CONTENT -->
 
-    <div ng-if="sync.dataStates.loading === sync.dataStatus">
+    <div ng-if="sync.dataStates.LOADING === sync.dataStatus">
       <span class="icon icon-spinner"></span>
       <span translate="messengerCiSync.loading"></span>
     </div>
 
-    <div ng-if="sync.dataStates.error === sync.dataStatus">
+    <div ng-if="sync.dataStates.ERROR === sync.dataStatus">
       <span class="icon icon-warning"></span>
       <span>{{sync.errorMsg}}</span>
-      <p class="down-10"><span class="icon icon-refresh" ng-click="sync.refreshStatus()"><span class="right-5" ng-click="sync.refreshStatus()">{{sync.refresh}}</span></p>
+      <p class="down-10">
+        <span ng-click="sync.refreshStatus()" class="right-5">
+          <i class="icon icon-refresh"></i> {{sync.refresh}}
+        </span>
+      </p>
     </div>
 
-    <div ng-if="sync.dataStates.loaded === sync.dataStatus">
+    <div ng-if="sync.dataStates.LOADED === sync.dataStatus">
       <div class="right">
-        <span class="icon icon-refresh" ng-click="sync.refreshStatus()"></span><span class="right-5" ng-click="sync.refreshStatus()">{{sync.refresh}}</span>
-        | <a tooltip-placement="left" tooltip="{{sync.orgAdminLinkTooltip}}" href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a>
+        <span ng-click="sync.refreshStatus()" class="right-5">
+          <i class="icon icon-refresh"></i> {{sync.refresh}}
+        </span>
+        |
+        <span><a tooltip-placement="left" tooltip="{{sync.orgAdminLinkTooltip}}" href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a></span>
       </div>
 
       <div class="col-md-4 sync-stats">
@@ -59,9 +66,9 @@
           <div ng-if="sync.syncInfo.isMessengerSyncRawMode"> <!-- Native Messenger Sync mode -->
             <p tooltip-placement="top" tooltip="{{sync.syncStatusTooltip}}" translate="messengerCiSync.syncStatusHeading"></p>
             <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-            <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType" ng-model="sync.syncInfo.isSyncEnabled" toggle-id="toggleIsSyncing" name="toggleSyncing" size="small"></cs-toggle-switch>
+            <cs-toggle-switch ng-if="sync.isOpsAdmin()" ng-model="sync.syncInfo.isSyncEnabled" toggle-id="toggleIsSyncing" name="toggleSyncing" size="small"></cs-toggle-switch>
             <!-- text when not editable -->
-            <div ng-if="sync.adminTypes.ops !== sync.adminType">
+            <div ng-if="!sync.isOpsAdmin()">
               <boolean-text-field ng-model="sync.syncInfo.isSyncEnabled"></boolean-text-field>
             </div>
           </div>
@@ -73,15 +80,15 @@
 
           <p tooltip-placement="bottom" tooltip="{{sync.authRedirectTooltip}}" translate="messengerCiSync.authRedirectHeading"></p>
           <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-          <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType"  ng-model="sync.syncInfo.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" size="small"></cs-toggle-switch>
+          <cs-toggle-switch ng-if="sync.isOpsAdmin()" ng-model="sync.syncInfo.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" size="small"></cs-toggle-switch>
           <!-- text when not editable -->
-          <div ng-if="sync.adminTypes.ops !== sync.adminType">
+          <div ng-if="!sync.isOpsAdmin()">
             <boolean-text-field ng-model="sync.syncInfo.isAuthRedirect"></boolean-text-field>
           </div>
 
           <div ng-if="sync.syncInfo.isNewDataFormat"> <!-- new org ext data -->
             <!-- using toggles when editable -->
-            <div ng-if="sync.adminTypes.ops === sync.adminType">
+            <div ng-if="sync.isOpsAdmin()">
               <p tooltip-placement="top" tooltip="{{sync.pwdSyncTooltip}}" translate="messengerCiSync.pwdSyncHeading"></p>
               <cs-toggle-switch ng-model="sync.syncInfo.isPwdSync" toggle-id="tidPwdSync" name="tnPwdSync" size="small"></cs-toggle-switch>
               <p tooltip-placement="top" tooltip="{{sync.sparkEntTooltip}}" translate="messengerCiSync.sparkEntHeading"></p>
@@ -92,7 +99,7 @@
               <cs-toggle-switch ng-model="sync.syncInfo.isUsrDel" toggle-id="tidUsrDel" name="tnUsrDel" size="small"></cs-toggle-switch>
             </div>
             <!-- text when not editable -->
-            <div ng-if="sync.adminTypes.ops !== sync.adminType">
+            <div ng-if="!sync.isOpsAdmin()">
               <p tooltip-placement="top" tooltip="{{sync.pwdSyncTooltip}}" translate="messengerCiSync.pwdSyncHeading"></p>
               <boolean-text-field ng-model="sync.syncInfo.isPwdSync"></boolean-text-field>
 
@@ -107,7 +114,7 @@
             </div>
           </div>
 
-          <input class="btn btn--attention" type="submit" value="{{sync.patchSyncButtonText}}" ng-if="sync.adminTypes.ops === sync.adminType" ng-click="sync.patchSync()">
+          <input class="btn btn--attention" type="submit" value="{{sync.patchSyncButtonText}}" ng-if="sync.isOpsAdmin()" ng-click="sync.patchSync()">
       </div>
     </div>
 
