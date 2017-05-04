@@ -638,7 +638,9 @@
       "joinMeetingTime": "Join Meeting Time",
       "webexReportInMashup": "CHP Reports",
       "webexReportInQlikApp": "Qlik app",
-      "sparkReportInMashup": "Spark Reports"
+      "sparkReportInMashup": "Spark Reports",
+      "webexReportWithTicket": "CHP Reports Login",
+      "sparkReportWithTicket": "Spark Reports Login"
     }
   },
   "sharedMeetingReports": {
