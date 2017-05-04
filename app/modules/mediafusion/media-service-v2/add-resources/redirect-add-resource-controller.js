@@ -41,7 +41,6 @@
         return;
       }
       if (isCloseOk) {
-        // $modalInstance.close();
         $state.go('services-overview');
         $modalInstance.dismiss();
         return;
@@ -81,7 +80,6 @@
 
     function canGoNext() {
       if (vm.firstTimeSetup && vm.showDownloadableOption) {
-        // vm.showDownloadableOption = false;
         return true;
       } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;

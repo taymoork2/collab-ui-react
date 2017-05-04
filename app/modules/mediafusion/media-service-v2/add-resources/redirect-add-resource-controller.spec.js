@@ -31,6 +31,7 @@ describe('RedirectAddResourceControllerV2', function () {
     Notification = _Notification_;
     $modalInstance = {
       close: sinon.stub(),
+      dismiss: sinon.stub(),
     };
     $modal = _$modal_;
     yesProceed = true;
@@ -76,7 +77,7 @@ describe('RedirectAddResourceControllerV2', function () {
   it('RedirectAddResourceControllerV2 closeSetupModal should close the modal', function () {
     spyOn($state, 'go');
     controller.closeSetupModal(true);
-    expect($modalInstance.close).toHaveBeenCalled();
+    expect($modalInstance.dismiss).toHaveBeenCalled();
   });
   xit('RedirectAddResourceControllerV2 closeSetupModal should close the modal when firstTimeSetup is false', function () {
     spyOn($modalInstance, "close");
@@ -95,12 +96,8 @@ describe('RedirectAddResourceControllerV2', function () {
     controller.back();
     expect(controller.enableRedirectToTarget).toBeFalsy();
   });
-  it('RedirectAddResourceControllerV2 canGoNext should disable the next button when the feild is empty', function () {
-    controller.hosts = [{
-      "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
-      "hostname": "10.196.5.251",
-      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a",
-    }];
+  it('RedirectAddResourceControllerV2 canGoNext should disable the next button when the field is empty', function () {
+    controller.showDownloadableOption = false;
     controller.canGoNext();
     expect(controller.canGoNext()).toBeFalsy();
   });
