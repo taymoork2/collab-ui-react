@@ -3920,7 +3920,9 @@
     "speedDialChangesFailed": "Failed to save speed dial changes.",
     "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
     "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries.",
-    "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}"
+    "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}",
+    "noSpeedDials": "No speed dials yet.",
+    "speedDiallDescription": "Speed dial numbers will appear on your devices as listed here."
   },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
@@ -6411,8 +6413,8 @@
     "noFeatures": "Features are not available for the current login",
     "noFeature": "This feature is not enabled for the current login",
     "featuresNotYetConfiguredPage": {
-      "nothingToSee": "No features yet.",
-      "letsCustomize": "Let's customize the calling experience"
+      "nothingToSee": "No features yet",
+      "letsCustomize": "Let's customize the calling experience."
     },
     "hgMethods": {
       "longestIdle": {
