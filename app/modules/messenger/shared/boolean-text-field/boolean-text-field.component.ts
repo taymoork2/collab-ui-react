@@ -1,6 +1,6 @@
 class BooleanTextFieldController implements ng.IComponentController {
   public label: string;
-  public value: boolean;
+  public ngModel: boolean;
 }
 
 export class BooleanTextFieldComponent implements ng.IComponentOptions {
