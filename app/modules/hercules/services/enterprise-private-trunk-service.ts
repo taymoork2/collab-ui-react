@@ -54,7 +54,7 @@ export class EnterprisePrivateTrunkService {
     ];
     return this.$q.all(promises)
       .then((results: [IPrivateTrunkInfo, ITrunksFromFMS]) => {
-        let trunks: Array<IPrivateTrunkResource> = results[0].resources;
+        let trunks: IPrivateTrunkResource[] = results[0].resources;
         let service: ITrunksFromFMS = results[1];
         _.map(trunks, (trunk: IPrivateTrunkResourceWithStatus) => {
           const resource = _.find(service.resources, (resource: ITrunkFromFms) => resource.id === trunk.uuid);
@@ -66,10 +66,10 @@ export class EnterprisePrivateTrunkService {
         });
         return trunks;
       })
-      .then((trunksWithStatus: Array<IPrivateTrunkResourceWithStatus>) => {
+      .then((trunksWithStatus: IPrivateTrunkResourceWithStatus[]) => {
         return _.sortBy(trunksWithStatus, (trunk: { name: string }) => trunk.name);
       })
-      .then((sortedTrunks: Array<IPrivateTrunkResourceWithStatus>) => {
+      .then((sortedTrunks: IPrivateTrunkResourceWithStatus[]) => {
         this.CsdmCacheUpdater.update(this.trunkCache, sortedTrunks);
         return sortedTrunks;
       });
