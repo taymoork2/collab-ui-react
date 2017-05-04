@@ -33,8 +33,14 @@
         vm.generateCodeIsDisabled = false;
       });
 
-      FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(function (feature) {
-        if (feature) {
+      $q.all([
+        FeatureToggleService.csdmPlaceUpgradeChannelGetStatus(),
+        FeatureToggleService.csdmPlaceGuiSettingsGetStatus(),
+      ])
+      .then(function (features) {
+        if (features[1]) {
+          vm.showDeviceSettings = true;
+        } else if (features[0]) {
           CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
             vm.showDeviceSettings = channels.length > 1;
           });
