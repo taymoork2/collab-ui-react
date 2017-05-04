@@ -93,7 +93,7 @@ class MySubscriptionCtrl {
   }
 
   public isSharedMeetingsLicense(offer: ISubscription): boolean {
-    return _.lowerCase(_.get(offer, 'licenseModel', '')) === this.Config.licenseModel.cloudSharedMeeting;
+    return _.toLower(_.get(offer, 'licenseModel', '')) === this.Config.licenseModel.cloudSharedMeeting;
   }
 
   public determineLicenseType(offer: ISubscription): string {

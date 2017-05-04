@@ -6,7 +6,7 @@ export class PlaceMatcher implements IMatcher<IPlace> {
       return true;
     }
 
-    let termsExpanded = _.lowerCase(terms).split(/[\s,]+/);
+    let termsExpanded = _.toLower(terms).split(/[\s,]+/);
     return termsExpanded.every((term) => {
       return this.termMatchesAnyFieldOfItem(term, matchable) || this.termMatchesAnyTag(matchable.tags, term);
     });
@@ -14,22 +14,22 @@ export class PlaceMatcher implements IMatcher<IPlace> {
 
   private termMatchesAnyTag(tags: string[], term: string): boolean {
     return _.some(tags, (tag) => {
-      return _.includes(_.lowerCase(tag), term);
+      return _.includes(_.toLower(tag), term);
     });
   }
 
   private termMatchesAnyFieldOfItem(term: string, item: IPlace): boolean {
     return ['displayName']
         .some((field) => {
-          return item && _.includes(_.lowerCase(item[field]), term);
+          return item && _.includes(_.toLower(item[field]), term);
         })
       || ['readableType']
         .some((field) => {
-          return item && _.includes(_.lowerCase(item[field]), term);
+          return item && _.includes(_.toLower(item[field]), term);
         })
       || ['sipUrl']
         .some((field) => {
-          return item && _.includes(_.lowerCase(item[field]), term);
+          return item && _.includes(_.toLower(item[field]), term);
         });
   }
 }
