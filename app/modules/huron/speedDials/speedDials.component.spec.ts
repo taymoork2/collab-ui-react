@@ -57,7 +57,6 @@ describe('component: speedDial', () => {
 
     beforeEach(initComponent);
     it('should have speed dial add functionality', function () {
-     // this.view.find(DROPDOWN_LIST).click();
       this.view.find(EMPTY_ADD).click();
       expect(this.view.find(INPUT_NAME)).toExist();
       expect(this.view.find(SAVE_BUTTON)).toBeDisabled();
