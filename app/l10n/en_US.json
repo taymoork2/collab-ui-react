@@ -1782,7 +1782,7 @@
         "squared-fusion-uc": "Call Service Activation",
         "squared-fusion-cal": "Calendar Service Activation",
         "squared-fusion-media": "Media Service Activation",
-        "contact-center-context": "Context Center Service Activation",
+        "contact-center-context": "Context Service Activation",
         "squared-fusion-ec": "Call Service Connect Activation",
         "squared-fusion-mgmt": "Expressway Management Service Activation"
       },
@@ -1868,7 +1868,7 @@
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-gcal": "Calendar Service",
       "squared-fusion-media": "Media Service",
-      "contact-center-context": "Context Center Service",
+      "contact-center-context": "Context Service",
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service"
@@ -2623,7 +2623,6 @@
       "inUse": "In Use",
       "notInUse": "Not In Use",
       "base": "Cisco",
-      "custom": "Custom",
       "access": "Source",
       "actions": "Actions",
       "dateUpdated": "Date Updated",

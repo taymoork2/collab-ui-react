@@ -8,7 +8,7 @@ require('./_fields-list.scss');
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, hasContextDictionaryEditFeatureToggle) {
+  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, Authinfo, hasContextDictionaryEditFeatureToggle) {
     var vm = this;
     var eventListeners = [];
 
@@ -116,7 +116,7 @@ require('./_fields-list.scss');
 
       var accessibleMap = {
         true: $translate.instant('context.dictionary.base'),
-        false: $translate.instant('context.dictionary.custom'),
+        false: Authinfo.getOrgName(),
       };
 
       field.publiclyAccessibleUI = accessibleMap[field.publiclyAccessible];

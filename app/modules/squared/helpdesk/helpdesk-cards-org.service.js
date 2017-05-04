@@ -51,7 +51,7 @@
     }
 
     function getHybridServicesCardForOrg(org) {
-      var hybridServiceIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity'];
+      var hybridServiceIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context'];
       var hybridServicesCard = {
         entitled: _.some(hybridServiceIds, function (serviceId) {
           return LicenseService.orgIsEntitledTo(org, serviceId);
