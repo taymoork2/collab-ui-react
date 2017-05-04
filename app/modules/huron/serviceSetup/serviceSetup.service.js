@@ -4,7 +4,7 @@
   module.exports = ServiceSetup;
 
   /* @ngInject */
-  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, SiteCountryService, SiteLanguageService, SiteService, TimeFormatService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
+  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, MediaManagerService, SiteCountryService, SiteLanguageService, SiteService, TimeFormatService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
     return {
       internalNumberRanges: [],
       sites: [],
@@ -19,9 +19,9 @@
       listSites: function () {
         return SiteService.query({
           customerId: Authinfo.getOrgId(),
-        }, angular.bind(this, function (sites) {
+        }, _.bind(function (sites) {
           this.sites = sites;
-        })).$promise;
+        }, this)).$promise;
       },
 
       getSite: function (siteUuid) {
@@ -71,6 +71,19 @@
         }, site).$promise;
       },
 
+      getMediaOnHoldList: function () {
+        return MediaManagerService.get({
+          orgId: Authinfo.getOrgId(),
+        }).$promise;
+      },
+
+      setCompanyMediaOnHold: function (mediaId) {
+        return MediaManagerService.save({
+          orgId: Authinfo.getOrgId(),
+          mediaFileId: mediaId,
+        }).$promise;
+      },
+
       loadExternalNumberPool: function (pattern) {
         var extNumPool = [];
         return ExternalNumberPool.getExternalNumbers(
@@ -78,7 +91,7 @@
           pattern,
           ExternalNumberPool.UNASSIGNED_NUMBERS,
           ExternalNumberPool.FIXED_LINE_OR_MOBILE
-        ).then(angular.bind(this, function (extPool) {
+        ).then(_.bind(function (extPool) {
           _.forEach(extPool, function (extNum) {
             extNumPool.push({
               uuid: extNum.uuid,
@@ -86,7 +99,7 @@
             });
           });
           this.externalNumberPool = extNumPool;
-        }));
+        }, this));
       },
 
       listVoicemailTimezone: function () {
@@ -172,9 +185,9 @@
       listInternalNumberRanges: function () {
         return InternalNumberRangeService.query({
           customerId: Authinfo.getOrgId(),
-        }, angular.bind(this, function (internalNumberRanges) {
+        }, _.bind(function (internalNumberRanges) {
           this.internalNumberRanges = internalNumberRanges;
-        })).$promise;
+        }, this)).$promise;
       },
 
       getDateFormats: function () {
@@ -249,9 +262,9 @@
       listCosRestrictions: function () {
         return CustomerCosRestrictionServiceV2.get({
           customerId: Authinfo.getOrgId(),
-        }, angular.bind(this, function (cosRestrictions) {
+        }, _.bind(function (cosRestrictions) {
           this.cosRestrictions = cosRestrictions;
-        })).$promise;
+        }, this)).$promise;
       },
 
       updateCosRestriction: function (cosEnabled, cosUuid, cosType) {

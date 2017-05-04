@@ -1,6 +1,6 @@
 <div ng-if="vm.ssoStatusLoaded">
   <p>
-    <i class="icon icon-circle" ng-class="vm.ssoEnabled ? 'success' : 'disabled' "></i>
+    <cs-statusindicator ng-model="vm.ssoStatus"></cs-statusindicator>
     <span translate="{{vm.ssoStatusText}}"></span>
   </p>
 

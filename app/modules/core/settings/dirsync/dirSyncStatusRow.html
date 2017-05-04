@@ -1,10 +1,10 @@
 <div class="status-row">
-  <div class="title">{{$ctrl.name}}</div>
-  <div class="status">
-      <i class="icon icon-circle status-indicator" ng-class="{ 'success' : $ctrl.enabled, 'danger': !$ctrl.enabled }"></i>
-      <span ng-if="$ctrl.enabled" translate="globalSettings.dirsync.enabled"></span>
-      <span ng-if="!$ctrl.enabled" translate="globalSettings.dirsync.disabled"></span>
-  </div>
+  <span ng-if="$ctrl.name" class="title">{{$ctrl.name}}</span>
+  <span class="status">
+    <cs-statusindicator ng-model="$ctrl.statusClass"></cs-statusindicator>
+    <span ng-if="$ctrl.enabled" translate="globalSettings.dirsync.enabled"></span>
+    <span ng-if="!$ctrl.enabled" translate="globalSettings.dirsync.disabled"></span>
+  </span>
   <div class="link">
     <a href="" ng-click="$ctrl.handleClick()">{{$ctrl.linkTitle}}</a>
   </div>

@@ -24,28 +24,28 @@
             <input type="radio" id="customLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="false" ng-change="bctrl.toggleLogo(bctrl.usePartnerLogo)">
             <label for="customLogoRadio">
               <span translate="branding.useOwnLogo"></span>
-              <a ng-if="bctrl.isPartner" ng-click=bctrl.showBrandingExample('Partner') translate="branding.exampleLink"></a>
-
-              <a ng-if="!bctrl.isPartner" ng-click=bctrl.showBrandingExample('Tenant') translate="branding.exampleLink"></a>
+              <a href="javascript:void(0);" ng-click="bctrl.showBrandingExample(bctrl.isPartner?'Partner':'Tenant')" translate="branding.exampleLink"></a>
             </label>
             <label for="customLogoRadio" class="radio-input-spacing">
               <div class="radio-input-flex">
-                <div 
-                  class="drop-box form-section" 
-                  ngf-drop="bctrl.upload($file, $event)" 
-                  ng-model="bctrl.logoFile" 
-                  ngf-drag-over-class="dragover" 
+                <a
+                  href="javascript:void(0);"
+                  class="drop-box form-section btn--none"
+                  type="file"
+                  ngf-drop="bctrl.upload($file, $event)"
+                  ng-model="bctrl.logoFile"
+                  ngf-drag-over-class="dragover"
                   ngf-validate="{{bctrl.logoCriteria}}"
                   accept="image/png"
-                  ngf-select="bctrl.upload($file, $event)" 
+                  ngf-select="bctrl.upload($file, $event)"
                   name="file">
-                    <img class="thumbnail" alt="newLogo" ngf-src="bctrl.logoFile.blobUrl" ng-hide="bctrl.logoError" />
-                    <img class="thumbnail" alt="currentLogo" ng-src="{{bctrl.tempLogoUrl}}" ng-if="!bctrl.logoFile && bctrl.tempLogoUrl" onerror="this.style.display='none'" />
+                    <img class="thumbnail" ng-attr-alt="{{::'branding.uploadLogo'|translate}}'" ngf-src="bctrl.logoFile.blobUrl" ng-hide="bctrl.logoError" />
+                    <img class="thumbnail" ng-attr-alt="{{::'branding.uploadLogo'|translate}}'" ng-src="{{bctrl.tempLogoUrl}}" ng-if="!bctrl.logoFile && bctrl.tempLogoUrl" onerror="this.style.display='none'" />
                      <p class="vertical-align text-center placeholder"  ng-hide="bctrl.tempLogoUrl">
                     <i class="icon icon-upload"></i><br/>
                     <span translate="branding.logoPlaceholder"></span>
                   </p>
-                </div>
+                </a>
               </div>
             </label>
             <p translate="branding.logoUploadNote" class="columns small-10 body-small radio-input-spacing"></p>
@@ -64,7 +64,7 @@
           cs-input-label="{{::'partnerProfile.allowCustomerLogo' | translate}}">
           <label for="allowCustomerLogo">
             <span translate="partnerProfile.allowCustomerLogo"></span>
-            <a ng-click="bctrl.showBrandingExample('Tenant')" translate="branding.exampleLink"></a>
+            <a href="javascript:void(0);" ng-click="bctrl.showBrandingExample('Tenant')" translate="branding.exampleLink"></a>
           </label>
 
       </div>

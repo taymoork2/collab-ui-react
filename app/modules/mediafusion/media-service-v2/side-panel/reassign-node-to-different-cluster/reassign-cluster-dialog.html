@@ -8,17 +8,17 @@
 <div class="modal-body">
   <div >
     <p>
-      {{reassignClust.reassignText}}
+      {{reassignCluster.reassignText}}
     </p>
   </div>
   <br>
   <div class="columns medium-8 moveNodeDropDown inputHostNameForm">
-    <cs-select ng-model="reassignClust.selectedCluster" options="reassignClust.options" placeholder="reassignClust.selectPlaceholder" combo="true">
+    <cs-select ng-model="reassignCluster.selectedCluster" options="reassignCluster.options" placeholder="reassignCluster.selectPlaceholder" combo="true">
     </cs-select>
   </div>
 </div>
 <div class="modal-footer" >
-  <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="reassignClust.reassign()" ng-disabled="!reassignClust.canContinue()">
+  <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="reassignCluster.reassign()" ng-disabled="!reassignCluster.canContinue()">
     <span translate="mediaFusion.reassign.moveNode">
     </span>
   </button>

@@ -119,7 +119,7 @@ require('./_fields-list.scss');
         false: $translate.instant('context.dictionary.custom'),
       };
 
-      field.publiclyAccessible = accessibleMap[field.publiclyAccessible];
+      field.publiclyAccessibleUI = accessibleMap[field.publiclyAccessible];
 
       return field;
     }
@@ -181,12 +181,12 @@ require('./_fields-list.scss');
                 var fieldCopy = processField(_.cloneDeep(updatedField));
                 _.fill(vm.fieldsList.allFields, fieldCopy, index, index + 1);
                 vm.gridOptions.data = vm.fieldsList.allFields;
+                //need to select the row to reopen the side panel to update the view of side panel
+                vm.gridApi.grid.modifyRows(vm.gridOptions.data);
+                vm.gridApi.selection.selectRow(vm.gridOptions.data[index]);
+                filterList(vm.searchStr);
               }
               vm.gridRefresh = false;
-              //need to select the row to reopen the side panel to update the view of side panel
-              vm.gridApi.grid.modifyRows(vm.gridOptions.data);
-              vm.gridApi.selection.selectRow(vm.gridOptions.data[index]);
-              filterList(vm.searchStr);
             },
           });
         });
@@ -229,7 +229,7 @@ require('./_fields-list.scss');
           displayName: $translate.instant('context.dictionary.fieldPage.searchable'),
           maxWidth: 200,
         }, {
-          field: 'publiclyAccessible',
+          field: 'publiclyAccessibleUI',
           displayName: $translate.instant('context.dictionary.access'),
           maxWidth: 200,
         }, {
@@ -260,7 +260,7 @@ require('./_fields-list.scss');
 
       var lowerStr = str.toLowerCase();
       var containSearchString = function (field) {
-        var propertiesToCheck = ['id', 'description', 'dataTypeUI', 'searchableUI', 'classificationUI', 'lastUpdatedUI', 'publiclyAccessible'];
+        var propertiesToCheck = ['id', 'description', 'dataTypeUI', 'searchableUI', 'classificationUI', 'lastUpdatedUI', 'publiclyAccessibleUI'];
         return _.some(propertiesToCheck, function (property) {
           var value = _.get(field, property, '').toLowerCase();
           return _.includes(value, lowerStr);

@@ -49,7 +49,7 @@
       exportReport.enabled = true;
 
       var titles = CareReportsGraphService.getBaseVariable('title');
-      if (!angular.isUndefined(title)) {
+      if (!_.isUndefined(title)) {
         titles[0].text = title;
         titles[0].enabled = true;
       }
@@ -181,7 +181,7 @@
       exportReport.enabled = true;
 
       var titles = CareReportsGraphService.getBaseVariable('title');
-      if (!angular.isUndefined(title)) {
+      if (!_.isUndefined(title)) {
         titles[0].text = title;
         titles[0].enabled = true;
       }
@@ -249,7 +249,7 @@
       exportReport.enabled = true;
 
       var titles = CareReportsGraphService.getBaseVariable('title');
-      if (!angular.isUndefined(title)) {
+      if (!_.isUndefined(title)) {
         titles[0].text = title;
         titles[0].enabled = true;
       }
@@ -318,7 +318,7 @@
       exportReport.enabled = true;
 
       var titles = CareReportsGraphService.getBaseVariable('title');
-      if (!angular.isUndefined(title)) {
+      if (!_.isUndefined(title)) {
         titles[0].text = title;
         titles[0].enabled = true;
       }

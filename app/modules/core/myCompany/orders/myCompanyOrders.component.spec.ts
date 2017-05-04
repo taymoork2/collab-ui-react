@@ -40,7 +40,7 @@ describe('Component: myCompanyOrders', () => {
     spyOn(this.DigitalRiverService, 'logout').and.returnValue(this.$q.resolve());
 
     this.compileComponent('myCompanyOrders');
-    spyOn(this.controller, 'downloadPdf');
+    spyOn(this.controller, 'viewInvoice');
   });
 
   it('should render ui-grid from gridOptions', function () {
@@ -51,7 +51,7 @@ describe('Component: myCompanyOrders', () => {
   describe('before data loaded', () => {
     it('should have loading icon with no data', function () {
       expect(this.view).not.toContainElement('.ui-grid-row');
-      expect(this.view).toContainElement('.grid-refresh .icon-spinner');
+      expect(this.view).toContainElement('.grid-spinner');
     });
   });
 
@@ -66,7 +66,7 @@ describe('Component: myCompanyOrders', () => {
 
     it('should not have loading icon or data', function () {
       expect(this.view).not.toContainElement('.ui-grid-row');
-      expect(this.view).not.toContainElement('.grid-refresh .icon-spinner');
+      expect(this.view).not.toContainElement('.grid-spinner');
       expect(this.controller.orderDetailList).toEqual([]);
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(jasmine.any(Object), 'myCompanyOrders.loadError');
     });
@@ -89,7 +89,7 @@ describe('Component: myCompanyOrders', () => {
 
     it('should have a data row and no loading icon', function () {
       expect(this.view).toContainElement('.ui-grid-row');
-      expect(this.view).not.toContainElement('.grid-refresh .icon-spinner');
+      expect(this.view).not.toContainElement('.grid-spinner');
     });
 
     // TODO investigate more on unit testing ui-grid sorting
@@ -108,10 +108,9 @@ describe('Component: myCompanyOrders', () => {
       expect(this.view.find('.ui-grid-row').last()).toContainText('123');
     });
 
-    // TODO re-enable when `myCompanyOrdersAction.tpl.html` shows an anchor
-    xit('should call downloadPdf on action click', function () {
+    it('should call viewInvoice on action click', function () {
       this.view.find('.my-company-order-history-actions').click();
-      expect(this.controller.downloadPdf).toHaveBeenCalled();
+      expect(this.controller.viewInvoice).toHaveBeenCalled();
     });
   });
 });

@@ -42,8 +42,15 @@
     "features": []
 }, {
     "name": "WESTUC",
-    "logoSrc": "images/carriers/logo_westuc.jpg",
+    "logoSrc": "images/carriers/logo_westuc.svg",
     "logoAlt": "West Corporation",
     "docSrc": "",
-    "features": []
+    "features": [
+        "westucFeatures.feature1",
+        "westucFeatures.feature2",
+        "westucFeatures.feature3",
+        "westucFeatures.feature4",
+        "westucFeatures.feature5",
+        "westucFeatures.feature6"        
+    ]
 }]

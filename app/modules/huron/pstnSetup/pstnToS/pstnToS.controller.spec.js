@@ -43,21 +43,21 @@ var CARRIER = {
 };
 
 describe('Controller: PstnToSCtrl', function () {
-  var $q, $rootScope, $scope, $controller, $httpBackend, controller, Orgservice, PstnSetupService;
+  var $q, $rootScope, $scope, $controller, $httpBackend, controller, Orgservice, PstnService;
 
   beforeEach(angular.mock.module('Huron'));
 
   afterAll(function () {
-    $q = $rootScope = $scope = $controller = controller = Orgservice = PstnSetupService = undefined;
+    $q = $rootScope = $scope = $controller = controller = Orgservice = PstnService = undefined;
   });
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _$controller_, _$httpBackend_, _Orgservice_, _PstnSetupService_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _$controller_, _$httpBackend_, _Orgservice_, _PstnService_) {
     $q = _$q_;
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
     Orgservice = _Orgservice_;
-    PstnSetupService = _PstnSetupService_;
+    PstnService = _PstnService_;
     $httpBackend = _$httpBackend_;
 
     $scope.$close = jasmine.createSpy('$close');
@@ -66,17 +66,17 @@ describe('Controller: PstnToSCtrl', function () {
       callback({ id: '1234512345' }, 200);
     });
 
-    spyOn(PstnSetupService, 'getCustomerV2').and.returnValue($q.resolve({ trial: true, pstnCarrierId: '1234' }));
-    spyOn(PstnSetupService, 'getCustomerTrialV2').and.returnValue($q.resolve({ termsOfServiceUrl: 'http://server/tos' }));
-    spyOn(PstnSetupService, 'setCustomerTrialV2').and.returnValue($q.resolve());
-    spyOn(PstnSetupService, 'getCarrierDetails').and.returnValue($q.resolve(CARRIER));
+    spyOn(PstnService, 'getCustomerV2').and.returnValue($q.resolve({ trial: true, pstnCarrierId: '1234' }));
+    spyOn(PstnService, 'getCustomerTrialV2').and.returnValue($q.resolve({ termsOfServiceUrl: 'http://server/tos' }));
+    spyOn(PstnService, 'setCustomerTrialV2').and.returnValue($q.resolve());
+    spyOn(PstnService, 'getCarrierDetails').and.returnValue($q.resolve(CARRIER));
 
     $httpBackend.when('GET', 'modules/huron/pstn/pstnProviders/pstnProviders.json').respond(PROVIDERS);
 
     controller = $controller('PstnToSCtrl', {
       $scope: $scope,
       Orgservice: Orgservice,
-      PstnSetupService: PstnSetupService,
+      PstnService: PstnService,
     });
     $rootScope.$apply();
   }));
@@ -88,7 +88,7 @@ describe('Controller: PstnToSCtrl', function () {
 
     controller.onAgreeClick();
     expect(controller.loading).toEqual(true);
-    expect(PstnSetupService.setCustomerTrialV2).toHaveBeenCalled();
+    expect(PstnService.setCustomerTrialV2).toHaveBeenCalled();
 
     $rootScope.$apply();
     expect($scope.$close).toHaveBeenCalled();

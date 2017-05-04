@@ -303,49 +303,63 @@
           })
           .state('sidepanel', {
             abstract: true,
-            onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
-              if ($state.sidepanel) {
-                $state.sidepanel.stopPreviousState = true;
-              } else {
-                $previousState.memo(sidepanelMemo);
-              }
-              var template = '<cs-sidepanel';
-              if ($state.params.size) {
-                template = template + ' size="large"';
-              }
-              template = template + '></cs-sidepanel>';
-              $state.sidepanel = $modal.open({
-                template: template,
-                // TODO(pajeter): remove inline template when cs-modal is updated
-                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
-                'modal-animation-class="fade"' +
-                'modal-in-class="in"' +
-                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
-                '<div class="modal-content" modal-transclude></div>' +
-                ' </div>',
-                backdrop: false,
-                keyboard: false,
-              });
-              $state.sidepanel.result.finally(function () {
-                if (!this.stopPreviousState && !$state.modal) {
-                  $state.sidepanel = null;
-                  var previousState = $previousState.get(sidepanelMemo);
-                  if (previousState) {
-                    if (isStateInSidepanel($state)) {
-                      return $previousState.go(sidepanelMemo).then(function () {
-                        $previousState.forget(sidepanelMemo);
-                      });
-                    }
+            onExit: panelOnExit,
+            onEnter: panelOnEnter({ type: '' }),
+          })
+          .state('largepanel', {
+            abstract: true,
+            onExit: panelOnExit,
+            onEnter: panelOnEnter({ type: 'large' }),
+          });
+
+        // Enter and Exit functions for panel(large or side)
+        function panelOnEnter(options) {
+          options = options || {};
+          return /* @ngInject */ function ($modal, $state, $previousState) {
+            if ($state.sidepanel) {
+              $state.sidepanel.stopPreviousState = true;
+            } else {
+              $previousState.memo(sidepanelMemo);
+            }
+
+            var template = '<cs-sidepanel';
+            template += options.type ? ' size="' + options.type + '"' : '';
+            template += '></cs-sidepanel>';
+            $state.sidepanel = $modal.open({
+              template: template,
+              // TODO(pajeter): remove inline template when cs-modal is updated
+              windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
+              'modal-animation-class="fade"' +
+              'modal-in-class="in"' +
+              'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
+              '<div class="modal-content" modal-transclude></div>' +
+              ' </div>',
+              backdrop: false,
+              keyboard: false,
+            });
+            $state.sidepanel.result.finally(function () {
+              if (!this.stopPreviousState && !$state.modal) {
+                $state.sidepanel = null;
+                var previousState = $previousState.get(sidepanelMemo);
+                if (previousState) {
+                  var isStateInLargepanel = $state.current.parent === 'largepanel';
+                  if (isStateInSidepanel($state) || isStateInLargepanel) {
+                    return $previousState.go(sidepanelMemo).then(function () {
+                      $previousState.forget(sidepanelMemo);
+                    });
                   }
                 }
-              }.bind($state.sidepanel));
-            },
-            onExit: /* @ngInject */ function ($state) {
-              if ($state.sidepanel) {
-                $state.sidepanel.dismiss();
               }
-            },
-          });
+            }.bind($state.sidepanel));
+          };
+        }
+
+        /* @ngInject */
+        function panelOnExit($state) {
+          if ($state.sidepanel) {
+            $state.sidepanel.dismiss();
+          }
+        }
 
         // See http://angular-translate.github.io/docs/#/guide/19_security
         $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -386,8 +400,8 @@
             $state.modal.result.finally(function () {
               if (!this.stopPreviousState) {
                 $state.modal = null;
-                //context-fields-sidepanel needs to update the view with new values after the update
-                if ($state.current.name !== 'context-fields-sidepanel') {
+                //context-fields-sidepanel needs to update the view with new values after the update; otherwise go back to previous state
+                if ($state.current.name !== 'context-fields-sidepanel' && $state.current.name !== 'context-fieldsets-sidepanel') {
                   var previousState = $previousState.get(modalMemo);
                   if (previousState) {
                     return $previousState.go(modalMemo).then(function () {
@@ -2136,14 +2150,12 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gmTdLargePanel', {
+          .state('gmTdNumbers', {
             data: {},
-            parent: 'sidepanel',
-            views: { 'sidepanel@': { template: '<gm-td-large-panel></gm-td-large-panel>' } },
-            resolve: {
-              sideBarInfo: /* @ngInject */ function ($state) {
-                $state.params.size = 'large';
-              },
+            parent: 'largepanel',
+            views: {
+              'sidepanel@': { template: '<gm-td-numbers></gm-td-numbers>' },
+              'header@gmTdNumbers': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
             },
           })
           .state('gmTdDetails', {
@@ -2227,6 +2239,16 @@
               currentCustomer: {},
             },
             data: {},
+            onEnter: /* @ngInject */ function (Orgservice, $stateParams, HuronCompassService) {
+              HuronCompassService.setIsCustomer(true);
+              Orgservice.isTestOrg($stateParams.currentCustomer.customerOrgId).then(function (result) {
+                $stateParams.isTestOrg = result;
+              });
+            },
+            onExit: /* @ngInject */ function (HuronCompassService) {
+              HuronCompassService.setIsCustomer(false);
+              HuronCompassService.setCustomerBaseDomain();
+            },
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
@@ -2260,7 +2282,7 @@
                 $state.get('customer-overview.ordersOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/ordersOverview'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/ordersOverview'], done);
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
@@ -2351,7 +2373,7 @@
                 $state.get('customerPstnOrdersOverview').data.displayName = $translate.instant('pstnOrderOverview.orderHistory');
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/customerPstnOrdersOverview'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/customerPstnOrdersOverview'], done);
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
@@ -2373,7 +2395,7 @@
                 $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.currentOrder.carrierOrderId;
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/orderDetail'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
               }),
               currentOrder: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentOrder;
@@ -2396,7 +2418,7 @@
                 $state.get('customer-overview.orderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/orderDetail'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
@@ -2593,6 +2615,9 @@
               details: {},
               mode: {},
             },
+            onEnter: /* @ngInject */ function (HuronCompassService) {
+              HuronCompassService.setIsCustomer(true);
+            },
           })
           .state('trial.info', {
             templateUrl: 'modules/core/trials/trial.tpl.html',
@@ -2687,6 +2712,54 @@
               },
             },
           })
+          .state('pstnWizard', {
+            parent: 'modal',
+            params: {
+              customerId: {},
+              customerName: {},
+              customerEmail: {},
+              customerCommunicationLicenseIsTrial: {},
+              customerRoomSystemsLicenseIsTrial: {},
+            },
+            views: {
+              'modal@': {
+                template: '<uc-pstn-paid-wizard class="modal-content" customer-id="$resolve.customerId" customer-communication-license-is-trial="$resolve.customerCommunicationLicenseIsTrial" customer-room-systems-license-is-trial="$resolve.customerRoomSystemsLicenseIsTrial" dismiss="$dismiss()" close="$close()"></uc-pstn-paid-wizard>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'pstn-numbers';
+                  },
+                },
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/pstn/pstnWizard'));
+                }, 'pstn-wizard');
+              }),
+              customerSetup: /* @ngInject */ function ($stateParams, PstnModel, PstnService, Notification) {
+                PstnModel.setCustomerId($stateParams.customerId);
+                PstnModel.setCustomerName($stateParams.customerName);
+                PstnModel.setCustomerEmail($stateParams.customerEmail);
+                PstnModel.setIsTrial($stateParams.customerCommunicationLicenseIsTrial && $stateParams.customerRoomSystemsLicenseIsTrial);
+                //Reset Carriers
+                PstnModel.setCarriers([]);
+
+                //Verify the the Terminus Reseller is setup, otherwise setup the Reseller
+                if (!PstnModel.isResellerExists()) {
+                  PstnService.getResellerV2().then(function () {
+                    PstnModel.setResellerExists(true);
+                  }).catch(function () {
+                    PstnService.createResellerV2().then(function () {
+                      PstnModel.setResellerExists(true);
+                    }).catch(function (response) {
+                      Notification.errorResponse(response, 'pstnSetup.resellerCreateError');
+                    });
+                  });
+                }
+              },
+            },
+          })
           .state('pstnSetup', {
             parent: 'modal',
             params: {
@@ -2748,7 +2821,6 @@
             templateUrl: 'modules/huron/details/huronDetails.html',
           })
           .state('hurondetails', {
-            url: '/hurondetails',
             parent: 'hurondetailsBase',
             views: {
               'header': {
@@ -2767,7 +2839,7 @@
             },
           })
           .state('huronlines', {
-            url: '/lines',
+            url: '/services/call-lines',
             parent: 'hurondetails',
             templateUrl: 'modules/huron/lines/lineList.tpl.html',
             controller: 'LinesListCtrl',
@@ -2794,7 +2866,7 @@
             },
           })
           .state('huronsettings', {
-            url: '/settings',
+            url: '/services/call-settings',
             parent: 'hurondetails',
             templateUrl: 'modules/huron/settings/settings.tpl.html',
             controller: 'HuronSettingsCtrl',
@@ -2802,7 +2874,7 @@
           })
           // TODO (jlowery): rename the huronsettingsnew to huronsettings state when sparkCallTenDigitExt is removed.
           .state('huronsettingsnew', {
-            url: '/settingsnew',
+            url: '/services/call-settingsnew',
             parent: 'hurondetails',
             template: '<uc-settings ftsw="false"></uc-settings>',
             resolve: {
@@ -2811,6 +2883,14 @@
                   done(require('modules/huron/settings'));
                 }, 'call-settings');
               }),
+            },
+          })
+          .state('huronrecords', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/huron/cdrReports/cdrReportsModal.html',
+              },
             },
           })
           .state('users.enableVoicemail', {
@@ -2822,7 +2902,7 @@
             },
           })
           .state('huronfeatures', {
-            url: '/features',
+            url: '/services/call-features',
             parent: 'hurondetails',
             templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
             controller: 'HuronFeaturesCtrl',
@@ -2997,6 +3077,9 @@
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
+              hasEnterprisePrivateTrunkingFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
+              },
             },
           })
           // hybrid context
@@ -3130,16 +3213,20 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" existing-fieldset-data="$resolve.existingFieldsetData" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
               },
             },
             params: {
               existingFieldsetIds: [],
+              existingFieldsetData: {},
               callback: function () {},
             },
             resolve: {
               existingFieldsetIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldsetIds;
+              },
+              existingFieldsetData: /* @ngIngect */function ($stateParams) {
+                return $stateParams.existingFieldsetData;
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
@@ -3150,7 +3237,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset"></context-fieldsets-sidepanel>',
+                template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset" process="$resolve.process" callback="$resolve.callback" ></context-fieldsets-sidepanel>',
               },
               'header@context-fieldsets-sidepanel': {
                 templateUrl: 'modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html',
@@ -3161,10 +3248,18 @@
             },
             params: {
               fieldset: {},
+              process: function () {},
+              callback: function () {},
             },
             resolve: {
               fieldset: /* @ngInject */ function ($stateParams) {
                 return $stateParams.fieldset;
+              },
+              process: /* @ngInject */ function ($stateParams) {
+                return $stateParams.process;
+              },
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })
@@ -3210,13 +3305,32 @@
             },
           })
           .state('private-trunk-overview', {
+            url: '/private-trunk-overview',
             parent: 'main',
             template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hercules/private-trunk/overview'));
-                }, 'private-trunk');
+                  done(require('modules/hercules/private-trunk/private-trunk-overview'));
+                }, 'private-trunk-overview');
+              }),
+              hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
+              },
+            },
+          })
+          .state('private-trunk-overview.settings', {
+            url: '/settings',
+            views: {
+              privateTrunkSettings: {
+                template: '<private-trunk-overview-settings has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview-settings>',
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hercules/private-trunk/private-trunk-overview-settings'));
+                }, 'private-trunk-overview-settings');
               }),
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
@@ -3224,10 +3338,18 @@
             },
           })
           .state('private-trunk-overview.list', {
-            url: '/private-trunk-overview/list',
+            url: '/list',
             views: {
               sipDestinationList: {
-                template: '<hybrid-service-cluster-list service-id="\'ept\'"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+              },
+            },
+            params: {
+              clusterId: null,
+            },
+            resolve: {
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
               },
             },
           })
@@ -3241,6 +3363,11 @@
             params: {
               host: null,
               hostSerial: null,
+            },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           // Cluster settings and nodes
@@ -3374,6 +3501,11 @@
             params: {
               host: null,
               hostSerial: null,
+            },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           .state('hds-cluster-details.alarm-details', {
@@ -3743,6 +3875,16 @@
               },
             },
           })
+          .state('private-trunk-settings', {
+            parent: 'main',
+            url: '/private-trunk-settings/:id',
+            template: '<private-trunk-settings-page trunk-id="$resolve.id"></private-trunk-settings-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+            },
+          })
           .state('private-trunk-sidepanel', {
             parent: 'sidepanel',
             views: {
@@ -3817,6 +3959,11 @@
               // the parent connectorType param…
               specificType: null,
             },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            },
           })
           .state('expressway-cluster-sidepanel.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
@@ -3878,6 +4025,11 @@
             params: {
               host: null,
               hostSerial: null,
+            },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           .state('media-cluster-details.alarm-details', {

@@ -16,6 +16,8 @@ describe('Component: context field modal', () => {
     translations: ({ en_US: '' }),
     searchable: false,
     lastUpdated: undefined,
+    publiclyAccessible: undefined,
+    publiclyAccessibleUI: '',
   };
 
   beforeEach(function () {
@@ -87,17 +89,17 @@ describe('Component: context field modal', () => {
     });
   });
 
-  describe('buttonEnabled', function () {
+  describe('createOrSaveButtonEnabled', function () {
     it('should return true if valid id, label, and datatype are selected', function () {
       this.controller.fieldData.id = 'someId';
       this.controller.fieldData.translations.en_US = 'label';
       this.controller.fieldData.dataTypeUI = 'dataType';
-      expect(this.controller.buttonEnabled()).toBe(true);
+      expect(this.controller.createOrSaveButtonEnabled()).toBe(true);
     });
 
     it('should return false if id has not been entered', function () {
       this.controller.fieldData.id = '';
-      expect(this.controller.buttonEnabled()).toBe(false);
+      expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
     });
 
     it('should return false if id contains invalid characters', function () {
@@ -105,7 +107,7 @@ describe('Component: context field modal', () => {
       this.controller.fieldData.dataType = 'dataType';
       ['!', '$', '%', '!@#$%^', 'some field', 'some_*-field'].forEach(testString => {
         this.controller.fieldData.id = testString;
-        expect(this.controller.buttonEnabled()).toBe(false);
+        expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
       });
     });
 
@@ -117,26 +119,26 @@ describe('Component: context field modal', () => {
       this.controller.fieldData.dataType = 'dataType';
       ['someField', 'some-field', 'some_field'].forEach(testString => {
         this.controller.fieldData.id = testString;
-        expect(this.controller.buttonEnabled()).toBe(false);
+        expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
       });
     });
 
     it('should return false if label has not been entered', function () {
       this.controller.fieldData.id = 'id';
       this.controller.fieldData.translations.en_US = '';
-      expect(this.controller.buttonEnabled()).toBe(false);
+      expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
     });
 
     it('should return false if dataType has not been selected', function () {
       this.controller.fieldData.id = 'id';
       this.controller.fieldData.translations.en_US = 'label';
       this.controller.fieldData.dataType = '';
-      expect(this.controller.buttonEnabled()).toBe(false);
+      expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
     });
 
     it('should return false if actionInProgress is true', function () {
       this.controller.actionInProgress = true;
-      expect(this.controller.buttonEnabled()).toBe(false);
+      expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
     });
   });
 

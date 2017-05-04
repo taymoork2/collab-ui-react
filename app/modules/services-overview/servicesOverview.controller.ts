@@ -11,9 +11,12 @@ import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { ITProPackService }  from 'modules/core/itProPack/itProPack.service';
+import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
+import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
+import { ICluster } from 'modules/hercules/hybrid-services.types';
 
 export class ServicesOverviewCtrl {
 
@@ -29,6 +32,7 @@ export class ServicesOverviewCtrl {
     private Authinfo,
     private CloudConnectorService,
     private Config,
+    private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FeatureToggleService,
     private FusionClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
@@ -78,10 +82,13 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('hybridDataSecurityFeatureToggleEventHandler', supports);
       });
 
-    this.ITProPackService.hasITProPackPurchased()
-      .then(result => {
-        this.forwardEvent('itProPackEventHandler', result);
-      });
+    let ItPropackPromises = {
+      hasITProPackEnabled: this.ITProPackService.hasITProPackEnabled(),
+      hasITProPackPurchased: this.ITProPackService.hasITProPackPurchased(),
+    };
+    this.$q.all(ItPropackPromises).then(result => {
+      this.forwardEvent('itProPackEventHandler', result);
+    });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(supports => {
@@ -101,6 +108,11 @@ export class ServicesOverviewCtrl {
     this.FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
       .then(supports => {
         this.forwardEvent('sparkCallTenDigitExtFeatureToggleEventhandler', supports);
+      });
+
+    this.FeatureToggleService.supports(FeatureToggleService.features.hI802)
+      .then(supports => {
+        this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', supports);
       });
 
   }
@@ -135,7 +147,7 @@ export class ServicesOverviewCtrl {
 
   private loadHybridServicesStatuses() {
     this.FusionClusterService.getAll()
-      .then((clusterList) => {
+      .then((clusterList: Array<ICluster>) => {
         let servicesStatuses: Array<any> = [
           this.FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList),
           this.FusionClusterService.getStatusForService('squared-fusion-cal', clusterList),
@@ -161,6 +173,20 @@ export class ServicesOverviewCtrl {
           'Context is setup': servicesStatuses[5].setup,
           'Context status': servicesStatuses[5].status,
         });
+        return clusterList;
+      })
+      .then(this.loadSipDestinations);
+  }
+
+  private loadSipDestinations = (clusterList: Array<ICluster>) => {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
+      .then((supported: boolean) => {
+        if (supported) {
+          this.EnterprisePrivateTrunkService.fetch()
+            .then((sipTrunkResources: Array<IPrivateTrunkResource>) => {
+              this.forwardEvent('sipDestinationsEventHandler', sipTrunkResources, clusterList);
+            });
+        }
       });
   }
 

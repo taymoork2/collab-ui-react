@@ -17,6 +17,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   //Paging group number
   private number: INumberData;
+  private originalNumber: INumberData;
   private availableNumbers: INumberData[] = [];
 
   //Paging group members
@@ -71,7 +72,12 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
           this.PagingNumberService.getNumberExtension(this.pgId).then(
             (data: INumberData) => {
-              this.number = data;
+              if (!_.isUndefined(data.extension)) {
+                this.number = data;
+                this.originalNumber = data;
+              } else {
+                this.Notification.error('pagingGroup.errorGetNumber', { pagingGroupName: this.pg.name });
+              }
             },
             (response) => {
               this.Notification.errorResponse(response, this.pg.name);
@@ -229,9 +235,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
   }
 
   public sortForUser(member: Member) {
-    return (member.displayName ? member.displayName.toLowerCase() : undefined,
-      member.lastName ? member.lastName.toLowerCase() : undefined,
-      member.firstName ? member.firstName.toLowerCase() : undefined);
+    return member.firstName ? member.firstName.toLowerCase() : undefined;
   }
 
   public sortForPlace(member: Member) {
@@ -419,11 +423,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public onCancel(): void {
     this.name = this.pg.name;
-
-    this.PagingNumberService.getNumberExtension(this.pgId).then(
-      (data: INumberData) => {
-        this.number = data;
-      });
+    this.number = this.originalNumber;
 
     if (this.pg.initiatorType !== undefined) {
       this.initiatorType = this.pg.initiatorType;
@@ -493,8 +493,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
     }
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
-      extension: this.number.extension,
-      extensionUUID: this.number.extensionUUID,
+      extension: (this.number.extension === this.originalNumber.extension) ? undefined : this.number.extension,
       members: members,
       initiatorType: this.initiatorType,
       initiators: initiators,

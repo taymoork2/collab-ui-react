@@ -3,7 +3,7 @@
 describe('Controller: AABuilderMainCtrl', function () {
   var controller, $controller, AANotificationService, AutoAttendantCeService;
   var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AANumberAssignmentService, HuronConfig, $httpBackend;
-  var $state, $rootScope, $scope, $q, $stateParams, $compile;
+  var $state, $rootScope, $scope, $q, $stateParams, $compile, $modalStack;
   var AAUiScheduleService, AACalendarService;
   var AATrackChangeService, AADependencyService;
   var FeatureToggleService;
@@ -60,10 +60,11 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(inject(function (_$state_, _$rootScope_, _$q_, _$compile_, _$stateParams_, _$controller_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AAUiScheduleService_,
-    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_) {
+    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_, _$modalStack_) {
 
     $state = _$state_;
     $rootScope = _$rootScope_;
+    $modalStack = _$modalStack_;
     $q = _$q_;
     $compile = _$compile_;
     $scope = $rootScope.$new();
@@ -124,6 +125,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(sysModel.site));
     spyOn($rootScope, '$broadcast').and.callThrough();
+    spyOn($modalStack, 'getTop').and.returnValue({});
+    spyOn($modalStack, 'dismiss');
 
     controller = $controller('AABuilderMainCtrl as vm', {
       $scope: $scope,
@@ -135,6 +138,15 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   afterEach(function () {
 
+  });
+
+  describe('$locationChangeStart', function () {
+    it('should dismiss the modal on click of browser back button', function () {
+      $scope.$broadcast('$locationChangeStart');
+      $scope.$apply();
+      expect($modalStack.getTop).toHaveBeenCalled();
+      expect($modalStack.dismiss).toHaveBeenCalled();
+    });
   });
 
   describe('getTimeZoneOptions', function () {

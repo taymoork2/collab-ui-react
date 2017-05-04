@@ -278,7 +278,11 @@
         <h4 translate="partnerHomePage.nonTrialServices"></h4>
       </div>
       <div class="section__content">
-        <formly-form model="trial.trialData.trials" fields="trial.nonTrialServices"></formly-form>
+         <input type="checkbox" cs-input
+            ng-model="trial.contextTrial.enabled"
+            id="contextTrial" name="contextTrial"
+            cs-input-label="{{::'trials.context' | translate}}">
+        </div>
       </div>
     </div>
   </form>
@@ -290,7 +294,7 @@
       <div class="message" translate="trials.supportedLocationWarning"></div>
     </div>
   </div>
-  <button id="cancelTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.loading">
+  <button id="cancelTrialButton" class="btn" ng-click="trial.cancelModal()" ng-disabled="trial.loading">
     <span translate="partnerHomePage.cancel"></span>
   </button>
   <!-- edit trial -->

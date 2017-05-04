@@ -3,9 +3,7 @@
 
   angular
     .module('Messenger')
-    .controller('CiSyncCtrl', CiSyncCtrl)
-    .directive('msgrTextStatusOn', msgrTextStatusOn)
-    .directive('msgrTextStatusOff', msgrTextStatusOff);
+    .controller('CiSyncCtrl', CiSyncCtrl);
 
   /* @ngInject */
   function CiSyncCtrl($q, $translate, Authinfo, Log, Notification, CiService, SyncService) {
@@ -44,6 +42,7 @@
     vm.errorMsg = '';
     vm.isDirSync = false;
     vm.orgAdminUrl = 'https://wapi.webexconnect.com/wbxconnect/acs/widgetserver/mashkit/apps/standalone.html?app=WBX.base.orgadmin';
+    vm.backState = 'services-overview';
 
     // Translated text
     vm.refresh = $translate.instant(translatePrefix + 'refresh');
@@ -70,38 +69,6 @@
       isUsrDis: true,
       isUsrDel: true,
     };
-
-    vm.fields = [{
-      key: 'messengerOrgName',
-      type: 'input',
-      templateOptions: {
-        type: '',
-        label: $translate.instant(translatePrefix + 'labelOrgName'),
-        required: false,
-        disabled: true,
-        placeholder: '',
-      },
-    }, {
-      key: 'messengerOrgId',
-      type: 'input',
-      templateOptions: {
-        type: '',
-        label: $translate.instant(translatePrefix + 'labelOrgId'),
-        required: false,
-        disabled: true,
-        placeholder: '',
-      },
-    }, {
-      key: 'linkDate',
-      type: 'input',
-      templateOptions: {
-        type: 'input',
-        label: $translate.instant(translatePrefix + 'labelCILinkDate'),
-        required: false,
-        disabled: true,
-        placeholder: '',
-      },
-    }];
 
     vm.init = init;
 
@@ -269,17 +236,5 @@
           });
       }
     }
-  }
-
-  function msgrTextStatusOn() {
-    return {
-      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOn.html',
-    };
-  }
-
-  function msgrTextStatusOff() {
-    return {
-      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOff.html',
-    };
   }
 })();

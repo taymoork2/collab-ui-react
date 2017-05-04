@@ -205,26 +205,26 @@ describe(' sunlightReportService', function () {
       expect(aggregatedData.length).toBe(4);
 
       expect(aggregatedData[0].avgCsatScore).toBe('-');
-      expect(aggregatedData[0].contactsHandled).toBe(1);
-      expect(aggregatedData[0].contactsAssigned).toBe(0);
+      expect(aggregatedData[0].tasksHandled).toBe(1);
+      expect(aggregatedData[0].tasksAssigned).toBe(0);
       expect(aggregatedData[0].handleTime).toBe(0);
       expect(aggregatedData[0].displayName).toBe('A GT user5');
 
       expect(aggregatedData[1].avgCsatScore).toBe(3.67);
-      expect(aggregatedData[1].contactsHandled).toBe(3);
-      expect(aggregatedData[1].contactsAssigned).toBe(4);
+      expect(aggregatedData[1].tasksHandled).toBe(3);
+      expect(aggregatedData[1].tasksAssigned).toBe(4);
       expect(aggregatedData[1].handleTime).toBe(27887);
       expect(aggregatedData[1].displayName).toBe('display GT User 4');
 
       expect(aggregatedData[2].avgCsatScore).toBe(4);
-      expect(aggregatedData[2].contactsHandled).toBe(7);
-      expect(aggregatedData[2].contactsAssigned).toBe(10);
+      expect(aggregatedData[2].tasksHandled).toBe(7);
+      expect(aggregatedData[2].tasksAssigned).toBe(10);
       expect(aggregatedData[2].handleTime).toBe(401973);
       expect(aggregatedData[2].displayName).toBe('A GT user5');
 
       expect(aggregatedData[3].avgCsatScore).toBe(4);
-      expect(aggregatedData[3].contactsHandled).toBe(0);
-      expect(aggregatedData[3].contactsAssigned).toBe(0);
+      expect(aggregatedData[3].tasksHandled).toBe(0);
+      expect(aggregatedData[3].tasksAssigned).toBe(0);
       expect(aggregatedData[3].handleTime).toBe(0);
       expect(aggregatedData[3].displayName).toBe('sunlight-user1@outlook.com');
 

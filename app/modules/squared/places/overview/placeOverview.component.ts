@@ -107,13 +107,21 @@ class PlaceOverview implements ng.IComponentController {
       this.generateCodeIsDisabled = false;
     });
 
-    this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(feature => {
-      if (feature) {
-        this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
-          this.showDeviceSettings = channels.length > 1 && this.currentPlace.type === 'cloudberry';
+    if (this.currentPlace.type === 'cloudberry') {
+      this.$q.all([
+        this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus(),
+        this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus(),
+      ])
+        .then(features => {
+          if (features[1]) {
+            this.showDeviceSettings = true;
+          } else if (features[0]) {
+            this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
+              this.showDeviceSettings = channels.length > 1;
+            });
+          }
         });
-      }
-    });
+    }
   }
 
   private fetchDetailsForLoggedInUser() {

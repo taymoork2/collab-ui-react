@@ -1,0 +1,32 @@
+<cs-sp-container class="pstn-order-detail">
+  <cs-sp-section>
+    <div class="section-title-row">
+      <h3 id="orderNumber" translate="pstnOrderDetail.orderNumber" translate-values="{orderId: $ctrl.currentOrder.carrierOrderId}"></h3>
+    </div>
+    <div class="feature-name">
+      <span id="orderCreated" translate="pstnOrderDetail.orderCreationDate" translate-values="{date: $ctrl.currentOrder.created }"></span>
+      <span ng-if="$ctrl.createdBy" id="orderCreatedBy" translate="pstnOrderDetail.createdBy" translate-values="{createdBy: $ctrl.createdBy}"></span>
+    </div>
+    <div>
+      <span id="orderType" class="feature-name">{{$ctrl.currentOrder.type}}</span>
+    </div>
+    <div>
+      <span id="orderStatus" class="feature-name">{{$ctrl.currentOrder.status}}
+      </span>
+    </div>
+    <div>
+      <span class="feature-name" ng-if="!$ctrl.tosAccepted" translate="pstnOrderDetail.waitOnTOSAcceptance"></span>
+    </div>
+    <div class="filter">
+      <input id="numberSearchInput" type="text" class="form-control" ng-model="$ctrl.filter" ng-model-options="{ debounce: 250 }" placeholder="{{::'pstnOrderDetail.searchPlaceholder' | translate}}">
+      <i class="icon icon-search"></i>
+    </div>
+    <ul class="detail-group">
+      <li class="detail-group-item" ng-repeat="info in filteredOrderDetails = ($ctrl.info | filter:$ctrl.filter)">
+        <span class="feature-name">{{info.label}}</span>
+        <span class="feature-status">{{info.status}}</span>
+        <span ng-if="info.tooltip" class="icon icon-info info-tooltip" tooltip="{{info.tooltip}}" tooltip-placement="top"></span>
+      </li>
+    </ul>
+  </cs-sp-section>
+</cs-sp-container>

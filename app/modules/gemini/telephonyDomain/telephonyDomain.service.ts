@@ -1,86 +1,76 @@
-import { GmHttpService } from '../common/gem.http.service';
-
 export class TelephonyDomainService {
 
   private url;
 
   /* @ngInject */
   constructor(
-    private GmHttpService: GmHttpService,
+    private UrlConfig,
+    private $http: ng.IHttpService,
     private $translate: ng.translate.ITranslateService,
   ) {
-    this.url = {
-      getActivityLogs: 'activityLogs',
-      telephonyDomain: 'telephonydomain/',
-      moveSite: 'telephonydomain/moveSite',
-      getTelephonyDomains: 'telephonydomain/customerId/',
-      cancelSubmission: 'telephonydomain/cancelSubmission',
-      getNumbers: 'telephonydomain/getTelephonyNumberByDomainId/',
-      getTelephonyDomain: 'telephonydomain/getTelephonyDomainInfoByDomainId/',
-      downloadUrl: 'https://hfccap12.qa.webex.com/ccaportal/resources/excel/ccaportal_telephony_numbers.xls', // TODO, will use urlConfig
-    };
+    this.url = `${this.UrlConfig.getGeminiUrl()}telephonydomain/`;
   }
 
   public getTelephonyDomains(customerId: string) {
-    const url = `${this.url.getTelephonyDomains}${customerId}`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.url}customerId/${customerId}`;
+    return this.$http.get(url).then(this.extractData);
   }
 
   public getTelephonyDomain(customerId, ccaDomainId) {
-    const url = `${this.url.getTelephonyDomain}${customerId}/${ccaDomainId}`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.url}getTelephonyDomainInfoByDomainId/${customerId}/${ccaDomainId}`;
+    return this.$http.get(url).then(this.extractData);
   }
 
   public getRegionDomains(data: Object) {
-    const url = `${this.url.telephonyDomain}getRegionDomains`;
-    return this.GmHttpService.httpPost(url, null, null, data).then(this.extractData);
+    const url = `${this.url}getRegionDomains`;
+    return this.$http.post(url, data).then(this.extractData);
   }
 
   public getRegions() {
-    const url = `${this.url.telephonyDomain}regions`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.url}regions`;
+    return this.$http.get(url).then(this.extractData);
   }
 
   public getNotes(customerId: string, ccaDomainId: string) {
-    const url = `${this.url.getActivityLogs}/${customerId}/${ccaDomainId}/add_note`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${customerId}/${ccaDomainId}/add_note_td`;
+    return this.$http.get(url).then(this.extractData);
   }
 
   public getHistories(customerId: string, ccaDomainId: string, domainName: string) {
-    const url = `${this.url.getActivityLogs}/${customerId}/${ccaDomainId}/Telephony%20Domain/${domainName}`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${customerId}/${ccaDomainId}/Telephony%20Domain/${domainName}`;
+    return this.$http.get(url).then(this.extractData);
   }
 
   public getNumbers(customerId: string, ccaDomainId: string) {
-    const url = `${this.url.getNumbers}${customerId}/${ccaDomainId}`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.url}getTelephonyNumberByDomainId/${customerId}/${ccaDomainId}`;
+    return this.$http.get(url).then(this.extractData);
   }
 
   public getDownloadUrl() {
-    return this.url.downloadUrl;
+    return `${this.url}files/templates/telephony_numbers_template`;
   }
 
   public postNotes(data: any) {
-    const url = this.url.getActivityLogs;
-    return this.GmHttpService.httpPost(url, null, null, data).then(this.extractData);
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs`;
+    return this.$http.post(url, data).then(this.extractData);
   }
 
   public moveSite(data: any) {
-    const url = this.url.moveSite;
-    return this.GmHttpService.httpPut(url, null, null, data).then(this.extractData);
+    const url = `${this.url}moveSite`;
+    return this.$http.put(url, data).then(this.extractData);
   }
 
   public updateTelephonyDomainStatus(customerId: string, ccaDomainId: string, telephonyDomainId: number, operation: string) {
     let url: string = '';
-    let postData: any = {
+    const postData: any = {
       ccaDomainId: ccaDomainId,
       customerId: customerId,
       TelephonyDomainId: telephonyDomainId,
     };
     if (operation === 'cancel') {
-      url = this.url.cancelSubmission;
+      url = `${this.url}cancelSubmission`;
     }
-    return this.GmHttpService.httpPost(url, null, null, postData).then(this.extractData);
+    return this.$http.post(url, postData).then(this.extractData);
   }
 
   public telephonyDomainsExportCSV(customerId: string) {

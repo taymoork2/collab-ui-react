@@ -12,7 +12,7 @@
     vm.groupResponse = null;
     vm.clusterDetail = null;
 
-    vm.getCluster = function () {
+    vm.getClusters = function () {
       MediaClusterServiceV2.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
@@ -23,7 +23,7 @@
           Notification.errorWithTrackingId(error, 'mediaFusion.genericError');
         });
     };
-    vm.getCluster();
+    vm.getClusters();
 
     vm.reassignText = $translate.instant(
       'mediaFusion.reassign.reassignTextV2', {
@@ -62,6 +62,7 @@
         moveHost();
       }
     };
+
     function moveHost() {
       MediaClusterServiceV2.moveV2Host(connector.id, cluster.id, vm.clusterDetail.id).then(function () {
         $modalInstance.close();

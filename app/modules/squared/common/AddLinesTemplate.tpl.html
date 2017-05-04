@@ -11,7 +11,7 @@
     <div id="addDnAndExtToUserOptionButtons" class="page-option-buttons">
       <div >
         <i ng-if="addLines.isMapInProgress" class='icon icon-spinner did-map-spinner'></i>
-        <a id="mapDn" href translate="firstTimeWizard.mapDirectLineWithExtIfPossible" ng-click="!addLines.isMapEnabled || addLines.mapDidToDn()"  ng-class="isMapEnabled ? 'primary' : 'disabled'" ></a>
+        <a id="mapDn" href translate="firstTimeWizard.mapPhoneNumberWithExt" ng-click="!addLines.isMapEnabled || addLines.mapDidToDn()"  ng-class="isMapEnabled ? 'primary' : 'disabled'" ></a>
         <span class="option-separator-pipe">|</span>
         <i ng-if="isResetInProgress" class='icon icon-spinner did-map-spinner'></i>
         <a href translate="firstTimeWizard.reset" ng-click="!addLines.isResetEnabled || addLines.resetDns()" ng-class="addLines.isResetEnabled ? 'primary' : 'disabled'" ></a>

@@ -9,7 +9,7 @@
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate,
     HuronCustomer, ValidationService, HuronCustomerService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
-    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2,
+    PstnService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2,
     CustomerDialPlanServiceV2, HuronCompassService) {
     var vm = this;
     vm.isTimezoneAndVoicemail = function () {
@@ -36,11 +36,13 @@
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
     var VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL';
+    var VOICE_VOICEMAIL = 'VOICE_VOICEMAIL';
 
     vm.avrilTzUpdated = false;
     vm.avrilDialPlanUpdated = false;
     vm.avrilLanguageUpdated = false;
     vm.voicemailAvrilCustomer = false;
+    vm.voicemailAvrilMailboxCustomer = false;
     vm.addInternalNumberRange = addInternalNumberRange;
     vm.deleteInternalNumberRange = deleteInternalNumberRange;
     vm.loadExternalNumberPool = loadExternalNumberPool;
@@ -130,12 +132,15 @@
     vm.ftHRegionalTones = false;
     vm.supportRegionalSettings = supportRegionalSettings;
 
-    PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
+    PstnService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
     });
 
     FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
       vm.voicemailAvrilCustomer = result;
+    });
+    FeatureToggleService.supports(FeatureToggleService.features.avrilVmMailboxEnable).then(function (result) {
+      vm.voicemailAvrilMailboxCustomer = result;
     });
 
     FeatureToggleService.supports(FeatureToggleService.features.hRegionalTones).then(function (result) {
@@ -897,24 +902,19 @@
     }
 
     function initClassOfService() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
-        .then(function (enabled) {
-          if (enabled) {
-            return CustomerCosRestrictionServiceV2.get({
-              customerId: Authinfo.getOrgId(),
-            }).$promise.then(function (cosRestrictions) {
-              vm.model.cosRestrictions = _.forEach(cosRestrictions.restrictions, function (restriction) {
-                if (_.has(restriction, 'url')) {
-                  delete restriction['url'];
-                }
+      return CustomerCosRestrictionServiceV2.get({
+        customerId: Authinfo.getOrgId(),
+      }).$promise.then(function (cosRestrictions) {
+        vm.model.cosRestrictions = _.forEach(cosRestrictions.restrictions, function (restriction) {
+          if (_.has(restriction, 'url')) {
+            delete restriction['url'];
+          }
 
-                if (_.has(restriction, 'uuid')) {
-                  delete restriction['uuid'];
-                }
-              });
-            });
+          if (_.has(restriction, 'uuid')) {
+            delete restriction['uuid'];
           }
         });
+      });
     }
 
     function initDialPlan() {
@@ -1185,7 +1185,10 @@
         var customer = {};
         if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
           if (!vm.hasVoicemailService) {
-            if (vm.voicemailAvrilCustomer) {
+            if (vm.voicemailAvrilMailboxCustomer) {
+              customer.servicePackage = VOICE_VOICEMAIL;
+              isAvrilVoiceEnabled = true;
+            } else if (vm.voicemailAvrilCustomer) {
               customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
               isAvrilVoiceEnabled = true;
             } else {
@@ -1258,7 +1261,8 @@
 
         return ServiceSetup.createSite(currentSite)
             .then(function () {
-              if (vm.voicemailAvrilCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === VOICE_VOICEMAIL_AVRIL)) {
+              if ((vm.voicemailAvrilCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === VOICE_VOICEMAIL_AVRIL))
+                || (vm.voicemailAvrilMailboxCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === VOICE_VOICEMAIL))) {
                 ServiceSetup.listSites().then(function () {
                   if (ServiceSetup.sites.length !== 0) {
                     var siteUuid = ServiceSetup.sites[0].uuid;
@@ -1286,7 +1290,8 @@
         if (!_.isEmpty(siteData)) {
           return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
             .then(function () {
-              if (vm.voicemailAvrilCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === 'VOICE_VOICEMAIL_AVRIL')) {
+              if ((vm.voicemailAvrilCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === VOICE_VOICEMAIL_AVRIL))
+                || (vm.voicemailAvrilMailboxCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === VOICE_VOICEMAIL))) {
                 var setupSites = ServiceSetup.sites[0];
                 var currentSetupSite = vm.model.site;
                 var mSite = {
@@ -1546,16 +1551,11 @@
       }
 
       function updateClassOfService() {
-        return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
-          .then(function (enabled) {
-            if (enabled) {
-              return CustomerCosRestrictionServiceV2.update({
-                customerId: Authinfo.getOrgId(),
-              }, {
-                restrictions: vm.model.cosRestrictions,
-              });
-            }
-          });
+        return CustomerCosRestrictionServiceV2.update({
+          customerId: Authinfo.getOrgId(),
+        }, {
+          restrictions: vm.model.cosRestrictions,
+        });
       }
 
       // Saving the company site has to be in done in a particular order
@@ -1692,7 +1692,7 @@
     });
 
     $scope.$watch(function () {
-      return _.get(vm, 'form.$invalid');
+      return _.get(vm, 'form.$invalid', true);
     }, function (invalid) {
       $scope.$emit('wizardNextButtonDisable', !!invalid);
     });

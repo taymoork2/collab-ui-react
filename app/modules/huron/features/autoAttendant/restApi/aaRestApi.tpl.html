@@ -1,0 +1,22 @@
+<div>
+  <div class="aa-rest-api row">
+    <div class="large-2 medium-2 small-2 columns aa-rest-api-block">
+      <label translate="autoAttendant.method"></label>
+    </div>
+    <div class="large-10 medium-10 small-10 columns">
+      <label>{{aaRestApiCtrl.method}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-1 medium-1 small-1 columns aa-rest-api-block">
+      <label translate="autoAttendant.url"></label>
+    </div>
+    <div class="large-11 medium-11 small-11 columns">
+      <label class="aa-rest-api-url">{{aaRestApiCtrl.url}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <br>
+    <a translate="autoAttendant.configureApi" id="configureApi" ng-click="aaRestApiCtrl.openConfigureApiModal()"></a>
+  </div>
+</div>

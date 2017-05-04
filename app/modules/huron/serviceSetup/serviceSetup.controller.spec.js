@@ -4,7 +4,7 @@ describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer;
   var Authinfo, VoicemailMessageAction;
   var model, customer, voicemail, avrilSites, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages, countries;
-  var $rootScope, PstnSetupService, HuronCustomerService;
+  var $rootScope, PstnService, HuronCustomerService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
     extensionGenerated: "false",
@@ -12,13 +12,14 @@ describe('Controller: ServiceSetup', function () {
     supportSiteCode: "true",
     supportSiteSteeringDigit: "true",
   }];
+  var restrictions = getJSONFixture('huron/json/cos/customerCos.json');
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$previousState_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
     _HuronCustomer_, _HuronCustomerService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_, _FeatureToggleService_,
-    _PstnSetupService_) {
+    _PstnService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
@@ -34,7 +35,7 @@ describe('Controller: ServiceSetup', function () {
     modalDefer = $q.defer();
     VoicemailMessageAction = _VoicemailMessageAction_;
     $previousState = _$previousState_;
-    PstnSetupService = _PstnSetupService_;
+    PstnService = _PstnService_;
     FeatureToggleService = _FeatureToggleService_;
 
     customer = {
@@ -117,7 +118,7 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'updateVoicemailUserTemplate').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
-    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.resolve());
+    spyOn(PstnService, 'getCustomer').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.callFake(function () {
       ServiceSetup.internalNumberRanges = model.numberRanges;
       return $q.resolve();
@@ -163,6 +164,12 @@ describe('Controller: ServiceSetup', function () {
       .respond({
         premiumNumbers: ['800', '900'],
       });
+    $httpBackend
+      .whenGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/restrictions')
+      .respond(restrictions);
+    $httpBackend
+      .whenPUT(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/restrictions')
+      .respond(204);
   }));
   describe('Existing Functioanlity with Feature Toggle ON Tests', function () {
     var controller;

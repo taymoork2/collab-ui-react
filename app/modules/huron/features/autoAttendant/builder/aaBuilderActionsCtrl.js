@@ -70,7 +70,6 @@
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
 
-
     var PHONE_MENU_INDEX = 1;
 
     /////////////////////
@@ -162,6 +161,17 @@
           type: [3, 4],
           showHelpLink: true,
           actions: ['runActionsOnInput'],
+        });
+      }
+
+      if (AACommonService.isRestApiToggle()) {
+        vm.options.push({
+          title: $translate.instant('autoAttendant.actionRestApi'),
+          controller: 'AARestApiCtrl as aaRestApiCtrl',
+          url: 'modules/huron/features/autoAttendant/restApi/aaRestApi.tpl.html',
+          metric: 'Rest-Api-Title',
+          showHelpLink: false,
+          actions: ['restApi'],
         });
       }
     }

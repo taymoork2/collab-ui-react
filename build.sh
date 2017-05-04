@@ -1,8 +1,11 @@
 #!/bin/bash
 
 # import helper functions
+# shellcheck disable=SC1091
 source ./bin/include/pid-helpers
+# shellcheck disable=SC1091
 source ./bin/include/setup-helpers
+# shellcheck disable=SC1091
 source ./bin/include/env-var-helpers
 
 
@@ -12,7 +15,7 @@ source ./bin/include/env-var-helpers
 proc_names_to_scan="bin\\/sc gulp bin\\/spin"
 for i in $proc_names_to_scan; do
     if [ -n "$(get_pids "$i")" ]; then
-        echo "WARNING: stale process found: $i"
+        echo "[WARN] stale process found: $i"
         kill_wait "$i"
     fi
 done
@@ -20,7 +23,7 @@ done
 # - detect if running in local dev environment, inject env vars as appropriate (this won't be needed
 #   in a Jenkins build env, as env vars are injected via other means)
 if ! is_ci; then
-    echo "INFO: detected running in local dev environment, injecting build env vars for \"dev\"."
+    echo "[INFO] detected running in local dev environment, injecting build env vars for \"dev\"."
     inj_build_env_vars_for "dev"
 fi
 
@@ -29,45 +32,45 @@ fi
 # Phase 2: Dependencies
 if [ -f "$BUILD_DEPS_ARCHIVE" ]; then
     # unpack previously built dependencies (but don't overwrite anything newer)
-    echo "Restoring previous deps..."
+    echo "[INFO] Restoring previous deps..."
     tar --keep-newer-files -xf "$BUILD_DEPS_ARCHIVE"
 fi
 
 # shellcheck disable=SC2154
-echo "Inspecting checksums of $manifest_files from last successful build... "
+echo "[INFO] Inspecting checksums of $manifest_files from last successful build... "
 # shellcheck disable=SC2154
 checksums_ok=$(is_checksums_ok "$manifest_checksums_file" && echo "true" || echo "false")
 
-echo "Checking if it is time to refresh..."
+echo "[INFO] Checking if it is time to refresh..."
 min_refresh_period=$(( 60 * 60 * 24 ))  # 24 hours
 # shellcheck disable=SC2154
 time_to_refresh=$(is_time_to_refresh $min_refresh_period "$last_refreshed_file" \
     && echo "true" || echo "false")
 
-echo "INFO: checksums_ok: $checksums_ok"
-echo "INFO: time_to_refresh: $time_to_refresh"
-if [ "$checksums_ok"    = "true" -a \
-     "$time_to_refresh" = "false" ]; then
-    echo "Install manifests haven't changed and not yet time to" \
-        "refresh, restore soft dependencies..."
+echo "[INFO] checksums_ok: $checksums_ok"
+echo "[INFO] time_to_refresh: $time_to_refresh"
+if [ "$checksums_ok" = "true" ] && [ "$time_to_refresh" = "false" ]; then
+    echo "[INFO] Install manifests haven't changed and not yet time to refresh, restore soft " \
+        "dependencies..."
     ./setup.sh --restore
 else
     # we want to fresh install npm dependencies
-    echo "Running 'setup'..."
+    echo "[INFO] Running 'setup'..."
     ./setup.sh
 
     # setup succeeded
+    # shellcheck disable=SC2181
     if [ $? -eq 0 ]; then
         # - regenerate .manifest-checksums
-        echo "Generating new manifest checksums file..."
+        echo "[INFO] Generating new manifest checksums file..."
         mk_checksum_file "$manifest_checksums_file" "$manifest_files"
 
         # - regenerate .last-refreshed
-        echo "Generating new last-refreshed file..."
+        echo "[INFO] Generating new last-refreshed file..."
         mk_last_refreshed_file "$last_refreshed_file"
 
         # archive dependencies
-        echo "Generating new build deps archive for later re-use..."
+        echo "[INFO] Generating new build deps archive for later re-use..."
         tar -cpf "$BUILD_DEPS_ARCHIVE" \
             "$last_refreshed_file" \
             "$manifest_checksums_file" \
@@ -82,8 +85,8 @@ else
 
         # setup was triggered only because refresh window has expired
         if [ "$time_to_refresh" = "true" ]; then
-            echo "'setup.sh' failed, but was triggered only because the refresh window expired," \
-                "falling back to recent successfully built dependencies..."
+            echo "[INFO] 'setup.sh' failed, but was triggered only because the refresh window " \
+                "expired, falling back to recent successfully built dependencies..."
             # re-use deps from previous successful build (if possible)
             ./setup.sh --restore
         else
@@ -107,12 +110,12 @@ function do_webpack {
     local webpack_exit_code
     export npm_lifecycle_event="build"
     while true; do
-        time nice -10 webpack --bail --progress --profile --env.nolint
+        time nice -10 webpack --bail --profile --env.nolint --env.noprogress --devtool source-map
         webpack_exit_code=$?
-        if [ "$webpack_exit_code" -ne 132 -a \
-            "$webpack_exit_code" -ne 137 -a \
-            "$webpack_exit_code" -ne 139 -a \
-            "$webpack_exit_code" -ne 255 ]; then
+        if [ "$webpack_exit_code" -ne 132 ] && \
+            [ "$webpack_exit_code" -ne 137 ] && \
+            [ "$webpack_exit_code" -ne 139 ] && \
+            [ "$webpack_exit_code" -ne 255 ]; then
             break
         fi
     done
@@ -139,14 +142,14 @@ webpack_pid=$!
 npm run lint
 npm run json-verify
 npm run languages-verify
-nice -15 npm run test --env.noprogress
+nice -15 npm run test -- --env.noprogress
 set +e
 
 
 # webpack must complete before running e2e tests
 set -x
 wait "$webpack_pid"
-read webpack_exit_code < ./.cache/webpack_exit_code
+read -r webpack_exit_code < ./.cache/webpack_exit_code
 [ "$webpack_exit_code" -eq 0 ] || exit "$webpack_exit_code"
 set +x
 
@@ -155,6 +158,7 @@ set +x
 ./e2e.sh | tee ./.cache/e2e-sauce-logs
 
 # groom logs for cleaner sauce labs output
+# shellcheck disable=SC1091
 source ./bin/include/sauce-results-helpers
 mk_test_report ./.cache/e2e-sauce-logs | tee "./.cache/e2e-report-for-${BUILD_TAG}"
 
@@ -172,6 +176,7 @@ rm -f wx2-admin-web-client.*.tar.gz
 
 # important: we untar with '--strip-components=1', so use 'dist/*' and NOT './dist/*'
 tar -zcvf "$APP_ARCHIVE" dist/*
+tar -zcvf "$SOURCE_MAP_ARCHIVE" dist-source-map/*
 tar -zcvf "$COVERAGE_ARCHIVE" ./test/coverage/
 
 # archive e2e test results

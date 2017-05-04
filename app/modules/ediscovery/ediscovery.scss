@@ -166,8 +166,15 @@
         color: $color-attention-base;
       }
 
-      .date-error {
-        color: $color-negative-base;
+      .search-warning-text {
+        color: $color-attention-darker;
+      }
+
+      .search-error {
+        color: $color-alerts-base;
+      }
+
+      .date-validation {
         float: left;
         padding: 3px;
       }
@@ -242,71 +249,6 @@
           width: 16px;
           height: 16px;
           color: #aeaeaf;
-        }
-      }
-
-      .typeahead-large .input-description::before {
-        display: none;
-      }
-
-      .typeahead-large .input-description {
-        padding: 0;
-      }
-
-      .typeahead-large {
-        position: relative;
-        margin-top: 1rem;
-        max-width: 100%;
-
-        @media only screen and (max-width: 640px) {
-          max-width: 90%;
-        }
-
-        input {
-          border: 0;
-          font-size: 24px;
-          width: 33rem;
-
-          @media only screen and (max-width: 640px) {
-            font-size: 21px;
-            width: 80%;
-            padding-bottom: 0;
-          }
-
-          @media only screen and (max-width: 500px) {
-            font-size: 18px;
-            width: 80%;
-            padding-bottom: 0;
-          }
-        }
-
-        .icon-search {
-          position: absolute;
-          right: 0;
-          bottom: 0.75rem;
-          font-size: 1rem;
-          width: 2.5rem;
-          height: 2.5rem;
-          z-index: 3;
-          min-width: 2.5rem;
-
-          @media screen and (-moz-images-in-menus: 0) {
-            top: 0 !important;
-          }
-
-          @media only screen and (max-width: 640px) {
-            font-size: 1rem;
-            width: 2rem;
-            height: 2rem;
-            min-width: 2rem;
-          }
-
-          @media only screen and (max-width: 500px) {
-            font-size: 0.75rem;
-            width: 1.5rem;
-            height: 1.5rem;
-            min-width: 1.5rem;
-          }
         }
       }
 
@@ -453,7 +395,7 @@
         }
 
         .input-section {
-          padding-bottom: 1.5rem;
+          padding-bottom: 2.5rem;
 
           .report-name {
             width: 100%;

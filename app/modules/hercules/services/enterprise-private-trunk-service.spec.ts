@@ -4,7 +4,7 @@ describe('EnterprisePrivateTrunkService ', () => {
 
   let $httpBackend, $scope, EnterprisePrivateTrunkService: EnterprisePrivateTrunkService, CsdmPoller;
 
-  let response = {
+  let fmsResponse = {
     resources: [
       {
         id: 'efc7ebfb-b7a4-42f2-a143-1c056741a03c',
@@ -20,6 +20,26 @@ describe('EnterprisePrivateTrunkService ', () => {
         id: '0ce247d8-4de9-482e-ac5a-51b2af1a7929',
         type: 'trunk',
         state: 'operational',
+      },
+    ],
+  };
+
+  let cmiResponse = {
+    resources: [
+      {
+        name: 'CTG Alpha New York-E',
+        uuid: 'e366b1ef-c3c3-414c-9125-5bf76c33df06',
+      },
+      {
+        name: 'ACE Beta Lysaker', // Deliberately no uuid here
+      },
+      {
+        name: 'CTG Alpha San Jose-E',
+        uuid: 'efc7ebfb-b7a4-42f2-a143-1c056741a03c',
+      },
+      {
+        name: 'ACE Beta Seattle',
+        uuid: '0ce247d8-4de9-482e-ac5a-51b2af1a7929',
       },
     ],
   };
@@ -49,6 +69,15 @@ describe('EnterprisePrivateTrunkService ', () => {
     EnterprisePrivateTrunkService = _EnterprisePrivateTrunkService_;
   }));
 
+  beforeEach((function () {
+    $httpBackend
+      .when('GET', 'http://united.no/organizations/zlatan/services/ept/status')
+      .respond(fmsResponse);
+    $httpBackend
+      .when('GET', 'https://cmi.huron-int.com/api/v2/customers/zlatan/privatetrunks')
+      .respond(cmiResponse);
+  }));
+
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
@@ -60,9 +89,6 @@ describe('EnterprisePrivateTrunkService ', () => {
   });
 
   it('should sort the returned trunks by name', () => {
-    $httpBackend
-      .when('GET', 'http://united.no/organizations/zlatan/services/ept/status')
-      .respond(response);
     EnterprisePrivateTrunkService.fetch();
     $httpBackend.flush();
     let trunks: any = EnterprisePrivateTrunkService.getAllResources();
@@ -74,9 +100,6 @@ describe('EnterprisePrivateTrunkService ', () => {
   });
 
   it('should merge statuses from FMS into each trunk in the list, an fall back to "unknown" if none is found', () => {
-    $httpBackend
-      .when('GET', 'http://united.no/organizations/zlatan/services/ept/status')
-      .respond(response);
     EnterprisePrivateTrunkService.fetch();
     $httpBackend.flush();
     let trunks: any = EnterprisePrivateTrunkService.getAllResources();

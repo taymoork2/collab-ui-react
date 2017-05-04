@@ -5,6 +5,15 @@
   .padding-p {
     padding-right: 4.5rem;
   }
+  .padding-p-done {
+    padding-right: 6rem;
+  }
+  .li-margin-left {
+    margin-left: 3rem;
+  }
+  .padding-p-bottom {
+    padding-bottom: 1.5rem;
+  }
 
   .cert-word-wrap {
     word-wrap: break-word;
@@ -53,6 +62,15 @@
   .box.multibox-margin {
     @include vr-spacing(m, .5);
     @include vr-spacing(pb, .5);
+  }
+
+  .cs-form__section {
+    padding-top: 0;
+    padding-bottom: 1rem;
+  }
+
+  .setting-section {
+    margin-bottom: -2rem;
   }
 
   .columns .box {

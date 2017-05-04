@@ -2,10 +2,10 @@
   <article>
     <header ng-class="{'one-liner': !$ctrl.hasNodesViewFeatureToggle}">
       <h4>{{::$ctrl.cluster.name}}</h4>
-      <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && !$ctrl.hasNodesViewFeatureToggle" class="cluster-list-hosts" tooltip-html-unsafe="{{$ctrl.getHostnames($ctrl.cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
+      <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && !$ctrl.hasNodesViewFeatureToggle && $ctrl.cluster.targetType !== 'ept'" class="cluster-list-hosts" tooltip-html-unsafe="{{$ctrl.getHostnames($ctrl.cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
         <div translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></div>
       </div>
-      <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && $ctrl.hasNodesViewFeatureToggle" class="cluster-nodes-link">
+      <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && $ctrl.hasNodesViewFeatureToggle && $ctrl.cluster.targetType !== 'ept'" class="cluster-nodes-link">
         <a ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)">
           <span translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></span>
           <span class="badge alert" ng-if="$ctrl.hasAlarms($ctrl.cluster)" translate="hercules.fusion.list.alarms"></span>
@@ -15,7 +15,8 @@
       </div>
     </header>
     <div class="row cluster-list-body" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
-      <div class="columns medium-6">
+      <div class="columns medium-3" ng-if="$ctrl.cluster.targetType === 'ept'"></div>
+      <div class="columns medium-6" ng-if="$ctrl.cluster.targetType !== 'ept'">
         <div>
           <div class="cluster-list-cat" translate="hercules.fusion.list.upgrade-schedule"></div>
           <div class="cluster-list-info" ng-if="$ctrl.upgradesAutomatically($ctrl.cluster)" translate="hercules.fusion.list.upgrades-automatically"></div>

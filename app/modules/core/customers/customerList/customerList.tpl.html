@@ -1,5 +1,5 @@
 <div class="customer-list">
-  <cs-page-header title="{{::'customerPage.title' | translate}}"></cs-page-header>
+  <cs-page-header title-name="{{::'customerPage.title' | translate}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
       <cs-searchfilter filters="filters" search-item-fn="customerList.filterList(searchStr)">
@@ -10,19 +10,19 @@
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
       <cs-select  class="filter-dropdown" ng-model="customerList.filter.selected" options="customerList.filter.options" placeholder="customerList.filter.placeholder" multi="true" singular="filter" plural="filters"></cs-select>
-      <div class="center" ng-controller="ExportCSVCtrl">
-        <a id="export-btn" class="export-users" ng-if="!exporting" ng-csv="exportCSV(customerList.exportType, customerList.activeFilter)" filename="{{'customerPage.csvFilename' | translate}}">
-          <span id="export-icon"><i class="icon icon-content-share icon-lg" tooltip-placement="top" tooltip="{{'customerPage.csvBtnTitle' | translate}}" tooltip-animation="false"  tooltip-append-to-body="true"></i></span>
-        </a>
-        <a id="export-in-progress" class="export-users" ng-if="exporting">
-          <span id="exporting-icon"><i class="icon icon-spinner icon-lg" tooltip-placement="top" tooltip="{{'customerPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false"  tooltip-append-to-body="true"></i></span>
-        </a>
-        <button id="addTrial" class="btn btn--people add-button" ng-if="!customerList.isCustomerPartner" ng-click="customerList.openAddTrialModal()" translate="customerPage.addTrial"></button>
-      </div>
+
+      <csv-simple-export
+        on-export="customerList.exportCsv()"
+        filename="{{::'customerPage.csvFilename' | translate}}"
+        export-tooltip="{{::'customerPage.csvBtnTitle' | translate}}"
+        exporting-tooltip="{{::'customerPage.csvBtnExportingTitle' | translate}}"
+        tooltip-placement="top">
+      </csv-simple-export>
+
+      <button id="addTrial" class="btn btn--people add-button" ng-if="!customerList.isCustomerPartner" ng-click="customerList.openAddTrialModal()" translate="customerPage.addTrial"></button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-    <div id="customerListPanel" class="gridStyle" ui-grid="customerList.gridOptions" ui-grid-selection ui-grid-infinite-scroll ui-grid-resize-columns ui-grid-move-columns></div>
-    <div class="grid-refresh" ng-if="customerList.showManagedOrgsRefresh">
-      <i class='icon icon-spinner icon-2x'></i>
-    </div>
+    <div id="customerListPanel" class="gridStyle" ui-grid="customerList.gridOptions"
+      ui-grid-selection ui-grid-infinite-scroll ui-grid-resize-columns ui-grid-move-columns
+      grid-spinner="customerList.showManagedOrgsRefresh"></div>
 </div>

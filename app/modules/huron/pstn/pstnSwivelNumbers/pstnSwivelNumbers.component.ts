@@ -8,13 +8,14 @@ export class PstnSwivelNumbersComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/huron/pstn/pstnSwivelNumbers/pstnSwivelNumbers.html';
   public bindings = {
     numbers: '<',
+    acknowledge: '<',
     noAcknowledge: '@',
     onChange: '&',
     onAcknowledge: '&',
   };
 }
 
-class TokenMethods {
+export class TokenMethods {
   public createtoken: Function;
   public createdtoken: Function;
   public edittoken: Function;
@@ -42,7 +43,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
     beautify: false,
   };
   public tokenmethods: TokenMethods;
-  public emergencyAcknowledge: boolean;
+  public acknowledge: boolean;
   public invalidCount: number = 0;
 
   /* @ngInject */
@@ -131,7 +132,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
 
   public onAckChange(): void {
     this.onAcknowledge({
-      value: this.emergencyAcknowledge,
+      value: this.acknowledge,
     });
   }
 

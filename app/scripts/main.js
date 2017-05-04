@@ -53,6 +53,7 @@
     require('modules/core/focus').default,
     require('modules/core/inlineEditText').default,
     require('modules/core/scrollIndicator').default,
+    require('modules/core/gridSpinner').default,
     require('modules/core/scripts/services/org.service'),
     require('modules/core/scripts/services/userlist.service'),
     require('modules/core/users/userCsv/userCsv.service'),
@@ -97,14 +98,14 @@
     'huron.call-park',
     'huron.bulk-enable-vm',
     'huron.TerminusServices',
-    'huron.PstnSetup',
-    'huron.pstnsetupservice',
     'huron.telephoneNumberService',
     'huron.externalNumberService',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
     require('modules/huron/pstn').default,
+    require('modules/huron/pstn/pstn.service').default,
+    require('modules/huron/pstn/pstn.model').default,
     require('modules/huron/pstn/pstnProviders').default,
     require('modules/huron/pstn/pstnContactInfo').default,
     require('modules/huron/pstn/pstnSwivelNumbers').default,
@@ -120,8 +121,16 @@
     'Squared',
     'core.onboard',
     'ngTagsInput',
-    require('modules/hercules/private-trunk/prereq').default,
-    require('modules/hercules/private-trunk/setup').default,
+    require('modules/hercules/private-trunk/private-trunk-prereq').default,
+    require('modules/hercules/private-trunk/private-trunk-setup').default,
+    require('modules/hercules/private-trunk/private-trunk-domain').default,
+    require('modules/hercules/private-trunk/private-trunk-destination').default,
+    require('modules/hercules/private-trunk/private-trunk-setup-complete').default,
+    require('modules/hercules/private-trunk/private-trunk-certificate').default,
+    require('modules/hercules/private-trunk/private-trunk-services').default,
+    require('modules/hercules/private-trunk/private-trunk-overview').default,
+    require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
+    require('modules/hercules/service-settings/calendar-service-setup').default,
     require('modules/hercules/services/cert-service').default,
     require('modules/hercules/services/certificate-formatter-service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
@@ -141,7 +150,7 @@
     require('modules/webex/xmlApi').default,
   ]);
 
-  angular.module('Messenger', ['Core']);
+  angular.module('Messenger', ['Core', 'messenger.shared']);
 
   angular.module('Sunlight', [
     'Core',
@@ -184,8 +193,8 @@
 
   // require all modules first
   requireAll(require.context("modules/", true, /\.module\.(js|ts)$/));
-  // require all other app files - ignore bootstrap.js and preload.js
-  requireAll(require.context("../", true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$)).*\.(js|ts)$/));
+  // require all other app files - ignore bootstrap.js, preload.js, newrelic
+  requireAll(require.context("../", true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
   // require all other assets
   requireAll(require.context("../", true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
 

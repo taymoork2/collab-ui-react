@@ -1,7 +1,7 @@
 import { ConnectorType, HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 export class HybridServicesUtilsService {
-  // Visual order to respect accross Atlas UI
+  // Visual order to respect across Atlas UI
   private static readonly orderedConnectors: ConnectorType[] = [
     'c_mgmt',
     'c_cal',
@@ -19,6 +19,7 @@ export class HybridServicesUtilsService {
     'squared-fusion-gcal',
     'squared-fusion-uc',
     'squared-fusion-ec',
+    'ept',
     'squared-fusion-media',
     'spark-hybrid-datasecurity',
     'contact-center-context',
@@ -74,6 +75,7 @@ export class HybridServicesUtilsService {
       case 'squared-fusion-gcal':
         return 'icon icon-circle-calendar';
       case 'squared-fusion-uc':
+      case 'ept':
         return 'icon icon-circle-call';
       case 'squared-fusion-media':
         return 'icon icon-circle-telepresence';
@@ -126,6 +128,6 @@ export class HybridServicesUtilsService {
 }
 
 export default angular
-  .module('hercules.hds', [])
+  .module('hercules.hybridServicesUtils', [])
   .service('HybridServicesUtilsService', HybridServicesUtilsService)
   .name;

@@ -6,16 +6,11 @@
     .service('cbgService', cbgService);
 
   /* @ngInject */
-  function cbgService(GmHttpService, $translate) {
-    var URL = {
-      coutries: 'countries',
-      updateCallbackGroup: 'callbackgroup/',
-      downloadCountryUrl: 'callbackgroup/countryRegionTemplate',
-      callbackGroup: 'callbackgroup/customerId/',
-      activityLogs: 'activityLogs',
-    };
+  function cbgService($http, $translate, UrlConfig) {
+    var URL = UrlConfig.getGeminiUrl() + 'callbackgroup/';
     var service = {
       getNotes: getNotes,
+      postNote: postNote,
       moveSite: moveSite,
       postRequest: postRequest,
       getCountries: getCountries,
@@ -26,62 +21,66 @@
       updateCallbackGroup: updateCallbackGroup,
       getDownloadCountryUrl: getDownloadCountryUrl,
       updateCallbackGroupStatus: updateCallbackGroupStatus,
-      postNote: postNote,
     };
     return service;
 
     function getCallbackGroups(customerId) {
-      return GmHttpService.httpGet(URL.callbackGroup + customerId).then(extractData);
+      var url = URL + 'customerId/' + customerId;
+      return $http.get(url).then(extractData);
     }
 
     function getOneCallbackGroup(customerId, groupId) {
-      return GmHttpService.httpGet(URL.callbackGroup + customerId + '/groupId/' + groupId).then(extractData);
+      var url = URL + 'customerId/' + customerId + '/groupId/' + groupId;
+      return $http.get(url).then(extractData);
     }
 
     function updateCallbackGroup(data) {
-      return GmHttpService.httpPut(URL.updateCallbackGroup, null, null, data).then(extractData);
+      return $http.put(URL, data).then(extractData);
     }
 
     function updateCallbackGroupStatus(customerId, ccaGroupId, operation, data) {
       if (!data) {
         data = {};
       }
-      var url = URL.callbackGroup + customerId + '/groupId/' + ccaGroupId + '/status/' + operation;
+      var url = URL + 'customerId/' + customerId + '/groupId/' + ccaGroupId + '/status/' + operation;
       if (operation === 'cancel' || operation === 'decline') {
-        url = URL.callbackGroup + customerId + '/groupId/' + ccaGroupId + '/' + operation;
+        url = URL + 'customerId/' + customerId + '/groupId/' + ccaGroupId + '/' + operation;
       }
-      return GmHttpService.httpPut(url, null, null, data).then(extractData);
+      return $http.put(url, data).then(extractData);
     }
 
     function getCountries() {
-      return GmHttpService.httpGet(URL.coutries).then(extractData);
+      var url = UrlConfig.getGeminiUrl() + 'countries';
+      return $http.get(url).then(extractData);
     }
 
     function postRequest(customerId, data) {
-      return GmHttpService.httpPost(URL.callbackGroup + customerId, null, null, data).then(extractData);
+      var url = URL + 'customerId/' + customerId;
+      return $http.post(url, data).then(extractData);
     }
 
     function moveSite(data) {
-      return GmHttpService.httpPut(URL.updateCallbackGroup + 'movesite', null, null, data).then(extractData);
+      var url = URL + 'movesite';
+      return $http.put(url, data).then(extractData);
     }
 
     function postNote(data) {
-      var url = URL.activityLogs;
-      return GmHttpService.httpPost(url, null, null, data).then(extractData);
+      var url = UrlConfig.getGeminiUrl() + 'activityLogs';
+      return $http.post(url, data).then(extractData);
     }
 
     function getNotes(customerId, ccaGroupId) {
-      var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/add_notes_cg';
-      return GmHttpService.httpGet(url).then(extractData);
+      var url = UrlConfig.getGeminiUrl() + 'activityLogs' + '/' + customerId + '/' + ccaGroupId + '/add_notes_cg';
+      return $http.get(url).then(extractData);
     }
 
     function getHistories(customerId, ccaGroupId, groupName) {
-      var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/Callback%20Group/' + groupName;
-      return GmHttpService.httpGet(url).then(extractData);
+      var url = UrlConfig.getGeminiUrl() + 'activityLogs' + '/' + customerId + '/' + ccaGroupId + '/Callback%20Group/' + groupName;
+      return $http.get(url).then(extractData);
     }
 
     function getDownloadCountryUrl() {
-      return GmHttpService.httpGet(URL.downloadCountryUrl).then(extractData);
+      return UrlConfig.getGeminiUrl() + 'files/templates/country_regions_template';
     }
 
     function extractData(response) {

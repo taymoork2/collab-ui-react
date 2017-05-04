@@ -79,7 +79,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'Agent_ID',
           'AAA_TEST_FIELD4',
         ],
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': false,
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -104,7 +104,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD2',
           'Agent_ID',
         ],
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': false,
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD2',
@@ -146,7 +146,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         'fields': [
           'AAA_TEST_FIELD',
         ],
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': false,
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -175,7 +175,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD4',
           'AAA_TEST_FIELD5',
         ],
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': false,
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD1',
@@ -214,7 +214,7 @@ describe('HybridContextFieldsetsCtrl', function () {
       ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
         'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
         'description': 'aaa custom fieldset with some long description description description description description',
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': false,
         'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
         'id': 'aaa_custom_fieldset',
         'lastUpdated': '2017-02-10T19:37:36.998Z',
@@ -244,7 +244,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD4',
           'AAA_TEST_FIELD5',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -275,7 +275,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD',
           'Agent_ID',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -298,7 +298,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD5',
           'Agent_ID',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD5',
@@ -320,7 +320,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         'fields': [
           'Agent_ID',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'Agent_ID',
@@ -342,7 +342,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'Agent_ID2',
           'AAA_TEST_FIELD3',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -397,7 +397,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD4',
           'AAA_TEST_FIELD5',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -427,7 +427,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD',
           'Agent_ID',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -449,7 +449,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'FIRST',
           'Agent_ID',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'FIRST',
@@ -470,7 +470,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         'fields': [
           'Agent_ID',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'Agent_ID',
@@ -512,7 +512,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD4',
           'AAA_TEST_FIELD5',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -542,7 +542,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD',
           'Agent_ID',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -564,7 +564,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'aaa.test',
           'Agent_ID',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'aaa.test',
@@ -585,7 +585,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         'fields': [
           'aaa_test',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'aaa_test',
@@ -603,7 +603,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         'id': 'SearchStrInOtherFields',
       }, {
         'orgId': '',
-        'publiclyAccessible': 'AAA_TEST',
+        'publiclyAccessibleUI': 'AAA_TEST',
         'id': 'SearchStringInPubliclyAccessible',
       }];
       controller.filterBySearchStr(fieldsetList, 'aaa_test')
@@ -629,7 +629,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD',
           'Agent_ID',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -651,7 +651,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           'AAA_TEST_FIELD',
           'AAA_TEST_FIELD4',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -685,7 +685,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         'fields': [
           'AAA_TEST_FIELD',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'AAA_TEST_FIELD',
@@ -701,7 +701,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         'fields': [
           'BBB_TEST_FIELD',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'BBB_TEST_FIELD',
@@ -717,7 +717,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         'fields': [
           'CCC_TEST_FIELD',
         ],
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'fieldDefinitions': [
           {
             'id': 'BBB_TEST_FIELD',

@@ -1,5 +1,5 @@
 <div class="sq-places-page">
-  <cs-page-header title="{{::'tabs.placeTab' | translate}}"></cs-page-header>
+  <cs-page-header title-name="{{::'tabs.placeTab' | translate}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
       <cs-searchfilter filters="sc.filteredView.getFilters()" search-item-fn="sc.filteredView.setCurrentSearch(searchStr)"
@@ -28,14 +28,14 @@
     <div ng-if="sc.filteredView.isInState(sc.filteredView.showresult)" id="roomsListPanel" class="row">
       <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
     </div>
-    <div ng-if="sc.filteredView.isInState(sc.filteredView.emptyresult)">
+    <div ng-if="sc.filteredView.isInState(sc.filteredView.emptysearchresult)">
       <div class="none_found">
         <i class="icon icon-circle-comp-negative"/>
         <span class="h2" translate="placesPage.noneFound"></span>
         <span class="h5" translate="spacesPage.tryAgain"></span>
       </div>
     </div>
-    <div ng-if="sc.filteredView.isInState(sc.filteredView.noplaces)">
+    <div ng-if="sc.filteredView.isInState(sc.filteredView.emptydatasource)">
       <div class="none_found">
         <i class="icon icon-circle-location"/>
         <span class="h2" translate="spacesPage.nothingHerePlaces"></span>
@@ -45,7 +45,7 @@
         </button>
       </div>
     </div>
-    <div ng-if="sc.filteredView.isInState(sc.filteredView.bigorg)">
+    <div ng-if="sc.filteredView.isInState(sc.filteredView.searchonly)">
       <div class="none_found">
         <span class="h2" translate="placesPage.bigOrgSearchHeader"></span>
         <span class="h5" translate="placesPage.bigOrgSearchText"></span>

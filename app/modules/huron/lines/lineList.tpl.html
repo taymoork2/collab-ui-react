@@ -4,7 +4,8 @@
       <cs-searchfilter filters="linesListCtrl.filters" set-filter-fn="linesListCtrl.setFilter(filter.filterValue)" ng-model="linesListCtrl.placeholder.count" search-item-fn="linesListCtrl.filterList(searchStr)" placeholder-text="{{linesListCtrl.placeholder.name}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
-    <cs-page-sub-header-right ng-show="Utils.isAdminPage()">
+    <cs-page-sub-header-right ng-if="Utils.isAdminPage()">
+
       <div ng-if="linesListCtrl.huronCustomerAdminPMPFeatureToggle && !linesListCtrl.gridRefresh">
         <a ui-sref="customerPstnOrdersOverview({currentCustomer: linesListCtrl.currentCustomer, vendor:linesListCtrl.vendor})">
           <span class="order-history" translate="pstnOrderOverview.orderHistory"></span>
@@ -14,26 +15,18 @@
           </button>
         </span>
       </div>
-      <div class="page-option-buttons" ng-controller="LineExportCtrl as lineExportCtrl">
-        <div ng-if="!lineExportCtrl.exportBusy">
-          <a id="export-btn" ng-csv="lineExportCtrl.exportCSV()" filename="{{'linesPage.csvFilename' | translate}}">
-            <span id="export-icon" class="export-lines" tooltip-placement="top" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
-              <i class="icon icon-content-share icon-lg"></i>
-            </span>
-          </a>
-        </div>
-        <div ng-if="lineExportCtrl.exportBusy" ng-show="Utils.isAdminPage()" ng-controller="LineExportCtrl as lineExportCtrl">
-          <span id="export-icon" class="export-lines">
-          <i class="icon icon-spinner"></i>
-        </span>
-        </div>
-      </div>
+
+      <csv-simple-export
+        on-export="linesListCtrl.exportCsv()"
+        filename="{{::'linesPage.csvFilename' | translate}}"
+        export-tooltip="{{::'linesPage.csvBtnTitle' | translate}}"
+        exporting-tooltip="{{::'linesPage.csvBtnExportingTitle' | translate}}"
+        tooltip-placement="left">
+      </csv-simple-export>
+
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div id="linesListPanel" class="gridStyle col-md-12" ui-grid="linesListCtrl.gridOptions" ui-grid-infinite-scroll></div>
-  <div class="grid-refresh" ng-if="linesListCtrl.gridRefresh">
-    <i class='icon icon-spinner icon-2x'></i>
-  </div>
+  <div id="linesListPanel" class="gridStyle col-md-12" ui-grid="linesListCtrl.gridOptions" ui-grid-infinite-scroll grid-spinner="linesListCtrl.gridRefresh"></div>
 </div>
 <!--<div ng-class="{preview: linesListCtrl.userPreviewActive, details: linesListCtrl.userDetailsActive}" class="user-management">
   <div ui-view class="outer-details-div" id="entire-slide"></div>

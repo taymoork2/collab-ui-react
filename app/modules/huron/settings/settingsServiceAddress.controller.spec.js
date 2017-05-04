@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: SettingsServiceAddressCtrl', function () {
-  var controller, $controller, $scope, $q, $timeout, PstnSetupService, PstnServiceAddressService, Notification;
+  var controller, $controller, $scope, $q, $timeout, PstnService, PstnServiceAddressService, Notification;
   var address = getJSONFixture('huron/json/pstnSetup/huronServiceAddress.json');
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var updatedAddress = _.cloneDeep(address);
@@ -9,16 +9,16 @@ describe('Controller: SettingsServiceAddressCtrl', function () {
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$timeout_, _PstnSetupService_, _PstnServiceAddressService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$timeout_, _PstnService_, _PstnServiceAddressService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     $timeout = _$timeout_;
-    PstnSetupService = _PstnSetupService_;
+    PstnService = _PstnService_;
     PstnServiceAddressService = _PstnServiceAddressService_;
     Notification = _Notification_;
 
-    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.resolve(customer));
+    spyOn(PstnService, 'getCustomer').and.returnValue($q.resolve(customer));
     spyOn(PstnServiceAddressService, 'getAddress').and.returnValue($q.resolve(address));
     spyOn(PstnServiceAddressService, 'lookupAddressV2').and.returnValue($q.resolve(updatedAddress));
     spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.resolve());

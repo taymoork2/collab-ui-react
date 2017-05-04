@@ -5,8 +5,14 @@
     .controller('PstnReviewCtrl', PstnReviewCtrl);
 
   /* @ngInject */
-  function PstnReviewCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification) {
+  function PstnReviewCtrl($q, $translate, $state, PstnModel, PstnService, PstnServiceAddressService, Notification) {
     var vm = this;
+    var NUMBER_ORDER = require('modules/huron/pstn').NUMBER_ORDER;
+    var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
+    var NUMTYPE_TOLLFREE = require('modules/huron/pstn').NUMTYPE_TOLLFREE;
+    var SWIVEL_ORDER = require('modules/huron/pstn').SWIVEL_ORDER;
+    var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
+    var PORT_ORDER = require('modules/huron/pstn').PORT_ORDER;
 
     vm.totalNewAdvancedOrder = 0;
     vm.totalPortNumbers = 0;
@@ -16,7 +22,7 @@
     vm.goToNumbers = goToNumbers;
     vm.placeOrder = placeOrder;
 
-    vm.provider = PstnSetup.getProvider();
+    vm.provider = PstnModel.getProvider();
 
     initOrders();
 
@@ -45,24 +51,24 @@
     }
 
     function createCustomerV2() {
-      return PstnSetupService.createCustomerV2(
-        PstnSetup.getCustomerId(),
-        PstnSetup.getCustomerName(),
-        PstnSetup.getCustomerFirstName(),
-        PstnSetup.getCustomerLastName(),
-        PstnSetup.getCustomerEmail(),
-        PstnSetup.getProviderId(),
-        PstnSetup.getIsTrial()
+      return PstnService.createCustomerV2(
+        PstnModel.getCustomerId(),
+        PstnModel.getCustomerName(),
+        PstnModel.getCustomerFirstName(),
+        PstnModel.getCustomerLastName(),
+        PstnModel.getCustomerEmail(),
+        PstnModel.getProviderId(),
+        PstnModel.getIsTrial()
       ).catch(function (response) {
-        Notification.errorResponse(response, 'pstnSetup.customerCreateError');
+        Notification.errorResponse(response, 'PstnModel.customerCreateError');
         return $q.reject(response);
       });
     }
 
     function updateCustomerCarrier() {
-      return PstnSetupService.updateCustomerCarrier(PstnSetup.getCustomerId(), PstnSetup.getProviderId())
+      return PstnService.updateCustomerCarrier(PstnModel.getCustomerId(), PstnModel.getProviderId())
         .then(function () {
-          PstnSetup.setCarrierExists(true);
+          PstnModel.setCarrierExists(true);
         }).catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.customerUpdateError');
           return $q.reject(response);
@@ -71,10 +77,10 @@
 
     function createSite() {
       // Only create site for API providers
-      if (vm.provider.apiImplementation !== "SWIVEL" && !PstnSetup.isSiteExists()) {
-        return PstnServiceAddressService.createCustomerSite(PstnSetup.getCustomerId(), PstnSetup.getCustomerName(), PstnSetup.getServiceAddress())
+      if (vm.provider.apiImplementation !== "SWIVEL" && !PstnModel.isSiteExists()) {
+        return PstnServiceAddressService.createCustomerSite(PstnModel.getCustomerId(), PstnModel.getCustomerName(), PstnModel.getServiceAddress())
           .then(function () {
-            PstnSetup.setSiteExists(true);
+            PstnModel.setSiteExists(true);
           }).catch(function (response) {
             Notification.errorResponse(response, 'pstnSetup.siteCreateError');
             return $q.reject(response);
@@ -83,26 +89,26 @@
     }
 
     function initOrders() {
-      vm.orders = PstnSetup.getOrders();
+      vm.orders = PstnModel.getOrders();
 
       vm.portOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'orderType') === PstnSetupService.PORT_ORDER;
+        return _.get(order, 'orderType') === PORT_ORDER;
       });
 
       vm.newTollFreeOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'orderType') === PstnSetupService.NUMBER_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE;
+        return _.get(order, 'orderType') === NUMBER_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE;
       });
 
       var pstnAdvancedOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_DID;
+        return _.get(order, 'orderType') === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_DID;
       });
 
       vm.swivelOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'orderType') === PstnSetupService.SWIVEL_ORDER;
+        return _.get(order, 'orderType') === SWIVEL_ORDER;
       });
 
       var tollFreeAdvancedOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE;
+        return _.get(order, 'orderType') === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE;
       });
       vm.advancedOrders = [].concat(pstnAdvancedOrders, tollFreeAdvancedOrders);
 
@@ -127,35 +133,35 @@
       }
 
       if (vm.newOrders.length > 0) {
-        promise = PstnSetupService.orderNumbersV2(PstnSetup.getCustomerId(), vm.newOrders)
+        promise = PstnService.orderNumbersV2(PstnModel.getCustomerId(), vm.newOrders)
           .catch(pushErrorArray);
         promises.push(promise);
       }
 
       if (vm.newTollFreeOrders.length > 0) {
-        promise = PstnSetupService.orderNumbersV2(PstnSetup.getCustomerId(), vm.newTollFreeOrders)
+        promise = PstnService.orderNumbersV2(PstnModel.getCustomerId(), vm.newTollFreeOrders)
           .catch(pushErrorArray);
         promises.push(promise);
       }
 
       if (vm.portOrders.length > 0) {
-        promise = PstnSetupService.portNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), _.get(vm, 'portOrders[0].data.numbers'))
+        promise = PstnService.portNumbers(PstnModel.getCustomerId(), PstnModel.getProviderId(), _.get(vm, 'portOrders[0].data.numbers'))
           .catch(pushErrorArray);
         promises.push(promise);
       }
 
       if (vm.swivelOrders.length > 0) {
-        promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), _.get(vm, 'swivelOrders[0].data.numbers'))
+        promise = PstnService.orderNumbers(PstnModel.getCustomerId(), PstnModel.getProviderId(), _.get(vm, 'swivelOrders[0].data.numbers'))
           .catch(pushErrorArray);
         promises.push(promise);
       }
 
       _.forEach(vm.advancedOrders, function (order) {
-        if (_.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_DID) {
-          promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
+        if (_.get(order, 'orderType') === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_DID) {
+          promise = PstnService.orderBlock(PstnModel.getCustomerId(), PstnModel.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
             .catch(pushErrorArray);
-        } else if (_.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE) {
-          promise = PstnSetupService.orderTollFreeBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length)
+        } else if (_.get(order, 'orderType') === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE) {
+          promise = PstnService.orderTollFreeBlock(PstnModel.getCustomerId(), PstnModel.getProviderId(), order.data.areaCode, order.data.length)
             .catch(pushErrorArray);
         }
         promises.push(promise);
@@ -195,9 +201,9 @@
     function placeOrder() {
       var promise = $q.resolve();
       startPlaceOrderLoad();
-      if (!PstnSetup.isCustomerExists()) {
+      if (!PstnModel.isCustomerExists()) {
         promise = promise.then(createCustomerV2);
-      } else if (!PstnSetup.isCarrierExists()) {
+      } else if (!PstnModel.isCarrierExists()) {
         promise = promise.then(updateCustomerCarrier);
       }
       promise

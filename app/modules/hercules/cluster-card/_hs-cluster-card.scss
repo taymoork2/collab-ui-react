@@ -31,6 +31,10 @@ hs-cluster-card {
       }
     }
 
+    .badge {
+      vertical-align: middle;
+    }
+
     .cluster-list-body {
       display: flex;
       flex-grow: 1;
@@ -152,6 +156,12 @@ hs-cluster-card {
     &.card-ucm_mgmt {
       header::after {
         border-top-color: $color-people-base;
+      }
+    }
+
+    &.card-ept {
+      header::after {
+        border-top-color: $gray-light-2;
       }
     }
 
