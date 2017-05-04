@@ -6,11 +6,12 @@
     .controller('WebExMetricsCtrl', WebExMetricsCtrl);
 
   /* @ngInject */
-  function WebExMetricsCtrl($q, $stateParams, $translate, Authinfo, LocalStorage, Userservice, WebExApiGatewayService,
+  function WebExMetricsCtrl($log, $q, $stateParams, $translate, Authinfo, LocalStorage, Userservice, WebExApiGatewayService,
     $sce,
     $timeout,
     $window,
-    UrlConfig
+    UrlConfig,
+    QlikService
   ) {
 
     var vm = this;
@@ -25,6 +26,8 @@
     vm.sparkReportInMashup = 'sparkReportInMashup';
     vm.meetingUsage = 'meetingUsage';
     vm.joinMeetingTime = 'joinMeetingTime';
+    vm.webexReportWithTicketInMashup = 'webexReportWithTicketInMashup';
+    vm.sparkReportWithTicketInMashup = 'sparkReportWithTicketInMashup';
     vm.currentFilter = vm.webexReportInMashup;
     vm.displayMeetingUsage = false;
     vm.displayJoinMeetingTime = false;
@@ -74,6 +77,22 @@
           resetIframe(vm.joinMeetingTime);
         },
       },*/
+      {
+        'id': '2',
+        'label': $translate.instant('reportsPage.webexMetrics.webexReportWithTicket'),
+        'selected': false,
+        toggle: function () {
+          resetIframe(vm.webexReportWithTicketInMashup);
+        },
+      },
+      {
+        'id': '3',
+        'label': $translate.instant('reportsPage.webexMetrics.sparkReportWithTicket'),
+        'selected': false,
+        toggle: function () {
+          resetIframe(vm.sparkReportWithTicketInMashup);
+        },
+      },
     ];
     vm.webexMetricsOptions[0].url = UrlConfig.getWebexReportInMashupUrl();
     vm.webexMetricsOptions[0].filterType = 'webexReportInMashup';
@@ -91,7 +110,13 @@
     vm.webexMetricsOptions[4].url = UrlConfig.getJoinMeetingTimeUrl();
     vm.webexMetricsOptions[4].filterType = 'joinMeetingTime';*/
 
-    updateIframe();
+    vm.webexMetricsOptions[2].url = '';
+    vm.webexMetricsOptions[2].filterType = 'webexReportWithTicketInMashup';
+
+    vm.webexMetricsOptions[3].url = '';
+    vm.webexMetricsOptions[3].filterType = 'sparkReportWithTicketInMashup';
+
+    getQlikUrl();
 
     function resetIframe(filter) {
       if (vm.currentFilter !== filter) {
@@ -201,6 +226,8 @@
 
     function updateIframe() {
       vm.isIframeLoaded = false;
+      vm.webexMetricsOptions[2].url = vm.qlikWebexAppUrl;
+      vm.webexMetricsOptions[3].url = vm.qlikSparkAppUrl;
       var iframeUrlOrig = _.find(vm.webexMetricsOptions, function (metrics) {
         return metrics.filterType === vm.currentFilter;
       }).url;
@@ -208,9 +235,26 @@
       $timeout(
         function loadIframe() {
           vm.metricsUrl = iframeUrlOrig;
+          $log.log('========:' + vm.metricsUrl);
         },
         0
       );
+    }
+
+    function getQlikUrl() {
+      QlikService.getQlikInfos().then(function (qlikInfo) {
+        $log.log('++++===QlikInfo url:' + qlikInfo.url);
+        var appUrl = qlikInfo.url;
+        var appIdAndTicket = appUrl.split('app/')[1];
+        var temp = appIdAndTicket.split('/?');
+        var ticket = temp[1];
+        //access app
+        vm.qlikWebexAppUrl = 'https://ds2-qlikdemo/custom/sense/app/2a4c2eb6-cc4f-4181-8ff7-c20ad389e292/sheet/vmNuum/state/analysis?' + ticket;
+        vm.qlikSparkAppUrl = 'https://ds2-qlikdemo/custom/sense/app/43f0146d-94a1-4add-addd-a21213a5f5c4/sheet/KYmpu/state/analysis?' + ticket;
+        $log.log('++++====qlik webex url:' + vm.qlikWebexAppUrl);
+        $log.log('++++====qlik spark url:' + vm.qlikSparkAppUrl);
+        updateIframe();
+      });
     }
 
     $window.iframeLoaded = function (iframeId) {
