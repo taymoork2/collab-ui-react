@@ -112,12 +112,12 @@ describe('Component: pgEdit', () => {
     initiatorType: 'CUSTOM',
     initiators: [
       {
-        initiatorId: '0001',
-        type: 'USER',
-      },
-      {
         initiatorId: '0002',
         type: 'PLACE',
+      },
+      {
+        initiatorId: '0001',
+        type: 'USER',
       },
     ],
   };
@@ -582,14 +582,16 @@ describe('Component: pgEdit', () => {
 
     it('Test showMoreButton', function () {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
+      spyOn(this.controller, 'getSearchedCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = this.controller.cardThreshold;
-      expect(this.controller.showMoreButton('USER_REAL_USER', 'MEMBER')).toBeFalsy();
+      expect(this.controller.showMoreButton('USER_REAL_USER', 'MEMBER')).toBeTruthy();
     });
 
     it('Test showLessButton', function () {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
+      spyOn(this.controller, 'getSearchedCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = undefined;
-      expect(this.controller.showLessButton('USER_REAL_USER', 'MEMBER')).toBeFalsy();
+      expect(this.controller.showLessButton('USER_REAL_USER', 'MEMBER')).toBeTruthy();
     });
   });
 
