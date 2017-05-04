@@ -5,5 +5,12 @@ if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     exit 1
 fi
 
+# shellcheck disable=SC1090
+source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/core-helpers"
+
+# always use physical path (vs. a symlinked path)
+WX2_ADMIN_WEB_CLIENT_HOME="$(get_physical_path "$WX2_ADMIN_WEB_CLIENT_HOME")"
+
+# shellcheck disable=SC2068
 find "${WX2_ADMIN_WEB_CLIENT_HOME}/app" -iname \*spec.js -o -iname \*spec.ts \
     | "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/ktest" $@
