@@ -25,6 +25,7 @@
     vm.noProceed = false;
     vm.yesProceed = $state.params.yesProceed;
     vm.fromClusters = $state.params.fromClusters;
+    vm.showDownloadableOption = vm.fromClusters;
     vm.canGoNext = canGoNext;
 
     // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
@@ -50,12 +51,14 @@
         vm.enableRedirectToTarget = false;
       } else {
         vm.yesProceed = false;
+        vm.showDownloadableOption = true;
       }
     }
 
     function next() {
       if (vm.radio == 0) {
         vm.noProceed = true;
+        vm.showDownloadableOption = false;
         $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
       } else if (vm.yesProceed) {
         if (!_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '' && !_.isUndefined(vm.hostName)) {
@@ -63,6 +66,7 @@
         }
       } else {
         vm.yesProceed = true;
+        vm.showDownloadableOption = false;
       }
     }
 
