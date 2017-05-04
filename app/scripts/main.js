@@ -52,6 +52,7 @@
     require('modules/core/featureToggle').default,
     require('modules/core/focus').default,
     require('modules/core/inlineEditText').default,
+    require('modules/core/learnMore').default,
     require('modules/core/scrollIndicator').default,
     require('modules/core/gridSpinner').default,
     require('modules/core/scripts/services/org.service'),
