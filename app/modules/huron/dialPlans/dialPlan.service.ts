@@ -14,14 +14,14 @@ export class DialPlanService {
     this.dialPlanResource = <IDialPlanResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/dialplans');
   }
 
-  public getDialPlan(): ng.IPromise<IDialPlan> {
+  public getDialPlan(customerId: string = this.Authinfo.getOrgId()): ng.IPromise<IDialPlan> {
     return this.dialPlanResource.get({
-      customerId: this.Authinfo.getOrgId(),
+      customerId,
     }).$promise;
   }
 
-  public getCustomerDialPlanCountryCode(): ng.IPromise<string> {
-    return this.getDialPlan().then(dialPlan => {
+  public getCustomerDialPlanCountryCode(customerId: string = this.Authinfo.getOrgId()): ng.IPromise<string> {
+    return this.getDialPlan(customerId).then(dialPlan => {
       return _.trimStart(dialPlan.countryCode, '+');
     });
   }
