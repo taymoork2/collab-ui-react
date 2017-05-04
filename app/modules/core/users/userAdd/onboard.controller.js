@@ -797,7 +797,7 @@ require('./_user-add.scss');
     };
 
     $scope.isSharedMeetingsLicense = function (license) {
-      return _.lowerCase(_.get(license, 'confLic[0].licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
+      return _.toLower(_.get(license, 'confLic[0].licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
     };
 
     $scope.determineLicenseType = function (license) {
