@@ -6,7 +6,7 @@
     .controller('WebExMetricsCtrl', WebExMetricsCtrl);
 
   /* @ngInject */
-  function WebExMetricsCtrl($log, $q, $stateParams, $translate, Authinfo, LocalStorage, Userservice, WebExApiGatewayService,
+  function WebExMetricsCtrl($q, $stateParams, $translate, Authinfo, LocalStorage, Userservice, WebExApiGatewayService,
     $sce,
     $timeout,
     $window,
@@ -235,7 +235,6 @@
       $timeout(
         function loadIframe() {
           vm.metricsUrl = iframeUrlOrig;
-          $log.log('========:' + vm.metricsUrl);
         },
         0
       );
@@ -243,16 +242,10 @@
 
     function getQlikUrl() {
       QlikService.getQlikInfos().then(function (qlikInfo) {
-        $log.log('++++===QlikInfo url:' + qlikInfo.url);
-        var appUrl = qlikInfo.url;
-        var appIdAndTicket = appUrl.split('app/')[1];
-        var temp = appIdAndTicket.split('/?');
-        var ticket = temp[1];
+        var ticket = qlikInfo.ticket;
         //access app
-        vm.qlikWebexAppUrl = 'https://ds2-qlikdemo/custom/sense/app/2a4c2eb6-cc4f-4181-8ff7-c20ad389e292/sheet/vmNuum/state/analysis?' + ticket;
-        vm.qlikSparkAppUrl = 'https://ds2-qlikdemo/custom/sense/app/43f0146d-94a1-4add-addd-a21213a5f5c4/sheet/KYmpu/state/analysis?' + ticket;
-        $log.log('++++====qlik webex url:' + vm.qlikWebexAppUrl);
-        $log.log('++++====qlik spark url:' + vm.qlikSparkAppUrl);
+        vm.qlikWebexAppUrl = 'https://ds2-qlikdemo/custom/sense/app/2a4c2eb6-cc4f-4181-8ff7-c20ad389e292/sheet/vmNuum/state/analysis?QlikTicket=' + ticket;
+        vm.qlikSparkAppUrl = 'https://ds2-qlikdemo/custom/sense/app/43f0146d-94a1-4add-addd-a21213a5f5c4/sheet/KYmpu/state/analysis?QlikTicket=' + ticket;
         updateIframe();
       });
     }
