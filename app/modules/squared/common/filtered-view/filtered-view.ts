@@ -9,6 +9,7 @@ export enum FilteredViewState {
 }
 
 interface IViewFilter<T> {
+  name: string;
   count: number;
   filterValue: string;
   passes(filterable: T): boolean;
