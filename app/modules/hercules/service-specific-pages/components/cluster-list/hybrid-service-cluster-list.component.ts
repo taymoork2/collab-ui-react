@@ -65,7 +65,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
         this.$scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
           if (this.serviceId === 'ept') {
-            row.entity.id = row.entity.resourceId;
+            row.entity.id = row.entity.uuid;
           }
           this.goToSidepanel(row.entity.id);
         });
