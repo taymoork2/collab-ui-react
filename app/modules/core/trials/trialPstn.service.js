@@ -94,7 +94,7 @@
 
     function reserveNumbersWithCustomerV2(customerOrgId) {
       if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
-        if (angular.isString(_trialData.details.pstnNumberInfo.numbers[0])) {
+        if (_.isString(_trialData.details.pstnNumberInfo.numbers[0])) {
           return PstnService.reserveCarrierInventoryV2(
             customerOrgId,
             _trialData.details.pstnProvider.uuid,

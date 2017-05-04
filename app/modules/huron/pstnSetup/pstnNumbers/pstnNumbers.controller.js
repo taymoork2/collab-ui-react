@@ -453,7 +453,7 @@
     function searchCarrierTollFreeInventory(areaCode, block, quantity, consecutive) {
       vm.model.tollFree.showAdvancedOrder = false;
       var field = this;
-      if (angular.isString(areaCode)) {
+      if (_.isString(areaCode)) {
         vm.model.tollFree.block = block;
         vm.model.tollFree.quantity = quantity;
         vm.model.tollFree.consecutive = consecutive;
@@ -472,7 +472,7 @@
       vm.model.tollFree.searchResults = [];
       vm.model.tollFree.searchResultsModel = {};
       vm.model.tollFree.paginateOptions.currentPage = 0;
-      if (!angular.isString(areaCode)) {
+      if (!_.isString(areaCode)) {
         vm.model.tollFree.isSingleResult = vm.model.tollFree.quantity == 1;
       }
       field.loading = true;
