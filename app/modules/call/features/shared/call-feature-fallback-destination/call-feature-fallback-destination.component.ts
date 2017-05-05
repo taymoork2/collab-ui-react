@@ -1,4 +1,4 @@
-import { CallFeatureFallbackDestinationService, FallbackDestination } from 'modules/call/features/shared/callFeatureFallbackDestination/services';
+import { CallFeatureFallbackDestinationService, FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { MemberService, Member } from 'modules/huron/members';
 import { NumberService } from 'modules/huron/numbers';
 import { Line } from 'modules/huron/lines/services/line';
@@ -178,7 +178,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
 
 export class CallFeatureFallbackDestinationComponent implements ng.IComponentOptions {
   public controller = CallFeatureFallbackDestinationCtrl;
-  public templateUrl = 'modules/call/features/shared/callFeatureFallbackDestination/callFeatureFallbackDestination.html';
+  public templateUrl = 'modules/call/features/shared/call-feature-fallback-destination/call-feature-fallback-destination.component.html';
   public bindings = {
     fallbackDestination: '<',
     showReversionLookup: '<',

@@ -1,4 +1,4 @@
-import { FallbackDestination } from 'modules/call/features/shared/callFeatureFallbackDestination/services';
+import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 
 class CallParkFallbackDestinationCtrl implements ng.IComponentController {
   public fallbackDestination: FallbackDestination;

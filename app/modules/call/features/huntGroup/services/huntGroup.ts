@@ -1,7 +1,7 @@
 // import { MemberType } from 'modules/huron/members';
 import { NumberType } from 'modules/huron/numbers';
 import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
-import { FallbackDestination } from 'modules/call/features/shared/callFeatureFallbackDestination/services';
+import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 
 export enum HuntMethod {
   DA_LONGEST_IDLE_TIME = <any>'DA_LONGEST_IDLE_TIME',

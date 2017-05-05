@@ -114,6 +114,7 @@
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
     require('modules/huron/lines/deleteExternalNumber').default,
+    require('modules/call/features').default,
   ])
   .constant('ASTParser', require('acorn'))
   .constant('ASTWalker', require('acorn/dist/walk'));
@@ -192,7 +193,6 @@
     'oc.lazyLoad',
     'Gemini',
     'CMC',
-    require('modules/call/features').default,
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

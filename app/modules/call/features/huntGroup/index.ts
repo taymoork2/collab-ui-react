@@ -8,7 +8,7 @@ import callFeatureMembers from 'modules/call/features/shared/call-feature-member
 import huntGroupMethod from 'modules/call/features/huntGroup/huntGroupMethod';
 import huntGroupMaxRingTime from 'modules/call/features/huntGroup/huntGroupMaxRingTime';
 import huntGroupMaxWaitTime from 'modules/call/features/huntGroup/huntGroupMaxWaitTime';
-import fallbackDestination from 'modules/call/features/shared/callFeatureFallbackDestination';
+import fallbackDestination from 'modules/call/features/shared/call-feature-fallback-destination';
 import notifications from 'modules/core/notifications';
 
 export default angular

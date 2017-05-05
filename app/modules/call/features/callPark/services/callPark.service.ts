@@ -1,6 +1,6 @@
 import { CallPark } from './callPark';
 import { CallFeatureMember, CardType } from 'modules/call/features/shared/call-feature-members/call-feature-member';
-import { FallbackDestination } from 'modules/call/features/shared/callFeatureFallbackDestination/services';
+import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { MemberType, USER_PLACE } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/services';
 

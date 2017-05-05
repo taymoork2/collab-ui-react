@@ -1,5 +1,5 @@
 import { CallParkFallbackDestinationComponent } from './callParkFallbackDestination.component';
-import callFeatureFallbackDestination from 'modules/call/features/shared/callFeatureFallbackDestination';
+import callFeatureFallbackDestination from 'modules/call/features/shared/call-feature-fallback-destination';
 
 export default angular
   .module('huron.call-park-fallback-destination', [

@@ -1,5 +1,5 @@
 import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
-import { FallbackDestination } from 'modules/call/features/shared/callFeatureFallbackDestination/services';
+import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 
 const FALLBACK_TIMER_DEFAULT: number = 120;
 
