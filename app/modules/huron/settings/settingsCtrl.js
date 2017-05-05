@@ -1692,7 +1692,7 @@
         .then(function (response) {
           loadMediaOnHoldOptions(response);
           _.forEach(response, function (media) {
-            if (media.entityIdSet && media.entityIdSet[0] === media.orgId) {
+            if (media.entityIdSet && _.includes(media.entityIdSet, media.orgId)) {
               vm.model.mediaOnHold = _.find(vm.mediaOnHoldOptions, function (option) {
                 return option.value === media.rhesosId;
               });
