@@ -81,32 +81,32 @@
     }; // isCIEnabledSite()
 
     obj.getSiteNameAndType = function (siteUrl) {
-      // var funcName = "getSiteNameAndType()";
-      // var logMsg = "";
+      var funcName = "getSiteNameAndType()";
+      var logMsg = "";
 
+      var siteUrlParts = siteUrl.split(".");
+      var siteUrlPartsCount = siteUrlParts.length;
       var isMCOnlineSite = false;
-      var dotIndex = siteUrl.indexOf(".");
-      var siteName = siteUrl.slice(0, dotIndex);
-      var restOfSiteUrl = siteUrl.slice(dotIndex);
-      var mcOnlineSuffixes = [
-        ".my",
-        ".mydmz",
-        ".mybts",
-        ".mydev",
-      ];
+      var siteName = siteUrlParts[0];
 
-      mcOnlineSuffixes.forEach(
-        function (mcOnlineSuffix) {
-          if (
-            (!isMCOnlineSite) &&
-            (0 == restOfSiteUrl.indexOf(mcOnlineSuffix + "."))
-          ) {
+      if (4 == siteUrlPartsCount) {
+        var siteNameSuffix = siteUrlParts[1];
 
-            siteName = siteName + mcOnlineSuffix;
-            isMCOnlineSite = true;
-          }
+        if ("my" == _.toLower(siteNameSuffix.slice(0, 2))) {
+          siteName = siteName + '.' + siteNameSuffix;
+          isMCOnlineSite = true;
         }
-      );
+      }
+
+      if (isMCOnlineSite) {
+        logMsg = funcName + "\n" +
+          "siteUrl=" + siteUrl + "\n" +
+          "siteUrlParts=" + siteUrlParts + "\n" +
+          "siteUrlPartsCount=" + siteUrlPartsCount + "\n" +
+          "siteName=" + siteName + "\n" +
+          "isMCOnlineSite=" + isMCOnlineSite;
+        $log.log(logMsg);
+      }
 
       var resultObj = {
         'siteName': siteName,
