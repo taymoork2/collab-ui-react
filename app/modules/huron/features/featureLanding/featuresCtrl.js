@@ -36,17 +36,17 @@ require('./_feature-landing.scss');
       name: $translate.instant('autoAttendant.title'),
       filterValue: 'AA',
     }, {
-      name: $translate.instant('huronHuntGroup.modalTitle'),
-      filterValue: 'HG',
-    }, {
       name: $translate.instant('callPark.title'),
       filterValue: 'CP',
     }, {
-      name: $translate.instant('pagingGroup.title'),
-      filterValue: 'PG',
-    }, {
       name: $translate.instant('callPickup.title'),
       filterValue: 'PI',
+    }, {
+      name: $translate.instant('huronHuntGroup.modalTitle'),
+      filterValue: 'HG',
+    }, {
+      name: $translate.instant('pagingGroup.title'),
+      filterValue: 'PG',
     }];
 
     /* LIST OF FEATURES
