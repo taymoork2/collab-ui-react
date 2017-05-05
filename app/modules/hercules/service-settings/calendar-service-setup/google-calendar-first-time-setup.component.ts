@@ -18,7 +18,7 @@ interface IData {
   useResources: boolean;
 }
 
-export class GoogleCalendarSetupCtrl implements ng.IComponentController {
+export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController {
   private steps: IStep[] = [{
     name: 'loading',
     next: () => { this.currentStep = 'authorization'; },
@@ -139,9 +139,9 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
   }
 }
 
-export class GoogleCalendarSetupComponent implements ng.IComponentOptions {
-  public controller = GoogleCalendarSetupCtrl;
-  public templateUrl = 'modules/hercules/service-settings/calendar-service-setup/google-calendar-setup.component.html';
+export class GoogleCalendarFirstTimeSetupComponent implements ng.IComponentOptions {
+  public controller = GoogleCalendarFirstTimeSetupCtrl;
+  public templateUrl = 'modules/hercules/service-settings/calendar-service-setup/google-calendar-first-time-setup.component.html';
   public bindings = {
     firstTimeSetup: '=',
   };
