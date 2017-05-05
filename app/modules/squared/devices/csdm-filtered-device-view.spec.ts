@@ -10,10 +10,10 @@ describe('Class: DevicesController', () => {
   } | any = {};
 
   let serverSideSearchRes = {
-    'url1': { displayName: 'abc', isOnline: true },
-    'url2': { displayName: 'abcd' },
-    'url3': { displayName: 'abcde', isOnline: true },
-    'url4': { displayName: 'abcdef' },
+    url1: { displayName: 'abc', isOnline: true },
+    url2: { displayName: 'abcd' },
+    url3: { displayName: 'abcde', isOnline: true },
+    url4: { displayName: 'abcdef' },
   };
 
   beforeEach(function () {
