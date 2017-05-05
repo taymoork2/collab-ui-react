@@ -83,7 +83,6 @@ describe('Controller: DevicesCtrl', function () {
 
   describe('startAddDeviceFlow function', function () {
     var userCisUuid;
-    var firstName;
     var email;
     var orgId;
     var adminFirstName;
@@ -101,7 +100,6 @@ describe('Controller: DevicesCtrl', function () {
       isEntitledToRoomSystem = true;
       showATA = true;
       showPersonal = true;
-      firstName = 'firstName';
       userCisUuid = 'userCisUuid';
       email = 'email@address.com';
       orgId = 'orgId';
@@ -117,7 +115,6 @@ describe('Controller: DevicesCtrl', function () {
       spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
       spyOn($state, 'go');
-      controller.adminFirstName = firstName;
       controller.adminUserDetails = {
         firstName: adminFirstName,
         lastName: adminLastName,
@@ -149,7 +146,7 @@ describe('Controller: DevicesCtrl', function () {
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
       expect(wizardState.account.organizationId).toBe(orgId);
       expect(wizardState.recipient.displayName).toBe(adminDisplayName);
-      expect(wizardState.recipient.firstName).toBe(firstName);
+      expect(wizardState.recipient.firstName).toBe(adminFirstName);
       expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
       expect(wizardState.recipient.email).toBe(email);
       expect(wizardState.recipient.organizationId).toBe(adminOrgId);

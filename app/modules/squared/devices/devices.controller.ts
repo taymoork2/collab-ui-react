@@ -23,7 +23,6 @@ export class DevicesController {
   private csdmHybridCalendarFeature: boolean;
   private hybridCalendarEnabledOnOrg: boolean;
   private hybridCallEnabledOnOrg: boolean;
-  private adminFirstName: string;
 
   private adminUserDetails: {
     firstName?: string;
@@ -221,12 +220,6 @@ export class DevicesController {
           cisUuid: data.id,
           organizationId: data.meta.organizationID,
         };
-        if (data.name) {
-          this.adminFirstName = data.name.givenName;
-        }
-        if (!this.adminFirstName) {
-          this.adminFirstName = data.displayName;
-        }
       }
       userDetailsDeferred.resolve();
     });
@@ -281,7 +274,7 @@ export class DevicesController {
           displayName: this.adminUserDetails.displayName,
           email: this.Authinfo.getPrimaryEmail(),
           organizationId: this.adminUserDetails.organizationId,
-          firstName: this.adminFirstName,
+          firstName: this.adminUserDetails.firstName || this.adminUserDetails.displayName,
         },
       },
       history: [],
@@ -360,7 +353,7 @@ export class DevicesController {
           displayName: this.adminUserDetails.displayName,
           email: this.Authinfo.getPrimaryEmail(),
           organizationId: this.adminUserDetails.organizationId,
-          firstName: this.adminFirstName,
+          firstName: this.adminUserDetails.firstName || this.adminUserDetails.displayName,
         },
       },
       history: [],
