@@ -5,8 +5,6 @@
 /*** PARTNERS ***/
 
 .partner-container {
-  @extend %card-container-padding;
-
   .tab-content {
     border-color: $gray-light-2;
   }
