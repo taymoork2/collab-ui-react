@@ -191,7 +191,7 @@ describe('HelpdeskHuronService', function () {
     expect(devices.length).toBe(1);
     expect(devices[0].displayName).toBe('SEP1CDEA7DBF740');
     expect(devices[0].uuid).toBe('c498a32e-8b95-4e38-aa70-2a8c90b1f0f4');
-    expect(devices[0].image).toBe('images/devices/cisco_8861.png');
+    expect(devices[0].image).toBe('images/devices-hi/cisco_8861.png');
     expect(devices[0].deviceStatus.status).toBe('Online');
     expect(devices[0].deviceStatus.cssColorClass).toBe('helpdesk-green');
     expect(devices[0].model).toBe('Cisco 8861');
