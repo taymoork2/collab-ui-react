@@ -15,7 +15,7 @@
         card.icon = 'icon-circle-contact-centre';
         card.desc = 'overview.cards.care.desc';
         card.name = 'overview.cards.care.title';
-        card.cardClass = 'cs-card header-bar care-card';
+        card.cardClass = 'cs-card';
         card.trial = false;
         card.enabled = false;
         card.notEnabledText = 'overview.cards.care.notEnabledText';

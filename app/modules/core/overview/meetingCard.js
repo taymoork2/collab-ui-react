@@ -15,7 +15,7 @@
         card.icon = 'icon-circle-group';
         card.desc = 'overview.cards.meeting.desc';
         card.name = 'overview.cards.meeting.title';
-        card.cardClass = 'cs-card header-bar meetings';
+        card.cardClass = 'cs-card';
         card.notEnabledText = 'overview.cards.meeting.notEnabledText';
         card.notEnabledFooter = 'overview.contactPartner';
         card.trial = false;
