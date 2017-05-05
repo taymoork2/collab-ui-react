@@ -1,7 +1,7 @@
 import { CallFeatureNameComponent } from './call-feature-name.component';
 
 export default angular
-  .module('huron.call-feature-name', [
+  .module('call.features.shared.name', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
