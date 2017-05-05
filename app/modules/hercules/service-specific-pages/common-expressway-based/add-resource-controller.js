@@ -299,6 +299,14 @@
       $window.open("https://" + encodeURIComponent(vm.hostname) + "/fusionregistration");
     };
 
+    vm.back = function () {
+      if (vm.welcomeScreenAccepted) {
+        vm.welcomeScreenAccepted = false;
+        return;
+      }
+      $modalInstance.close('back');
+    };
+
     ResourceGroupService.getAllAsOptions().then(function (options) {
       if (options.length > 0) {
         vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);

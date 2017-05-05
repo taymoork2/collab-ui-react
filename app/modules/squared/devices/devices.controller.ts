@@ -114,6 +114,7 @@ export class DevicesController {
 
     this.gridOptions = {
       data: 'sc.filteredView.getResult()',
+      enableHorizontalScrollbar: 0,
       rowHeight: 45,
       enableRowHeaderSelection: false,
       enableColumnMenus: false,

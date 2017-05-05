@@ -1,5 +1,6 @@
 import { Notification } from 'modules/core/notifications';
 import { TIMEOUT } from './index';
+import { TokenMethods } from './tokenMethods';
 
 declare var phoneUtils: any;
 
@@ -13,19 +14,6 @@ export class PstnSwivelNumbersComponent implements ng.IComponentOptions {
     onChange: '&',
     onAcknowledge: '&',
   };
-}
-
-export class TokenMethods {
-  public createtoken: Function;
-  public createdtoken: Function;
-  public edittoken: Function;
-  public removetoken: Function;
-  constructor(createToken, createdToken, editToken, removeToken) {
-    this.createtoken = createToken;
-    this.createdtoken = createdToken;
-    this.edittoken = editToken;
-    this.removetoken = removeToken;
-  }
 }
 
 export class PstnSwivelNumbersCtrl implements ng.IComponentController {

@@ -6,39 +6,29 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /* @ngInject */
-  function CiSyncCtrl($q, $translate, Authinfo, Log, Notification, CiService, SyncService) {
-    // Interface ---------------------------------------------------------------
+  function CiSyncCtrl($q, $translate, Authinfo, Notification, CiService, SyncService) {
     var vm = this;
 
     var translatePrefix = 'messengerCiSync.';
     var customerSuccessRole = 'webex-messenger.customer_success';
     var requiredEntitlements = ['webex-squared', 'webex-messenger'];
 
-    vm.dataStates = Object.freeze({
-      loading: 1,
-      loaded: 2,
-      error: 3,
-    });
+    vm.dataStates = {
+      LOADING: 1,
+      LOADED: 2,
+      ERROR: 3,
+    };
 
-    // the label is only a stake holder right now
-    vm.adminTypes = Object.freeze({
-      org: {
-        label: $translate.instant(translatePrefix + 'labelOrgAdmin'),
-      },
-      ops: {
-        label: $translate.instant(translatePrefix + 'labelOpsAdmin'),
-      },
-      read: {
-        label: $translate.instant(translatePrefix + 'labelReadAdmin'),
-      },
-      unknown: {
-        label: $translate.instant(translatePrefix + 'labelUnauthorizedUser'),
-      },
-    });
+    vm.adminTypes = {
+      ORG: 'ORG',
+      OPS: 'OPS',
+      READ: 'READ',
+      UNKNOWN: 'UNKNOWN',
+    };
 
     // Public
-    vm.adminType = vm.adminTypes.unknown;
-    vm.dataStatus = vm.dataStates.loading;
+    vm.adminType = vm.adminTypes.UNKNOWN;
+    vm.dataStatus = vm.dataStates.LOADING;
     vm.errorMsg = '';
     vm.isDirSync = false;
     vm.orgAdminUrl = 'https://wapi.webexconnect.com/wbxconnect/acs/widgetserver/mashkit/apps/standalone.html?app=WBX.base.orgadmin';
@@ -84,9 +74,7 @@
 
     init();
 
-    ////////////////////////////////////////////////////////////////////////////
-
-    // Implementation ----------------------------------------------------------
+    ////////////////
 
     // CI Calls Inside
     function init() {
@@ -99,7 +87,6 @@
         }).catch(function (errorMsg) {
           var error = $translate.instant(translatePrefix + 'errorAuthFailed') + errorMsg;
           Notification.error(error);
-          Log.error(error);
         });
     }
 
@@ -108,11 +95,11 @@
     }
 
     function isOrgAdmin() {
-      return (vm.adminTypes.org === vm.adminType);
+      return (vm.adminTypes.ORG === vm.adminType);
     }
 
     function isOpsAdmin() {
-      return (vm.adminTypes.ops === vm.adminType);
+      return (vm.adminTypes.OPS === vm.adminType);
     }
 
     function checkUserType() {
@@ -173,54 +160,52 @@
     }
 
     function getSyncStatus() {
-      vm.dataStatus = vm.dataStates.loading;
+      vm.dataStatus = vm.dataStates.LOADING;
 
       SyncService.getSyncStatus()
         .then(function (syncStatusObj) {
           vm.syncInfo = syncStatusObj;
-          vm.dataStatus = vm.dataStates.loaded;
+          vm.dataStatus = vm.dataStates.LOADED;
         }, function (errorObj) {
-          vm.dataStatus = vm.dataStates.error;
+          vm.dataStatus = vm.dataStates.ERROR;
           var error = $translate.instant(translatePrefix + 'errorFailedGettingCISyncStatus') + errorObj.message;
 
           vm.errorMsg = error;
-          Log.error(error);
           Notification.error(error);
         });
     }
 
     function refreshStatus() {
-      vm.dataStatus = vm.dataStates.loading;
+      vm.dataStatus = vm.dataStates.LOADING;
 
       SyncService.refreshSyncStatus()
         .then(function (status) {
           vm.syncInfo = status;
-          vm.dataStatus = vm.dataStates.loaded;
+          vm.dataStatus = vm.dataStates.LOADED;
         }, function (errorObj) {
-          vm.dataStatus = vm.dataStates.error;
+          vm.dataStatus = vm.dataStates.ERROR;
           var error = $translate.instant(translatePrefix + 'errorFailedRefreshingCISyncStatus') + errorObj.message;
 
           vm.errorMsg = error;
-          Log.error(error);
           Notification.error(error);
         });
     }
 
     function setOrgAdmin() {
-      vm.adminType = vm.adminTypes.org;
+      vm.adminType = vm.adminTypes.ORG;
     }
 
     function setOpsAdmin() {
-      vm.adminType = vm.adminTypes.ops;
+      vm.adminType = vm.adminTypes.OPS;
     }
 
     function setReadAdmin() {
-      vm.adminType = vm.adminTypes.read;
+      vm.adminType = vm.adminTypes.READ;
     }
 
     function patchSync() {
       // Double-check that they are ops for security
-      if (vm.adminTypes.ops === vm.adminType) {
+      if (vm.adminTypes.OPS === vm.adminType) {
         // SyncService must turn the syncing boolean into the full mode
         SyncService.patchSync(vm.syncInfo)
           .then(function () {
@@ -228,7 +213,6 @@
           }, function (errorObj) {
             var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;
 
-            Log.error(error);
             Notification.error(error);
 
             // Reset to previous state

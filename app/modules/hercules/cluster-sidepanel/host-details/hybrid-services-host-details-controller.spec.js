@@ -79,20 +79,20 @@ describe('HybridServicesHostDetailsController: ', function () {
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctDeregisterHostDialogOptions));
   });
 
-  it('should open the correct modal window when deleteExpresswayOrHDSNode() is called', function () {
-    var correctDeleteExpresswayOrHDSNodeDialogOptions = {
+  it('should open the correct modal window when deleteExpressway() is called', function () {
+    var correctDeleteExpresswayNodeDialogOptions = {
       templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
       controller: 'ConfirmDeleteHostController',
       controllerAs: 'confirmDeleteHostDialog',
     };
-    controller.deleteExpresswayOrHDSNode();
-    expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctDeleteExpresswayOrHDSNodeDialogOptions));
+    controller.deleteExpressway();
+    expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctDeleteExpresswayNodeDialogOptions));
   });
 
   it('should support HDS connector parsing', function () {
     expect(controller.host.connectorType).toBe('hds_app');
     expect(controller.host.state).toBe('running');
-    expect(controller.showDeleteNodeAction()).toBe(true);
+    expect(controller.showHdsAction()).toBe(true);
     expect(controller.showGoToHostAction()).toBe(true);
   });
 
@@ -100,7 +100,7 @@ describe('HybridServicesHostDetailsController: ', function () {
     controller.host = {};
     controller.host.state = 'offline';
     controller.host.connectorType = 'hds_app';
-    expect(controller.showDeleteNodeAction()).toBe(true);
+    expect(controller.showHdsAction()).toBe(true);
     expect(controller.showGoToHostAction()).toBe(true);
   });
 

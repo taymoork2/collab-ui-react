@@ -1161,6 +1161,7 @@
     "ipAddress": "IP Address",
     "language": "Language",
     "lastName": "Last Name",
+    "learnMore": "Learn More",
     "leave": "Leave",
     "metrics": "Metrics",
     "modal": "Modal",
@@ -1782,7 +1783,7 @@
         "squared-fusion-uc": "Call Service Activation",
         "squared-fusion-cal": "Calendar Service Activation",
         "squared-fusion-media": "Media Service Activation",
-        "contact-center-context": "Context Center Service Activation",
+        "contact-center-context": "Context Service Activation",
         "squared-fusion-ec": "Call Service Connect Activation",
         "squared-fusion-mgmt": "Expressway Management Service Activation"
       },
@@ -1868,7 +1869,7 @@
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-gcal": "Calendar Service",
       "squared-fusion-media": "Media Service",
-      "contact-center-context": "Context Center Service",
+      "contact-center-context": "Context Service",
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service"
@@ -2623,7 +2624,6 @@
       "inUse": "In Use",
       "notInUse": "Not In Use",
       "base": "Cisco",
-      "custom": "Custom",
       "access": "Source",
       "actions": "Actions",
       "dateUpdated": "Date Updated",
@@ -3920,7 +3920,9 @@
     "speedDialChangesFailed": "Failed to save speed dial changes.",
     "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
     "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries.",
-    "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}"
+    "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}",
+    "noSpeedDials": "No speed dials yet.",
+    "speedDiallDescription": "Speed dial numbers will appear on your devices as listed here."
   },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
@@ -4522,7 +4524,9 @@
       "quantity": "Quantity {{quantity}}",
       "status": "Status {{status}}",
       "url": "URL {{url}}"
-    }
+    },
+    "popUpTitle": "Pop-up Blocked",
+    "popUpDesc": "To view this customer, update your browser settings to allow pop-up windows."
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -4984,7 +4988,6 @@
     },
     "deregister": {
       "header": "Deregister Node",
-      "body": "Are you sure you want to deregister this node?",
       "body1": "If you proceed, this node will no longer be available.",
       "body2": "To make this node available again, you will need to reregister it."
     },
@@ -5129,6 +5132,7 @@
       "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}.",
+      "deregisterNodeErrorGeneric": "Unable to deregister node.",
       "clusterSettings": "Cluster Settings",
       "deletecluster": "Delete Cluster",
       "deleteclusterHeadding": "Delete Hybrid Media Cluster",
@@ -5256,8 +5260,8 @@
     "offline": "Offline",
     "active": "Active",
     "close": "Close",
-    "moveHostSuccess": "Node moved successfully, Please wait for a moment...",
-    "deleteNodeSuccess": "Node deregistered successfully, Please wait for a moment...",
+    "moveHostSuccess": "Node moved successfully.",
+    "deleteNodeSuccess": "Node deregistered successfully.",
     "installing": "Installing"
   },
   "webexUserSettings": {
@@ -6409,8 +6413,8 @@
     "noFeatures": "Features are not available for the current login",
     "noFeature": "This feature is not enabled for the current login",
     "featuresNotYetConfiguredPage": {
-      "nothingToSee": "No features yet.",
-      "letsCustomize": "Let's customize the calling experience"
+      "nothingToSee": "No features yet",
+      "letsCustomize": "Let's customize the calling experience."
     },
     "hgMethods": {
       "longestIdle": {

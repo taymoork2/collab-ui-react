@@ -11,7 +11,7 @@ require('./_overview.scss');
   function OverviewCtrl($rootScope, $state, $scope, $translate, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
-    var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
+    var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
@@ -33,6 +33,7 @@ require('./_overview.scss');
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
     vm.notificationComparator = notificationComparator;
+    vm.ftHuronPstn = false;
 
     ////////////////////////////////
 
@@ -177,6 +178,10 @@ require('./_overview.scss');
         }
       });
 
+      FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
+        vm.ftHuronPstn = result;
+      });
+
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
@@ -192,9 +197,16 @@ require('./_overview.scss');
           if (customer.trial) {
             PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
               if (!_.has(trial, 'acceptedDate')) {
-                vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
-                vm.notifications.push(vm.pstnToSNotification);
-                $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                if (vm.ftHuronPstn) {
+                  //This is the new TS version of ToS
+                  vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
+                  vm.notifications.push(vm.pstnToSNotification);
+                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                } else {
+                  vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
+                  vm.notifications.push(vm.pstnToSNotification);
+                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                }
               }
             });
           }

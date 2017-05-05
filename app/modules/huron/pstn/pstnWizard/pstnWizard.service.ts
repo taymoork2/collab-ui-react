@@ -1,15 +1,12 @@
 import { Notification } from 'modules/core/notifications';
-import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE, NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY, TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER } from '../index';
+import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE, NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY, TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER } from '../pstn.const';
 import { INumbersModel } from './number.model';
 import { PstnService } from '../pstn.service';
-import { PstnModel } from '../pstn.model';
+import {
+  PstnModel,
+  IOrder,
+} from '../pstn.model';
 
-export interface IOrder {
-  reservationId?: string;
-  orderType: string;
-  numberType: string;
-  data: any;
-}
 export class PstnWizardService {
   public STEP_TITLE: {
     1: string;

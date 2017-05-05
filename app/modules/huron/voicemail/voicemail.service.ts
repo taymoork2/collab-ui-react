@@ -18,7 +18,7 @@ export class HuronVoicemailService {
     let isEnabled = false;
     return this.HuronCustomerService.getCustomer().then( customer => {
       _.forEach(_.get<Array<Link>>(customer, 'links'), link => {
-        if (link.rel === _.lowerCase(VOICEMAIL)) {
+        if (link.rel === _.toLower(VOICEMAIL)) {
           isEnabled = true;
         }
       });

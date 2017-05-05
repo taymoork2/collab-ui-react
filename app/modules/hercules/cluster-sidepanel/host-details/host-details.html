@@ -38,13 +38,13 @@
           <span translate="hercules.connectors.moveNode"></span>
         </a>
       </li>
-      <li ng-if="hostDetailsCtrl.showHybridMediaAction()">
+      <li ng-if="hostDetailsCtrl.showHybridMediaAction() || hostDetailsCtrl.showHdsAction()">
         <a ng-click="hostDetailsCtrl.showDeregisterHostDialog()">
           <span translate="hercules.connectors.deregisterNode"></span>
         </a>
       </li>
       <li ng-if="hostDetailsCtrl.showDeleteNodeAction()">
-        <a ng-click="hostDetailsCtrl.deleteExpresswayOrHDSNode()">
+        <a ng-click="hostDetailsCtrl.deleteExpressway()">
           <span translate="hercules.connectors.removeNode"></span>
         </a>
       </li>

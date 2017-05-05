@@ -1,5 +1,10 @@
 import { PstnCarrier } from './pstnProviders/pstnCarrier';
-import { IOrder } from './pstnWizard/pstnWizard.service';
+export interface IOrder {
+  reservationId?: string;
+  orderType: string;
+  numberType: string;
+  data: any;
+}
 
 export class PstnModel {
   private customerId: string;
@@ -143,7 +148,7 @@ export class PstnModel {
     return this.provider;
   }
 
-  public getProviderId(): String {
+  public getProviderId(): string {
     return _.isObject(this.provider) ? this.provider.uuid : '';
   }
 
@@ -203,7 +208,7 @@ export class PstnModel {
 
 }
 
-export default angular.module('huron.PstnSetup', [
+export default angular.module('huron.pstn.pstn-model', [
   require('angular-resource'),
 ])
 .service('PstnModel', PstnModel)

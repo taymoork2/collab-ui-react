@@ -181,9 +181,15 @@
 <div class="modal-footer add-resource">
 
   <button class="btn"
-          ng-hide="vm.inFinalScreen()"
+          ng-hide="vm.inFinalScreen() || vm.firstTimeSetup"
           ng-click="vm.closeSetupModal()">
     <span translate="common.cancel"></span>
+  </button>
+
+  <button class="btn"
+          ng-hide="vm.inFinalScreen() || !vm.firstTimeSetup"
+          ng-click="vm.back()">
+    <span translate="common.back"></span>
   </button>
 
   <button class="btn btn--primary"
