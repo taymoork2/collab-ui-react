@@ -130,9 +130,9 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct messenger service url', function () {
     whenCalling('getMessengerServiceUrl').expectUrlToBe({
-      dev: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+      dev: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       cfe: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
-      integration: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+      integration: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       prod: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
     });
   });
