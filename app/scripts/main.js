@@ -192,6 +192,7 @@
     'oc.lazyLoad',
     'Gemini',
     'CMC',
+    require('modules/call/features').default,
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

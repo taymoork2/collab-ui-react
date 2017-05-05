@@ -1,3 +1,8 @@
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/settings/z-index';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
 .cs-setupassistant {
   &--content {
     .typeahead-large {
@@ -11,25 +16,20 @@
 
       .feature-title {
         @include vr-spacing(pt, 3);
-
         font-family: $brand-font-thin;
-        font-size: $font-size-h1;
+        font-size: $h1-font-size;
       }
 
       .feature-desc {
         @include vr-spacing(pb, 2.75);
-
         font-family: $brand-font-light;
-        font-size: $font-size-h4;
+        font-size: $h4-font-size;
       }
     }
   }
+
   form,
   .cs-form {
     margin-top: 0;
   }
-}
-
-.save-feature {
-
 }

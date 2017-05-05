@@ -1,3 +1,7 @@
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/z-index';
+
 .callpickupedit-state {
   @extend %page-background-white;
 }
