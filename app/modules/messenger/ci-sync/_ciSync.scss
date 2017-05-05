@@ -1,4 +1,27 @@
 .container-ci-sync {
+  .org-info-section {
+    .row {
+      margin-top: 8px;
+    }
+    .row--first {
+      margin-top: 0;
+    }
+
+    .links-row {
+      margin-top: 14px;
+      margin-left: -4px;
+    }
+  }
+
+  .options-section {
+    .row {
+      margin-top: 14px;
+    }
+    .row--first {
+      margin-top: 0;
+    }
+  }
+
   .bottom-padding {
     padding-bottom: 30px;
   }
