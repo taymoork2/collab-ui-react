@@ -28,6 +28,7 @@
         min: $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount'),
         number: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
         required: $translate.instant('common.invalidRequired'),
+        pattern: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
       },
       care: {
         max: $translate.instant('partnerHomePage.invalidTrialCareQuantity'),
