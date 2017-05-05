@@ -46,7 +46,7 @@ class DeviceSettings implements ng.IComponentController {
 
   public onSaveGuiSettings() {
     this.updatingGuiSettings = true;
-    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'ui_settings', this.guiSettingsEnabled)
+    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'gui_settings', this.guiSettingsEnabled)
       .then(() => {
         this.Notification.success('deviceSettings.guiSettingsUpdated');
       })
@@ -101,7 +101,7 @@ class DeviceSettings implements ng.IComponentController {
   }
 
   private resetGuiSettingsEnabled() {
-    this.CsdmConfigurationService.getRuleForPlace(this.ownerId, 'ui_settings').then(rule => {
+    this.CsdmConfigurationService.getRuleForPlace(this.ownerId, 'gui_settings').then(rule => {
       this.guiSettingsEnabled = rule.value;
     }).catch(() => {
       this.guiSettingsEnabled = true;
