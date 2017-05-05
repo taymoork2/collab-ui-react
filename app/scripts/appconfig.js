@@ -3046,7 +3046,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call-features/callPark/callPark'));
+                  done(require('modules/call/features/callPark/callPark'));
                 }, 'call-park');
               }),
             },
@@ -3061,7 +3061,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call-features/callPark/callPark'));
+                  done(require('modules/call/features/callPark/callPark'));
                 }, 'call-park');
               }),
             },
@@ -3072,7 +3072,7 @@
             template: '<uc-hunt-group></uc-hunt-group>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/call-features/huntGroup/huntGroup'], done);
+                require(['modules/call/features/huntGroup/huntGroup'], done);
               }),
             },
           })
@@ -3085,7 +3085,7 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/call-features/huntGroup/huntGroup'], done);
+                require(['modules/call/features/huntGroup/huntGroup'], done);
               }),
             },
           })
