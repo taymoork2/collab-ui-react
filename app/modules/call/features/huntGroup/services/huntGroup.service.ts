@@ -2,7 +2,7 @@ import { HuntGroup, HuntGroupNumber } from './huntGroup';
 import { NumberType } from 'modules/huron/numbers';
 import { FallbackDestination } from 'modules/call/features/shared/callFeatureFallbackDestination/services';
 import { MemberType, USER_PLACE } from 'modules/huron/members';
-import { CallFeatureMember, CardType, ComplexCardType, MemberItem } from 'modules/call/features/shared/callFeatureMembers/callFeatureMember';
+import { CallFeatureMember, CardType, ComplexCardType, MemberItem } from 'modules/call/features/shared/call-feature-members/call-feature-member';
 import { FeatureMemberService } from 'modules/huron/features/services';
 
 export interface IHuntGroupListItem {

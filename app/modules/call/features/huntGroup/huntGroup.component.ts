@@ -1,5 +1,5 @@
 import { HuntGroup, HuntMethod, HuntGroupNumber, HuntGroupService } from 'modules/call/features/huntGroup/services';
-import { CallFeatureMember } from 'modules/call/features/shared/callFeatureMembers/callFeatureMember';
+import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
 import { FallbackDestination } from 'modules/call/features/shared/callFeatureFallbackDestination/services';
 import { Notification } from 'modules/core/notifications';
 

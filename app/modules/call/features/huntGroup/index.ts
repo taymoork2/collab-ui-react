@@ -4,7 +4,7 @@ import { HuntGroupComponent } from './huntGroup.component';
 import huntGroupService from './services';
 import callFeatureName from 'modules/call/features/shared/call-feature-name';
 import huntGroupNumbers from 'modules/call/features/huntGroup/huntGroupNumbers';
-import callFeatureMembers from 'modules/call/features/shared/callFeatureMembers';
+import callFeatureMembers from 'modules/call/features/shared/call-feature-members';
 import huntGroupMethod from 'modules/call/features/huntGroup/huntGroupMethod';
 import huntGroupMaxRingTime from 'modules/call/features/huntGroup/huntGroupMaxRingTime';
 import huntGroupMaxWaitTime from 'modules/call/features/huntGroup/huntGroupMaxWaitTime';

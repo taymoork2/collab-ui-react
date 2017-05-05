@@ -13,7 +13,7 @@ describe('Component: CallFeatureMembers', () => {
   let typeaheadResults = getJSONFixture('huron/json/features/callFeatureMembers/typeaheadMemberResponse.json');
 
   beforeEach(function () {
-    this.initModules('huron.call-feature-members');
+    this.initModules('call.features.shared.members');
     this.injectDependencies(
       '$scope',
       '$rootScope',

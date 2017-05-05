@@ -2,7 +2,7 @@ import './_call-park.scss';
 
 import { CallParkComponent } from './callPark.component';
 import callParkNumber from './callParkNumber';
-import callFeatureMember from 'modules/call/features/shared/callFeatureMembers';
+import callFeatureMember from 'modules/call/features/shared/call-feature-members';
 import callParkFallbackDestination from 'modules/call/features/callPark/callParkFallbackDestination';
 import callParkReversionTimer from './callParkReversionTimer';
 import callParkService from './services';

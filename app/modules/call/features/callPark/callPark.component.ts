@@ -1,5 +1,5 @@
 import { CallParkService, CallPark, ICallParkRangeItem } from 'modules/call/features/callPark/services';
-import { CallFeatureMember } from 'modules/call/features/shared/callFeatureMembers/callFeatureMember';
+import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
 import { FallbackDestination } from 'modules/call/features/shared/callFeatureFallbackDestination/services';
 import { HuronSiteService } from 'modules/huron/sites';
 import { Notification } from 'modules/core/notifications';

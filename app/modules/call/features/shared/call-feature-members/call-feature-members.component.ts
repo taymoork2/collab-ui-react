@@ -1,4 +1,4 @@
-import { CallFeatureMember, CardType } from './callFeatureMember';
+import { CallFeatureMember, CardType } from './call-feature-member';
 import { MemberService, Member, MemberType, USER_PLACE } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/services';
 import { Line } from 'modules/huron/lines/services/line';
@@ -262,7 +262,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
 
 export class CallFeatureMembersComponent implements ng.IComponentOptions {
   public controller = CallFeatureMembersCtrl;
-  public templateUrl = 'modules/call/features/shared/callFeatureMembers/callFeatureMembers.html';
+  public templateUrl = 'modules/call/features/shared/call-feature-members/call-feature-members.html';
   public bindings = {
     members: '<',
     filterBy: '<',

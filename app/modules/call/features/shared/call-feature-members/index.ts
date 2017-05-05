@@ -1,15 +1,15 @@
-import './_call-feature-members.scss';
-import './_call-feature-member-lookup.scss';
+import './call-feature-members.component.scss';
+import './call-feature-member-lookup.scss';
 
-import { CallFeatureMembersComponent } from './callFeatureMembers.component';
-import { callFeatureMemberPrimaryNumberFilter } from './callFeatureMemberPrimaryNumber.filter';
-import { callFeatureMemberNumberFormatterFilter } from './callFeatureMemberNumberFormatter.filter';
+import { CallFeatureMembersComponent } from './call-feature-members.component';
+import { callFeatureMemberPrimaryNumberFilter } from './call-feature-member-primary-number.filter';
+import { callFeatureMemberNumberFormatterFilter } from './call-feature-member-number-formatter.filter';
 import memberService from 'modules/huron/members';
 import featureMemberService from 'modules/huron/features/services';
 import noDirtyOverride from 'modules/call/features/shared/no-dirty-override';
 
 export default angular
-  .module('huron.call-feature-members', [
+  .module('call.features.shared.members', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),

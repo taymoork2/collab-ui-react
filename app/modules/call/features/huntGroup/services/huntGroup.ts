@@ -1,6 +1,6 @@
 // import { MemberType } from 'modules/huron/members';
 import { NumberType } from 'modules/huron/numbers';
-import { CallFeatureMember } from 'modules/call/features/shared/callFeatureMembers/callFeatureMember';
+import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
 import { FallbackDestination } from 'modules/call/features/shared/callFeatureFallbackDestination/services';
 
 export enum HuntMethod {
