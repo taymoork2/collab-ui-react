@@ -7228,8 +7228,7 @@
         "buttons": {
           "verify": "Verify prerequisites",
           "view": "View prerequisites",
-          "resources": "Resources",
-          "settings": "Settings"
+          "resources": "SIP Destinations"
         },
         "error": {
           "invalidMaxLength": "Domain/SRV length cannot be more than {{max}}.",
@@ -7293,8 +7292,8 @@
         "pstn": "PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•",
         "pstnConnectivity": "PSTN connectivity",
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
-        "deactivateTitle": "Deactivate Enterprise Private Trunk",
-        "deactivateConfirm": "Are you sure to deactivate Private Trunk?",
+        "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
+        "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Spark remote SIP destinations configuration and disables the service for all users.",
         "deactivateSuccess": "Enterprise Private Trunk has been successfully deactivated",
         "deactivateError": "Enterprise Private Trunk could not be deactivated"
       }
