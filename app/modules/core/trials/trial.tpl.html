@@ -128,6 +128,7 @@
               cs-input-size="medium-4"
               cs-input-messages="trial.validationMessages.care"
               ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K1)}}"
+              min="1"
               ng-required="trial.careTrial.enabled;"
               ng-disabled="trial._helpers.careLicenseInputDisabledExpression()"
               ng-model-options="{'allowInvalid': true}">
@@ -145,6 +146,7 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-messages="trial.validationMessages.care"
               ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K2)}}"
+              min="1"
               ng-required="trial.advanceCareTrial.enabled;"
               ng-disabled="trial._helpers.advanceCareLicenseInputDisabledExpression()"
               ng-model-options="{'allowInvalid': true}">
@@ -167,6 +169,8 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-messages="trial.validationMessages.roomSystem"
               ng-min="0" ng-max="{{::trial.validationData.roomSystemMax}}"
+              min="1"
+              ng-disabled="!trial.roomSystemTrial.enabled"
               ng-required="trial.roomSystemTrial.enabled">
           </div>
           <div ng-if="!trial.sparkBoardTrial.paid && trial.sbTrial" class="cs-form-group row">
@@ -183,6 +187,8 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-messages="trial.validationMessages.roomSystem"
               ng-min="0" ng-max="{{trial.validationData.roomSystemMax}}"
+              min="1"
+              ng-disabled="!trial.sparkBoardTrial.enabled"
               ng-required="trial.sparkBoardTrial.enabled">
           </div>
         </div>
