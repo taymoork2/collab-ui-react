@@ -663,14 +663,8 @@
       key: 'callerId',
       type: 'nested',
       className: 'max-width-form',
-      templateOptions: {
-        label: $translate.instant('companyCallerId.companyCallerId'),
-      },
       data: {
         fields: [{
-          key: 'callerIdEnabled',
-          type: 'switch',
-        }, {
           key: 'callerIdName',
           type: 'input',
           templateOptions: {
@@ -728,14 +722,6 @@
         key: 'companyVoicemail',
         type: 'nested',
         className: 'medium-10 left',
-        templateOptions: {
-          label: $translate.instant('serviceSetupModal.vmAccessNumber'),
-        },
-      }, {
-        model: vm.model.companyVoicemail,
-        key: 'companyVoicemailEnabled',
-        className: 'medium-2 right vm-switch-margin',
-        type: 'switch',
       }],
     }, {
       model: vm.model.companyVoicemail,
