@@ -129,8 +129,8 @@
               cs-input-messages="trial.validationMessages.care"
               ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K1)}}"
               min="1"
-              ng-required="trial.careTrial.enabled;"
-              ng-disabled="trial._helpers.careLicenseInputDisabledExpression()"
+              ng-required="trial.careTrial.enabled"
+              ng-disabled="!trial.careTrial.enabled"
               ng-model-options="{'allowInvalid': true}">
           </div>
           <div class="cs-form-group row" ng-if="trial.showAdvanceCare">
@@ -147,8 +147,8 @@
               cs-input-messages="trial.validationMessages.care"
               ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K2)}}"
               min="1"
-              ng-required="trial.advanceCareTrial.enabled;"
-              ng-disabled="trial._helpers.advanceCareLicenseInputDisabledExpression()"
+              ng-required="trial.advanceCareTrial.enabled"
+              ng-disabled="!trial.advanceCareTrial.enabled"
               ng-model-options="{'allowInvalid': true}">
           </div>
         </div>
