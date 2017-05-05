@@ -59,6 +59,8 @@ require('./_customer-overview.scss');
     var QTY = _.toUpper($translate.instant('common.quantity'));
     var FREE = _.toUpper($translate.instant('customerPage.free'));
 
+    vm.loadingCustomerPortal = true;
+
     $q.all([FeatureToggleService.atlasCareTrialsGetStatus(), FeatureToggleService.atlasCareInboundTrialsGetStatus()])
       .then(function (results) {
         if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
@@ -377,6 +379,9 @@ require('./_customer-overview.scss');
                 });
               }
             });
+        })
+        .finally(function () {
+          vm.loadingCustomerPortal = false;
         });
     }
 
