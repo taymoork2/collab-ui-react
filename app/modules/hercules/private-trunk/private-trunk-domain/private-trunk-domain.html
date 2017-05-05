@@ -1,7 +1,7 @@
-<div>
+<div ng-form="privateTrunkDomainForm" class="private-trunk">
+  <div ng-if="!$ctrl.isfirstTimeSetup()" class="top-margin"></div>
   <h5>{{$ctrl.domainDesc.title}}</h5>
   <p>{{$ctrl.domainDesc.desc}}</p>
-   <form name="privateTrunkDomainForm">
     <div class="cs-radio-group" ng-if="$ctrl.isFirstTimeSetup()">
       <input
         cs-input
@@ -46,5 +46,4 @@
         </cs-select>
         <a href="" translate="servicesOverview.cards.privateTrunk.verifyADomain" ng-click="$ctrl.gotoSettings()"></a>
      </div>
-  </form>
 </div>
