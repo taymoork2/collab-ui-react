@@ -335,6 +335,21 @@
       });
     }
 
+    function getOverflowIndicator() {
+      // vm.overflow_indicator = '/overflow_indicator';
+      // var returnData = [];
+      // return $http.get(vm.urlBase + getQuerys(vm.overflow_indicator, cluster, time)).then(function (response) {
+      //   if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
+      //     return response;
+      //   } else {
+      //     return returnData;
+      //   }
+      // }, function (error) {
+      //   return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallCallVolumeGraphError'), returnData);
+      // });
+      return -5;
+    }
+
     function returnErrorCheck(error, message, returnItem) {
       if (error.status === 401 || error.status === 403) {
         Notification.error('reportsPage.unauthorizedError');
@@ -359,6 +374,7 @@
       getMeetingLocationData: getMeetingLocationData,
       getNumberOfParticipantData: getNumberOfParticipantData,
       getMeetingLocationCardData: getMeetingLocationCardData,
+      getOverflowIndicator: getOverflowIndicator,
     };
 
   }

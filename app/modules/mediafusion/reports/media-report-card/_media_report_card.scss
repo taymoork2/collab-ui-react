@@ -1,3 +1,15 @@
+.positive-indicate {
+  color: #22D5A3;
+}
+.negetive-indicate {
+  color: #F34743;
+}
+.indicator-icon {
+  font-size: 4rem;
+  padding-top: 15px;
+  margin-left: -25px;
+  position: absolute;
+}
 .vis-hidden {
   visibility: hidden;
 }
@@ -21,7 +33,7 @@
   text-align: center;
 }
 .cardTooltipClass {
-  font-size: 3rem;
+  font-size: 4rem;
 }
 
 .sneak-peek-filter {

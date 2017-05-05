@@ -5,6 +5,6 @@ describe('Component: ucMediaReportCard', () => {
   });
   it('Replaces the element with the appropriate content', function () {
     expect(this.view.html()).toContain('metrics-info');
-    expect(this.view.html()).toContain('metrics-header');
+    expect(this.view.html()).toContain('media-card-article');
   });
 });
