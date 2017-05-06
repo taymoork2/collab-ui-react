@@ -4120,7 +4120,7 @@
         $stateProvider
           .state('messenger', {
             parent: 'main',
-            url: '/messenger',
+            url: '/services/messenger',
             templateUrl: 'modules/messenger/ci-sync/ciSync.tpl.html',
             controller: 'CiSyncCtrl',
             controllerAs: 'sync',
