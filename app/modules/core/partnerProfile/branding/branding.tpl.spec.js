@@ -1,5 +1,7 @@
 'use strict';
 
+var testModule = require('./index').default;
+
 describe('Template: branding', function () {
 
   var $scope, $controller, controller, $q, $templateCache, $compile, view;
@@ -15,13 +17,11 @@ describe('Template: branding', function () {
     if (view) {
       view.remove();
     }
-    view = undefined;
+    $scope = $controller = controller = $q = $templateCache = $compile = view = undefined;
+    Notification = Orgservice = UserListService = BrandService = FeatureToggleService = WebexClientVersion = Authinfo = undefined;
   });
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(angular.mock.module(testModule));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);

@@ -40,8 +40,3 @@ export class DirSyncStatusRowComponent implements ng.IComponentOptions {
     onClick: '&',
   };
 }
-
-angular
-  .module('Core')
-  .component('dirSyncStatusRow', new DirSyncStatusRowComponent());
-

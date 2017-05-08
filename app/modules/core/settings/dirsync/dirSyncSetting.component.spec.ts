@@ -1,5 +1,5 @@
-import testModule from './dirSyncSetting.component';
-import { DirSyncSettingController } from './dirsync/dirSyncSetting.controller';
+import testModule from './index';
+import { DirSyncSettingController } from './dirSyncSetting.controller';
 
 describe('DirSyncSettings Component', () => {
 

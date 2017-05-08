@@ -1,123 +1,116 @@
 require('./_domainManagement.scss');
 
-namespace domainManagement {
+export class DomainManageDeleteCtrl {
+  private _domainToDelete;
+  private _loggedOnUser;
+  private _error;
+  private _moreThanOneVerifiedDomainLeft;
 
-  class DomainManageDeleteCtrl {
-    private _domainToDelete;
-    private _loggedOnUser;
-    private _error;
-    private _moreThanOneVerifiedDomainLeft;
+  /* @ngInject */
+  constructor(
+    private $stateParams,
+    private $translate: ng.translate.ITranslateService,
+    private $previousState,
+    private DomainManagementService,
+    private LogMetricsService,
+  ) {
+    this._loggedOnUser = this.$stateParams.loggedOnUser;
+    this._domainToDelete = this.$stateParams.domain;
+    this._moreThanOneVerifiedDomainLeft = DomainManagementService.domainList && (_.filter(DomainManagementService.domainList, (d: any) => { return (d.status === DomainManagementService.states.verified || d.status === DomainManagementService.states.claimed); }).length > 1);
 
-    /* @ngInject */
-    constructor(
-      private $stateParams,
-      private $translate: ng.translate.ITranslateService,
-      private $previousState,
-      private DomainManagementService,
-      private LogMetricsService,
-    ) {
-      this._loggedOnUser = this.$stateParams.loggedOnUser;
-      this._domainToDelete = this.$stateParams.domain;
-      this._moreThanOneVerifiedDomainLeft = DomainManagementService.domainList && (_.filter(DomainManagementService.domainList, (d: any) => { return (d.status === DomainManagementService.states.verified || d.status === DomainManagementService.states.claimed); }).length > 1);
-
-      if (!this._loggedOnUser.isPartner //Partners do not get lockout warnings
-          //Domain is not just pending (which is ok to delete) or claimed (which will just unclaim)
-        && (this._domainToDelete.status === DomainManagementService.states.verified
-          //Enforcement is turned on:
+    if (!this._loggedOnUser.isPartner //Partners do not get lockout warnings
+      //Domain is not just pending (which is ok to delete) or claimed (which will just unclaim)
+      && (this._domainToDelete.status === DomainManagementService.states.verified
+        //Enforcement is turned on:
         && DomainManagementService.enforceUsersInVerifiedAndClaimedDomains
-          //Logged on user deleting his own domain:
+        //Logged on user deleting his own domain:
         && this._loggedOnUser.domain === this._domainToDelete.text
-          //Not last verified/claimed domain (which is ok to delete, as doing so will reset the enforceUsersInVerifiedAndClaimedDomains flag in CI:
+        //Not last verified/claimed domain (which is ok to delete, as doing so will reset the enforceUsersInVerifiedAndClaimedDomains flag in CI:
         && this._moreThanOneVerifiedDomainLeft)) {
-        this._error = this.$translate.instant('domainManagement.delete.preventLockoutError');
-      }
+      this._error = this.$translate.instant('domainManagement.delete.preventLockoutError');
     }
+  }
 
-    public deleteDomain() {
-      let start = moment();
-      if (this._domainToDelete.status === this.DomainManagementService.states.verified || this._domainToDelete.status === this.DomainManagementService.states.pending) {
-        this.DomainManagementService.unverifyDomain(this._domainToDelete.text).then(
-          () => {
-            this.recordMetrics({
-              msg: 'ok',
-              startLog: start,
-              data: { domain: this._domainToDelete.text, action: 'unverify' },
-            });
-            this.$previousState.go();
-          },
-          err => {
-            this.recordMetrics({
-              msg: 'error',
-              status: 500,
-              startLog: start,
-              data: { domain: this._domainToDelete.text, action: 'unverify', error: err },
-            });
-            this._error = err;
-          },
-        );
-      } else {
-        this.DomainManagementService.unclaimDomain(this._domainToDelete.text).then(
-          () => {
-            this.recordMetrics({
-              msg: 'ok',
-              startLog: start,
-              data: { domain: this._domainToDelete.text, action: 'unclaim' },
-            });
-            this.$previousState.go();
-          },
-          err => {
-            this.recordMetrics({
-              msg: 'error',
-              status: 500,
-              startLog: start,
-              data: { domain: this._domainToDelete.text, action: 'unclaim', error: err },
-            });
-            this._error = err;
-          },
-        );
-      }
-    }
-
-    public cancel() {
-      this.recordMetrics({
-        msg: 'cancel',
-        status: 100,
-        data: { domain: this._domainToDelete.text, action: 'cancel' },
-      });
-      this.$previousState.go();
-    }
-
-    get domain() {
-      return this._domainToDelete && this._domainToDelete.text;
-    }
-
-    get showWarning() {
-      return this._domainToDelete && this.DomainManagementService.enforceUsersInVerifiedAndClaimedDomains &&
-        this._domainToDelete.status !== this.DomainManagementService.states.pending && this._moreThanOneVerifiedDomainLeft;
-    }
-
-    get error() {
-      return this._error;
-    }
-
-    get isValid() {
-      return this.domain && this._loggedOnUser && this._loggedOnUser.isLoaded && !this._error;
-    }
-
-    public recordMetrics({ msg, status = 200, startLog = moment(), data }) {
-      this.LogMetricsService.logMetrics(
-        'domainManage remove ' + msg,
-        this.LogMetricsService.eventType.domainManageRemove,
-        this.LogMetricsService.eventAction.buttonClick,
-        status,
-        startLog,
-        1,
-        data,
+  public deleteDomain() {
+    let start = moment();
+    if (this._domainToDelete.status === this.DomainManagementService.states.verified || this._domainToDelete.status === this.DomainManagementService.states.pending) {
+      this.DomainManagementService.unverifyDomain(this._domainToDelete.text).then(
+        () => {
+          this.recordMetrics({
+            msg: 'ok',
+            startLog: start,
+            data: { domain: this._domainToDelete.text, action: 'unverify' },
+          });
+          this.$previousState.go();
+        },
+        err => {
+          this.recordMetrics({
+            msg: 'error',
+            status: 500,
+            startLog: start,
+            data: { domain: this._domainToDelete.text, action: 'unverify', error: err },
+          });
+          this._error = err;
+        },
+      );
+    } else {
+      this.DomainManagementService.unclaimDomain(this._domainToDelete.text).then(
+        () => {
+          this.recordMetrics({
+            msg: 'ok',
+            startLog: start,
+            data: { domain: this._domainToDelete.text, action: 'unclaim' },
+          });
+          this.$previousState.go();
+        },
+        err => {
+          this.recordMetrics({
+            msg: 'error',
+            status: 500,
+            startLog: start,
+            data: { domain: this._domainToDelete.text, action: 'unclaim', error: err },
+          });
+          this._error = err;
+        },
       );
     }
   }
 
-  angular
-    .module('Core')
-    .controller('DomainManageDeleteCtrl', DomainManageDeleteCtrl);
+  public cancel() {
+    this.recordMetrics({
+      msg: 'cancel',
+      status: 100,
+      data: { domain: this._domainToDelete.text, action: 'cancel' },
+    });
+    this.$previousState.go();
+  }
+
+  get domain() {
+    return this._domainToDelete && this._domainToDelete.text;
+  }
+
+  get showWarning() {
+    return this._domainToDelete && this.DomainManagementService.enforceUsersInVerifiedAndClaimedDomains &&
+      this._domainToDelete.status !== this.DomainManagementService.states.pending && this._moreThanOneVerifiedDomainLeft;
+  }
+
+  get error() {
+    return this._error;
+  }
+
+  get isValid() {
+    return this.domain && this._loggedOnUser && this._loggedOnUser.isLoaded && !this._error;
+  }
+
+  public recordMetrics({ msg, status = 200, startLog = moment(), data }) {
+    this.LogMetricsService.logMetrics(
+      'domainManage remove ' + msg,
+      this.LogMetricsService.eventType.domainManageRemove,
+      this.LogMetricsService.eventAction.buttonClick,
+      status,
+      startLog,
+      1,
+      data,
+    );
+  }
 }

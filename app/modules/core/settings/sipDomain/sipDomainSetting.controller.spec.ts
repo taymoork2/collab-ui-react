@@ -1,6 +1,9 @@
+import testModule from './index';
+import { SipDomainSettingController } from './sipDomainSetting.controller';
+
 describe('Controller: EnterpriseSettingsCtrl', function () {
   beforeEach(function () {
-    this.initModules('Core', 'Hercules');
+    this.initModules(testModule);
     this.injectDependencies('$controller', '$modal', '$rootScope', '$scope', '$timeout', '$translate', '$q', '$window', 'Config',
       'FeatureToggleService', 'Notification', 'Orgservice', 'ServiceDescriptor', 'SparkDomainManagementService', 'UrlConfig');
 
@@ -78,7 +81,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     spyOn(this.ServiceDescriptor, 'isServiceEnabled').and.returnValue(this.$q.when(true));
 
     this.initController = (): void => {
-      this.controller = this.$controller('SipDomainSettingController', {
+      this.controller = this.$controller(SipDomainSettingController, {
         $scope: this.$scope,
         $rootScope: this.$rootScope,
         $translate: this.$translate,
