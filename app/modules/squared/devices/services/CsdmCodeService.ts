@@ -1,13 +1,14 @@
 import { CsdmConverter } from './CsdmConverter';
+import ICode = csdm.ICode;
 
-class CsdmCodeService {
+export class CsdmCodeService {
   private codesUrl: string;
   /* @ngInject  */
   constructor(private $http, Authinfo, UrlConfig, private CsdmConverter: CsdmConverter) {
     this.codesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
   }
 
-  public createCodeForExisting(cisUuid) {
+  public createCodeForExisting(cisUuid): IPromise<ICode> {
     return this.$http.post(this.codesUrl, {
       cisUuid: cisUuid,
     }).then((res) => {
