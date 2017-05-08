@@ -1,6 +1,6 @@
-import './_cp-reversion-timer.scss';
+import './call-park-reversion-timer.component.scss';
 
-import { CallParkReversionTimerComponent } from './callParkReversionTimer.component';
+import { CallParkReversionTimerComponent } from './call-park-reversion-timer.component';
 
 export default angular
   .module('huron.call-park-reversion-timer', [

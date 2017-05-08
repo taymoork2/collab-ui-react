@@ -1,10 +1,10 @@
-import './_call-park.scss';
+import './call-park.component.scss';
 
-import { CallParkComponent } from './callPark.component';
-import callParkNumber from './callParkNumber';
+import { CallParkComponent } from './call-park.component';
+import callParkNumber from './call-park-number';
 import callFeatureMember from 'modules/call/features/shared/call-feature-members';
-import callParkFallbackDestination from 'modules/call/features/callPark/callParkFallbackDestination';
-import callParkReversionTimer from './callParkReversionTimer';
+import callParkFallbackDestination from 'modules/call/features/call-park/call-park-fallback-destination';
+import callParkReversionTimer from './call-park-reversion-timer';
 import callParkService from './services';
 import callFeatureName from 'modules/call/features/shared/call-feature-name';
 import huronSiteService from 'modules/huron/sites';

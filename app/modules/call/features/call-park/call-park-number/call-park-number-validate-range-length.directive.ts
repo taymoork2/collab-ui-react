@@ -1,4 +1,4 @@
-import { RangeType } from 'modules/call/features/callPark/callParkNumber/callParkNumber.component';
+import { RangeType } from 'modules/call/features/call-park/call-park-number/call-park-number.component';
 
 export class CallParkRangeLengthValidator implements ng.IDirective {
   public restrict: string = 'A';

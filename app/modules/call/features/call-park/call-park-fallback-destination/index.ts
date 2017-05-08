@@ -1,4 +1,4 @@
-import { CallParkFallbackDestinationComponent } from './callParkFallbackDestination.component';
+import { CallParkFallbackDestinationComponent } from './call-park-fallback-destination.component';
 import callFeatureFallbackDestination from 'modules/call/features/shared/call-feature-fallback-destination';
 
 export default angular

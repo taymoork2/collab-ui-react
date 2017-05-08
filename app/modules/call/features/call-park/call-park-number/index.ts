@@ -1,8 +1,8 @@
-import './_cp-number-lookup.scss';
+import './call-park-number.component.scss';
 
-import { CallParkNumberComponent } from './callParkNumber.component';
-import { CallParkRangeValidator } from './cpValidateRange.directive';
-import { CallParkRangeLengthValidator } from './cpValidateRangeLength.directive';
+import { CallParkNumberComponent } from './call-park-number.component';
+import { CallParkRangeValidator } from './call-park-number-validate-range.directive';
+import { CallParkRangeLengthValidator } from './call-park-number-validate-range-length.directive';
 
 export default angular
   .module('huron.call-park-number', [

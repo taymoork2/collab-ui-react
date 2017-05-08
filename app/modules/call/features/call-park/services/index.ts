@@ -1,8 +1,8 @@
-import { CallParkService } from './callPark.service';
+import { CallParkService } from './call-park.service';
 import featureMemberService from 'modules/huron/features/services';
 
-export * from './callPark.service';
-export * from './callPark';
+export * from './call-park.service';
+export * from './call-park';
 
 export default angular
   .module('huron.call-park.services', [

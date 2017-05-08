@@ -3046,7 +3046,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call/features/callPark/callPark'));
+                  done(require('modules/call/features/call-park'));
                 }, 'call-park');
               }),
             },
@@ -3061,7 +3061,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call/features/callPark/callPark'));
+                  done(require('modules/call/features/call-park'));
                 }, 'call-park');
               }),
             },

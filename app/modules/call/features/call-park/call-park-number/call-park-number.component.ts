@@ -1,4 +1,4 @@
-import { CallParkService, ICallParkRangeItem } from 'modules/call/features/callPark/services';
+import { CallParkService, ICallParkRangeItem } from 'modules/call/features/call-park/services';
 
 export enum RangeType {
   RANGE = <any>'range',
@@ -135,7 +135,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
 
 export class CallParkNumberComponent implements ng.IComponentOptions {
   public controller = CallParkNumberCtrl;
-  public templateUrl = 'modules/call/features/callPark/callParkNumber/callParkNumber.html';
+  public templateUrl = 'modules/call/features/call-park/call-park-number/call-park-number.component.html';
   public bindings = {
     range: '<',
     extensionLength: '<',

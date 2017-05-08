@@ -1,4 +1,4 @@
-import { CallParkService, CallPark, ICallParkRangeItem } from 'modules/call/features/callPark/services';
+import { CallParkService, CallPark, ICallParkRangeItem } from 'modules/call/features/call-park/services';
 import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { HuronSiteService } from 'modules/huron/sites';
@@ -100,7 +100,7 @@ class CallParkCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/callPark/callParkCancelModal.html',
+      templateUrl: 'modules/call/features/call-park/call-park-cancel-modal.html',
       type: 'dialog',
     });
   }
@@ -273,6 +273,6 @@ class CallParkCtrl implements ng.IComponentController {
 
 export class CallParkComponent implements ng.IComponentOptions {
   public controller = CallParkCtrl;
-  public templateUrl = 'modules/call/features/callPark/callPark.html';
+  public templateUrl = 'modules/call/features/call-park/call-park.component.html';
   public bindings = {};
 }
