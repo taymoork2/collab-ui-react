@@ -7216,7 +7216,6 @@
         "title": "Enterprise Private Trunking ",
         "description": "Extends your organization lorem ipsum dolor sit amet consectetur adipiscing elit cras ut imperdiet augue.",
         "buttons": {
-          "verify": "Verify prerequisites",
           "view": "View prerequisites",
           "resources": "SIP Destinations"
         },
@@ -7228,7 +7227,13 @@
           "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found",
           "resourceError": "Add Private trunk resource error",
           "privateTrunkError": "Add Private trunk Domain error",
-          "certUploadError": "Certificate Upload error"
+          "certUploadError": "Certificate Upload error",
+          "deactivateError": "Enterprise Private Trunk could not be deactivated"
+        },
+        "success": {
+          "deactivate": "Enterprise Private Trunk has been successfully deactivated",
+          "resource": "Sip Destination has been successfully added to the Enterprise Private Trunk",
+          "activate": "Enterprise Private Trunk has been successfully created"
         },
         "prereqTitle": "Enterprise Private Trunking prerequisites",
         "setupTitle": "Set up Enterprise Private Trunking ",
@@ -7263,6 +7268,7 @@
         "displayName": "Enter display name",
         "addDestination": "Add another SIP destination",
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
+        "addSipDestination": "Add SIP destination",
         "certificateTitle": "Certificates",
         "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
         "certificateTitleSettings": "Certificates for Encrypted SIP Calls",
@@ -7283,9 +7289,7 @@
         "pstnConnectivity": "PSTN connectivity",
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
         "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
-        "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Spark remote SIP destinations configuration and disables the service for all users.",
-        "deactivateSuccess": "Enterprise Private Trunk has been successfully deactivated",
-        "deactivateError": "Enterprise Private Trunk could not be deactivated"
+        "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Spark remote SIP destinations configuration and disables the service for all users."
       }
     },
     "showMore": "View all",

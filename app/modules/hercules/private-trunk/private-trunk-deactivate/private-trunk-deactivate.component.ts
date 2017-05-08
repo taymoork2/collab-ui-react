@@ -14,7 +14,7 @@ export class PrivateTrunkDeactivateCtrl implements ng.IComponentController {
   public deactivatePrivateTrunk(): void {
     this.PrivateTrunkService.deprovisionPrivateTrunk()
       .then(() => {
-        this.Notification.success('servicesOverview.cards.privateTrunk.deactivateSuccess');
+        this.Notification.success('servicesOverview.cards.privateTrunk.success.deactivate');
         this.dismiss();
         this.$state.go('services-overview');
       }).catch((error) => {
