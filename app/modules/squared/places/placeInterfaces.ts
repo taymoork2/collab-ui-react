@@ -17,7 +17,7 @@ declare namespace csdm {
     updateCloudberryPlace(objectToUpdate: IPlace, entitlements, directoryNumber,
                           externalNumber, externalLinkedAccounts?: any[]): ng.IPromise<IPlace>;
     reloadPlace(cisUuid: string): ng.IPromise<IPlace>;
-    reloadItem(item: IPlace): ng.IPromise<IPlace>;
+    reloadItem<T extends IDevicePlaceCommon>(item: T): ng.IPromise<T>;
     updateItemName(item: IPlace, newName: string): ng.IPromise<IPlace>;
     isBigOrg(): ng.IPromise<boolean>;
     getPlacesMap(refreshIfOld: boolean): ng.IPromise<{ [url: string]: IPlace; }>;

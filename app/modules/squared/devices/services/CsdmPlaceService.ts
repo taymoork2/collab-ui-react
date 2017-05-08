@@ -1,5 +1,6 @@
 'use strict';
 import { CsdmConverter } from './CsdmConverter';
+import IPlace = csdm.IPlace;
 export class CsdmPlaceService {
   private csdmPlacesUrl: string;
 
@@ -50,7 +51,7 @@ export class CsdmPlaceService {
     return this.deletePlace(item);
   }
 
-  public createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
+  public createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps?) {
     return this.createPlace(name, entitlements || ['webex-squared', 'spark'], directoryNumber, externalNumber, 'lyra_space', externalLinkedAccounts, ussProps);
   }
 
@@ -58,7 +59,7 @@ export class CsdmPlaceService {
     return this.createPlace(name, entitlements || ['ciscouc'], directoryNumber, externalNumber, 'room', null, null);
   }
 
-  public createPlace(name, entitlements, directoryNumber, externalNumber, machineType, externalLinkedAccounts, ussProps) {
+  public createPlace(name, entitlements, directoryNumber, externalNumber, machineType, externalLinkedAccounts, ussProps): ng.IPromise<IPlace> {
     return this.$http.post(this.csdmPlacesUrl, {
       name: name,
       directoryNumber: directoryNumber,
@@ -76,7 +77,7 @@ export class CsdmPlaceService {
     });
   }
 
-  public updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
+  public updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts): ng.IPromise<IPlace> {
     return this.$http.patch(placeUrl, {
       directoryNumber: directoryNumber,
       externalNumber: externalNumber,

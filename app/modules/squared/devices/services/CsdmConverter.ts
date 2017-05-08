@@ -464,7 +464,7 @@ class Helper {
   }
 }
 
-class Code {
+export class Code {
   private expiryTime: any;
   private activationCode: string;
 
