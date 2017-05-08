@@ -6734,6 +6734,7 @@
     "numberedName": "Enterprise Subscription {{number}}",
     "enterpriseTrial": "Enterprise Trial {{number}}",
     "usage": "Usage: ",
+    "licenses": "Licenses: ",
     "licenseUsageReport": "License Usage Report",
     "more": "More",
     "less": "Less",

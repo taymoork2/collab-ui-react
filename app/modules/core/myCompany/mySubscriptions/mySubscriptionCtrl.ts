@@ -89,14 +89,22 @@ class MySubscriptionCtrl {
   }
 
   public getWarning(offer: IOfferData): boolean {
-    return offer.usage > offer.volume;
+    if (_.isNumber(offer.usage) && _.isNumber(offer.volume)) {
+      return offer.usage > offer.volume;
+    } else {
+      return false;
+    }
   }
 
-  public isSharedMeetingsLicense(offer: ISubscription): boolean {
+  public isUsageDefined(usage?: number): boolean {
+    return _.isNumber(usage);
+  }
+
+  public isSharedMeetingsLicense(offer: IOfferData): boolean {
     return _.toLower(_.get(offer, 'licenseModel', '')) === this.Config.licenseModel.cloudSharedMeeting;
   }
 
-  public determineLicenseType(offer: ISubscription): string {
+  public determineLicenseType(offer: IOfferData): string {
     return this.isSharedMeetingsLicense(offer) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
   }
 
@@ -154,12 +162,14 @@ class MySubscriptionCtrl {
 
   // generating the subscription view tooltips
   private generateTooltip(offerName: string, usage?: number, volume?: number): string | undefined {
-    if (_.isNumber(usage) && _.isNumber(volume)) {
-      let tooltip = this.$translate.instant('subscriptions.licenseTypes.' + offerName) + '<br>' + this.$translate.instant('subscriptions.usage');
-      if (usage > volume) {
-        tooltip += '<span class="warning">' + usage + '/' + volume + '</span>';
+    if (_.isNumber(volume)) {
+      let tooltip = this.$translate.instant('subscriptions.licenseTypes.' + offerName) + '<br>';
+      if (_.isNumber(usage) && usage > volume) {
+        tooltip += this.$translate.instant('subscriptions.usage') + `<span class="warning">${usage}/${volume}</span>`;
+      } else if (_.isNumber(usage)) {
+        tooltip += this.$translate.instant('subscriptions.usage') + `${usage}/${volume}`;
       } else {
-        tooltip += usage + '/' + volume;
+        tooltip += this.$translate.instant('subscriptions.licenses') + volume;
       }
       return tooltip;
     } else {
@@ -180,7 +190,9 @@ class MySubscriptionCtrl {
 
     _.forEach(offers, (offer: IOfferData): void => {
       if (!exists && offer.offerName === item.offerName) {
-        offer.usage += item.usage;
+        if (offer.usage && item.usage) {
+          offer.usage += item.usage;
+        }
         offer.volume += item.volume;
         exists = true;
       }
@@ -229,11 +241,16 @@ class MySubscriptionCtrl {
               licenseType: license.licenseType,
               licenseModel: _.get(license, 'licenseModel', ''),
               offerName: license.offerName,
-              usage: license.usage || 0,
               volume: license.volume,
               id: 'donutId' + subIndex + licenseIndex,
               tooltip: this.generateTooltip(license.offerName, license.usage, license.volume),
             };
+
+            if (license.offerName === this.Config.offerCodes.SB) {
+              offer.totalUsage = license.usage || 0;
+            } else {
+              offer.usage = license.usage || 0;
+            }
 
             if (license.siteUrl) {
               offer.siteUrl = license.siteUrl;

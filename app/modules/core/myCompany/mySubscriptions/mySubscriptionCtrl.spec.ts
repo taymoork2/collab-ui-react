@@ -202,5 +202,10 @@ describe('Controller: MySubscriptionCtrl', function () {
         volume: 200,
       })).toBeFalsy();
     });
+
+    it('isUsageDefined - should return true only if usage is a number', function () {
+      expect(this.controller.isUsageDefined(5)).toBeTruthy();
+      expect(this.controller.isUsageDefined(undefined)).toBeFalsy();
+    });
   });
 });
