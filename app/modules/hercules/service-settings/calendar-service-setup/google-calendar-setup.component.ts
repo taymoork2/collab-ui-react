@@ -6,6 +6,7 @@ type StepName = 'loading' | 'authorization' | 'test-account' | 'completion';
 interface IStep {
   name: StepName;
   next: () => any;
+  back: () => any;
   canGoNext: () => boolean;
 }
 
@@ -14,10 +15,12 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
     name: 'loading',
     next: () => { this.currentStep = 'authorization'; },
     canGoNext: () => !this.loading,
+    back: () => {},
   }, {
     name: 'authorization',
     next: () => { this.currentStep = 'test-account'; },
     canGoNext: () => true,
+    back: () => {},
   }, {
     name: 'test-account',
     next: () => {
@@ -42,10 +45,12 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
     canGoNext: () => {
       return this.testAccountForm.$valid;
     },
+    back: () => { this.currentStep = 'authorization'; },
   }, {
     name: 'completion',
     next: () => null,
     canGoNext: () => false,
+    back: () => {},
   }];
   private data: any = {
     testAccount: this.Authinfo.getPrimaryEmail(),
@@ -104,6 +109,15 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
     this.$state.go('google-calendar-service.settings');
   }
 
+  public back(): void {
+    const currentStep = _.find(this.steps, step => step.name === this.currentStep);
+    if (currentStep.name === 'test-account') {
+      currentStep.back();
+      return;
+    }
+    this.CloudConnectorService.dismissSetupModal('back');
+  }
+
   public dismiss(): void {
     this.CloudConnectorService.dismissSetupModal();
   }
@@ -112,4 +126,7 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
 export class GoogleCalendarSetupComponent implements ng.IComponentOptions {
   public controller = GoogleCalendarSetupCtrl;
   public templateUrl = 'modules/hercules/service-settings/calendar-service-setup/google-calendar-setup.component.html';
+  public bindings = {
+    firstTimeSetup: '=',
+  };
 }

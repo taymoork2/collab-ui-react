@@ -8,8 +8,9 @@
     <span>{{$ctrl.fieldData.id}}</span>
   </h3>
 </div>
-<div class="modal-body new-field-modal-body">
+<div class="modal-body context-modal-body">
   <form name="newFieldForm">
+  <div class="context-modal-content">
     <!-- ID -->
     <div class="cs-input-group">
       <p class="cs-input-label" translate="context.dictionary.fieldPage.fieldId"></p>
@@ -88,6 +89,7 @@
       name="fieldSearchable"
       cs-input-label="{{'context.dictionary.fieldPage.searchable' | translate}}"
       cs-input-help-text="{{::'context.dictionary.fieldPage.searchableHelpText' | translate}}">
+  </div>
   </form>
 </div>
 <div class="modal-footer">

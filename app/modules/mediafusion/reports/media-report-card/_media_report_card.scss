@@ -7,10 +7,18 @@
 .footer-section {
   min-height: 40px;
   font-size: 0.9rem;
-
+  position: relative;
   .footer-value {
     color: #5ca4e5;
   }
+}
+.availabilityDpdnSelector {
+  position: absolute;
+  bottom: 10px;
+  right: 1px;
+  color: #5ca4e5;
+  width: 100%;
+  text-align: center;
 }
 .cardTooltipClass {
   font-size: 3rem;
@@ -29,6 +37,7 @@
     outline: none;
     text-align: center;
     cursor: pointer;
+    background-color: transparent !important;
   }
   .select-list .open > a:focus,
   .select-list .open > a:hover {
@@ -37,6 +46,7 @@
     outline: none;
     text-align: center;
     cursor: pointer;
+    background-color: transparent !important;
   }
   .select-toggle > i.icon {
     color: rgb(92, 164, 229);

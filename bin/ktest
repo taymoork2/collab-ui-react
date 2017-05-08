@@ -51,6 +51,9 @@ source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/core-helpers"
 # shellcheck disable=SC1090
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/ktest-helpers"
 
+# always use physical path (vs. a symlinked path)
+WX2_ADMIN_WEB_CLIENT_HOME="$(get_physical_path "$WX2_ADMIN_WEB_CLIENT_HOME")"
+
 # ----------
 # otherwise collect '--*' args for passing through to gulp
 no_parallel=
@@ -98,7 +101,7 @@ for arg in $@; do
     if [[ "$arg" = /* ]]; then
         fname="$arg"
     else
-        fname="$(pwd)/$arg"
+        fname="$(pwd -P)/$arg"
     fi
     ls -1 "$fname" >> "$flist" 2>/dev/null
 done

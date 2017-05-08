@@ -9,6 +9,7 @@ export interface IBmmpAttr {
 
 export interface IProdInst {
   productInstanceId: string;
+  subscriptionId: string;
   name: string;
 }
 
@@ -76,24 +77,26 @@ export class OnlineUpgradeService {
     return _.get<string>(this.Authinfo.getSubscriptions(), '[0].subscriptionId');
   }
 
-  public getProductInstance(userId, subId): ng.IPromise<IProdInst> {
-    return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + userId).then((response) => {
-      const productGroups = _.get(response, 'data.productGroups');
-      const productInstances = _.flatMap(productGroups, 'productInstance');
-      const productInstance = _.find(productInstances, (instance: any) => {
-        return instance.subscriptionInfo.subscriptionId === subId && instance.baseProduct;
-      });
-      return this.getProdInstAttrs(productInstance);
-    });
+  public getProductInstances(userId): ng.IPromise<Array<IProdInst>> {
+    return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + userId)
+      .then((response) => {
+        const productGroups = _.get(response, 'data.productGroups');
+        const productInstances = _.flatMap(productGroups, 'productInstance');
+        const baseProducts = _.filter(productInstances, 'baseProduct');
+        return _.map(baseProducts, (instance) => this.getProdInstAttrs(instance));
+      })
+      .catch(() => []);
   }
 
   private getProdInstAttrs(productInstance): IProdInst {
     let prodInst: IProdInst = {
       productInstanceId: '',
+      subscriptionId: '',
       name: '',
     };
     if (productInstance) {
       prodInst.productInstanceId = productInstance.productInstanceId;
+      prodInst.subscriptionId = productInstance.subscriptionInfo.subscriptionId;
       prodInst.name = productInstance.description;
     }
 

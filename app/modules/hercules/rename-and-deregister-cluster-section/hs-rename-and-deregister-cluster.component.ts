@@ -1,7 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { IToolkitModalService } from 'modules/core/modal';
-import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
+import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk.service';
 
 class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
@@ -34,9 +34,9 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
+    private PrivateTrunkService: PrivateTrunkService,
   ) { }
 
   public $onInit() {
@@ -72,7 +72,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     }
     this.savingNameState = true;
     if (this.serviceId === 'ept') {
-      this.EnterprisePrivateTrunkService.updateTrunkName(this.clusterId, clusterName)
+      this.PrivateTrunkService.setPrivateTrunkResource(this.clusterId, clusterName)
         .then(() => {
           this.Notification.success('hercules.renameAndDeregisterComponent.sipDestinationNameSaved');
           this.onNameUpdate({ name: clusterName });

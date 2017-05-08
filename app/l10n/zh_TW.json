@@ -788,7 +788,7 @@
     "drilldownDescription": "這些是活動最多的使用者（{{time}}）。表格可以依使用者名稱或者處理的聯絡人總數進行排序。",
     "drilldownErrorDescription": "此資料暫時不可用。我們的伺服器正努力儘快恢復資料可用性，請稍後再檢查。",
     "drilldownEmptyDescription": "沒有活躍的使用者（{{time}}）。若要查看使用者狀態並向仍然擱置的使用者重新傳送邀請，請造訪使用者標籤。",
-    "contactsHandled": "處理的聯絡人數",
+    "tasksHandled": "處理的聯絡人數",
     "user": "使用者",
     "drilldownSearchPlaceholder": "搜尋"
   },

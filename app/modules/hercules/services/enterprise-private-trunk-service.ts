@@ -1,11 +1,8 @@
 import { IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
+import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk.service';
+import { IPrivateTrunkInfo, IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 
-export interface IPrivateTrunkResource {
-  url: string;
-  resourceId: string;
-  name: string;
-  address: string;
-  port: string;
+export interface IPrivateTrunkResourceWithStatus extends IPrivateTrunkResource {
   serviceStatus: TrunkStatus;
 }
 
@@ -44,54 +41,23 @@ export class EnterprisePrivateTrunkService {
     private CsdmCacheUpdater,
     private CsdmHubFactory,
     private CsdmPoller,
+    private PrivateTrunkService: PrivateTrunkService,
     private ServiceDescriptor,
   ) {
-    this.deleteTrunk = this.deleteTrunk.bind(this);
   }
 
   public fetch() {
 
-    const dummyTrunks = [
-      {
-        url: 'https://giggs.example.org',
-        resourceId: 'efc7ebfb-b7a4-42f2-a143-1c056741a03c',
-        name: 'CTG Alpha San Jose-E',
-        address: 'some.address.goes.here',
-        port: '1983',
-        serviceStatus: 'halla',
-      }, {
-        url: 'https://kanchelskis.example.org',
-        resourceId: 'e366b1ef-c3c3-414c-9125-5bf76c33df06',
-        name: 'CTG Alpha New York-E',
-        address: 'other.address.goes.here',
-        port: '1984',
-        serviceStatus: 'halla',
-      }, {
-        url: 'https://sharpe.example.org',
-        resourceId: '0ce247d8-4de9-482e-ac5a-51b2af1a7929',
-        name: 'ACE Beta Seattle',
-        address: 'ace.of.base',
-        port: '1985',
-        serviceStatus: 'halla',
-      }, {
-        url: 'https://bug.buggy.example.org',
-        resourceId: '2d2c9bd4-2e7d-4c3b-b1b9-c7e172c93600',
-        name: 'ACE Beta Lysaker',
-        address: 'beautiful.life',
-        port: '1986',
-        serviceStatus: 'halla',
-      }];
-
     let promises = [
-      this.$q.resolve(dummyTrunks), // Replace with API call to CMI once ready
+      this.PrivateTrunkService.getPrivateTrunk(),
       this.ServiceDescriptor.getServiceStatus('ept'),
     ];
     return this.$q.all(promises)
-      .then((results: [IPrivateTrunkResource[], ITrunksFromFMS]) => {
-        let trunks: IPrivateTrunkResource[] = results[0];
+      .then((results: [IPrivateTrunkInfo, ITrunksFromFMS]) => {
+        let trunks: IPrivateTrunkResource[] = results[0].resources;
         let service: ITrunksFromFMS = results[1];
-        _.map(trunks, (trunk: IPrivateTrunkResource) => {
-          const resource = _.find(service.resources, (resource: ITrunkFromFms) => resource.id === trunk.resourceId);
+        _.map(trunks, (trunk: IPrivateTrunkResourceWithStatus) => {
+          const resource = _.find(service.resources, (resource: ITrunkFromFms) => resource.id === trunk.uuid);
           if (resource && resource.state) {
             trunk.serviceStatus = resource.state;
           } else {
@@ -100,10 +66,10 @@ export class EnterprisePrivateTrunkService {
         });
         return trunks;
       })
-      .then((trunksWithStatus) => {
+      .then((trunksWithStatus: IPrivateTrunkResourceWithStatus[]) => {
         return _.sortBy(trunksWithStatus, (trunk: { name: string }) => trunk.name);
       })
-      .then((sortedTrunks) => {
+      .then((sortedTrunks: IPrivateTrunkResourceWithStatus[]) => {
         this.CsdmCacheUpdater.update(this.trunkCache, sortedTrunks);
         return sortedTrunks;
       });
@@ -121,59 +87,11 @@ export class EnterprisePrivateTrunkService {
   }
 
   public getTrunkFromCmi(trunkId: string) {
-    const dummyTrunks = [
-      {
-        url: 'https://giggs.example.org',
-        resourceId: 'efc7ebfb-b7a4-42f2-a143-1c056741a03c',
-        name: 'CTG Alpha San Jose-E',
-        address: 'some.address.goes.here',
-        port: '1983',
-        serviceStatus: 'halla',
-      }, {
-        url: 'https://kanchelskis.example.org',
-        resourceId: 'e366b1ef-c3c3-414c-9125-5bf76c33df06',
-        name: 'CTG Alpha New York-E',
-        address: 'other.address.goes.here',
-        port: '1984',
-        serviceStatus: 'halla',
-      }, {
-        url: 'https://sharpe.example.org',
-        resourceId: '0ce247d8-4de9-482e-ac5a-51b2af1a7929',
-        name: 'ACE Beta Seattle',
-        address: 'ace.of.base',
-        port: '1985',
-        serviceStatus: 'halla',
-      }, {
-        url: 'https://bug.buggy.example.org',
-        resourceId: '2d2c9bd4-2e7d-4c3b-b1b9-c7e172c93600',
-        name: 'ACE Beta Lysaker',
-        address: 'beautiful.life',
-        port: '1986',
-        serviceStatus: 'halla',
-      }];
-    let trunk = _.find(dummyTrunks, (trunk: any) => trunk.resourceId === trunkId);
-    if (trunk) {
-      return this.$q.resolve(trunk);
-    } else {
-      return this.$q.reject('Could not find trunk.');
-    }
-  }
-
-  public updateTrunkName(trunkId: string, trunkName: string) {
-    // Dummy implementation, because there is no CMI API for updating the name yet.
-    return this.$q.resolve({
-      trunkId: trunkId,
-      clusterName: trunkName,
-    });
-  }
-
-  public deleteTrunk(trunkId: string) {
-    // Dummy implementation, because there is no CMI API for deleting a trunk yet.
-    return this.$q.resolve({
-      trunkId: trunkId,
-    })
-      .then(() => {
-        this.fetch();
+    return this.PrivateTrunkService.getPrivateTrunk()
+      .then((trunks: IPrivateTrunkInfo) => {
+        return _.find(trunks.resources, (trunk: IPrivateTrunkResource) => {
+          return trunk.uuid === trunkId;
+        });
       });
   }
 

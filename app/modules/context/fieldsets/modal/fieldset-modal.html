@@ -63,7 +63,6 @@
           <div class="typeahead">
             <span class="icon icon-search"></span>
             <input id="fieldInput" ng-model="$ctrl.selectedField"
-                   ng-class="{'error': $ctrl.error}"
                    typeahead="field for field in $ctrl.allSelectableFields | filter:{id:$viewValue}"
                    typeahead-template-url="fieldTemplate.html"
                    typeahead-on-select="$ctrl.selectField($item)"
@@ -76,6 +75,11 @@
               <span class="field-drop-down-fieldinfo" ng-bind-html="match.label.fieldInfo | typeaheadHighlight:query" ng-if="match.label.fieldInfo"></span>
             </div>
           </script>
+        </div>
+        <!-- No Search Results messages, shows up when the search text is present and no fields match it-->
+        <div ng-show="$ctrl.selectedField && $ctrl.selectedField.length > 0 &&
+             ($ctrl.allSelectableFields | filter:{id:$ctrl.selectedField}).length === 0" class="no-results"
+             translate="context.dictionary.fieldPage.noneFound">
         </div>
 
         <!-- List of selected fields -->

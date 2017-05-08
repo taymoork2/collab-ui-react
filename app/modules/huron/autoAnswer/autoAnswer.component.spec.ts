@@ -176,7 +176,7 @@ describe('Component: autoAnswer', () => {
     this.$scope.$apply();
 
     expect(this.view.find(AUTO_ANSWER_TITLE)).toExist();
-    expect(this.view.find(AUTO_ANSWER_ENABLED_TOGGLE)).toBeChecked;
+    expect(this.view.find(AUTO_ANSWER_ENABLED_TOGGLE)).toBeChecked();
     expect(this.view.find(AUTO_ANSWER_DESCRIPTION)).toExist();
     expect(this.view.find(AUTO_ANSWER_PHONE_SELECT)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).toBeChecked();

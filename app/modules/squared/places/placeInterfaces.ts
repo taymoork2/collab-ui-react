@@ -1,29 +1,32 @@
-/**
- * Created by ngrodum on 29/03/2017.
- */
-
 declare namespace csdm {
 
-  interface IPlace {
+  interface IPlaceExtended extends IPlace {
+    readableType: string;
+  }
+
+  interface IPlace extends IDevicePlaceCommon {
+    externalNumber?: string;
+    directoryNumber?: string;
     devices: {};
-    cisUuid?: string;
     id?: string;
-    type?: string;
-    url?: string;
     entitlements?: Array<any>;
-    displayName?: string;
     externalLinkedAccounts?: any[];
-    tags: string[];
   }
 
   interface ICsdmDataModelService {
     updateCloudberryPlace(objectToUpdate: IPlace, entitlements, directoryNumber,
                           externalNumber, externalLinkedAccounts?: any[]): ng.IPromise<IPlace>;
+    createCmiPlace(name, entitlements, directoryNumber, externalNumber): ng.IPromise<IPlace>;
+    createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts): ng.IPromise<IPlace>;
+    createCodeForExisting(cisUuid: string): ng.IPromise<ICode>;
     reloadPlace(cisUuid: string): ng.IPromise<IPlace>;
-    reloadItem(item: IPlace): ng.IPromise<IPlace>;
+    reloadItem<T extends IDevicePlaceCommon>(item: T): ng.IPromise<T>;
     updateItemName(item: IPlace, newName: string): ng.IPromise<IPlace>;
     isBigOrg(): ng.IPromise<boolean>;
     getPlacesMap(refreshIfOld: boolean): ng.IPromise<{ [url: string]: IPlace; }>;
     getSearchPlacesMap(searchString: string): ng.IPromise<{ [url: string]: IPlace; }>;
+    getDevicesMap(refreshHuron: boolean): ng.IPromise<{ [url: string]: IDevice; }>;
+    devicePollerOn(event: string, listener: Function, options: { scope: angular.IScope }): void;
+    subscribeToChanges($scope: ng.IScope, listener: Function): void;
   }
 }

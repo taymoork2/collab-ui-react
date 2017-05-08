@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}}, bunlar en etkin kullanıcılardır. Tablo, kullanıcının adına veya işlenen toplam kişi sayısına göre sıralanabilir.",
     "drilldownErrorDescription": "Bu veriler geçici olarak kullanılamıyor. Sunucularımız verileri geri döndürmek için çalışıyor, lütfen daha sonra tekrar kontrol edin.",
     "drilldownEmptyDescription": "{{time}}, etkin olan kullanıcı yok. Kullanıcı durumunu görmek ve beklemede olan kullanıcılara yeniden davet göndermek için kullanıcı sekmesini ziyaret edin.",
-    "contactsHandled": "İşlenen Kişiler",
+    "tasksHandled": "İşlenen Kişiler",
     "user": "Kullanıcı",
     "drilldownSearchPlaceholder": "Arama"
   },

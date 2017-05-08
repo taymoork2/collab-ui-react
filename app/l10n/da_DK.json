@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}}, disse er de mest aktive brugere. Tabellen kan sorteres efter brugernavn eller samlet antal håndterede kontakter.",
     "drilldownErrorDescription": "Disse oplysninger er i øjeblikket ikke tilgængelige. Vores servere arbejder på at gøre den tilgængelige snarest muligt, prøv venligst igen senere.",
     "drilldownEmptyDescription": "{{time}}, der har ikke været nogen aktive brugere. For at se brugerstatus og gensende invitationer til dem, der mangler, skal du besøge fanen Brugere.",
-    "contactsHandled": "Håndterede kontakter",
+    "tasksHandled": "Håndterede kontakter",
     "user": "Bruger",
     "drilldownSearchPlaceholder": "Søg"
   },

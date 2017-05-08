@@ -123,22 +123,22 @@ describe('Controller: FusionClusterListController', function () {
     beforeEach(function () {
       EnterprisePrivateTrunkService.fetch.and.returnValue($q.resolve([
         {
-          resourceId: 'b01dface',
+          uuid: 'b01dface',
           name: 'To fulle menn',
           serviceStatus: 'unknown',
         },
         {
-          resourceId: 'f005ba11',
+          uuid: 'f005ba11',
           name: 'Aldri stol på en fyllik',
           serviceStatus: 'outage',
         },
         {
-          resourceId: 'deadbea7',
+          uuid: 'deadbea7',
           name: 'Skinnet bedrar',
           serviceStatus: 'operational',
         },
         {
-          resourceId: 'ba5eba11',
+          uuid: 'ba5eba11',
           name: 'Ingen har skylda',
           serviceStatus: 'impaired',
         },

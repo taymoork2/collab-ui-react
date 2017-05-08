@@ -26,10 +26,7 @@
 
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div id="linesListPanel" class="gridStyle col-md-12" ui-grid="linesListCtrl.gridOptions" ui-grid-infinite-scroll></div>
-  <div class="grid-refresh" ng-if="linesListCtrl.gridRefresh">
-    <i class='icon icon-spinner icon-2x'></i>
-  </div>
+  <div id="linesListPanel" class="gridStyle col-md-12" ui-grid="linesListCtrl.gridOptions" ui-grid-infinite-scroll grid-spinner="linesListCtrl.gridRefresh"></div>
 </div>
 <!--<div ng-class="{preview: linesListCtrl.userPreviewActive, details: linesListCtrl.userDetailsActive}" class="user-management">
   <div ui-view class="outer-details-div" id="entire-slide"></div>

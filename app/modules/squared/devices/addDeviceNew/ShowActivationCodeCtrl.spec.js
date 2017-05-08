@@ -664,7 +664,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, externalIdentifiers, ussProps);
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, externalIdentifiers);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
           expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
@@ -707,7 +707,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, null, null);
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, null);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
           expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);

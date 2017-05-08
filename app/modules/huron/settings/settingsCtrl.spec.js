@@ -11,6 +11,8 @@ describe('Controller: HuronSettingsCtrl', function () {
 
   var controller, compile, styleSheet, element, window;
 
+  var restrictions = getJSONFixture('huron/json/cos/customerCos.json');
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
@@ -124,6 +126,12 @@ describe('Controller: HuronSettingsCtrl', function () {
         countryCode: '+13',
         premiumNumbers: ['800', '900'],
       });
+    $httpBackend
+      .whenGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/restrictions')
+      .respond(restrictions);
+    $httpBackend
+      .whenPUT(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/restrictions')
+      .respond(204);
   }));
 
   describe('SettingsCtrlBasic', function () {
@@ -150,7 +158,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(ServiceSetup.listInternalNumberRanges).toHaveBeenCalled();
       expect(ServiceSetup.listSites).toHaveBeenCalled();
       expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
-      expect(ServiceSetup.listCosRestrictions).toHaveBeenCalled();
       expect(controller.model.callerId.callerIdName).toEqual('Cisco');
       expect(ServiceSetup.getMediaOnHoldList).toHaveBeenCalled();
     });
@@ -514,16 +521,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       $scope.$apply();
 
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
-    });
-
-    it('should show international dialing when feature toggle is ON', function () {
-      InternationalDialing.isDisableInternationalDialing.and.returnValue($q.resolve(false));
-
-      controller.save();
-      $scope.$apply();
-
-      expect(ServiceSetup.updateCosRestriction).toHaveBeenCalled();
-      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
     it('should update the timezone options when collection changes', function () {

@@ -1,9 +1,9 @@
 <div class="ui-grid-cell-contents">
-  <a
-    ng-if="false"
-    class="my-company-order-history-actions"
-    ng-click="grid.appScope.$ctrl.downloadPdf()">
-    <i class="icon icon-notes"></i>
-    <span translate="myCompanyOrders.downloadPdf"></span>
+  <a ng-if="!row.entity.isTrial"
+    class="my-company-order-history-actions a-order-history"
+    title="{{::'myCompanyOrders.viewInvoice' | translate}}"
+    ng-click="grid.appScope.$ctrl.viewInvoice(row.entity.externalOrderId, row.entity.productDescriptionList)">
+    <i class="icon icon-notes" style="vertical-align: middle;"></i>
   </a>
+  <span ng-class="{iconspacer: row.entity.isTrial}" ng-bind="row.entity.total | currency"></span>
 </div>
