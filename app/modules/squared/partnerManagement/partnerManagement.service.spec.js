@@ -4,16 +4,18 @@ describe('PartnerManagementService:', function () {
   var svc;
   var UrlConfig;
   var $httpBackend;
+  var $sanitize;
 
   var email = 'test@cisco.com';
   var org = 'test_org';
 
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$httpBackend_, _PartnerManagementService_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, $_sanitize_, _PartnerManagementService_, _UrlConfig_) {
     svc = _PartnerManagementService_;
     UrlConfig = _UrlConfig_;
     $httpBackend = _$httpBackend_;
+    $sanitize = _$sanitize_;
   }));
 
   afterEach(function () {

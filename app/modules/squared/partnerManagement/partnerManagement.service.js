@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function PartnerManagementService($q, $http, UrlConfig) {
+  function PartnerManagementService($q, $http, $sanitize, UrlConfig) {
     var svc = {};
 
     svc.search = function (email) {
@@ -37,7 +37,7 @@
 
     svc.getOrgDetails = function (org) {
       return $http.get(UrlConfig.getAdminServiceUrl() +
-        'organizations/' + encodeURIComponent(org) + '/onboardinfo');
+        'organizations/' + $sanitize(org) + '/onboardinfo');
     };
 
     return svc;
