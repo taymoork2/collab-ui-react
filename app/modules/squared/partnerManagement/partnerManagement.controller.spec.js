@@ -83,7 +83,7 @@ describe('PartnerManagementController:', function () {
   }
 
   function getOrgDetailsString() {
-    return '[{"label":"partnerManagement.orgDetails.createDate","value":"6/5/2015, 1:31:08 PM"},' +
+    return '[{"label":"partnerManagement.orgDetails.createDate","value":""},' +
       '{"label":"partnerManagement.orgDetails.activeSubs","value":0},{"label":' +
       '"partnerManagement.orgDetails.managedCusts","value":2},{"label":' +
       '"partnerManagement.orgDetails.domains","value":"adomain.na, bdomain.na, cdomain.na"},' +
@@ -121,6 +121,7 @@ describe('PartnerManagementController:', function () {
         $scope.vm.search();
         $scope.$apply();
         expect($state.go).toHaveBeenCalledWith('partnerManagement.orgExists');
+        $scope.vm.data.orgDetails[0].value = ''; // blank out date due to locale issues
         expect(JSON.stringify($scope.vm.data.orgDetails)).toEqual(getOrgDetailsString());
       });
 

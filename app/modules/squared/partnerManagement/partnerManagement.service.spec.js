@@ -11,7 +11,7 @@ describe('PartnerManagementService:', function () {
 
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$httpBackend_, $_sanitize_, _PartnerManagementService_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _$sanitize_, _PartnerManagementService_, _UrlConfig_) {
     svc = _PartnerManagementService_;
     UrlConfig = _UrlConfig_;
     $httpBackend = _$httpBackend_;
@@ -54,7 +54,7 @@ describe('PartnerManagementService:', function () {
 
   it('should confirm getOrgDetails is making proper GET', function () {
     $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() +
-        'organizations/' + encodeURIComponent(org) + '/onboardinfo').respond(200);
+        'organizations/' + $sanitize(org) + '/onboardinfo').respond(200);
     svc.getOrgDetails(org);
     $httpBackend.flush();
   });
