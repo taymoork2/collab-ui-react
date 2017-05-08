@@ -119,7 +119,7 @@
   }
 
   .menu-card {
-    height: 296px;
+    min-height: 296px;
   }
 
   .cta-base {
@@ -256,7 +256,7 @@
 @media only screen and (max-width: 1345px) {
   .overview-page {
     .menu-card {
-      height: 316px;
+      min-height: 316px;
     }
   }
 }
@@ -281,7 +281,7 @@
     }
 
     .menu-card {
-      height: 304px;
+      min-height: 304px;
     }
 
     .fourth {
@@ -295,7 +295,7 @@
 @media only screen and (max-width: 760px) {
   .overview-page {
     .menu-card {
-      height: 300px;
+      min-height: 300px;
     }
   }
 }
