@@ -71,7 +71,6 @@ module.exports = {
   feedbackViaEmail: 'feedback-via-email',
   filterBadges: 'filter-badges',
   flagMsg: 'flag-msg',
-  fmcCommandDispatch: 'fmc-command-dispatch',
   geoHintEnabled: 'geo-hint-enabled',
   huronAAMediaUpload: 'huron-aa-mediaupload',
   huronAACallerInput: 'huron-aa-callerinput',
