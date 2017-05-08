@@ -29,7 +29,6 @@ var Spark = require('@ciscospark/spark-core').default;
     /* Report Generation Functions */
     vm.createReport = createReport;
     vm.generateReport = generateReport;
-    vm.runReport = runReport;
     vm.reportProgress = reportProgress;
     vm.downloadReport = downloadReport;
     vm.cancelReport = cancelReport;
@@ -331,8 +330,6 @@ var Spark = require('@ciscospark/spark-core').default;
             };
             Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.GENERATE_REPORT);
             generateReport(reportParams);
-          } else {
-            runReport(res.runUrl, res.url);
           }
         })
         .catch(function () {
@@ -376,19 +373,6 @@ var Spark = require('@ciscospark/spark-core').default;
           vm.isReportComplete = true;
         }
       });
-    }
-
-    function runReport(runUrl, url) {
-      EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url, getStartDate(), getEndDate())
-        .catch(function () {
-          Notification.error('ediscovery.search.runFailed');
-          EdiscoveryService.patchReport(vm.currentReportId, {
-            state: "FAILED",
-            failureReason: "UNEXPECTED_FAILURE",
-          });
-        }).finally(function () {
-          enableAvalonPolling();
-        });
     }
 
     function reportProgress() {
