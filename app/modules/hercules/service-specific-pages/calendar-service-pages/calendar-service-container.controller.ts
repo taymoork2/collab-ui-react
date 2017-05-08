@@ -33,13 +33,14 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
     Authinfo,
     private $stateParams: ng.ui.IStateParamsService,
     ClusterService,
+    hasPartnerRegistrationFeatureToggle,
     Notification: Notification,
     private $translate: ng.translate.ITranslateService,
     ServiceDescriptor,
     ServiceStateChecker,
     USSService,
   ) {
-    super($modal, $scope, $state, Authinfo, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
+    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
     this.clusterId = this.$stateParams['clusterId'];
   }
 

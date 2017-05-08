@@ -4,22 +4,28 @@ class AddResourceComponentCtrl implements ng.IComponentController {
 
   private modalWindowOptions: any;
   private isPartnerAdmin = false;
+  private hasPartnerRegistrationFeatureToggle = false;
 
   /* @ngInject */
   constructor(
     private $modal,
     private $state,
     private Authinfo,
+    private FeatureToggleService,
   ) {  }
 
   public $onInit() {
     if (this.Authinfo.isCustomerLaunchedFromPartner()) {
       this.isPartnerAdmin = true;
     }
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridPartnerRegistration)
+      .then(enabled => {
+        this.hasPartnerRegistrationFeatureToggle = enabled;
+      });
   }
 
   public openAddResourceModal = () => {
-    if (this.isPartnerAdmin) {
+    if (this.isPartnerAdmin && !this.hasPartnerRegistrationFeatureToggle) {
       this.$modal.open({
         templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
         type: 'dialog',

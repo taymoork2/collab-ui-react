@@ -197,4 +197,5 @@ module.exports = {
   csdmPlaceUpgradeChannel: "csdm-place-upgrade-channel",
   hI802: "h-i802",
   csdmPlaceGuiSettings: "csdm-place-gui-settings",
+  atlasHybridPartnerRegistration: 'atlas-hybrid-partner-registration',
 };
