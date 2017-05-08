@@ -1,4 +1,4 @@
-import { HuntGroup, HuntMethod, HuntGroupNumber, HuntGroupService } from 'modules/call/features/huntGroup/services';
+import { HuntGroup, HuntMethod, HuntGroupNumber, HuntGroupService } from 'modules/call/features/hunt-group';
 import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { Notification } from 'modules/core/notifications';
@@ -96,7 +96,7 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/huntGroup/huntGroupCancelModal.html',
+      templateUrl: 'modules/call/features/hunt-group/huntGroupCancelModal.html',
       type: 'dialog',
     });
   }
@@ -286,6 +286,6 @@ class HuntGroupCtrl implements ng.IComponentController {
 
 export class HuntGroupComponent implements ng.IComponentOptions {
   public controller = HuntGroupCtrl;
-  public templateUrl = 'modules/call/features/huntGroup/huntGroup.html';
+  public templateUrl = 'modules/call/features/hunt-group/hunt-group.component.html';
   public bindings = {};
 }

@@ -1,4 +1,4 @@
-import { HuntGroupNumber } from 'modules/call/features/huntGroup/services';
+import { HuntGroupNumber } from 'modules/call/features/hunt-group';
 import { NumberService, INumber } from 'modules/huron/numbers';
 
 class HuntGroupNumbersCtrl implements ng.IComponentController {
@@ -66,7 +66,7 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
 
 export class HuntGroupNumbersComponent implements ng.IComponentOptions {
   public controller = HuntGroupNumbersCtrl;
-  public templateUrl = 'modules/call/features/huntGroup/huntGroupNumbers/huntGroupNumbers.html';
+  public templateUrl = 'modules/call/features/hunt-group/hunt-group-numbers/hunt-group-numbers.component.html';
   public bindings = {
     numbers: '<',
     isNew: '<',

@@ -3072,7 +3072,7 @@
             template: '<uc-hunt-group></uc-hunt-group>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/call/features/huntGroup/huntGroup'], done);
+                require(['modules/call/features/hunt-group'], done);
               }),
             },
           })
@@ -3085,7 +3085,7 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/call/features/huntGroup/huntGroup'], done);
+                require(['modules/call/features/hunt-group'], done);
               }),
             },
           })

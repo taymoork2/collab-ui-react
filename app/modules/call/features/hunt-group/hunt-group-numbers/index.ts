@@ -1,6 +1,6 @@
-import './_hg-numbers.scss';
+import './hunt-group-numbers.component.scss';
 
-import { HuntGroupNumbersComponent } from './huntGroupNumbers.component';
+import { HuntGroupNumbersComponent } from './hunt-group-numbers.component';
 import numberService from 'modules/huron/numbers';
 import noDirtyOverride from 'modules/call/features/shared/no-dirty-override';
 

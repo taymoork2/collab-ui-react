@@ -1,4 +1,4 @@
-import { HuntGroupMaxRingTimeComponent } from './huntGroupMaxRingTime.component';
+import { HuntGroupMaxRingTimeComponent } from './hunt-group-max-ring-time.component';
 
 export default angular
   .module('huron.hunt-group-max-ring-time', [

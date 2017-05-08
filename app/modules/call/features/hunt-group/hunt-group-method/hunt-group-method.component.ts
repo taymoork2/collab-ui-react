@@ -1,4 +1,4 @@
-import { HuntMethod } from 'modules/call/features/huntGroup/services';
+import { HuntMethod } from 'modules/call/features/hunt-group';
 
 class HuntGroupMethodCtrl implements ng.IComponentController {
   public huntMethod: HuntMethod;
@@ -22,7 +22,7 @@ class HuntGroupMethodCtrl implements ng.IComponentController {
 
 export class HuntGroupMethodComponent implements ng.IComponentOptions {
   public controller = HuntGroupMethodCtrl;
-  public templateUrl = 'modules/call/features/huntGroup/huntGroupMethod/huntGroupMethod.html';
+  public templateUrl = 'modules/call/features/hunt-group/hunt-group-method/hunt-group-method.component.html';
   public bindings = {
     huntMethod: '<',
     isNew: '<',

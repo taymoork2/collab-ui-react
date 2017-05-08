@@ -1,4 +1,4 @@
-import { HuntGroupMaxWaitTimeComponent } from './huntGroupMaxWaitTime.component';
+import { HuntGroupMaxWaitTimeComponent } from './hunt-group-max-wait-time.component';
 
 export default angular
   .module('huron.hunt-group-max-wait-time', [

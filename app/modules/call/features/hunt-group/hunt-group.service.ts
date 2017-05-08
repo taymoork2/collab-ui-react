@@ -1,4 +1,4 @@
-import { HuntGroup, HuntGroupNumber } from './huntGroup';
+import { HuntGroup, HuntGroupNumber } from './hunt-group';
 import { NumberType } from 'modules/huron/numbers';
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { MemberType, USER_PLACE } from 'modules/huron/members';

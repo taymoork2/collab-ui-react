@@ -1,6 +1,6 @@
-import './_hg-method.scss';
+import './hunt-group-method.component.scss';
 
-import { HuntGroupMethodComponent } from './huntGroupMethod.component';
+import { HuntGroupMethodComponent } from './hunt-group-method.component';
 
 export default angular
   .module('huron.hunt-group-method', [
