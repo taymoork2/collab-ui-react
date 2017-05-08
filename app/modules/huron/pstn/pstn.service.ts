@@ -61,9 +61,11 @@ export class PstnService {
   public createResellerV2(): ng.IPromise<any> {
     let payload = {
       uuid: this.Authinfo.getCallPartnerOrgId(),
-      name: this.Authinfo.getOrgName(),
       email: this.Authinfo.getPrimaryEmail(),
     };
+    if (this.Authinfo.isPartner()) {
+      _.extend(payload, { name: this.Authinfo.getOrgName() });
+    }
     return this.TerminusV2ResellerService.save({}, payload).$promise;
   }
 
