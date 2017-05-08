@@ -61,12 +61,11 @@ require('./partnerManagement.scss');
                   'partnerManagement.orgExists' : 'partnerManagement.orgClaimed');
                 break;
 
-/* $TODO - backend does not support this case yet, but will soon...
               case "DOMAIN":
                 vm.data.domainMatches = resp.data.organizations;
                 $state.go('partnerManagement.searchResults');
                 break;
-*/
+
               case "NO_MATCH":
                 $state.go('partnerManagement.create');
                 break;
@@ -99,8 +98,8 @@ require('./partnerManagement.scss');
         $state.go('partnerManagement.createSuccess');
       }).catch(function (resp) {
         vm.isLoading = false;
-        if (resp.data.message === ('Organization ' + vm.data.name +
-          ' already exists in CI')) {
+        if (!_.isEmpty(resp.data) &&
+          (resp.data.message === ('Organization ' + vm.data.name + ' already exists in CI'))) {
           vm.duplicateName = vm.data.name;
           $scope.$$childHead.createForm.name.$validate();
         } else {

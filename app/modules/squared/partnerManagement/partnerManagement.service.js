@@ -37,7 +37,7 @@
 
     svc.getOrgDetails = function (org) {
       return $http.get(UrlConfig.getAdminServiceUrl() +
-        'organizations/' + org + '/onboardinfo');
+        'organizations/' + encodeURIComponent(org) + '/onboardinfo');
     };
 
     return svc;

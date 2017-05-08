@@ -2,7 +2,7 @@
 
 /* eslint-disable */
 
-describe('Controller: PartnerManagementController', function () {
+describe('PartnerManagementController:', function () {
   beforeEach(angular.mock.module('Squared'));
 
   var $controller;
@@ -11,12 +11,16 @@ describe('Controller: PartnerManagementController', function () {
   var svc;
   var $state;
   var ctrl;
+  var Notification;
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _PartnerManagementService_ ) {
+  beforeEach(inject (function (_$controller_, _$q_, _$rootScope_, _$state_,
+    _Notification_, _PartnerManagementService_) {
     $controller = _$controller_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     $state = _$state_;
+
+    Notification = _Notification_;
     svc = _PartnerManagementService_;
   }));
 
@@ -78,7 +82,17 @@ describe('Controller: PartnerManagementController', function () {
     };
   }
 
-  describe('wizard steps', function () {
+  function getOrgDetailsString() {
+    return '[{"label":"partnerManagement.orgDetails.createDate","value":"6/5/2015, 1:31:08 PM"},' +
+      '{"label":"partnerManagement.orgDetails.activeSubs","value":0},{"label":' +
+      '"partnerManagement.orgDetails.managedCusts","value":2},{"label":' +
+      '"partnerManagement.orgDetails.domains","value":"adomain.na, bdomain.na, cdomain.na"},' +
+      '{"label":"partnerManagement.orgDetails.users","value":3},{"label":' +
+      '"partnerManagement.orgDetails.admins","value":"Abe Adams, Betty Burns, Charlie Charms, Collab"},' +
+      '{"label":"partnerManagement.orgDetails.orgId","value":"123"}]';
+  }
+
+  describe('wizard steps,', function () {
     beforeEach( function() {
       initController();
       spyOn($state, 'go');
@@ -96,26 +110,115 @@ describe('Controller: PartnerManagementController', function () {
       expect(JSON.stringify(d) === JSON.stringify($scope.vm.data)).toBe(true);
     });
 
-    it('should go to orgExists when search returns EMAIL_ADDRESS', function () {
-      spyOn(svc, 'search').and.returnValue($q.when({
-        status: 200,
-        data: { orgMatchBy: 'EMAIL_ADDRESS',
-                organizations: [{ orgId: '123', displayName: 'test name', }] },
-      }));
-      $scope.vm.search();
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('partnerManagement.orgExists');
+    // SEARCH API
+    describe('search API', function() {
+      it('should go to orgExists when search returns EMAIL_ADDRESS', function () {
+        spyOn(svc, 'search').and.returnValue($q.when({
+          status: 200,
+          data: { orgMatchBy: 'EMAIL_ADDRESS',
+                  organizations: [{ orgId: '123', displayName: 'test name', }] },
+        }));
+        $scope.vm.search();
+        $scope.$apply();
+        expect($state.go).toHaveBeenCalledWith('partnerManagement.orgExists');
+        expect(JSON.stringify($scope.vm.data.orgDetails)).toEqual(getOrgDetailsString());
+      });
+
+      it('should go to orgClaimed when search returns DOMAIN_CLAIMED', function () {
+        spyOn(svc, 'search').and.returnValue($q.when({
+          status: 200,
+          data: { orgMatchBy: 'DOMAIN_CLAIMED',
+                  organizations: [{ orgId: '123', displayName: 'test name', }] },
+        }));
+        $scope.vm.search();
+        $scope.$apply();
+        expect($state.go).toHaveBeenCalledWith('partnerManagement.orgClaimed');
+      });
+
+      it('should go to searchResults when search returns DOMAIN', function () {
+        spyOn(svc, 'search').and.returnValue($q.when({
+          status: 200,
+          data: { orgMatchBy: 'DOMAIN',
+                  organizations: [{ orgId: '123', displayName: 'test name', }] },
+        }));
+        $scope.vm.search();
+        $scope.$apply();
+        expect($state.go).toHaveBeenCalledWith('partnerManagement.searchResults');
+      });
+
+      it('should go to create when search returns NO_MATCH', function () {
+        spyOn(svc, 'search').and.returnValue($q.when({
+          status: 200,
+          data: { orgMatchBy: 'NO_MATCH',
+                  organizations: [{ orgId: '123', displayName: 'test name', }] },
+        }));
+        $scope.vm.search();
+        $scope.$apply();
+        expect($state.go).toHaveBeenCalledWith('partnerManagement.create');
+      });
+
+      describe('(error cases)', function () {
+        beforeEach( function () {
+          spyOn(Notification, 'errorWithTrackingId');
+        });
+
+        it('should show error on invalid orgMatchBy value', function () {
+          spyOn(svc, 'search').and.returnValue($q.when({
+            status: 200,
+            data: { orgMatchBy: 'INVALID',
+                    organizations: [{ orgId: '123', displayName: 'test name', }] },
+          }));
+          $scope.vm.search();
+          $scope.$apply();
+          expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+        });
+
+        it('should show error when search does not return 200', function () {
+          spyOn(svc, 'search').and.returnValue($q.reject({ status: 400, }));
+          $scope.vm.search();
+          $scope.$apply();
+          expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+        });
+      });
     });
 
-    it('should go to orgClaimed when search returns DOMAIN_CLAIMED', function () {
-      spyOn(svc, 'search').and.returnValue($q.when({
-        status: 200,
-        data: { orgMatchBy: 'DOMAIN_CLAIMED',
-                organizations: [{ orgId: '123', displayName: 'test name', }] },
-      }));
-      $scope.vm.search();
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('partnerManagement.orgClaimed');
-    });
+    // CREATE API
+    describe('create API', function () {
+      beforeEach( function () {
+        $scope.vm.data = makeFormData();
+        $scope.$$childHead = {
+          createForm: { name: { $validate: function () { return true; }, }}
+        };
+      });
+
+      it('should show got to createSuccess on successful resp', function () {
+        spyOn(svc, 'create').and.returnValue($q.when({ status: 200, }));
+        $scope.vm.create();
+        $scope.$apply();
+        expect($state.go).toHaveBeenCalledWith('partnerManagement.createSuccess');
+      });
+
+      describe('(error cases)', function () {
+        beforeEach( function () {
+          spyOn(Notification, 'errorWithTrackingId');
+        });
+
+        it('should invalidate form on duplicate name', function () {
+          spyOn(svc, 'create').and.returnValue($q.reject({ status: 409,
+            data: { message: 'Organization ' + $scope.vm.data.name +
+              ' already exists in CI' }}));
+          $scope.vm.create();
+          $scope.$apply();
+          expect($scope.vm.duplicateName).toBe($scope.vm.data.name);
+        });
+
+        it ('should show error when create fails', function () {
+          spyOn(svc, 'create').and.returnValue($q.reject({ status: 504, }));
+          $scope.vm.create();
+          $scope.$apply();
+          expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+        })
+      });
+    })
   });
 });
