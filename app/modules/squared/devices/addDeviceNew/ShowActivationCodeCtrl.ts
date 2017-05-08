@@ -3,6 +3,7 @@ import IRecipientUser = csdm.IRecipientUser;
 import { WizardCtrl } from './WizardCtrl';
 import * as jstz from 'jstimezonedetect';
 import IDeferred = angular.IDeferred;
+import ICsdmDataModelService = csdm.ICsdmDataModelService;
 
 class ShowActivationCodeCtrl extends WizardCtrl {
   private account: IAccountData;
@@ -30,7 +31,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
   constructor($q: angular.IQService,
               private UserListService,
               private OtpService,
-              private CsdmDataModelService,
+              private CsdmDataModelService: ICsdmDataModelService,
               private CsdmHuronPlaceService,
               $stateParams,
               private ActivationCodeEmailService,
@@ -131,8 +132,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
               (err) => { this.onCodeCreationFailure(err); });
         } else { // New place
           this.createCloudberryPlace(this.account.name, this.wizardData.account.entitlements, this.wizardData.account.directoryNumber,
-            this.wizardData.account.externalNumber, this.getExternalLinkedAccounts(),
-            this.wizardData.account.ussProps || null)
+            this.wizardData.account.externalNumber, this.getExternalLinkedAccounts())
             .then((place) => {
               this.account.cisUuid = place.cisUuid;
               this.$q.all({
@@ -223,8 +223,8 @@ class ShowActivationCodeCtrl extends WizardCtrl {
       });
   }
 
-  public createCloudberryPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
-    return this.CsdmDataModelService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps);
+  public createCloudberryPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
+    return this.CsdmDataModelService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts);
   }
 
   public createCodeForCloudberryAccount(cisUuid) {

@@ -1,4 +1,5 @@
-import { Code, CsdmConverter } from './CsdmConverter';
+import { CsdmConverter } from './CsdmConverter';
+import ICode = csdm.ICode;
 
 export class CsdmCodeService {
   private codesUrl: string;
@@ -7,7 +8,7 @@ export class CsdmCodeService {
     this.codesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
   }
 
-  public createCodeForExisting(cisUuid): IPromise<Code> {
+  public createCodeForExisting(cisUuid): IPromise<ICode> {
     return this.$http.post(this.codesUrl, {
       cisUuid: cisUuid,
     }).then((res) => {

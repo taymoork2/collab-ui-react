@@ -51,15 +51,15 @@ export class CsdmPlaceService {
     return this.deletePlace(item);
   }
 
-  public createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps?) {
-    return this.createPlace(name, entitlements || ['webex-squared', 'spark'], directoryNumber, externalNumber, 'lyra_space', externalLinkedAccounts, ussProps);
+  public createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
+    return this.createPlace(name, entitlements || ['webex-squared', 'spark'], directoryNumber, externalNumber, 'lyra_space', externalLinkedAccounts);
   }
 
   public createCmiPlace(name, entitlements, directoryNumber, externalNumber) {
-    return this.createPlace(name, entitlements || ['ciscouc'], directoryNumber, externalNumber, 'room', null, null);
+    return this.createPlace(name, entitlements || ['ciscouc'], directoryNumber, externalNumber, 'room', null);
   }
 
-  public createPlace(name, entitlements, directoryNumber, externalNumber, machineType, externalLinkedAccounts, ussProps): ng.IPromise<IPlace> {
+  public createPlace(name, entitlements, directoryNumber, externalNumber, machineType, externalLinkedAccounts): ng.IPromise<IPlace> {
     return this.$http.post(this.csdmPlacesUrl, {
       name: name,
       directoryNumber: directoryNumber,
@@ -67,7 +67,6 @@ export class CsdmPlaceService {
       entitlements: entitlements,
       machineType: machineType,
       extLinkedAccts: externalLinkedAccounts,
-      ussProps: ussProps,
     }).then((res) => {
       let convertedPlace = this.CsdmConverter.convertPlace(res.data);
       // TODO: Don't need to set these here when CSDM returns the lines on place creation

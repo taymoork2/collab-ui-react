@@ -16,6 +16,9 @@ declare namespace csdm {
   interface ICsdmDataModelService {
     updateCloudberryPlace(objectToUpdate: IPlace, entitlements, directoryNumber,
                           externalNumber, externalLinkedAccounts?: any[]): ng.IPromise<IPlace>;
+    createCmiPlace(name, entitlements, directoryNumber, externalNumber): ng.IPromise<IPlace>;
+    createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts): ng.IPromise<IPlace>;
+    createCodeForExisting(cisUuid: string): ng.IPromise<ICode>;
     reloadPlace(cisUuid: string): ng.IPromise<IPlace>;
     reloadItem<T extends IDevicePlaceCommon>(item: T): ng.IPromise<T>;
     updateItemName(item: IPlace, newName: string): ng.IPromise<IPlace>;

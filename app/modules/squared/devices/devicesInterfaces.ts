@@ -43,4 +43,8 @@ declare namespace csdm {
     label: string;
     value: string;
   }
+
+  interface ICode {
+
+  }
 }

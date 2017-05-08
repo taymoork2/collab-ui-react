@@ -2,6 +2,7 @@ import IDevice = csdm.IDevice;
 import IPlace = csdm.IPlace;
 import Dictionary = _.Dictionary;
 import IPlaceExtended = csdm.IPlaceExtended;
+import ICode = csdm.ICode;
 
 export class CsdmConverter {
   private helper: Helper;
@@ -464,7 +465,7 @@ class Helper {
   }
 }
 
-export class Code {
+class Code implements ICode {
   private expiryTime: any;
   private activationCode: string;
 

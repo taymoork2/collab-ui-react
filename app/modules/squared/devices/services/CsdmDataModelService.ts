@@ -4,7 +4,7 @@ import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import { CsdmDeviceService } from './CsdmDeviceService';
 import { CsdmCodeService } from './CsdmCodeService';
 import IDeferred = ng.IDeferred;
-import ITimeoutService = angular.ITimeoutService;
+import ITimeoutService = ng.ITimeoutService;
 import { CsdmHubFactory, CsdmPollerFactory } from './CsdmPoller';
 import { CsdmConverter } from './CsdmConverter';
 import { CsdmCacheUpdater } from './CsdmCacheUpdater';
