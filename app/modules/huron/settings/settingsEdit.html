@@ -76,6 +76,9 @@
           <uc-extension-length
             first-time-setup="$ctrl.ftsw"
             extension-length="$ctrl.huronSettingsData.site.extensionLength"
+            huron-settings-data="$ctrl.huronSettingsData"
+            extensions-assigned="$ctrl.settingsOptions.extensionsAssigned"
+            extension-length-saved-fn="$ctrl.onExtensionLengthSaved()"
             on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
           </uc-extension-length>
         </div>
@@ -140,7 +143,7 @@
     </div>
 
     <!-- emergency service address selection -->
-    <div class="cs-form__section" ng-show="$ctrl.showEmergencyServiceAddress">
+    <div class="cs-form__section" ng-if="$ctrl.showEmergencyServiceAddress">
       <div class="section__info">
         <div cs-sticky>
           <h4 class="section__title" translate="settingsServiceAddress.label"></h4>

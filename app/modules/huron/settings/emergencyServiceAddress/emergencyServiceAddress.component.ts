@@ -1,4 +1,4 @@
-import { E911_ADDRESS_PENDING } from 'modules/huron/settings';
+import { E911_ADDRESS_PENDING } from 'modules/huron/settings/services';
 import { Notification } from 'modules/core/notifications';
 import { PstnModel } from '../../pstn/pstn.model';
 

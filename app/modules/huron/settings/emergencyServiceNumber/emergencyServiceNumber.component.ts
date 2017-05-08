@@ -1,6 +1,5 @@
 import { Site, EmergencyCallbackNumber } from 'modules/huron/sites';
-import { IEmergencyNumberOption } from 'modules/huron/settings/settingsOptions.service';
-import { HuronSettingsService, E911_ADDRESS_PENDING } from 'modules/huron/settings';
+import { HuronSettingsService, E911_ADDRESS_PENDING, IEmergencyNumberOption } from 'modules/huron/settings/services';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 class EmergencyServiceNumberCtrl implements ng.IComponentController {
