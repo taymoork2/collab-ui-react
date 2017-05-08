@@ -5016,6 +5016,7 @@
       "legendcallLocalCluster": "Hosted On This Cluster",
       "legendcallRedirectedCluster": "Redirected to Another Cluster or Cloud",
       "redirectedCluster": "Redirected by Cluster",
+      "callsRedirectedCluster": "Calls Redirected by Cluster:",
       "nodesAdded": "Nodes Added",
       "nodesUnavailable": "Nodes Unavailable",
       "availableTitle": "Available",
@@ -5037,6 +5038,7 @@
       "total_calls": "Total Calls",
       "onpremcalls": "Hosted On-Premises",
       "cloudcalls": "Overflowed to Cloud",
+      "callOverflow": "Calls Overflowed to Cloud:",
       "hostedcalls": "Hosted by this Cluster",
       "redirectedcalls": "Redirected by this Cluster",
       "total_participants": "Total Calls",
@@ -5076,6 +5078,7 @@
       "cloudHeading": "Cloud",
       "hybridHeading": "Cloud and On-Premises",
       "othersHeading": "Others",
+      "callsBallon": "Calls:",
       "clientType": {
         "android": "Android",
         "blackberry": "BlackBerry",
@@ -5100,7 +5103,7 @@
         "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
         "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected."
       },
-      "graphDescription":{
+      "graphDescription": {
         "utilizationOrgDesc": "Average utilization trend for all clusters in an organization",
         "utilizationClusterDesc": "Average utilization trend for the selected cluster in an organization, compared to the average utilization for all the clusters",
         "callActivityDesc": "Provides a view of the call activity trend across the organization, showing the calls that were hosted on-premises and calls hosted on the cloud. The calls that overflowed to the cloud are represented as dots on the cloud call graph. Hover over a dot to show the number of calls that overflowed to the cloud at that instance.",
@@ -6751,8 +6754,7 @@
     "statusHeader": "Payment Status",
     "viewInvoice": "View Invoice",
     "completed": "Completed",
-    "pending": "Pending",
-    "error": "Error",
+    "pending": "Pending Processing",
     "onlineOnly1": "Purchases from Cisco Online Marketplace only.",
     "onlineOnly2": "Cisco and Cisco Partner invoices are not listed here.",
     "loadError": "An error occurred while loading order history."

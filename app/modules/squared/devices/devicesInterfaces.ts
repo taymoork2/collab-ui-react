@@ -26,10 +26,12 @@ declare namespace csdm {
     cisUuid: string;
     displayName: string;
     image: string;
+    isPlace?: boolean;
     readonly type?: string;
     sipUrl: string;
     tags: string[];
     url: string;
+    devices?: Map<string, IDevicePlaceCommon>;
   }
 
   interface IDeviceDiagnosticEvent {
@@ -40,5 +42,9 @@ declare namespace csdm {
   interface IDeviceUpgradeChannel {
     label: string;
     value: string;
+  }
+
+  interface ICode {
+
   }
 }

@@ -4,7 +4,6 @@ import { Notification } from 'modules/core/notifications';
 import { MyCompanyOrdersService } from './myCompanyOrders.service';
 
 const COMPLETED = 'COMPLETED';
-const ERROR = 'ERROR';
 const TRIAL = 'Trial';
 
 class MyCompanyOrdersCtrl implements ng.IComponentController {
@@ -41,13 +40,6 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
         }
         if (COMPLETED === orderDetail.status) {
           orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
-        } else if (ERROR === orderDetail.status) {
-          orderDetail.status = this.$translate.instant('myCompanyOrders.error');
-          const errorCode = _.get(orderDetail.errorDetails[0], 'errorCode');
-          if (errorCode) {
-            orderDetail.status += ' ' + errorCode;
-            orderDetail.errorText = _.get(orderDetail.errorDetails[0], 'description');
-          }
         } else {
           orderDetail.status = this.$translate.instant('myCompanyOrders.pending');
         }

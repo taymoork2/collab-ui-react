@@ -202,6 +202,7 @@
     }
 
     function getClusterName(graphs, clusterMap) {
+      var callsBallon = $translate.instant('mediaFusion.metrics.callsBallon');
       var tempData = [];
       _.each(graphs, function (value) {
         var clusterName = _.findKey(clusterMap, function (val) {
@@ -209,7 +210,7 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + value.title + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></p></div>';
+          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + value.title + ' ' + callsBallon + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></p></div>';
           value.lineThickness = 2;
         }
         if (value.title !== value.valueField) {
