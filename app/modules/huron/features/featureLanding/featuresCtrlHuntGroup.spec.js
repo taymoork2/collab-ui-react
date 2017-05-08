@@ -36,6 +36,11 @@ describe('Features Controller', function () {
     toggle: 'huronHuntGroup',
   }];
 
+  var $event = {
+    preventDefault: function () {},
+    stopImmediatePropagation: function () {},
+  };
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
@@ -140,7 +145,7 @@ describe('Features Controller', function () {
     getDeferred.resolve(getHGListSuccessResp(emptyListOfHGs));
     $scope.$apply();
     $timeout.flush();
-    featureCtrl.deleteHuronFeature(huntGroups[0]);
+    featureCtrl.deleteHuronFeature(huntGroups[0], $event);
     expect($state.go).toHaveBeenCalledWith('huronfeatures.deleteFeature', {
       deleteFeatureName: huntGroups[0].cardName,
       deleteFeatureId: huntGroups[0].id,

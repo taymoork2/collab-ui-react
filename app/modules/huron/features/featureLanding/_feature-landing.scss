@@ -1,6 +1,7 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/settings/typography';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/mixins/vendor-prefixes';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .features-loading {
@@ -45,7 +46,7 @@
   padding-bottom: rem-calc(16);
 
   .cs-card article {
-    height: rem-calc(170);
+    height: rem-calc(195);
   }
 
   .cs-card article section {
@@ -67,13 +68,10 @@
   }
 
   .card-section {
-    @include vr-spacing(pl, 0.9);
-    @include vr-spacing(pt, 0.8);
+    @include vr-spacing(pl, 1.5);
   }
 
   .card-section-num {
-    @include vr-spacing(pb, 0.2);
-
     display: block;
     color: $gray-base;
     font-family: $brand-font-light;
@@ -88,7 +86,7 @@
   .card-members {
     color: $gray-dark;
     font-family: $brand-font-light;
-    font-size: $h6-font-size;
+    font-size: $base-font-size;
   }
 
   .card-footer {
@@ -198,5 +196,131 @@
     list-style-type: none;
 
     @include vr-spacing(ml, 0);
+  }
+}
+
+$toolkit-primary: #0393c9;
+$toolkit-people: #09b385;
+$toolkit-attention: #dd9608;
+$toolkit-cta: #835dce;
+$toolkit-alerts: #d3385e;
+//Toolkit
+.cs-card.header-background.hoverable {
+  article {
+    &.hover,
+    &:focus {
+      background-color: $toolkit-primary;
+      header {
+        background-color: $toolkit-primary;
+        button.close {
+          color: $color-white;
+          opacity: 1;
+        }
+      }
+      .badge--outline {
+        border: none !important;
+        color: $color-white;
+        padding: 0;
+        font-size: rem-calc(14);
+      }
+      .h4 {
+        color: $color-white;
+      }
+    }
+    header {
+      background-color: $color-white;
+      padding-right: 1.5rem;
+      padding-left: 1.5rem;
+      padding-top: 1rem;
+      .h4 {
+        color: $gray-dark-2;
+      }
+
+      button.close {
+        color: $gray-light-2;
+        opacity: 1;
+        &::before {
+          font-size: 1rem;
+        }
+      }
+    }
+    .card-body {
+      padding-bottom: 1rem;
+    }
+  }
+
+  &.alerts {
+    article {
+      &.hover,
+      &:focus {
+        background-color: $toolkit-alerts;
+        header {
+          background-color: $toolkit-alerts;
+        }
+      }
+    }
+  }
+
+  &.cta {
+    article {
+      &.hover,
+      &:focus {
+        background-color: $toolkit-cta;
+        header {
+          background-color: $toolkit-cta;
+        }
+      }
+    }
+    .badge {
+      border-color: $toolkit-cta;
+      color: $toolkit-cta;
+    }
+  }
+
+  &.people {
+    article {
+      &.hover,
+      &:focus {
+        background-color: $toolkit-people;
+        header {
+          background-color: $toolkit-people;
+        }
+      }
+    }
+  }
+
+  &.attention {
+    article {
+      &.hover,
+      &:focus {
+        background-color: $toolkit-attention;
+        header {
+          background-color: $toolkit-attention;
+        }
+      }
+    }
+  }
+}
+
+// Atlas
+.features-content {
+  .cs-card.hoverable {
+    article {
+      &.hover,
+      &:focus {
+        .card-section-num,
+        .card-members {
+          color: $color-white;
+        }
+      }
+      section {
+        justify-content: flex-end;
+      }
+    }
+    header a {
+      color: $gray-light-2;
+      line-height: 2;
+      padding-right: .5rem;
+    }
   }
 }

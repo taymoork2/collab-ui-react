@@ -73,6 +73,7 @@
     require('modules/huron/settings').default,
     require('modules/huron/dialPlans').default,
     require('modules/core/domainManagement').default,
+    require('modules/huron/features/featureLanding/hoverDelay.directive').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))

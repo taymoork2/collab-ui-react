@@ -45,6 +45,11 @@ describe('Features Controller', function () {
     }],
   };
 
+  var $event = {
+    preventDefault: function () {},
+    stopImmediatePropagation: function () {},
+  };
+
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -147,7 +152,7 @@ describe('Features Controller', function () {
     getDeferred.resolve(getCPListSuccessResp(emptyListOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
-    featureCtrl.deleteHuronFeature(callParks.callparks[0]);
+    featureCtrl.deleteHuronFeature(callParks.callparks[0], $event);
     expect($state.go).toHaveBeenCalledWith('huronfeatures.deleteFeature', {
       deleteFeatureName: callParks.callparks[0].cardName,
       deleteFeatureId: callParks.callparks[0].id,

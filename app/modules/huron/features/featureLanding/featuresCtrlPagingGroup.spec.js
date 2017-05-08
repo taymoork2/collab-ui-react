@@ -31,6 +31,11 @@ describe('Features Controller', function () {
     }],
   };
 
+  var $event = {
+    preventDefault: function () {},
+    stopImmediatePropagation: function () {},
+  };
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
@@ -143,7 +148,7 @@ describe('Features Controller', function () {
     expect(featureCtrl.listOfFeatures).toEqual([pagingGroups.paginggroups[0]]);
   });
   it('should be able to edit an PagingGroup ', function () {
-    featureCtrl.editHuronFeature(pagingGroups.paginggroups[0]);
+    featureCtrl.editHuronFeature(pagingGroups.paginggroups[0], $event);
     expect($state.go).toHaveBeenCalledWith('huronPagingGroupEdit', {
       feature: pagingGroups.paginggroups[0],
     });
