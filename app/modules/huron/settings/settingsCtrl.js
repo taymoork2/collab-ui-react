@@ -1414,13 +1414,18 @@
     }
 
     function loadAvrilVoicemailOptions() {
-      var guid = _.get(ServiceSetup, 'sites[0].uuid', null);
-      if (guid !== null) {
-        return ServiceSetup.getAvrilSite(guid)
-          .then(function (response) {
-            setVoicemailOptions(response.features);
-          });
-      }
+      FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable)
+        .then(function (result) {
+          if (result) {
+            var guid = _.get(ServiceSetup, 'sites[0].uuid', null);
+            if (guid) {
+              return ServiceSetup.getAvrilSite(guid)
+                .then(function (response) {
+                  setVoicemailOptions(response.features);
+                });
+            }
+          }
+        });
     }
 
     function setVoicemailOptions(features) {
