@@ -1,5 +1,5 @@
-import { IExternalLinkedAccount } from '../../common/ExternalLinkedAccount';
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
+import IExternalLinkedAccount = csdm.IExternalLinkedAccount;
 
 class EditCalendarService implements ng.IComponentController {
   private dismiss: Function;
