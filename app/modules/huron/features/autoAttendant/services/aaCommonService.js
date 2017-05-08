@@ -16,12 +16,13 @@
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
     var aaQueueSettingsStatus = false;
-    var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
-    var decisionToggle = false;
     var routeSIPAddressToggle = false;
+    var dynAnnounceToggle = false;
+    var returnedCallerToggle = false;
     var uniqueId = 0;
+    var restApiToggle = false;
 
     var invalidList = {};
     var service = {
@@ -34,17 +35,19 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
-      setDecisionToggle: setDecisionToggle,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
-      setRouteQueueToggle: setRouteQueueToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
-      isRouteQueueToggle: isRouteQueueToggle,
+      setRestApiToggle: setRestApiToggle,
+      isRestApiToggle: isRestApiToggle,
+      setDynAnnounceToggle: setDynAnnounceToggle,
+      setReturnedCallerToggle: setReturnedCallerToggle,
+      isDynAnnounceToggle: isDynAnnounceToggle,
       isCallerInputToggle: isCallerInputToggle,
-      isDecisionToggle: isDecisionToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
+      isReturnedCallerToggle: isReturnedCallerToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -68,7 +71,7 @@
     }
 
     function isValid() {
-      return (!_.size(invalidList));
+      return (_.size(invalidList) === 0);
     }
 
     function getInvalid(which) {
@@ -135,10 +138,9 @@
       aaCENumberStatus = status;
     }
 
-    function setRouteQueueToggle(status) {
-      routeQueueToggle = status;
+    function setDynAnnounceToggle(status) {
+      dynAnnounceToggle = status;
     }
-
     function setQueueSettingsStatus(status) {
       aaQueueSettingsStatus = status;
     }
@@ -150,19 +152,29 @@
     function setCallerInputToggle(status) {
       callerInputToggle = status;
     }
-    function setDecisionToggle(status) {
-      decisionToggle = status;
-    }
 
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
     }
 
-    /**
-     * Will check the toggle status for Queue which is set while aaPhoneMenuCtrl
-     */
-    function isRouteQueueToggle() {
-      return routeQueueToggle;
+    function setReturnedCallerToggle(status) {
+      returnedCallerToggle = status;
+    }
+
+    function isReturnedCallerToggle() {
+      return returnedCallerToggle;
+    }
+
+    function setRestApiToggle(status) {
+      restApiToggle = status;
+    }
+
+    function isDynAnnounceToggle() {
+      return dynAnnounceToggle;
+    }
+
+    function isRestApiToggle() {
+      return restApiToggle;
     }
 
     function isMediaUploadToggle() {
@@ -171,9 +183,6 @@
 
     function isCallerInputToggle() {
       return callerInputToggle;
-    }
-    function isDecisionToggle() {
-      return decisionToggle;
     }
 
     function isRouteSIPAddressToggle() {

@@ -6,7 +6,7 @@
     .factory('OverviewCallCard', OverviewCallCard);
 
   /* @ngInject */
-  function OverviewCallCard(OverviewHelper, Authinfo) {
+  function OverviewCallCard(OverviewHelper, Authinfo, FeatureToggleService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -15,14 +15,23 @@
         card.icon = 'icon-circle-call';
         card.desc = 'overview.cards.call.desc';
         card.name = 'overview.cards.call.title';
-        card.cardClass = 'cs-card header-bar cta-base';
+        card.cardClass = 'cs-card';
         card.trial = false;
         card.enabled = false;
         card.notEnabledText = 'overview.cards.call.notEnabledText';
         card.notEnabledFooter = 'overview.contactPartner';
-        card.settingsUrl = '#/hurondetails/settings';
+        card.settingsUrl = '#/services/call-settings';
         card.helper = OverviewHelper;
         card.showHealth = true;
+
+        // TODO (jlowery): Remove when i751-10d-ext toggle is GA
+        FeatureToggleService.sparkCallTenDigitExtGetStatus().then(function (result) {
+          if (result) {
+            card.settingsUrl = '#/services/call-settingsnew';
+          } else {
+            card.settingsUrl = '#/services/call-settings';
+          }
+        });
 
         card.reportDataEventHandler = function (event, response) {
           if (!response.data.success) return;

@@ -16,9 +16,9 @@
     flex-wrap: wrap;
 
     .title {
-      max-width: 15rem;
       min-width: 15rem;
-      flex: 1 1 auto;
+      max-width: 15rem;
+      flex: 2 1 auto;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
@@ -26,17 +26,13 @@
     }
 
     .status {
-      flex: 0 1 auto;
-      display: block;
-      min-width: 5rem;
-
-      .status-indicator {
-        padding-right: 0rem;
-      }
+      align-items: center;
+      min-width: 6rem;
     }
 
     .link {
       flex: 1 1 auto;
+      margin-left: 1rem;
     }
   }
 

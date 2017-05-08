@@ -224,4 +224,85 @@ describe('Service: contextFieldsetsService', function () {
     });
   });
 
+  describe('getInUse', function () {
+    it('should get in use status', function () {
+      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/status/someId').respond(200, {
+        'status': {
+          'inUse': false,
+        },
+        'refUrl': '/dictionary/fieldset/v1/someId',
+        'id': 'someId',
+      });
+
+      this.ContextFieldsetsService.getInUse('someId').then(function (status) {
+        expect(status).toBe(false);
+      }).catch(fail);
+      this.$httpBackend.flush();
+    });
+
+    it('should reject if error response is returned', function () {
+      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/status/someId').respond(400, 'some error');
+      this.ContextFieldsetsService.getInUse('someId').then(function () {
+        fail('');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.data).toBe('some error');
+        expect(errorResponse.status).toBe(400);
+      });
+      this.$httpBackend.flush();
+    });
+  });
+
+  describe('updateAndGetFieldset', function () {
+    it('should update and get the fieldset', function () {
+      this.$httpBackend.expectPUT(dictionaryUrl + '/dictionary/fieldset/v1/id/someId').respond(200, {});
+      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/id/someId').respond(200, {
+        id: 'someId',
+        data: 'someData',
+      });
+      this.ContextFieldsetsService.updateAndGetFieldset({
+        id: 'someId',
+        data: 'updateData',
+      }).then(function (fieldset) {
+        expect(fieldset.data).toBe('someData');
+      }).catch(function () {
+        fail('should not fail');
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('should reject if error happens', function () {
+      this.$httpBackend.expectPUT(dictionaryUrl + '/dictionary/fieldset/v1/id/someId').respond(400, 'someError');
+      this.ContextFieldsetsService.updateAndGetFieldset({
+        id: 'someId',
+        data: 'someData',
+      }).then(function () {
+        fail('should have failed');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.status).toBe(400);
+        expect(errorResponse.data).toBe('someError');
+      });
+      this.$httpBackend.flush();
+    });
+  });
+
+  describe('deleteFieldset', function () {
+    it('should return upon successful delete', function () {
+      this.$httpBackend.expectDELETE(dictionaryUrl + '/dictionary/fieldset/v1/id/someId').respond(200);
+      this.ContextFieldsetsService.deleteFieldset('someId').then(function (response) {
+        expect(response.status).toBe(200);
+      }).catch(fail);
+      this.$httpBackend.flush();
+    });
+
+    it('should reject if delete fails', function () {
+      this.$httpBackend.expectDELETE(dictionaryUrl + '/dictionary/fieldset/v1/id/fieldsetId').respond(404, 'Not found');
+      this.ContextFieldsetsService.deleteFieldset('fieldsetId').then(function () {
+        fail('ContextFieldsetsService.deleteFieldset should have rejected');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.data).toBe('Not found');
+        expect(errorResponse.status).toBe(404);
+      });
+      this.$httpBackend.flush();
+    });
+  });
 });

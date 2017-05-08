@@ -13,13 +13,21 @@
   @include vr-spacing(mh, 0.5, 1px, true);
   @include vr-spacing(pb, 10);
 
-  > .row {
-    @include vr-spacing(pt, 2);
+  > form {
+    .row .row .columns {
+      padding-left: 0;
+    }
+    > .row {
+      @include vr-spacing(pt, 2);
+
+      .row > .columns {
+        padding: .5rem .75rem .5rem .5rem;
+      }
+    }
   }
 
   .cs-card.small {
     position: relative;
-    width: 43%;
 
     @include vr-spacing(ph, 0);
 
@@ -29,6 +37,27 @@
 
     article > header {
       @include vr-spacing(ph, 0.75);
+    }
+  }
+
+  .pilot-number-pill {
+    width: 9.5rem;
+
+    article header.open-panel {
+      border-radius: 0.25rem !important;
+      cursor: default;
+    }
+
+    i,
+    i:hover {
+      color: $color-white;
+      cursor: pointer;
+    }
+
+    .pilot-number {
+      display: inline-block;
+      min-width: 85%;
+      text-align: left;
     }
   }
 
@@ -44,29 +73,40 @@
   }
 
   form {
-    @include vr-spacing(m, 2);
+    @include vr-spacing(mh, 2);
   }
 
   label {
     font-size: 1rem;
   }
 
-  .hg-name .formly-input-wrapper {
-    width: 20rem;
-    font-family: $brand-font-light;
-    font-size: $h6-font-size;
+  .hg-name {
+    @include vr-spacing(ml, 1);
+    .formly-input-wrapper {
+      width: 20rem;
+      font-family: $brand-font-light;
+      font-size: $h6-font-size;
+    }
   }
 
-  .hg-num .formly-input-wrapper {
-    width: 13rem;
-    font-family: $brand-font-light;
-    font-size: $h6-font-size;
+  .hg-num {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mv, 1.5);
+    .formly-input-wrapper {
+      width: 13rem;
+      font-family: $brand-font-light;
+      font-size: $h6-font-size;
+    }
   }
 
-  .hg-time .formly-input-wrapper {
-    width: 8.5rem;
-    font-family: $brand-font-light;
-    font-size: $h6-font-size;
+  .hg-time {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mv, 1.5);
+    .formly-input-wrapper {
+      width: 8.5rem;
+      font-family: $brand-font-light;
+      font-size: $h6-font-size;
+    }
   }
 
   .hg-num .formly-input-wrapper,
@@ -100,7 +140,8 @@
 }
 
 .hg-wrapper {
-  @include vr-spacing(m, 1.5);
+  @include vr-spacing(ml, 1);
+  @include vr-spacing(mb, 1.5);
 
   .form-input {
     width: 40%;
@@ -235,4 +276,22 @@
   .cs-card.header-background header {
     background: $gray;
   }
+}
+
+.hg-numbers {
+  @include vr-spacing(ml, 1);
+  @include vr-spacing(mt, 1.5);
+  @include vr-spacing(mb, 2);
+  input {
+    min-width: 20rem;
+  }
+
+  .cs-card.small {
+    padding-right: 0.5rem;
+  }
+}
+
+.hg-edit-ring {
+  @include vr-spacing(ml, 1);
+  @include vr-spacing(mt, 1.5);
 }

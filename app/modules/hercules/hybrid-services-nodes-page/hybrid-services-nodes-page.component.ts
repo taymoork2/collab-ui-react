@@ -1,6 +1,7 @@
 import { Notification } from 'modules/core/notifications';
+import { IToolkitModalService } from 'modules/core/modal';
 import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
-import { HybridServicesUtils } from 'modules/hercules/services/hybrid-services-utils';
+import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 interface ISimplifiedConnector {
@@ -30,19 +31,24 @@ interface IData {
 }
 
 class HybridServicesNodesPageCtrl implements ng.IComponentController {
+  private REFRESH_INTERVAL = 30 * 1000;
+  private refreshTimeout: ng.IPromise<void> | null = null;
   public data: IData;
   public gridOptions = {};
-  public loading = true;
+  public loading = true; // first load
+  public refreshing = false; // subsequant load of data
   public openedConnector: any;
 
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $modal: IToolkitModalService,
+    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
     private FusionClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
-    private HybridServicesUtils: HybridServicesUtils,
+    private HybridServicesUtilsService: HybridServicesUtilsService,
     private ModalService,
     private Notification: Notification,
   ) {
@@ -59,7 +65,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   }
 
   public hybridConnectorsComparator(a, b) {
-    return this.HybridServicesUtils.hybridConnectorsComparator(a.value, b.value);
+    return this.HybridServicesUtilsService.hybridConnectorsComparator(a.value, b.value);
   }
 
   public openSidepanel(connector: ISimplifiedConnector) {
@@ -80,6 +86,14 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
 
   public displayGoToNodeMenuItem(targetType: ClusterTargetType): boolean {
     return !_.includes(<ConnectorType[]>['mf_mgmt'], targetType);
+  }
+
+  public displayMoveNodeMenuItem(targetType: ClusterTargetType): boolean {
+    return _.includes(<ConnectorType[]>['mf_mgmt'], targetType);
+  }
+
+  public displayDeregisterNodeMenuItem(targetType: ClusterTargetType): boolean {
+    return _.includes(<ConnectorType[]>['mf_mgmt', 'hds_app'], targetType);
   }
 
   public enableMaintenanceMode(node: ISimplifiedNode): void {
@@ -116,9 +130,8 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
       return this.FusionClusterService.updateHost(node.serial, {
         maintenanceMode: 'off',
       })
-      .then(response => {
+      .then(() => {
         this.loadCluster(this.data.id);
-        return response;
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error);
@@ -126,8 +139,52 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     });
   }
 
+  public openMoveNodeModal(node: ISimplifiedNode): void {
+    this.$modal.open({
+      resolve: {
+        cluster: () => ({
+          id: this.data.id,
+          name: this.data.name,
+        }),
+        connector: () => ({
+          id: node.connectors[0].id,
+          hostname: node.name,
+        }),
+      },
+      type: 'small',
+      controller: 'ReassignClusterControllerV2',
+      controllerAs: 'reassignCluster',
+      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
+    })
+    .result
+    .then(() => {
+      this.loadCluster(this.data.id);
+    });
+  }
+
+  public openDeregisterNodeModal(node: ISimplifiedNode): void {
+    this.$modal.open({
+      resolve: {
+        connectorId: () => node.connectors[0].id,
+      },
+      type: 'dialog',
+      controller: 'HostDeregisterControllerV2',
+      controllerAs: 'hostDeregister',
+      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',
+    })
+    .result
+    .then(() => {
+      this.loadCluster(this.data.id);
+    });
+  }
+
   private loadCluster(id) {
-    this.loading = true;
+    if (this.refreshTimeout) {
+      this.$timeout.cancel(this.refreshTimeout);
+    }
+    if (!this.loading) {
+      this.refreshing = true;
+    }
     let clusterCache: ICluster;
     return this.FusionClusterService.get(id)
       .then((cluster: ICluster) => {
@@ -144,6 +201,10 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
       })
       .finally(() => {
         this.loading = false;
+        this.refreshing = false;
+        this.refreshTimeout = this.$timeout(() => {
+          this.loadCluster(id);
+        }, this.REFRESH_INTERVAL);
       });
   }
 

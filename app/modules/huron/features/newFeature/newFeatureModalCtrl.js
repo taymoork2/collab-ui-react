@@ -8,7 +8,7 @@ require('./_new-feature.scss');
     .controller('NewFeatureModalCtrl', NewFeatureModalCtrl);
 
   /* @ngInject */
-  function NewFeatureModalCtrl($scope, $modalInstance, $state, $modal, FeatureToggleService) {
+  function NewFeatureModalCtrl($scope, $modalInstance, $state, $modal) {
     var vm = $scope;
 
     vm.features = [{
@@ -35,26 +35,19 @@ require('./_new-feature.scss');
       label: 'pagingGroup.title',
       description: 'pagingGroup.modalDescription',
       toggle: 'huronPagingGroup',
-    }];
-
-    var callPickupService = {
+    }, {
       id: 'PI',
       code: 'callPickup.code',
       label: 'callPickup.title',
       description: 'callPickup.modalDescription',
       toggle: 'huronCallPickup',
-    };
-
-    FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup).then(function (result) {
-      if (result) {
-        vm.features.push(callPickupService);
-      }
-      init();
-    });
+    }];
 
     vm.ok = ok;
     vm.cancel = cancel;
     vm.loading = true;
+
+    init();
 
     function init() {
       vm.loading = false;

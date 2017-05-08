@@ -12,7 +12,7 @@
     });
 
   /* @ngInject */
-  function HerculesNotificationsController($q, $modal, $scope, $state, $translate, FusionClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService) {
+  function HerculesNotificationsController($q, $modal, $scope, $state, $translate, FusionClusterService, HybridServicesClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService) {
     var vm = this;
     vm.showNotifications = false;
     vm.notificationsLength = notificationsLength;
@@ -28,7 +28,6 @@
     vm.locatedinCallSettings = locatedinCallSettings;
     vm.navigateToCurrentServiceSettings = navigateToCurrentServiceSettings;
     vm.showUserErrorsDialog = showUserErrorsDialog;
-    vm.dismissNewServiceNotification = dismissNewServiceNotification;
     vm.showEnterpriseSettings = showEnterpriseSettings;
     vm.setSipUriNotificationAcknowledged = setSipUriNotificationAcknowledged;
 
@@ -87,7 +86,7 @@
 
     function fixClusters(options) {
       var promises = _.map(options.clusters, function (cluster) {
-        return FusionClusterService.setReleaseChannel(cluster.id, options.channel);
+        return HybridServicesClusterService.setClusterInformation(cluster.id, { releaseChannel: options.channel });
       });
       return $q.all(promises)
         .then(function () {
@@ -132,17 +131,13 @@
       });
     }
 
-    function dismissNewServiceNotification(notificationId, serviceId) {
-      ServiceDescriptor.acknowledgeService(serviceId);
-      NotificationService.removeNotification(notificationId);
-    }
-
     function showEnterpriseSettings() {
       $state.go('setupwizardmodal', {
         currentTab: 'enterpriseSettings',
         currentStep: 'enterpriseSipUrl',
         numberOfSteps: 1,
         onlyShowSingleTab: true,
+        showStandardModal: true,
       });
     }
 

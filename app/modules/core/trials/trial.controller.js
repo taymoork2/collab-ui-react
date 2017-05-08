@@ -5,7 +5,7 @@
     .controller('TrialCtrl', TrialCtrl);
 
   /* @ngInject */
-  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCountryService, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService) {
+  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, HuronCompassService) {
     var vm = this;
     vm.careTypes = {
       K1: 1,
@@ -28,6 +28,7 @@
         min: $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount'),
         number: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
         required: $translate.instant('common.invalidRequired'),
+        pattern: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
       },
       care: {
         max: $translate.instant('partnerHomePage.invalidTrialCareQuantity'),
@@ -102,6 +103,10 @@
       trials: [vm.callTrial, vm.roomSystemTrial],
       enabled: true,
     }, {
+      name: 'trial.pstnDeprecated',
+      trials: [vm.pstnTrial],
+      enabled: true,
+    }, {
       name: 'trial.pstn',
       trials: [vm.pstnTrial],
       enabled: true,
@@ -111,19 +116,8 @@
       enabled: true,
     }];
     // Navigate trial modal in this order
-    vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.emergAddress', 'trial.call'];
+    vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call'];
     vm.navStates = ['trial.info'];
-
-    vm.nonTrialServices = [{
-      // Context Service Trial
-      model: vm.contextTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        label: $translate.instant('trials.context'),
-        id: 'contextTrial',
-      },
-    }];
 
     vm.isNewTrial = isNewTrial;
     vm.isEditTrial = isEditTrial;
@@ -192,6 +186,27 @@
         vm.sparkBoardTrial.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
       }
     });
+    // algendel: for care and advanced care the quantity is set by 'disabled expression' functions.
+    // We can just move the code that sets the quantity into the watch the same way we do with the others
+    // The only downside to that is difficulty testing the $watch vs. the function.
+
+    //watch care 'enabled' for quantity
+    $scope.$watch(function () {
+      return vm.careTrial.enabled;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm._helpers.careLicenseInputDisabledExpression();
+      }
+    });
+
+    //watch advance care 'enabled' for quantity
+    $scope.$watch(function () {
+      return vm.advanceCareTrial.enabled;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm._helpers.advanceCareLicenseInputDisabledExpression();
+      }
+    });
 
     //watch hasUserServices for licence quantity
     $scope.$watch(function () {
@@ -208,9 +223,6 @@
       }
     });
 
-    // algendel: for care and advanced care the quantity is set by 'disabled expression' functions.
-    // Will refactor it to use watchers since I think the current implementation goes against the single responsibility principle
-
     init();
     ///////////////////////
 
@@ -225,11 +237,9 @@
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
-        ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
-        ftSupportThinktel: FeatureToggleService.huronSupportThinktelGetStatus(),
-        ftFederatedSparkCall: FeatureToggleService.huronFederatedSparkCallGetStatus(),
+        ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        huronCountryList: getCountryList(),
+        huronPstn: FeatureToggleService.supports(FeatureToggleService.features.huronPstn),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -251,8 +261,11 @@
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
-          vm.ftSupportThinktel = results.ftSupportThinktel;
-          vm.ftFederatedSparkCall = results.ftFederatedSparkCall;
+          vm.huronPstn = results.huronPstn;
+
+          if (vm.huronPstn) {
+            vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
+          }
 
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
@@ -286,13 +299,6 @@
         });
     }
 
-    function getCountryList() {
-      return HuronCountryService.getHardCodedCountryList()
-        .catch(function () {
-          return [];
-        });
-    }
-
     function isNewTrial() {
       return mode === 'add';
     }
@@ -318,11 +324,11 @@
     }
 
     function toggleTrial() {
-      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled && !vm.sparkBoardTrial.enabled) {
+      if ((!vm.callTrial.enabled && !vm.roomSystemTrial.enabled && !vm.sparkBoardTrial.enabled) || _.get(vm.details.country, 'id') === 'N/A') {
         vm.pstnTrial.enabled = false;
       }
 
-      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped && _.get(vm.details.country, 'id') !== 'N/A') {
         vm.pstnTrial.enabled = true;
       }
 
@@ -337,12 +343,13 @@
       setViewState('trial.call', canAddDevice());
       setViewState('trial.webex', hasEnabledWebexTrial());
       setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-      if (vm.ftSupportThinktel || vm.ftFederatedSparkCall) {
-        setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
-      } else {
-        setViewState('trial.emergAddress', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-      }
+      setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
 
+      if (vm.huronPstn) {
+        setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
+      } else {
+        setViewState('trial.pstnDeprecated', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
+      }
 
       addRemoveStates();
     }
@@ -446,6 +453,7 @@
     }
 
     function closeDialogBox() {
+      cancelCustomer();
       sendToAnalytics(Analytics.sections.TRIAL.eventNames.NO);
       $state.modal.close();
     }
@@ -727,6 +735,7 @@
         customerOrgName: customerOrgName,
       }));
       $state.modal.close();
+      cancelCustomer();
     }
 
     function showDefaultFinish() {
@@ -749,7 +758,13 @@
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
     }
 
+    function cancelCustomer() {
+      HuronCompassService.setIsCustomer(false);
+      HuronCompassService.setCustomerBaseDomain();
+    }
+
     function cancelModal() {
+      cancelCustomer();
       $state.modal.dismiss();
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }
@@ -954,6 +969,8 @@
       //trial code being instantiated
       if (country && (_.get(country, 'id') !== 'N/A')) {
         countryCode = country.id;
+      } else if (_.get(country, 'id') === 'N/A') {
+        countryCode = "US";
       } else {
         countryCode = TrialPstnService.getCountryCode();
       }

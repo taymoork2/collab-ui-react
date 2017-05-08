@@ -16,6 +16,7 @@ export class HybridServicesFlagService {
   /* @ngInject */
   constructor($resource: ng.resource.IResourceService,
               UrlConfig: any,
+              private readonly Authinfo,
   ) {
     this.resource = <IResource>$resource(
       `${UrlConfig.getFlagServiceUrl()}/organizations/:orgId/flags/:flagName`,
@@ -26,7 +27,7 @@ export class HybridServicesFlagService {
       });
   }
 
-  public readFlag(orgId: string, flagName: string): ng.IPromise<HybridServicesFlag> {
+  public readFlag(flagName: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<HybridServicesFlag> {
     return this.resource
       .get({
         orgId: orgId,
@@ -36,7 +37,7 @@ export class HybridServicesFlagService {
       .then(f => new HybridServicesFlag(f.name, f.raised));
   }
 
-  public readFlags(orgId: string, flagNames: string[]): ng.IPromise<HybridServicesFlag[]> {
+  public readFlags(flagNames: string[], orgId = this.Authinfo.getOrgId()): ng.IPromise<HybridServicesFlag[]> {
     return this.resource
       .multiGet({
         orgId: orgId,
@@ -46,7 +47,7 @@ export class HybridServicesFlagService {
       .then(f => _.map(f.items, (item) => new HybridServicesFlag(item.name, item.raised)));
   }
 
-  private setFlag(orgId: string, flagName: string, raised: boolean): ng.IPromise<void>  {
+  private setFlag(flagName: string, raised: boolean, orgId = this.Authinfo.getOrgId()): ng.IPromise<void>  {
     return this.resource
       .patch({
         orgId: orgId,
@@ -56,12 +57,12 @@ export class HybridServicesFlagService {
       .$promise;
   }
 
-  public raiseFlag(orgId: string, flagName: string): ng.IPromise<void> {
-    return this.setFlag(orgId, flagName, true);
+  public raiseFlag(flagName: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<void> {
+    return this.setFlag(flagName, true, orgId);
   }
 
-  public lowerFlag(orgId: string, flagName: string): ng.IPromise<void> {
-    return this.setFlag(orgId, flagName, false);
+  public lowerFlag(flagName: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<void> {
+    return this.setFlag(flagName, false, orgId);
   }
 }
 

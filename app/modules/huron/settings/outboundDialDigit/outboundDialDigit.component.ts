@@ -1,32 +1,48 @@
 import { IExtensionRange } from 'modules/huron/settings/extensionRange';
-
-const STEERING_DIGIT_OPTIONS: Array<string> = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+import { IOption } from 'modules/huron/dialing/dialing.service';
 
 class OutboundDialDigitCtrl implements ng.IComponentController {
+  public selected: IOption;
   public steeringDigit: string;
   public internalNumberRanges: Array<IExtensionRange>;
   public onChangeFn: Function;
 
-  public steeringDigitOptions: Array<string> = STEERING_DIGIT_OPTIONS;
+  public steeringDigitOptions: Array<IOption> = [];
 
   /* @ngInject */
-  constructor() { }
+  constructor(
+    private $translate: ng.translate.ITranslateService,
+  ) {
+    this.steeringDigitOptions.push({
+      label: this.$translate.instant('common.none'),
+      value: 'null',
+    });
+    for (let index = 1; index < 10; index++) {
+      this.steeringDigitOptions.push({
+        label: _.toString(index),
+        value: _.toString(index),
+      });
+    }
+  }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { internalNumberRanges } = changes;
+    const {
+      internalNumberRanges,
+      steeringDigit,
+    } = changes;
     if (internalNumberRanges && internalNumberRanges.currentValue) {
       this.steeringDigitConflict();
     }
 
-    const { steeringDigit } = changes;
     if (steeringDigit && steeringDigit.currentValue) {
+      this.selected = _.find(this.steeringDigitOptions, { value: steeringDigit.currentValue });
       this.steeringDigitConflict();
     }
   }
 
   public onSteeringDigitChanged(): void {
     this.onChangeFn({
-      steeringDigit: this.steeringDigit,
+      steeringDigit: _.get(this.selected, 'value'),
     });
   }
 

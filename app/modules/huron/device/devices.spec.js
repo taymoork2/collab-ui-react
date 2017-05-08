@@ -1,11 +1,9 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, $state, $controller, CsdmHuronUserDeviceService, poller, FeatureToggleService, Userservice, Authinfo;
+  var controller, $scope, $q, $stateParams, $state, CsdmUpgradeChannelService, $httpBackend, UrlConfig, $controller, CsdmHuronUserDeviceService, poller, CsdmDataModelService, FeatureToggleService, Userservice, Authinfo;
 
   beforeEach(angular.mock.module('Huron'));
-
-  var deviceList = {};
 
   var userOverview = {
     enableAuthCodeLink: jasmine.createSpy(),
@@ -13,12 +11,16 @@ describe('Controller: DevicesCtrlHuron', function () {
   };
 
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _CsdmHuronUserDeviceService_, _CsdmDeviceService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _$httpBackend_, _UrlConfig_, _CsdmUpgradeChannelService_, _CsdmHuronUserDeviceService_, _CsdmDataModelService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
     $q = _$q_;
+    $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
+    CsdmUpgradeChannelService = _CsdmUpgradeChannelService_;
     CsdmHuronUserDeviceService = _CsdmHuronUserDeviceService_;
+    CsdmDataModelService = _CsdmDataModelService_;
     $state = _$state_;
     FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
@@ -37,26 +39,22 @@ describe('Controller: DevicesCtrlHuron', function () {
       ],
     };
 
-    poller = {
-      fetch: function () {
-        return $q.resolve();
-      },
-      getDeviceList: function () {
-        return null;
-      },
-      dataLoaded: function () {
-        return true;
-      },
-    };
+    poller = {};
 
-    spyOn(_CsdmDeviceService_, 'fetchDevicesForUser').and.returnValue($q.resolve({}));
     spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
-    spyOn(poller, 'getDeviceList').and.returnValue($q.resolve(deviceList));
+    spyOn(CsdmDataModelService, 'reloadDevicesForUser').and.returnValue($q.resolve({}));
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(false));
     spyOn(Userservice, 'getUser');
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
+    spyOn(CsdmUpgradeChannelService, 'getUpgradeChannelsPromise').and.returnValue($q.resolve([]));
+    $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/upgradeChannels').respond(200, []);
 
   }));
+
+  afterEach(function () {
+    $scope.$destroy();
+  });
 
   function initController() {
     controller = $controller('DevicesCtrlHuron', {
@@ -71,55 +69,135 @@ describe('Controller: DevicesCtrlHuron', function () {
     spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(false));
     initController();
     expect(controller).toBeDefined();
+    expect(controller.csdmHuronUserDeviceService).toBe(poller);
+  });
+
+  describe('device settings', function () {
+    it('should not be visible without "csdmPlaceUpgradeChannel" and "csdmPlaceGuiSettings" feature toggles', function () {
+      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(false));
+      spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(false));
+      initController();
+      expect(controller.showDeviceSettings).toBeFalsy();
+    });
+
+    it('should not be visible with "csdmPlaceUpgradeChannel" feature toggle and without channels', function () {
+      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(true));
+      spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(false));
+      initController();
+      expect(controller.showDeviceSettings).toBeFalsy();
+    });
+
+    it('should be visible with "csdmPlaceUpgradeChannel" feature toggle and with channels', function () {
+      CsdmUpgradeChannelService.getUpgradeChannelsPromise.and.returnValue($q.resolve(['a channel', 'and another']));
+      spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(false));
+      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(true));
+      initController();
+      expect(controller.showDeviceSettings).toBeTruthy();
+    });
+
+    it('should be visible with "csdmPlaceGuiSettings" feature toggle', function () {
+      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(false));
+      spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(true));
+      initController();
+      expect(controller.showDeviceSettings).toBeTruthy();
+    });
   });
 
   describe('activate() method', function () {
-    beforeEach(function () {
-      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
-      initController();
+    describe('is called at the correct times', function () {
+      beforeEach(function () {
+        spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
+        initController();
+      });
+
+      it('CsdmDataModelService.reloadDevicesForUser() should only be called once', function () {
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(1);
+      });
+
+      it('broadcast [deviceDeactivated] event', function () {
+        $scope.$broadcast('deviceDeactivated');
+        $scope.$apply();
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(2);
+      });
+
+      it('broadcast [otpGenerated] event', function () {
+        $scope.$broadcast('otpGenerated');
+        $scope.$apply();
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(2);
+      });
+
+      it('broadcast [entitlementsUpdated] event', function () {
+        $scope.$broadcast('entitlementsUpdated');
+        $scope.$apply();
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(2);
+      });
+
+      it('should still call activate when Huron entitlement is removed', function () {
+        CsdmDataModelService.reloadDevicesForUser.calls.reset();
+
+        $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
+        $scope.$broadcast('entitlementsUpdated');
+        $scope.$apply();
+
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(1);
+      });
+
+      it('should not call activate when currentUser is not defined', function () {
+        CsdmDataModelService.reloadDevicesForUser.calls.reset();
+        $stateParams.currentUser = undefined;
+        $scope.$broadcast('entitlementsUpdated');
+        $scope.$apply();
+
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(0);
+      });
     });
 
-    it('HuronDeviceService.getDeviceList() should only be called once', function () {
-      expect(poller.getDeviceList.calls.count()).toEqual(1);
+    describe('sets the correct type on reloadDevicesForUser()', function () {
+      it('should use type "all" when both huron, cloudberry and personal mode are enabled', function () {
+        spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
+        $stateParams.currentUser.entitlements = ["ciscouc"];
+        Authinfo.isDeviceMgmt.and.returnValue(true);
+        initController();
+
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.argsFor(0)[1]).toBe('all');
+      });
+
+      it('should use type "huron" when both huron and cloudberry are enabled but personal mode is not', function () {
+        spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(false));
+        $stateParams.currentUser.entitlements = ["ciscouc"];
+        Authinfo.isDeviceMgmt.and.returnValue(true);
+        initController();
+
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.argsFor(0)[1]).toBe('huron');
+      });
+
+      it('should use type "huron" when both huron and personal mode are enabled but cloudberry is not', function () {
+        spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
+        $stateParams.currentUser.entitlements = ["ciscouc"];
+        Authinfo.isDeviceMgmt.and.returnValue(false);
+        initController();
+
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.argsFor(0)[1]).toBe('huron');
+      });
+
+      it('should use type "huron" when only huron is enabled', function () {
+        spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(false));
+        $stateParams.currentUser.entitlements = ["ciscouc"];
+        Authinfo.isDeviceMgmt.and.returnValue(false);
+        initController();
+
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.argsFor(0)[1]).toBe('huron');
+      });
+
+      it('should use type "cloudberry" when cloudberry and personal mode are enabled but huron is not', function () {
+        spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
+        $stateParams.currentUser.entitlements = [];
+        Authinfo.isDeviceMgmt.and.returnValue(true);
+        initController();
+
+        expect(CsdmDataModelService.reloadDevicesForUser.calls.argsFor(0)[1]).toBe('cloudberry');
+      });
     });
-
-    it('broadcast [deviceDeactivated] event', function () {
-      $scope.$broadcast('deviceDeactivated');
-      $scope.$apply();
-      expect(poller.getDeviceList.calls.count()).toEqual(2);
-    });
-
-    it('broadcast [otpGenerated] event', function () {
-      $scope.$broadcast('otpGenerated');
-      $scope.$apply();
-      expect(poller.getDeviceList.calls.count()).toEqual(2);
-    });
-
-    it('broadcast [entitlementsUpdated] event', function () {
-      $scope.$broadcast('entitlementsUpdated');
-      $scope.$apply();
-      expect(poller.getDeviceList.calls.count()).toEqual(2);
-    });
-
-    it('should still call activate when Huron entitlement is removed', function () {
-      poller.getDeviceList.calls.reset();
-
-      $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
-      $scope.$broadcast('entitlementsUpdated');
-      $scope.$apply();
-
-      expect(poller.getDeviceList.calls.count()).toEqual(1);
-    });
-
-    it('should not call activate when currentUser is not defined', function () {
-      poller.getDeviceList.calls.reset();
-      $stateParams.currentUser = undefined;
-      $scope.$broadcast('entitlementsUpdated');
-      $scope.$apply();
-
-      expect(poller.getDeviceList.calls.count()).toEqual(0);
-    });
-
   });
 
   describe('showDeviceDetails() method', function () {
@@ -134,24 +212,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     });
   });
 
-  describe('showGenerateOtpButton()', function () {
-    beforeEach(function () {
-      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
-      initController();
-    });
-    it('should be false when not entitled to huron', function () {
-      $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
-      $scope.$broadcast('entitlementsUpdated');
-      $scope.$apply();
-      expect(controller.showGenerateOtpButton).toBeFalsy();
-    });
-
-    it('should be false when devices', function () {
-      expect(controller.showGenerateOtpButton).toBeFalsy();
-    });
-  });
-
-  describe('resetCode() method', function () {
+  describe('onGenerateOtpFn() method', function () {
     var displayName;
     var firstName;
     var userCisUuid;
@@ -206,7 +267,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         organizationId: adminOrgId,
       };
       spyOn($state, 'go');
-      controller.resetCode();
+      controller.onGenerateOtpFn();
       $scope.$apply();
     }
 

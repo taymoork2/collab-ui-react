@@ -43,25 +43,21 @@ class HybridVoicemailCtrl implements ng.IComponentController {
   }
 
   private setVoiceMailStatus = (status: HybridVoicemailStatus) => {
+    this.status = this.UCCService.mapStatusToCss(status);
     switch (status) {
       case 'NOT_CONFIGURED':
-        this.status = 'disabled';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusNotConfigured');
         break;
       case 'REQUESTED':
-        this.status = 'disabled';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusRequested');
         break;
       case 'HYBRID_SUCCESS':
-        this.status = 'success';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusHybridSuccess');
         break;
       case 'HYBRID_FAILED':
-        this.status = 'warning';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusHybridFailed');
         break;
       case 'HYBRID_PARTIAL':
-        this.status = 'danger';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusHybridPartial');
         break;
     }

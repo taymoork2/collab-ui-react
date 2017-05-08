@@ -1,3 +1,5 @@
+// TODO: convert double-quotes to single-quotes for JS strings
+
 (function () {
   'use strict';
 
@@ -11,7 +13,6 @@
     $interval,
     $translate,
     Authinfo,
-    Auth,
     Userservice,
     WebExUtilsFact,
     UrlConfig,
@@ -687,29 +688,29 @@
           siteRow.asyncErr = false;
 
           _this.updateDisplayControlFlagsInRow(siteRow);
-        }, // csvStatusSuccess()
+        }, // success()
 
         function error(response) {
-          // var funcName = "WebExApiGatewayService.csvStatus.error()";
-          // var logMsg = "";
+          var funcName = "WebExApiGatewayService.csvStatus.error()";
+          var logMsg = "";
 
-          // logMsg = funcName + "\n" +
-          //   "siteUrl=" + siteRow.siteUrl + "\n" +
-          //   "response=" + JSON.stringify(response);
-          //$log.log(logMsg);
+          logMsg = funcName + "\n" +
+            "siteUrl=" + siteRow.siteUrl + "\n" +
+            "response=" + JSON.stringify(response);
+          $log.log(logMsg);
 
           if (response.errorId == "060502") {
-            //$log.log("Redirect to login...");
-            Auth.redirectToLogin();
+            // TODO: restore this after CSCvd83672 is deployed to WebEx production
+            // - see also: https://jira-eng-chn-sjc1.cisco.com/jira/projects/ATLAS/issues/ATLAS-2022
+            // $log.log("Redirect to login...");
+            // Auth.redirectToLogin();
+            $log.log("Redirect to login (disabled)...");
+            siteRow.csvStatusObj = response;
+          } else {
+            siteRow.csvStatusObj = response;
+            siteRow.showCSVInfo = false;
           }
-
-          siteRow.csvStatusObj = response;
-          siteRow.asyncErr = true;
-
-          _this.updateDisplayControlFlagsInRow(siteRow);
-
-          siteRow.showCSVInfo = false;
-        } // csvStatusError()
+        } // error()
       ); // WebExApiGatewayService.csvStatus(siteRow.siteUrl).then()
     }; // updateCSVStatusInRow()
 

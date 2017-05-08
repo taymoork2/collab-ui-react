@@ -1,5 +1,5 @@
 <div class="overview-page">
-  <cs-page-header title="{{::overview.pageTitle}}"></cs-page-header>
+  <cs-page-header title-name="{{::overview.pageTitle}}"></cs-page-header>
   <div class="cs-card-container multiple-layouts">
     <cs-card-layout class="three-fourths">
       <cs-card class="medium menu-card overview-card" ng-class="card.cardClass" ng-repeat="card in overview.cards">
@@ -19,10 +19,10 @@
             </div>
           </section>
           <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length > 0">
-            <div class="notification-style" ng-repeat="notification in overview.notifications">
-              <span class="badge {{notification.badgeType}}" translate="{{notification.badgeText}}"></span>
+            <div class="notification-style" ng-repeat="notification in overview.notifications | orderBy:'badgeText':false:overview.notificationComparator">
               <span class="notification-spacing">
-                <span translate="{{notification.text}}" translate-values="{{notification.textValues}}" translate-compile></span>
+                <span class="badge {{notification.badgeType}}" translate="{{notification.badgeText}}"></span>
+                <span class="text" translate="{{notification.text}}" translate-values="{{notification.textValues}}" translate-compile></span>
                 <div>
                   <a ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
                 </div>

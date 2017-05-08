@@ -48,6 +48,16 @@
       metric: 'Route-Call-Title',
       showHelpLink: false,
       actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'routeToQueue', 'routeToSipEndpoint'],
+    }, {
+      title: $translate.instant('autoAttendant.actionDecision'),
+      ifTitle: $translate.instant('autoAttendant.actionIfDecision'),
+      controller: 'AADecisionCtrl as aaDecisionCtrl',
+      url: 'modules/huron/features/autoAttendant/decision/aaDecision.tpl.html',
+      hint: $translate.instant('autoAttendant.actionDecisionHint'),
+      help: $translate.instant('autoAttendant.actionDecisionHelp'),
+      metric: 'Decision-Title',
+      showHelpLink: true,
+      actions: ['conditional'],
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
@@ -59,7 +69,6 @@
     vm.selectOption = selectOption;
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
-
 
     var PHONE_MENU_INDEX = 1;
 
@@ -142,7 +151,7 @@
         vm.options[2].help = vm.options[2].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
       }
       if (AACommonService.isCallerInputToggle()) {
-        vm.options.push({
+        vm.options.splice(4, 0, {
           title: $translate.instant('autoAttendant.actionCallerInput'),
           controller: 'AACallerInputCtrl as aaCallerInput',
           url: 'modules/huron/features/autoAttendant/callerInput/aaCallerInput.tpl.html',
@@ -154,17 +163,15 @@
           actions: ['runActionsOnInput'],
         });
       }
-      if (AACommonService.isDecisionToggle()) {
+
+      if (AACommonService.isRestApiToggle()) {
         vm.options.push({
-          title: $translate.instant('autoAttendant.actionDecision'),
-          ifTitle: $translate.instant('autoAttendant.actionIfDecision'),
-          controller: 'AADecisionCtrl as aaDecisionCtrl',
-          url: 'modules/huron/features/autoAttendant/decision/aaDecision.tpl.html',
-          hint: $translate.instant('autoAttendant.actionDecisionHint'),
-          help: $translate.instant('autoAttendant.actionDecisionHelp'),
-          metric: 'Decision-Title',
-          showHelpLink: true,
-          actions: ['conditional'],
+          title: $translate.instant('autoAttendant.actionRestApi'),
+          controller: 'AARestApiCtrl as aaRestApiCtrl',
+          url: 'modules/huron/features/autoAttendant/restApi/aaRestApi.tpl.html',
+          metric: 'Rest-Api-Title',
+          showHelpLink: false,
+          actions: ['restApi'],
         });
       }
     }

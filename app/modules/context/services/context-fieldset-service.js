@@ -7,6 +7,7 @@
   var searchPath = '/dictionary/fieldset/v1/search';
   var createPath = '/dictionary/fieldset/v1';
   var getPath = '/dictionary/fieldset/v1/id/';
+  var statusPath = '/dictionary/fieldset/v1/status/';
 
   /* @ngInject */
   function contextFieldsetsService($http, Discovery) {
@@ -16,6 +17,9 @@
       getFieldset: getFieldset,
       createFieldset: createFieldset,
       createAndGetFieldset: createAndGetFieldset,
+      getInUse: getInUse,
+      updateAndGetFieldset: updateAndGetFieldset,
+      deleteFieldset: deleteFieldset,
     };
 
     return service;
@@ -74,6 +78,37 @@
       return createFieldset(data)
         .then(function () {
           return getFieldset(data.id);
+        });
+    }
+
+    function getInUse(id) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.get(dictionaryUrl + statusPath + id)
+            .then(function (response) {
+              return _.get(response, 'data.status.inUse', false);
+            });
+        });
+    }
+
+    function updateFieldset(data) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.put(dictionaryUrl + getPath + data.id, data);
+        });
+    }
+
+    function updateAndGetFieldset(data) {
+      return updateFieldset(data)
+        .then(function () {
+          return getFieldset(data.id);
+        });
+    }
+
+    function deleteFieldset(id) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.delete(dictionaryUrl + getPath + id);
         });
     }
   }

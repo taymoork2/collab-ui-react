@@ -1,13 +1,15 @@
 'use strict';
 
+var testModule = require('./callerIdService');
+
 describe('Service: CallerId', function () {
+  beforeEach(angular.mock.module(testModule));
+
   var CallerId, $httpBackend, HuronConfig, companyNumber;
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
-
-  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);

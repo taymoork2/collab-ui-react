@@ -33,22 +33,27 @@
           <span translate="hercules.connectors.goToHost"></span>
         </a>
       </li>
-      <li ng-if="hostDetailsCtrl.showMoveNodeAction()">
+      <li ng-if="hostDetailsCtrl.showHybridMediaAction()">
         <a ng-click="hostDetailsCtrl.showReassignHostDialog()">
           <span translate="hercules.connectors.moveNode"></span>
         </a>
       </li>
-      <li ng-if="hostDetailsCtrl.showMoveNodeAction()">
+      <li ng-if="hostDetailsCtrl.showHybridMediaAction() || hostDetailsCtrl.showHdsAction()">
         <a ng-click="hostDetailsCtrl.showDeregisterHostDialog()">
           <span translate="hercules.connectors.deregisterNode"></span>
         </a>
       </li>
       <li ng-if="hostDetailsCtrl.showDeleteNodeAction()">
-        <a ng-click="hostDetailsCtrl.deleteExpresswayOrHDSNode()">
+        <a ng-click="hostDetailsCtrl.deleteExpressway()">
           <span translate="hercules.connectors.removeNode"></span>
         </a>
       </li>
     </ul>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="hostDetailsCtrl.showNodeLink()">
+    <p></p>
+    <a class="btn btn--white" translate="hercules.connectors.goToNodes" ng-click="$ctrl.goToNodesPage()"></a>
   </cs-sp-section>
 
   <alarm-list-section ng-if="!hostDetailsCtrl.isHybridContextCluster" alarms="hostDetailsCtrl.host.alarms" connector-type="hostDetailsCtrl.host.connectorType"></alarm-list-section>

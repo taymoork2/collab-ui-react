@@ -5,26 +5,13 @@
 describe('Huron Auto Attendant', function () {
   var remote = require('selenium-webdriver/remote');
 
-  var initialIgnoreSync = true;
-
   beforeAll(function () {
 
     browser.setFileDetector(new remote.FileDetector());
 
-    initialIgnoreSync = browser.ignoreSynchronization;
-
-    login.login('aa-admin');
+    login.login('aa-admin', '#/hurondetails/features');
 
   }, 120000);
-
-  // See AUTOATTN-556
-  beforeEach(function () {
-    browser.ignoreSynchronization = false;
-  });
-
-  afterEach(function () {
-    browser.ignoreSynchronization = initialIgnoreSync;
-  });
 
   describe('Create and Delete AA', function () {
 
@@ -68,6 +55,50 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+    it('should add REST API via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      // REST API
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // 5th menu option is REST API
+      utils.click(autoattendant.newStepSelectRestApi);
+
+      // stop here as the complete menu has been tested elsewhere
+      utils.expectIsDisplayed(autoattendant.restApi);
+
+    });
+
+    it('should click configureApi hyperlink and a modal is opened with components for rest api url and dynamic feature"' + deleteUtils.testAAName + '"', function () {
+
+      // REST API
+      autoattendant.scrollIntoView(autoattendant.restApi);
+
+      utils.click(autoattendant.configureApi);
+      utils.expectIsDisplayed(autoattendant.configureApiURL);
+      utils.expectIsDisplayed(autoattendant.addDynamicFeature);
+      utils.expectIsDisplayed(autoattendant.sessionVar);
+      utils.expectIsDisplayed(autoattendant.addVariableToSet);
+      utils.expectIsDisplayed(autoattendant.saveBtn);
+      utils.click(autoattendant.saveBtn);
+
+    });
+
+    it('should add url and it should be visible in REST API new step upon save "' + deleteUtils.testAAName + '"', function () {
+
+      // REST API
+      autoattendant.scrollIntoView(autoattendant.restApi);
+
+      utils.click(autoattendant.configureApi);
+      utils.click(autoattendant.configureApiURL);
+      utils.wait(autoattendant.configureApiURL, 12000);
+      utils.sendKeys(autoattendant.configureApiURL, "This is test URL");
+      utils.click(autoattendant.saveBtn);
+      utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
+    });
+
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.lanesWrapper);
@@ -87,7 +118,7 @@ describe('Huron Auto Attendant', function () {
     it('should delete a phone number from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       utils.click(autoattendant.numberByNameClose);
-      utils.click(autoattendant.numberByNameClose);
+      // utils.click(autoattendant.numberByNameClose);
 
       expect(autoattendant.numberByNameCloseAll.count()).toEqual(0);
 
@@ -486,7 +517,6 @@ describe('Huron Auto Attendant', function () {
       // and save
       utils.wait(autoattendant.saveButton, 12000);
 
-      utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
@@ -514,9 +544,9 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.decisionIfDropDownOptions);
 
-      utils.wait(autoattendant.decisionCallerNumberTextArea, 12000);
+      utils.wait(autoattendant.decisionCountryCodeTextArea, 12000);
 
-      utils.sendKeys(autoattendant.decisionCallerNumberTextArea, "Hello World");
+      utils.sendKeys(autoattendant.decisionCountryCodeTextArea, "Hello World");
 
       utils.click(autoattendant.decisionThen);
 
@@ -565,31 +595,15 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.day1);
-      utils.expectIsEnabled(autoattendant.modalsave);
-      utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
-    }, 60000);
-
-    it('should add a Holiday Schedule to AA', function () {
-      utils.click(autoattendant.schedule);
       utils.wait(autoattendant.toggleHolidays, 12000);
       utils.click(autoattendant.toggleHolidays);
+      utils.wait(autoattendant.addholiday, 12000);
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.date);
       utils.click(autoattendant.selectdate);
-      utils.expectIsEnabled(autoattendant.modalsave);
-      utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
-    }, 60000);
-
-    it('should add a Recurring Holiday Schedule to AA', function () {
-      utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.toggleHolidays, 12000);
-      utils.click(autoattendant.toggleHolidays);
+      utils.wait(autoattendant.addholiday, 12000);
       utils.click(autoattendant.addholiday);
       utils.click(autoattendant.recurAnnually);
       utils.click(autoattendant.exactDate);
@@ -614,31 +628,21 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.scheduleInfoHolidayHours);
     }, 60000);
 
-    it('should update a AA Schedule', function () {
+    it('should dismiss schedule modal on browser back button', function () {
       utils.wait(autoattendant.schedule, 12000);
       utils.click(autoattendant.schedule);
-      // utils.wait(autoattendant.starttime);
-      utils.click(autoattendant.starttime);
-      utils.sendKeys(autoattendant.starttime, '2:30AM');
-      utils.expectIsEnabled(autoattendant.modalsave);
-      utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      utils.expectIsDisplayed(autoattendant.modalsave);
+      browser.driver.navigate().back();
+      utils.expectIsNotDisplayed(autoattendant.modalsave);
     }, 60000);
 
     it('should be able to change time zone for AA', function () {
       utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.toggleHolidays, 12000);
+      /*
+      utils.click(autoattendant.timeZone);
       utils.click(autoattendant.timeZone);
       utils.click(autoattendant.firstTimeZoneElement);
-      utils.expectIsEnabled(autoattendant.modalsave);
-      utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-      expect(autoattendant.aaTimeZone.getText()).toEqual(autoattendant.firstTimeZone);
-    }, 120000);
-
-    it('should delete a AA Schedule', function () {
-      utils.click(autoattendant.schedule);
-      utils.expectIsDisabled(autoattendant.modalsave);
+      */
       utils.click(autoattendant.scheduletrash);
 
       utils.wait(autoattendant.toggleHolidays, 12000);

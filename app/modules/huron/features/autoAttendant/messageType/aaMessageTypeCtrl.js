@@ -57,10 +57,15 @@
     vm.messageType = messageType.ACTION;
     vm.saveUiModel = saveUiModel;
     vm.setMessageOptions = setMessageOptions;
+    vm.isDynamicToggle = isDynamicToggle;
+    vm.dynamicTags = ['DYNAMIC-EXAMPLE'];
+    vm.dynamicValues = undefined;
     vm.mediaState = {};
     vm.mediaState.uploadProgress = false;
 
     vm.MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024;
+
+    vm.addElement = '<aa-insertion-element element-text="DynamicText"></aa-insertion-element>';
 
     //////////////////////////////////////////////////////
 
@@ -224,6 +229,10 @@
             break;
           }
       }
+    }
+
+    function isDynamicToggle() {
+      return AACommonService.isDynAnnounceToggle();
     }
 
     function activate() {

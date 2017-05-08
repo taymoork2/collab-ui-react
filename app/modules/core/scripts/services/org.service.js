@@ -25,7 +25,7 @@
     .name;
 
   /* @ngInject */
-  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Log, UrlConfig, Utils) {
+  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Log, UrlConfig, Utils, HuronCompassService) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -52,6 +52,7 @@
 
     var savedOrgSettingsCache = [];
     var isTestOrgCache = {};
+    var domainCache = {};
 
     return service;
 
@@ -146,14 +147,15 @@
         });
     }
 
-    function getAdminOrgUsage(oid) {
+    function getAdminOrgUsage(oid, useCache) {
+      var cache = _.isUndefined(useCache) ? true : useCache;
       var orgId = oid || Authinfo.getOrgId();
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
-      return $http.get(adminUrl, { cache: true });
+      return $http.get(adminUrl, { cache: cache });
     }
 
-    function getLicensesUsage() {
-      return getAdminOrgUsage()
+    function getLicensesUsage(useCache) {
+      return getAdminOrgUsage(undefined, useCache)
         .then(function (response) {
           var usageLicenses = response.data || [];
           var statusLicenses = Authinfo.getLicenses();
@@ -257,10 +259,17 @@
         orgId = Authinfo.getOrgId();
       }
       if (_.isBoolean(isTestOrgCache[orgId])) {
+        HuronCompassService.setCustomerBaseDomain(domainCache[orgId]);
         return $q.resolve(isTestOrgCache[orgId]);
       }
       return getAdminOrgAsPromise(orgId, { basicInfo: true })
         .then(function (org) {
+          var orgSettings = _.get(org, 'data.orgSettings[0]');
+          if (orgSettings) {
+            var domain = JSON.parse(orgSettings).sparkCallBaseDomain;
+            HuronCompassService.setCustomerBaseDomain(domain);
+            domainCache[orgId] = domain;
+          }
           isTestOrgCache[orgId] = _.get(org, 'data.isTestOrg', false);
           return isTestOrgCache[orgId];
         });

@@ -98,16 +98,16 @@
 
     .basic-search {
       background-color: $brand-white;
-      padding-top: 9rem;
+      padding-top: 8rem;
     }
 
     .advanced-search {
       background-color: $gray-light-4;
-      padding-top: 9rem;
+      padding-top: 8rem;
     }
 
     @media only screen and (max-height: 950px) {
-      padding-top: 7rem;
+      padding-top: 6rem;
     }
 
     div.search-result-area {
@@ -166,14 +166,31 @@
         color: $color-attention-base;
       }
 
-      .date-error {
-        color: $color-negative-base;
+      .search-warning-text {
+        color: $color-attention-darker;
+      }
+
+      .search-error {
+        color: $color-alerts-base;
+      }
+
+      .date-validation {
+        float: left;
+        padding: 3px;
       }
 
       .ediscovery-advanced-search {
         margin-top: 48px;
         display: inline-block;
         width: 50%;
+
+        .subheading {
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 1.71;
+          color: #858688;
+          margin-bottom: 8px;
+        }
 
         .cs-input {
           width: 100%;
@@ -195,8 +212,12 @@
           display: block;
         }
 
-        .search-text {
+        .search-spacing {
           float: left;
+        }
+
+        .search-text {
+          color: #4f5051;
         }
 
         .search-box {
@@ -223,70 +244,11 @@
         .large-gap {
           margin-top: 36px;
         }
-      }
 
-      .typeahead-large .input-description::before {
-        display: none;
-      }
-
-      .typeahead-large .input-description {
-        padding: 0;
-      }
-
-      .typeahead-large {
-        position: relative;
-        margin-top: 1rem;
-        max-width: 100%;
-
-        @media only screen and (max-width: 640px) {
-          max-width: 90%;
-        }
-
-        input {
-          border: 0;
-          font-size: 24px;
-          width: 33rem;
-
-          @media only screen and (max-width: 640px) {
-            font-size: 21px;
-            width: 80%;
-            padding-bottom: 0;
-          }
-
-          @media only screen and (max-width: 500px) {
-            font-size: 18px;
-            width: 80%;
-            padding-bottom: 0;
-          }
-        }
-
-        .icon-search {
-          position: absolute;
-          right: 0;
-          bottom: 0.75rem;
-          font-size: 1rem;
-          width: 2.5rem;
-          height: 2.5rem;
-          z-index: 3;
-          min-width: 2.5rem;
-
-          @media screen and (-moz-images-in-menus: 0) {
-            top: 0 !important;
-          }
-
-          @media only screen and (max-width: 640px) {
-            font-size: 1rem;
-            width: 2rem;
-            height: 2rem;
-            min-width: 2rem;
-          }
-
-          @media only screen and (max-width: 500px) {
-            font-size: 0.75rem;
-            width: 1.5rem;
-            height: 1.5rem;
-            min-width: 1.5rem;
-          }
+        .icon-info {
+          width: 16px;
+          height: 16px;
+          color: #aeaeaf;
         }
       }
 
@@ -350,18 +312,19 @@
           }
         }
 
-        .room-id {
-          color: $gray-base;
-          padding-bottom: 2.25rem;
-
-          @media only screen and (max-width: 800px) {
-            font-size: 1rem;
-          }
-        }
-
         .back-button {
           padding-left: 16px;
           padding-top: 24px;
+        }
+
+        .icon-info {
+          width: 16px;
+          height: 16px;
+          color: $gray-light-1;
+        }
+
+        .date-range-tooltip {
+          padding: 16px 24px 4px;
         }
 
         .result-title {
@@ -407,7 +370,7 @@
         }
 
         .report-parameters {
-          padding: 12px 32px;
+          padding: 0 32px 12px;
 
           .results-spacing {
             margin-top: 16px;
@@ -423,16 +386,11 @@
         }
 
         .input-section {
-          padding-bottom: 1.5rem;
+          padding-bottom: 2.5rem;
 
           .report-name {
             width: 100%;
             margin-bottom: 15px;
-          }
-
-          .date-error {
-            margin-bottom: 0;
-            color: $color-negative-base;
           }
 
           h6 {
@@ -458,10 +416,6 @@
             padding-top: 0.5rem;
           }
 
-          i.icon-warning {
-            color: $color-attention-base;
-          }
-
           .report-timeout {
             padding-top: 1rem;
           }
@@ -475,34 +429,10 @@
 
         .expiry-info {
           padding-top: 1.5rem;
-        }
 
-        .last-input-row {
-          padding-bottom: 0.75rem;
-        }
-      }
-
-      .report-logo-column {
-        max-width: 406px;
-
-        @media only screen and (max-width: 640px) {
-          max-width: 100%;
-        }
-      }
-
-      .report-logo {
-        color: $gray-base;
-        font-size: 210px;
-        padding-top: 1.5rem;
-
-        @media only screen and (max-width: 800px) {
-          font-size: 10rem;
-          padding-top: 0.75rem;
-        }
-
-        @media only screen and (max-width: 640px) {
-          font-size: 4rem;
-          height: 5rem;
+          i.icon-warning {
+            color: $color-attention-base;
+          }
         }
       }
 

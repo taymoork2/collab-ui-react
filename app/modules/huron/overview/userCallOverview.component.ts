@@ -1,5 +1,4 @@
 import { LineService, LineConsumerType, Line, LINE_CHANGE } from 'modules/huron/lines/services';
-import { DialingService, DialingType } from 'modules/huron/dialing';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
 import { HuronVoicemailService, VOICEMAIL_CHANGE } from 'modules/huron/voicemail';
@@ -14,7 +13,6 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   public customerVmEnabled: boolean = false;
   public userVmEnabled: boolean = false;
   public userServices: Array<string> = [];
-  private cosFeatureToggle;
   public snrEnabled: boolean = false;
 
   /* @ngInject */
@@ -24,12 +22,9 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     private $stateParams: any,
     private $translate: ng.translate.ITranslateService,
     private LineService: LineService,
-    private DialingService: DialingService,
     private HuronVoicemailService: HuronVoicemailService,
     private HuronUserService: HuronUserService,
     private $q: ng.IQService,
-    private Notification,
-    private FeatureToggleService,
 
   ) {
     this.currentUser = this.$stateParams.currentUser;
@@ -44,41 +39,19 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       this.snrEnabled = status;
       this.initFeatures();
     });
-
-    this.$scope.$on(DialingType.LOCAL, (_e, data) => {
-      this.DialingService.setLocalDialing(data, LineConsumerType.USERS, this.currentUser.id).then(() => {
-        this.DialingService.initializeDialing(LineConsumerType.USERS, this.currentUser.id).then(() => {
-          this.initFeatures();
-        });
-      }, (response) => {
-        this.Notification.errorResponse(response, 'internationalDialingPanel.error');
-      });
-    });
-    this.$scope.$on(DialingType.INTERNATIONAL, (_e, data) => {
-      this.DialingService.setInternationalDialing(data, LineConsumerType.USERS, this.currentUser.id).then(() => {
-        this.DialingService.initializeDialing(LineConsumerType.USERS, this.currentUser.id).then(() => {
-          this.initFeatures();
-        });
-      }, (response) => {
-        this.Notification.errorResponse(response, 'internationalDialingPanel.error');
-      });
-    });
   }
 
   public $onInit(): void {
     this.initActions();
     let promises  = {
-      1: this.DialingService.initializeDialing(LineConsumerType.USERS, this.currentUser.id),
-      2: this.HuronVoicemailService.isEnabledForCustomer(),
-      3: this.HuronUserService.getUserServices(this.currentUser.id),
-      4: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronCustomerCos),
-      5: this.HuronUserService.getRemoteDestinations(this.currentUser.id),
+      1: this.HuronVoicemailService.isEnabledForCustomer(),
+      2: this.HuronUserService.getUserServices(this.currentUser.id),
+      3: this.HuronUserService.getRemoteDestinations(this.currentUser.id),
     };
     this.$q.all(promises).then( data => {
-      this.customerVmEnabled = data[2];
-      this.userServices = data[3];
-      this.cosFeatureToggle = data[4];
-      let rd: UserRemoteDestination[] = data[5];
+      this.customerVmEnabled = data[1];
+      this.userServices = data[2];
+      let rd: UserRemoteDestination[] = data[3];
       this.snrEnabled = (!_.isEmpty(rd) && rd[0].enableMobileConnect === 'true') ;
     }).then(() => {
       this.userVmEnabled = this.HuronVoicemailService.isEnabledForUser(this.userServices);
@@ -122,37 +95,18 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       actionAvailable: true,
     };
     this.features.push(service);
-    if (!this.cosFeatureToggle) {
-      service = {
-        name: this.$translate.instant('telephonyPreview.internationalDialing'),
-        state: 'internationalDialing',
-        detail: this.DialingService.getInternationalDialing(LineConsumerType.USERS),
-        actionAvailable: true,
-      };
-      this.features.push(service);
-      service = {
-        name: this.$translate.instant('telephonyPreview.localDialing'),
-        state: 'local',
-        detail: this.DialingService.getLocalDialing(LineConsumerType.USERS),
-        actionAvailable: true,
-      };
-      this.features.push(service);
-    }
-    if (this.cosFeatureToggle) {
-      service = {
-        name: this.$translate.instant('serviceSetupModal.cos.title'),
-        state: 'cos',
-        detail: undefined,
-        actionAvailable: true,
-      };
-      this.features.push(service);
-    }
+
+    let cosService: IFeature = {
+      name: this.$translate.instant('serviceSetupModal.cos.title'),
+      state: 'cos',
+      detail: undefined,
+      actionAvailable: true,
+    };
+    this.features.push(cosService);
   }
 
   public clickFeature(feature: IFeature) {
     this.$state.go('user-overview.communication.' + feature.state, {
-      watcher: feature.state === 'local' ? DialingType.LOCAL : DialingType.INTERNATIONAL,
-      selected: feature.state === 'local' ? this.DialingService.getLocalDialing(LineConsumerType.USERS) : this.DialingService.getInternationalDialing(LineConsumerType.USERS),
       currentUser: this.currentUser,
     });
   }

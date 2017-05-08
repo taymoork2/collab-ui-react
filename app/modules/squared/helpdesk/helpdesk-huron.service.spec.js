@@ -191,7 +191,7 @@ describe('HelpdeskHuronService', function () {
     expect(devices.length).toBe(1);
     expect(devices[0].displayName).toBe('SEP1CDEA7DBF740');
     expect(devices[0].uuid).toBe('c498a32e-8b95-4e38-aa70-2a8c90b1f0f4');
-    expect(devices[0].image).toBe('images/devices/cisco_8861.png');
+    expect(devices[0].image).toBe('images/devices-hi/cisco_8861.png');
     expect(devices[0].deviceStatus.status).toBe('Online');
     expect(devices[0].deviceStatus.cssColorClass).toBe('helpdesk-green');
     expect(devices[0].model).toBe('Cisco 8861');
@@ -237,7 +237,7 @@ describe('HelpdeskHuronService', function () {
     beforeEach(function () {
       validResult = [{ "steeringDigit": "9", "siteSteeringDigit": "8", "mediaTraversalMode": "TURNOnly", "vmCluster": null, "uuid": "8f667dfe-a3f7-4911-9947-ab985075dceb", "url": "https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb", "links": [{ "rel": "voice", "href": "/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb" }] }];
 
-      validSiteResult = { "customer": { "uuid": "d16100fe-8039-4170-8407-f87eb58382ef", "name": "Atlas-Stoy-Test-4" }, "siteIndex": "000001", "siteCode": "100", "steeringDigit": "9", "siteSteeringDigit": "8", "timeZone": "America/Los_Angeles", "voicemailPilotNumber": null, "mediaTraversalMode": "TURNOnly", "siteDescription": "", "vmCluster": null, "allowInternationalDialing": "false", "emergencyCallBackNumber": null, "extensionLength": "4", "voicemailPilotNumberGenerated": null, "uuid": "8f667dfe-a3f7-4911-9947-ab985075dceb", "url": "https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb", "links": [{ "rel": "voice", "href": "/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb" }] };
+      validSiteResult = { "customer": { "uuid": "d16100fe-8039-4170-8407-f87eb58382ef", "name": "Atlas-Stoy-Test-4" }, "siteIndex": "000001", "siteCode": "100", "steeringDigit": "9", "siteSteeringDigit": "8", "timeZone": "America/Los_Angeles", "voicemailPilotNumber": null, "mediaTraversalMode": "TURNOnly", "siteDescription": "", "vmCluster": null, "emergencyCallBackNumber": null, "extensionLength": "4", "voicemailPilotNumberGenerated": null, "uuid": "8f667dfe-a3f7-4911-9947-ab985075dceb", "url": "https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb", "links": [{ "rel": "voice", "href": "/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb" }] };
 
       emptyResult = [];
     });

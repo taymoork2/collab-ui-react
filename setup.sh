@@ -89,9 +89,6 @@ fi
 # check for and install GNU Parallel as-appropriate
 install_parallel_as_needed || exit 1
 
-# check for and install C++ compiler
-install_cpp_compiler_as_needed || exit 1
-
 # # Check for cleanup script and run
 # ls -al ./cleanUpManagedOrgs.sh > /dev/null 2>&1
 # CLEANUP_RET=$?
@@ -106,7 +103,10 @@ time_start=$(date +"%s")
 
 # Install dependecies
 echo "Install all dependencies..."
-npm install --loglevel=verbose || exit $?
+if [ "${NPM__VERBOSE}" = "true" ]; then
+  npm_install_options="--loglevel=verbose"
+fi
+npm install "${npm_install_options}" || exit $?
 
 # npm install succeeded
 # - make a tar archive of the npm deps, and rm older versions

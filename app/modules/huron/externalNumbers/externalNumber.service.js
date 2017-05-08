@@ -1,11 +1,19 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
-    .factory('ExternalNumberService', ExternalNumberService);
+  module.exports = angular.module('huron.externalNumberService', [
+    require('angular-resource'),
+    require('modules/huron/telephony/cmiServices'),
+    require('modules/huron/telephony/telephonyExternalNumbersService'),
+    require('modules/huron/telephony/telephoneNumber.service'),
+    require('modules/huron/pstn/pstn.service').default,
+    require('modules/huron/pstnSetup/terminusServices'),
+  ])
+  .factory('ExternalNumberService', ExternalNumberService)
+  .name;
 
   /* @ngInject */
-  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService) {
+  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnService, TelephoneNumberService, TerminusCarrierService) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
@@ -23,6 +31,7 @@
       getQuantity: getQuantity,
       getAssignedNumbersV2: getAssignedNumbersV2,
       getUnassignedNumbersV2: getUnassignedNumbersV2,
+      getCarrierInfo: getCarrierInfo,
     };
     var allNumbers = [];
     var pendingNumbers = [];
@@ -71,7 +80,7 @@
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
-            return PstnSetupService.listPendingNumbers(customerId)
+            return PstnService.listPendingNumbers(customerId)
               .then(formatNumberLabels)
               .then(function (numbers) {
                 var tempOrders = [];
@@ -104,7 +113,7 @@
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
-            return PstnSetupService.deleteNumber(customerId, number.number);
+            return PstnService.deleteNumber(customerId, number.number);
           } else {
             return ExternalNumberPool.deletePool(customerId, number.uuid);
           }
@@ -212,8 +221,10 @@
       if (_.find(terminusDetails, { customerId: customerId })) {
         return $q.resolve(true);
       }
-      return PstnSetupService.getCustomerV2(customerId)
-        .then(_.partial(allowPstnSetup, customerId))
+      return PstnService.getCustomerV2(customerId)
+        .then(function (response) {
+          return allowPstnSetup(customerId, _.get(response, 'pstnCarrierId'));
+        })
         .catch(_.partial(hasExternalNumbers, customerId));
     }
 
@@ -230,9 +241,10 @@
       });
     }
 
-    function allowPstnSetup(customerId) {
+    function allowPstnSetup(customerId, pstnCarrierId) {
       terminusDetails.push({
         customerId: customerId,
+        pstnCarrierId: pstnCarrierId,
       });
       return true;
     }
@@ -252,6 +264,12 @@
         default:
           break;
       }
+    }
+
+    function getCarrierInfo(customerId) {
+      return TerminusCarrierService.get({
+        carrierId: (_.find(terminusDetails, { customerId: customerId })).pstnCarrierId,
+      }).$promise;
     }
   }
 })();

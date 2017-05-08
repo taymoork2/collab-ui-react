@@ -7,14 +7,14 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
+  var controller, $filter, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService, $httpBackend;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
   var isCustomerLaunchedFromPartner = true;
 
   afterEach(function () {
-    controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = ServiceDescriptor = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
+    controller = $filter = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = $httpBackend = undefined;
   });
 
   afterAll(function () {
@@ -162,7 +162,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should NOT call ToS check if logged in as a Partner', function () {
-      expect(PstnSetupService.getCustomerTrialV2).not.toHaveBeenCalled();
+      expect(PstnService.getCustomerTrialV2).not.toHaveBeenCalled();
     });
   });
 
@@ -172,8 +172,35 @@ describe('Controller: OverviewCtrl', function () {
       inject(defaultWireUpFunc);
     });
     it('should call ToS check if logged in as a Customer', function () {
-      expect(PstnSetupService.getCustomerTrialV2).toHaveBeenCalled();
+      expect(PstnService.getCustomerTrialV2).toHaveBeenCalled();
     });
+  });
+
+  describe('Notifications - notificationComparator', function () {
+    beforeEach(inject(defaultWireUpFunc));
+
+    it('should return correct sort values', function () {
+      // ensure comparator sorts correctly
+      var items = [
+        { badgeText: 'common.info' },
+        { badgeText: 'common.new' },
+        { badgeText: 'common.alert' },
+        { badgeText: 'homePage.todo' },
+        { badgeText: 'common.info' },
+        { badgeText: 'common.alert' },
+      ];
+      var sorted = $filter('orderBy')(items, 'badgeText', false, controller.notificationComparator);
+
+      expect(sorted).toEqual([
+        { badgeText: 'common.alert' },
+        { badgeText: 'common.alert' },
+        { badgeText: 'homePage.todo' },
+        { badgeText: 'common.info' },
+        { badgeText: 'common.info' },
+        { badgeText: 'common.new' },
+      ]);
+    });
+
   });
 
   function getCard(filter) {
@@ -182,7 +209,7 @@ describe('Controller: OverviewCtrl', function () {
     }).head();
   }
 
-  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_, _SunlightReportService_) {
+  function defaultWireUpFunc(_$rootScope_, _$filter_, $controller, _$httpBackend_, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_, _SunlightReportService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -196,6 +223,8 @@ describe('Controller: OverviewCtrl', function () {
     TrialService = _TrialService_;
     FusionClusterService = _FusionClusterService_;
     SunlightReportService = _SunlightReportService_;
+    $httpBackend = _$httpBackend_;
+    $filter = _$filter_;
 
     spyOn(SunlightReportService, 'getOverviewData');
     SunlightReportService.getOverviewData.and.returnValue({});
@@ -203,18 +232,17 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(FusionClusterService, 'getAll');
     FusionClusterService.getAll.and.returnValue($q.resolve());
 
-    ServiceDescriptor = {
-      services: function () {},
-      getServices: function () {
+    HybridServicesFlagService = {
+      readFlags: function () {
         return $q.resolve([{
-          id: Config.entitlements.fusion_cal,
-          acknowledged: false,
+          name: 'fms.services.squared-fusion-cal.acknowledged',
+          raised: false,
         }, {
-          id: Config.entitlements.fusion_uc,
-          acknowledged: false,
+          name: 'fms.services.squared-fusion-uc.acknowledged',
+          raised: false,
         }, {
-          id: Config.entitlements.fusion_ec,
-          acknowledged: false,
+          name: 'fms.services.squared-fusion-ec.acknowledged',
+          raised: false,
         }]);
       },
     };
@@ -239,7 +267,7 @@ describe('Controller: OverviewCtrl', function () {
       }),
     };
 
-    PstnSetupService = {
+    PstnService = {
       getCustomerV2: function () {
         return $q.resolve({
           trial: true,
@@ -285,7 +313,9 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
-    spyOn(PstnSetupService, 'getCustomerTrialV2').and.callThrough();
+    spyOn(PstnService, 'getCustomerTrialV2').and.callThrough();
+
+    $httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
@@ -296,14 +326,15 @@ describe('Controller: OverviewCtrl', function () {
       $state: $state,
       ReportsService: ReportsService,
       Orgservice: Orgservice,
-      PstnSetupService: PstnSetupService,
-      ServiceDescriptor: ServiceDescriptor,
+      PstnService: PstnService,
+      HybridServicesFlagService: HybridServicesFlagService,
       ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config,
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
       hasGoogleCalendarFeatureToggle: false,
+      $httpBackend: $httpBackend,
     });
 
     $scope.$apply();

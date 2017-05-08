@@ -6,7 +6,7 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService, AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, ExternalNumberPool, InternalNumberPoolService, ExternalNumberPoolService) {
+  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService, AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, ExternalNumberPool) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -41,55 +41,48 @@
 
     /////////////////////
 
-    function getNumFromCmi(resource) {
-      if (resource.getUUID()) {
-        if (resource.getType() == 'directoryNumber') {
-          getInternalNumberFromCmi(resource);
-        } else {
-          getExternalNumberFromCmi(resource);
-        }
+    function findUUIDFromCmiUsingNumber(fromCMI, resource) {
+
+      var cmiNumber = _.find(fromCMI, function (thisCMI) {
+        return (_.trimStart(thisCMI.number, '+') === _.trimStart(resource.getNumber(), '+'));
+      });
+
+      if (cmiNumber) {
+        resource.setUUID(cmiNumber.uuid);
       }
     }
 
-    function getExternalNumberFromCmi(resource) {
-      ExternalNumberPoolService.get({
-        customerId: Authinfo.getOrgId(),
-        externalNumberId: resource.getUUID(),
-      }).$promise
-      .then(function (extNumPool) {
-        if (!_.isEqual(extNumPool.pattern, resource.getNumber())) {
-          resource.setNumber(extNumPool.pattern);
-          AACommonService.setCENumberStatus(true);
-        }
-      });
-    }
+    function setupResourcesFromCmi(resources) {
+      var cmiNumber;
 
-    function getInternalNumberFromCmi(resource) {
-      InternalNumberPoolService.get({
-        customerId: Authinfo.getOrgId(),
-        internalNumberId: resource.getUUID(),
-      }).$promise
-      .then(function (intNumPool) {
-        if (!_.isEqual(intNumPool.pattern, resource.getNumber())) {
-          resource.setNumber(intNumPool.pattern);
-          AACommonService.setCENumberStatus(true);
+      return AANumberAssignmentService.getAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID).then(function (fromCMI) {
+
+        if (!fromCMI || fromCMI.length === 0) {
+          /* no assigned resources */
+          return;
         }
+        _.forEach(resources, function (resource) {
+          if (resource.getUUID()) {
+            cmiNumber = _.find(fromCMI, { 'uuid': resource.getUUID() });
+            if (cmiNumber) {
+              resource.setNumber(cmiNumber.number);
+            } else {
+              findUUIDFromCmiUsingNumber(fromCMI, resource);
+            }
+          } else {
+            findUUIDFromCmiUsingNumber(fromCMI, resource);
+          }
+        });
       });
     }
 
     // Add Number, top-level method called by UI
     function addNumber(phoneNum) {
       var number = phoneNum.value;
-      var uuid = phoneNum.uuid;
 
       if (_.isUndefined(number) || number === '') {
         return;
       }
-
-      // check to see if it's in the available list, if it's in the available list, take it out, and add to CE resources
-      vm.availablePhoneNums = _.reject(vm.availablePhoneNums, function (phoneNumber) {
-        return uuid ? phoneNumber.uuid === uuid : phoneNumber.value === number;
-      });
 
       // add to the CE resources
       addAAResource(phoneNum);
@@ -102,18 +95,12 @@
 
     // Remove number, top-level method called by UI
     function removeNumber(phoneNum) {
-      var uuid = phoneNum.getUUID();
       var number = phoneNum.getNumber();
 
       if (_.isUndefined(number) || number === '') {
         return;
       }
 
-      addToAvailableNumberList(telephoneNumberFilter(number), number, uuid);
-
-      vm.availablePhoneNums.sort(function (a, b) {
-        return compareNumbersExternalThenInternal(a.value, b.value);
-      });
       deleteAAResource(phoneNum);
 
       // clear selection
@@ -139,13 +126,11 @@
     function addAAResource(phoneNum) {
 
       var number = phoneNum.value;
-      var uuid = phoneNum.uuid;
 
       var resource = AutoAttendantCeInfoModelService.newResource();
       // both internal and external triggers are incomingCall
       resource.setTrigger('incomingCall');
-      // set UUID
-      resource.setUUID(uuid);
+
       // set the type
       if (vm.numberTypeList[number]) {
         resource.setType(vm.numberTypeList[number]);
@@ -176,6 +161,8 @@
         function () {
 
           // after assignment, the extension ESN numbers are derived; update CE based on CMI ESN info
+          // Also take advantage of the query to check ALL numbers for UUID
+
           AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(function (resources) {
 
               // find first e164 number, move to array[0] if not already there
@@ -224,6 +211,7 @@
     function deleteAAResource(phoneNum) {
       var number = phoneNum.getNumber();
       var uuid = phoneNum.getUUID();
+
       // remove number from resources list
       var resources = vm.ui.ceInfo.getResources();
       _.remove(resources, function (r) {
@@ -283,14 +271,11 @@
 
     }
 
-    function addToAvailableNumberList(label, number, uuid) {
+    function addToAvailableNumberList(label, number) {
       var opt = {
         label: label,
         value: number,
       };
-      if (!_.isUndefined(uuid)) {
-        opt.uuid = uuid;
-      }
       vm.availablePhoneNums.push(opt);
     }
 
@@ -312,6 +297,7 @@
           }
         });
       }
+
     }
 
     function getInternalNumbers(pattern) {
@@ -319,14 +305,13 @@
       return TelephonyInfoService.loadInternalNumberPool(pattern).then(function (intPool) {
         for (var i = 0; i < intPool.length; i++) {
 
-          var uuid = intPool[i].uuid;
           var number = _.replace(intPool[i].pattern, /\D/g, '');
 
           vm.numberTypeList[number] = AANumberAssignmentService.DIRECTORY_NUMBER;
 
           // Add to the available phone number list if not already used
           // Internal extensions don't need formatting
-          addToAvailableNumberList(number, number, uuid);
+          addToAvailableNumberList(number, number);
 
         }
       });
@@ -354,15 +339,13 @@
           vm.externalNumberList.push(dn);
 
           var number = _.replace(extPool[i].pattern, /\D/g, '');
-          var uuid = extPool[i].uuid;
 
           vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
 
           // Add to the available phone number list if not already used
           // For the option list, format the number for the label,
           // and return the value as just the number
-          addToAvailableNumberList(telephoneNumberFilter(number), number, uuid);
-
+          addToAvailableNumberList(telephoneNumberFilter(number), number);
 
         }
       });
@@ -409,22 +392,18 @@
         });
     }
 
-    function loadResources() {
-      var resources;
-      resources = vm.ui.ceInfo.getResources();
-      _.each(resources, function (resource) {
-        getNumFromCmi(resource);
-      });
-    }
-
     function activate() {
+
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
       vm.aaModel.possibleNumberDiscrepancy = false;
-      loadResources();
-      warnOnAssignedNumberDiscrepancies();
+
+      setupResourcesFromCmi(vm.ui.ceInfo.getResources()).then(function () {
+        warnOnAssignedNumberDiscrepancies();
+      });
     }
 
     activate();
+
   }
 })();

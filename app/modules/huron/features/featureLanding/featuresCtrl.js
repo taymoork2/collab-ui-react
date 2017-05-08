@@ -8,7 +8,7 @@ require('./_feature-landing.scss');
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService, CallPickupGroupService, CardUtils) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, CallPickupGroupService, AutoAttendantCeInfoModelService, Notification, Log, CardUtils) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -36,11 +36,14 @@ require('./_feature-landing.scss');
       name: $translate.instant('autoAttendant.title'),
       filterValue: 'AA',
     }, {
-      name: $translate.instant('huronHuntGroup.modalTitle'),
-      filterValue: 'HG',
-    }, {
       name: $translate.instant('callPark.title'),
       filterValue: 'CP',
+    }, {
+      name: $translate.instant('callPickup.title'),
+      filterValue: 'PI',
+    }, {
+      name: $translate.instant('huronHuntGroup.modalTitle'),
+      filterValue: 'HG',
     }, {
       name: $translate.instant('pagingGroup.title'),
       filterValue: 'PG',
@@ -90,9 +93,7 @@ require('./_feature-landing.scss');
       isEmpty: false,
       i18n: 'huronFeatureDetails.pgName',
       color: 'people',
-    }];
-
-    var piFeature = {
+    }, {
       name: 'PI',
       getFeature: function () {
         return CallPickupGroupService.getListOfPickupGroups();
@@ -101,22 +102,9 @@ require('./_feature-landing.scss');
       isEmpty: false,
       i18n: 'huronFeatureDetails.piName',
       color: 'attention',
-    };
+    }];
 
-    var featureTogglePromises = [];
-    var callPickupPromise = FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup);
-    featureTogglePromises.push(callPickupPromise);
-    $q.all(featureTogglePromises).then(function (data) {
-      if (data[0] === true) {
-        var pi = {
-          name: $translate.instant('callPickup.title'),
-          filterValue: 'PI',
-        };
-        vm.features.push(piFeature);
-        vm.filters.push(pi);
-      }
-      init();
-    });
+    init();
 
     function init() {
       vm.loading = false;

@@ -2,18 +2,9 @@
 @import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
-.reveal-modal.dialog .modal-body.subdomain-modal,
-.subdomain-modal {
-  @include vr-spacing(ph, 3);
-  margin: 0;
+.modal-body.subdomain-modal {
   .modal-space {
     @include vr-spacing(mt, 0.75);
-  }
-  .subdomain-modal-warning {
-    display: inline-flex;
-    .subdomain-warning-icon {
-      color: $color-attention-base;
-    }
   }
 }
 
@@ -26,7 +17,7 @@
     @include vr-spacing(mb, 0.5);
   }
   .domain-buttons {
-    display: inline-flex;
+    display: flex;
     width: 50%;
     height: vr-adjust(36);
     .btn {
@@ -52,9 +43,9 @@
     @include vr-spacing(ml, 0.25);
   }
   .domain-form {
-    display: inline-flex;
+    display: flex;
     width: 100%;
-    height: 0;
+    margin-bottom: 0;
   }
   .domain-input {
     min-width: vr-adjust(200);

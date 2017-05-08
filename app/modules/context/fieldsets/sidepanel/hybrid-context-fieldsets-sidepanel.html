@@ -4,45 +4,81 @@
 
   <!-- main side panel body -->
   <cs-sp-container>
-    <div class="section-wrapper">
-      <div class="cs-input-group">
-        <p class="cs-input-label" translate="context.dictionary.fieldsetPage.fieldsetId"></p>
-        <input
-          cs-input
-          type="text"
-          id="fieldsetId"
-          ng-model="$ctrl.fieldset.id"
-          cs-input-group-size="medium-12"
-          disabled>
+    <cs-sp-section>
+      <div ng-show="$ctrl.isEditable()">
+        <section-title
+          title-key="context.dictionary.fieldsetPage.fieldsetAttributes"
+          action-list="$ctrl.actionList"
+          as-button="true">
+        </section-title>
+      </div>
+      <div ng-show="!$ctrl.isEditable()">
+        <section-title title-key="context.dictionary.fieldsetPage.fieldsetAttributes"></section-title>
       </div>
 
-      <div class="cs-input-group">
-        <p class="cs-input-label" translate="common.description"></p>
-        <textarea
-          rows="4"
-          id="fieldsetDescription"
-          class="form-control"
-          disabled
-          ng-model="$ctrl.fieldset.description"/>
-      </div>
-    </div>
+      <!-- Content section -->
+      <div class="section-content">
+        <!-- Display status based on whether a fieldset is in use -->
+        <div ng-switch="$ctrl.inUse">
+          <div ng-switch-when="true">
+            <span class="feature">
+              <span class="feature-name" translate="context.dictionary.status"></span>
+              <span class="feature-details">
+                <i class="icon icon-circle status-indicator success"></i>
+                <span class="context-status-block" tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom" translate="context.dictionary.inUse"></span>
+              </span>
+            </span>
+          </div>
+          <div ng-switch-when="false">
+            <span class="feature">
+              <span class="feature-name" translate="context.dictionary.status"></span>
+              <span class="feature-details">
+                <i class="icon icon-circle status-indicator"></i>
+                <span class="context-status-block" tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom" translate="context.dictionary.notInUse"></span>
+              </span>
+            </span>
+          </div>
+        </div>
 
-    <div class="cs-input-group">
-      <div class="feature">
-      <a ui-sref="context-fieldsets-sidepanel.fields({fields: $ctrl.fields})">
-        <span class="feature-name field-label" translate="context.dictionary.fieldsetPage.fields"></span>
-        <span class="feature-status" ng-if="$ctrl.fields.length === 0" translate="common.none"></span>
-        <span class="feature-status" ng-if="$ctrl.fields.length > 0" >{{$ctrl.fields.length}}</span>
-        <i class="feature-status feature-arrow"></i>
-      </a>
-      </div>
-    </div>
+        <div class="feature">
+          <span class="feature-name" translate="context.dictionary.fieldsetPage.fieldsetId"></span>
+          <span class="feature-details">{{$ctrl.fieldset.id}}</span>
+        </div>
 
-    <div class="cs-input-group">
-      <p class="cs-input-label"  translate="context.dictionary.fieldPage.lastUpdated"></p>
-      <div class="feature-status" ng-if="$ctrl.lastUpdated">{{$ctrl.lastUpdated}}</div>
-      <div class="feature-status" ng-if="!$ctrl.lastUpdated" translate="context.dictionary.unavailable"></div>
-    </div>
+        <div class="feature">
+          <span class="feature-name" translate="common.description"></span>
+          <span ng-if="!$ctrl.hasDescription" class="feature-details" translate="common.none"></span>
+        </div>
+        <div class="feature">
+          <label ng-if="$ctrl.hasDescription" class="context-padded-multi-line context-nocursor">{{$ctrl.fieldset.description}}</label>
+        </div>
+
+        <div class="feature">
+          <span class="feature-name"  translate="context.dictionary.dateUpdated"></span>
+          <span class="feature-details  context-updated-date" ng-if="$ctrl.lastUpdated">{{$ctrl.fieldset.lastUpdatedUI}}</span>
+          <span class="feature-details" ng-if="!$ctrl.lastUpdated" translate="context.dictionary.unavailable"></span>
+        </div>
+
+        <div class="cs-input-group">
+          <div class="feature">
+            <a ui-sref="context-fieldsets-sidepanel.fields({fields: $ctrl.fields})">
+              <span class="feature-name field-label" translate="context.dictionary.fieldsetPage.fields"></span>
+              <span class="feature-status" ng-if="$ctrl.fields.length === 0" translate="common.none"></span>
+              <span class="feature-status" ng-if="$ctrl.fields.length > 0" >{{$ctrl.fields.length}}</span>
+              <i class="feature-arrow"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </cs-sp-section>
+
+    <cs-sp-section ng-if="$ctrl.isEditable()">
+      <div class="section-title-row section-name" translate="context.dictionary.actions"></div>
+      <div>
+        <button class="btn btn--negative" ng-click="$ctrl.openDeleteConfirmDialog()" translate="common.delete"></button>
+      </div>
+    </cs-sp-section>
 
   </cs-sp-container>
 </div>

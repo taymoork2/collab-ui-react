@@ -1,0 +1,15 @@
+<div class="customer-overview">
+  <cs-sp-header>
+    <div class="header-info" id="customer-info">
+      <div class="header-info-wrap">
+        <div class="header-title">
+          <span translate="pstnOrderOverview.orderHistory"></span>
+        </div>
+        <div ng-if="$ctrl.vendor !== 'undefined'">
+          <span translate="{{$ctrl.vendor}}"></span>
+        </div>
+      </div>
+    </div>
+  </cs-sp-header>
+  <uc-orders-overview is-partner= "false" current-customer="$ctrl.currentCustomer"></uc-orders-overview>
+</div>

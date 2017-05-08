@@ -3,6 +3,7 @@ import { CsvDownloadComponent } from './csvDownload.component';
 import { ExtractTarService } from './extractTar.service';
 import notificationsModule from 'modules/core/notifications';
 import featureToggleModule from 'modules/core/featureToggle';
+import csvSimpleExportModule from './csvSimpleExport';
 
 let analyticsModule = require('modules/core/analytics');
 let userListServiceModule = require('modules/core/scripts/services/userlist.service');
@@ -15,13 +16,14 @@ export { CsvDownloadService, CsvDownloadTypes, ExtractTarService };
 export default angular
   .module('core.csvDownload', [
     'ngResource',
-    'atlas.templates',
-    'collab.ui',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
     analyticsModule,
     config,
     featureToggleModule,
     notificationsModule,
     userListServiceModule,
+    csvSimpleExportModule,
     'core.users.userCsv', // WARNING: This is creating a circular dependency!!
   ])
   .service('CsvDownloadTypes', CsvDownloadTypes)

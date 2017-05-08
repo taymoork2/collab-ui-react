@@ -1,9 +1,9 @@
 describe('Component: releaseChannelSection', () => {
-  let $componentController, $q, $log, $scope, controller, FusionClusterService, ResourceGroupService;
+  let $componentController, $q, $log, $scope, controller, FmsOrgSettings, HybridServicesClusterService, ResourceGroupService;
   let expresswayCluster, expresswayClusterInResourceGroup, mediaCluster, resourceGroup;
 
   afterEach(function () {
-    $componentController = $q = $log = $scope = controller = FusionClusterService = ResourceGroupService = undefined;
+    $componentController = $q = $log = $scope = controller = HybridServicesClusterService = ResourceGroupService = undefined;
     expresswayCluster = expresswayClusterInResourceGroup = mediaCluster = resourceGroup = undefined;
   });
 
@@ -13,19 +13,20 @@ describe('Component: releaseChannelSection', () => {
   beforeEach(initSpies);
   beforeEach(loadFixtures);
 
-  function dependencies (_$componentController_, _$q_, _$log_, $rootScope, _FusionClusterService_, _ResourceGroupService_) {
+  function dependencies(_$componentController_, _$q_, _$log_, $rootScope, _FmsOrgSettings_, _HybridServicesClusterService_, _ResourceGroupService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $log = _$log_;
     $scope = $rootScope.$new();
-    FusionClusterService = _FusionClusterService_;
+    FmsOrgSettings = _FmsOrgSettings_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     ResourceGroupService = _ResourceGroupService_;
   }
 
   function initSpies() {
     spyOn($log, 'error');
-    spyOn(FusionClusterService, 'getOrgSettings').and.returnValue($q.resolve({}));
-    spyOn(FusionClusterService, 'setReleaseChannel').and.returnValue($q.resolve({}));
+    spyOn(FmsOrgSettings, 'get').and.returnValue($q.resolve({}));
+    spyOn(HybridServicesClusterService, 'setClusterInformation').and.returnValue($q.resolve({}));
     spyOn(ResourceGroupService, 'getAllowedChannels').and.returnValue($q.resolve({}));
     spyOn(ResourceGroupService, 'setReleaseChannel').and.returnValue($q.resolve({}));
   }
@@ -73,10 +74,10 @@ describe('Component: releaseChannelSection', () => {
   });
 
   it('should fetch the default release channel for Expressways on init', () => {
-    FusionClusterService.getOrgSettings.and.returnValue($q.resolve({ expresswayClusterReleaseChannel: 'smthg' }));
+    FmsOrgSettings.get.and.returnValue($q.resolve({ expresswayClusterReleaseChannel: 'smthg' }));
     initController();
     $scope.$apply();
-    expect(FusionClusterService.getOrgSettings).toHaveBeenCalled();
+    expect(FmsOrgSettings.get).toHaveBeenCalled();
     expect(controller.defaultReleaseChannel).toBe('smthg');
   });
 
@@ -116,7 +117,7 @@ describe('Component: releaseChannelSection', () => {
   });
 
   it('should show the reset section if the cluster is not in a resource group and its release channel is not the default one', () => {
-    FusionClusterService.getOrgSettings.and.returnValue($q.resolve({ expresswayClusterReleaseChannel: 'stable' })); // default
+    FmsOrgSettings.get.and.returnValue($q.resolve({ expresswayClusterReleaseChannel: 'stable' })); // default
     const data = _.assign({}, mediaCluster, { releaseChannel: 'latest' });
     initController({ cluster: data });
     $scope.$apply();

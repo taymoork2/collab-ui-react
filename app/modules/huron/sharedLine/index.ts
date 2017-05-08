@@ -6,9 +6,9 @@ export * from 'modules/huron/sharedLine/sharedLine.service';
 
 export default angular
   .module('huron.shared-line', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),

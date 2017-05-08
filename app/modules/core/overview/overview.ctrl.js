@@ -8,10 +8,10 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
+  function OverviewCtrl($rootScope, $state, $scope, $translate, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
-    var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
+    var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
@@ -32,6 +32,28 @@ require('./_overview.scss');
     vm.pstnToSNotification = null;
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
+    vm.notificationComparator = notificationComparator;
+    vm.ftHuronPstn = false;
+
+    ////////////////////////////////
+
+    var notificationOrder = [
+      'alert',
+      'todo',
+      'info',
+      'new',
+    ];
+
+    // used to sort notifications in a specific order
+    function notificationComparator(a, b) {
+      var v1 = _.toLower(_.last(_.split(a.value, '.')));
+      var v2 = _.toLower(_.last(_.split(b.value, '.')));
+      if (_.isEqual(v1, v2)) {
+        return 0;
+      } else {
+        return (_.indexOf(notificationOrder, v1) < _.indexOf(notificationOrder, v2)) ? -1 : 1;
+      }
+    }
 
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {
@@ -46,21 +68,34 @@ require('./_overview.scss');
         resizeNotifications();
       }
 
-      ServiceDescriptor.getServices()
-        .then(function (services) {
-          _.forEach(services, function (service) {
-            if (!service.acknowledged) {
-              if (service.id === Config.entitlements.fusion_cal) {
+      var hybridServiceNotificationFlags = _.chain([
+        Config.entitlements.fusion_cal,
+        Config.entitlements.fusion_gcal,
+        Config.entitlements.fusion_uc,
+        Config.entitlements.fusion_ec,
+        Config.entitlements.mediafusion,
+        Config.entitlements.hds,
+      ])
+      .filter(Authinfo.isEntitled)
+      .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
+      .value();
+
+      HybridServicesFlagService
+        .readFlags(hybridServiceNotificationFlags)
+        .then(function (flags) {
+          _.forEach(flags, function (flag) {
+            if (!flag.raised) {
+              if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_cal)) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
-              } else if (service.id === Config.entitlements.fusion_gcal && hasGoogleCalendarFeatureToggle) {
-                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, Orgservice));
-              } else if (service.id === Config.entitlements.fusion_uc) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal) && hasGoogleCalendarFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService));
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
-              } else if (service.id === Config.entitlements.fusion_ec) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_ec)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
-              } else if (service.id === Config.entitlements.mediafusion) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.mediafusion)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
-              } else if (service.id === Config.entitlements.hds) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
             }
@@ -143,6 +178,10 @@ require('./_overview.scss');
         }
       });
 
+      FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
+        vm.ftHuronPstn = result;
+      });
+
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
@@ -154,13 +193,20 @@ require('./_overview.scss');
         return;
       }
       if (vm.orgData !== null) {
-        PstnSetupService.getCustomerV2(vm.orgData.id).then(function (customer) {
+        PstnService.getCustomerV2(vm.orgData.id).then(function (customer) {
           if (customer.trial) {
-            PstnSetupService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
+            PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
               if (!_.has(trial, 'acceptedDate')) {
-                vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
-                vm.notifications.push(vm.pstnToSNotification);
-                $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                if (vm.ftHuronPstn) {
+                  //This is the new TS version of ToS
+                  vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
+                  vm.notifications.push(vm.pstnToSNotification);
+                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                } else {
+                  vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
+                  vm.notifications.push(vm.pstnToSNotification);
+                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                }
               }
             });
           }

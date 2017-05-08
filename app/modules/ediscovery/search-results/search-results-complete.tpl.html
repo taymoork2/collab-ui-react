@@ -1,13 +1,13 @@
 <div class="report-parameters">
   <span class="result-title results-spacing" translate="ediscovery.search.reportStatus"></span>
   <br>
-  <span ng-if="ediscoverySearchCtrl.report.state === 'COMPLETED'"
+  <h6 ng-if="ediscoverySearchCtrl.report.state === 'COMPLETED'"
     translate="ediscovery.search.generatedAt"
-    translate-value-time="{{ediscoverySearchCtrl.report.createdTime | date: 'shortTime'}}"></span>
+    translate-value-time="{{ediscoverySearchCtrl.report.createdTime | date: 'shortTime'}}"></h6>
   <br>
   <span class="result-title results-spacing" translate="ediscovery.searchResults.totalReportSize"></span>
   <br>
-  <span>{{ediscoverySearchCtrl.searchResults.totalSize}}</span>
+  <h6>{{ediscoverySearchCtrl.searchResults.totalSize}}</h6>
   <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeDownloaded">
     <div class="columns small-12 medium-12 large-12 results-spacing">
       <button cs-btn

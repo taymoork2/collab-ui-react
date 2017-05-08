@@ -47,6 +47,8 @@
         numberOfParticipantChart.graphs = graphs;
         numberOfParticipantChart.startDuration = startDuration;
         numberOfParticipantChart.balloon.enabled = true;
+        numberOfParticipantChart.balloon.horizontalPadding = 3;
+        numberOfParticipantChart.balloon.verticalPadding = 2;
         numberOfParticipantChart.chartCursor.valueLineBalloonEnabled = true;
         numberOfParticipantChart.chartCursor.valueLineEnabled = true;
         numberOfParticipantChart.chartCursor.categoryBalloonEnabled = true;
@@ -127,7 +129,7 @@
       var columnNames = {
         'time': timeStamp,
       };
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.title === 'onPremParticipants') {
           value.title = onPremisesHeading;
           value.lineColor = '#67b7dc';
@@ -139,7 +141,7 @@
         }
       });
       var exportFields = [];
-      _.forEach(columnNames, function (key) {
+      _.each(columnNames, function (key) {
         exportFields.push(key);
       });
       dateLabel = _.replace(dateLabel, /\s/g, '_');
@@ -171,14 +173,14 @@
 
     function formatGraph(graphs) {
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.title === 'cloudParticipants') {
-          value.balloonText = '<span class="graph-text">' + cloudHeading + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color">[[' + value.descriptionField + ']]</span></p>';
+          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + cloudHeading + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></p></div>';
         } else if (value.title === 'onPremParticipants') {
-          value.balloonText = '<span class="graph-text">' + onPremisesHeading + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <span class="graph-text"><span class="graph-text-color">[[' + value.descriptionField + ']]</span></span>';
+          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + onPremisesHeading + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <span class="graph-text"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></span></div>';
         }
         value.lineThickness = 2;
-        value.connect = true;
+        value.connect = false;
         tempData.push(value);
       });
       return tempData;

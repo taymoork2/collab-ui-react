@@ -30,7 +30,7 @@
     function userIsLicensedFor(user, offerCode) {
       if (user && user.licenseID) {
         return _.some(user.licenseID, function (license) {
-          return license.substring(0, 2) === offerCode;
+          return license.split('_')[0] === offerCode;
         });
       }
       return false;

@@ -414,6 +414,3 @@ export class SparkLineReportService {
     return deviceArray;
   }
 }
-
-angular.module('Core')
-  .service('SparkLineReportService', SparkLineReportService);

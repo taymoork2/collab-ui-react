@@ -16,7 +16,6 @@ describe('Component: pgEdit', () => {
   let pg = getJSONFixture('huron/json/features/pagingGroup/pgWithMembersAndInitiators.json');
   let pg2 = getJSONFixture('huron/json/features/pagingGroup/pgWithEmptyInitiators.json');
   let pgUpdated = getJSONFixture('huron/json/features/pagingGroup/pgUpdated.json');
-  let pgUpdate = getJSONFixture('huron/json/features/pagingGroup/pgUpdate.json');
   let invalidName = 'Invalid &<>';
   let validName = 'Valid$#@';
   let pilotNumbers = getJSONFixture('huron/json/features/pagingGroup/numberList.json');
@@ -89,6 +88,40 @@ describe('Component: pgEdit', () => {
     extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f432',
   };
 
+  let numberData3 = {
+    extension: '2222',
+    extensionUUID: undefined,
+  };
+
+  let pgUpdate = {
+    groupId: 'bbcd1234-abcd-abcd-abcddef123456',
+    name: 'Test2',
+    extension: undefined,
+    members: [
+      {
+        memberId: '0002',
+        deviceIds: [],
+        type: 'PLACE',
+      },
+      {
+        memberId : '0001',
+        deviceIds: [],
+        type: 'USER',
+      },
+    ],
+    initiatorType: 'CUSTOM',
+    initiators: [
+      {
+        initiatorId: '0002',
+        type: 'PLACE',
+      },
+      {
+        initiatorId: '0001',
+        type: 'USER',
+      },
+    ],
+  };
+
   beforeEach(function () {
     this.initModules('huron.paging-group.edit');
     this.injectDependencies(
@@ -159,7 +192,7 @@ describe('Component: pgEdit', () => {
 
     it('should initialize all the Paging Group data', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
-      this.getNumberExtensionDefer.resolve(numberData);
+      this.getNumberExtensionDefer.resolve(numberData3);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -167,7 +200,7 @@ describe('Component: pgEdit', () => {
       this.$scope.$apply();
       expect(this.PagingGroupService.getPagingGroup).toHaveBeenCalledWith(this.pg.groupId);
       expect(this.controller.name).toEqual(this.pg.name);
-      expect(this.controller.number).toEqual(numberData);
+      expect(this.controller.number).toEqual(numberData3);
       expect(this.controller.members[0].member.displayName).toEqual('peter desk');
       expect(this.controller.members[1].member.firstName).toEqual('rtp2');
       expect(this.controller.loading).toBeFalsy();
@@ -212,6 +245,22 @@ describe('Component: pgEdit', () => {
       this.getPagingGroupDefer.reject(pagingServiceFailureResp);
       this.$scope.$apply();
       expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorUpdate', { message: '' });
+    });
+
+    it('should display Notification when getNumberExtension failed', function () {
+      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.reject(pagingServiceFailureResp);
+      this.getPagingGroupDefer.resolve(pg);
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).toHaveBeenCalledWith(pagingServiceFailureResp, pg.name);
+    });
+
+    it('should display Notification when getNumberExtension 2xx with empty number', function () {
+      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve({ data: [] });
+      this.getPagingGroupDefer.resolve(pg);
+      this.$scope.$apply();
+      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorGetNumber', { pagingGroupName: pg.name });
     });
   });
 
@@ -263,6 +312,7 @@ describe('Component: pgEdit', () => {
       expect(this.view.find(CANCEL_BUTTON)).toExist();
       this.view.find(CANCEL_BUTTON).click();
       expect(this.controller.name).toEqual(pg.name);
+      expect(this.controller.number).toEqual(numberData);
       expect(this.controller.errorNameInput).toBeFalsy();
       expect(this.controller.formChanged).toBeFalsy();
     });
@@ -532,14 +582,16 @@ describe('Component: pgEdit', () => {
 
     it('Test showMoreButton', function () {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
+      spyOn(this.controller, 'getSearchedCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = this.controller.cardThreshold;
-      expect(this.controller.showMoreButton('USER_REAL_USER', 'MEMBER')).toBeTruthy;
+      expect(this.controller.showMoreButton('USER_REAL_USER', 'MEMBER')).toBeTruthy();
     });
 
     it('Test showLessButton', function () {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
+      spyOn(this.controller, 'getSearchedCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = undefined;
-      expect(this.controller.showLessButton('USER_REAL_USER', 'MEMBER')).toBeTruthy;
+      expect(this.controller.showLessButton('USER_REAL_USER', 'MEMBER')).toBeTruthy();
     });
   });
 
@@ -580,7 +632,7 @@ describe('Component: pgEdit', () => {
 
     it('should update pg to clear out outOfSync if not find an user in UPDM', function () {
       this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
-      this.getNumberExtensionDefer.resolve(_.cloneDeep(numberData));
+      this.getNumberExtensionDefer.resolve(_.cloneDeep(numberData3));
       this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
       this.getUserDefer.reject(memberFailureResp);
       this.getPlaceDefer.reject(memberFailureResp);
@@ -588,7 +640,7 @@ describe('Component: pgEdit', () => {
       this.$scope.$apply();
       expect(this.PagingGroupService.getPagingGroup).toHaveBeenCalledWith(this.pg.groupId);
       expect(this.controller.name).toEqual(this.pg.name);
-      expect(this.controller.number).toEqual(numberData);
+      expect(this.controller.number).toEqual(numberData3);
       expect(this.controller.loading).toBeFalsy();
       expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalled();
       expect(this.PagingNumberService.getNumberSuggestions).toHaveBeenCalled();

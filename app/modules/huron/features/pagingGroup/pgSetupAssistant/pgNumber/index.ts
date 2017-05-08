@@ -3,8 +3,8 @@ import notifications from 'modules/core/notifications';
 
 export default angular
   .module('huron.paging-group.number', [
-    'atlas.templates',
-    'collab.ui',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
     'huron.paging-group',
     require('angular-resource'),
     require('modules/huron/telephony/cmiServices'),

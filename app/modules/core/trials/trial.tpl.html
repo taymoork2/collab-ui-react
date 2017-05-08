@@ -107,7 +107,8 @@
             ng-model="trial.callTrial.enabled"
             id="callTrial" name="callTrial"
             ng-disabled="trial.preset.call"
-            cs-input-label="{{::'trials.call' | translate}}">
+            cs-input-label="{{::'trials.call' | translate}}"
+            ng-change="trial.updateCountryList()">
         </div>
         <div class="sub-section" ng-if="trial.showCare && (!trial.careTrial.paid || !trial.advanceCareTrial.paid)">
           <h5 translate="subscriptions.care"></h5>
@@ -127,8 +128,9 @@
               cs-input-size="medium-4"
               cs-input-messages="trial.validationMessages.care"
               ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K1)}}"
-              ng-required="trial.careTrial.enabled;"
-              ng-disabled="trial._helpers.careLicenseInputDisabledExpression()"
+              min="1"
+              ng-required="trial.careTrial.enabled"
+              ng-disabled="!trial.careTrial.enabled"
               ng-model-options="{'allowInvalid': true}">
           </div>
           <div class="cs-form-group row" ng-if="trial.showAdvanceCare">
@@ -144,8 +146,9 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-messages="trial.validationMessages.care"
               ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K2)}}"
-              ng-required="trial.advanceCareTrial.enabled;"
-              ng-disabled="trial._helpers.advanceCareLicenseInputDisabledExpression()"
+              min="1"
+              ng-required="trial.advanceCareTrial.enabled"
+              ng-disabled="!trial.advanceCareTrial.enabled"
               ng-model-options="{'allowInvalid': true}">
           </div>
         </div>
@@ -156,7 +159,8 @@
               ng-model="trial.roomSystemTrial.enabled"
               id="roomSystemsTrial" name="roomSystemsTrial"
               ng-disabled="trial.preset.roomSystems"
-              cs-input-label="{{::'trials.roomSystem' | translate}}">
+              cs-input-label="{{::'trials.roomSystem' | translate}}"
+              ng-change="trial.updateCountryList()">
             <input cs-input type="number"
               id="trialRoomSystemsAmount" name="trialRoomSystemsAmount"
               ng-model="trial.roomSystemTrial.details.quantity"
@@ -165,6 +169,8 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-messages="trial.validationMessages.roomSystem"
               ng-min="0" ng-max="{{::trial.validationData.roomSystemMax}}"
+              min="1"
+              ng-disabled="!trial.roomSystemTrial.enabled"
               ng-required="trial.roomSystemTrial.enabled">
           </div>
           <div ng-if="!trial.sparkBoardTrial.paid && trial.sbTrial" class="cs-form-group row">
@@ -181,6 +187,8 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-messages="trial.validationMessages.roomSystem"
               ng-min="0" ng-max="{{trial.validationData.roomSystemMax}}"
+              min="1"
+              ng-disabled="!trial.sparkBoardTrial.enabled"
               ng-required="trial.sparkBoardTrial.enabled">
           </div>
         </div>
@@ -223,6 +231,8 @@
           cs-input-messages="trial.validationMessages.licenseNumber"
           ng-required="trial.hasUserServices()"
           ng-disabled="!trial.hasUserServices()"
+          min="1"
+          ng-pattern="/^[1-9][0-9]*$/"
           ng-min="{{trial._helpers.getMinTotalCare()}}" ng-max="{{ trial.validationData.trialLicenseMax }}">
       </div>
     </div>
@@ -264,22 +274,10 @@
 
     <!-- regional settings -->
     <trial-regional-settings
-      cr-feature-toggle feature-show="huron-federated-spark-call"
-      ng-if="trial.isNewTrial() && (trial.roomSystemTrial.enabled || trial.callTrial.enabled)"
-      filter-country-list="false"
-      default-country="trial.details.country"
-      default-country-list="trial.defaultCountryList"
-      on-change-fn="trial.setDefaultCountry(country)">
-    </trial-regional-settings>
-
-    <trial-regional-settings
-      cr-feature-toggle feature-show="huron-support-for-thinktel"
-      required="false"
       ng-if="!trial.preset.call && (trial.roomSystemTrial.enabled || trial.callTrial.enabled)"
-      filter-country-list="true"
-      default-country="trial.details.country"
-      default-country-list="trial.defaultCountryList"
-      on-change-fn="trial.setDefaultCountry(country)">
+      call-trial-enabled="trial.callTrial.enabled"
+      on-change-fn="trial.setDefaultCountry(country)"
+      default-country="trial.details.country">
     </trial-regional-settings>
 
     <!-- context service trial -->
@@ -288,7 +286,11 @@
         <h4 translate="partnerHomePage.nonTrialServices"></h4>
       </div>
       <div class="section__content">
-        <formly-form model="trial.trialData.trials" fields="trial.nonTrialServices"></formly-form>
+         <input type="checkbox" cs-input
+            ng-model="trial.contextTrial.enabled"
+            id="contextTrial" name="contextTrial"
+            cs-input-label="{{::'trials.context' | translate}}">
+        </div>
       </div>
     </div>
   </form>
@@ -300,7 +302,7 @@
       <div class="message" translate="trials.supportedLocationWarning"></div>
     </div>
   </div>
-  <button id="cancelTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.loading">
+  <button id="cancelTrialButton" class="btn" ng-click="trial.cancelModal()" ng-disabled="trial.loading">
     <span translate="partnerHomePage.cancel"></span>
   </button>
   <!-- edit trial -->

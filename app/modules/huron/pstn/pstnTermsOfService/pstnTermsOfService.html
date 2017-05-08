@@ -1,0 +1,77 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$ctrl.onDismissClick()">
+      <span class="sr-only" translate='common.close'></span>
+    </button>
+    <h3 class="modal-title">{{$ctrl.carrier.logoAlt}} <span translate="pstnSetup.tos.title"></span></h3>
+  </div>
+
+  <div class="modal-body">
+    <div class="pstn-tos-loading" ng-if="!$ctrl.initComplete">
+      <i class="icon icon-spinner"></i>
+    </div>
+    <div class="pstn-tos" ng-if="$ctrl.initComplete">
+      <div class="intelepeer">
+        <img class="logo" src="{{$ctrl.carrier.logoSrc}}" alt="{{$ctrl.carrier.logoAlt}}">
+        <p class="copyright" translate="pstnSetup.tos.copyright"></p>
+        <p class="description" translate="pstnSetup.tos.info"></p>
+      </div>
+      <div>
+        <p class="noticeTitle" translate="pstnSetup.tos.noticeTitle"></p>
+        <p class="notice" translate="pstnSetup.tos.notice"></p>
+        <p class="viewTos"><a translate="pstnSetup.tos.viewTos" href="{{$ctrl.tosUrl}}" target="_blank"></a></p>
+        <p class="confirm" translate="pstnSetup.tos.confirmHeading"></p>
+        <form name="$ctrl.form">
+          <div class="name">
+            <div>
+              <label class="cs-input__label" for="input-fname" translate="common.firstName"></label>
+              <input
+                id="input-fname"
+                class="cs-input"
+                type="text"
+                ng-model="$ctrl.firstName"
+                maxlength="50"
+                required>
+            </div>
+            <div>
+              <label class="cs-input__label" for="input-lname" translate="common.lastName"></label>
+              <input
+                id="input-lname"
+                class="cs-input"
+                type="text"
+                ng-model="$ctrl.lastName"
+                maxlength="50"
+                required>
+            </div>
+          </div>
+          <div class="email">
+            <label class="cs-input__label" for="input-email" translate="common.email"></label>
+            <input
+              id="input-email"
+              class="cs-input"
+              type="email"
+              ng-model="$ctrl.email"
+              maxlength="254"
+              required>
+          </div>
+        </form>
+        <p class="agree" translate="pstnSetup.tos.agreeInstructions" ng-if="!$ctrl.showCanadaThinkTelLegal"></p>
+        <p class="agree" translate="pstnSetup.tos.agreeInstructionsCanadaThinkTel" ng-if="$ctrl.showCanadaThinkTelLegal"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      class="btn"
+      ng-click="$ctrl.onDismissClick()"
+      translate="common.cancel"
+      ng-disabled="$ctrl.loading"></button>
+    <button
+      cs-btn
+      class="btn btn--primary"
+      loading="$ctrl.loading"
+      ng-click="$ctrl.onAgreeClick()"
+      ng-disabled="$ctrl.form.$invalid"><span translate="common.agree"></span></button>
+  </div>
+</div>

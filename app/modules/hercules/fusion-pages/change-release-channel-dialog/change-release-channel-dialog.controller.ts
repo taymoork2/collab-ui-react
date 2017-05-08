@@ -1,3 +1,5 @@
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+
 export type ResourceType = 'cluster' | 'resource-group';
 
 export class ChangeReleaseChannelDialogController {
@@ -12,7 +14,7 @@ export class ChangeReleaseChannelDialogController {
     private data,
     private releaseChannel,
     private type: ResourceType,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private Notification,
     private ResourceGroupService,
   ) {}
@@ -21,7 +23,7 @@ export class ChangeReleaseChannelDialogController {
     return this.$q.resolve()
       .then(() => {
         if (this.type === 'cluster') {
-          return this.FusionClusterService.setReleaseChannel(this.data.id, this.releaseChannel);
+          return this.HybridServicesClusterService.setClusterInformation(this.data.id, { releaseChannel: this.releaseChannel });
         } else if (this.type === 'resource-group') {
           return this.ResourceGroupService.setReleaseChannel(this.data.id, this.releaseChannel);
         }

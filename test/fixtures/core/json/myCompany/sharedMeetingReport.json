@@ -8,11 +8,6 @@
   },
   "filteredData":{
     "threeMonths": [{
-      "date": "Sep '16",
-      "maxMeetings": 15,
-      "meetings": 0,
-      "balloon": true
-    }, {
       "date": "Oct '16",
       "maxMeetings": 15,
       "meetings": 2,
@@ -29,11 +24,6 @@
       "balloon": true
     }],
     "sixMonths": [{
-      "date": "Jun '16",
-      "maxMeetings": 15,
-      "meetings": 0,
-      "balloon": true
-    }, {
       "date": "Jul '16",
       "maxMeetings": 15,
       "meetings": 5,
@@ -78,11 +68,6 @@
       "balloon": false
     }],
     "threeMonths":  [{
-      "date": "Sep '16",
-      "maxMeetings": 15,
-      "meetings": 6,
-      "balloon": false
-    }, {
       "date": "Oct '16",
       "maxMeetings": 15,
       "meetings": 4,
@@ -99,11 +84,6 @@
       "balloon": false
     }],
     "sixMonths":  [{
-      "date": "Jun '16",
-      "maxMeetings": 15,
-      "meetings": 12,
-      "balloon": false
-    }, {
       "date": "Jul '16",
       "maxMeetings": 15,
       "meetings": 10,
@@ -137,10 +117,10 @@
   },
   "timeFilter": [{
     "label": "reportsPage.sixMonths",
-    "value": 6
+    "value": 5
   }, {
     "label": "reportsPage.threeMonths",
-    "value": 3
+    "value": 2
   }, {
     "label": "reportsPage.oneMonth",
     "value": 1

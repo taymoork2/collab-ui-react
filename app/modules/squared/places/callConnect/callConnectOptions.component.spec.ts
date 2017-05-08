@@ -11,11 +11,12 @@ describe('CallConnectOptions component:', () => {
       '$componentController',
       '$rootScope',
       'CsdmDataModelService',
+      'ResourceGroupService',
       'USSService',
       '$q',
     );
     test = this;
-
+    spyOn(this.ResourceGroupService, 'getAllAsOptions').and.returnValue(this.$q.resolve({}));
   });
 
   let defaultState = () => {
@@ -124,7 +125,7 @@ describe('CallConnectOptions component:', () => {
     it('should call CsdmDataModelService with correct entitlement and extLinkAccts', () => {
       spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
       const place = { cisUuid: uid };
-      spyOn(test.CsdmDataModelService, 'getPlacesMap').and.returnValue(test.$q.resolve({ 'https://url': place }));
+      spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
       spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
 
       let mailId = 'mail@example.com';

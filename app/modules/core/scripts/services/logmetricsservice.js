@@ -34,8 +34,6 @@
       },
 
       eventType: {
-        contextCreateFieldSuccess: 'CONTEXTCREATEFIELDSUCCESS',
-        contextCreateFieldFailure: 'CONTEXTCREATEFIELDFAILURE',
         contextNewField: 'CONTEXTNEWFIELD',
         contextCreateFieldsetSuccess: 'CONTEXTCREATEFIELDSETSUCCESS',
         contextCreateFieldsetFailure: 'CONTEXTCREATEFIELDSETFAILURE',

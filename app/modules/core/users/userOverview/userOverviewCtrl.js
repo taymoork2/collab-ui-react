@@ -5,7 +5,7 @@
 
   /* @ngInject */
   function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q,
-    Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService,
+    Authinfo, Config, DirSyncService, FeatureToggleService, Notification, SunlightConfigService,
     Userservice, UserOverviewService) {
     var vm = this;
 
@@ -31,9 +31,9 @@
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
+    vm.clickUserDetailsService = clickUserDetailsService;
     vm.actionList = [];
-    vm.isSharedMeetingsEnabled = false;
-    vm.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
+    vm.hasSparkCall = false;
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
@@ -66,9 +66,16 @@
     var preferredLanguageState = {
       name: $translate.instant('preferredLanguage.title'),
       detail: "",
+      state: 'userDetails',
       dirsyncEnabled: false,
+      actionAvailable: true,
     };
-
+    var preferredLanguageDetails = {
+      selectedLanguageCode: '',
+      languageOptions: [],
+      currentUserId: '',
+      hasSparkCall: false,
+    };
     init();
 
     /////////////////////////////
@@ -84,14 +91,6 @@
       });
 
       vm.services = [];
-
-      if (_.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
-        vm.isSharedMeetingsEnabled = _.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue', false);
-      } else {
-        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
-          vm.isSharedMeetingsEnabled = smpStatus;
-        });
-      }
 
       initServices();
       initActionList();
@@ -144,6 +143,10 @@
 
     function clickService(feature) {
       $state.go('user-overview.' + feature.state);
+    }
+
+    function clickUserDetailsService(feature) {
+      $state.go('user-overview.' + feature.state, { 'preferredLanguageDetails': preferredLanguageDetails });
     }
 
     function getDisplayableServices(serviceName) {
@@ -242,7 +245,7 @@
       if (UserOverviewService.userHasEntitlement(vm.currentUser, 'cloudmeetings')) {
         confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
         if (vm.currentUser.trainSiteNames) {
-          confState.detail = vm.isSharedMeetingsEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
+          confState.detail = $translate.instant('onboardModal.paidAdvancedConferencing');
         }
       } else if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-syncup')) {
         if (hasLicense('CF')) {
@@ -255,6 +258,7 @@
         if (hasLicense('CO')) {
           commState.detail = $translate.instant('onboardModal.paidComm');
           commState.actionAvailable = true;
+          vm.hasSparkCall = true;
         }
       }
       vm.services.push(commState);
@@ -280,18 +284,22 @@
     }
 
     function initUserDetails() {
+      vm.userDetailList = [];
       var ciLanguageCode = _.get(vm.currentUser, 'preferredLanguage');
-      var ciDirsyncEnabled = _.get(vm.orgInfo, 'dirsyncEnabled');
-      if (ciLanguageCode) {
-        UserOverviewService.getUserPreferredLanguage(ciLanguageCode).then(function (userPreferredLanguage) {
-          preferredLanguageState.detail = userPreferredLanguage ? _.get(userPreferredLanguage, 'label') : ciLanguageCode;
-        }).catch(function (error) {
-          Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
-        });
-      }
+      var ciDirsyncEnabled = DirSyncService.isUserAttributeSynced(vm.orgInfo, 'preferredLanguage');
+      var formattedLanguage = ciLanguageCode ? UserOverviewService.formatLanguage(ciLanguageCode) : ciLanguageCode;
+      UserOverviewService.getUserPreferredLanguage(formattedLanguage).then(function (userLanguageDetails) {
+        preferredLanguageState.detail = !_.isEmpty(userLanguageDetails.language) ? _.get(userLanguageDetails.language, 'label') : formattedLanguage;
+        preferredLanguageDetails.languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
+      }).catch(function (error) {
+        Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
+      });
       if (ciDirsyncEnabled) {
         preferredLanguageState.dirsyncEnabled = ciDirsyncEnabled;
       }
+      preferredLanguageDetails.selectedLanguageCode = formattedLanguage;
+      preferredLanguageDetails.currentUserId = vm.currentUser.id;
+      preferredLanguageDetails.hasSparkCall = vm.hasSparkCall;
       vm.userDetailList.push(preferredLanguageState);
     }
 

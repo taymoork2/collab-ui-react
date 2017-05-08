@@ -1,70 +1,76 @@
-import { GmHttpService } from '../common/gem.http.service';
-
 export class TelephonyDomainService {
 
   private url;
 
   /* @ngInject */
   constructor(
-    private GmHttpService: GmHttpService,
+    private UrlConfig,
+    private $http: ng.IHttpService,
     private $translate: ng.translate.ITranslateService,
   ) {
-    this.url = {
-      telephonyDomain: 'telephonyDomain/',
-      getTelephonyDomains: 'telephonyDomains/customerId/',
-      getTelephonyDomain: 'telephonydomain/getTelephonyDomainInfoByDomainId/',
-      getActivityLogs: 'activityLogs',
-      moveSite: 'telephonydomain/moveSite',
-      cancelSubmission: 'telephonydomain/cancelSubmission',
-    };
+    this.url = `${this.UrlConfig.getGeminiUrl()}telephonydomain/`;
   }
 
   public getTelephonyDomains(customerId: string) {
-    let url = `${this.url.getTelephonyDomains}/${customerId}`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.url}customerId/${customerId}`;
+    return this.$http.get(url).then(this.extractData);
   }
 
   public getTelephonyDomain(customerId, ccaDomainId) {
-    let url = `${this.url.getTelephonyDomain}${customerId}/${ccaDomainId}`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.url}getTelephonyDomainInfoByDomainId/${customerId}/${ccaDomainId}`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
+  public getRegionDomains(data: Object) {
+    const url = `${this.url}getRegionDomains`;
+    return this.$http.post(url, data).then(this.extractData);
   }
 
   public getRegions() {
-    let url = `${this.url.telephonyDomain}/regions`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.url}regions`;
+    return this.$http.get(url).then(this.extractData);
   }
 
   public getNotes(customerId: string, ccaDomainId: string) {
-    let url = `${this.url.getActivityLogs}/${customerId}/${customerId}/${ccaDomainId}/add_note`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${customerId}/${ccaDomainId}/add_note_td`;
+    return this.$http.get(url).then(this.extractData);
   }
 
   public getHistories(customerId: string, ccaDomainId: string, domainName: string) {
-    let url = `${this.url.getActivityLogs}/${customerId}/${ccaDomainId}/Telephony%20Domain/${domainName}`;
-    return this.GmHttpService.httpGet(url).then(this.extractData);
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${customerId}/${ccaDomainId}/Telephony%20Domain/${domainName}`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
+  public getNumbers(customerId: string, ccaDomainId: string) {
+    const url = `${this.url}getTelephonyNumberByDomainId/${customerId}/${ccaDomainId}`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
+  public getDownloadUrl() {
+    return `${this.url}files/templates/telephony_numbers_template`;
   }
 
   public postNotes(data: any) {
-    let url = this.url.getActivityLogs;
-    return this.GmHttpService.httpPost(url, null, null, data).then(this.extractData);
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs`;
+    return this.$http.post(url, data).then(this.extractData);
   }
 
   public moveSite(data: any) {
-    let url = this.url.moveSite;
-    return this.GmHttpService.httpPut(url, null, null, data).then(this.extractData);
+    const url = `${this.url}moveSite`;
+    return this.$http.put(url, data).then(this.extractData);
   }
 
   public updateTelephonyDomainStatus(customerId: string, ccaDomainId: string, telephonyDomainId: number, operation: string) {
     let url: string = '';
-    let postData: any = {
+    const postData: any = {
       ccaDomainId: ccaDomainId,
       customerId: customerId,
       TelephonyDomainId: telephonyDomainId,
     };
     if (operation === 'cancel') {
-      url = this.url.cancelSubmission;
+      url = `${this.url}cancelSubmission`;
     }
-    return this.GmHttpService.httpPost(url, null, null, postData).then(this.extractData);
+    return this.$http.post(url, postData).then(this.extractData);
   }
 
   public telephonyDomainsExportCSV(customerId: string) {
@@ -91,6 +97,10 @@ export class TelephonyDomainService {
       });
       return exportedLines;
     });
+  }
+
+  public transformCSVNumber(value: any) {
+    return (value == null ? '' : value + '\t');
   }
 
   private extractData(response) {
@@ -131,10 +141,6 @@ export class TelephonyDomainService {
     });
 
     return newData;
-  }
-
-  private transformCSVNumber(value: any) {
-    return (value == null ? '' : value + '\t');
   }
 
   private transformBridgeSet(v1: string, v2: string) {

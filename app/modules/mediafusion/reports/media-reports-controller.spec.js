@@ -129,7 +129,7 @@ describe('Controller:MediaReportsController', function () {
   describe('filter changes', function () {
     it('should set all page variables', function () {
       expect(controller.timeOptions).toEqual(timeOptions);
-      expect(controller.timeSelected).toEqual(timeOptions[0]);
+      expect(controller.timeSelected).toEqual(timeOptions[1]);
     });
     it('All graphs should update on cluster filter changes', function () {
       controller.clusterSelected = allClusters;
@@ -139,10 +139,10 @@ describe('Controller:MediaReportsController', function () {
       spyOn(MediaReportsService, 'getParticipantDistributionData').and.returnValue($q.resolve(participantDistributionGraphData));
       controller.clusterUpdate();
       httpMock.flush();
-      expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
-      expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
-      expect(MediaReportsService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
-      expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
+      expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
+      expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
+      expect(MediaReportsService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
+      expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
     });
   });
 
@@ -201,7 +201,7 @@ describe('Controller:MediaReportsController', function () {
       expect(controller.onprem).toBe(20);
       expect(controller.cloudOverflow).toBe(30);
       expect(controller.total).toBe(50);
-      expect(controller.second_card_value).toBe(30);
+      expect(controller.second_card_value).toBe("30");
     });
 
     it('setClientTypeCard should invoke getClienTypeCardData', function () {

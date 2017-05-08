@@ -36,23 +36,24 @@
 
       if (typeof to.authenticate === 'undefined' || to.authenticate) {
         if (Authinfo.isInitialized()) {
-
-          TOSService.hasAcceptedTOS()
-            .then(function (acceptedTOS) {
-              if (!Authinfo.isAllowedState(to.name)) {
-                e.preventDefault();
-                $state.go('unauthorized');
-              } else if (OnlineUpgradeService.shouldForceUpgrade()) {
-                e.preventDefault();
-                OnlineUpgradeService.openUpgradeModal();
-              } else if (!acceptedTOS) {
-                e.preventDefault();
-                TOSService.openTOSModal();
-              } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
-                e.preventDefault();
-                $state.go('firsttimewizard');
-              }
-            });
+          if (!Authinfo.isAllowedState(to.name)) {
+            e.preventDefault();
+            $state.go('unauthorized');
+          } else {
+            TOSService.hasAcceptedTOS()
+                .then(function (acceptedTOS) {
+                  if (OnlineUpgradeService.shouldForceUpgrade()) {
+                    e.preventDefault();
+                    OnlineUpgradeService.openUpgradeModal();
+                  } else if (!acceptedTOS) {
+                    e.preventDefault();
+                    TOSService.openTOSModal();
+                  } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
+                    e.preventDefault();
+                    $state.go('firsttimewizard');
+                  }
+                });
+          }
         } else {
           e.preventDefault();
           SessionStorage.put(StorageKeys.REQUESTED_STATE_NAME, to.name);

@@ -8,8 +8,15 @@
   /* @ngInject */
   function ServiceDescriptor($http, UrlConfig, Authinfo, Orgservice) {
 
+    function getServiceStatus(serviceId, orgId) {
+      return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/services/' + serviceId + '/status')
+        .then(function (response) {
+          return response.data;
+        });
+    }
+
     function getServices(orgId) {
-      return $http.get(UrlConfig.getHerculesUrl() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/services')
+      return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/services')
         .then(extractData);
     }
 
@@ -31,7 +38,7 @@
 
     var getEmailSubscribers = function (serviceId) {
       return $http
-        .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/services')
         .then(function (response) {
           var data = response.data;
           var service = _.find(data.items, {
@@ -46,7 +53,7 @@
 
     var setEmailSubscribers = function (serviceId, emailSubscribers) {
       return $http
-        .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+        .patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
           emailSubscribers: emailSubscribers,
         });
     };
@@ -98,7 +105,7 @@
     };
 
     var enableService = function (serviceId) {
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId;
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId;
       return $http.patch(url, {
         enabled: true,
       })
@@ -106,7 +113,7 @@
     };
 
     var disableService = function (serviceId) {
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId;
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId;
       return $http.patch(url, {
         enabled: false,
       })
@@ -123,18 +130,11 @@
         });
     };
 
-    var acknowledgeService = function (serviceId) {
-      return $http
-        .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
-          acknowledged: true,
-        });
-    };
-
     return {
       filterEnabledServices: filterEnabledServices,
       filterAllExceptManagement: filterAllExceptManagement,
       isServiceEnabled: isServiceEnabled,
-      acknowledgeService: acknowledgeService,
+      getServiceStatus: getServiceStatus,
       getServices: getServices,
       getEmailSubscribers: getEmailSubscribers,
       setEmailSubscribers: setEmailSubscribers,

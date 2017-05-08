@@ -13,8 +13,11 @@ describe('Component: pgNumber service', () => {
     }];
 
   let successResponse2 = {
-    number: '2222',
-    uuid: '22a2dc30-041f-4d25-9351-325eb1db7f79',
+    numbers: [{
+      number: '2222',
+      uuid: '22a2dc30-041f-4d25-9351-325eb1db7f79',
+      type: 'NUMBER_FORMAT_EXTENSION',
+    }],
   };
 
   let numberData = <INumberData> {
@@ -55,9 +58,14 @@ describe('Component: pgNumber service', () => {
   });
 
   it('should get the extension based on number uuid', function () {
-    this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers/22a2dc30-041f-4d25-9351-325eb1db7f79').respond(200, successResponse2);
-    this.PagingNumberService.getNumberExtension(numberData.extensionUUID).then(function (response) {
-      expect(response).toEqual(numberData);
+    let numberData3 = <INumberData> {
+      extension: '2222',
+      extensionUUID: undefined,
+    };
+    let groupId: string = 'abcd1234-abcd-abcd-abcddef123456';
+    this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/paging/' + groupId + '/numbers').respond(200, successResponse2);
+    this.PagingNumberService.getNumberExtension(groupId).then(function (response) {
+      expect(response).toEqual(numberData3);
     });
     this.$httpBackend.flush();
   });

@@ -134,4 +134,55 @@ describe('Service: contextFieldsService', function () {
       this.$httpBackend.flush();
     });
   });
+
+  describe('updateAndGetField', function () {
+    it('should update, get and return the field', function () {
+      this.$httpBackend.expectPUT(dictionaryUrl + '/dictionary/field/v1/id/someId').respond(200, {});
+      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/field/v1/id/someId').respond(200, {
+        id: 'someId',
+        data: 'someData',
+      });
+      this.ContextFieldsService.updateAndGetField({
+        id: 'someId',
+      }).then(function (field) {
+        expect(field.id).toBe('someId');
+        expect(field.data).toBe('someData');
+      }).catch(fail);
+      this.$httpBackend.flush();
+    });
+
+    it('should reject if error occurs', function () {
+      this.$httpBackend.expectPUT(dictionaryUrl + '/dictionary/field/v1/id/someId').respond(400, 'some error');
+      this.ContextFieldsService.updateAndGetField({
+        id: 'someId',
+      }).then(function () {
+        fail('ContextFieldsService.updateAndGetField should have rejected');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.data).toBe('some error');
+        expect(errorResponse.status).toBe(400);
+      });
+      this.$httpBackend.flush();
+    });
+  });
+
+  describe('deleteField', function () {
+    it('should return upon successful delete', function () {
+      this.$httpBackend.expectDELETE(dictionaryUrl + '/dictionary/field/v1/id/fieldId').respond(200);
+      this.ContextFieldsService.deleteField('fieldId').then(function (response) {
+        expect(response.status).toBe(200);
+      }).catch(fail);
+      this.$httpBackend.flush();
+    });
+
+    it('should reject if delete fails', function () {
+      this.$httpBackend.expectDELETE(dictionaryUrl + '/dictionary/field/v1/id/fieldId').respond(404, 'Not found');
+      this.ContextFieldsService.deleteField('fieldId').then(function () {
+        fail('ContextFieldsService.deleteField should have rejected');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.data).toBe('Not found');
+        expect(errorResponse.status).toBe(404);
+      });
+      this.$httpBackend.flush();
+    });
+  });
 });

@@ -13,8 +13,7 @@
   }
 
   .filter-dropdown {
-    width: 250px;
-    margin-right: 24px;
+    width: 16rem;
   }
 }
 
@@ -33,13 +32,13 @@
     }
 
     .service-icon {
-      color: $gray-dark-2;
+      color: $gray-base;
       margin-right: 1rem;
       font-size: 1rem;
     }
 
     .service-icon-managed-by-others {
-      color: $gray-light-1;
+      color: $gray-light-2;
       margin-right: 1rem;
       font-size: 1rem;
     }

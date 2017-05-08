@@ -16,8 +16,6 @@ class MySubscriptionCtrl {
   public loading: boolean = false;
   public digitalRiverSubscriptionsUrl: string;
   public isSharedMeetingsReportsEnabled: boolean;
-  public isSharedMeetingsEnabled: boolean;
-  public temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
   public temporarilyOverrideSharedMeetingsReportsFeatureToggle = { default: false, defaultValue: true };
   public bmmpAttr: IBmmpAttr;
 
@@ -95,7 +93,7 @@ class MySubscriptionCtrl {
   }
 
   public isSharedMeetingsLicense(offer: ISubscription): boolean {
-    return _.lowerCase(_.get(offer, 'licenseModel', '')) === this.Config.licenseModel.cloudSharedMeeting;
+    return _.toLower(_.get(offer, 'licenseModel', '')) === this.Config.licenseModel.cloudSharedMeeting;
   }
 
   public determineLicenseType(offer: ISubscription): string {
@@ -107,14 +105,6 @@ class MySubscriptionCtrl {
   }
 
   private initFeatures(): void {
-    if (this.temporarilyOverrideSharedMeetingsFeatureToggle.default === true) {
-      this.isSharedMeetingsEnabled = this.temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue;
-    } else {
-      this.FeatureToggleService.atlasSharedMeetingsGetStatus().then((status) => {
-        this.isSharedMeetingsEnabled = status;
-      });
-    }
-
     if (this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.default) {
       this.isSharedMeetingsReportsEnabled = this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.defaultValue;
     } else {
@@ -213,7 +203,7 @@ class MySubscriptionCtrl {
   }
 
   private subscriptionRetrieval(): void {
-    this.Orgservice.getLicensesUsage().then((subscriptions: Array<any>): void => {
+    this.Orgservice.getLicensesUsage(false).then((subscriptions: Array<any>): void => {
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
         let newSubscription: ISubscription = {
           licenses: [],
@@ -323,68 +313,63 @@ class MySubscriptionCtrl {
 
       let enterpriseSubs = 1;
       let enterpriseTrials = 1;
-      _.forEach(this.subscriptionDetails, (subscription: ISubscription, index: number): void => {
-        if (!subscription.isOnline) {
-          if (subscription.isTrial) {
-            this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.enterpriseTrial', { number: enterpriseTrials++ });
-            this.hasEnterpriseTrial = true;
+      this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((instances) => {
+        _.forEach(this.subscriptionDetails, (subscription: ISubscription, index: number): void => {
+          if (!subscription.isOnline) {
+            if (subscription.isTrial) {
+              this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.enterpriseTrial', { number: enterpriseTrials++ });
+              this.hasEnterpriseTrial = true;
+            } else {
+              this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
+            }
           } else {
-            this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
+            const prodResponse: IProdInst = _.find(instances, ['subscriptionId', subscription.internalSubscriptionId]);
+            if (subscription.isTrial) {
+              this.setBMMPTrial(subscription, prodResponse);
+            } else {
+              this.setBMMP(subscription, prodResponse);
+            }
           }
-        } else {
-          if (subscription.isTrial) {
-            this.setBMMPTrial(subscription, this.Authinfo.getUserId());
-          } else {
-            this.setBMMP(subscription, this.Authinfo.getUserId());
-          }
-        }
+        });
       });
     });
   }
 
-  private setBMMP(subscription: ISubscription, userId: string): void {
-    this.OnlineUpgradeService.getProductInstance(userId, subscription.internalSubscriptionId).then((prodResponse: IProdInst) => {
-      if (prodResponse) {
-        subscription.productInstanceId = prodResponse.productInstanceId;
-        subscription.name = prodResponse.name;
-        const env: string = _.includes(prodResponse.name, 'Spark') ? 'spark' : 'webex';
-        this.getChangeSubURL(env).then((urlResponse) => {
-          if (urlResponse) {
-            subscription.changeplanOverride = urlResponse;
+  private setBMMP(subscription: ISubscription, prodResponse: IProdInst): void {
+    subscription.productInstanceId = prodResponse.productInstanceId;
+    subscription.name = prodResponse.name;
+    const env: string = _.includes(prodResponse.name, 'Spark') ? 'spark' : 'webex';
+    this.getChangeSubURL(env).then((urlResponse) => {
+      if (urlResponse) {
+        subscription.changeplanOverride = urlResponse;
 
-            if (subscription.internalSubscriptionId && subscription.productInstanceId) {
-              this.bmmpAttr = {
-                subscriptionId: subscription.internalSubscriptionId,
-                productInstanceId: subscription.productInstanceId,
-                changeplanOverride: urlResponse,
-              };
-            }
-            this.broadcastSingleSubscription(subscription, undefined);
-          }
-        });
+        if (subscription.internalSubscriptionId && subscription.productInstanceId) {
+          this.bmmpAttr = {
+            subscriptionId: subscription.internalSubscriptionId,
+            productInstanceId: subscription.productInstanceId,
+            changeplanOverride: urlResponse,
+          };
+        }
+        this.broadcastSingleSubscription(subscription, undefined);
       }
     });
   }
 
-  private setBMMPTrial(subscription: ISubscription, userId: string): void {
+  private setBMMPTrial(subscription: ISubscription, prodResponse: IProdInst): void {
     if (subscription.internalSubscriptionId) {
       this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response: any): void => {
         if (response) {
-          this.OnlineUpgradeService.getProductInstance(userId, subscription.internalSubscriptionId).then((prodResponse: IProdInst) => {
-            if (prodResponse) {
-              subscription.productInstanceId = prodResponse.productInstanceId;
-              subscription.name = prodResponse.name;
+          subscription.productInstanceId = prodResponse.productInstanceId;
+          subscription.name = prodResponse.name;
 
-              if (subscription.internalSubscriptionId && subscription.productInstanceId) {
-                this.bmmpAttr = {
-                  subscriptionId: subscription.internalSubscriptionId,
-                  productInstanceId: subscription.productInstanceId,
-                  changeplanOverride: '',
-                };
-              }
-              this.broadcastSingleSubscription(subscription, response);
-            }
-          });
+          if (subscription.internalSubscriptionId && subscription.productInstanceId) {
+            this.bmmpAttr = {
+              subscriptionId: subscription.internalSubscriptionId,
+              productInstanceId: subscription.productInstanceId,
+              changeplanOverride: '',
+            };
+          }
+          this.broadcastSingleSubscription(subscription, response);
         }
         subscription.upgradeTrialUrl = response;
       });

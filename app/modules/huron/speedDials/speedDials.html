@@ -7,18 +7,24 @@
   <cs-sp-container>
     <div class="warning" ng-show="$ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.reordering">
       <div class="cs-input__messages">
-        <div class="message limit-reach-warning" translate="speedDial.limitSpeedDialReach"></div>
+        <div class="message limit-reach-warning" translate="speedDials.limitSpeedDialsReach"></div>
       </div>
     </div>
     <cs-sp-section>
       <section-title
         title-key="speedDials.title"
         action-list="$ctrl.actionList"
+        show-actions="$ctrl.speedDialList.length != 0"
         ng-class="{'sd-title-with-warning': $ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.reordering}">
       </section-title>
       <div>
         <form name="$ctrl.form" novalidate role="form">
           <div id="speedDialsContainer" class="sd-container">
+            <div class="center sd-empty-state" ng-if="$ctrl.speedDialList.length === 0">
+               <div class="h3" translate="speedDials.noSpeedDials"></div>
+               <div class="h5" translate="speedDials.speedDiallDescription"></div>
+               <button class="btn btn--primary" type="submit" ng-click="$ctrl.add()" translate="speedDials.addSpeedDial"></button>
+            </div>
             <div ng-repeat="sd in $ctrl.speedDialList" ng-class="{'sd-reorder': $ctrl.reordering}">
               <div ng-if="!sd.edit" class="sd-readonly-wrapper">
                 <div>

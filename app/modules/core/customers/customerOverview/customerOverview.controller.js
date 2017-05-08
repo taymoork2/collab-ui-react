@@ -38,7 +38,7 @@ require('./_customer-overview.scss');
     vm.isTest = false;
     vm.countryCode = 'US';
     vm.isDeleting = false;
-    vm.isOrgSetup = false;
+    vm.isOrgSetup = null;
     vm.isUpdateStatusEnabled = true;
 
     vm.partnerOrgId = Authinfo.getOrgId();
@@ -112,7 +112,7 @@ require('./_customer-overview.scss');
       getLogoSettings();
       getIsSetupDone();
       getCountryCode();
-      Orgservice.isTestOrg()
+      Orgservice.isTestOrg(vm.customerOrgId)
         .then(function (isTestOrg) {
           vm.isTest = isTestOrg;
         });
@@ -125,7 +125,7 @@ require('./_customer-overview.scss');
           actionFunction: openEditTrialModal,
         });
       } else {
-        if (!vm.currentCustomer.trialId) {
+        if (!vm.currentCustomer.trialId && _.get(vm.currentCustomer, 'licenseList.length', 0) > 0) {
           vm.trialActions.push({
             actionKey: 'customerPage.addTrial',
             actionFunction: openAddTrialModal,
@@ -204,6 +204,7 @@ require('./_customer-overview.scss');
       //   'Userservice.updateUsers()'
       // - this call is required in order to patch the partner-admin user as appropriate such that
       //   admin access to webex sites is enabled
+      vm.loadingCustomerPortal = true;
       var liclist = vm.currentCustomer.licenseList;
       var licIds = collectLicenseIdsForWebexSites(liclist);
       var partnerEmail = Authinfo.getPrimaryEmail();
@@ -264,10 +265,20 @@ require('./_customer-overview.scss');
     }
 
     function openCustomerPortal() {
-      return $window.open($state.href('login_swap', {
+      vm.loadingCustomerPortal = false;
+      var openWindow = $window.open($state.href('login_swap', {
         customerOrgId: vm.customerOrgId,
         customerOrgName: vm.customerName,
       }));
+
+      if (!openWindow || openWindow.closed || typeof openWindow.closed === 'undefined') {
+        $modal.open({
+          type: 'dialog',
+          templateUrl: 'modules/core/customers/customerOverview/popUpBlocked.tpl.html',
+        });
+      }
+
+      return openWindow;
     }
 
     function openEditTrialModal() {

@@ -8,11 +8,21 @@ describe('FlagService', () => {
   beforeEach(angular.mock.module(mockDeps));
   beforeEach(inject(dependencies));
 
+  afterEach(() => {
+    $httpBackend.flush();
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   function mockDeps($provide: any): any {
     const UrlConfig = {
       getFlagServiceUrl: () => 'http://ekorn.no/fls/api/v1',
     };
     $provide.value('UrlConfig', UrlConfig);
+    const Authinfo = {
+      getOrgId: () => 'kjereeorg',
+    };
+    $provide.value('Authinfo', Authinfo);
   }
 
   function dependencies(_HybridServicesFlagService_: HybridServicesFlagService, _$httpBackend_: any): void {
@@ -26,8 +36,7 @@ describe('FlagService', () => {
         'http://ekorn.no/fls/api/v1/organizations/kjereeorg/flags/fms.foo',
         { name: 'fms.foo', raised: true })
       .respond(200);
-    HybridServicesFlagService.raiseFlag('kjereeorg', 'fms.foo');
-    $httpBackend.flush();
+    HybridServicesFlagService.raiseFlag('fms.foo');
   });
 
   it('lowers the flag in the backend when a caller lowers it', () => {
@@ -36,8 +45,7 @@ describe('FlagService', () => {
         'http://ekorn.no/fls/api/v1/organizations/kjereeorg/flags/fms.foo',
         { name: 'fms.foo', raised: false })
       .respond(200);
-    HybridServicesFlagService.lowerFlag('kjereeorg', 'fms.foo');
-    $httpBackend.flush();
+    HybridServicesFlagService.lowerFlag('fms.foo', 'kjereeorg');
   });
 
   it('reads the flag from the backend and returns it when a caller reads it', () => {
@@ -45,12 +53,11 @@ describe('FlagService', () => {
       .expectGET('http://ekorn.no/fls/api/v1/organizations/kjereeorg/flags/fms.notRaised')
       .respond( { name: 'fms.notRaised', raised: false });
     HybridServicesFlagService
-      .readFlag('kjereeorg', 'fms.notRaised')
+      .readFlag('fms.notRaised', 'kjereeorg')
       .then((flag) => {
         expect(flag).toEqual(new HybridServicesFlag('fms.notRaised', false));
       })
       .catch(() => fail());
-    $httpBackend.flush();
   });
 
   it('reads multiple flags from the backend and returns them when a caller asks for them', () => {
@@ -58,14 +65,13 @@ describe('FlagService', () => {
       .expectGET('http://ekorn.no/fls/api/v1/organizations/kjereeorg/flags?name=fms.notRaised&name=fms.raised')
       .respond({ items: [ { name: 'fms.notRaised', raised: false }, { name: 'fms.raised', raised: true } ] });
     HybridServicesFlagService
-      .readFlags('kjereeorg', ['fms.notRaised', 'fms.raised'])
+      .readFlags(['fms.notRaised', 'fms.raised'], 'kjereeorg')
       .then((flags) => {
         expect(flags.length).toBe(2);
         expect(flags[0]).toEqual(new HybridServicesFlag('fms.notRaised', false));
         expect(flags[1]).toEqual(new HybridServicesFlag('fms.raised', true));
       })
       .catch(() => fail());
-    $httpBackend.flush();
   });
 
   it('returns a failed promise to the caller when it gets a 429 from the backend', () => {
@@ -73,9 +79,8 @@ describe('FlagService', () => {
       .expectGET('http://ekorn.no/fls/api/v1/organizations/kjereeorg/flags/fms.foo')
       .respond(429);
     HybridServicesFlagService
-      .readFlag('kjereeorg', 'fms.foo')
+      .readFlag('fms.foo', 'kjereeorg')
       .then(() => fail())
       .catch((reason) => expect(reason).toBeDefined());
-    $httpBackend.flush();
   });
 });

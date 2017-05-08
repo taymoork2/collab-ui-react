@@ -19,6 +19,16 @@
   .meeting-location-reports {
     z-index: 1;
   }
+  .insight-balloon-div {
+    display: inline-block;
+    background-color: #FFF;
+    margin-bottom: -8px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .dis-inline-block {
+    display: inline-block;
+  }
   .amcharts-export-menu {
     opacity: 1 !important;
     z-index: 100;
@@ -47,7 +57,21 @@
       font-family: $brand-font-cisco-TT-Light;
       font-size: rem-calc(22);
       text-align: left;
-      padding: rem-calc(15);
+      padding: rem-calc(20) rem-calc(6) rem-calc(18) rem-calc(19);
+    }
+    .header-padding {
+      padding-top: 15px !important;
+    }
+    .tooltip[popup-class="metrics-tooltip"] .c-nub {
+      background-color: #333333;
+      border: 0.2px solid #333333;
+      max-width: 300px;
+      color: #d6d6d6;
+      line-height: 1.4rem;
+      font-size: 0.8rem;
+    }
+    .tooltip[popup-class="metrics-tooltip"] .nub {
+      border-color: transparent;
     }
     .barchart {
       font-size: rem-calc(11);

@@ -45,7 +45,6 @@
     var runActionInputName = 'runActionsOnInput';
     var errMissingVariableNameMsg = 'autoAttendant.callerInputMenuErrorVariableNameMissing';
     var errCallerInputNoInputValuesEnteredMsg = 'autoAttendant.callerInputMenuErrorNoInputValuesEntered';
-    var errPhoneMenuNoInputValuesEnteredMsg = 'autoAttendant.phoneMenuMenuErrorNoInputValuesEntered';
     var errSubMenuNoInputValuesEnteredMsg = 'autoAttendant.subMenuErrorNoInputValuesEntered';
     var errMissingIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableMissing';
     var errUnevenQuotesIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableUnevenQouotes';
@@ -221,6 +220,9 @@
           schedule: translatedLabel,
           at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
         });
+      } else if (_.isEqual(action.if.leftCondition, 'callerReturned')) {
+        //dropdown default is suitable, but we don't want the other errors
+        //to be set up
       } else if (_.isEmpty(action.if.rightCondition)) {
         validAction = false;
         AANotificationService.error(errMissingIsVariableMsg, {
@@ -311,18 +313,7 @@
       var isValid = true;
 
       if (_.has(optionMenu, 'entries') && (optionMenu.entries.length > 0)) {
-
-        if (noInputsEntered(optionMenu)) {
-          errors.push({
-            msg: errPhoneMenuNoInputValuesEnteredMsg,
-          });
-        } else {
-          checkAllKeys(optionMenu, fromLane, errors, 0);
-        }
-      } else {
-        errors.push({
-          msg: errPhoneMenuNoInputValuesEnteredMsg,
-        });
+        checkAllKeys(optionMenu, fromLane, errors, 0);
       }
       _.forEach(errors, function (err) {
         isValid = false;

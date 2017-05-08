@@ -3,19 +3,21 @@
 describe('Controller: HuronSettingsCtrl', function () {
   var $scope, $q, $httpBackend;
   var Authinfo, Notification;
-  var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
-  var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
+  var ExternalNumberService, PstnService, ModalService;
+  var HuronCustomer, HuronCustomerService, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, internalNumberRanges, languages, avrilSites;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
   var $rootScope, FeatureToggleService, TerminusUserDeviceE911Service, Orgservice;
 
   var controller, compile, styleSheet, element, window;
 
+  var restrictions = getJSONFixture('huron/json/cos/customerCos.json');
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
-    _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
+  beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _HuronCustomerService_,
+    _PstnService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
     _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_, _TerminusUserDeviceE911Service_, _Orgservice_) {
 
     $q = _$q_;
@@ -26,12 +28,12 @@ describe('Controller: HuronSettingsCtrl', function () {
     Authinfo = _Authinfo_;
     Notification = _Notification_;
     ExternalNumberService = _ExternalNumberService_;
-    DialPlanService = _DialPlanService_;
-    PstnSetupService = _PstnSetupService_;
+    PstnService = _PstnService_;
     ModalService = _ModalService_;
     ServiceSetup = _ServiceSetup_;
     InternationalDialing = _InternationalDialing_;
     HuronCustomer = _HuronCustomer_;
+    HuronCustomerService = _HuronCustomerService_;
     HuronConfig = _HuronConfig_;
     CallerId = _CallerId_;
     VoicemailMessageAction = _VoicemailMessageAction_;
@@ -68,14 +70,16 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
     spyOn(ServiceSetup, 'getAvrilSite').and.returnValue($q.resolve(avrilSites));
     spyOn(ServiceSetup, 'updateAvrilSite').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'getMediaOnHoldList').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'setCompanyMediaOnHold').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
-    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.resolve());
-    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.resolve({
+    spyOn(PstnService, 'getCustomer').and.returnValue($q.resolve());
+    spyOn(HuronCustomerService, 'getVoiceCustomer').and.returnValue($q.resolve({
       dialPlanDetails: {
         extensionGenerated: 'false',
       },
     }));
-    spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.resolve());
+    spyOn(HuronCustomerService, 'updateVoiceCustomer').and.returnValue($q.resolve());
     spyOn(TerminusUserDeviceE911Service, 'update').and.returnValue($q.resolve());
     spyOn(Orgservice, 'getOrg').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listSites').and.callFake(function () {
@@ -93,7 +97,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'listCosRestrictions').and.returnValue($q.resolve(cosRestrictions));
     spyOn(ServiceSetup, 'updateCosRestriction').and.returnValue($q.resolve());
     spyOn(InternationalDialing, 'isDisableInternationalDialing').and.returnValue($q.resolve(true));
-    spyOn(PstnSetupService, 'listCustomerCarriers').and.returnValue($q.resolve(customerCarriers));
+    spyOn(PstnService, 'listCustomerCarriers').and.returnValue($q.resolve(customerCarriers));
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise,
     });
@@ -122,6 +126,12 @@ describe('Controller: HuronSettingsCtrl', function () {
         countryCode: '+13',
         premiumNumbers: ['800', '900'],
       });
+    $httpBackend
+      .whenGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/restrictions')
+      .respond(restrictions);
+    $httpBackend
+      .whenPUT(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/restrictions')
+      .respond(204);
   }));
 
   describe('SettingsCtrlBasic', function () {
@@ -148,8 +158,8 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(ServiceSetup.listInternalNumberRanges).toHaveBeenCalled();
       expect(ServiceSetup.listSites).toHaveBeenCalled();
       expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
-      expect(ServiceSetup.listCosRestrictions).toHaveBeenCalled();
       expect(controller.model.callerId.callerIdName).toEqual('Cisco');
+      expect(ServiceSetup.getMediaOnHoldList).toHaveBeenCalled();
     });
 
     it('should save new internal number range', function () {
@@ -349,6 +359,18 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
+    it('should update the Company Media on Hold when changed', function () {
+      controller.model.mediaOnHold = {
+        label: 'Fake Music',
+        value: '1234-dcba',
+      };
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.setCompanyMediaOnHold).toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+    });
+
     it('should update the company pilot number and voicemail site timezone', function () {
       controller.unassignedExternalNumbers = [{
         uuid: '1234',
@@ -499,16 +521,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       $scope.$apply();
 
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
-    });
-
-    it('should show international dialing when feature toggle is ON', function () {
-      InternationalDialing.isDisableInternationalDialing.and.returnValue($q.resolve(false));
-
-      controller.save();
-      $scope.$apply();
-
-      expect(ServiceSetup.updateCosRestriction).toHaveBeenCalled();
-      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
     it('should update the timezone options when collection changes', function () {
@@ -1063,20 +1075,20 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
 
     describe('dailing habits', function () {
-      it('should not call DialPlanService when dailing habit is not changed', function () {
+      it('should not call HuronCustomerService when dailing habit is not changed', function () {
         controller.model.regionCode = '';
         controller.previousModel.regionCode = '';
         controller.save();
         $scope.$apply();
-        expect(DialPlanService.updateCustomerVoice).not.toHaveBeenCalled();
+        expect(HuronCustomerService.updateVoiceCustomer).not.toHaveBeenCalled();
       });
 
-      it('should call DialPlanService when dailing habit is changed', function () {
+      it('should call HuronCustomerService when dailing habit is changed', function () {
         controller.model.regionCode = '214';
         controller.previousModel.regionCode = '';
         controller.save();
         $scope.$apply();
-        expect(DialPlanService.updateCustomerVoice).toHaveBeenCalled();
+        expect(HuronCustomerService.updateVoiceCustomer).toHaveBeenCalled();
       });
     });
   });

@@ -3,6 +3,7 @@ namespace globalsettings {
 
     public ssoStatusLoaded = false;
     public ssoEnabled: boolean = false;
+    public ssoStatus: string;
     public ssoStatusText: string;
 
     /* @ngInject */
@@ -21,6 +22,7 @@ namespace globalsettings {
 
     private setSSOStatus(ssoEnabled: boolean) {
       this.ssoEnabled = ssoEnabled;
+      this.ssoStatus = ssoEnabled ? 'success' : 'disabled';
       this.ssoStatusLoaded = true;
       this.ssoStatusText = `ssoModal.${ this.ssoEnabled ? 'ssoEnabledStatus' : 'ssoNotEnabledStatus' }`;
     }
@@ -30,6 +32,7 @@ namespace globalsettings {
         currentTab: 'enterpriseSettings',
         currentStep: 'init',
         onlyShowSingleTab: true,
+        showStandardModal: true,
       });
     }
   }

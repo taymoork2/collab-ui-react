@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService, $q) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnModel, PstnService, TelephoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService, $q) {
     var vm = this;
 
     var NXX = 'nxx';
@@ -17,6 +17,7 @@
     var SELECT = '';
     var MIN_VALID_CODE = 3;
     var MAX_VALID_CODE = 6;
+    var MAX_DID_QUANTITY = 100;
 
     vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
@@ -40,6 +41,7 @@
     vm.addToCart = addToCart;
     vm.removeOrder = removeOrder;
     vm.maxSelection = pstnTokenLimit;
+    vm.manualTokenChange = manualTokenChange;
     vm.location = '';
     vm.paginateOptions = {
       currentPage: 0,
@@ -212,21 +214,21 @@
     }
 
     function onProviderChange(reset) {
-      vm.trialData.details.pstnProvider = PstnSetup.getProvider();
+      vm.trialData.details.pstnProvider = PstnModel.getProvider();
       vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
       resetNumberSearch(reset);
       vm.providerSelected = true;
     }
 
     function onProviderReady() {
-      if (PstnSetup.getCarriers().length === 1) {
-        PstnSetup.getCarriers()[0].selected = true;
-        PstnSetup.setProvider(PstnSetup.getCarriers()[0]);
+      if (PstnModel.getCarriers().length === 1) {
+        PstnModel.getCarriers()[0].selected = true;
+        PstnModel.setProvider(PstnModel.getCarriers()[0]);
         onProviderChange();
       } else {
-        PstnSetup.getCarriers().forEach(function (pstnCarrier) {
+        PstnModel.getCarriers().forEach(function (pstnCarrier) {
           if (pstnCarrier.selected) {
-            PstnSetup.setProvider(pstnCarrier);
+            PstnModel.setProvider(pstnCarrier);
             onProviderChange();
           }
         });
@@ -235,10 +237,10 @@
 
     function _setupResellers() {
       if (!vm.trialData.reseller) {
-        PstnSetupService.getResellerV2().then(function () {
+        PstnService.getResellerV2().then(function () {
           vm.trialData.reseller = true;
         }).catch(function () {
-          PstnSetupService.createResellerV2().then(function () {
+          PstnService.createResellerV2().then(function () {
             vm.trialData.reseller = true;
           }).catch(function (response) {
             Notification.errorResponse(response, 'pstnSetup.resellerCreateError');
@@ -260,7 +262,7 @@
       vm.trialData.details.pstnNumberInfo.nxx = null;
       vm.pstn.nxxEnable = false;
       resetNumbers();
-      PstnSetupService.getCarrierInventory(
+      PstnService.getCarrierInventory(
         vm.trialData.details.pstnProvider.uuid,
         vm.trialData.details.pstnNumberInfo.state.abbreviation
       ).then(
@@ -288,7 +290,7 @@
       vm.trialData.details.pstnNumberInfo.nxx = null;
       searchCarrierInventory();
       //Get Exchanges
-      PstnSetupService.getCarrierInventory(
+      PstnService.getCarrierInventory(
         vm.trialData.details.pstnProvider.uuid,
         vm.trialData.details.pstnNumberInfo.state.abbreviation,
         vm.trialData.details.pstnNumberInfo.areaCode.code
@@ -333,7 +335,7 @@
     }
 
     function removeOrder(order) {
-      PstnSetupService.releaseCarrierInventoryV2(PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, PstnSetup.isCustomerExists())
+      PstnService.releaseCarrierInventoryV2(PstnModel.getCustomerId(), order.reservationId, order.data.numbers, PstnModel.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
     }
 
@@ -346,7 +348,7 @@
           var searchResultsIndex = (vm.paginateOptions.currentPage * vm.paginateOptions.pageSize) + key;
           if (searchResultsIndex < vm.searchResults.length && !vm.trialData.details.pstnNumberInfo.numbers.includes(vm.searchResults[searchResultsIndex])) {
             var numbers = vm.searchResults[searchResultsIndex];
-            reservation = PstnSetupService.reserveCarrierInventoryV2(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
+            reservation = PstnService.reserveCarrierInventoryV2(PstnModel.getCustomerId(), PstnModel.getProviderId(), numbers, PstnModel.isCustomerExists());
             var promise = reservation
               .then(function (reservationData) {
                 var order = {
@@ -393,7 +395,7 @@
       }
       var params = {
         npa: vm.trialData.details.pstnNumberInfo.areaCode.code,
-        count: '1',
+        count: MAX_DID_QUANTITY,
         sequential: false,
       };
 
@@ -410,7 +412,7 @@
         }
       }
 
-      PstnSetupService.searchCarrierInventory(vm.trialData.details.pstnProvider.uuid, params)
+      PstnService.searchCarrierInventory(vm.trialData.details.pstnProvider.uuid, params)
         .then(function (numberRanges) {
           vm.searchResults = _.flatten(numberRanges);
           vm.showNoResult = vm.searchResults.length === 0;
@@ -511,16 +513,16 @@
     }
 
     function _listCarriers(localScope) {
-      PstnSetupService.listResellerCarriers().then(function (carriers) {
+      PstnService.listResellerCarriers().then(function (carriers) {
         if (_.isArray(carriers) && carriers.length > 0) {
           _showCarriers(carriers, localScope);
         } else {
-          PstnSetupService.listDefaultCarriers().then(function (carriers) {
+          PstnService.listDefaultCarriers().then(function (carriers) {
             _showCarriers(carriers, localScope);
           });
         }
       }).catch(function () {
-        PstnSetupService.listDefaultCarriers().then(function (carriers) {
+        PstnService.listDefaultCarriers().then(function (carriers) {
           _showCarriers(carriers, localScope);
         });
       });
@@ -553,6 +555,11 @@
         vm.trialData.details.pstnProvider = localScope.to.options[0];
         vm.providerImplementation = localScope.to.options[0].apiImplementation;
       }
+    }
+
+    function manualTokenChange(tokens, invalidCount) {
+      vm.trialData.details.swivelNumbers = tokens;
+      vm.invalidCount = invalidCount;
     }
 
     function disableNextButton() {

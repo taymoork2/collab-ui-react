@@ -169,24 +169,25 @@
         showSnapshotReportWithRealData();
       }
       var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
+      var title = generateReportTitle();
       return SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, vm.mediaTypeSelected.name)
         .then(function (data) {
           if (data.length === 0) {
             vm.dataStatus = EMPTY;
           } else {
             vm.dataStatus = SET;
-            CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, categoryAxisTitle, isToday);
-            CareReportsService.showTaskTimeGraph('taskTimeDiv', data, categoryAxisTitle, isToday);
-            CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, isToday);
+            CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, categoryAxisTitle, title, isToday);
+            CareReportsService.showTaskTimeGraph('taskTimeDiv', data, categoryAxisTitle, title, isToday);
+            CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, title, isToday);
             resizeCards();
           }
         }, function (data) {
           vm.dataStatus = EMPTY;
           Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Customer Satisfaction' }));
           if (!isToday) {
-            Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Contact Time Measure' }));
+            Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Task Time Measure' }));
           }
-          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Contacts' }));
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Tasks' }));
         });
     }
 
@@ -198,12 +199,12 @@
             vm.snapshotDataStatus = EMPTY;
           } else {
             vm.snapshotDataStatus = SET;
-            CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, vm.timeSelected.categoryAxisTitle);
+            CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, vm.timeSelected.categoryAxisTitle, generateReportTitle());
             resizeCards();
           }
         }, function (data) {
           vm.snapshotDataStatus = EMPTY;
-          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Aggregated Contacts' }));
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Aggregated Tasks' }));
         });
     }
 
@@ -218,13 +219,22 @@
 
     function showReportsWithDummyData() {
       var dummyData = DummyCareReportService.dummyOrgStatsData(vm.timeSelected.value);
+      var dummyTitle = undefined;
       var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
       var isToday = (vm.timeSelected.value === 0);
-      CareReportsService.showTaskIncomingDummy('taskIncomingdiv', dummyData, categoryAxisTitle, isToday);
-      CareReportsService.showTaskTimeDummy('taskTimeDiv', dummyData, categoryAxisTitle, isToday);
-      CareReportsService.showAverageCsatDummy('averageCsatDiv', dummyData, categoryAxisTitle, isToday);
-      CareReportsService.showTaskAggregateDummy('taskAggregateDiv', dummyData, categoryAxisTitle, isToday);
+      CareReportsService.showTaskIncomingDummy('taskIncomingdiv', dummyData, categoryAxisTitle, dummyTitle, isToday);
+      CareReportsService.showTaskTimeDummy('taskTimeDiv', dummyData, categoryAxisTitle, dummyTitle);
+      CareReportsService.showAverageCsatDummy('averageCsatDiv', dummyData, categoryAxisTitle, dummyTitle);
+      CareReportsService.showTaskAggregateDummy('taskAggregateDiv', dummyData, categoryAxisTitle, dummyTitle);
       resizeCards();
+    }
+
+    function generateReportTitle() {
+      switch (vm.timeSelected.value) {
+        case 0: return (moment().format('MMM D'));
+        case 1: return (moment().subtract(1, 'days').format('MMM D'));
+        default: return undefined;
+      }
     }
 
     function resizeCards() {

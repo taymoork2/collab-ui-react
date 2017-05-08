@@ -1,5 +1,5 @@
 <cs-page-header
-  title="{{$ctrl.title}}"
+  title-name="{{$ctrl.title}}"
   back="true"
   back-url="$ctrl.huronFeaturesUrl">
 </cs-page-header>
@@ -59,7 +59,7 @@
           on-change-fn="$ctrl.setNotifications(playSound, displayCalledParty, displayCallingParty)"
           play-Sound="$ctrl.callPickup.playSound"
           display-calling-party="$ctrl.callPickup.displayCallingPartyId"
-          display-called-party="$ctrl.callPickup.displayCalledPartyId"
+          display-called-party="$ctrl.callPickup.displayCalledPartyId">
         </call-pickup-notifications>
       </div>
     </div>
@@ -76,8 +76,8 @@
           on-update="$ctrl.onUpdateMember(member, isValidMember)"
           selected-members="$ctrl.selectedMembers"
           saved-call-pickup="$ctrl.callPickup"
-          on-edit-update="$ctrl.onEditUpdateMember(savedCallPickup)"
-          ></call-pickup-members>
+          on-edit-update="$ctrl.onEditUpdateMember(savedCallPickup)">
+        </call-pickup-members>
       </div>
     </div>
   </div>

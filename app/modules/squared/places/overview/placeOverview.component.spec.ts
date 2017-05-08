@@ -74,7 +74,6 @@ describe('placeOverview component', () => {
       spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.when('0q9u09as09vu0a9sv'));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(showHybrid));
-      spyOn(FeatureToggleService, 'atlasF237ResourceGroupGetStatus').and.returnValue($q.when({}));
       spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.when({}));
       spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.when({}));
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
@@ -164,7 +163,6 @@ describe('placeOverview component', () => {
                 csdmHybridCalendarFeature: false,
                 hybridCalendarEnabledOnOrg: false,
                 atlasHerculesGoogleCalendarFeatureToggle: false,
-                atlasF237ResourceGroups: false,
                 admin: {
                   firstName: adminFirstName,
                   lastName: adminLastName,
@@ -213,7 +211,6 @@ describe('placeOverview component', () => {
 
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(showHybrid));
-      spyOn(FeatureToggleService, 'atlasF237ResourceGroupGetStatus').and.returnValue($q.when({}));
       spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.when({}));
       spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.when({}));
       spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
@@ -254,7 +251,6 @@ describe('placeOverview component', () => {
             hybridCalendarEnabledOnOrg: false,
             hybridCallEnabledOnOrg: false,
             atlasHerculesGoogleCalendarFeatureToggle: false,
-            atlasF237ResourceGroups: false,
             account: {
               deviceType: 'cloudberry',
               type: 'shared',

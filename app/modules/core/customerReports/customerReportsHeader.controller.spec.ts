@@ -5,14 +5,14 @@ describe('Controller: Customer Reports Ctrl', function () {
     title: 'reportsPage.sparkReports',
     state: 'reports.spark',
   }, {
+    title: 'reportsPage.careTab',
+    state: 'reports.care',
+  }, {
     title: 'reportsPage.webex',
     state: 'reports.webex',
   }, {
     title: 'mediaFusion.report.title',
     state: 'reports.media',
-  }, {
-    title: 'reportsPage.careTab',
-    state: 'reports.care',
   }, {
     title: 'reportsPage.usageReports.usageReportTitle',
     state: 'reports.device-usage',
@@ -81,7 +81,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     });
 
     it('should only display spark and care reports tab', function () {
-      expect(this.controller.headerTabs).toEqual([headerTabs[0], headerTabs[3], headerTabs[4]]);
+      expect(this.controller.headerTabs).toEqual([headerTabs[0], headerTabs[1], headerTabs[4]]);
     });
 
   });

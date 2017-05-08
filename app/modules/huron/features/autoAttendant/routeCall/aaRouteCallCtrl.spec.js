@@ -2,7 +2,7 @@
 
 describe('Controller: AARouteCallMenuCtrl', function () {
   var controller;
-  var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService, AACommonService;
+  var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService;
   var $rootScope, $scope, $q;
   var aaUiModel = {
     openHours: {},
@@ -19,19 +19,19 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   }, {
     "label": 'autoAttendant.phoneMenuRouteHunt',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteQueue',
-  }, {
     "label": 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
     "label": 'autoAttendant.phoneMenuRouteUser',
   }, {
     "label": 'autoAttendant.phoneMenuRouteVM',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteQueue',
   }];
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_, _AACommonService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
@@ -39,7 +39,6 @@ describe('Controller: AARouteCallMenuCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     QueueHelperService = _QueueHelperService_;
-    AACommonService = _AACommonService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(QueueHelperService, 'listQueues').and.returnValue($q.resolve(queues));
@@ -59,8 +58,6 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   describe('setSelects', function () {
 
     it('should add a new keyAction object into selectedActions array', function () {
-
-      AACommonService.setRouteQueueToggle(false);
 
       controller = controller('AARouteCallMenuCtrl', {
         $scope: $scope,
@@ -89,8 +86,6 @@ describe('Controller: AARouteCallMenuCtrl', function () {
    */
   describe('Activate ', function () {
     it('test for sorted options', function () {
-
-      AACommonService.setRouteQueueToggle(true);
 
       controller = controller('AARouteCallMenuCtrl', {
         $scope: $scope,

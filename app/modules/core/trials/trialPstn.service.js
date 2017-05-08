@@ -1,12 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialPstnService', TrialPstnService);
+  var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
+  var NUMBER_ORDER = require('modules/huron/pstn').NUMBER_ORDER;
+  module.exports = TrialPstnService;
 
   /* @ngInject */
-  function TrialPstnService($q, Config, Notification, PstnServiceAddressService, PstnSetupService) {
+  function TrialPstnService($q, Config, Notification, PstnServiceAddressService, PstnService) {
     var _trialData;
     var service = {
       getData: getData,
@@ -39,7 +39,7 @@
         reseller: false,
         details: {
           isTrial: true,
-          countryCode: PstnSetupService.getCountryCode(),
+          countryCode: PstnService.getCountryCode(),
           pstnProvider: {},
           swivelNumbers: [],
           pstnContractInfo: {
@@ -89,13 +89,13 @@
     }
 
     function checkForPstnSetup(customerOrgId) {
-      return PstnSetupService.getCustomerV2(customerOrgId);
+      return PstnService.getCustomerV2(customerOrgId);
     }
 
     function reserveNumbersWithCustomerV2(customerOrgId) {
       if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
-        if (angular.isString(_trialData.details.pstnNumberInfo.numbers[0])) {
-          return PstnSetupService.reserveCarrierInventoryV2(
+        if (_.isString(_trialData.details.pstnNumberInfo.numbers[0])) {
+          return PstnService.reserveCarrierInventoryV2(
             customerOrgId,
             _trialData.details.pstnProvider.uuid,
             _trialData.details.pstnNumberInfo.numbers,
@@ -105,8 +105,8 @@
               data: {
                 numbers: reservationData.numbers,
               },
-              numberType: PstnSetupService.NUMTYPE_DID,
-              orderType: PstnSetupService.NUMBER_ORDER,
+              numberType: NUMTYPE_DID,
+              orderType: NUMBER_ORDER,
               reservationId: reservationData.uuid,
             };
             _trialData.details.pstnOrderData.push(order);
@@ -126,7 +126,7 @@
     }
 
     function createPstnCustomerV2(customerOrgId) {
-      return PstnSetupService.createCustomerV2(
+      return PstnService.createCustomerV2(
         customerOrgId,
         _trialData.details.pstnContractInfo.companyName,
         _trialData.details.pstnContractInfo.firstName,
@@ -141,7 +141,7 @@
     }
 
     function orderNumbers(customerOrgId) {
-      return PstnSetupService.orderNumbers(
+      return PstnService.orderNumbers(
         customerOrgId,
         _trialData.details.pstnProvider.uuid,
         _trialData.details.pstnNumberInfo.numbers
@@ -152,7 +152,7 @@
     }
 
     function orderNumbersV2(customerOrgId) {
-      return PstnSetupService.orderNumbersV2(
+      return PstnService.orderNumbersV2(
         customerOrgId,
         _trialData.details.pstnOrderData
       ).catch(function (response) {
@@ -192,17 +192,17 @@
     }
 
     function getCountryCode() {
-      return PstnSetupService.getCountryCode();
+      return PstnService.getCountryCode();
     }
 
     function setCountryCode(countryCode) {
       getData();
       _trialData.details.countryCode = countryCode;
-      PstnSetupService.setCountryCode(countryCode);
+      PstnService.setCountryCode(countryCode);
     }
 
     function getCarrierCapability(capability) {
-      var carrier = PstnSetupService.getProvider();
+      var carrier = PstnService.getProvider();
       if (!carrier) {
         return false;
       }

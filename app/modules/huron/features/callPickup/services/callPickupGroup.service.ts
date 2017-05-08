@@ -135,7 +135,7 @@ export class CallPickupGroupService {
         let value = false;
         if (pickupGroupName[index] !== '') {
           disabled = true;
-          sublabel = scope.$translate.instant('callPickup.assignmentMsg') + pickupGroupName[index];
+          sublabel = scope.$translate.instant('callPickup.assignmentMsg', { pickupGroupName: pickupGroupName[index] });
           value = false;
         } else {
           if (autoSelect) {
@@ -161,7 +161,7 @@ export class CallPickupGroupService {
     });
   }
 
-  public createCheckBoxesForEdit(member: IMember, memberNumbers: IMemberNumber[], pickupName: string): ICardMemberCheckbox[] {
+  public createCheckboxesForEdit(member: IMember, memberNumbers: IMemberNumber[], pickupName: string): ICardMemberCheckbox[] {
     let scope = this;
     _.forEach(memberNumbers, function (number, index) {
       scope.isLineInPickupGroup(number.internal)
@@ -173,7 +173,7 @@ export class CallPickupGroupService {
           value = true;
         } else if (pickupGroupName !== '' && pickupGroupName !== pickupName) {
           disabled = true;
-          sublabel = scope.$translate.instant('callPickup.assignmentMsg') + pickupGroupName;
+          sublabel = scope.$translate.instant('callPickup.assignmentMsg', { pickupGroupName: pickupGroupName });
           value = false;
         }
         member.checkboxes[index] = {

@@ -10,13 +10,6 @@
     vm.mediaServiceId = 'squared-fusion-media';
 
 
-    var setServiceAcknowledged = function (serviceId, acknowledged) {
-      return $http
-        .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
-          acknowledged: acknowledged,
-        });
-    };
-
     var getUserIdentityOrgToMediaAgentOrgMapping = function () {
       var url = UrlConfig.getCalliopeUrl() + '/identity2agent/' + Authinfo.getOrgId();
       return $http.get(url);
@@ -152,7 +145,6 @@
     return {
       setisMediaServiceEnabled: setisMediaServiceEnabled,
       getMediaServiceState: getMediaServiceState,
-      setServiceAcknowledged: setServiceAcknowledged,
       getUserIdentityOrgToMediaAgentOrgMapping: getUserIdentityOrgToMediaAgentOrgMapping,
       setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,
       deleteUserIdentityOrgToMediaAgentOrgMapping: deleteUserIdentityOrgToMediaAgentOrgMapping,

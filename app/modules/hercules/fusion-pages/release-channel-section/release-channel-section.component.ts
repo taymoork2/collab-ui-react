@@ -1,4 +1,6 @@
 import { Notification } from 'modules/core/notifications';
+import { FmsOrgSettings } from 'modules/hercules/services/fms-org-settings.service';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface ISelectOption {
   label: string;
@@ -31,13 +33,14 @@ class ReleaseChannelSectionController implements ng.IComponentController {
     private $q: ng.IQService,
     private $modal,
     private $translate: ng.translate.ITranslateService,
-    private FusionClusterService,
+    private FmsOrgSettings: FmsOrgSettings,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
     private ResourceGroupService,
   ) {}
 
   public $onInit() {
-    this.FusionClusterService.getOrgSettings()
+    this.FmsOrgSettings.get()
       .then(({ expresswayClusterReleaseChannel }) => {
         this.defaultReleaseChannel = expresswayClusterReleaseChannel;
         this.localizedDefaultChannelName = this.$translate.instant(`hercules.fusion.add-resource-group.release-channel.${expresswayClusterReleaseChannel}`);
@@ -121,7 +124,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
       .then(() => {
         if (this.type === 'cluster') {
           releaseChannel = this.defaultReleaseChannel;
-          return this.FusionClusterService.setReleaseChannel(this.data.id, releaseChannel);
+          return this.HybridServicesClusterService.setClusterInformation(this.data.id, { releaseChannel });
         } else if (this.type === 'resource-group') {
           releaseChannel = 'stable';
           return this.ResourceGroupService.setReleaseChannel(this.data.id, releaseChannel);

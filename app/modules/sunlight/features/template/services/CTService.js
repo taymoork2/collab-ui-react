@@ -241,6 +241,7 @@
           return [
             { name: 'customerInformation', mediaIcons: [] },
             { name: 'offHours', mediaIcons: [] },
+            { name: 'feedbackCallback', mediaIcons: [] },
           ];
         case 'chatPlusCallback':
           return [
@@ -248,7 +249,9 @@
             { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
             { name: 'feedback', mediaIcons: ['icon-message'] },
             { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
+            { name: 'feedbackCallback', mediaIcons: ['icon-phone'] },
             { name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] },
+
           ];
         default:
           return [];
@@ -273,6 +276,7 @@
             'overview',
             'customerInformation',
             'offHours',
+            'feedbackCallback',
             'summary',
           ];
         case 'chatPlusCallback':
@@ -284,6 +288,7 @@
             'profile',
             'chatStatusMessages',
             'customerInformationCallback',
+            'feedbackCallback',
             'offHours',
             'summary',
           ];

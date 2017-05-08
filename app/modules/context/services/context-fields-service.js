@@ -6,7 +6,7 @@
 
   var searchPath = '/dictionary/field/v1/search';
   var createPath = '/dictionary/field/v1';
-  var getPath = '/dictionary/field/v1/id/';
+  var idPath = '/dictionary/field/v1/id/';
 
   /* @ngInject */
   function contextFieldsService($http, Discovery) {
@@ -15,6 +15,9 @@
       createField: createField,
       getField: getField,
       createAndGetField: createAndGetField,
+      updateField: updateField,
+      updateAndGetField: updateAndGetField,
+      deleteField: deleteField,
     };
 
     return service;
@@ -33,13 +36,19 @@
         })
         .then(function (response) {
           return response.data;
+        })
+        // TODO: Remove temporary fix to filter INTERNAL TEST ONLY fields.
+        .then(function (fields) {
+          return _.filter(fields, function (field) {
+            return !(field.description && field.description.includes('*INTERNAL TEST ONLY:') && field.publiclyAccessible);
+          });
         });
     }
 
     function getField(id) {
       return Discovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
-          return $http.get(dictionaryUrl + getPath + id);
+          return $http.get(dictionaryUrl + idPath + id);
         })
         .then(function (response) {
           return response.data;
@@ -59,5 +68,27 @@
           return getField(data.id);
         });
     }
+
+    function updateField(data) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.put(dictionaryUrl + idPath + data.id, data);
+        });
+    }
+
+    function updateAndGetField(data) {
+      return updateField(data)
+        .then(function () {
+          return getField(data.id);
+        });
+    }
+
+    function deleteField(id) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.delete(dictionaryUrl + idPath + id);
+        });
+    }
+
   }
 })();

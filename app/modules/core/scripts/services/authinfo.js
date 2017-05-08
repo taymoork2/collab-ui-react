@@ -2,7 +2,7 @@
   'use strict';
 
   module.exports = angular.module('core.authinfo', [
-    'pascalprecht.translate',
+    require('angular-translate'),
     require('modules/core/config/config'),
     require('modules/core/config/tabConfig'),
   ])
@@ -50,6 +50,9 @@
         userId: null,
         userName: null,
         userOrgId: null,
+        commPartnerOrgId: null,
+        roomPartnerOrgId: null,
+        customerAdminEmail: null,
       };
     }
 
@@ -132,6 +135,7 @@
           authData.customerId = _.get(authData.customerAccounts, '[0].customerId');
           authData.commerceRelation = _.get(authData.customerAccounts, '[0].commerceRelation', '');
           authData.subscriptions = _.get(authData.customerAccounts, '[0].subscriptions', []);
+          authData.customerAdminEmail = _.get(authData.customerAccounts, '[0].customerAdminEmail');
 
           for (var x = 0; x < authData.customerAccounts.length; x++) {
 
@@ -186,6 +190,12 @@
                 case Config.licenseTypes.COMMUNICATION:
                   service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
                   commLicenses.push(service);
+                  // store the partner for Communication license
+                  authData.commPartnerOrgId = license.partnerOrgId;
+                  break;
+                case Config.licenseTypes.SHARED_DEVICES:
+                  // store the partner for shared devices(room systems) license
+                  authData.roomPartnerOrgId = license.partnerOrgId;
                   break;
                 case Config.licenseTypes.CARE:
                   if (license.offerName === Config.offerCodes.CDC) {
@@ -233,6 +243,19 @@
       getOrgId: function () {
         // The orgId of the managed org (can be a different org than the logged in user when delegated admin)
         return authData.orgId;
+      },
+      getCommPartnerOrgId: function () {
+        // The orgId of the partner who enabled COMMUNICATION license
+        return authData.commPartnerOrgId;
+      },
+      getRoomPartnerOrgId: function () {
+        // The orgId of the partner who enabled SHARED_DEVICES license
+        return authData.roomPartnerOrgId;
+      },
+      // When partner logs in, it will be the partner admin email
+      // but partner admin chooses to login to customer portal it will be customer admin email
+      getCustomerAdminEmail: function () {
+        return authData.customerAdminEmail;
       },
       getUserOrgId: function () {
         // The orgId of the org the user is homed (can be a different org than the org being managed in getOrgId)
@@ -541,6 +564,16 @@
       },
       isComplianceUser: function () {
         return this.hasRole(Config.roles.compliance_user);
+      },
+      getCallPartnerOrgId: function () {
+        // On Login to partner portal, orgid has the partner info
+        // On Login to customer portal, need to get the call partner info from services licenses data
+        if (this.isPartner()) {
+          return this.getOrgId();
+        } else {
+          //handle case where comm(call) license is not there for org but shared_devices(room systems) is there
+          return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId();
+        }
       },
     };
   }

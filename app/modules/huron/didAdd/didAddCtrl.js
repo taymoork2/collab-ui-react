@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($q, $rootScope, $state, $stateParams, $timeout, $translate, Authinfo, DialPlanService, DidAddEmailService, DidService, ExternalNumberPool, LogMetricsService, Notification, PstnSetupService, TelephoneNumberService, TrialService) {
+  function DidAddCtrl($q, $rootScope, $state, $stateParams, $timeout, $translate, Authinfo, DialPlanService, DidAddEmailService, DidService, ExternalNumberPool, LogMetricsService, Notification, PstnService, TelephoneNumberService, TrialService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = !!$stateParams.editMode;
@@ -128,7 +128,7 @@
     }
 
     function getCarrierInfoFromTerminus() {
-      return PstnSetupService.listResellerCarriers()
+      return PstnService.listResellerCarriers()
         .then(function (resellerCarriers) {
           // this may need revisiting once multiple carriers are supported by a partner/reseller
           if (resellerCarriers.length > 0) {

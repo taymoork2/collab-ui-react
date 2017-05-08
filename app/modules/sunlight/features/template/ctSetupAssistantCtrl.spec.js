@@ -876,6 +876,7 @@ describe('Care Setup Assistant Ctrl', function () {
         'overview',
         'customerInformation',
         'offHours',
+        'feedbackCallback',
         'summary',
       ]);
     });
@@ -884,6 +885,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.overviewCards).toEqual([
         { name: 'customerInformation', mediaIcons: [] },
         { name: 'offHours', mediaIcons: [] },
+        { name: 'feedbackCallback', mediaIcons: [] },
       ]);
     });
 
@@ -896,6 +898,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(false);
       expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
       expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(true);
+      expect(controller.template.configuration.pages.feedbackCallback.enabled).toBe(true);
     });
   });
 
@@ -918,6 +921,7 @@ describe('Care Setup Assistant Ctrl', function () {
         'profile',
         'chatStatusMessages',
         'customerInformationCallback',
+        'feedbackCallback',
         'offHours',
         'summary',
       ]);
@@ -929,6 +933,7 @@ describe('Care Setup Assistant Ctrl', function () {
         { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
         { name: 'feedback', mediaIcons: ['icon-message'] },
         { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
+        { name: 'feedbackCallback', mediaIcons: ['icon-phone'] },
         { name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] },
       ]);
     });
@@ -944,6 +949,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
       expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(true);
       expect(controller.template.configuration.pages.feedback.enabled).toBe(true);
+      expect(controller.template.configuration.pages.feedbackCallback.enabled).toBe(true);
     });
   });
 

@@ -17,6 +17,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   //Paging group number
   private number: INumberData;
+  private originalNumber: INumberData;
   private availableNumbers: INumberData[] = [];
 
   //Paging group members
@@ -68,18 +69,20 @@ class PgEditComponentCtrl implements ng.IComponentController {
         (data) => {
           this.pg = data;
           this.name = this.pg.name;
-          let numberData: INumberData = <INumberData> {
-            extension: this.pg.extension,
-            extensionUUID: this.pg.extensionUUID,
-          };
 
-          if (this.pg.extension === undefined && this.pg.extensionUUID) {
-            this.PagingNumberService.getNumberExtension(this.pg.extensionUUID).then(
-              (data: INumberData) => {
-                numberData.extension = data.extension;
-              });
-          }
-          this.number = numberData;
+          this.PagingNumberService.getNumberExtension(this.pgId).then(
+            (data: INumberData) => {
+              if (!_.isUndefined(data.extension)) {
+                this.number = data;
+                this.originalNumber = data;
+              } else {
+                this.Notification.error('pagingGroup.errorGetNumber', { pagingGroupName: this.pg.name });
+              }
+            },
+            (response) => {
+              this.Notification.errorResponse(response, this.pg.name);
+            });
+
           this.userCount = _.get(_.countBy(this.pg.members, 'type'), USER, 0);
           this.placeCount = _.get(_.countBy(this.pg.members, 'type'), PLACE, 0);
           this.getMembers(this.pg.members);
@@ -232,9 +235,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
   }
 
   public sortForUser(member: Member) {
-    return (member.displayName ? member.displayName.toLowerCase() : undefined,
-      member.lastName ? member.lastName.toLowerCase() : undefined,
-      member.firstName ? member.firstName.toLowerCase() : undefined);
+    return (member.displayName ? member.displayName.toLowerCase() : (member.lastName ? member.lastName.toLowerCase() : (member.firstName ? member.firstName.toLowerCase() : undefined)));
   }
 
   public sortForPlace(member: Member) {
@@ -422,8 +423,8 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public onCancel(): void {
     this.name = this.pg.name;
-    this.number.extension = this.pg.extension;
-    this.number.extensionUUID = undefined; //This will be updated later
+    this.number = this.originalNumber;
+
     if (this.pg.initiatorType !== undefined) {
       this.initiatorType = this.pg.initiatorType;
     }
@@ -492,8 +493,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
     }
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
-      extension: this.number.extension,
-      extensionUUID: this.number.extensionUUID,
+      extension: (this.number.extension === this.originalNumber.extension) ? undefined : this.number.extension,
       members: members,
       initiatorType: this.initiatorType,
       initiators: initiators,

@@ -2,41 +2,125 @@
   <button type="button" class="close" ng-click="$ctrl.dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h3 class="modal-title" translate="context.dictionary.fieldsetPage.createNew"></h3>
+  <h3 ng-if="$ctrl.createMode" class="modal-title" translate="context.dictionary.fieldsetPage.createNew"></h3>
+  <h3 ng-if="!$ctrl.createMode" class="modal-title">
+    <span translate="context.dictionary.update"></span>
+    <span>{{$ctrl.fieldsetData.id}}</span>
+  </h3>
 </div>
 <div class="modal-body context-modal-body">
-  <form name="newFieldsetForm">
-    <!-- ID -->
-    <div class="cs-input-group">
-      <p class="cs-input-label" translate="context.dictionary.fieldsetPage.fieldsetId"></p>
-      <input
-        cs-input
-        type="text"
-        id="fieldsetId"
-        name="fieldsetId"
-        placeholder="{{::'context.dictionary.fieldsetPage.fieldsetIdPlaceholder' | translate}}"
-        ng-model="$ctrl.fieldsetData.id"
-        cs-input-group-size="medium-12"
-        cs-input-messages="$ctrl.validationMessages"
-        cs-input-validators="$ctrl.validators">
+  <form name="fieldsetForm" autocomplete="off">
+
+    <!-- Attributes Page -->
+    <div ng-if="$ctrl.isAttributesPage">
+      <div class="context-modal-content">
+        <div class="section__info">
+          <h4 class="section-title" translate="context.dictionary.fieldsetPage.fieldsetAttributes"></h4>
+        </div>
+        <div class="cs-input-group">
+          <!-- ID -->
+          <p class="cs-input-label" translate="context.dictionary.fieldsetPage.fieldsetId"></p>
+          <input
+            cs-input
+            type="text"
+            id="fieldsetId"
+            name="fieldsetId"
+            placeholder="{{::'context.dictionary.fieldsetPage.fieldsetIdPlaceholder' | translate}}"
+            ng-model="$ctrl.fieldsetData.id"
+            cs-input-group-size="medium-12"
+            cs-input-messages="$ctrl.validationMessages"
+            cs-input-validators="$ctrl.validators"
+            ng-disabled="!$ctrl.createMode">
+
+          <!-- DESCRIPTION -->
+          <p class="cs-input-label" translate="common.description"></p>
+          <textarea
+            rows="4"
+            id="fieldsetDescription"
+            class="form-control"
+            placeholder="{{::'context.dictionary.fieldsetPage.descriptionPlaceholder' | translate}}"
+            ng-model="$ctrl.fieldsetData.description"></textarea>
+        </div>
+      </div>
     </div>
 
-    <!-- DESCRIPTION -->
-    <div class="cs-input-group">
-      <p translate="common.description"></p>
-      <textarea
-        rows="4"
-        id="fieldsetDescription"
-        class="form-control"
-        placeholder="{{::'context.dictionary.fieldsetPage.descriptionPlaceholder' | translate}}"
-        ng-model="$ctrl.fieldsetData.description"></textarea>
+    <!-- Fields Page -->
+    <div ng-if="!$ctrl.isAttributesPage">
+      <div class="context-modal-content">
+        <div class="section__info">
+          <h4 class="section__title" translate="context.dictionary.fieldsetPage.fields"></h4>
+          <div class="section__description" translate="context.dictionary.fieldsetPage.addOrEditFields"></div>
+        </div>
+
+        <!-- Search fields typeahead input box or error messages-->
+        <span ng-if="$ctrl.allSelectableFields.length === 0 && !$ctrl.fetchFailed" translate="context.dictionary.fieldsetPage.noFields"></span>
+        <div  ng-if="$ctrl.allSelectableFields.length === 0 && $ctrl.fetchFailed" class="context-retry-error">
+          <i class="icon icon-error"></i>
+          <span translate="context.dictionary.fieldsetPage.loadFailure" class="failure-message"></span>
+          <button translate="common.retry" class="retry-action" ng-click="$ctrl.loadFields()" ng-disabled="$ctrl.fetchInProgress"></button>
+        </div>
+        <div ng-show="$ctrl.allSelectableFields.length > 0">
+          <div class="typeahead">
+            <span class="icon icon-search"></span>
+            <input id="fieldInput" ng-model="$ctrl.selectedField"
+                   typeahead="field for field in $ctrl.allSelectableFields | filter:{id:$viewValue}"
+                   typeahead-template-url="fieldTemplate.html"
+                   typeahead-on-select="$ctrl.selectField($item)"
+                   placeholder="{{'context.dictionary.fieldsetPage.searchFields' | translate}}"
+                   typeahead-wait-ms="500"/>
+          </div>
+          <script type="text/ng-template" id="fieldTemplate.html">
+            <div class="field-drop-down">
+              <span class="field-drop-down-id" ng-bind-html="match.label.id | typeaheadHighlight:query" ng-if="match.label.id"></span>
+              <span class="field-drop-down-fieldinfo" ng-bind-html="match.label.fieldInfo | typeaheadHighlight:query" ng-if="match.label.fieldInfo"></span>
+            </div>
+          </script>
+        </div>
+        <!-- No Search Results messages, shows up when the search text is present and no fields match it-->
+        <div ng-show="$ctrl.selectedField && $ctrl.selectedField.length > 0 &&
+             ($ctrl.allSelectableFields | filter:{id:$ctrl.selectedField}).length === 0" class="no-results"
+             translate="context.dictionary.fieldPage.noneFound">
+        </div>
+
+        <!-- List of selected fields -->
+        <div ng-repeat="field in $ctrl.fields | orderBy: 'id'">
+          <div class="field-list-item-wrapper">
+            <div class="btn btn--white btn--expand field-list-item" enabled>
+          <span class="column-one" tooltip-class="context-tooltip" tooltip-trigger="mouseenter" tooltip-placement="bottom"
+                tooltip-animation="true" tooltip="{{field.id}}">{{field.id}}</span>
+              <span class="column-two">{{field.fieldInfo}}</span>
+              <span class="column-three">
+                <i ng-click="$ctrl.removeFieldFromList(field, fieldsetForm)" class="icon icon-exit"></i>
+          </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </form>
+
 </div>
 <div class="modal-footer">
-  <button
-    class="btn btn-primary"
-    translate="common.create"
-    ng-click="$ctrl.create()"
-    ng-disabled="!$ctrl.buttonEnabled()"></button>
+  <div ng-if="$ctrl.isAttributesPage">
+    <button
+      class="btn btn-primary"
+      ng-click="$ctrl.switchToPage(2)"
+      ng-disabled="!$ctrl.nextButtonEnabled()" translate="common.next"></button>
+  </div>
+  <div ng-if="!$ctrl.isAttributesPage">
+    <button
+      class="btn btn-primary"
+      ng-click="$ctrl.switchToPage(1)" translate="common.back"></button>
+    <button ng-if="$ctrl.createMode"
+      class="btn btn-primary"
+      translate="common.create"
+      ng-click="$ctrl.create()"
+      ng-disabled="!$ctrl.createOrSaveButtonEnabled()"></button>
+    <button ng-if="!$ctrl.createMode"
+      class="btn btn-primary"
+      translate="common.save"
+      ng-click="$ctrl.update()"
+      ng-disabled="!$ctrl.createOrSaveButtonEnabled() || fieldsetForm.$pristine">
+    </button>
+  </div>
 </div>

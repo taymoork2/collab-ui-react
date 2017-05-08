@@ -302,6 +302,17 @@ describe('Controller: AAMediaUploadCtrl', function () {
           expect(AAMediaUploadService.notifyAsSaved).toHaveBeenCalled();
         });
       });
+      describe('on Queue Cancelled', function () {
+        beforeEach(function () {
+          spyOn(AAMediaUploadService, 'notifyAsActive');
+          $rootScope.$broadcast('Queue_Cancelled');
+          $rootScope.$apply();
+        });
+
+        it('should call notifyAsActive to false on queue cancelled broadcast', function () {
+          expect(AAMediaUploadService.notifyAsActive).toHaveBeenCalledWith(jasmine.any(String), false);
+        });
+      });
     });
   });
 

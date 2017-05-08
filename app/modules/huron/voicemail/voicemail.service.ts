@@ -11,13 +11,14 @@ export class HuronVoicemailService {
     private HuronCustomerService: HuronCustomerService,
     private HuronUserService: HuronUserService,
     private FeatureToggleService,
+    private $q: ng.IQService,
   ) {}
 
   public isEnabledForCustomer(): ng.IPromise<boolean> {
     let isEnabled = false;
     return this.HuronCustomerService.getCustomer().then( customer => {
       _.forEach(_.get<Array<Link>>(customer, 'links'), link => {
-        if (link.rel === _.lowerCase(VOICEMAIL)) {
+        if (link.rel === _.toLower(VOICEMAIL)) {
           isEnabled = true;
         }
       });
@@ -29,10 +30,11 @@ export class HuronVoicemailService {
     return _.includes(services, VOICEMAIL);
   }
 
-  public isFeatureEnabledForAvril(): ng.IPromise<boolean> {
-    return this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmEnable).then (data => {
-      return data;
-    });
+  public isFeatureEnabledAvril(): ng.IPromise<boolean> {
+    return this.$q.all([
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmEnable),
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmMailboxEnable),
+    ]).then(results => results[0] || results [1]);
   }
 
   public update(userId: string, voicemail: boolean, services: Array<string>): ng.IPromise<Array<string>> {
@@ -59,7 +61,7 @@ export class HuronVoicemailService {
       }
       return this.HuronUserService.getUserV2Numbers(userId).then((data) => {
         _.set(user, 'voicemail.dtmfAccessId', _.get(data[0], 'siteToSite'));
-        return this.isFeatureEnabledForAvril().then(data => {
+        return this.isFeatureEnabledAvril().then(data => {
           if ( data && !_.includes(services, AVRIL)) {
             user.services.push(AVRIL);
           }
@@ -75,7 +77,7 @@ export class HuronVoicemailService {
       if (this.isAvrilCustomer && _.includes(services, AVRIL)) {
         _.pull(user.services, AVRIL);
       }
-      return this.isFeatureEnabledForAvril().then(data => {
+      return this.isFeatureEnabledAvril().then(data => {
         if ( data && _.includes(services, AVRIL)) {
           _.pull(user.services, AVRIL);
         }

@@ -33,6 +33,7 @@
       getPrimaryEmailFromUser: getPrimaryEmailFromUser,
       getUserLicence: getUserLicence,
       getPreferredWebExSiteForCalendaring: getPreferredWebExSiteForCalendaring,
+      updateUserData: updateUserData,
     };
 
     // TODO: migrate these helpers to 'SunlightUserService'
@@ -178,6 +179,28 @@
     }
 
     function updateUserProfile(userid, userData) {
+      return updateUserData(userid, userData).then(function (response) {
+        var entitlements = _.get(response, 'data.entitlements', []);
+        // This code is being added temporarily to update users on Squared UC
+        // Discussions are ongoing concerning how these common functions should be
+        // integrated.
+        if (_.includes(entitlements, Config.entitlements.huron)) {
+          var data = _.get(response, 'data', {});
+          return HuronUser.update(data.id, data)
+            .catch(function (huronResponse) {
+              // Notify Huron error huronResponse
+              Notification.errorResponse(huronResponse);
+            })
+            .then(function () {
+              // always return original successful response
+              return response;
+            });
+        }
+        return response;
+      });
+    }
+
+    function updateUserData(userid, userData) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
       if (!userData) {
@@ -189,25 +212,9 @@
         url: scimUrl,
         data: userData,
       })
-        .then(function (response) {
-          var entitlements = _.get(response, 'data.entitlements', []);
-          // This code is being added temporarily to update users on Squared UC
-          // Discussions are ongoing concerning how these common functions should be
-          // integrated.
-          if (_.includes(entitlements, Config.entitlements.huron)) {
-            var data = _.get(response, 'data', {});
-            return HuronUser.update(data.id, data)
-              .catch(function (huronResponse) {
-                // Notify Huron error huronResponse
-                Notification.errorResponse(huronResponse);
-              })
-              .then(function () {
-                // always return original successful response
-                return response;
-              });
-          }
-          return response;
-        });
+      .then(function (response) {
+        return response;
+      });
     }
 
     function inviteUsers(usersDataArray, entitlements, forceResend, callback) {

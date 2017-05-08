@@ -102,7 +102,7 @@
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       var chart = AmCharts.makeChart(vm.callVolumediv, chartData);
-      // listen for zoomed event and call "handleZoom" method
+      // listen for zoomed event and call 'handleZoom' method
       chart.addListener('zoomed', handleZoom);
       return chart;
     }

@@ -1,6 +1,6 @@
 <div class="fusion-resource-group-settings">
 
-  <cs-page-header title="{{rgsCtrl.localizedTitle}}" back="true" back-url="rgsCtrl.backUrl"></cs-page-header>
+  <cs-page-header title-name="{{rgsCtrl.localizedTitle}}" back="true" back-url="rgsCtrl.backUrl"></cs-page-header>
 
   <div class="cs-form" ng-if="rgsCtrl.group">
     <setting-section setting="rgsCtrl.clusters">
@@ -19,9 +19,9 @@
         <p class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription1"></p>
         <ul>
           <li class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription2" translate-compile></li>
-          <li class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription3" translate-compile></li>
+          <li class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription3" translate-value-onclick="rgsCtrl.manageUsers()" translate-compile></li>
         </ul>
-        <p class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription4"></p>
+        <p class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription4" translate-value-href="{{rgsCtrl.userDocumentation}}"></p>
       </div>
     </setting-section>
 

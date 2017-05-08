@@ -1,5 +1,5 @@
 <div class="feature-toggles-editor">
-  <cs-page-header title="{{ $ctrl.pageTitle }}"></cs-page-header>
+  <cs-page-header title-name="{{ $ctrl.pageTitle }}"></cs-page-header>
 
   <div class="row userData">
     <div class="columns medium-10 medium-offset-1">
@@ -20,7 +20,7 @@
   </div>
 
   <div class="row grid">
-    <div class="toggle-list">
+    <div class="toggle-list" grid-spinner="$ctrl.isLoading">
       <cs-page-sub-header>
         <cs-page-sub-header-left>
           <cs-searchfilter search-item-fn="$ctrl.searchFn(searchStr)" placeholder-text="{{'editFeatureToggles.search'|translate}}">
@@ -33,9 +33,6 @@
         </cs-page-sub-header-right>
       </cs-page-sub-header>
 
-      <div class="grid-refresh" ng-if="$ctrl.isLoading">
-        <i class='icon icon-spinner icon-2x'></i>
-      </div>
       <table class="table table-striped" ng-if="!$ctrl.isLoading">
         <thead>
           <tr>

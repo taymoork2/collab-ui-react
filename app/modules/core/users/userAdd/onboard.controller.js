@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -50,7 +50,6 @@ require('./_user-add.scss');
     $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
     var isFTW = false;
-    $scope.isSharedMeetingsEnabled = false;
     $scope.isReset = false;
     $scope.showExtensions = true;
     $scope.isResetEnabled = false;
@@ -107,15 +106,6 @@ require('./_user-add.scss');
     $scope.isCareAndCDCEnabled = Authinfo.isCareAndCDC();
     $scope.isCareAndCVCEnabled = Authinfo.isCareVoiceAndCVC();
     $scope.isCareEnabled = $scope.isCareAndCDCEnabled || $scope.isCareAndCVCEnabled;
-
-    $scope.sharedMeetingsFeatureDefaultToggle = { default: true, defaultValue: true };
-    if (_.get($scope, 'sharedMeetingsFeatureDefaultToggle.default')) {
-      $scope.isSharedMeetingsEnabled = _.get($scope, 'sharedMeetingsFeatureDefaultToggle.defaultValue');
-    } else {
-      FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
-        $scope.isSharedMeetingsEnabled = smpStatus;
-      });
-    }
 
     $scope.controlMsg = controlMsg;
 
@@ -400,7 +390,7 @@ require('./_user-add.scss');
     };
 
     function toggleShowExtensions() {
-      return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+      return DialPlanService.getDialPlan().then(function (response) {
         var indexOfDidColumn = _.findIndex($scope.addDnGridOptions.columnDefs, {
           field: 'externalNumber',
         });
@@ -498,6 +488,8 @@ require('./_user-add.scss');
     $scope.conferenceFeatures = [];
     $scope.communicationFeatures = [];
     $scope.careFeatures = [];
+    $scope.cdcCareFeature = [];
+    $scope.cvcCareFeature = [];
     $scope.licenses = [];
     $scope.licenseStatus = [];
     $scope.populateConf = populateConf;
@@ -805,7 +797,7 @@ require('./_user-add.scss');
     };
 
     $scope.isSharedMeetingsLicense = function (license) {
-      return _.lowerCase(_.get(license, 'confLic[0].licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
+      return _.toLower(_.get(license, 'confLic[0].licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
     };
 
     $scope.determineLicenseType = function (license) {
@@ -888,10 +880,8 @@ require('./_user-add.scss');
       }
       if (services.care) {
         $scope.careFeatures = $scope.careFeatures.concat(services.care);
-        if (!$scope.isCareAndCDCEnabled && $scope.isCareAndCVCEnabled) {
-          $scope.careFeatures = $scope.careFeatures.concat($scope.careFeatures[1]);
-          $scope.careFeatures[1] = [];
-        }
+        $scope.cdcCareFeature = getCareFeature(Config.offerCodes.CDC);
+        $scope.cvcCareFeature = getCareFeature(Config.offerCodes.CVC);
       }
     };
 
@@ -1041,7 +1031,7 @@ require('./_user-add.scss');
       enableColumnMenus: false,
       columnDefs: [{
         field: 'name',
-        displayName: $translate.instant('usersPage.nameHeader'),
+        displayName: $translate.instant('common.user'),
         sortable: false,
         cellTemplate: nameTemplate,
         width: '*',
@@ -1170,39 +1160,41 @@ require('./_user-add.scss');
           licenseList.push(new LicenseFeature($scope.communicationFeatures[1].license.licenseId, false));
         }
 
+        // BEGIN: Care License provisioning for users
         var selCareService = {};
-        if ($scope.radioStates.careRadio === $scope.careRadioValue.K1) {
-          selCareService = $scope.careFeatures[1];
-        } else if ($scope.radioStates.careRadio === $scope.careRadioValue.K2) {
-          selCareService = $scope.careFeatures[2];
-        } else if ($scope.radioStates.careRadio === $scope.careRadioValue.NONE) {
-          selCareService = $scope.careFeatures[0];
+
+        // get the selected care service according to care radio button selected
+        switch ($scope.radioStates.careRadio) {
+          case $scope.careRadioValue.K1:
+            if ($scope.cdcCareFeature.license.licenseId) {
+              selCareService = $scope.cdcCareFeature;
+            }
+            break;
+          case $scope.careRadioValue.K2:
+            if ($scope.cvcCareFeature.license.licenseId) {
+              selCareService = $scope.cvcCareFeature;
+            }
+            break;
+          case $scope.careRadioValue.NONE:
+            selCareService = $scope.careFeatures[0];
+            break;
         }
 
+        // push and remove licenses in licenseList as per selected care service
         var licenseId = _.get(selCareService, 'license.licenseId', null);
         if (licenseId) {
           licenseList.push(new LicenseFeature(licenseId, true));
+
           if (_.startsWith(licenseId, Config.offerCodes.CDC)) {
-            licenseId = _.get($scope, 'careFeatures[2].license.licenseId', null);
-            if (licenseId) {
-              licenseList.push(new LicenseFeature(licenseId, false));
-            }
+            removeCareLicence($scope.cvcCareFeature, licenseList);
           } else if (_.startsWith(licenseId, Config.offerCodes.CVC)) {
-            licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
-            if (licenseId) {
-              licenseList.push(new LicenseFeature(licenseId, false));
-            }
+            removeCareLicence($scope.cdcCareFeature, licenseList);
           }
         } else if (action === 'patch') { // will get invoked when None is selected in care radio
-          licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
-          if (licenseId) {
-            licenseList.push(new LicenseFeature(licenseId, false));
-          }
-          licenseId = _.get($scope, 'careFeatures[2].license.licenseId', null);
-          if (licenseId) {
-            licenseList.push(new LicenseFeature(licenseId, false));
-          }
+          removeCareLicence($scope.cdcCareFeature, licenseList);
+          removeCareLicence($scope.cvcCareFeature, licenseList);
         }
+        // END: Care License provisioning for users
 
         // Metrics for care entitlement for users
         if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
@@ -1220,6 +1212,18 @@ require('./_user-add.scss');
         }
       }
       return licenseList.length === 0 ? null : licenseList;
+    }
+
+    function getCareFeature(offerName) {
+      return _.find($scope.careFeatures, function (careFeature) {
+        return _.startsWith(careFeature.license.licenseId, offerName);
+      });
+    }
+
+    function removeCareLicence(careFeature, licenseList) {
+      if (careFeature && careFeature.license.licenseId) {
+        licenseList.push(new LicenseFeature(careFeature.license.licenseId, false));
+      }
     }
 
     var getEntitlements = function (action) {
@@ -1873,6 +1877,12 @@ require('./_user-add.scss');
             }
             case 404: {
               userResult.message = $translate.instant('onboardModal.result.404');
+              userResult.alertType = 'danger';
+              isComplete = false;
+              break;
+            }
+            case 408: {
+              userResult.message = $translate.instant('onboardModal.result.408');
               userResult.alertType = 'danger';
               isComplete = false;
               break;

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCardsOrgService($translate, Config, HelpdeskHuronService, LicenseService, Notification, FusionClusterService, CloudConnectorService) {
+  function HelpdeskCardsOrgService($translate, CloudConnectorService, Config, FusionClusterService, HelpdeskHuronService, LicenseService, Notification, UCCService) {
 
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
@@ -21,7 +21,13 @@
       };
       HelpdeskHuronService.getOrgSiteInfo(org.id).then(function (site) {
         callCard.voiceMailPrefix = site.siteSteeringDigit + site.siteCode;
-        callCard.outboundDialDigit = site.steeringDigit;
+        if (_.isEmpty(site.steeringDigit)) {
+          callCard.outboundDialDigit = $translate.instant("helpdesk.none");
+        } else {
+          callCard.outboundDialDigit = site.steeringDigit;
+        }
+        callCard.routingPrefix = site.routingPrefix;
+        callCard.extensionLength = site.extensionLength;
       });
       HelpdeskHuronService.getTenantInfo(org.id).then(function (tenant) {
         if (_.isEmpty(tenant.regionCode)) {
@@ -45,11 +51,11 @@
     }
 
     function getHybridServicesCardForOrg(org) {
-      var hybridServiceIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity'];
+      var hybridServiceIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context'];
       var hybridServicesCard = {
         entitled: _.some(hybridServiceIds, function (serviceId) {
           return LicenseService.orgIsEntitledTo(org, serviceId);
-        }) || LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal'),
+        }) || LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal') || LicenseService.orgIsEntitledTo(org, 'squared-fusion-ec'),
         services: [],
       };
       if (!hybridServicesCard.entitled) {
@@ -65,13 +71,30 @@
         Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
       });
       if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal')) {
-        CloudConnectorService.getService('squared-fusion-gcal', org.id).then(function (service) {
+        CloudConnectorService.getService(org.id).then(function (service) {
           hybridServicesCard.services.push(service);
         }).catch(function (response) {
           Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
         });
       }
+      if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-ec')) {
+        UCCService.getOrgVoicemailConfiguration(org.id)
+          .then(function (data) {
+            hybridServicesCard.services.push({
+              serviceId: 'voicemail',
+              statusCss: UCCService.mapStatusToCss(data.voicemailOrgEnableInfo.orgVoicemailStatus),
+            });
+          })
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'helpdesk.hybridVoicemail.cannotReadStatus');
+          });
+      }
       return hybridServicesCard;
+    }
+
+    function getCareCardForOrg(org, licenses) {
+      var entitled = LicenseService.orgIsEntitledTo(org, 'cloud-contact-center');
+      return new OrgCard(entitled, licenses, Config.licenseTypes.CARE);
     }
 
     return {
@@ -80,6 +103,7 @@
       getCallCardForOrg: getCallCardForOrg,
       getHybridServicesCardForOrg: getHybridServicesCardForOrg,
       getRoomSystemsCardForOrg: getRoomSystemsCardForOrg,
+      getCareCardForOrg: getCareCardForOrg,
     };
   }
 

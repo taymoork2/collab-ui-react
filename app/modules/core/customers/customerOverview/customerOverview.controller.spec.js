@@ -16,13 +16,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
       customerOrgId: '123-456',
       licenseList: [{
         licenseId: licenseString,
-        offerName: "MC",
-        licenseType: "CONFERENCING",
-        siteUrl: "t30citest.webex.com",
+        offerName: 'MC',
+        licenseType: 'CONFERENCING',
+        siteUrl: 't30citest.webex.com',
       }, {
-        licenseId: "ST_04b1c66d-9cb7-4280-bd0e-cfdb763fbdc6",
-        offerName: "ST",
-        licenseType: "STORAGE",
+        licenseId: 'ST_04b1c66d-9cb7-4280-bd0e-cfdb763fbdc6',
+        offerName: 'ST',
+        licenseType: 'STORAGE',
       }],
     };
     identityCustomer = {
@@ -34,13 +34,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
     };
     Authinfo = {
       getPrimaryEmail: function () {
-        return "xyz123@gmail.com";
+        return 'xyz123@gmail.com';
       },
       getOrgId: function () {
         return '1A2B3C4D';
       },
       getOrgName: function () {
-        return "xyz123";
+        return 'xyz123';
       },
       isPartnerAdmin: function () {
         return true;
@@ -133,13 +133,22 @@ describe('Controller: CustomerOverviewCtrl', function () {
     expect($state.go.calls.mostRecent().args[0]).toEqual('partnercustomers.list');
   });
 
+  it('should check the customer org id to see if it is a test org', function () {
+    expect(Orgservice.isTestOrg).toHaveBeenCalledWith('123-456');
+  });
+
   it('should display correct customer portal launch button via var isOrgSetup', function () {
     // isOrgSetup is false from spyOn in beforeEach
     expect(controller.isOrgSetup).toBe(false);
-
     Orgservice.isSetupDone.and.returnValue($q.resolve(true));
     initController();
     expect(controller.isOrgSetup).toBe(true);
+    Orgservice.isSetupDone.and.returnValue($q.reject());
+    initController();
+    expect(controller.isOrgSetup).toBe(null);
+    Orgservice.isSetupDone.and.returnValue($q.resolve(false));
+    initController();
+    expect(controller.isOrgSetup).toBe(false);
   });
 
   it('should display number of days left', function () {

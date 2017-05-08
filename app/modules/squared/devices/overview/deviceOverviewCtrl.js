@@ -6,9 +6,11 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService,
-    CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal,
-    LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo,
+    FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal,
+    ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService,
+    TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService,
+    FeatureToggleService) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -18,7 +20,16 @@
     deviceOverview.selectedCountry = "";
     deviceOverview.hideE911Edit = true;
     deviceOverview.faxEnabled = false;
+    deviceOverview.t38FeatureToggle = false;
+    deviceOverview.actionList = [{
+      actionKey: 'common.edit',
+      actionFunction: goToEmergencyServices,
+    }];
     function init() {
+      FeatureToggleService.csdmT38GetStatus().then(function (response) {
+        deviceOverview.t38FeatureToggle = response;
+      });
+
       displayDevice($stateParams.currentDevice);
 
       CsdmDataModelService.reloadItem($stateParams.currentDevice).then(function (updatedDevice) {
@@ -66,9 +77,10 @@
 
       deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
 
-      deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
-
-      deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isOnline;
+      FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(function (feature) {
+        deviceOverview.canChangeUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && deviceOverview.currentDevice.isOnline && !feature;
+        deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && (!deviceOverview.currentDevice.isOnline || feature);
+      });
 
       deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
@@ -87,17 +99,17 @@
       if (!deviceOverview.currentDevice.isHuronDevice) {
         deviceOverview.emergencyCallbackNumber = _.get(deviceOverview, 'lines[0].alternate');
         deviceOverview.showE911 = deviceOverview.emergencyCallbackNumber;
-        if (!deviceOverview.showE911) {
-          deviceOverview.hideE911Edit = false;
+        if (deviceOverview.showE911) {
+          getEmergencyAddress();
+        } else if (_.get(deviceOverview, 'lines[0]')) {
           EmergencyServicesService.getCompanyECN().then(function (result) {
             deviceOverview.showE911 = result;
             deviceOverview.emergencyCallbackNumber = result;
             if (result) {
+              deviceOverview.hideE911Edit = false;
               getEmergencyAddress();
             }
           });
-        } else {
-          getEmergencyAddress();
         }
       } else {
         deviceOverview.showE911 = true;
@@ -237,7 +249,7 @@
       }
     };
 
-    deviceOverview.goToEmergencyServices = function () {
+    function goToEmergencyServices() {
       var data = {
         currentAddress: deviceOverview.emergencyAddress,
         currentNumber: deviceOverview.emergencyCallbackNumber,
@@ -250,7 +262,7 @@
       } else {
         $state.go('device-overview.emergencyServices', data);
       }
-    };
+    }
 
     function waitForDeviceToUpdateTimeZone(newValue) {
       var deferred = $q.defer();

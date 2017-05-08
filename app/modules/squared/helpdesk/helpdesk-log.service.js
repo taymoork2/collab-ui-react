@@ -4,37 +4,27 @@
   /* @ngInject */
   function HelpdeskLogService($q, LogService, HelpdeskMockData, HelpdeskService) {
 
-    function searchForLastPushedLog(term) {
+    function searchLogs(term, _searchOptions) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(findLastLog(HelpdeskMockData.logs.search));
       }
-      var deferred = $q.defer();
-      // request backend to return logs sorted by descending timestamp, and only one
-      LogService.searchLogs(term, {
+      var searchOptions = _.extend({
         timeSortOrder: 'descending',
         limit: 1,
-      }).then(function (data, status) {
-        data = _.isObject(data) ? data : {};
-        data.success = true;
-        data.status = status;
-        return data;
-      }).catch(function (data, status) {
-        data = _.isObject(data) ? data : {};
-        data.success = false;
-        data.status = status;
-        return data;
-      }).then(function (data) {
-        if (data.success) {
-          if (data.metadataList && data.metadataList.length > 0) {
-            deferred.resolve(cleanLogMetadata(data.metadataList[0]));
-          } else {
-            deferred.reject("NoLog");
-          }
-        } else {
-          deferred.reject("NoLog");
+      }, _searchOptions);
+      return LogService.searchLogs(term, searchOptions);
+    }
+
+    function searchForLastPushedLog(term) {
+      return searchLogs(term).then(function (response) {
+        var metadataList = _.get(response, 'data.metadataList');
+        if (_.size(metadataList)) {
+          return cleanLogMetadata(metadataList[0]);
         }
+        return $q.reject('NoLog');
+      }).catch(function () {
+        return $q.reject('NoLog');
       });
-      return deferred.promise;
     }
 
     function getLastPushedLogForUser(uuid) {
@@ -43,6 +33,7 @@
       }
 
       var deferred = $q.defer();
+      // TODO (mipark2): revisit this after moving 'LogService.listLogs()' away from callback-style
       LogService.listLogs(uuid, function (data) {
         if (data.success) {
           if (data.metadataList && data.metadataList.length > 0) {
@@ -63,6 +54,7 @@
       }
 
       var deferred = $q.defer();
+      // TODO (mipark2): revisit this after moving 'LogService.downloadLog()' away from callback-style
       LogService.downloadLog(filename, function (data) {
         if (data.success) {
           deferred.resolve(data.tempURL);
@@ -99,9 +91,11 @@
     }
 
     return {
+      searchLogs: searchLogs,
       searchForLastPushedLog: searchForLastPushedLog,
       getLastPushedLogForUser: getLastPushedLogForUser,
       downloadLog: downloadLog,
+      cleanLogMetadata: cleanLogMetadata,
     };
 
   }

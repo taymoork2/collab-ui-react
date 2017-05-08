@@ -4,44 +4,21 @@ describe('Controller: HostDeregisterControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $rootScope, controller, cluster, connector, orgName, MediaClusterServiceV2, Notification, $q, $translate, modalInstanceMock, windowMock;
+  var $rootScope, controller, connectorId, FusionClusterService, $q, modalInstanceMock;
 
-  beforeEach(inject(function (_$rootScope_, $controller, _Notification_, _$q_, _$translate_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _FusionClusterService_, _$q_) {
     $rootScope = _$rootScope_;
-    cluster = {
-      id: 'id',
-      name: 'b',
-    };
-    orgName = '123';
-    connector = {
-      id: 'id',
-    };
-    MediaClusterServiceV2 = {
-
-      deleteCluster: sinon.stub(),
-      defuseV2Connector: sinon.stub(),
-    };
-    Notification = _Notification_;
+    connectorId = '12345';
+    FusionClusterService = _FusionClusterService_;
     $q = _$q_;
-    $translate = _$translate_;
 
     modalInstanceMock = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
-    windowMock = {
-      open: sinon.stub(),
-    };
+
     controller = $controller('HostDeregisterControllerV2', {
-      $scope: $rootScope.$new(),
-      connector: connector,
-      cluster: cluster,
-      orgName: orgName,
-      MediaClusterServiceV2: MediaClusterServiceV2,
-      Notification: Notification,
-      $q: $q,
-      $translate: $translate,
+      connectorId: connectorId,
       $modalInstance: modalInstanceMock,
-      $window: windowMock,
     });
 
   }));
@@ -50,24 +27,24 @@ describe('Controller: HostDeregisterControllerV2', function () {
     expect(controller).toBeDefined();
   });
 
-  it('check if Deregister is called', function () {
-    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue($q.resolve());
+  it('should call deregisterEcpNode', function () {
+    spyOn(FusionClusterService, 'deregisterEcpNode').and.returnValue($q.resolve());
     controller.deregister();
-    expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalled();
+    expect(FusionClusterService.deregisterEcpNode).toHaveBeenCalled();
     expect(controller.saving).toBe(true);
 
   });
 
-  it('check if Deregister is called with  clusterId', function () {
+  it('should call deregisterEcpNode with connectorId', function () {
 
-    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue($q.resolve());
+    spyOn(FusionClusterService, 'deregisterEcpNode').and.returnValue($q.resolve());
     controller.deregister();
-    expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalledWith(cluster.id);
+    expect(FusionClusterService.deregisterEcpNode).toHaveBeenCalledWith(connectorId);
   });
 
-  it('Should go to success module of deregister', function () {
+  it('should go to success module of deregister', function () {
     var deregisterDefered = $q.defer();
-    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue(deregisterDefered.promise);
+    spyOn(FusionClusterService, 'deregisterEcpNode').and.returnValue(deregisterDefered.promise);
     deregisterDefered.resolve();
     $rootScope.$apply();
 
@@ -75,9 +52,9 @@ describe('Controller: HostDeregisterControllerV2', function () {
     $rootScope.$apply();
     expect(controller.saving).toBe(false);
   });
-  it('Should go to failure module of deregister', function () {
+  it('should go to failure module of deregister', function () {
     var deregisterDefered = $q.defer();
-    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue(deregisterDefered.promise);
+    spyOn(FusionClusterService, 'deregisterEcpNode').and.returnValue(deregisterDefered.promise);
     deregisterDefered.reject();
     $rootScope.$apply();
 

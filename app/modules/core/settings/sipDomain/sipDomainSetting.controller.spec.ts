@@ -1,7 +1,7 @@
 describe('Controller: EnterpriseSettingsCtrl', function () {
   beforeEach(function () {
     this.initModules('Core', 'Hercules');
-    this.injectDependencies('$controller', '$modal', '$rootScope', '$scope', '$translate', '$q', '$window', 'Config',
+    this.injectDependencies('$controller', '$modal', '$rootScope', '$scope', '$timeout', '$translate', '$q', '$window', 'Config',
       'FeatureToggleService', 'Notification', 'Orgservice', 'ServiceDescriptor', 'SparkDomainManagementService', 'UrlConfig');
 
     this.orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
@@ -38,8 +38,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     this.modal = {
       templateUrl: '',
-      controller: jasmine.any(Function),
-      controllerAs: 'subdomain',
       type: 'dialog',
     };
 
@@ -392,7 +390,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.controller.isSSAReserved = false;
 
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
-        expect(this.controller.saving).toBeTruthy();
+        this.$timeout.flush();
         this.$scope.$apply();
 
         expect(this.controller.saving).toBeFalsy();
@@ -414,7 +412,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.controller.isSSAReserved = false;
 
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
-        expect(this.controller.saving).toBeTruthy();
+        this.$timeout.flush();
         this.$scope.$apply();
 
         expect(this.controller.saving).toBeFalsy();
@@ -431,7 +429,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.controller.isSSAReserved = false;
 
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
-        expect(this.controller.saving).toBeTruthy();
+        this.$timeout.flush();
         this.$scope.$apply();
 
         expect(this.controller.saving).toBeFalsy();
@@ -450,6 +448,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.controller.inputValue = this.testInput;
         this.controller.isSSAReserved = false;
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
+        this.$timeout.flush();
         this.$scope.$apply();
         expect(this.Notification.errorWithTrackingId.calls.mostRecent().args).toEqual([this.ERROR_FOUR_ZERO_ONE, this.unauthorizedError]);
       });
@@ -461,6 +460,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.controller.inputValue = this.testInput;
         this.controller.isSSAReserved = false;
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
+        this.$timeout.flush();
         this.$scope.$apply();
         expect(this.Notification.errorWithTrackingId.calls.mostRecent().args).toEqual([this.ERROR_FIVE_HUNDRED, this.serverError]);
       });
@@ -472,41 +472,25 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.cscModal.templateUrl = 'modules/core/settings/sipDomain/editCSCWarning.tpl.html';
       });
 
-      it('should open a modal warning about the effects CSC changes and call toggleSipForm on close', function () {
-        spyOn(this.$modal, 'open').and.returnValue({
-          result: this.$q.when(true),
-        });
+      it('when CSC is enabled should do nothing', function () {
+        spyOn(this.$modal, 'open');
         this.initController();
         spyOn(this.controller, 'toggleSipForm').and.callThrough();
 
         this.controller.editSubdomain();
         this.$scope.$apply();
-        expect(this.$modal.open).toHaveBeenCalledWith(this.cscModal);
-        expect(this.controller.toggleSipForm).toHaveBeenCalledTimes(1);
-      });
-
-      it('should open a modal warning about the effects CSC changes and do nothing on dismiss', function () {
-        spyOn(this.$modal, 'open').and.returnValue({
-          result: this.$q.reject(false),
-        });
-        this.initController();
-        spyOn(this.controller, 'toggleSipForm').and.callThrough();
-
-        this.controller.editSubdomain();
-        this.$scope.$apply();
-        expect(this.$modal.open).toHaveBeenCalledWith(this.cscModal);
+        expect(this.$modal.open).not.toHaveBeenCalled();
         expect(this.controller.toggleSipForm).not.toHaveBeenCalled();
       });
 
       it('should only call toggleSipForm', function () {
         this.ServiceDescriptor.isServiceEnabled.and.returnValue(this.$q.when(false));
-        spyOn(this.$modal, 'open').and.returnValue({
-          result: this.$q.reject(false),
-        });
+        spyOn(this.$modal, 'open');
         this.initController();
         spyOn(this.controller, 'toggleSipForm').and.callThrough();
 
         this.controller.editSubdomain();
+        this.$scope.$apply();
         expect(this.$modal.open).not.toHaveBeenCalled();
         expect(this.controller.toggleSipForm).toHaveBeenCalledTimes(1);
       });
@@ -541,7 +525,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         expect(this.$modal.open).toHaveBeenCalledWith(this.saveModal);
       });
 
-      it('should reactivate save\cancel buttons if modal has "no" selected', function () {
+      it('should reactivate save/cancel buttons if modal has "no" selected', function () {
         spyOn(this.$modal, 'open').and.returnValue({
           result: this.$q.reject(false),
         });

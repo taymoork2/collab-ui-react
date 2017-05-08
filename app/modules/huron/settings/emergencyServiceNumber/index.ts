@@ -2,9 +2,9 @@ import { EmergencyServiceNumberComponent } from './emergencyServiceNumber.compon
 
 export default angular
   .module('huron.settings.emergency-service-number', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
   ])
   .component('ucEmergencyServiceNumber', new EmergencyServiceNumberComponent())
   .name;

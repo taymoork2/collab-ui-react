@@ -2,27 +2,26 @@
   'use strict';
 
   /* @ngInject */
-  function HostDeregisterControllerV2(cluster, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification) {
+  function HostDeregisterControllerV2($translate, $modalInstance, FusionClusterService, Notification, connectorId) {
     var vm = this;
 
     vm.saving = false;
 
     vm.deregister = function () {
       vm.saving = true;
-      MediaClusterServiceV2
-        .defuseV2Connector(connector.id)
+      FusionClusterService
+        .deregisterEcpNode(connectorId)
         .then(function () {
           $modalInstance.close();
-          vm.saving = false;
           Notification.success('mediaFusion.deleteNodeSuccess');
-        }, function (err) {
-          vm.error = $translate.instant('mediaFusion.clusters.deregisterErrorGeneric', {
-            clusterName: cluster.name,
-          });
+        })
+        .catch(function (err) {
+          vm.error = $translate.instant('mediaFusion.clusters.deregisterNodeErrorGeneric');
           Notification.errorWithTrackingId(err, vm.error);
+        })
+        .finally(function () {
           vm.saving = false;
         });
-      return false;
     };
   }
 

@@ -8,7 +8,7 @@ require('../fields/_fields-list.scss');
     .controller('HybridContextFieldsetsCtrl', HybridContextFieldsetsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsetsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsetsService, Notification, hasContextDictionaryEditFeatureToggle) {
+  function HybridContextFieldsetsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsetsService, Notification, Authinfo, hasContextDictionaryEditFeatureToggle) {
     //Initialize variables
     var vm = this;
     var eventListeners = [];
@@ -40,7 +40,7 @@ require('../fields/_fields-list.scss');
         existingFieldsetIds: _.map(vm.fieldsetsList.allFieldsets, function (fieldset) {
           return fieldset.id;
         }),
-        createCallback: function (newFieldset) {
+        callback: function (newFieldset) {
           var fieldsetCopy = _.cloneDeep(newFieldset);
           vm.fieldsetsList.allFieldsets.unshift(processFieldset(fieldsetCopy));
           filterList(vm.searchStr);
@@ -83,10 +83,17 @@ require('../fields/_fields-list.scss');
     function processFieldset(fieldset) {
 
       if (fieldset.lastUpdated) {
-        fieldset.lastUpdated = $filter('date')(fieldset.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+        fieldset.lastUpdatedUI = $filter('date')(fieldset.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
       }
 
       fieldset.numOfFields = (fieldset.fields) ? fieldset.fields.length : 0;
+
+      var accessibleMap = {
+        true: $translate.instant('context.dictionary.base'),
+        false: Authinfo.getOrgName(),
+      };
+
+      fieldset.publiclyAccessibleUI = accessibleMap[fieldset.publiclyAccessible];
       return fieldset;
     }
 
@@ -141,6 +148,22 @@ require('../fields/_fields-list.scss');
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $state.go('context-fieldsets-sidepanel', {
             fieldset: row.entity,
+            process: processFieldset,
+            callback: function (updatedFieldset) {
+              vm.gridRefresh = true;
+              var index = _.findIndex(vm.fieldsetsList.allFieldsets, function (current) {
+                return current.id === updatedFieldset.id;
+              });
+              if (index > -1) {
+                var fieldsetCopy = processFieldset(_.cloneDeep(updatedFieldset));
+                _.fill(vm.fieldsetsList.allFieldsets, fieldsetCopy, index, index + 1);
+                vm.gridOptions.data = vm.fieldsetsList.allFieldsets;
+                vm.gridApi.grid.modifyRows(vm.gridOptions.data);
+                vm.gridApi.selection.selectRow(vm.gridOptions.data[index]);
+                filterList(vm.searchStr);
+              }
+              vm.gridRefresh = false;
+            },
           });
         });
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
@@ -160,6 +183,7 @@ require('../fields/_fields-list.scss');
         enableColumnResize: true,
         enableRowHeaderSelection: false,
         enableColumnMenus: false,
+        enableRowHashing: false,
         onRegisterApi: onRegisterApi,
         columnDefs: [{
           field: 'id',
@@ -174,8 +198,12 @@ require('../fields/_fields-list.scss');
           type: 'number',
           maxWidth: 200,
         }, {
-          field: 'lastUpdated',
-          displayName: $translate.instant('context.dictionary.fieldPage.lastUpdated'),
+          field: 'publiclyAccessibleUI',
+          displayName: $translate.instant('context.dictionary.access'),
+          maxWidth: 200,
+        }, {
+          field: 'lastUpdatedUI',
+          displayName: $translate.instant('context.dictionary.dateUpdated'),
           maxWidth: 300,
         }],
       };
@@ -184,7 +212,6 @@ require('../fields/_fields-list.scss');
 
     // On click, wait for typing to stop and run search
     function filterList(str) {
-
       return filterBySearchStr(vm.fieldsetsList.allFieldsets, str)
         .then(function (processedFieldsets) {
           vm.gridOptions.data = processedFieldsets;
@@ -201,13 +228,19 @@ require('../fields/_fields-list.scss');
       }
 
       var lowerStr = str.toLowerCase();
-      return $q.resolve(fieldsetList.filter(function (fieldset) {
-        return (_.has(fieldset, 'id') ? (fieldset.id.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(fieldset, 'description') ? (fieldset.description.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(fieldset, 'numOfFields') ? (fieldset.numOfFields.toString().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(fieldset, 'lastUpdated') ? (fieldset.lastUpdated.toLowerCase().indexOf(lowerStr) !== -1) : false);
-      }));
+      var containSearchStr = function (fieldset) {
+        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdated', 'publiclyAccessibleUI'];
+        return _.some(propertiesToCheck, function (property) {
+          var value;
+          if (property === 'numOfFields') {
+            value = (_.has(fieldset, 'numOfFields') ? (fieldset.numOfFields.toString()) : undefined);
+          } else {
+            value = _.get(fieldset, property, '').toLowerCase();
+          }
+          return _.includes(value, lowerStr);
+        });
+      };
+      return $q.resolve(fieldsetList.filter(containSearchStr));
     }
-
   }
 }());

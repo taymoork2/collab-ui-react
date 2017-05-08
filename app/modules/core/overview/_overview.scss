@@ -66,7 +66,7 @@
           margin: 0;
         }
 
-        .icon-tools {
+        .icon {
           font-size: 0.875em;
         }
 
@@ -180,6 +180,9 @@
           font-size: .5rem;
           margin-right: 6px;
         }
+        .icon-settings {
+          color: $gray-light-1;
+        }
       }
     }
   }
@@ -196,13 +199,17 @@
       overflow-y: hidden;
 
       .notification-style {
-        padding-top: 1.5rem;
-        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        margin-top: 0.75rem;
         border-top: 1px solid $gray-light-2;
         display: flex;
 
         .badge {
-          top: rem-calc(3);
+          top: rem-calc(-1.5);
+        }
+
+        .text {
+          padding-left: .25rem;
         }
 
         .close {
@@ -218,9 +225,9 @@
     }
 
     .notification-spacing {
-      margin-left: 15px;
       font-size: 0.875rem;
       line-height: 1.5rem;
+      margin-right: 0.15rem;
       flex: 1;
     }
 
@@ -256,13 +263,6 @@
 
 @media only screen and (max-width: 1170px) and (min-width: 1025px) {
   .overview-page {
-    .notification-style {
-      display: block;
-
-      span {
-        display: block;
-      }
-    }
 
     .notification-spacing {
       padding-left: 0;

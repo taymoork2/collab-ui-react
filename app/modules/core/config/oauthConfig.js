@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var hostnameConfig = require('config/hostname.config');
+
   module.exports = angular
     .module('core.oauthconfig', [
       require('modules/core/config/config'),
@@ -166,9 +168,9 @@
     function getAdminPortalUrl() {
       var adminPortalUrl = {
         dev: getAbsUrlForDev(),
-        cfe: 'https://cfe-admin.ciscospark.com',
-        integration: 'https://int-admin.ciscospark.com/',
-        prod: 'https://admin.ciscospark.com/',
+        cfe: 'https://' + hostnameConfig.CFE,
+        integration: 'https://' + hostnameConfig.INTEGRATION + '/',
+        prod: 'https://' + hostnameConfig.PRODUCTION + '/',
       };
       var env = Config.isE2E() ? 'dev' : Config.getEnv();
       return adminPortalUrl[env];

@@ -310,6 +310,7 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
+      isCeMenuEntry: isCeMenuEntry,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -566,8 +567,8 @@
         action.if = {};
         exp = parseLeftRightExpression(inAction.conditional.expression);
 
-        action.if.leftCondition = exp[0];
-        action.if.rightCondition = exp[1];
+        action.if.leftCondition = exp.ifCondition;
+        action.if.rightCondition = exp.isConditions;
 
         if (inAction.conditional.true[0].route) {
           action.then = new Action("route", inAction.conditional.true[0].route.destination);
@@ -603,7 +604,7 @@
       }
     }
     function parseLeftRightExpression(expression) {
-      return AAUtilityService.pullJSPieces(expression);
+      return AAUtilityService.pullJSPieces(expression && expression.indexOf(AAUtilityService.CONSTANTS.js.func) === 0 ? expression : decodeURI(expression));
     }
 
 
@@ -1198,8 +1199,15 @@
       }
       return newActionArray;
     }
+
     function createInListObj(action) {
-      return AAUtilityService.generateFunction(action.if.leftCondition, AAUtilityService.splitOnCommas(action.if.rightCondition));
+      var js;
+      if (_.isEqual(action.if.leftCondition, 'callerReturned')) {
+        js = AAUtilityService.generateFunction(action.if.leftCondition, action.if.rightCondition);
+      } else {
+        js = AAUtilityService.generateFunction(action.if.leftCondition, AAUtilityService.splitOnCommas(action.if.rightCondition));
+      }
+      return encodeURI(js);
     }
 
     function createObj(tag, action) {
@@ -1212,9 +1220,7 @@
         destObj[tag] = action.then.value;
       }
       out[action.then.name] = destObj;
-
       return out;
-
     }
 
     function createFalseObj() {
@@ -1232,6 +1238,8 @@
       /* as of now, all are InList type expressions. callerReturned is not
          implemented yet.
       */
+      out.varsUsed = [];
+      out.varsUsed.push(action.if.leftCondition);
 
       out.expression = createInListObj(action);
 
@@ -1253,7 +1261,6 @@
       out.false.push(createFalseObj());
 
       return out;
-
     }
 
     function updateWelcomeMenu(ceRecord, actionSetName, aaMenu) {
@@ -1319,6 +1326,7 @@
       }
       return newActionArray;
     }
+
     /*
     * Method for route to queue prior to CES def
     */
@@ -1375,6 +1383,7 @@
       }
       return newAction;
     }
+
     /*
      * Set the defaults for Dial by Extension
      */
@@ -1450,6 +1459,7 @@
       }
       return newAction;
     }
+
     /*
      * Read aaMenu and populate mainMenu object
      */
@@ -1710,5 +1720,10 @@
     function isCeMenu(obj) {
       return (objectType(obj) === 'CeMenu');
     }
+    function isCeMenuEntry(obj) {
+      return (objectType(obj) === 'CeMenuEntry');
+    }
+
+
   }
 })();

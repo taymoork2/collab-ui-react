@@ -9,8 +9,9 @@ describe('HelpdeskCardsService', function () {
   var FusionClusterService;
   var $scope, q;
   var CloudConnectorService;
+  var UCCService;
 
-  beforeEach(inject(function (_HelpdeskCardsOrgService_, _$q_, _LicenseService_, _$rootScope_, _HelpdeskHuronService_, _FusionClusterService_, _CloudConnectorService_) {
+  beforeEach(inject(function (_HelpdeskCardsOrgService_, _$q_, _LicenseService_, _$rootScope_, _HelpdeskHuronService_, _FusionClusterService_, _CloudConnectorService_, _UCCService_) {
     HelpdeskCardsOrgService = _HelpdeskCardsOrgService_;
     LicenseService = _LicenseService_;
     HelpdeskHuronService = _HelpdeskHuronService_;
@@ -18,12 +19,13 @@ describe('HelpdeskCardsService', function () {
     $scope = _$rootScope_.$new();
     q = _$q_;
     CloudConnectorService = _CloudConnectorService_;
+    UCCService = _UCCService_;
     spyOn(FusionClusterService, 'getAll').and.returnValue(q.resolve(getJSONFixture('hercules/fusion-cluster-service-test-clusters.json')));
   }));
 
   describe('Org Cards', function () {
     var org = {
-      services: ['spark-room-system', 'ciscouc', 'webex-squared', 'rubbish'],
+      services: ['spark-room-system', 'ciscouc', 'webex-squared', 'rubbish', 'cloud-contact-center'],
     };
     var licenses = [{
       offerCode: 'MS',
@@ -50,17 +52,26 @@ describe('HelpdeskCardsService', function () {
       type: 'RUBBISH',
       volume: 100,
       usage: 50,
+    }, {
+      offerCode: 'CDC',
+      type: 'CARE',
+      volume: 101,
+      usage: 51,
     }];
 
     beforeEach(function () {
       spyOn(LicenseService, 'orgIsEntitledTo').and.callThrough();
     });
 
+    afterEach(function () {
+      HelpdeskCardsOrgService = LicenseService = HelpdeskHuronService = FusionClusterService = $scope = q = CloudConnectorService = UCCService = undefined;
+    });
+
     it('should return correct message card for org', function () {
       var card = HelpdeskCardsOrgService.getMessageCardForOrg(org, licenses);
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
-      expect(card.aggregatedLicenses.length).toEqual(1);
+      expect(card.aggregatedLicenses.length).toBe(1);
       var aggregatedLicense = _.head(card.aggregatedLicenses);
       expect(aggregatedLicense.totalVolume).toEqual(100);
       expect(aggregatedLicense.totalUsage).toEqual(50);
@@ -74,7 +85,7 @@ describe('HelpdeskCardsService', function () {
     it('should return correct meeting card for org', function () {
       var card = HelpdeskCardsOrgService.getMeetingCardForOrg(org, licenses);
       expect(card.entitled).toBeTruthy();
-      expect(card.aggregatedLicenses.length).toEqual(1);
+      expect(card.aggregatedLicenses.length).toBe(1);
       var aggregatedLicense = _.head(card.aggregatedLicenses);
       expect(aggregatedLicense.totalVolume).toEqual(100);
       expect(aggregatedLicense.totalUsage).toEqual(50);
@@ -89,7 +100,7 @@ describe('HelpdeskCardsService', function () {
       var card = HelpdeskCardsOrgService.getCallCardForOrg(org, licenses, false, false);
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
-      expect(card.aggregatedLicenses.length).toEqual(1);
+      expect(card.aggregatedLicenses.length).toBe(1);
       var aggregatedLicense = _.head(card.aggregatedLicenses);
       expect(aggregatedLicense.totalVolume).toEqual(200);
       expect(aggregatedLicense.totalUsage).toEqual(100);
@@ -107,9 +118,11 @@ describe('HelpdeskCardsService', function () {
       sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
-        "steeringDigit": "7",
+        "steeringDigit": null,
         "siteSteeringDigit": "4",
+        "routingPrefix": "7100",
         "siteCode": "100",
+        "extensionLength": "10",
         "mediaTraversalMode": "TURNOnly",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
@@ -129,7 +142,7 @@ describe('HelpdeskCardsService', function () {
 
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
-      expect(card.aggregatedLicenses.length).toEqual(1);
+      expect(card.aggregatedLicenses.length).toBe(1);
       var aggregatedLicense = _.head(card.aggregatedLicenses);
       expect(aggregatedLicense.totalVolume).toEqual(200);
       expect(aggregatedLicense.totalUsage).toEqual(100);
@@ -139,7 +152,9 @@ describe('HelpdeskCardsService', function () {
       expect(license.volume).toEqual(200);
       expect(license.usage).toEqual(100);
       expect(card.voiceMailPrefix).toBe("4100");
-      expect(card.outboundDialDigit).toBe("7");
+      expect(card.routingPrefix).toBe("7100");
+      expect(card.outboundDialDigit).toEqual("helpdesk.none");
+      expect(card.extensionLength).toBe("10");
       expect(card.dialing).toEqual("helpdesk.dialingPlan.local");
       expect(card.areaCode).toBe("940");
     });
@@ -148,7 +163,7 @@ describe('HelpdeskCardsService', function () {
       var card = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(org, licenses);
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
-      expect(card.aggregatedLicenses.length).toEqual(1);
+      expect(card.aggregatedLicenses.length).toBe(1);
       var aggregatedLicense = _.head(card.aggregatedLicenses);
       expect(aggregatedLicense.totalVolume).toEqual(100);
       expect(aggregatedLicense.totalUsage).toEqual(50);
@@ -195,13 +210,62 @@ describe('HelpdeskCardsService', function () {
       $scope.$apply();
 
       expect(card.entitled).toBeTruthy();
-      expect(card.services.length).toEqual(1);
+      expect(card.services.length).toBe(1);
 
       expect(card.services[0].serviceId).toEqual('squared-fusion-gcal');
       expect(card.services[0].status).toEqual('OK');
       expect(card.services[0].setup).toBeTruthy();
       expect(card.services[0].statusCss).toEqual('success');
 
+    });
+
+    it('should get the voicemail status from UCCService if the org is entitled to Call Service Connect, and show a green icon if the service is good', function () {
+      spyOn(UCCService, 'getOrgVoicemailConfiguration').and.returnValue(q.resolve({
+        voicemailOrgEnableInfo: {
+          orgVoicemailStatus: 'HYBRID_SUCCESS',
+        },
+      }));
+      LicenseService.orgIsEntitledTo.and.callFake(function (org, service) {
+        return service === 'squared-fusion-ec';
+      });
+      var org = {
+        services: ['squared-fusion-mgmt', 'squared-fusion-ec'],
+      };
+      var card = HelpdeskCardsOrgService.getHybridServicesCardForOrg(org);
+      $scope.$apply();
+
+      expect(card.services.length).toBe(1);
+      expect(card.services[0].statusCss).toEqual('success');
+      expect(UCCService.getOrgVoicemailConfiguration).toHaveBeenCalled();
+
+    });
+
+    it('should not get voicemail status if the org is not entitled to Call Service Connect', function () {
+      spyOn(UCCService, 'getOrgVoicemailConfiguration');
+      LicenseService.orgIsEntitledTo.and.returnValue(false);
+      var org = {
+        services: ['squared-fusion-mgmt'],
+      };
+      HelpdeskCardsOrgService.getHybridServicesCardForOrg(org);
+      $scope.$apply();
+
+      expect(UCCService.getOrgVoicemailConfiguration).not.toHaveBeenCalled();
+
+    });
+
+    it('should return care card for org', function () {
+      var card = HelpdeskCardsOrgService.getCareCardForOrg(org, licenses);
+      expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
+      expect(card.entitled).toBeTruthy();
+      expect(card.aggregatedLicenses.length).toBe(1);
+      var aggregatedLicense = _.head(card.aggregatedLicenses);
+      expect(aggregatedLicense.totalVolume).toEqual(101);
+      expect(aggregatedLicense.totalUsage).toEqual(51);
+      expect(aggregatedLicense.displayName).toEqual('helpdesk.licenseDisplayNames.CDC');
+      var license = _.head(aggregatedLicense.licenses);
+      expect(license.type).toEqual('CARE');
+      expect(license.volume).toEqual(101);
+      expect(license.usage).toEqual(51);
     });
 
   });

@@ -6,89 +6,127 @@ const DEFAULT_COUNTRY: string = 'US';
 const DEFAULT_EXTENSION_LENGTH: string = '3';
 const DEFAULT_STEERING_DIGIT: string = '9';
 const DEFAULT_SITE_INDEX: string = '000001';
+const NULL: string = 'null';
 
-export class Site {
-  public uuid?: string;
-  public siteIndex: string;
-  public steeringDigit: string;
-  public siteCode: string;
-  public timeZone: string;
-  public voicemailPilotNumber: string | undefined;
-  public mediaTraversalMode: string | undefined;
-  public siteDescription: string | undefined;
-  public allowInternationalDialing: string | undefined;
-  public emergencyCallBackNumber: EmergencyCallbackNumber | undefined;
-  public extensionLength: string;
-  public voicemailPilotNumberGenerated: string;
-  public preferredLanguage: string;
-  public country: string;
-  public dateFormat: string;
-  public timeFormat: string;
-  public routingPrefix?: string;
-  public disableVoicemail?: boolean;
-  public allowExternalTransfer?: boolean;
+interface IBaseSite {
+  uuid?: string;
+  siteIndex: string;
+  steeringDigit: string;
+  siteCode?: string;
+  timeZone: string;
+  voicemailPilotNumber?: string;
+  mediaTraversalMode?: string;
+  siteDescription?: string;
+  emergencyCallBackNumber?: EmergencyCallbackNumber;
+  extensionLength: string;
+  preferredLanguage: string;
+  country: string;
+  dateFormat: string;
+  timeFormat: string;
+  routingPrefix?: string;
+}
 
-  constructor(obj: {
-    uuid?: string,
-    siteIndex: string,
-    steeringDigit: string,
-    timeZone: string,
-    voicemailPilotNumber?: string,
-    mediaTraversalMode?: string,
-    siteDescription?: string,
-    allowInternationalDialing?: string,
-    emergencyCallBackNumber?: EmergencyCallbackNumber,
-    extensionLength: string,
-    voicemailPilotNumberGenerated: string,
-    preferredLanguage: string,
-    country: string,
-    dateFormat: string,
-    timeFormat: string,
-    routingPrefix?: string,
-    disableVoicemail?: boolean,
-    allowExternalTransfer?: boolean,
-  } = {
+interface ISiteResponse extends IBaseSite {
+  disableVoicemail?: string;
+  regionCodeDialing?: IRegionCodeDialingResponse;
+  voicemailPilotNumberGenerated?: string;
+  allowExternalTransfer?: string;
+}
+
+export interface ISite extends IBaseSite {
+  disableVoicemail: boolean;
+  regionCodeDialing: IRegionCodeDialing;
+  voicemailPilotNumberGenerated: boolean;
+  allowExternalTransfer: boolean;
+}
+
+export class Site implements ISite {
+  public uuid;
+  public siteIndex;
+  public steeringDigit;
+  public siteCode;
+  public timeZone;
+  public voicemailPilotNumber;
+  public mediaTraversalMode;
+  public siteDescription;
+  public emergencyCallBackNumber;
+  public extensionLength;
+  public preferredLanguage;
+  public country;
+  public dateFormat;
+  public timeFormat;
+  public routingPrefix;
+  public disableVoicemail;
+  public regionCodeDialing;
+  public voicemailPilotNumberGenerated;
+  public allowExternalTransfer;
+
+  constructor(site: ISiteResponse = {
     uuid: undefined,
+    siteCode: undefined,
     siteIndex: DEFAULT_SITE_INDEX,
     steeringDigit: DEFAULT_STEERING_DIGIT,
     timeZone: DEFAULT_TIME_ZONE,
     voicemailPilotNumber: undefined,
     mediaTraversalMode: undefined,
     siteDescription: undefined,
-    allowInternationalDialing: undefined,
     emergencyCallBackNumber: undefined,
     extensionLength: DEFAULT_EXTENSION_LENGTH,
-    voicemailPilotNumberGenerated: 'false',
     preferredLanguage: DEFAULT_LANGUAGE,
     country: DEFAULT_COUNTRY,
     dateFormat: DEFAULT_DATE_FORMAT,
     timeFormat: DEFAULT_TIME_FORMAT,
     routingPrefix: undefined,
     disableVoicemail: undefined,
+    voicemailPilotNumberGenerated: undefined,
     allowExternalTransfer: undefined,
+    regionCodeDialing: undefined,
   }) {
-    this.uuid = obj.uuid;
-    this.siteIndex = obj.siteIndex;
-    this.steeringDigit = obj.steeringDigit;
-    this.timeZone = obj.timeZone;
-    this.voicemailPilotNumber = obj.voicemailPilotNumber;
-    this.mediaTraversalMode = obj.mediaTraversalMode;
-    this.siteDescription = obj.siteDescription;
-    this.allowInternationalDialing = obj.allowInternationalDialing;
-    this.emergencyCallBackNumber = obj.emergencyCallBackNumber;
-    this.extensionLength = obj.extensionLength;
-    this.voicemailPilotNumberGenerated = obj.voicemailPilotNumberGenerated;
-    this.preferredLanguage = obj.preferredLanguage;
-    this.country = obj.country;
-    this.dateFormat = obj.dateFormat;
-    this.timeFormat = obj.timeFormat;
-    this.routingPrefix = obj.routingPrefix;
-    this.disableVoicemail = obj.disableVoicemail;
-    this.allowExternalTransfer = obj.allowExternalTransfer;
+    this.uuid = site.uuid;
+    this.siteCode = site.siteCode;
+    this.siteIndex = site.siteIndex;
+    this.steeringDigit = _.isNull(site.steeringDigit) ? NULL : site.steeringDigit;
+    this.timeZone = site.timeZone;
+    this.voicemailPilotNumber = site.voicemailPilotNumber;
+    this.mediaTraversalMode = site.mediaTraversalMode;
+    this.siteDescription = site.siteDescription;
+    this.emergencyCallBackNumber = site.emergencyCallBackNumber;
+    this.extensionLength = site.extensionLength;
+    this.preferredLanguage = site.preferredLanguage;
+    this.country = site.country;
+    this.dateFormat = site.dateFormat;
+    this.timeFormat = site.timeFormat;
+    this.routingPrefix = site.routingPrefix;
+    this.disableVoicemail = (site.disableVoicemail === 'true');
+    this.allowExternalTransfer = (site.allowExternalTransfer === 'true');
+    this.voicemailPilotNumberGenerated = (site.voicemailPilotNumberGenerated === 'true');
+    this.regionCodeDialing = new RegionCodeDialing(_.get<IRegionCodeDialingResponse>(site, 'regionCodeDialing'));
   }
 }
 
 export class EmergencyCallbackNumber {
   public uuid: string;
   public pattern: string;
+}
+
+interface IBaseRegionCodeDialing {
+  regionCode: string;
+}
+
+interface IRegionCodeDialingResponse extends IBaseRegionCodeDialing {
+  useSimplifiedNationalDialing: string;
+}
+
+interface IRegionCodeDialing extends IBaseRegionCodeDialing {
+  useSimplifiedNationalDialing: boolean;
+}
+
+export class RegionCodeDialing implements IRegionCodeDialing {
+  public regionCode;
+  public useSimplifiedNationalDialing;
+
+  constructor(regionCode: IRegionCodeDialingResponse) {
+    this.regionCode = _.get(regionCode, 'regionCode');
+    this.useSimplifiedNationalDialing = (_.get(regionCode, 'useSimplifiedNationalDialing') === 'true');
+  }
 }

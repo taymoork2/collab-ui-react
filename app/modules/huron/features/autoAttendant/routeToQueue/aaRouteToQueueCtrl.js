@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService) {
+  function AARouteToQueueCtrl($rootScope, $scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService) {
 
     var vm = this;
     var conditional = 'conditional';
@@ -84,6 +84,8 @@
         }
       }, function () {
         // discard changes as modal was dismissed
+        $rootScope.$broadcast('Queue_Cancelled');
+
         if (fromRouteCall || fromDecision) {
           vm.menuEntry.actions[0] = master;
         } else {

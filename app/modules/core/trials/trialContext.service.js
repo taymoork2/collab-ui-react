@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialContextService', TrialContextService);
+  module.exports = TrialContextService;
 
   /* @ngInject */
   function TrialContextService($http, $q, Config, UrlConfig, LogMetricsService) {

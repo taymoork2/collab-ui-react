@@ -60,9 +60,9 @@
               sortable: true,
               sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
             }, {
-              field: 'contactsHandled',
-              id: 'contactsHandled',
-              displayName: $translate.instant('taskIncoming.contactsHandled'),
+              field: 'tasksHandled',
+              id: 'tasksHandled',
+              displayName: $translate.instant('taskIncoming.tasksHandled'),
               enableFiltering: false,
               width: '40%',
               sortable: true,

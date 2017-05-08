@@ -27,10 +27,12 @@ stats.json
 .vscode
 .history
 yarn.lock
+.tern-project
 
 build
 coverage
 dist
+dist-source-map
 plato
 screenshots
 typings/index.d.ts
