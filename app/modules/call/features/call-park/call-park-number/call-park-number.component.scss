@@ -17,6 +17,7 @@
         color: $color-primary-base;
         font-family: $brand-font-thin;
         font-size: $h1-font-size;
+
         @include vr-spacing(pt, 3);
       }
 
@@ -98,13 +99,13 @@
 }
 
 .cp-number-form {
-  input[type='radio']+label.cs-radio {
+  input[type='radio'] + label.cs-radio {
     input {
       color: $input-placeholder-font-color;
     }
   }
 
-  input[type='radio']:checked+label.cs-radio {
+  input[type='radio']:checked + label.cs-radio {
     input {
       color: $input-font-color;
     }

@@ -1,5 +1,7 @@
+import callFeatureMembersModule from './index';
+
 describe('Component: CallFeatureMembers', () => {
-  const DISPLAYED_MEMBER_COUNT = 9;
+  const DISPLAYED_MEMBER_COUNT = 10;
   const MEMBER_COUNT = 11;
   const CS_CARD_MEMBER = 'cs-card-member';
   const SHOW_MORE_LESS_LINK = '.members-footer a';
@@ -8,12 +10,12 @@ describe('Component: CallFeatureMembers', () => {
   const APPLY_REORDER_LINK = '.apply-reorder';
   const SEARCH_ADD_INPUT = 'input#callfeaturememberadd';
   const SEARCH_MEMBER_INPUT = 'input#callfeaturemembersearch';
-  const DROPDOWN_OPTIONS = '.search-add ul li a';
+  const DROPDOWN_OPTIONS = '.search-add ul li';
 
   let typeaheadResults = getJSONFixture('huron/json/features/callFeatureMembers/typeaheadMemberResponse.json');
 
   beforeEach(function () {
-    this.initModules('call.features.shared.members');
+    this.initModules(callFeatureMembersModule);
     this.injectDependencies(
       '$scope',
       '$rootScope',
@@ -41,14 +43,14 @@ describe('Component: CallFeatureMembers', () => {
     });
   }
 
-  describe('Handle showing/hiding members when member count > 9', () => {
+  describe('Handle showing/hiding members when member count > 10', () => {
     beforeEach(initComponent);
     beforeEach(function () {
       this.$scope.members = getJSONFixture('huron/json/features/callFeatureMembers/largeMemberList.json');
       this.$scope.$apply();
     });
 
-    it('should display only 9 members initially', function() {
+    it('should display only 10 members initially', function() {
       expect(this.view.find(CS_CARD_MEMBER).length).toEqual(DISPLAYED_MEMBER_COUNT);
     });
 
@@ -57,7 +59,7 @@ describe('Component: CallFeatureMembers', () => {
       expect(this.view.find(CS_CARD_MEMBER).length).toEqual(MEMBER_COUNT);
     });
 
-    it('should display only 9 members when Show Less is clicked', function() {
+    it('should display only 10 members when Show Less is clicked', function() {
       this.view.find(SHOW_MORE_LESS_LINK).get(1).click();
       expect(this.view.find(CS_CARD_MEMBER).length).toEqual(DISPLAYED_MEMBER_COUNT);
     });

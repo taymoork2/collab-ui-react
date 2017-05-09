@@ -1,9 +1,11 @@
+import callFeatureNameModule from './index';
+
 describe('Component: CallFeatureName', () => {
   const NAME_INPUT = 'input';
   const HINT_TEXT = 'p.input-description';
 
   beforeEach(function () {
-    this.initModules('huron.call-feature-name');
+    this.initModules(callFeatureNameModule);
     this.injectDependencies(
       '$scope',
     );
