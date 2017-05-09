@@ -9,7 +9,7 @@ interface INodes {
 
 export class NodeListComponentCtrl implements ng.IComponentController {
 
-  private cluster: ICluster;
+  public cluster: ICluster;
   public hosts;
   public connectorType;
   public getSeverity = this.HybridServicesClusterStatesService.getSeverity;
@@ -21,10 +21,10 @@ export class NodeListComponentCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
-    private FusionClusterService,
-    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
-    private Notification: Notification,
+    public $translate: ng.translate.ITranslateService,
+    public FusionClusterService,
+    public HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    public Notification: Notification,
   ) {}
 
   public $onInit() {
