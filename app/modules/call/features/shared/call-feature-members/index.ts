@@ -1,5 +1,4 @@
 import './call-feature-members.component.scss';
-import './call-feature-member-lookup.scss';
 
 import { CallFeatureMembersComponent } from './call-feature-members.component';
 import { callFeatureMemberPrimaryNumberFilter } from './call-feature-member-primary-number.filter';

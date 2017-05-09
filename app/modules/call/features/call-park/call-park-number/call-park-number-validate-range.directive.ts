@@ -1,4 +1,4 @@
-import { CallParkService } from 'modules/call/features/call-park/services';
+import { CallParkService } from 'modules/call/features/call-park';
 import { RangeFieldName } from 'modules/call/features/call-park/call-park-number/call-park-number.component';
 
 export class CallParkRangeValidator implements ng.IDirective {

@@ -4,9 +4,7 @@
   .cs-card-layout {
     @include vr-spacing(ml, 1, 0px, true);
     @include vr-spacing(pb, 1);
-
     height: 100% !important;
-    // width: 58rem;
     margin-right: auto;
     margin-left: 0;
     overflow: auto;
@@ -18,7 +16,6 @@
 
     .overlay-panel & {
       @include vr-spacing(ml, 26, 0px, true);
-
       position: fixed !important;
       height: 16rem !important;
       width: 54rem;
@@ -26,5 +23,4 @@
       justify-content: center;
     }
   }
-
 }

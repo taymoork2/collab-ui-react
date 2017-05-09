@@ -1,4 +1,4 @@
-import { CallParkService, ICallParkRangeItem } from 'modules/call/features/call-park/services';
+import { CallParkService, ICallParkRangeItem } from 'modules/call/features/call-park';
 
 export enum RangeType {
   RANGE = <any>'range',
