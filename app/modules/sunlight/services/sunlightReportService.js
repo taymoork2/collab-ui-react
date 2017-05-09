@@ -26,8 +26,8 @@
     };
 
     var emptyUserstats = {
-      "contactsHandled": 0,
-      "contactsAssigned": 0,
+      "tasksHandled": 0,
+      "tasksAssigned": 0,
       "avgCsatScore": 0,
       "handleTime": 0,
       "numCsatScores": 0,
@@ -369,8 +369,8 @@
 
     function reduceUserStats(stats1, stats2) {
       var resultStats = _.clone(stats2);
-      resultStats.contactsHandled = stats1.contactsHandled + stats2.contactsHandled;
-      resultStats.contactsAssigned = stats1.contactsAssigned + stats2.contactsAssigned;
+      resultStats.tasksHandled = stats1.tasksHandled + stats2.tasksHandled;
+      resultStats.tasksAssigned = stats1.tasksAssigned + stats2.tasksAssigned;
       resultStats.numCsatScores = stats1.numCsatScores + stats2.numCsatScores;
       resultStats.handleTime = calculateAvgHandleTime(stats1, stats2);
       resultStats.avgCsatScore = calculateUserAverageCsat(stats1, stats2);
@@ -454,9 +454,9 @@
     }
 
     function calculateAvgHandleTime(stats1, stats2) {
-      var totalHandledContacts = stats1.contactsHandled + stats2.contactsHandled;
-      var handleTime = (stats1.contactsHandled * stats1.handleTime) + (stats2.contactsHandled * stats2.handleTime);
-      return ((totalHandledContacts != 0) ? (handleTime / totalHandledContacts) : 0);
+      var totalHandledTasks = stats1.tasksHandled + stats2.tasksHandled;
+      var handleTime = (stats1.tasksHandled * stats1.handleTime) + (stats2.tasksHandled * stats2.handleTime);
+      return ((totalHandledTasks != 0) ? (handleTime / totalHandledTasks) : 0);
     }
 
     function calculateOrgAverageCsat(stats1, stats2) {

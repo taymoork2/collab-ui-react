@@ -49,17 +49,24 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       controller: 'AddResourceController',
       controllerAs: 'vm',
       templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
-      type: 'small',
     })
       .result
-      .then(() => {
+      .then((value) => {
+        if (value === 'back') {
+          this.openChoiceModal();
+          return;
+        }
         this.$state.go('calendar-service.list');
       });
   }
 
   private firstTimeGoogleSetup() {
     this.CloudConnectorService.openSetupModal()
-      .then(() => {
+      .then((value) => {
+        if (value === 'back') {
+          this.openChoiceModal();
+          return;
+        }
         this.$state.go('google-calendar-service.settings');
       });
   }

@@ -153,4 +153,54 @@ describe('DirSyncService', () => {
 
   });
 
+  describe('check whether the org has dirsync attribute', () => {
+    it('should handle org with dirsyncEnabled as true and with out dirsync attribute', function () {
+      let orgWithoutDirSyncAttributes = {
+        isTestOrg: true,
+        dirsyncEnabled: true,
+      };
+      expect(this.DirSyncService.isUserAttributeSynced(orgWithoutDirSyncAttributes, 'preferredLanguage')).toBeFalsy();
+    });
+
+    it('should handle org with dirsyncEnabled as false', function () {
+      let orgWithdirsyncEnabled = {
+        isTestOrg: true,
+        dirsyncEnabled: false,
+      };
+      expect(this.DirSyncService.isUserAttributeSynced(orgWithdirsyncEnabled, 'preferredLanguage')).toBeFalsy();
+    });
+
+    it('should handle org with dirsyncEnabled as true and preferred language attribute present', function () {
+      let orgWithDirSyncAttributes = {
+        isTestOrg: true,
+        dirsyncEnabled: true,
+        dirsyncAttributes: {
+          user: [
+            'userName',
+            'organization',
+            'preferredLanguage',
+            'country',
+          ],
+        },
+      };
+      expect(this.DirSyncService.isUserAttributeSynced(orgWithDirSyncAttributes, 'preferredLanguage')).toBeTruthy();
+    });
+
+    it('should handle org with dirsyncEnabled as true and preferred language attribute not present', function () {
+      let orgWithDirSyncAttributes = {
+        isTestOrg: true,
+        dirsyncEnabled: true,
+        dirsyncAttributes: {
+          user: [
+            'userName',
+            'organization',
+            'country',
+          ],
+        },
+      };
+      expect(this.DirSyncService.isUserAttributeSynced(orgWithDirSyncAttributes, 'preferredLanguage')).toBeFalsy();
+    });
+
+  });
+
 });

@@ -18,6 +18,7 @@
 
     function link(scope) {
       scope.translateTypeToIcon = translateTypeToIcon;
+      scope.isServiceManaged = isServiceManaged;
       scope.getTooltipText = getTooltipText;
       _setVisibility(scope);
       scope.$watch('row', _.throttle(function () {
@@ -70,20 +71,35 @@
         } else {
           tooltipDataObj.serviceName = $translate.instant('customerPage.' + type);
         }
+
+        tooltipDataObj.quantity = 0;
         if (serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[type].volume) {
+          tooltipDataObj.quantity = rowData[type].volume;
           tooltipDataObj.qty = $translate.instant('customerPage.quantityWithValue', {
-            quantity: rowData[type].volume });
+            quantity: rowData[type].volume,
+          });
         }
+
         tooltipDataObj.status = $translate.instant('customerPage.' + serviceStatus);
         if (serviceManagedByAnotherPartner && serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[type].volume) {
           tooltipDataObj.anotherPartner = $translate.instant('customerPage.anotherPartner');
         }
         // Note that the tooltip displays raw html, which can contain unsecure code!
         // In this case all input is put through $translate, sanitized, or changed to a constant
+        scope.ariaLabel = _.join([
+          $translate.instant('customerPage.ariaTooltips.service', tooltipDataObj),
+          $translate.instant('customerPage.ariaTooltips.quantity', tooltipDataObj),
+          $translate.instant('customerPage.ariaTooltips.status', tooltipDataObj),
+        ], ' ,');
         return $interpolate(tooltip[0].outerHTML)(tooltipDataObj);
       }
 
       function getWebexTooltip(rowData) {
+
+        var ariaItems = [
+          $translate.instant('customerPage.ariaTooltips.service', { serviceName: scope.WEBEX_TRANSLATION }),
+        ];
+
         var tooltip = scope.TOOLTIP_TEMPLATE.clone();
         tooltip.find('.service-name').text(scope.WEBEX_TRANSLATION);
         tooltip.find('.tooltip-qty').remove();
@@ -101,7 +117,12 @@
           if (isLicenseAny && hasLicenseId && isUniqueUrl) {
             if (webexServicesCounted < MAX_SITES_DISPLAYED) {
               sitesFound.push(licenseData.siteUrl);
-              tooltip.append(createWebexTooltipBlock(rowData, licenseType, licenseData, sitesFound));
+              var serviceStatus = getServiceStatus(rowData, licenseType);
+              tooltip.append(createWebexTooltipBlock(rowData, licenseType, licenseData, sitesFound, serviceStatus));
+
+              ariaItems.push($translate.instant('customerPage.ariaTooltips.url', { url: licenseData.siteUrl }));
+              ariaItems.push($translate.instant('customerPage.ariaTooltips.quantity', { quantity: licenseData.volume }));
+              ariaItems.push($translate.instant('customerPage.ariaTooltips.status', { status: serviceStatus }));
             }
             webexServicesCounted++;
           }
@@ -111,13 +132,16 @@
             count: webexServicesCounted - MAX_SITES_DISPLAYED,
           }, 'messageformat');
           tooltip.append('<p class="service-text">' + additionalSiteCount + '</p>');
+          ariaItems.push(additionalSiteCount);
         }
+
+        scope.ariaLabel = _.join(ariaItems, ' ,');
+
         return $interpolate(tooltip[0].outerHTML)();
       }
 
-      function createWebexTooltipBlock(rowData, licenseType, licenseData) {
+      function createWebexTooltipBlock(rowData, licenseType, licenseData, sitesFound, serviceStatus) {
         var tooltipBlock = scope.TOOLTIP_TEMPLATE_BLOCK.clone();
-        var serviceStatus = getServiceStatus(rowData, licenseType);
         var serviceManagedByAnotherPartner = !PartnerService.isServiceManagedByCurrentPartner(rowData[licenseType]);
         var tooltipDataObj = {
           url: licenseData.siteUrl,
@@ -131,7 +155,6 @@
         if (serviceManagedByAnotherPartner && serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[licenseType].volume) {
           tooltipDataObj.anotherPartner = $translate.instant('customerPage.anotherPartner');
         }
-
         return $interpolate(tooltipBlock[0].outerHTML)(tooltipDataObj);
       }
 
@@ -157,24 +180,36 @@
         return PartnerService.isLicenseInfoAvailable(licenseList) && licenseStatusFunction(serviceData);
       }
 
+      function isServiceManaged() {
+        return (scope.showServiceManagedByAnotherPartner || scope.showServiceManagedByCurrentPartner);
+      }
+
       function translateTypeToIcon(type) {
+        var classType = "";
+        if (scope.showServiceManagedByAnotherPartner) {
+          classType = 'service-icon-managed-by-others ';
+        } else if (scope.showServiceManagedByCurrentPartner) {
+          classType = 'service-icon ';
+        }
+
         // Converts the trial type to a css icon representing that icon
         switch (type) {
           case 'messaging':
-            return 'icon-message';
+            classType += 'icon-message'; break;
           case 'conferencing':
-            return 'icon-conference';
+            classType += 'icon-conference'; break;
           case 'communications':
-            return 'icon-phone';
+            classType += 'icon-phone'; break;
           case 'webex':
-            return 'icon-webex';
+            classType += 'icon-webex'; break;
           case 'roomSystems':
-            return 'icon-devices';
+            classType += 'icon-devices'; break;
           case 'sparkBoard':
-            return 'icon-whiteboard';
+            classType += 'icon-whiteboard'; break;
           case 'care':
-            return 'icon-headset';
+            classType += 'icon-headset'; break;
         }
+        return classType;
       }
 
       function _isVisible(row, type, collection) {

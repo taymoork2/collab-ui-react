@@ -1,12 +1,8 @@
-import { PstnService } from '../pstn.service';
 import { PstnModel } from '../pstn.model';
-
 import {
-  IPstnCarrierGet,
-  IPstnCarrierStatic,
-  IPstnCarrierCapability,
   PstnCarrier,
 } from './pstnCarrier';
+import { PstnProvidersService } from './pstnProviders.service';
 
 export class PstnProvidersComponent implements ng.IComponentOptions {
   public controller = PstnProvidersCtrl;
@@ -20,23 +16,22 @@ export class PstnProvidersComponent implements ng.IComponentOptions {
 export class PstnProvidersCtrl implements ng.IComponentController {
   public show: boolean = false;
   public pstnCarriers: Array<PstnCarrier>;
-  private pstnCarrierStatics: Array<IPstnCarrierStatic>;
   private onChangeFn: Function;
   private onReadyFn: Function;
 
   /* @ngInject */
   constructor(
     public PstnModel: PstnModel,
-    private PstnService: PstnService,
-    private $resource: ng.resource.IResourceService,
-    private $translate: ng.translate.ITranslateService,
+    private PstnProvidersService: PstnProvidersService,
   ) {}
 
   public $onInit() {
-    this.pstnCarriers = new Array<PstnCarrier>();
-    this.pstnCarrierStatics = new Array<IPstnCarrierStatic>();
-    this.getCarriersStatic().then(() => {
-      this.getCarriersNetwork();
+    this.PstnProvidersService.getCarriers().then((pstnCarriers: Array<PstnCarrier>) => {
+      if (_.isArray(pstnCarriers)) {
+        this.pstnCarriers = pstnCarriers;
+        this.show = true;
+        this.onReadyFn();
+      }
     });
   }
 
@@ -51,108 +46,4 @@ export class PstnProvidersCtrl implements ng.IComponentController {
     this.PstnModel.setProvider(carrier);
     this.onChangeFn();
   }
-
-  public onReady() {
-    this.show = true;
-    this.onReadyFn();
-  }
-
-  //Get static carrier informantion from JSON file
-  private getCarriersStatic(): any {
-    return this.getCarriersJson().query().$promise.then(carriers => {
-      carriers.forEach((carrier: IPstnCarrierStatic) => {
-        //translate the feature strings
-        for (let i: number = 0; i < carrier.features.length; i++) {
-          carrier.features[i] = this.$translate.instant(carrier.features[i]);
-        }
-        this.pstnCarrierStatics.push(carrier);
-      });
-    });
-  }
-
-  //Not using a service, due to just one call used by this component for retrieving JSON file
-  private getCarriersJson(): any {
-    return this.$resource('modules/huron/pstn/pstnProviders/pstnProviders.json', {}, {
-      query: {
-        method: 'GET',
-        isArray: true,
-        cache: true,
-      },
-    });
-  }
-
-  //Get array of carriers from Terminus service
-  private getCarriersNetwork(): void {
-    //Are carriers already loaded
-    if (this.PstnModel.isCarrierExists()) {
-      this.pstnCarriers = this.PstnModel.getCarriers();
-      this.onReady();
-      return;
-    }
-
-    if (this.PstnModel.isCustomerExists()) {
-      //Get Customer Carriers (Most likely there is only 1, the previous selected carrier)
-      this.PstnService.listCustomerCarriers(this.PstnModel.getCustomerId()).then ( carriers => {
-        if (_.isArray(carriers) && carriers.length > 0) {
-          carriers.forEach(carrier => {
-            this.addCarrier(<IPstnCarrierGet> carrier);
-          });
-          this.PstnModel.setCarriers(this.pstnCarriers);
-          this.onReady();
-        } else {
-          this.getCarriersNetworkDefault();
-        }
-      })
-      .catch( () => {
-        this.getCarriersNetworkDefault();
-      });
-    } else {
-      //Get Reseller Carriers
-      this.PstnService.listResellerCarriersV2().then(carriers => {
-        if (_.isArray(carriers) && carriers.length > 0) {
-          carriers.forEach(carrier => {
-            this.addCarrier(<IPstnCarrierGet> carrier);
-          });
-          this.PstnModel.setCarriers(this.pstnCarriers);
-          this.onReady();
-        } else {
-          this.getCarriersNetworkDefault();
-        }
-      })
-      .catch( () => {
-        this.getCarriersNetworkDefault();
-      });
-    }
-  }
-
-  private getCarriersNetworkDefault() {
-    this.PstnService.listDefaultCarriersV2().then ( carriers => {
-      carriers.forEach(carrier => {
-        this.addCarrier(<IPstnCarrierGet> carrier);
-      });
-      this.PstnModel.setCarriers(this.pstnCarriers);
-      this.onReady();
-    });
-  }
-
-  private addCarrier(carrier: IPstnCarrierGet): void {
-    let size: number = this.pstnCarriers.push(new PstnCarrier());
-    let pstnCarrier: PstnCarrier = this.pstnCarriers[size - 1];
-
-    //Save the Network info in the 'pstnCarrier' object
-    pstnCarrier.setPstnCarrierGet(carrier);
-    //Add static carrier information
-    for (let x: number = 0; x < this.pstnCarrierStatics.length; x++) {
-      if (this.pstnCarrierStatics[x].name === carrier.vendor) {
-        //Add the static info to 'pstnCarrier' object
-        pstnCarrier.setPstnCarrierStatic(this.pstnCarrierStatics[x]);
-        break;
-      }
-    }
-    //Get and add carrier capabilities
-    this.PstnService.getCarrierCapabilities(carrier.uuid).then( (capabilities: Array<IPstnCarrierCapability>) => {
-      pstnCarrier.setCapabilities(capabilities);
-    });
-  }
-
 }

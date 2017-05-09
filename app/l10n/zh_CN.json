@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}}，这些用户是最活跃的。此表格可以按用户的姓名或处理的联系总数进行排序。",
     "drilldownErrorDescription": "该数据暂时无法使用。我们的服务器正在返回该数据，请稍后再进行查阅。",
     "drilldownEmptyDescription": "{{time}}，没有活跃用户。要查看用户状态并重新向仍处于待批准状态的用户发送邀请，请访问“用户”标签页。",
-    "contactsHandled": "已处理的联系",
+    "tasksHandled": "已处理的联系",
     "user": "用户",
     "drilldownSearchPlaceholder": "搜索"
   },

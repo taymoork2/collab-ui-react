@@ -98,13 +98,6 @@
               $state.modal = $modal.open({
                 template: '<div ui-view="modal"></div>',
                 controller: 'ModalWizardCtrl',
-                // TODO(pajeter): remove inline template when cs-modal is updated
-                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="modal-alt"' +
-                'modal-animation-class="fade"' +
-                'modal-in-class="in"' +
-                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\', position: \'relative\'}">' +
-                '<div class="modal-content" modal-transclude></div>' +
-                '</div>',
                 backdrop: 'static',
               });
               $state.modal.result.finally(function () {
@@ -2239,6 +2232,16 @@
               currentCustomer: {},
             },
             data: {},
+            onEnter: /* @ngInject */ function (Orgservice, $stateParams, HuronCompassService) {
+              HuronCompassService.setIsCustomer(true);
+              Orgservice.isTestOrg($stateParams.currentCustomer.customerOrgId).then(function (result) {
+                $stateParams.isTestOrg = result;
+              });
+            },
+            onExit: /* @ngInject */ function (HuronCompassService) {
+              HuronCompassService.setIsCustomer(false);
+              HuronCompassService.setCustomerBaseDomain();
+            },
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
@@ -2272,7 +2275,7 @@
                 $state.get('customer-overview.ordersOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/ordersOverview'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/ordersOverview'], done);
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
@@ -2363,7 +2366,7 @@
                 $state.get('customerPstnOrdersOverview').data.displayName = $translate.instant('pstnOrderOverview.orderHistory');
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/customerPstnOrdersOverview'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/customerPstnOrdersOverview'], done);
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
@@ -2385,7 +2388,7 @@
                 $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.currentOrder.carrierOrderId;
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/orderDetail'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
               }),
               currentOrder: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentOrder;
@@ -2408,7 +2411,7 @@
                 $state.get('customer-overview.orderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
               },
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/pstnOrderManagement/orderDetail'], done);
+                require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
@@ -2440,7 +2443,7 @@
             parent: 'wizardmodal',
             views: {
               'modal@': {
-                template: '<cr-wizard tabs="tabs" finish="finish"></cr-wizard>',
+                template: '<cr-wizard class="modal-content" tabs="tabs" finish="finish"></cr-wizard>',
                 controller: 'SetupWizardCtrl',
               },
             },
@@ -2450,6 +2453,7 @@
               currentStep: '',
               numberOfSteps: undefined,
               onlyShowSingleTab: false,
+              showStandardModal: false,
             },
             data: {
               firstTimeSetup: false,
@@ -2604,6 +2608,9 @@
               currentTrial: {},
               details: {},
               mode: {},
+            },
+            onEnter: /* @ngInject */ function (HuronCompassService) {
+              HuronCompassService.setIsCustomer(true);
             },
           })
           .state('trial.info', {
@@ -2808,7 +2815,6 @@
             templateUrl: 'modules/huron/details/huronDetails.html',
           })
           .state('hurondetails', {
-            url: '/hurondetails',
             parent: 'hurondetailsBase',
             views: {
               'header': {
@@ -2827,7 +2833,7 @@
             },
           })
           .state('huronlines', {
-            url: '/lines',
+            url: '/services/call-lines',
             parent: 'hurondetails',
             templateUrl: 'modules/huron/lines/lineList.tpl.html',
             controller: 'LinesListCtrl',
@@ -2854,7 +2860,7 @@
             },
           })
           .state('huronsettings', {
-            url: '/settings',
+            url: '/services/call-settings',
             parent: 'hurondetails',
             templateUrl: 'modules/huron/settings/settings.tpl.html',
             controller: 'HuronSettingsCtrl',
@@ -2862,7 +2868,7 @@
           })
           // TODO (jlowery): rename the huronsettingsnew to huronsettings state when sparkCallTenDigitExt is removed.
           .state('huronsettingsnew', {
-            url: '/settingsnew',
+            url: '/services/call-settingsnew',
             parent: 'hurondetails',
             template: '<uc-settings ftsw="false"></uc-settings>',
             resolve: {
@@ -2871,6 +2877,14 @@
                   done(require('modules/huron/settings'));
                 }, 'call-settings');
               }),
+            },
+          })
+          .state('huronrecords', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/huron/cdrReports/cdrReportsModal.html',
+              },
             },
           })
           .state('users.enableVoicemail', {
@@ -2882,7 +2896,7 @@
             },
           })
           .state('huronfeatures', {
-            url: '/features',
+            url: '/services/call-features',
             parent: 'hurondetails',
             templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
             controller: 'HuronFeaturesCtrl',
@@ -3291,7 +3305,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hercules/private-trunk/overview'));
+                  done(require('modules/hercules/private-trunk/private-trunk-overview'));
                 }, 'private-trunk-overview');
               }),
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -3300,22 +3314,25 @@
             },
           })
           .state('private-trunk-overview.settings', {
-            url: '/private-trunk-overview/settings',
+            url: '/settings',
             views: {
-              'privateTrunkSettings': {
-                templateUrl: 'modules/hercules/private-trunk/overview/private-trunk-overview-settings.html',
+              privateTrunkSettings: {
+                template: '<private-trunk-overview-settings has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview-settings>',
               },
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hercules/private-trunk/overview'));
-                }, 'private-trunk-overview');
+                  done(require('modules/hercules/private-trunk/private-trunk-overview-settings'));
+                }, 'private-trunk-overview-settings');
               }),
+              hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
+              },
             },
           })
           .state('private-trunk-overview.list', {
-            url: '/private-trunk-overview/list',
+            url: '/list',
             views: {
               sipDestinationList: {
                 template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',

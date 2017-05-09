@@ -1,12 +1,10 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const commonWebpack = require('./webpack.common');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const loaders = require('./loaders');
 const plugins = require('./plugins');
 const _ = require('lodash');
-const sortOrder = require('../utils/sortOrder');
 
 function webpackConfig(env) {
   const commonWebpackConfig = commonWebpack(env);
@@ -35,14 +33,12 @@ function webpackConfig(env) {
       publicPath: '/',
       filename: 'js/[name].[hash].js',
       chunkFilename: 'js/[name].[hash].js',
+      sourceMapFilename: '../dist-source-map/[file].map',
     },
     plugins: plugins.commonsChunkPlugins.concat([
-      new HtmlWebpackPlugin({
-        template: 'index.html',
-        inject: 'body',
+      plugins.getHtmlWebpackPlugin({
         ngStrictDi: '',
         loadAdobeScripts: true,
-        chunksSortMode: sortOrder,
       }),
       new ExtractTextPlugin({
         filename: 'styles/[name].[hash].css',
@@ -51,6 +47,7 @@ function webpackConfig(env) {
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.optimize.UglifyJsPlugin({
         mangle: false,
+        sourceMap: true,
       }),
     ]),
     stats: {

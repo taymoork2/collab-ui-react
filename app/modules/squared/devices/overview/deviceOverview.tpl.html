@@ -246,17 +246,12 @@
     </cs-sp-section>
     <cs-sp-section ng-show="deviceOverview.showE911">
       <div>
-        <div class="section-title-row">
-          <span class="section-name" translate="spacesPage.emergencyTitle"></span>
-          <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="deviceOverview.hideE911Edit && !deviceOverview.e911NotFound">
-            <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-              <i class="icon icon-three-dots"></i>
-            </button>
-            <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-              <li><a href ng-click="deviceOverview.goToEmergencyServices()" translate="spacesPage.editEmergencyServices"></a></li>
-            </ul>
-          </span>
-        </div>
+        <section-title
+          title-key="spacesPage.emergencyTitle"
+          show-actions="deviceOverview.hideE911Edit && !deviceOverview.e911NotFound"
+          action-list="deviceOverview.actionList"
+          as-button="true">
+        </section-title>
         <div ng-if="deviceOverview.e911NotFound">
           <div class="warning">
             <div class="cs-input__messages">

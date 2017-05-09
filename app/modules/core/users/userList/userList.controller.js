@@ -384,7 +384,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
               Log.debug('Get existing org failed. Status: ' + status);
               reject(data);
             }
-          }, null, { basicInfo: true });
+          }, null, { showDirsyncAttributes: true });
         }
       });
     }

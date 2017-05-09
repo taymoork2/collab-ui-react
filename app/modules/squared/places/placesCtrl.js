@@ -110,6 +110,7 @@ require('../devices/_devices.scss');
         vm.gridOptions = {
           data: 'sc.filteredView.getResult()',
           rowHeight: 45,
+          enableHorizontalScrollbar: 0,
           enableRowHeaderSelection: false,
           enableColumnMenus: false,
           multiSelect: false,
@@ -225,8 +226,7 @@ require('../devices/_devices.scss');
         vm.deletePlace = function ($event, place) {
           $event.stopPropagation();
           RemPlaceModal
-            .open(place)
-            .then(vm.updateListAndFilter());
+            .open(place);
         };
 
         function getTemplate(name) {

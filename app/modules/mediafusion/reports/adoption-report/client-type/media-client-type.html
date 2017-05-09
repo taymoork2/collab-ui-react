@@ -1,8 +1,9 @@
 <cs-card id='client-type-card' class="full media-metrics-report-card">
-  <article class="media-service-card">
+  <article class="media-service-card header-padding">
     <graphheader>
-              <h4 class='report-section-header' translate='mediaFusion.metrics.clientTypeHeading'>
-              </h4><div id="client-type-div"></div>
+      <span class='report-section-header' translate='mediaFusion.metrics.clientTypeHeading'></span>
+      <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.clientTypeDesc' | translate}}" tooltip-class="metrics-tooltip"></i>
+      <div id="client-type-div"></div>
     </graphheader>
     <section>
       <div class="client-type-reports">
@@ -12,7 +13,7 @@
         </div>
         <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.clientTypeStatus)">
           <p>
-            <h3 class="no-data"> 
+            <h3 class="no-data">
             <i class='icon icon-warning no-data-warning'></i>
             <span translate='mediaFusion.metrics.nodata'></span>
           </h3>

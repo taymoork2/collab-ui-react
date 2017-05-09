@@ -1,6 +1,7 @@
 const DIGITAL_RIVER_URL = {
   spark: 'https://buy.ciscospark.com/store/ciscoctg/en_US/',
   webex: 'https://buy.webex.com/store/ciscoctg/en_US/',
+  dr: 'https://gc.digitalriver.com/store/ciscoctg/',
 };
 
 const DIGITAL_RIVER_COOKIE = 'webexToken';
@@ -16,13 +17,21 @@ export class DigitalRiverService {
   ) {}
 
   public getOrderHistoryUrl(env: string): ng.IPromise<string> {
-    const ORDER_HISTORY_PATH = 'DisplayAccountOrderListPage';
+    const ORDER_HISTORY_PATH = 'DisplayAccountOrderListPage?';
     return this.getDigitalRiverUrl(ORDER_HISTORY_PATH, env);
   }
 
   public getSubscriptionsUrl(env: string): ng.IPromise<string> {
-    const SUBSCRIPTIONS_PATH = 'DisplaySelfServiceSubscriptionHistoryListPage';
+    const SUBSCRIPTIONS_PATH = 'DisplaySelfServiceSubscriptionHistoryListPage?';
     return this.getDigitalRiverUrl(SUBSCRIPTIONS_PATH, env);
+  }
+
+  public getInvoiceUrl(reqId: string, product: string): ng.IPromise<string> {
+    let invoicePath = 'DisplayInvoicePage?requisitionID=' + reqId + '&';
+    if (_.includes(product, 'WebEx')) {
+      invoicePath += 'ThemeID=4777108300&';
+    }
+    return this.getDigitalRiverUrl(invoicePath, 'dr');
   }
 
   public logout(env: string): ng.IHttpPromise<any> {
@@ -33,7 +42,7 @@ export class DigitalRiverService {
     return this.getDigitalRiverToken()
       .then((response) => this.setDRCookie(response))
       .then((response) => {
-        const queryParams = env === WEBEX_ENVIRONMENT ? '?ThemeID=4777108300&DRL=' : '?DRL=';
+        const queryParams = env === WEBEX_ENVIRONMENT ? 'ThemeID=4777108300&DRL=' : 'DRL=';
         return _.get(DIGITAL_RIVER_URL, env) + path + queryParams + encodeURIComponent(response);
       });
   }

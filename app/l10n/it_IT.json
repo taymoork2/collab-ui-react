@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}}, questi sono gli utenti più attivi. È possibile ordinare la tabella in base al nome dell'utente o al numero totale di contatti gestiti.",
     "drilldownErrorDescription": "Dati temporaneamente non disponibili. Stiamo lavorando per ripristinare quanto prima i nostri server. Ricontrollare tra poco.",
     "drilldownEmptyDescription": "{{time}}, non vi sono stati utenti attivi. Per visualizzare lo stato utente e inviare nuovamente gli inviti a coloro che sono ancora in sospeso, visitare la scheda degli utenti.",
-    "contactsHandled": "Contatti gestiti",
+    "tasksHandled": "Contatti gestiti",
     "user": "Utente",
     "drilldownSearchPlaceholder": "Cerca"
   },

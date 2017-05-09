@@ -788,7 +788,7 @@
     "drilldownDescription": "W okresie {{time}} byli to najaktywniejsi użytkownicy. Tabelę można sortować według nazwy użytkownika lub całkowitej liczby obsłużonych kontaktów.",
     "drilldownErrorDescription": "Te dane są tymczasowo niedostępne. Nasze serwery wkrótce udostępnią je ponownie, proszę sprawdzić za chwilę.",
     "drilldownEmptyDescription": "W okresie {{time}} nie było aktywnych użytkowników. Aby sprawdzić stan użytkowników i ponownie wysłać zaproszenia do tych, którzy jeszcze nie odpowiedzieli, wyświetl kartę Użytkownicy.",
-    "contactsHandled": "Obsłużone kontakty",
+    "tasksHandled": "Obsłużone kontakty",
     "user": "Użytkownik",
     "drilldownSearchPlaceholder": "Szukaj"
   },

@@ -1,4 +1,3 @@
-require('./_field-modal.scss');
 import { Notification } from 'modules/core/notifications';
 import { ContextFieldsService } from 'modules/context/services/context-fields-service';
 

@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}}: dit zijn de meest actieve gebruikers. De tabel kan worden gesorteerd op gebruikersnaam of totaal aantal contactpersonen die zijn verwerkt.",
     "drilldownErrorDescription": "Deze gegevens zijn tijdelijk niet beschikbaar. Onze servers zijn bezig om de gegevens terug te plaatsen. Controleer binnenkort opnieuw.",
     "drilldownEmptyDescription": "{{time}}: er zijn geen actieve gebruikers geweest. Voor het bekijken van de gebruikersstatus en het opnieuw versturen van uitnodigingen aan gebruikers die nog in behandeling zijn, gaat u naar het tabblad Gebruikers.",
-    "contactsHandled": "Contactpersonen verwerkt",
+    "tasksHandled": "Contactpersonen verwerkt",
     "user": "Gebruiker",
     "drilldownSearchPlaceholder": "Zoeken"
   },

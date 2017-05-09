@@ -1,8 +1,10 @@
 <cs-card id='availability-card' class="full media-metrics-report-card">
-  <article class="media-service-card">
+  <article class="media-service-card header-padding">
     <graphheader>
-      <h4 class='report-section-header' translate='mediaFusion.metrics.clusterAvailabilityCardHeading' ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></h4>
-      <h4 class='report-section-header' translate='mediaFusion.metrics.nodeAvailabilityCardHeading' ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></h4>
+      <span class='report-section-header' translate='mediaFusion.metrics.clusterAvailabilityCardHeading' ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></span>
+      <i class='icon icon-info-outline icon-large' tooltip-html="$ctrl.parentcntrl.clusterInServiceOrgDesc" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></i>
+      <span class='report-section-header' translate='mediaFusion.metrics.nodeAvailabilityCardHeading' ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></span>
+      <i class='icon icon-info-outline icon-large' tooltip-html="$ctrl.parentcntrl.clusterInServiceClusterDesc" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></i>
       <div id="availability-div"></div>
     </graphheader>
     <section>

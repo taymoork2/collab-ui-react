@@ -2,7 +2,7 @@ import renameAndDeregisterClusterSection from './index';
 
 describe('Component: hsRenameAndDeregisterClusterSection', () => {
 
-  let $componentController, $scope, $q, EnterprisePrivateTrunkService, HybridServicesClusterService, Notification;
+  let $componentController, $scope, $q, PrivateTrunkService, HybridServicesClusterService, Notification;
 
   beforeEach(function () {
     this.initModules(renameAndDeregisterClusterSection);
@@ -36,11 +36,11 @@ describe('Component: hsRenameAndDeregisterClusterSection', () => {
 
   describe ('controller', function () {
 
-    beforeEach(inject(function (_$componentController_, $rootScope, _$q_, _EnterprisePrivateTrunkService_, _HybridServicesClusterService_, _Notification_) {
+    beforeEach(inject(function (_$componentController_, $rootScope, _$q_, _PrivateTrunkService_, _HybridServicesClusterService_, _Notification_) {
       $componentController = _$componentController_;
       $scope = $rootScope.$new();
       $q = _$q_;
-      EnterprisePrivateTrunkService = _EnterprisePrivateTrunkService_;
+      PrivateTrunkService = _PrivateTrunkService_;
       HybridServicesClusterService = _HybridServicesClusterService_;
       Notification = _Notification_;
     }));
@@ -103,7 +103,7 @@ describe('Component: hsRenameAndDeregisterClusterSection', () => {
     });
 
     it ('should use EnterprisePrivateTrunkService when dealing with private trunks', function () {
-      spyOn(EnterprisePrivateTrunkService, 'updateTrunkName').and.returnValue($q.resolve({}));
+      spyOn(PrivateTrunkService, 'setPrivateTrunkResource').and.returnValue($q.resolve({}));
       spyOn(HybridServicesClusterService, 'setClusterInformation');
       let ctrl = $componentController('hsRenameAndDeregisterClusterSection', {}, {
         cluster: {
@@ -114,12 +114,12 @@ describe('Component: hsRenameAndDeregisterClusterSection', () => {
       });
       ctrl.saveClusterName('This is a new name!');
       $scope.$apply();
-      expect(EnterprisePrivateTrunkService.updateTrunkName.calls.count()).toBe(1);
+      expect(PrivateTrunkService.setPrivateTrunkResource.calls.count()).toBe(1);
       expect(HybridServicesClusterService.setClusterInformation.calls.count()).toBe(0);
     });
 
     it ('should use HybridServicesClusterService when dealing with anything that is not a private trunk', function () {
-      spyOn(EnterprisePrivateTrunkService, 'updateTrunkName');
+      spyOn(PrivateTrunkService, 'setPrivateTrunkResource');
       spyOn(HybridServicesClusterService, 'setClusterInformation').and.returnValue($q.resolve({}));
       let ctrl = $componentController('hsRenameAndDeregisterClusterSection', {}, {
         cluster: {
@@ -130,7 +130,7 @@ describe('Component: hsRenameAndDeregisterClusterSection', () => {
       });
       ctrl.saveClusterName('This is a new name!');
       $scope.$apply();
-      expect(EnterprisePrivateTrunkService.updateTrunkName.calls.count()).toBe(0);
+      expect(PrivateTrunkService.setPrivateTrunkResource.calls.count()).toBe(0);
       expect(HybridServicesClusterService.setClusterInformation.calls.count()).toBe(1);
     });
 

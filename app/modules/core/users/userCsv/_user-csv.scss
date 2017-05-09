@@ -62,7 +62,8 @@
   }
 
   .columns .box {
-    @include vr-spacing(m, 1);
+    @include vr-spacing(mh, 1);
+    @include vr-spacing(mt, 2);
 
     border: thin solid $gray-light-2;
     color: $gray-base;
@@ -78,16 +79,17 @@
       align-items: center;
       justify-content: center;
       background: transparent;
+      @include vr-spacing(mv, 2);
     }
 
     .disabled {
-      color: $gray-light;
+      color: $gray-light-3;
 
       .icon,
       .prompt label,
       a,
       h5 {
-        color: $gray-light;
+        color: $gray-light-3;
       }
     }
 
@@ -101,8 +103,10 @@
     }
 
     .icon {
+      color: $gray-light-1;
       font-size: 3rem;
       display: block;
+      margin-bottom: .5rem;
 
       &:hover,
       &:active,
@@ -113,7 +117,7 @@
 
     .prompt {
       width: 14rem;
-      margin: 1rem auto 0;
+      margin: 3rem auto 0;
 
       label {
         cursor: pointer;
@@ -147,10 +151,6 @@
 
       .prompt {
         min-width: 10rem;
-      }
-
-      .icon {
-        transform: scaleY(-1);
       }
 
       .icon-spinner {

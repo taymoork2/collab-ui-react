@@ -2,15 +2,19 @@ import './deviceSettings.scss';
 
 class DeviceSettings implements ng.IComponentController {
   public ownerType: string;
-  public supportsSettings: boolean;
   public ownerId: string;
   public deviceList: any;
-  public showDeviceSettings = false;
+
   private upgradeChannelOptions;
   private shouldShowUpgradeChannel;
   private selectedUpgradeChannel;
-  private updatingUpgradeChannel = false;
-  private unsupportedDeviceType: string;
+  private updatingUpgradeChannel;
+  private unsupportedDeviceTypeForUpgradeChannel: string;
+
+  private shouldShowGuiSettings;
+  private guiSettingsEnabled;
+  private updatingGuiSettings;
+  private unsupportedDeviceTypeForGuiSettings: string;
 
   /* @ngInject */
   constructor(
@@ -40,23 +44,48 @@ class DeviceSettings implements ng.IComponentController {
       });
   }
 
+  public onSaveGuiSettings() {
+    this.updatingGuiSettings = true;
+    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'gui_settings', this.guiSettingsEnabled)
+      .then(() => {
+        this.Notification.success('deviceSettings.guiSettingsUpdated');
+      })
+      .catch(error => {
+        this.Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
+        this.resetGuiSettingsEnabled();
+      })
+      .finally(() => {
+        this.updatingGuiSettings = false;
+      });
+  }
+
   private fetchAsyncSettings(): void {
     this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(placeUpgradeChannel => {
       if (placeUpgradeChannel) {
         let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.product); // TODO: Replace with sw version check once implemented
         if (firstUnsupportedDevice) {
-          this.unsupportedDeviceType = firstUnsupportedDevice.product;
+          this.unsupportedDeviceTypeForUpgradeChannel = firstUnsupportedDevice.product;
         }
         this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
           this.shouldShowUpgradeChannel = channels.length > 1;
-          this.upgradeChannelOptions = _.map(channels, (channel: string) => {
-            return this.getUpgradeChannelObject(channel);
-          });
-          this.showDeviceSettings = this.shouldShowUpgradeChannel;
-          if (this.showDeviceSettings) {
+          if (this.shouldShowUpgradeChannel) {
+            this.upgradeChannelOptions = _.map(channels, (channel: string) => {
+              return this.getUpgradeChannelObject(channel);
+            });
             this.resetSelectedUpgradeChannel();
           }
         });
+      }
+    });
+
+    this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(placeGuiSettings => {
+      if (placeGuiSettings) {
+        let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.product); // TODO: Replace with sw version check once implemented
+        if (firstUnsupportedDevice) {
+          this.unsupportedDeviceTypeForGuiSettings = firstUnsupportedDevice.product;
+        }
+        this.shouldShowGuiSettings = true;
+        this.resetGuiSettingsEnabled();
       }
     });
   }
@@ -68,6 +97,14 @@ class DeviceSettings implements ng.IComponentController {
       this.selectedUpgradeChannel = {
         label: 'Nothing Selected',
       };
+    });
+  }
+
+  private resetGuiSettingsEnabled() {
+    this.CsdmConfigurationService.getRuleForPlace(this.ownerId, 'gui_settings').then(rule => {
+      this.guiSettingsEnabled = rule.value;
+    }).catch(() => {
+      this.guiSettingsEnabled = true;
     });
   }
 

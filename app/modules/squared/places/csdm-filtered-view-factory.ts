@@ -5,9 +5,13 @@ import { FilteredView } from '../common/filtered-view/filtered-view';
 import { FilteredPlaceViewDataSource } from './FilteredPlaceViewDataSource';
 import { PlaceMatcher } from './place-matcher';
 
+export interface ICsdmFilteredViewFactory {
+  createFilteredPlaceView(): FilteredView<IPlace>;
+}
+
 function CsdmFilteredViewFactory(CsdmDataModelService: ICsdmDataModelService,
                                  $timeout: ng.ITimeoutService,
-                                 $q: ng.IQService): { createFilteredPlaceView(): FilteredView<IPlace> } {
+                                 $q: ng.IQService): ICsdmFilteredViewFactory {
   return {
     createFilteredPlaceView: () => {
       return new FilteredView<IPlace>(new FilteredPlaceViewDataSource(CsdmDataModelService),

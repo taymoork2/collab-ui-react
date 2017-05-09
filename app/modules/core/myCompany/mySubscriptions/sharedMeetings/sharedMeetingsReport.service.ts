@@ -1,4 +1,4 @@
-import { ISharedMeetingData } from './sharedMeetingsReport.interfaces';
+import { ISharedMeetingData, ISharedMeetingTimeFilter } from './sharedMeetingsReport.interfaces';
 import { CommonGraphService } from '../../../partnerReports/commonReportServices/commonGraph.service';
 import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
 import { Notification } from '../../../notifications/notification.service';
@@ -10,6 +10,7 @@ interface IWindowService extends ng.IWindowService {
 export class SharedMeetingsReportService {
   public readonly FILENAME: string = 'shared_meeting.csv';
   private readonly CHART_DIV: string = 'sharedMeetingsChart';
+  private readonly ONE_MONTH: number = 1;
   private meetingModal: IToolkitModalServiceInstance |  undefined;
   private blob: any;
 
@@ -74,9 +75,13 @@ export class SharedMeetingsReportService {
     }
   }
 
-  public setChartData(data: Array<ISharedMeetingData>, chart: any): any {
+  public setChartData(data: Array<ISharedMeetingData>, chart: any, filter: ISharedMeetingTimeFilter): any {
     if (chart) {
+      chart.categoryAxis.showFirstLabel = true;
       chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
+      if (!_.isUndefined(filter) && filter.value === this.ONE_MONTH) {
+        chart.categoryAxis.showFirstLabel = false;
+      }
       if (!data[0].balloon) {
         chart.categoryAxis.gridColor = this.chartColors.grayLightThree;
       }
@@ -85,14 +90,20 @@ export class SharedMeetingsReportService {
       chart.graphs = this.createGraphs(data);
       chart.validateData();
     } else {
-      chart = this.createChart(data);
+      chart = this.createChart(data, filter);
     }
     return chart;
   }
 
-  private createChart(data: Array<ISharedMeetingData>): any {
+  private createChart(data: Array<ISharedMeetingData>, filter: ISharedMeetingTimeFilter): any {
     let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE_AXIS);
-    catAxis.showFirstLabel = false;
+    if (!_.isUndefined(filter) && filter.value === this.ONE_MONTH) {
+      catAxis.showFirstLabel = false;
+    }
+    if (!data[0].balloon) {
+      catAxis.gridColor = this.chartColors.grayLightThree;
+    }
+
     let valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].integersOnly = true;
 
@@ -101,10 +112,6 @@ export class SharedMeetingsReportService {
     chartCursor.valueLineEnabled = true;
     chartCursor.valueLineBalloonEnabled = true;
     chartCursor.cursorColor = this.chartColors.grayLightTwo;
-
-    if (!data[0].balloon) {
-      catAxis.gridColor = this.chartColors.grayLightThree;
-    }
 
     let chartData: any = this.CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, this.createGraphs(data), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);

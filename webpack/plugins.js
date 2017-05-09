@@ -1,4 +1,6 @@
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const _ = require('lodash');
 
 const isVendor = module => module.context && module.context.includes('node_modules');
 
@@ -22,4 +24,15 @@ const commonsChunkPlugins = [
   }),
 ];
 
+function getHtmlWebpackPlugin(options) {
+  return new HtmlWebpackPlugin(_.assignIn({
+    template: 'index.html',
+    chunks: ['manifest', 'newrelic', 'preload', 'styles', 'bootstrap-vendor', 'bootstrap'],
+    inject: false,
+    headChunks: ['manifest', 'newrelic'],
+    bodyChunks: ['preload', 'styles', 'bootstrap-vendor', 'bootstrap'],
+  }, options));
+}
+
 exports.commonsChunkPlugins = commonsChunkPlugins;
+exports.getHtmlWebpackPlugin = getHtmlWebpackPlugin;

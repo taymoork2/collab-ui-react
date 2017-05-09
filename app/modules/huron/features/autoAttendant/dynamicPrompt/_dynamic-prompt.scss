@@ -3,16 +3,17 @@
 
   .dynamic-prompt {
     border: 1px solid $gray-light-2;
-    @include vr-spacing(mt, 1);
     @include vr-spacing(mb, 1);
     @include vr-spacing(pt, 0.75);
     @include vr-spacing(pb, 0.75);
     @include vr-spacing(pl, 0.75);
     @include vr-spacing(pr, 0.75);
     display: inline-block;
-    overflow: auto;
-    line-height: 1.25rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    line-height: 1.75rem;
     word-wrap: break-word;
+    min-width: 100%;
   }
 
   div.dynamic-prompt[data-placeholder]:not(:focus)[data-div-placeholder-content]::before {
@@ -21,7 +22,11 @@
   }
 
   div.dynamic-prompt[contentEditable="true"]:focus {
-    border: 2px solid $color-primary-base;
+    border-color: $brand-primary;
     outline: none;
+  }
+
+  div.dynamic-prompt[contentEditable="true"]:hover {
+    border-color: $brand-primary;
   }
 }

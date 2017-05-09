@@ -50,7 +50,7 @@ require('./_wizard.scss');
 
   /* @ngInject */
   function WizardCtrl($controller, $modal,
-    $rootScope, $scope, $state, $stateParams, $translate,
+    $rootScope, $scope, $state, $stateParams, $timeout, $translate,
     Authinfo, Config, PromiseHook, SessionStorage) {
     var vm = this;
     vm.current = {};
@@ -59,6 +59,7 @@ require('./_wizard.scss');
     vm.currentStep = $stateParams.currentStep;
     vm.onlyShowSingleTab = $stateParams.onlyShowSingleTab;
     vm.numberOfSteps = $stateParams.numberOfSteps;
+    vm.showStandardModal = $stateParams.showStandardModal;
 
     vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
@@ -257,6 +258,9 @@ require('./_wizard.scss');
         if (tabIndex + 1 < tabs.length) {
           setTab(tabs[tabIndex + 1]);
         } else if (tabIndex + 1 === tabs.length && _.isFunction($scope.finish)) {
+          $timeout(function () {
+            vm.wizardNextLoad = true;
+          });
           $scope.finish();
         }
       }
@@ -294,9 +298,10 @@ require('./_wizard.scss');
       });
     }
 
-    $rootScope.$on('wizard-enterprise-sip-save', function () {
+    var enterpriseSipSaveDeregister = $rootScope.$on('wizard-enterprise-sip-save', function () {
       nextStepSuccessful();
     });
+    $scope.$on('$destroy', enterpriseSipSaveDeregister);
 
     function nextStepSuccessful() {
       var steps = getSteps();
@@ -393,6 +398,10 @@ require('./_wizard.scss');
     $scope.$on('wizardNextButtonDisable', function (event, status) {
       event.stopPropagation();
       vm.isNextDisabled = status;
+    });
+    $scope.$on('wizardNextButtonLoading', function (event, status) {
+      event.stopPropagation();
+      vm.wizardNextLoad = status;
     });
 
     function openTermsAndConditions() {

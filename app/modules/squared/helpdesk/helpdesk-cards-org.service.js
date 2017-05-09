@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCardsOrgService($translate, Config, HelpdeskHuronService, LicenseService, Notification, FusionClusterService, CloudConnectorService) {
+  function HelpdeskCardsOrgService($translate, CloudConnectorService, Config, FusionClusterService, HelpdeskHuronService, LicenseService, Notification, UCCService) {
 
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
@@ -51,11 +51,11 @@
     }
 
     function getHybridServicesCardForOrg(org) {
-      var hybridServiceIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity'];
+      var hybridServiceIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context'];
       var hybridServicesCard = {
         entitled: _.some(hybridServiceIds, function (serviceId) {
           return LicenseService.orgIsEntitledTo(org, serviceId);
-        }) || LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal'),
+        }) || LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal') || LicenseService.orgIsEntitledTo(org, 'squared-fusion-ec'),
         services: [],
       };
       if (!hybridServicesCard.entitled) {
@@ -76,6 +76,18 @@
         }).catch(function (response) {
           Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
         });
+      }
+      if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-ec')) {
+        UCCService.getOrgVoicemailConfiguration(org.id)
+          .then(function (data) {
+            hybridServicesCard.services.push({
+              serviceId: 'voicemail',
+              statusCss: UCCService.mapStatusToCss(data.voicemailOrgEnableInfo.orgVoicemailStatus),
+            });
+          })
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'helpdesk.hybridVoicemail.cannotReadStatus');
+          });
       }
       return hybridServicesCard;
     }

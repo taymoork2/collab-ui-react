@@ -1,4 +1,5 @@
-<div class="wizard">
+<div class="wizard" ng-if="!wizard.showStandardModal">
   <cr-wizard-nav ng-if="!wizard.onlyShowSingleTab"></cr-wizard-nav>
   <cr-wizard-main></cr-wizard-main>
 </div>
+<cr-wizard-main ng-if="wizard.showStandardModal"></cr-wizard-main>

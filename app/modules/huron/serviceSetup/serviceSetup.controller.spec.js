@@ -12,6 +12,7 @@ describe('Controller: ServiceSetup', function () {
     supportSiteCode: "true",
     supportSiteSteeringDigit: "true",
   }];
+  var restrictions = getJSONFixture('huron/json/cos/customerCos.json');
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -163,6 +164,12 @@ describe('Controller: ServiceSetup', function () {
       .respond({
         premiumNumbers: ['800', '900'],
       });
+    $httpBackend
+      .whenGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/restrictions')
+      .respond(restrictions);
+    $httpBackend
+      .whenPUT(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/restrictions')
+      .respond(204);
   }));
   describe('Existing Functioanlity with Feature Toggle ON Tests', function () {
     var controller;
