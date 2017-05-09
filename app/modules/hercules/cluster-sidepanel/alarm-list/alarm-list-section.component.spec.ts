@@ -85,4 +85,15 @@ describe('Component: AlarmListSectionComponent  ', () => {
     expect($state.go).toHaveBeenCalledWith('hds-cluster-details.alarm-details', { alarm: templateAlarm });
   });
 
+  it ('should getSeverityIcon returns right icon', () => {
+    let alarms = [templateAlarm];
+    let connectorType = 'c_mgmt';
+    let newLink = 'false';
+    initController(alarms, connectorType, newLink);
+    expect(ctrl.getSeverityIcon('critical')).toBe('icon icon-error');
+    expect(ctrl.getSeverityIcon('error')).toBe('icon icon-priority');
+    expect(ctrl.getSeverityIcon('warning')).toBe('icon icon-warning');
+    expect(ctrl.getSeverityIcon('alert')).toBe('icon icon-info');
+  });
+
 });
