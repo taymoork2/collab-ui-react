@@ -1,11 +1,10 @@
-import './_mySubscription.scss';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
 import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
 import { SharedMeetingsReportService } from './sharedMeetings/sharedMeetingsReport.service';
 import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from './subscriptionsInterfaces';
 
-class MySubscriptionCtrl {
+export class MySubscriptionCtrl {
   public hybridServices: Array<any> = [];
   public licenseCategory: Array<ISubscriptionCategory> = [];
   public subscriptionDetails: Array<ISubscription> = [];
@@ -88,14 +87,6 @@ class MySubscriptionCtrl {
     return category.offerWrapper.length > 0;
   }
 
-  public getWarning(offer: IOfferData): boolean {
-    if (_.isNumber(offer.usage) && _.isNumber(offer.volume)) {
-      return offer.usage > offer.volume;
-    } else {
-      return false;
-    }
-  }
-
   public isUsageDefined(usage?: number): boolean {
     return _.isNumber(usage);
   }
@@ -164,12 +155,12 @@ class MySubscriptionCtrl {
   private generateTooltip(offerName: string, usage?: number, volume?: number): string | undefined {
     if (_.isNumber(volume)) {
       let tooltip = this.$translate.instant('subscriptions.licenseTypes.' + offerName) + '<br>';
-      if (_.isNumber(usage) && usage > volume) {
-        tooltip += this.$translate.instant('subscriptions.usage') + `<span class="warning">${usage}/${volume}</span>`;
-      } else if (_.isNumber(usage)) {
-        tooltip += this.$translate.instant('subscriptions.usage') + `${usage}/${volume}`;
-      } else {
+      if (this.useTotal(offerName) || !_.isNumber(usage)) {
         tooltip += this.$translate.instant('subscriptions.licenses') + volume;
+      } else if (usage > volume) {
+        tooltip += this.$translate.instant('subscriptions.usage') + `<span class="warning">${usage}/${volume}</span>`;
+      } else {
+        tooltip += this.$translate.instant('subscriptions.usage') + `${usage}/${volume}`;
       }
       return tooltip;
     } else {
@@ -246,7 +237,7 @@ class MySubscriptionCtrl {
               tooltip: this.generateTooltip(license.offerName, license.usage, license.volume),
             };
 
-            if (license.offerName === this.Config.offerCodes.SB) {
+            if (this.useTotal(license.offerName)) {
               offer.totalUsage = license.usage || 0;
             } else {
               offer.usage = license.usage || 0;
@@ -407,8 +398,8 @@ class MySubscriptionCtrl {
       this.hybridServices = humanReadableServices;
     });
   }
-}
 
-angular
-  .module('Core')
-  .controller('MySubscriptionCtrl', MySubscriptionCtrl);
+  private useTotal(offerName: string): boolean {
+    return offerName === this.Config.offerCodes.SB || offerName === this.Config.offerCodes.SD;
+  }
+}

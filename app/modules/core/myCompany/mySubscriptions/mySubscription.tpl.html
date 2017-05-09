@@ -19,7 +19,7 @@
             </div>
             <div class="detail-break" ng-class="{'match-icon': license.class}" ng-if="subscription.viewAll && mcpSub.isUsageDefined(license.totalUsage)">
               <span class="h6" translate="subscriptions.licenses"></span>
-              <span class="h6" ng-class="{'warning': license.usage > license.volume}">{{::license.volume}}</span>
+              <span class="h6">{{::license.volume}}</span>
             </div>
           </div>
         </div>
@@ -60,8 +60,8 @@
                   <div class="h5" translate="subscriptions.licenseTypes.{{::offer.offerName}}"></div>
                   <div>
                     <span class="h6" translate="subscriptions.usage"></span>
-                    <span class="h6" ng-if="mcpSub.isUsageDefined(offer.usage)" ng-class="{ 'warning': mcpSub.getWarning(offer) }">{{::offer.usage}}/{{::offer.volume}}</span>
-                    <span class="h6" ng-if="mcpSub.isUsageDefined(offer.totalUsage)" ng-class="{ 'warning': mcpSub.getWarning(offer) }">{{::offer.totalUsage}}/{{::offer.volume}}</span>
+                    <span class="h6" ng-if="mcpSub.isUsageDefined(offer.usage)" ng-class="{ 'warning': offer.usage > offer.volume }">{{::offer.usage}}/{{::offer.volume}}</span>
+                    <span class="h6" ng-if="mcpSub.isUsageDefined(offer.totalUsage)" ng-class="{ 'warning': offer.totalUsage > offer.volume }">{{::offer.totalUsage}}/{{::offer.volume}}</span>
                   </div>
                 </div>
               </div>
@@ -82,7 +82,7 @@
                     <div ng-if="!mcpSub.hideUsage(offer) && !mcpSub.isSharedMeetingsLicense(offer)">
                       <span class="h6" translate="subscriptions.usage"></span>
                       <span class="h6" ng-if="mcpSub.isUsageDefined(offer.usage)" ng-class="{'warning': offer.usage > offer.volume}">{{::offer.usage}}/{{::offer.volume}}</span>
-                      <span class="h6" ng-if="mcpSub.isUsageDefined(offer.totalUsage)" ng-class="{'warning': offer.usage > offer.volume}">{{::offer.totalUsage}}/{{::offer.volume}}</span>
+                      <span class="h6" ng-if="mcpSub.isUsageDefined(offer.totalUsage)" ng-class="{'warning': offer.totalUsage > offer.volume}">{{::offer.totalUsage}}/{{::offer.volume}}</span>
                     </div>
 
                     <!-- For non-CI sites -->

@@ -61,6 +61,7 @@
     require('modules/core/scripts/services/sparkDomainManagement.service'),
     require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/scripts/services/retention.service'),
+    require('modules/core/myCompany/mySubscriptions').default,
     require('modules/core/cards').default,
     require('modules/core/customerReports/sparkReports').default,
     require('modules/core/partnerReports/commonReportServices').default,
@@ -126,6 +127,7 @@
     require('modules/hercules/service-settings/calendar-service-setup').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/service-descriptor'),
     require('modules/hercules/services/uss-service'),
     require('modules/hercules/services/service-descriptor'),
   ]);
