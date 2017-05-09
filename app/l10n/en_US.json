@@ -7050,7 +7050,7 @@
     "title": "Domains",
     "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service.",
     "addDomain": "Add Domain",
-    "verifyDomain": "Verify",
+    "verifyDomain": "Verify Domain",
     "claimDomain": "Claim",
     "list": {
       "domainHeader": "Domain",
