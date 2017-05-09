@@ -16,7 +16,6 @@ describe('Component: hdsUpgradeSection', function () {
     $componentController = _$componentController_;
     ClusterService = _ClusterService_;
     $modal = _$modal_;
-    //$q = _$q_;
   }
 
   function initData() {
