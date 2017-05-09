@@ -1,6 +1,9 @@
-import { SWIVEL, MIN_VALID_CODE, MAX_VALID_CODE, NXX, MAX_DID_QUANTITY } from './../index';
+import { SWIVEL, MIN_VALID_CODE, MAX_VALID_CODE, NXX, MAX_DID_QUANTITY } from '../pstn.const';
 import { Notification } from '../../../core/notifications/notification.service';
 import { PaginateOptions } from '../paging-option.model';
+import { PstnService } from '../pstn.service';
+import { PstnModel } from '../pstn.model';
+import { HuronCompassService } from '../../compass/compass.service';
 
 export class PstnTrialSetupComponent implements ng.IComponentOptions {
   public controller = PstnTrialSetupCtrl;
@@ -27,18 +30,20 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   public validation: boolean = false;
   public addressFound: boolean = false;
   public readOnly: boolean = false;
+  public dismiss: Function;
 
   /* @ngInject */
-  constructor(private PstnSetup,
+  constructor(private PstnModel: PstnModel,
               private TrialPstnService,
-              private PstnSetupService,
+              private PstnService: PstnService,
               private Notification: Notification,
               private $q: ng.IQService,
               private $scope: ng.IScope,
               private $timeout: ng.ITimeoutService,
               private Analytics,
               private PstnServiceAddressService,
-              private $translate: ng.translate.ITranslateService) {
+              private $translate: ng.translate.ITranslateService,
+              private HuronCompassService: HuronCompassService) {
     this.trialData = this.TrialPstnService.getData();
     this.SWIVEL = SWIVEL;
     this.parentTrialData = $scope.$parent.trialData;
@@ -54,22 +59,22 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   }
 
   public onProviderChange(reset?): void {
-    this.trialData.details.pstnProvider = this.PstnSetup.getProvider();
+    this.trialData.details.pstnProvider = this.PstnModel.getProvider();
     this.providerImplementation = this.trialData.details.pstnProvider.apiImplementation;
     this.resetNumberSearch(reset);
     this.providerSelected = true;
   }
 
   public onProviderReady(): void {
-    let carriers = this.PstnSetup.getCarriers();
+    let carriers = this.PstnModel.getCarriers();
     if (carriers.length === 1) {
       carriers[0].selected = true;
-      this.PstnSetup.setProvider(carriers[0]);
+      this.PstnModel.setProvider(carriers[0]);
       this.onProviderChange();
     } else {
       carriers.forEach((pstnCarrier) => {
         if (pstnCarrier.selected) {
-          this.PstnSetup.setProvider(pstnCarrier);
+          this.PstnModel.setProvider(pstnCarrier);
           this.onProviderChange();
         }
       });
@@ -106,7 +111,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
       params[NXX] = null;
     }
 
-    this.PstnSetupService.searchCarrierInventory(this.trialData.details.pstnProvider.uuid, params)
+    this.PstnService.searchCarrierInventory(this.trialData.details.pstnProvider.uuid, params)
       .then((numberRanges) => {
         this.searchResults = _.flatten(numberRanges);
         this.showNoResult = this.searchResults.length === 0;
@@ -125,7 +130,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
         let searchResultsIndex = (this.paginateOptions.currentPage * this.paginateOptions.pageSize) + key;
         if (searchResultsIndex < this.searchResults.length && !this.trialData.details.pstnNumberInfo.numbers.includes(this.searchResults[searchResultsIndex])) {
           let numbers = this.searchResults[searchResultsIndex];
-          reservation = this.PstnSetupService.reserveCarrierInventoryV2(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), numbers, this.PstnSetup.isCustomerExists());
+          reservation = this.PstnService.reserveCarrierInventoryV2(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), numbers, this.PstnModel.isCustomerExists());
           let promise = reservation
             .then((reservationData) => {
               let order = {
@@ -167,7 +172,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   }
 
   public removeOrder(order): void {
-    this.PstnSetupService.releaseCarrierInventoryV2(this.PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, this.PstnSetup.isCustomerExists())
+    this.PstnService.releaseCarrierInventoryV2(this.PstnModel.getCustomerId(), order.reservationId, order.data.numbers, this.PstnModel.isCustomerExists())
         .then(_.partial(this.removeOrderFromCart.bind(this), order));
   }
 
@@ -243,6 +248,11 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
       this.TrialPstnService.resetAddress();
     }
     this.trial.previousStep();
+  }
+
+  public dismissModal() {
+    this.HuronCompassService.setIsCustomer(false);
+    this.dismiss();
   }
 
 }

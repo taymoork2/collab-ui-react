@@ -13,7 +13,7 @@ var Wizard = function () {
   // this.addusersTab = element(by.id('wizard-addUsers-link'));
   this.addusersTab = element(by.css('.icon-add-users'));
   this.mainviewTitle = element(by.css('.wizard-main-title'));
-  this.mainviewSubtitle = element(by.css('.wizard h3'));
+  this.mainviewSubtitle = element(by.css('.wizard-main-wrapper h3'));
   this.radiobuttons = element.all(by.css('label.cs-radio'));
   this.manualAddUsers = element(by.css('label.cs-radio[for="syncSimple"]'));
   this.beginBtn = element(by.id('wizardNext'));

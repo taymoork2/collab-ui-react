@@ -42,7 +42,7 @@ export class PrivateTrunkService {
     });
   }
 
-  public setPrivateTrunk(domains: Array<string>): ng.IPromise<void> {
+  public setPrivateTrunk(domains: string[]): ng.IPromise<void> {
     return this.privateTrunkService.update({
       customerId: this.Authinfo.getOrgId(),
     }, {
@@ -89,6 +89,18 @@ export class PrivateTrunkService {
       customerId: this.Authinfo.getOrgId(),
       resourceId: resourceId,
     }).$promise;
+  }
+
+  public removePrivateTrunkResources(): void {
+    this.listPrivateTrunkResources().then((res) => {
+      if (res) {
+        let resources = _.get(res, 'resources');
+        _.forEach(resources, dest => {
+          this.removePrivateTrunkResource(dest.uuid || '');
+        });
+      }
+    });
+
   }
 
 }

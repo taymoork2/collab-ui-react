@@ -3,4 +3,8 @@
 google-calendar-config-section {
   display: block;
   border-top: 1px solid $gray-light-3;
+
+  .resources-section {
+    padding-left: 2rem;
+  }
 }

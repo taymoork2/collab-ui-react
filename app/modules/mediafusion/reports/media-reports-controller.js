@@ -63,8 +63,9 @@
     vm.second_card_value = 0;
     vm.hosted_participants_heading = vm.on_prem_participants_heading;
     vm.hosted_heading = vm.on_prem_calls_heading;
-
     vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
+    vm.clusterInServiceOrgDesc = $translate.instant('mediaFusion.metrics.graphDescription.clusterInServiceOrgDesc');
+    vm.clusterInServiceClusterDesc = $translate.instant('mediaFusion.metrics.graphDescription.clusterInServiceClusterDesc');
 
     vm.Map = {};
     vm.secondCardFooter = {
@@ -132,12 +133,13 @@
       value: 4,
       label: $translate.instant('mediaFusion.metrics.threeMonths'),
     }];
-    vm.timeSelected = vm.timeOptions[0];
+    vm.timeSelected = vm.timeOptions[1];
 
     vm.isFlipped = false;
-    vm.clientTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.clientType');
+    vm.clientTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.clientTypeDesc');
     vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
     vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostType');
+    vm.tooltipText = '';
 
     setRefreshInterval();
     getCluster();
@@ -176,10 +178,8 @@
         vm.redirected_heading = vm.cloud_calls_heading;
         vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
       }
+      vm.displayResources = false;
       loadResourceDatas();
-      $timeout(function () {
-        angular.element('#adoptionReportsLi').triggerHandler('click');
-      }, 0);
       $timeout(function () {
         angular.element('#resourceReportsLi').triggerHandler('click');
       }, 0);
@@ -444,7 +444,7 @@
     function setSneekPeekData() {
       MediaReportsService.getClusterAvailabilityTooltip(vm.timeSelected).then(function (response) {
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
-        vm.availabilityTooltipOptions['tooltipModel'] = vm.availabilityTooltipOptions.values[0];
+        vm.tooltipText = vm.availabilityTooltipOptions.values[0];
         vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
       }, function () {
         Notification.error('mediaFusion.genericError');

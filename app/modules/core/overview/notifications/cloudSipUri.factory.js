@@ -20,6 +20,7 @@
               currentStep: 'enterpriseSipUrl',
               numberOfSteps: 1,
               onlyShowSingleTab: true,
+              showStandardModal: true,
             });
           },
           linkText: 'homePage.goSetupCloudSipUri',

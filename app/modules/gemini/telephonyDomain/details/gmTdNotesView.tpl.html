@@ -1,0 +1,48 @@
+<cs-sp-section ng-if="$ctrl.ccaDomainId" class="section gm-td-notes-view side-panel-history">
+  <div class="section-title-row">
+    <div class="section-name">
+      <i class="icon icon-2x {{$ctrl.isCollapsed ? 'icon-chevron-right': 'icon-chevron-down'}}"
+         ng-click="$ctrl.onCollapse()"></i>
+      <span translate="gemini.cbgs.notes.notes"></span>
+    </div>
+  </div>
+  <div class="section-content" collapse="$ctrl.isCollapsed">
+    <div class="columns medium-6">
+      <div ng-if="$ctrl.isLoading">
+        <i class="icon icon-spinner"></i>
+      </div>
+      <div ng-if="$ctrl.model.length == 0 && !$ctrl.isLoading">
+        <h3 translate="gemini.cbgs.notes.noNotes"></h3>
+        <small translate="gemini.cbgs.notes.noNoteMsg"></small>
+      </div>
+
+      <ul ng-if="!$ctrl.isLoading" class="history-ul">
+        <li ng-repeat="note in $ctrl.model | limitTo: $ctrl.displayCount track by $index">
+          <small>{{note.actionTime}} {{'gemini.cbgs.by' | translate}} {{note.userName}} {{!note.email ? '' : '(' +
+            note.email + ')'}}
+          </small>
+          <h6>{{note.objectName}}</h6>
+        </li>
+      </ul>
+      <p ng-if="$ctrl.displayCount < $ctrl.model.length" class="show-more">
+        <a class="primary-color" href ng-click="$ctrl.onShowAll()" translate="gemini.cbgs.showMore"></a>
+      </p>
+    </div>
+    <div class="columns medium-6">
+      <span class="feature-name" translate="gemini.cbgs.notes.newNote"></span>
+      <form name="note" novalidate>
+        <textarea rows="5" ng-maxlength="2048" ng-model="$ctrl.newNote" required
+                  class="form-control optional-row"
+                  placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
+        <button class="btn btn--primary" cs-btn
+                loading="$ctrl.isSubmitting"
+                ng-click="$ctrl.onSave()"
+                ng-disabled="!$ctrl.newNote">
+          <span translate="gemini.cbgs.notes.addNote"></span>
+        </button>
+      </form>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</cs-sp-section>
+

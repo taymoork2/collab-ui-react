@@ -4,7 +4,7 @@
   var serviceUrlMapping = {
     AdminServiceUrl: {
       dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
+      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
       integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     },
@@ -16,26 +16,26 @@
     },
     FeatureToggleUrl: {
       dev: 'https://locus-a.wbx2.com',
-      cfe: 'https://locus-e.wbx2.com',
+      cfe: 'https://locus-loada.ciscospark.com',
       integration: 'https://locus-a.wbx2.com',
       prod: 'https://locus-a.wbx2.com',
     },
     AthenaServiceUrl: {
       dev: 'https://athena-intb.ciscospark.com/athena/api/v1',
-      cfe: 'https://athena-e.wbx2.com/athena/api/v1',
+      cfe: 'https://athena-loada.ciscospark.com/athena/api/v1',
       integration: 'https://athena-intb.ciscospark.com/athena/api/v1',
       prod: 'https://athena-a.wbx2.com/athena/api/v1',
     },
     CsdmServiceUrl: {
       dev: 'https://csdm-intb.ciscospark.com/csdm/api/v1',
-      cfe: 'https://csdm-e.wbx2.com/csdm/api/v1',
+      cfe: 'https://csdm-loada.ciscospark.com/csdm/api/v1',
       integration: 'https://csdm-intb.ciscospark.com/csdm/api/v1',
       prod: 'https://csdm-a.wbx2.com/csdm/api/v1',
     },
     MessengerServiceUrl: {
-      dev: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+      dev: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       cfe: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
-      integration: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+      integration: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       prod: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
     },
     UtilizationServiceUrl: {
@@ -70,7 +70,7 @@
     },
     SparkDomainManagementUrl: {
       dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      cfe: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
       integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     },
@@ -88,37 +88,37 @@
     },
     HerculesUrl: {
       dev: 'https://hercules-intb.ciscospark.com/v1',
-      cfe: 'https://hercules-e.wbx2.com/v1',
+      cfe: 'https://hercules-loada.ciscospark.com/v1',
       integration: 'https://hercules-intb.ciscospark.com/v1',
       prod: 'https://hercules-a.wbx2.com/v1',
     },
     HerculesUrlV2: {
       dev: 'https://hercules-intb.ciscospark.com/hercules/api/v2',
-      cfe: 'https://hercules-e.wbx2.com/hercules/api/v2',
+      cfe: 'https://hercules-loada.ciscospark.com/hercules/api/v2',
       integration: 'https://hercules-intb.ciscospark.com/hercules/api/v2',
       prod: 'https://hercules-a.wbx2.com/hercules/api/v2',
     },
     FlagServiceUrl: {
       dev: 'https://hercules-intb.ciscospark.com/fls/api/v1',
-      cfe: 'https://hercules-e.wbx2.com/fls/api/v1',
+      cfe: 'https://hercules-loada.ciscospark.com/fls/api/v1',
       integration: 'https://hercules-intb.ciscospark.com/fls/api/v1',
       prod: 'https://hercules-a.wbx2.com/fls/api/v1',
     },
     UssUrl: {
       dev: 'https://uss-intb.ciscospark.com/',
-      cfe: 'https://uss-e.wbx2.com/',
+      cfe: 'https://uss-loada.ciscospark.com/',
       integration: 'https://uss-intb.ciscospark.com/',
       prod: 'https://uss-a.wbx2.com/',
     },
     CertsUrl: {
       dev: 'https://certs-intb.ciscospark.com/',
-      cfe: 'https://certs-e.wbx2.com/',
+      cfe: 'https://certs-loada.ciscospark.com/',
       integration: 'https://certs-intb.ciscospark.com/',
       prod: 'https://certs-a.wbx2.com/',
     },
     FeatureUrl: {
       dev: 'https://feature-a.wbx2.com/feature/api/v1',
-      cfe: 'http://feature.cfe.wbx2.com/feature/api/v1',
+      cfe: 'https://feature-loada.ciscospark.com/feature/api/v1',
       integration: 'https://feature-a.wbx2.com/feature/api/v1',
       prod: 'https://feature-a.wbx2.com/feature/api/v1',
     },
@@ -148,7 +148,7 @@
     },
     CalliopeUrl: {
       dev: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
-      cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
+      cfe: 'https://calliope-loada.ciscospark.com/calliope/api/authorization/v1',
       integration: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
       prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1',
     },
@@ -178,19 +178,19 @@
     },
     UccUrl: {
       dev: 'https://ucc-intb.ciscospark.com/ucm-service/api/v1',
-      cfe: 'https://ucc-e.wbx2.com/ucm-service/api/v1',
+      cfe: 'https://ucc-loada.ciscospark.com/ucm-service/api/v1',
       integration: 'https://ucc-intb.ciscospark.com/ucm-service/api/v1',
       prod: 'https://ucc-a.wbx2.com/ucm-service/api/v1',
     },
     HybridVoicemailUrl: {
       dev: 'https://ucc-intb.ciscospark.com/voicemail/api/v1',
-      cfe: 'https://ucc-e.wbx2.com/voicemail/api/v1',
+      cfe: 'https://ucc-loada.ciscospark.com/voicemail/api/v1',
       integration: 'https://ucc-intb.ciscospark.com/voicemail/api/v1',
       prod: 'https://ucc-a.wbx2.com/voicemail/api/v1',
     },
     CccUrl: {
       dev: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
-      cfe: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
+      cfe: 'https://calendar-cloud-connector-loada.ciscospark.com/api/v1',
       integration: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
       prod: 'https://calendar-cloud-connector-a.wbx2.com/api/v1',
     },
@@ -202,25 +202,25 @@
     },
     HybridEncryptionServiceUrl: {
       dev: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
-      cfe: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
+      cfe: 'https://encryption-loada.ciscospark.com/encryption/api/v1',
       integration: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
       prod: 'https://encryption-a.wbx2.com/encryption/api/v1',
     },
     L2sipUrl: {
       dev: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
-      cfe: 'https://l2sip-integration-web.wbx2.com/l2sip/api/v1',
+      cfe: 'https://l2sip-loada.ciscospark.com/api/v1',
       integration: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1', // Tool is not working in integration, we need to point to prod for now.
       prod: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
     },
     ArgonautReportUrl: {
       dev: 'https://argonaut-intb.ciscospark.com/argonaut/api/v1/compliance/report',
-      cfe: 'https://argonaut-e.wbx2.com/argonaut/api/v1/compliance/report',
+      cfe: 'https://argonaut-loada.ciscospark.com/argonaut/api/v1/compliance/report',
       integration: 'https://argonaut-intb.ciscospark.com/argonaut/api/v1/compliance/report',
       prod: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report',
     },
     LyraServiceUrl: {
       dev: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
-      cfe: 'https://lyra-e.wbx2.com/lyra/api/v1',
+      cfe: 'https://lyra-loada.ciscospark.com/lyra/api/v1',
       integration: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
@@ -230,8 +230,8 @@
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
     WebexAdvancedEditUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
     WebexAdvancedHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
-    WebexMaxConcurrentMeetings: 'https://%s/meetingsapi/v1/report/MonthlyMaxConcurrentMeetings',
-    WebexConcurrentMeetings: 'https://%s/meetingsapi/v1/report/ConcurrentMeetingsDetailByMonth',
+    WebexMaxConcurrentMeetings: 'https://%s/meetingsapi/v1/reports/MonthlyMaxConcurrentMeetings',
+    WebexConcurrentMeetings: 'https://%s/meetingsapi/v1/reports/ConcurrentMeetingsDetailByMonth',
     WebClientUrl: 'https://web.ciscospark.com/',
     AndroidStoreUrl: 'http://cs.co/sqandroid',
     ItunesStoreUrl: 'http://cs.co/sqios',
@@ -244,7 +244,8 @@
     MeetingUsageUrl: 'https://ds2-qlikdemo.cisco.com/single/?appid=226f935e-50eb-4d67-8a22-4f3ea9a4f499&sheet=FyVmGa',
     JoinMeetingTimeUrl: 'https://10.140.50.27/single/?appid=0983ec7e-fc3d-4a1e-b4ea-116b239ce3f1&sheet=461c49d5-3bbc-4fec-b06b-96a762a44f1d',
     WebexReportInMashupUrl: 'https://ds2-qlikdemo.cisco.com/extensions/webex-report-allsite/webex-report-allsite.html',
-    WebexReportInQlikAppUrl: 'https://ds2-qlikdemo.cisco.com/sense/app/5d50c7ce-91f1-4a4b-9b7d-3f38d80b897a',
+    WebexReportInQlikAppUrl: 'http://10.194.245.72:8080/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/singlesitereport/basic_webex_report_vSiteId/599/jacao/ds2-win2012-01',
+    SparkReportInMashupUrl: 'https://ds2-qlikdemo.cisco.com/extensions/spark_mashup/spark_mashup.html',
   };
 
   module.exports = angular

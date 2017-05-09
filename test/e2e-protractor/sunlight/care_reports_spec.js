@@ -15,6 +15,10 @@ describe('Care Reports', function () {
       utils.expectIsPresent(reports.pageTitle);
       navigation.clickCareReports();
       utils.expectIsPresent(reports.pageTitle);
+      utils.expectIsPresent(reports.mediaTypeAllFilter);
+      utils.expectIsPresent(reports.mediaTypeChatFilter);
+      utils.expectIsPresent(reports.mediaTypeCallbackFilter);
+
     });
 
     it('should verify report type buttons', function () {

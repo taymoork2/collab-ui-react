@@ -80,8 +80,7 @@
     }
 
     function getDownloadCountryUrl() {
-      var url = URL + 'countryRegionTemplate';
-      return $http.get(url).then(extractData);
+      return UrlConfig.getGeminiUrl() + 'files/templates/country_regions_template';
     }
 
     function extractData(response) {

@@ -21,6 +21,10 @@
     deviceOverview.hideE911Edit = true;
     deviceOverview.faxEnabled = false;
     deviceOverview.t38FeatureToggle = false;
+    deviceOverview.actionList = [{
+      actionKey: 'common.edit',
+      actionFunction: goToEmergencyServices,
+    }];
     function init() {
       FeatureToggleService.csdmT38GetStatus().then(function (response) {
         deviceOverview.t38FeatureToggle = response;
@@ -245,7 +249,7 @@
       }
     };
 
-    deviceOverview.goToEmergencyServices = function () {
+    function goToEmergencyServices() {
       var data = {
         currentAddress: deviceOverview.emergencyAddress,
         currentNumber: deviceOverview.emergencyCallbackNumber,
@@ -258,7 +262,7 @@
       } else {
         $state.go('device-overview.emergencyServices', data);
       }
-    };
+    }
 
     function waitForDeviceToUpdateTimeZone(newValue) {
       var deferred = $q.defer();

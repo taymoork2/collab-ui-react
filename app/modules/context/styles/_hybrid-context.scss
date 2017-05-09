@@ -55,8 +55,8 @@
     width: 60%;
     line-height: 100%;
     font-size: 0.875rem;
-    font-family: "CiscoSansTT Light";
-    color: #6A6B6C;
+    font-family: $brand-font-light;
+    color: $gray-dark-1;
     text-overflow: ellipsis;
     padding-left: 2%;
     white-space: nowrap;
@@ -70,8 +70,8 @@
     width: 35%;
     line-height: 100%;
     font-size: 0.875rem;
-    font-family: "CiscoSansTT Light";
-    color: #6A6B6C;
+    font-family: $brand-font-light;
+    color: $gray-dark-1;
     text-overflow: ellipsis;
     padding-left: 4%;
     white-space: nowrap;
@@ -85,8 +85,8 @@
     width: 5%;
     line-height: 100%;
     font-size: 0.875rem;
-    font-family: "CiscoSansTT Light";
-    color: #6A6B6C;
+    font-family: $brand-font-light;
+    color: $gray-dark-1;
     padding-top: 1px;
     padding-left: 1%;
     cursor: pointer;
@@ -126,8 +126,8 @@
       border: none;
       width: 100%;
       font-size: 0.875rem;
-      font-family: "CiscoSansTT Light";
-      color: #6A6B6C;
+      font-family: $brand-font-light;
+      color: $gray-dark-1;
       line-height: 24px;
       @include vr-spacing(pt, 0.5);
       padding-left: 36px;
@@ -138,17 +138,17 @@
       &::-webkit-input-placeholder {
         color: #858688;
         font-size: 0.875rem;
-        font-family: "CiscoSansTT Light";
+        font-family: $brand-font-light;
       }
       &::-moz-placeholder {
         color: #858688;
         font-size: 0.875rem;
-        font-family: "CiscoSansTT Light";
+        font-family: $brand-font-light;
       }
       &:-ms-input-placeholder {
         color: #858688;
         font-size: 0.875rem;
-        font-family: "CiscoSansTT Light";
+        font-family: $brand-font-light;
       }
     }
 
@@ -157,8 +157,8 @@
 
       .field-drop-down {
         font-size: 0.875rem;
-        font-family: "CiscoSansTT Light";
-        color: #6A6B6C;
+        font-family: $brand-font-light;
+        color: $gray-dark-1;
       }
 
       li {
@@ -190,6 +190,13 @@
   }
 }
 
+.no-results {
+  font-size: 0.875rem;
+  font-family: $brand-font-light;
+  color: $gray-dark-1;
+  line-height: 24px;
+}
+
 .context-retry-error {
   i {
     font-size: 18px;
@@ -198,12 +205,12 @@
     color: $color-negative-base;
   }
   .failure-message {
-    font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: $brand-font-regular;
     font-size: 14px;
     color: $color-negative-base;
   }
   .retry-action {
-    font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: $brand-font-regular;
     font-size: 14px;
     color: $color-primary-base;
     background: none;

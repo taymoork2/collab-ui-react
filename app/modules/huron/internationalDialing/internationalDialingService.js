@@ -23,9 +23,9 @@
       return UserCosRestrictionServiceV2.get({
         customerId: Authinfo.getOrgId(),
         userId: curUserId,
-      }, angular.bind(this, function (cosRestrictions) {
+      }, _.bind(function (cosRestrictions) {
         this.cosRestrictions = cosRestrictions;
-      })).$promise;
+      }, this)).$promise;
     }
 
     function updateCosRestriction(curUserId, cosEnabled, cosUuid, cosType) {

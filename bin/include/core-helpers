@@ -2,3 +2,15 @@ function abort {
     >&2 echo "Aborting '`basename $0`'"
     exit 1
 }
+
+function get_physical_path {
+    local dir=${1}
+    if [ ! -d "${dir}" ]; then
+        >&2 echo "Error: get_physical_path: invalid path ${dir}"
+        return 1
+    fi
+
+    cd "${dir}"
+    pwd -P
+    cd ~-
+}

@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}} において最もアクティブなユーザーです。この表は、ユーザーの名前別または対応したコンタクト合計数によって並び替えることができます。",
     "drilldownErrorDescription": "このデータは一時的に利用できません。サーバーを復帰していますので、しらばくしてからご確認ください。",
     "drilldownEmptyDescription": "最近の {{time}} の間でアクティブなユーザーはいませんでした。ユーザー ステータスを表示し、保留中のユーザーに招待を再送信するには、ユーザー タブにアクセスしてください。",
-    "contactsHandled": "対応したコンタクト",
+    "tasksHandled": "対応したコンタクト",
     "user": "ユーザー",
     "drilldownSearchPlaceholder": "検索"
   },

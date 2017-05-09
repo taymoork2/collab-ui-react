@@ -1,9 +1,13 @@
 import { Notification } from 'modules/core/notifications/notification.service';
-import { NumberModel, INumbersModel } from './number.model';
-import { PstnWizardService, IOrder } from './pstnWizard.service';
-import { TokenMethods } from '../pstnSwivelNumbers/pstnSwivelNumbers.component';
 import { IEmergencyAddress } from 'modules/squared/devices/emergencyServices/index';
-import { TOKEN_FIELD_ID } from '../index';
+import { NumberModel, INumbersModel } from './number.model';
+import { PstnWizardService } from './pstnWizard.service';
+import { DirectInwardDialing } from './directInwardDialing';
+import { TokenMethods } from '../pstnSwivelNumbers';
+import { TOKEN_FIELD_ID } from '../pstn.const';
+import { PstnService } from '../pstn.service';
+import { PstnModel, IOrder } from '../pstn.model';
+
 
 export class PstnWizardComponent implements ng.IComponentOptions {
   public controller = PstnWizardCtrl;
@@ -55,35 +59,36 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public enableCarriers: boolean;
   public close: Function;
   public get provider() {
-    return this.PstnSetup.getProvider();
+    return this.PstnModel.getProvider();
   }
   public tokenmethods: TokenMethods;
   public titles: {};
 
+  private did: DirectInwardDialing = new DirectInwardDialing();
+
   /* @ngInject */
-  constructor(private PstnSetup,
+  constructor(private PstnModel: PstnModel,
               private PstnServiceAddressService,
               private Notification: Notification,
               private $state: ng.ui.IStateService,
               private $window: ng.IWindowService,
               private $timeout: ng.ITimeoutService,
-              private PstnSetupService,
-              private DidService,
+              private PstnService: PstnService,
               private $translate: ng.translate.ITranslateService,
               private PstnWizardService: PstnWizardService,
               private TelephoneNumberService,
               ) {
     this.contact = this.PstnWizardService.getContact();
-    this.address = _.cloneDeep(PstnSetup.getServiceAddress());
-    this.countryCode = PstnSetup.getCountryCode();
-    this.isTrial = PstnSetup.getIsTrial();
+    this.address = _.cloneDeep(PstnModel.getServiceAddress());
+    this.countryCode = PstnModel.getCountryCode();
+    this.isTrial = PstnModel.getIsTrial();
     this.showPortNumbers = !this.isTrial;
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.tokenmethods = new TokenMethods(this.createToken.bind(this), this.createdToken.bind(this), this.editToken.bind(this), this.removeToken.bind(this));
     this.titles = this.PstnWizardService.STEP_TITLE;
 
     if ($state['modal'] && $state['modal'].result) {
-      $state['modal'].result.finally(PstnSetup.clear);
+      $state['modal'].result.finally(PstnModel.clear);
     }
   }
 
@@ -96,12 +101,13 @@ export class PstnWizardCtrl implements ng.IComponentController {
       this.PstnWizardService.hasTollFreeCapability().then(result => {
         this.showTollFreeNumbers = result;
         this.getTollFreeInventory();
-      });
+      })
+      .catch(response => this.Notification.errorResponse(response, 'pstnSetup.errors.capabilities'));
     }
   }
 
   public getTollFreeInventory(): void {
-    this.PstnSetupService.getCarrierTollFreeInventory(this.PstnSetup.getProviderId())
+    this.PstnService.getCarrierTollFreeInventory(this.PstnModel.getProviderId())
       .then(response => {
         this.model.tollFree.areaCodeOptions = response.areaCodes;
         let areaCodes = response.areaCodes.join(', ') + '.';
@@ -125,32 +131,32 @@ export class PstnWizardCtrl implements ng.IComponentController {
       this.validCount++;
     }
     // add to service after validation/duplicate checks
-    this.DidService.addDid(e.attrs.value);
+    this.did.add(e.attrs.value);
 
     this.invalidCount = this.getInvalidTokens().length;
   }
 
   public isTokenInvalid(value): boolean {
     return !this.TelephoneNumberService.validateDID(value) ||
-      _.includes(this.DidService.getDidList(), value);
+      _.includes(this.did.getList(), value);
   }
 
   public removeToken(e): void {
-    this.DidService.removeDid(e.attrs.value);
+    this.did.remove(e.attrs.value);
     this.$timeout(this.initTokens);
   }
 
   public editToken(e): void {
-    this.DidService.removeDid(e.attrs.value);
+    this.did.remove(e.attrs.value);
     if (!angular.element(e.relatedTarget).hasClass('invalid')) {
       this.validCount--;
     }
   }
 
   public goToOrderNumbers(): void {
-    if (!this.PstnSetup.isCustomerExists()) {
+    if (!this.PstnModel.isCustomerExists()) {
       this.step = 2;
-    } else if (!this.PstnSetup.isSiteExists()) {
+    } else if (!this.PstnModel.isSiteExists()) {
       this.step = 3;
     } else {
       this.step = 4;
@@ -177,11 +183,11 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public onProviderReady(): void {
     this.PstnWizardService.initSites().then(() => {
       //If new PSTN setup show all the carriers even if there only one
-      if (this.PstnSetup.isCarrierExists() && this.PstnSetup.isCustomerExists()) {
+      if (this.PstnModel.isCarrierExists() && this.PstnModel.isCustomerExists()) {
         // Only 1 carrier should exist for a customer
-        if (this.PstnSetup.getCarriers().length === 1) {
-          this.PstnSetup.setSingleCarrierReseller(true);
-          this.PstnSetup.setProvider(this.PstnSetup.getCarriers()[0]);
+        if (this.PstnModel.getCarriers().length === 1) {
+          this.PstnModel.setSingleCarrierReseller(true);
+          this.PstnModel.setProvider(this.PstnModel.getCarriers()[0]);
           this.goToNumbers();
           this.getCapabilities();
         }
@@ -219,7 +225,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
           this.Notification.error('pstnSetup.orderNumbersPrompt');
           return;
         } else {
-          this.PstnSetup.setOrders(this.orderCart);
+          this.PstnModel.setOrders(this.orderCart);
           this.step += 1;
           let orders = this.PstnWizardService.initOrders();
           this.totalPortNumbers = orders.totalPortNumbers;
@@ -235,9 +241,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
           return;
         } else {
           //set numbers for if they go back
-          this.PstnSetup.setNumbers(this.swivelNumbers);
+          this.PstnModel.setNumbers(this.swivelNumbers);
           let swivelOrder = this.PstnWizardService.setSwivelOrder(this.swivelNumbers);
-          this.PstnSetup.setOrders(swivelOrder);
+          this.PstnModel.setOrders(swivelOrder);
         }
         break;
       case 6:
@@ -269,10 +275,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public hideBackBtn(): boolean {
     switch (this.step) {
       case 2:
-        return this.PstnSetup.getCarriers().length === 1;
+        return this.PstnModel.getCarriers().length === 1;
       case 4:
       case 5:
-        return this.PstnSetup.isCustomerExists();
+        return this.PstnModel.isCustomerExists();
       case 7:
         return true;
     }
@@ -281,11 +287,11 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public validateAddress(): void {
     this.loading = true;
-    this.PstnServiceAddressService.lookupAddressV2(this.address, this.PstnSetup.getProviderId())
+    this.PstnServiceAddressService.lookupAddressV2(this.address, this.PstnModel.getProviderId())
       .then(address => {
         if (address) {
           this.address = address;
-          this.PstnSetup.setServiceAddress(address);
+          this.PstnModel.setServiceAddress(address);
           this.isValid = true;
         } else {
           this.Notification.error('pstnSetup.serviceAddressNotFound');
@@ -297,14 +303,14 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public resetAddress(): void {
     this.address = {};
-    this.PstnSetup.setServiceAddress(this.address);
+    this.PstnModel.setServiceAddress(this.address);
     this.isValid = false;
   }
 
   public launchCustomerPortal(): void {
     this.$window.open(this.$state.href('login_swap', {
-      customerOrgId: this.PstnSetup.getCustomerId(),
-      customerOrgName: this.PstnSetup.getCustomerName(),
+      customerOrgId: this.PstnModel.getCustomerId(),
+      customerOrgName: this.PstnModel.getCustomerName(),
     }));
   }
 
@@ -332,11 +338,11 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public initTokens(didList): void {
-    let tmpDids = didList || this.DidService.getDidList();
+    let tmpDids = didList || this.did.getList();
     // reset valid and list before setTokens
     this.validCount = 0;
     this.invalidCount = 0;
-    this.DidService.clearDidList();
+    this.did.clearList();
     angular.element('#' + this.tokenfieldId).tokenfield('setTokens', tmpDids);
   }
 

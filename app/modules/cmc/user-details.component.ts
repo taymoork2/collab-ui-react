@@ -20,7 +20,7 @@ class CmcUserDetailsController implements ng.IComponentController {
       name: 'Collaboration Mobile Convergence',
       icon: 'icon-circle-mobile',
       actionAvailable: false,
-      detail: 'Activated',
+      detail: 'Settings',
       state: 'cmc',
     });
     this.$log.debug('state', this.$state);

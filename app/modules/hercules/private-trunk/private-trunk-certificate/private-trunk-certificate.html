@@ -1,0 +1,76 @@
+<div ng-form="privateTrunkCertificateForm" class="private-trunk" >
+  <h5>{{$ctrl.certTitle}}</h5>
+  <p class="padding-p">{{$ctrl.certDesc}}</p>
+  <div class="cs-radio-group row cs-input-group modal-destination">
+    <input
+      cs-input
+      type="radio"
+      ng-model="$ctrl.certificateRadio"
+      id="certificateRadio1"
+      name="certificateRadio1"
+      ng-value="'default'"
+      ng-disabled="$ctrl.formattedCertList.length>0"
+      cs-input-label="{{'servicesOverview.cards.privateTrunk.certificateRadio1' | translate}}"
+      ng-change="$ctrl.changeOption()">
+    <input
+      cs-input
+      type="radio"
+      ng-model="$ctrl.certificateRadio"
+      id="certificateRadio2"
+      name="certificateRadio2"
+      ng-value="'new'"
+      cs-input-label="{{'servicesOverview.cards.privateTrunk.certificateRadio2' | translate}}"
+      ng-change="$ctrl.changeOption()">
+  </div>
+  <div row>
+    <div class="columns large-12 medium-12 small-12" ng-if="$ctrl.certificateRadio==='new'">
+      <div class="box center singlebox-margin">
+        <div class="flex-center-container certificate-upload">
+          <label ng-if="$ctrl.isImporting" class="icon-label" for="import">
+              <span class="icon icon-spinner"></span>
+              <span class="body-small span-text" translate="siteList.siteCsvImportInProgressLinkLabel"></span>
+          </label>
+          <div ng-if="!$ctrl.isImporting" class="file-drop"
+            cr-file-drop
+            file="$ctrl.file"
+            file-name="$ctrl.fileName"
+            file-max-size="10"
+            file-type=".pem .crt .der"
+            file-suffix="pem crt der">
+            <label class="icon-label" for="upload">
+              <span class="icon icon-upload-contain"></span>
+              <span class="body-small span-text" translate="hercules.settings.call.certificatesUpload"></span>
+            </label>
+            <input
+              id="upload"
+              type="file"
+              name="upload"
+              cr-file-read
+              file="$ctrl.file"
+              file-name="$ctrl.fileName"
+              file-max-size="10"
+              file-type=".pem .crt .der application/x-x509-ca-cert"/>
+            <div class="prompt" >
+              <span class="body-small" translate="servicesOverview.cards.privateTrunk.dragAndDropKeyFileHere "></span>
+              <label for='upload' class="text-size" translate="userManage.bulk.fileBrowser"></label>
+            </div>
+          </div>
+        </div>
+    </div>
+      <div ng-repeat="cert in $ctrl.formattedCertList">
+        <div class="columns large-6 medium-6 small-6">
+          <div class="box multibox-margin">
+            <p>
+              <span class="span-filename" >{{cert.commonName}}</span>
+              <i class="icon icon-close close-icon-align" ng-click="$ctrl.deleteCert(cert.certId)"></i>
+            </p>
+            <div ng-repeat="(key, value) in cert" ng-if="key!=='certId'">
+              <div class="body-small columns large-6 medium-6 small-6 cert-word-wrap bold ">{{$ctrl.certLabels[$index]}}</div>
+              <div ng-if="$index<8" class="body-small columns medium-6 small-6 large-6 cert-word-wrap">{{value}}</div>
+              <div ng-if="$index>7" class=" body-small columns medium-6 small-6 large-6">{{value| date:'fullDate'}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

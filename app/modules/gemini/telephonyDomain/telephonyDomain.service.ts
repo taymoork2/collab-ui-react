@@ -32,12 +32,12 @@ export class TelephonyDomainService {
   }
 
   public getNotes(customerId: string, ccaDomainId: string) {
-    const url = `${this.url}activityLogs/${customerId}/${ccaDomainId}/add_note`;
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${customerId}/${ccaDomainId}/add_note_td`;
     return this.$http.get(url).then(this.extractData);
   }
 
   public getHistories(customerId: string, ccaDomainId: string, domainName: string) {
-    const url = `${this.url}activityLogs/${customerId}/${ccaDomainId}/Telephony%20Domain/${domainName}`;
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${customerId}/${ccaDomainId}/Telephony%20Domain/${domainName}`;
     return this.$http.get(url).then(this.extractData);
   }
 
@@ -47,12 +47,11 @@ export class TelephonyDomainService {
   }
 
   public getDownloadUrl() {
-    const downloadUrl = 'https://hfccap12.qa.webex.com/ccaportal/resources/excel/ccaportal_telephony_numbers.xls'; // TODO, will use urlConfig
-    return downloadUrl;
+    return `${this.url}files/templates/telephony_numbers_template`;
   }
 
   public postNotes(data: any) {
-    const url = `${this.url}activityLogs`;
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs`;
     return this.$http.post(url, data).then(this.extractData);
   }
 

@@ -12,6 +12,10 @@
     vm.allNumbersCount = 0;
     vm.isTerminusCustomer = isTerminusCustomer;
     vm.isHuronSupportThinktel = false;
+    vm.callAction = [{
+      actionKey: 'customerPage.addNumbers',
+      actionFunction: isTerminusCustomer,
+    }];
     var ALL = 'all';
 
     //(Paul Clark)This will be used for new "PstnProviders.component.ts"
@@ -61,9 +65,7 @@
             customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems'),
           });
         } else {
-          return $state.go('didadd', {
-            currentOrg: vm.currentCustomer,
-          });
+          return Notification.error('pstnSetup.errors.customerNotFound');
         }
       });
     }

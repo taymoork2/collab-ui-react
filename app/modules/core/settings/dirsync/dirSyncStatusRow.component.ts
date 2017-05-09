@@ -7,6 +7,7 @@ class DirSyncStatusRowController implements ng.IComponentController {
   public enabled: boolean;
   public onClick: Function;
   public linkTitle: string;
+  public statusClass: string;
 
   constructor(
   ) {
@@ -15,13 +16,16 @@ class DirSyncStatusRowController implements ng.IComponentController {
   public $onInit() {
   }
 
-  public $onChanges(_changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+    const { enabled } = changes;
+    if (enabled) {
+      this.statusClass = enabled.currentValue ? 'success' : 'disabled';
+    }
   }
 
   public handleClick(): void {
     this.onClick();
   }
-
 }
 
 /////////////////////

@@ -68,7 +68,7 @@
     function init() {
       $q.all({
         servicesFromFms: ServiceDescriptor.getServices(),
-        gcalService: vm.hasGoogleCalendarFeature ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({}),
+        gcalService: vm.hasGoogleCalendarFeature ? CloudConnectorService.getService() : $q.resolve({}),
       }).then(function (response) {
         vm.services.calendarExchange = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-cal');
         vm.services.callServiceAware = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-uc');

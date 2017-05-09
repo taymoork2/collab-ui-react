@@ -7,7 +7,9 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window,
+    Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log,
+    Notification, Orgservice, PartnerService, TrialService, uiGridSelectionService, HuronCompassService) {
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -180,15 +182,15 @@ require('./_customer-list.scss');
       cellTemplate: licenseCountTemplate,
       headerCellClass: 'align-center',
     };
-  /* AG TODO:  once we have data for total users -- add back
-      var totalUsersField = {
-      field: 'totalUsers',
-      displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
-      width: '16%',
-      cellTemplate: totalUsersTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: userSort
-    };*/
+    /* AG TODO:  once we have data for total users -- add back
+        var totalUsersField = {
+        field: 'totalUsers',
+        displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
+        width: '16%',
+        cellTemplate: totalUsersTemplate,
+        headerCellClass: 'align-center',
+        sortingAlgorithm: userSort
+      };*/
     var notesField = {
       field: 'notes',
       displayName: $translate.instant('customerPage.notes'),
@@ -206,15 +208,14 @@ require('./_customer-list.scss');
       multiSelect: false,
       rowHeight: 56,
       enableRowHeaderSelection: false,
-      enableRowSelection: true,
+      enableRowSelection: false,
       enableColumnMenus: false,
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
       onRegisterApi: function (gridApi) {
+
         vm.gridApi = gridApi;
-        vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          vm.showCustomerDetails(row.entity);
-        });
+
         vm.gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
           if (vm.load) {
             vm.currentDataPosition++;
@@ -222,7 +223,9 @@ require('./_customer-list.scss');
             vm.gridApi.infiniteScroll.dataLoaded();
           }
         });
+
         gridApi.grid.registerRowsProcessor(rowFilter, 150);
+
       },
       multiFields: {
         meeting: [{
@@ -437,7 +440,7 @@ require('./_customer-list.scss');
       if (a.sortOrder !== b.sortOrder) {
         return a.sortOrder - b.sortOrder;
       } else if (a.sortOrder === PartnerService.customerStatus.NOTE_NOT_EXPIRED ||
-                 a.sortOrder === PartnerService.customerStatus.NOTE_EXPIRED) {
+        a.sortOrder === PartnerService.customerStatus.NOTE_EXPIRED) {
         return Math.abs(a.daysLeft) - Math.abs(b.daysLeft);
       } else {
         return 0;
@@ -457,13 +460,13 @@ require('./_customer-list.scss');
       _.forEach(rows, function (row) {
         var isVisibleFlags = {
           byAccountFilter: (!selectedFilters.account.length) ||
-            _.some(selectedFilters.account, function (filter) {
-              return (vm.getAccountStatus(row.entity) === filter.value);
-            }),
+          _.some(selectedFilters.account, function (filter) {
+            return (vm.getAccountStatus(row.entity) === filter.value);
+          }),
           byLicenseFilter: (!selectedFilters.license.length) ||
-            _.some(selectedFilters.license, function (filter) {
-              return vm.isLicenseTypeAny(row.entity, filter.value);
-            }),
+          _.some(selectedFilters.license, function (filter) {
+            return vm.isLicenseTypeAny(row.entity, filter.value);
+          }),
         };
 
         row.visible = _.every(isVisibleFlags);
@@ -598,7 +601,8 @@ require('./_customer-list.scss');
       _.forEach(accountFilters, function (filter) {
         filter.count = statusTypeCounts[filter.value] || 0;
         filter.label = $translate.instant('customerPage.' + filter.value + 'AccountsFilter', {
-          count: filter.count });
+          count: filter.count,
+        });
       });
     }
 
@@ -722,8 +726,13 @@ require('./_customer-list.scss');
       return isTrial ? 'trial' : 'active';
     }
 
-    function showCustomerDetails(customer) {
+    function showCustomerDetails(customer, gridRow) {
+      if (!_.isUndefined(gridRow)) {
+        uiGridSelectionService.toggleRowSelection(vm.gridApi.grid, gridRow, null, false, true);
+      }
+
       vm.currentTrial = customer;
+      HuronCompassService.setIsCustomer(true);
       $state.go('customer-overview', {
         currentCustomer: customer,
       });
@@ -750,9 +759,7 @@ require('./_customer-list.scss');
               customerRoomSystemsLicenseIsTrial: getIsTrial(org, 'roomSystems'),
             });
           } else {
-            return $state.go('didadd', {
-              currentOrg: org,
-            });
+            return Notification.error('pstnSetup.errors.customerNotFound');
           }
         });
     }

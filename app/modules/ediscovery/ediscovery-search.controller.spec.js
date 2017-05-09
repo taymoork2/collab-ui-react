@@ -5,7 +5,7 @@ describe('Controller: EdiscoverySearchController', function () {
   beforeEach(angular.mock.module('Huron'));
 
   var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, ITProPackService, Notification, TrialService;
-  var promiseUrl, promise;
+  var promiseUrl, promise, result, startDate, endDate;
 
   beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _ITProPackService_, _Notification_, _TrialService_) {
     $scope = _$rootScope_.$new();
@@ -27,6 +27,7 @@ describe('Controller: EdiscoverySearchController', function () {
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
     spyOn(ITProPackService, 'hasITProPackPurchased').and.returnValue($q.resolve(false));
+    spyOn(ITProPackService, 'hasITProPackEnabled').and.returnValue($q.resolve(false));
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
     spyOn(TrialService, 'getDaysLeftForCurrentUser');
 
@@ -57,6 +58,46 @@ describe('Controller: EdiscoverySearchController', function () {
     it('should contain default values', function () {
       expect(ediscoverySearchController.encryptedEmails).toBeNull();
       expect(ediscoverySearchController.unencryptedRoomIds).toBeNull();
+    });
+  });
+
+  describe('Date Validation', function () {
+    beforeEach(initController);
+
+    it('should not return an error', function () {
+      startDate = moment().subtract(30, 'days').format();
+      endDate = moment().format();
+
+      result = ediscoverySearchController.dateErrors(startDate, endDate);
+
+      expect(result).toEqual([]);
+    });
+
+    it('should not have end date be before start date', function () {
+      startDate = moment().format();
+      endDate = moment().subtract(2, 'days').format();
+
+      result = ediscoverySearchController.dateErrors(startDate, endDate);
+
+      expect(result).toEqual(['ediscovery.dateError.StartDateMustBeforeEndDate']);
+    });
+
+    it('should not have a start date that is in the future', function () {
+      startDate = moment().add(1, 'day').format();
+      endDate = moment().format();
+
+      result = ediscoverySearchController.dateErrors(startDate, endDate);
+
+      expect(result).toEqual(['ediscovery.dateError.StartDateMustBeforeEndDate', 'ediscovery.dateError.StartDateCannotBeInTheFuture']);
+    });
+
+    it('should not exceed a 90 day range if itProPack is not purchased', function () {
+      startDate = moment().subtract(91, 'days').format();
+      endDate = moment().format();
+
+      result = ediscoverySearchController.dateErrors(startDate, endDate);
+
+      expect(result).toEqual(['ediscovery.dateError.InvalidDateRange']);
     });
   });
 
@@ -97,133 +138,12 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
     });
 
-    it('uses combined avalonRoomsUrl and room id to get room info', function () {
-      ediscoverySearchController.searchForRoom('myRoomId');
-      $scope.$apply();
-      expect(ediscoverySearchController.searchingForRoom).toBeFalsy();
-      expect(EdiscoveryService.getAvalonRoomInfo.calls.count()).toBe(1);
-    });
-  });
-
-  describe('Search for room with status 404', function () {
-    beforeEach(function () {
-      promise = $q.reject({
-        "status": 404,
-      });
-
-      spyOn(EdiscoveryService, 'getAvalonServiceUrl').and.returnValue(promiseUrl);
-      spyOn(EdiscoveryService, 'getAvalonRoomInfo').and.returnValue(promise);
-    });
-
-    beforeEach(initController);
-
-    it('found no room', function () {
-      ediscoverySearchController.searchForRoom("myRoomId");
-      expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-      $scope.$apply();
-
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
-      expect(ediscoverySearchController.error).toEqual("ediscovery.search.roomNotFound");
-      expect(ediscoverySearchController.roomInfo).toBeNull();
-    });
-
-  });
-
-  describe('Search for room with status 400', function () {
-    beforeEach(function () {
-      promise = $q.reject({
-        "status": 400,
-      });
-
-      spyOn(EdiscoveryService, 'getAvalonServiceUrl').and.returnValue(promiseUrl);
-      spyOn(EdiscoveryService, 'getAvalonRoomInfo').and.returnValue(promise);
-    });
-
-    beforeEach(initController);
-
-    it('invalid room id', function () {
-      ediscoverySearchController.searchForRoom("myRoomId");
-      expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-      $scope.$apply();
-
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
-      expect(ediscoverySearchController.error).toEqual("ediscovery.search.invalidRoomId");
-      expect(ediscoverySearchController.roomInfo).toBeNull();
-
-    });
-  });
-
-  describe('Search for room with status 500', function () {
-    beforeEach(function () {
-      promise = $q.reject({
-        "status": 500,
-      });
-      spyOn(Notification, 'error').and.callFake(function () {
-        return true;
-      });
-      spyOn(EdiscoveryService, 'getAvalonServiceUrl').and.returnValue(promiseUrl);
-      spyOn(EdiscoveryService, 'getAvalonRoomInfo').and.returnValue(promise);
-    });
-
-    beforeEach(initController);
-
-    it('failed with an unexpected error', function () {
-      ediscoverySearchController.searchForRoom("myRoomId");
-      expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-      $scope.$apply();
-
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
-      expect(ediscoverySearchController.error).toEqual("ediscovery.search.roomNotFound");
-      expect(ediscoverySearchController.roomInfo).toBeNull();
-      expect(Notification.error.calls.count()).toBe(1);
-
-    });
-  });
-
-  describe('finds a room', function () {
-    beforeEach(function () {
-      var lastReadableActivityDate = moment().subtract(1, "day");
-      var publishedDate = moment().subtract(2, "day");
-
-      promise = $q.resolve({
-        id: '1234',
-        displayName: 'whatever',
-        participants: {
-          items: ['abc@test.com'],
-        },
-        lastReadableActivityDate: lastReadableActivityDate,
-        published: publishedDate,
-      });
-
-      spyOn(EdiscoveryService, 'getAvalonServiceUrl').and.returnValue(promiseUrl);
-      spyOn(EdiscoveryService, 'getAvalonRoomInfo').and.returnValue(promise);
-    });
-
-    beforeEach(initController);
-
-    it('prepopulates search date with relevant room info data', function () {
-      ediscoverySearchController.searchForRoom('myRoomId');
-      expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-      $scope.$apply();
-
-      expect(ediscoverySearchController.searchCriteria.roomId).toEqual('myRoomId');
-      expect(ediscoverySearchController.searchCriteria.displayName).toEqual('whatever');
-      //expect(ediscoverySearchController.searchCriteria.startDate).toEqual(publishedDate);
-      //expect(ediscoverySearchController.searchCriteria.endDate).toEqual(lastReadableActivityDate);
-
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
-
-    });
-
   });
 
   describe('Create report', function () {
     beforeEach(function () {
-      var deferedRunReportResult = $q.defer();
+      FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue($q.resolve(true));
+      var deferredRunReportResult = $q.defer();
 
       promise = $q.resolve({
         displayName: 'test',
@@ -231,8 +151,8 @@ describe('Controller: EdiscoverySearchController', function () {
         id: '12345678',
       });
 
-      spyOn(EdiscoveryService, 'runReport').and.returnValue(deferedRunReportResult.promise);
       spyOn(EdiscoveryService, 'createReport').and.returnValue(promise);
+      spyOn(EdiscoveryService, 'generateReport').and.returnValue(deferredRunReportResult.promise);
     });
 
     beforeEach(initController);
@@ -252,9 +172,8 @@ describe('Controller: EdiscoverySearchController', function () {
 
       ediscoverySearchController.createReport(params);
       $scope.$apply();
-
-      expect(EdiscoveryService.runReport.calls.count()).toBe(1);
       expect(EdiscoveryService.createReport).toHaveBeenCalled();
+      expect(EdiscoveryService.generateReport.calls.count()).toBe(1);
     });
 
   });
@@ -288,6 +207,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
   describe('Create report with error', function () {
     beforeEach(function () {
+      FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue($q.resolve(true));
 
       ediscoverySearchController.searchCriteria.roomId = 'whatever';
       ediscoverySearchController.searchCriteria.endDate = moment().format();
@@ -299,8 +219,8 @@ describe('Controller: EdiscoverySearchController', function () {
         id: '12345678',
       });
 
-      spyOn(EdiscoveryService, 'runReport').and.returnValue($q.reject());
       spyOn(EdiscoveryService, 'createReport').and.returnValue(promise);
+      spyOn(EdiscoveryService, 'generateReport').and.returnValue($q.reject());
       spyOn(EdiscoveryService, 'patchReport').and.returnValue($q.resolve({}));
       spyOn(EdiscoveryService, 'getReport').and.returnValue(promise);
       spyOn(Notification, 'error').and.callFake(function () {
@@ -311,19 +231,10 @@ describe('Controller: EdiscoverySearchController', function () {
     beforeEach(initController);
 
     it('received from avalon backend', function () {
-      var params = {
-        displayName: jasmine.any,
-        roomIds: jasmine.any,
-        startDate: jasmine.any,
-        endDate: jasmine.any,
-        keyword: jasmine.any,
-        emailAddresses: null,
-      };
-
-      ediscoverySearchController.createReport(params);
+      ediscoverySearchController.createReport();
       $scope.$apply();
 
-      expect(EdiscoveryService.runReport.calls.count()).toBe(1);
+      expect(EdiscoveryService.generateReport.calls.count()).toBe(1);
       expect(EdiscoveryService.createReport).toHaveBeenCalled();
       expect(Notification.error.calls.count()).toBe(1);
       expect(EdiscoveryService.patchReport.calls.count()).toBe(1);

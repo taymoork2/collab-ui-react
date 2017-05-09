@@ -2,15 +2,16 @@ import IPlace = csdm.IPlace;
 import { FilteredPlaceViewDataSource } from './FilteredPlaceViewDataSource';
 import { PlaceMatcher } from 'modules/squared/places/place-matcher';
 import { FilteredView } from 'modules/squared/common/filtered-view/filtered-view';
+
 describe('Class: FilteredView', () => {
 
   let test: any = {};
 
   let serverSideSearchRes = {
-    'url1': { displayName: 'abc', devices: [{}, {}] },
-    'url2': { displayName: 'abcd' },
-    'url3': { displayName: 'abcde', devices: [{}, {}] },
-    'url4': { displayName: 'abcdef' },
+    url1: { displayName: 'abc', devices: [{}, {}] },
+    url2: { displayName: 'abcd' },
+    url3: { displayName: 'abcde', devices: [{}, {}] },
+    url4: { displayName: 'abcdef' },
   };
 
   beforeEach(function () {

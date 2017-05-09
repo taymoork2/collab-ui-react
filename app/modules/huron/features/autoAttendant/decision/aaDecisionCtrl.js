@@ -6,7 +6,7 @@
   .controller('AADecisionCtrl', AADecisionCtrl);
 
   /* @ngInject */
-  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, CustomVariableService) {
+  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
 
     var vm = this;
 
@@ -143,20 +143,6 @@
       });
     }
 
-    function getSessionVariables(ceId) {
-      return CustomVariableService.listCustomVariables(ceId).then(function (data) {
-        if (data.length != 0) {
-          _.each(data, function (entry) {
-            _.each(entry.var_name, function (customVar) {
-              vm.sessionVarOptions.push(customVar);
-            });
-          });
-          vm.sessionVarOptions.sort();
-          addSessionObject();
-        }
-      });
-    }
-
     function setActionEntry() {
       var ui = AAUiModelService.getUiModel();
       var uiMenu = ui[$scope.schedule];
@@ -222,36 +208,36 @@
           value: 'callerReturned',
           buffer: {
             label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-            value: 10080,
+            value: 10080 * 60,
           },
         });
 
         vm.callerReturnedOption = {
           label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-          value: 10080,
+          value: 10080 * 60,
         };
 
         vm.callerReturnedOptions = [{
           label: $translate.instant('autoAttendant.callerReturned1Min'),
-          value: 1,
+          value: 1 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturned5Mins'),
-          value: 5,
+          value: 5 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturned30Mins'),
-          value: 30,
+          value: 30 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturned1Hour'),
-          value: 60,
+          value: 60 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturnedOneDay'),
-          value: 1440,
+          value: 1440 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-          value: 10080,
+          value: 10080 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturnedOneMonth'),
-          value: 43200,
+          value: 43200 * 60,
         }];
         vm.returnedCallerToggle = true;
       } else {
@@ -274,7 +260,13 @@
     }
 
     function init() {
-      getSessionVariables(AAModelService.getAAModel().aaRecordUUID).finally(function () {
+      AASessionVariableService.getSessionVariables(AAModelService.getAAModel().aaRecordUUID).then(function (data) {
+        if (!_.isUndefined(data) && data.length > 0) {
+          vm.sessionVarOptions = data;
+          vm.sessionVarOptions.sort();
+          addSessionObject();
+        }
+      }).finally(function () {
         /* no support for Queues as of this story.
          * if (AACommonService.isRouteQueueToggle()) {
          *

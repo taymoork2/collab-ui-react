@@ -31,6 +31,15 @@
       @include vr-spacing(mb, .25);
     }
   }
+
+  .needs-border-top {
+    border-top: 1px solid $gray-light-2;
+  }
+
+  .top-margin {
+    margin-top: -4rem;
+  }
+
   .domain-list {
     padding-left: 1rem;
   }

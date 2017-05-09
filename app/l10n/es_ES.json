@@ -788,7 +788,7 @@
     "drilldownDescription": "Estos son los usuarios más activos de este período: {{time}}. La tabla se puede ordenar por el nombre de usuario o el número total de contactos gestionados.",
     "drilldownErrorDescription": "Este dato no se encuentra disponible temporalmente. Nuestros servidores están trabajando para restablecerlo lo antes posible. Vuelva a consultarlo en breve.",
     "drilldownEmptyDescription": "No ha habido ningún usuario activo en este período: {{time}}. Para ver el estado de los usuarios y volver a enviar las invitaciones pendientes, vaya a la pestaña de usuarios.",
-    "contactsHandled": "Contactos gestionados",
+    "tasksHandled": "Contactos gestionados",
     "user": "Usuario",
     "drilldownSearchPlaceholder": "Buscar"
   },

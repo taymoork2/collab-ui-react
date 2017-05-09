@@ -9,15 +9,14 @@
 		      </a>
 		    </div>
 				<header><h4 class="result-info" translate="ediscovery.searchResults.searchInfo"></h4></header>
-				<section>		
+				<section>
 					<p class="result-title">{{ediscoverySearchCtrl.searchResultsHeader}}</p>
 					<div ng-repeat="keyword in ediscoverySearchCtrl.searchResults.keywords">
 						<p class="result-info">{{keyword}}</p>
 					</div>
 					<div class="date-range-tooltip">
 						<span class="result-title" translate="ediscovery.searchResults.dateRange"></span>
-						<i ng-if="ediscoverySearchCtrl.itProPackToggle" tooltip="{{'ediscovery.searchParameters.dateRangeTooltip' | translate}}" tooltip-placement="right"
-						class="icon icon-info"></i>
+						<i ng-if="ediscoverySearchCtrl.showHover()" tooltip="{{'ediscovery.searchParameters.dateRangeTooltip' | translate}}" tooltip-placement="right" class="icon icon-info"></i>
 					</div>
 					<p class="result-info">{{ediscoverySearchCtrl.searchCriteria.startDate}} - {{ediscoverySearchCtrl.searchCriteria.endDate}}</p>
 					<p class="result-title" translate="ediscovery.searchResults.messages"></p>

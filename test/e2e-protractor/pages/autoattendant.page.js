@@ -135,7 +135,7 @@ var AutoAttendantPage = function () {
   this.decisionFirst = element.all(by.css('div.aa-panel-body[name="Decision"]')).all(by.cssContainingText("h3", "If")).first();
   this.decisionIf = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div span.select-toggle'));
   this.decisionIfDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(2);
-  this.decisionCallerNumberTextArea = element.all(by.name('callerNumberCalled')).first();
+  this.decisionCountryCodeTextArea = element.all(by.name('countryCode')).first();
 
   this.decisionThen = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div span.select-toggle'));
   this.decisionThenDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(2);
@@ -206,49 +206,16 @@ var AutoAttendantPage = function () {
   this.voiceSelectopenHours0 = element(by.id('voiceSelectopenHours0'));
   this.cancelTreatmentFeature = element(by.id('cancelTreatmentFeature'));
 
-  // last item in newStep dropdown: Say Message
-  this.newStepSelectSayMessage = element.all(by.css('div.aa-panel[name="newStepForm"]'))
-    .filter(function (el) {
-      return el.isDisplayed();
-    })
-    .first()
-    .all(by.css("div.aa-flex-row"))
-    .last()
-    .all(by.tagName('li'))
-    .get(5);
-
-  // third item in newStep dropdown: Phone Menu
-  this.newStepSelectPhoneMenu = element.all(by.css('div.aa-panel[name="newStepForm"]'))
-    .filter(function (el) {
-      return el.isDisplayed();
-    })
-    .first()
-    .all(by.css("div.aa-flex-row"))
-    .last()
-    .all(by.tagName('li'))
-    .get(3);
-
-  // second item in newStep dropdown: Dial By Extension
-  this.newStepSelectDialByExt = element.all(by.css('div.aa-panel[name="newStepForm"]'))
-    .filter(function (el) {
-      return el.isDisplayed();
-    })
-    .first()
-    .all(by.css("div.aa-flex-row"))
-    .last()
-    .all(by.tagName('li'))
-    .get(2);
-
-  // fourth item in newStep dropdown: Route Call
-  this.newStepSelectRouteCall = element.all(by.css('div.aa-panel[name="newStepForm"]'))
-    .filter(function (el) {
-      return el.isDisplayed();
-    })
-    .first()
-    .all(by.css("div.aa-flex-row"))
-    .last()
-    .all(by.tagName('li'))
-    .get(4);
+  // first item is caller input
+  this.newStepCallerInput = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+      .filter(function (el) {
+        return el.isDisplayed();
+      })
+      .first()
+      .all(by.css("div.aa-flex-row"))
+      .last()
+      .all(by.tagName('li'))
+      .get(0)
 
   // second item is caller input
   this.newStepDecision = element.all(by.css('div.aa-panel[name="newStepForm"]'))
@@ -261,16 +228,60 @@ var AutoAttendantPage = function () {
       .all(by.tagName('li'))
       .get(1)
 
-  // first item is caller input
-  this.newStepCallerInput = element.all(by.css('div.aa-panel[name="newStepForm"]'))
-      .filter(function (el) {
-        return el.isDisplayed();
-      })
-      .first()
-      .all(by.css("div.aa-flex-row"))
-      .last()
-      .all(by.tagName('li'))
-      .get(0)
+  // third item in newStep dropdown: Dial By Extension
+  this.newStepSelectDialByExt = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css("div.aa-flex-row"))
+    .last()
+    .all(by.tagName('li'))
+    .get(2);
+
+  // fourth item in newStep dropdown: Phone Menu
+  this.newStepSelectPhoneMenu = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css("div.aa-flex-row"))
+    .last()
+    .all(by.tagName('li'))
+    .get(3);
+
+  // fifth item in newStep dropdown: REST API
+  this.newStepSelectRestApi = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css("div.aa-flex-row"))
+    .last()
+    .all(by.tagName('li'))
+    .get(4);
+
+  // sixth item in newStep dropdown: Route Call
+  this.newStepSelectRouteCall = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css("div.aa-flex-row"))
+    .last()
+    .all(by.tagName('li'))
+    .get(5);
+
+  // seventh (last) item in newStep dropdown: Say Message
+  this.newStepSelectSayMessage = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css("div.aa-flex-row"))
+    .last()
+    .all(by.tagName('li'))
+    .get(6);
 
   // since we added a Say Message via Add New Step, there should be more than 1 from now on.
   // Get them all so we can check:
@@ -286,6 +297,16 @@ var AutoAttendantPage = function () {
     .element(by.css('div.dropdown-menu'))
     .all(by.tagName('li'))
     .get(9);
+
+  this.restApi = element(by.css('div.aa-panel-body[name="REST API"]'));
+  this.configureApi = element(by.id('configureApi'));
+  this.configureApiURL = element(by.id('configureApiUrl'));
+  this.addDynamicFeature = element(by.id('addDynamicFeature'));
+  this.sessionVar = element(by.id('sessionVar'));
+  this.newSessionVar = this.sessionVar.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
+  this.addVariableToSet = element(by.id('addVariableToSet'));
+  this.saveBtn = element(by.id('saveBtn'));
+  this.restApiUrlLabel = element(by.css('.aa-rest-api-url'));
 
   this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));

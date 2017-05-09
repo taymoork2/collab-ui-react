@@ -22,7 +22,6 @@
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-
     @include vr-spacing(pv, 0.5);
     @include vr-spacing(ph, 2);
 

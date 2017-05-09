@@ -8,10 +8,11 @@ describe('Controller: MySubscriptionCtrl', function () {
   const ccwTrialSubId: string = 'Trial';
   const productInstanceId: string = 'productInstanceId';
   const productName: string = 'productName';
-  const productInstanceResponse: IProdInst = {
+  const productInstanceResponse: IProdInst[] = [{
     productInstanceId: productInstanceId,
+    subscriptionId: onlineIntSubId,
     name: productName,
-  };
+  }];
 
   beforeEach(function () {
     this.initModules('Core', 'Hercules', 'Sunlight', 'WebExApp');
@@ -35,7 +36,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
     spyOn(this.ServiceDescriptor, 'getServices').and.returnValue(this.$q.when(this.data.servicesResponse));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.when(false));
-    spyOn(this.OnlineUpgradeService, 'getProductInstance').and.returnValue(this.$q.when(productInstanceResponse));
+    spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.when(productInstanceResponse));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');
     spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.$q.when(drUrlResponse));
     spyOn(this.$rootScope, '$broadcast').and.callThrough();

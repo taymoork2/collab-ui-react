@@ -86,7 +86,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct admin service url', function () {
     whenCalling('getAdminServiceUrl').expectUrlToBe({
       dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
+      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
       integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
@@ -95,7 +95,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct csdm service url', function () {
     whenCalling('getCsdmServiceUrl').expectUrlToBe({
       dev: 'https://csdm-intb.ciscospark.com/csdm/api/v1',
-      cfe: 'https://csdm-e.wbx2.com/csdm/api/v1',
+      cfe: 'https://csdm-loada.ciscospark.com/csdm/api/v1',
       integration: 'https://csdm-intb.ciscospark.com/csdm/api/v1',
       prod: 'https://csdm-a.wbx2.com/csdm/api/v1',
     });
@@ -113,7 +113,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct feature toggle service url', function () {
     whenCalling('getFeatureToggleUrl').expectUrlToBe({
       dev: 'https://locus-a.wbx2.com',
-      cfe: 'https://locus-e.wbx2.com',
+      cfe: 'https://locus-loada.ciscospark.com',
       integration: 'https://locus-a.wbx2.com',
       prod: 'https://locus-a.wbx2.com',
     });
@@ -122,7 +122,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct athena service url', function () {
     whenCalling('getAthenaServiceUrl').expectUrlToBe({
       dev: 'https://athena-intb.ciscospark.com/athena/api/v1',
-      cfe: 'https://athena-e.wbx2.com/athena/api/v1',
+      cfe: 'https://athena-loada.ciscospark.com/athena/api/v1',
       integration: 'https://athena-intb.ciscospark.com/athena/api/v1',
       prod: 'https://athena-a.wbx2.com/athena/api/v1',
     });
@@ -130,9 +130,9 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct messenger service url', function () {
     whenCalling('getMessengerServiceUrl').expectUrlToBe({
-      dev: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+      dev: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       cfe: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
-      integration: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+      integration: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       prod: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
     });
   });
@@ -149,7 +149,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct spark domain mgmt url', function () {
     whenCalling('getSparkDomainManagementUrl').expectUrlToBe({
       dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      cfe: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
       integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
@@ -257,7 +257,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct hercules url', function () {
     whenCalling('getHerculesUrl').expectUrlToBe({
       dev: 'https://hercules-intb.ciscospark.com/v1',
-      cfe: 'https://hercules-e.wbx2.com/v1',
+      cfe: 'https://hercules-loada.ciscospark.com/v1',
       integration: 'https://hercules-intb.ciscospark.com/v1',
       prod: 'https://hercules-a.wbx2.com/v1',
     });
@@ -266,7 +266,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct hercules url v2', function () {
     whenCalling('getHerculesUrlV2').expectUrlToBe({
       dev: 'https://hercules-intb.ciscospark.com/hercules/api/v2',
-      cfe: 'https://hercules-e.wbx2.com/hercules/api/v2',
+      cfe: 'https://hercules-loada.ciscospark.com/hercules/api/v2',
       integration: 'https://hercules-intb.ciscospark.com/hercules/api/v2',
       prod: 'https://hercules-a.wbx2.com/hercules/api/v2',
     });
@@ -275,7 +275,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct flag service url', function () {
     whenCalling('getFlagServiceUrl').expectUrlToBe({
       dev: 'https://hercules-intb.ciscospark.com/fls/api/v1',
-      cfe: 'https://hercules-e.wbx2.com/fls/api/v1',
+      cfe: 'https://hercules-loada.ciscospark.com/fls/api/v1',
       integration: 'https://hercules-intb.ciscospark.com/fls/api/v1',
       prod: 'https://hercules-a.wbx2.com/fls/api/v1',
     });
@@ -293,7 +293,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct USS url', function () {
     whenCalling('getUssUrl').expectUrlToBe({
       dev: 'https://uss-intb.ciscospark.com/',
-      cfe: 'https://uss-e.wbx2.com/',
+      cfe: 'https://uss-loada.ciscospark.com/',
       integration: 'https://uss-intb.ciscospark.com/',
       prod: 'https://uss-a.wbx2.com/',
     });
@@ -302,7 +302,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct calliope url', function () {
     whenCalling('getCalliopeUrl').expectUrlToBe({
       dev: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
-      cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
+      cfe: 'https://calliope-loada.ciscospark.com/calliope/api/authorization/v1',
       integration: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
       prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1',
     });
@@ -311,7 +311,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct certs url', function () {
     whenCalling('getCertsUrl').expectUrlToBe({
       dev: 'https://certs-intb.ciscospark.com/',
-      cfe: 'https://certs-e.wbx2.com/',
+      cfe: 'https://certs-loada.ciscospark.com/',
       integration: 'https://certs-intb.ciscospark.com/',
       prod: 'https://certs-a.wbx2.com/',
     });
@@ -320,7 +320,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct wdm url', function () {
     whenCalling('getFeatureUrl').expectUrlToBe({
       dev: 'https://feature-a.wbx2.com/feature/api/v1',
-      cfe: 'http://feature.cfe.wbx2.com/feature/api/v1',
+      cfe: 'https://feature-loada.ciscospark.com/feature/api/v1',
       integration: 'https://feature-a.wbx2.com/feature/api/v1',
       prod: 'https://feature-a.wbx2.com/feature/api/v1',
     });

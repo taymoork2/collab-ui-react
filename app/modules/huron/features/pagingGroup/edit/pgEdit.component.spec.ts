@@ -112,12 +112,12 @@ describe('Component: pgEdit', () => {
     initiatorType: 'CUSTOM',
     initiators: [
       {
-        initiatorId: '0001',
-        type: 'USER',
-      },
-      {
         initiatorId: '0002',
         type: 'PLACE',
+      },
+      {
+        initiatorId: '0001',
+        type: 'USER',
       },
     ],
   };
@@ -253,6 +253,14 @@ describe('Component: pgEdit', () => {
       this.getPagingGroupDefer.resolve(pg);
       this.$scope.$apply();
       expect(this.Notification.errorResponse).toHaveBeenCalledWith(pagingServiceFailureResp, pg.name);
+    });
+
+    it('should display Notification when getNumberExtension 2xx with empty number', function () {
+      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve({ data: [] });
+      this.getPagingGroupDefer.resolve(pg);
+      this.$scope.$apply();
+      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorGetNumber', { pagingGroupName: pg.name });
     });
   });
 
@@ -574,14 +582,16 @@ describe('Component: pgEdit', () => {
 
     it('Test showMoreButton', function () {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
+      spyOn(this.controller, 'getSearchedCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = this.controller.cardThreshold;
-      expect(this.controller.showMoreButton('USER_REAL_USER', 'MEMBER')).toBeTruthy;
+      expect(this.controller.showMoreButton('USER_REAL_USER', 'MEMBER')).toBeTruthy();
     });
 
     it('Test showLessButton', function () {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
+      spyOn(this.controller, 'getSearchedCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = undefined;
-      expect(this.controller.showLessButton('USER_REAL_USER', 'MEMBER')).toBeTruthy;
+      expect(this.controller.showLessButton('USER_REAL_USER', 'MEMBER')).toBeTruthy();
     });
   });
 

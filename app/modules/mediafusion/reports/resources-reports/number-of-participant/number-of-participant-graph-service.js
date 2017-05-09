@@ -172,15 +172,16 @@
     }
 
     function formatGraph(graphs) {
+      var callsBallon = $translate.instant('mediaFusion.metrics.callsBallon');
       var tempData = [];
       _.each(graphs, function (value) {
         if (value.title === 'cloudParticipants') {
-          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + cloudHeading + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></p></div>';
+          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + cloudHeading + ' ' + callsBallon + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></p></div>';
         } else if (value.title === 'onPremParticipants') {
-          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + onPremisesHeading + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <span class="graph-text"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></span></div>';
+          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + onPremisesHeading + ' ' + callsBallon + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <span class="graph-text"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></span></div>';
         }
         value.lineThickness = 2;
-        value.connect = true;
+        value.connect = false;
         tempData.push(value);
       });
       return tempData;

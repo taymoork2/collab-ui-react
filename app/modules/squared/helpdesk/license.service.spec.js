@@ -108,6 +108,15 @@ describe('LicenseService', function () {
     expect(license.id).toEqual('62b343df-bdd5-463b-8895-d07fc3a94832');
     expect(license.displayName).toEqual('onboardModal.paidMsg');
 
+    //Care
+    license = new LicenseService.UserLicense('CDC_92b343ef-bdd5-463b-8895-d07fc3a94833');
+    expect(license.offerCode).toBe('CDC');
+    expect(license.id).toBe('92b343ef-bdd5-463b-8895-d07fc3a94833');
+
+    license = new LicenseService.UserLicense('CVC_22b343ef-b5d5-463b-8895-d07fc3a94833');
+    expect(license.offerCode).toBe('CVC');
+    expect(license.id).toBe('22b343ef-b5d5-463b-8895-d07fc3a94833');
+
     // Meeting Center
     license = new LicenseService.UserLicense('MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com');
     expect(license.offerCode).toEqual('MC');

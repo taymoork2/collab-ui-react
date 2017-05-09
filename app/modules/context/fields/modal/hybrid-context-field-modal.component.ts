@@ -1,4 +1,3 @@
-require('./_field-modal.scss');
 import { Notification } from 'modules/core/notifications';
 import { ContextFieldsService } from 'modules/context/services/context-fields-service';
 
@@ -162,7 +161,7 @@ class FieldModalCtrl implements ng.IComponentController {
       });
   }
 
-  public buttonEnabled() {
+  public createOrSaveButtonEnabled() {
     return Boolean(!this.actionInProgress &&
       this.fieldData.id &&
       this.invalidCharactersValidation(this.fieldData.id) &&

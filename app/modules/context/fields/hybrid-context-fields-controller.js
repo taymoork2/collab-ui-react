@@ -8,7 +8,7 @@ require('./_fields-list.scss');
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, hasContextDictionaryEditFeatureToggle) {
+  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, Authinfo, hasContextDictionaryEditFeatureToggle) {
     var vm = this;
     var eventListeners = [];
 
@@ -116,7 +116,7 @@ require('./_fields-list.scss');
 
       var accessibleMap = {
         true: $translate.instant('context.dictionary.base'),
-        false: $translate.instant('context.dictionary.custom'),
+        false: Authinfo.getOrgName(),
       };
 
       field.publiclyAccessibleUI = accessibleMap[field.publiclyAccessible];
@@ -181,12 +181,12 @@ require('./_fields-list.scss');
                 var fieldCopy = processField(_.cloneDeep(updatedField));
                 _.fill(vm.fieldsList.allFields, fieldCopy, index, index + 1);
                 vm.gridOptions.data = vm.fieldsList.allFields;
+                //need to select the row to reopen the side panel to update the view of side panel
+                vm.gridApi.grid.modifyRows(vm.gridOptions.data);
+                vm.gridApi.selection.selectRow(vm.gridOptions.data[index]);
+                filterList(vm.searchStr);
               }
               vm.gridRefresh = false;
-              //need to select the row to reopen the side panel to update the view of side panel
-              vm.gridApi.grid.modifyRows(vm.gridOptions.data);
-              vm.gridApi.selection.selectRow(vm.gridOptions.data[index]);
-              filterList(vm.searchStr);
             },
           });
         });
