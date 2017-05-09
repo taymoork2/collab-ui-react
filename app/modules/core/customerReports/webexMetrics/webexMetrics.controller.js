@@ -244,8 +244,8 @@
       QlikService.getQlikInfos().then(function (qlikInfo) {
         var ticket = qlikInfo.ticket;
         //access app
-        vm.qlikWebexAppUrl = 'https://ds2-qlikdemo/custom/sense/app/2a4c2eb6-cc4f-4181-8ff7-c20ad389e292/sheet/vmNuum/state/analysis?QlikTicket=' + ticket;
-        vm.qlikSparkAppUrl = 'https://ds2-qlikdemo/custom/sense/app/43f0146d-94a1-4add-addd-a21213a5f5c4/sheet/KYmpu/state/analysis?QlikTicket=' + ticket;
+        vm.qlikWebexAppUrl = 'https://ds2-win2012-01/custom/sense/app/c6bb71ff-7f16-42f8-9694-6618a67f4640/sheet/vmNuum/state/analysis?QlikTicket=' + ticket;
+        vm.qlikSparkAppUrl = 'https://ds2-win2012-01/custom/sense/app/cc9c95d0-a16d-43ed-b89c-0f32b9f4a745/sheet/KYmpu/state/analysis?QlikTicket=' + ticket;
         updateIframe();
       });
     }

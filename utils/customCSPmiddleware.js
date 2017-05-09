@@ -31,6 +31,7 @@ module.exports = csp({
       'https://10.140.50.27',
       'http://127.0.0.1:8000',
       'https://ds2-qlikdemo',
+      'https://ds2-win2012-01',
     ],
     objectSrc: [
       'http://www.cisco.com', // Terms of Service
@@ -61,8 +62,8 @@ module.exports = csp({
       // Browser Sync:
       'ws://127.0.0.1:8000',
       'ws://localhost:8000',
-      'ws://127.0.0.1:8080',
-      'ws://localhost:8080',
+      'ws://127.0.0.1:8443',
+      'ws://localhost:8443',
       // Local Atlas Backend:
       'http://127.0.0.1:8080',
       'http://localhost:8080',
@@ -71,7 +72,7 @@ module.exports = csp({
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
       'https://*.clouddrive.com', // CSV download
       'https://bam.nr-data.net', // New Relic Browser
-      'http://10.194.245.72:8080',
+      'https://10.194.245.72:8443',
     ],
     fontSrc: [
       '\'self\'',
