@@ -37,38 +37,7 @@
     padding-top: 10px;
   }
 
-  .indented {
-    margin-left: 50px;
-  }
-
-  .info {
-    .info-header {
-      font-family: 'CiscoSansTT Thick', Helvetica;
-      font-size: 22px;
-    }
-
-    .data-item {
-      font-family: Consolas, 'Courier New';
-    }
-
-    .data-key {
-      font-weight: bold;
-    }
-  }
-
-  .no-click {
-    pointer-events: none;
-  }
-
   .right-5 {
     padding-left: 5px;
-  }
-
-  .sub-info {
-    margin-top: 50px;
-  }
-
-  .sync-stats {
-    min-width: 350px;
   }
 }
