@@ -109,4 +109,19 @@ describe('Component: privateTrunkDestination component', () => {
     let testAddress = 'ABC-test-123.com:5061';
     expect(this.controller.uniqueDomainValidation(testAddress)).toBeTruthy();
   });
+
+  it('invalidate SIP destination IP address input', function() {
+    let testAddress = '10.89.123.1:5061';
+    expect(this.controller.invalidCharactersValidation(testAddress)).toBeFalsy();
+  });
+
+  it('validate SIP destination domain with numeric input', function() {
+    let testAddress = 'aa10.aa.com:5061';
+    expect(this.controller.invalidCharactersValidation(testAddress)).toBeTruthy();
+  });
+
+  it('validate SIP destination domain part length not exceed 63', function() {
+    let testAddress = 'aaaa0123456789-0123456789-0123456789-0123456789-0123456789-012345.aa.com:5061';
+    expect(this.controller.invalidCharactersValidation(testAddress)).toBeFalsy();
+  });
 });

@@ -7249,7 +7249,7 @@
         },
         "error": {
           "invalidMaxLength": "Domain/SRV length cannot be more than {{max}}.",
-          "invalidChars": "Domain name is invalid.  It should have an extension and the allowed characters only. Allowed set is \"[a-z][A-Z][0-9]-.\"",
+          "invalidChars": "Domain name is invalid. It should have an extension and the allowed characters only. Allowed set is \"[a-z][A-Z][0-9]-.\"",
           "invalidPort": "Port can only range between {{min}} and {{max}}",
           "invalidUniqueEntry": "Duplicate entry, this SIP Destination address is already in use",
           "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found",
@@ -7289,7 +7289,7 @@
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",
         "destinationTitle": "Add SIP Destination",
         "destination": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
-        "destinationHelp": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
+        "destinationHelp": "Enter an SRV domain, domain:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipLabel": "Sip destination",
         "sip": "Enter Sip destination",
         "displayLabel": "Display name",

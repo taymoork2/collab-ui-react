@@ -126,7 +126,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 
   public invalidCharactersValidation(viewValue: string): boolean {
     let value = _.split(viewValue, ':', 2);
-    let regex = new RegExp(/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-])*[a-zA-Z0-9]\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/g);
+    let regex = new RegExp(/^(([a-zA-Z0-9\-]{1,63}[\.]))+([A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z])$/g);
     return regex.test(value[0]);
   }
 
