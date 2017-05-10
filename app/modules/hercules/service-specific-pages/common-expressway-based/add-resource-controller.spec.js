@@ -20,149 +20,158 @@ describe('Controller: AddResourceController', function () {
 
   function initController() {
     translateMock = {
-      instant: sinon.stub(),
+      instant: jasmine.createSpy('instant'),
     };
 
     modalInstanceMock = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
 
     windowMock = {
-      open: sinon.stub(),
+      open: jasmine.createSpy('open'),
     };
 
     hybridServicesExtrasServiceMock = {
-      addPreregisteredClusterToAllowList: sinon.stub().returns($q.resolve({})),
+      addPreregisteredClusterToAllowList: function () {
+        return $q.resolve({});
+      },
     };
 
     FmsOrgSettingsMock = {
-      get: sinon.stub().returns($q.resolve({
-        expresswayClusterReleaseChannel: 'stable',
-      })),
+      get: function () {
+        return $q.resolve({
+          expresswayClusterReleaseChannel: 'stable',
+        });
+      },
     };
-
     fusionClusterServiceMock = {
-      provisionConnector: sinon.stub().returns($q.resolve({
-        id: clusterIdOfNewCluster,
-      })),
-      preregisterCluster: sinon.stub().returns($q.resolve({
-        id: clusterIdOfNewCluster,
-      })),
-      getAll: sinon.stub().returns($q.resolve([{
-        url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d',
-        id: 'fe5acf7a-6246-484f-8f43-3e8c910fc50d',
-        name: 'Test Expressway Cluster 01 – starting with c_ucmc but no c_cal',
-        connectors: [{
-          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
-          id: 'c_cal@03C36F68',
-          connectorType: 'c_cal',
-          upgradeState: 'upgraded',
-          state: 'offline',
-          hostname: 'host1.example.org',
-          hostSerial: '03C36F68',
-          alarms: [],
-          runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
+      provisionConnector: function () {
+        return $q.resolve({
+          id: clusterIdOfNewCluster,
+        });
+      },
+      preregisterCluster: function () {
+        return $q.resolve({
+          id: clusterIdOfNewCluster,
+        });
+      },
+      getAll: function () {
+        return $q.resolve([{
+          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d',
+          id: 'fe5acf7a-6246-484f-8f43-3e8c910fc50d',
+          name: 'Test Expressway Cluster 01 – starting with c_ucmc but no c_cal',
+          connectors: [{
+            url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
+            id: 'c_cal@03C36F68',
+            connectorType: 'c_cal',
+            upgradeState: 'upgraded',
+            state: 'offline',
+            hostname: 'host1.example.org',
+            hostSerial: '03C36F68',
+            alarms: [],
+            runningVersion: '8.7-1.0.2966',
+            packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
+          }, {
+            url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_mgmt@03C36F68',
+            id: 'c_mgmt@03C36F68',
+            connectorType: 'c_mgmt',
+            upgradeState: 'upgraded',
+            state: 'offline',
+            hostname: 'host1.example.org',
+            hostSerial: '03C36F68',
+            alarms: [],
+            runningVersion: '8.7-1.0.2966',
+            packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt',
+          }],
+          state: 'fused',
+          releaseChannel: 'stable',
+          provisioning: [{
+            connectorType: 'c_mgmt',
+          }, {
+            connectorType: 'c_ucmc',
+          }],
+          targetType: 'c_mgmt',
+          servicesStatuses: [{
+            serviceId: 'squared-fusion-uc',
+            state: {
+              name: 'offline',
+              severity: 3,
+              label: 'error',
+            },
+          }],
         }, {
-          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_mgmt@03C36F68',
-          id: 'c_mgmt@03C36F68',
-          connectorType: 'c_mgmt',
-          upgradeState: 'upgraded',
-          state: 'offline',
-          hostname: 'host1.example.org',
-          hostSerial: '03C36F68',
-          alarms: [],
-          runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt',
-        }],
-        state: 'fused',
-        releaseChannel: 'stable',
-        provisioning: [{
-          connectorType: 'c_mgmt',
+          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/6f090d26-0d32-11e6-bda1-005056001268',
+          id: '6f090d26-0d32-11e6-bda1-005056001268',
+          name: 'Test Expressway Cluster 02 – starting with both c_ucmc and c_cal',
+          connectors: [{
+            url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
+            id: 'c_cal@03C36F68',
+            connectorType: 'c_cal',
+            upgradeState: 'upgraded',
+            state: 'offline',
+            hostname: 'both.example.org',
+            hostSerial: '0C379CB8',
+            alarms: [],
+            runningVersion: '8.7-1.0.2966',
+            packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
+          }],
+          state: 'fused',
+          releaseChannel: 'stable',
+          provisioning: [{
+            connectorType: 'c_cal',
+          }, {
+            connectorType: 'c_ucmc',
+          }],
+          targetType: 'c_mgmt',
+          servicesStatuses: [{
+            serviceId: 'squared-fusion-uc',
+            state: {
+              name: 'offline',
+              severity: 3,
+              label: 'error',
+            },
+          }, {
+            serviceId: 'squared-fusion-cal',
+            state: {
+              name: 'offline',
+              severity: 3,
+              label: 'error',
+            },
+          }],
         }, {
-          connectorType: 'c_ucmc',
-        }],
-        targetType: 'c_mgmt',
-        servicesStatuses: [{
-          serviceId: 'squared-fusion-uc',
-          state: {
-            name: 'offline',
-            severity: 3,
-            label: 'error',
-          },
-        }],
-      }, {
-        url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/6f090d26-0d32-11e6-bda1-005056001268',
-        id: '6f090d26-0d32-11e6-bda1-005056001268',
-        name: 'Test Expressway Cluster 02 – starting with both c_ucmc and c_cal',
-        connectors: [{
-          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
-          id: 'c_cal@03C36F68',
-          connectorType: 'c_cal',
-          upgradeState: 'upgraded',
-          state: 'offline',
-          hostname: 'both.example.org',
-          hostSerial: '0C379CB8',
-          alarms: [],
-          runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
-        }],
-        state: 'fused',
-        releaseChannel: 'stable',
-        provisioning: [{
-          connectorType: 'c_cal',
-        }, {
-          connectorType: 'c_ucmc',
-        }],
-        targetType: 'c_mgmt',
-        servicesStatuses: [{
-          serviceId: 'squared-fusion-uc',
-          state: {
-            name: 'offline',
-            severity: 3,
-            label: 'error',
-          },
-        }, {
-          serviceId: 'squared-fusion-cal',
-          state: {
-            name: 'offline',
-            severity: 3,
-            label: 'error',
-          },
-        }],
-      }, {
-        url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/2a394f17-bf73-4f01-a29e-eee22df86615',
-        id: '2a394f17-bf73-4f01-a29e-eee22df86615',
-        name: 'Test Expressway Cluster 03 – starting with c_cal and no c_ucmc',
-        connectors: [{
-          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
-          id: 'c_cal@03C36F68',
-          connectorType: 'c_cal',
-          upgradeState: 'upgraded',
-          state: 'offline',
-          hostname: 'calendar.example.org',
-          hostSerial: '55379CB8',
-          alarms: [],
-          runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
-        }],
-        state: 'fused',
-        releaseChannel: 'stable',
-        provisioning: [{
-          connectorType: 'c_mgmt',
-        }, {
-          connectorType: 'c_cal',
-        }],
-        targetType: 'c_mgmt',
-        servicesStatuses: [{
-          serviceId: 'squared-fusion-cal',
-          state: {
-            name: 'offline',
-            severity: 3,
-            label: 'error',
-          },
-        }],
-      }])),
+          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/2a394f17-bf73-4f01-a29e-eee22df86615',
+          id: '2a394f17-bf73-4f01-a29e-eee22df86615',
+          name: 'Test Expressway Cluster 03 – starting with c_cal and no c_ucmc',
+          connectors: [{
+            url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
+            id: 'c_cal@03C36F68',
+            connectorType: 'c_cal',
+            upgradeState: 'upgraded',
+            state: 'offline',
+            hostname: 'calendar.example.org',
+            hostSerial: '55379CB8',
+            alarms: [],
+            runningVersion: '8.7-1.0.2966',
+            packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
+          }],
+          state: 'fused',
+          releaseChannel: 'stable',
+          provisioning: [{
+            connectorType: 'c_mgmt',
+          }, {
+            connectorType: 'c_cal',
+          }],
+          targetType: 'c_mgmt',
+          servicesStatuses: [{
+            serviceId: 'squared-fusion-cal',
+            state: {
+              name: 'offline',
+              severity: 3,
+              label: 'error',
+            },
+          }],
+        }]);
+      },
     };
 
     spyOn(ResourceGroupService, 'getAllAsOptions').and.returnValue($q.resolve({}));
