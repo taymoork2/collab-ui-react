@@ -7232,9 +7232,9 @@
         },
         "error": {
           "invalidMaxLength": "Domain/SRV length cannot be more than {{max}}.",
-          "invalidChars": "Invalid character is not allowed in address domain. Allowed set is \"[a-z] [A-Z] [0-9]_-.\"",
+          "invalidChars": "Domain name is invalid.  It should have an extension and the allowed characters only. Allowed set is \"[a-z][A-Z][0-9]-.\"",
           "invalidPort": "Port can only range between {{min}} and {{max}}",
-          "invalidUniqueEntry": "This SIP Destination address already exists",
+          "invalidUniqueEntry": "Duplicate entry, this SIP Destination address is already in use",
           "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found",
           "resourceError": "Add Private trunk resource error",
           "privateTrunkError": "Add Private trunk Domain error",
