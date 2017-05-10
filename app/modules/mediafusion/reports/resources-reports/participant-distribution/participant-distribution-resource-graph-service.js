@@ -149,16 +149,19 @@
 
       if (!isDummy && clusterSelected === vm.allClusters) {
         graphs.push({
-          'title': 'None',
+          'title': 'All Off',
           'id': 'none',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000',
+          'bullet': 'none',
+          'bulletSize': 0,
+          'lineColor': 'transparent',
         });
       }
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
       chartData.chartCursor.balloonPointerOrientation = 'vertical';
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
+      if (chartData.graphs[0].lineColor == '#D7D7D8') {
+        chartData.legend.color = '#343537';
+      }
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
 
@@ -223,17 +226,17 @@
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.title === 'None') {
-        evt.dataItem.title = 'All';
+      if (evt.dataItem.title === 'All Off') {
+        evt.dataItem.title = 'All On';
         _.each(evt.chart.graphs, function (graph) {
-          if (graph.title != 'All') {
+          if (graph.title != 'All On') {
             evt.chart.hideGraph(graph);
           } else {
             evt.chart.showGraph(graph);
           }
         });
-      } else if (evt.dataItem.title === 'All') {
-        evt.dataItem.title = 'None';
+      } else if (evt.dataItem.title === 'All On') {
+        evt.dataItem.title = 'All Off';
         _.each(evt.chart.graphs, function (graph) {
           evt.chart.showGraph(graph);
         });
