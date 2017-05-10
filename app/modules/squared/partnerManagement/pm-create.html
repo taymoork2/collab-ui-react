@@ -16,7 +16,7 @@
                 <div class="medium-8">
                     <form name="createForm">
                         <input cs-input class="form-control" name="name"
-                            ng-model="vm.data.name" cs-input-label="{{'partnerManagement.search.name' | translate}}"
+                            ng-model="vm.data.name" cs-input-label="{{::'partnerManagement.search.name' | translate}}"
                             cs-input-messages="vm.messages" required
                             ng-blur="createForm.confirmName.$validate()"
                             validate-unused={{createForm.name.$viewValue}}>
@@ -24,7 +24,7 @@
                         <input cs-input name="confirmName" class="form-control"
                             ng-model="vm.data.confirmName"
                             ng-model-options="{updateOn: 'default blur', debounce: {default: 800, blur: 0}}"
-                            cs-input-label="{{'partnerManagement.search.confirmName' | translate}}"
+                            cs-input-label="{{::'partnerManagement.search.confirmName' | translate}}"
                             cs-input-messages="vm.messages" required validate-match="{{createForm.name.$viewValue}}">
 
                         <label translate="partnerManagement.create.type"></label>
@@ -33,7 +33,7 @@
 
                         <div id="lifeCycleDiv">
                             <input cs-input type="checkbox" id="lifeCycle" ng-model="vm.data.lifeCyclePartner"
-                            cs-input-label="{{'partnerManagement.create.lifeCycleCB' | translate}}">
+                            cs-input-label="{{::'partnerManagement.create.lifeCycleCB' | translate}}">
                         </div>
                     </form>
                 </div>

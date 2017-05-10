@@ -9,16 +9,17 @@
         <div class="medium-6">
             <form name="searchForm">
                 <input cs-input class="form-control" type="email" name="email"
-                    placeholder="{{'partnerManagement.exampleEmail' | translate}}"
-                    ng-model="vm.data.email" cs-input-label="{{'partnerManagement.search.email' | translate}}"
+                    placeholder="{{::'partnerManagement.exampleEmail' | translate}}"
+                    ng-model="vm.data.email"
+                    cs-input-label="{{::'partnerManagement.search.email' | translate}}"
                     cs-input-messages="vm.messages" required
                     ng-blur="searchForm.confirmEmail.$validate()">
 
                 <input cs-input name="confirmEmail" class="form-control"
-                    placeholder="{{'partnerManagement.exampleEmail' | translate}}"
+                    placeholder="{{::'partnerManagement.exampleEmail' | translate}}"
                     ng-model="vm.data.confirmEmail"
                     ng-model-options="{updateOn: 'default blur', debounce: {default: 800, blur: 0}}"
-                    cs-input-label="{{'partnerManagement.search.confirmEmail' | translate}}"
+                    cs-input-label="{{::'partnerManagement.search.confirmEmail' | translate}}"
                     cs-input-messages="vm.messages" required validate-match="{{searchForm.email.$viewValue}}">
             </form>
         </div>
