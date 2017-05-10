@@ -123,6 +123,7 @@
     vm.hideoptionalvmHelpText = false;
     vm.loadMediaOnHold = loadMediaOnHold;
     vm.mediaOnHoldOptions = [];
+    vm.isSavingInternalNumberRange = false;
 
     vm.model = {
       site: {
@@ -404,7 +405,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions && !_.isUndefined(scope.model.uuid);
+                  return !_.isUndefined(scope.model.uuid) || vm.isSavingInternalNumberRange;
                 },
                 'templateOptions.isWarn': vm.steerDigitOverLapValidation,
                 'templateOptions.minlength': function () {
@@ -458,7 +459,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions && !_.isUndefined(scope.model.uuid);
+                  return !_.isUndefined(scope.model.uuid) || vm.isSavingInternalNumberRange;
                 },
                 'data.validate': function (viewValue, modelValue, scope) {
                   return scope.fc && scope.fc.$validate();
@@ -512,7 +513,7 @@
           },
         },
         hideExpression: function () {
-          if (vm.model.displayNumberRanges.length > 19) {
+          if (vm.model.displayNumberRanges.length > 19 || vm.extensionLengthChanged) {
             return true;
           } else {
             return vm.hideFieldInternalNumberRange;
@@ -1766,6 +1767,7 @@
     function saveInternalNumberRanges() {
       return $q.resolve(true)
         .then(function () {
+          vm.isSavingInternalNumberRange = true;
           var promises = [];
           var hasNewInternalNumberRange = false;
 
@@ -1801,6 +1803,7 @@
 
           return $q.all(promises)
             .finally(function () {
+              vm.isSavingInternalNumberRange = false;
               if (hasNewInternalNumberRange) {
                 loadInternalNumbers()
                   .then(function () {
@@ -2093,6 +2096,7 @@
         })
         .finally(function () {
           vm.processing = false;
+          vm.extensionLengthChanged = false;
           vm.previousModel.companyVoicemail.companyVoicemailEnabled = vm.model.companyVoicemail.companyVoicemailEnabled;
           var existingCompanyVoicemailEnabled = savedModel.companyVoicemail.companyVoicemailEnabled;
           savedModel = _.cloneDeep(vm.model);
