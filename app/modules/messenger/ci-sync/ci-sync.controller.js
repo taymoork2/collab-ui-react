@@ -46,6 +46,20 @@
     vm.usrDisTooltip = $translate.instant(translatePrefix + 'usrDisTooltip');
     vm.usrDelTooltip = $translate.instant(translatePrefix + 'usrDelTooltip');
 
+    vm.subSections = {};
+    vm.subSections.orgInfo = {
+      title: $translate.instant(translatePrefix + 'orgInfoSection.sectionTitle'),
+      description: $translate.instant(translatePrefix + 'orgInfoSection.sectionDescr'),
+      subsectionLabel: '',
+      subsectionDescription: '',
+    };
+    vm.subSections.options = {
+      title: $translate.instant(translatePrefix + 'optionsSection.sectionTitle'),
+      description: $translate.instant(translatePrefix + 'optionsSection.sectionDescr'),
+      subsectionLabel: '',
+      subsectionDescription: '',
+    };
+
     vm.syncInfo = {
       messengerOrgName: 'Unknown',
       messengerOrgId: 'Unknown',
@@ -71,6 +85,7 @@
     vm.refreshStatus = refreshStatus;
     vm.setOrgAdmin = setOrgAdmin;
     vm.setOpsAdmin = setOpsAdmin;
+    vm.setSyncInfoProperty = setSyncInfoProperty;
 
     init();
 
@@ -219,6 +234,15 @@
             getSyncStatus();
           });
       }
+    }
+
+    function setSyncInfoProperty(propName, value) {
+      // only a previously defined property can be updated
+      if (_.isNil(_.get(vm, propName))) {
+        return;
+      }
+
+      _.set(vm, propName, value);
     }
   }
 })();

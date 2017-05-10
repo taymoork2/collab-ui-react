@@ -6106,6 +6106,17 @@
     "deleteNumberTextBYOP": "The number will be returned to you immediately"
   },
   "messengerCiSync": {
+    "orgInfoSection": {
+      "sectionTitle": "Organization Information",
+      "sectionDescr": "View information about this WebEx Messenger Organization.",
+      "name": "Name",
+      "id": "ID",
+      "linkDate": "Link Date"
+    },
+    "optionsSection": {
+      "sectionTitle": "Options",
+      "sectionDescr": "Control how WebEx Messenger works with Cisco Spark."
+    },
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
     "authRedirectTooltip": "If enabled, users will login to Common Identity. If disabled, users will login to Messenger.",
     "pwdSyncHeading": "Sync Passwords From Messenger",

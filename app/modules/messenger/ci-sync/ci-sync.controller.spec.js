@@ -21,13 +21,16 @@
       $controller = _$controller_;
     }));
 
+    afterEach(function () {
+      ctrl = $scope = $q = $controller = Authinfo = Notification = CiService = SyncService = undefined;
+    });
+
     function initController() {
       ctrl = $controller('CiSyncCtrl');
       $scope.$apply();
     }
 
     describe('Initialization Tests', function () {
-
       beforeEach(function () {
         spyOn(CiService, 'getCiAdmins');
         spyOn(CiService, 'getCiNonAdmins');
@@ -151,7 +154,47 @@
         expect(Notification.error).toHaveBeenCalledWith('messengerCiSync.errorAuthFailedmessengerCiSync.errorFailedCheckingOrgInManagedOrgs');
         expect(ctrl.adminType).toBe(ctrl.adminTypes.UNKNOWN);
       });
+    });
 
+    describe('helper functions:', function () {
+      it('should set "syncInfo.*" properties only if they are already predefined on the controller', function () {
+        initController();
+        ctrl.setSyncInfoProperty('syncInfo.messengerOrgName', 'fake-org-name');
+        expect(ctrl.syncInfo.messengerOrgName).toBe('fake-org-name');
+
+        ctrl.setSyncInfoProperty('syncInfo.messengerOrgId', 'fake-org-id');
+        expect(ctrl.syncInfo.messengerOrgId).toBe('fake-org-id');
+
+        ctrl.setSyncInfoProperty('syncInfo.linkDate', 'fake-link-date');
+        expect(ctrl.syncInfo.linkDate).toBe('fake-link-date');
+
+        ctrl.setSyncInfoProperty('syncInfo.isAuthRedirect', true);
+        expect(ctrl.syncInfo.isAuthRedirect).toBe(true);
+
+        ctrl.setSyncInfoProperty('syncInfo.isSyncEnabled', true);
+        expect(ctrl.syncInfo.isSyncEnabled).toBe(true);
+
+        ctrl.setSyncInfoProperty('syncInfo.isMessengerSyncRawMode', true);
+        expect(ctrl.syncInfo.isMessengerSyncRawMode).toBe(true);
+
+        ctrl.setSyncInfoProperty('syncInfo.isNewDataFormat', true);
+        expect(ctrl.syncInfo.isNewDataFormat).toBe(true);
+
+        ctrl.setSyncInfoProperty('syncInfo.isPwdSync', true);
+        expect(ctrl.syncInfo.isPwdSync).toBe(true);
+
+        ctrl.setSyncInfoProperty('syncInfo.isSparkEnt', true);
+        expect(ctrl.syncInfo.isSparkEnt).toBe(true);
+
+        ctrl.setSyncInfoProperty('syncInfo.isUsrDis', true);
+        expect(ctrl.syncInfo.isUsrDis).toBe(true);
+
+        ctrl.setSyncInfoProperty('syncInfo.isUsrDel', true);
+        expect(ctrl.syncInfo.isUsrDel).toBe(true);
+
+        ctrl.setSyncInfoProperty('syncInfo.fakeNewProperty', true);
+        expect(ctrl.syncInfo.fakeNewProperty).toBe(undefined);
+      });
     });
   });
 })();
