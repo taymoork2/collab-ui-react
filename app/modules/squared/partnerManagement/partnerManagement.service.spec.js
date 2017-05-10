@@ -9,6 +9,11 @@ describe('PartnerManagementService:', function () {
   var email = 'test@cisco.com';
   var org = 'test_org';
 
+  // Until we have a real solution to GC issues...
+  afterAll(function () {
+    svc = UrlConfig = $httpBackend = $sanitize = email = org = undefined;
+  });
+
   beforeEach(angular.mock.module('Squared'));
 
   beforeEach(inject(function (_$httpBackend_, _$sanitize_, _PartnerManagementService_, _UrlConfig_) {
@@ -50,6 +55,9 @@ describe('PartnerManagementService:', function () {
       postedData).respond(200);
     svc.create(data);
     $httpBackend.flush();
+
+    // Until we have a real solution to GC issues...
+    data = postedData = null;
   });
 
   it('should confirm getOrgDetails is making proper GET', function () {

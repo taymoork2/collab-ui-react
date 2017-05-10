@@ -12,11 +12,11 @@
 
     svc.create = function (data) {
       var postData = {
-        'partnerOrgName': data.name,
-        'partnerAdminEmail': data.email,
-        'partnerType': data.partnerType.value,
-        'isPartner': true,
-        'isLifecyclePartner': ((data.lifeCyclePartner === true) ? 'true' : 'false'),
+        partnerOrgName: data.name,
+        partnerAdminEmail: data.email,
+        partnerType: data.partnerType.value,
+        isPartner: true,
+        isLifecyclePartner: ((data.lifeCyclePartner === true) ? 'true' : 'false'),
       };
 
       var deferred = $q.defer();

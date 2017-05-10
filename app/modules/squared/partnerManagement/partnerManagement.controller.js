@@ -52,8 +52,8 @@ require('./partnerManagement.scss');
         switch (resp.status) {
           case 200:
             switch (resp.data.orgMatchBy) {
-              case "EMAIL_ADDRESS":
-              case "DOMAIN_CLAIMED":
+              case 'EMAIL_ADDRESS':
+              case 'DOMAIN_CLAIMED':
                 vm.data.emailMatch = resp.data.organizations[0];
                 vm.data.name = vm.data.emailMatch.displayName;
                 getOrgDetails(vm.data.emailMatch.orgId);
@@ -61,12 +61,12 @@ require('./partnerManagement.scss');
                   'partnerManagement.orgExists' : 'partnerManagement.orgClaimed');
                 break;
 
-              case "DOMAIN":
+              case 'DOMAIN':
                 vm.data.domainMatches = resp.data.organizations;
                 $state.go('partnerManagement.searchResults');
                 break;
 
-              case "NO_MATCH":
+              case 'NO_MATCH':
                 $state.go('partnerManagement.create');
                 break;
 

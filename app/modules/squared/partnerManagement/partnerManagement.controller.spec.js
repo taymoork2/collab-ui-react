@@ -12,6 +12,10 @@ describe('PartnerManagementController:', function () {
   var $state;
   var ctrl;
   var Notification;
+  // Until we have a real solution to GC issues...
+  afterAll(function () {
+    $controller = $q = $scope = svc = $state = ctrl = Notification = undefined;
+  });
 
   beforeEach(inject (function (_$controller_, _$q_, _$rootScope_, _$state_,
     _Notification_, _PartnerManagementService_) {
@@ -45,38 +49,38 @@ describe('PartnerManagementController:', function () {
 
   function makeOrgDetails() {
     return {
-      "orgId": "123",
-      "numOfSubscription": 1,
-      "numOfManagedOrg": 2,
-      "numOfUsers": 3,
-      "overMaxUserQuerySize": true,
-      "createdDate": "2015-06-05T20:31:08.925Z",
-      "claimedDomains": [
-        "adomain.na", "cdomain.na", "bdomain.na",
+      orgId: '123',
+      numOfSubscription: 1,
+      numOfManagedOrg: 2,
+      numOfUsers: 3,
+      overMaxUserQuerySize: true,
+      createdDate: '2015-06-05T20:31:08.925Z',
+      claimedDomains: [
+        'adomain.na', 'cdomain.na', 'bdomain.na',
       ],
-      "fullAdmins": [
+      fullAdmins: [
         {
-          "firstName": "Abe",
-          "lastName": "Adams",
-          "displayName": "Abe Adams",
-          "primaryEmail": "abe@cisco.na"
+          firstName: 'Abe',
+          lastName: 'Adams',
+          displayName: 'Abe Adams',
+          primaryEmail: 'abe@cisco.na'
         },
         {
-          "lastName": "Collaboration",
-          "displayName": "Collab",
-          "primaryEmail": "collab@cisco.na"
+          lastName: 'Collaboration',
+          displayName: 'Collab',
+          primaryEmail: 'collab@cisco.na'
         },
         {
-          "firstName": "Charlie",
-          "lastName": "Charms",
-          "displayName": "Charlie Charms",
-          "primaryEmail": "charlie@cisco.na"
+          firstName: 'Charlie',
+          lastName: 'Charms',
+          displayName: 'Charlie Charms',
+          primaryEmail: 'charlie@cisco.na'
         },
         {
-          "firstName": "Betty",
-          "lastName": "Burns",
-          "displayName": "Betty Burns",
-          "primaryEmail": "betty@cisco.na"
+          firstName: 'Betty',
+          lastName: 'Burns',
+          displayName: 'Betty Burns',
+          primaryEmail: 'betty@cisco.na'
         },
       ]
     };
@@ -108,6 +112,8 @@ describe('PartnerManagementController:', function () {
       expect(JSON.stringify(d) === JSON.stringify($scope.vm.data)).toBe(false);
       $scope.vm.startOver();
       expect(JSON.stringify(d) === JSON.stringify($scope.vm.data)).toBe(true);
+      // Until we have a real solution to GC issues...
+      d = undefined;
     });
 
     // SEARCH API

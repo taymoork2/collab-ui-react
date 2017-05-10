@@ -99,12 +99,8 @@ require('./_support.scss');
     }
 
     function isPartnerManagementRole(roleArray) {
-      if (Array.isArray(roleArray)) {
-        if (roleArray.indexOf('atlas-portal.cisco.partnermgmt') >= 0) {
-          return true;
-        }
-      }
-      return false;
+      return Array.isArray(roleArray) &&
+        (roleArray.indexOf('atlas-portal.cisco.partnermgmt') >= 0);
     }
 
     $scope.showHelpdeskLink = function () {
