@@ -33,7 +33,9 @@
                     ng-change="$ctrl.changeDestination({{$index}})"
                     ng-required="true"
                     cs-input-validators="$ctrl.validators"
+                    cs-input-async-validators="$ctrl.asyncValidators"
                     cs-input-messages="$ctrl.errorMessages.newAddress"
+                    ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
                     is-disabled= "$ctrl.destinationRadio!=='new'">
                 </div>
                 <div class="columns medium-5 large-5 small-5">
