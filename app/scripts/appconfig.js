@@ -2163,26 +2163,14 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gmTdNumbers', {
-            data: {},
-            parent: 'largepanel',
-            views: {
-              'sidepanel@': { template: '<gm-td-numbers></gm-td-numbers>' },
-              'header@gmTdNumbers': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
-            },
-          })
           .state('gmTdDetails', {
             data: {},
             params: { info: {} },
             parent: 'sidepanel',
             views: {
               'sidepanel@': { template: '<gm-td-details></gm-td-details>' },
-              'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' } },
-          })
-          .state('gmTdDetails.numbersView', {
-            onEnter: SidePanelLargeOpen,
-            onExit: SidePanelLargeClose,
-            template: '<gm-td-numbers-view></gm-td-numbers-view>',
+              'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
+            },
           })
           .state('gmTdDetails.sites', {
             params: { data: {} },
@@ -2191,6 +2179,20 @@
           .state('gmTdDetails.notes', {
             template: '<gm-td-notes></gm-td-notes>',
             params: { obj: {} },
+          })
+          .state('gmTdNumbersRequest', {
+            data: {},
+            params: { info: {} },
+            parent: 'largepanel',
+            views: {
+              'sidepanel@': { template: '<gm-td-numbers></gm-td-numbers>' },
+              'header@gmTdNumbersRequest': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
+            },
+          })
+          .state('gmTdDetails.gmTdNumbers', {
+            template: '<gm-td-numbers></gm-td-numbers>',
+            onEnter: SidePanelLargeOpen,
+            onExit: SidePanelLargeClose,
           })
           .state('gemCbgDetails', {
             data: {},

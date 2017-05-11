@@ -19,8 +19,8 @@ class GmTdNotesView implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(private gemService,
+                     private $scope: ng.IScope,
                      private Notification: Notification,
-                     private $stateParams: ng.ui.IStateParamsService,
                      private $translate: ng.translate.ITranslateService,
                      private TelephonyDomainService: TelephonyDomainService,
   ) {
@@ -28,8 +28,8 @@ class GmTdNotesView implements ng.IComponentController {
     this.customerId = currentTD.customerId;
     this.ccaDomainId = currentTD.ccaDomainId;
 
-    if (_.has(this.$stateParams, 'info.notes')) {
-      this.model = _.get(this.$stateParams, 'info.notes', []);
+    this.model = this.gemService.getStorage('currentTdNotes');
+    if (this.model && this.model.length) {
       this._getDataFromHttp = false;
     }
   }
@@ -56,8 +56,8 @@ class GmTdNotesView implements ng.IComponentController {
     };
 
     let notes = _.get(postData, 'objectName');
-    if (this.getByteLength(notes) > GmTdNotesView.MAX_LENGTH_NOTE) {
-      this.Notification.error(this.$translate.instant('gemini.cbgs.notes.errorMsg.maxLength'));
+    if (this.gemService.getByteLength(notes) > GmTdNotesView.MAX_LENGTH_NOTE) {
+      this.Notification.error('gemini.cbgs.notes.errorMsg.maxLength', { maxLength: GmTdNotesView.MAX_LENGTH_NOTE });
       return;
     }
 
@@ -81,25 +81,9 @@ class GmTdNotesView implements ng.IComponentController {
         this.displayCount = this.model.length;
       }
       this.newNote = '';
+      this.$scope.$$childTail.$$childTail.noteForm.$setPristine();
+      this.$scope.$emit('detailWatch', { notes: this.model });
     });
-  }
-
-  private getByteLength(str) {
-    let totalLength = 0;
-    let charCode;
-    for (let i = 0; i < str.length; i++) {
-      charCode = str.charCodeAt(i);
-      if (charCode < 0x007f) {
-        totalLength = totalLength + 1;
-        /* istanbul ignore if */
-      } else if ((0x0080 <= charCode) && (charCode <= 0x07ff)) {
-        totalLength += 2;
-        /* istanbul ignore else */
-      } else if ((0x0800 <= charCode) && (charCode <= 0xffff)) {
-        totalLength += 3;
-      }
-    }
-    return totalLength;
   }
 
   private getNotes() {

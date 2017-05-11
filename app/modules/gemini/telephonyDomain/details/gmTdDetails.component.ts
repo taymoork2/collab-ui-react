@@ -1,18 +1,18 @@
-import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
 
 class GmtdDetails implements ng.IComponentController {
 
   public model;
+
   public remedyTicket;
   public customerId: string;
   public ccaDomainId: string;
   public domainName: string;
   public totalSites: number;
-  public panelTitle: string;
   public tds: any[] = [];
   public notes: any[] = [];
+  public isEdit: boolean = false;
   public allHistories: any[] = [];
   public histories: any[] = [];
   public hisLoading: boolean = true;
@@ -20,14 +20,16 @@ class GmtdDetails implements ng.IComponentController {
   public showHistoriesNum: number = 5;
   public loading: boolean = true;
   public remedyTicketLoading: boolean = true;
+  public telephonyNumberList: any [] = [];
+
   /* @ngInject */
   public constructor(
+    private $state,
+    private $modal,
     private gemService,
     private $scope: ng.IScope,
     private Notification: Notification,
     private $window: ng.IWindowService,
-    private $state: ng.ui.IStateService,
-    private $modal: IToolkitModalService,
     private $rootScope: ng.IRootScopeService,
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
@@ -37,63 +39,70 @@ class GmtdDetails implements ng.IComponentController {
     this.customerId = _.get(this.$stateParams, 'info.customerId', '');
     this.ccaDomainId = _.get(this.$stateParams, 'info.ccaDomainId', '');
     this.domainName = _.get(this.$stateParams, 'info.domainName', '');
-    this.panelTitle = this.domainName;
   }
 
   public $onInit(): void {
-    this.listenNotesUpdated();
-    this.listenSitesUpdated();
-
     this.getDetails();
     this.getNotes();
     this.getHistories();
     this.getRemedyTicket();
+    this.getCountries();
+    const deregister = this.$scope.$on('detailWatch', (_event, data) => {
+      _event.preventDefault();
+      this.isEdit = data.isEdit;
+      this.notes  = data.notes || this.notes;
+      this.domainName = data.domainName || this.domainName;
+      this.totalSites = data.sitesLength || this.totalSites;
+      if (data.isLoadingHistories) {
+        this.getHistories();
+      }
+    });
+    this.$scope.$on('$destroy', deregister);
     this.$state.current.data.displayName = this.$translate.instant('gemini.cbgs.overview');
   }
 
-  public onSeeAllPhoneHumbers() {
-    let data = this.model || {};
-    data.customerId = this.customerId;
-    data.ccaDomainId = this.ccaDomainId;
-    this.gemService.setStorage('currentTelephonyDomain', data);
-    this.$state.go('gmTdDetails.numbersView');
-  }
+  public onEditTD() {
+    let region = this.gemService.getStorage('currentTelephonyDomain').region;
 
-  private listenNotesUpdated(): void {
-    let deregister = this.$rootScope.$on('tdNotesUpdated', (event, data) => {
-      event.preventDefault();
-      this.notes = data;
-    });
-    this.$scope.$on('$destroy', deregister);
-  }
+    this.$modal.open({
+      type: 'full',
+      template: '<gm-td-modal-request dismiss="$dismiss()" close="$close()" class="new-field-modal"></gm-td-modal-request>',
+    }).result.then(() => {
+      const currentTD = this.gemService.getStorage('currentTelephonyDomain');
+      this.domainName = currentTD.domainName || '';
 
-  private listenSitesUpdated(): void {
-    let deregister = this.$rootScope.$on('tdSitesUpdated', (event, data) => {
-      event.preventDefault();
-      this.totalSites = data.length;
+      if (!_.isEqual(region, currentTD.region)) {
+        this.$scope.$broadcast('regionUpdated');
+      }
     });
-    this.$scope.$on('$destroy', deregister);
   }
 
   private getDetails() {
     this.TelephonyDomainService.getTelephonyDomain(this.customerId, this.ccaDomainId)
       .then((res) => {
         if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('error'); //TODO Wording
+          this.Notification.error('gemini.errorCode.loadError');
           return;
         }
 
+        const DATA_STATUS = this.gemService.getNumberStatus();
+
         this.model = _.get(res, 'content.data.body');
         this.model.domainName = this.model.telephonyDomainName || this.model.domainName;
+        this.domainName = this.model.domainName;
         this.totalSites = this.model.telephonyDomainSites.length;
         this.model.status_ = (this.model.status ? this.$translate.instant('gemini.cbgs.field.status.' + this.model.status) : '');
-        _.forEach(this.model.telephonyNumberList, (item) => {
+
+        this.telephonyNumberList = _.filter(this.model.telephonyNumberList, (item: any) => { return _.toNumber(item.compareToSuperadminPhoneNumberStatus) !== DATA_STATUS.DELETED; });
+        _.forEach(this.telephonyNumberList, (item) => {
           this.getToll(item);
         });
 
-        let status = this.model.status;
-        this.model.isShowReject = status === 'R';
-        this.model.isShowCancelSubmission = (this.gemService.isServicePartner() && (status === 'S'));
+        const status = this.model.status;
+        const TD_STATUS = this.gemService.getTdStatus();
+        this.model.isShowReject = (status === TD_STATUS.REJECTED);
+        this.model.isShowCancelSubmission = (this.gemService.isServicePartner() && (status === TD_STATUS.SUBMITTED));
+        this.model.isEdit = !(status === TD_STATUS.SUBMITTED || status === TD_STATUS.APPROVED || status === TD_STATUS.FAILED);
 
         this.loading = false;
       })
@@ -116,10 +125,26 @@ class GmtdDetails implements ng.IComponentController {
           this.remedyTicket = remedyTicket;
           this.remedyTicketLoading = false;
         }
-      })
-      .catch((err) => {
-        this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
       });
+  }
+
+  private getCountries(): void {
+    let countryOptions: any = this.gemService.getStorage('countryOptions') || [];
+    let countryId2NameMapping: any = this.gemService.getStorage('countryId2NameMapping') || {};
+    let countryName2IdMapping: any = this.gemService.getStorage('countryName2IdMapping') || {};
+    if (countryOptions.length === 0) {
+      this.TelephonyDomainService.getCountries().then((res: any) => {
+        _.forEach(_.get(res, 'content.data'), (item: any) => {
+          countryId2NameMapping[item.countryId] = item.countryName;
+          countryName2IdMapping[item.countryName] = item.countryId;
+          countryOptions.push({ label: item.countryName, value: item.countryId });
+        });
+      });
+
+      this.gemService.setStorage('countryId2NameMapping', countryId2NameMapping);
+      this.gemService.setStorage('countryName2IdMapping', countryName2IdMapping);
+      this.gemService.setStorage('countryOptions', countryOptions);
+    }
   }
 
   public onOpenRemedyTicket() {
@@ -135,7 +160,7 @@ class GmtdDetails implements ng.IComponentController {
     this.TelephonyDomainService.getNotes(this.customerId, this.ccaDomainId)
       .then((res) => {
         if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('error'); //TODO Wording
+          this.Notification.error('gemini.errorCode.loadError');
           return;
         }
         this.notes = _.get(res, 'content.data.body', []);
@@ -146,14 +171,23 @@ class GmtdDetails implements ng.IComponentController {
   }
 
   private getHistories() {
-    this.TelephonyDomainService.getHistories(this.customerId, this.ccaDomainId, this.domainName)
+    const data = {
+      siteId: this.ccaDomainId,
+      objectID: this.domainName,
+      customerId: this.customerId,
+      actionFor: 'Telephony Domain',
+    };
+    this.TelephonyDomainService.getHistories(data)
       .then((res) => {
         if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('error'); //TODO Wording
+          this.Notification.error('gemini.errorCode.loadError');
           return;
         }
         this.hisLoading = false;
         this.allHistories = _.get(res, 'content.data.body', []);
+        this.allHistories = _.filter(this.allHistories, (item: any) : boolean => {
+          return item.action !== 'add_notes_td';
+        });
         _.forEach(this.allHistories, (item) => {
           item.action = _.upperFirst(item.action);
 
@@ -201,7 +235,7 @@ class GmtdDetails implements ng.IComponentController {
       .then((res) => {
         let resJson: any = _.get(res, 'content.data');
         if (resJson.returnCode) {
-          this.Notification.error('error'); //TODO wording
+          this.Notification.error('gemini.errorCode.genericError');
           this.setButtonStatus('CancelSubmission');
           return;
         }
@@ -226,6 +260,19 @@ class GmtdDetails implements ng.IComponentController {
       this.setButtonStatus('CancelSubmission');
       this.updateTelephonyDomainStatus('cancel');
     });
+  }
+
+  public onSeeAllPhoneNumbers() {
+    let data = this.model;
+    data.customerId = this.customerId;
+    data.ccaDomainId = this.ccaDomainId;
+    data.region = data.regionId;
+    this.gemService.setStorage('currentTelephonyDomain', data);
+
+    this.gemService.setStorage('remedyTicket', this.remedyTicket);
+    this.gemService.setStorage('currentTdNotes', this.notes);
+    this.gemService.setStorage('currentTdHistories', this.allHistories);
+    this.$state.go('gmTdDetails.gmTdNumbers');
   }
 }
 

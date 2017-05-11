@@ -15,19 +15,23 @@ describe('Component: gmTdModalRequest', () => {
         data: { body: [], returnCode: 0, trackId: '' },
       },
     };
+    this.currentTelephonyDomain = {
+      regionId: 'EMEA',
+    };
     this.button = '[name="nextButton"]';
     this.box = '.dropdown-menu ul li a';
     this.input = 'input[name="customerName"]';
-    this.select = '.csSelect-container[name="partnerName"]';
+    this.select = '.csSelect-container[name="region"]';
   });
 
   function initSpies() {
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.gemService, 'getStorage').and.returnValue(this.currentTelephonyDomain);
     spyOn(this.TelephonyDomainService, 'getRegions').and.returnValue(this.$q.resolve());
   }
 
   function initComponent() {
-    this.compileComponent('gmTdModalRequest', {});
+    this.compileComponent('gmTdModalRequest', { $element: angular.element('') });
     this.$scope.$apply();
   }
 
@@ -50,7 +54,7 @@ describe('Component: gmTdModalRequest', () => {
       this.view.find(this.button).click();
 
       expect(this.controller.selected.value).toBe('EMEA');
-      expect(this.controller.data.customerName).toBe('inputName');
+      expect(this.controller.data.domainName).toBe('inputName');
     });
   });
 });

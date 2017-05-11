@@ -106,18 +106,20 @@ describe('Component: gmTdDetails', () => {
         actionFor: 'Telephony Domain',
         email: 'liqing@qa.webex.com',
       }];
+    this.countries = [ { countryId: 1, countryName: 'Albania' }, { countryId: 2, countryName: 'Algeria' } ];
   });
 
   function initSpies() {
+    spyOn(this.$state, 'go');
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
     spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.resolve());
+    spyOn(this.TelephonyDomainService, 'getCountries').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getNotes').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'updateTelephonyDomainStatus').and.returnValue(this.$q.resolve());
-    spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
-    spyOn(this.$state, 'go');
   }
 
   function initComponent() {
@@ -167,7 +169,7 @@ describe('Component: gmTdDetails', () => {
     });
 
     it('Should return correct data for TelephonyDomainService.getTelephonyDomain', function () {
-      let Element = '.side-panel-wrapper .side-panel-section';
+      let Element = '.gm-td-side-panel .feature-name';
       this.preData.content.data.body = this.telephonyDomain;
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.preData ));
@@ -175,7 +177,7 @@ describe('Component: gmTdDetails', () => {
       this.TelephonyDomainService.getHistories.and.returnValue(this.$q.reject( { status: 404 } ));
 
       initComponent.call(this);
-      expect(this.view.find(Element).first().find('span').first()).toContainText(this.telephonyDomain.customerAttribute);
+      expect(this.view.find(Element).get(1)).toHaveText(this.telephonyDomain.customerAttribute);
     });
 
     it('Should call Notification.error for TD getNotes & getHistories when the returnCode is\'t 0', function () {
@@ -263,6 +265,7 @@ describe('Component: gmTdDetails', () => {
 
     it('Should cancel submission successfully', function () {
       this.preData.content.data.body = this.telephonyDomain;
+      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(this.countries));
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.preData ));
       this.preData.content.data.returnCode = 0;
@@ -281,6 +284,7 @@ describe('Component: gmTdDetails', () => {
     it('Should open the modal dialog to confirm submission cancellation when cancel request', function () {
       this.preData.content.data.body = this.telephonyDomain;
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(this.countries));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.preData ));
       this.preData.content.data.returnCode = 0;
       this.TelephonyDomainService.updateTelephonyDomainStatus.and.returnValue(this.$q.resolve( this.preData ));

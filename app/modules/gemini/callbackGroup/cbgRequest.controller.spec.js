@@ -41,6 +41,7 @@ describe('controller: CbgRequestCtrl', function () {
     ctrl = $controller('CbgRequestCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
+      $element: angular.element(''),
     });
 
     ctrl.countries = preData.getCountries.content.data;

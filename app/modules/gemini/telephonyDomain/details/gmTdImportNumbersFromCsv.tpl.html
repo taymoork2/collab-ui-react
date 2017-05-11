@@ -1,5 +1,5 @@
 <div class="pull-left upload-file-box">
-    <button id="btnImport" type="button" class="btn" cs-btn loading="$ctrl.isParsing" ng-disabled="$ctrl.isParsing" ng-click="$ctrl.onSelectFile($event)">
+    <button id="btnImport" type="button" class="btn" cs-btn loading="$ctrl.isParsing" ng-disabled="$ctrl.isParsing || $ctrl.isDisabled" ng-click="$ctrl.onSelectFile($event)">
       <span translate="gemini.cbgs.importCsv"></span>
     </button>
     <input class="upload-input"

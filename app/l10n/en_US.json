@@ -7349,6 +7349,8 @@
     "import": "Import",
     "hidden": "Hidden",
     "display": "Display",
+    "inputLengthError": "Your {{field}} should be less than {{length}} characters.",
+    "invalidCharacters": "{{field}} can not include invalid characters.",
     "services": {
       "pageTitle": "Service"
     },
@@ -7370,16 +7372,17 @@
       "cancelSubmission": "Cancel Submission"
     },
     "errorCode": {
-      "3001": "Failed to create callback group",
-      "3002": "Failed to update callback group",
-      "3003": "Failed to get callback group",
-      "3004": "Failed to get callback group workflow status",
-      "3005": "Failed to synchronize callback group",
-      "3006": "Failed to move sites between callback groups",
-      "3007": "Failed to list callback groups",
-      "3008": "Failed to check callback group name",
-      "3009": "The callback group name is duplicated",
-      "genericError": "An unexpected error occurred. Please try again later."
+      "3001": "Failed to create callback group.",
+      "3002": "Failed to update callback group.",
+      "3003": "Failed to get callback group.",
+      "3004": "Failed to get callback group workflow status.",
+      "3005": "Failed to synchronize callback group.",
+      "3006": "Failed to move sites between callback groups.",
+      "3007": "Failed to list callback groups.",
+      "3008": "Failed to check callback group name.",
+      "3009": "The callback group name is duplicated.",
+      "genericError": "An unexpected error occurred. Please try again later.",
+      "loadError": "There was an error while loading data."
     },
     "tds": {
       "seeAll": "See All",
@@ -7392,6 +7395,9 @@
       "selectTdPlaceholder": "Select Telephony Domain...",
       "selectExistingTd": "Select existing Telephony Domain",
       "selectPhoneNumberTips": "Select all or individual phone numbers to import.",
+      "importFilterNumbers": "Import complete.{{number}} numbers have not yet synced to WebEx and cannot be imported. Try again later.",
+      "submissionMsg": "The Telephony Domain request has been submitted.",
+      "rejectSubmissionMsg": "The Telephony Domain request has been rejected.",
       "downloadConfirmMsg": "The exported template file is in .xls format with dropdown lists for ease of use. However after finish editing of the template, it needs to <b>\"Save As\" CSV format</b> before importing.",
       "export": {
         "csvFilename": "exported_telephonyDomain.csv",
@@ -7403,10 +7409,27 @@
       "numbers": {
         "export": {
           "exportToCSV": "Export to CSV",
+          "exportInProcess": "Export in process",
           "csvFilename": "exported_telephonyNumbers.csv",
           "result": {
-            "success": "Phone numbers have been successfully exported.",
+            "success": "Phone numbers are exported successfully.",
             "failed": "There was an error exporting phone numbers."
+          }
+        },
+        "import": {
+          "invalidFileType": "Invalid file type. Select a .csv file.",
+          "resultTitle" : {
+            "importComplete": "Import complete"
+          },
+          "resultMsg": {
+            "noItemFound": "No item found.",
+            "exceedMax": "{{importedNumbersCount}}/{{allNumbersCount}} new numbers are imported. The maximum number of telephony number entries is 300. The excess has been discarded.",
+            "importTD": "{{number}} numbers have not yet synced to WebEx and cannot be imported. Try again later.",
+            "success": "Import completed successfully. {{importedNumbersCount}} new numbers imported. Assign one number as the Default Toll before submitting the request."
+          },
+          "csvConfirm": {
+            "title": "Import Telephone Numbers?",
+            "content": "All numbers in the imported CSV file are treated as additions to the current number list. You can edit the current number list directly in the UI."
           }
         },
         "field": {
@@ -7419,12 +7442,17 @@
           "globalDisplay": "Global Display",
           "country": "Country",
           "hiddenOnClient": "Hidden On Client",
-          "values": {
-            "noForDefaultNumber": "NO",
-            "displayForGlobalDisplay": "Display",
-            "noForGlobalDisplay": "NO",
-            "displayForHiddenOnClient": "Display",
-            "hiddenForHiddenOnClient": "Hidden"
+          "action": "Action",
+          "labels": {
+            "selectType": "Select Type",
+            "selectCountry": "Select Country",
+            "ccaToll": "CCA Toll",
+            "ccaTollFree": "CCA Toll Free",
+            "international": "International",
+            "domestic": "Domestic",
+            "no": "NO",
+            "display": "Display",
+            "hidden": "Hidden"
           }
         }
       },
@@ -7432,18 +7460,16 @@
         "names": "Names",
         "region": "Region",
         "addNumber": "Add Number",
-        "notePlaceholder": "Text here",
+        "notePlaceholder": "Add any additional information for the Cisco team here",
         "regionNote": "Region and Note",
-        "phoneNumbers": "Phone Numbers",
         "selectPlaceholder": "Select ...",
         "labelCustomerName": "Customer Name",
-        "partnerName": "Partner Name (optional)",
+        "partnerName": "Partner TD Name (optional)",
         "modalTitle": "Request Telephony Domain",
-        "noteText": "Note to Cisco Team(optional)",
+        "noteText": "Note to Cisco Team (optional)",
         "customerPlaceholder": "Who is the Telephony Domain for",
         "partnerPlaceholder": "Enter a nickname for this Telephony Domain",
         "customerHelpText": "Once approved by Cisco team, this name cannot be changed",
-        "customerNameLengthError": "Your customer name should be less than 15 characters",
         "importNumber": {
           "fromTd": "Import TD",
           "fromCsv": "Import CSV"
@@ -7460,6 +7486,36 @@
         "totalSites": "Sites Assigned",
         "partnerTdName": "Partner TD Name",
         "telephonyDomains": "Telephony Domains"
+      },
+      "submit": {
+        "returnCode": {
+          "5000": "Telephony domain submitted.",
+          "5001": "Telephony domain saved."
+        },
+        "confirm": "Do you want to submit this Telephony Domain?",
+        "validation": {
+          "PhoneNumberLengthRange": "The phone number must be between 7 to 32 digits.",
+          "PhoneNumberInvalidFormat": "Enter a valid phone number. For example in the format +1222-333-4444.",
+          "PhoneLabelInvalidFormat": "Enter a maximum of 85 characters.",
+          "AccessNumberInvalidFormat": "The access number must be between 7 to 30 digits and can contain only one +.",
+          "fieldRequired": "{{field}} is required.",
+          "oneDefaultTollRequired": "Select one number as the Default Toll number.",
+          "oneDefaultTollMost": "You can only select one number as the Default Toll number.",
+          "oneDefaultTollFreeMost": "You can only select one number as the Default Toll Free number.",
+          "oneGlobalDisplayLeast": "At least one number must be assigned the Display value.",
+          "duplicatedPhoneNumbers": "Telephony numbers cannot have the same phone number, phone label and access number. Delete or edit the duplications marked in red.",
+          "duplicatedErrorTitle": "Duplicate Phone Entries",
+          "conflictAccessNumbers": "Duplicate access number with conflicting call type or toll type. Edit the call type or toll type before submitting.",
+          "conflictErrorTitle": "Conflicting Access Numbers",
+          "conflictTollType": "Edit the conflicting Toll Type.",
+          "conflictCallType": "Edit the conflicting Call Type.",
+          "dnisNumberNotAvailable": "This access number is not available.",
+          "exceedPhoneLengthTitle": "Entries Exceed Maximum Size Limit",
+          "exceedPhoneLength": "The total length of the phone number and phone label must not exceed 11KB. Edit the phone number and phone label before submitting.",
+          "exceedNumberCount": "The maximum number of phone number entries can not exceed 300.",
+          "noDisplayNumber": " Setting the Hidden On Client attribute to hide every occurrence of one phone number prevents the phone number from working. Set one occurrence to Display.",
+          "multipleDisplayNumbers": " Set the Hidden On Client attribute to Display for only one occurrence of each phone number. Doing so for more than one occurrence results in the display number appearing more than once in the Global Call-in list."
+        }
       }
     },
     "cbgs": {
@@ -7490,9 +7546,10 @@
       "cancelSubmissionMsg": "The associated remedy ticket will be deleted from the system.",
       "declineDialogNote": "Note: Explanation appears as a comment in the Callback Group history",
       "approveMsg": "If you proceed, the system will automatically updates the callback group with the selected countries",
-      "submissionMsg": "A request has been submitted.",
+      "submissionMsg": "The CallBack Group request has been submitted.",
       "cancelSubmissionLink": "Cancel request",
-      "rejectSubmissionMsg": "A request has been rejected.",
+      "rejectSubmissionMsg": "The CallBack Group request has been rejected.",
+      "invalidCountry": "Invalid country \"{{country}}\".",
       "field": {
         "sites": "Site URL",
         "status_": "Status",
@@ -7529,10 +7586,14 @@
       "notes": {
         "notes": "Notes",
         "noNotes": "No notes yet",
-        "noNoteMsg": "Add notes to leave others helpful information that may be useful.",
+        "noNoteMsg": "Add any additional information here.",
         "enterNote": "Enter note",
         "newNote": "New Note",
-        "addNote": "Add Note"
+        "addNote": "Add Note",
+        "errorMsg": {
+          "getListError": "Error loading the note list.",
+          "maxLength": "Enter a maximum of {{maxLength}} characters"
+        }
       },
       "logs": {
         "history": "History"

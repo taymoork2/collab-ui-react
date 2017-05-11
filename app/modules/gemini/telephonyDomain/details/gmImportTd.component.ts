@@ -21,7 +21,7 @@ class GmImportTdCtrl implements ng.IComponentController {
 
   private close;
   private currentTD: any;
-  private countries: Object = {};
+  private countryId2NameMapping = {};
   private selectedGridLines: Object = {};
 
   /* @ngInject */
@@ -49,11 +49,15 @@ class GmImportTdCtrl implements ng.IComponentController {
     this.isShowNumbers = true;
     this.loadingNumbers = true;
     this.getCountries();
+    this.setGridData();
+
+    let data = this.gemService.getStorage('currentTelephonyDomain');
+    data.importTDNumbers = [];
   }
 
   public onImport() {
     let data = this.gemService.getStorage('currentTelephonyDomain');
-    data.numbers = _.values(this.selectedGridLines);
+    data.importTDNumbers = _.values(this.selectedGridLines);
 
     this.gemService.setStorage('currentTelephonyDomain', data);
     this.close();
@@ -67,7 +71,7 @@ class GmImportTdCtrl implements ng.IComponentController {
   private getTelephonyDomainByRegion() {
     const data = {
       customerId: this.currentTD.customerId,
-      regionId: this.currentTD.region.regionId,
+      regionId: this.currentTD.region,
       ccaDomainId: this.currentTD.ccaDomainId ? this.currentTD.ccaDomainId : '',
     };
 
@@ -75,12 +79,13 @@ class GmImportTdCtrl implements ng.IComponentController {
       .then((res) => {
         this.loadingContent = !this.loadingContent;
         const optionsSource: any = _.get(res, 'content.data.body');
+
         this.options = _.map(optionsSource, (item: any) => {
-          return { value: item.ccaDomainId, label: item.domainName };
+          return item.telephonyDomainId && { value: item.ccaDomainId, label: item.domainName };
         });
       })
       .catch((res) => {
-        this.Notification.errorResponse(res, 'error'); // TODO, wording
+        this.Notification.errorResponse(res, 'gemini.errorCode.genericError');
       });
   }
 
@@ -109,10 +114,9 @@ class GmImportTdCtrl implements ng.IComponentController {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.country'),
     }, {
-      field: 'isHidden',
+      field: '_isHidden',
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.hiddenOnClient'),
-      cellTemplate: '<div class="ui-grid-cell-contents" ng-class="{\'error\': row.entity.phnNumDisplayValidation.invalid}" style="overflow: inherit"><cs-select id="{{row.uid}}-isHidden" is-disabled="row.entity.isHnDisabled" title="{{row.entity.isHidden.label}}" options="grid.appScope.isHiddenOptions" labelfield="label" valuefield="value" ng-change="grid.appScope.resetPhnNumDisplayValidation(row)" ng-model="row.entity.isHidden"></cs-select></div>',
     }];
 
     this.gridOptions = {
@@ -142,32 +146,35 @@ class GmImportTdCtrl implements ng.IComponentController {
       delete this.selectedGridLines[row.entity.dnisId];
       return;
     }
+    row.entity.isHidden = _.isEqual(row.entity._isHidden, 'Display') ? 'false' : 'true';
     this.selectedGridLines[row.entity.dnisId] = row.entity;
   }
 
   private setGridData() {
     const ccaDomainId = this.selected.value;
+    const DATA_STATUS = this.gemService.getNumberStatus();
     this.TelephonyDomainService.getNumbers(this.currentTD.customerId, ccaDomainId)
       .then((res) => {
         this.loadingNumbers = false;
         const data = _.get(res, 'content.data.body', []);
-        this.gridData = _.map(data, (item: any) => {
+        const newData = _.filter(data, (item: any) => { return _.toNumber(item.compareToSuperadminPhoneNumberStatus) === DATA_STATUS.NO_CHANGE; });
+        this.gridData = _.map(newData, (item: any) => {
           return _.assignIn({}, item, {
-            country: this.countries[item.countryId].countryName,
-            callType: this.TelephonyDomainService.transformCSVNumber(item.phoneType),
+            country: this.countryId2NameMapping[item.countryId],
+            callType: item.phoneType,
+            _isHidden: item.isHidden === 'false' ? 'Display' : 'Hidden',
           });
         });
+
+        if (data.length - newData.length > 0) {
+          this.Notification.warning('gemini.tds.numbers.import.resultMsg.importTD', { number: data.length - newData.length }, 'gemini.tds.numbers.import.resultTitle.importComplete');
+        }
         this.setGridOption();
       });
   }
 
   private getCountries() {
-    this.gemService.getCountries()
-      .then((res) => {
-        const countries = _.get(res, 'content.data');
-        _.forEach(countries, (item) => { this.countries[item.countryId] = item; });
-        this.setGridData();
-      });
+    this.countryId2NameMapping = this.gemService.getStorage('countryId2NameMapping');
   }
 }
 export class GmImportTdComponent implements ng.IComponentOptions {
