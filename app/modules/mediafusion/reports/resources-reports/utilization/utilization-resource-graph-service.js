@@ -155,7 +155,7 @@
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
       if (!isDummy && clusterSelected === vm.allClusters) {
         graphs.push({
-          'title': 'All Off',
+          'title': vm.allOff,
           'id': 'none',
           'lineColor': 'transparent',
         });

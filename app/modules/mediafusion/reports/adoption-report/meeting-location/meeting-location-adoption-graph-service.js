@@ -153,7 +153,7 @@
 
       if (!isDummy) {
         graphs.push({
-          'title': 'All Off',
+          'title': vm.allOff,
           'id': 'none',
           'lineColor': 'transparent',
         });
