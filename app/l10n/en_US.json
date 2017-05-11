@@ -5127,7 +5127,9 @@
         "clusterInServiceClusterDesc": "Percentage of nodes that are in service to host calls over the selected time period.<br>Green: node is in service.<br>Red: node is not in service.",
         "meetHostTypeDesc": "Provides a trend of the number of meetings in an organization, based on where the calls were hosted",
         "clientTypeDesc": "Provides usage trend of the various client types that are used in an organization"
-      }
+      },
+      "allOff": "All Off",
+      "allOn": "All On"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
