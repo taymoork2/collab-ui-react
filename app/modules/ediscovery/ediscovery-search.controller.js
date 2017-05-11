@@ -9,10 +9,7 @@ var Spark = require('@ciscospark/spark-core').default;
   function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService,
     FeatureToggleService, ITProPackService, Notification, TokenService) {
     $scope.$on('$viewContentLoaded', function () {
-      angular.element('#searchInput').focus();
-    });
-    $scope.$on('$viewContentLoaded', function () {
-      $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
+      $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
     var vm = this;
     var spark;
