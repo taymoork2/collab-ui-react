@@ -12,10 +12,6 @@
     vm.selectPlaceholder = $translate.instant('common.select');
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
-    vm.readAsSelection = {
-      label: '',
-      value: '',
-    };
     vm.readAsOptions = [
       {
         label: $translate.instant('autoAttendant.date'),
@@ -29,7 +25,12 @@
         label: $translate.instant('autoAttendant.number'),
         value: 'NUMBER',
       },
+      {
+        label: $translate.instant('autoAttendant.word'),
+        value: '',
+      },
     ];
+    vm.readAsSelection = vm.readAsOptions[3];
     vm.variableSelection = {
       label: '',
       value: '',
