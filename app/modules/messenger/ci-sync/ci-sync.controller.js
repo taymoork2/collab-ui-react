@@ -46,7 +46,7 @@
       isSparkEnt: true,
       isUsrDis: true,
       isUsrDel: true,
-    }
+    };
     vm.settingsCopy = undefined;
 
     // l10n strings
@@ -186,7 +186,8 @@
       return SyncService.getSyncStatus()
         .then(function (syncStatusObj) {
           return syncStatusObj;
-        }, function (errorObj) {
+        })
+        .catch(function (errorObj) {
           var error = $translate.instant(translatePrefix + 'errorFailedGettingCISyncStatus') + errorObj.message;
           vm.errorMsg = error;
           Notification.error(error);
@@ -199,7 +200,8 @@
         .then(function (syncStatusObj) {
           vm.settings.syncInfo = syncStatusObj;
           return syncStatusObj;
-        }, function (errorObj) {
+        })
+        .catch(function (errorObj) {
           var error = $translate.instant(translatePrefix + 'errorFailedRefreshingCISyncStatus') + errorObj.message;
           vm.errorMsg = error;
           Notification.error(error);
@@ -260,17 +262,13 @@
 
       vm.isSaving = true;
       return $q.all({
-          syncInfo: patchSync(),
-        })
-        .then(function () {
-          updateSettingsCopy();
-        })
-        .catch(function () {
-          resetSettings();
-        })
-        .finally(function () {
-          vm.isSaving = false;
-        });
+        syncInfo: patchSync(),
+      })
+      .then(updateSettingsCopy)
+      .catch(resetSettings)
+      .finally(function () {
+        vm.isSaving = false;
+      });
     }
 
     function updateSettingsCopy() {
