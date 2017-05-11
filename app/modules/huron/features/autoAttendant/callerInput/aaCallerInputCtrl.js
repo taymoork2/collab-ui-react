@@ -94,6 +94,14 @@
       AACommonService.setCallerInputStatus(true);
 
     }
+
+    $scope.$on(
+      "$destroy",
+      function () {
+        AACommonService.setIsValid(myId, true);
+      }
+    );
+
     // the user has changed the key for an existing action
     function keyChanged(index, whichKey) {
       vm.inputActions[index].key = whichKey;
