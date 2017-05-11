@@ -401,4 +401,15 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertCloudberryDevices(arr)[5].hasAdvancedSettings).toBe(false);
     });
   });
+
+  describe('updatePlaceFromItem', function () {
+    it('should keep place url when updating place from device', function () {
+      var url = 'placeUrl';
+      var place = converter.convertPlace({
+        url: url,
+      });
+      converter.updatePlaceFromItem(place, {});
+      expect(place.url).toBe(url);
+    });
+  });
 });
