@@ -1,4 +1,5 @@
 import { SettingSection } from '../settingSection';
+import { PrivacySettingController } from './privacy.settings.controller';
 
 export class PrivacySetting extends SettingSection {
 
@@ -9,10 +10,12 @@ export class PrivacySetting extends SettingSection {
     this.subsectionDescription = '';
   }
 }
-angular.module('Core').component('privacySetting', {
-  bindings: {
+
+export class PrivacySettingsComponent implements ng.IComponentOptions {
+  public bindings = {
     hideUsagePart: '<',
-  },
-  controller: 'PrivacySettingController as vm',
-  templateUrl: 'modules/core/settings/privacySection/privacySettings.tpl.html',
-});
+  };
+  public controller = PrivacySettingController;
+  public controllerAs = 'vm';
+  public templateUrl = 'modules/core/settings/privacySection/privacySettings.tpl.html';
+}

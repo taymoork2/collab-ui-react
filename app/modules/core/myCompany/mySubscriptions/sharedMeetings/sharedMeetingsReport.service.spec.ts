@@ -1,3 +1,5 @@
+import sharedMeetingsModule from './index';
+
 describe('Service: SharedMeetingsReportService', function () {
   const data: any = getJSONFixture('core/json/myCompany/sharedMeetingReport.json');
   const siteUrl: string = 'siteUrl';
@@ -8,7 +10,7 @@ describe('Service: SharedMeetingsReportService', function () {
     };
 
     beforeEach(function () {
-      this.initModules('Core');
+      this.initModules(sharedMeetingsModule);
       this.injectDependencies('$modal', 'Notification', 'SharedMeetingsReportService');
 
       spyOn(this.$modal, 'open').and.returnValue(modal);

@@ -98,13 +98,6 @@
               $state.modal = $modal.open({
                 template: '<div ui-view="modal"></div>',
                 controller: 'ModalWizardCtrl',
-                // TODO(pajeter): remove inline template when cs-modal is updated
-                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="modal-alt"' +
-                'modal-animation-class="fade"' +
-                'modal-in-class="in"' +
-                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\', position: \'relative\'}">' +
-                '<div class="modal-content" modal-transclude></div>' +
-                '</div>',
                 backdrop: 'static',
               });
               $state.modal.result.finally(function () {
@@ -1269,6 +1262,26 @@
               },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('user-overview.communication.cos').data.displayName = $translate.instant('serviceSetupModal.cos.title');
+              },
+            },
+          })
+          .state('user-overview.communication.externaltransfer', {
+            template: '<uc-external-transfer member-type="users" member-id="$resolve.ownerId"></uc-external-transfer>',
+            params: {
+              watcher: null,
+              selected: null,
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/externaltransfer'));
+                }, 'user-call-externaltransfer');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.externaltransfer').data.displayName = $translate.instant('serviceSetupModal.externalTransfer.title');
               },
             },
           })
@@ -2450,7 +2463,7 @@
             parent: 'wizardmodal',
             views: {
               'modal@': {
-                template: '<cr-wizard tabs="tabs" finish="finish"></cr-wizard>',
+                template: '<cr-wizard class="modal-content" tabs="tabs" finish="finish"></cr-wizard>',
                 controller: 'SetupWizardCtrl',
               },
             },
@@ -2460,6 +2473,7 @@
               currentStep: '',
               numberOfSteps: undefined,
               onlyShowSingleTab: false,
+              showStandardModal: false,
             },
             data: {
               firstTimeSetup: false,
@@ -4126,7 +4140,7 @@
         $stateProvider
           .state('messenger', {
             parent: 'main',
-            url: '/messenger',
+            url: '/services/messenger',
             templateUrl: 'modules/messenger/ci-sync/ciSync.tpl.html',
             controller: 'CiSyncCtrl',
             controllerAs: 'sync',

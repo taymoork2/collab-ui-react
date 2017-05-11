@@ -1,6 +1,7 @@
 .icon-export-import {
-  top: 40px;
-  color: $color-primary-base;
+  color: $gray-light-1;
+  font-size: 3rem;
+  margin-bottom: .5rem;
 
   &:hover {
     cursor: pointer;
@@ -9,7 +10,6 @@
 }
 
 .icon-export-import-disabled {
-  top: 40px;
   color: $gray-light-3;
 
   &:hover {
@@ -26,6 +26,8 @@
 }
 
 .webex-csv-container {
+  @include vr-spacing(pv, 2);
+  @include vr-spacing(ph, 1.5);
   height: 275px;
 
   .file-drop {

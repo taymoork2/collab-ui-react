@@ -28,6 +28,7 @@
         min: $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount'),
         number: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
         required: $translate.instant('common.invalidRequired'),
+        pattern: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
       },
       care: {
         max: $translate.instant('partnerHomePage.invalidTrialCareQuantity'),
@@ -185,6 +186,27 @@
         vm.sparkBoardTrial.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
       }
     });
+    // algendel: for care and advanced care the quantity is set by 'disabled expression' functions.
+    // We can just move the code that sets the quantity into the watch the same way we do with the others
+    // The only downside to that is difficulty testing the $watch vs. the function.
+
+    //watch care 'enabled' for quantity
+    $scope.$watch(function () {
+      return vm.careTrial.enabled;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm._helpers.careLicenseInputDisabledExpression();
+      }
+    });
+
+    //watch advance care 'enabled' for quantity
+    $scope.$watch(function () {
+      return vm.advanceCareTrial.enabled;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm._helpers.advanceCareLicenseInputDisabledExpression();
+      }
+    });
 
     //watch hasUserServices for licence quantity
     $scope.$watch(function () {
@@ -200,9 +222,6 @@
         }
       }
     });
-
-    // algendel: for care and advanced care the quantity is set by 'disabled expression' functions.
-    // Will refactor it to use watchers since I think the current implementation goes against the single responsibility principle
 
     init();
     ///////////////////////

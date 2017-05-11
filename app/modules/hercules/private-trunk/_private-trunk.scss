@@ -31,6 +31,15 @@
       @include vr-spacing(mb, .25);
     }
   }
+
+  .needs-border-top {
+    border-top: 1px solid $gray-light-2;
+  }
+
+  .top-margin {
+    margin-top: -4rem;
+  }
+
   .domain-list {
     padding-left: 1rem;
   }
@@ -62,15 +71,6 @@
   .box.multibox-margin {
     @include vr-spacing(m, .5);
     @include vr-spacing(pb, .5);
-  }
-
-  .cs-form__section {
-    padding-top: 0;
-    padding-bottom: 1rem;
-  }
-
-  .setting-section {
-    margin-bottom: -2rem;
   }
 
   .columns .box {

@@ -1,7 +1,9 @@
 'use strict';
 
+var testModule = require('./accountorgservice');
+
 describe('Service : AccountOrgService', function () {
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(testModule));
 
   var AccountOrgService, $httpBackend;
   var authInfo = {

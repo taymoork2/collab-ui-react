@@ -267,7 +267,7 @@ describe('Controller: TrialPstnCtrl', function () {
       // add a number
       controller.manualTokenMethods.createdtoken({
         attrs: {
-          value: '9728131449',
+          value: '+19728131449',
         },
         relatedTarget: '<div></div>',
       });

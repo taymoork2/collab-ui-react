@@ -9,6 +9,7 @@ export enum FilteredViewState {
 }
 
 interface IViewFilter<T> {
+  name: string;
   count: number;
   filterValue: string;
   passes(filterable: T): boolean;
@@ -52,7 +53,7 @@ export class FilteredView<T> {
 
           let listState = _.isEmpty(this.fetchedDataMap) ? FilteredViewState.emptydatasource : FilteredViewState.showresult;
 
-          this.applyFilter(listState);
+          this.applyFilter(isSearchOnly, listState);
         });
       }
     });
@@ -84,7 +85,9 @@ export class FilteredView<T> {
     this.currentFilter = _.find(this.filters, {
       filterValue: filterValue,
     });
-    this.applyFilter();
+    this.isSearchOnly.then((isSearchOnly) => {
+      this.applyFilter(isSearchOnly);
+    });
   }
 
   public setCurrentSearch(searchString: string): IPromise<T[]> {
@@ -118,20 +121,20 @@ export class FilteredView<T> {
                 this.currentServerSearchString = searchString;
                 this.fetchedDataMap = map;
 
-                deferredRes.resolve(this.applyFilter());
+                deferredRes.resolve(this.applyFilter(isSearchOnly));
 
               }, () => {
                 this.currentServerSearchString = '';
                 this.currentSearchString = '';
                 this.fetchedDataMap = {};
-                deferredRes.resolve(this.applyFilter());
+                deferredRes.resolve(this.applyFilter(isSearchOnly));
               });
 
             }, this.searchTimeoutMs);
 
           } else {
             this.currentSearchString = searchString;
-            deferredRes.resolve(this.applyFilter());
+            deferredRes.resolve(this.applyFilter(isSearchOnly));
           }
 
         } else {
@@ -139,11 +142,11 @@ export class FilteredView<T> {
           this.currentSearchString = '';
           this.currentServerSearchString = '';
           this.filteredViewList.length = 0;
-          deferredRes.resolve(this.applyFilter(FilteredViewState.searchonly));
+          deferredRes.resolve(this.applyFilter(isSearchOnly, FilteredViewState.searchonly));
         }
       } else {
         this.currentSearchString = searchString;
-        deferredRes.resolve(this.applyFilter());
+        deferredRes.resolve(this.applyFilter(isSearchOnly));
       }
     });
 
@@ -154,7 +157,7 @@ export class FilteredView<T> {
     return this.filteredViewList;
   }
 
-  private applyFilter(finalListState?: FilteredViewState): T[] {
+  private applyFilter(isSearchOnly: boolean, finalListState?: FilteredViewState): T[] {
 
     _.forEach(this.filters, (filter: IViewFilter<T>) => {
       filter.count = 0;
@@ -169,7 +172,19 @@ export class FilteredView<T> {
       }
     });
 
-    this.listState = finalListState || (this.filteredViewList.length > 0 ? FilteredViewState.showresult : FilteredViewState.emptysearchresult);
+    if (finalListState) {
+      this.listState = finalListState;
+    } else {
+      if (this.filteredViewList.length > 0) {
+        this.listState = FilteredViewState.showresult;
+      } else {
+        if (!isSearchOnly && _.isEmpty(this.fetchedDataMap)) {
+          this.listState = FilteredViewState.emptydatasource;
+        } else {
+          this.listState = FilteredViewState.emptysearchresult;
+        }
+      }
+    }
 
     return this.filteredViewList;
   }

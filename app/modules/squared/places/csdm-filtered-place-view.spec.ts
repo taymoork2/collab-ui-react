@@ -2,6 +2,7 @@ import IPlace = csdm.IPlace;
 import { FilteredPlaceViewDataSource } from './FilteredPlaceViewDataSource';
 import { PlaceMatcher } from 'modules/squared/places/place-matcher';
 import { FilteredView } from 'modules/squared/common/filtered-view/filtered-view';
+
 describe('Class: FilteredView', () => {
 
   let test: any = {};

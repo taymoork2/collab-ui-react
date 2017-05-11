@@ -46,7 +46,7 @@ require('./_user-preview.scss');
 
       $scope.isSharedMeetingsLicense = function (siteUrl) {
         var service = _.find(vm.sites, { license: { siteUrl: siteUrl } });
-        return _.lowerCase(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
+        return _.toLower(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
       };
 
       $scope.determineLicenseType = function (siteUrl) {

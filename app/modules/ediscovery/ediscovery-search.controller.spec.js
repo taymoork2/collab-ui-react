@@ -142,7 +142,8 @@ describe('Controller: EdiscoverySearchController', function () {
 
   describe('Create report', function () {
     beforeEach(function () {
-      var deferedRunReportResult = $q.defer();
+      FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue($q.resolve(true));
+      var deferredRunReportResult = $q.defer();
 
       promise = $q.resolve({
         displayName: 'test',
@@ -150,8 +151,8 @@ describe('Controller: EdiscoverySearchController', function () {
         id: '12345678',
       });
 
-      spyOn(EdiscoveryService, 'runReport').and.returnValue(deferedRunReportResult.promise);
       spyOn(EdiscoveryService, 'createReport').and.returnValue(promise);
+      spyOn(EdiscoveryService, 'generateReport').and.returnValue(deferredRunReportResult.promise);
     });
 
     beforeEach(initController);
@@ -171,9 +172,8 @@ describe('Controller: EdiscoverySearchController', function () {
 
       ediscoverySearchController.createReport(params);
       $scope.$apply();
-
-      expect(EdiscoveryService.runReport.calls.count()).toBe(1);
       expect(EdiscoveryService.createReport).toHaveBeenCalled();
+      expect(EdiscoveryService.generateReport.calls.count()).toBe(1);
     });
 
   });
@@ -207,6 +207,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
   describe('Create report with error', function () {
     beforeEach(function () {
+      FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue($q.resolve(true));
 
       ediscoverySearchController.searchCriteria.roomId = 'whatever';
       ediscoverySearchController.searchCriteria.endDate = moment().format();
@@ -218,8 +219,8 @@ describe('Controller: EdiscoverySearchController', function () {
         id: '12345678',
       });
 
-      spyOn(EdiscoveryService, 'runReport').and.returnValue($q.reject());
       spyOn(EdiscoveryService, 'createReport').and.returnValue(promise);
+      spyOn(EdiscoveryService, 'generateReport').and.returnValue($q.reject());
       spyOn(EdiscoveryService, 'patchReport').and.returnValue($q.resolve({}));
       spyOn(EdiscoveryService, 'getReport').and.returnValue(promise);
       spyOn(Notification, 'error').and.callFake(function () {
@@ -230,19 +231,10 @@ describe('Controller: EdiscoverySearchController', function () {
     beforeEach(initController);
 
     it('received from avalon backend', function () {
-      var params = {
-        displayName: jasmine.any,
-        roomIds: jasmine.any,
-        startDate: jasmine.any,
-        endDate: jasmine.any,
-        keyword: jasmine.any,
-        emailAddresses: null,
-      };
-
-      ediscoverySearchController.createReport(params);
+      ediscoverySearchController.createReport();
       $scope.$apply();
 
-      expect(EdiscoveryService.runReport.calls.count()).toBe(1);
+      expect(EdiscoveryService.generateReport.calls.count()).toBe(1);
       expect(EdiscoveryService.createReport).toHaveBeenCalled();
       expect(Notification.error.calls.count()).toBe(1);
       expect(EdiscoveryService.patchReport.calls.count()).toBe(1);

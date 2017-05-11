@@ -151,6 +151,3 @@ export class SharedMeetingsReportService {
     return graphs;
   }
 }
-
-angular.module('Core')
-  .service('SharedMeetingsReportService', SharedMeetingsReportService);

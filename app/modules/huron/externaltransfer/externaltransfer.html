@@ -1,0 +1,19 @@
+<form name="$ctrl.form" novalidate role="form">
+  <cs-sp-buttons ng-show="$ctrl.form.$dirty">
+    <button cs-btn loading="$ctrl.saveInProcess" class="btn-primary" ng-click="$ctrl.save()" type="submit">
+      <span translate="common.save"></span>
+    </button>
+    <button class="btn-default" translate="common.cancel" ng-click="$ctrl.reset()"></button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+      <cs-sp-section>
+        <section-title title-key="serviceSetupModal.externalTransfer.title"></section-title>
+        <p class="description-block" translate="serviceSetupModal.externalTransfer.desc"></p>
+        <cs-select
+          options="$ctrl.options"
+          ng-model="$ctrl.selected"
+          is-disabled="$ctrl.disableControl">
+        </cs-select>
+      </cs-sp-section>
+  </cs-sp-container>
+</form>

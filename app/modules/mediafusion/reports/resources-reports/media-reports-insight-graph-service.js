@@ -6,8 +6,8 @@
   function InsightGraphService($translate) {
     var vm = this;
     vm.insightTranMap = {
-      'Redirected by Cluster': $translate.instant('mediaFusion.metrics.redirectedCluster'),
-      'Overflowed to Cloud': $translate.instant('mediaFusion.metrics.cloudcalls'),
+      'Redirected by Cluster': $translate.instant('mediaFusion.metrics.callsRedirectedCluster'),
+      'Overflowed to Cloud': $translate.instant('mediaFusion.metrics.callOverflow'),
       'Nodes Added': $translate.instant('mediaFusion.metrics.nodesAdded'),
       'Nodes Unavailable': $translate.instant('mediaFusion.metrics.nodesUnavailable'),
       'Redirected by this Cluster': $translate.instant('mediaFusion.metrics.redirectedcalls'),
@@ -19,7 +19,7 @@
         var finalinsight = '';
         _.map(value, function (res, key) {
           if (_.includes(key, 'bullet')) {
-            res = 'round';//vm.insightImage;
+            res = 'round'; //vm.insightImage;
             value[key] = res;
           }
           if (_.includes(key, 'insight')) {

@@ -1,40 +1,43 @@
-import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER } from './index';
+import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER } from './pstn.const';
+
 import { Notification } from 'modules/core/notifications/notification.service';
-import { IOrder } from './pstnWizard/pstnWizard.service';
-import { PstnModel } from './pstn.model';
+import { PstnModel, IOrder } from './pstn.model';
+import pstnModel from './pstn.model';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { PhoneNumberType } from 'google-libphonenumber';
 
 export class PstnService {
   /* @ngInject */
-  constructor(private PstnModel: PstnModel,
-              private Authinfo,
-              private TerminusCustomerV2Service,
-              private TerminusV2ResellerService,
-              private TerminusCustomerService,
-              private TerminusCustomerNumberService,
-              private TerminusCustomerTrialV2Service,
-              private TerminusCarrierService,
-              private $q: ng.IQService,
-              private TerminusCarrierV2Service,
-              private TerminusResellerCarrierService,
-              private TerminusResellerCarrierV2Service,
-              private TerminusCustomerCarrierService,
-              private TerminusV2CarrierNumberCountService,
-              private TerminusV2CarrierCapabilitiesService,
-              private TerminusV2CarrierNumberService,
-              private TerminusV2CustomerNumberOrderBlockService,
-              private TerminusV2CustomerNumberReservationService,
-              private TerminusV2ResellerNumberReservationService,
-              private $translate: ng.translate.ITranslateService,
-              private TerminusCustomerPortService,
-              private TerminusV2ResellerCarrierNumberReservationService,
-              private TerminusOrderV2Service,
-              private TerminusCustomerCarrierDidService,
-              private Notification: Notification,
-              private TelephoneNumberService) {
+  constructor(
+    private PstnModel: PstnModel,
+    private Authinfo,
+    private TerminusCustomerV2Service,
+    private TerminusV2ResellerService,
+    private TerminusCustomerService,
+    private TerminusCustomerNumberService,
+    private TerminusCustomerTrialV2Service,
+    private TerminusCarrierService,
+    private $q: ng.IQService,
+    private TerminusCarrierV2Service,
+    private TerminusResellerCarrierService,
+    private TerminusResellerCarrierV2Service,
+    private TerminusCustomerCarrierService,
+    private TerminusV2CarrierNumberCountService,
+    private TerminusV2CarrierCapabilitiesService,
+    private TerminusV2CarrierNumberService,
+    private TerminusV2CustomerNumberOrderBlockService,
+    private TerminusV2CustomerNumberReservationService,
+    private TerminusV2ResellerNumberReservationService,
+    private $translate: ng.translate.ITranslateService,
+    private TerminusCustomerPortService,
+    private TerminusV2ResellerCarrierNumberReservationService,
+    private TerminusOrderV2Service,
+    private TerminusCustomerCarrierDidService,
+    private Notification: Notification,
+    private PhoneNumberService: PhoneNumberService,
+  ) { }
 
-  }
-
-  public createCustomerV2(uuid: string, name: string, firstName: string, lastName: string, email: string, pstnCarrierId: String, trial: boolean): ng.IPromise<any> {
+  public createCustomerV2(uuid: string, name: string, firstName: string, lastName: string, email: string, pstnCarrierId: string, trial: boolean): ng.IPromise<any> {
     let payload = {
       uuid: uuid,
       name: name,
@@ -60,13 +63,15 @@ export class PstnService {
   public createResellerV2(): ng.IPromise<any> {
     let payload = {
       uuid: this.Authinfo.getCallPartnerOrgId(),
-      name: this.Authinfo.getOrgName(),
       email: this.Authinfo.getPrimaryEmail(),
     };
+    if (this.Authinfo.isPartner()) {
+      _.extend(payload, { name: this.Authinfo.getOrgName() });
+    }
     return this.TerminusV2ResellerService.save({}, payload).$promise;
   }
 
-  public updateCustomerCarrier(customerId: string, pstnCarrierId: String): ng.IPromise<any> {
+  public updateCustomerCarrier(customerId: string, pstnCarrierId: string): ng.IPromise<any> {
     let payload = {
       pstnCarrierId: pstnCarrierId,
     };
@@ -103,14 +108,14 @@ export class PstnService {
     }).$promise;
   }
 
-  public listDefaultCarriers(): ng.IPromise<any> {
+  public listDefaultCarriers(): ng.IPromise<Array<any>> {
     return this.TerminusCarrierService.query({
       service: PSTN,
       defaultOffer: true,
     }).$promise.then(this.getCarrierDetails.bind(this));
   }
 
-  public listDefaultCarriersV2(): ng.IPromise<any> {
+  public listDefaultCarriersV2(): ng.IPromise<Array<any>> {
     return this.TerminusCarrierV2Service.query({
       service: PSTN,
       defaultOffer: true,
@@ -118,20 +123,20 @@ export class PstnService {
     }).$promise.then(this.getCarrierDetails.bind(this));
   }
 
-  public listResellerCarriers(): ng.IPromise<any> {
+  public listResellerCarriers(): ng.IPromise<Array<any>> {
     return this.TerminusResellerCarrierService.query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
     }).$promise.then(this.getCarrierDetails.bind(this));
   }
 
-  public listResellerCarriersV2(): ng.IPromise<any> {
+  public listResellerCarriersV2(): ng.IPromise<Array<any>> {
     return this.TerminusResellerCarrierV2Service.query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
       country: this.PstnModel.getCountryCode(),
     }).$promise.then(this.getCarrierDetails.bind(this));
   }
 
-  public listCustomerCarriers(customerId): ng.IPromise<any> {
+  public listCustomerCarriers(customerId): ng.IPromise<Array<any>> {
     return this.TerminusCustomerCarrierService.query({
       customerId: customerId,
     }).$promise.then(this.getCarrierDetails.bind(this));
@@ -164,20 +169,20 @@ export class PstnService {
     return this.TerminusV2CarrierNumberCountService.get(config).$promise;
   }
 
-  public getCarrierTollFreeInventory(carrierId: String): ng.IPromise<any> {
+  public getCarrierTollFreeInventory(carrierId: string): ng.IPromise<any> {
     return this.TerminusV2CarrierNumberCountService.get({
       carrierId: carrierId,
       numberType: NUMTYPE_TOLLFREE,
     }).$promise;
   }
 
-  public getCarrierCapabilities(carrierId: String): ng.IPromise<any> {
+  public getCarrierCapabilities(carrierId: string): ng.IPromise<any> {
     return this.TerminusV2CarrierCapabilitiesService.query({
       carrierId: carrierId,
     }).$promise;
   }
 
-  public searchCarrierInventory(carrierId: String, params: any): ng.IPromise<any> {
+  public searchCarrierInventory(carrierId: string, params: any): ng.IPromise<any> {
     let paramObj = params || {};
     paramObj.carrierId = carrierId;
     paramObj.numberType = NUMTYPE_DID;
@@ -185,7 +190,7 @@ export class PstnService {
         .then(response => _.get(response, 'numbers', []));
   }
 
-  public searchCarrierTollFreeInventory(carrierId: String, params: any): ng.IPromise<any> {
+  public searchCarrierTollFreeInventory(carrierId: string, params: any): ng.IPromise<any> {
     let paramObj = params || {};
     paramObj.carrierId = carrierId;
     paramObj.numberType = NUMTYPE_TOLLFREE;
@@ -193,7 +198,7 @@ export class PstnService {
         .then(response => _.get(response, 'numbers', []));
   }
 
-  public reserveCarrierInventoryV2(customerId: string, carrierId: String, numbers: Array<string>, isCustomerExists: boolean): ng.IPromise<any> {
+  public reserveCarrierInventoryV2(customerId: string, carrierId: string, numbers: Array<string>, isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -247,7 +252,7 @@ export class PstnService {
     }
   }
 
-  public releaseCarrierTollFreeInventory(customerId: string, _carrierId: String, numbers: Array<string>, reservationId: string | undefined, isCustomerExists: boolean): ng.IPromise<any> {
+  public releaseCarrierTollFreeInventory(customerId: string, _carrierId: string, numbers: Array<string>, reservationId: string | undefined, isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -270,7 +275,7 @@ export class PstnService {
     }
   }
 
-  public reserveCarrierTollFreeInventory(customerId: string, carrierId: String, numbers: Array<string>, isCustomerExists: boolean): ng.IPromise<any> {
+  public reserveCarrierTollFreeInventory(customerId: string, carrierId: string, numbers: Array<string>, isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -315,7 +320,7 @@ export class PstnService {
     });
   }
 
-  public orderBlock(customerId: string, _carrierId: String, npa: string, quantity: string, isSequential: boolean, nxx: string): ng.IPromise<any> {
+  public orderBlock(customerId: string, _carrierId: string, npa: string, quantity: string, isSequential: boolean, nxx: string): ng.IPromise<any> {
     let payload = {
       npa: npa,
       quantity: quantity,
@@ -332,7 +337,7 @@ export class PstnService {
     }, payload).$promise;
   }
 
-  public orderTollFreeBlock(customerId: string, _carrierId: String, npa: string, quantity: number): ng.IPromise<any> {
+  public orderTollFreeBlock(customerId: string, _carrierId: string, npa: string, quantity: number): ng.IPromise<any> {
     let payload = {
       npa: npa,
       quantity: quantity,
@@ -345,7 +350,7 @@ export class PstnService {
     }, payload).$promise;
   }
 
-  public orderNumbers(customerId: string, carrierId: String, numbers: Array<string>): ng.IPromise<any> {
+  public orderNumbers(customerId: string, carrierId: string, numbers: Array<string>): ng.IPromise<any> {
     let promises: any = [];
     let payload = {
       pstn: {
@@ -357,10 +362,10 @@ export class PstnService {
       },
     };
     _.forEach(numbers, number => {
-      let phoneNumberType = this.TelephoneNumberService.getPhoneNumberType(number);
-      if (phoneNumberType === 'FIXED_LINE_OR_MOBILE' || phoneNumberType === 'FIXED_LINE') {
+      const phoneNumberType: PhoneNumberType = this.PhoneNumberService.getPhoneNumberType(number);
+      if (phoneNumberType === PhoneNumberType.FIXED_LINE_OR_MOBILE || phoneNumberType === PhoneNumberType.FIXED_LINE) {
         payload.pstn.numbers.push(<never>number);
-      } else if (phoneNumberType === 'TOLL_FREE') {
+      } else if (phoneNumberType === PhoneNumberType.TOLL_FREE) {
         payload.tollFree.numbers.push(<never>number);
       } else {
         this.Notification.error('pstnSetup.errors.unsupportedNumberType', {
@@ -408,12 +413,12 @@ export class PstnService {
     return this.$q.all(promises);
   }
 
-  public portNumbers(customerId: string, _carrierId: String, numbers: Array<string>): ng.IPromise<any> {
+  public portNumbers(customerId: string, _carrierId: string, numbers: Array<string>): ng.IPromise<any> {
     let promises: any = [];
     let tfnNumbers: any = [];
 
     tfnNumbers = _.remove(numbers, number => {
-      return this.TelephoneNumberService.checkPhoneNumberType(number) === 'TOLL_FREE';
+      return this.PhoneNumberService.getPhoneNumberType(number) === PhoneNumberType.TOLL_FREE;
     });
 
     let tfnPayload = {
@@ -716,16 +721,15 @@ export class PstnService {
 }
 
 export default angular
-  .module('huron.PstnService', [
+  .module('huron.pstn.pstn-service', [
     require('angular-resource'),
-    require('modules/huron/telephony/telephoneNumber.filter'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/notifications').default,
-    require('./pstn.model').default,
-    require('./../pstnSetup/terminusServices'),
-    require('modules/huron/telephony/telephonyConfig'),
-    require('modules/huron/telephony/telephoneNumber.service'),
     require('modules/core/featureToggle').default,
+    require('modules/huron/pstnSetup/terminusServices'),
+    require('modules/huron/telephony/telephonyConfig'),
+    require('modules/huron/phoneNumber').default,
+    pstnModel,
   ])
   .service('PstnService', PstnService)
   .name;

@@ -9,8 +9,8 @@ require('./_hg-edit.scss');
   /* @ngInject */
   function HuntGroupEditCtrl($state, $q, $stateParams, $translate,
     Authinfo, HuntGroupService, Notification, HuntGroupFallbackDataService,
-    HuntGroupMemberDataService, HuntGroupEditDataService, HuronCustomerService,
-    TelephoneNumberService, CardUtils) {
+    HuntGroupMemberDataService, HuntGroupEditDataService,
+    PhoneNumberService, CardUtils) {
     var vm = this;
     vm.selectHuntMethod = selectHuntMethod;
     vm.resetForm = resetForm;
@@ -52,7 +52,6 @@ require('./_hg-edit.scss');
     vm.selectedFallbackMember = undefined;
     vm.disableVoicemail = false;
 
-    vm.externalRegionCodeFn = getRegionCode;
     vm.callDestInputs = ['internal', 'external'];
     vm.minRingSeconds = 10;
     vm.maxRingSeconds = 120;
@@ -104,10 +103,6 @@ require('./_hg-edit.scss');
       vm.selectedFallbackNumber = model;
     }
 
-    function getRegionCode() {
-      return HuronCustomerService.getVoiceCustomer();
-    }
-
     function updateModal(pristineData, resetFromBackend) {
       HuntGroupFallbackDataService.reset(resetFromBackend);
       HuntGroupMemberDataService.reset(resetFromBackend);
@@ -123,7 +118,7 @@ require('./_hg-edit.scss');
         vm.title = vm.model.name;
         updatePilotNumbers(pristineData);
         vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
-        vm.selectedFallbackNumber = TelephoneNumberService.getDestinationObject(HuntGroupFallbackDataService.getFallbackNumber());
+        vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
         vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
         if (customerId && _.get(pristineData, 'fallbackDestination.numberUuid')) {
           HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(pristineData, 'fallbackDestination.numberUuid')).then(function (isVoicemailDisabled) {
@@ -286,9 +281,9 @@ require('./_hg-edit.scss');
       vm.saveInProgress = true;
       var updateJSONRequest = hgUpdateReqBody();
       var tempExternalNumber;
-      if (_.isObject(updateJSONRequest.fallbackDestination.number) && _.has(updateJSONRequest, 'fallbackDestination.number.phoneNumber')) {
+      if (_.isObject(updateJSONRequest.fallbackDestination.number) && _.has(updateJSONRequest, 'fallbackDestination.number')) {
         tempExternalNumber = updateJSONRequest.fallbackDestination.number;
-        updateJSONRequest.fallbackDestination.number = TelephoneNumberService.getDIDValue(updateJSONRequest.fallbackDestination.number.phoneNumber);
+        updateJSONRequest.fallbackDestination.number = PhoneNumberService.getE164Format(updateJSONRequest.fallbackDestination.number);
       }
       HuntGroupService.updateHuntGroup(customerId, vm.hgId, updateJSONRequest).then(function () {
         vm.saveInProgress = false;

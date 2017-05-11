@@ -11,18 +11,16 @@
       </div>
       <p class="snr-description" translate="singleNumberReachPanel.description"></p>
       <p class="snr-description" translate="singleNumberReachPanel.description2"></p>
-
       <div class="form-group-wrapper" ng-if="$ctrl.snrEnabled">
         <div class="form-group">
           <label for="snrDestinationNumber" translate="singleNumberReachPanel.snrRemoteDestinationNumber"></label>
           <div class="snr-remote-destination-number">
             <cs-call-destination
-              model="$ctrl.callDest"
+              model="$ctrl.snrInfo.destination"
               size="medium-12"
               inputs="$ctrl.callDestInputs"
               select-type="select"
               custom-number-translations="$ctrl.customTranslations"
-              external-number-region-code-fn="$ctrl.getRegionCode()"
               on-change-fn="$ctrl.setSnr(model)">
             </cs-call-destination>
           </div>

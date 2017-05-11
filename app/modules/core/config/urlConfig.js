@@ -33,9 +33,9 @@
       prod: 'https://csdm-a.wbx2.com/csdm/api/v1',
     },
     MessengerServiceUrl: {
-      dev: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+      dev: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       cfe: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
-      integration: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+      integration: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       prod: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
     },
     UtilizationServiceUrl: {
@@ -70,7 +70,7 @@
     },
     SparkDomainManagementUrl: {
       dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      cfe: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
       integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     },
@@ -190,7 +190,7 @@
     },
     CccUrl: {
       dev: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
-      cfe: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
+      cfe: 'https://calendar-cloud-connector-loada.ciscospark.com/api/v1',
       integration: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
       prod: 'https://calendar-cloud-connector-a.wbx2.com/api/v1',
     },
@@ -202,13 +202,13 @@
     },
     HybridEncryptionServiceUrl: {
       dev: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
-      cfe: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
+      cfe: 'https://encryption-loada.ciscospark.com/encryption/api/v1',
       integration: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
       prod: 'https://encryption-a.wbx2.com/encryption/api/v1',
     },
     L2sipUrl: {
       dev: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
-      cfe: 'https://l2sip-integration-web.wbx2.com/l2sip/api/v1',
+      cfe: 'https://l2sip-loada.ciscospark.com/api/v1',
       integration: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1', // Tool is not working in integration, we need to point to prod for now.
       prod: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
     },

@@ -14,7 +14,7 @@
   /* @ngInject */
 
   function HuntGroupEditDataService(HuntGroupService, HuntGroupMemberDataService,
-    HuntGroupFallbackDataService, TelephoneNumberService) {
+    HuntGroupFallbackDataService, PhoneNumberService) {
 
     var pristineHGData = {};
 
@@ -79,7 +79,7 @@
 
     function updatePilotNumberType(updatedHG) {
       updatedHG.numbers.forEach(function (n) {
-        if (TelephoneNumberService.validateDID(n.number)) {
+        if (PhoneNumberService.validateDID(n.number)) {
           n.type = HuntGroupService.NUMBER_FORMAT_DIRECT_LINE;
         } else {
           n.type = HuntGroupService.NUMBER_FORMAT_EXTENSION;

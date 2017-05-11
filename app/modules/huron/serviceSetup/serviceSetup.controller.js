@@ -7,7 +7,7 @@
 
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate,
-    HuronCustomer, ValidationService, HuronCustomerService, TelephoneNumberService, ExternalNumberService,
+    HuronCustomer, ValidationService, HuronCustomerService, PhoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
     PstnService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2,
     CustomerDialPlanServiceV2, HuronCompassService) {
@@ -687,7 +687,7 @@
             })) {
               var tmpExternalNumber = {
                 pattern: vm.model.site.voicemailPilotNumber,
-                label: TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber),
+                label: PhoneNumberService.getNationalFormat(vm.model.site.voicemailPilotNumber),
               };
               $scope.to.options.push(tmpExternalNumber);
             }
@@ -863,7 +863,7 @@
         if (vm.model.ftswCompanyVoicemail.ftswExternalVoicemail) {
           vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
             pattern: voicemailPilotNumber,
-            label: TelephoneNumberService.getDIDLabel(voicemailPilotNumber),
+            label: PhoneNumberService.getNationalFormat(voicemailPilotNumber),
           };
         }
       }
@@ -924,7 +924,6 @@
         vm.premiumNumbers = _.get(dialPlan, 'premiumNumbers', []).toString();
         vm.countryCode = _.get(dialPlan, 'countryCode');
         if (vm.countryCode !== null) {
-          TelephoneNumberService.setCountryCode(vm.countryCode);
           vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), vm.countryCode);
         }
       });
@@ -1156,7 +1155,7 @@
           .result
           .catch(function () {
             vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
-            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber);
+            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern = PhoneNumberService.getNationalFormat(vm.model.site.voicemailPilotNumber);
             return $q.reject();
           });
       }
@@ -1685,7 +1684,7 @@
       if (vm.form && vm.model.dialingHabit === vm.LOCAL && vm.model.regionCode === '') {
         vm.form.ftswLocalDialingRadio.$setValidity('', false);
       } else if (vm.form && vm.model.dialingHabit === vm.LOCAL) {
-        vm.form.ftswLocalDialingRadio.$setValidity('', TelephoneNumberService.isPossibleAreaCode(vm.model.regionCode));
+        vm.form.ftswLocalDialingRadio.$setValidity('', PhoneNumberService.isPossibleAreaCode(vm.model.regionCode, vm.countryCode));
       } else if (vm.form) {
         vm.form.ftswLocalDialingRadio.$setValidity('', true);
       }

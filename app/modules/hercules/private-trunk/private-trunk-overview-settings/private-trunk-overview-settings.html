@@ -1,7 +1,7 @@
 <div>
   <email-notifications-section service-id="'ept'"></email-notifications-section>
-  <setting-section class="private-trunk">
-     <div class="sub-section">
+  <setting-section>
+    <div class="sub-section">
       <private-trunk-domain
         domain-selected="$ctrl.domainSelected"
         domains="$ctrl.domains"
@@ -19,6 +19,6 @@
       </private-trunk-certificate>
      </div>
   </setting-section>
-  <deactivate-section service-id="'ept'" class="needs-border-top"></deactivate-section>
-  <documentation-section service-id="'ept'" class="needs-border-top"></documentation-section>
+  <deactivate-section class="private-trunk needs-border-top" service-id="'ept'" deactivate-modal-options="$ctrl.modalOptions"></deactivate-section>
+  <documentation-section class="private-trunk needs-border-top" service-id="'ept'"></documentation-section>
 </div>

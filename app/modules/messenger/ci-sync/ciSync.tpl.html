@@ -1,118 +1,144 @@
-<!-- BEGIN CI Sync -->
 <div ng-if="!sync.authorized()">
   <span class="icon icon-warning"></span>
   <span translate="messengerCiSync.errorUnauthorizedToView"></span>
 </div>
 
-<div class="container-ci-sync" ng-if="sync.authorized()">
+<div class="container-ci-sync settings" ng-if="sync.authorized()">
 
   <cs-page-header title-name="messengerCiSync.pageTitle" back="true" back-url="sync.backState"></cs-page-header>
 
-  <div class="content">
-    <!-- BEGIN CONTENT -->
-
-    <div ng-if="sync.dataStates.loading === sync.dataStatus">
+  <div class="container-ci-sync__content-body">
+    <div ng-if="sync.dataStates.LOADING === sync.dataStatus">
       <span class="icon icon-spinner"></span>
       <span translate="messengerCiSync.loading"></span>
     </div>
 
-    <div ng-if="sync.dataStates.error === sync.dataStatus">
+    <div ng-if="sync.dataStates.ERROR === sync.dataStatus">
       <span class="icon icon-warning"></span>
       <span>{{sync.errorMsg}}</span>
-      <p class="down-10"><span class="icon icon-refresh" ng-click="sync.refreshStatus()"><span class="right-5" ng-click="sync.refreshStatus()">{{sync.refresh}}</span></p>
+      <p class="down-10">
+        <span ng-click="sync.refreshStatus()" class="right-5">
+          <i class="icon icon-refresh"></i> {{sync.refresh}}
+        </span>
+      </p>
     </div>
 
-    <div ng-if="sync.dataStates.loaded === sync.dataStatus">
-      <div class="right">
-        <span class="icon icon-refresh" ng-click="sync.refreshStatus()"></span><span class="right-5" ng-click="sync.refreshStatus()">{{sync.refresh}}</span>
-        | <a tooltip-placement="left" tooltip="{{sync.orgAdminLinkTooltip}}" href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a>
-      </div>
-
-      <div class="col-md-4 sync-stats">
-          <h3 translate="messengerCiSync.syncStatusHeading"></h3>
-
-          <input cs-input type="text"
-            id="ciSyncOrgSettingsOrgName"
-            name="ciSyncOrgSettingsOrgName"
-            ng-model="sync.syncInfo.messengerOrgName"
-            cs-input-label="{{:: 'messengerCiSync.labelOrgName' | translate }}"
-            cs-input-group-size="medium-12"
-            disabled
-            read-only>
-          <input cs-input type="text"
-            id="ciSyncOrgSettingsOrgId"
-            name="ciSyncOrgSettingsOrgId"
-            ng-model="sync.syncInfo.messengerOrgId"
-            cs-input-label="{{:: 'messengerCiSync.labelOrgId' | translate }}"
-            cs-input-group-size="medium-12"
-            disabled
-            read-only>
-          <input cs-input type="text"
-            id="ciSyncOrgSettingsCiLinkDate"
-            name="ciSyncOrgSettingsCiLinkDate"
-            ng-model="sync.syncInfo.linkDate"
-            cs-input-label="{{:: 'messengerCiSync.labelCILinkDate' | translate }}"
-            cs-input-group-size="medium-12"
-            disabled
-            read-only>
-
-          <div ng-if="sync.syncInfo.isMessengerSyncRawMode"> <!-- Native Messenger Sync mode -->
-            <p tooltip-placement="top" tooltip="{{sync.syncStatusTooltip}}" translate="messengerCiSync.syncStatusHeading"></p>
-            <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-            <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType" ng-model="sync.syncInfo.isSyncEnabled" toggle-id="toggleIsSyncing" name="toggleSyncing" size="small"></cs-toggle-switch>
-            <!-- text when not editable -->
-            <div ng-if="sync.adminTypes.ops !== sync.adminType">
-              <boolean-text-field ng-model="sync.syncInfo.isSyncEnabled"></boolean-text-field>
-            </div>
+    <div ng-if="sync.dataStates.LOADED === sync.dataStatus">
+      <setting-section setting="sync.subSections.orgInfo" class="org-info-section">
+        <div class="row row--first">
+          <div class="medium-6">
+            <input cs-input type="text"
+              id="ciSyncOrgSettingsOrgName"
+              name="ciSyncOrgSettingsOrgName"
+              ng-model="sync.syncInfo.messengerOrgName"
+              cs-input-label="{{:: 'messengerCiSync.orgInfoSection.name' | translate }}"
+              disabled
+              read-only>
           </div>
-          <div ng-if="!sync.syncInfo.isMessengerSyncRawMode"> <!-- Native CI DirSync mode -->
-            <p tooltip-placement="top" tooltip="{{sync.dirsyncStatusTooltip}}" translate="messengerCiSync.dirsyncStatusHeading"></p>
-            <!-- text when not editable -->
-            <boolean-text-field ng-model="sync.syncInfo.isSyncEnabled"></boolean-text-field>
+          <div class="medium-6"></div>
+        </div>
+        <div class="row">
+          <div class="medium-6">
+            <input cs-input type="text"
+              id="ciSyncOrgSettingsOrgId"
+              name="ciSyncOrgSettingsOrgId"
+              ng-model="sync.syncInfo.messengerOrgId"
+              cs-input-label="{{:: 'messengerCiSync.orgInfoSection.id' | translate }}"
+              disabled
+              read-only>
           </div>
-
-          <p tooltip-placement="bottom" tooltip="{{sync.authRedirectTooltip}}" translate="messengerCiSync.authRedirectHeading"></p>
-          <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-          <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType"  ng-model="sync.syncInfo.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" size="small"></cs-toggle-switch>
-          <!-- text when not editable -->
-          <div ng-if="sync.adminTypes.ops !== sync.adminType">
-            <boolean-text-field ng-model="sync.syncInfo.isAuthRedirect"></boolean-text-field>
+          <div class="medium-6"></div>
+        </div>
+        <div class="row">
+          <div class="medium-6">
+            <input cs-input type="text"
+              id="ciSyncOrgSettingsCiLinkDate"
+              name="ciSyncOrgSettingsCiLinkDate"
+              ng-model="sync.syncInfo.linkDate"
+              cs-input-label="{{:: 'messengerCiSync.orgInfoSection.linkDate' | translate }}"
+              disabled
+              read-only>
           </div>
+          <div class="medium-6"></div>
+        </div>
+        <div class="row links-row">
+          <div class="medium-12">
+            <span ng-click="sync.refreshStatus()" class="right-5">
+              <i class="icon icon-refresh"></i> {{sync.refresh}}
+            </span>
+            |
+            <span><a tooltip-placement="left" tooltip="{{sync.orgAdminLinkTooltip}}" href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a></span>
+          </div>
+        </div>
+      </setting-section>
 
-          <div ng-if="sync.syncInfo.isNewDataFormat"> <!-- new org ext data -->
-            <!-- using toggles when editable -->
-            <div ng-if="sync.adminTypes.ops === sync.adminType">
-              <p tooltip-placement="top" tooltip="{{sync.pwdSyncTooltip}}" translate="messengerCiSync.pwdSyncHeading"></p>
-              <cs-toggle-switch ng-model="sync.syncInfo.isPwdSync" toggle-id="tidPwdSync" name="tnPwdSync" size="small"></cs-toggle-switch>
-              <p tooltip-placement="top" tooltip="{{sync.sparkEntTooltip}}" translate="messengerCiSync.sparkEntHeading"></p>
-              <cs-toggle-switch ng-model="sync.syncInfo.isSparkEnt" toggle-id="tidSparkEnt" name="tnSparkEnt" size="small"></cs-toggle-switch>
-              <p tooltip-placement="top" tooltip="{{sync.usrDisTooltip}}" translate="messengerCiSync.usrDisHeading"></p>
-              <cs-toggle-switch ng-model="sync.syncInfo.isUsrDis" toggle-id="tidUsrDis" name="tnUsrDis" size="small"></cs-toggle-switch>
-              <p tooltip-placement="top" tooltip="{{sync.usrDelTooltip}}" translate="messengerCiSync.usrDelHeading"></p>
-              <cs-toggle-switch ng-model="sync.syncInfo.isUsrDel" toggle-id="tidUsrDel" name="tnUsrDel" size="small"></cs-toggle-switch>
-            </div>
-            <!-- text when not editable -->
-            <div ng-if="sync.adminTypes.ops !== sync.adminType">
-              <p tooltip-placement="top" tooltip="{{sync.pwdSyncTooltip}}" translate="messengerCiSync.pwdSyncHeading"></p>
-              <boolean-text-field ng-model="sync.syncInfo.isPwdSync"></boolean-text-field>
+      <setting-section setting="sync.subSections.options" class="options-section">
+        <div ng-if="sync.syncInfo.isMessengerSyncRawMode" class="row row--first"> <!-- Native Messenger Sync mode -->
+          <span tooltip-placement="top" tooltip="{{sync.syncStatusTooltip}}" translate="messengerCiSync.syncStatusHeading"></span>
+          <toggle-switch-with-read-only
+            value="sync.syncInfo.isSyncEnabled"
+            is-read-only="!sync.isOpsAdmin()"
+            toggle-id="toggleIsSyncing"
+            on-change-fn="sync.setSyncInfoProperty('syncInfo.isSyncEnabled', toggleValue);"></toggle-switch-with-read-only>
+        </div>
 
-              <p tooltip-placement="top" tooltip="{{sync.sparkEntTooltip}}" translate="messengerCiSync.sparkEntHeading"></p>
-              <boolean-text-field ng-model="sync.syncInfo.isSparkEnt"></boolean-text-field>
+        <div ng-if="!sync.syncInfo.isMessengerSyncRawMode" class="row row--first"> <!-- Native CI DirSync mode -->
+          <span tooltip-placement="top" tooltip="{{sync.dirsyncStatusTooltip}}" translate="messengerCiSync.dirsyncStatusHeading"></span>
+          <boolean-text-field value="sync.syncInfo.isSyncEnabled"></boolean-text-field>
+        </div>
 
-              <p tooltip-placement="top" tooltip="{{sync.usrDisTooltip}}" translate="messengerCiSync.usrDisHeading"></p>
-              <boolean-text-field ng-model="sync.syncInfo.isUsrDis"></boolean-text-field>
+        <div class="row">
+          <span tooltip-placement="top" tooltip="{{sync.authRedirectTooltip}}" translate="messengerCiSync.authRedirectHeading"></span>
+          <toggle-switch-with-read-only
+            value="sync.syncInfo.isAuthRedirect"
+            is-read-only="!sync.isOpsAdmin()"
+            toggle-id="toggleAuthRedirect"
+            on-change-fn="sync.setSyncInfoProperty('syncInfo.isAuthRedirect', toggleValue);"></toggle-switch-with-read-only>
+        </div>
 
-              <p tooltip-placement="top" tooltip="{{sync.usrDelTooltip}}" translate="messengerCiSync.usrDelHeading"></p>
-              <boolean-text-field ng-model="sync.syncInfo.isUsrDel"></boolean-text-field>
-            </div>
+        <div ng-if="sync.syncInfo.isNewDataFormat"> <!-- new org ext data -->
+          <div class="row">
+            <span tooltip-placement="top" tooltip="{{sync.pwdSyncTooltip}}" translate="messengerCiSync.pwdSyncHeading"></span>
+            <toggle-switch-with-read-only
+              value="sync.syncInfo.isPwdSync"
+              is-read-only="!sync.isOpsAdmin()"
+              toggle-id="tidPwdSync"
+              on-change-fn="sync.setSyncInfoProperty('syncInfo.isPwdSync', toggleValue);"></toggle-switch-with-read-only>
           </div>
 
-          <input class="btn btn--attention" type="submit" value="{{sync.patchSyncButtonText}}" ng-if="sync.adminTypes.ops === sync.adminType" ng-click="sync.patchSync()">
-      </div>
+          <div class="row">
+            <span tooltip-placement="top" tooltip="{{sync.sparkEntTooltip}}" translate="messengerCiSync.sparkEntHeading"></span>
+            <toggle-switch-with-read-only
+              value="sync.syncInfo.isSparkEnt"
+              is-read-only="!sync.isOpsAdmin()"
+              toggle-id="tidSparkEnt"
+              on-change-fn="sync.setSyncInfoProperty('syncInfo.isSparkEnt', toggleValue);"></toggle-switch-with-read-only>
+          </div>
+
+          <div class="row">
+            <span tooltip-placement="top" tooltip="{{sync.usrDisTooltip}}" translate="messengerCiSync.usrDisHeading"></span>
+            <toggle-switch-with-read-only
+              value="sync.syncInfo.isUsrDis"
+              is-read-only="!sync.isOpsAdmin()"
+              toggle-id="tidUsrDis"
+              on-change-fn="sync.setSyncInfoProperty('syncInfo.isUsrDis', toggleValue);"></toggle-switch-with-read-only>
+          </div>
+
+          <div class="row">
+            <span tooltip-placement="top" tooltip="{{sync.usrDelTooltip}}" translate="messengerCiSync.usrDelHeading"></span>
+            <toggle-switch-with-read-only
+              value="sync.syncInfo.isUsrDel"
+              is-read-only="!sync.isOpsAdmin()"
+              toggle-id="tidUsrDel"
+              on-change-fn="sync.setSyncInfoProperty('syncInfo.isUsrDel', toggleValue);"></toggle-switch-with-read-only>
+          </div>
+        </div>
+
+        <div class="row">
+          <input class="btn btn--attention" type="submit" value="{{sync.patchSyncButtonText}}" ng-if="sync.isOpsAdmin()" ng-click="sync.patchSync()">
+        </div>
+      </setting-section>
     </div>
-
-    <!-- END CONTENT -->
   </div>
 
 </div>
-<!-- END CI Sync -->

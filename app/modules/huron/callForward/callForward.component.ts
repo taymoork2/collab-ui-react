@@ -1,5 +1,4 @@
 import { CallForward, CallForwardAll, CallForwardBusy } from './callForward';
-import { HuronCustomerService } from 'modules/huron/customer/customer.service';
 
 interface ITranslationMessages {
   placeholderText: string;
@@ -36,8 +35,6 @@ class CallForwardCtrl implements ng.IComponentController {
  /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private HuronCustomerService: HuronCustomerService,
-    private TelephoneNumberService,
   ) {
     this.customTranslations = {
       placeholderText: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
@@ -75,21 +72,22 @@ class CallForwardCtrl implements ng.IComponentController {
   }
 
   private processCallForwardChanges(callForwardChanges: ng.IChangesObject) {
-    let forward = callForwardChanges.currentValue.callForwardAll;
-    let number = (forward.destination) ? this.TelephoneNumberService.getDestinationObject(forward.destination) : '';
+    let forward: any = callForwardChanges.currentValue.callForwardAll;
+    let number: string = forward.destination;
     let all = {
       destination: number,
       voicemail: forward.voicemailEnabled,
     };
     forward = callForwardChanges.currentValue.callForwardBusy;
-    number = (forward.internalDestination) ? this.TelephoneNumberService.getDestinationObject(forward.internalDestination) : '';
+    number = forward.internalDestination;
 
     let internal = {
       destination: number,
       voicemail: forward.internalVoicemailEnabled,
     };
     forward = callForwardChanges.currentValue.callForwardBusy;
-    number = (forward.externalDestination) ? this.TelephoneNumberService.getDestinationObject(forward.externalDestination) : '';
+    number = forward.externalDestination;
+
     let external = {
       destination: number,
       voicemail: forward.externalVoicemailEnabled,
@@ -98,9 +96,9 @@ class CallForwardCtrl implements ng.IComponentController {
     this.busyInternal = internal;
     this.busyExternal = external;
 
-    this.forwardState = (all.destination.phoneNumber || all.voicemail) ? CallForwardCtrl.ALL : ((internal.destination.phoneNumber || internal.voicemail) ?  CallForwardCtrl.BUSY : this.forwardState = CallForwardCtrl.NONE);
+    this.forwardState = (all.destination || all.voicemail) ? CallForwardCtrl.ALL : ((internal.destination || internal.voicemail) ?  CallForwardCtrl.BUSY : this.forwardState = CallForwardCtrl.NONE);
 
-    this.forwardExternalCallsDifferently = (( external.destination.phoneNumber || external.voicemail ) && !_.isEqual(internal, external) );
+    this.forwardExternalCallsDifferently = (( external.destination || external.voicemail ) && !_.isEqual(internal, external) );
     this.callForwardTimer = _.get<number>(callForwardChanges, 'currentValue.callForwardBusy.ringDurationTimer');
   }
 
@@ -120,7 +118,7 @@ class CallForwardCtrl implements ng.IComponentController {
 
   public onCallFwdAllChange(destination: any): void {
     let callForwardAll: CallForwardAll = new CallForwardAll();
-    callForwardAll.destination = (destination && destination.phoneNumber) ? this.validate(destination.phoneNumber) : null;
+    callForwardAll.destination = destination || null;
     this.callForward.callForwardAll = callForwardAll;
     this.callForward.callForwardBusy = new CallForwardBusy();
     this.change(this.callForward);
@@ -136,7 +134,7 @@ class CallForwardCtrl implements ng.IComponentController {
 
   public onCallFwdBusyChange(destination: any): void {
     let callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
-    callForwardBusy.internalDestination = (destination && destination.phoneNumber) ? this.validate(destination.phoneNumber) : null;
+    callForwardBusy.internalDestination = destination || null;
     this.callForward.callForwardAll = new CallForwardAll();
     this.callForward.callForwardBusy = callForwardBusy;
     this.change(this.callForward);
@@ -156,7 +154,7 @@ class CallForwardCtrl implements ng.IComponentController {
   public onCallFwdBusyExternalChange(destination: any): void {
     let callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
     if (this.forwardExternalCallsDifferently) {
-      callForwardBusy.externalDestination = (destination && destination.phoneNumber) ? this.validate(destination.phoneNumber) : null;
+      callForwardBusy.externalDestination = destination || null;
     }
     this.callForward.callForwardAll = new CallForwardAll();
     this.callForward.callForwardBusy = callForwardBusy;
@@ -198,20 +196,6 @@ class CallForwardCtrl implements ng.IComponentController {
     });
   }
 
-  public getRegionCode() {
-    return this.HuronCustomerService.getVoiceCustomer();
-  }
-
-  public validate(number: any) {
-    let newNumber = number;
-    if (number && this.TelephoneNumberService.validateDID(number)) {
-      newNumber = this.TelephoneNumberService.getDIDValue(number);
-    } else if (number.indexOf('@') === -1) {
-      newNumber = _.replace(number, /-/g, '');
-    }
-    return newNumber.replace(/ /g, '');
-  }
-
   public onCFNATimerChange(): void {
     if (this.validateCallForwardTimer()) {
       this.isError = false;
@@ -229,8 +213,6 @@ class CallForwardCtrl implements ng.IComponentController {
   private validateCallForwardTimer(): boolean {
     return _.inRange(this.callForwardTimer, MIN_SECONDS, MAX_SECONDS + 1);
   }
-
-
 }
 
 export class CallForwardComponent implements ng.IComponentOptions {

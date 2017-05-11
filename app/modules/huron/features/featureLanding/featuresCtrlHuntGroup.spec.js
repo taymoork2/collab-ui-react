@@ -6,7 +6,7 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, CallPickupGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, CallPickupGroupService, PhoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService;
   var listOfHGs = getJSONFixture('huron/json/features/huntGroup/hgList.json');
   var hg = getJSONFixture('huron/json/features/huntGroup/oneHg.json');
   var emptyListOfHGs = [];
@@ -36,10 +36,15 @@ describe('Features Controller', function () {
     toggle: 'huronHuntGroup',
   }];
 
+  var $event = {
+    preventDefault: function () {},
+    stopImmediatePropagation: function () {},
+  };
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _CallPickupGroupService_, _PagingGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _CallPickupGroupService_, _PagingGroupService_, _PhoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -52,7 +57,7 @@ describe('Features Controller', function () {
     CallParkService = _CallParkService_;
     PagingGroupService = _PagingGroupService_;
     CallPickupGroupService = _CallPickupGroupService_;
-    TelephoneNumberService = _TelephoneNumberService_;
+    PhoneNumberService = _PhoneNumberService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAModelService = _AAModelService_;
     Log = _Log_;
@@ -82,7 +87,7 @@ describe('Features Controller', function () {
       $timeout: $timeout,
       Authinfo: Authinfo,
       HuntGroupService: HuntGroupService,
-      TelephoneNumberService: TelephoneNumberService,
+      PhoneNumberService: PhoneNumberService,
       Log: Log,
       Notification: Notification,
     });
@@ -140,7 +145,7 @@ describe('Features Controller', function () {
     getDeferred.resolve(getHGListSuccessResp(emptyListOfHGs));
     $scope.$apply();
     $timeout.flush();
-    featureCtrl.deleteHuronFeature(huntGroups[0]);
+    featureCtrl.deleteHuronFeature(huntGroups[0], $event);
     expect($state.go).toHaveBeenCalledWith('huronfeatures.deleteFeature', {
       deleteFeatureName: huntGroups[0].cardName,
       deleteFeatureId: huntGroups[0].id,

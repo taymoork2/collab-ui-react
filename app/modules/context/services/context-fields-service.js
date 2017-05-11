@@ -36,6 +36,12 @@
         })
         .then(function (response) {
           return response.data;
+        })
+        // TODO: Remove temporary fix to filter INTERNAL TEST ONLY fields.
+        .then(function (fields) {
+          return _.filter(fields, function (field) {
+            return !(field.description && field.description.includes('*INTERNAL TEST ONLY:') && field.publiclyAccessible);
+          });
         });
     }
 

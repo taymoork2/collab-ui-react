@@ -1,8 +1,10 @@
-describe('Component: pstn-contactInfo', () => {
+import pstnContactInfo from './index';
+
+describe('Component: PstnContactInfoComponent', () => {
   const FIRST_NAME_INPUT = '#firstName';
 
   beforeEach(function () {
-    this.initModules('huron.pstn-contactInfo');
+    this.initModules(pstnContactInfo);
     this.injectDependencies(
       '$scope',
       '$timeout',

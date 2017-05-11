@@ -1,19 +1,18 @@
+
 export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
 
   public back: boolean = true;
   public backState = 'services-overview';
   public hasPrivateTrunkFeatureToggle: boolean;
-  public tabs = [{
-    title: 'Resources',
-    state: 'private-trunk-overview.list',
-  }, {
-    title: 'Settings',
-    state: 'private-trunk-overview.settings',
-  }];
-
+  public tabs: [{ 'title': String, 'state': String }];
+  public modalOptions: any = {
+    template: '<private-trunk-setup class="modal-content" dismiss="$dismiss()"></private-trunk-setup>',
+    type: 'full',
+  };
   /* @ngInject */
   constructor (
     private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
   ) {
   }
 
@@ -21,16 +20,14 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
     if (!this.hasPrivateTrunkFeatureToggle) {
       this.$state.go(this.backState);
     }
-  }
 
-  public getModalOptions() {
-    const currentStep: number = 2;
-    let addResourceModalOptions = {
-      template: '<private-trunk-setup class="modal-content" currentStepIndex=' + currentStep + '></private-trunk-setup>',
-      type: 'full',
-      keyboard: false,
-    };
-    return addResourceModalOptions;
+    this.tabs = [{
+      title: this.$translate.instant('servicesOverview.cards.privateTrunk.buttons.resources'),
+      state: 'private-trunk-overview.list',
+    }, {
+      title: this.$translate.instant('servicesOverview.cards.hybridCall.buttons.settings'),
+      state: 'private-trunk-overview.settings',
+    }];
   }
 
 }

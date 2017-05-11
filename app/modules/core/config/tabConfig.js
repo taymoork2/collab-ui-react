@@ -77,7 +77,7 @@
     state: 'support.status',
   }, {
     tab: 'settingsTab',
-    icon: 'icon-sliders',
+    icon: 'icon-settings',
     title: 'tabs.settingsTab',
     state: 'settings',
     link: '/settings',

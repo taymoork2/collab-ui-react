@@ -1,14 +1,14 @@
-import './_settings.scss';
+
 import { SettingSection } from './settingSection';
-import { AuthenticationSetting } from './authenticationSetting.component';
-import { BrandingSetting } from './brandingSetting.component';
-import { DomainsSetting } from './domainsSetting.component';
-import { RetentionSetting } from './retentionSetting.component';
-import { SecuritySetting } from './securitySetting.component';
-import { SipDomainSetting } from './sipDomainSetting.component';
+import { AuthenticationSetting } from './authentication/authenticationSetting.component';
+import { BrandingSetting } from './branding/brandingSetting.component';
+import { DomainsSetting } from './domain/domainsSetting.component';
+import { RetentionSetting } from './retention/retentionSetting.component';
+import { SecuritySetting } from './security/securitySetting.component';
+import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';
-import { DirSyncSetting } from './dirSyncSetting.component';
+import { DirSyncSetting } from './dirsync/dirSyncSetting.component';
 
 export class SettingsCtrl {
 
@@ -123,6 +123,3 @@ export class SettingsCtrl {
     });
   }
 }
-angular
-  .module('Core')
-  .controller('SettingsCtrl', SettingsCtrl);

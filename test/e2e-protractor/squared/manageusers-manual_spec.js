@@ -126,8 +126,8 @@ describe('Manage Users - Manual -', function () {
       utils.click(manageUsersPage.buttons.finish);
     });
 
-    it('should confirm invited users exist and have licenses/entitlements set', function () {
-      _.each(allUsers, function (user) {
+    _.forEach(allUsers, function (user) {
+      it('should confirm invited user ' + user.email + ' exists and has licenses/entitlements set', function () {
         utils.searchAndClick(user.email);
         utils.expectIsDisplayed(users.servicesPanel);
 
@@ -140,7 +140,7 @@ describe('Manage Users - Manual -', function () {
 
     // delete all the users we created
     afterAll(function () {
-      _.each(allUsers, function (user) {
+      _.forEach(allUsers, function (user) {
         deleteUtils.deleteUser(user.email, token);
       });
     });

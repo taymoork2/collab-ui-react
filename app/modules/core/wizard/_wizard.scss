@@ -70,6 +70,19 @@ cr-wizard-nav {
   display: flex;
 }
 
+cr-wizard {
+  margin: initial !important;
+
+  .modal-content {
+    margin: initial !important;
+    width: 100%;
+
+    .ssoWizardTitle {
+      padding-left: inherit;
+    }
+  }
+}
+
 .wizard-nav {
   width: 370px;
   height: 94vh;

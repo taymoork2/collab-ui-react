@@ -128,7 +128,6 @@ class CsdmPollerInstance {
         this.pollPromise = this.$timeout(() => this.poll(), this.pollDelay);
       }
     };
-
     this.service().then(_.partial(notifyAll, undefined), notifyAll);
   }
 

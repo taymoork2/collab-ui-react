@@ -11,8 +11,6 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
-    'huron.telephoneNumber',
-    'huron.telephoneNumberService',
     require('modules/huron/telephony/cmiServices'),
     require('modules/core/scripts/services/authinfo'),
     memberService,

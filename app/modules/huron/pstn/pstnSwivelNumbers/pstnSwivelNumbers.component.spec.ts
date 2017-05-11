@@ -1,7 +1,9 @@
-describe('Component: pstn-swivelNumbers', () => {
+import pstnSwivelNumbers from './index';
+
+describe('Component: PstnSwivelNumbersComponent', () => {
 
   beforeEach(function () {
-    this.initModules('huron.pstn-swivelNumbers');
+    this.initModules(pstnSwivelNumbers);
     this.injectDependencies(
       '$scope',
       '$timeout',

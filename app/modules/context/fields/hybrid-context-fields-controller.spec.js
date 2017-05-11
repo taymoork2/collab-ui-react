@@ -2,7 +2,7 @@
 
 describe('HybridContextFieldsCtrl', function () {
 
-  var $controller, $scope, $state, $q, controller, ContextFieldsService, Log, Notification, LogMetricsService;
+  var $controller, $scope, $state, $q, controller, ContextFieldsService, Log, Notification, LogMetricsService, Authinfo;
   var fakeGridApi = {
     infiniteScroll: {
       dataLoaded: jasmine.createSpy('dataLoaded'),
@@ -24,10 +24,10 @@ describe('HybridContextFieldsCtrl', function () {
   beforeEach(initSpies);
 
   afterAll(function () {
-    $controller = $scope = $state = $q = controller = ContextFieldsService = Log = Notification = fakeGridApi = LogMetricsService = undefined;
+    $controller = $scope = $state = $q = controller = ContextFieldsService = Authinfo = Log = Notification = fakeGridApi = LogMetricsService = undefined;
   });
 
-  function dependencies($rootScope, _$controller_, _$q_, _$state_, _ContextFieldsService_, _Log_, _Notification_, _LogMetricsService_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$state_, _Authinfo_, _ContextFieldsService_, _Log_, _Notification_, _LogMetricsService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -36,6 +36,7 @@ describe('HybridContextFieldsCtrl', function () {
     Log = _Log_;
     Notification = _Notification_;
     LogMetricsService = _LogMetricsService_;
+    Authinfo = _Authinfo_;
   }
 
   function initSpies() {
@@ -44,6 +45,7 @@ describe('HybridContextFieldsCtrl', function () {
     spyOn(Log, 'debug');
     spyOn(Notification, 'error');
     spyOn(LogMetricsService, 'logMetrics');
+    spyOn(Authinfo, 'getOrgName').and.returnValue('orgName');
   }
 
   function initController() {
@@ -118,6 +120,26 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
       expect(controller.fieldsList.allFields[0].publiclyAccessible).toEqual('false');
+      expect(controller.fieldsList.allFields[0].publiclyAccessibleUI).toEqual('orgName');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).not.toExist();
+      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toBeNull();
+    });
+
+    it('should process field data when data returned and publiclyAccessible', function () {
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
+        'publiclyAccessible': 'true',
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'refUrl': '/dictionary/field/v1/id/NoDataType',
+        'id': 'NoDataType',
+        'lastUpdated': '2017-01-26T18:42:42.124Z',
+      }]));
+      controller = initController();
+      $scope.$apply();
+      expect(controller.fieldsList.allFields.length).toBe(1);
+      expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
+      expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].publiclyAccessible).toEqual('true');
+      expect(controller.fieldsList.allFields[0].publiclyAccessibleUI).toEqual('context.dictionary.base');
       expect(controller.fieldsList.allFields[0].dataTypeUI).not.toExist();
       expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toBeNull();
     });

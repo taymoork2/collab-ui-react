@@ -251,20 +251,16 @@
       });
 
     function showProviderDetails() {
-      LineListService.isResellerExists().then(function (response) {
-        if (response) {
-          return $state.go('pstnSetup', {
-            customerId: Authinfo.getOrgId(),
-            customerName: Authinfo.getOrgName(),
-            customerEmail: Authinfo.getCustomerAdminEmail(),
-            customerCommunicationLicenseIsTrial: Authinfo.getLicenseIsTrial("COMMUNICATION", 'ciscouc'),
-            customerRoomSystemsLicenseIsTrial: Authinfo.getLicenseIsTrial("SHARED_DEVICES", false),
-          });
-        } else {
-          Notification.error('pstnSetup.resellerMissingError');
-        }
+      return $state.go('pstnSetup', {
+        customerId: Authinfo.getOrgId(),
+        customerName: Authinfo.getOrgName(),
+        customerEmail: Authinfo.getCustomerAdminEmail(),
+        customerCommunicationLicenseIsTrial: Authinfo.getLicenseIsTrial("COMMUNICATION", 'ciscouc'),
+        customerRoomSystemsLicenseIsTrial: Authinfo.getLicenseIsTrial("SHARED_DEVICES", false),
       });
     }
+
+
     getLineList();
   }
 })();

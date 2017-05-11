@@ -6,12 +6,12 @@
  * or in the case of no externalNumber:
  * 501
  * @param {$translate} - Translate Service
- * @param {TelephoneNumberService} - Telephone Number service located in modules/huron/telephony/telephoneNumber.service.js
+ * @param {PhoneNumberService} - Telephone Number service located in modules/huron/phoneNumber/phoneNumber.service.ts
  * @return {string} - The formatted number string.
  */
 
 /* @ngInject */
-export function callParkReversionDirectoryNumberFilter($translate, TelephoneNumberService) {
+export function callParkReversionDirectoryNumberFilter($translate, PhoneNumberService) {
   return filter;
 
   function filter(number: any): string {
@@ -19,7 +19,7 @@ export function callParkReversionDirectoryNumberFilter($translate, TelephoneNumb
     let externalNumber = _.get(number, 'alternateNumbers.externalNumber.pattern');
 
     if (externalNumber) {
-      filteredNumber += ' ' + $translate.instant('common.and') + ' ' + TelephoneNumberService.getDIDLabel(externalNumber);
+      filteredNumber += ' ' + $translate.instant('common.and') + ' ' + PhoneNumberService.getNationalFormat(externalNumber);
     }
 
     return filteredNumber;

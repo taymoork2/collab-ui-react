@@ -39,9 +39,3 @@ export class DirConnectorsComponent implements ng.IComponentOptions {
     onDeregister: '&',
   };
 }
-
-export default angular
-  .module('Core')
-  .component('dirConnectorsConfig', new DirConnectorsComponent())
-  .name;
-

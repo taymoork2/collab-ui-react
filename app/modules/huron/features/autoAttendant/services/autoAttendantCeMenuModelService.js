@@ -610,7 +610,7 @@
       }
     }
     function parseLeftRightExpression(expression) {
-      return AAUtilityService.pullJSPieces(expression && expression.indexOf(AAUtilityService.CONSTANTS.js.func) === 0 ? expression : decodeURI(expression));
+      return AAUtilityService.pullJSPieces(expression && expression.indexOf(AAUtilityService.CONSTANTS.js.func) === 0 ? expression : decodeURIComponent(expression));
     }
 
 
@@ -1250,7 +1250,7 @@
       } else {
         js = AAUtilityService.generateFunction(action.if.leftCondition, AAUtilityService.splitOnCommas(action.if.rightCondition));
       }
-      return encodeURI(js);
+      return encodeURIComponent(js);
     }
 
     function createObj(tag, action) {

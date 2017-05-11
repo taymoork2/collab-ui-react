@@ -6,7 +6,7 @@
     .service('Userservice', Userservice);
 
   /* @ngInject */
-  function Userservice($http, $q, $rootScope, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
+  function Userservice($http, $q, $rootScope, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, PhoneNumberService, UrlConfig) {
     var userUrl = UrlConfig.getAdminServiceUrl();
     var service = {
       updateUsers: updateUsers,
@@ -590,7 +590,7 @@
             entitlementOrLicense.properties.internalExtension = user.internalExtension;
           }
           if (user.directLine) {
-            entitlementOrLicense.properties.directLine = TelephoneNumberService.getDIDValue(user.directLine);
+            entitlementOrLicense.properties.directLine = PhoneNumberService.getDIDValue(user.directLine);
           }
         }
 

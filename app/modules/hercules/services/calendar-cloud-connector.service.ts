@@ -70,15 +70,19 @@ export class CloudConnectorService {
 
   public openSetupModal(): ng.IPromise<any> {
     this.setupModal = this.$modal.open({
-      template: '<google-calendar-setup class="modal-content"></google-calendar-setup>',
+      template: '<google-calendar-setup class="modal-content" first-time-setup="true"></google-calendar-setup>',
       type: 'full',
     });
     return this.setupModal.result;
   }
 
-  public dismissSetupModal(): void {
+  public dismissSetupModal(back?): void {
     if (this.setupModal) {
-      this.setupModal.dismiss();
+      if (back) {
+        this.setupModal.close('back');
+      } else {
+        this.setupModal.dismiss();
+      }
       this.setupModal = undefined;
     }
   }

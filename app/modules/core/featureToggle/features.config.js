@@ -71,7 +71,6 @@ module.exports = {
   feedbackViaEmail: 'feedback-via-email',
   filterBadges: 'filter-badges',
   flagMsg: 'flag-msg',
-  fmcCommandDispatch: 'fmc-command-dispatch',
   geoHintEnabled: 'geo-hint-enabled',
   huronAAMediaUpload: 'huron-aa-mediaupload',
   huronAACallerInput: 'huron-aa-callerinput',
@@ -171,6 +170,7 @@ module.exports = {
   avrilVmMailboxEnable: 'avril-vm-mailbox-enable',
   avrilVoicemaill1249: 'avril-voicemail-l1249',
   cloudberryPersonalMode: 'ce-enable-personal-mode',
+  hi1033: 'h-i1033',
   huronFederatedSparkCall: 'huron-federated-spark-call',
   sparkCallTenDigitExt: 'i751-10d-ext',
   huronNetworkLocaleGB: 'huron-l10n-network-locale-gb',
@@ -196,4 +196,5 @@ module.exports = {
   csdmT38: "csdm-ata-t38",
   csdmPlaceUpgradeChannel: "csdm-place-upgrade-channel",
   hI802: "h-i802",
+  csdmPlaceGuiSettings: "csdm-place-gui-settings",
 };

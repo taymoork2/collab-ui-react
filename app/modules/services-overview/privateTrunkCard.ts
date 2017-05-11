@@ -19,7 +19,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
   }];
 
   private _activeButtons: ICardButton[] = [{
-    name: 'servicesOverview.cards.hybridCall.buttons.resources',
+    name: 'servicesOverview.cards.privateTrunk.buttons.resources',
     routerState: 'private-trunk-overview.list',
     buttonClass: 'btn-link',
   }, {

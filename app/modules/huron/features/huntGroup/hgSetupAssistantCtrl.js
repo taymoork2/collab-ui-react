@@ -12,7 +12,7 @@ require('./_hunt-group.scss');
   /* @ngInject */
   function HuntGroupSetupAssistantCtrl($q, $state, $modal, $timeout,
     Authinfo, Notification, HuntGroupService,
-    HuntGroupFallbackDataService, HuntGroupMemberDataService, HuronCustomerService) {
+    HuntGroupFallbackDataService, HuntGroupMemberDataService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
 
@@ -80,7 +80,6 @@ require('./_hunt-group.scss');
     vm.populateHuntMembers = populateHuntMembers;
     vm.populateFallbackDestination = populateFallbackDestination;
 
-    vm.externalRegionCodeFn = getRegionCode;
     vm.setSelectedFallbackNumber = setSelectedFallbackNumber;
     vm.callDestInputs = ['internal', 'external'];
 
@@ -93,10 +92,7 @@ require('./_hunt-group.scss');
 
     function setSelectedFallbackNumber(model) {
       vm.selectedFallbackNumber = model;
-    }
-
-    function getRegionCode() {
-      return HuronCustomerService.getVoiceCustomer();
+      validateFallbackNumber(vm.selectedFallbackNumber);
     }
 
     function fetchNumbers(typedNumber) {
@@ -178,7 +174,6 @@ require('./_hunt-group.scss');
     }
 
     function setHuntMethod(methodSelected) {
-
       if (vm.huntGroupMethod === methodSelected) {
         nextPage();
       } else {
@@ -266,7 +261,7 @@ require('./_hunt-group.scss');
     // Fallback destination presentation controller functions.
 
     function selectFallback($item) {
-      vm.selectedFallbackNumber = {};
+      vm.selectedFallbackNumber = '';
       vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
       HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get($item, 'selectableNumber.uuid')).then(function (isVoicemailDisabled) {
         vm.disableVoicemail = isVoicemailDisabled;
