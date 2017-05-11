@@ -2530,18 +2530,17 @@
             parent: 'main',
           })
           .state('helpdesk', {
-            url: '/helpdesk',
             template: '<div ui-view></div>',
             controller: 'HelpdeskController',
             controllerAs: 'helpdeskCtrl',
             parent: 'helpdesk-main',
           })
           .state('helpdesk.search', {
-            url: '/',
+            url: '/helpdesk',
             templateUrl: 'modules/squared/helpdesk/helpdesk-search.html',
           })
           .state('helpdesk.user', {
-            url: '/user/:orgId/:id',
+            url: '/helpdesk/user/:orgId/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-user.html',
             controller: 'HelpdeskUserController',
             controllerAs: 'helpdeskUserCtrl',
@@ -2552,7 +2551,7 @@
             },
           })
           .state('helpdesk.order', {
-            url: '/order/:orderId/:id',
+            url: '/helpdesk/order/:orderId/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
             controller: 'HelpdeskOrderController',
             controllerAs: 'helpdeskOrderCtrl',
@@ -2561,7 +2560,7 @@
             },
           })
           .state('helpdesk.org', {
-            url: '/org/:id',
+            url: '/helpdesk/org/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
             controller: 'HelpdeskOrgController',
             controllerAs: 'helpdeskOrgCtrl',
@@ -2571,7 +2570,7 @@
             },
           })
           .state('helpdesk.cloudberry-device', {
-            url: '/cloudberryDevice/:orgId/:id',
+            url: '/helpdesk/cloudberryDevice/:orgId/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-cloudberry-device.html',
             controller: 'HelpdeskCloudberryDeviceController',
             controllerAs: 'helpdeskDeviceCtrl',
@@ -2582,7 +2581,7 @@
             },
           })
           .state('helpdesk.huron-device', {
-            url: '/huronDevice/:orgId/:id',
+            url: '/helpdesk/huronDevice/:orgId/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-huron-device.html',
             controller: 'HelpdeskHuronDeviceController',
             controllerAs: 'helpdeskDeviceCtrl',
