@@ -2573,11 +2573,11 @@
       "goToNode": "Go to node",
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
-      "pendingTooltip": "Maintenance mode has been requested. The node will move to this mode when any pending activities complete.",
+      "pendingTooltip": "Maintenance mode has been requested. Please wait until the node is ready.",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
-        "message": "Are you sure? While the Hybrid Media node is in this mode, alarms will be ignored. This mode will be enabled as soon as no calls are hosted on the node.",
-        "expresswayMessage": "Are you sure? While the Expressway is in this mode, all connectors will stop and alarms will be ignored. Users will be reassigned to other clusters or nodes, and will have no service in the meantime."
+        "message": "<p>The Hybrid Media node will be put in maintenance mode as soon as there are no active calls or a timeout of two hours is reached. Please wait for the node to move from \"Pending Maintenance\" to \"Maintenance\" before proceeding.</p><p>No alarm notifications will be sent for nodes in maintenance mode.</p>",
+        "expresswayMessage": "<p>The Expressway node will be marked as \"Pending Maintenance\" until it has been instructed to go into maintenance mode. All users assigned to connectors on this node will be reassigned to another available node. Note that if there are no other nodes available, these users will lose service.</p><p>No alarm notifications will be sent for nodes in maintenance mode.</p>"
       },
       "disableMaintenanceModeModal": {
         "title": "Disable maintenance mode",
