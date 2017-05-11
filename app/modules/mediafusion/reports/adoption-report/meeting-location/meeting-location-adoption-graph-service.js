@@ -23,6 +23,8 @@
     vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
     vm.totalHeading = $translate.instant('mediaFusion.metrics.clientType.total');
     vm.locations = $translate.instant('mediaFusion.metrics.location');
+    vm.allOn = $translate.instant('mediaFusion.metrics.allOn');
+    vm.allOff = $translate.instant('mediaFusion.metrics.allOff');
 
     return {
       setMeetingLocationGraph: setMeetingLocationGraph,
@@ -153,8 +155,6 @@
         graphs.push({
           'title': 'All Off',
           'id': 'none',
-          'bullet': 'none',
-          'bulletSize': 0,
           'lineColor': 'transparent',
         });
       }
@@ -222,17 +222,17 @@
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.title === 'All Off') {
-        evt.dataItem.title = 'All On';
+      if (evt.dataItem.title === vm.allOff) {
+        evt.dataItem.title = vm.allOn;
         _.each(evt.chart.graphs, function (graph) {
-          if (graph.title != 'All On') {
+          if (graph.title != vm.allOn) {
             evt.chart.hideGraph(graph);
           } else {
             evt.chart.showGraph(graph);
           }
         });
-      } else if (evt.dataItem.title === 'All On') {
-        evt.dataItem.title = 'All Off';
+      } else if (evt.dataItem.title === vm.allOn) {
+        evt.dataItem.title = vm.allOff;
         _.each(evt.chart.graphs, function (graph) {
           evt.chart.showGraph(graph);
         });
