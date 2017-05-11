@@ -1,13 +1,13 @@
-import { GoogleCalendarSetupComponent } from './google-calendar-setup.component';
+import { GoogleCalendarFirstTimeSetupComponent } from './google-calendar-first-time-setup.component';
 import { GoogleCalendarApiInformationComponent } from './google-calendar-api-information.component';
-import 'modules/hercules/service-settings/calendar-service-setup/_google-calendar-setup.scss';
+import 'modules/hercules/service-settings/calendar-service-setup/_google-calendar-first-time-setup.scss';
 
 export default angular
-  .module('hercules.first-google-calendar-setup', [
+  .module('hercules.google-calendar-first-time-setup', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
   ])
-  .component('googleCalendarSetup', new GoogleCalendarSetupComponent())
+  .component('googleCalendarFirstTimeSetup', new GoogleCalendarFirstTimeSetupComponent())
   .component('googleCalendarApiInformation', new GoogleCalendarApiInformationComponent())
   .name;

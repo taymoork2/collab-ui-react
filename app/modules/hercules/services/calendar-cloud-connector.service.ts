@@ -14,8 +14,8 @@ interface IService {
 
 interface IConfig {
   aclAdminAccount?: string;
-  apiClientId: string;
-  testEmailAccount: string;
+  apiClientId?: string;
+  testEmailAccount?: string;
 }
 
 export interface IApiKey {
@@ -37,12 +37,14 @@ enum ProvisioningResult {
 
 export class CloudConnectorService {
   private setupModal: any;
+  private secondSetupModal: any;
   private serviceId: HybridServiceId = 'squared-fusion-gcal';
 
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
     private $modal: IToolkitModalService,
+    private $q: ng.IQService,
     private Authinfo,
     private ServiceDescriptor,
     private UrlConfig,
@@ -53,8 +55,21 @@ export class CloudConnectorService {
   }
 
   public updateConfig = (config: IConfig): ng.IPromise<any> => {
-    return this.$http
-      .post(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${this.serviceId}`, config)
+    let promiseStart;
+    // Fetch apiClientId if it wasn't provided, since the server requires it
+    if (config.apiClientId === undefined) {
+      promiseStart = this.getApiKey()
+        .then((data) => data.apiClientId);
+    } else {
+      promiseStart = this.$q.resolve(config.apiClientId);
+    }
+    return promiseStart
+      .then((apiClientId) => {
+        config = _.extend({}, config, {
+          apiClientId: apiClientId,
+        });
+        return this.$http.post(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${this.serviceId}`, config);
+      })
       .then(() => {
         return this.ServiceDescriptor.enableService(this.serviceId);
       });
@@ -70,10 +85,18 @@ export class CloudConnectorService {
 
   public openSetupModal(): ng.IPromise<any> {
     this.setupModal = this.$modal.open({
-      template: '<google-calendar-setup class="modal-content" first-time-setup="true"></google-calendar-setup>',
+      template: '<google-calendar-first-time-setup class="modal-content" first-time-setup="true"></google-calendar-first-time-setup>',
       type: 'full',
     });
     return this.setupModal.result;
+  }
+
+  public openSecondSetupModal(): ng.IPromise<any> {
+    this.secondSetupModal = this.$modal.open({
+      template: '<google-calendar-second-time-setup class="modal-content"></google-calendar-second-time-setup>',
+      type: 'full',
+    });
+    return this.secondSetupModal.result;
   }
 
   public dismissSetupModal(back?): void {
@@ -84,6 +107,13 @@ export class CloudConnectorService {
         this.setupModal.dismiss();
       }
       this.setupModal = undefined;
+    }
+  }
+
+  public dismissSecondSetupModal(): void {
+    if (this.secondSetupModal) {
+      this.secondSetupModal.close();
+      this.secondSetupModal = undefined;
     }
   }
 
