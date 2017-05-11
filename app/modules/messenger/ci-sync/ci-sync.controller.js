@@ -78,7 +78,7 @@
     vm.refreshStatus = refreshStatus;
     vm.setOrgAdmin = setOrgAdmin;
     vm.setOpsAdmin = setOpsAdmin;
-    vm.setSyncInfoProperty = setSyncInfoProperty;
+    vm.setExistingProperty = setExistingProperty;
     vm.saveSettings = saveSettings;
     vm.resetSettings = resetSettings;
     vm.canShowSaveCancel = canShowSaveCancel;
@@ -234,7 +234,7 @@
         });
     }
 
-    function setSyncInfoProperty(propName, value) {
+    function setExistingProperty(propName, value) {
       // only a previously defined property can be updated
       if (_.isNil(_.get(vm, propName))) {
         return;

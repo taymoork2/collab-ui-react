@@ -79,7 +79,7 @@
             value="sync.settings.syncInfo.isSyncEnabled"
             is-read-only="!sync.isOpsAdmin()"
             toggle-id="toggleIsSyncing"
-            on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isSyncEnabled', toggleValue);"></toggle-switch-with-read-only>
+            on-change-fn="sync.setExistingProperty('settings.syncInfo.isSyncEnabled', toggleValue);"></toggle-switch-with-read-only>
         </div>
 
         <div ng-if="!sync.settings.syncInfo.isMessengerSyncRawMode" class="row row--first"> <!-- Native CI DirSync mode -->
@@ -93,7 +93,7 @@
             value="sync.settings.syncInfo.isAuthRedirect"
             is-read-only="!sync.isOpsAdmin()"
             toggle-id="toggleAuthRedirect"
-            on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isAuthRedirect', toggleValue);"></toggle-switch-with-read-only>
+            on-change-fn="sync.setExistingProperty('settings.syncInfo.isAuthRedirect', toggleValue);"></toggle-switch-with-read-only>
         </div>
 
         <div ng-if="sync.settings.syncInfo.isNewDataFormat"> <!-- new org ext data -->
@@ -103,7 +103,7 @@
               value="sync.settings.syncInfo.isPwdSync"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidPwdSync"
-              on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isPwdSync', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setExistingProperty('settings.syncInfo.isPwdSync', toggleValue);"></toggle-switch-with-read-only>
           </div>
 
           <div class="row">
@@ -112,7 +112,7 @@
               value="sync.settings.syncInfo.isSparkEnt"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidSparkEnt"
-              on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isSparkEnt', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setExistingProperty('settings.syncInfo.isSparkEnt', toggleValue);"></toggle-switch-with-read-only>
           </div>
 
           <div class="row">
@@ -121,7 +121,7 @@
               value="sync.settings.syncInfo.isUsrDis"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidUsrDis"
-              on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isUsrDis', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setExistingProperty('settings.syncInfo.isUsrDis', toggleValue);"></toggle-switch-with-read-only>
           </div>
 
           <div class="row">
@@ -130,7 +130,7 @@
               value="sync.settings.syncInfo.isUsrDel"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidUsrDel"
-              on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isUsrDel', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setExistingProperty('settings.syncInfo.isUsrDel', toggleValue);"></toggle-switch-with-read-only>
           </div>
         </div>
 
