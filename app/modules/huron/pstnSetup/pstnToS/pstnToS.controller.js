@@ -5,7 +5,7 @@
     .controller('PstnToSCtrl', PstnToSCtrl);
 
   /* @ngInject */
-  function PstnToSCtrl($rootScope, $scope, $translate, $resource, Orgservice, PstnService) {
+  function PstnToSCtrl($rootScope, $scope, $translate, $resource, Orgservice, PstnService, Notification) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -102,6 +102,12 @@
         .then(function () {
           $rootScope.$broadcast(PSTN_TOS_ACCEPT);
           $scope.$close();
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response);
+        })
+        .finally(function () {
+          vm.loading = false;
         });
     }
 

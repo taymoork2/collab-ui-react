@@ -1,5 +1,6 @@
 import { CompanyCallerIdComponent } from './companyCallerId.component';
 import { CallerIdPhoneNumberValidator } from './companyCallerIdValidatePhoneNumber.directive';
+import phoneNumberModule from 'modules/huron/phoneNumber';
 
 export * from './companyNumber';
 
@@ -8,8 +9,7 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
-    'huron.telephoneNumber',
-    'huron.telephoneNumberService',
+    phoneNumberModule,
   ])
   .component('ucCompanyCallerId', new CompanyCallerIdComponent())
   .directive('validateCallerIdPhoneNumber', CallerIdPhoneNumberValidator.factory)

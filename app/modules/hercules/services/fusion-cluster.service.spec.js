@@ -17,14 +17,14 @@ describe('Service: FusionClusterService', function () {
 
   function mockDependencies($provide) {
     var Authinfo = {
-      getOrgId: sinon.stub().returns('0FF1C3'),
-      isEntitled: sinon.stub().returns(true),
+      getOrgId: jasmine.createSpy('getOrgId').and.returnValue('0FF1C3'),
+      isEntitled: jasmine.createSpy('isEntitled').and.returnValue(true),
     };
     $provide.value('Authinfo', Authinfo);
     var UrlConfig = {
-      getHerculesUrlV2: sinon.stub().returns('http://elg.no'),
-      getHerculesUrl: sinon.stub().returns('http://ulv.no'),
-      getUssUrl: sinon.stub().returns('http://whatever.no/'),
+      getHerculesUrlV2: jasmine.createSpy('getHerculesUrlV2').and.returnValue('http://elg.no'),
+      getHerculesUrl: jasmine.createSpy('getHerculesUrl').and.returnValue('http://ulv.no'),
+      getUssUrl: jasmine.createSpy('getUssUrl').and.returnValue('http://whatever.no/'),
     };
     $provide.value('UrlConfig', UrlConfig);
   }

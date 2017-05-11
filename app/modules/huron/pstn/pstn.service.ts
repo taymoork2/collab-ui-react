@@ -3,37 +3,39 @@ import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_OR
 import { Notification } from 'modules/core/notifications/notification.service';
 import { PstnModel, IOrder } from './pstn.model';
 import pstnModel from './pstn.model';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { PhoneNumberType } from 'google-libphonenumber';
 
 export class PstnService {
   /* @ngInject */
-  constructor(private PstnModel: PstnModel,
-              private Authinfo,
-              private TerminusCustomerV2Service,
-              private TerminusV2ResellerService,
-              private TerminusCustomerService,
-              private TerminusCustomerNumberService,
-              private TerminusCustomerTrialV2Service,
-              private TerminusCarrierService,
-              private $q: ng.IQService,
-              private TerminusCarrierV2Service,
-              private TerminusResellerCarrierService,
-              private TerminusResellerCarrierV2Service,
-              private TerminusCustomerCarrierService,
-              private TerminusV2CarrierNumberCountService,
-              private TerminusV2CarrierCapabilitiesService,
-              private TerminusV2CarrierNumberService,
-              private TerminusV2CustomerNumberOrderBlockService,
-              private TerminusV2CustomerNumberReservationService,
-              private TerminusV2ResellerNumberReservationService,
-              private $translate: ng.translate.ITranslateService,
-              private TerminusCustomerPortService,
-              private TerminusV2ResellerCarrierNumberReservationService,
-              private TerminusOrderV2Service,
-              private TerminusCustomerCarrierDidService,
-              private Notification: Notification,
-              private TelephoneNumberService) {
-
-  }
+  constructor(
+    private PstnModel: PstnModel,
+    private Authinfo,
+    private TerminusCustomerV2Service,
+    private TerminusV2ResellerService,
+    private TerminusCustomerService,
+    private TerminusCustomerNumberService,
+    private TerminusCustomerTrialV2Service,
+    private TerminusCarrierService,
+    private $q: ng.IQService,
+    private TerminusCarrierV2Service,
+    private TerminusResellerCarrierService,
+    private TerminusResellerCarrierV2Service,
+    private TerminusCustomerCarrierService,
+    private TerminusV2CarrierNumberCountService,
+    private TerminusV2CarrierCapabilitiesService,
+    private TerminusV2CarrierNumberService,
+    private TerminusV2CustomerNumberOrderBlockService,
+    private TerminusV2CustomerNumberReservationService,
+    private TerminusV2ResellerNumberReservationService,
+    private $translate: ng.translate.ITranslateService,
+    private TerminusCustomerPortService,
+    private TerminusV2ResellerCarrierNumberReservationService,
+    private TerminusOrderV2Service,
+    private TerminusCustomerCarrierDidService,
+    private Notification: Notification,
+    private PhoneNumberService: PhoneNumberService,
+  ) { }
 
   public createCustomerV2(uuid: string, name: string, firstName: string, lastName: string, email: string, pstnCarrierId: string, trial: boolean): ng.IPromise<any> {
     let payload = {
@@ -61,9 +63,11 @@ export class PstnService {
   public createResellerV2(): ng.IPromise<any> {
     let payload = {
       uuid: this.Authinfo.getCallPartnerOrgId(),
-      name: this.Authinfo.getOrgName(),
       email: this.Authinfo.getPrimaryEmail(),
     };
+    if (this.Authinfo.isPartner()) {
+      _.extend(payload, { name: this.Authinfo.getOrgName() });
+    }
     return this.TerminusV2ResellerService.save({}, payload).$promise;
   }
 
@@ -358,10 +362,10 @@ export class PstnService {
       },
     };
     _.forEach(numbers, number => {
-      let phoneNumberType = this.TelephoneNumberService.getPhoneNumberType(number);
-      if (phoneNumberType === 'FIXED_LINE_OR_MOBILE' || phoneNumberType === 'FIXED_LINE') {
+      const phoneNumberType: PhoneNumberType = this.PhoneNumberService.getPhoneNumberType(number);
+      if (phoneNumberType === PhoneNumberType.FIXED_LINE_OR_MOBILE || phoneNumberType === PhoneNumberType.FIXED_LINE) {
         payload.pstn.numbers.push(<never>number);
-      } else if (phoneNumberType === 'TOLL_FREE') {
+      } else if (phoneNumberType === PhoneNumberType.TOLL_FREE) {
         payload.tollFree.numbers.push(<never>number);
       } else {
         this.Notification.error('pstnSetup.errors.unsupportedNumberType', {
@@ -414,7 +418,7 @@ export class PstnService {
     let tfnNumbers: any = [];
 
     tfnNumbers = _.remove(numbers, number => {
-      return this.TelephoneNumberService.checkPhoneNumberType(number) === 'TOLL_FREE';
+      return this.PhoneNumberService.getPhoneNumberType(number) === PhoneNumberType.TOLL_FREE;
     });
 
     let tfnPayload = {
@@ -724,8 +728,7 @@ export default angular
     require('modules/core/featureToggle').default,
     require('modules/huron/pstnSetup/terminusServices'),
     require('modules/huron/telephony/telephonyConfig'),
-    require('modules/huron/telephony/telephoneNumber.service'),
-    require('modules/huron/telephony/telephoneNumber.filter'),
+    require('modules/huron/phoneNumber').default,
     pstnModel,
   ])
   .service('PstnService', PstnService)

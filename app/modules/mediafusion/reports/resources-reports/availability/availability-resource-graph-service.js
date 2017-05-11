@@ -146,6 +146,7 @@
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonReportsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv), catAxes);
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
+      chartData.legend.color = '#343537';
       chartData.legend.labelText = '[[title]]';
       chartData.legend.data = legend;
       chartData.graph.showHandOnHover = (selectedCluster === vm.allClusters);

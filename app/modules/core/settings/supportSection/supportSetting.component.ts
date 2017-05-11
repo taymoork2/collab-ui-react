@@ -1,4 +1,5 @@
 import { SettingSection } from '../settingSection';
+import { SupportSettingsController } from './support.section.controller';
 
 export class SupportSetting extends SettingSection {
 
@@ -9,7 +10,10 @@ export class SupportSetting extends SettingSection {
     this.subsectionDescription = '';
   }
 }
-angular.module('Core').component('supportSetting', {
-  controller: 'SupportSettings as ctrl',
-  templateUrl: 'modules/core/settings/supportSection/supportSection.tpl.html',
-});
+
+export class SupportSettingComponent implements ng.IComponentOptions {
+  public controller = SupportSettingsController;
+  public controllerAs = 'ctrl';
+  public templateUrl = 'modules/core/settings/supportSection/supportSection.tpl.html';
+}
+

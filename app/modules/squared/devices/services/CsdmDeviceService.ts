@@ -1,15 +1,16 @@
 import { CsdmConverter } from './CsdmConverter';
+import IHttpService = angular.IHttpService;
 
-class CsdmDeviceService {
+export class CsdmDeviceService {
   private devicesUrl: string;
   private devicesFastUrlPostFix: string;
   /* @ngInject  */
-  constructor(private $http, Authinfo, UrlConfig, private CsdmConverter: CsdmConverter, private Utils) {
+  constructor(private $http: IHttpService, Authinfo, UrlConfig, private CsdmConverter: CsdmConverter, private Utils) {
     this.devicesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
     this.devicesFastUrlPostFix = '?checkDisplayName=false&checkOnline=false';
   }
 
-  public fetchDevices(requestFullData) {
+  public fetchDevices(requestFullData?: boolean) {
     let url = this.devicesUrl;
     if (!requestFullData) {
       url += this.devicesFastUrlPostFix;

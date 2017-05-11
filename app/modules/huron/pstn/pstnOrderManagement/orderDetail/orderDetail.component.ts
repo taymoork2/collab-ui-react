@@ -1,8 +1,10 @@
 import { PstnService } from 'modules/huron/pstn/pstn.service';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 const BLOCK_ORDER = 'BLOCK_ORDER';
 const CUSTOMER = 'CUSTOMER';
 const PARTNER = 'PARTNER';
+
 export class OrderDetailCtrl implements ng.IComponentController {
   public currentOrder: any;
   public currentCustomer: any;
@@ -13,7 +15,7 @@ export class OrderDetailCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private PstnService: PstnService,
-    private TelephoneNumberService,
+    private PhoneNumberService: PhoneNumberService,
     private $translate: angular.translate.ITranslateService,
   ) {
     if (_.isUndefined(this.currentOrder.createdBy) ||
@@ -53,7 +55,7 @@ export class OrderDetailCtrl implements ng.IComponentController {
     _.forEach(numbers, (num) => {
       this.info.push({
         number: num.number,
-        label: this.TelephoneNumberService.getDIDLabel(num.number),
+        label: this.PhoneNumberService.getNationalFormat(num.number),
         status: num.status,
         tooltip: num.tooltip,
       });

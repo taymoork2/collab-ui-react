@@ -9,12 +9,12 @@ describe('Service: ExcelService', function () {
 
   function provide($provide) {
     $window = {
-      Blob: sinon.stub(),
+      Blob: jasmine.createSpy('Blob'),
       URL: {
-        createObjectURL: sinon.stub(),
+        createObjectURL: jasmine.createSpy('createObjectURL'),
       },
       navigator: {
-        msSaveOrOpenBlob: sinon.stub(),
+        msSaveOrOpenBlob: jasmine.createSpy('msSaveOrOpenBlob'),
       },
     };
     $provide.value('$window', $window);
@@ -64,13 +64,13 @@ describe('Service: ExcelService', function () {
   describe('downloadFile()', function () {
     it('should call $window.Blob', function () {
       ExcelService.downloadFile('download.csv', 'sep=,\r\nName,Age\r\nDoge,5');
-      expect($window.Blob.called).toBe(true);
+      expect($window.Blob).toHaveBeenCalled();
     });
     it('should handle Internet Explorer by checking for msSaveOrOpenBlob', function () {
       // note: $window.navigator.msSaveOrOpenBlob is truthy by default in the mock
       // because it is a stub
       ExcelService.downloadFile('download.csv', 'sep=,\r\nName,Age\r\nDoge,5');
-      expect($window.navigator.msSaveOrOpenBlob.called).toBe(true);
+      expect($window.navigator.msSaveOrOpenBlob).toHaveBeenCalled();
     });
   });
 });

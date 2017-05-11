@@ -1129,6 +1129,7 @@
     "create": "Create",
     "dateRange": "Date Range",
     "deactivate": "Deactivate",
+    "default": "Default",
     "delete": "Delete",
     "description": "Description",
     "details": "Details",
@@ -1488,6 +1489,15 @@
       "tooShortError": "Routing Prefix must contain at least one digit.",
       "tooLongError": "Routing Prefix can contain a maximum of seven digits."
     },
+    "externalTransfer": {
+      "title": "External Call Transfers/Conference",
+      "desc": "Choose whether this user is allowed to do external call transfers and conferences. This will override global settings.",
+      "neverAllow": "Never Allow",
+      "alwaysAllow": "Always Allow",
+      "orgSetting": "Organization Settings ({{state}})",
+      "success": "External Call Transfers/Conference settings successfully saved.",
+      "error": "External Call Transfers/Conference settings failed to update"
+    },
     "cos": {
       "title": "Dialing Restrictions",
       "desc": "Restrict certain dialing features for the entire organization. You can override each setting for individual users.",
@@ -1844,7 +1854,7 @@
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists."
     },
     "placeSidepanel": {
-      "hybridCallNotActivated": "Cloud Collaboration management is currently checking for the corresponding user account in Cisco Uni ed Communications Manager to connect to. This could take up to half an hour. Check back later.",
+      "hybridCallNotActivated": "Cloud Collaboration management is currently checking for the corresponding user account in Cisco Unified Communications Manager to connect to. This could take up to half an hour. Check back later.",
       "mail-id-explanation-part1": "- If the Mail ID you entered here is incorrect,",
       "mail-id-explanation-part2": "then try entering a different Mail ID.",
       "email-calendar-explanation-part1": "- If the email you entered here is incorrect,",
@@ -2573,9 +2583,11 @@
       "goToNode": "Go to node",
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
+      "pendingTooltip": "Maintenance mode has been requested. Please wait until the node is ready.",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
-        "message": "Are you sure you want to enable maintenance mode for this node?"
+        "message": "<p>The Hybrid Media node will be put in maintenance mode as soon as there are no active calls or a timeout of two hours is reached. Please wait for the node to move from \"Pending Maintenance\" to \"Maintenance\" before proceeding.</p><p>No alarm notifications will be sent for nodes in maintenance mode.</p>",
+        "expresswayMessage": "<p>The Expressway node will be marked as \"Pending Maintenance\" until it has been instructed to go into maintenance mode. All users assigned to connectors on this node will be reassigned to another available node. Note that if there are no other nodes available, these users will lose service.</p><p>No alarm notifications will be sent for nodes in maintenance mode.</p>"
       },
       "disableMaintenanceModeModal": {
         "title": "Disable maintenance mode",
@@ -3386,6 +3398,12 @@
     "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
     "addDynamicText": "Add Dynamic Text",
+    "dynamicText": "Dynamic Text",
+    "variable": "Variable",
+    "readAs": "Read as",
+    "number": "Number",
+    "date": "Date",
+    "digits": "Digits",
     "callerInputMenuErrorVariableNameMissing": "{{schedule}} schedule at Caller Input Menu {{at}} is missing a variable name ",
     "conditionalThenTargetMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing a target for the 'Then' entry",
     "conditionalIsEntryVariableMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing an entry for 'Is'",
@@ -3761,7 +3779,8 @@
     "maxLines": "You reached the limit of 25 lines. Please remove a line from this user before provisioning additional lines.",
     "showMore": "Show more",
     "showLess": "Show less",
-    "localDialing": "Local Dialing"
+    "localDialing": "Local Dialing",
+    "externalTransfer": "External Call Transfers/Conference"
   },
   "preferredLanguage": {
     "title": "Preferred Language",
@@ -3911,9 +3930,7 @@
     "speedDialChangesFailed": "Failed to save speed dial changes.",
     "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
     "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries.",
-    "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}",
-    "noSpeedDials": "No speed dials yet.",
-    "speedDiallDescription": "Speed dial numbers will appear on your devices as listed here."
+    "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}"
   },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
@@ -4033,7 +4050,6 @@
     "swivelAddError": "Failed to add {{number}}.",
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
     "resellerCreateError": "Failed to create Reseller",
-    "resellerMissingError": "Reseller does not exist. Please contact your partner for additional support.",
     "customerCreateError": "Failed to create customer with the carrier.",
     "customerUpdateError": "Failed to update customer with the carrier.",
     "siteCreateError": "Failed to create the service address.",
@@ -5016,6 +5032,7 @@
       "legendcallLocalCluster": "Hosted On This Cluster",
       "legendcallRedirectedCluster": "Redirected to Another Cluster or Cloud",
       "redirectedCluster": "Redirected by Cluster",
+      "callsRedirectedCluster": "Calls Redirected by Cluster:",
       "nodesAdded": "Nodes Added",
       "nodesUnavailable": "Nodes Unavailable",
       "availableTitle": "Available",
@@ -5037,6 +5054,7 @@
       "total_calls": "Total Calls",
       "onpremcalls": "Hosted On-Premises",
       "cloudcalls": "Overflowed to Cloud",
+      "callOverflow": "Calls Overflowed to Cloud:",
       "hostedcalls": "Hosted by this Cluster",
       "redirectedcalls": "Redirected by this Cluster",
       "total_participants": "Total Calls",
@@ -5076,6 +5094,7 @@
       "cloudHeading": "Cloud",
       "hybridHeading": "Cloud and On-Premises",
       "othersHeading": "Others",
+      "callsBallon": "Calls:",
       "clientType": {
         "android": "Android",
         "blackberry": "BlackBerry",
@@ -5100,7 +5119,7 @@
         "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
         "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected."
       },
-      "graphDescription":{
+      "graphDescription": {
         "utilizationOrgDesc": "Average utilization trend for all clusters in an organization",
         "utilizationClusterDesc": "Average utilization trend for the selected cluster in an organization, compared to the average utilization for all the clusters",
         "callActivityDesc": "Provides a view of the call activity trend across the organization, showing the calls that were hosted on-premises and calls hosted on the cloud. The calls that overflowed to the cloud are represented as dots on the cloud call graph. Hover over a dot to show the number of calls that overflowed to the cloud at that instance.",
@@ -5110,7 +5129,9 @@
         "clusterInServiceClusterDesc": "Percentage of nodes that are in service to host calls over the selected time period.<br>Green: node is in service.<br>Red: node is not in service.",
         "meetHostTypeDesc": "Provides a trend of the number of meetings in an organization, based on where the calls were hosted",
         "clientTypeDesc": "Provides usage trend of the various client types that are used in an organization"
-      }
+      },
+      "allOff": "All Off",
+      "allOn": "All On"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -6024,11 +6045,11 @@
   "huronFeatureDetails": {
     "members": " Members",
     "numbers": " Numbers",
-    "hg": "HG",
-    "aa": "AA",
-    "cp": "CP",
-    "pg": "PG",
-    "pi": "PI",
+    "hg": "Hunt Group",
+    "aa": "Auto Attendant",
+    "cp": "Call Park",
+    "pg": "Paging Group",
+    "pi": "Call Pickup",
     "editAction": "Edit",
     "deleteAction": "Delete",
     "aaDependsTitle": "Auto Attendant Dependents",
@@ -6095,6 +6116,17 @@
     "deleteNumberTextBYOP": "The number will be returned to you immediately"
   },
   "messengerCiSync": {
+    "orgInfoSection": {
+      "sectionTitle": "Organization Information",
+      "sectionDescr": "View information about this WebEx Messenger Organization.",
+      "name": "Name",
+      "id": "ID",
+      "linkDate": "Link Date"
+    },
+    "optionsSection": {
+      "sectionTitle": "Options",
+      "sectionDescr": "Control how WebEx Messenger works with Cisco Spark."
+    },
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
     "authRedirectTooltip": "If enabled, users will login to Common Identity. If disabled, users will login to Messenger.",
     "pwdSyncHeading": "Sync Passwords From Messenger",
@@ -6227,7 +6259,7 @@
     "defaultEmailText": "Email",
     "defaultEmail": "e.g. abc@xyz.com",
     "defaultPhoneText": "Phone Number",
-    "defaultPhoneHintText": "234-555-6789",
+    "defaultPhoneHintText": "+12345556789",
     "defaultQuestionText": "How may I assist you?",
     "additionalDetails": "Additional Details",
     "additionalDetailsAbtIssue": "Describe the issue you are experiencing",
@@ -6706,6 +6738,7 @@
     "numberedName": "Enterprise Subscription {{number}}",
     "enterpriseTrial": "Enterprise Trial {{number}}",
     "usage": "Usage: ",
+    "licenses": "Licenses: ",
     "licenseUsageReport": "License Usage Report",
     "more": "More",
     "less": "Less",
@@ -6751,8 +6784,7 @@
     "statusHeader": "Payment Status",
     "viewInvoice": "View Invoice",
     "completed": "Completed",
-    "pending": "Pending",
-    "error": "Error",
+    "pending": "Pending Processing",
     "onlineOnly1": "Purchases from Cisco Online Marketplace only.",
     "onlineOnly2": "Cisco and Cisco Partner invoices are not listed here.",
     "loadError": "An error occurred while loading order history."
@@ -7217,19 +7249,24 @@
         "title": "Enterprise Private Trunking ",
         "description": "Extends your organization lorem ipsum dolor sit amet consectetur adipiscing elit cras ut imperdiet augue.",
         "buttons": {
-          "verify": "Verify prerequisites",
           "view": "View prerequisites",
           "resources": "SIP Destinations"
         },
         "error": {
           "invalidMaxLength": "Domain/SRV length cannot be more than {{max}}.",
-          "invalidChars": "Invalid character is not allowed in address domain. Allowed set is \"[a-z] [A-Z] [0-9]_-.\"",
+          "invalidChars": "Domain name is invalid. It should have an extension and the allowed characters only. Allowed set is \"[a-z][A-Z][0-9]-.\"",
           "invalidPort": "Port can only range between {{min}} and {{max}}",
-          "invalidUniqueEntry": "This SIP Destination address already exists",
+          "invalidUniqueEntry": "Duplicate entry, this SIP Destination address is already in use",
           "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found",
           "resourceError": "Add Private trunk resource error",
           "privateTrunkError": "Add Private trunk Domain error",
-          "certUploadError": "Certificate Upload error"
+          "certUploadError": "Certificate Upload error",
+          "deactivateError": "Enterprise Private Trunk could not be deactivated"
+        },
+        "success": {
+          "deactivate": "Enterprise Private Trunk has been successfully deactivated",
+          "resource": "Sip Destination has been successfully added to the Enterprise Private Trunk",
+          "activate": "Enterprise Private Trunk has been successfully created"
         },
         "prereqTitle": "Enterprise Private Trunking prerequisites",
         "setupTitle": "Set up Enterprise Private Trunking ",
@@ -7257,13 +7294,14 @@
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",
         "destinationTitle": "Add SIP Destination",
         "destination": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
-        "destinationHelp": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
+        "destinationHelp": "Enter an SRV domain, domain:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipLabel": "Sip destination",
         "sip": "Enter Sip destination",
         "displayLabel": "Display name",
         "displayName": "Enter display name",
         "addDestination": "Add another SIP destination",
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
+        "addSipDestination": "Add SIP destination",
         "certificateTitle": "Certificates",
         "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
         "certificateTitleSettings": "Certificates for Encrypted SIP Calls",
@@ -7284,9 +7322,7 @@
         "pstnConnectivity": "PSTN connectivity",
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
         "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
-        "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Spark remote SIP destinations configuration and disables the service for all users.",
-        "deactivateSuccess": "Enterprise Private Trunk has been successfully deactivated",
-        "deactivateError": "Enterprise Private Trunk could not be deactivated"
+        "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Spark remote SIP destinations configuration and disables the service for all users."
       }
     },
     "showMore": "View all",

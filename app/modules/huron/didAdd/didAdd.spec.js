@@ -104,36 +104,6 @@ describe('Controller: DidAddCtrl', function () {
         expect(controller.tokenmethods).toBeDefined();
       });
 
-      describe('tokenmethods.createtoken function', function () {
-        it('should exist', function () {
-          expect(controller.tokenmethods.createtoken).toBeDefined();
-        });
-
-        it('should format the token properly and add a +1 to the number +1 (123) 456-7890', function () {
-          var element = {
-            attrs: {
-              value: '2145556789',
-              label: '2145556789',
-            },
-          };
-          controller.tokenmethods.createtoken(element);
-          expect(element.attrs.value).toEqual('+12145556789');
-          expect(element.attrs.label).toEqual('(214) 555-6789');
-        });
-
-        it('should not format the token if an invalid number', function () {
-          var element = {
-            attrs: {
-              value: '111 222 3333',
-              label: '111 222 3333',
-            },
-          };
-          controller.tokenmethods.createtoken(element);
-          expect(element.attrs.value).toEqual('1112223333');
-          expect(element.attrs.label).toEqual('111 222 3333');
-        });
-      });
-
       describe('tokenmethods.createdtoken function', function () {
         it('should exist', function () {
           expect(controller.tokenmethods.createdtoken).toBeDefined();

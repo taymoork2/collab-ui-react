@@ -171,7 +171,7 @@
           url: 'modules/huron/features/autoAttendant/restApi/aaRestApi.tpl.html',
           metric: 'Rest-Api-Title',
           showHelpLink: false,
-          actions: ['restApi'],
+          actions: ['doREST'],
         });
       }
     }

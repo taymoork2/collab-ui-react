@@ -387,5 +387,3 @@ export class SipDomainSettingController {
   }
 
 }
-angular.module('Core')
-  .controller('SipDomainSettingController', SipDomainSettingController);

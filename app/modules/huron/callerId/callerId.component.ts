@@ -1,5 +1,4 @@
 import { IOption } from './../dialing/dialing.service';
-import { HuronCustomerService } from 'modules/huron/customer/customer.service';
 
 const callerIdInputs = ['external'];
 
@@ -19,7 +18,6 @@ class CallerId implements ng.IComponentController {
   private companyNumberPattern: string;
   private listApiSuccess: boolean = false;
   private firstTime: boolean = true;
-  private customCallDest: any | null;
   private callerIdInputs: string[];
   private static readonly BLOCK_CALLERID_TYPE = {
     name: 'Blocked Outbound Caller ID',
@@ -44,33 +42,31 @@ class CallerId implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private HuronCustomerService: HuronCustomerService,
-    private TelephoneNumberService ) {
-
+  ) {
     this.initCallerId();
-
   }
 
-  public $onInit(): void {
-
-  }
-
-  public $onChanges(changes) {
-    if (changes.directLine && changes.directLine.previousValue === undefined) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+    const {
+      directLine,
+      companyNumbers,
+      callerIdSelected,
+    } = changes;
+    if (directLine && directLine.previousValue === undefined) {
       if (changes.directLine.currentValue) {
         this.directLineOption = new CallerIdOption(CallerId.DIRECT_LINE_TYPE.name, new CallerIdConfig('', CallerId.DIRECT_LINE_TYPE.name, changes.directLine.currentValue, CallerId.DIRECT_LINE_TYPE.key));
         this.options.push(this.directLineOption);
       }
     }
-    if (changes.companyNumbers && _.isArray(changes.companyNumbers.currentValue)) {
+    if (companyNumbers && _.isArray(companyNumbers.currentValue)) {
       if (!this.listApiSuccess) {
-        this.updateCompanyNumberOptions(changes.companyNumbers.currentValue);
+        this.updateCompanyNumberOptions(companyNumbers.currentValue);
       }
     }
-    if (changes.callerIdSelected && !changes.callerIdSelected.currentValue) {
+    if (callerIdSelected && !callerIdSelected.currentValue) {
       this.callerIdSelected = this.selectType(CallerId.BLOCK_CALLERID_TYPE.key);
     }
-    if (changes.callerIdSelected && _.isString(changes.callerIdSelected.currentValue)) {
+    if (callerIdSelected && _.isString(callerIdSelected.currentValue)) {
       while (this.listApiSuccess && this.firstTime) {
         this.callerIdOptions = this.getOptions();
         this.firstTime = false;
@@ -80,14 +76,11 @@ class CallerId implements ng.IComponentController {
         this.callerIdSelected = this.selectType(changes.callerIdSelected.currentValue);
       }
     }
-    if (changes.directLine && (typeof changes.directLine.previousValue !== 'object' || changes.directLine.previousValue === null)) {
+    if (directLine && (typeof changes.directLine.previousValue !== 'object' || changes.directLine.previousValue === null)) {
       let data = this.changeDirectLine(<string>_.get(changes, 'directLine.currentValue'), this.callerIdSelected);
       this.callerIdOptions = data.options;
       this.callerIdSelected = data.selected;
       this.onChange();
-    }
-    if (changes.customCallerIdNumber && changes.customCallerIdNumber.previousValue === undefined) {
-      this.customCallDest = this.TelephoneNumberService.getDestinationObject(this.customCallerIdNumber);
     }
   }
 
@@ -216,25 +209,9 @@ class CallerId implements ng.IComponentController {
     return _selected;
   }
 
-  public getRegionCode() {
-    if (this.showCustom()) {
-      return this.HuronCustomerService.getVoiceCustomer();
-    }
-  }
-
-  public setCallerIdNumber(callDest: any) {
-    this.customCallerIdNumber = (callDest && callDest.phoneNumber) ? this.validate(callDest.phoneNumber) : null;
+  public setCallerIdNumber(number: string): void {
+    this.customCallerIdNumber = number;
     this.onChange();
-  }
-
-  public validate(number: any) {
-    let newNumber = number;
-    if (number && this.TelephoneNumberService.validateDID(number)) {
-      newNumber = this.TelephoneNumberService.getDIDValue(number);
-    } else if (number.indexOf('@') === -1) {
-      newNumber = _.replace(number, /-/g, '');
-    }
-    return newNumber.replace(/ /g, '');
   }
 }
 
@@ -265,7 +242,7 @@ export class CallerIdOption {
 export class CallerIdComponent implements ng.IComponentOptions {
   public controller = CallerId;
   public templateUrl = 'modules/huron/callerId/callerId.html';
-  public bindings = <{ [binding: string]: string }>{
+  public bindings = {
     callerIdOptions: '<',
     callerIdSelected: '<',
     customCallerIdName: '<',

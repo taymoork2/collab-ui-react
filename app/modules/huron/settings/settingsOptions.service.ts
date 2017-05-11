@@ -1,6 +1,7 @@
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class HuronSettingsOptions {
   public preferredLanguageOptions: Array<IOption>;
@@ -25,7 +26,7 @@ export class HuronSettingsOptionsService {
     private $q: ng.IQService,
     private ServiceSetup,
     private NumberService: NumberService,
-    private TelephoneNumberService,
+    private PhoneNumberService: PhoneNumberService,
     private DialPlanService: DialPlanService,
   ) { }
 
@@ -83,7 +84,7 @@ export class HuronSettingsOptionsService {
         return _.map(externalNumbers, externalNumber => {
           return <IOption> {
             value: externalNumber.number,
-            label: this.TelephoneNumberService.getDIDLabel(externalNumber.number),
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
           };
         });
       });
@@ -95,7 +96,7 @@ export class HuronSettingsOptionsService {
         return _.map(externalNumbers, externalNumber => {
           return <IOption> {
             value: externalNumber.number,
-            label: this.TelephoneNumberService.getDIDLabel(externalNumber.number),
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
           };
         });
       });
@@ -114,7 +115,7 @@ export class HuronSettingsOptionsService {
           return <IEmergencyNumberOption> {
             value: externalNumber.uuid,
             pattern: externalNumber.number,
-            label: this.TelephoneNumberService.getDIDLabel(externalNumber.number),
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
           };
         });
       });

@@ -1,9 +1,14 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Hercules')
-    .service('ServiceDescriptor', ServiceDescriptor);
+  module.exports = angular
+    .module('Hercules.serviceDescriptor', [
+      require('modules/core/config/urlConfig'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/org.service'),
+    ])
+    .service('ServiceDescriptor', ServiceDescriptor)
+    .name;
 
   /* @ngInject */
   function ServiceDescriptor($http, UrlConfig, Authinfo, Orgservice) {

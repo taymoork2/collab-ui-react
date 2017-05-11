@@ -6,7 +6,7 @@
     .controller('AAAddVariableCtrl', AAAddVariableCtrl);
 
   /* @ngInject */
-  function AAAddVariableCtrl($scope) {
+  function AAAddVariableCtrl($scope, $modal) {
 
     var vm = this;
 
@@ -19,8 +19,31 @@
 
     function dynamicAdd(id, dynamicElement) {
       if (id && dynamicElement) {
-        dispatchElementInsertion(id, dynamicElement);
+        openDynamicAnnouncements()
+          .result
+          .then(function () {
+            dispatchElementInsertion(id, dynamicElement);
+          }, function () {
+            cancelledDynamicModal();
+          })
+          .finally(modalClosed);
       }
+    }
+
+    function cancelledDynamicModal() {}
+
+    function modalClosed() {}
+
+    function openDynamicAnnouncements() {
+      return $modal.open({
+        templateUrl: 'modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html',
+        controller: 'AADynamicAnnouncementsModalCtrl',
+        controllerAs: 'aaDynamicAnnouncementsModalCtrl',
+        type: 'small',
+        resolve: {
+        },
+        modalClass: 'aa-dynamic-announcements-modal',
+      });
     }
 
     function dispatchElementInsertion(id, dynamicElement) {

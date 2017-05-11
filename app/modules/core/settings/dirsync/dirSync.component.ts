@@ -52,7 +52,3 @@ export class DirSyncComponent implements ng.IComponentOptions {
     onDisableDirsync: '&',
   };
 }
-
-angular
-  .module('Core')
-  .component('dirSyncConfig', new DirSyncComponent());

@@ -132,16 +132,11 @@
       return sortObjectByKeyName(data);
     };
 
-    $scope.phone = {
-      name: 'US',
-      code: 'us',
-      number: '1',
-      phoneNumber: '+12345556789',
-    };
+    $scope.phone = '+12345556789';
 
-    $scope.getPhoneNumber = function (field) {
-      var defaultPhoneNumber = $scope.getPlaceholder(field);
-      $scope.phone.phoneNumber = defaultPhoneNumber || '+12345556789';
+    $scope.getPhoneNumber = function () {
+      // var defaultPhoneNumber = $scope.getPlaceholder(field);
+      // $scope.phone = defaultPhoneNumber || '+12345556789';
       return $scope.phone;
     };
 

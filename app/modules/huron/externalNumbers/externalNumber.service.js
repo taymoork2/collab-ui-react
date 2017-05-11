@@ -5,15 +5,15 @@
     require('angular-resource'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/telephony/telephonyExternalNumbersService'),
-    require('modules/huron/telephony/telephoneNumber.service'),
     require('modules/huron/pstn/pstn.service').default,
+    require('modules/huron/phoneNumber').default,
     require('modules/huron/pstnSetup/terminusServices'),
   ])
   .factory('ExternalNumberService', ExternalNumberService)
   .name;
 
   /* @ngInject */
-  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnService, TelephoneNumberService, TerminusCarrierService) {
+  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnService, PhoneNumberService, TerminusCarrierService) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
@@ -135,7 +135,7 @@
         } else if (_.has(number, 'orderNumber')) {
           number.label = $translate.instant('pstnSetup.orderNumber') + ' ' + number.orderNumber;
         } else {
-          number.label = TelephoneNumberService.getDIDLabel(number.pattern);
+          number.label = PhoneNumberService.getNationalFormat(number.pattern);
         }
       });
       return numbers;
@@ -267,9 +267,30 @@
     }
 
     function getCarrierInfo(customerId) {
-      return TerminusCarrierService.get({
-        carrierId: (_.find(terminusDetails, { customerId: customerId })).pstnCarrierId,
-      }).$promise;
+      var _terminusDetail = _.find(terminusDetails, { customerId: customerId });
+      var _pstnCarrierId = _terminusDetail.pstnCarrierId;
+
+      if (_.isUndefined(_pstnCarrierId) || _pstnCarrierId === null) {
+        PstnService.getCustomerV2(customerId)
+        .then(function (response) {
+          _pstnCarrierId = _.get(response, 'pstnCarrierId');
+          if (_.isUndefined(_pstnCarrierId) || _pstnCarrierId === null) {
+            return null;
+          } else {
+            _.assign(_terminusDetail, { pstnCarrierId: _pstnCarrierId });
+            return TerminusCarrierService.get({
+              carrierId: _pstnCarrierId,
+            }).$promise;
+          }
+        })
+        .catch(function () {
+          return null;
+        });
+      } else {
+        return TerminusCarrierService.get({
+          carrierId: _pstnCarrierId,
+        }).$promise;
+      }
     }
   }
 })();

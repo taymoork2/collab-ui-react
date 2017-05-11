@@ -1,5 +1,6 @@
 import { Site } from 'modules/huron/sites';
 import { IOption } from 'modules/huron/dialing/dialing.service';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 class ComapnyVoicemailCtrl implements ng.IComponentController {
   public site: Site;
@@ -18,7 +19,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private TelephoneNumberService,
+    private PhoneNumberService: PhoneNumberService,
     private ServiceSetup,
     private Authinfo,
   ) {
@@ -105,7 +106,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     if (!existingOption) {
       let currentExternalNumberOption: IOption = {
         value: currentValue,
-        label: this.TelephoneNumberService.getDIDLabel(currentValue),
+        label: this.PhoneNumberService.getNationalFormat(currentValue),
       };
       existingOptions.unshift(currentExternalNumberOption);
       return currentExternalNumberOption;

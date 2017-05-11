@@ -70,6 +70,7 @@
           ASSIGN: 'Partner Admin Assigning',
           REMOVE: 'Partner Admin Removal',
           PATCH: 'Patch User Call',
+          LAUNCH_CUSTOMER_PATCH_USERS: 'Partner: Launch Customer Patch Users',
         },
         persistentProperties: null,
       },

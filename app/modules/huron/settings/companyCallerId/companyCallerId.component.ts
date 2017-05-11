@@ -1,6 +1,7 @@
 import { Site } from 'modules/huron/sites';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/huron/settings/companyCallerId';
 import { IOption } from 'modules/huron/dialing/dialing.service';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 class CompanyCallerId implements ng.IComponentController {
   public site: Site;
@@ -16,7 +17,7 @@ class CompanyCallerId implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private TelephoneNumberService,
+    private PhoneNumberService: PhoneNumberService,
   ) { }
 
   public $onInit(): void {
@@ -37,7 +38,7 @@ class CompanyCallerId implements ng.IComponentController {
 
     if (companyCallerId && companyCallerId.currentValue) {
       this.companyCallerIdEnabled = true;
-      this.selectedNumber = this.TelephoneNumberService.getDIDLabel(companyCallerId.currentValue.pattern);
+      this.selectedNumber = this.PhoneNumberService.getNationalFormat(companyCallerId.currentValue.pattern);
     } else if (companyCallerId && !companyCallerId.currentValue) {
       this.companyCallerIdEnabled = false;
     }

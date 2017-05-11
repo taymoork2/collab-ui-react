@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('AccountOrgService', AccountOrgService);
+  module.exports = angular.module('core.accountOrgService', [
+    require('modules/core/config/urlConfig'),
+    require('modules/core/scripts/services/authinfo'),
+  ])
+    .service('AccountOrgService', AccountOrgService)
+    .name;
 
   /* @ngInject */
   function AccountOrgService($http, $q, UrlConfig) {

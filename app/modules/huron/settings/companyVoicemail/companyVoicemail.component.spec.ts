@@ -17,7 +17,7 @@ describe('Component: companyVoicemail', () => {
     this.injectDependencies(
       '$scope',
       '$timeout',
-      'TelephoneNumberService',
+      'PhoneNumberService',
       'ServiceSetup',
     );
 

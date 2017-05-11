@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, DialPlanService, ExternalNumberService, $modal, $scope, Notification, TelephoneNumberService) {
+  function ExternalNumberDetail($stateParams, $translate, DialPlanService, ExternalNumberService, $modal, $scope, Notification, PhoneNumberService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.apiImplementation = undefined;
@@ -19,6 +19,7 @@
     vm.assignedModel = '';
     vm.unassignedModel = '';
     vm.loading = false;
+    vm.countryCode = '';
 
     vm.assignedText = $translate.instant('common.assigned');
     vm.pendingText = $translate.instant('common.pending');
@@ -33,7 +34,7 @@
     vm.refreshAssignedOnDelete = refreshAssignedOnDelete;
     vm.refreshUnassignedOnDelete = refreshUnassignedOnDelete;
 
-    vm.isNumberValid = TelephoneNumberService.validateDID;
+    vm.isNumberValid = PhoneNumberService.validateDID;
 
     init();
 
@@ -64,7 +65,9 @@
 
     function setCountryCode() {
       return DialPlanService.getCustomerDialPlanCountryCode(vm.currentCustomer.customerOrgId)
-        .then(TelephoneNumberService.setCountryCode)
+        .then(function (countryCode) {
+          vm.countryCode = countryCode;
+        })
         .catch(function (response) {
           Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
         });

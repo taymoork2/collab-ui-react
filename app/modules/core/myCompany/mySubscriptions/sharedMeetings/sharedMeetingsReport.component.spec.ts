@@ -1,3 +1,4 @@
+import sharedMeetingsModule from './index';
 import {
   ISharedMeetingCSV,
   IMeetingData,
@@ -5,7 +6,7 @@ import {
 
 describe('Component: sharedMeetingReport', function () {
   beforeEach(function () {
-    this.initModules('Core');
+    this.initModules(sharedMeetingsModule);
     this.injectDependencies('$componentController',
       '$timeout',
       '$scope',

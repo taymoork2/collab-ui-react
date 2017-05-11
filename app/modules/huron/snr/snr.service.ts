@@ -1,4 +1,5 @@
 import { SingleNumberReach } from './snr';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 interface ISnrResource extends ng.resource.IResourceClass<ng.resource.IResource<SingleNumberReach>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<SingleNumberReach>>;
@@ -8,7 +9,7 @@ export class SnrService {
   /* @ngInject */
   constructor(
     private Authinfo,
-    private TelephoneNumberService,
+    private PhoneNumberService: PhoneNumberService,
     private $resource: ng.resource.IResourceService,
     private HuronConfig) {
     let saveAction: ng.resource.IActionDescriptor = {
@@ -89,8 +90,8 @@ export class SnrService {
 
   public validate(number: any) {
     let newNumber = number;
-    if (number && this.TelephoneNumberService.validateDID(number)) {
-      newNumber = this.TelephoneNumberService.getDIDValue(number);
+    if (number && this.PhoneNumberService.validateDID(number)) {
+      newNumber = this.PhoneNumberService.getE164Format(number);
     } else if (number.indexOf('@') === -1) {
       newNumber = _.replace(number, /-/g, '');
     }

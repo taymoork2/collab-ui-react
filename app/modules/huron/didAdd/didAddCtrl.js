@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($q, $rootScope, $state, $stateParams, $timeout, $translate, Authinfo, DialPlanService, DidAddEmailService, DidService, ExternalNumberPool, LogMetricsService, Notification, PstnService, TelephoneNumberService, TrialService) {
+  function DidAddCtrl($q, $rootScope, $state, $stateParams, $timeout, $translate, Authinfo, DialPlanService, DidAddEmailService, DidService, ExternalNumberPool, LogMetricsService, Notification, PstnService, PhoneNumberService, TrialService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = !!$stateParams.editMode;
@@ -24,11 +24,13 @@
     vm.addNumbers = true;
     vm.addSuccess = false;
     vm.unsavedTokens = [];
+    vm.regionCode = '';
+    vm.countryCode = '';
 
     vm.tokenfieldid = 'didAddField';
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
     vm.currentTrial = _.cloneDeep($stateParams.currentTrial);
-    vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
+    vm.getExampleNumbers = PhoneNumberService.getExampleNumbers;
 
     vm.tokenoptions = {
       delimiter: [',', ';'],
@@ -65,8 +67,8 @@
 
     function createToken(e) {
       var tokenNumber = e.attrs.label;
-      e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
-      e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
+      e.attrs.value = PhoneNumberService.getE164Format(tokenNumber);
+      e.attrs.label = PhoneNumberService.getNationalFormat(tokenNumber);
     }
 
     function createdToken(e) {
@@ -118,12 +120,12 @@
       var countryCode = _.get(carrierOrDialPlanInfo, 'countryCode');
       if (country) {
         // check if two-digit alphabetical country identifier is available, i.e. "us"
-        TelephoneNumberService.setRegionCode(country.toLowerCase());
+        vm.regionCode = country.toLowerCase();
       } else if (countryCode) {
-        TelephoneNumberService.setCountryCode(countryCode);
+        vm.countryCode = countryCode;
       } else {
         // if country and countryCode are not available, assume "us"
-        TelephoneNumberService.setRegionCode("us");
+        vm.regionCode = 'us';
       }
     }
 
@@ -141,7 +143,9 @@
       var customerOrgId = _.get($stateParams, 'currentOrg.customerOrgId');
       if (customerOrgId) {
         DialPlanService.getCustomerDialPlanCountryCode(customerOrgId)
-          .then(TelephoneNumberService.setCountryCode)
+          .then(function (countryCode) {
+            vm.countryCode = countryCode;
+          })
           .catch(function () {
             // if customer carrier info could not be obtained from CMI, try getting partner carrier info from Terminus
             return getCarrierInfoFromTerminus(Authinfo.getOrgId()).then(setDidValidationCountry)
@@ -197,7 +201,7 @@
     }
 
     function validateDID(input) {
-      return TelephoneNumberService.validateDID(input);
+      return PhoneNumberService.validateDID(input, vm.regionCode);
     }
 
     function checkForInvalidTokens() {

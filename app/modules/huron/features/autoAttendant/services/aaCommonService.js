@@ -23,6 +23,7 @@
     var returnedCallerToggle = false;
     var uniqueId = 0;
     var restApiToggle = false;
+    var aaRestApiStatus = false;
 
     var invalidList = {};
     var service = {
@@ -32,6 +33,7 @@
       setCallerInputStatus: setCallerInputStatus,
       setDecisionStatus: setDecisionStatus,
       setActionStatus: setActionStatus,
+      setRestApiStatus: setRestApiStatus,
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
@@ -67,7 +69,7 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus || aaDecisionStatus;
+      return aaQueueSettingsStatus || aaRestApiStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus || aaDecisionStatus;
     }
 
     function isValid() {
@@ -102,6 +104,7 @@
 
     function resetFormStatus() {
       aaSayMessageForm = false;
+      aaRestApiStatus = false;
       aaPhoneMenuOptions = false;
       aaCallerInputStatus = false;
       aaDecisionStatus = false;
@@ -115,6 +118,10 @@
 
     function setSayMessageStatus(status) {
       aaSayMessageForm = status;
+    }
+
+    function setRestApiStatus(status) {
+      aaRestApiStatus = status;
     }
 
     function setPhoneMenuStatus(status) {

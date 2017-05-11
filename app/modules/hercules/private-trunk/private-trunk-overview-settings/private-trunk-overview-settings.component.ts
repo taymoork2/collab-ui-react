@@ -15,7 +15,7 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
   public isDomain: boolean;
   public selectedVerifiedDomains: string[];
   public domainSelected: IOption[] = [];
-  public privateTrunkDeactivateModalOptions: any = {
+  public modalOptions: any = {
     template: '<private-trunk-deactivate dismiss="$dismiss()" class="modal-content"></private-trunk-deactivate>',
     type: 'dialog',
   };
