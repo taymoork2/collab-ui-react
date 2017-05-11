@@ -158,6 +158,24 @@
           }]
         }
       }, {
+        "doREST":{
+          "url":"test URL",
+          "method":"GET",
+          "responseActions":[  
+           {
+             "assignVar":{  
+               "variableName":"var1",
+               "value":"$Response.testResponse"
+             }
+           },{
+             "assignVar":{  
+               "variableName":"testVar",
+               "value":"$Response.testRes2"
+             }
+           }
+        ]
+      }
+    }, {
       "routeToQueue": {
         "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
@@ -585,6 +603,32 @@
         "description": "",
         "value": "3333",
         "voice": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "doREST",
+        "value": "",
+        "description": "",
+        "voice": "",
+        "method": "GET",
+        "url": "test URL",
+        "variableSet": [{
+          "value": "",
+          "variableName": "var1"
+        }, {
+          "value": "",
+          "variableName": "testVar"
+        }
+        ]
       }],
       "timeout": "",
       "username": "",

@@ -44,13 +44,15 @@
           </div>
         </div>
         <div class="row aa-rest-var">
-          <div class="large-4 medium-4 small-8 columns">
-            <cs-select id="sessionVar" ng-model="variable.variableName" name="sessionVar" options="aaConfigureApiModal.sessionVarOptions" placeholder="aaConfigureApiModal.selectVariablePlaceholder" icon="icon-chevron-down">
-            </cs-select>
-          </div>
-          <div  ng-if="aaConfigureApiModal.isNewVariable(variable.variableName);" class="large-5 medium-5 small-10 medium-pull-2 columns">
-            <input class="large-4 medium-4 small-4" type="text" ng-model="variable.newVariableValue">
-          </div>
+          <ng-form name="nameKeyedInputForm">
+            <div class="large-4 medium-4 small-8 columns">
+              <cs-select id="sessionVar" ng-model="variable.variableName" name="sessionVar" options="aaConfigureApiModal.sessionVarOptions" placeholder="aaConfigureApiModal.selectVariablePlaceholder" icon="icon-chevron-down">
+              </cs-select>
+            </div>
+            <div  ng-if="aaConfigureApiModal.isNewVariable(variable.variableName);" class="large-5 medium-5 small-10 medium-pull-2 columns">
+              <input ng-model="variable.newVariableValue" cs-input type="text" ng-pattern="/^[a-zA-Z0-9 ]*$/" ng-required="true" ng-minlength="aaConfigureApiModal.minVariableLength" id="newVariableName" name="newVariableName" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength="aaConfigureApiModal.maxVariableLength" cs-input-messages="aaConfigureApiModal.validationMsgs" cs-input-warning-message="{{ :: 'autoAttendant.callerInputVariableDuplicateMsg' | translate }}" cs-input-warning="variable.isWarn" ng-change="aaConfigureApiModal.canShowWarn(variable);" cs-input-group-size="medium-12">
+            </div>
+          </ng-form>
         </div>
       </div>
     </div>
@@ -62,5 +64,5 @@
 </div>
 <div class="modal-footer">
   <button id="cancelBtn" class="btn" ng-click="$dismiss();">{{ :: 'common.cancel' | translate }}</button>
-  <button id="saveBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.save()">{{ :: 'common.save' | translate }}</button>
+  <button id="saveBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.save()" ng-disabled="aaConfigureApiModal.isSaveDisabled();">{{ :: 'common.save' | translate }}</button>
 </div>
