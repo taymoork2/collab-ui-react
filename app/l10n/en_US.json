@@ -1854,7 +1854,7 @@
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists."
     },
     "placeSidepanel": {
-      "hybridCallNotActivated": "Cloud Collaboration management is currently checking for the corresponding user account in Cisco Uni ed Communications Manager to connect to. This could take up to half an hour. Check back later.",
+      "hybridCallNotActivated": "Cloud Collaboration management is currently checking for the corresponding user account in Cisco Unified Communications Manager to connect to. This could take up to half an hour. Check back later.",
       "mail-id-explanation-part1": "- If the Mail ID you entered here is incorrect,",
       "mail-id-explanation-part2": "then try entering a different Mail ID.",
       "email-calendar-explanation-part1": "- If the email you entered here is incorrect,",
