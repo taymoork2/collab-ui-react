@@ -5,7 +5,7 @@ describe('Controller: EdiscoverySearchController', function () {
   beforeEach(angular.mock.module('Huron'));
 
   var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, ITProPackService, Notification, TrialService;
-  var promiseUrl, promise, result, startDate, endDate;
+  var promise, result, startDate, endDate;
 
   beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _ITProPackService_, _Notification_, _TrialService_) {
     $scope = _$rootScope_.$new();
@@ -19,10 +19,6 @@ describe('Controller: EdiscoverySearchController', function () {
     Notification = _Notification_;
     TrialService = _TrialService_;
     ITProPackService = _ITProPackService_;
-
-    promiseUrl = $q.resolve({
-      avalonRoomsUrl: 'https://whatever.com/myFancyRoomsApi',
-    });
 
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
@@ -50,14 +46,37 @@ describe('Controller: EdiscoverySearchController', function () {
 
   describe('Search for space or email address', function () {
     beforeEach(function () {
-      spyOn(EdiscoveryService, 'getArgonautServiceUrl').and.returnValue(promiseUrl);
+      promise = $q.resolve({
+        numFiles: 10,
+        numMessages: 10,
+        numRooms: 10,
+        totalSizeInBytes: 100,
+      });
+
+      spyOn(EdiscoveryService, 'getArgonautServiceUrl').and.returnValue(promise);
     });
 
     beforeEach(initController);
 
+    beforeEach(function () {
+      expect(ediscoverySearchController.searchingForRoom).toBeFalsy();
+      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
+    });
+
+    afterEach(function () {
+      expect(ediscoverySearchController.searchingForRoom).toBeFalsy();
+    });
+
     it('should contain default values', function () {
       expect(ediscoverySearchController.encryptedEmails).toBeNull();
       expect(ediscoverySearchController.unencryptedRoomIds).toBeNull();
+    });
+
+    it('search button disabled when empty roomId search input', function () {
+      ediscoverySearchController.searchCriteria.roomId = '';
+      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
+      ediscoverySearchController.searchCriteria.roomId = 'whatever';
+      expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
     });
   });
 
@@ -99,45 +118,6 @@ describe('Controller: EdiscoverySearchController', function () {
 
       expect(result).toEqual(['ediscovery.dateError.InvalidDateRange']);
     });
-  });
-
-  describe('Search for room', function () {
-    beforeEach(function () {
-      var lastReadableActivityDate = moment().subtract(1, 'day');
-      var publishedDate = moment().subtract(2, 'day');
-
-      promise = $q.resolve({
-        id: '1234',
-        displayName: 'whatever',
-        participants: {
-          items: ['abc@test.com'],
-        },
-        lastReadableActivityDate: lastReadableActivityDate,
-        published: publishedDate,
-      });
-
-      spyOn(EdiscoveryService, 'getAvalonServiceUrl').and.returnValue(promiseUrl);
-      spyOn(EdiscoveryService, 'getAvalonRoomInfo').and.returnValue(promise);
-    });
-
-    beforeEach(initController);
-
-    beforeEach(function () {
-      expect(ediscoverySearchController.searchingForRoom).toBeFalsy();
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-    });
-
-    afterEach(function () {
-      expect(ediscoverySearchController.searchingForRoom).toBeFalsy();
-    });
-
-    it('search button disabled when empty roomId search input', function () {
-      ediscoverySearchController.searchCriteria.roomId = '';
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-      ediscoverySearchController.searchCriteria.roomId = 'whatever';
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
-    });
-
   });
 
   describe('Create report', function () {
