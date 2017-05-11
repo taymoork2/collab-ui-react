@@ -1,4 +1,5 @@
 import { Notification } from 'modules/core/notifications';
+
 export class DomainManagementService {
 
   private _domainList: Array<{

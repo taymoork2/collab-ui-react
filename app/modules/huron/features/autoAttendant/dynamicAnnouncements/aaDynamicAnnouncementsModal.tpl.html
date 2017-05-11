@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss();"></button>
+  <h1 class="modal-title" translate="autoAttendant.dynamicText"></h1>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="large-6 small-12 columns aa-message-select-list">
+      <label for="variableSelect" translate="autoAttendant.variable"></label>
+      <cs-select id="variableSelect" name="variableSelect" ng-model="aaDynamicAnnouncementsModalCtrl.variableSelection" options="aaDynamicAnnouncementsModalCtrl.variableOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaDynamicAnnouncementsModalCtrl.selectPlaceholder">
+      </cs-select>
+    </div>
+    <div class="large-6 small-12 columns aa-message-select-list">
+      <label for="readAsSelect" translate="autoAttendant.readAs"></label>
+      <cs-select id="readAsSelect" name="readAsSelect" ng-model="aaDynamicAnnouncementsModalCtrl.readAsSelection" options="aaDynamicAnnouncementsModalCtrl.readAsOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaDynamicAnnouncementsModalCtrl.selectPlaceholder">
+      </cs-select>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button id="cancelDynamicModalBtn" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>
+  <button id="okDynamicModalBtn" class="btn btn-primary" ng-click="aaDynamicAnnouncementsModalCtrl.ok();" ng-disabled="!aaDynamicAnnouncementsModalCtrl.isSaveEnabled();" translate="common.ok"></button>
+</div>

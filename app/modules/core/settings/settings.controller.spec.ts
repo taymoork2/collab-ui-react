@@ -1,8 +1,11 @@
 /// <reference path="settings.controller.ts"/>
+
+import testModule from './index';
+
 describe('SettingsCtrl', function () {
 
   beforeEach(function () {
-    this.initModules('Core', 'Huron', 'Sunlight');
+    this.initModules(testModule);
     this.injectDependencies('$rootScope', '$scope', '$stateParams', '$controller', '$q', '$timeout', 'Authinfo', 'FeatureToggleService', 'Orgservice');
 
     spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.reject());

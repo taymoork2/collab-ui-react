@@ -40,8 +40,6 @@
         model="$ctrl.selectedReversionNumber"
         inputs="$ctrl.callDestInputs"
         select-type="select"
-        external-number-region-code-fn="$ctrl.getExternalRegionCode()"
-        ng-keyup="$ctrl.validateReversionNumber()"
         internal-number-data-fn="$ctrl.getMemberList(data)"
         internal-number-on-select="$ctrl.onSelectReversionMember(data)"
         internal-number-template-url="callParkReversionTemplate.html"
@@ -61,7 +59,7 @@
         </cs-card-member>
         <cs-card-number ng-if="!$ctrl.fallbackDestination.memberUuid"
           cs-id="$ctrl.fallbackDestination.numberUuid"
-          cs-title="$ctrl.fallbackDestination.number"
+          cs-title="$ctrl.fallbackDestination.number | telephoneNumber"
           on-remove-fn="$ctrl.removeMember()">
         </cs-card-number>
       </cs-card-layout>

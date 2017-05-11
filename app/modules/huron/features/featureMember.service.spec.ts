@@ -1,3 +1,4 @@
+import featureMemberServiceModule from './index';
 import { Member } from 'modules/huron/members';
 
 describe('Service: FeatureService', () => {
@@ -47,7 +48,7 @@ describe('Service: FeatureService', () => {
   };
 
   beforeEach(function () {
-    this.initModules('huron.feature-member-service');
+    this.initModules(featureMemberServiceModule);
     this.injectDependencies(
       '$httpBackend',
       '$http',

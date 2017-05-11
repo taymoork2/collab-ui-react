@@ -1,3 +1,4 @@
+import subscriptionModule from './index';
 import { IProdInst } from 'modules/online/upgrade/upgrade.service';
 
 describe('Controller: MySubscriptionCtrl', function () {
@@ -15,7 +16,7 @@ describe('Controller: MySubscriptionCtrl', function () {
   }];
 
   beforeEach(function () {
-    this.initModules('Core', 'Hercules', 'Sunlight', 'WebExApp');
+    this.initModules(subscriptionModule);
     this.injectDependencies('$controller',
       '$httpBackend',
       '$rootScope',
@@ -192,15 +193,9 @@ describe('Controller: MySubscriptionCtrl', function () {
       expect(this.controller.showCategory(this.data.trialLicenseData[1])).toBeFalsy();
     });
 
-    it('getWarning - should return true when usage exceeds volume', function () {
-      expect(this.controller.getWarning({
-        usage: 50,
-        volume: 20,
-      })).toBeTruthy();
-      expect(this.controller.getWarning({
-        usage: 50,
-        volume: 200,
-      })).toBeFalsy();
+    it('isUsageDefined - should return true only if usage is a number', function () {
+      expect(this.controller.isUsageDefined(5)).toBeTruthy();
+      expect(this.controller.isUsageDefined(undefined)).toBeFalsy();
     });
   });
 });

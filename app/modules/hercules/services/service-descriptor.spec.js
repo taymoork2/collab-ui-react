@@ -2,7 +2,7 @@
 
 describe('ServiceDescriptor', function () {
   // load the service's module
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(require('./service-descriptor')));
 
   // instantiate service
   var Service, $httpBackend, authinfo;

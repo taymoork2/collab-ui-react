@@ -6,7 +6,7 @@ describe('component: callerId', () => {
 
   beforeEach(function() {
     this.initModules('huron.caller-id');
-    this.injectDependencies('$scope', '$timeout', '$q', 'CallerIDService', 'HuronCustomerService', 'TelephoneNumberService');
+    this.injectDependencies('$scope', '$timeout', '$q', 'CallerIDService');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.$scope.myForm = {
       $dirty: true,
@@ -21,7 +21,6 @@ describe('component: callerId', () => {
     }];
     this.$scope.companyNumbers = [];
     this.$scope.callerIdSelected = 'EXT_CALLER_ID_BLOCKED_CALLER_ID';
-    spyOn(this.HuronCustomerService, 'getVoiceCustomer').and.returnValue(this.$q.resolve({}));
     this.compileComponent('ucCallerId', {
       callerIdOptions: 'callerIdOptions',
       callerIdSelected: 'callerIdSelected',

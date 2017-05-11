@@ -1,9 +1,17 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('BrandService', BrandService);
+  module.exports = angular.module('core.service.brand', [
+    require('angular-cache'),
+    require('ng-file-upload'),
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('modules/core/scripts/services/org.service'),
+    require('modules/core/notifications').default,
+    require('modules/core/config/urlConfig'),
+  ])
+    .factory('BrandService', BrandService)
+    .name;
 
   /* @ngInject */
   function BrandService($http, $q, Log, Notification, Orgservice, Upload, UrlConfig) {

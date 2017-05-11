@@ -12,7 +12,7 @@
 
   /* @ngInject */
 
-  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, $q, DirectoryNumberService) {
+  function HuntGroupFallbackDataService(PhoneNumberService, HuntGroupService, Notification, $q, DirectoryNumberService) {
 
     var isValidInternalNumber = false;
     var isValidExternalNumber = false;
@@ -182,15 +182,13 @@
         fallbackDestination: {},
       };
       if (isValidInternalNumber || isValidExternalNumber) {
-        if (_.isObject(fallbackNumber) && _.has(fallbackNumber, 'phoneNumber')) {
-          data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber.phoneNumber);
-        } else if (_.has(fallbackMember, 'member.searchNumber')) {
+        if (_.has(fallbackMember, 'member.searchNumber')) {
           data.fallbackDestination = {
             number: _.get(fallbackMember, 'member.searchNumber'),
             sendToVoicemail: fallbackMember.sendToVoicemail,
           };
         } else {
-          data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber);
+          data.fallbackDestination.number = PhoneNumberService.getE164Format(fallbackNumber);
         }
       } else if (_.has(fallbackMember, 'member.searchNumber')) {
         data.fallbackDestination = {
@@ -207,14 +205,7 @@
     }
 
     function validateExternalNumber() {
-      if (_.isObject(fallbackNumber) && _.get(fallbackNumber, 'code')) {
-        TelephoneNumberService.setRegionCode(_.get(fallbackNumber, 'code'));
-      }
-      if (TelephoneNumberService.validateDID(fallbackNumber)) {
-        isValidExternalNumber = true;
-      } else if (TelephoneNumberService.validateDID(_.get(fallbackNumber, 'phoneNumber'))) {
-        isValidExternalNumber = true;
-      }
+      isValidExternalNumber = PhoneNumberService.validateDID(fallbackNumber);
       return isValidExternalNumber;
     }
 
@@ -250,7 +241,7 @@
       if (pristineFallbackJSON.number &&
         pristineFallbackJSON.number !== '') {
         return (pristineFallbackJSON.number !==
-          TelephoneNumberService.getDIDValue(fallbackNumber));
+          PhoneNumberService.getE164Format(fallbackNumber));
       }
 
       if (pristineFallbackJSON.numberUuid) {

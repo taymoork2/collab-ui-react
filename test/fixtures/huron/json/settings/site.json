@@ -12,7 +12,6 @@
   "mediaTraversalMode": "TURNOnly",
   "siteDescription": "",
   "vmCluster": "6e2e8585-40d2-4e4a-b5ad-07b1273b01c4",
-  "allowInternationalDialing": "true",
   "allowExternalTransfer": "false",
   "emergencyCallBackNumber": {
     "uuid": "26d9e8e9-9da4-4901-be2c-90e0e3bafeef",

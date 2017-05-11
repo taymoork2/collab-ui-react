@@ -5,15 +5,15 @@
     require('angular-resource'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/telephony/telephonyExternalNumbersService'),
-    require('modules/huron/telephony/telephoneNumber.service'),
     require('modules/huron/pstn/pstn.service').default,
+    require('modules/huron/phoneNumber').default,
     require('modules/huron/pstnSetup/terminusServices'),
   ])
   .factory('ExternalNumberService', ExternalNumberService)
   .name;
 
   /* @ngInject */
-  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnService, TelephoneNumberService, TerminusCarrierService) {
+  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnService, PhoneNumberService, TerminusCarrierService) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
@@ -135,7 +135,7 @@
         } else if (_.has(number, 'orderNumber')) {
           number.label = $translate.instant('pstnSetup.orderNumber') + ' ' + number.orderNumber;
         } else {
-          number.label = TelephoneNumberService.getDIDLabel(number.pattern);
+          number.label = PhoneNumberService.getNationalFormat(number.pattern);
         }
       });
       return numbers;

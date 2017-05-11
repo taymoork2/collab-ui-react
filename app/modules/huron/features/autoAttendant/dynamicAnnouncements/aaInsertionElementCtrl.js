@@ -11,13 +11,13 @@
     var vm = this;
 
     vm.mainClickFn = mainClickFn;
-    vm.closeClickFn = closeClickFn;
+    //vm.closeClickFn = closeClickFn;
 
     /////////////////////
 
     function mainClickFn() {}
 
-    function closeClickFn() {}
+    //function closeClickFn() {}
 
     function setUp() {
       vm.elementText = $scope.textValue;

@@ -1129,6 +1129,7 @@
     "create": "Create",
     "dateRange": "Date Range",
     "deactivate": "Deactivate",
+    "default": "Default",
     "delete": "Delete",
     "description": "Description",
     "details": "Details",
@@ -1487,6 +1488,15 @@
       "numericOnlyError": "Routing Prefix can only contain digits.",
       "tooShortError": "Routing Prefix must contain at least one digit.",
       "tooLongError": "Routing Prefix can contain a maximum of seven digits."
+    },
+    "externalTransfer": {
+      "title": "External Call Transfers/Conference",
+      "desc": "Choose whether this user is allowed to do external call transfers and conferences. This will override global settings.",
+      "neverAllow": "Never Allow",
+      "alwaysAllow": "Always Allow",
+      "orgSetting": "Organization Settings ({{state}})",
+      "success": "External Call Transfers/Conference settings successfully saved.",
+      "error": "External Call Transfers/Conference settings failed to update"
     },
     "cos": {
       "title": "Dialing Restrictions",
@@ -3386,6 +3396,12 @@
     "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
     "addDynamicText": "Add Dynamic Text",
+    "dynamicText": "Dynamic Text",
+    "variable": "Variable",
+    "readAs": "Read as",
+    "number": "Number",
+    "date": "Date",
+    "digits": "Digits",
     "callerInputMenuErrorVariableNameMissing": "{{schedule}} schedule at Caller Input Menu {{at}} is missing a variable name ",
     "conditionalThenTargetMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing a target for the 'Then' entry",
     "conditionalIsEntryVariableMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing an entry for 'Is'",
@@ -3761,7 +3777,8 @@
     "maxLines": "You reached the limit of 25 lines. Please remove a line from this user before provisioning additional lines.",
     "showMore": "Show more",
     "showLess": "Show less",
-    "localDialing": "Local Dialing"
+    "localDialing": "Local Dialing",
+    "externalTransfer": "External Call Transfers/Conference"
   },
   "preferredLanguage": {
     "title": "Preferred Language",
@@ -6095,6 +6112,17 @@
     "deleteNumberTextBYOP": "The number will be returned to you immediately"
   },
   "messengerCiSync": {
+    "orgInfoSection": {
+      "sectionTitle": "Organization Information",
+      "sectionDescr": "View information about this WebEx Messenger Organization.",
+      "name": "Name",
+      "id": "ID",
+      "linkDate": "Link Date"
+    },
+    "optionsSection": {
+      "sectionTitle": "Options",
+      "sectionDescr": "Control how WebEx Messenger works with Cisco Spark."
+    },
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
     "authRedirectTooltip": "If enabled, users will login to Common Identity. If disabled, users will login to Messenger.",
     "pwdSyncHeading": "Sync Passwords From Messenger",
@@ -6227,7 +6255,7 @@
     "defaultEmailText": "Email",
     "defaultEmail": "e.g. abc@xyz.com",
     "defaultPhoneText": "Phone Number",
-    "defaultPhoneHintText": "234-555-6789",
+    "defaultPhoneHintText": "+12345556789",
     "defaultQuestionText": "How may I assist you?",
     "additionalDetails": "Additional Details",
     "additionalDetailsAbtIssue": "Describe the issue you are experiencing",
@@ -6706,6 +6734,7 @@
     "numberedName": "Enterprise Subscription {{number}}",
     "enterpriseTrial": "Enterprise Trial {{number}}",
     "usage": "Usage: ",
+    "licenses": "Licenses: ",
     "licenseUsageReport": "License Usage Report",
     "more": "More",
     "less": "Less",
@@ -7221,9 +7250,9 @@
         },
         "error": {
           "invalidMaxLength": "Domain/SRV length cannot be more than {{max}}.",
-          "invalidChars": "Invalid character is not allowed in address domain. Allowed set is \"[a-z] [A-Z] [0-9]_-.\"",
+          "invalidChars": "Domain name is invalid. It should have an extension and the allowed characters only. Allowed set is \"[a-z][A-Z][0-9]-.\"",
           "invalidPort": "Port can only range between {{min}} and {{max}}",
-          "invalidUniqueEntry": "This SIP Destination address already exists",
+          "invalidUniqueEntry": "Duplicate entry, this SIP Destination address is already in use",
           "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found",
           "resourceError": "Add Private trunk resource error",
           "privateTrunkError": "Add Private trunk Domain error",
@@ -7261,7 +7290,7 @@
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",
         "destinationTitle": "Add SIP Destination",
         "destination": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
-        "destinationHelp": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
+        "destinationHelp": "Enter an SRV domain, domain:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipLabel": "Sip destination",
         "sip": "Enter Sip destination",
         "displayLabel": "Display name",

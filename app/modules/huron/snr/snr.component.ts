@@ -27,7 +27,6 @@ class SnrCtrl implements ng.IComponentController {
   public snrInfo: SingleNumberReach;
   private snrWaitSeconds: any;
   private snrWaitSecondsOptions: any;
-  private callDest: any;
   private callDestInputs: string[];
   private snrEnabled: boolean = false;
   private form: ng.IFormController;
@@ -39,7 +38,6 @@ class SnrCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private HuronCustomerService: HuronCustomerService,
     private SnrService: SnrService,
-    private TelephoneNumberService,
     private $modal,
     private Notification,
     private $scope: ng.IScope,
@@ -57,7 +55,6 @@ class SnrCtrl implements ng.IComponentController {
 
   public init(): void {
     this.snrId = '';
-    this.callDest = this.TelephoneNumberService.getDestinationObject('');
     this.snrInfo = new SingleNumberReach();
     this.snrEnabled = false;
     this.SnrService.getSnrList(this.ownerId).then((data) => {
@@ -68,10 +65,8 @@ class SnrCtrl implements ng.IComponentController {
           destination: data[0].destination,
           answerTooLateTimer: data[0].answerTooLateTimer,
         };
-        this.snrWaitSeconds = _.find(SNR_WAIT_SECONDS_OPTIONS,
-        { value: this.snrInfo.answerTooLateTimer });
+        this.snrWaitSeconds = _.find(SNR_WAIT_SECONDS_OPTIONS, { value: this.snrInfo.answerTooLateTimer });
         this.snrEnabled = (this.snrInfo.enableMobileConnect === 'true');
-        this.callDest = this.TelephoneNumberService.getDestinationObject(this.snrInfo.destination);
       }
       this.resetForm();
     });
@@ -103,7 +98,7 @@ class SnrCtrl implements ng.IComponentController {
 
   public save(isDelete: boolean = false): void {
     let snr: SingleNumberReach = new SingleNumberReach({
-      destination: this.callDest.phoneNumber,
+      destination: this.snrInfo.destination,
       answerTooLateTimer: this.snrWaitSeconds.value,
       enableMobileConnect: (this.snrEnabled) ? 'true' : 'false',
     });
@@ -125,10 +120,8 @@ class SnrCtrl implements ng.IComponentController {
     return this.HuronCustomerService.getVoiceCustomer();
   }
 
-  public setSnr(callDest: any): void {
-    if (callDest !== undefined && callDest.phoneNumber) {
-      this.callDest.phoneNumber =  this.SnrService.validate(callDest.phoneNumber);
-    }
+  public setSnr(destination: string): void {
+    this.snrInfo.destination = destination;
   }
 
 }

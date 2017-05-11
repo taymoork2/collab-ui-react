@@ -10,7 +10,7 @@ require('./_user-csv.scss');
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
     Analytics, Authinfo, Config, CsvDownloadService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
-    Notification, ServiceDescriptor, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
+    Notification, ServiceDescriptor, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
@@ -385,7 +385,7 @@ require('./_user-csv.scss');
     function isValidDID(value) {
       if (value) {
         try {
-          return TelephoneNumberService.validateDID(value);
+          return PhoneNumberService.validateDID(value);
         } catch (e) {
           return false;
         }

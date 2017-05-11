@@ -1,6 +1,6 @@
 import { IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
 
-class SubscriptionHeaderCtrl {
+export class SubscriptionHeaderCtrl {
   public isTrial: boolean = false;
   public isOnline: boolean = false;
   public numSubscriptions: number = 0;
@@ -28,7 +28,3 @@ class SubscriptionHeaderCtrl {
     });
   }
 }
-
-angular
-  .module('Core')
-  .controller('SubscriptionHeaderCtrl', SubscriptionHeaderCtrl);

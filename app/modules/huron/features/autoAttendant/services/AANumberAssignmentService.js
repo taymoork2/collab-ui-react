@@ -10,7 +10,7 @@
   /* @ngInject */
 
   function AANumberAssignmentService($q, AssignAutoAttendantService, TelephonyInfoService,
-    ExternalNumberPool) {
+    ExternalNumberPool, PhoneNumberService) {
 
     var service = {
       setAANumberAssignment: setAANumberAssignment,
@@ -109,11 +109,7 @@
           // We didn't find in CMI - shouldn't happen - but let's try to format fields
           // Note we are returning a copy (see above), not altering input parms, so this leaves CE structures alone
           // We should try to format as best as possible for CMI assignment
-          try {
-            fmtRes.number = phoneUtils.formatE164(fmtRes.id, phoneUtils.getRegionCodeForNumber(fmtRes.id));
-          } catch (e) {
-            fmtRes.number = fmtRes.id;
-          }
+          fmtRes.number = PhoneNumberService.getE164Format(fmtRes.id);
           fmtRes.id = _.replace(fmtRes.number, /\D/g, '');
         }
         return fmtRes;

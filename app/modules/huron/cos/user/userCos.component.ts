@@ -146,7 +146,9 @@ class UserClassOfService implements ng.IComponentController {
     this.cosTrialToggle = this.FeatureToggleService.supports('h-cos-trial');
     this.callTrial = this.Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc');
     this.roomSystemsTrial = this.Authinfo.getLicenseIsTrial('SHARED_DEVICES');
-    if (this.callTrial || this.roomSystemsTrial) {
+    if ((!_.isUndefined(this.callTrial) && !this.callTrial) || (!_.isUndefined(this.roomSystemsTrial) && !this.roomSystemsTrial)) {
+      this.disableControl = false;
+    } else {
       this.$q.when(this.cosTrialToggle)
         .then((response) => {
           if (response) {
@@ -155,8 +157,6 @@ class UserClassOfService implements ng.IComponentController {
             this.disableControl = true;
           }
         });
-    } else {
-      this.disableControl = false;
     }
   }
 

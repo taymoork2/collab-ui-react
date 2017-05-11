@@ -1,11 +1,10 @@
-import './_mySubscription.scss';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
 import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
 import { SharedMeetingsReportService } from './sharedMeetings/sharedMeetingsReport.service';
 import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from './subscriptionsInterfaces';
 
-class MySubscriptionCtrl {
+export class MySubscriptionCtrl {
   public hybridServices: Array<any> = [];
   public licenseCategory: Array<ISubscriptionCategory> = [];
   public subscriptionDetails: Array<ISubscription> = [];
@@ -88,15 +87,15 @@ class MySubscriptionCtrl {
     return category.offerWrapper.length > 0;
   }
 
-  public getWarning(offer: IOfferData): boolean {
-    return offer.usage > offer.volume;
+  public isUsageDefined(usage?: number): boolean {
+    return _.isNumber(usage);
   }
 
-  public isSharedMeetingsLicense(offer: ISubscription): boolean {
+  public isSharedMeetingsLicense(offer: IOfferData): boolean {
     return _.toLower(_.get(offer, 'licenseModel', '')) === this.Config.licenseModel.cloudSharedMeeting;
   }
 
-  public determineLicenseType(offer: ISubscription): string {
+  public determineLicenseType(offer: IOfferData): string {
     return this.isSharedMeetingsLicense(offer) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
   }
 
@@ -154,12 +153,14 @@ class MySubscriptionCtrl {
 
   // generating the subscription view tooltips
   private generateTooltip(offerName: string, usage?: number, volume?: number): string | undefined {
-    if (_.isNumber(usage) && _.isNumber(volume)) {
-      let tooltip = this.$translate.instant('subscriptions.licenseTypes.' + offerName) + '<br>' + this.$translate.instant('subscriptions.usage');
-      if (usage > volume) {
-        tooltip += '<span class="warning">' + usage + '/' + volume + '</span>';
+    if (_.isNumber(volume)) {
+      let tooltip = this.$translate.instant('subscriptions.licenseTypes.' + offerName) + '<br>';
+      if (this.useTotal(offerName) || !_.isNumber(usage)) {
+        tooltip += this.$translate.instant('subscriptions.licenses') + volume;
+      } else if (usage > volume) {
+        tooltip += this.$translate.instant('subscriptions.usage') + `<span class="warning">${usage}/${volume}</span>`;
       } else {
-        tooltip += usage + '/' + volume;
+        tooltip += this.$translate.instant('subscriptions.usage') + `${usage}/${volume}`;
       }
       return tooltip;
     } else {
@@ -180,7 +181,9 @@ class MySubscriptionCtrl {
 
     _.forEach(offers, (offer: IOfferData): void => {
       if (!exists && offer.offerName === item.offerName) {
-        offer.usage += item.usage;
+        if (offer.usage && item.usage) {
+          offer.usage += item.usage;
+        }
         offer.volume += item.volume;
         exists = true;
       }
@@ -229,11 +232,16 @@ class MySubscriptionCtrl {
               licenseType: license.licenseType,
               licenseModel: _.get(license, 'licenseModel', ''),
               offerName: license.offerName,
-              usage: license.usage || 0,
               volume: license.volume,
               id: 'donutId' + subIndex + licenseIndex,
               tooltip: this.generateTooltip(license.offerName, license.usage, license.volume),
             };
+
+            if (this.useTotal(license.offerName)) {
+              offer.totalUsage = license.usage || 0;
+            } else {
+              offer.usage = license.usage || 0;
+            }
 
             if (license.siteUrl) {
               offer.siteUrl = license.siteUrl;
@@ -390,8 +398,8 @@ class MySubscriptionCtrl {
       this.hybridServices = humanReadableServices;
     });
   }
-}
 
-angular
-  .module('Core')
-  .controller('MySubscriptionCtrl', MySubscriptionCtrl);
+  private useTotal(offerName: string): boolean {
+    return offerName === this.Config.offerCodes.SB || offerName === this.Config.offerCodes.SD;
+  }
+}

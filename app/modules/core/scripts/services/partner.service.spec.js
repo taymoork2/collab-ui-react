@@ -4,32 +4,15 @@ describe('Partner Service -', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $q, $translate, $scope, Analytics, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
+  var $httpBackend, $translate, $scope, Analytics, Authinfo, Config, PartnerService, TrialService, UrlConfig;
 
   var testData;
 
-  beforeEach(function () {
-    angular.mock.module(function ($provide) {
-      Authinfo = {
-        getOrgId: function () {
-          return '12345';
-        },
-        getPrimaryEmail: function () {
-          return 'fake-primaryEmail';
-        },
-      };
-
-      $provide.value('Authinfo', Authinfo);
-    });
-  });
-
-  beforeEach(inject(function (_$httpBackend_, _$q_, $rootScope, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, $rootScope, _$translate_, _Analytics_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
-    $q = _$q_;
     $translate = _$translate_;
     Analytics = _Analytics_;
-    Auth = _Auth_;
     Authinfo = _Authinfo_;
     Config = _Config_;
     PartnerService = _PartnerService_;
@@ -37,7 +20,9 @@ describe('Partner Service -', function () {
     UrlConfig = _UrlConfig_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
-    spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.resolve({}));
+    spyOn(Authinfo, 'getOrgId').and.returnValue('12345');
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('fake-primaryEmail');
+    spyOn(Authinfo, 'getManagedOrgs').and.returnValue([]);
     spyOn(Analytics, 'trackPartnerActions');
   }));
 
@@ -242,7 +227,7 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being true', function () {
-    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
+    Authinfo.getPrimaryEmail.and.returnValue('partner@company.com');
 
     var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), {
       isTrialData: true,
@@ -260,7 +245,7 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being false', function () {
-    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
+    Authinfo.getPrimaryEmail.and.returnValue('partner@company.com');
 
     var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), {
       isTrialData: true,
@@ -296,16 +281,20 @@ describe('Partner Service -', function () {
   });
 
   describe('modifyManagedOrgs function', function () {
-    beforeEach(function () {
-      Auth.getAuthorizationUrlList.and.returnValue($q.resolve(testData.getAuthorizationUrlListResponse));
-      $scope.$apply();
-    });
+    beforeEach(installPromiseMatchers);
 
     it('should call a patch if organization is not matched', function () {
       var url = UrlConfig.getAdminServiceUrl() + 'organization/12345/users/roles';
       $httpBackend.expectPATCH(url).respond(200);
       PartnerService.modifyManagedOrgs('fake-customer-org-id-1');
+      $scope.$apply();
       $httpBackend.flush();
+    });
+
+    it('should resolve but not patch if organization is already managed', function () {
+      Authinfo.getManagedOrgs.and.returnValue(['fake-customer-org-id-1']);
+      var promise = PartnerService.modifyManagedOrgs('fake-customer-org-id-1');
+      expect(promise).toBeResolved();
     });
   });
 
@@ -355,8 +344,8 @@ describe('Partner Service -', function () {
 
     beforeEach(function () {
       services = getJSONFixture('core/json/partner/partner.service.json').services;
-      spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(services.messaging.partnerEmail);
-      spyOn(Authinfo, 'getOrgId').and.returnValue(services.messaging.partnerOrgId);
+      Authinfo.getPrimaryEmail.and.returnValue(services.messaging.partnerEmail);
+      Authinfo.getOrgId.and.returnValue(services.messaging.partnerOrgId);
     });
 
     it('should return true by matching partner email', function () {

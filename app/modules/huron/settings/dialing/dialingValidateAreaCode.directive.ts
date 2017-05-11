@@ -13,16 +13,16 @@ export class DialingAreaCodeValidator implements ng.IDirective {
         return true;
       }
 
-      return this.TelephoneNumberService.isPossibleAreaCode(modelValue);
+      return this.PhoneNumberService.isPossibleAreaCode(modelValue, 'us');
     };
   }
 
   constructor(
-    private TelephoneNumberService,
+    private PhoneNumberService,
   ) { }
 
   /* @ngInject */
-  public static factory(TelephoneNumberService) {
-    return new DialingAreaCodeValidator(TelephoneNumberService);
+  public static factory(PhoneNumberService) {
+    return new DialingAreaCodeValidator(PhoneNumberService);
   }
 }
