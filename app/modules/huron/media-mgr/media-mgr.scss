@@ -1,0 +1,232 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+
+media-mgr {
+
+  flex: 1 1 auto;
+  flex-direction: column;
+  display: flex;
+
+  .reveal-modal.full & .modal-body {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    max-width: none;
+  }
+
+  .reveal-modal.full & .modal-container {
+    flex: 1 1 auto;
+    flex-direction: row;
+    display: flex;
+    align-items: stretch;
+    max-width: inherit;
+  }
+
+  .mb-nav {
+    flex: 1;
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mb-container {
+    flex: 9;
+    flex-direction: row;
+    display: flex;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: inherit;
+  }
+
+  .mb-panel-left {
+    flex: 4;
+    flex-direction: column;
+    display: flex;
+    border-left: gray;
+    border-left-width: thin;
+    border-left-style: solid;
+    padding-left: 0;
+    padding-right: 0;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .mb-panel-right {
+    flex: 6;
+    flex-direction: column;
+    display: flex;
+    border-left: gray;
+    border-left-width: thin;
+    border-left-style: solid;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .mb-panel-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: CiscoSans-ExtraLight;
+    font-size: 26px;
+    text-align: end;
+    margin: 0.5rem;
+  }
+
+  .mb-panel-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .mb-panel {
+    flex: 1;
+    flex-direction: column;
+    display: flex;
+    border-left: gray;
+    border-left-width: thin;
+    border-left-style: solid;
+    padding-left: 0;
+    padding-right: 0;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .mb-title {
+    font-family: CiscoSans-ExtraLight;
+    font-size: 26px;
+    text-align: center;
+    margin: 0.5rem;
+  }
+
+  .mb-desc {
+    font-family: CiscoSans-Light;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .mb-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: CiscoSans-ExtraLight;
+    font-size: 26px;
+    text-align: end;
+    margin: 0.5rem;
+  }
+
+  .mb-row-content {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .searchbox .searchinput {
+    border: none;
+  }
+
+  .searchfilter {
+    border: none;
+    width: 100%;
+  }
+
+  .media-text {
+    font-family: CiscoSans-Light;
+    font-size: 14px;
+    color: $color-primary-base;
+    margin-top: 0.25rem;
+    margin-left: 0.25rem;
+  }
+
+  .media-info {
+    font-family: CiscoSans;
+    font-size: 12px;
+    color: $gray-darkest;
+    text-align: right;
+    float: right;
+    margin-right: 0.25rem;
+  }
+
+  .media-progress-msg {
+    font-family: CiscoSans;
+    font-size: 12px;
+    text-align: left;
+    color: $gray-darkest;
+  }
+
+  .media-icon-alignment {
+    text-align: right;
+    vertical-align: middle;
+    margin-top: 0.25rem;
+    margin-right: 0.25rem;
+  }
+
+  .mb-br-button {
+    align-self: flex-end;
+    margin: 0.5rem;
+  }
+
+  .icon-msg-alignment {
+    vertical-align: middle;
+    margin-right: 0.25rem;
+    margin-left: 0.25rem;
+  }
+
+  .icon-music {
+    background: none;
+    margin: 0.5rem;
+    color: $gray-base;
+    &:hover,
+    &:focus,
+    &:active { color: $color-primary-base; }
+  }
+
+  .icon-trash {
+    background: none;
+    margin: 0.5rem;
+    color: $gray-base;
+    &:hover,
+    &:focus,
+    &:active { color: $color-primary-base; }
+  }
+
+  .active-icon {
+    color: $color-primary-base;
+  }
+
+  .icon-spinner {
+    color: $color-primary-base;
+  }
+
+  .icon-error {
+    color: $color-negative-base;
+  }
+
+  .icon-plus {
+    color: $color-primary-base;
+    text-align: right;
+  }
+
+  .icon-plus-disabled {
+    color: $color-primary-lighter;
+    text-align: right;
+  }
+
+  .icon-exit {
+    float: right;
+  }
+
+  .progress-striped {
+    background: $gray-light-2;
+  }
+
+  .progress-bar {
+    margin: 10rem;
+  }
+
+  .centered {
+    justify-content: center;
+    align-items: center;
+  }
+}
