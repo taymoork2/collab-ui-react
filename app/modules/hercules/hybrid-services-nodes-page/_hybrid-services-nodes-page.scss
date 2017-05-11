@@ -25,10 +25,18 @@ hybrid-services-nodes-page {
     border-bottom: 1px solid $gray-light-3;
   }
 
+  tr.connector-row-filler {
+    background-color: $gray-light-3;
+  }
+
+  tbody:last-of-type tr.connector-row-filler {
+    background-color: $gray-light-4;
+  }
+
   table thead tr th {
     font-size: 16px;
     color: $gray-dark-2;
-    background-color: $gray-light-4;
+    background-color: $gray-light-3;
     border: 1px solid $gray-light-3;
     border-top: 0;
 
@@ -48,8 +56,13 @@ hybrid-services-nodes-page {
   }
 
   .hostname {
+    border-top: solid;
+    border-top-color: $color-primary-light;
     color: $gray-dark-3;
-    background-color: $gray-light-2;
+  }
+
+  .nodename {
+    color: $gray-dark-4;
   }
 
   .connector-row {

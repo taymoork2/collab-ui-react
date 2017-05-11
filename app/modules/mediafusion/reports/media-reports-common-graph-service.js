@@ -51,7 +51,7 @@
       'tickLength': 0,
     };
     baseVariables['legend'] = {
-      'color': chartColors.grayDarkThree,
+      'color': '#049FD9',
       'autoMargins': false,
       'align': 'right',
       'position': 'bottom',

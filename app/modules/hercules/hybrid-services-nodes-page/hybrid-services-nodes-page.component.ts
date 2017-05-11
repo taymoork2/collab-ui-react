@@ -97,9 +97,13 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   }
 
   public enableMaintenanceMode(node: ISimplifiedNode): void {
+    let message = this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.message');
+    if (this.data.targetType === 'c_mgmt') {
+      message = this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.expresswayMessage');
+    }
     this.ModalService.open({
       title: this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.title'),
-      message: this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.message'),
+      message: message,
       close: this.$translate.instant('common.enable'),
       dismiss: this.$translate.instant('common.cancel'),
     })

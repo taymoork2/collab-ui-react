@@ -2583,9 +2583,11 @@
       "goToNode": "Go to node",
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
+      "pendingTooltip": "Maintenance mode has been requested. Please wait until the node is ready.",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
-        "message": "Are you sure you want to enable maintenance mode for this node?"
+        "message": "<p>The Hybrid Media node will be put in maintenance mode as soon as there are no active calls or a timeout of two hours is reached. Please wait for the node to move from \"Pending Maintenance\" to \"Maintenance\" before proceeding.</p><p>No alarm notifications will be sent for nodes in maintenance mode.</p>",
+        "expresswayMessage": "<p>The Expressway node will be marked as \"Pending Maintenance\" until it has been instructed to go into maintenance mode. All users assigned to connectors on this node will be reassigned to another available node. Note that if there are no other nodes available, these users will lose service.</p><p>No alarm notifications will be sent for nodes in maintenance mode.</p>"
       },
       "disableMaintenanceModeModal": {
         "title": "Disable maintenance mode",
@@ -5127,7 +5129,9 @@
         "clusterInServiceClusterDesc": "Percentage of nodes that are in service to host calls over the selected time period.<br>Green: node is in service.<br>Red: node is not in service.",
         "meetHostTypeDesc": "Provides a trend of the number of meetings in an organization, based on where the calls were hosted",
         "clientTypeDesc": "Provides usage trend of the various client types that are used in an organization"
-      }
+      },
+      "allOff": "All Off",
+      "allOn": "All On"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
