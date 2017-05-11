@@ -4,6 +4,9 @@ export class StorageKeys {
   public static readonly REQUESTED_STATE_PARAMS = 'storedParams';
   public static readonly REQUESTED_QUERY_PARAMS = 'queryParams';
 
+  // Login Query String Parameters
+  public static readonly BMMP_ENV = 'bmmpEnv';
+
   // Idle Timeout
   public static readonly ACTIVE_TABS = 'ACTIVE_TABS';
   public static readonly LOGIN_MESSAGE = 'loginMessage';
