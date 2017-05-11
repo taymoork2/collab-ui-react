@@ -13,8 +13,7 @@
     gemService.getSpData().then(function (res) {
       var resJson = _.get(res.content, 'data');
       if (resJson.returnCode) {
-        // TODO: error message should be defined in frontend according to error code to support i18N
-        Notification.error(resJson.message);
+        Notification.error('gemini.errorCode.loadError');
         return;
       }
 

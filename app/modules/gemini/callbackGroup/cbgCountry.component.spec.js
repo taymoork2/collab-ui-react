@@ -50,7 +50,6 @@ describe('component: cbgCountry', function () {
       ctrl.$onInit();
       $scope.$apply();
       expect(ctrl.options.length).toBe(4);
-      expect(ctrl.downloadUrl).toBe('https://atlascca1.qa.webex.com');
     });
 
     it('should isCsvValid to be true', function () {

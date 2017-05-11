@@ -4,8 +4,11 @@
   </cs-page-sub-header-left>
   <cs-page-sub-header-right>
     <div class="page-option-buttons">
-      <div ng-if="!cbgsCtrl.exportLoading">
-        <a class="export-users" ng-csv="cbgsCtrl.exportCSV()" filename="{{'gemini.cbgs.csvFilename' | translate}}">
+      <div ng-if="!cbgsCtrl.exportLoading"
+           tooltip="Export to CSV"
+           tooltip-placement="top"
+           tooltip-trigger="mouseenter">
+        <a class="export-users" ng-csv="cbgsCtrl.exportCSV()" ng-show="cbgsCtrl.isDownload" filename="{{'gemini.cbgs.csvFilename' | translate}}" quote-strings="true">
           <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
         </a>
       </div>
@@ -16,7 +19,7 @@
       </div>
     </div>
 
-    <button class="btn btn--people" id="request" translate="gemini.cbgs.request.button" ng-click="cbgsCtrl.onRequest()"></button>
+    <button class="btn btn--primary" id="request" translate="gemini.cbgs.request.button" ng-click="cbgsCtrl.onRequest()"></button>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 <div id="cbgListPanel" class="gridStyle col-md-12" ui-grid="cbgsCtrl.gridOptions" gridscrollbar ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-infinite-scroll></div>
