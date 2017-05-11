@@ -23,11 +23,11 @@ describe('DeactivateServiceModalView', function () {
   it('should call deactivateService() when Confirm is clicked', function () {
 
     $scope.deactivateServiceOnExpresswayModal = {
-      deactivateService: sinon.stub(),
+      deactivateService: jasmine.createSpy('deactivateService'),
     };
 
     view.find("#confirm").click();
-    expect($scope.deactivateServiceOnExpresswayModal.deactivateService.callCount).toBe(1);
+    expect($scope.deactivateServiceOnExpresswayModal.deactivateService.calls.count()).toBe(1);
 
   });
 });
