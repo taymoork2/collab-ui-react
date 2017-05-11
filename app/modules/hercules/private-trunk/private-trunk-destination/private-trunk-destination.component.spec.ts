@@ -29,6 +29,7 @@ describe('Component: privateTrunkDestination component', () => {
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.$scope.destinationRadio = 'new';
     this.compileComponent('privateTrunkDestination', {
+      isFirstTimeSetup: true,
       privateTrunkResource: 'privateTrunkResource',
       onChangeFn: 'onChangeFn(selected)',
     });

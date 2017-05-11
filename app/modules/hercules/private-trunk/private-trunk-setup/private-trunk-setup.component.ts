@@ -43,6 +43,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   private errors: any[] = [];
   private dismiss: Function;
+  public isFirstTimeSetup: boolean;
 
   /* @ngInject */
   constructor(
@@ -61,8 +62,8 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
     if (_.isUndefined(this.currentStepIndex)) {
       this.currentStepIndex = 1;
     }
-
-    if (!this.isFirstTimeSetup()) {
+    this.isFirstTimeSetup = (this.$state.current.name === 'services-overview');
+    if (!this.isFirstTimeSetup) {
       this.currentStepIndex = 2;
     }
 
@@ -72,10 +73,6 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       this.domainSelected = [];
     }
     this.initCertificateInfo();
-  }
-
-  public isFirstTimeSetup(): boolean {
-    return (this.$state.current.name === 'services-overview');
   }
 
   public initDomainInfo(): void {
@@ -113,7 +110,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
   public isClose(): boolean {
-    return (this.currentStepIndex === 1 || this.currentStepIndex === 2 && !this.isFirstTimeSetup());
+    return (this.currentStepIndex === 1 || this.currentStepIndex === 2 && !this.isFirstTimeSetup);
   }
 
   public leftButtonLabel(): string {
@@ -246,13 +243,12 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       this.PrivateTrunkCertificateService.deleteUploadedCerts();
     }
 
-    if (this.isFirstTimeSetup()) {
+    if (this.isFirstTimeSetup) {
       this.createPrivateTrunk()
         .then(() => {
           this.isSetup = false;
           if (!this.errors.length) {
             this.currentStepIndex++;
-            this.Notification.success('servicesOverview.cards.privateTrunk.success.activate');
           }
           if (this.privateTrunkAddError) {
             this.cleanupOnError();
@@ -288,7 +284,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
     })
       .result.then(() => {
         this.PrivateTrunkCertificateService.deleteUploadedCerts();
-        if (!this.isFirstTimeSetup()) {
+        if (!this.isFirstTimeSetup) {
           this.dismiss();
         } else {
           this.PrivateTrunkPrereqService.dismissModal();
