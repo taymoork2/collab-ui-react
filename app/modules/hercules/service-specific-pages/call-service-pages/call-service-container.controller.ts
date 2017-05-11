@@ -33,13 +33,14 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
     private $stateParams: ng.ui.IStateParamsService,
     Authinfo,
     ClusterService,
+    hasPartnerRegistrationFeatureToggle,
     Notification: Notification,
     private $translate: ng.translate.ITranslateService,
     ServiceDescriptor,
     ServiceStateChecker,
     USSService,
   ) {
-    super($modal, $scope, $state, Authinfo, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
+    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
     this.addConnectIfEnabled();
     this.clusterId = this.$stateParams['clusterId'];
   }

@@ -3628,6 +3628,9 @@
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
+              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
+              },
             },
           })
           .state('add-resource.expressway', {
@@ -3806,6 +3809,11 @@
             },
             parent: 'main',
             abstract: true,
+            resolve: {
+              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
+              },
+            },
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
@@ -3856,6 +3864,11 @@
               clusterId: null,
             },
             parent: 'main',
+            resolve: {
+              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
+              },
+            },
           })
           .state('call-service.list', {
             url: '/services/call',
