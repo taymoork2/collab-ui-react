@@ -145,9 +145,9 @@ class FieldModalCtrl implements ng.IComponentController {
     this.actionInProgress = true;
     return this.ContextFieldsService.updateAndGetField(this.fixDataForApi())
       .then(data => {
-        // need to copy the new lastUpdated timestamp so user can perform
+        // need to clone the new fielddata so user can perform
         // another update if they want to
-        this.fieldData.lastUpdated = data.lastUpdated;
+        this.fieldData = _.cloneDeep(data);
         // must call callback method to update field data in side panel;
         // however, don't dismiss the modal as it will overwrite the updated field data in the side panel
         this.callback(this.fieldData);
