@@ -3411,6 +3411,7 @@
     "number": "Number",
     "date": "Date",
     "digits": "Digits",
+    "word": "Word",
     "callerInputMenuErrorVariableNameMissing": "{{schedule}} schedule at Caller Input Menu {{at}} is missing a variable name ",
     "conditionalThenTargetMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing a target for the 'Then' entry",
     "conditionalIsEntryVariableMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing an entry for 'Is'",
