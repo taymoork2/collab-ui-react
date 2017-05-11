@@ -13,6 +13,7 @@
     var customerSuccessRole = 'webex-messenger.customer_success';
     var requiredEntitlements = ['webex-squared', 'webex-messenger'];
 
+    // TODO: replace this mechanism with something more consistent w/ other pages
     vm.dataStates = {
       LOADING: 1,
       LOADED: 2,
@@ -26,41 +27,14 @@
       UNKNOWN: 'UNKNOWN',
     };
 
-    // Public
     vm.adminType = vm.adminTypes.UNKNOWN;
     vm.dataStatus = vm.dataStates.LOADING;
     vm.errorMsg = '';
-    vm.isDirSync = false;
     vm.orgAdminUrl = 'https://wapi.webexconnect.com/wbxconnect/acs/widgetserver/mashkit/apps/standalone.html?app=WBX.base.orgadmin';
     vm.backState = 'services-overview';
-
-    // Translated text
-    vm.refresh = $translate.instant(translatePrefix + 'refresh');
-    vm.syncStatusTooltip = $translate.instant(translatePrefix + 'syncStatusTooltip');
-    vm.dirsyncStatusTooltip = $translate.instant(translatePrefix + 'dirsyncStatusTooltip');
-    vm.authRedirectTooltip = $translate.instant(translatePrefix + 'authRedirectTooltip');
-    vm.patchSyncButtonText = $translate.instant(translatePrefix + 'patchSyncButtonText');
-    vm.orgAdminLinkTooltip = $translate.instant(translatePrefix + 'orgAdminLinkTooltip');
-    vm.pwdSyncTooltip = $translate.instant(translatePrefix + 'pwdSyncTooltip');
-    vm.sparkEntTooltip = $translate.instant(translatePrefix + 'sparkEntTooltip');
-    vm.usrDisTooltip = $translate.instant(translatePrefix + 'usrDisTooltip');
-    vm.usrDelTooltip = $translate.instant(translatePrefix + 'usrDelTooltip');
-
-    vm.subSections = {};
-    vm.subSections.orgInfo = {
-      title: $translate.instant(translatePrefix + 'orgInfoSection.sectionTitle'),
-      description: $translate.instant(translatePrefix + 'orgInfoSection.sectionDescr'),
-      subsectionLabel: '',
-      subsectionDescription: '',
-    };
-    vm.subSections.options = {
-      title: $translate.instant(translatePrefix + 'optionsSection.sectionTitle'),
-      description: $translate.instant(translatePrefix + 'optionsSection.sectionDescr'),
-      subsectionLabel: '',
-      subsectionDescription: '',
-    };
-
-    vm.syncInfo = {
+    vm.isSaving = false;
+    vm.settings = {};
+    vm.settings.syncInfo = {
       messengerOrgName: 'Unknown',
       messengerOrgId: 'Unknown',
       linkDate: 'Unknown',
@@ -72,13 +46,33 @@
       isSparkEnt: true,
       isUsrDis: true,
       isUsrDel: true,
+    }
+    vm.settingsCopy = undefined;
+
+    // l10n strings
+    vm.refresh = $translate.instant(translatePrefix + 'refresh');
+    vm.syncStatusTooltip = $translate.instant(translatePrefix + 'syncStatusTooltip');
+    vm.dirsyncStatusTooltip = $translate.instant(translatePrefix + 'dirsyncStatusTooltip');
+    vm.authRedirectTooltip = $translate.instant(translatePrefix + 'authRedirectTooltip');
+    vm.patchSyncButtonText = $translate.instant(translatePrefix + 'patchSyncButtonText');
+    vm.orgAdminLinkTooltip = $translate.instant(translatePrefix + 'orgAdminLinkTooltip');
+    vm.pwdSyncTooltip = $translate.instant(translatePrefix + 'pwdSyncTooltip');
+    vm.sparkEntTooltip = $translate.instant(translatePrefix + 'sparkEntTooltip');
+    vm.usrDisTooltip = $translate.instant(translatePrefix + 'usrDisTooltip');
+    vm.usrDelTooltip = $translate.instant(translatePrefix + 'usrDelTooltip');
+    vm.subSections = {};
+    vm.subSections.orgInfo = {
+      title: $translate.instant(translatePrefix + 'orgInfoSection.sectionTitle'),
+      description: $translate.instant(translatePrefix + 'orgInfoSection.sectionDescr'),
+    };
+    vm.subSections.options = {
+      title: $translate.instant(translatePrefix + 'optionsSection.sectionTitle'),
+      description: $translate.instant(translatePrefix + 'optionsSection.sectionDescr'),
     };
 
+    // methods
     vm.init = init;
-
-    // Event handlers
     vm.authorized = authorized;
-    vm.isDirSync = SyncService.isDirSync;
     vm.isOrgAdmin = isOrgAdmin;
     vm.isOpsAdmin = isOpsAdmin;
     vm.patchSync = patchSync;
@@ -86,6 +80,9 @@
     vm.setOrgAdmin = setOrgAdmin;
     vm.setOpsAdmin = setOpsAdmin;
     vm.setSyncInfoProperty = setSyncInfoProperty;
+    vm.saveSettings = saveSettings;
+    vm.resetSettings = resetSettings;
+    vm.canShowSaveCancel = canShowSaveCancel;
 
     init();
 
@@ -93,13 +90,24 @@
 
     // CI Calls Inside
     function init() {
+      vm.dataStatus = vm.dataStates.LOADING;
+
+      // TODO: move this auth check to the UI routing level (ie. 'appconfig')
       // Check for Partner Admin (Ops Admin) vs. Full Admin (Org Admin)
-      checkUserType()
+      return checkUserType()
         .then(function () {
-          if (authorized()) {
-            getSyncStatus();
-          }
-        }).catch(function (errorMsg) {
+          // TODO: add promise for jabber interop setting
+          return $q.all({
+            syncInfo: getSyncStatus(),
+          });
+        })
+        .then(function (results) {
+          vm.settings.syncInfo = results.syncInfo;
+          updateSettingsCopy();
+          vm.dataStatus = vm.dataStates.LOADED;
+        })
+        .catch(function (errorMsg) {
+          vm.dataStatus = vm.dataStates.ERROR;
           var error = $translate.instant(translatePrefix + 'errorAuthFailed') + errorMsg;
           Notification.error(error);
         });
@@ -175,32 +183,24 @@
     }
 
     function getSyncStatus() {
-      vm.dataStatus = vm.dataStates.LOADING;
-
-      SyncService.getSyncStatus()
+      return SyncService.getSyncStatus()
         .then(function (syncStatusObj) {
-          vm.syncInfo = syncStatusObj;
-          vm.dataStatus = vm.dataStates.LOADED;
+          return syncStatusObj;
         }, function (errorObj) {
-          vm.dataStatus = vm.dataStates.ERROR;
           var error = $translate.instant(translatePrefix + 'errorFailedGettingCISyncStatus') + errorObj.message;
-
           vm.errorMsg = error;
           Notification.error(error);
         });
     }
 
+    // TODO (mipark2): implement loading state behavior while refresh occurs (see: luwang2)
     function refreshStatus() {
-      vm.dataStatus = vm.dataStates.LOADING;
-
-      SyncService.refreshSyncStatus()
-        .then(function (status) {
-          vm.syncInfo = status;
-          vm.dataStatus = vm.dataStates.LOADED;
+      return SyncService.refreshSyncStatus()
+        .then(function (syncStatusObj) {
+          vm.settings.syncInfo = syncStatusObj;
+          return syncStatusObj;
         }, function (errorObj) {
-          vm.dataStatus = vm.dataStates.ERROR;
           var error = $translate.instant(translatePrefix + 'errorFailedRefreshingCISyncStatus') + errorObj.message;
-
           vm.errorMsg = error;
           Notification.error(error);
         });
@@ -219,21 +219,18 @@
     }
 
     function patchSync() {
-      // Double-check that they are ops for security
-      if (vm.adminTypes.OPS === vm.adminType) {
-        // SyncService must turn the syncing boolean into the full mode
-        SyncService.patchSync(vm.syncInfo)
-          .then(function () {
-            Notification.success(translatePrefix + 'patchSuccessful');
-          }, function (errorObj) {
-            var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;
+      // SyncService must turn the syncing boolean into the full mode
+      return SyncService.patchSync(vm.settings.syncInfo)
+        .then(function () {
+          Notification.success(translatePrefix + 'patchSuccessful');
+        })
+        .catch(function (errorObj) {
+          var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;
+          Notification.error(error);
 
-            Notification.error(error);
-
-            // Reset to previous state
-            getSyncStatus();
-          });
-      }
+          // Reset to previous state
+          return getSyncStatus();
+        });
     }
 
     function setSyncInfoProperty(propName, value) {
@@ -243,6 +240,49 @@
       }
 
       _.set(vm, propName, value);
+    }
+
+    function canShowSaveCancel() {
+      return vm.dataStatus === vm.dataStates.LOADED &&
+        hasSettingsChanged() &&
+        canCurrentUserSave();
+    }
+
+    function canCurrentUserSave() {
+      return vm.adminTypes.OPS === vm.adminType;
+    }
+
+    function saveSettings() {
+      // Double-check that they are ops for security
+      if (!canCurrentUserSave()) {
+        return $q.reject();
+      }
+
+      vm.isSaving = true;
+      return $q.all({
+          syncInfo: patchSync(),
+        })
+        .then(function () {
+          updateSettingsCopy();
+        })
+        .catch(function () {
+          resetSettings();
+        })
+        .finally(function () {
+          vm.isSaving = false;
+        });
+    }
+
+    function updateSettingsCopy() {
+      vm.settingsCopy = _.cloneDeep(vm.settings);
+    }
+
+    function resetSettings() {
+      vm.settings = _.cloneDeep(vm.settingsCopy);
+    }
+
+    function hasSettingsChanged() {
+      return !_.isEqual(vm.settings, vm.settingsCopy);
     }
   }
 })();

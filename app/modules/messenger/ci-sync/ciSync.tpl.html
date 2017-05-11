@@ -30,7 +30,7 @@
             <input cs-input type="text"
               id="ciSyncOrgSettingsOrgName"
               name="ciSyncOrgSettingsOrgName"
-              ng-model="sync.syncInfo.messengerOrgName"
+              ng-model="sync.settings.syncInfo.messengerOrgName"
               cs-input-label="{{:: 'messengerCiSync.orgInfoSection.name' | translate }}"
               disabled
               read-only>
@@ -42,7 +42,7 @@
             <input cs-input type="text"
               id="ciSyncOrgSettingsOrgId"
               name="ciSyncOrgSettingsOrgId"
-              ng-model="sync.syncInfo.messengerOrgId"
+              ng-model="sync.settings.syncInfo.messengerOrgId"
               cs-input-label="{{:: 'messengerCiSync.orgInfoSection.id' | translate }}"
               disabled
               read-only>
@@ -54,7 +54,7 @@
             <input cs-input type="text"
               id="ciSyncOrgSettingsCiLinkDate"
               name="ciSyncOrgSettingsCiLinkDate"
-              ng-model="sync.syncInfo.linkDate"
+              ng-model="sync.settings.syncInfo.linkDate"
               cs-input-label="{{:: 'messengerCiSync.orgInfoSection.linkDate' | translate }}"
               disabled
               read-only>
@@ -73,72 +73,76 @@
       </setting-section>
 
       <setting-section setting="sync.subSections.options" class="options-section">
-        <div ng-if="sync.syncInfo.isMessengerSyncRawMode" class="row row--first"> <!-- Native Messenger Sync mode -->
+        <div ng-if="sync.settings.syncInfo.isMessengerSyncRawMode" class="row row--first"> <!-- Native Messenger Sync mode -->
           <span tooltip-placement="top" tooltip="{{sync.syncStatusTooltip}}" translate="messengerCiSync.syncStatusHeading"></span>
           <toggle-switch-with-read-only
-            value="sync.syncInfo.isSyncEnabled"
+            value="sync.settings.syncInfo.isSyncEnabled"
             is-read-only="!sync.isOpsAdmin()"
             toggle-id="toggleIsSyncing"
-            on-change-fn="sync.setSyncInfoProperty('syncInfo.isSyncEnabled', toggleValue);"></toggle-switch-with-read-only>
+            on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isSyncEnabled', toggleValue);"></toggle-switch-with-read-only>
         </div>
 
-        <div ng-if="!sync.syncInfo.isMessengerSyncRawMode" class="row row--first"> <!-- Native CI DirSync mode -->
+        <div ng-if="!sync.settings.syncInfo.isMessengerSyncRawMode" class="row row--first"> <!-- Native CI DirSync mode -->
           <span tooltip-placement="top" tooltip="{{sync.dirsyncStatusTooltip}}" translate="messengerCiSync.dirsyncStatusHeading"></span>
-          <boolean-text-field value="sync.syncInfo.isSyncEnabled"></boolean-text-field>
+          <boolean-text-field value="sync.settings.syncInfo.isSyncEnabled"></boolean-text-field>
         </div>
 
         <div class="row">
           <span tooltip-placement="top" tooltip="{{sync.authRedirectTooltip}}" translate="messengerCiSync.authRedirectHeading"></span>
           <toggle-switch-with-read-only
-            value="sync.syncInfo.isAuthRedirect"
+            value="sync.settings.syncInfo.isAuthRedirect"
             is-read-only="!sync.isOpsAdmin()"
             toggle-id="toggleAuthRedirect"
-            on-change-fn="sync.setSyncInfoProperty('syncInfo.isAuthRedirect', toggleValue);"></toggle-switch-with-read-only>
+            on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isAuthRedirect', toggleValue);"></toggle-switch-with-read-only>
         </div>
 
-        <div ng-if="sync.syncInfo.isNewDataFormat"> <!-- new org ext data -->
+        <div ng-if="sync.settings.syncInfo.isNewDataFormat"> <!-- new org ext data -->
           <div class="row">
             <span tooltip-placement="top" tooltip="{{sync.pwdSyncTooltip}}" translate="messengerCiSync.pwdSyncHeading"></span>
             <toggle-switch-with-read-only
-              value="sync.syncInfo.isPwdSync"
+              value="sync.settings.syncInfo.isPwdSync"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidPwdSync"
-              on-change-fn="sync.setSyncInfoProperty('syncInfo.isPwdSync', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isPwdSync', toggleValue);"></toggle-switch-with-read-only>
           </div>
 
           <div class="row">
             <span tooltip-placement="top" tooltip="{{sync.sparkEntTooltip}}" translate="messengerCiSync.sparkEntHeading"></span>
             <toggle-switch-with-read-only
-              value="sync.syncInfo.isSparkEnt"
+              value="sync.settings.syncInfo.isSparkEnt"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidSparkEnt"
-              on-change-fn="sync.setSyncInfoProperty('syncInfo.isSparkEnt', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isSparkEnt', toggleValue);"></toggle-switch-with-read-only>
           </div>
 
           <div class="row">
             <span tooltip-placement="top" tooltip="{{sync.usrDisTooltip}}" translate="messengerCiSync.usrDisHeading"></span>
             <toggle-switch-with-read-only
-              value="sync.syncInfo.isUsrDis"
+              value="sync.settings.syncInfo.isUsrDis"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidUsrDis"
-              on-change-fn="sync.setSyncInfoProperty('syncInfo.isUsrDis', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isUsrDis', toggleValue);"></toggle-switch-with-read-only>
           </div>
 
           <div class="row">
             <span tooltip-placement="top" tooltip="{{sync.usrDelTooltip}}" translate="messengerCiSync.usrDelHeading"></span>
             <toggle-switch-with-read-only
-              value="sync.syncInfo.isUsrDel"
+              value="sync.settings.syncInfo.isUsrDel"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidUsrDel"
-              on-change-fn="sync.setSyncInfoProperty('syncInfo.isUsrDel', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setSyncInfoProperty('settings.syncInfo.isUsrDel', toggleValue);"></toggle-switch-with-read-only>
           </div>
         </div>
 
-        <div class="row">
-          <input class="btn btn--attention" type="submit" value="{{sync.patchSyncButtonText}}" ng-if="sync.isOpsAdmin()" ng-click="sync.patchSync()">
-        </div>
       </setting-section>
     </div>
+  </div>
+
+  <div class="save-cancel-footer" ng-if="sync.canShowSaveCancel()">
+    <button type="button" cs-btn loading="sync.isSaving" class="btn btn--primary save-cancel-buttons pull-right" ng-click="sync.saveSettings()">
+      <span translate="common.save"></span>
+    </button>
+    <button type="button" class="btn save-cancel-buttons pull-right" translate="common.cancel" ng-click="sync.resetSettings()"></button>
   </div>
 
 </div>

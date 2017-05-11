@@ -157,43 +157,43 @@
     });
 
     describe('helper functions:', function () {
-      it('should set "syncInfo.*" properties only if they are already predefined on the controller', function () {
+      it('should set "settings.syncInfo.*" properties only if they are already predefined on the controller', function () {
         initController();
-        ctrl.setSyncInfoProperty('syncInfo.messengerOrgName', 'fake-org-name');
-        expect(ctrl.syncInfo.messengerOrgName).toBe('fake-org-name');
+        ctrl.setSyncInfoProperty('settings.syncInfo.messengerOrgName', 'fake-org-name');
+        expect(ctrl.settings.syncInfo.messengerOrgName).toBe('fake-org-name');
 
-        ctrl.setSyncInfoProperty('syncInfo.messengerOrgId', 'fake-org-id');
-        expect(ctrl.syncInfo.messengerOrgId).toBe('fake-org-id');
+        ctrl.setSyncInfoProperty('settings.syncInfo.messengerOrgId', 'fake-org-id');
+        expect(ctrl.settings.syncInfo.messengerOrgId).toBe('fake-org-id');
 
-        ctrl.setSyncInfoProperty('syncInfo.linkDate', 'fake-link-date');
-        expect(ctrl.syncInfo.linkDate).toBe('fake-link-date');
+        ctrl.setSyncInfoProperty('settings.syncInfo.linkDate', 'fake-link-date');
+        expect(ctrl.settings.syncInfo.linkDate).toBe('fake-link-date');
 
-        ctrl.setSyncInfoProperty('syncInfo.isAuthRedirect', true);
-        expect(ctrl.syncInfo.isAuthRedirect).toBe(true);
+        ctrl.setSyncInfoProperty('settings.syncInfo.isAuthRedirect', true);
+        expect(ctrl.settings.syncInfo.isAuthRedirect).toBe(true);
 
-        ctrl.setSyncInfoProperty('syncInfo.isSyncEnabled', true);
-        expect(ctrl.syncInfo.isSyncEnabled).toBe(true);
+        ctrl.setSyncInfoProperty('settings.syncInfo.isSyncEnabled', true);
+        expect(ctrl.settings.syncInfo.isSyncEnabled).toBe(true);
 
-        ctrl.setSyncInfoProperty('syncInfo.isMessengerSyncRawMode', true);
-        expect(ctrl.syncInfo.isMessengerSyncRawMode).toBe(true);
+        ctrl.setSyncInfoProperty('settings.syncInfo.isMessengerSyncRawMode', true);
+        expect(ctrl.settings.syncInfo.isMessengerSyncRawMode).toBe(true);
 
-        ctrl.setSyncInfoProperty('syncInfo.isNewDataFormat', true);
-        expect(ctrl.syncInfo.isNewDataFormat).toBe(true);
+        ctrl.setSyncInfoProperty('settings.syncInfo.isNewDataFormat', true);
+        expect(ctrl.settings.syncInfo.isNewDataFormat).toBe(true);
 
-        ctrl.setSyncInfoProperty('syncInfo.isPwdSync', true);
-        expect(ctrl.syncInfo.isPwdSync).toBe(true);
+        ctrl.setSyncInfoProperty('settings.syncInfo.isPwdSync', true);
+        expect(ctrl.settings.syncInfo.isPwdSync).toBe(true);
 
-        ctrl.setSyncInfoProperty('syncInfo.isSparkEnt', true);
-        expect(ctrl.syncInfo.isSparkEnt).toBe(true);
+        ctrl.setSyncInfoProperty('settings.syncInfo.isSparkEnt', true);
+        expect(ctrl.settings.syncInfo.isSparkEnt).toBe(true);
 
-        ctrl.setSyncInfoProperty('syncInfo.isUsrDis', true);
-        expect(ctrl.syncInfo.isUsrDis).toBe(true);
+        ctrl.setSyncInfoProperty('settings.syncInfo.isUsrDis', true);
+        expect(ctrl.settings.syncInfo.isUsrDis).toBe(true);
 
-        ctrl.setSyncInfoProperty('syncInfo.isUsrDel', true);
-        expect(ctrl.syncInfo.isUsrDel).toBe(true);
+        ctrl.setSyncInfoProperty('settings.syncInfo.isUsrDel', true);
+        expect(ctrl.settings.syncInfo.isUsrDel).toBe(true);
 
-        ctrl.setSyncInfoProperty('syncInfo.fakeNewProperty', true);
-        expect(ctrl.syncInfo.fakeNewProperty).toBe(undefined);
+        ctrl.setSyncInfoProperty('settings.syncInfo.fakeNewProperty', true);
+        expect(ctrl.settings.syncInfo.fakeNewProperty).toBe(undefined);
       });
     });
   });
