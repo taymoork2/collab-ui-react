@@ -76,7 +76,7 @@ describe('Service: Trial Device Service:', function () {
     });
 
     it('should be US and Canada if Room System and phone', function () {
-      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_8841']);
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_7832']);
       expect(countries.length).toBe(2);
       expect(countries).toContain({
         country: 'Canada',
@@ -91,7 +91,7 @@ describe('Service: Trial Device Service:', function () {
         default: TrialDeviceService.listTypes.ROLLOUT2,
         override: TrialDeviceService.listTypes.US_ONLY,
       }];
-      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_8841'], replacement);
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_7832'], replacement);
       expect(countries.length).toBe(1);
       expect(countries[0]).toEqual({
         country: 'United States',
