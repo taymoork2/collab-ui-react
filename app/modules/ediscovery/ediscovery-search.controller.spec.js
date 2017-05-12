@@ -170,7 +170,7 @@ describe('Controller: EdiscoverySearchController', function () {
       var errorNotification = spyOn(Notification, 'error');
       ediscoverySearchController.createReport();
       $scope.$apply();
-      expect(errorNotification.called).toBeTruthy();
+      expect(errorNotification).toHaveBeenCalled();
       expect(ediscoverySearchController.report).toBeNull();
     });
   });

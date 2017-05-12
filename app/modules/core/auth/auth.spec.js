@@ -449,7 +449,7 @@ describe('Auth Service', function () {
       expect(TokenService.triggerGlobalLogout).not.toHaveBeenCalled(); // should not be called before logout (token revocation) is complete
       logoutDefer.resolve();
       expect(promise).toBeResolved();  // seems unnecessary, but should be the same promise returned from logoutAndRedirectTo()
-      expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
+      expect(Auth.logoutAndRedirectTo).toHaveBeenCalledWith('logoutUrl');
       expect(TokenService.triggerGlobalLogout).toHaveBeenCalled(); // should only be called after logout (token revocation)
     });
     it('should set the message in the local storage if it has been passed in', function () {

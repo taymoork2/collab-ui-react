@@ -27,9 +27,8 @@ describe('Service: HelpdeskSplunkReporterService', function () {
     it("reportOperation reports as HELPDESKOPERATION", function () {
       var logMetrics = sinon.spy(LogMetricsService, 'logMetrics');
       Service.reportOperation("search");
-      var anyTime = sinon.match.any;
-
-      sinon.assert.calledWith(logMetrics,
+      var anyTime = jasmine.any(Object);
+      expect(logMetrics).toHaveBeenCalledWith(
         "helpdesk",
         "HELPDESKOPERATION",
         "BUTTONCLICK",
@@ -51,10 +50,10 @@ describe('Service: HelpdeskSplunkReporterService', function () {
       var orgId = "12345";
       var statsResult = Service.reportStats(searchString, result, moment(), orgId);
 
-      var anyTime = sinon.match.any;
-      var anyJsonBlob = sinon.match.any;
+      var anyTime = jasmine.any(Object);
+      var anyJsonBlob = jasmine.any(Object);
 
-      sinon.assert.calledWith(logMetrics,
+      expect(logMetrics).toHaveBeenCalledWith(
         "helpdesk",
         "HELPDESKSEARCH",
         "BUTTONCLICK",
