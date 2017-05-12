@@ -203,9 +203,9 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
   private setGridOptions(): void {
     let columnDefs: any = [{
-      cellTooltip: true,
       field: 'phone',
       type: 'number',
+      cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.phoneNumber'),
       cellClass: this.isEdit ? 'cell-border-none' : '',
       cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'phoneNumberCellTemplate.tpl.html'),
@@ -217,28 +217,32 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'phoneLabelCellTemplate.tpl.html'),
     }, {
       width: '12%',
-      cellTooltip: true,
       field: 'dnisNumberFormat',
+      type: 'number',
+      cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.accessNumber'),
       cellClass: this.isEdit ? 'cell-border-none' : '',
       cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'accessNumberCellTemplate.tpl.html'),
     }, {
       width: '9%',
-      cellTooltip: true,
       field: 'tollType',
+      sortingAlgorithm: this.sortDropdownList,
+      cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.tollType'),
       cellClass: this.isEdit ? 'cell-border-none' : '',
       cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'tollTypeCellTemplate.tpl.html'),
     }, {
       width: '8%',
-      cellTooltip: true,
       field: 'callType',
+      sortingAlgorithm: this.sortDropdownList,
+      cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.callType'),
       cellClass: this.isEdit ? 'cell-border-none' : '',
       cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'callTypeCellTemplate.tpl.html'),
     }, {
       width: '12%',
       field: 'defaultNumber',
+      sortingAlgorithm: this.sortDropdownList,
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.defaultNumber'),
       cellClass: this.isEdit ? 'cell-border-none' : '',
@@ -246,6 +250,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }, {
       width: '11%',
       field: 'globalListDisplay',
+      sortingAlgorithm: this.sortDropdownList,
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.globalDisplay'),
       cellClass: this.isEdit ? 'cell-border-none' : '',
@@ -253,6 +258,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }, {
       width: '9%',
       field: 'country',
+      sortingAlgorithm: this.sortDropdownList,
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.country'),
       cellClass: this.isEdit ? 'cell-border-none' : '',
@@ -260,6 +266,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }, {
       width: '13%',
       field: 'isHidden',
+      sortingAlgorithm: this.sortDropdownList,
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.hiddenOnClient'),
       cellClass: this.isEdit ? 'cell-border-none' : '',
@@ -297,6 +304,13 @@ class GmTdNumbersCtrl implements ng.IComponentController {
         }, 500);
       },
     };
+  }
+
+  public sortDropdownList(a, b) {
+    if (a.value === '' || b.value === '') {
+      return (a.value === '' && b.value === '') ? 0 : (a.value === '' ? -1 : 1);
+    }
+    return a.label === b.label ? 0 : (a.label.length < b.label.length ? -1 : 1);
   }
 
   public validatePhone(row, oldVal) {
