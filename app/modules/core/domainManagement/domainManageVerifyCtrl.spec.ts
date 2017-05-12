@@ -1,7 +1,5 @@
 import testModule from './index';
 
-declare let sinon: any;
-
 describe('DomainManagementVerifyCtrl', () => {
   let Config, Controller, $rootScope, $q, Translate, Injector, DomainManagementService;
   beforeEach(angular.mock.module(testModule));

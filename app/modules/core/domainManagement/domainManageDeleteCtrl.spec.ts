@@ -1,7 +1,5 @@
 import testModule from './index';
 
-declare let sinon: any;
-
 describe('DomainManageDeleteCtrl', () => {
 
   let Config, $q, $rootScope, $controller, $translate, DomainManagementService: any;

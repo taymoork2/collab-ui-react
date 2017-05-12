@@ -1,7 +1,6 @@
 import testModule from './index';
 
 declare let punycode: any;
-declare let sinon: any;
 
 describe('DomainManagementAddCtrl', () => {
 

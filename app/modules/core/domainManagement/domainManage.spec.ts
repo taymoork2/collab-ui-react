@@ -1,7 +1,5 @@
 import testModule from './index';
 
-declare let sinon: any;
-
 describe('Constructor of', () => {
 
   let Config, $q, $rootScope, DomainManagementService;
