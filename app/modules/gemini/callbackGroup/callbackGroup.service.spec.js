@@ -129,7 +129,7 @@ describe('Service: cbgService', function () {
     $httpBackend.expectGET(url).respond(200, mockData);
 
     cbgService.getNotes(customerId, groupId).then(function (res) {
-      expect(res.content.data.body.length).toBe(2);
+      expect(res.content.data.body.length).toBe(6);
     });
     $httpBackend.flush();
   });

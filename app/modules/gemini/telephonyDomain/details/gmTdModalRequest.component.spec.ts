@@ -22,11 +22,25 @@ describe('Component: gmTdModalRequest', () => {
     this.box = '.dropdown-menu ul li a';
     this.input = 'input[name="customerName"]';
     this.select = '.csSelect-container[name="region"]';
+    this.countries = [ { countryId: 1, countryName: 'Albania' }, { countryId: 2, countryName: 'Algeria' } ];
   });
 
+  function setParameter(key, value) {
+    let preData = {
+      links: [],
+      content: {
+        health: { code: 200, status: 'OK' },
+        data: { body: [], returnCode: 0, trackId: '' },
+      },
+    };
+    _.set(preData, key, value);
+    return preData;
+  }
+
   function initSpies() {
+
     spyOn(this.Notification, 'errorResponse');
-    spyOn(this.gemService, 'getStorage').and.returnValue(this.currentTelephonyDomain);
+    spyOn(this.TelephonyDomainService, 'getCountries').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getRegions').and.returnValue(this.$q.resolve());
   }
 
@@ -37,13 +51,17 @@ describe('Component: gmTdModalRequest', () => {
 
   describe('$onInit', () => {
     it('should call Notification.errorResponse when the http status is 404', function () {
+      let countries = setParameter.call(this, 'content.data.body', this.countries);
+      spyOn(this.gemService, 'getStorage').and.returnValue([]);
       this.TelephonyDomainService.getRegions.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(countries));
 
       initComponent.call(this);
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('should display the correct element and bind the javascript event', function () {
+      spyOn(this.gemService, 'getStorage').and.returnValue(this.currentTelephonyDomain);
       let response = this.preData;
       response.content.data.body = [ { regionId: 'EMEA', regionName: 'EMEA' }, { regionId: 'US', regionName: 'US' }];
       this.TelephonyDomainService.getRegions.and.returnValue(this.$q.resolve(response));

@@ -93,6 +93,14 @@ describe('Component: CbgDetails', function () {
       }
     }
 
+    it('should call notification.notify when get histories error', function () {
+      initReturnValue();
+      obj.Histories.content.data.returnCode = 1000;
+      ctrl.$onInit();
+      $scope.$apply();
+      expect(Notification.notify).toHaveBeenCalled();
+    });
+
     it('should get all correct data on init when show the details', function () {
       initReturnValue();
       ctrl.$onInit();

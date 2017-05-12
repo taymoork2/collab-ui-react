@@ -48,7 +48,6 @@ class GmtdDetails implements ng.IComponentController {
     this.getRemedyTicket();
     this.getCountries();
     const deregister = this.$scope.$on('detailWatch', (_event, data) => {
-      _event.preventDefault();
       this.isEdit = data.isEdit;
       this.notes  = data.notes || this.notes;
       this.domainName = data.domainName || this.domainName;

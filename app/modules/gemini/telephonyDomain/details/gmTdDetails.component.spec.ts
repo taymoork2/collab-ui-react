@@ -3,10 +3,11 @@ import testModule from '../index';
 describe('Component: gmTdDetails', () => {
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', '$state', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService', '$modal');
+    this.injectDependencies('$q', '$scope', '$state', '$modal', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService', '$modal');
 
     initSpies.apply(this);
     this.$stateParams.info = {
+      customerId: 'ff808081527ccb3f0163116a3531593d',
       ccaDomainId: 'ff808081527ccb3f0153116a3531041e',
     };
   });
@@ -106,6 +107,22 @@ describe('Component: gmTdDetails', () => {
         actionFor: 'Telephony Domain',
         email: 'liqing@qa.webex.com',
       }];
+
+    this.fakeModal = {
+      result: {
+        then: function (okCallback, cancelCallback) {
+          this.okCallback = okCallback;
+          this.cancelCallback = cancelCallback;
+        },
+      },
+      ok: function (item) {
+        this.result.okCallback(item);
+      },
+      cancel: function (type) {
+        this.result.cancelCallback(type);
+      },
+    };
+
     this.countries = [ { countryId: 1, countryName: 'Albania' }, { countryId: 2, countryName: 'Algeria' } ];
   });
 
@@ -113,22 +130,49 @@ describe('Component: gmTdDetails', () => {
     spyOn(this.$state, 'go');
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorResponse');
-    spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
+    // spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
+    spyOn(this.$modal, 'open').and.returnValue(this.fakeModal);
     spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.resolve());
-    spyOn(this.TelephonyDomainService, 'getCountries').and.returnValue(this.$q.resolve());
-    spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getNotes').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.resolve());
+    spyOn(this.TelephonyDomainService, 'getCountries').and.returnValue(this.$q.resolve());
+    spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'updateTelephonyDomainStatus').and.returnValue(this.$q.resolve());
   }
 
   function initComponent() {
     this.$state.current.data = {};
-    this.compileComponent('gmTdDetails', {});
+    this.compileComponent('gmTdDetails', { $scope: this.$scope });
     this.$scope.$apply();
   }
 
+  function setParameter(key, value) {
+    let preData = {
+      links: [],
+      content: {
+        health: { code: 200, status: 'OK' },
+        data: { body: [], returnCode: 0, trackId: '' },
+      },
+    };
+    _.set(preData, key, value);
+    return preData;
+  }
+
   describe('$onInit', () => {
+
+    it('should watch', function () {
+      spyOn(this.$scope, '$on').and.callThrough();
+      let currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
+      let countries = setParameter.call(this, 'content.data.body', this.countries);
+      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(countries));
+      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(currentTD));
+
+      initComponent.call(this);
+      this.controller.$onInit();
+      this.$scope.$broadcast('detailWatch', { isEdit: true, domainName: 'testTitle', notes: this.notes, sitesLength: this.sites.length });
+      expect(this.controller.isEdit).toBeTruthy();
+    });
 
     it('Should call Notification.errorResponse when the http status is 404', function () {
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
@@ -137,8 +181,7 @@ describe('Component: gmTdDetails', () => {
       this.TelephonyDomainService.getHistories.and.returnValue(this.$q.reject({ status: 404 }));
 
       initComponent.call(this);
-      this.$scope.$emit('tdNotesUpdated', this.notes);
-      this.$scope.$emit('tdSitesUpdated', this.sites);
+      this.$scope.$emit('detailWatch', { notes: this.notes, sitesLength: this.sites.length });
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
 
@@ -215,6 +258,31 @@ describe('Component: gmTdDetails', () => {
       expect(this.controller.histories.length).toBe(1);
     });
 
+
+    it('Should call onSeeAllPhoneNumbers when click the phone numbers section in page', function () {
+      let currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
+      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(this.countries));
+      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(currentTD));
+
+      initComponent.call(this);
+      this.view.find('li.feature a').click();
+      expect(this.$state.go).toHaveBeenCalled();
+    });
+
+    it('OnEdit', function () {
+      let currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
+      let countries = setParameter.call(this, 'content.data.body', this.countries);
+      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(countries));
+      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(currentTD));
+
+      this.gemService.setStorage('currentTelephonyDomain', { region: 'US' });
+      initComponent.call(this);
+      this.controller.onEditTD();
+      this.fakeModal.ok();
+      expect(this.controller.domainName).not.toBeEmpty();
+    });
   });
 
   describe('TD histories', () => {

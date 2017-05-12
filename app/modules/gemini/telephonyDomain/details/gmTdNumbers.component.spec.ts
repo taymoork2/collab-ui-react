@@ -669,6 +669,18 @@ describe('Component: gmTdNumbers', () => {
     expect(this.Notification.errorResponse).toHaveBeenCalled();
   });
 
+  it('sortDropdownList', function () {
+    initComponent.apply(this);
+    let a = { label: '', value: '' };
+    let b = { label: '', value: '' };
+    let result = this.controller.sortDropdownList(a, b);
+    expect(result).toBe(0);
+
+    a = b = { label: '', value: '1' };
+    result = this.controller.sortDropdownList(a, b);
+    expect(result).toBe(0);
+  });
+
   it('onCancel', function () {
     initComponent.apply(this);
     this.controller.onCancel();

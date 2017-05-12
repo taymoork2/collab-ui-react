@@ -503,6 +503,12 @@
   }
 }
 
+.new-field-modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .reveal-modal.full {
   .modal-header {
     -ms-flex-basis: 0;

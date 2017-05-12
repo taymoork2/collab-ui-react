@@ -23,8 +23,8 @@ describe('Component: gmImportTd', () => {
     ];
 
     this.numbers = [
-      { dnisId: '8a607bdb5b21f550015b2353f4850026', countryId: 1, tollType: 'CCA Toll', phone: '111111111', label: 'a', dnisNumber: '11111111', dnisNumberFormat: '11111111', phoneType: 'International', defaultDialInLanguage: '', firstAltChoice: '', secondAltChoice: '', compareToSuperadminPhoneNumberStatus: '1', superAdminCallInNumberDto: null, spCustomerId: 'ff808081527ccb3f0153116a3531041e', defaultNumber: '0', globalListDisplay: '1', ccaDomainId: '8a607bdb5b1280d3015b1353f92800cd', isHidden: 'true' },
-      { dnisId: '8a607bdb5b21f550015b2353f492002a', countryId: 2, tollType: 'CCA Toll', phone: '55555555', label: 'a', dnisNumber: '1111111', dnisNumberFormat: '1111111', phoneType: 'Domestic', defaultDialInLanguage: '', firstAltChoice: '', secondAltChoice: '', compareToSuperadminPhoneNumberStatus: '1', superAdminCallInNumberDto: null, spCustomerId: 'ff808081527ccb3f0153116a3531041e', defaultNumber: '0', globalListDisplay: '1', ccaDomainId: '8a607bdb5b1280d3015b1353f92800cd', isHidden: 'false' },
+      { dnisId: '8a607bdb5b21f550015b2353f4850026', countryId: 1, tollType: 'CCA Toll', phone: '111111111', label: 'a', dnisNumber: '11111111', dnisNumberFormat: '11111111', phoneType: 'International', defaultDialInLanguage: '', firstAltChoice: '', secondAltChoice: '', compareToSuperadminPhoneNumberStatus: '4', superAdminCallInNumberDto: null, spCustomerId: 'ff808081527ccb3f0153116a3531041e', defaultNumber: '0', globalListDisplay: '1', ccaDomainId: '8a607bdb5b1280d3015b1353f92800cd', isHidden: 'true' },
+      { dnisId: '8a607bdb5b21f550015b2353f492002a', countryId: 2, tollType: 'CCA Toll', phone: '55555555', label: 'a', dnisNumber: '1111111', dnisNumberFormat: '1111111', phoneType: 'Domestic', defaultDialInLanguage: '', firstAltChoice: '', secondAltChoice: '', compareToSuperadminPhoneNumberStatus: '4', superAdminCallInNumberDto: null, spCustomerId: 'ff808081527ccb3f0153116a3531041e', defaultNumber: '0', globalListDisplay: '1', ccaDomainId: '8a607bdb5b1280d3015b1353f92800cd', isHidden: 'false' },
     ];
 
     this.countries = [ { countryId: 1, countryName: 'Albania' }, { countryId: 2, countryName: 'Algeria' } ];
@@ -80,4 +80,29 @@ describe('Component: gmImportTd', () => {
     });
   });
 
+
+  describe('View: ', () => {
+    it('should show grid data when selected one option and click select all checkbox then the Import button should be availabe', function () {
+      let domains, countries, numbers;
+      countries = setParameter.call(this, 'content.data', this.countries);
+      numbers = setParameter.call(this, 'content.data.body', this.numbers);
+      domains = setParameter.call(this, 'content.data.body', this.regions);
+
+      this.gemService.getStorage.and.returnValue(countries);
+      this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(numbers));
+      this.TelephonyDomainService.getRegionDomains.and.returnValue(this.$q.resolve(domains));
+      initComponent.call(this);
+
+      expect(this.view.find(this.button)).toBeDisabled();
+
+      this.view.find(this.select).find(this.box).get(0).click();
+      this.view.find(this.selectGrid).get(0).click();
+      this.view.find(this.selectGrid).get(1).click();
+      this.view.find(this.button).click();
+
+      expect(this.view.find(this.button)).not.toBeDisabled();
+      expect(this.controller.selectedGridLinesLength).toBe(1);
+      expect(this.controller.selected.value).toBe('ff808081527ccb3f0153116a3531152d');
+    });
+  });
 });
