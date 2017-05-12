@@ -27,8 +27,8 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     $filter = _$filter_;
     /*
         MediaClusterServiceV2 = {
-          get: sinon.stub().returns(redirectTargetPromise),
-          getAll: sinon.stub().returns(redirectTargetPromise),
+          get: jasmine.createSpy('get').and.returnValue(redirectTargetPromise),
+          getAll: jasmine.createSpy('getAll').and.returnValue(redirectTargetPromise),
         };
     */
     FusionClusterService = _FusionClusterService_;

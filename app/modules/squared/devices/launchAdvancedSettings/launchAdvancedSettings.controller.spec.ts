@@ -33,8 +33,8 @@ describe('LaunchAdvancedSettingsController', () => {
     };
 
     state.authInfo = {
-      getPrimaryEmail: sinon.stub().returns('getPrimaryEmail@getPrimaryEmail'),
-      getUserName: sinon.stub().returns('getUserName'),
+      getPrimaryEmail: jasmine.createSpy('getPrimaryEmail').and.returnValue('getPrimaryEmail@getPrimaryEmail'),
+      getUserName: jasmine.createSpy('getUserName').and.returnValue('getUserName'),
     };
     state.CsdmDeviceService = {
       sendAdvancedSettingsOtp: sinon.stub(),

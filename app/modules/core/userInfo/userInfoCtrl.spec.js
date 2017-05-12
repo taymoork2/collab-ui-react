@@ -19,10 +19,10 @@ describe('UserInfoController', function () {
     };
     deferred = $q.defer();
     FeedbackService = {
-      getFeedbackUrl: sinon.stub().returns(deferred.promise),
+      getFeedbackUrl: jasmine.createSpy('getFeedbackUrl').and.returnValue(deferred.promise),
     };
     Utils = {
-      getUUID: sinon.stub().returns('awesome uuid'),
+      getUUID: jasmine.createSpy('getUUID').and.returnValue('awesome uuid'),
     };
     $window = {
       open: sinon.stub(),
