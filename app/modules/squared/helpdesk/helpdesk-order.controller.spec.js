@@ -64,7 +64,7 @@ describe('Controller: HelpdeskOrderController', function () {
         },
       };
       var promise = $q.reject(rejectData);
-      HelpdeskService.getOrg.returns(promise);
+      HelpdeskService.getOrg.and.returnValue(promise);
       $scope.$apply();
 
       orderController = $controller('HelpdeskOrderController', {

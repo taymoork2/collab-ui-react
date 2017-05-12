@@ -31,10 +31,10 @@ describe('Controller: DeviceUsageCtrl', function () {
     $modal = _$modal_;
 
     spyOn(DeviceUsageGraphService, 'makeChart');
-    DeviceUsageGraphService.makeChart.returns(amchartMock());
+    DeviceUsageGraphService.makeChart.and.returnValue(amchartMock());
 
     spyOn(DeviceUsageModelService, 'getModelsForRange');
-    DeviceUsageModelService.getModelsForRange.returns($q.resolve([]));
+    DeviceUsageModelService.getModelsForRange.and.returnValue($q.resolve([]));
 
   }));
 
@@ -64,9 +64,9 @@ describe('Controller: DeviceUsageCtrl', function () {
         ],
         missingDays: false,
       };
-      DeviceUsageService.getDataForRange.returns($q.resolve(deviceData));
-      DeviceUsageService.extractStats.returns($q.resolve([]));
-      DeviceUsageService.resolveDeviceData.returns($q.resolve([]));
+      DeviceUsageService.getDataForRange.and.returnValue($q.resolve(deviceData));
+      DeviceUsageService.extractStats.and.returnValue($q.resolve([]));
+      DeviceUsageService.resolveDeviceData.and.returnValue($q.resolve([]));
 
       expect(controller.waitingForDeviceMetrics).toBe(true);
       controller.init();

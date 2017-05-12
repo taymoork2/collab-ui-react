@@ -203,7 +203,7 @@ describe('HelpdeskService', function () {
     spyOn(ServiceDescriptor, 'getServices');
     var deferred = $q.defer();
     deferred.resolve(serviceDescriptionsMock);
-    ServiceDescriptor.getServices.returns(deferred.promise);
+    ServiceDescriptor.getServices.and.returnValue(deferred.promise);
 
     var result;
     Service.getHybridServices("1234").then(function (res) {

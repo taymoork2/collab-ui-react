@@ -126,7 +126,7 @@ describe('HelpdeskCardsService', function () {
         "mediaTraversalMode": "TURNOnly",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
-      HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
+      HelpdeskHuronService.getOrgSiteInfo.and.returnValue(deferredSiteInfoResult.promise);
 
       spyOn(HelpdeskHuronService, 'getTenantInfo');
       var deferredTenantInfoResult = q.defer();
@@ -135,7 +135,7 @@ describe('HelpdeskCardsService', function () {
         "regionCode": "940",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
-      HelpdeskHuronService.getTenantInfo.returns(deferredTenantInfoResult.promise);
+      HelpdeskHuronService.getTenantInfo.and.returnValue(deferredTenantInfoResult.promise);
 
       var card = HelpdeskCardsOrgService.getCallCardForOrg(org, licenses, true, true);
       $scope.$apply();

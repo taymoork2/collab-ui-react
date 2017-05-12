@@ -19,7 +19,7 @@ describe('Directive: ShowReadOnly', function () {
     Authinfo = _Authinfo_;
     translate = _$translate_;
     spyOn(Authinfo, 'isReadOnlyAdmin');
-    Authinfo.isReadOnlyAdmin.returns(true);
+    Authinfo.isReadOnlyAdmin.and.returnValue(true);
     directiveElem = getCompiledElement();
   }));
 

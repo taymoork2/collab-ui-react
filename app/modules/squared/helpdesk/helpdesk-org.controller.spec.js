@@ -83,7 +83,7 @@ describe('Controller: HelpdeskOrgController', function () {
         },
       };
       var promise = q.reject(rejectData);
-      HelpdeskService.getOrg.returns(promise);
+      HelpdeskService.getOrg.and.returnValue(promise);
       $scope.$apply();
 
       orgController = $controller('HelpdeskOrgController', {
@@ -107,7 +107,7 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskHuronService, 'getTenantInfo').and.returnValue(q.resolve({}));
 
       spyOn(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
+      Authinfo.getOrgId.and.returnValue("ce8d17f8-1734-4a54-8510-fae65acc505e");
 
       spyOn(HelpdeskService, 'getOrgDisplayName').and.returnValue(q.resolve("Marvel"));
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(false));
@@ -115,7 +115,7 @@ describe('Controller: HelpdeskOrgController', function () {
 
     it('sets cardsAvailable and adminUsersAvailable to true when data has been collected', function () {
       spyOn(HelpdeskService, 'getOrg');
-      HelpdeskService.getOrg.returns(q.resolve({
+      HelpdeskService.getOrg.and.returnValue(q.resolve({
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
@@ -152,7 +152,7 @@ describe('Controller: HelpdeskOrgController', function () {
         }],
         "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
-      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+      HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
       sinon.restore(FeatureToggleService, 'supports');
       sinon.restore(HelpdeskHuronService, 'getOrgSiteInfo');
@@ -169,7 +169,7 @@ describe('Controller: HelpdeskOrgController', function () {
         "mediaTraversalMode": "TURNOnly",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
-      HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
+      HelpdeskHuronService.getOrgSiteInfo.and.returnValue(deferredSiteInfoResult.promise);
 
       spyOn(HelpdeskHuronService, 'getTenantInfo');
       var deferredTenantInfoResult = q.defer();
@@ -178,7 +178,7 @@ describe('Controller: HelpdeskOrgController', function () {
         "regionCode": "940",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
-      HelpdeskHuronService.getTenantInfo.returns(deferredTenantInfoResult.promise);
+      HelpdeskHuronService.getTenantInfo.and.returnValue(deferredTenantInfoResult.promise);
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
@@ -207,7 +207,7 @@ describe('Controller: HelpdeskOrgController', function () {
         }],
         "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
-      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+      HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
       sinon.restore(FeatureToggleService, 'supports');
       sinon.restore(HelpdeskHuronService, 'getOrgSiteInfo');
@@ -222,7 +222,7 @@ describe('Controller: HelpdeskOrgController', function () {
         "siteSteeringDigit": "4",
         "siteCode": "100",
       });
-      HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
+      HelpdeskHuronService.getOrgSiteInfo.and.returnValue(deferredSiteInfoResult.promise);
 
       spyOn(HelpdeskHuronService, 'getTenantInfo');
       var deferredTenantInfoResult = q.defer();
@@ -230,7 +230,7 @@ describe('Controller: HelpdeskOrgController', function () {
         "name": "SomeTestCustomer",
         "regionCode": "",
       });
-      HelpdeskHuronService.getTenantInfo.returns(deferredTenantInfoResult.promise);
+      HelpdeskHuronService.getTenantInfo.and.returnValue(deferredTenantInfoResult.promise);
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
@@ -259,7 +259,7 @@ describe('Controller: HelpdeskOrgController', function () {
         }],
         "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
-      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+      HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
@@ -286,7 +286,7 @@ describe('Controller: HelpdeskOrgController', function () {
         }],
         "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
-      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+      HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
       sinon.restore(FeatureToggleService, 'supports');
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
@@ -316,7 +316,7 @@ describe('Controller: HelpdeskOrgController', function () {
         }],
         "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
-      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+      HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
@@ -342,7 +342,7 @@ describe('Controller: HelpdeskOrgController', function () {
         }],
         "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": false}'],
       });
-      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+      HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
@@ -367,7 +367,7 @@ describe('Controller: HelpdeskOrgController', function () {
         }],
         "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
-      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+      HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
@@ -393,7 +393,7 @@ describe('Controller: HelpdeskOrgController', function () {
         }],
         "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": false}'],
       });
-      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+      HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
@@ -414,14 +414,14 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskService, 'usersWithRole').and.returnValue(q.resolve({}));
       spyOn(LicenseService, 'getLicensesInOrg').and.returnValue(q.resolve({}));
       spyOn(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
+      Authinfo.getOrgId.and.returnValue("ce8d17f8-1734-4a54-8510-fae65acc505e");
       spyOn(HelpdeskService, 'getOrgDisplayName').and.returnValue(q.resolve("Marvel"));
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(false));
       spyOn(HelpdeskHuronService, 'getOrgSiteInfo').and.returnValue(q.resolve({}));
       spyOn(HelpdeskHuronService, 'getTenantInfo').and.returnValue(q.resolve({}));
 
       spyOn(HelpdeskService, 'getOrg');
-      HelpdeskService.getOrg.returns(q.resolve({
+      HelpdeskService.getOrg.and.returnValue(q.resolve({
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
