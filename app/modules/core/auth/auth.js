@@ -244,17 +244,32 @@
       return httpGET(authUrl);
     }
 
+    function allowMessengerService(syncInfo, userRoles) {
+      // both 'orgName' and 'orgID' must exist, and 'wapiOrgStatus' cannot be 'inactive'
+      if (!syncInfo.orgName || !syncInfo.orgID || syncInfo.wapiOrgStatus === 'inactive') {
+        return false;
+      }
+
+      // user is a full admin or a read-only admin
+      if (_.intersection(['Full_Admin', 'Readonly_Admin'], userRoles).length) {
+        return true;
+      }
+
+      // user is not a partner
+      return !_.intersection(['PARTNER_ADMIN', 'PARTNER_READ_ONLY_ADMIN', 'PARTNER_USER'], userRoles).length;
+    }
+
+    // notes:
+    // - currently (2017-05-11), this logic is used to stub in a fake org-level entitlement into the
+    //   logged-in users's auth data
+    // - the primary use-case for this is to allow access to the 'messenger' UI state (see
+    //   'Authinfo.isAllowedState()')
     function injectMessengerService(authData) {
       var url = UrlConfig.getMessengerServiceUrl() + '/orgs/' + authData.orgId + '/cisync/';
       return httpGET(url)
         .then(function (res) {
-          var isMessengerOrg = _.has(res, 'data.orgName') && _.has(res, 'data.orgID');
-          if (isMessengerOrg && res.data.wapiOrgStatus === 'inactive') {
-            isMessengerOrg = false;
-          }
-          var isAdminForMsgr = _.intersection(['Full_Admin', 'Readonly_Admin'], authData.roles).length;
-          var isPartnerAdmin = _.intersection(['PARTNER_ADMIN', 'PARTNER_READ_ONLY_ADMIN', 'PARTNER_USER'], authData.roles).length;
-          if (isMessengerOrg && (isAdminForMsgr || !isPartnerAdmin)) {
+          var syncInfo = _.get(res, 'data', {});
+          if (allowMessengerService(syncInfo, authData.roles)) {
             Log.debug('This Org is migrated from Messenger, add webex-messenger service to Auth data');
             authData.services.push({
               serviceId: 'jabberMessenger',
