@@ -15,6 +15,6 @@ describe('Factory : OverviewCrashLogNotification', function () {
     Orgservice.setOrgSettings = jasmine.createSpy('setOrgSettings');
     Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('cisco');
     crashLogNotification.dismiss();
-    expect(Orgservice.setOrgSettings.getCall(0).args[1].allowCrashLogUpload).toBeTruthy();
+    expect(Orgservice.setOrgSettings.calls.argsFor(0)[1].allowCrashLogUpload).toBeTruthy();
   });
 });

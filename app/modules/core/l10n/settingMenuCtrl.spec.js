@@ -54,13 +54,13 @@ describe('settingsMenuCtrl', function () {
 
     it('should have translated the language', function () {
       expect($translate.instant.calls.count()).toBe(1);
-      expect($translate.instant.getCall(0).args[0]).toBe('languages.simplifiedDothraki');
+      expect($translate.instant.calls.argsFor(0)[0]).toBe('languages.simplifiedDothraki');
     });
 
     it('should do something clever things when updateLanguage is called', function () {
       controller.selected.value = '123';
       controller.updateLanguage();
-      expect($translate.use.getCall(1).args[0]).toBe('123');
+      expect($translate.use.calls.argsFor(1)[0]).toBe('123');
     });
   });
 });

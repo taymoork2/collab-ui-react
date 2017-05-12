@@ -107,7 +107,7 @@ describe('Auth Service', function () {
 
       $httpBackend.flush();
       expect(promise).toBeResolvedWith('accessTokenFromAPI');
-      expect(OAuthConfig.getNewAccessTokenPostData.getCall(0).args[0]).toBe('argToGetNewAccessToken');
+      expect(OAuthConfig.getNewAccessTokenPostData.calls.argsFor(0)[0]).toBe('argToGetNewAccessToken');
     });
 
     it('should not get new access token if failure', function () {
@@ -157,8 +157,8 @@ describe('Auth Service', function () {
 
       $httpBackend.flush();
       expect(promise).toBeResolvedWith('accessTokenFromAPI');
-      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
-      expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
+      expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
+      expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe('fromStorage');
     });
 
     it('should reject refresh access token if failure', function () {
@@ -170,8 +170,8 @@ describe('Auth Service', function () {
 
       $httpBackend.flush();
       expect(promise).toBeRejectedWith(mockResponse(500));
-      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
-      expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
+      expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
+      expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe('fromStorage');
       expect(TokenService.completeLogout).toHaveBeenCalled();
     });
 
@@ -182,8 +182,8 @@ describe('Auth Service', function () {
 
       $rootScope.$apply();
       expect(promise).toBeRejectedWith('refreshtoken not found');
-      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
-      expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe(undefined);
+      expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
+      expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe(undefined);
       expect(TokenService.completeLogout).toHaveBeenCalled();
     });
   });
@@ -552,7 +552,7 @@ describe('Auth Service', function () {
 
         expect(Authinfo.initialize.calls.count()).toBe(1);
 
-        var result = Authinfo.initialize.getCall(0).args[0];
+        var result = Authinfo.initialize.calls.argsFor(0)[0];
         expect(result.services[0]).toBe('foo');
       });
 
@@ -592,7 +592,7 @@ describe('Auth Service', function () {
 
         expect(Authinfo.initialize.calls.count()).toBe(1);
 
-        var result = Authinfo.initialize.getCall(0).args[0];
+        var result = Authinfo.initialize.calls.argsFor(0)[0];
         expect(result.services[0].ciName).toBe('foo');
         expect(result.services[0].serviceId).toBe('bar');
         expect(result.services[0].ciService).toBe(undefined);
@@ -690,7 +690,7 @@ describe('Auth Service', function () {
 
       expect(Authinfo.initialize.calls.count()).toBe(1);
 
-      var result = Authinfo.initialize.getCall(0).args[0];
+      var result = Authinfo.initialize.calls.argsFor(0)[0];
       expect(result.services.length).toBe(1);
       expect(result.services[0].ciName).toBe('webex-messenger');
     });
@@ -731,7 +731,7 @@ describe('Auth Service', function () {
 
       expect(Authinfo.initialize.calls.count()).toBe(1);
 
-      var result = Authinfo.initialize.getCall(0).args[0];
+      var result = Authinfo.initialize.calls.argsFor(0)[0];
       expect(result.services.length).toBe(2);
       expect(result.services[1].ciName).toBe('webex-messenger');
     });
@@ -772,7 +772,7 @@ describe('Auth Service', function () {
 
       expect(Authinfo.initialize.calls.count()).toBe(1);
 
-      var result = Authinfo.initialize.getCall(0).args[0];
+      var result = Authinfo.initialize.calls.argsFor(0)[0];
       expect(result.services.length).toBe(1);
     });
 
@@ -812,7 +812,7 @@ describe('Auth Service', function () {
 
       expect(Authinfo.initialize.calls.count()).toBe(1);
 
-      var result = Authinfo.initialize.getCall(0).args[0];
+      var result = Authinfo.initialize.calls.argsFor(0)[0];
       expect(result.services.length).toBe(0);
     });
   });
