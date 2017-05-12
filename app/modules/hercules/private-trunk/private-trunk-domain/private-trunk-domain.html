@@ -1,7 +1,7 @@
 <div ng-form="privateTrunkDomainForm" class="private-trunk">
   <div ng-class="{'top-margin': !$ctrl.isFirstTimeSetup}"></div>
   <h5>{{$ctrl.domainDesc.title}}</h5>
-  <p>{{$ctrl.domainDesc.desc}}</p>
+  <div>{{$ctrl.domainDesc.desc}}</div>
   <div class="cs-radio-group" ng-if="$ctrl.isFirstTimeSetup">
       <input
         cs-input
