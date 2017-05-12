@@ -550,7 +550,7 @@ describe('Auth Service', function () {
 
         $httpBackend.flush();
 
-        expect(Authinfo.initialize.callCount).toBe(1);
+        expect(Authinfo.initialize.calls.count()).toBe(1);
 
         var result = Authinfo.initialize.getCall(0).args[0];
         expect(result.services[0]).toBe('foo');
@@ -590,7 +590,7 @@ describe('Auth Service', function () {
 
         $httpBackend.flush();
 
-        expect(Authinfo.initialize.callCount).toBe(1);
+        expect(Authinfo.initialize.calls.count()).toBe(1);
 
         var result = Authinfo.initialize.getCall(0).args[0];
         expect(result.services[0].ciName).toBe('foo');
@@ -613,7 +613,7 @@ describe('Auth Service', function () {
         });
 
         $httpBackend.flush();
-        expect(Authinfo.updateAccountInfo.callCount).toBe(1);
+        expect(Authinfo.updateAccountInfo.calls.count()).toBe(1);
       });
 
     });
@@ -656,7 +656,7 @@ describe('Auth Service', function () {
         });
 
         $httpBackend.flush();
-        expect(Authinfo.updateAccountInfo.callCount).toBe(1);
+        expect(Authinfo.updateAccountInfo.calls.count()).toBe(1);
       });
 
     });
@@ -688,7 +688,7 @@ describe('Auth Service', function () {
       });
       $httpBackend.flush();
 
-      expect(Authinfo.initialize.callCount).toBe(1);
+      expect(Authinfo.initialize.calls.count()).toBe(1);
 
       var result = Authinfo.initialize.getCall(0).args[0];
       expect(result.services.length).toBe(1);
@@ -729,7 +729,7 @@ describe('Auth Service', function () {
       });
       $httpBackend.flush();
 
-      expect(Authinfo.initialize.callCount).toBe(1);
+      expect(Authinfo.initialize.calls.count()).toBe(1);
 
       var result = Authinfo.initialize.getCall(0).args[0];
       expect(result.services.length).toBe(2);
@@ -770,7 +770,7 @@ describe('Auth Service', function () {
       });
       $httpBackend.flush();
 
-      expect(Authinfo.initialize.callCount).toBe(1);
+      expect(Authinfo.initialize.calls.count()).toBe(1);
 
       var result = Authinfo.initialize.getCall(0).args[0];
       expect(result.services.length).toBe(1);
@@ -810,7 +810,7 @@ describe('Auth Service', function () {
       });
       $httpBackend.flush();
 
-      expect(Authinfo.initialize.callCount).toBe(1);
+      expect(Authinfo.initialize.calls.count()).toBe(1);
 
       var result = Authinfo.initialize.getCall(0).args[0];
       expect(result.services.length).toBe(0);

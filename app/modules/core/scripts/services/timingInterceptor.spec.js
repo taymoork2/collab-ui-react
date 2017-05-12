@@ -41,7 +41,7 @@ describe('TimingInterceptor', function () {
 
     Interceptor.response(response);
 
-    expect($log.error.callCount).toBe(1);
+    expect($log.error.calls.count()).toBe(1);
   });
 
   it('should not log in prod', function () {
@@ -55,7 +55,7 @@ describe('TimingInterceptor', function () {
 
     Interceptor.response(response);
 
-    expect($log.error.callCount).toBe(0);
+    expect($log.error.calls.count()).toBe(0);
   });
 
   it('should not log if thresold not reached', function () {
@@ -69,7 +69,7 @@ describe('TimingInterceptor', function () {
 
     Interceptor.response(response);
 
-    expect($log.error.callCount).toBe(0);
+    expect($log.error.calls.count()).toBe(0);
   });
 
   it('should return rejected promise from responseError', function (done) {

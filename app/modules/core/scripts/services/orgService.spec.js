@@ -75,7 +75,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
   });
 
@@ -98,7 +98,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(500, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(false);
   });
 
@@ -114,7 +114,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
   });
 
@@ -123,7 +123,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(500, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(false);
   });
 
@@ -132,7 +132,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
   });
 
@@ -144,7 +144,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=true").respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId(), params);
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
   });
 
@@ -153,7 +153,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(false);
   });
 
@@ -162,7 +162,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
   });
 
@@ -171,7 +171,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(false);
   });
 
@@ -200,7 +200,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(200, {});
     Orgservice.getUnlicensedUsers(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
   });
 
@@ -209,7 +209,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(500, {});
     Orgservice.getUnlicensedUsers(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(false);
   });
 
@@ -218,7 +218,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(200, {});
     Orgservice.getUnlicensedUsers(callback);
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
   });
 
@@ -227,7 +227,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers?searchPrefix=sqtest').respond(200, {});
     Orgservice.getUnlicensedUsers(callback, null, 'sqtest');
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
   });
 
@@ -236,7 +236,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(500, {});
     Orgservice.getUnlicensedUsers(callback);
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
+    expect(callback.calls.count()).toBe(1);
     expect(callback.args[0][0].success).toBe(false);
   });
 

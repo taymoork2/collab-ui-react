@@ -15,13 +15,13 @@ describe('Service: HelpdeskSplunkReporterService', function () {
     it("reportOperation reports to logMetricsService", function () {
       spyOn(LogMetricsService, 'logMetrics');
       Service.reportOperation("whatever");
-      expect(LogMetricsService.logMetrics.callCount).toBe(1);
+      expect(LogMetricsService.logMetrics.calls.count()).toBe(1);
     });
 
     it("reportStats reports to logMetriceService", function () {
       spyOn(LogMetricsService, 'logMetrics');
       Service.reportStats("searchString", {}, moment(), "1234");
-      expect(LogMetricsService.logMetrics.callCount).toBe(1);
+      expect(LogMetricsService.logMetrics.calls.count()).toBe(1);
     });
 
     it("reportOperation reports as HELPDESKOPERATION", function () {

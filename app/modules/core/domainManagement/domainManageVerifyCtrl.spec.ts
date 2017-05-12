@@ -63,8 +63,8 @@ describe('DomainManagementVerifyCtrl', () => {
 
     ctrl.verify();
 
-    expect(DomainManagementService.verifyDomain.callCount).toBe(1);
-    expect(DomainManagementService.getToken.callCount).toBe(1);
+    expect(DomainManagementService.verifyDomain.calls.count()).toBe(1);
+    expect(DomainManagementService.getToken.calls.count()).toBe(1);
 
     deferred.reject('error-in-verify');
     ctrl.error = 'not-the-error-we-expect';
@@ -89,7 +89,7 @@ describe('DomainManagementVerifyCtrl', () => {
 
     ctrl.learnMore();
     $rootScope.$digest();
-    expect(ctrl.LogMetricsService.logMetrics.callCount).toBe(1);
+    expect(ctrl.LogMetricsService.logMetrics.calls.count()).toBe(1);
   });
 
   describe('with no previous domains verified', () => {
@@ -167,8 +167,8 @@ describe('DomainManagementVerifyCtrl', () => {
 
       ctrl.verify();
       $rootScope.$digest();
-      expect(DomainManagementService.verifyDomain.callCount).toBe(1);
-      expect(DomainManagementService.getToken.callCount).toBe(0);
+      expect(DomainManagementService.verifyDomain.calls.count()).toBe(1);
+      expect(DomainManagementService.getToken.calls.count()).toBe(0);
     });
   });
 });

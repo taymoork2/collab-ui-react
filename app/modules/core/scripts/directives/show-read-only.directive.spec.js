@@ -31,7 +31,7 @@ describe('Directive: ShowReadOnly', function () {
   }
 
   it('should be wrapped in div element', function () {
-    expect(Authinfo.isReadOnlyAdmin.callCount).toBe(1);
+    expect(Authinfo.isReadOnlyAdmin.calls.count()).toBe(1);
     var divElement = directiveElem.find('div');
     expect(divElement).toBeDefined();
     expect(divElement.text()).toEqual(translate.instant('readOnlyModal.banner'));

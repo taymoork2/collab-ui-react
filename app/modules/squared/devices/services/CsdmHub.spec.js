@@ -23,16 +23,16 @@ describe('CsdmHubFactory', function () {
     hub.on('foo', listener, {
       scope: scope,
     });
-    expect(scope.$on.callCount).toBe(1);
-    expect(listenerAddedListener.callCount).toBe(1);
+    expect(scope.$on.calls.count()).toBe(1);
+    expect(listenerAddedListener.calls.count()).toBe(1);
     expect(hub.count('foo')).toBe(1);
 
     hub.emit('foo', 'bar');
-    expect(listener.callCount).toBe(1);
+    expect(listener.calls.count()).toBe(1);
     expect(listener.args[0][0]).toBe('bar');
 
     scope.$on.args[0][1].call();
-    expect(listenerRemovedListener.callCount).toBe(1);
+    expect(listenerRemovedListener.calls.count()).toBe(1);
     expect(hub.count('foo')).toBe(0);
   });
 

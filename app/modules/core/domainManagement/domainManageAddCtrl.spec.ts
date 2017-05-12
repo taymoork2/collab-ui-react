@@ -82,7 +82,7 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementAddCtrl.domain = unEncoded;
     DomainManagementAddCtrl.add();
     $rootScope.$digest();
-    expect(DomainManagementService.addDomain.callCount).toBe(1);
+    expect(DomainManagementService.addDomain.calls.count()).toBe(1);
   });
 
   it('should post metric for add domain', () => {
@@ -94,7 +94,7 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementAddCtrl.domain = unEncoded;
     DomainManagementAddCtrl.add();
     $rootScope.$digest();
-    expect(DomainManagementAddCtrl.LogMetricsService.logMetrics.callCount).toBe(1);
+    expect(DomainManagementAddCtrl.LogMetricsService.logMetrics.calls.count()).toBe(1);
   });
 
   it('should set error if addDomain on the service fails', () => {
@@ -106,7 +106,7 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementAddCtrl.domain = unEncoded;
     DomainManagementAddCtrl.add();
     $rootScope.$digest();
-    expect(DomainManagementService.addDomain.callCount).toBe(1);
+    expect(DomainManagementService.addDomain.calls.count()).toBe(1);
     expect(DomainManagementAddCtrl.error).toBe('error-during-add');
   });
 

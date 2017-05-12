@@ -43,7 +43,7 @@ describe('UserInfoController', function () {
   it('fetches url and opens new window', function () {
     $scope.sendFeedback();
 
-    expect(FeedbackService.getFeedbackUrl.callCount).toBe(1);
+    expect(FeedbackService.getFeedbackUrl.calls.count()).toBe(1);
     expect(FeedbackService.getFeedbackUrl.args[0][0]).toBe('Atlas_some useragent');
     expect(FeedbackService.getFeedbackUrl.args[0][1]).toBe('awesome uuid');
 
@@ -56,7 +56,7 @@ describe('UserInfoController', function () {
     $rootScope.$apply();
     $rootScope.$apply();
 
-    expect($window.open.callCount).toBe(1);
+    expect($window.open.calls.count()).toBe(1);
     expect($window.open.args[0][0]).toBe('some url');
     expect($window.open.args[0][1]).toBe('_blank');
   });

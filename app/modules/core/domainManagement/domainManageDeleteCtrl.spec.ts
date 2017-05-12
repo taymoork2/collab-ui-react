@@ -160,7 +160,7 @@ describe('DomainManageDeleteCtrl', () => {
     ctrl.deleteDomain();
 
     $rootScope.$digest();
-    expect(DomainManagementService.unverifyDomain.callCount).toBe(1);
+    expect(DomainManagementService.unverifyDomain.calls.count()).toBe(1);
   });
 
   it('delete a claimed domain should invoke unclaimDomain on service', () => {
@@ -170,7 +170,7 @@ describe('DomainManageDeleteCtrl', () => {
     ctrl.deleteDomain();
 
     $rootScope.$digest();
-    expect(DomainManagementService.unclaimDomain.callCount).toBe(1);
+    expect(DomainManagementService.unclaimDomain.calls.count()).toBe(1);
   });
 
   it('delete a non-verified domain should invoke unclaimDomain on service', () => {
@@ -180,7 +180,7 @@ describe('DomainManageDeleteCtrl', () => {
     ctrl.deleteDomain();
 
     $rootScope.$digest();
-    expect(DomainManagementService.unclaimDomain.callCount).toBe(1);
+    expect(DomainManagementService.unclaimDomain.calls.count()).toBe(1);
   });
 
   it('delete a proper pending domain should invoke unverifyDomain on service', () => {
@@ -191,7 +191,7 @@ describe('DomainManageDeleteCtrl', () => {
     ctrl.deleteDomain();
 
     $rootScope.$digest();
-    expect(DomainManagementService.unclaimDomain.callCount).toBe(0);
-    expect(DomainManagementService.unverifyDomain.callCount).toBe(1);
+    expect(DomainManagementService.unclaimDomain.calls.count()).toBe(0);
+    expect(DomainManagementService.unverifyDomain.calls.count()).toBe(1);
   });
 });

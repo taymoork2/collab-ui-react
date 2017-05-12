@@ -23,7 +23,7 @@ describe('ServerErrorInterceptor', function () {
 
     Interceptor.responseError(response);
 
-    expect($log.error.callCount).toBe(1);
+    expect($log.error.calls.count()).toBe(1);
   });
 
   it('should not log in prod', function () {
@@ -38,7 +38,7 @@ describe('ServerErrorInterceptor', function () {
 
     Interceptor.responseError(response);
 
-    expect($log.error.callCount).toBe(0);
+    expect($log.error.calls.count()).toBe(0);
   });
 
   it('should not log if status is 404', function () {
@@ -53,7 +53,7 @@ describe('ServerErrorInterceptor', function () {
 
     Interceptor.responseError(response);
 
-    expect($log.error.callCount).toBe(0);
+    expect($log.error.calls.count()).toBe(0);
   });
 
 });

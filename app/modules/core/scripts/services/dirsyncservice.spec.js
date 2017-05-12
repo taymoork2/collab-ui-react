@@ -52,7 +52,7 @@ describe('DirSyncServiceOld', function () {
 
       $httpBackend.flush();
 
-      expect(callback.callCount).toBe(1);
+      expect(callback.calls.count()).toBe(1);
       expect(callback.args[0][0].success).toBe(false);
     });
 
@@ -71,7 +71,7 @@ describe('DirSyncServiceOld', function () {
 
       $httpBackend.flush();
 
-      expect(callback.callCount).toBe(1);
+      expect(callback.calls.count()).toBe(1);
       expect(callback.args[0][0].success).toBe(true);
       expect(callback.args[0][0].serviceMode).toBe('ENABLED');
     });

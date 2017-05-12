@@ -53,7 +53,7 @@ describe('settingsMenuCtrl', function () {
     });
 
     it('should have translated the language', function () {
-      expect($translate.instant.callCount).toBe(1);
+      expect($translate.instant.calls.count()).toBe(1);
       expect($translate.instant.getCall(0).args[0]).toBe('languages.simplifiedDothraki');
     });
 

@@ -81,7 +81,7 @@ describe('Controller: SupportCtrl', function () {
       $scope.gotoHelpdesk = sinon.spy($scope, 'gotoHelpdesk');
       $scope.$digest();
       view.find("#toolsCardHelpdeskButton").click();
-      expect($scope.gotoHelpdesk.callCount).toBe(1);
+      expect($scope.gotoHelpdesk.calls.count()).toBe(1);
     });
 
     it('has NO helpdesk button to click if user hasnt helpdesk role', function () {
@@ -89,7 +89,7 @@ describe('Controller: SupportCtrl', function () {
       $scope.gotoHelpdesk = sinon.spy($scope, 'gotoHelpdesk');
       $scope.$digest();
       view.find("toolsCardHelpdeskButton").click();
-      expect($scope.gotoHelpdesk.callCount).toBe(0);
+      expect($scope.gotoHelpdesk.calls.count()).toBe(0);
     });
 
     it('has clickable call flow button if user has cisco dev role', function () {
@@ -109,7 +109,7 @@ describe('Controller: SupportCtrl', function () {
       $scope.gotoCdrSupport = sinon.spy($scope, 'gotoCdrSupport');
       $scope.$digest();
       view.find("#toolsCardCdrCallFlowButton").click();
-      expect($scope.gotoCdrSupport.callCount).toBe(1);
+      expect($scope.gotoCdrSupport.calls.count()).toBe(1);
     });
 
     it('has no call flow button to click if user hasnt cisco dev role', function () {
@@ -129,7 +129,7 @@ describe('Controller: SupportCtrl', function () {
       $scope.gotoCdrSupport = sinon.spy($scope, 'gotoCdrSupport');
       $scope.$digest();
       view.find("toolsCardCdrCallFlowButton").click();
-      expect($scope.gotoCdrSupport.callCount).toBe(0);
+      expect($scope.gotoCdrSupport.calls.count()).toBe(0);
     });
   });
 
