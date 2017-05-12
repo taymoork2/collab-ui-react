@@ -2614,6 +2614,11 @@
       "mobileServices": "Mobile Services",
       "mobileConvergenceService": "Mobile Convergence Service"
     },
+    "detailsPage": {
+      "title": "Cmc",
+      "settings": "Settings",
+      "status": "Status"
+    },
     "settings": {
       "mobileNumber": "Mobile Number"
     },
@@ -7162,6 +7167,7 @@
     "title": "Services",
     "cloudServices": "Cloud Services",
     "hybridServices": "Hybrid Services",
+    "mobileServices": "Mobile Services",
     "showAllCards": "Show all cards",
     "showActiveCards": "Show active cards only",
     "noActiveHybridCards": "No Hybrid Services cards found.",
@@ -7331,6 +7337,14 @@
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
         "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
         "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Spark remote SIP destinations configuration and disables the service for all users."
+      },
+      "cmc": {
+        "title": "CMC",
+        "description": "Show status and configuration for Collaboration Mobile Convergence (CMC) service",
+        "buttons": {
+          "settings": "Settings",
+          "status": "Status"
+        }
       }
     },
     "showMore": "View all",

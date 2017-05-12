@@ -1494,6 +1494,30 @@
               },
             },
           })
+          .state('cmc-base', {
+            abstract: true,
+            parent: 'main',
+            templateUrl: 'modules/cmc/details/cmc-details.html',
+          })
+          .state('cmc', {
+            parent: 'cmc-base',
+            views: {
+              'header': {
+                template: '<cmc-details-header></cmc-details-header>',
+              },
+              'main': {
+                template: '<div ui-view></div>',
+              },
+            },
+          })
+          .state('cmc.settings', {
+            url: '/services/cmc-settings',
+            template: '<cmc-details-settings></cmc-details-settings>',
+          })
+          .state('cmc.status', {
+            url: '/services/cmc-status',
+            template: '<cmc-details-status></cmc-details-status>',
+          })
 
           // FOR Development: allow editing of user's feature toggles
           .state('edit-featuretoggles', {

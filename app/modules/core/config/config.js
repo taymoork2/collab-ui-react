@@ -548,6 +548,11 @@
       'squared-fusion-khaos': [
         'cucm-cluster',
       ],
+      'cmc': [
+        'cmc',
+        'cmc.status',
+        'cmc.settings',
+      ],
     };
 
     // These states are not allowed in specific views

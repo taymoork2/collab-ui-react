@@ -1,0 +1,23 @@
+import { INotification } from 'modules/core/overview/notifications/notification.interface';
+
+export class CmcNotification {
+  public createNotification(): INotification {
+    return {
+      badgeText: 'common.new',
+      badgeType: 'success',
+      canDismiss: true,
+      dismiss: () => {
+        //HybridServicesFlagService.raiseFlag(HybridServicesUtilsService.getAckFlagForHybridServiceId('squared-fusion-gcal'));
+      },
+      link: () => {
+        // CloudConnectorService.openSetupModal()
+        //   .then(() => {
+        //     $state.go('google-calendar-service.settings');
+        //   });
+      },
+      linkText: 'homePage.getStarted',
+      name: 'cmc',
+      text: 'cmc.notificationText',
+    };
+  }
+}
