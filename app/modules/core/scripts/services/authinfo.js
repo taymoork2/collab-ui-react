@@ -575,6 +575,19 @@
           return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId();
         }
       },
+      addEntitlement: function (entitlementObj) {
+        var entitlement = _.get(entitlementObj, 'ciName');
+        if (isEntitled(entitlement)) {
+          throw new Error('Entitlement: "' + entitlement + '" already exists.');
+        }
+        this.getServices().push(entitlementObj);
+      },
+      removeEntitlement: function (entitlement) {
+        if (!isEntitled(entitlement)) {
+          return;
+        }
+        _.remove(this.getServices(), { ciName: entitlement });
+      },
     };
   }
 })();
