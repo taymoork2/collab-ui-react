@@ -164,6 +164,7 @@ module.exports = {
   csdmPlaceCalendar: 'csdm-hybrid-calendar',
   atlasHybridNodesView: 'atlas-hybrid-nodes-view',
   atlasHybridVoicemail: 'atlas-hybrid-voicemail',
+  atlasHybridImp: 'atlas-hybrid-imp',
   atlasHybridCallDiagnosticTool: 'atlas-hybrid-call-diagnostic-tool',
   gemServicesTab: 'gem-services-tab',
   atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',

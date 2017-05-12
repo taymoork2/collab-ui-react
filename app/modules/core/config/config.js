@@ -548,6 +548,9 @@
       'squared-fusion-khaos': [
         'cucm-cluster',
       ],
+      'spark-hybrid-impinterop': [
+        'imp-service',
+      ],
     };
 
     // These states are not allowed in specific views
