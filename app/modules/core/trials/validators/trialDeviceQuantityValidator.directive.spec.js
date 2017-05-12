@@ -43,7 +43,7 @@ describe('Validator: DeviceQuantityValidator:', function () {
       getTotalQuantity: function () { return 2; },
       sx10: this.controller.sx10,
       mx300: this.controller.mx300,
-      phone8841: this.controller.phone8841,
+      phone7832: this.controller.phone7832,
       deviceLimit: this.controller.deviceLimit,
     };
 
@@ -54,7 +54,7 @@ describe('Validator: DeviceQuantityValidator:', function () {
       device_mx300: {
         quantity: 2,
       },
-      device_phone8841: {
+      device_phone7832: {
         quantity: 2,
       },
     };
@@ -65,7 +65,7 @@ describe('Validator: DeviceQuantityValidator:', function () {
       device_mx300: {
         trialDeviceQuantityValidator: '',
       },
-      device_phone8841: {
+      device_phone7832: {
         trialDeviceQuantityValidator: '',
       },
     };
@@ -76,8 +76,8 @@ describe('Validator: DeviceQuantityValidator:', function () {
           'error-messages="validationMessages.device_sx10">' +
         '<input ng-model="model.device_mx300.quantity" name="device_mx300" trial-device-quantity-validator = "{type: \'roomSystems\', name: \'mx300\'}" ' +
           'error-messages="validationMessages.device_mx300">' +
-        '<input ng-model="model.device_phone8841.quantity" name="device_phone8841" trial-device-quantity-validator = "{type: \'callDevices\', name: \'phone8841\'}" ' +
-          'error-messages="validationMessages.device_phone8841">' +
+        '<input ng-model="model.device_phone7832.quantity" name="device_phone7832" trial-device-quantity-validator = "{type: \'callDevices\', name: \'phone7832\'}" ' +
+          'error-messages="validationMessages.device_phone7832">' +
       '</form>'
     );
     this.compileTemplate(this.element);
@@ -140,12 +140,12 @@ describe('Validator: DeviceQuantityValidator:', function () {
     describe('Input type quantity validators', function () {
       it('should set the quantity invalid if the phone quantity is over the max allowed', function () {
         var expectedError = this.$translate.instant('trialModal.call.invalidPhonesQuantity', { max: this.controller.deviceLimit.callDevices.max });
-        this.input = this.$scope.form.device_phone8841;
+        this.input = this.$scope.form.device_phone7832;
         this.$rootScope.callTrial.getTypeQuantity = function () { return 6; };
         this.input.$setViewValue('1');
         this.$scope.$digest();
         expect(this.input.$valid).toBe(false);
-        expect(this.$scope.validationMessages.device_phone8841.trialDeviceQuantityValidator).toBe(expectedError);
+        expect(this.$scope.validationMessages.device_phone7832.trialDeviceQuantityValidator).toBe(expectedError);
       });
 
       it('should set the quantity invalid if the room ayarwma quantity is over the max allowed', function () {

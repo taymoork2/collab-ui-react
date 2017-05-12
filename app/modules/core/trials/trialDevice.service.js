@@ -212,10 +212,10 @@
         model: 'CISCO_8845',
         type: 'CALL_DEVICES',
       },
-      CISCO_8841: {
+      CISCO_7832: {
         min: 1,
         max: 4,
-        model: 'CISCO_8841',
+        model: 'CISCO_7832',
         type: 'CALL_DEVICES',
       },
       CISCO_7841: {
@@ -240,6 +240,7 @@
       CISCO_8865: 'ROLLOUT2',
       CISCO_8845: 'ROLLOUT2',
       CISCO_8841: 'ROLLOUT2',
+      CISCO_7832: 'ROLLOUT2',
       CISCO_7841: 'ROLLOUT2',
     };
 

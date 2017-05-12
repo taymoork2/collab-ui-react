@@ -151,8 +151,8 @@ describe('Controller: TrialDeviceController', function () {
         getData: trialData.enabled.trials.roomSystemTrial,
       });
 
-      controller.phone8841.quantity = 2;
-      controller.phone8841.enabled = true;
+      controller.phone7832.quantity = 2;
+      controller.phone7832.enabled = true;
       controller.phone8845.quantity = 1;
       controller.phone8845.enabled = true;
       controller.sx10.quantity = 1;
