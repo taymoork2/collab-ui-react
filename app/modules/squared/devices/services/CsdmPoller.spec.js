@@ -54,7 +54,7 @@ describe('CsdmPoller', function () {
     expect(callback.calls.count()).toBe(2, 'callback');
 
     expect(scope.$on.calls.count()).toBe(1);
-    expect(scope.$on.args[0][0]).toBe('$destroy');
+    expect(scope.$on.calls.argsFor(0)[0]).toBe('$destroy');
     scope.$on.callArg(1);
 
     defer.resolve();

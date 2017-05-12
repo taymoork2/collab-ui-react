@@ -44,8 +44,8 @@ describe('UserInfoController', function () {
     $scope.sendFeedback();
 
     expect(FeedbackService.getFeedbackUrl.calls.count()).toBe(1);
-    expect(FeedbackService.getFeedbackUrl.args[0][0]).toBe('Atlas_some useragent');
-    expect(FeedbackService.getFeedbackUrl.args[0][1]).toBe('awesome uuid');
+    expect(FeedbackService.getFeedbackUrl.calls.argsFor(0)[0]).toBe('Atlas_some useragent');
+    expect(FeedbackService.getFeedbackUrl.calls.argsFor(0)[1]).toBe('awesome uuid');
 
     deferred.resolve({
       data: {
@@ -57,8 +57,8 @@ describe('UserInfoController', function () {
     $rootScope.$apply();
 
     expect($window.open.calls.count()).toBe(1);
-    expect($window.open.args[0][0]).toBe('some url');
-    expect($window.open.args[0][1]).toBe('_blank');
+    expect($window.open.calls.argsFor(0)[0]).toBe('some url');
+    expect($window.open.calls.argsFor(0)[1]).toBe('_blank');
   });
 
 });

@@ -53,7 +53,7 @@ describe('DirSyncServiceOld', function () {
       $httpBackend.flush();
 
       expect(callback.calls.count()).toBe(1);
-      expect(callback.args[0][0].success).toBe(false);
+      expect(callback.calls.argsFor(0)[0].success).toBe(false);
     });
 
     it('should set status to true when request succeed', function () {
@@ -72,8 +72,8 @@ describe('DirSyncServiceOld', function () {
       $httpBackend.flush();
 
       expect(callback.calls.count()).toBe(1);
-      expect(callback.args[0][0].success).toBe(true);
-      expect(callback.args[0][0].serviceMode).toBe('ENABLED');
+      expect(callback.calls.argsFor(0)[0].success).toBe(true);
+      expect(callback.calls.argsFor(0)[0].serviceMode).toBe('ENABLED');
     });
 
   });

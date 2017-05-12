@@ -76,7 +76,7 @@ describe('orgService', function () {
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should successfully get an organization for a given orgId and resolve the returned promise', function () {
@@ -99,7 +99,7 @@ describe('orgService', function () {
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should fail to get an organization for a given orgId and reject the returned promise', function () {
@@ -115,7 +115,7 @@ describe('orgService', function () {
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should fail to get an organization for getOrgId provided by Authinfo', function () {
@@ -124,7 +124,7 @@ describe('orgService', function () {
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get an admin organization for a given orgId', function () {
@@ -133,7 +133,7 @@ describe('orgService', function () {
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should successfully get an admin organization for a given orgId with disableCache', function () {
@@ -145,7 +145,7 @@ describe('orgService', function () {
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId(), params);
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should fail to get an admin organization for a given orgId', function () {
@@ -154,7 +154,7 @@ describe('orgService', function () {
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get an admin organization for getOrgId provided by Authinfo', function () {
@@ -163,7 +163,7 @@ describe('orgService', function () {
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should fail to get an admin organization for getOrgId provided by Authinfo', function () {
@@ -172,7 +172,7 @@ describe('orgService', function () {
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get an admin organization for a given orgId as when called as a promise', function () {
@@ -201,7 +201,7 @@ describe('orgService', function () {
     Orgservice.getUnlicensedUsers(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should fail to get unlicensed users for random orgId', function () {
@@ -210,7 +210,7 @@ describe('orgService', function () {
     Orgservice.getUnlicensedUsers(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get unlicensed users for getOrgId provided by Authinfo', function () {
@@ -219,7 +219,7 @@ describe('orgService', function () {
     Orgservice.getUnlicensedUsers(callback);
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should successfully get unlicensedUsers with searchStr', function () {
@@ -228,7 +228,7 @@ describe('orgService', function () {
     Orgservice.getUnlicensedUsers(callback, null, 'sqtest');
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should fail to get unlicensed users for getOrgId provided by Authinfo', function () {
@@ -237,7 +237,7 @@ describe('orgService', function () {
     Orgservice.getUnlicensedUsers(callback);
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should set setup done', function () {
