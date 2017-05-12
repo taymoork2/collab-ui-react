@@ -18,7 +18,7 @@ describe('ServerErrorInterceptor', function () {
         headers: {},
       },
     };
-    Config.isProd = sinon.stub().returns(false);
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(false);
     $log.error = sinon.stub();
 
     Interceptor.responseError(response);
@@ -33,7 +33,7 @@ describe('ServerErrorInterceptor', function () {
         headers: {},
       },
     };
-    Config.isProd = sinon.stub().returns(true);
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(true);
     $log.error = sinon.stub();
 
     Interceptor.responseError(response);
@@ -48,7 +48,7 @@ describe('ServerErrorInterceptor', function () {
         headers: {},
       },
     };
-    Config.isProd = sinon.stub().returns(false);
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(false);
     $log.error = sinon.stub();
 
     Interceptor.responseError(response);

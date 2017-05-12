@@ -13,7 +13,7 @@ describe('Factory : OverviewCrashLogNotification', function () {
 
   it('should set allowCrashLogUpload to true on dismiss', function () {
     Orgservice.setOrgSettings = sinon.spy();
-    Authinfo.getOrgId = sinon.stub().returns('cisco');
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('cisco');
     crashLogNotification.dismiss();
     expect(Orgservice.setOrgSettings.getCall(0).args[1].allowCrashLogUpload).toBeTruthy();
   });

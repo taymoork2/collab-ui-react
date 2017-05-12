@@ -22,8 +22,8 @@ describe('CsdmHuronOrgDeviceService', function () {
   });
 
   it('should return an empty list if no directorynumbers', function (done) {
-    HuronConfig.getCmiUrl = sinon.stub().returns('testHuronUrl');
-    Authinfo.getOrgId = sinon.stub().returns('testOrg');
+    HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
       cisUuid: 'testUserId',
     };
@@ -41,8 +41,8 @@ describe('CsdmHuronOrgDeviceService', function () {
   });
 
   it('should return only extension if no alternates', function (done) {
-    HuronConfig.getCmiUrl = sinon.stub().returns('testHuronUrl');
-    Authinfo.getOrgId = sinon.stub().returns('testOrg');
+    HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
       cisUuid: 'testUserId',
     };
@@ -73,8 +73,8 @@ describe('CsdmHuronOrgDeviceService', function () {
   });
 
   it('should return alternate', function (done) {
-    HuronConfig.getCmiUrl = sinon.stub().returns('testHuronUrl');
-    Authinfo.getOrgId = sinon.stub().returns('testOrg');
+    HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
       cisUuid: 'testUserId',
     };
@@ -107,8 +107,8 @@ describe('CsdmHuronOrgDeviceService', function () {
   });
 
   it('should return multiple results', function (done) {
-    HuronConfig.getCmiUrl = sinon.stub().returns('testHuronUrl');
-    Authinfo.getOrgId = sinon.stub().returns('testOrg');
+    HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
       cisUuid: 'testUserId',
     };

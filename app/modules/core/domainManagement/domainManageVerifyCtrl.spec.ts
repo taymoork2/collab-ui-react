@@ -19,7 +19,7 @@ describe('DomainManagementVerifyCtrl', () => {
   let domainManagementVerifyCtrlFactory = (domainManageService, user, domain, mockToken = true) => {
 
     if (mockToken) {
-      domainManageService.getToken = sinon.stub().returns($q.resolve());
+      domainManageService.getToken = jasmine.createSpy('getToken').and.returnValue($q.resolve());
     }
     return Controller('DomainManageVerifyCtrl', {
       $state: { params: { domain: domain, loggedOnUser: user } },
@@ -57,8 +57,8 @@ describe('DomainManagementVerifyCtrl', () => {
 
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList = [{ text: 'superdomain.com', status: 'verified' }];
-    DomainManagementService.verifyDomain = sinon.stub().returns(deferred.promise);
-    DomainManagementService.getToken = sinon.stub().returns($q.resolve('faketoken'));
+    DomainManagementService.verifyDomain = jasmine.createSpy('verifyDomain').and.returnValue(deferred.promise);
+    DomainManagementService.getToken = jasmine.createSpy('getToken').and.returnValue($q.resolve('faketoken'));
     ctrl = domainManagementVerifyCtrlFactory(
       DomainManagementService, user, domain, false,
     );
@@ -164,7 +164,7 @@ describe('DomainManagementVerifyCtrl', () => {
     });
 
     it('should invoke verifyDomain on service', () => {
-      DomainManagementService.verifyDomain = sinon.stub().returns($q.resolve({}));
+      DomainManagementService.verifyDomain = jasmine.createSpy('verifyDomain').and.returnValue($q.resolve({}));
       ctrl.$previousState = { go: sinon.stub() };
 
       ctrl.verify();

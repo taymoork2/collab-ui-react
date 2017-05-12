@@ -36,7 +36,7 @@ describe('TimingInterceptor', function () {
         requestTimestamp: now - 15000,
       },
     };
-    Config.isProd = sinon.stub().returns(false);
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(false);
     $log.error = sinon.stub();
 
     Interceptor.response(response);
@@ -50,7 +50,7 @@ describe('TimingInterceptor', function () {
         requestTimestamp: now - 15000,
       },
     };
-    Config.isProd = sinon.stub().returns(true);
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(true);
     $log.error = sinon.stub();
 
     Interceptor.response(response);
@@ -64,7 +64,7 @@ describe('TimingInterceptor', function () {
         requestTimestamp: now,
       },
     };
-    Config.isProd = sinon.stub().returns(false);
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(false);
     $log.error = sinon.stub();
 
     Interceptor.response(response);

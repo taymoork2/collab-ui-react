@@ -17,7 +17,7 @@ describe('Constructor of', () => {
   describe('DomainManagementCtrl', () => {
     let ctrl;
     beforeEach(inject(($controller) => {
-      DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve());
+      DomainManagementService.getVerifiedDomains = jasmine.createSpy('getVerifiedDomains').and.returnValue($q.resolve());
       ctrl = $controller('DomainManagementCtrl', {
         Authinfo: { getOrgId: jasmine.createSpy('getOrgId').and.returnValue('org-id') },
         CiService: {

@@ -75,7 +75,7 @@ describe('DomainManagementAddCtrl', () => {
   });
 
   it('should add the given domain using addDomain on the service', () => {
-    DomainManagementService.addDomain = sinon.stub().returns(
+    DomainManagementService.addDomain = jasmine.createSpy('addDomain').and.returnValue(
       $q.resolve());
 
     let unEncoded = 'test.com';
@@ -87,7 +87,7 @@ describe('DomainManagementAddCtrl', () => {
   });
 
   it('should post metric for add domain', () => {
-    DomainManagementService.addDomain = sinon.stub().returns(
+    DomainManagementService.addDomain = jasmine.createSpy('addDomain').and.returnValue(
       $q.resolve());
 
     let unEncoded = 'test.com';
@@ -99,7 +99,7 @@ describe('DomainManagementAddCtrl', () => {
   });
 
   it('should set error if addDomain on the service fails', () => {
-    DomainManagementService.addDomain = sinon.stub().returns(
+    DomainManagementService.addDomain = jasmine.createSpy('addDomain').and.returnValue(
       $q.reject('error-during-add'));
 
     let unEncoded = 'test.com';

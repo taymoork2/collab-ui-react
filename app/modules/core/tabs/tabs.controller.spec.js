@@ -112,13 +112,13 @@
     //from authinfo
     describe('authorize', function () {
       beforeEach(function () {
-        UrlConfig.getAdminServiceUrl = sinon.stub().returns('path/');
+        UrlConfig.getAdminServiceUrl = jasmine.createSpy('getAdminServiceUrl').and.returnValue('path/');
       });
 
       describe('given user is not admin', function () {
 
         beforeEach(function () {
-          UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+          UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
           spyOn(Auth, 'authorize').and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve({

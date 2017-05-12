@@ -15,7 +15,7 @@ describe('settingsMenuCtrl', function () {
     beforeEach(inject(function ($rootScope, $controller, _$translate_) {
       $translate = _$translate_;
 
-      $translate.use = sinon.stub().returns('nb_NO');
+      $translate.use = jasmine.createSpy('use').and.returnValue('nb_NO');
 
       controller = $controller('SettingsMenuCtrl', {
         $scope: $rootScope.$new,
@@ -34,8 +34,8 @@ describe('settingsMenuCtrl', function () {
   describe('with single mocked language', function () {
     beforeEach(inject(function ($rootScope, $controller, _$translate_) {
       $translate = _$translate_;
-      $translate.instant = sinon.stub().returns('foo');
-      $translate.use = sinon.stub().returns({
+      $translate.instant = jasmine.createSpy('instant').and.returnValue('foo');
+      $translate.use = jasmine.createSpy('use').and.returnValue({
         then: sinon.stub(),
       });
 

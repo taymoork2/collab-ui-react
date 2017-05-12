@@ -6,7 +6,7 @@ describe('Service: MediaClusterServiceV2', function () {
 
   beforeEach(inject(function ($injector, _MediaClusterServiceV2_, _Authinfo_) {
     Authinfo = _Authinfo_;
-    Authinfo.getOrgId = sinon.stub().returns("orgId");
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue("orgId");
     Service = _MediaClusterServiceV2_;
     $httpBackend = $injector.get('$httpBackend');
   }));
