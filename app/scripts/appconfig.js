@@ -3950,6 +3950,47 @@
               },
             },
           })
+          .state('imp-service', {
+            templateUrl: 'modules/hercules/service-specific-pages/imp-service-pages/imp-service-container.html',
+            controller: 'ImpServiceContainerController',
+            controllerAs: 'vm',
+            params: {
+              clusterId: null,
+            },
+            parent: 'main',
+          })
+          .state('imp-service.settings', {
+            url: '/services/imp/settings',
+            views: {
+              impServiceView: {
+                controllerAs: 'impServiceSettings',
+                controller: 'ImpServiceSettingsController',
+                templateUrl: 'modules/hercules/service-settings/imp-service-settings.html',
+              },
+            },
+            resolve: {
+              hasHybridImpFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp);
+              },
+              hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
+              },
+            },
+          })
+          .state('imp-service.list', {
+            url: '/services/imp',
+            views: {
+              impServiceView: {
+                templateUrl: 'modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html',
+              },
+              controller: /* @ngInject */ function (Analytics) {
+                return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
+              },
+            },
+            params: {
+              clusterId: null,
+            },
+          })
           .state('private-trunk-settings', {
             parent: 'main',
             url: '/private-trunk-settings/:id',

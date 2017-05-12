@@ -550,10 +550,14 @@
       'squared-fusion-khaos': [
         'cucm-cluster',
       ],
+
       'cmc': [
         'cmc',
         'cmc.status',
         'cmc.settings',
+      ],
+      'spark-hybrid-impinterop': [
+        'imp-service',
       ],
     };
 

@@ -8,6 +8,7 @@ import { ServicesOverviewHybridServicesCard } from './hybridServicesCard';
 import { ServicesOverviewHybridAndGoogleCalendarCard } from './hybridAndGoogleCalendarCard';
 import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
 import { ServicesOverviewHybridCallCard } from './hybridCallCard';
+import { ServicesOverviewImpCard } from './impCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
@@ -54,6 +55,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridContextCard(this.HybridServicesClusterStatesService),
       new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService, this.HybridServicesClusterStatesService),
+      new ServicesOverviewImpCard(this.Authinfo, this.HybridServicesClusterStatesService),
     ];
 
     this.loadWebexSiteList();
@@ -95,6 +97,10 @@ export class ServicesOverviewCtrl {
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(supports => {
         this.forwardEvent('googleCalendarFeatureToggleEventHandler', supports);
+      });
+    this.FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp)
+      .then(supports => {
+        this.forwardEvent('atlasHybridImpFeatureToggleEventHandler', supports);
       });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking)
