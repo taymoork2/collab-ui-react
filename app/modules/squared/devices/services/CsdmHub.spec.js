@@ -14,7 +14,7 @@ describe('CsdmHubFactory', function () {
     var listenerAddedListener = jasmine.createSpy('listenerAddedListener');
     var listenerRemovedListener = jasmine.createSpy('listenerRemovedListener');
     var scope = {
-      '$on': sinon.stub(),
+      '$on': jasmine.createSpy('$on'),
     };
 
     hub.onListener('added', listenerAddedListener);

@@ -27,7 +27,7 @@ describe('Controller: DisableMediaServiceController', function () {
     ServiceDescriptor = _ServiceDescriptor_;
     Notification = _Notification_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
-    sinon.stub($state, 'go');
+    spyOn($state, 'go');
     httpMock = _$httpBackend_;
     httpMock.when('GET', /^\w+.*/).respond({});
     controller = $controller('DisableMediaServiceController', {

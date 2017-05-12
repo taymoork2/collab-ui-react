@@ -830,7 +830,7 @@ describe('Auth Service', function () {
   // helpers
 
   function stubCredentials() {
-    return sinon.stub().and.returnValue('clientRegistrationCredentials');
+    return jasmine.createSpy('getOAuthClientRegistrationCredentials').and.returnValue('clientRegistrationCredentials');
   }
 
   function assertCredentials(headers) {
