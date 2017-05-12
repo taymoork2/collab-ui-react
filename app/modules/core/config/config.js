@@ -550,7 +550,6 @@
       'squared-fusion-khaos': [
         'cucm-cluster',
       ],
-
       'cmc': [
         'cmc',
         'cmc.status',
