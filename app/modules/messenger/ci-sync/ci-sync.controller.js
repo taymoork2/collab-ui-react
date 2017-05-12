@@ -54,7 +54,6 @@
     vm.syncStatusTooltip = $translate.instant(translatePrefix + 'syncStatusTooltip');
     vm.dirsyncStatusTooltip = $translate.instant(translatePrefix + 'dirsyncStatusTooltip');
     vm.authRedirectTooltip = $translate.instant(translatePrefix + 'authRedirectTooltip');
-    vm.patchSyncButtonText = $translate.instant(translatePrefix + 'patchSyncButtonText');
     vm.orgAdminLinkTooltip = $translate.instant(translatePrefix + 'orgAdminLinkTooltip');
     vm.pwdSyncTooltip = $translate.instant(translatePrefix + 'pwdSyncTooltip');
     vm.sparkEntTooltip = $translate.instant(translatePrefix + 'sparkEntTooltip');

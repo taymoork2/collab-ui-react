@@ -6140,6 +6140,8 @@
       "sectionTitle": "Options",
       "sectionDescr": "Control how WebEx Messenger works with Cisco Spark."
     },
+    "jabberInteropHeading": "Cisco Spark / Jabber Interop",
+    "jabberInteropTooltip": "Messaging interoperability between Cisco Spark and WebEx Messenger Jabber.",
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
     "authRedirectTooltip": "If enabled, users will login to Common Identity. If disabled, users will login to Messenger.",
     "pwdSyncHeading": "Sync Passwords From Messenger",
@@ -6177,7 +6179,6 @@
     "orgAdminLinkTooltip": "Continue to mange your Jabber users in the Messenger Org Admin tool",
     "pageTitle": "WebEx Messenger",
     "patchSuccessful": "Jabber Messenger Sync updated successfully",
-    "patchSyncButtonText": "Update",
     "refresh": "Refresh",
     "refreshFailed": "Failed refreshing Jabber Messenger Sync status",
     "syncStatusHeading": "User Synchronization From Messenger",
