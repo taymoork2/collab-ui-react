@@ -4,6 +4,7 @@ import { WizardCtrl } from './WizardCtrl';
 import * as jstz from 'jstimezonedetect';
 import IDeferred = angular.IDeferred;
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
+import IExternalLinkedAccount = csdm.IExternalLinkedAccount;
 
 class ShowActivationCodeCtrl extends WizardCtrl {
   private account: IAccountData;
@@ -190,12 +191,16 @@ class ShowActivationCodeCtrl extends WizardCtrl {
   }
 
   public getExternalLinkedAccounts() {
-    let extLinkedAcc = [];
+    let extLinkedAcc: IExternalLinkedAccount[] = [];
     if (this.wizardData.account.externalCalendarIdentifier) {
-      _.merge(extLinkedAcc, this.wizardData.account.externalCalendarIdentifier);
+      _.forEach(this.wizardData.account.externalCalendarIdentifier, (acc) => {
+        extLinkedAcc.push(acc);
+      });
     }
     if (this.wizardData.account.externalHybridCallIdentifier) {
-      _.merge(extLinkedAcc, this.wizardData.account.externalHybridCallIdentifier);
+      _.forEach(this.wizardData.account.externalHybridCallIdentifier, (acc) => {
+        extLinkedAcc.push(acc);
+      });
     }
     if (extLinkedAcc.length === 0) {
       return null;

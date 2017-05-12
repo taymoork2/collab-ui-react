@@ -469,7 +469,9 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       userEmail = 'user@example.org';
       userFirstName = 'userFirstName';
       entitlements = ['something', 'else'];
-      externalIdentifiers = [{ type: 'squared-fusion-cal', GUID: 'test@example.com' }];
+      externalIdentifiers = [
+        { type: 'squared-fusion-cal', GUID: 'test@example.com' },
+        { type: 'squared-fusion-uc', GUID: 'test2@example.com' }];
       ussProps = [{ resourceGroup: '' }];
 
       cloudberryNewPlace = {
@@ -485,6 +487,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 directoryNumber: directoryNumber,
                 externalNumber: externalNumber,
                 externalCalendarIdentifier: [externalIdentifiers[0]],
+                externalHybridCallIdentifier: [externalIdentifiers[1]],
                 ussProps: ussProps,
               },
               recipient: {
