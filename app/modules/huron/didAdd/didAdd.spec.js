@@ -47,9 +47,9 @@ describe('Controller: DidAddCtrl', function () {
     $scope = $rootScope.$new();
     $scope.trial = trial;
     $state.modal = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
       result: {
-        finally: sinon.stub(),
+        finally: jasmine.createSpy('finally'),
       },
     };
     HuronConfig = _HuronConfig_;

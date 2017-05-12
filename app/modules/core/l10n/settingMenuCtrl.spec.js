@@ -36,7 +36,7 @@ describe('settingsMenuCtrl', function () {
       $translate = _$translate_;
       $translate.instant = jasmine.createSpy('instant').and.returnValue('foo');
       $translate.use = jasmine.createSpy('use').and.returnValue({
-        then: sinon.stub(),
+        then: jasmine.createSpy('then'),
       });
 
       controller = $controller('SettingsMenuCtrl', {

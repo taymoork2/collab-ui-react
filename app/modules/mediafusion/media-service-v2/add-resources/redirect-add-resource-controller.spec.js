@@ -22,7 +22,7 @@ describe('RedirectAddResourceControllerV2', function () {
     httpBackend = $httpBackend;
     httpBackend.when('GET', /^\w+.*/).respond({});
     redirectTargetPromise = {
-      then: sinon.stub(),
+      then: jasmine.createSpy('then'),
     };
     $state = _$state_;
     $stateParams = _$stateParams_;
@@ -30,8 +30,8 @@ describe('RedirectAddResourceControllerV2', function () {
     $translate = _$translate_;
     Notification = _Notification_;
     $modalInstance = {
-      close: sinon.stub(),
-      dismiss: sinon.stub(),
+      close: jasmine.createSpy('close'),
+      dismiss: jasmine.createSpy('dismiss'),
     };
     $modal = _$modal_;
     yesProceed = true;

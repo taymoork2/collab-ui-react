@@ -29,7 +29,7 @@ describe('LaunchAdvancedSettingsController', () => {
     state.$controller = _$controller_;
 
     state.$scope = {
-      $apply: sinon.stub(),
+      $apply: jasmine.createSpy('apply'),
     };
 
     state.authInfo = {
@@ -37,10 +37,10 @@ describe('LaunchAdvancedSettingsController', () => {
       getUserName: jasmine.createSpy('getUserName').and.returnValue('getUserName'),
     };
     state.CsdmDeviceService = {
-      sendAdvancedSettingsOtp: sinon.stub(),
+      sendAdvancedSettingsOtp: jasmine.createSpy('sendAdvancedSettingsOtp'),
     };
     state.$modalInstance = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
   }));
 

@@ -25,7 +25,7 @@ describe('DomainManageDeleteCtrl', () => {
 
     return $controller('DomainManageDeleteCtrl', {
       $stateParams: { domain: domain, loggedOnUser: user },
-      $previousState: { go: sinon.stub() },
+      $previousState: { go: jasmine.createSpy('go') },
     });
   };
 

@@ -4,7 +4,7 @@ describe('Controller: ResetDeviceController', function () {
   var $httpBackend, controller, Notification;
   var url = "http://dummyUrl";
   var fakeModal = {
-    close: sinon.stub(),
+    close: jasmine.createSpy('close'),
   };
 
   beforeEach(angular.mock.module('Squared'));

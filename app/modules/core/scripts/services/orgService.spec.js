@@ -13,7 +13,7 @@ describe('orgService', function () {
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       Auth = {
-        setAccessToken: sinon.stub(),
+        setAccessToken: jasmine.createSpy('setAccessToken'),
       };
 
       Authinfo = {
@@ -47,7 +47,7 @@ describe('orgService', function () {
         },
       };
       Log = {
-        debug: sinon.stub(),
+        debug: jasmine.createSpy('debug'),
       };
       $provide.value('Auth', Auth);
       $provide.value('Authinfo', Authinfo);

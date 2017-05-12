@@ -3,7 +3,7 @@
 describe('Controller: RemPlaceController', function () {
   var controller, $q, $rootScope, $httpBackend, CsdmPlaceService, place;
   var fakeModal = {
-    close: sinon.stub(),
+    close: jasmine.createSpy('close'),
   };
 
   var pWithoutDeviceUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e';

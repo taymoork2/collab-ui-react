@@ -17,7 +17,7 @@ describe('CsdmPoller', function () {
     var defer, serviceCallCount = 0;
 
     var scope = {
-      $on: sinon.stub(),
+      $on: jasmine.createSpy('on'),
     };
 
     var service = function () {

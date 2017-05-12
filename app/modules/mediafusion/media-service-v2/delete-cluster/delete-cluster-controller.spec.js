@@ -22,7 +22,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       "releaseChannel": "DEV",
     };
     $modalInstance = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
     $filter = _$filter_;
     /*

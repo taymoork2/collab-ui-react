@@ -14,13 +14,13 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementService = _DomainManagementService_;
     DomainManagementAddCtrl = $controller('DomainManageAddCtrl', {
       $stateParams: { loggedOnUser: '' },
-      $previousState: { go: sinon.stub() },
+      $previousState: { go: jasmine.createSpy('go') },
       DomainManagementService: DomainManagementService,
       $translate: $translate,
       LogMetricsService: {
         eventType: { domainManageAdd: 'add' },
         eventAction: { buttonClick: 'click' },
-        logMetrics: sinon.stub(),
+        logMetrics: jasmine.createSpy('logMetrics'),
       },
     });
   }));

@@ -12,7 +12,7 @@ describe('DirSyncServiceOld', function () {
           getAdminServiceUrl: function () {
             return '/foo/';
           },
-          getOauth2Url: sinon.stub(),
+          getOauth2Url: jasmine.createSpy('Url'),
         };
         Authinfo = {
           getOrgId: function () {
@@ -20,7 +20,7 @@ describe('DirSyncServiceOld', function () {
           },
         };
         Log = {
-          debug: sinon.stub(),
+          debug: jasmine.createSpy('debug'),
         };
         $provide.value('Log', Log);
         $provide.value('UrlConfig', UrlConfig);

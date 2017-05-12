@@ -36,8 +36,8 @@ describe('Constructor of', () => {
     let ctrl;
     beforeEach(inject(($controller) => {
       ctrl = $controller('DomainManageInstructionsCtrl', {
-        $stateParams: { domain: 'test.example.com', loggedOnUser: { email: sinon.stub() } },
-        $previousState: { go: sinon.stub() },
+        $stateParams: { domain: 'test.example.com', loggedOnUser: { email: jasmine.createSpy('email') } },
+        $previousState: { go: jasmine.createSpy('go') },
       });
     }));
 
@@ -50,8 +50,8 @@ describe('Constructor of', () => {
     let ctrl;
     beforeEach(inject(($controller) => {
       ctrl = $controller('DomainManageClaimCtrl', {
-        $state: { params: { domain: { text: 'test.example.com' }, loggedOnUser: { email: sinon.stub() } } },
-        $previousState: { go: sinon.stub() },
+        $state: { params: { domain: { text: 'test.example.com' }, loggedOnUser: { email: jasmine.createSpy('email') } } },
+        $previousState: { go: jasmine.createSpy('go') },
       });
     }));
 

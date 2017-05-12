@@ -27,7 +27,7 @@ describe('controller: EditServiceCtrl', function () {
   function initController() {
     controller = $controller('EditServiceCtrl', {
       $modalInstance: {
-        close: sinon.stub(),
+        close: jasmine.createSpy('close'),
       },
       theService: {},
       $scope: $scope,

@@ -15,7 +15,7 @@ describe('UserInfoController', function () {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     Userservice = {
-      getUser: sinon.stub(),
+      getUser: jasmine.createSpy('getUser'),
     };
     deferred = $q.defer();
     FeedbackService = {
@@ -25,7 +25,7 @@ describe('UserInfoController', function () {
       getUUID: jasmine.createSpy('getUUID').and.returnValue('awesome uuid'),
     };
     $window = {
-      open: sinon.stub(),
+      open: jasmine.createSpy('open'),
       navigator: {
         userAgent: 'some useragent',
       },
@@ -77,7 +77,7 @@ describe('UserInfoController WebEx logout', function () {
     $timeout = _$timeout_;
 
     var Userservice = {
-      getUser: sinon.stub(),
+      getUser: jasmine.createSpy('getUser'),
     };
 
     deferredLogout = $q.defer();

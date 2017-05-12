@@ -10,8 +10,8 @@ describe('Controller: DisableMediaServiceController', function () {
 
   // var serviceId = "squared-fusion-media";
   var modalInstance = {
-    dismiss: sinon.stub(),
-    close: sinon.stub(),
+    dismiss: jasmine.createSpy('dismiss'),
+    close: jasmine.createSpy('close'),
   };
   var authInfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632f806-ad09-4a26-a0c0-a49a13f38873'),

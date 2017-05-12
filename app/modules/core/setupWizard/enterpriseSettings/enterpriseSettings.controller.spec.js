@@ -30,7 +30,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
 
     $scope.wizard = {
-      nextTab: sinon.stub(),
+      nextTab: jasmine.createSpy('nextTab'),
     };
   }));
 

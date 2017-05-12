@@ -11,17 +11,17 @@ describe('Controller: UpgradeNowControllerV2', function () {
     clusterId = '134';
 
     ClusterService = {
-      upgradeSoftware: sinon.stub(),
+      upgradeSoftware: jasmine.createSpy('upgradeSoftware'),
     };
     Notification = _Notification_;
     $q = _$q_;
     $translate = _$translate_;
 
     modalInstanceMock = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
     windowMock = {
-      open: sinon.stub(),
+      open: jasmine.createSpy('open'),
     };
     controller = $controller('UpgradeNowControllerV2', {
       $scope: $rootScope.$new(),

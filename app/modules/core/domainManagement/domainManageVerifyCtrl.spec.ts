@@ -27,7 +27,7 @@ describe('DomainManagementVerifyCtrl', () => {
       DomainManagementService: domainManageService,
       $translate: Translate,
       LogMetricsService: {
-        logMetrics: sinon.stub(),
+        logMetrics: jasmine.createSpy('logMetrics'),
         eventType: { domainManageVerify: 'verify' },
         eventAction: { buttonClick: 'click' },
       },
@@ -165,7 +165,7 @@ describe('DomainManagementVerifyCtrl', () => {
 
     it('should invoke verifyDomain on service', () => {
       DomainManagementService.verifyDomain = jasmine.createSpy('verifyDomain').and.returnValue($q.resolve({}));
-      ctrl.$previousState = { go: sinon.stub() };
+      ctrl.$previousState = { go: jasmine.createSpy('go') };
 
       ctrl.verify();
       $rootScope.$digest();
