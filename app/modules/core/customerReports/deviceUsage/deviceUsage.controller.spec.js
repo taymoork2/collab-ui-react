@@ -30,10 +30,10 @@ describe('Controller: DeviceUsageCtrl', function () {
     Notification = _Notification_;
     $modal = _$modal_;
 
-    sinon.stub(DeviceUsageGraphService, 'makeChart');
+    spyOn(DeviceUsageGraphService, 'makeChart');
     DeviceUsageGraphService.makeChart.returns(amchartMock());
 
-    sinon.stub(DeviceUsageModelService, 'getModelsForRange');
+    spyOn(DeviceUsageModelService, 'getModelsForRange');
     DeviceUsageModelService.getModelsForRange.returns($q.resolve([]));
 
   }));
@@ -50,14 +50,14 @@ describe('Controller: DeviceUsageCtrl', function () {
         $state: $state,
       });
 
-      splunkService = sinon.stub(DeviceUsageSplunkMetricsService, 'reportOperation');
+      splunkService = spyOn(DeviceUsageSplunkMetricsService, 'reportOperation');
     });
 
 
     it('starts with fetching initial data based on default last 7 days range', function (done) {
-      sinon.stub(DeviceUsageService, 'getDataForRange');
-      sinon.stub(DeviceUsageService, 'extractStats');
-      sinon.stub(DeviceUsageService, 'resolveDeviceData');
+      spyOn(DeviceUsageService, 'getDataForRange');
+      spyOn(DeviceUsageService, 'extractStats');
+      spyOn(DeviceUsageService, 'resolveDeviceData');
       var deviceData = {
         reportItems: [
           { totalDuration: 42 },

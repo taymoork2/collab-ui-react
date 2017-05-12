@@ -48,8 +48,8 @@ describe('Service: HelpdeskLogService', function () {
       tempURL: 'http://download.com',
     };
 
-    sinon.stub(LogService, 'listLogs');
-    sinon.stub(LogService, 'downloadLog');
+    spyOn(LogService, 'listLogs');
+    spyOn(LogService, 'downloadLog');
     LogService.listLogs.yields(logs);
     LogService.downloadLog.yields(download);
 

@@ -75,8 +75,8 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('call errorWithTrackingId and supply the response data when promise is rejected', function () {
-      sinon.stub(Notification, 'errorWithTrackingId');
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(Notification, 'errorWithTrackingId');
+      spyOn(HelpdeskService, 'getOrg');
       var rejectData = {
         data: {
           errorCode: 420000,
@@ -106,7 +106,7 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskHuronService, 'getOrgSiteInfo').and.returnValue(q.resolve([{}]));
       spyOn(HelpdeskHuronService, 'getTenantInfo').and.returnValue(q.resolve({}));
 
-      sinon.stub(Authinfo, 'getOrgId');
+      spyOn(Authinfo, 'getOrgId');
       Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
 
       spyOn(HelpdeskService, 'getOrgDisplayName').and.returnValue(q.resolve("Marvel"));
@@ -114,7 +114,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('sets cardsAvailable and adminUsersAvailable to true when data has been collected', function () {
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskService, 'getOrg');
       HelpdeskService.getOrg.returns(q.resolve({
         "id": "whatever",
         "displayName": "Marvel",
@@ -142,7 +142,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('call card elements should be equal to data from Site and Tenant API calls', function () {
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
         "id": "whatever",
@@ -160,7 +160,7 @@ describe('Controller: HelpdeskOrgController', function () {
 
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
 
-      sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
+      spyOn(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
         "steeringDigit": "7",
@@ -171,7 +171,7 @@ describe('Controller: HelpdeskOrgController', function () {
       });
       HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
 
-      sinon.stub(HelpdeskHuronService, 'getTenantInfo');
+      spyOn(HelpdeskHuronService, 'getTenantInfo');
       var deferredTenantInfoResult = q.defer();
       deferredTenantInfoResult.resolve({
         "name": "SomeTestCustomer",
@@ -197,7 +197,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('call card elements should be equal to data from Site and Tenant API calls', function () {
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
         "id": "whatever",
@@ -215,7 +215,7 @@ describe('Controller: HelpdeskOrgController', function () {
 
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
 
-      sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
+      spyOn(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
         "steeringDigit": "7",
@@ -224,7 +224,7 @@ describe('Controller: HelpdeskOrgController', function () {
       });
       HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
 
-      sinon.stub(HelpdeskHuronService, 'getTenantInfo');
+      spyOn(HelpdeskHuronService, 'getTenantInfo');
       var deferredTenantInfoResult = q.defer();
       deferredTenantInfoResult.resolve({
         "name": "SomeTestCustomer",
@@ -249,7 +249,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('extended information feature toggle is default false', function () {
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
         "id": "whatever",
@@ -276,7 +276,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('extended information feature toggle is true when toggle is active from service', function () {
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
         "id": "whatever",
@@ -306,7 +306,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('allow read only access for marvel partners', function () {
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
         "id": "whatever",
@@ -332,7 +332,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('dont allow read only access for marvel partners', function () {
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
         "id": "whatever",
@@ -357,7 +357,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('allow read only access for arkadin partners', function () {
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
         "id": "whatever",
@@ -383,7 +383,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('dont allow read only access for arkadin partners', function () {
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
         "id": "whatever",
@@ -413,14 +413,14 @@ describe('Controller: HelpdeskOrgController', function () {
     beforeEach(function () {
       spyOn(HelpdeskService, 'usersWithRole').and.returnValue(q.resolve({}));
       spyOn(LicenseService, 'getLicensesInOrg').and.returnValue(q.resolve({}));
-      sinon.stub(Authinfo, 'getOrgId');
+      spyOn(Authinfo, 'getOrgId');
       Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
       spyOn(HelpdeskService, 'getOrgDisplayName').and.returnValue(q.resolve("Marvel"));
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(false));
       spyOn(HelpdeskHuronService, 'getOrgSiteInfo').and.returnValue(q.resolve({}));
       spyOn(HelpdeskHuronService, 'getTenantInfo').and.returnValue(q.resolve({}));
 
-      sinon.stub(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskService, 'getOrg');
       HelpdeskService.getOrg.returns(q.resolve({
         "id": "whatever",
         "displayName": "Marvel",

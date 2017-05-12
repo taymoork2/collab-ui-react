@@ -115,7 +115,7 @@ describe('HelpdeskCardsService', function () {
     });
 
     it('should return correct call card for org with huron-site-dial-digit & huron-local-dialing features', function () {
-      sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
+      spyOn(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
         "steeringDigit": null,
@@ -128,7 +128,7 @@ describe('HelpdeskCardsService', function () {
       });
       HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
 
-      sinon.stub(HelpdeskHuronService, 'getTenantInfo');
+      spyOn(HelpdeskHuronService, 'getTenantInfo');
       var deferredTenantInfoResult = q.defer();
       deferredTenantInfoResult.resolve({
         "name": "SomeTestCustomer",

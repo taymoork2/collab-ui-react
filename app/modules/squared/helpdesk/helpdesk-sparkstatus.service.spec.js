@@ -30,7 +30,7 @@ describe('Service: HelpdeskSparkStatusService', function () {
     }];
 
     beforeEach(function () {
-      sinon.stub(ReportsService, 'healthMonitor');
+      spyOn(ReportsService, 'healthMonitor');
       ReportsService.healthMonitor.yields(healthReport);
     });
 
@@ -93,7 +93,7 @@ describe('Service: HelpdeskSparkStatusService', function () {
         "success": false,
       };
 
-      sinon.stub(ReportsService, 'healthMonitor');
+      spyOn(ReportsService, 'healthMonitor');
       ReportsService.healthMonitor.yields(healthReport);
 
       Service.getHealthStatuses().then(function () {

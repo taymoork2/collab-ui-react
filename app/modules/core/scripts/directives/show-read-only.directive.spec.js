@@ -18,7 +18,7 @@ describe('Directive: ShowReadOnly', function () {
     scope = _$rootScope_.$new();
     Authinfo = _Authinfo_;
     translate = _$translate_;
-    sinon.stub(Authinfo, 'isReadOnlyAdmin');
+    spyOn(Authinfo, 'isReadOnlyAdmin');
     Authinfo.isReadOnlyAdmin.returns(true);
     directiveElem = getCompiledElement();
   }));
