@@ -1,6 +1,5 @@
 'use strict';
 
-// TODO: convert APIs sinon -> jasmine spy
 describe('Controller: HelpdeskOrgController', function () {
   beforeEach(angular.mock.module('Squared'));
 
@@ -154,11 +153,7 @@ describe('Controller: HelpdeskOrgController', function () {
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
-      sinon.restore(FeatureToggleService, 'supports');
-      sinon.restore(HelpdeskHuronService, 'getOrgSiteInfo');
-      sinon.restore(HelpdeskHuronService, 'supgetTenantInfoports');
-
-      spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
+      FeatureToggleService.supports.and.returnValue(q.resolve(true));
 
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
@@ -207,11 +202,7 @@ describe('Controller: HelpdeskOrgController', function () {
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
-      sinon.restore(FeatureToggleService, 'supports');
-      sinon.restore(HelpdeskHuronService, 'getOrgSiteInfo');
-      sinon.restore(HelpdeskHuronService, 'supgetTenantInfoports');
-
-      spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
+      FeatureToggleService.supports.and.returnValue(q.resolve(true));
 
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
@@ -284,8 +275,7 @@ describe('Controller: HelpdeskOrgController', function () {
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
-      sinon.restore(FeatureToggleService, 'supports');
-      spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
+      FeatureToggleService.supports.and.returnValue(q.resolve(true));
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
