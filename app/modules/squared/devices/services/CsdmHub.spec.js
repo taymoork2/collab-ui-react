@@ -10,9 +10,9 @@ describe('CsdmHubFactory', function () {
   }));
 
   it('should work', function () {
-    var listener = sinon.stub();
-    var listenerAddedListener = sinon.stub();
-    var listenerRemovedListener = sinon.stub();
+    var listener = jasmine.createSpy('listener');
+    var listenerAddedListener = jasmine.createSpy('listenerAddedListener');
+    var listenerRemovedListener = jasmine.createSpy('listenerRemovedListener');
     var scope = {
       '$on': sinon.stub(),
     };

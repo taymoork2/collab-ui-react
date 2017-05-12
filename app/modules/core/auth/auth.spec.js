@@ -465,7 +465,7 @@ describe('Auth Service', function () {
 
   describe('authorize()', function () {
     beforeEach(function () {
-      SessionStorage.get = sinon.stub();
+      SessionStorage.get = jasmine.createSpy('get');
       UrlConfig.getAdminServiceUrl = jasmine.createSpy('getAdminServiceUrl').and.returnValue('path/');
     });
 
@@ -544,7 +544,7 @@ describe('Auth Service', function () {
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
 
-        Authinfo.initialize = sinon.stub();
+        Authinfo.initialize = jasmine.createSpy('initialize');
 
         Auth.authorize();
 
@@ -580,7 +580,7 @@ describe('Auth Service', function () {
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
 
-        Authinfo.initialize = sinon.stub();
+        Authinfo.initialize = jasmine.createSpy('initialize');
       });
 
       it('massaged services are used and webex api should be called', function (done) {
@@ -602,7 +602,7 @@ describe('Auth Service', function () {
       it('will fetch account info if admin', function (done) {
         Authinfo.isAdmin = jasmine.createSpy('isAdmin').and.returnValue(true);
         Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue(42);
-        Authinfo.updateAccountInfo = sinon.stub();
+        Authinfo.updateAccountInfo = jasmine.createSpy('updateAccountInfo');
 
         $httpBackend
           .expectGET('path/customers?orgId=42')
@@ -639,13 +639,13 @@ describe('Auth Service', function () {
         $httpBackend
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
-        Authinfo.initialize = sinon.stub();
+        Authinfo.initialize = jasmine.createSpy('initialize');
       });
 
       it('will update account info', function (done) {
         Authinfo.isReadOnlyAdmin = jasmine.createSpy('isReadOnlyAdmin').and.returnValue(true);
         Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue(42);
-        Authinfo.updateAccountInfo = sinon.stub();
+        Authinfo.updateAccountInfo = jasmine.createSpy('updateAccountInfo');
 
         $httpBackend
           .expectGET('path/customers?orgId=42')
@@ -662,7 +662,7 @@ describe('Auth Service', function () {
     });
 
     it('will add some webex stuff given some condition && when no roles specified', function (done) {
-      Authinfo.initialize = sinon.stub();
+      Authinfo.initialize = jasmine.createSpy('initialize');
       UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
 
       $httpBackend
@@ -696,7 +696,7 @@ describe('Auth Service', function () {
     });
 
     it('will add some webex stuff given some condition && when Full_Admin', function (done) {
-      Authinfo.initialize = sinon.stub();
+      Authinfo.initialize = jasmine.createSpy('initialize');
       UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
 
       $httpBackend
@@ -737,7 +737,7 @@ describe('Auth Service', function () {
     });
 
     it('will not add some webex stuff given some condition && when Full_Admin && inactive wapi org', function (done) {
-      Authinfo.initialize = sinon.stub();
+      Authinfo.initialize = jasmine.createSpy('initialize');
       UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
 
       $httpBackend
@@ -777,7 +777,7 @@ describe('Auth Service', function () {
     });
 
     it('will not add some webex stuff given some condition && when PARTNER_ADMIN', function (done) {
-      Authinfo.initialize = sinon.stub();
+      Authinfo.initialize = jasmine.createSpy('initialize');
       UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
 
       $httpBackend

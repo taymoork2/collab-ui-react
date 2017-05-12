@@ -16,21 +16,21 @@ describe('Service: MediaClusterServiceV2', function () {
 
   it('should call error callback on failure', function () {
     $httpBackend.when('GET', /^\w+.*/).respond(500, null);
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     Service.fetch().then(null, callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
   });
   it('should delete v2 cluster', function () {
     $httpBackend.when('DELETE', /^\w+.*/).respond(204);
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     Service.deleteV2Cluster('connectorId').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
   });
   it('should delete v2 cluster with connectors', function () {
     $httpBackend.when('POST', /^\w+.*/).respond(204);
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     Service.deleteClusterWithConnector('clusterId').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -38,7 +38,7 @@ describe('Service: MediaClusterServiceV2', function () {
 
   it('should update v2 cluster', function () {
     $httpBackend.when('PATCH', /^\w+.*/).respond(204);
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     Service.updateV2Cluster('clusterId', 'clusterName', 'releaseChannel').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -46,7 +46,7 @@ describe('Service: MediaClusterServiceV2', function () {
 
   it('should move v2 host', function () {
     $httpBackend.when('POST', /^\w+.*/).respond(204);
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     Service.moveV2Host('connectorId', 'fromCluster', 'toCluster').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -54,14 +54,14 @@ describe('Service: MediaClusterServiceV2', function () {
 
   it('should get a given cluster', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({});
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     Service.get('clusterid').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
   });
   it('should getall a given cluster', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({});
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     Service.getAll().then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -244,7 +244,7 @@ describe('Service: MediaClusterServiceV2', function () {
   });
   it('should setproperty', function () {
     $httpBackend.when('POST', /^\w+.*/).respond(204);
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     Service.setProperties('clusterId', 'sipUri').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -261,14 +261,14 @@ describe('Service: MediaClusterServiceV2', function () {
   });
   it('should createPropertySet', function () {
     $httpBackend.when('POST', /^\w+.*/).respond(204);
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     Service.createPropertySet('payLoad').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
   });
   it('should updatePropertySetById', function () {
     $httpBackend.when('POST', /^\w+.*/).respond(204);
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     Service.updatePropertySetById('clusterId', 'payLoad').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);

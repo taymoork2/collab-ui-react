@@ -28,7 +28,7 @@ describe('CsdmPoller', function () {
     var hub = Hub.create();
     Poller.create(service, hub);
 
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     hub.on('data', callback, {
       scope: scope,
     });

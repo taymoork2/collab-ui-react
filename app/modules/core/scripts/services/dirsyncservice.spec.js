@@ -47,7 +47,7 @@ describe('DirSyncServiceOld', function () {
         )
         .respond(500);
 
-      var callback = sinon.stub();
+      var callback = jasmine.createSpy('callback');
       DirSyncServiceOld.getDirSyncStatus(callback);
 
       $httpBackend.flush();
@@ -66,7 +66,7 @@ describe('DirSyncServiceOld', function () {
           serviceMode: 'ENABLED',
         });
 
-      var callback = sinon.stub();
+      var callback = jasmine.createSpy('callback');
       DirSyncServiceOld.getDirSyncStatus(callback);
 
       $httpBackend.flush();

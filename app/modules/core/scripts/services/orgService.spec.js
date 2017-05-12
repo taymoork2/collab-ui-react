@@ -71,7 +71,7 @@ describe('orgService', function () {
   });
 
   it('should successfully get an organization for a given orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
@@ -94,7 +94,7 @@ describe('orgService', function () {
   });
 
   it('should fail to get an organization for a given orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(500, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
@@ -110,7 +110,7 @@ describe('orgService', function () {
   });
 
   it('should get an organization for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
@@ -119,7 +119,7 @@ describe('orgService', function () {
   });
 
   it('should fail to get an organization for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(500, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
@@ -128,7 +128,7 @@ describe('orgService', function () {
   });
 
   it('should successfully get an admin organization for a given orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
@@ -140,7 +140,7 @@ describe('orgService', function () {
     var params = {
       disableCache: true,
     };
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=true").respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId(), params);
     httpBackend.flush();
@@ -149,7 +149,7 @@ describe('orgService', function () {
   });
 
   it('should fail to get an admin organization for a given orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
@@ -158,7 +158,7 @@ describe('orgService', function () {
   });
 
   it('should successfully get an admin organization for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
@@ -167,7 +167,7 @@ describe('orgService', function () {
   });
 
   it('should fail to get an admin organization for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
@@ -196,7 +196,7 @@ describe('orgService', function () {
   });
 
   it('should successfully get unlicensed users for random orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(200, {});
     Orgservice.getUnlicensedUsers(callback, Authinfo.getOrgId());
     httpBackend.flush();
@@ -205,7 +205,7 @@ describe('orgService', function () {
   });
 
   it('should fail to get unlicensed users for random orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(500, {});
     Orgservice.getUnlicensedUsers(callback, Authinfo.getOrgId());
     httpBackend.flush();
@@ -214,7 +214,7 @@ describe('orgService', function () {
   });
 
   it('should successfully get unlicensed users for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(200, {});
     Orgservice.getUnlicensedUsers(callback);
     httpBackend.flush();
@@ -223,7 +223,7 @@ describe('orgService', function () {
   });
 
   it('should successfully get unlicensedUsers with searchStr', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers?searchPrefix=sqtest').respond(200, {});
     Orgservice.getUnlicensedUsers(callback, null, 'sqtest');
     httpBackend.flush();
@@ -232,7 +232,7 @@ describe('orgService', function () {
   });
 
   it('should fail to get unlicensed users for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(500, {});
     Orgservice.getUnlicensedUsers(callback);
     httpBackend.flush();
@@ -455,7 +455,7 @@ describe('orgService', function () {
   });
 
   it('should overwrite current settings with new settings', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     var currentSettings = {
       'orgSettings': ['{"reportingSiteUrl": "http://example.com", "isCiscoSupport": true}'],
     };
