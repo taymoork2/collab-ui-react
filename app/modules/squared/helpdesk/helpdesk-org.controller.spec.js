@@ -22,7 +22,7 @@ describe('Controller: HelpdeskOrgController', function () {
     FusionClusterService = _FusionClusterService_;
     Orgservice = _Orgservice_;
 
-    sinon.stub(FusionClusterService, 'getAll').returns(q.resolve([]));
+    spyOn(FusionClusterService, 'getAll').and.returnValue(q.resolve([]));
   }));
 
   describe('Org controller', function () {
@@ -71,7 +71,7 @@ describe('Controller: HelpdeskOrgController', function () {
 
   describe('Org controller error notification', function () {
     beforeEach(function () {
-      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
+      spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(false));
     });
 
     it('call errorWithTrackingId and supply the response data when promise is rejected', function () {
@@ -100,17 +100,17 @@ describe('Controller: HelpdeskOrgController', function () {
 
   describe('read only access', function () {
     beforeEach(function () {
-      sinon.stub(HelpdeskService, 'usersWithRole').returns(q.resolve({}));
-      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{}]));
-      sinon.stub(LicenseService, 'getLicensesInOrg').returns(q.resolve({}));
-      sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo').returns(q.resolve([{}]));
-      sinon.stub(HelpdeskHuronService, 'getTenantInfo').returns(q.resolve({}));
+      spyOn(HelpdeskService, 'usersWithRole').and.returnValue(q.resolve({}));
+      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{}]));
+      spyOn(LicenseService, 'getLicensesInOrg').and.returnValue(q.resolve({}));
+      spyOn(HelpdeskHuronService, 'getOrgSiteInfo').and.returnValue(q.resolve([{}]));
+      spyOn(HelpdeskHuronService, 'getTenantInfo').and.returnValue(q.resolve({}));
 
       sinon.stub(Authinfo, 'getOrgId');
       Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
 
-      sinon.stub(HelpdeskService, 'getOrgDisplayName').returns(q.resolve("Marvel"));
-      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
+      spyOn(HelpdeskService, 'getOrgDisplayName').and.returnValue(q.resolve("Marvel"));
+      spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(false));
     });
 
     it('sets cardsAvailable and adminUsersAvailable to true when data has been collected', function () {
@@ -158,7 +158,7 @@ describe('Controller: HelpdeskOrgController', function () {
       sinon.restore(HelpdeskHuronService, 'getOrgSiteInfo');
       sinon.restore(HelpdeskHuronService, 'supgetTenantInfoports');
 
-      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
 
       sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
@@ -213,7 +213,7 @@ describe('Controller: HelpdeskOrgController', function () {
       sinon.restore(HelpdeskHuronService, 'getOrgSiteInfo');
       sinon.restore(HelpdeskHuronService, 'supgetTenantInfoports');
 
-      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
 
       sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
@@ -289,7 +289,7 @@ describe('Controller: HelpdeskOrgController', function () {
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
       sinon.restore(FeatureToggleService, 'supports');
-      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
@@ -411,14 +411,14 @@ describe('Controller: HelpdeskOrgController', function () {
 
   describe('service Order System', function () {
     beforeEach(function () {
-      sinon.stub(HelpdeskService, 'usersWithRole').returns(q.resolve({}));
-      sinon.stub(LicenseService, 'getLicensesInOrg').returns(q.resolve({}));
+      spyOn(HelpdeskService, 'usersWithRole').and.returnValue(q.resolve({}));
+      spyOn(LicenseService, 'getLicensesInOrg').and.returnValue(q.resolve({}));
       sinon.stub(Authinfo, 'getOrgId');
       Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
-      sinon.stub(HelpdeskService, 'getOrgDisplayName').returns(q.resolve("Marvel"));
-      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
-      sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo').returns(q.resolve({}));
-      sinon.stub(HelpdeskHuronService, 'getTenantInfo').returns(q.resolve({}));
+      spyOn(HelpdeskService, 'getOrgDisplayName').and.returnValue(q.resolve("Marvel"));
+      spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(false));
+      spyOn(HelpdeskHuronService, 'getOrgSiteInfo').and.returnValue(q.resolve({}));
+      spyOn(HelpdeskHuronService, 'getTenantInfo').and.returnValue(q.resolve({}));
 
       sinon.stub(HelpdeskService, 'getOrg');
       HelpdeskService.getOrg.returns(q.resolve({
@@ -442,7 +442,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('shows name based on one known orderingTool code', function () {
-      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{ "orderingTool": "APP_DIRECT" }, { "orderingTool": "Ibm" }]));
+      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ "orderingTool": "APP_DIRECT" }, { "orderingTool": "Ibm" }]));
       $scope.$apply();
       orgController.findServiceOrders("12345");
       expect(orgController.orderSystems.length).toBe(2);
@@ -450,7 +450,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('shows names based on two known orderingTool codes', function () {
-      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{ "orderingTool": "DIGITAL_RIVER" }, { "orderingTool": "CCW" }, { "orderingTool": "CCW_CSB" }]));
+      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ "orderingTool": "DIGITAL_RIVER" }, { "orderingTool": "CCW" }, { "orderingTool": "CCW_CSB" }]));
       $scope.$apply();
       orgController.findServiceOrders("12345");
       expect(orgController.orderSystems.length).toBe(3);
@@ -458,7 +458,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('shows actual value from service order if unknown orderingTool code', function () {
-      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{ "orderingTool": "ABCD" }]));
+      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ "orderingTool": "ABCD" }]));
       $scope.$apply();
       orgController.findServiceOrders("12345");
       expect(orgController.orderSystems.length).toBe(1);
@@ -466,7 +466,7 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('shows empty if empty orderingTool list', function () {
-      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{}]));
+      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{}]));
       $scope.$apply();
       orgController.findServiceOrders("12345");
       expect(orgController.orderSystems).toEqual([undefined]);

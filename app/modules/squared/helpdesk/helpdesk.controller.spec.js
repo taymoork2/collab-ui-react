@@ -174,7 +174,7 @@ describe('Controller: HelpdeskController', function () {
       sinon.stub(Authinfo, 'isInDelegatedAdministrationOrg');
       sinon.stub(Authinfo, 'getOrgId');
       sinon.stub(Authinfo, 'getOrgName');
-      sinon.stub(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').returns(q.resolve(true));
+      spyOn(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').and.returnValue(q.resolve(true));
 
       var deferredUserResult = q.defer();
       deferredUserResult.resolve(userSearchResult);
@@ -429,7 +429,7 @@ describe('Controller: HelpdeskController', function () {
       sinon.stub(HelpdeskService, 'searchUsers');
       sinon.stub(HelpdeskService, 'searchOrgs');
       sinon.stub(Authinfo, 'isInDelegatedAdministrationOrg');
-      sinon.stub(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').returns(q.resolve(true));
+      spyOn(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').and.returnValue(q.resolve(true));
 
       Authinfo.isInDelegatedAdministrationOrg.returns(true);
 
