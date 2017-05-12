@@ -19,6 +19,7 @@
       postponeUpgradeSchedule: postponeUpgradeSchedule,
       deleteMoratoria: deleteMoratoria,
       deregisterCluster: deregisterCluster,
+      deregisterEcpNode: deregisterEcpNode,
       getAggregatedStatusForService: getAggregatedStatusForService,
       processClustersToAggregateStatusForService: processClustersToAggregateStatusForService,
       serviceIsSetUp: serviceIsSetUp,
@@ -40,7 +41,15 @@
     function get(clusterId, orgId) {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/clusters/' + clusterId + '?fields=@wide')
-        .then(extractData);
+        .then(extractData)
+        .then(function (cluster) {
+          var clusters = addExtendedStateToConnectors([cluster]);
+          return clusters[0];
+        })
+        .then(function (cluster) {
+          var clusters = addServicesStatuses([cluster]);
+          return clusters[0];
+        });
     }
 
     function getAll(orgId) {
@@ -48,6 +57,7 @@
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '?fields=@wide')
         .then(extractClustersFromResponse)
         .then(filterUnknownClusters)
+        .then(addExtendedStateToConnectors)
         .then(addServicesStatuses)
         .then(sort);
     }
@@ -57,6 +67,7 @@
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractData)
         .then(function addServicesStatusesToClusters(org) {
+          org.clusters = addExtendedStateToConnectors(org.clusters);
           org.clusters = addServicesStatuses(org.clusters);
           return org;
         })
@@ -119,6 +130,26 @@
 
     function extractClustersFromResponse(response) {
       return _.get(extractData(response), 'clusters', []);
+    }
+
+    function addExtendedStateToConnectors(clusters) {
+      return _.map(clusters, function (cluster) {
+        cluster.connectors = _.map(cluster.connectors, function (connector) {
+          var extendedState = '';
+          if (connector.alarms.length === 0) {
+            extendedState = connector.state;
+          } else {
+            extendedState = _.some(connector.alarms, function (alarm) {
+              return alarm.severity === 'critical' || alarm.severity === 'error';
+            }) ? 'has_error_alarms' : 'has_warning_alarms';
+          }
+          return _.extend({}, connector, {
+            state: extendedState, // hack the node view
+            extendedState: extendedState,
+          });
+        });
+        return cluster;
+      });
     }
 
     function addServicesStatuses(clusters) {
@@ -398,5 +429,12 @@
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/hosts/' + serial;
       return $http.patch(url, params).then(extractData);
     }
+
+    function deregisterEcpNode(connectorId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregister/invoke?managementConnectorId=' + connectorId;
+      return $http.post(url)
+        .then(extractData);
+    }
+
   }
 })();

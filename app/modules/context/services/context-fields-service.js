@@ -17,6 +17,7 @@
       createAndGetField: createAndGetField,
       updateField: updateField,
       updateAndGetField: updateAndGetField,
+      deleteField: deleteField,
     };
 
     return service;
@@ -35,6 +36,12 @@
         })
         .then(function (response) {
           return response.data;
+        })
+        // TODO: Remove temporary fix to filter INTERNAL TEST ONLY fields.
+        .then(function (fields) {
+          return _.filter(fields, function (field) {
+            return !(field.description && field.description.includes('*INTERNAL TEST ONLY:') && field.publiclyAccessible);
+          });
         });
     }
 
@@ -75,5 +82,13 @@
           return getField(data.id);
         });
     }
+
+    function deleteField(id) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.delete(dictionaryUrl + idPath + id);
+        });
+    }
+
   }
 })();

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var LazyResource = require('modules/core/scripts/services/lazyResource').default;
+
   module.exports = angular
     .module('huron.resources', [
       require('angular-resource'),
@@ -44,6 +46,7 @@
     .factory('DirectoryNumberUserService', DirectoryNumberUserService)
     .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
+    .factory('MediaManagerService', MediaManagerService)
     .factory('DateFormatService', DateFormatService)
     .factory('TimeFormatService', TimeFormatService)
     .factory('TimeZoneService', TimeZoneService)
@@ -125,7 +128,9 @@
 
   /* @ngInject */
   function CustomerCommonService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId', {
+    return LazyResource($resource, function () {
+      return HuronConfig.getCmiUrl() + '/common/customers/:customerId';
+    }, {
       customerId: '@customerId',
     }, {
       update: {
@@ -184,7 +189,9 @@
 
   /* @ngInject */
   function NumberSearchServiceV2($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers', {
+    return LazyResource($resource, function () {
+      return HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers';
+    }, {
       customerId: '@customerId',
       number: '@number',
       assigned: '@assigned',
@@ -294,7 +301,9 @@
 
   /* @ngInject */
   function ExternalNumberPoolService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId', {
+    return LazyResource($resource, function () {
+      return HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId';
+    }, {
       customerId: '@customerId',
       externalNumberId: '@externalNumberId',
     });
@@ -442,6 +451,24 @@
     }, {
       update: {
         method: 'PUT',
+      },
+    });
+  }
+
+  /* @ngInject */
+  function MediaManagerService($resource, HuronConfig) {
+    return $resource(HuronConfig.getMmsUrl() + '/organizations/:orgId/mohPrompts', {
+      orgId: '@orgId',
+    }, {
+      get: {
+        method: 'GET',
+        isArray: true,
+      },
+      save: {
+        method: 'POST',
+        headers: {
+          'Access-Control-Expose-Headers': 'Location',
+        },
       },
     });
   }

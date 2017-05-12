@@ -1,3 +1,5 @@
+import sharedMeetingsModule from './index';
+
 describe('Service: SharedMeetingsReportService', function () {
   const data: any = getJSONFixture('core/json/myCompany/sharedMeetingReport.json');
   const siteUrl: string = 'siteUrl';
@@ -8,7 +10,7 @@ describe('Service: SharedMeetingsReportService', function () {
     };
 
     beforeEach(function () {
-      this.initModules('Core');
+      this.initModules(sharedMeetingsModule);
       this.injectDependencies('$modal', 'Notification', 'SharedMeetingsReportService');
 
       spyOn(this.$modal, 'open').and.returnValue(modal);
@@ -44,8 +46,8 @@ describe('Service: SharedMeetingsReportService', function () {
       this.initModules('Core');
       this.injectDependencies('$httpBackend', 'SharedMeetingsReportService');
 
-      this.$httpBackend.whenPOST('https://siteUrl/meetingsapi/v1/report/ConcurrentMeetingsDetailByMonth').respond(_.cloneDeep(data.APIResponse));
-      this.$httpBackend.whenPOST('https://siteUrl/meetingsapi/v1/report/MonthlyMaxConcurrentMeetings').respond(_.cloneDeep(data.APIResponse));
+      this.$httpBackend.whenPOST('https://siteUrl/meetingsapi/v1/reports/ConcurrentMeetingsDetailByMonth').respond(_.cloneDeep(data.APIResponse));
+      this.$httpBackend.whenPOST('https://siteUrl/meetingsapi/v1/reports/MonthlyMaxConcurrentMeetings').respond(_.cloneDeep(data.APIResponse));
     });
 
     afterEach(function () {
@@ -123,11 +125,11 @@ describe('Service: SharedMeetingsReportService', function () {
       chartResponse.validateData = jasmine.createSpy('validateData');
       spyOn(AmCharts, 'makeChart').and.returnValue(chartResponse);
 
-      let graph: any = this.SharedMeetingsReportService.setChartData(_.cloneDeep(data.filteredData.threeMonths), undefined);
+      let graph: any = this.SharedMeetingsReportService.setChartData(_.cloneDeep(data.filteredData.threeMonths), undefined, data.timeFilter[1]);
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(chartResponse.validateData).not.toHaveBeenCalled();
 
-      this.SharedMeetingsReportService.setChartData(_.cloneDeep(data.filteredData.threeMonths), graph);
+      this.SharedMeetingsReportService.setChartData(_.cloneDeep(data.filteredData.threeMonths), graph, data.timeFilter[1]);
       expect(chartResponse.validateData).toHaveBeenCalled();
     });
   });

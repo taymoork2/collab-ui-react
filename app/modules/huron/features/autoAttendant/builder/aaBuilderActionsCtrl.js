@@ -135,27 +135,27 @@
       });
     }
 
+    function checkIfModal(varNames, thisCeHasVar) {
+      if (!_.isEmpty(varNames) || thisCeHasVar) {
+        // there are dependent Ce's
+        return openVarNamesModal(varNames, thisCeHasVar);
+      }
+      // no dependent Ces, good to go
+      return true;
+    }
 
     function checkVarNameDependencies(varNameToCheck) {
 
-      var thisCeHasVar = AACommonService.collectThisCeActionValue(vm.ui, 'conditional').filter(function (value) {
+      // flag as we need to alert if the current Ce uses this variable.
+      // Current Ce will not be returned in list of dependant Ce
+      var thisCeHasVar = AACommonService.collectThisCeActionValue(vm.ui).filter(function (value) {
         return _.isEqual(value, varNameToCheck);
-      }).length > 0;
+      }).length > 1; // one for this CallerInput
 
       return CustomVariableService.getVariableDependencies(varNameToCheck).then(function (varNames) {
-        if (!_.isEmpty(varNames) || thisCeHasVar) {
-          // there are dependent Ce's
-          return openVarNamesModal(varNames, thisCeHasVar);
-        }
-        // no dependent Ces, good to go
-        return true;
+        return checkIfModal(varNames, thisCeHasVar);
       }, function () {
-        // check for removal from this Ce
-        if (thisCeHasVar) {
-          // there are dependent Ce's
-          return openVarNamesModal([], thisCeHasVar);
-        }
-        return true;
+        return checkIfModal([], thisCeHasVar);
       });
     }
 
@@ -220,6 +220,17 @@
           type: [3, 4],
           showHelpLink: true,
           actions: ['runActionsOnInput'],
+        });
+      }
+
+      if (AACommonService.isRestApiToggle()) {
+        vm.options.push({
+          title: $translate.instant('autoAttendant.actionRestApi'),
+          controller: 'AARestApiCtrl as aaRestApiCtrl',
+          url: 'modules/huron/features/autoAttendant/restApi/aaRestApi.tpl.html',
+          metric: 'Rest-Api-Title',
+          showHelpLink: false,
+          actions: ['doREST'],
         });
       }
     }

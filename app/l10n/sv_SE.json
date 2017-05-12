@@ -788,7 +788,7 @@
     "drilldownDescription": "Under {{time}} är dessa de mest aktiva användarna. Du kan sortera tabellen efter användares namn eller efter det totala antalet kontakter som hanteras.",
     "drilldownErrorDescription": "Data är för närvarande inte tillgängliga. Våra servrar arbetar på att lösa problemet. Försök igen om en stund.",
     "drilldownEmptyDescription": "Under {{time}} har det inte funnit några aktiva användare. För att se användarstatus och skicka nya inbjudningar till de som ännu väntar kan du gå till användarfliken.",
-    "contactsHandled": "Kontakter som hanteras",
+    "tasksHandled": "Kontakter som hanteras",
     "user": "Användare",
     "drilldownSearchPlaceholder": "Sök"
   },

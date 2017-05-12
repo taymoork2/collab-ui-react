@@ -1,0 +1,24 @@
+<div ng-if="grid.appScope.isEdit"
+     class="ui-grid-cell-contents"
+     ng-class="{'error': row.entity.validation.dnisNumberFormat.invalid || row.entity.duplicatedRowValidation.invalid}"
+     tooltip-class="tn-error"
+     tooltip-append-to-body="true"
+     tooltip-is-open="row.entity.validation.dnisNumberFormat.show"
+     tooltip-html-unsafe="{{row.entity.validation.dnisNumberFormat.message}}">
+  <input type="hidden" ng-model="row.entity.dnisNumber">
+  <input id="{{row.uid}}-dnisNumberFormat"
+         placeholder="Access Number"
+         cs-input
+         maxlength="31"
+         ng-disabled="grid.appScope.submitLoading"
+         type="text"
+         title="{{row.entity.dnisNumberFormat}}"
+         ng-change="grid.appScope.validateAccessNumber(row, '{{row.entity.dnisNumber}}')"
+         ng-blur="grid.appScope.changeAccessNumber(row)"
+         ng-model="row.entity.dnisNumberFormat">
+</div>
+<div ng-if="!grid.appScope.isEdit"
+     class="ui-grid-cell-contents read-only-text"
+     title="{{row.entity.dnisNumberFormat}}">
+  {{row.entity.dnisNumberFormat}}
+</div>

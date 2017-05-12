@@ -26,6 +26,7 @@
 
     function populateUi() {
       if (ceHasVar) {
+        // they maybe using this variable in a unsaved AA's decision
         vm.dependentNames.push(vm.aaModel.aaRecord.callExperienceName);
       }
       _.forEach(vm.dependentCes.ce_id, function (this_id) {
@@ -33,11 +34,13 @@
           return _.isEqual(extractUUID(record.callExperienceURL), this_id);
         });
         if (rec) {
-          vm.dependentNames.push(rec.callExperienceName);
+          // there maybe dup if the current AA is also added above
+          if (vm.dependentNames.indexOf(rec.callExperienceName) === -1) { // not there
+            vm.dependentNames.push(rec.callExperienceName);
+          }
         }
 
       });
-
     }
 
     function activate() {

@@ -74,6 +74,48 @@ describe('Service: Analytics', function () {
     });
   });
 
+  describe('when calling premium events', function () {
+    beforeEach(function () {
+      this.BMMP_DISMISSAL = 'BMMP Banner dismissal';
+      this.PREMIUM_FILTER = 'Customer Overview Filtering';
+      this.NO_EVENT_NAME = 'eventName not passed';
+      this.premiumEvent = {
+        cisco_from: 'my-state',
+        cisco_orgId: '999',
+        cisco_userId: '123',
+        cisco_userRole: ['dummyRoles'],
+      };
+
+      _.set(this.$state, '$current.name', this.premiumEvent.cisco_from);
+      spyOn(this.Authinfo, 'getOrgId').and.returnValue(this.premiumEvent.cisco_orgId);
+      spyOn(this.Authinfo, 'getUserId').and.returnValue(this.premiumEvent.cisco_userId);
+      spyOn(this.Authinfo, 'getRoles').and.returnValue(this.premiumEvent.cisco_userRole);
+
+      this.triggerEvent = function (eventName, location) {
+        this.Analytics.trackPremiumEvent(eventName, location);
+        this.$scope.$apply();
+      };
+    });
+
+    it('should call _track when trackPremiumEvent is called', function () {
+      this.premiumEvent.cisco_location = 'reports banner';
+      this.triggerEvent(this.Analytics.sections.PREMIUM.eventNames.BMMP_DISMISSAL, this.premiumEvent.cisco_location);
+      expect(this.Analytics._track.calls.mostRecent().args).toEqual([this.BMMP_DISMISSAL, jasmine.objectContaining(this.premiumEvent)]);
+    });
+
+    it('should call _track when trackPremiumEvent is called with no location', function () {
+      this.triggerEvent(this.Analytics.sections.PREMIUM.eventNames.PREMIUM_FILTER);
+      expect(this.Analytics._track.calls.mostRecent().args).toEqual([this.PREMIUM_FILTER, jasmine.objectContaining(this.premiumEvent)]);
+    });
+
+    it('should fail if there is no eventName', function () {
+      this.Analytics.trackPremiumEvent().then(function (response) {
+        expect(response).toEqual(this.NO_EVENT_NAME);
+      });
+      this.$scope.$apply();
+    });
+  });
+
   describe('when calling trial events', function () {
     it('should call _track when trackTrialSteps is called', function () {
       this.Analytics.trackTrialSteps(this.Analytics.eventNames.START, {});

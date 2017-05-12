@@ -6,7 +6,7 @@
   .controller('AADecisionCtrl', AADecisionCtrl);
 
   /* @ngInject */
-  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, CustomVariableService) {
+  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
 
     var vm = this;
 
@@ -143,20 +143,6 @@
       });
     }
 
-    function getSessionVariables(ceId) {
-      return CustomVariableService.listCustomVariables(ceId).then(function (data) {
-        if (data.length != 0) {
-          _.each(data, function (entry) {
-            _.each(entry.var_name, function (customVar) {
-              vm.sessionVarOptions.push(customVar);
-            });
-          });
-          vm.sessionVarOptions.sort();
-          addSessionObject();
-        }
-      });
-    }
-
     function setActionEntry() {
       var ui = AAUiModelService.getUiModel();
       var uiMenu = ui[$scope.schedule];
@@ -274,7 +260,13 @@
     }
 
     function init() {
-      getSessionVariables(AAModelService.getAAModel().aaRecordUUID).finally(function () {
+      AASessionVariableService.getSessionVariables(AAModelService.getAAModel().aaRecordUUID).then(function (data) {
+        if (!_.isUndefined(data) && data.length > 0) {
+          vm.sessionVarOptions = data;
+          vm.sessionVarOptions.sort();
+          addSessionObject();
+        }
+      }).finally(function () {
         /* no support for Queues as of this story.
          * if (AACommonService.isRouteQueueToggle()) {
          *

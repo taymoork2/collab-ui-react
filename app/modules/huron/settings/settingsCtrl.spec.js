@@ -11,6 +11,8 @@ describe('Controller: HuronSettingsCtrl', function () {
 
   var controller, compile, styleSheet, element, window;
 
+  var restrictions = getJSONFixture('huron/json/cos/customerCos.json');
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
@@ -68,6 +70,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
     spyOn(ServiceSetup, 'getAvrilSite').and.returnValue($q.resolve(avrilSites));
     spyOn(ServiceSetup, 'updateAvrilSite').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'getMediaOnHoldList').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'setCompanyMediaOnHold').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
     spyOn(PstnService, 'getCustomer').and.returnValue($q.resolve());
     spyOn(HuronCustomerService, 'getVoiceCustomer').and.returnValue($q.resolve({
@@ -122,6 +126,12 @@ describe('Controller: HuronSettingsCtrl', function () {
         countryCode: '+13',
         premiumNumbers: ['800', '900'],
       });
+    $httpBackend
+      .whenGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/restrictions')
+      .respond(restrictions);
+    $httpBackend
+      .whenPUT(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/restrictions')
+      .respond(204);
   }));
 
   describe('SettingsCtrlBasic', function () {
@@ -148,8 +158,8 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(ServiceSetup.listInternalNumberRanges).toHaveBeenCalled();
       expect(ServiceSetup.listSites).toHaveBeenCalled();
       expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
-      expect(ServiceSetup.listCosRestrictions).toHaveBeenCalled();
       expect(controller.model.callerId.callerIdName).toEqual('Cisco');
+      expect(ServiceSetup.getMediaOnHoldList).toHaveBeenCalled();
     });
 
     it('should save new internal number range', function () {
@@ -349,6 +359,18 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
+    it('should update the Company Media on Hold when changed', function () {
+      controller.model.mediaOnHold = {
+        label: 'Fake Music',
+        value: '1234-dcba',
+      };
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.setCompanyMediaOnHold).toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+    });
+
     it('should update the company pilot number and voicemail site timezone', function () {
       controller.unassignedExternalNumbers = [{
         uuid: '1234',
@@ -499,16 +521,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       $scope.$apply();
 
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
-    });
-
-    it('should show international dialing when feature toggle is ON', function () {
-      InternationalDialing.isDisableInternationalDialing.and.returnValue($q.resolve(false));
-
-      controller.save();
-      $scope.$apply();
-
-      expect(ServiceSetup.updateCosRestriction).toHaveBeenCalled();
-      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
     it('should update the timezone options when collection changes', function () {

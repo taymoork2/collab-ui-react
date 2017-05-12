@@ -6,8 +6,9 @@ var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
 var path = require('path');
-var remote = require('selenium-webdriver/remote');
 var fs = require('fs');
+
+var RETRY_COUNT = 5;
 
 exports.getDateTimeString = function () {
   var now = new Date();
@@ -378,7 +379,7 @@ exports.click = function (elem, maxRetry) {
     return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be clickable: ' + elem.locator());
   }).then(function () {
     if (typeof maxRetry === 'undefined') {
-      maxRetry = 10;
+      maxRetry = RETRY_COUNT;
     }
     log('Click element: ' + elem.locator());
     if (maxRetry === 0) {
@@ -472,9 +473,18 @@ exports.sendKeysUpArrow = function (element, howMany) {
 
 exports.fileSendKeys = function (elem, value) {
   this.waitForPresence(elem).then(function () {
-    log('Send file keys to element: ' + elem.locator() + ' ' + value);
-    browser.setFileDetector(new remote.FileDetector());
-    elem.sendKeys(value);
+    function retrySendKeys(retries) {
+      log('Send file keys to element: ' + elem.locator() + ' ' + value);
+      var promise = elem.sendKeys(value);
+      if (retries > 0) {
+        promise = promise.then(_.noop, function (e) {
+          log('Retry. Failed to send file keys. Error: ' + ((e && e.message) || e));
+          return retrySendKeys(--retries);
+        });
+      }
+      return promise;
+    }
+    retrySendKeys(RETRY_COUNT);
   });
 };
 

@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnModel, PstnService, TelephoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService, $q) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnModel, PstnService, PhoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService, $q) {
     var vm = this;
 
     var NXX = 'nxx';
@@ -430,8 +430,8 @@
 
     function createToken(e) {
       var tokenNumber = e.attrs.label;
-      e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
-      e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
+      e.attrs.value = PhoneNumberService.getE164Format(tokenNumber);
+      e.attrs.label = PhoneNumberService.getNationalFormat(tokenNumber);
     }
 
     function editedToken() {
@@ -450,15 +450,11 @@
       if (e.attrs.value.charAt(0) !== '+') {
         e.attrs.value = '+'.concat(e.attrs.value);
       }
-      try {
-        e.attrs.value = e.attrs.label = phoneUtils.formatE164(e.attrs.value);
-      } catch (e) {
-        //noop
-      }
+      e.attrs.value = e.attrs.label = PhoneNumberService.getE164Format(e.attrs.value);
     }
 
     function manualCreatedToken(e) {
-      if (!TelephoneNumberService.internationalNumberValidator(e.attrs.value) || isDidAlreadyPresent(e.attrs.value)) {
+      if (!PhoneNumberService.internationalNumberValidator(e.attrs.value) || isDidAlreadyPresent(e.attrs.value)) {
         angular.element(e.relatedTarget).addClass('invalid');
         vm.invalidCount++;
       }

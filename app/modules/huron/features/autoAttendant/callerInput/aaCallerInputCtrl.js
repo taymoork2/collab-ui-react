@@ -93,6 +93,14 @@
       AACommonService.setCallerInputStatus(true);
 
     }
+
+    $scope.$on(
+      "$destroy",
+      function () {
+        AACommonService.setIsValid(myId, true);
+      }
+    );
+
     // the user has changed the key for an existing action
     function keyChanged(index, whichKey) {
       vm.inputActions[index].key = whichKey;
@@ -185,7 +193,7 @@
       vm.isWarn = !_.isUndefined(sessionVarOptions[vm.nameInput]);
 
       if (!vm.isWarn) {
-        vm.isWarn = AACommonService.collectThisCeActionValue(ui, runActionName).filter(function (value) {
+        vm.isWarn = AACommonService.collectThisCeActionValue(ui).filter(function (value) {
           return _.isEqual(value, vm.nameInput);
         }).length > 1;
       }

@@ -38,6 +38,16 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     }
   }
 
+  // (ashutupa): Added this for Reports button on Call Card
+  public sparkCallCdrReportingFeatureToggleEventhandler(hasFeature: boolean) {
+    if (hasFeature) {
+      this._buttons.push({
+        name: 'servicesOverview.cards.call.buttons.records',
+        routerState: 'huronrecords',
+        buttonClass: 'btn-link',
+      });
+    }
+  }
   private showFeatureTab() {
     return this.Authinfo.getLicenses()
       .filter((license) => {

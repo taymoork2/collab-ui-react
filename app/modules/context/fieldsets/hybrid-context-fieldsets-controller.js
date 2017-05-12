@@ -8,7 +8,7 @@ require('../fields/_fields-list.scss');
     .controller('HybridContextFieldsetsCtrl', HybridContextFieldsetsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsetsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsetsService, Notification, hasContextDictionaryEditFeatureToggle) {
+  function HybridContextFieldsetsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsetsService, Notification, Authinfo, hasContextDictionaryEditFeatureToggle) {
     //Initialize variables
     var vm = this;
     var eventListeners = [];
@@ -83,17 +83,17 @@ require('../fields/_fields-list.scss');
     function processFieldset(fieldset) {
 
       if (fieldset.lastUpdated) {
-        fieldset.lastUpdated = $filter('date')(fieldset.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+        fieldset.lastUpdatedUI = $filter('date')(fieldset.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
       }
 
       fieldset.numOfFields = (fieldset.fields) ? fieldset.fields.length : 0;
 
       var accessibleMap = {
         true: $translate.instant('context.dictionary.base'),
-        false: $translate.instant('context.dictionary.custom'),
+        false: Authinfo.getOrgName(),
       };
 
-      fieldset.publiclyAccessible = accessibleMap[fieldset.publiclyAccessible];
+      fieldset.publiclyAccessibleUI = accessibleMap[fieldset.publiclyAccessible];
       return fieldset;
     }
 
@@ -148,6 +148,22 @@ require('../fields/_fields-list.scss');
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $state.go('context-fieldsets-sidepanel', {
             fieldset: row.entity,
+            process: processFieldset,
+            callback: function (updatedFieldset) {
+              vm.gridRefresh = true;
+              var index = _.findIndex(vm.fieldsetsList.allFieldsets, function (current) {
+                return current.id === updatedFieldset.id;
+              });
+              if (index > -1) {
+                var fieldsetCopy = processFieldset(_.cloneDeep(updatedFieldset));
+                _.fill(vm.fieldsetsList.allFieldsets, fieldsetCopy, index, index + 1);
+                vm.gridOptions.data = vm.fieldsetsList.allFieldsets;
+                vm.gridApi.grid.modifyRows(vm.gridOptions.data);
+                vm.gridApi.selection.selectRow(vm.gridOptions.data[index]);
+                filterList(vm.searchStr);
+              }
+              vm.gridRefresh = false;
+            },
           });
         });
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
@@ -167,6 +183,7 @@ require('../fields/_fields-list.scss');
         enableColumnResize: true,
         enableRowHeaderSelection: false,
         enableColumnMenus: false,
+        enableRowHashing: false,
         onRegisterApi: onRegisterApi,
         columnDefs: [{
           field: 'id',
@@ -181,11 +198,11 @@ require('../fields/_fields-list.scss');
           type: 'number',
           maxWidth: 200,
         }, {
-          field: 'publiclyAccessible',
+          field: 'publiclyAccessibleUI',
           displayName: $translate.instant('context.dictionary.access'),
           maxWidth: 200,
         }, {
-          field: 'lastUpdated',
+          field: 'lastUpdatedUI',
           displayName: $translate.instant('context.dictionary.dateUpdated'),
           maxWidth: 300,
         }],
@@ -212,7 +229,7 @@ require('../fields/_fields-list.scss');
 
       var lowerStr = str.toLowerCase();
       var containSearchStr = function (fieldset) {
-        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdated', 'publiclyAccessible'];
+        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdated', 'publiclyAccessibleUI'];
         return _.some(propertiesToCheck, function (property) {
           var value;
           if (property === 'numOfFields') {

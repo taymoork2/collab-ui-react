@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}}, disse er de mest aktive brukerne. Tabellen kan sorteres etter brukernavn eller totalt antall kontakter som er behandlet.",
     "drilldownErrorDescription": "Disse dataene er midlertidig utilgjengelige. Serverne våre jobber med å gjøre dem tilgjengelige igjen. Prøv igjen snart.",
     "drilldownEmptyDescription": "{{time}}, det har ikke vært noen aktive brukere. For å se brukerstatus og sende invitasjoner på nytt til de som fremdeles venter, gå til fanen for brukere.",
-    "contactsHandled": "Kontakter behandlet",
+    "tasksHandled": "Kontakter behandlet",
     "user": "Bruker",
     "drilldownSearchPlaceholder": "Søke"
   },

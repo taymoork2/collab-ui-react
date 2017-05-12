@@ -108,7 +108,7 @@ describe('Service: PstnService', function () {
       'PstnModel',
       'HuronConfig',
       'CountryCodes',
-      'TelephoneNumberService',
+      'PhoneNumberService',
      );
     spyOn(this.Authinfo, 'getCallPartnerOrgId').and.returnValue(suite.partnerId);
     spyOn(this.Authinfo, 'isPartner');
@@ -407,6 +407,14 @@ describe('Service: PstnService', function () {
       this.Authinfo.isPartner.and.returnValue(true);
       this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', TollFreeBlockOrderPayload).respond(201);
       this.PstnService.orderTollFreeBlock(suite.customerId, suite.carrierId, TollFreeBlockOrderPayload.npa, TollFreeBlockOrderPayload.quantity);
+      this.$httpBackend.flush();
+    });
+  });
+
+  describe('deleteNumber', function () {
+    it('should call DELETE on Terminus V2 customer number API', function () {
+      this.$httpBackend.expectDELETE(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/+155512345678').respond(204);
+      this.PstnService.deleteNumber(suite.customerId, '+155512345678');
       this.$httpBackend.flush();
     });
   });

@@ -1,5 +1,9 @@
 import { IPrivateTrunkResource, IPrivateTrunkDomain, IPrivateTrunkInfo } from './private-trunk';
 
+interface IValidateSIPDestination {
+  unique: boolean;
+}
+
 interface IDestinationResource extends ng.resource.IResourceClass<ng.resource.IResource<IPrivateTrunkResource>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
@@ -8,9 +12,13 @@ interface IPrivateTrunk extends ng.resource.IResourceClass<ng.resource.IResource
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
+interface ISipDestinationValidateResource extends ng.resource.IResourceClass<ng.resource.IResource<IValidateSIPDestination>> {
+}
+
 export class PrivateTrunkService {
   private privateTrunkResourceService: IDestinationResource;
   private privateTrunkService: IPrivateTrunk;
+  private sipDestinationValidateService: ISipDestinationValidateResource;
 
   /* @ngInject */
   constructor(
@@ -31,6 +39,9 @@ export class PrivateTrunkService {
       {
         update: updateAction,
       });
+
+    this.sipDestinationValidateService = <ISipDestinationValidateResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/validate/sipaddress', {});
+
   }
 
   public getPrivateTrunk(): ng.IPromise<IPrivateTrunkInfo> {
@@ -42,7 +53,7 @@ export class PrivateTrunkService {
     });
   }
 
-  public setPrivateTrunk(domains: Array<string>): ng.IPromise<void> {
+  public setPrivateTrunk(domains: string[]): ng.IPromise<void> {
     return this.privateTrunkService.update({
       customerId: this.Authinfo.getOrgId(),
     }, {
@@ -100,7 +111,14 @@ export class PrivateTrunkService {
         });
       }
     });
+  }
 
+  public isValidUniqueSipDestination(sipDestination: string): ng.IPromise<boolean> {
+    return this.sipDestinationValidateService.get({
+      customerId: this.Authinfo.getOrgId(),
+      value: sipDestination,
+    }).$promise
+    .then(res => _.get(res, 'unique'));
   }
 
 }

@@ -8,7 +8,6 @@
       input-type="undefined"
       class="columns medium-10"
       ng-class="{'error': huntGroupSA.isErrorFallbackInput()}"
-      ng-keyup="huntGroupSA.validateFallbackNumber()"
       model="huntGroupSA.selectedFallbackNumber"
       inputs="huntGroupSA.callDestInputs"
       select-type="button"
@@ -16,7 +15,6 @@
       internal-number-data-fn="huntGroupSA.fetchFallbackDestination(data)"
       internal-number-on-select="huntGroupSA.selectFallback(data)"
       internal-number-template-url="userTemplate.html"
-      external-number-region-code-fn="huntGroupSA.externalRegionCodeFn()"
       on-change-fn="huntGroupSA.setSelectedFallbackNumber(model)"
       focus-on>
     </cs-call-destination>

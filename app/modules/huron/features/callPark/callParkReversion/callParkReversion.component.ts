@@ -26,17 +26,11 @@ class CallParkReversionCtrl implements ng.IComponentController {
     private NumberService: NumberService,
     private CallParkService: CallParkService,
     private FeatureMemberService: FeatureMemberService,
-    private CustomerVoiceCmiService,
-    private TelephoneNumberService,
-    private Authinfo,
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     const { fallbackDestination } = changes;
     if (fallbackDestination && fallbackDestination.currentValue) {
-      if (this.cpReversionForm) {
-        this.cpReversionForm.$setValidity('', true, this.cpReversionForm);
-      }
       this.processCallParkReversionChanges(fallbackDestination);
     }
   }
@@ -84,12 +78,6 @@ class CallParkReversionCtrl implements ng.IComponentController {
     }
   }
 
-  public getExternalRegionCode(): ng.IPromise<any> {
-    return this.CustomerVoiceCmiService.get({
-      customerId: this.Authinfo.getOrgId(),
-    }).$promise;
-  }
-
   public onSelectReversionMember(data: any): void {
     this.cpReversionForm.$setValidity('', true, this.cpReversionForm);
     this.selectedReversionNumber = undefined;
@@ -117,7 +105,15 @@ class CallParkReversionCtrl implements ng.IComponentController {
   }
 
   public setSelectedReversionNumber(model) {
+    this.cpReversionForm.$setValidity('', true, this.cpReversionForm);
     this.selectedReversionNumber = model;
+    this.onChangeFn({
+      fallbackDestination: new FallbackDestination({
+        number: model,
+        numberUuid: null,
+        sendToVoicemail: false,
+      }),
+    });
   }
 
   public onSelectRevertToParker(): void {
@@ -153,27 +149,6 @@ class CallParkReversionCtrl implements ng.IComponentController {
     this.cpReversionForm.$setValidity('', false, this.cpReversionForm);
     this.thumbnailSrc = undefined;
     this.onMemberRemovedFn();
-  }
-
-  public validateReversionNumber(): void {
-    if (_.isObject(this.selectedReversionNumber)) {
-      this.TelephoneNumberService.setRegionCode(_.get(this.selectedReversionNumber, 'code'));
-      let isValid = this.TelephoneNumberService.validateDID(_.get(this.selectedReversionNumber, 'phoneNumber'));
-      if (isValid) {
-        this.cpReversionForm.$setValidity('', true, this.cpReversionForm);
-        let number = this.TelephoneNumberService.getDIDValue(_.get(this.selectedReversionNumber, 'phoneNumber'));
-        let fallbackDestination = new FallbackDestination({
-          name: null,
-          numberUuid: null,
-          number: number,
-          memberUuid: null,
-          sendToVoicemail: false,
-        });
-        this.onChangeFn({
-          fallbackDestination: fallbackDestination,
-        });
-      }
-    }
   }
 
   private getPrimaryNumber(member: Member): Line {

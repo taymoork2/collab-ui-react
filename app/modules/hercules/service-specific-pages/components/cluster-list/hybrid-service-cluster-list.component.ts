@@ -1,11 +1,15 @@
 import { ClusterService } from 'modules/hercules/services/cluster-service';
-import { ConnectorType, HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, HybridServiceId, ICluster, IConnector, ConnectorMaintenanceMode } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: any;
+}
+
+export interface IClusterWithMaintenanceModeLabel extends ICluster {
+  maintenanceModeLabel?: ConnectorMaintenanceMode;
 }
 
 export class HybridServiceClusterListCtrl implements ng.IComponentController {
@@ -37,7 +41,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   public $onInit() {
     this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
     if (this.serviceId !== 'ept' && this.connectorType !== undefined) {
-      this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
+      this.clusterList = this.calculateMaintenanceModeLabel(this.ClusterService.getClustersByConnectorType(this.connectorType));
     } else {
       this.clusterList = this.EnterprisePrivateTrunkService.getAllResources();
     }
@@ -65,7 +69,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
         this.$scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
           if (this.serviceId === 'ept') {
-            row.entity.id = row.entity.resourceId;
+            row.entity.id = row.entity.uuid;
           }
           this.goToSidepanel(row.entity.id);
         });
@@ -99,17 +103,17 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc') {
       this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
         .then((clusters) => {
-          this.clusterList = clusters;
+          this.clusterList = this.calculateMaintenanceModeLabel(clusters);
         })
         .catch(() => {
           if (this.connectorType !== undefined) {
-            this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
+            this.clusterList = this.calculateMaintenanceModeLabel(this.ClusterService.getClustersByConnectorType(this.connectorType));
           }
         });
     } else if (this.serviceId === 'spark-hybrid-datasecurity' ||
       this.serviceId === 'squared-fusion-media' ||
       this.serviceId === 'contact-center-context') {
-      this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
+      this.clusterList = this.calculateMaintenanceModeLabel(this.ClusterService.getClustersByConnectorType(this.connectorType));
     }
   }
 
@@ -128,6 +132,23 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       connectorType: this.connectorType,
     });
 
+  }
+
+  public calculateMaintenanceModeLabel(clusterList: IClusterWithMaintenanceModeLabel[]) {
+    return _.map(clusterList, (cluster: IClusterWithMaintenanceModeLabel) => {
+      if (_.find(cluster.connectors, (connector: IConnector) => {
+        return connector.connectorStatus && connector.connectorStatus.maintenanceMode === 'pending';
+      })) {
+        cluster.maintenanceModeLabel = 'pending';
+      } else if (_.find(cluster.connectors, (connector: IConnector) => {
+        return connector.connectorStatus && connector.connectorStatus.maintenanceMode === 'on';
+      })) {
+        cluster.maintenanceModeLabel = 'on';
+      } else {
+        cluster.maintenanceModeLabel = 'off';
+      }
+      return cluster;
+    });
   }
 
 }

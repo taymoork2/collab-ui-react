@@ -9,7 +9,7 @@
   function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, EnterprisePrivateTrunkService, FusionClusterService, HybridServicesClusterStatesService, Notification, ResourceGroupService, WizardFactory, hasCucmSupportFeatureToggle, hasEnterprisePrivateTrunkingFeatureToggle) {
     var vm = this;
     var groupsCache = [];
-    vm.displayedGroups = groupsCache;
+    vm.displayedGroups = _.cloneDeep(groupsCache);
 
     Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST);
 
@@ -68,7 +68,7 @@
           return _.map(destinations, function (destination) {
             return {
               name: destination.name,
-              id: destination.resourceId,
+              id: destination.uuid,
               targetType: 'ept',
               servicesStatuses: [{
                 serviceId: 'ept',
@@ -198,14 +198,10 @@
 
     function setFilter(filter) {
       if (filter.filterValue === 'all') {
-        vm.displayedGroups = _.map(groupsCache, function (group) {
-          group.display = true;
-          return group;
-        });
+        vm.displayedGroups = _.cloneDeep(groupsCache);
       } else {
         vm.displayedGroups = _.map(groupsCache, function (group) {
-          group.display = filter.filterValue === group.targetType;
-          return group;
+          return _.extend({}, group, { display: filter.filterValue === group.targetType });
         });
       }
     }
@@ -216,8 +212,8 @@
         vm.displayedGroups = groupsCache;
       } else {
         vm.displayedGroups = [
-          _.assign({}, vm.displayedGroups[0], {
-            groups: _.chain(vm.displayedGroups[0].groups)
+          _.assign({}, groupsCache[0], {
+            groups: _.chain(groupsCache[0].groups)
               .map(function (group) {
                 var response = _.cloneDeep(group);
                 response.clusters = $filter('filter')(response.clusters, { name: searchStr });
@@ -227,22 +223,22 @@
                 return group.clusters.length > 0;
               })
               .value(),
-            unassigned: $filter('filter')(vm.displayedGroups[0].unassigned, { name: searchStr }),
+            unassigned: $filter('filter')(groupsCache[0].unassigned, { name: searchStr }),
           }),
-          _.assign({}, vm.displayedGroups[1], {
-            unassigned: $filter('filter')(vm.displayedGroups[1].unassigned, { name: searchStr }),
+          _.assign({}, groupsCache[1], {
+            unassigned: $filter('filter')(groupsCache[1].unassigned, { name: searchStr }),
           }),
-          _.assign({}, vm.displayedGroups[2], {
-            unassigned: $filter('filter')(vm.displayedGroups[2].unassigned, { name: searchStr }),
+          _.assign({}, groupsCache[2], {
+            unassigned: $filter('filter')(groupsCache[2].unassigned, { name: searchStr }),
           }),
-          _.assign({}, vm.displayedGroups[3], {
-            unassigned: $filter('filter')(vm.displayedGroups[3].unassigned, { name: searchStr }),
+          _.assign({}, groupsCache[3], {
+            unassigned: $filter('filter')(groupsCache[3].unassigned, { name: searchStr }),
           }),
-          _.assign({}, vm.displayedGroups[4], {
-            unassigned: $filter('filter')(vm.displayedGroups[4].unassigned, { name: searchStr }),
+          _.assign({}, groupsCache[4], {
+            unassigned: $filter('filter')(groupsCache[4].unassigned, { name: searchStr }),
           }),
-          _.assign({}, vm.displayedGroups[5], {
-            unassigned: $filter('filter')(vm.displayedGroups[5].unassigned, { name: searchStr }),
+          _.assign({}, groupsCache[5], {
+            unassigned: $filter('filter')(groupsCache[5].unassigned, { name: searchStr }),
           }),
         ];
       }

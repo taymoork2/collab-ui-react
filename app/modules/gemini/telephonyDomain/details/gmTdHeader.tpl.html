@@ -1,0 +1,40 @@
+<div class="gm-td-header">
+  <section class="columns medium-6">
+    <div>
+      <span class="field-name">{{::'gemini.tds.field.partnerTdName' | translate}}: </span>
+      <span class="field-value">{{$ctrl.model.customerAttribute}}</span>
+    </div>
+    <div>
+      <span class="field-name">{{::'gemini.region' | translate}}: </span>
+      <span class="field-value">{{$ctrl.model.region}}</span>
+    </div>
+    <div>
+      <span class="field-name">{{::'gemini.tds.noteToCisco' | translate}}: </span>
+      <span class="field-value">{{$ctrl.model.noteToCiscoTeam}}</span>
+    </div>
+  </section>
+
+  <section class="columns medium-6">
+    <div class="status">
+      <span ng-if="$ctrl.model.status">
+        <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
+          {{$ctrl.model.status_}}
+      </span>
+    </div>
+
+    <div ng-if="$ctrl.remedyTicketLoading && $ctrl.showRemedyTicket">
+      <i class="icon icon-spinner"></i>
+    </div>
+
+    <div ng-if="!$ctrl.remedyTicketLoading && $ctrl.showRemedyTicket">
+      <p class="remedyTicket">{{::'gemini.cbgs.remedyTicket' | translate}}: <a ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a>
+      </p>
+      <p>
+        <small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} -
+          {{$ctrl.remedyTicket.status}}
+        </small>
+      </p>
+    </div>
+  </section>
+  <div class="clearfix"></div>
+</div>

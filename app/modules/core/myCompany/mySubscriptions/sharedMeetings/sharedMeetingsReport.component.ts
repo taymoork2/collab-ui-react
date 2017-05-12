@@ -14,8 +14,8 @@ import {
 
 class SharedMeetingsReportCtrl {
   private readonly ONE_MONTH: number = 1;
-  private readonly THREE_MONTHS: number = 3;
-  private readonly SIX_MONTHS: number = 6;
+  private readonly THREE_MONTHS: number = 2;
+  private readonly SIX_MONTHS: number = 5;
   private readonly DATE_FORMAT: string = 'MMM \'YY';
 
   /* @ngInject */
@@ -39,8 +39,8 @@ class SharedMeetingsReportCtrl {
 
   // CSV Download
   public csvDownload: boolean = false;
-  public csvHref: string | undefined;
-  public csvFilename: string | undefined;
+  public csvHref?: string;
+  public csvFilename?: string;
   public csvError: boolean = false;
 
   // Timefilter controls
@@ -108,7 +108,7 @@ class SharedMeetingsReportCtrl {
 
         this.state = this.ReportConstants.EMPTY;
         if (sharedMeetingData.length > 0) {
-          this.chart = this.SharedMeetingsReportService.setChartData(sharedMeetingData, this.chart);
+          this.chart = this.SharedMeetingsReportService.setChartData(sharedMeetingData, this.chart, this.timeSelected);
           this.state = this.ReportConstants.SET;
           this.getDetailedReport();
         }
@@ -182,7 +182,7 @@ class SharedMeetingsReportCtrl {
       });
     }
 
-    this.chart = this.SharedMeetingsReportService.setChartData(dummyData, this.chart);
+    this.chart = this.SharedMeetingsReportService.setChartData(dummyData, this.chart, this.timeSelected);
   }
 
   private getDetailedReport(): void {
@@ -226,11 +226,10 @@ class SharedMeetingsReportCtrl {
   }
 }
 
-angular.module('Core')
-  .component('sharedMeetingReport', {
-    templateUrl: 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html',
-    controller: SharedMeetingsReportCtrl,
-    bindings: {
-      siteUrl: '@',
-    },
-  });
+export class SharedMeetingComponent implements ng.IComponentOptions {
+  public templateUrl = 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html';
+  public controller = SharedMeetingsReportCtrl;
+  public bindings = {
+    siteUrl: '@',
+  };
+}

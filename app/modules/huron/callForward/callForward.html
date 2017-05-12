@@ -33,7 +33,6 @@
             inputs="$ctrl.forwardOptions"
             select-type="select"
             custom-number-translations="$ctrl.customTranslations"
-            external-number-region-code-fn="$ctrl.getRegionCode()"
             on-change-fn="$ctrl.onCallFwdAllChange(model)">
           </cs-call-destination>
         </div>
@@ -84,7 +83,6 @@
               inputs="$ctrl.forwardOptions"
               select-type="select"
               custom-number-translations="$ctrl.customTranslations"
-              external-number-region-code-fn="$ctrl.getRegionCode()"
               on-change-fn="$ctrl.onCallFwdBusyChange(model)">
             </cs-call-destination>
           </div>
@@ -116,7 +114,6 @@
                 inputs="$ctrl.forwardOptions"
                 select-type="select"
                 custom-number-translations="$ctrl.customTranslations"
-                external-number-region-code-fn="$ctrl.getRegionCode()"
                 on-change-fn="$ctrl.onCallFwdBusyExternalChange(model)">
               </cs-call-destination>
             </div>

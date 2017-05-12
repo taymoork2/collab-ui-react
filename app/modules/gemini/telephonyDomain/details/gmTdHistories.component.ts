@@ -1,18 +1,19 @@
 import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
 
-const DISPLAY_NUM = 5;
 class GmTdHistories implements ng.IComponentController {
-  private static readonly EDIT_TD_MOVE_SITE = 'Edit_td_move_site';
+  private _getDataFromHttp: boolean = true;
+  private static readonly HISTORY_ACTION: string = 'add_notes_td';
+  private static readonly HISTORY_ACTION_MOVE_SITE: string = 'Edit_td_move_site';
 
-  public model;
-  public customerId: string;
-  public displayNum: number;
-  public ccaDomainId: string;
+  public model: any[] = [];
   public domainName: string;
+  public customerId: string;
+  public ccaDomainId: string;
+  public displayCount: number = 5;
+  public isLoaded: boolean = false;
+  public isLoading: boolean = false;
   public isCollapsed: boolean = true;
-  public isLoading: boolean;
-  public needToShowAll: boolean = false;
 
   /* @ngInject */
   public constructor(
@@ -22,47 +23,71 @@ class GmTdHistories implements ng.IComponentController {
     private TelephonyDomainService: TelephonyDomainService,
   ) {
     let currentTD = this.gemService.getStorage('currentTelephonyDomain');
+    this.domainName = currentTD.domainName;
     this.customerId = currentTD.customerId;
     this.ccaDomainId = currentTD.ccaDomainId;
-    this.domainName = currentTD.domainName;
+
+    this.model = this.gemService.getStorage('currentTdHistories');
+    if (this.model && this.model.length) {
+      this._getDataFromHttp = false;
+    }
   }
 
-  public $onInit(): void {
-    this.getHistories();
-  }
-
-  public onCollapse() {
+  public onCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
+
+    if (!this.isCollapsed && !this.isLoaded) {
+      this.getHistories();
+    }
   }
 
-  public isShowAll() {
-    return this.displayNum > DISPLAY_NUM;
-  }
-
-  public onShowAll() {
-    this.displayNum = _.size(this.model);
+  public onShowAll(): void {
+    this.displayCount = this.model.length;
   }
 
   private getHistories() {
-    this.TelephonyDomainService.getHistories(this.customerId, this.ccaDomainId, this.domainName)
+    if (!this._getDataFromHttp) {
+      return;
+    }
+
+    const data = {
+      siteId: this.ccaDomainId,
+      objectID: this.domainName,
+      customerId: this.customerId,
+      actionFor: 'Telephony Domain',
+    };
+
+    this.isLoading = true;
+    this.TelephonyDomainService.getHistories(data)
       .then((res) => {
         if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('error'); //TODO Wording
+          this.Notification.error('gemini.errorCode.loadError');
           return;
         }
-        this.isLoading = false;
-        const data = _.get(res, 'content.data.body', []);
-        this.model = _.map(data, (item: any) => {
-          let newItem = _.assignIn({}, item, { action: _.upperFirst(item.action) });
-          if (item.action === GmTdHistories.EDIT_TD_MOVE_SITE) {
-            const moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID + ' to ' + item.objectName;
-            newItem.objectName = '';
-            newItem.moveSiteMsg = moveSiteMsg;
-            newItem.action = this.$translate.instant('gemini.cbgs.siteMoved');
-          }
-          return newItem;
+
+        let data: any[] = _.get(res, 'content.data.body', []);
+
+        data = _.filter(data, (item: any) : boolean => {
+          return item.action !== GmTdHistories.HISTORY_ACTION;
         });
-        this.displayNum = _.size(this.model) <= DISPLAY_NUM ? _.size(this.model) : DISPLAY_NUM;
+
+        this.model = _.map(data, (item) => {
+          let formattedItem = _.assignIn({}, item, {
+            action: _.upperFirst(item.action),
+          });
+
+          if (item.action === GmTdHistories.HISTORY_ACTION_MOVE_SITE) {
+            const moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID
+              + ' to ' + item.objectName;
+            formattedItem.objectName = '';
+            formattedItem.moveSiteMsg = moveSiteMsg;
+            formattedItem.action = this.$translate.instant('gemini.cbgs.siteMoved');
+          }
+          return formattedItem;
+        });
+
+        this.isLoaded = true;
+        this.isLoading = false;
       }).catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
       });

@@ -8,7 +8,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _Authinfo_, _BrandService_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_, _Userservice_) {
 
     $scope = $rootScope.$new();
     currentCustomer = {
@@ -29,36 +29,14 @@ describe('Controller: CustomerOverviewCtrl', function () {
       services: ['webex-squared', 'ciscouc'],
     };
 
-    Userservice = {
-      updateUsers: function () {},
-    };
-    Authinfo = {
-      getPrimaryEmail: function () {
-        return 'xyz123@gmail.com';
-      },
-      getOrgId: function () {
-        return '1A2B3C4D';
-      },
-      getOrgName: function () {
-        return 'xyz123';
-      },
-      isPartnerAdmin: function () {
-        return true;
-      },
-      getUserId: function () {
-        return 'D4C3B2A1';
-      },
-      isCare: function () {
-        return true;
-      },
-    };
-    BrandService = {
-      getSettings: function () {},
-    };
-
+    Authinfo = _Authinfo_;
+    BrandService = _BrandService_;
     FeatureToggleService = _FeatureToggleService_;
+    Notification = _Notification_;
     Orgservice = _Orgservice_;
     PartnerService = _PartnerService_;
+    TrialService = _TrialService_;
+    Userservice = _Userservice_;
 
     $stateParams = _$stateParams_;
     $stateParams.currentCustomer = currentCustomer;
@@ -72,8 +50,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
       result: $q.resolve(),
     };
 
-    TrialService = _TrialService_;
-    Notification = _Notification_;
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('xyz123@gmail.com');
+    spyOn(Authinfo, 'getOrgId').and.returnValue('1A2B3C4D');
+    spyOn(Authinfo, 'getOrgName').and.returnValue('xyz123');
+    spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);
+    spyOn(Authinfo, 'getUserId').and.returnValue('D4C3B2A1');
+    spyOn(Authinfo, 'getUserOrgId').and.returnValue('1A2B3C4D');
+    spyOn(Authinfo, 'isCare').and.returnValue(true);
     spyOn(Notification, 'errorWithTrackingId');
     spyOn($state, 'go').and.returnValue($q.resolve());
     spyOn($state, 'href').and.callThrough();
@@ -106,11 +89,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
       identityCustomer: identityCustomer,
-      Userservice: Userservice,
-      Authinfo: Authinfo,
-      BrandService: BrandService,
-      FeatureToggleService: FeatureToggleService,
-      $modal: modal,
     });
 
     $scope.$apply();
@@ -140,10 +118,15 @@ describe('Controller: CustomerOverviewCtrl', function () {
   it('should display correct customer portal launch button via var isOrgSetup', function () {
     // isOrgSetup is false from spyOn in beforeEach
     expect(controller.isOrgSetup).toBe(false);
-
     Orgservice.isSetupDone.and.returnValue($q.resolve(true));
     initController();
     expect(controller.isOrgSetup).toBe(true);
+    Orgservice.isSetupDone.and.returnValue($q.reject());
+    initController();
+    expect(controller.isOrgSetup).toBe(null);
+    Orgservice.isSetupDone.and.returnValue($q.resolve(false));
+    initController();
+    expect(controller.isOrgSetup).toBe(false);
   });
 
   it('should display number of days left', function () {

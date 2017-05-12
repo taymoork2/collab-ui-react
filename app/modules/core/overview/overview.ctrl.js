@@ -8,10 +8,10 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($rootScope, $state, $scope, $translate, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
-    var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
+    var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
@@ -32,6 +32,28 @@ require('./_overview.scss');
     vm.pstnToSNotification = null;
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
+    vm.notificationComparator = notificationComparator;
+    vm.ftHuronPstn = false;
+
+    ////////////////////////////////
+
+    var notificationOrder = [
+      'alert',
+      'todo',
+      'info',
+      'new',
+    ];
+
+    // used to sort notifications in a specific order
+    function notificationComparator(a, b) {
+      var v1 = _.toLower(_.last(_.split(a.value, '.')));
+      var v2 = _.toLower(_.last(_.split(b.value, '.')));
+      if (_.isEqual(v1, v2)) {
+        return 0;
+      } else {
+        return (_.indexOf(notificationOrder, v1) < _.indexOf(notificationOrder, v2)) ? -1 : 1;
+      }
+    }
 
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {
@@ -66,7 +88,7 @@ require('./_overview.scss');
               if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_cal)) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal) && hasGoogleCalendarFeatureToggle) {
-                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, HybridServicesFlagService, HybridServicesUtilsService));
+                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService));
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_ec)) {
@@ -156,6 +178,10 @@ require('./_overview.scss');
         }
       });
 
+      FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
+        vm.ftHuronPstn = result;
+      });
+
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
@@ -171,9 +197,16 @@ require('./_overview.scss');
           if (customer.trial) {
             PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
               if (!_.has(trial, 'acceptedDate')) {
-                vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
-                vm.notifications.push(vm.pstnToSNotification);
-                $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                if (vm.ftHuronPstn) {
+                  //This is the new TS version of ToS
+                  vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
+                  vm.notifications.push(vm.pstnToSNotification);
+                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                } else {
+                  vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
+                  vm.notifications.push(vm.pstnToSNotification);
+                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                }
               }
             });
           }

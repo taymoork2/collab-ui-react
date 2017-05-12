@@ -93,13 +93,17 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   }
 
   public displayDeregisterNodeMenuItem(targetType: ClusterTargetType): boolean {
-    return _.includes(<ConnectorType[]>['mf_mgmt'], targetType);
+    return _.includes(<ConnectorType[]>['mf_mgmt', 'hds_app'], targetType);
   }
 
   public enableMaintenanceMode(node: ISimplifiedNode): void {
+    let message = this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.message');
+    if (this.data.targetType === 'c_mgmt') {
+      message = this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.expresswayMessage');
+    }
     this.ModalService.open({
       title: this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.title'),
-      message: this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.message'),
+      message: message,
       close: this.$translate.instant('common.enable'),
       dismiss: this.$translate.instant('common.cancel'),
     })
@@ -165,10 +169,9 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   public openDeregisterNodeModal(node: ISimplifiedNode): void {
     this.$modal.open({
       resolve: {
-        clusterName: () => this.data.name,
         connectorId: () => node.connectors[0].id,
       },
-      type: 'small',
+      type: 'dialog',
       controller: 'HostDeregisterControllerV2',
       controllerAs: 'hostDeregister',
       templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',

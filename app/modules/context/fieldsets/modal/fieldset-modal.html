@@ -2,7 +2,11 @@
   <button type="button" class="close" ng-click="$ctrl.dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h3 class="modal-title" translate="context.dictionary.fieldsetPage.createNew"></h3>
+  <h3 ng-if="$ctrl.createMode" class="modal-title" translate="context.dictionary.fieldsetPage.createNew"></h3>
+  <h3 ng-if="!$ctrl.createMode" class="modal-title">
+    <span translate="context.dictionary.update"></span>
+    <span>{{$ctrl.fieldsetData.id}}</span>
+  </h3>
 </div>
 <div class="modal-body context-modal-body">
   <form name="fieldsetForm" autocomplete="off">
@@ -25,7 +29,8 @@
             ng-model="$ctrl.fieldsetData.id"
             cs-input-group-size="medium-12"
             cs-input-messages="$ctrl.validationMessages"
-            cs-input-validators="$ctrl.validators">
+            cs-input-validators="$ctrl.validators"
+            ng-disabled="!$ctrl.createMode">
 
           <!-- DESCRIPTION -->
           <p class="cs-input-label" translate="common.description"></p>
@@ -58,7 +63,6 @@
           <div class="typeahead">
             <span class="icon icon-search"></span>
             <input id="fieldInput" ng-model="$ctrl.selectedField"
-                   ng-class="{'error': $ctrl.error}"
                    typeahead="field for field in $ctrl.allSelectableFields | filter:{id:$viewValue}"
                    typeahead-template-url="fieldTemplate.html"
                    typeahead-on-select="$ctrl.selectField($item)"
@@ -72,6 +76,11 @@
             </div>
           </script>
         </div>
+        <!-- No Search Results messages, shows up when the search text is present and no fields match it-->
+        <div ng-show="$ctrl.selectedField && $ctrl.selectedField.length > 0 &&
+             ($ctrl.allSelectableFields | filter:{id:$ctrl.selectedField}).length === 0" class="no-results"
+             translate="context.dictionary.fieldPage.noneFound">
+        </div>
 
         <!-- List of selected fields -->
         <div ng-repeat="field in $ctrl.fields | orderBy: 'id'">
@@ -81,7 +90,7 @@
                 tooltip-animation="true" tooltip="{{field.id}}">{{field.id}}</span>
               <span class="column-two">{{field.fieldInfo}}</span>
               <span class="column-three">
-                <i ng-click="$ctrl.removeFieldFromList(field)" class="icon icon-exit"></i>
+                <i ng-click="$ctrl.removeFieldFromList(field, fieldsetForm)" class="icon icon-exit"></i>
           </span>
             </div>
           </div>
@@ -102,10 +111,16 @@
     <button
       class="btn btn-primary"
       ng-click="$ctrl.switchToPage(1)" translate="common.back"></button>
-    <button
+    <button ng-if="$ctrl.createMode"
       class="btn btn-primary"
       translate="common.create"
       ng-click="$ctrl.create()"
-      ng-disabled="!$ctrl.createButtonEnabled()"></button>
+      ng-disabled="!$ctrl.createOrSaveButtonEnabled()"></button>
+    <button ng-if="!$ctrl.createMode"
+      class="btn btn-primary"
+      translate="common.save"
+      ng-click="$ctrl.update()"
+      ng-disabled="!$ctrl.createOrSaveButtonEnabled() || fieldsetForm.$pristine">
+    </button>
   </div>
 </div>

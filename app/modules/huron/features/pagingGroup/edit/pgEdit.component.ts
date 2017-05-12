@@ -72,8 +72,12 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
           this.PagingNumberService.getNumberExtension(this.pgId).then(
             (data: INumberData) => {
-              this.number = data;
-              this.originalNumber = data;
+              if (!_.isUndefined(data.extension)) {
+                this.number = data;
+                this.originalNumber = data;
+              } else {
+                this.Notification.error('pagingGroup.errorGetNumber', { pagingGroupName: this.pg.name });
+              }
             },
             (response) => {
               this.Notification.errorResponse(response, this.pg.name);
@@ -231,9 +235,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
   }
 
   public sortForUser(member: Member) {
-    return (member.displayName ? member.displayName.toLowerCase() : undefined,
-      member.lastName ? member.lastName.toLowerCase() : undefined,
-      member.firstName ? member.firstName.toLowerCase() : undefined);
+    return (member.displayName ? member.displayName.toLowerCase() : (member.lastName ? member.lastName.toLowerCase() : (member.firstName ? member.firstName.toLowerCase() : undefined)));
   }
 
   public sortForPlace(member: Member) {

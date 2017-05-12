@@ -1,8 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .service('SparkDomainManagementService', sparkDomainManagementService);
+  module.exports = angular.module('core.sparkDomainManagementService', [
+  ])
+    .service('SparkDomainManagementService', sparkDomainManagementService)
+    .name;
 
   /* @ngInject */
   function sparkDomainManagementService($http, $q, Authinfo, UrlConfig) {

@@ -181,7 +181,19 @@ describe('Service: OnlineUpgradeService', () => {
 
   describe('Upgrade Modal', () => {
     beforeEach(function () {
-      this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=null').respond(200, '12345');
+      spyOn(this.OnlineUpgradeService, 'getSubscriptionId').and.returnValue('789');
+      this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=null').respond(200, {
+        productGroups: [{
+          productInstance: [{
+            productInstanceId: '123',
+            description: 'WebEx',
+            baseProduct: true,
+            subscriptionInfo: {
+              subscriptionId: '789',
+            },
+          } ],
+        } ],
+      });
       this.OnlineUpgradeService.openUpgradeModal();
       this.$httpBackend.flush();
     });

@@ -3,7 +3,11 @@
 
   /* eslint no-template-curly-in-string: 0 */
 
-  angular.module('WebExApp').service('WebexClientVersion', WebexClientVersion);
+  module.exports = angular.module('webexapp.webexClientVersion', [
+    require('modules/core/config/urlConfig'),
+  ])
+    .service('WebexClientVersion', WebexClientVersion)
+    .name;
 
   /* @ngInject */
   function WebexClientVersion(

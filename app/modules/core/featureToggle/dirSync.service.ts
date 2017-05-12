@@ -7,6 +7,7 @@ export interface IDirSyncService {
   refreshStatus(): ng.IPromise<void>;
   disableSync(): ng.IPromise<void>;
   deregisterConnector(connector: IDirectoryConnector): ng.IPromise<void>;
+  isUserAttributeSynced(orgInfo: any, attribute: string): boolean;
 }
 
 export interface IDirectoryConnector {
@@ -43,6 +44,7 @@ interface IDirSyncModeResource extends ng.resource.IResourceClass<ng.resource.IR
  */
 export class DirSyncService implements IDirSyncService {
   private readonly MODE_ENABLED = 'ENABLED';
+  private readonly DIRSYNCATTRIBUTES_USER = 'dirsyncAttributes.user';
 
   private connectorsResource: IDirectoryConnectorsResource;
   private dirConnectors: IDirectoryConnectors;
@@ -143,6 +145,19 @@ export class DirSyncService implements IDirSyncService {
    */
   public deregisterConnector(connector: IDirectoryConnector): ng.IPromise<any> {
     return this.connectorsResource.delete({ customerId: this.Authinfo.getOrgId(), name: connector.name }).$promise;
+  }
+
+  public isUserAttributeSynced(orgInfo: any, attribute: string): boolean {
+    let attributeFound = false;
+    let ciDirsyncEnabled = false;
+    if (!_.isEmpty(orgInfo)) {
+      ciDirsyncEnabled = <boolean> _.get(orgInfo, 'dirsyncEnabled');
+      let userAttributes: any = _.get(orgInfo, this.DIRSYNCATTRIBUTES_USER);
+      if (!_.isEmpty(userAttributes)) {
+        attributeFound = _.includes(userAttributes, attribute);
+      }
+    }
+    return ciDirsyncEnabled && attributeFound;
   }
 
 }

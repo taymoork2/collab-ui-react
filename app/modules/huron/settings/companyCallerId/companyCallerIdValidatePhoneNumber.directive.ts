@@ -1,3 +1,5 @@
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
+
 export class CallerIdPhoneNumberValidator implements ng.IDirective {
   public restrict: string = 'A';
   public require: string = 'ngModel';
@@ -16,16 +18,16 @@ export class CallerIdPhoneNumberValidator implements ng.IDirective {
         value = modelValue;
       }
 
-      return this.TelephoneNumberService.validateDID(value);
+      return this.PhoneNumberService.validateDID(value);
     };
   }
 
   constructor(
-    private TelephoneNumberService,
+    private PhoneNumberService: PhoneNumberService,
   ) { }
 
   /* @ngInject */
-  public static factory(TelephoneNumberService) {
-    return new CallerIdPhoneNumberValidator(TelephoneNumberService);
+  public static factory(PhoneNumberService) {
+    return new CallerIdPhoneNumberValidator(PhoneNumberService);
   }
 }

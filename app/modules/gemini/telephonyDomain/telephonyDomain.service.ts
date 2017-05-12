@@ -5,6 +5,7 @@ export class TelephonyDomainService {
   /* @ngInject */
   constructor(
     private UrlConfig,
+    private gemService,
     private $http: ng.IHttpService,
     private $translate: ng.translate.ITranslateService,
   ) {
@@ -32,22 +33,13 @@ export class TelephonyDomainService {
   }
 
   public getNotes(customerId: string, ccaDomainId: string) {
-    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${customerId}/${ccaDomainId}/add_note_td`;
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${customerId}/${ccaDomainId}/add_notes_td`;
     return this.$http.get(url).then(this.extractData);
   }
 
-  public getHistories(customerId: string, ccaDomainId: string, domainName: string) {
-    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${customerId}/${ccaDomainId}/Telephony%20Domain/${domainName}`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
-  public getNumbers(customerId: string, ccaDomainId: string) {
-    const url = `${this.url}getTelephonyNumberByDomainId/${customerId}/${ccaDomainId}`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
-  public getDownloadUrl() {
-    return `${this.url}files/templates/telephony_numbers_template`;
+  public getHistories(data) {
+    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs`;
+    return this.$http.put(url, data).then(this.extractData);
   }
 
   public postNotes(data: any) {
@@ -73,6 +65,30 @@ export class TelephonyDomainService {
     return this.$http.post(url, postData).then(this.extractData);
   }
 
+  public getDownloadUrl() {
+    return `${this.url}files/templates/telephony_numbers_template`;
+  }
+
+  public getCountries() {
+    const url = `${this.UrlConfig.getGeminiUrl()}countries`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
+  public getAccessNumberInfo(accessNumber: string) {
+    const url = `${this.url}getAccessNumberInfo`;
+    return this.$http.post(url, [{ number: accessNumber }]).then(this.extractData);
+  }
+
+  public getNumbers(customerId: string, ccaDomainId: string) {
+    const url = `${this.url}getTelephonyNumberByDomainId/${customerId}/${ccaDomainId}`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
+  public postTelephonyDomain(customerId: string, data: any) {
+    const url = `${this.url}customerId/${customerId}`;
+    return this.$http.post(url, data).then(this.extractData);
+  }
+
   public telephonyDomainsExportCSV(customerId: string) {
     return this.getTelephonyDomains(customerId).then((response) => {
       let lines: any = _.get(response, 'content.data');
@@ -84,7 +100,7 @@ export class TelephonyDomainService {
         bridgeSet: this.$translate.instant('gemini.tds.field.bridgeSet'),
         webDomain: this.$translate.instant('gemini.tds.field.webDomain'),
         status: this.$translate.instant('gemini.tds.field.status'),
-        description: this.$translate.instant('gemini.tds.field.description'),
+        partnerTdName: this.$translate.instant('gemini.tds.field.partnerTdName'),
         sites: this.$translate.instant('gemini.tds.field.sites'),
       };
       exportedLines.push(headerLine);
@@ -93,29 +109,90 @@ export class TelephonyDomainService {
         return exportedLines; // only export the header when is empty
       }
       _.forEach(lines.body, (line) => {
-        exportedLines = exportedLines.concat(this.formatCsvData(line));
+        exportedLines = exportedLines.concat(this.formatTdData(line));
       });
       return exportedLines;
     });
   }
 
-  public transformCSVNumber(value: any) {
-    return (value == null ? '' : value + '\t');
+  public exportNumbersToCSV(customerId: string, ccaDomainId: string) {
+    return this.getNumbers(customerId, ccaDomainId).then((response) => {
+      let lines: any = _.get(response, 'content.data');
+      let exportedLines: any[] = [];
+      let headerLine = {
+        phoneNumber: this.$translate.instant('gemini.tds.numbers.field.phoneNumber').toUpperCase(),
+        phoneLabel: this.$translate.instant('gemini.tds.numbers.field.phoneLabel').toUpperCase(),
+        accessNumber: this.$translate.instant('gemini.tds.numbers.field.accessNumber').toUpperCase(),
+        tollType: this.$translate.instant('gemini.tds.numbers.field.tollType').toUpperCase(),
+        callType: this.$translate.instant('gemini.tds.numbers.field.callType').toUpperCase(),
+        country: this.$translate.instant('gemini.tds.numbers.field.country').toUpperCase(),
+        hiddenOnClient: this.$translate.instant('gemini.tds.numbers.field.hiddenOnClient').toUpperCase(),
+      };
+      exportedLines.push(headerLine);
+
+      if (!lines.body.length) {
+        return exportedLines;
+      }
+      _.forEach(lines.body, (line) => {
+        this.makeNumberItemReadable(line);
+        exportedLines = exportedLines.concat(this.formatNumbersData(line));
+      });
+      return exportedLines;
+    });
   }
 
-  private extractData(response) {
-    return _.get(response, 'data');
+  public makeNumberItemReadable(item): void {
+    if (item.defaultNumber === '1') {
+      switch (item.tollType) {
+        case 'CCA Toll':
+          item.defaultNumber = this.$translate.instant('gemini.tds.defaultToll');
+          break;
+
+        case 'CCA Toll Free':
+          item.defaultNumber = this.$translate.instant('gemini.tds.defaultTollFree');
+          break;
+      }
+    }
+
+    if (item.defaultNumber === '0') {
+      item.defaultNumber = this.$translate.instant('gemini.tds.numbers.field.labels.no');
+    }
+
+    item.globalListDisplay = item.globalListDisplay === '1'
+      ? this.$translate.instant('gemini.tds.numbers.field.labels.display')
+      : this.$translate.instant('gemini.tds.numbers.field.labels.no');
+
+    item.isHidden = item.isHidden === 'true'
+      ? this.$translate.instant('gemini.tds.numbers.field.labels.hidden')
+      : this.$translate.instant('gemini.tds.numbers.field.labels.display');
+
+    let countryId2NameMapping = this.gemService.getStorage('countryId2NameMapping');
+    item.countryName = countryId2NameMapping[item.countryId];
   }
 
-  private formatCsvData(data: any) {
+  private formatNumbersData(data: any) {
+    let oneLine = {
+      phoneNumber: this.formatAsCsvString(data.phone),
+      phoneLabel: this.formatAsCsvString(data.label),
+      accessNumber: this.formatAsCsvString(data.dnisNumberFormat),
+      tollType: this.formatAsCsvString(data.tollType),
+      callType: this.formatAsCsvString(data.phoneType),
+      country: this.formatAsCsvString(data.countryName),
+      hiddenOnClient: this.formatAsCsvString(data.isHidden),
+    };
+
+    return oneLine;
+  }
+
+  private formatTdData(data: any) {
     let newData: any [] = [];
     let oneLine = {
-      domainName: this.transformCSVNumber(data.telephonyDomainName || data.domainName),
-      totalSites: this.transformCSVNumber(data.telephonyDomainSites.length),
+      domainName: this.formatAsCsvString(data.telephonyDomainName || data.domainName),
+      totalSites: this.formatAsCsvString(data.telephonyDomainSites.length),
       bridgeSet: this.transformBridgeSet(data.primaryBridgeName, data.backupBridgeName),
-      webDomain: this.transformCSVNumber(data.webDomainName || 'N/A'),
+      webDomain: this.formatAsCsvString(data.webDomainName || 'N/A'),
       status: data.status ? this.$translate.instant('gemini.cbgs.field.status.' + data.status) : '',
-      description: this.transformCSVNumber(data.customerAttribute),
+      partnerTdName: this.formatAsCsvString(data.customerAttribute),
       siteUrl: '',
     };
 
@@ -132,21 +209,32 @@ export class TelephonyDomainService {
         oneLine.bridgeSet = '';
         oneLine.webDomain = '';
         oneLine.status = '';
-        oneLine.description = '';
+        oneLine.partnerTdName = '';
         oneLine.siteUrl = '';
       }
 
-      oneLine.siteUrl = this.transformCSVNumber(v.siteUrl);
+      oneLine.siteUrl = this.formatAsCsvString(v.siteUrl);
       newData.push(oneLine);
     });
 
     return newData;
   }
 
-  private transformBridgeSet(v1: string, v2: string) {
-    v1 = !v1 ? 'N/A' : this.transformCSVNumber(v1);
-    v2 = !v2 ? 'N/A' : this.transformCSVNumber(v2);
+  public formatAsCsvString(data: any) {
+    if (data === null) {
+      data = '';
+    }
+    return '="' + data + '"';
+  }
 
-    return (v1 === 'N/A' && v2 === 'N/A') ? 'N/A' : (v1 + '+' + v2);
+  private transformBridgeSet(v1: string, v2: string) {
+    v1 = !v1 ? 'N/A' : v1;
+    v2 = !v2 ? 'N/A' : v2;
+
+    return (v1 === 'N/A' && v2 === 'N/A') ? 'N/A' : this.formatAsCsvString(v1 + '+' + v2);
+  }
+
+  private extractData(response) {
+    return _.get(response, 'data');
   }
 }

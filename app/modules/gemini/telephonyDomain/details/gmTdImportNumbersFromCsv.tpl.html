@@ -1,0 +1,18 @@
+<div class="pull-left upload-file-box">
+    <button id="btnImport" type="button" class="btn" cs-btn loading="$ctrl.isParsing" ng-disabled="$ctrl.isParsing || $ctrl.isDisabled" ng-click="$ctrl.onSelectFile($event)">
+      <span translate="gemini.cbgs.importCsv"></span>
+    </button>
+    <input class="upload-input"
+           id="upload"
+           name="upload"
+           type="file"
+           cr-file-read
+           ng-show="!$ctrl.isParsing"
+           file="$ctrl.file"
+           file-name="$ctrl.fileName"
+           file-max-size="10"
+           file-max-size-error="$ctrl.onFileSizeError()"
+           file-type="text/csv, application/csv, application/vnd.ms-excel"
+           file-suffix="csv"
+           file-type-error="$ctrl.onFileTypeError()"/>
+</div>

@@ -7,6 +7,7 @@
 
   /* @ngInject */
   function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UserListService) {
+    var NO_EVENT_NAME = 'eventName not passed';
 
     var token = {
       PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
@@ -42,6 +43,7 @@
           GENERATE_REPORT: 'eDiscovery: Generate Report Button Clicked',
           SEARCH_SECTION: 'eDiscovery: Search Section Viewed',
           REPORTS_SECTION: 'eDiscovery: Report Viewed',
+          SEARCH_ERROR: 'eDiscovery: Request Failed',
         },
         persistentProperties: null,
       },
@@ -53,12 +55,22 @@
         },
         persistentProperties: null,
       },
+      PREMIUM: {
+        name: 'Premium IT Pro Pack',
+        eventNames: {
+          BMMP_DISMISSAL: 'BMMP Banner dismissal',
+          LEARN_MORE: 'Learn More option selected',
+          PREMIUM_FILTER: 'Customer Overview Filtering',
+        },
+        persistentProperties: null,
+      },
       PARTNER: {
         name: 'Partner',
         eventNames: {
           ASSIGN: 'Partner Admin Assigning',
           REMOVE: 'Partner Admin Removal',
           PATCH: 'Patch User Call',
+          LAUNCH_CUSTOMER_PATCH_USERS: 'Partner: Launch Customer Patch Users',
         },
         persistentProperties: null,
       },
@@ -119,14 +131,20 @@
         persistentProperties: null,
       },
       CONTEXT: {
-        name: 'Context Service related operations',
+        name: 'Context Service operations',
         eventNames: {
-          CONTEXT_CREATE_FIELDSET_SUCCESS: 'Successfully created a new fieldset',
-          CONTEXT_CREATE_FIELDSET_FAILURE: 'Failed to create a new fieldset',
-          CONTEXT_CREATE_FIELD_SUCCESS: 'Successfully created a new field',
-          CONTEXT_CREATE_FIELD_FAILURE: 'Failed to create a new field',
-          CONTEXT_UPDATE_FIELD_SUCCESS: 'Successfully updated a field',
-          CONTEXT_UPDATE_FIELD_FAILURE: 'Failed to update a field',
+          CONTEXT_CREATE_FIELD_SUCCESS: 'Field created',
+          CONTEXT_CREATE_FIELD_FAILURE: 'Field creation failed',
+          CONTEXT_CREATE_FIELDSET_SUCCESS: 'Fieldset created',
+          CONTEXT_CREATE_FIELDSET_FAILURE: 'Fieldset creation failed',
+          CONTEXT_UPDATE_FIELD_SUCCESS: 'Field updated',
+          CONTEXT_UPDATE_FIELD_FAILURE: 'Field update failed',
+          CONTEXT_UPDATE_FIELDSET_SUCCESS: 'Fieldset updated',
+          CONTEXT_UPDATE_FIELDSET_FAILURE: 'Fieldset update failed',
+          CONTEXT_DELETE_FIELD_SUCCESS: 'Field deleted',
+          CONTEXT_DELETE_FIELD_FAILURE: 'Field deletion failed',
+          CONTEXT_DELETE_FIELDSET_SUCCESS: 'Fieldset deleted',
+          CONTEXT_DELETE_FIELDSET_FAILURE: 'Fieldset deletion failed',
         },
       },
     };
@@ -145,6 +163,7 @@
       sections: sections,
       trackError: trackError,
       trackEvent: trackEvent,
+      trackPremiumEvent: trackPremiumEvent,
       trackEdiscoverySteps: trackEdiscoverySteps,
       trackPartnerActions: trackPartnerActions,
       trackTrialSteps: trackTrialSteps,
@@ -224,15 +243,39 @@
     }
 
     /**
+     * Premium IT Pro Pack Events
+     */
+    function trackPremiumEvent(eventName, location) {
+      if (_.isEmpty(eventName) || !_.isString(eventName)) {
+        return $q.reject(NO_EVENT_NAME);
+      }
+
+      var properties = {
+        date: moment().format(),
+        from: _.get($state, '$current.name'),
+        orgId: Authinfo.getOrgId(),
+        userId: Authinfo.getUserId(),
+        userRole: Authinfo.getRoles(),
+      };
+
+      if (!_.isUndefined(location)) {
+        properties.location = location;
+      }
+
+      return trackEvent(eventName, properties);
+    }
+
+    /**
       * Ediscovery Events
       */
-    function trackEdiscoverySteps(eventName) {
-      if (!_.isString(eventName) && eventName.length !== 0) {
-        return $q.reject('eventName not passed');
+    function trackEdiscoverySteps(eventName, trackingId) {
+      if (!_.isString(eventName) || eventName.length !== 0) {
+        return $q.reject(NO_EVENT_NAME);
       }
 
       var properties = {
         from: _.get($state, '$current.name'),
+        trackingId: trackingId,
       };
 
       _getOrgData('EDISCOVERY').then(function (data) {
@@ -248,7 +291,7 @@
      */
     function trackTrialSteps(eventName, trialData, additionalPayload) {
       if (!eventName) {
-        return $q.reject('eventName not passed');
+        return $q.reject(NO_EVENT_NAME);
       }
 
       var properties = {
@@ -268,7 +311,6 @@
       });
     }
 
-
     /**
      * Partner Events
      */
@@ -287,7 +329,6 @@
     /**
     * Onboarding. First Time Wizard Events
     */
-
     function trackUserOnboarding(eventName, name, orgId, additionalData) {
       if (!eventName || !name || !orgId) {
         return $q.reject('eventName, uuid or orgId not passed');
@@ -315,7 +356,7 @@
     */
     function trackAddUsers(eventName, uploadMethod, additionalPayload) {
       if (!eventName) {
-        return $q.reject('eventName not passed');
+        return $q.reject(NO_EVENT_NAME);
       }
       var properties = {
         from: _.get($state, '$current.name'),
@@ -346,7 +387,7 @@
      */
     function trackHSNavigation(eventName, payload) {
       if (!eventName) {
-        return $q.reject('eventName not passed');
+        return $q.reject(NO_EVENT_NAME);
       }
 
       var properties = _.extend({

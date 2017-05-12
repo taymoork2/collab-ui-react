@@ -5,7 +5,7 @@ interface IResult {
   trackingId: string;
 }
 
-interface IVoicemailOrgEnableInfo {
+export interface IVoicemailOrgEnableInfo {
   voicemailOrgEnableInfo: {
     orgId: string,                       // OrgID (UUID)
     orgHybridVoicemailEnabled: boolean,  // Voicemail Enable Setting for Hybrid Users (true, false)
@@ -14,7 +14,7 @@ interface IVoicemailOrgEnableInfo {
   };
 }
 
-interface IVmInfo {
+export interface IVmInfo {
   vmInfo: {
     userId: string,                 // UserID (UUID)
     mwiStatus: boolean,             // Whether message waiting indicator should be on/off
@@ -87,6 +87,25 @@ export class UCCService {
     }
     return this.$http.get(`${this.hybridVoicemailUrl}/vmInfo/orgs/${orgId}/users/${userId}/`)
       .then(this.extractData);
+  }
+
+  public mapStatusToCss(status: HybridVoicemailStatus): string {
+    switch (status) {
+      case 'NOT_CONFIGURED':
+        return 'disabled';
+      case 'REQUESTED':
+        return 'disabled';
+      case 'HYBRID_SUCCESS':
+        return 'success';
+      case 'HYBRID_FAILED':
+        return 'danger';
+      case 'HYBRID_PARTIAL':
+        return 'warning';
+      case undefined:
+      default:
+        return 'default';
+    }
+
   }
 
 }

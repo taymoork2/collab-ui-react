@@ -5,14 +5,13 @@
     .controller('PstnSwivelNumbersCtrl', PstnSwivelNumbersCtrl);
 
   /* @ngInject */
-  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnModel, Notification, TelephoneNumberService, FeatureToggleService) {
+  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnModel, Notification, PhoneNumberService, FeatureToggleService) {
     var vm = this;
 
     vm.hasCarriers = PstnModel.isCarrierExists;
     vm.hasBackButton = hasBackButton;
     vm.goBack = goBack;
     vm.validateSwivelNumbers = validateSwivelNumbers;
-    vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
     vm.onChange = onChange;
     vm.onAcknowledge = onAcknowledge;
     var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
@@ -41,7 +40,6 @@
     function init() {
       vm.provider = PstnModel.getProvider();
       vm.swivelNumbers = PstnModel.getNumbers();
-      TelephoneNumberService.setRegionCode(vm.provider.country);
       $timeout(function () {
         setSwivelNumberTokens(vm.swivelNumbers);
       }, 100);
@@ -63,7 +61,7 @@
         e.attrs.value = '+'.concat(e.attrs.value);
       }
       try {
-        e.attrs.value = e.attrs.label = phoneUtils.formatE164(e.attrs.value);
+        e.attrs.value = e.attrs.label = PhoneNumberService.getE164Format(e.attrs.value);
       } catch (e) {
         //noop
       }
@@ -88,7 +86,7 @@
             return token.value;
           }));
         });
-      } else if (!TelephoneNumberService.internationalNumberValidator(e.attrs.value)) {
+      } else if (!PhoneNumberService.internationalNumberValidator(e.attrs.value)) {
         angular.element(e.relatedTarget).addClass('invalid');
         e.attrs.invalid = true;
       }

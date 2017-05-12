@@ -268,7 +268,7 @@
 
         aaUiModel['openHours'].entries[0].addAction(action);
 
-        var result = AACommonService.collectThisCeActionValue(aaUiModel, 'runActionsOnInput');
+        var result = AACommonService.collectThisCeActionValue(aaUiModel);
         expect(result[0]).toEqual('My variable name');
       });
 
@@ -284,7 +284,7 @@
 
         aaUiModel['openHours'].entries[0].addAction(action);
 
-        var result = AACommonService.collectThisCeActionValue(aaUiModel, 'conditional');
+        var result = AACommonService.collectThisCeActionValue(aaUiModel);
         expect(result[0]).toEqual('My variable name');
 
       });
@@ -299,10 +299,33 @@
 
         aaUiModel['openHours'].entries[0].addAction(action);
 
-        var result = AACommonService.collectThisCeActionValue(aaUiModel, 'conditional');
+        var result = AACommonService.collectThisCeActionValue(aaUiModel);
         expect(result.length).toEqual(0);
 
       });
+    });
+    it('should return list of doRest', function () {
+      var aaUiModel = {};
+
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      var menuClosed = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      aaUiModel['openHours'].addEntryAt(0, menuOpen);
+      aaUiModel['closedHours'].addEntryAt(0, menuClosed);
+
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
+      action.variableName = 'Closed Variable';
+      menuClosed.addAction(action);
+
+      var action2 = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
+      action2.variableName = 'Open Variable';
+      menuOpen.addAction(action2);
+
+      var res = AACommonService.collectThisCeActionValue(aaUiModel);
+      // verify data returned
+      expect(res).toBeDefined(2);
     });
 
     describe('keyActionAvailable', function () {

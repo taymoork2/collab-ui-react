@@ -1,3 +1,4 @@
+import sharedMeetingsModule from './index';
 import {
   ISharedMeetingCSV,
   IMeetingData,
@@ -5,7 +6,7 @@ import {
 
 describe('Component: sharedMeetingReport', function () {
   beforeEach(function () {
-    this.initModules('Core');
+    this.initModules(sharedMeetingsModule);
     this.injectDependencies('$componentController',
       '$timeout',
       '$scope',
@@ -53,7 +54,7 @@ describe('Component: sharedMeetingReport', function () {
     this.createMaxMeetings = (months): Array<IMeetingData> => {
       let returnArray: Array<IMeetingData> = [];
 
-      for (let i = 0; i < months; i++) {
+      for (let i = 0; i <= months; i++) {
         returnArray.push({
           TimeBucketStart: this.getMonth(i),
           NumOfMtgs: i,
@@ -132,8 +133,8 @@ describe('Component: sharedMeetingReport', function () {
       expect(this.SharedMeetingsReportService.getDetailedReportData).toHaveBeenCalledTimes(1);
       expect(this.SharedMeetingsReportService.getDetailedReportData).toHaveBeenCalledWith(this.siteUrl, this.getMonth(0), this.getMonth(this.controller.timeSelected.value));
       expect(this.SharedMeetingsReportService.setChartData).toHaveBeenCalledTimes(2);
-      expect(this.SharedMeetingsReportService.setChartData.calls.first().args).toEqual([_.cloneDeep(this.data.dummyData.sixMonths), undefined]);
-      expect(this.SharedMeetingsReportService.setChartData.calls.mostRecent().args).toEqual([_.cloneDeep(this.data.filteredData.sixMonths), undefined]);
+      expect(this.SharedMeetingsReportService.setChartData.calls.first().args).toEqual([_.cloneDeep(this.data.dummyData.sixMonths), undefined, this.timeFilter[0]]);
+      expect(this.SharedMeetingsReportService.setChartData.calls.mostRecent().args).toEqual([_.cloneDeep(this.data.filteredData.sixMonths), undefined, this.timeFilter[0]]);
       expect(this.Notification.errorWithTrackingId).not.toHaveBeenCalled();
     });
 
@@ -150,10 +151,11 @@ describe('Component: sharedMeetingReport', function () {
       expect(this.SharedMeetingsReportService.getDetailedReportData).toHaveBeenCalledTimes(1);
       expect(this.SharedMeetingsReportService.getDetailedReportData).toHaveBeenCalledWith(this.siteUrl, this.getMonth(0), this.getMonth(this.controller.timeSelected.value));
       expect(this.SharedMeetingsReportService.setChartData).toHaveBeenCalledTimes(2);
-      expect(this.SharedMeetingsReportService.setChartData.calls.first().args).toEqual([_.cloneDeep(this.data.dummyData.threeMonths), undefined]);
-      expect(this.SharedMeetingsReportService.setChartData.calls.mostRecent().args).toEqual([_.cloneDeep(this.data.filteredData.threeMonths), undefined]);
+      expect(this.SharedMeetingsReportService.setChartData.calls.first().args).toEqual([_.cloneDeep(this.data.dummyData.threeMonths), undefined, this.timeFilter[1]]);
+      expect(this.SharedMeetingsReportService.setChartData.calls.mostRecent().args).toEqual([_.cloneDeep(this.data.filteredData.threeMonths), undefined, this.timeFilter[1]]);
       expect(this.Notification.errorWithTrackingId).not.toHaveBeenCalled();
 
+      this.SharedMeetingsReportService.getMaxConcurrentMeetingsData.and.returnValue(this.$q.reject(500));
       this.SharedMeetingsReportService.getMaxConcurrentMeetingsData.calls.reset();
       this.SharedMeetingsReportService.getDetailedReportData.calls.reset();
       this.SharedMeetingsReportService.setChartData.calls.reset();
@@ -165,8 +167,8 @@ describe('Component: sharedMeetingReport', function () {
       expect(this.SharedMeetingsReportService.getMaxConcurrentMeetingsData).toHaveBeenCalledWith(this.siteUrl, this.getMonth(0), this.getMonth(this.controller.timeSelected.value));
       expect(this.SharedMeetingsReportService.getDetailedReportData).not.toHaveBeenCalled();
       expect(this.SharedMeetingsReportService.setChartData).toHaveBeenCalledTimes(1);
-      expect(this.SharedMeetingsReportService.setChartData).toHaveBeenCalledWith(_.cloneDeep(this.data.dummyData.oneMonth), undefined);
-      expect(this.Notification.errorWithTrackingId).not.toHaveBeenCalled();
+      expect(this.SharedMeetingsReportService.setChartData.calls.mostRecent().args).toEqual([_.cloneDeep(this.data.dummyData.oneMonth), undefined, this.timeFilter[2]]);
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
     it('should control the export menu', function () {
@@ -212,7 +214,7 @@ describe('Component: sharedMeetingReport', function () {
       expect(this.SharedMeetingsReportService.getMaxConcurrentMeetingsData).toHaveBeenCalledWith(this.siteUrl, this.getMonth(0), this.getMonth(this.controller.timeSelected.value));
       expect(this.SharedMeetingsReportService.getDetailedReportData).not.toHaveBeenCalled();
       expect(this.SharedMeetingsReportService.setChartData).toHaveBeenCalledTimes(1);
-      expect(this.SharedMeetingsReportService.setChartData).toHaveBeenCalledWith(_.cloneDeep(this.data.dummyData.sixMonths), undefined);
+      expect(this.SharedMeetingsReportService.setChartData).toHaveBeenCalledWith(_.cloneDeep(this.data.dummyData.sixMonths), undefined, this.timeFilter[0]);
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(this.error, 'sharedMeetingReports.errorLoadingSharedMeetingData');
     });
@@ -252,8 +254,8 @@ describe('Component: sharedMeetingReport', function () {
       expect(this.SharedMeetingsReportService.getDetailedReportData).toHaveBeenCalledTimes(1);
       expect(this.SharedMeetingsReportService.getDetailedReportData).toHaveBeenCalledWith(this.siteUrl, this.getMonth(0), this.getMonth(this.controller.timeSelected.value));
       expect(this.SharedMeetingsReportService.setChartData).toHaveBeenCalledTimes(2);
-      expect(this.SharedMeetingsReportService.setChartData.calls.first().args).toEqual([_.cloneDeep(this.data.dummyData.sixMonths), undefined]);
-      expect(this.SharedMeetingsReportService.setChartData.calls.mostRecent().args).toEqual([_.cloneDeep(this.data.filteredData.sixMonths), undefined]);
+      expect(this.SharedMeetingsReportService.setChartData.calls.first().args).toEqual([_.cloneDeep(this.data.dummyData.sixMonths), undefined, this.timeFilter[0]]);
+      expect(this.SharedMeetingsReportService.setChartData.calls.mostRecent().args).toEqual([_.cloneDeep(this.data.filteredData.sixMonths), undefined, this.timeFilter[0]]);
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(this.error, 'sharedMeetingReports.errorLoadingSharedMeetingDetails');
     });
   });

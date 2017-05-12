@@ -4,12 +4,13 @@
   </button>
   <h3 ng-if="$ctrl.createMode" class="modal-title" translate="context.dictionary.fieldPage.createNew"></h3>
   <h3 ng-if="!$ctrl.createMode" class="modal-title">
-    <span translate="context.dictionary.fieldPage.update"></span>
+    <span translate="context.dictionary.update"></span>
     <span>{{$ctrl.fieldData.id}}</span>
   </h3>
 </div>
-<div class="modal-body new-field-modal-body">
+<div class="modal-body context-modal-body">
   <form name="newFieldForm">
+  <div class="context-modal-content">
     <!-- ID -->
     <div class="cs-input-group">
       <p class="cs-input-label" translate="context.dictionary.fieldPage.fieldId"></p>
@@ -88,6 +89,7 @@
       name="fieldSearchable"
       cs-input-label="{{'context.dictionary.fieldPage.searchable' | translate}}"
       cs-input-help-text="{{::'context.dictionary.fieldPage.searchableHelpText' | translate}}">
+  </div>
   </form>
 </div>
 <div class="modal-footer">
@@ -96,11 +98,11 @@
     class="btn btn-primary"
     translate="common.create"
     ng-click="$ctrl.create()"
-    ng-disabled="!$ctrl.buttonEnabled()"></button>
+    ng-disabled="!$ctrl.createOrSaveButtonEnabled()"></button>
   <button
     ng-if="!$ctrl.createMode"
     class="btn btn-primary"
     translate="common.save"
     ng-click="$ctrl.update()"
-    ng-disabled="!$ctrl.buttonEnabled()"></button>
+    ng-disabled="!$ctrl.createOrSaveButtonEnabled() || newFieldForm.$pristine"></button>
 </div>

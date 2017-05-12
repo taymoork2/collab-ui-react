@@ -16,6 +16,7 @@ export abstract class ExpresswayContainerController {
     private $state: ng.ui.IStateService,
     private Authinfo,
     private ClusterService: ClusterService,
+    protected hasPartnerRegistrationFeatureToggle,
     protected Notification: Notification,
     protected ServiceDescriptor,
     private ServiceStateChecker,
@@ -46,7 +47,7 @@ export abstract class ExpresswayContainerController {
       if (enabled) {
         return;
       }
-      if (this.Authinfo.isCustomerLaunchedFromPartner()) {
+      if (this.Authinfo.isCustomerLaunchedFromPartner() && !this.hasPartnerRegistrationFeatureToggle) {
         this.$modal.open({
           templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
           type: 'dialog',

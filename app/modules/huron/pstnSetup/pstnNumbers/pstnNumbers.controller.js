@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnModel, PstnService, TelephoneNumberService, PstnSetupStatesService, ValidationService, FeatureToggleService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnModel, PstnService, PhoneNumberService, PstnSetupStatesService, ValidationService, FeatureToggleService) {
     var vm = this;
 
     vm.provider = PstnModel.getProvider();
@@ -453,7 +453,7 @@
     function searchCarrierTollFreeInventory(areaCode, block, quantity, consecutive) {
       vm.model.tollFree.showAdvancedOrder = false;
       var field = this;
-      if (angular.isString(areaCode)) {
+      if (_.isString(areaCode)) {
         vm.model.tollFree.block = block;
         vm.model.tollFree.quantity = quantity;
         vm.model.tollFree.consecutive = consecutive;
@@ -472,7 +472,7 @@
       vm.model.tollFree.searchResults = [];
       vm.model.tollFree.searchResultsModel = {};
       vm.model.tollFree.paginateOptions.currentPage = 0;
-      if (!angular.isString(areaCode)) {
+      if (!_.isString(areaCode)) {
         vm.model.tollFree.isSingleResult = vm.model.tollFree.quantity == 1;
       }
       field.loading = true;
@@ -652,10 +652,10 @@
 
     function getCommonPattern(telephoneNumber) {
       if (_.isString(telephoneNumber)) {
-        return TelephoneNumberService.getDIDLabel(telephoneNumber);
+        return PhoneNumberService.getNationalFormat(telephoneNumber);
       } else {
-        var firstNumber = TelephoneNumberService.getDIDLabel(_.head(telephoneNumber));
-        var lastNumber = TelephoneNumberService.getDIDLabel(_.last(telephoneNumber));
+        var firstNumber = PhoneNumberService.getNationalFormat(_.head(telephoneNumber));
+        var lastNumber = PhoneNumberService.getNationalFormat(_.last(telephoneNumber));
         if (isConsecutiveArray(telephoneNumber)) {
           return firstNumber + ' - ' + _.last(lastNumber.split('-'));
         } else {
@@ -690,8 +690,8 @@
 
     function createToken(e) {
       var tokenNumber = e.attrs.label;
-      e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
-      e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
+      e.attrs.value = PhoneNumberService.getE164Format(tokenNumber);
+      e.attrs.label = PhoneNumberService.getNationalFormat(tokenNumber);
     }
 
     function createdToken(e) {
@@ -708,7 +708,7 @@
     }
 
     function isTokenInvalid(value) {
-      return !TelephoneNumberService.validateDID(value) ||
+      return !PhoneNumberService.validateDID(value) ||
         _.includes(DidService.getDidList(), value);
     }
 

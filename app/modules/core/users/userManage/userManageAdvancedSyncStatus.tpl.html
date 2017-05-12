@@ -25,10 +25,7 @@
   </div>
 
   <div class="dirsync-info flex-item-resize">
-    <div class="ftwdirgridStyle flex-item-resize" ui-grid="gridOptions">
-      <div class="grid-refresh" ng-if="umac.isBusy">
-        <i class='icon icon-spinner icon-2x'></i>
-      </div>
+    <div class="ftwdirgridStyle flex-item-resize" ui-grid="gridOptions" grid-spinner="umac.isBusy">
     </div>
   </div>
 

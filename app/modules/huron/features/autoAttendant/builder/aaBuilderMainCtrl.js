@@ -628,6 +628,7 @@
       AACommonService.setCallerInputToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       AACommonService.setDynAnnounceToggle(featureToggleDefault);
+      AACommonService.setRestApiToggle(featureToggleDefault);
       AACommonService.setReturnedCallerToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
@@ -637,6 +638,7 @@
         hasCallerinput: FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput),
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
+        hasRestApi: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApi),
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
         hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
       });
@@ -646,6 +648,7 @@
       AACommonService.setCallerInputToggle(featureToggles.hasCallerinput);
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
+      AACommonService.setRestApiToggle(featureToggles.hasRestApi);
       AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
     }

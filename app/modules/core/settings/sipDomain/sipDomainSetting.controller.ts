@@ -43,21 +43,23 @@ export class SipDomainSettingController {
   private readonly WIZARD_EMIT: string = 'wizard-enterprise-sip-save';
   private readonly DISMISS_BROADCAST: string = 'DISMISS_SIP_NOTIFICATION';
   private readonly DISMISS_DISABLE: string = 'wizardNextButtonDisable';
+  private readonly WIZARD_NEXT_LOADING: string = 'wizardNextButtonLoading';
 
   /* @ngInject */
   constructor(
-    private $scope: ng.IScope,
-    private $rootScope: ng.IRootScopeService,
-    private Notification: Notification,
-    private FeatureToggleService,
-    private Config,
-    private Orgservice,
-    private SparkDomainManagementService,
-    private $translate: ng.translate.ITranslateService,
-    private $window,
-    private UrlConfig,
     private $modal,
+    private $rootScope: ng.IRootScopeService,
+    private $scope: ng.IScope,
+    private $timeout: ng.ITimeoutService,
+    private $translate: ng.translate.ITranslateService,
+    private $window: ng.IWindowService,
+    private Config,
+    private FeatureToggleService,
+    private Notification: Notification,
+    private Orgservice,
     private ServiceDescriptor,
+    private SparkDomainManagementService,
+    private UrlConfig,
   ) {
     this.FeatureToggleService.atlasSubdomainUpdateGetStatus().then((status: boolean): void => {
       this.toggle = status;
@@ -72,12 +74,12 @@ export class SipDomainSettingController {
           if (this.inputValue === this.currentDisplayName) {
             this.$rootScope.$emit(this.WIZARD_EMIT);
           } else if (this.isSSAReserved) {
-            this.updateSubdomain();
+            this.$timeout(() => this.updateSubdomain());
           } else {
-            this.saveSubdomain();
+            this.$timeout(() => this.saveSubdomain());
           }
         } else {
-          this.saveDomain();
+          this.$timeout(() => this.saveDomain());
         }
       });
       $scope.$on('$destroy', onSaveEventDeregister);
@@ -140,8 +142,8 @@ export class SipDomainSettingController {
   }
 
   public saveDomain() {
-    this.$rootScope.$emit(this.WIZARD_EMIT);
     if (this.isUrlAvailable && this.isConfirmed) {
+      this.$scope.$emit(this.WIZARD_NEXT_LOADING, true);
       this.SparkDomainManagementService.addSipDomain(this._validatedValue)
         .then((response) => {
           if (response.data.isDomainReserved) {
@@ -154,7 +156,13 @@ export class SipDomainSettingController {
         })
         .catch((response) => {
           this.Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+        })
+        .finally(() => {
+          this.$scope.$emit(this.WIZARD_NEXT_LOADING, false);
+          this.$rootScope.$emit(this.WIZARD_EMIT);
         });
+    } else {
+      this.$rootScope.$emit(this.WIZARD_EMIT);
     }
   }
 
@@ -213,9 +221,7 @@ export class SipDomainSettingController {
 
   // Used in New Feature
   public editSubdomain() {
-    if (this.isCsc) {
-      this.cscWarning();
-    } else {
+    if (!this.isCsc) {
       this.toggleSipForm();
     }
   }
@@ -275,8 +281,8 @@ export class SipDomainSettingController {
   }
 
   private saveSubdomain(): void {
-    this.$rootScope.$emit(this.WIZARD_EMIT);
     this.saving = true;
+    this.$scope.$emit(this.WIZARD_NEXT_LOADING, true);
     this.SparkDomainManagementService.addSipDomain(this.inputValue).then((response: any): void => {
       this.verified = false;
       if (response.data.isDomainReserved) {
@@ -297,6 +303,9 @@ export class SipDomainSettingController {
       } else {
         this.errorResponse(response);
       }
+    }).finally(() => {
+      this.$scope.$emit(this.WIZARD_NEXT_LOADING, false);
+      this.$rootScope.$emit(this.WIZARD_EMIT);
     });
   }
 
@@ -313,13 +322,6 @@ export class SipDomainSettingController {
     });
   }
 
-  private cscWarning(): void {
-    this.$modal.open({
-      templateUrl: 'modules/core/settings/sipDomain/editCSCWarning.tpl.html',
-      type: 'dialog',
-    });
-  }
-
   private checkRoomLicense() {
     this.Orgservice.getLicensesUsage().then((response) => {
       this.isRoomLicensed = _.some(response, function (subscription) {
@@ -328,7 +330,9 @@ export class SipDomainSettingController {
           return _.get(license, 'offerName') === 'SD' || _.get(license, 'offerName') === 'SB';
         });
       });
-      this.subdomainCount++;
+      if (this.isRoomLicensed) {
+        this.subdomainCount++;
+      }
     });
   }
 
@@ -383,5 +387,3 @@ export class SipDomainSettingController {
   }
 
 }
-angular.module('Core')
-  .controller('SipDomainSettingController', SipDomainSettingController);

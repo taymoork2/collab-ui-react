@@ -1,6 +1,6 @@
 import { Notification } from 'modules/core/notifications';
 
-export class SupportSettings {
+export class SupportSettingsController {
 
   private customSupport = { enable: false, url: '', text: '' };
   private oldCustomSupport = { enable: false, url: '', text: '' };
@@ -248,6 +248,3 @@ class Partner {
   public displayName: string;
   public name: { givenName: string, familyName: string };
 }
-angular
-  .module('Core')
-  .controller('SupportSettings', SupportSettings);

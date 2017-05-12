@@ -283,7 +283,7 @@ require('./_setup-wizard.scss');
           name: 'careSettings',
           label: 'firstTimeWizard.careSettings',
           description: 'firstTimeWizard.careSettingsSub',
-          icon: 'icon-circle-contact-centre',
+          icon: 'icon-headset',
           title: 'firstTimeWizard.careSettings',
           controller: 'CareSettingsCtrl as careSettings',
           steps: [{

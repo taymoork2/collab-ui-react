@@ -5,7 +5,7 @@
     .controller('TypeSelectorController', TypeSelectorController);
 
   /* @ngInject */
-  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, FusionClusterService, hasCucmSupportFeatureToggle) {
+  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, FusionClusterService, hasCucmSupportFeatureToggle, hasPartnerRegistrationFeatureToggle) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -27,7 +27,7 @@
       .keys()
       .value();
 
-    if (Authinfo.isCustomerLaunchedFromPartner()) {
+    if (Authinfo.isCustomerLaunchedFromPartner() && !hasPartnerRegistrationFeatureToggle) {
       vm.UIstate = 'isPartnerAdmin';
       return;
     }

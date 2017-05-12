@@ -500,15 +500,13 @@ describe('Service: AAValidationService', function () {
       uiKey2.actions[0].name = "";
       var valid = AAValidationService.isValidCES(ui);
 
-      expect(valid).toEqual(false);
-      expect(AANotificationService.error).toHaveBeenCalled();
+      expect(valid).toEqual(true);
 
       uiPhoneMenu.entries.length = 0;
 
       valid = AAValidationService.isValidCES(ui);
 
-      expect(valid).toEqual(false);
-      expect(AANotificationService.error).toHaveBeenCalled();
+      expect(valid).toEqual(true);
     });
 
     it('report validation error for an empty Route to User target', function () {

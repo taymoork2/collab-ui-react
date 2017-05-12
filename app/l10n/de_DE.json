@@ -788,7 +788,7 @@
     "drilldownDescription": "{{time}} sind dies die aktivsten Benutzer. Die Tabelle kann nach Benutzernamen oder Gesamtzahl der bearbeiteten Kontakte sortiert werden.",
     "drilldownErrorDescription": "Diese Daten sind vorübergehend nicht verfügbar. Es wird versucht, die Daten so bald wie möglich über die Server bereitzustellen. Versuchen Sie es später noch einmal.",
     "drilldownEmptyDescription": "{{time}} gab es keine aktiven Benutzer. Um den Benutzerstatus anzuzeigen und erneut Einladungen an noch ausstehende Benutzer zu senden, gehen Sie zur Registerkarte „Benutzer“.",
-    "contactsHandled": "Bearbeitete Kontakte",
+    "tasksHandled": "Bearbeitete Kontakte",
     "user": "Benutzer",
     "drilldownSearchPlaceholder": "Suchen"
   },

@@ -5,7 +5,7 @@
     .controller('TrialCtrl', TrialCtrl);
 
   /* @ngInject */
-  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService) {
+  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, HuronCompassService) {
     var vm = this;
     vm.careTypes = {
       K1: 1,
@@ -28,6 +28,7 @@
         min: $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount'),
         number: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
         required: $translate.instant('common.invalidRequired'),
+        pattern: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
       },
       care: {
         max: $translate.instant('partnerHomePage.invalidTrialCareQuantity'),
@@ -118,17 +119,6 @@
     vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call'];
     vm.navStates = ['trial.info'];
 
-    vm.nonTrialServices = [{
-      // Context Service Trial
-      model: vm.contextTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        label: $translate.instant('trials.context'),
-        id: 'contextTrial',
-      },
-    }];
-
     vm.isNewTrial = isNewTrial;
     vm.isEditTrial = isEditTrial;
     vm.isExistingOrg = isExistingOrg;
@@ -196,6 +186,27 @@
         vm.sparkBoardTrial.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
       }
     });
+    // algendel: for care and advanced care the quantity is set by 'disabled expression' functions.
+    // We can just move the code that sets the quantity into the watch the same way we do with the others
+    // The only downside to that is difficulty testing the $watch vs. the function.
+
+    //watch care 'enabled' for quantity
+    $scope.$watch(function () {
+      return vm.careTrial.enabled;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm._helpers.careLicenseInputDisabledExpression();
+      }
+    });
+
+    //watch advance care 'enabled' for quantity
+    $scope.$watch(function () {
+      return vm.advanceCareTrial.enabled;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm._helpers.advanceCareLicenseInputDisabledExpression();
+      }
+    });
 
     //watch hasUserServices for licence quantity
     $scope.$watch(function () {
@@ -211,9 +222,6 @@
         }
       }
     });
-
-    // algendel: for care and advanced care the quantity is set by 'disabled expression' functions.
-    // Will refactor it to use watchers since I think the current implementation goes against the single responsibility principle
 
     init();
     ///////////////////////
@@ -445,6 +453,7 @@
     }
 
     function closeDialogBox() {
+      cancelCustomer();
       sendToAnalytics(Analytics.sections.TRIAL.eventNames.NO);
       $state.modal.close();
     }
@@ -726,6 +735,7 @@
         customerOrgName: customerOrgName,
       }));
       $state.modal.close();
+      cancelCustomer();
     }
 
     function showDefaultFinish() {
@@ -748,7 +758,13 @@
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
     }
 
+    function cancelCustomer() {
+      HuronCompassService.setIsCustomer(false);
+      HuronCompassService.setCustomerBaseDomain();
+    }
+
     function cancelModal() {
+      cancelCustomer();
       $state.modal.dismiss();
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }

@@ -27,6 +27,7 @@ describe('Controller: TypeSelectorController', function () {
     return $controller('TypeSelectorController', {
       $stateParams: $stateParams,
       hasCucmSupportFeatureToggle: true,
+      hasPartnerRegistrationFeatureToggle: false,
     });
   }
 

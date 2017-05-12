@@ -250,7 +250,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     });
     it('should bring up modal when no dependent variables present but the model has one', function () {
       spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({}));
-      spyOn(AACommonService, 'collectThisCeActionValue').and.returnValue(['My variable']);
+      spyOn(AACommonService, 'collectThisCeActionValue').and.returnValue(['My variable', 'My variable']);
 
       controller.removeAction(0);
 
@@ -264,7 +264,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     });
     it('should bring up modal when no dependent variables present but the model (reject) has one', function () {
       spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.reject({}));
-      spyOn(AACommonService, 'collectThisCeActionValue').and.returnValue(['My variable']);
+      spyOn(AACommonService, 'collectThisCeActionValue').and.returnValue(['My variable', 'My variable']);
 
       controller.removeAction(0);
 

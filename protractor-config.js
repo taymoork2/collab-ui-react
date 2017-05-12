@@ -5,9 +5,11 @@
 var HttpsProxyAgent = require("https-proxy-agent");
 var fs = require('fs');
 var appConfig = require('./config/config');
+var hostnameConfig = require('./app/config/hostname.config');
 var processEnvUtil = require('./utils/processEnvUtil')();
 var args = require('yargs').argv;
 var _ = require('lodash');
+var remote = require('selenium-webdriver/remote');
 
 var gatingSuites = _.chain(appConfig.e2eSuites).omit('huron').values().value();
 
@@ -89,6 +91,9 @@ exports.config = {
     browser.ignoreSynchronization = true;
 
     global.isSauce = !!(process.env.SAUCE__USERNAME && process.env.SAUCE__USERNAME.length > 0);
+    if (global.isSauce) {
+      browser.setFileDetector(new remote.FileDetector());
+    }
     global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
 
@@ -313,10 +318,10 @@ function mkProxyAgent() {
 
 function getLaunchUrl(args) {
   if (args.prod) {
-    return 'https://admin.ciscospark.com';
+    return 'https://' + hostnameConfig.PRODUCTION;
   }
   if (args.int) {
-    return 'https://int-admin.ciscospark.com';
+    return 'https://' + hostnameConfig.INTEGRATION;
   }
-  return 'http://127.0.0.1:8000';
+  return 'http://' + hostnameConfig.LOCAL + ':8000';
 }

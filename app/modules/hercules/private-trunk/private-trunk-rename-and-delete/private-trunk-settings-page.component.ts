@@ -4,7 +4,7 @@ interface IFakeFMSCluster {
   targetType: string;
 }
 
-import { EnterprisePrivateTrunkService, IPrivateTrunkResource } from 'modules/hercules/services/enterprise-private-trunk-service';
+import { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 
 class PrivateTrunkSettingsPageComponentCtrl implements ng.IComponentController {
 
@@ -18,15 +18,13 @@ class PrivateTrunkSettingsPageComponentCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.cluster = {
-      name: '',
-      id: this.trunkId,
-      targetType: 'ept',
-    };
-
     this.EnterprisePrivateTrunkService.getTrunkFromCmi(this.trunkId)
-      .then((trunk: IPrivateTrunkResource) => {
-        this.cluster.name = trunk.name;
+      .then((trunk: IPrivateTrunkResourceWithStatus) => {
+        this.cluster = {
+          name: trunk.name,
+          id: this.trunkId,
+          targetType: 'ept',
+        };
       });
   }
 

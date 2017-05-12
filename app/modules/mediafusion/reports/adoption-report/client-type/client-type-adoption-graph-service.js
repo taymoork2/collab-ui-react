@@ -34,6 +34,8 @@
       'WINDOWS_MOBILE': $translate.instant('mediaFusion.metrics.clientType.windows'),
       'Total': $translate.instant('mediaFusion.metrics.clientType.total'),
     };
+    vm.allOn = $translate.instant('mediaFusion.metrics.allOn');
+    vm.allOff = $translate.instant('mediaFusion.metrics.allOff');
 
     return {
       setClientTypeGraph: setClientTypeGraph,
@@ -153,16 +155,17 @@
 
       if (!isDummy) {
         graphs.push({
-          'title': 'None',
+          'title': vm.allOff,
           'id': 'none',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000',
+          'lineColor': 'transparent',
         });
       }
 
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
+      if (chartData.graphs[0].lineColor == '#D7D7D8') {
+        chartData.legend.color = '#343537';
+      }
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
 
@@ -208,17 +211,17 @@
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.title === 'None') {
-        evt.dataItem.title = 'All';
+      if (evt.dataItem.title === vm.allOff) {
+        evt.dataItem.title = vm.allOn;
         _.each(evt.chart.graphs, function (graph) {
-          if (graph.title != 'All') {
+          if (graph.title != vm.allOn) {
             evt.chart.hideGraph(graph);
           } else {
             evt.chart.showGraph(graph);
           }
         });
-      } else if (evt.dataItem.title === 'All') {
-        evt.dataItem.title = 'None';
+      } else if (evt.dataItem.title === vm.allOn) {
+        evt.dataItem.title = vm.allOff;
         _.each(evt.chart.graphs, function (graph) {
           evt.chart.showGraph(graph);
         });
