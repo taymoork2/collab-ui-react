@@ -36,10 +36,10 @@
         headers: {
           'Content-Type': 'application/x-www-rform-urlencoded',
         },
-      }).success(function (data) {
-        resolve(data);
-      }).error(function (data) {
-        reject(data);
+      }).then(function (response) {
+        resolve(response.data);
+      }).catch(function (response) {
+        reject(response.data);
       });
     }; //sendXMLApiReq()
 

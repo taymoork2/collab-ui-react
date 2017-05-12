@@ -185,7 +185,7 @@ describe('orgService', function () {
     });
   });
 
-  it('should fail to get an admin organization for getOrgId provided by Authinfo pwhen called as a promise', function () {
+  it('should fail to get an admin organization for getOrgId provided by Authinfo when called as a promise', function () {
 
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
     var promise = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
