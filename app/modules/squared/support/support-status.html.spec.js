@@ -49,9 +49,11 @@ describe('Controller: SupportCtrl', function () {
     it('shows tools card if user has cisco dev role', function () {
       Authinfo.isCisco = jasmine.createSpy('isCisco').and.returnValue(true);
       Authinfo.isHelpDeskUser = jasmine.createSpy('isHelpDeskUser').and.returnValue(false);
-      Userservice.getUser = jasmine.createSpy('getUser').yields({
-        success: true,
-        roles: ['ciscouc.devops', 'ciscouc.devsupport'],
+      Userservice.getUser = jasmine.createSpy('getUser').and.callFake(function (userid, callback) {
+        callback({
+          success: true,
+          roles: ['ciscouc.devops', 'ciscouc.devsupport'],
+        });
       });
 
       controller('SupportCtrl', {
@@ -67,10 +69,19 @@ describe('Controller: SupportCtrl', function () {
 
     it('does NOT show tools card if user doesnt have dev roles nor helpdesk role', function () {
       Authinfo.isHelpDeskUser = jasmine.createSpy('isHelpDeskUser').and.returnValue(false);
-      Userservice.getUser = jasmine.createSpy('getUser').yields({
-        success: true,
-        roles: ['noDevRole'],
+      Userservice.getUser = jasmine.createSpy('getUser').and.callFake(function (userid, callback) {
+        callback({
+          success: true,
+          roles: ['noDevRole'],
+        });
       });
+
+      controller('SupportCtrl', {
+        $scope: $scope,
+        Authinfo: Authinfo,
+        Userservice: Userservice,
+      });
+
       $scope.$digest();
       var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
       expect(hasToolsCard).toBeFalsy();
@@ -95,9 +106,11 @@ describe('Controller: SupportCtrl', function () {
     it('has clickable call flow button if user has cisco dev role', function () {
       Authinfo.isCisco = jasmine.createSpy('isCisco').and.returnValue(true);
       Authinfo.isHelpDeskUser = jasmine.createSpy('isHelpDeskUser').and.returnValue(false);
-      Userservice.getUser = jasmine.createSpy('getUser').yields({
-        success: true,
-        roles: ['ciscouc.devops', 'ciscouc.devsupport'],
+      Userservice.getUser = jasmine.createSpy('getUser').and.callFake(function (userid, callback) {
+        callback({
+          success: true,
+          roles: ['ciscouc.devops', 'ciscouc.devsupport'],
+        });
       });
 
       controller('SupportCtrl', {
@@ -115,9 +128,11 @@ describe('Controller: SupportCtrl', function () {
     it('has no call flow button to click if user hasnt cisco dev role', function () {
       Authinfo.isCisco = jasmine.createSpy('isCisco').and.returnValue(true);
       Authinfo.isHelpDeskUser = jasmine.createSpy('isHelpDeskUser').and.returnValue(false);
-      Userservice.getUser = jasmine.createSpy('getUser').yields({
-        success: true,
-        roles: ['noDevopRole'],
+      Userservice.getUser = jasmine.createSpy('getUser').and.callFake(function (userid, callback) {
+        callback({
+          success: true,
+          roles: ['noDevopRole'],
+        });
       });
 
       controller('SupportCtrl', {
