@@ -1006,6 +1006,7 @@
             },
             params: {
               manageUsers: false,
+              readOnly: false,
             },
           })
           .state('users.convert.services', {
