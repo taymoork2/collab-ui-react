@@ -32,11 +32,13 @@ export class SettingsCtrl {
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
+    private $q: ng.IQService,
     private $stateParams: ng.ui.IStateParamsService,
     private $timeout: ng.ITimeoutService,
     private Authinfo,
     private Orgservice,
     private FeatureToggleService,
+    private ITProPackService,
   ) {
   }
 
@@ -116,9 +118,14 @@ export class SettingsCtrl {
   }
 
   private initRetention() {
-    this.FeatureToggleService.atlasDataRetentionSettingsGetStatus().then((toggle) => {
-      if (toggle) {
-        this.retention = new RetentionSetting();
+    let promises = {
+      retentionToggle: this.FeatureToggleService.atlasDataRetentionSettingsGetStatus(),
+      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+    };
+
+    this.$q.all(promises).then((result) => {
+      if (result.retentionToggle) {
+        this.retention = new RetentionSetting(result.proPackPurchased);
       }
     });
   }

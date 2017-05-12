@@ -1,7 +1,13 @@
 <div class="cs-form__section">
   <div class="section__info">
     <div cs-sticky>
-      <h4 class="section__title" translate="{{$ctrl.setting.title}}"></h4>
+      <h4 class="section__title">
+          {{::$ctrl.setting.title|translate}}
+          <i ng-if="$ctrl.setting.icon && !$ctrl.setting.tooltipText" class="icon info-icon" ng-class="$ctrl.setting.icon"></i>
+          <i ng-if="$ctrl.setting.icon && $ctrl.setting.tooltipText" class="icon info-icon has-tooltip" ng-class="$ctrl.setting.icon"
+            tooltip="{{::$ctrl.setting.tooltipText | translate}}" tooltip-append-to-body="true" tooltip-placement="right">
+          </i>
+      </h4>
       <p class="section__description" ng-if="$ctrl.setting.description" translate="{{$ctrl.setting.description}}"></p>
     </div>
   </div>

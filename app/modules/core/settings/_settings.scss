@@ -16,6 +16,14 @@
   .section__info .sticky {
     top: vr-adjust(60px);
     bottom: vr-adjust(48px);
+
+    i.info-icon {
+      font-size: .875rem;
+      top: .1rem;
+      &.has-tooltip:hover {
+        color: $color-primary-base;
+      }
+    }
   }
 
   .setting {
