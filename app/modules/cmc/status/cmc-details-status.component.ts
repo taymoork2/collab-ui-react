@@ -20,7 +20,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
 export class CmcDetailsStatusComponent implements ng.IComponentOptions {
   public controller = CmcDetailsStatusComponentCtrl;
-  public templateUrl = 'modules/cmc/status/status.tpl.html';
+  public templateUrl = 'modules/cmc/status/status.component.html';
   public bindings = {
   };
 }
