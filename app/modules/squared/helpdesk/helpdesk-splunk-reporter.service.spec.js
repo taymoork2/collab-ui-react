@@ -25,7 +25,7 @@ describe('Service: HelpdeskSplunkReporterService', function () {
     });
 
     it("reportOperation reports as HELPDESKOPERATION", function () {
-      var logMetrics = sinon.spy(LogMetricsService, 'logMetrics');
+      var logMetrics = spyOn(LogMetricsService, 'logMetrics');
       Service.reportOperation("search");
       var anyTime = jasmine.any(Object);
       expect(logMetrics).toHaveBeenCalledWith(
@@ -41,7 +41,7 @@ describe('Service: HelpdeskSplunkReporterService', function () {
     });
 
     it("reportStats reports as HELPDESKSEARCH", function () {
-      var logMetrics = sinon.spy(LogMetricsService, 'logMetrics');
+      var logMetrics = spyOn(LogMetricsService, 'logMetrics');
 
       var searchString = "whatever";
       var result = {

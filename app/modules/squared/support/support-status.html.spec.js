@@ -78,7 +78,7 @@ describe('Controller: SupportCtrl', function () {
 
     it('has clickable helpdesk button if user has helpdesk role', function () {
       Authinfo.isHelpDeskUser = jasmine.createSpy('isHelpDeskUser').and.returnValue(true);
-      $scope.gotoHelpdesk = sinon.spy($scope, 'gotoHelpdesk');
+      $scope.gotoHelpdesk = spyOn($scope, 'gotoHelpdesk');
       $scope.$digest();
       view.find("#toolsCardHelpdeskButton").click();
       expect($scope.gotoHelpdesk.calls.count()).toBe(1);
@@ -86,7 +86,7 @@ describe('Controller: SupportCtrl', function () {
 
     it('has NO helpdesk button to click if user hasnt helpdesk role', function () {
       Authinfo.isHelpDeskUser = jasmine.createSpy('isHelpDeskUser').and.returnValue(false);
-      $scope.gotoHelpdesk = sinon.spy($scope, 'gotoHelpdesk');
+      $scope.gotoHelpdesk = spyOn($scope, 'gotoHelpdesk');
       $scope.$digest();
       view.find("toolsCardHelpdeskButton").click();
       expect($scope.gotoHelpdesk.calls.count()).toBe(0);
@@ -106,7 +106,7 @@ describe('Controller: SupportCtrl', function () {
         Userservice: Userservice,
       });
 
-      $scope.gotoCdrSupport = sinon.spy($scope, 'gotoCdrSupport');
+      $scope.gotoCdrSupport = spyOn($scope, 'gotoCdrSupport');
       $scope.$digest();
       view.find("#toolsCardCdrCallFlowButton").click();
       expect($scope.gotoCdrSupport.calls.count()).toBe(1);
@@ -126,7 +126,7 @@ describe('Controller: SupportCtrl', function () {
         Userservice: Userservice,
       });
 
-      $scope.gotoCdrSupport = sinon.spy($scope, 'gotoCdrSupport');
+      $scope.gotoCdrSupport = spyOn($scope, 'gotoCdrSupport');
       $scope.$digest();
       view.find("toolsCardCdrCallFlowButton").click();
       expect($scope.gotoCdrSupport.calls.count()).toBe(0);
