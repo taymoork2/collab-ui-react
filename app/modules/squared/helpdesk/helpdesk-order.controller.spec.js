@@ -57,7 +57,6 @@ describe('Controller: HelpdeskOrderController', function () {
     });
     it('call Notification.errorWithTrackingId and supply the response data when promise is rejected', function () {
       $scope.$apply();
-      spyOn(HelpdeskService, 'getOrg');
       var rejectData = {
         data: {
           errorCode: 420000,

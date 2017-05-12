@@ -46,7 +46,6 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(controller).toBeDefined();
   });
   it('should call the dismiss for cancel', function () {
-    spyOn(modalInstance, 'dismiss');
     controller.cancel();
     expect(modalInstance.dismiss).toHaveBeenCalled();
   });
@@ -65,7 +64,6 @@ describe('Controller: DisableMediaServiceController', function () {
     spyOn(MediaServiceActivationV2, 'disableOrpheusForMediaFusion');
     spyOn(MediaServiceActivationV2, 'deactivateHybridMedia');
     spyOn(Notification, 'success');
-    spyOn(modalInstance, 'close');
     controller.clusterIds = ['cluster1', 'cluster2'];
     controller.deactivate();
     httpMock.verifyNoOutstandingExpectation();
@@ -83,7 +81,6 @@ describe('Controller: DisableMediaServiceController', function () {
       'status': 500,
     }));
     spyOn(Notification, 'error');
-    spyOn(modalInstance, 'close');
     controller.clusterIds = ['cluster1', 'cluster2'];
     controller.deactivate();
     httpMock.verifyNoOutstandingExpectation();

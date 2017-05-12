@@ -35,8 +35,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
   }));
 
   function initSpies() {
-    spyOn($scope.wizard, 'nextTab');
-
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });

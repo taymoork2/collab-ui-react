@@ -44,7 +44,6 @@ describe('Controller: RemDeviceController', function () {
 
       spyOn(CsdmDeviceService, 'deleteItem').and.returnValue($q.resolve());
       spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.resolve());
-      spyOn(fakeModal, 'close');
 
       controller = $controller('RemDeviceController', {
         $modalInstance: fakeModal,

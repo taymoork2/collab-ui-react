@@ -39,7 +39,6 @@ describe('Controller: RemPlaceController', function () {
       $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices/?type=huron').respond([]);
 
       spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.resolve());
-      spyOn(fakeModal, 'close');
 
       controller = $controller('RemPlaceController', {
         $modalInstance: fakeModal,

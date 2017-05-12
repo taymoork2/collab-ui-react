@@ -160,7 +160,6 @@ describe('Controller: HelpdeskOrgController', function () {
 
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
 
-      spyOn(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
         "steeringDigit": "7",
@@ -171,7 +170,6 @@ describe('Controller: HelpdeskOrgController', function () {
       });
       HelpdeskHuronService.getOrgSiteInfo.and.returnValue(deferredSiteInfoResult.promise);
 
-      spyOn(HelpdeskHuronService, 'getTenantInfo');
       var deferredTenantInfoResult = q.defer();
       deferredTenantInfoResult.resolve({
         "name": "SomeTestCustomer",
@@ -215,7 +213,6 @@ describe('Controller: HelpdeskOrgController', function () {
 
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(true));
 
-      spyOn(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
         "steeringDigit": "7",
@@ -224,7 +221,6 @@ describe('Controller: HelpdeskOrgController', function () {
       });
       HelpdeskHuronService.getOrgSiteInfo.and.returnValue(deferredSiteInfoResult.promise);
 
-      spyOn(HelpdeskHuronService, 'getTenantInfo');
       var deferredTenantInfoResult = q.defer();
       deferredTenantInfoResult.resolve({
         "name": "SomeTestCustomer",
