@@ -470,7 +470,12 @@ describe('Auth Service', function () {
     });
 
     it('should use correct URL if customer org', function (done) {
-      SessionStorage.get.withArgs('customerOrgId').and.returnValue('1337');
+      SessionStorage.get.and.callFake(function (arg) {
+        var store = {
+          customerOrgId: '1337',
+        };
+        return store[arg];
+      });
       $httpBackend
         .expectGET('path/organization/1337/userauthinfo')
         .respond(500, {});
@@ -483,7 +488,12 @@ describe('Auth Service', function () {
     });
 
     it('should use correct URL if partner org', function (done) {
-      SessionStorage.get.withArgs('partnerOrgId').and.returnValue('1337');
+      SessionStorage.get.and.callFake(function (arg) {
+        var store = {
+          partnerOrgId: '1337',
+        };
+        return store[arg];
+      });
       $httpBackend
         .expectGET('path/organization/1337/userauthinfo?launchpartnerorg=true')
         .respond(500, {});
