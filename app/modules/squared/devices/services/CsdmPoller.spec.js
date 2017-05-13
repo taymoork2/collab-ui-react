@@ -55,7 +55,7 @@ describe('CsdmPoller', function () {
 
     expect(scope.$on.calls.count()).toBe(1);
     expect(scope.$on.calls.argsFor(0)[0]).toBe('$destroy');
-    scope.$on.callArg(1);
+    scope.$on.calls.argsFor(0)[1](); // execute $destroy callback to cancel
 
     defer.resolve();
     $rootScope.$digest();
