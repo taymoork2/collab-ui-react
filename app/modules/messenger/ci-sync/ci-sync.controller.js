@@ -23,7 +23,6 @@
     vm.adminTypes = {
       ORG: 'ORG',
       OPS: 'OPS',
-      READ: 'READ',
       UNKNOWN: 'UNKNOWN',
     };
 
@@ -112,8 +111,9 @@
         });
     }
 
+    // TODO: remove this in-page auth logic (use UI router or 'Auth.allowMessengerService()' to block access instead)
     function authorized() {
-      return (isOrgAdmin() || isOpsAdmin());
+      return isOrgAdmin() || isOpsAdmin() || Authinfo.isReadOnlyAdmin();
     }
 
     function isOrgAdmin() {
@@ -135,7 +135,6 @@
       // Customer Success Admin     --> Ops Admin
       // Non-Customer Success Admin --> must have webex-squared AND webex-messenger CI entitlements
       if (Authinfo.isReadOnlyAdmin()) {
-        setReadAdmin();
         defer.resolve();
       } else if (Authinfo.isCustomerAdmin()) {
         CiService.hasRole(customerSuccessRole)
@@ -213,10 +212,6 @@
 
     function setOpsAdmin() {
       vm.adminType = vm.adminTypes.OPS;
-    }
-
-    function setReadAdmin() {
-      vm.adminType = vm.adminTypes.READ;
     }
 
     function patchSync() {

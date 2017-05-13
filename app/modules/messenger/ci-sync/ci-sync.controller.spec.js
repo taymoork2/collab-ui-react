@@ -37,14 +37,6 @@
         spyOn(SyncService, 'getSyncStatus').and.returnValue($q.resolve());
       });
 
-      it('should initialize user with adminTypes.READ', function () {
-        spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
-
-        initController();
-
-        expect(ctrl.adminType).toBe(ctrl.adminTypes.READ);
-      });
-
       it('should initialize user with adminTypes.OPS with help desk user', function () {
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(false);
