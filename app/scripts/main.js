@@ -148,6 +148,7 @@
 
   angular.module('Messenger', [
     'Core',
+    require('modules/core/scripts/services/accountorgservice'),
     require('modules/shared').default,
   ]);
 
