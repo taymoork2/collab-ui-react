@@ -6,12 +6,13 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /* @ngInject */
-  function CiSyncCtrl($q, $translate, Authinfo, Notification, CiService, SyncService) {
+  function CiSyncCtrl($q, $translate, Authinfo, Config, CiService, Notification, SyncService) {
     var vm = this;
 
     var translatePrefix = 'messengerCiSync.';
     var customerSuccessRole = 'webex-messenger.customer_success';
-    var requiredEntitlements = ['webex-squared', 'webex-messenger'];
+    var requiredEntitlements = [Config.entitlements.squared, Config.entitlements.messenger];
+    var JABBER_INTEROP_ENTITLEMENT = Config.entitlements.messenger_interop;
 
     // TODO: replace this mechanism with something more consistent w/ other pages
     vm.dataStates = {
