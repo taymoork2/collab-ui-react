@@ -197,7 +197,7 @@
     function refreshStatus() {
       return SyncService.refreshSyncStatus()
         .then(function (syncStatusObj) {
-          vm.settings.syncInfo = syncStatusObj;
+          vm.settingsCopy.syncInfo = vm.settings.syncInfo = syncStatusObj;
           return syncStatusObj;
         })
         .catch(function (errorObj) {
