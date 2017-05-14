@@ -1,63 +1,59 @@
-/* globals $controller, $httpBackend, $q, $rootScope, Analytics, FeatureToggleService, Notification, Orgservice, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
-
 'use strict';
 
+var trialModule = require('./trial.module');
+
 describe('Controller: TrialDeviceController', function () {
-  var controller, scope;
-  var trialData = getJSONFixture('core/json/trials/trialData.json');
-  var limitData = {};
-
-  afterEach(function () {
-    controller = scope = undefined;
-  });
-
-  afterAll(function () {
-    trialData = limitData = undefined;
-  });
-
-  beforeEach(angular.mock.module('core.trial'));
-  beforeEach(angular.mock.module('Core'));
-  // TODO - check for removal of Huron and Sunlight when MX300 are officially supported
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-
   beforeEach(function () {
-    // TODO - check for removal of $httpBackend and FeatureToggleService when MX300 are officially supported
-    bard.inject(this, '$controller', '$httpBackend', '$q', '$rootScope', 'Analytics', 'FeatureToggleService', 'Notification', 'Orgservice', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
-  });
+    // TODO: fix the module dependencies
+    this.initModules(
+      trialModule,
+      'Core',
+      'Huron',
+      'Sunlight'
+    );
+    this.injectDependencies(
+      '$controller',
+      '$httpBackend',
+      '$q',
+      '$scope',
+      'Analytics',
+      'FeatureToggleService',
+      'Notification',
+      'Orgservice',
+      'TrialCallService',
+      'TrialDeviceService',
+      'TrialRoomSystemService'
+    );
 
-  beforeEach(function () {
-    // TODO - remove $httpBackend when MX300 are officially supported
-    $httpBackend
+    this.trialData = getJSONFixture('core/json/trials/trialData.json');
+
+    // TODO - remove this.$httpBackend when MX300 are officially supported
+    this.$httpBackend
       .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
       .respond({});
-    spyOn(Orgservice, 'getOrg');
-    limitData = TrialDeviceService.getDeviceLimit();
-    spyOn(Analytics, 'trackTrialSteps');
-    spyOn(FeatureToggleService, 'atlasPhonesCanadaGetStatus').and.returnValue($q.resolve(false));
-    initController();
+    spyOn(this.Orgservice, 'getOrg');
+    this.limitData = this.TrialDeviceService.getDeviceLimit();
+    spyOn(this.Analytics, 'trackTrialSteps');
+    spyOn(this.FeatureToggleService, 'atlasPhonesCanadaGetStatus').and.returnValue(this.$q.resolve(false));
+
+    this.initController = function () {
+      this.$scope.trialData = this.trialData.enabled;
+      this.controller = this.$controller('TrialDeviceController', { $scope: this.$scope });
+      this.$scope.$apply();
+    };
+
+    this.initController();
   });
 
-  function initController() {
-    scope = $rootScope.$new();
-    scope.trialData = trialData.enabled;
-    controller = $controller('TrialDeviceController', { $scope: scope.$new() });
-    $rootScope.$apply();
-  }
-
   describe('controller data', function () {
-    it('should be created successfully', function () {
-      expect(controller).toBeDefined();
-    });
-
     it('should have nothing enabled', function () {
-      var roomSystems = _.find(controller.details.roomSystems, {
+      var roomSystems = _.find(this.controller.details.roomSystems, {
         enabled: true,
       });
-      var phones = _.filter(controller.details.phones, {
+      var phones = _.filter(this.controller.details.phones, {
         enabled: true,
       });
-      var shippingInfo = _.find(controller.details.shippingInfo, {
+      var shippingInfo = _.find(this.controller.details.shippingInfo, {
         enabled: true,
       });
 
@@ -68,19 +64,19 @@ describe('Controller: TrialDeviceController', function () {
 
     // the back end expects this as an enum and enums cant start with numbers
     it('should have all devices starting with \'CISCO_\'', function () {
-      for (var i = 0; i < controller.details.roomSystems.length; i++) {
-        var rsModel = controller.details.roomSystems[i].model;
+      for (var i = 0; i < this.controller.details.roomSystems.length; i++) {
+        var rsModel = this.controller.details.roomSystems[i].model;
         expect(_.startsWith(rsModel, 'CISCO_')).toBeTruthy();
       }
-      for (var j = 0; j < controller.details.phones.length; j++) {
-        var phoneModel = controller.details.phones[j].model;
+      for (var j = 0; j < this.controller.details.phones.length; j++) {
+        var phoneModel = this.controller.details.phones[j].model;
         expect(_.startsWith(phoneModel, 'CISCO_')).toBeTruthy();
       }
     });
 
     it('should always have a recipient type === PARTNER || CUSTOMER', function () {
-      var type = controller.shippingInfo.type;
-      expect(controller.shippingInfo.type).toBeDefined();
+      var type = this.controller.shippingInfo.type;
+      expect(this.controller.shippingInfo.type).toBeDefined();
 
       expect(type === 'CUSTOMER' || type === 'PARTNER').toBeTruthy();
     });
@@ -136,31 +132,26 @@ describe('Controller: TrialDeviceController', function () {
 
       }];
 
-      expect(controller.calcQuantity(devices1)).toEqual(3);
-      expect(controller.calcQuantity(devices1, devices2)).toEqual(7);
-      expect(controller.calcQuantity(devices3)).toEqual(0);
+      expect(this.controller.calcQuantity(devices1)).toEqual(3);
+      expect(this.controller.calcQuantity(devices1, devices2)).toEqual(7);
+      expect(this.controller.calcQuantity(devices3)).toEqual(0);
     });
 
     it('should correctly calculate quantity by device type', function () {
       // default data has quality 3 of CISCO_8865 and 2 of CISCO_SX10
-      bard.mockService(TrialCallService, {
-        getData: trialData.enabled.trials.callTrial,
-      });
+      spyOn(this.TrialCallService, 'getData').and.returnValue(this.trialData.enabled.trials.callTrial);
+      spyOn(this.TrialRoomSystemService, 'getData').and.returnValue(this.trialData.enabled.trials.roomSystemTrial);
 
-      bard.mockService(TrialRoomSystemService, {
-        getData: trialData.enabled.trials.roomSystemTrial,
-      });
-
-      controller.phone7832.quantity = 2;
-      controller.phone7832.enabled = true;
-      controller.phone8845.quantity = 1;
-      controller.phone8845.enabled = true;
-      controller.sx10.quantity = 1;
-      controller.sx10.enabled = true;
-      controller.mx300.quantity = 1;
-      controller.mx300.enabled = true;
-      var roomSystemsQuantity = controller.getTypeQuantity('roomSystems');
-      var phonesQuantity = controller.getTypeQuantity('phones');
+      this.controller.phone7832.quantity = 2;
+      this.controller.phone7832.enabled = true;
+      this.controller.phone8845.quantity = 1;
+      this.controller.phone8845.enabled = true;
+      this.controller.sx10.quantity = 1;
+      this.controller.sx10.enabled = true;
+      this.controller.mx300.quantity = 1;
+      this.controller.mx300.enabled = true;
+      var roomSystemsQuantity = this.controller.getTypeQuantity('roomSystems');
+      var phonesQuantity = this.controller.getTypeQuantity('phones');
       expect(roomSystemsQuantity).toBe(2);
       expect(phonesQuantity).toBe(3);
     });
@@ -173,7 +164,7 @@ describe('Controller: TrialDeviceController', function () {
 
       };
 
-      controller.setQuantity(deviceModel);
+      this.controller.setQuantity(deviceModel);
 
       expect(deviceModel.quantity).toBe(3);
       expect(deviceModel.enabled).toBe(true);
@@ -187,9 +178,9 @@ describe('Controller: TrialDeviceController', function () {
         readonly: false,
 
       };
-      spyOn(controller, 'getQuantity').and.returnValue(2);
+      spyOn(this.controller, 'getQuantity').and.returnValue(2);
 
-      controller.setQuantity(deviceModel);
+      this.controller.setQuantity(deviceModel);
 
       expect(deviceModel.quantity).toBe(2);
       expect(deviceModel.enabled).toBe(true);
@@ -197,66 +188,58 @@ describe('Controller: TrialDeviceController', function () {
     });
 
     it('should set device trial limits', function () {
-      bard.mockService(TrialDeviceService, {
-        getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.resolve({
-          activeDeviceTrials: 17,
-          maxDeviceTrials: 20,
-        }),
-        getDeviceLimit: limitData,
-        listTypes: {},
-      });
-      initController();
+      spyOn(this.TrialDeviceService, 'getData').and.returnValue(this.trialData.enabled.trials.deviceTrial);
+      spyOn(this.TrialDeviceService, 'getLimitsPromise').and.returnValue(this.$q.resolve({
+        activeDeviceTrials: 17,
+        maxDeviceTrials: 20,
+      }));
+      spyOn(this.TrialDeviceService, 'getDeviceLimit').and.returnValue(this.limitData);
+      spyOn(this.TrialDeviceService, 'listTypes').and.returnValue({});
+      this.initController();
 
-      expect(controller.activeTrials).toEqual(17);
-      expect(controller.maxTrials).toEqual(20);
-      expect(controller.limitReached).toBe(false);
+      expect(this.controller.activeTrials).toEqual(17);
+      expect(this.controller.maxTrials).toEqual(20);
+      expect(this.controller.limitReached).toBe(false);
     });
 
     it('should set limitReached', function () {
-      bard.mockService(TrialDeviceService, {
-        getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.resolve({
-          activeDeviceTrials: 20,
-          maxDeviceTrials: 20,
-        }),
-        getDeviceLimit: limitData,
-        listTypes: {},
-      });
-      initController();
+      spyOn(this.TrialDeviceService, 'getData').and.returnValue(this.trialData.enabled.trials.deviceTrial);
+      spyOn(this.TrialDeviceService, 'getLimitsPromise').and.returnValue(this.$q.resolve({
+        activeDeviceTrials: 20,
+        maxDeviceTrials: 20,
+      }));
+      spyOn(this.TrialDeviceService, 'getDeviceLimit').and.returnValue(this.limitData);
+      spyOn(this.TrialDeviceService, 'listTypes').and.returnValue({});
+      this.initController();
 
-      expect(controller.activeTrials).toEqual(20);
-      expect(controller.maxTrials).toEqual(20);
-      expect(controller.limitReached).toBe(true);
+      expect(this.controller.activeTrials).toEqual(20);
+      expect(this.controller.maxTrials).toEqual(20);
+      expect(this.controller.limitReached).toBe(true);
     });
 
     it('should set limitsError', function () {
-      bard.mockService(TrialDeviceService, {
-        getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.reject(),
-        getDeviceLimit: limitData,
-        listTypes: {},
-      });
-      initController();
+      spyOn(this.TrialDeviceService, 'getData').and.returnValue(this.trialData.enabled.trials.deviceTrial);
+      spyOn(this.TrialDeviceService, 'getLimitsPromise').and.returnValue(this.$q.reject());
+      spyOn(this.TrialDeviceService, 'getDeviceLimit').and.returnValue(this.limitData);
+      spyOn(this.TrialDeviceService, 'listTypes').and.returnValue({});
+      this.initController();
 
-      expect(controller.limitsError).toBe(true);
-      expect(controller.limitReached).toBe(true);
+      expect(this.controller.limitsError).toBe(true);
+      expect(this.controller.limitReached).toBe(true);
     });
 
     it('should notify limit approaching', function () {
-      spyOn(Notification, 'warning');
-      bard.mockService(TrialDeviceService, {
-        getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.resolve({
-          activeDeviceTrials: 17,
-          maxDeviceTrials: 20,
-        }),
-        getDeviceLimit: limitData,
-        listTypes: {},
-      });
-      initController();
+      spyOn(this.Notification, 'warning');
+      spyOn(this.TrialDeviceService, 'getData').and.returnValue(this.trialData.enabled.trials.deviceTrial);
+      spyOn(this.TrialDeviceService, 'getLimitsPromise').and.returnValue(this.$q.resolve({
+        activeDeviceTrials: 17,
+        maxDeviceTrials: 20,
+      }));
+      spyOn(this.TrialDeviceService, 'getDeviceLimit').and.returnValue(this.limitData);
+      spyOn(this.TrialDeviceService, 'listTypes').and.returnValue({});
+      this.initController();
 
-      expect(Notification.warning).toHaveBeenCalled();
+      expect(this.Notification.warning).toHaveBeenCalled();
     });
   });
 
@@ -272,7 +255,7 @@ describe('Controller: TrialDeviceController', function () {
         minQuantity: 1,
         maxQuantity: 3,
       };
-      controller.setQuantityInputDefault(device);
+      this.controller.setQuantityInputDefault(device);
       expect(device.quantity).toBe(0);
     });
 
@@ -286,7 +269,7 @@ describe('Controller: TrialDeviceController', function () {
         minQuantity: 1,
         maxQuantity: 3,
       };
-      controller.setQuantityInputDefault(device);
+      this.controller.setQuantityInputDefault(device);
       expect(device.quantity).toBe(1);
     });
 
@@ -300,7 +283,7 @@ describe('Controller: TrialDeviceController', function () {
         minQuantity: 1,
         maxQuantity: 3,
       };
-      controller.setQuantityInputDefault(device, 1);
+      this.controller.setQuantityInputDefault(device, 1);
       expect(device.quantity).toBe(3);
     });
 
@@ -309,45 +292,35 @@ describe('Controller: TrialDeviceController', function () {
   describe('total device quantity calculation', function () {
 
     it('should calculate total quantity 0 when nothing is enabled', function () {
-      var total = controller.getTotalQuantity();
+      var total = this.controller.getTotalQuantity();
       expect(total).toBe(0);
     });
 
     it('should calculate total quantity correcty when not 0', function () {
       // default data has quality 3 of CISCO_8865 and 2 of CISCO_SX10
-      bard.mockService(TrialCallService, {
-        getData: trialData.enabled.trials.callTrial,
-        canAddCallDevice: true,
-      });
+      spyOn(this.TrialCallService, 'getData').and.returnValue(this.trialData.enabled.trials.callTrial);
+      spyOn(this.TrialCallService, 'canAddCallDevice').and.returnValue(true);
 
-      bard.mockService(TrialRoomSystemService, {
-        getData: trialData.enabled.trials.roomSystemTrial,
-        canAddRoomSystemDevice: true,
-      });
+      spyOn(this.TrialRoomSystemService, 'getData').and.returnValue(this.trialData.enabled.trials.roomSystemTrial);
+      spyOn(this.TrialRoomSystemService, 'canAddRoomSystemDevice').and.returnValue(true);
 
-      initController();
-      $rootScope.$apply();
+      this.initController();
 
-      var total = controller.getTotalQuantity();
+      var total = this.controller.getTotalQuantity();
       expect(total).toBe(5);
 
     });
     it('should calculate total quantity correcty when not 0 but trail is not enabled', function () {
       // default data has quality 3 of CISCO_8865 and 2 of CISCO_SX10
-      bard.mockService(TrialCallService, {
-        getData: trialData.enabled.trials.callTrial,
-        canAddCallDevice: true,
-      });
+      spyOn(this.TrialCallService, 'getData').and.returnValue(this.trialData.enabled.trials.callTrial);
+      spyOn(this.TrialCallService, 'canAddCallDevice').and.returnValue(true);
 
-      bard.mockService(TrialRoomSystemService, {
-        getData: trialData.enabled.trials.roomSystemTrial,
-        canAddRoomSystemDevice: false,
-      });
+      spyOn(this.TrialRoomSystemService, 'getData').and.returnValue(this.trialData.enabled.trials.roomSystemTrial);
+      spyOn(this.TrialRoomSystemService, 'canAddRoomSystemDevice').and.returnValue(false);
 
-      initController();
-      $rootScope.$apply();
+      this.initController();
 
-      var total = controller.getTotalQuantity();
+      var total = this.controller.getTotalQuantity();
       expect(total).toBe(3);
 
     });
@@ -355,7 +328,7 @@ describe('Controller: TrialDeviceController', function () {
 
   describe('checkbox validation', function () {
     it('should validate when model valid is true', function () {
-      var valid = controller.validateChecks(null, null, {
+      var valid = this.controller.validateChecks(null, null, {
         model: {
           valid: true,
         },
@@ -364,7 +337,7 @@ describe('Controller: TrialDeviceController', function () {
     });
 
     it('should validate when one or more checkboxes are enabled true', function () {
-      var valid = controller.validateChecks(null, null, {
+      var valid = this.controller.validateChecks(null, null, {
         model: {
           enabled: true,
           valid: true,
@@ -374,7 +347,7 @@ describe('Controller: TrialDeviceController', function () {
     });
 
     it('should not validate when all checkboxes are enabled false', function () {
-      var valid = controller.validateChecks(null, null, {
+      var valid = this.controller.validateChecks(null, null, {
         model: {
           enabled: false,
           valid: false,
@@ -386,40 +359,35 @@ describe('Controller: TrialDeviceController', function () {
 
   describe('areAdditionalDevicesAllowed  function ', function () {
     it('should return false when limit is reached', function () {
+      spyOn(this.TrialDeviceService, 'getData').and.returnValue(this.trialData.enabled.trials.deviceTrial);
+      spyOn(this.TrialDeviceService, 'getLimitsPromise').and.returnValue(this.$q.resolve({
+        activeDeviceTrials: 20,
+        maxDeviceTrials: 20,
+      }));
+      spyOn(this.TrialDeviceService, 'getDeviceLimit').and.returnValue(this.limitData);
+      spyOn(this.TrialDeviceService, 'listTypes').and.returnValue({});
 
-      bard.mockService(TrialDeviceService, {
-        getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.resolve({
-          activeDeviceTrials: 20,
-          maxDeviceTrials: 20,
-        }),
-        getDeviceLimit: limitData,
-        listTypes: {},
-      });
+      this.initController();
+      this.controller.canAddMoreDevices = false;
+      this.$scope.$apply();
 
-      initController();
-      controller.canAddMoreDevices = false;
-      $rootScope.$apply();
-
-      var result = controller.areAdditionalDevicesAllowed();
+      var result = this.controller.areAdditionalDevicesAllowed();
       expect(result).toBe(false);
     });
 
     it('should return true when the limit is not reached', function () {
-      bard.mockService(TrialDeviceService, {
-        getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.resolve({
-          activeDeviceTrials: 15,
-          maxDeviceTrials: 20,
-        }),
-        getDeviceLimit: limitData,
-        listTypes: {},
-      });
-      initController();
-      controller.canAddMoreDevices = false;
-      $rootScope.$apply();
+      spyOn(this.TrialDeviceService, 'getData').and.returnValue(this.trialData.enabled.trials.deviceTrial);
+      spyOn(this.TrialDeviceService, 'getLimitsPromise').and.returnValue(this.$q.resolve({
+        activeDeviceTrials: 15,
+        maxDeviceTrials: 20,
+      }));
+      spyOn(this.TrialDeviceService, 'getDeviceLimit').and.returnValue(this.limitData);
+      spyOn(this.TrialDeviceService, 'listTypes').and.returnValue({});
+      this.initController();
+      this.controller.canAddMoreDevices = false;
+      this.$scope.$apply();
 
-      var result = controller.areAdditionalDevicesAllowed();
+      var result = this.controller.areAdditionalDevicesAllowed();
       expect(result).toBe(true);
     });
   });
@@ -434,7 +402,7 @@ describe('Controller: TrialDeviceController', function () {
         valid: true,
       };
 
-      expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
+      expect(this.controller.areTemplateOptionsDisabled(device)).toBeTruthy();
     });
 
     it('should set to false if device.enabled is true', function () {
@@ -445,7 +413,7 @@ describe('Controller: TrialDeviceController', function () {
         readonly: false,
         valid: true,
       };
-      expect(controller.areTemplateOptionsDisabled(device)).toBeFalsy();
+      expect(this.controller.areTemplateOptionsDisabled(device)).toBeFalsy();
     });
 
     it('should set to false if device.readonly is true', function () {
@@ -456,51 +424,51 @@ describe('Controller: TrialDeviceController', function () {
         readonly: true,
         valid: true,
       };
-      expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
+      expect(this.controller.areTemplateOptionsDisabled(device)).toBeTruthy();
     });
   });
 
   describe('Shipping to additional countries ', function () {
     it('should show a largest list of countries when only CISCO_SX10 is selected', function () {
-      controller.sx10.enabled = true;
-      controller.sx10.quantity = 1;
-      var countryList = controller.getCountriesForSelectedDevices();
+      this.controller.sx10.enabled = true;
+      this.controller.sx10.quantity = 1;
+      var countryList = this.controller.getCountriesForSelectedDevices();
       expect(countryList.length).toBeGreaterThan(2);
     });
     it('should have a list of countries to be US and Canada only when CISCO_SX10 and Desk Phone is selected AND FT is true', function () {
-      FeatureToggleService.atlasPhonesCanadaGetStatus.and.returnValue($q.resolve(true));
-      initController();
-      controller.sx10.enabled = true;
-      controller.sx10.quantity = 1;
-      controller.phone8865.enabled = true;
-      controller.phone8865.quantity = 1;
+      this.FeatureToggleService.atlasPhonesCanadaGetStatus.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      this.controller.sx10.enabled = true;
+      this.controller.sx10.quantity = 1;
+      this.controller.phone8865.enabled = true;
+      this.controller.phone8865.quantity = 1;
 
-      var countryList = controller.getCountriesForSelectedDevices();
+      var countryList = this.controller.getCountriesForSelectedDevices();
       expect(countryList.length).toBe(2);
       expect(countryList).toContain({ country: 'United States' });
       expect(countryList).toContain({ country: 'Canada' });
     });
     it('should have a list of countries to be US only when CISCO_SX10 and Desk Phone is selected and FT is false', function () {
 
-      controller.sx10.enabled = true;
-      controller.sx10.quantity = 1;
-      controller.phone8865.enabled = true;
-      controller.phone8865.quantity = 1;
-      FeatureToggleService.atlasPhonesCanadaGetStatus.and.returnValue($q.resolve(false));
-      var countryList = controller.getCountriesForSelectedDevices();
+      this.controller.sx10.enabled = true;
+      this.controller.sx10.quantity = 1;
+      this.controller.phone8865.enabled = true;
+      this.controller.phone8865.quantity = 1;
+      this.FeatureToggleService.atlasPhonesCanadaGetStatus.and.returnValue(this.$q.resolve(false));
+      var countryList = this.controller.getCountriesForSelectedDevices();
       expect(countryList.length).toBe(1);
       expect(countryList).toContain({ country: 'United States' });
       expect(countryList).not.toContain({ country: 'Canada' });
 
     });
     it('should have a list of countries to still be US only when MX300 phone is selected', function () {
-      controller.sx10.enabled = true;
-      controller.sx10.quantity = 1;
-      controller.mx300.enabled = true;
-      controller.mx300.quantity = 1;
-      controller.phone8865.enabled = true;
-      controller.phone8865.quantity = 1;
-      var countryList = controller.getCountriesForSelectedDevices();
+      this.controller.sx10.enabled = true;
+      this.controller.sx10.quantity = 1;
+      this.controller.mx300.enabled = true;
+      this.controller.mx300.quantity = 1;
+      this.controller.phone8865.enabled = true;
+      this.controller.phone8865.quantity = 1;
+      var countryList = this.controller.getCountriesForSelectedDevices();
       expect(countryList.length).toBe(1);
       expect(countryList).toContain({ country: 'United States' });
     });
