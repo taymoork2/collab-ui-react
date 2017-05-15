@@ -1,6 +1,7 @@
 module.exports = {
   requireAcceptTos: 'atlas-tos-required',
   dirSync: 'atlas-dir-sync',
+  atlas2017NameChange: 'atlas-2017-name-change',
   atlasCareTrials: 'atlas-care-trials',
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
   atlasContextServiceTrials: 'atlas-context-service-trials',
