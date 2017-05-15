@@ -12,8 +12,9 @@ describe('PartnerManagementController:', function () {
   var $state;
   var ctrl;
   var Notification;
-  // Until we have a real solution to GC issues...
-  afterAll(function () {
+
+  // TODO: switch this over to using `this.*()` methods for dependency injection
+  afterEach(function () {
     $controller = $q = $scope = svc = $state = ctrl = Notification = undefined;
   });
 
