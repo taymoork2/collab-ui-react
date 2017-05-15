@@ -3305,6 +3305,8 @@
     "invalidCharacter": "Invalid character entered.",
     "callerInputCnvtDigit": "Convert digit input to text string value.",
     "callerInputMaxLenStr": "Max Length of String",
+    "varNamesDependenciesTitle": "Variable Dependencies",
+    "varNamesDependentCes": "Are you sure? This variable is used in...",
     "callerInputVariableTooLongMsg": "Maximum length of input variable is exceeded.",
     "callerInputVariableTooShortMsg": "Variable name is too short.",
     "callerInputVariableRequiredMsg": "Variable name is required.",
