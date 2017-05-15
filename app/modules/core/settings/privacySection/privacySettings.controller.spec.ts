@@ -32,7 +32,7 @@ describe('Controller: PrivacySettingController', () => {
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
-    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve());
   }
 
   function initController(orgData) {

@@ -271,7 +271,7 @@ export class ReportService {
     });
 
     if (customerArray.length === 0) {
-      return this.$q.when([]);
+      return this.$q.resolve([]);
     } else {
       // TODO: Remove IIntervalQuery once API is fixed; currently necessary to avoid exceptions from API
       let extraOptions: IIntervalQuery = this.CommonReportService.getOptions(filter, this.ACTIVE_USERS, this.TOPN);

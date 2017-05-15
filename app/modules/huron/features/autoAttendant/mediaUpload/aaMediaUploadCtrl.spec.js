@@ -113,7 +113,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       result: modal.promise,
     });
     spyOn(Upload, 'mediaDuration').and.returnValue(deferred.promise);
-    spyOn(Analytics, 'trackEvent').and.returnValue($q.when[{
+    spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve[{
       sizeInMB: 1,
       durationInSeconds: 1,
       uuid: jasmine.any(String),

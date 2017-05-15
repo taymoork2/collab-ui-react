@@ -36,7 +36,7 @@ describe('OverviewUsersCard', function () {
       }],
     }];
 
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.licenses));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.licenses));
 
     this.card = this.OverviewUsersCard.createCard();
     this.$rootScope.$apply();

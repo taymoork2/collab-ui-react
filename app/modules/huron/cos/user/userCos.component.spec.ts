@@ -23,11 +23,11 @@ describe('Component: UserClassOfService', () => {
   });
 
   function initDependencySpies() {
-    spyOn(this.UserCosService, 'getUserCos').and.returnValue(this.$q.when(restrictions));
-    spyOn(this.UserCosService, 'updateUserCos').and.returnValue(this.$q.when(204));
-    spyOn(this.UserCosService, 'getPremiumNumbers').and.returnValue(this.$q.when(['800', '900']));
+    spyOn(this.UserCosService, 'getUserCos').and.returnValue(this.$q.resolve(restrictions));
+    spyOn(this.UserCosService, 'updateUserCos').and.returnValue(this.$q.resolve(204));
+    spyOn(this.UserCosService, 'getPremiumNumbers').and.returnValue(this.$q.resolve(['800', '900']));
     spyOn(this.Authinfo, 'getLicenseIsTrial').and.returnValue(true);
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
   }
 
   function initComponent() {

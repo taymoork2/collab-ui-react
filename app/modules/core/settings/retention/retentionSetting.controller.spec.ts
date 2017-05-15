@@ -64,7 +64,7 @@ describe('Controller: RetentionSettingController', () => {
       });
 
       function initSpyWithRetention() {
-        RetentionService.getRetention.and.returnValue($q.when({
+        RetentionService.getRetention.and.returnValue($q.resolve({
           sparkDataRetentionDays: secondRetentionOption,
         }));
       }
@@ -80,7 +80,7 @@ describe('Controller: RetentionSettingController', () => {
       });
 
       function initSpyWithRetention() {
-        RetentionService.getRetention.and.returnValue($q.when({
+        RetentionService.getRetention.and.returnValue($q.resolve({
           sparkDataRetentionDays: 45444,
         }));
       }
@@ -97,7 +97,7 @@ describe('Controller: RetentionSettingController', () => {
       });
 
       function initSpyInsufficientResponse() {
-        RetentionService.getRetention.and.returnValue($q.when({}));
+        RetentionService.getRetention.and.returnValue($q.resolve({}));
       }
     });
   });
@@ -119,8 +119,8 @@ describe('Controller: RetentionSettingController', () => {
     });
 
     function initSpyIncompleteResponse() {
-      RetentionService.getRetention.and.returnValue($q.when({}));
-      RetentionService.setRetention.and.returnValue($q.when({}));
+      RetentionService.getRetention.and.returnValue($q.resolve({}));
+      RetentionService.setRetention.and.returnValue($q.resolve({}));
     }
   });
 });
