@@ -71,6 +71,7 @@
         fusion_mgmt: 'squared-fusion-mgmt',
         room_system: 'spark-room-system',
         fusion_ec: 'squared-fusion-ec',
+        messenger_interop: 'messenger-interop',
         messenger: 'webex-messenger',
         care: 'cloud-contact-center',
         care_inbound_voice: 'cloud-contact-center-inbound-voice',
