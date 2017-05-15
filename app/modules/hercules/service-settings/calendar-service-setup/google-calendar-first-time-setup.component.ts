@@ -137,6 +137,19 @@ export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController
   public dismiss(): void {
     this.CloudConnectorService.dismissSetupModal();
   }
+
+  public goToUsers(): void {
+    this.dismiss();
+    this.$state.go('users.list');
+  }
+
+  public manageUsers(): void {
+    this.dismiss();
+    this.$state.go('users.list')
+      .then(() => {
+        this.$state.go('users.manage.picker');
+      });
+  }
 }
 
 export class GoogleCalendarFirstTimeSetupComponent implements ng.IComponentOptions {
