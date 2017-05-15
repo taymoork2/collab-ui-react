@@ -4,6 +4,7 @@ module.exports = {
   atlas2017NameChange: 'atlas-2017-name-change',
   atlasCareTrials: 'atlas-care-trials',
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
+  atlasCareAutomatedRouteTrials: 'care-automated-routing',
   atlasContextServiceTrials: 'atlas-context-service-trials',
   atlasContextDictionaryEdit: 'atlas-context-dictionary-edit',
   atlasDarling: 'atlas-darling',

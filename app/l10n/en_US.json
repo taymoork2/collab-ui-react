@@ -3146,6 +3146,7 @@
     "careSettingsTimeout": "Request timed out while checking Care setup status.",
     "careSettingsChecking": "Checking Care setup status.",
     "setUpCareFailure": "Failed to setup Care. Please try again or skip this step for now and set it up from the Settings page in Care. Users cannot have Care license until this setup is complete.",
+    "careSettingsUpdateFailed": "Care settings could not be saved at this time.",
     "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
@@ -6020,7 +6021,29 @@
       "setUpCare": "Care",
       "setUpDescription": "Setup Care to add this license for your users so that your organization can take advantage of Care service.",
       "setUpCareSuccess": "Care service has been setup successfully.",
-      "setUpCareFailure": "Failed to setup Care. Please try again. Users cannot have Care license until this setup is complete."
+      "setUpCareFailure": "Failed to setup Care. Please try again. Users cannot have Care license until this setup is complete.",
+      "routing": {
+        "header": "Routing",
+        "description": "This setting is applicable to all users in the organization.",
+        "pick": {
+          "Header": "Pick Routing",
+          "Label": "Users can pick tasks from a queue based on their capacity."
+        },
+        "automated": {
+          "Header": "Automated Routing",
+          "Label": "Users are offered tasks based on their availability and capacity."
+        }
+      },
+      "saveModal": {
+        "Header": "Care Settings",
+        "BodyMsg1": "Are you sure you want to change your care settings?",
+        "BodyMsg2": "Do you want to save your care settings?",
+        "Save": "Yes",
+        "Cancel": "No"
+      },
+      "routingChangeWarnMsgLine1": "Routing changes require up to 15 minutes to take effect.",
+      "routingChangeWarnMsgLine2": "We recommend changing this setting during off hours or when users are not signed in.",
+      "routingChangeWarnMsgLine3": "Users are required to sign in again to receive tasks as per the new routing."
     },
     "featuresNotYetConfiguredPage": {
       "createCareTemplate": "Create a Care Template",
