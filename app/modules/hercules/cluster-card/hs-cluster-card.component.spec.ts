@@ -1,20 +1,24 @@
-'use strict';
+import hsClusterCardModule from './index';
 
 describe('Component: hsClusterCard', function () {
-  beforeEach(angular.mock.module('Hercules'));
-
-  describe('Controller', function () {
-    var $componentController;
-    var controller;
-    var mockCluster = {
+  beforeEach(function () {
+    this.initModules(hsClusterCardModule);
+    this.injectDependencies(
+      '$q',
+      '$scope',
+      'FeatureToggleService',
+    );
+    this.$scope.clusterMock = {
       id: 1,
       name: 'Sup',
       connectors: [{
+        alarms: [],
         id: 'c_mgmt@0BA28333',
         connectorType: 'c_mgmt',
         hostname: 'achronos-expressway.rd.cisco.com',
         hostSerial: '0BA28333',
       }, {
+        alarms: [],
         id: 'c_cal@0BA28333',
         connectorType: 'c_cal',
         hostname: 'achronos-expressway.rd.cisco.com',
@@ -47,66 +51,61 @@ describe('Component: hsClusterCard', function () {
         total: 1,
       }],
     };
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+    this.compileComponent('hsClusterCard', { cluster: 'clusterMock' });
+  });
 
-    beforeEach(inject(function ($injector) {
-      $componentController = $injector.get('$componentController');
-      controller = $componentController('hsClusterCard', {
-        $scope: {},
-      }, {
-        cluster: mockCluster,
-      });
-    }));
-
+  describe('Controller', function () {
     it('should bind to the correct cluster', function () {
-      expect(controller.cluster.id).toEqual(mockCluster.id);
+      expect(this.controller.cluster.id).toEqual(this.$scope.clusterMock.id);
     });
 
     describe('getHostnames()', function () {
       it('should find unique hostnames and sort them', function () {
-        expect(controller.getHostnames(controller.cluster)).toBe('achronos-expressway.rd.cisco.com');
+        expect(this.controller.getHostnames(this.controller.cluster)).toBe('achronos-expressway.rd.cisco.com');
       });
     });
 
     describe('countHosts()', function () {
       it('should count unique hostnames', function () {
-        expect(controller.countHosts(controller.cluster)).toBe(1);
+        expect(this.controller.countHosts(this.controller.cluster)).toBe(1);
       });
     });
 
     describe('hasServices()', function () {
       it('should be true there are one or more connector ', function () {
-        expect(controller.hasServices(controller.cluster)).toBe(true);
+        expect(this.controller.hasServices(this.controller.cluster)).toBe(true);
       });
     });
 
     describe('upgradesAutomatically()', function () {
       it('should return true for context service', function () {
-        ['cs_mgmt'].forEach(function (type) {
-          var cluster = { targetType: type };
-          expect(controller.upgradesAutomatically(cluster)).toBe(true);
+        ['cs_mgmt'].forEach((type) => {
+          let cluster = { targetType: type };
+          expect(this.controller.upgradesAutomatically(cluster)).toBe(true);
         });
       });
 
       it('should return false otherwise', function () {
-        ['c_mgmt', 'mf_mgmt', 'hds_app', 'ucm_mgmt'].forEach(function (type) {
-          var cluster = { targetType: type };
-          expect(controller.upgradesAutomatically(cluster)).toBe(false);
+        ['c_mgmt', 'mf_mgmt', 'hds_app', 'ucm_mgmt'].forEach((type) => {
+          let cluster = { targetType: type };
+          expect(this.controller.upgradesAutomatically(cluster)).toBe(false);
         });
       });
     });
 
     describe('hideFooter()', function () {
       it('should return true for context service', function () {
-        ['cs_mgmt'].forEach(function (type) {
-          var cluster = { targetType: type };
-          expect(controller.hideFooter(cluster)).toBe(true);
+        ['cs_mgmt'].forEach((type) => {
+          let cluster = { targetType: type };
+          expect(this.controller.hideFooter(cluster)).toBe(true);
         });
       });
 
       it('should return false otherwise', function () {
-        ['c_mgmt', 'mf_mgmt', 'hds_app', 'ucm_mgmt'].forEach(function (type) {
-          var cluster = { targetType: type };
-          expect(controller.hideFooter(cluster)).toBe(false);
+        ['c_mgmt', 'mf_mgmt', 'hds_app', 'ucm_mgmt'].forEach((type) => {
+          let cluster = { targetType: type };
+          expect(this.controller.hideFooter(cluster)).toBe(false);
         });
       });
     });
