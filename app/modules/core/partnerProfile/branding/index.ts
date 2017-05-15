@@ -8,8 +8,6 @@ import './_brandingUpload.scss';
 import featureToggleModule from 'modules/core/featureToggle';
 import notificationModule from 'modules/core/notifications';
 
-export { BrandingCtrl };
-
 export default angular.module('core.partnerProfile.branding', [
   require('angular-cache'),
   require('angular-translate'),

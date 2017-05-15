@@ -1,6 +1,6 @@
 import { DomainsSettingComponent } from './domainsSetting.component';
 
-export default angular.module('core.settings.branding', [
+export default angular.module('core.settings.domain', [
   require('angular-cache'),
   require('angular-ui-router'),
   require('angular-translate'),
