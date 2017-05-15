@@ -159,7 +159,7 @@
           var fakeResponse = {
             data: {
               entitlements: [{
-                ciName: 'messenger-interop'
+                ciName: 'messenger-interop',
               }],
             },
           };

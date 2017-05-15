@@ -132,8 +132,9 @@ describe('Authinfo:', function () {
       Authinfo.addEntitlement(fakeEntitlement);
       expect(Authinfo.getServices().length).toBe(1);
 
-      // adding another entitlement with a 'ciName' that already exists is now allowed
-      expect(function () { Authinfo.addEntitlement(fakeEntitlement); }).toThrowError(/already exists/);
+      // adding an entitlement that already exists does nothing
+      Authinfo.addEntitlement(fakeEntitlement);
+      expect(Authinfo.getServices().length).toBe(1);
     });
 
     it('should remove an entitlement', function () {

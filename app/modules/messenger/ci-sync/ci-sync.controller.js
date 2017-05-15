@@ -285,9 +285,6 @@
         .catch(function (errorObj) {
           var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;
           Notification.error(error);
-
-          // Reset to previous state
-          return getSyncStatus();
         });
     }
 
@@ -316,8 +313,8 @@
         .then(function () {
           Notification.success(translatePrefix + 'jabberInteropUpdateSuccessful');
         })
-        .catch(function (error) {
-          Notification.error(translatePrefix + 'errorFailedUpdatingJabberInterop')
+        .catch(function () {
+          Notification.error(translatePrefix + 'errorFailedUpdatingJabberInterop');
         });
     }
   }

@@ -577,10 +577,9 @@
       },
       addEntitlement: function (entitlementObj) {
         var entitlement = _.get(entitlementObj, 'ciName');
-        if (isEntitled(entitlement)) {
-          throw new Error('Entitlement: "' + entitlement + '" already exists.');
+        if (!isEntitled(entitlement)) {
+          this.getServices().push(entitlementObj);
         }
-        this.getServices().push(entitlementObj);
       },
       removeEntitlement: function (entitlement) {
         if (!isEntitled(entitlement)) {
