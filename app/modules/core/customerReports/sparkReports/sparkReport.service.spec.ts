@@ -54,7 +54,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Active User Services', function () {
     it('should return column data getActiveUserData', function () {
-      spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.when(this.dataResponse([{
+      spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.resolve(this.dataResponse([{
         data: this.updateDates(_.cloneDeep(this.activeData.activeDetailed)),
       }])));
 
@@ -80,7 +80,7 @@ describe('Service: Customer Reports Service', function () {
     });
 
     it('should getMostActiveUserData', function () {
-      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.when({
+      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.resolve({
         data: _.cloneDeep(this.activeData.mostActive),
       }));
 
@@ -110,7 +110,7 @@ describe('Service: Customer Reports Service', function () {
         } else if (options.type === 'avgConversations') {
           data = this.updateDates(_.cloneDeep(this.roomData.avgRooms.data));
         }
-        return q.when(this.dataResponse(data));
+        return q.resolve(this.dataResponse(data));
       });
 
       this.SparkReportService.getAvgRoomData(this.defaults.timeFilter[0]).then((response: Array<IAvgRoomData>): void => {
@@ -137,7 +137,7 @@ describe('Service: Customer Reports Service', function () {
         if (options.type === 'contentShareSizes') {
           data = this.updateDates(_.cloneDeep(this.fileData.contentSize.data));
         }
-        return q.when(this.dataResponse(data));
+        return q.resolve(this.dataResponse(data));
       });
 
       this.SparkReportService.getFilesSharedData(this.defaults.timeFilter[0]).then((response: Array<IFilesShared>): void => {
@@ -158,7 +158,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Media Service', function () {
     it('should getMediaQualityData', function () {
-      spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.when(this.dataResponse([{
+      spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.resolve(this.dataResponse([{
         data: this.updateDates(_.cloneDeep(this.mediaData.callQuality.data[0].data)),
       }])));
 
@@ -180,7 +180,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Call Metrics Service', function () {
     it('should getCallMetricsData', function () {
-      spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.when(this.dataResponse(_.cloneDeep(this.metricsData.data))));
+      spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.resolve(this.dataResponse(_.cloneDeep(this.metricsData.data))));
 
       this.SparkReportService.getCallMetricsData(this.defaults.timeFilter[0]).then((response: IMetricsData): void => {
         expect(response).toEqual(this.metricsData.response);
@@ -210,7 +210,7 @@ describe('Service: Customer Reports Service', function () {
         item.graph = this.updateDates(item.graph, this.defaults.dayFormat);
       });
 
-      spyOn(this.CommonReportService, 'getCustomerReportByType').and.returnValue(this.$q.when(this.dataResponse(devicesData)));
+      spyOn(this.CommonReportService, 'getCustomerReportByType').and.returnValue(this.$q.resolve(this.dataResponse(devicesData)));
 
       this.SparkReportService.getDeviceData(this.defaults.timeFilter[0]).then((response: IEndpointContainer): void => {
         expect(response).toEqual(deviceResponse);

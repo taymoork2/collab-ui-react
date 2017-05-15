@@ -366,7 +366,7 @@
         });
         spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
         spyOn(featureToggleService, 'supports').and.returnValue($q.resolve(featureIsEnabled));
-        // featureToggleService.supports = jasmine.stub().and.returnValue($q.when(featureIsEnabled));
+        // featureToggleService.supports = jasmine.stub().and.returnValue($q.resolve(featureIsEnabled));
         initTabsController();
         broadcastEvent('TABS_UPDATED');
         $scope.$apply();

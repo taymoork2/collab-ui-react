@@ -120,14 +120,14 @@ export class CmcService {
 
     switch (_.random(1, 3)) {
       case 1:
-        return this.$q.when(okMock);
+        return this.$q.resolve(okMock);
       case 2:
         return this.$q.reject(errorMock);
       case 3:
-        return this.$q.when(nokMock);
+        return this.$q.resolve(nokMock);
     }
 
-    return this.$q.when(okMock);
+    return this.$q.resolve(okMock);
   }
 
   private hasCmcService(services: string[]): boolean {

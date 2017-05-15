@@ -35,11 +35,11 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data = _.cloneDeep(getJSONFixture('core/json/myCompany/subscriptionData.json'));
     this.siteUrl = 'siteUrl';
 
-    spyOn(this.ServiceDescriptor, 'getServices').and.returnValue(this.$q.when(this.data.servicesResponse));
-    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.when(false));
-    spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.when(productInstanceResponse));
+    spyOn(this.ServiceDescriptor, 'getServices').and.returnValue(this.$q.resolve(this.data.servicesResponse));
+    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');
-    spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.$q.when(drUrlResponse));
+    spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.$q.resolve(drUrlResponse));
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
 
     spyOn(this.SharedMeetingsReportService, 'openModal');
@@ -66,7 +66,7 @@ describe('Controller: MySubscriptionCtrl', function () {
   });
 
   it('should initialize with expected data for ccw orgs', function () {
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.data.subscriptionsResponse));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsResponse));
     this.startController();
 
     expect(this.controller.hybridServices).toEqual(this.data.servicesFormatted);
@@ -78,7 +78,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for online orgs', function () {
     this.data.subscriptionsResponse[0].internalSubscriptionId = onlineIntSubId;
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.data.subscriptionsResponse));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsResponse));
     this.data.subscriptionsFormatted[0].isOnline = true;
     this.data.subscriptionsFormatted[0].productInstanceId = productInstanceId;
     this.data.subscriptionsFormatted[0].name = productName;
@@ -97,7 +97,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for ccw trial orgs', function () {
     this.data.subscriptionsTrialResponse[0].internalSubscriptionId = ccwTrialSubId;
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.data.subscriptionsTrialResponse));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
     this.data.trialSubscriptionData[0].name = 'subscriptions.enterpriseTrial';
     this.data.trialSubscriptionData[0].internalSubscriptionId = ccwTrialSubId;
     this.startController();
@@ -111,8 +111,8 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for online trial orgs', function () {
     this.data.subscriptionsTrialResponse[0].internalSubscriptionId = onlineIntSubId;
-    this.$httpBackend.whenGET(trialUrl).respond(this.$q.when(trialUrlResponse));
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.data.subscriptionsTrialResponse));
+    this.$httpBackend.whenGET(trialUrl).respond(this.$q.resolve(trialUrlResponse));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
     this.data.trialSubscriptionData[0].isOnline = true;
     this.data.trialSubscriptionData[0].upgradeTrialUrl = trialUrlResponse;
     this.data.trialSubscriptionData[0].productInstanceId = productInstanceId;
@@ -133,7 +133,7 @@ describe('Controller: MySubscriptionCtrl', function () {
   describe('Tests for Named User Licenses : ', function () {
     let dataWithNamedUserLicense = { offers: [{ licenseModel: 'hosts' }] };
     beforeEach(function () {
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.data.subscriptionsTrialResponse));
+      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
       this.startController();
     });
 
@@ -150,7 +150,7 @@ describe('Controller: MySubscriptionCtrl', function () {
   describe('Tests for Shared Meeting Licenses : ', function () {
     let dataWithSharedMeetingsLicense = { offers: [{ licenseModel: 'Cloud Shared Meeting' }] };
     beforeEach(function () {
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.data.subscriptionsTrialResponse));
+      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
       this.startController();
     });
 
@@ -166,7 +166,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   describe('Helper Functions - ', function () {
     beforeEach(function () {
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.data.subscriptionsTrialResponse));
+      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
       this.startController();
     });
 

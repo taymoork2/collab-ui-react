@@ -69,7 +69,7 @@ class ClassOfService implements ng.IComponentController {
     if ((!_.isUndefined(this.callTrial) && !this.callTrial) || (!_.isUndefined(this.roomSystemsTrial) && !this.roomSystemsTrial)) {
       this.disableControl = false;
     } else {
-      this.$q.when(this.cosTrialToggle)
+      this.$q.resolve(this.cosTrialToggle)
         .then((response) => {
           if (response) {
             this.disableControl = false;
