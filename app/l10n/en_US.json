@@ -723,7 +723,9 @@
     "media_type_callback": "Callbacks",
     "media_type_voice": "Inbound Calls",
     "taskDataGetError": "There was an error while loading the {{dataType}} data.",
-    "tableDataGetError": "There was an error while loading the detailed efficient user data."
+    "tableDataGetError": "There was an error while loading the detailed efficient user data.",
+    "errorLoadingName": "Error Loading Name",
+    "deletedUser": "Deleted User "
   },
   "activeUsers": {
     "active": "Active",

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function sunlightReportService($http, $q, $rootScope, Authinfo, UrlConfig) {
+  function sunlightReportService($http, $q, $rootScope, $translate, Authinfo, UrlConfig) {
     var sunlightReportUrl = UrlConfig.getSunlightReportServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/report/';
 
     var dayFormat = "MMM DD";
@@ -50,40 +50,112 @@
       return $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + encodeURI('?filter=entitlements eq cloud-contact-center'));
     }
 
+    function getCareUsersByIds(idList) {
+      var idString = _.reduce(idList, function (result, id) {
+        if (result === '') {
+          return result + 'id eq ' + id + ' ';
+        } else {
+          return result + 'or id eq ' + id + ' ';
+        }
+      }, '');
+      return $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + encodeURI('?filter=' + idString));
+    }
+
     function getAllUsersAggregatedData(reportName, timeSelected, mediaType) {
       return getReportingData(reportName, timeSelected, mediaType)
         .then(addUserDataToReportingData);
     }
 
     function addUserDataToReportingData(reportingUserData) {
+      var reportedUserIds = [];
       if (reportingUserData && reportingUserData.length > 0) {
-        return getCareUsers()
-          .then(function (ciUsersData) {
-            if (_.isEmpty(_.get(ciUsersData, 'data.Resources'))) {
-              return [];
-            } else {
-              return mergeReportingAndUserData(reportingUserData, ciUsersData);
-            }
-          });
+        reportedUserIds = _.map(reportingUserData, function (reportUser) {
+          return reportUser.userId;
+        });
+        return $q(function (resolve) {
+          getCareUsers()
+              .then(function (ciCareUserData) {
+                var ciCareUsers = _.get(ciCareUserData, 'data.Resources');
+                var ciCareUserIds = _.map(ciCareUsers, function (ciUser) {
+                  return ciUser.id;
+                });
+
+                var ciNonCareUserIds = _.difference(reportedUserIds, ciCareUsers, ciCareUserIds);
+                if (ciNonCareUserIds.length > 0) {
+                  getNonCareUserDetails(ciNonCareUserIds, ciCareUsers, reportingUserData, resolve);
+                } else {
+                  resolve(mergeReportingAndUserData(reportingUserData, ciCareUsers));
+                }
+              });
+
+        });
       } else {
         return $q.resolve([]);
       }
     }
 
-    function mergeReportingAndUserData(aggregatedUserData, ciUserData) {
-      var careUserIDNameMap = getCareUserIDNameMap(ciUserData);
-      return finalAggregatedData(aggregatedUserData, careUserIDNameMap);
+    function getNonCareUserDetails(ciNonCareUserIds, ciCareUsers, reportingUserData, resolve) {
+      getNonCareCiUsers(ciNonCareUserIds)
+          .then(function (ciNonCareUsers) {
+            var userObjs = _.filter(_.map(ciNonCareUsers, function (user) {
+              if (user.data.Resources.length > 0) {
+                return user.data.Resources;
+              }
+            }), function (obj) {
+              return (obj !== undefined);
+            });
+
+            var totalUsers = _.concat(ciCareUsers, userObjs[0]);
+            resolve(mergeReportingAndUserData(reportingUserData, totalUsers));
+          }, function () {
+            resolve(mergeReportingAndUserData(reportingUserData, ciCareUsers, true));
+          });
     }
 
-    function finalAggregatedData(aggregatedData, careUserIDNameMap) {
+    function getNonCareCiUsers(ciNonCareUserIds) {
+      return $q(function (resolve, reject) {
+        var userPromises = [];
+        var userIdChunks = _.chunk(ciNonCareUserIds, 50);
+        _.forEach(userIdChunks, function (userIdList) {
+          userPromises.push(getCareUsersByIds(userIdList));
+        });
+
+        $q.all(userPromises).then(function (res) {
+          resolve(res);
+        }, function (err) {
+          reject(err);
+        });
+      });
+    }
+
+
+    function mergeReportingAndUserData(aggregatedUserData, ciUserData, isError) {
+      var careUserIDNameMap = getCareUserIDNameMap(ciUserData, aggregatedUserData);
+
+      return finalAggregatedData(aggregatedUserData, careUserIDNameMap, isError);
+    }
+
+    function finalAggregatedData(aggregatedData, careUserIDNameMap, isError) {
       _.forEach(aggregatedData, function (reportingUserData) {
         reportingUserData.displayName = careUserIDNameMap[reportingUserData.userId];
         reportingUserData.avgCsatScore = reportingUserData.avgCsatScore ? roundTwoDecimalPlaces(reportingUserData.avgCsatScore) : '-';
         reportingUserData.handleTime = Number((reportingUserData.handleTime).toFixed(0));
       });
-      return _.filter(aggregatedData, function (userData) {
-        return userData.displayName;
+
+      var deletedUserIndex = 0;
+      _.forEach(aggregatedData, function (userData) {
+        if (!userData.displayName) {
+          if (isError) {
+            userData.displayName = $translate.instant('careReportsPage.errorLoadingName');
+            userData.isError = true;
+          } else {
+            userData.displayName = $translate.instant('careReportsPage.deletedUser ') + ++deletedUserIndex;
+            userData.isUserDeleted = true;
+          }
+        }
       });
+
+      return aggregatedData;
     }
 
     function getDisplayName(ciUser) {
@@ -103,9 +175,8 @@
     }
 
     function getCareUserIDNameMap(ciUserData) {
-      var ciUsers = ciUserData.data.Resources;
       var careUserIDNameMap = {};
-      _.forEach(ciUsers, function (ciUserDetailedData) {
+      _.forEach(ciUserData, function (ciUserDetailedData) {
         careUserIDNameMap[ciUserDetailedData.id] = getDisplayName(ciUserDetailedData);
       });
       return careUserIDNameMap;
