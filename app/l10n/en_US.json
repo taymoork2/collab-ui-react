@@ -2125,8 +2125,8 @@
         "line1": "Great! Google Calendar is correctly configured.",
         "line2": "You can now enable Hybrid Calendar for your users.",
         "line3": "To enable users, you can:",
-        "item1": "Enable them individually from the <a href=\"#\">users page</a>.",
-        "item2": "Enable them in bulk using the <a href=\"#\">CSV template</a>.",
+        "item1": "Enable them individually from the <a ng-click=\"{{onclick}}\">users page</a>.",
+        "item2": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
         "line4": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\">documentation</a> if you need help enabling users."
       }
     },
