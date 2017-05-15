@@ -3,7 +3,9 @@
 /* eslint-disable */
 
 describe('PartnerManagementController:', function () {
-  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module(
+    require('./index').default
+  ));
 
   var $controller;
   var $q

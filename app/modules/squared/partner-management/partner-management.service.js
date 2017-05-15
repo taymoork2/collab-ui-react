@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  module.exports = PartnerManagementService;
+
   /* @ngInject */
   function PartnerManagementService($q, $http, $sanitize, UrlConfig) {
     var svc = {};
@@ -42,7 +44,4 @@
 
     return svc;
   }
-
-  angular.module('Squared')
-    .service('PartnerManagementService', PartnerManagementService);
 })();

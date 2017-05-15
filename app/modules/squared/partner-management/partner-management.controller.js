@@ -1,7 +1,7 @@
-require('./partnerManagement.scss');
-
 (function () {
   'use strict';
+
+  module.exports = PartnerManagementController;
 
   /* @ngInject */
   function PartnerManagementController($scope, $state, $translate, $window,
@@ -168,36 +168,4 @@ require('./partnerManagement.scss');
       });
     }
   }
-
-  angular
-    .module('Squared')
-    .directive('validateMatch', validateMatchDirective)
-    .directive('validateUnused', validateUnusedDirective)
-    .controller('PartnerManagementController', PartnerManagementController);
-
-  function validateMatchDirective() {
-    return {
-      require: 'ngModel',
-      restrict: 'A',
-      link: function (scope, elem, attrs, ngModelCtrl) {
-        ngModelCtrl.$validators.noMatch = function (value) {
-          return attrs.validateMatch === value;
-        };
-      },
-    };
-  }
-
-  function validateUnusedDirective() {
-    return {
-      require: 'ngModel',
-      restrict: 'A',
-      link: function (scope, elem, attrs, ngModelCtrl) {
-        ngModelCtrl.$validators.unused = function (value) {
-          return _.isEmpty(scope.vm.duplicateName) ||
-            (value !== scope.vm.duplicateName);
-        };
-      },
-    };
-  }
 }());
-
