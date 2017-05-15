@@ -158,6 +158,10 @@
         return checkIfModal([], thisCeHasVar);
       });
     }
+    function deleteMenu(uiMenu, index) {
+      uiMenu.deleteEntryAt(index);
+      AACommonService.setActionStatus(true);
+    }
 
     function removeAction(index) {
 
@@ -170,16 +174,12 @@
       if (_.has(entryI, 'actions[0].variableName')) {
         checkVarNameDependencies(entryI.actions[0].variableName).then(function (okToDelete) {
           if (okToDelete) {
-            uiMenu.deleteEntryAt(index);
-            AACommonService.setActionStatus(true);
+            deleteMenu(uiMenu, index);
           }
         });
 
       } else {
-
-        uiMenu.deleteEntryAt(index);
-
-        AACommonService.setActionStatus(true);
+        deleteMenu(uiMenu, index);
       }
     }
 
