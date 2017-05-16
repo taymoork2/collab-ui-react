@@ -2,6 +2,7 @@ import { CallFeatureMember, CardType } from './call-feature-member';
 import { MemberService, Member, MemberType, USER_PLACE } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/services';
 import { Line } from 'modules/huron/lines/services/line';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 class CallFeatureMembersCtrl implements ng.IComponentController {
   public static readonly DISPLAYED_MEMBER_SIZE: number = 10;
@@ -30,7 +31,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
     private $translate: ng.translate.ITranslateService,
-    private TelephoneNumberService,
+    private PhoneNumberService: PhoneNumberService,
     private dragularService,
   ) {}
 
@@ -140,11 +141,11 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   }
 
   private formatNumber(number: Line, includeExternal: boolean = false): string {
-    let formattedNumber = _.get(number, 'internal', '');
-    let externalNumber = _.get(number, 'external');
+    let formattedNumber = _.get<Line, string>(number, 'internal', '');
+    let externalNumber = _.get<Line, string | undefined>(number, 'external');
 
     if (includeExternal && externalNumber) {
-      formattedNumber += ' ' + this.$translate.instant('common.and') + ' ' + this.TelephoneNumberService.getDIDLabel(externalNumber);
+      formattedNumber += ' ' + this.$translate.instant('common.and') + ' ' + this.PhoneNumberService.getNationalFormat(externalNumber);
     }
     return formattedNumber;
   }

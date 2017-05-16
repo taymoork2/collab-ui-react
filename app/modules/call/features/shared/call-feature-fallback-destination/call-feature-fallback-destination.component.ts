@@ -3,7 +3,7 @@ import { MemberService, Member } from 'modules/huron/members';
 import { NumberService } from 'modules/huron/numbers';
 import { Line } from 'modules/huron/lines/services/line';
 import { FeatureMemberService } from 'modules/huron/features/services';
-import { VoicemailService } from 'modules/huron/voicemail/services';
+import { HuronVoicemailService } from 'modules/huron/voicemail';
 
 class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public fallbackDestination: FallbackDestination;
@@ -24,20 +24,14 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   constructor(
     private MemberService: MemberService,
     private NumberService: NumberService,
-    private VoicemailService: VoicemailService,
+    private HuronVoicemailService: HuronVoicemailService,
     private FeatureMemberService: FeatureMemberService,
     private CallFeatureFallbackDestinationService: CallFeatureFallbackDestinationService,
-    private CustomerVoiceCmiService,
-    private TelephoneNumberService,
-    private Authinfo,
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     const { fallbackDestination, showReversionLookup } = changes;
     if (fallbackDestination && fallbackDestination.currentValue) {
-      if (this.fallbackDestForm) {
-        this.fallbackDestForm.$setValidity('', true, this.fallbackDestForm);
-      }
       this.processCallFeatureFallbackDestChanges(fallbackDestination);
     }
 
@@ -52,13 +46,13 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     if (_.isNull(fallbackDestinationChanges.currentValue.number) && _.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
       this.showMember = false;
       this.showReversionLookup = false;
-      this.selectedReversionNumber = {};
+      this.selectedReversionNumber = '';
     } else {
       if (!_.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
         this.showMember = true;
         this.showReversionLookup = false;
         this.CallFeatureFallbackDestinationService.getDirectoryNumber(fallbackDestinationChanges.currentValue.numberUuid).then( dn => this.directoryNumber = dn);
-        this.VoicemailService.isVoiceMailEnabledForDnOwner(fallbackDestinationChanges.currentValue.numberUuid).then( isEnabled => this.hasVoicemail = isEnabled);
+        this.HuronVoicemailService.isEnabledForDnOwner(fallbackDestinationChanges.currentValue.numberUuid).then( isEnabled => this.hasVoicemail = isEnabled);
         if (!_.isNull(fallbackDestinationChanges.currentValue.memberUuid)) {
           this.FeatureMemberService.getMemberPicture(fallbackDestinationChanges.currentValue.memberUuid)
             .then(featureMember => this.thumbnailSrc = featureMember.thumbnailSrc);
@@ -89,15 +83,9 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     }
   }
 
-  public getExternalRegionCode(): ng.IPromise<any> {
-    return this.CustomerVoiceCmiService.get({
-      customerId: this.Authinfo.getOrgId(),
-    }).$promise;
-  }
-
   public onSelectReversionMember(data: any): void {
     this.fallbackDestForm.$setValidity('', true, this.fallbackDestForm);
-    this.selectedReversionNumber = {};
+    this.selectedReversionNumber = '';
     this.showMember = true;
     this.showReversionLookup = false;
     let fallbackDestination: FallbackDestination;
@@ -122,7 +110,15 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   }
 
   public setSelectedReversionNumber(model) {
-    this.selectedReversionNumber = model;
+    this.fallbackDestForm.$setValidity('', true, this.fallbackDestForm);
+    this.selectedReversionNumber = '';
+    this.onChangeFn({
+      fallbackDestination: new FallbackDestination({
+        number: model,
+        numberUuid: null,
+        sendToVoicemail: false,
+      }),
+    });
   }
 
   public onChangeSendToVoicemail(): void {
@@ -139,33 +135,12 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   }
 
   public removeMember(): void {
-    this.selectedReversionNumber = {};
+    this.selectedReversionNumber = '';
     this.showMember = false;
     this.showReversionLookup = true;
     this.fallbackDestForm.$setDirty();
     this.fallbackDestForm.$setValidity('', false, this.fallbackDestForm);
     this.thumbnailSrc = undefined;
-  }
-
-  public validateReversionNumber(): void {
-    if (_.isObject(this.selectedReversionNumber)) {
-      this.TelephoneNumberService.setRegionCode(_.get(this.selectedReversionNumber, 'code'));
-      let isValid = this.TelephoneNumberService.validateDID(_.get(this.selectedReversionNumber, 'phoneNumber'));
-      if (isValid) {
-        this.fallbackDestForm.$setValidity('', true, this.fallbackDestForm);
-        let number = this.TelephoneNumberService.getDIDValue(_.get(this.selectedReversionNumber, 'phoneNumber'));
-        let fallbackDestination = new FallbackDestination({
-          name: null,
-          numberUuid: null,
-          number: number,
-          memberUuid: null,
-          sendToVoicemail: false,
-        });
-        this.onChangeFn({
-          fallbackDestination: fallbackDestination,
-        });
-      }
-    }
   }
 
   private getPrimaryNumber(member: Member): Line {

@@ -5,7 +5,9 @@ import { callFeatureFallbackDestinationDirectoryNumberFilter } from './call-feat
 import { CallFeatureFallbackDestinationService } from './call-feature-fallback-destination.service';
 import memberService from 'modules/huron/members';
 import numberService from 'modules/huron/numbers';
-import voicemailService from 'modules/huron/voicemail/services';
+import voicemailServiceModule from 'modules/huron/voicemail';
+import featureMemberService from 'modules/huron/features/services';
+import phoneNumberModule from 'modules/huron/phoneNumber';
 
 export * from './call-feature-fallback-destination.service';
 export * from './call-feature-fallback-destination';
@@ -18,12 +20,13 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
-    require('modules/huron/telephony/telephoneNumber.filter.js'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/core/scripts/services/authinfo'),
     memberService,
+    featureMemberService,
     numberService,
-    voicemailService,
+    voicemailServiceModule,
+    phoneNumberModule,
   ])
   .component('ucFallbackDestination', new CallFeatureFallbackDestinationComponent())
   .service('CallFeatureFallbackDestinationService', CallFeatureFallbackDestinationService)

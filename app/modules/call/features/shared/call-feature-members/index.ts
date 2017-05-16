@@ -6,6 +6,7 @@ import { callFeatureMemberNumberFormatterFilter } from './call-feature-member-nu
 import memberService from 'modules/huron/members';
 import featureMemberService from 'modules/huron/features/services';
 import noDirtyOverride from 'modules/call/features/shared/no-dirty-override';
+import phoneNumberModule from 'modules/huron/phoneNumber';
 
 export default angular
   .module('call.features.shared.members', [
@@ -13,7 +14,7 @@ export default angular
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('dragular'),
-    require('modules/huron/telephony/telephoneNumber.service'),
+    phoneNumberModule,
     memberService,
     featureMemberService,
     noDirtyOverride,

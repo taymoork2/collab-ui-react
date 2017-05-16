@@ -1,3 +1,4 @@
+import CallParkFallbackDestinationModule  from './index';
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 
 describe('Component: callFeatureFallbackDestination', () => {
@@ -5,7 +6,7 @@ describe('Component: callFeatureFallbackDestination', () => {
   const REVERT_TO_DEST_RADIO = 'input#radioParkDestination';
 
   beforeEach(function() {
-    this.initModules('huron.call-park-reversion');
+    this.initModules(CallParkFallbackDestinationModule);
     this.injectDependencies(
       '$scope',
     );
@@ -14,7 +15,7 @@ describe('Component: callFeatureFallbackDestination', () => {
   });
 
   function initComponent() {
-    this.compileComponent('ucFallbackDestination', {
+    this.compileComponent('ucCallParkFallbackDesination', {
       fallbackDestination: 'fallbackDestination',
       onMemberRemovedFn: 'onMemberRemovedFn',
       onChangeFn: 'onChangeFn(fallbackDestination)',

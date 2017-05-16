@@ -62,7 +62,7 @@ describe('Features Controller', function () {
     getDeferred = $q.defer();
 
     //Using a Jasmine Spy to return a promise when methods of the PagingGroupService are called
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve([]));
+    spyOn(HuntGroupService, 'getHuntGroupList').and.returnValue($q.resolve([]));
     spyOn(CallParkService, 'getCallParkList').and.returnValue($q.resolve([]));
     spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue($q.resolve());
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue(getDeferred.promise);

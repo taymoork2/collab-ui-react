@@ -129,7 +129,7 @@ describe('Component: CallFeatureMembers', () => {
     });
   });
 
-  describe('Add and delete members', () => {
+  xdescribe('Add and delete members', () => {
     beforeEach(initComponent);
     beforeEach(function () {
       this.$scope.members = getJSONFixture('huron/json/features/callFeatureMembers/largeMemberList.json');
