@@ -4,6 +4,7 @@ import './_settings.scss';
 
 import authenticationModule from './authentication';
 import brandingModule from './branding';
+import domainsModule from './domain';
 import dirSyncModule from './dirsync';
 import privacySectionModule from './privacySection';
 import retentionModule from './retention';
@@ -22,6 +23,7 @@ export default angular.module('core.settings', [
   privacySectionModule,
   retentionModule,
   securityModule,
+  domainsModule,
   sipDomainModule,
   supportSectionModule,
 ])
