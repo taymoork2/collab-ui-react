@@ -1689,4 +1689,77 @@ describe('Controller: TrialCtrl:', function () {
       expect(controller.trialData.details.customerName).toBe(controller.currentTrial.customerName);
     });
   });
+
+  describe('user license validation', function () {
+    beforeEach(function () {
+      addWatchSpy.and.callThrough();
+      var stateParams = {
+        currentTrial: purchasedWithTrialCustomerData,
+        details: {},
+        mode: 'add',
+      };
+      initController(stateParams);
+    });
+
+    it('should set user license minimum as 1 if there are user services in trial', function () {
+      controller.messageTrial.enabled = false;
+      controller.messageTrial.paid = 0;
+      controller.callTrial.enabled = true;
+      controller.webexTrial.enabled = false;
+
+      var min = controller._helpers.getMinUserLicenseRequired();
+      expect(min).toBe(1);
+    });
+
+    it('should set user license minimum to be 0 if there are no user services in trial', function () {
+      controller.messageTrial.enabled = false;
+      controller.messageTrial.paid = 0;
+      controller.callTrial.enabled = false;
+      controller.webexTrial.enabled = false;
+
+      var min = controller._helpers.getMinUserLicenseRequired();
+      expect(min).toBe(0);
+    });
+
+    it('should set user license minimum to be N if there are user services in trial and care license number = N ', function () {
+      controller.messageTrial.enabled = true;
+      controller.messageTrial.paid = 0;
+      controller.callTrial.enabled = true;
+      controller.webexTrial.enabled = false;
+      controller.careTrial.enabled = true;
+      controller.advanceCareTrial.enabled = true;
+      controller.careTrial.details.quantity = 3;
+      controller.advanceCareTrial.details.quantity = 6;
+
+      var min = controller._helpers.getMinUserLicenseRequired();
+      expect(min).toBe(9);
+    });
+
+    it('should set user license minimum as 1 if there are user services in trial and care license number > 1  and message purchased licenses', function () {
+      controller.messageTrial.enabled = true;
+      controller.messageTrial.paid = 10;
+      controller.callTrial.enabled = true;
+      controller.webexTrial.enabled = false;
+      controller.careTrial.enabled = true;
+      controller.advanceCareTrial.enabled = true;
+      controller.careTrial.details.quantity = 3;
+      controller.advanceCareTrial.details.quantity = 6;
+
+      var min = controller._helpers.getMinUserLicenseRequired();
+      expect(min).toBe(1);
+    });
+
+    it('should set user license minimum as 0 if there are no user services in trial and case license number >1  and message has purchased licenses', function () {
+      controller.messageTrial.enabled = false;
+      controller.messageTrial.paid = 10;
+      controller.callTrial.enabled = false;
+      controller.webexTrial.enabled = false;
+      controller.careTrial.enabled = true;
+      controller.advanceCareTrial.enabled = false;
+      controller.careTrial.details.quantity = 3;
+
+      var min = controller._helpers.getMinUserLicenseRequired();
+      expect(min).toBe(0);
+    });
+  });
 });

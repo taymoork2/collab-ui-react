@@ -4219,7 +4219,7 @@
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialSparkBoardQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialCareQuantity": "K1 and K2 licenses should be between 1 and 50 each and not exceed the Licenses Quantity in total.",
-    "careLicenseCountExceedsTotalCount": "Care license requested is more than the message license quantity.",
+    "careLicenseCountExceedsTotalCount": "Number of Licenses should be between 1 and 999 and no less than total Care license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Devices",
     "roomSystem": "Room Device",
