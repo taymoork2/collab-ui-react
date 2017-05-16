@@ -3071,7 +3071,7 @@
     "setSipDomainSuccessMessage": "Le domaine SIP a été enregistré avec succès",
     "setSipDomainConfirmText": "Je comprends que ce paramètre est à utilisation unique et ne pourra plus être modifié ultérieurement.",
     "sparkDomainManagementServiceErrorMessage": "Impossible de joindre le service de Gestion des domaines Spark",
-    "currentSubdomainDescription": "Le {count, plural, =1{sous -domaine ci-dessous est} other{sous-domaines ci-dessous sont}} en cours d'utilisation pour {count, plural, one{adresse} other{adresses}} SIP Spark de votre entreprise.",
+    "currentSubdomainDescription": "Le {count, plural, =1{sous -domaine ci-dessous est} other{sous-domaines ci-dessous sont}} en cours d'utilisation pour {count, plural, =1{adresse} other{adresses}} SIP Spark de votre entreprise.",
     "subdomainChangesDescription": "Les modifications apportées au sous-domaine peuvent prendre quelques heures pour être prises en compte.",
     "subdomainDescription": "Sélectionnez un sous-domaine qui identifie votre entreprise. Le sous-domaine sera utilisé pour créer {count, plural, =1{une adresse SIP Spark} other{adresses SIP Spark}}. Vous pouvez modifier le nom du sous-domaine ultérieurement dans les paramètres de votre compte.",
     "updateSubdomainMessage": "Les modifications apportées au sous-domaine peuvent prendre quelques heures pour être prises en compte. Les utilisateurs ne pourront plus passer des appels en utilisant l'adresse SIP Spark précédente lorsque les modifications auront été prises en compte.",
@@ -4095,7 +4095,7 @@
     "feature4": "Listing du répertoire",
     "feature5": "E911",
     "feature6": "Aucun frais d'installation"
-  },  
+  },
   "partnerHomePage": {
     "trialsHeading": "Essais",
     "onboardingTitle": "Intégration",
