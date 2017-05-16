@@ -29,7 +29,6 @@ describe('Validator: DeviceQuantityValidator:', function () {
       .respond({});
     spyOn(this.Orgservice, 'getOrg');
     spyOn(this.Analytics, 'trackTrialSteps');
-    spyOn(this.FeatureToggleService, 'atlasPhonesCanadaGetStatus').and.returnValue(this.$q.resolve(false));
     this.initController('TrialDeviceController');
 
     // algendel: this validator is tightly bound to the parent controller therefore this odd setup.

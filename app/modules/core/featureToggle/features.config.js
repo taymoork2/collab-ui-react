@@ -30,7 +30,6 @@ module.exports = {
   atlasNewUserExport: 'atlas-new-user-export',
   atlasNurturingEmails: 'atlas-nurturing-emails',
   atlasPartnerManagement: 'atlas-partner-management',
-  atlasPhonesCanada: 'atlas-phones-canada',
   atlasPinSettings: 'atlas-pin-settings',
   atlasPMRonM2: 'atlas-pmr-on-m2',
   atlasReadOnlyAdmin: 'atlas-read-only-admin',
