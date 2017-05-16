@@ -12,6 +12,16 @@
     color: #5ca4e5;
   }
 }
+.media-scroll-icon {
+  outline: none !important;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  bottom: 16px;
+  padding-right: 20px;
+  font-size: 1.6rem;
+  color: #808080;
+}
 .availabilityDpdnSelector {
   position: absolute;
   bottom: 10px;
