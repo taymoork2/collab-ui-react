@@ -1,5 +1,4 @@
 <form novalidate name="countrySelectForm" class="aa-country-select">
-  <cs-phone-number model="aaRouteToExtNum.model" fields="aaRouteToExtNum.countryList">
+  <cs-phone-number e164-phone-number="aaRouteToExtNum.getPhoneNumber()" fields="aaRouteToExtNum.countryList" on-change-fn="aaRouteToExtNum.saveUiModel(model)" >
   </cs-phone-number>
 </form>
-
