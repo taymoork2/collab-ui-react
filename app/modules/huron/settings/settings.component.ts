@@ -8,6 +8,7 @@ import { PstnService } from 'modules/huron/pstn/pstn.service';
 import { PstnModel } from 'modules/huron/pstn/pstn.model';
 import { PstnCarrier } from 'modules/huron/pstn/pstnProviders/pstnCarrier';
 import { IAvrilFeatures } from 'modules/huron/avril';
+import { SettingSetupInitService } from 'modules/huron/settings/init/settingSetupInitService';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
 
@@ -39,6 +40,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public showVoiceMailDisableDialog: boolean = false;
   public supportsAvrilVoicemail: boolean = false;
   public supportsAvrilVoicemailMailbox: boolean = false;
+  public ishI1484: boolean;
 
   public huronSettingsData: HuronSettingsData;
 
@@ -58,6 +60,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private Config,
     private Orgservice,
     private FeatureToggleService,
+    private SettingSetupInitService: SettingSetupInitService,
   ) { }
 
   public $onInit(): void {
@@ -106,6 +109,10 @@ class HuronSettingsCtrl implements ng.IComponentController {
     }
   }
 
+  public isMultiSelected() {
+    return this.SettingSetupInitService.getSelected() === 2;
+  }
+
   private initSettingsComponent(): ng.IPromise<any> {
     return this.HuronSettingsOptionsService.getOptions().then(options => this.settingsOptions = options)
     .then(() => {
@@ -119,6 +126,9 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmMailboxEnable)
       .then(result => this.supportsAvrilVoicemailMailbox = result);
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(result => this.ishI1484 = result);
 
     return this.$q.resolve();
   }

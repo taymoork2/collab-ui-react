@@ -22,6 +22,18 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     return [];
   }
 
+
+//Shows Locations tab when hI148 Feature toggle is enabled
+  public hI1484FeatureToggleEventhandler(hasFeature: boolean) {
+    if (hasFeature) {
+      this._buttons.splice(0, 0, {
+        name: 'servicesOverview.cards.call.buttons.locations',
+        routerState: 'calllocations',
+        buttonClass: 'btn-link',
+      });
+    }
+  }
+
   // TODO (jlowery): remove when sparkCallTenDigitExt feature toggle is removed.
   public sparkCallTenDigitExtFeatureToggleEventhandler(hasFeature: boolean) {
     if (hasFeature) {

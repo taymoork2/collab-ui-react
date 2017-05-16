@@ -90,6 +90,11 @@ describe('Controller: ServiceSetup', function () {
       },
     };
 
+    $scope.wizard = {};
+    $scope.wizard.current = {};
+    $scope.wizard.current.tab = {};
+    $scope.wizard.current.tab.name = 'serviceSetup';
+
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
     languages = getJSONFixture('huron/json/settings/languages.json');
     countries = getJSONFixture('huron/json/settings/countries.json');

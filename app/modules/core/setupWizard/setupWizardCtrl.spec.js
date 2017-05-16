@@ -241,7 +241,7 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have a lot of settings', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
       this.expectSubStepOrder('planReview', ['init']);
-      this.expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['setup', 'init']);
       this.expectSubStepOrder('messagingSetup', ['setup']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);

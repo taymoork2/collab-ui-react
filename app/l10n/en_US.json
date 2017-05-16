@@ -1526,7 +1526,9 @@
       "title": "Routing Prefix",
       "radioReserve": "Reserve a prefix",
       "radioReserveDesc": "This prefix will be used as a compound number to connect with users on the cloud.",
+      "reserveDesc": "This prefix is used as a compound number. Users can dial it to connect with other users at this location..  All locations share the same routing prefix length.",
       "exampleHelpText": "Example dialing: 8100-(extension)",
+      "placeholder": "8100",
       "numericOnlyError": "Routing Prefix can only contain digits.",
       "tooShortError": "Routing Prefix must contain at least one digit.",
       "tooLongError": "Routing Prefix can contain a maximum of seven digits."
@@ -6212,6 +6214,26 @@
       "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
+  "locations": {
+      "locationName": "Location Name",
+      "addText": "Add Location",
+      "copyTitle": "Copy Location",
+      "copyDesc": "This location will use the customized setting from the location that you copied.",
+      "deleteTitle": "Delete Location",
+      "deleteDesc": "Are you sure you want to delete location, {{locationName}}?",
+      "cannotDeleteDesc": "This location still has users and places and can not be deleted.",
+      "deleteButton": "OK, Delete it",
+      "deleteFailed": "Failed to Delete Location",
+      "makeDefault": "Make Default",
+      "copyLocation": "Duplicate",
+      "reload": "Reload",
+      "makeDefaultTitle": "Make Default",
+      "makeDefaultDesc": "Are you sure you want to make this location default?  It will be the defualt location for new users or places.",
+      "createLocation": "Create Location",
+      "cancelHeader": "Cancel Location Creation",
+      "cancelDialog": "Are you sure you wish to cancel location creation? This location will not be saved.",
+      "locationDesc": "Give this location a name to identify it."
+  },
   "sunlightDetails": {
     "title": "Care",
     "settingsTitle": "Settings",
@@ -6279,7 +6301,8 @@
     "title": "Call",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
-    "featuresTitle": "Features"
+    "featuresTitle": "Features",
+    "locationsTitle": "Locations"
   },
   "huronFeatureDetails": {
     "members": " Members",
@@ -7537,6 +7560,7 @@
         "title": "Call",
         "description": "Unified Communications and basic calling configurations for your organization.",
         "buttons": {
+          "locations": "Locations",
           "numbers": "Numbers",
           "features": "Features",
           "settings": "Settings",
