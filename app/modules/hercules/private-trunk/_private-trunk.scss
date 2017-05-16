@@ -1,6 +1,7 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/tools/functions/core';
+
 .private-trunk {
   .padding-p {
     padding-right: 4.5rem;
@@ -51,24 +52,56 @@
     @include vr-spacing(mt, 0.25);
     @include vr-spacing(mr, 0.5);
   }
+
   .exit-icon {
     padding-top: .5rem;
     font-size: 1.25rem;
     position: absolute;
     cursor: pointer;
   }
+
+  .span-font-size {
+    font-size: 1rem;
+  }
+
   .add-align {
     padding-left: 1.5rem;
   }
+
   .label-align {
     padding-left: 1.25rem;
   }
-  .label-2-align {
-    padding-left: 1.5rem;
+
+  .float-right-view {
+    float: right;
+    position: relative;
+    padding-right: .5rem;
+    padding-top: rem-calc(10);
+  }
+
+  .margin-input {
+    margin: rem-calc(16) 0;
+  }
+
+  .cert-top-margin {
+    margin-top: 1.5rem;
+  }
+
+  .cert-left {
+    margin-left: 1.5rem;
+  }
+
+  .cert-color {
+    color: $color-attention-light;
+  }
+
+  .cert-icon {
+    line-height: 1.5;
+    padding-left: .5rem;
   }
 
   .box.singlebox-margin {
-    margin: 0 rem_calc(16) rem_calc(8);
+    margin: 0 rem-calc(16) rem-calc(8);
   }
 
   .box.multibox-margin {
@@ -90,10 +123,13 @@
       background: transparent;
     }
 
+    .box-disabled {
+      background-color: $gray-lightest;
+    }
+
     .icon.icon-upload-contain {
       font-size: 1.5rem;
       display: inline;
-      line-height: 2rem;
       &:hover,
       &:active,
       &:focus {
@@ -108,18 +144,15 @@
     }
 
     .icon.close-icon-align {
-      position: relative;
       float: right;
-      font-size: .75rem;
-      line-height: 1rem;
+      font-size: 1rem;
       padding-right: .5rem;
-      padding-top: .25rem;
+      line-height: 2;
     }
 
     .span-filename {
       padding-left: .5rem;
       font-size: 1rem;
-      line-height: 2rem;
     }
     .prompt {
       padding-bottom: .5rem;
@@ -135,6 +168,7 @@
       }
     }
   }
+
   .flex-center-container {
     flex: 1 1 auto;
     display: flex;

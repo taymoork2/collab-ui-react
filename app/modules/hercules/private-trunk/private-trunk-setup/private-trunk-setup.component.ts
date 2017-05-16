@@ -151,15 +151,6 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       });
   }
 
-  public deleteCert(certId: string) {
-    this.PrivateTrunkCertificateService.deleteCert(certId)
-    .then( cert => {
-      if (cert) {
-        this.formattedCertList = cert.formattedCertList || [];
-      }
-    });
-  }
-
   public changeOption(isCertificateDefault: boolean): void {
     this.isCertificateDefault = isCertificateDefault;
     if (!this.isCertificateDefault) {
@@ -182,7 +173,6 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       .then((cert) => {
         if (!_.isUndefined(cert)) {
           this.formattedCertList = cert.formattedCertList;
-          this.isCertificateDefault =  (!_.isArray(this.formattedCertList) || this.formattedCertList.length === 0);
         }
       });
   }
