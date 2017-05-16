@@ -22,7 +22,7 @@ export class CmcService {
   }
 
   public getData(user: ICmcUser): CmcUserData {
-    this.$log.warn('Getting data for user=', user);
+    this.$log.info('Getting data for user=', user);
     let entitled = this.extractCmcEntitlement(user);
     let mobileNumber = this.extractMobileNumber(user);
     return new CmcUserData(mobileNumber, entitled);
@@ -68,7 +68,7 @@ export class CmcService {
         providers: {
           mobileProvider: {
             id: 'mobileProvider_id',
-            name: 'mobileProvider_name',
+            name: 'Ericsson Mock',
             description: 'mobileProvider_description',
             address: 'mobileProvider_address',
             authName: 'mobileProvider_authName',
@@ -77,7 +77,7 @@ export class CmcService {
           },
           ucProvider: {
             id: 'ucProvider_id',
-            name: 'ucProvider_name',
+            name: 'Telstra Mock',
             description: 'ucProvider_description',
             address: 'ucProvider_address',
             authName: 'ucProvider_authName',
@@ -93,7 +93,7 @@ export class CmcService {
         providers: {
           mobileProvider: {
             id: 'mobileProvider_id',
-            name: 'mobileProvider_name',
+            name: 'Ericsson Mock',
             description: 'mobileProvider_description',
             address: 'mobileProvider_address',
             authName: 'mobileProvider_authName',
@@ -102,7 +102,7 @@ export class CmcService {
           },
           ucProvider: {
             id: 'ucProvider_id',
-            name: 'ucProvider_name',
+            name: 'Telstra Mock',
             description: 'ucProvider_description',
             address: 'ucProvider_address',
             authName: 'ucProvider_authName',
@@ -118,7 +118,9 @@ export class CmcService {
       ],
     };
 
-    switch (_.random(1, 3)) {
+    let random_happenin = _.random(1, 3);
+    this.$log.info('radom', random_happenin);
+    switch (random_happenin) {
       case 1:
         return this.$q.resolve(okMock);
       case 2:
@@ -126,7 +128,6 @@ export class CmcService {
       case 3:
         return this.$q.resolve(nokMock);
     }
-
     return this.$q.resolve(okMock);
   }
 

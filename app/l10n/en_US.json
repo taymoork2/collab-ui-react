@@ -2627,6 +2627,18 @@
     },
     "details": {
       "invalidInput": "Always provide valid mobile number when enabling"
+    },
+    "settingsPage": {
+      "title": "Mobile  Convergence service",
+      "description": "Settings for the Mobile Converence service",
+      "mobileProvider": {
+        "title": "Mobile Provider",
+        "description": "Mobile provider for the CMC service"
+      },
+      "serviceProvider": {
+        "title": "Service Provider",
+        "description": "Service provider for the CMC service"
+      }
     }
   },
   "context": {
