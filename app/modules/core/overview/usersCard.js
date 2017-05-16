@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($rootScope, $state, Config, Orgservice, DirSyncService) {
+  function OverviewUsersCard($rootScope, $state, $translate, Config, DirSyncService, ModalService, Orgservice) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -85,8 +85,27 @@
             });
         };
 
+        function goToUsersConvert(options) {
+          $state.go('users.convert', options);
+        }
+
+        card.isConvertButtonDisabled = function () {
+          return card.isUpdating || !card.usersToConvert;
+        };
+
         card.openConvertModal = function () {
-          $state.go('users.convert', {});
+          if (card.dirsyncEnabled) {
+            ModalService.open({
+              message: '<span>' + $translate.instant('homePage.convertUsersDirSyncEnabledWarning') + '</span>',
+              title: $translate.instant('userManage.ad.adStatus'),
+            }).result.then(function () {
+              goToUsersConvert({
+                readOnly: true,
+              });
+            });
+          } else {
+            goToUsersConvert();
+          }
         };
 
         card.showSSOSettings = function () {

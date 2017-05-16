@@ -16,7 +16,7 @@
           translate-values="{licenseNumber: card.licenseNumber, licenseType: card.licenseType}"></span>
       </div>
     </div>
-    <button ng-if="!card.showLicenseCard" id="convertButton" class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="!card.usersToConvert">
+    <button ng-if="!card.showLicenseCard" id="convertButton" class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="card.isConvertButtonDisabled()">
     </button>
     <button ng-if="card.showLicenseCard" id="convertButton" class="btn btn--primary" translate="overview.cards.licenses.manageUsersButton" ng-click="card.manageUsers()">
     </button>
