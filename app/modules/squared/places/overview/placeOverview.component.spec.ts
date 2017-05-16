@@ -71,11 +71,11 @@ describe('placeOverview component', () => {
         cisUuid: placeCisUuid,
       };
 
-      spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.when('0q9u09as09vu0a9sv'));
-      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
-      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(showHybrid));
-      spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.when({}));
-      spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.when({}));
+      spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.resolve('0q9u09as09vu0a9sv'));
+      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
+      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(showHybrid));
+      spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve({}));
+      spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve({}));
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
       Authinfo.displayName = displayName;
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
@@ -209,12 +209,12 @@ describe('placeOverview component', () => {
       entitlements = ['entitlement'];
       placeUuid = '9avs8y9q2v9aw98';
 
-      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
-      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(showHybrid));
-      spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.when({}));
-      spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.when({}));
+      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
+      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(showHybrid));
+      spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve({}));
+      spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve({}));
       spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
-      spyOn(Userservice, 'getUser').and.returnValue($q.when({}));
+      spyOn(Userservice, 'getUser').and.returnValue($q.resolve({}));
       spyOn($state, 'go').and.callFake((stateName, stateData) => {
         goStateName = stateName;
         goStateData = stateData;

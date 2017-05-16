@@ -16,6 +16,7 @@ describe(' sunlightReportService', function () {
   var allUserFifteenMinutesStats = dummyStats.reportUsersFifteenMinutesStats;
   var allUserHourlyStats = dummyStats.reportUsersHourlyStats;
   var ciUserStats = dummyStats.ciUserStats;
+  var ciNonCareUserStats = dummyStats.ciNonCareUserStats;
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('676a82cd-64e9-4ebd-933c-4dce087a02bd'),
@@ -73,6 +74,10 @@ describe(' sunlightReportService', function () {
       .respond(function () {
         return [200, ciUserStats];
       });
+    $httpBackend.whenGET(/.*filter=id.*/g)
+        .respond(function () {
+          return [200, ciNonCareUserStats];
+        });
   }));
 
   beforeEach(inject(function ($rootScope, $q) {
@@ -102,7 +107,7 @@ describe(' sunlightReportService', function () {
     $httpBackend.flush();
 
     sunlightReportService.getStats('all_user_stats', config).then(function (response) {
-      expect(response.data.data.length).toBe(10);
+      expect(response.data.data.length).toBe(12);
       expect(response.data.metadata.jobName).toBe('user_contact_stats_fifteen_minutes');
     });
     $httpBackend.flush();
@@ -202,7 +207,7 @@ describe(' sunlightReportService', function () {
 
   it('should get the aggregated data based on userId', function (onSuccess, onError) {
     sunlightReportService.getAllUsersAggregatedData('all_user_stats', 1, 'chat').then(function (aggregatedData) {
-      expect(aggregatedData.length).toBe(4);
+      expect(aggregatedData.length).toBe(7);
 
       expect(aggregatedData[0].avgCsatScore).toBe('-');
       expect(aggregatedData[0].tasksHandled).toBe(1);
@@ -227,6 +232,14 @@ describe(' sunlightReportService', function () {
       expect(aggregatedData[3].tasksAssigned).toBe(0);
       expect(aggregatedData[3].handleTime).toBe(0);
       expect(aggregatedData[3].displayName).toBe('sunlight-user1@outlook.com');
+
+      expect(aggregatedData[4].displayName).toBe('A GT Non Care user');
+
+      expect(aggregatedData[5].displayName).toBe('careReportsPage.deletedUser1');
+      expect(aggregatedData[5].isUserDeleted).toBe(true);
+
+      expect(aggregatedData[6].displayName).toBe('careReportsPage.deletedUser2');
+      expect(aggregatedData[6].isUserDeleted).toBe(true);
 
       onSuccess(aggregatedData);
     }, function () {

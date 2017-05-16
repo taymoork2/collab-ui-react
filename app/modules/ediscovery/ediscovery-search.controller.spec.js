@@ -167,10 +167,10 @@ describe('Controller: EdiscoverySearchController', function () {
     beforeEach(initController);
 
     it('received from atlas backend', function () {
-      var errorNotification = sinon.stub(Notification, 'error');
+      var errorNotification = spyOn(Notification, 'error');
       ediscoverySearchController.createReport();
       $scope.$apply();
-      expect(errorNotification.called).toBeTruthy();
+      expect(errorNotification).toHaveBeenCalled();
       expect(ediscoverySearchController.report).toBeNull();
     });
   });

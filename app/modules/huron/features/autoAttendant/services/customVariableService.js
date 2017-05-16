@@ -6,10 +6,11 @@
     .factory('CustomVariableService', CustomVariableService);
 
   /* @ngInject */
-  function CustomVariableService(CeCustomVariableService, Authinfo) {
+  function CustomVariableService(CeCustomVariableService, CeVariableDependeciesService, Authinfo) {
 
     var service = {
       listCustomVariables: listCustomVariables,
+      getVariableDependencies: getVariableDependencies,
     };
     return service;
     /////////////////////
@@ -17,6 +18,12 @@
       return CeCustomVariableService.query({
         customerId: Authinfo.getOrgId(),
         ceId: aCeId,
+      }).$promise;
+    }
+    function getVariableDependencies(varNameOfInterest) {
+      return CeVariableDependeciesService.get({
+        customerId: Authinfo.getOrgId(),
+        varname: varNameOfInterest,
       }).$promise;
     }
   }

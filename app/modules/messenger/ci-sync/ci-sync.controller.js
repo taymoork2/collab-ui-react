@@ -6,12 +6,13 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /* @ngInject */
-  function CiSyncCtrl($q, $translate, Authinfo, Notification, CiService, SyncService) {
+  function CiSyncCtrl($q, $translate, AccountOrgService, Authinfo, Config, CiService, Notification, SyncService) {
     var vm = this;
 
     var translatePrefix = 'messengerCiSync.';
     var customerSuccessRole = 'webex-messenger.customer_success';
-    var requiredEntitlements = ['webex-squared', 'webex-messenger'];
+    var requiredEntitlements = [Config.entitlements.squared, Config.entitlements.messenger];
+    var JABBER_INTEROP_ENTITLEMENT = Config.entitlements.messenger_interop;
 
     // TODO: replace this mechanism with something more consistent w/ other pages
     vm.dataStates = {
@@ -23,7 +24,6 @@
     vm.adminTypes = {
       ORG: 'ORG',
       OPS: 'OPS',
-      READ: 'READ',
       UNKNOWN: 'UNKNOWN',
     };
 
@@ -51,6 +51,7 @@
 
     // l10n strings
     vm.refresh = $translate.instant(translatePrefix + 'refresh');
+    vm.jabberInteropTooltip = $translate.instant(translatePrefix + 'jabberInteropTooltip');
     vm.syncStatusTooltip = $translate.instant(translatePrefix + 'syncStatusTooltip');
     vm.dirsyncStatusTooltip = $translate.instant(translatePrefix + 'dirsyncStatusTooltip');
     vm.authRedirectTooltip = $translate.instant(translatePrefix + 'authRedirectTooltip');
@@ -74,7 +75,6 @@
     vm.authorized = authorized;
     vm.isOrgAdmin = isOrgAdmin;
     vm.isOpsAdmin = isOpsAdmin;
-    vm.patchSync = patchSync;
     vm.refreshStatus = refreshStatus;
     vm.setOrgAdmin = setOrgAdmin;
     vm.setOpsAdmin = setOpsAdmin;
@@ -82,6 +82,11 @@
     vm.saveSettings = saveSettings;
     vm.resetSettings = resetSettings;
     vm.canShowSaveCancel = canShowSaveCancel;
+    vm._helpers = {};
+    vm._helpers.hasJabberInteropChanged = hasJabberInteropChanged;
+    vm._helpers.hasSyncInfoChanged = hasSyncInfoChanged;
+    vm._helpers.saveJabberInterop = saveJabberInterop;
+    vm._helpers.saveSyncInfo = saveSyncInfo;
 
     init();
 
@@ -91,17 +96,16 @@
     function init() {
       vm.dataStatus = vm.dataStates.LOADING;
 
+      // jabber interop entitlement is already known (this is determined at login-time when
+      // populating the 'services' property of a user's auth data)
+      vm.settings.jabberInterop = isJabberInteropEnabled();
+
       // TODO: move this auth check to the UI routing level (ie. 'appconfig')
       // Check for Partner Admin (Ops Admin) vs. Full Admin (Org Admin)
       return checkUserType()
-        .then(function () {
-          // TODO: add promise for jabber interop setting
-          return $q.all({
-            syncInfo: getSyncStatus(),
-          });
-        })
-        .then(function (results) {
-          vm.settings.syncInfo = results.syncInfo;
+        .then(getSyncStatus)
+        .then(function (syncInfo) {
+          vm.settings.syncInfo = syncInfo;
           updateSettingsCopy();
           vm.dataStatus = vm.dataStates.LOADED;
         })
@@ -112,8 +116,9 @@
         });
     }
 
+    // TODO: remove this in-page auth logic (use UI router or 'Auth.allowMessengerService()' to block access instead)
     function authorized() {
-      return (isOrgAdmin() || isOpsAdmin());
+      return isOrgAdmin() || isOpsAdmin() || Authinfo.isReadOnlyAdmin();
     }
 
     function isOrgAdmin() {
@@ -135,7 +140,6 @@
       // Customer Success Admin     --> Ops Admin
       // Non-Customer Success Admin --> must have webex-squared AND webex-messenger CI entitlements
       if (Authinfo.isReadOnlyAdmin()) {
-        setReadAdmin();
         defer.resolve();
       } else if (Authinfo.isCustomerAdmin()) {
         CiService.hasRole(customerSuccessRole)
@@ -197,7 +201,7 @@
     function refreshStatus() {
       return SyncService.refreshSyncStatus()
         .then(function (syncStatusObj) {
-          vm.settings.syncInfo = syncStatusObj;
+          vm.settingsCopy.syncInfo = vm.settings.syncInfo = syncStatusObj;
           return syncStatusObj;
         })
         .catch(function (errorObj) {
@@ -215,25 +219,6 @@
       vm.adminType = vm.adminTypes.OPS;
     }
 
-    function setReadAdmin() {
-      vm.adminType = vm.adminTypes.READ;
-    }
-
-    function patchSync() {
-      // SyncService must turn the syncing boolean into the full mode
-      return SyncService.patchSync(vm.settings.syncInfo)
-        .then(function () {
-          Notification.success(translatePrefix + 'patchSuccessful');
-        })
-        .catch(function (errorObj) {
-          var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;
-          Notification.error(error);
-
-          // Reset to previous state
-          return getSyncStatus();
-        });
-    }
-
     function setExistingProperty(propName, value) {
       // only a previously defined property can be updated
       if (_.isNil(_.get(vm, propName))) {
@@ -244,25 +229,17 @@
     }
 
     function canShowSaveCancel() {
-      return vm.dataStatus === vm.dataStates.LOADED &&
-        hasSettingsChanged() &&
-        canCurrentUserSave();
-    }
-
-    function canCurrentUserSave() {
-      return vm.adminTypes.OPS === vm.adminType;
+      return vm.dataStatus === vm.dataStates.LOADED && hasSettingsChanged();
     }
 
     function saveSettings() {
-      // Double-check that they are ops for security
-      if (!canCurrentUserSave()) {
-        return $q.reject();
-      }
+      var promises = {
+        jabberInterop: vm._helpers.hasJabberInteropChanged() ? vm._helpers.saveJabberInterop() : $q.resolve(),
+        syncInfo: vm._helpers.hasSyncInfoChanged() ? vm._helpers.saveSyncInfo() : $q.resolve(),
+      };
 
       vm.isSaving = true;
-      return $q.all({
-        syncInfo: patchSync(),
-      })
+      return $q.all(promises)
       .then(updateSettingsCopy)
       .catch(resetSettings)
       .finally(function () {
@@ -278,8 +255,67 @@
       vm.settings = _.cloneDeep(vm.settingsCopy);
     }
 
+    function hasJabberInteropChanged() {
+      return !_.isEqual(_.get(vm, 'settings.jabberInterop'), _.get(vm, 'settingsCopy.jabberInterop'));
+    }
+
+    function hasSyncInfoChanged() {
+      return !_.isEqual(_.get(vm, 'settings.syncInfo'), _.get(vm, 'settingsCopy.syncInfo'));
+    }
+
     function hasSettingsChanged() {
       return !_.isEqual(vm.settings, vm.settingsCopy);
+    }
+
+    function isJabberInteropEnabled() {
+      return Authinfo.isEntitled(JABBER_INTEROP_ENTITLEMENT);
+    }
+
+    function saveSyncInfo() {
+      // Double-check that they are ops for security
+      if (!vm.isOpsAdmin()) {
+        return $q.reject();
+      }
+
+      // SyncService must turn the syncing boolean into the full mode
+      return SyncService.patchSync(vm.settings.syncInfo)
+        .then(function () {
+          Notification.success(translatePrefix + 'patchSuccessful');
+        })
+        .catch(function (errorObj) {
+          var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;
+          Notification.error(error);
+        });
+    }
+
+    function saveJabberInterop() {
+      var orgId = Authinfo.getOrgId();
+      var promise;
+
+      if (_.get(vm, 'settings.jabberInterop')) {
+        promise = AccountOrgService.addMessengerInterop(orgId)
+          .then(function () {
+            return AccountOrgService.getServices(orgId);
+          })
+          .then(function (response) {
+            var entitlements = _.get(response, 'data.entitlements');
+            var entitlement = _.find(entitlements, { ciName: JABBER_INTEROP_ENTITLEMENT });
+            Authinfo.addEntitlement(entitlement);
+          });
+      } else {
+        promise = AccountOrgService.deleteMessengerInterop(orgId)
+          .then(function () {
+            Authinfo.removeEntitlement(JABBER_INTEROP_ENTITLEMENT);
+          });
+      }
+
+      return promise
+        .then(function () {
+          Notification.success(translatePrefix + 'jabberInteropUpdateSuccessful');
+        })
+        .catch(function () {
+          Notification.error(translatePrefix + 'errorFailedUpdatingJabberInterop');
+        });
     }
   }
 })();

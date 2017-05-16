@@ -18,12 +18,12 @@ describe('ServerErrorInterceptor', function () {
         headers: {},
       },
     };
-    Config.isProd = sinon.stub().returns(false);
-    $log.error = sinon.stub();
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(false);
+    $log.error = jasmine.createSpy('error');
 
     Interceptor.responseError(response);
 
-    expect($log.error.callCount).toBe(1);
+    expect($log.error.calls.count()).toBe(1);
   });
 
   it('should not log in prod', function () {
@@ -33,12 +33,12 @@ describe('ServerErrorInterceptor', function () {
         headers: {},
       },
     };
-    Config.isProd = sinon.stub().returns(true);
-    $log.error = sinon.stub();
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(true);
+    $log.error = jasmine.createSpy('error');
 
     Interceptor.responseError(response);
 
-    expect($log.error.callCount).toBe(0);
+    expect($log.error.calls.count()).toBe(0);
   });
 
   it('should not log if status is 404', function () {
@@ -48,12 +48,12 @@ describe('ServerErrorInterceptor', function () {
         headers: {},
       },
     };
-    Config.isProd = sinon.stub().returns(false);
-    $log.error = sinon.stub();
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(false);
+    $log.error = jasmine.createSpy('error');
 
     Interceptor.responseError(response);
 
-    expect($log.error.callCount).toBe(0);
+    expect($log.error.calls.count()).toBe(0);
   });
 
 });

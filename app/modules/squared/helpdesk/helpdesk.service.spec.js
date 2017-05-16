@@ -200,10 +200,10 @@ describe('HelpdeskService', function () {
       "id": "squared-a-cool-service",
     }];
 
-    sinon.stub(ServiceDescriptor, 'getServices');
+    spyOn(ServiceDescriptor, 'getServices');
     var deferred = $q.defer();
     deferred.resolve(serviceDescriptionsMock);
-    ServiceDescriptor.getServices.returns(deferred.promise);
+    ServiceDescriptor.getServices.and.returnValue(deferred.promise);
 
     var result;
     Service.getHybridServices("1234").then(function (res) {

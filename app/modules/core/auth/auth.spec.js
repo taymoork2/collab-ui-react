@@ -52,13 +52,13 @@ describe('Auth Service', function () {
     });
 
     it('should redirect to oauthUrl if redirectToLogin method is called with email', function () {
-      OAuthConfig.getOauthLoginUrl = sinon.stub().returns('oauthURL');
+      OAuthConfig.getOauthLoginUrl = jasmine.createSpy('getOauthLoginUrl').and.returnValue('oauthURL');
       Auth.redirectToLogin('email@email.com');
       expect(WindowLocation.set).toHaveBeenCalledWith('oauthURL');
     });
 
     it('should login if redirectToLogin method is called with sso=true', function () {
-      OAuthConfig.getOauthLoginUrl = sinon.stub().returns('oauthURL');
+      OAuthConfig.getOauthLoginUrl = jasmine.createSpy('getOauthLoginUrl').and.returnValue('oauthURL');
       Auth.redirectToLogin(null, true);
       expect(WindowLocation.set).toHaveBeenCalledWith('oauthURL');
     });
@@ -66,7 +66,7 @@ describe('Auth Service', function () {
 
   describe('getCustomerAccount()', function () {
     it('should get customer account info using correct API', function () {
-      UrlConfig.getAdminServiceUrl = sinon.stub().returns('foo/');
+      UrlConfig.getAdminServiceUrl = jasmine.createSpy('getAdminServiceUrl').and.returnValue('foo/');
 
       $httpBackend
         .expectGET('foo/customers?orgId=bar')
@@ -87,8 +87,8 @@ describe('Auth Service', function () {
 
   describe('getNewAccessToken()', function () {
     beforeEach(function () {
-      OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
-      OAuthConfig.getNewAccessTokenPostData = sinon.stub().returns('data');
+      OAuthConfig.getAccessTokenUrl = jasmine.createSpy('getAccessTokenUrl').and.returnValue('url');
+      OAuthConfig.getNewAccessTokenPostData = jasmine.createSpy('getNewAccessTokenPostData').and.returnValue('data');
       OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
       spyOn(Auth, 'verifyOauthState').and.returnValue(true);
     });
@@ -107,7 +107,7 @@ describe('Auth Service', function () {
 
       $httpBackend.flush();
       expect(promise).toBeResolvedWith('accessTokenFromAPI');
-      expect(OAuthConfig.getNewAccessTokenPostData.getCall(0).args[0]).toBe('argToGetNewAccessToken');
+      expect(OAuthConfig.getNewAccessTokenPostData.calls.argsFor(0)[0]).toBe('argToGetNewAccessToken');
     });
 
     it('should not get new access token if failure', function () {
@@ -139,9 +139,9 @@ describe('Auth Service', function () {
 
   describe('refreshAccessToken()', function () {
     beforeEach(function () {
-      SessionStorage.get = sinon.stub().returns('fromStorage');
-      OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
-      OAuthConfig.getOauthAccessCodeUrl = sinon.stub().returns('accessCodeUrl');
+      SessionStorage.get = jasmine.createSpy('get').and.returnValue('fromStorage');
+      OAuthConfig.getAccessTokenUrl = jasmine.createSpy('getAccessTokenUrl').and.returnValue('url');
+      OAuthConfig.getOauthAccessCodeUrl = jasmine.createSpy('getOauthAccessCodeUrl').and.returnValue('accessCodeUrl');
       OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
       spyOn(TokenService, 'completeLogout');
     });
@@ -157,8 +157,8 @@ describe('Auth Service', function () {
 
       $httpBackend.flush();
       expect(promise).toBeResolvedWith('accessTokenFromAPI');
-      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
-      expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
+      expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
+      expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe('fromStorage');
     });
 
     it('should reject refresh access token if failure', function () {
@@ -170,29 +170,29 @@ describe('Auth Service', function () {
 
       $httpBackend.flush();
       expect(promise).toBeRejectedWith(mockResponse(500));
-      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
-      expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
+      expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
+      expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe('fromStorage');
       expect(TokenService.completeLogout).toHaveBeenCalled();
     });
 
     it('should reject refresh access token if no refresh token', function () {
-      SessionStorage.get.returns(undefined);
+      SessionStorage.get.and.returnValue(undefined);
 
       var promise = Auth.refreshAccessToken();
 
       $rootScope.$apply();
       expect(promise).toBeRejectedWith('refreshtoken not found');
-      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
-      expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe(undefined);
+      expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
+      expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe(undefined);
       expect(TokenService.completeLogout).toHaveBeenCalled();
     });
   });
 
   describe('refreshAccessTokenAndResendRequest()', function () {
     beforeEach(function () {
-      OAuthConfig.getOauth2Url = sinon.stub().returns('');
-      OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
-      TokenService.getRefreshToken = sinon.stub().returns('refresh_token');
+      OAuthConfig.getOauth2Url = jasmine.createSpy('Url').and.returnValue('');
+      OAuthConfig.getAccessTokenUrl = jasmine.createSpy('getAccessTokenUrl').and.returnValue('access_token_url');
+      TokenService.getRefreshToken = jasmine.createSpy('getRefreshToken').and.returnValue('refresh_token');
       spyOn(TokenService, 'completeLogout');
     });
 
@@ -244,7 +244,7 @@ describe('Auth Service', function () {
     });
 
     it('should not refresh token and resend request, should redirect to login', function () {
-      OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+      OAuthConfig.getLogoutUrl = jasmine.createSpy('getLogoutUrl').and.returnValue('logoutUrl');
       $httpBackend
         .expectPOST('access_token_url')
         .respond(500);
@@ -297,9 +297,9 @@ describe('Auth Service', function () {
 
   describe('setAccessToken()', function () {
     beforeEach(function () {
-      OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+      OAuthConfig.getAccessTokenUrl = jasmine.createSpy('getAccessTokenUrl').and.returnValue('url');
       OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
-      OAuthConfig.getAccessTokenPostData = sinon.stub().returns('data');
+      OAuthConfig.getAccessTokenPostData = jasmine.createSpy('getAccessTokenPostData').and.returnValue('data');
     });
 
     it('should set access and refresh token', function () {
@@ -331,10 +331,10 @@ describe('Auth Service', function () {
 
   describe('logoutAndRedirectTo()', function () {
     beforeEach(function () {
-      OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
-      OAuthConfig.getOauthListTokenUrl = sinon.stub().returns('OauthListTokenUrl');
-      OAuthConfig.getOauthDeleteRefreshTokenUrl = sinon.stub().returns('refreshtoken=');
-      OAuthConfig.getClientId = sinon.stub().returns('ewvmpibn34inbr433f23f4');
+      OAuthConfig.getLogoutUrl = jasmine.createSpy('getLogoutUrl').and.returnValue('logoutUrl');
+      OAuthConfig.getOauthListTokenUrl = jasmine.createSpy('getOauthListTokenUrl').and.returnValue('OauthListTokenUrl');
+      OAuthConfig.getOauthDeleteRefreshTokenUrl = jasmine.createSpy('getOauthDeleteRefreshTokenUrl').and.returnValue('refreshtoken=');
+      OAuthConfig.getClientId = jasmine.createSpy('getClientId').and.returnValue('ewvmpibn34inbr433f23f4');
       spyOn(TokenService, 'completeLogout');
       spyOn(TokenService, 'getClientSessionId').and.returnValue('testSessionId123');
     });
@@ -442,20 +442,20 @@ describe('Auth Service', function () {
 
     it('should logout and redirect to the default logout url', function () {
       var logoutDefer = $q.defer();
-      OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
-      Auth.logoutAndRedirectTo = sinon.stub().returns(logoutDefer.promise);
+      OAuthConfig.getLogoutUrl = jasmine.createSpy('getLogoutUrl').and.returnValue('logoutUrl');
+      Auth.logoutAndRedirectTo = jasmine.createSpy('logoutAndRedirectTo').and.returnValue(logoutDefer.promise);
       var promise = Auth.logout();
 
       expect(TokenService.triggerGlobalLogout).not.toHaveBeenCalled(); // should not be called before logout (token revocation) is complete
       logoutDefer.resolve();
       expect(promise).toBeResolved();  // seems unnecessary, but should be the same promise returned from logoutAndRedirectTo()
-      expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
+      expect(Auth.logoutAndRedirectTo).toHaveBeenCalledWith('logoutUrl');
       expect(TokenService.triggerGlobalLogout).toHaveBeenCalled(); // should only be called after logout (token revocation)
     });
     it('should set the message in the local storage if it has been passed in', function () {
       TokenService.triggerGlobalLogout.and.callThrough();
-      OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
-      Auth.logoutAndRedirectTo = sinon.stub().returns($q.resolve());
+      OAuthConfig.getLogoutUrl = jasmine.createSpy('getLogoutUrl').and.returnValue('logoutUrl');
+      Auth.logoutAndRedirectTo = jasmine.createSpy('logoutAndRedirectTo').and.returnValue($q.resolve());
       var promise = Auth.logout('still there');
       expect(promise).toBeResolved();
       expect(TokenService.triggerGlobalLogout).toHaveBeenCalled(); // should only be called after logout (token revocation)
@@ -465,12 +465,17 @@ describe('Auth Service', function () {
 
   describe('authorize()', function () {
     beforeEach(function () {
-      SessionStorage.get = sinon.stub();
-      UrlConfig.getAdminServiceUrl = sinon.stub().returns('path/');
+      SessionStorage.get = jasmine.createSpy('get');
+      UrlConfig.getAdminServiceUrl = jasmine.createSpy('getAdminServiceUrl').and.returnValue('path/');
     });
 
     it('should use correct URL if customer org', function (done) {
-      SessionStorage.get.withArgs('customerOrgId').returns('1337');
+      SessionStorage.get.and.callFake(function (arg) {
+        var store = {
+          customerOrgId: '1337',
+        };
+        return store[arg];
+      });
       $httpBackend
         .expectGET('path/organization/1337/userauthinfo')
         .respond(500, {});
@@ -483,7 +488,12 @@ describe('Auth Service', function () {
     });
 
     it('should use correct URL if partner org', function (done) {
-      SessionStorage.get.withArgs('partnerOrgId').returns('1337');
+      SessionStorage.get.and.callFake(function (arg) {
+        var store = {
+          partnerOrgId: '1337',
+        };
+        return store[arg];
+      });
       $httpBackend
         .expectGET('path/organization/1337/userauthinfo?launchpartnerorg=true')
         .respond(500, {});
@@ -510,7 +520,7 @@ describe('Auth Service', function () {
     describe('given user is full admin', function () {
 
       beforeEach(function () {
-        UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+        UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
         $httpBackend
           .expectGET('path/userauthinfo')
           .respond(200, {
@@ -544,15 +554,15 @@ describe('Auth Service', function () {
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
 
-        Authinfo.initialize = sinon.stub();
+        Authinfo.initialize = jasmine.createSpy('initialize');
 
         Auth.authorize();
 
         $httpBackend.flush();
 
-        expect(Authinfo.initialize.callCount).toBe(1);
+        expect(Authinfo.initialize.calls.count()).toBe(1);
 
-        var result = Authinfo.initialize.getCall(0).args[0];
+        var result = Authinfo.initialize.calls.argsFor(0)[0];
         expect(result.services[0]).toBe('foo');
       });
 
@@ -561,7 +571,7 @@ describe('Auth Service', function () {
     describe('given user is not admin', function () {
 
       beforeEach(function () {
-        UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+        UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
         $httpBackend
           .expectGET('path/userauthinfo')
           .respond(200, {
@@ -580,7 +590,7 @@ describe('Auth Service', function () {
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
 
-        Authinfo.initialize = sinon.stub();
+        Authinfo.initialize = jasmine.createSpy('initialize');
       });
 
       it('massaged services are used and webex api should be called', function (done) {
@@ -590,9 +600,9 @@ describe('Auth Service', function () {
 
         $httpBackend.flush();
 
-        expect(Authinfo.initialize.callCount).toBe(1);
+        expect(Authinfo.initialize.calls.count()).toBe(1);
 
-        var result = Authinfo.initialize.getCall(0).args[0];
+        var result = Authinfo.initialize.calls.argsFor(0)[0];
         expect(result.services[0].ciName).toBe('foo');
         expect(result.services[0].serviceId).toBe('bar');
         expect(result.services[0].ciService).toBe(undefined);
@@ -600,9 +610,9 @@ describe('Auth Service', function () {
       });
 
       it('will fetch account info if admin', function (done) {
-        Authinfo.isAdmin = sinon.stub().returns(true);
-        Authinfo.getOrgId = sinon.stub().returns(42);
-        Authinfo.updateAccountInfo = sinon.stub();
+        Authinfo.isAdmin = jasmine.createSpy('isAdmin').and.returnValue(true);
+        Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue(42);
+        Authinfo.updateAccountInfo = jasmine.createSpy('updateAccountInfo');
 
         $httpBackend
           .expectGET('path/customers?orgId=42')
@@ -613,7 +623,7 @@ describe('Auth Service', function () {
         });
 
         $httpBackend.flush();
-        expect(Authinfo.updateAccountInfo.callCount).toBe(1);
+        expect(Authinfo.updateAccountInfo.calls.count()).toBe(1);
       });
 
     });
@@ -621,7 +631,7 @@ describe('Auth Service', function () {
     describe('given admin has read only role', function () {
 
       beforeEach(function () {
-        UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+        UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
         $httpBackend
           .expectGET('path/userauthinfo')
           .respond(200, {
@@ -639,13 +649,13 @@ describe('Auth Service', function () {
         $httpBackend
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
-        Authinfo.initialize = sinon.stub();
+        Authinfo.initialize = jasmine.createSpy('initialize');
       });
 
       it('will update account info', function (done) {
-        Authinfo.isReadOnlyAdmin = sinon.stub().returns(true);
-        Authinfo.getOrgId = sinon.stub().returns(42);
-        Authinfo.updateAccountInfo = sinon.stub();
+        Authinfo.isReadOnlyAdmin = jasmine.createSpy('isReadOnlyAdmin').and.returnValue(true);
+        Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue(42);
+        Authinfo.updateAccountInfo = jasmine.createSpy('updateAccountInfo');
 
         $httpBackend
           .expectGET('path/customers?orgId=42')
@@ -656,14 +666,14 @@ describe('Auth Service', function () {
         });
 
         $httpBackend.flush();
-        expect(Authinfo.updateAccountInfo.callCount).toBe(1);
+        expect(Authinfo.updateAccountInfo.calls.count()).toBe(1);
       });
 
     });
 
     it('will add some webex stuff given some condition && when no roles specified', function (done) {
-      Authinfo.initialize = sinon.stub();
-      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+      Authinfo.initialize = jasmine.createSpy('initialize');
+      UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
 
       $httpBackend
         .expectGET('path/userauthinfo')
@@ -688,16 +698,16 @@ describe('Auth Service', function () {
       });
       $httpBackend.flush();
 
-      expect(Authinfo.initialize.callCount).toBe(1);
+      expect(Authinfo.initialize.calls.count()).toBe(1);
 
-      var result = Authinfo.initialize.getCall(0).args[0];
+      var result = Authinfo.initialize.calls.argsFor(0)[0];
       expect(result.services.length).toBe(1);
       expect(result.services[0].ciName).toBe('webex-messenger');
     });
 
     it('will add some webex stuff given some condition && when Full_Admin', function (done) {
-      Authinfo.initialize = sinon.stub();
-      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+      Authinfo.initialize = jasmine.createSpy('initialize');
+      UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
 
       $httpBackend
         .expectGET('path/userauthinfo')
@@ -729,16 +739,16 @@ describe('Auth Service', function () {
       });
       $httpBackend.flush();
 
-      expect(Authinfo.initialize.callCount).toBe(1);
+      expect(Authinfo.initialize.calls.count()).toBe(1);
 
-      var result = Authinfo.initialize.getCall(0).args[0];
+      var result = Authinfo.initialize.calls.argsFor(0)[0];
       expect(result.services.length).toBe(2);
       expect(result.services[1].ciName).toBe('webex-messenger');
     });
 
     it('will not add some webex stuff given some condition && when Full_Admin && inactive wapi org', function (done) {
-      Authinfo.initialize = sinon.stub();
-      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+      Authinfo.initialize = jasmine.createSpy('initialize');
+      UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
 
       $httpBackend
         .expectGET('path/userauthinfo')
@@ -770,15 +780,15 @@ describe('Auth Service', function () {
       });
       $httpBackend.flush();
 
-      expect(Authinfo.initialize.callCount).toBe(1);
+      expect(Authinfo.initialize.calls.count()).toBe(1);
 
-      var result = Authinfo.initialize.getCall(0).args[0];
+      var result = Authinfo.initialize.calls.argsFor(0)[0];
       expect(result.services.length).toBe(1);
     });
 
     it('will not add some webex stuff given some condition && when PARTNER_ADMIN', function (done) {
-      Authinfo.initialize = sinon.stub();
-      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+      Authinfo.initialize = jasmine.createSpy('initialize');
+      UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
 
       $httpBackend
         .expectGET('path/userauthinfo')
@@ -810,9 +820,9 @@ describe('Auth Service', function () {
       });
       $httpBackend.flush();
 
-      expect(Authinfo.initialize.callCount).toBe(1);
+      expect(Authinfo.initialize.calls.count()).toBe(1);
 
-      var result = Authinfo.initialize.getCall(0).args[0];
+      var result = Authinfo.initialize.calls.argsFor(0)[0];
       expect(result.services.length).toBe(0);
     });
   });
@@ -820,7 +830,7 @@ describe('Auth Service', function () {
   // helpers
 
   function stubCredentials() {
-    return sinon.stub().returns('clientRegistrationCredentials');
+    return jasmine.createSpy('getOAuthClientRegistrationCredentials').and.returnValue('clientRegistrationCredentials');
   }
 
   function assertCredentials(headers) {

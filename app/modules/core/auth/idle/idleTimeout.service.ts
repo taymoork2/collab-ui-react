@@ -22,7 +22,6 @@ export class IdleTimeoutService {
     private $window: ng.IWindowService,
     private Auth,
     private Config,
-    private FeatureToggleService,
     private Log,
     private LocalStorage,
     private WindowService: WindowService,
@@ -104,29 +103,27 @@ export class IdleTimeoutService {
     this.$rootScope.$on(IdleTimeoutService.LOGIN_EVENT, () => {
       this.LocalStorage.remove(StorageKeys.LOGIN_MESSAGE);
 
-      return this.FeatureToggleService.atlasIdleLogoutGetStatus()
-      .then(result => {
-        if (result && !this.isInitialized) {
+      if (!this.isInitialized) {
 
-          this.Log.debug('IDLE TIMEOUT SERVICE: Wiring up events');
-          /* This is for long running  import and export operations to keep from timing out this event is emitted by:
-          /* csvDownload.service.ts,  the getUserReport() is a recursive function that gets executed every 3 seconds until
-          /* userlist.service.js,  getUserReports() same
-          /* userCsvController processCsvRows() issues a rest API for every 10 users in the CSV file
-          */
-          this.keepAliveDeregistrer  = this.$rootScope.$on(this.Config.idleTabKeepAliveEvent, () => this.resetAndBroadcast({ type: this.Config.idleTabKeepAliveEvent }));
-          this.idleSetter = this.initIdleTimer();
-          //bind events to reset the timer.
-          let throttled = _.throttle(e => {
-            this.resetAndBroadcast(e);
-          }, IdleTimeoutService.DEBOUNCE_INTERVAL);
-          _.forEach(IdleTimeoutService.IDLE_RESET_EVENTS, EventName => {
-            angular.element(this.$document).bind(EventName, throttled);
-          });
-          //listen to storage
-          this.WindowService.registerEventListener('storage', this.checkActive.bind(this));
-        }
-      });
+        this.Log.debug('IDLE TIMEOUT SERVICE: Wiring up events');
+        /* This is for long running  import and export operations to keep from timing out this event is emitted by:
+        /* csvDownload.service.ts,  the getUserReport() is a recursive function that gets executed every 3 seconds until
+        /* userlist.service.js,  getUserReports() same
+        /* userCsvController processCsvRows() issues a rest API for every 10 users in the CSV file
+        */
+        this.keepAliveDeregistrer  = this.$rootScope.$on(this.Config.idleTabKeepAliveEvent, () => this.resetAndBroadcast({ type: this.Config.idleTabKeepAliveEvent }));
+        this.idleSetter = this.initIdleTimer();
+        //bind events to reset the timer.
+        let throttled = _.throttle(e => {
+          this.resetAndBroadcast(e);
+        }, IdleTimeoutService.DEBOUNCE_INTERVAL);
+        _.forEach(IdleTimeoutService.IDLE_RESET_EVENTS, EventName => {
+          angular.element(this.$document).bind(EventName, throttled);
+        });
+        //listen to storage
+        this.WindowService.registerEventListener('storage', this.checkActive.bind(this));
+      }
+
     });
 
   }

@@ -1,7 +1,6 @@
 import testModule from './index';
 
 declare let punycode: any;
-declare let sinon: any;
 
 describe('DomainManagementAddCtrl', () => {
 
@@ -14,13 +13,13 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementService = _DomainManagementService_;
     DomainManagementAddCtrl = $controller('DomainManageAddCtrl', {
       $stateParams: { loggedOnUser: '' },
-      $previousState: { go: sinon.stub() },
+      $previousState: { go: jasmine.createSpy('go') },
       DomainManagementService: DomainManagementService,
       $translate: $translate,
       LogMetricsService: {
         eventType: { domainManageAdd: 'add' },
         eventAction: { buttonClick: 'click' },
-        logMetrics: sinon.stub(),
+        logMetrics: jasmine.createSpy('logMetrics'),
       },
     });
   }));
@@ -75,7 +74,7 @@ describe('DomainManagementAddCtrl', () => {
   });
 
   it('should add the given domain using addDomain on the service', () => {
-    DomainManagementService.addDomain = sinon.stub().returns(
+    DomainManagementService.addDomain = jasmine.createSpy('addDomain').and.returnValue(
       $q.resolve());
 
     let unEncoded = 'test.com';
@@ -83,11 +82,11 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementAddCtrl.domain = unEncoded;
     DomainManagementAddCtrl.add();
     $rootScope.$digest();
-    expect(DomainManagementService.addDomain.callCount).toBe(1);
+    expect(DomainManagementService.addDomain.calls.count()).toBe(1);
   });
 
   it('should post metric for add domain', () => {
-    DomainManagementService.addDomain = sinon.stub().returns(
+    DomainManagementService.addDomain = jasmine.createSpy('addDomain').and.returnValue(
       $q.resolve());
 
     let unEncoded = 'test.com';
@@ -95,11 +94,11 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementAddCtrl.domain = unEncoded;
     DomainManagementAddCtrl.add();
     $rootScope.$digest();
-    expect(DomainManagementAddCtrl.LogMetricsService.logMetrics.callCount).toBe(1);
+    expect(DomainManagementAddCtrl.LogMetricsService.logMetrics.calls.count()).toBe(1);
   });
 
   it('should set error if addDomain on the service fails', () => {
-    DomainManagementService.addDomain = sinon.stub().returns(
+    DomainManagementService.addDomain = jasmine.createSpy('addDomain').and.returnValue(
       $q.reject('error-during-add'));
 
     let unEncoded = 'test.com';
@@ -107,7 +106,7 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementAddCtrl.domain = unEncoded;
     DomainManagementAddCtrl.add();
     $rootScope.$digest();
-    expect(DomainManagementService.addDomain.callCount).toBe(1);
+    expect(DomainManagementService.addDomain.calls.count()).toBe(1);
     expect(DomainManagementAddCtrl.error).toBe('error-during-add');
   });
 

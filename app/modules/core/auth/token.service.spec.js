@@ -7,7 +7,7 @@ describe('TokenService', function () {
 
   var SessionStorage, TokenService, $window;
   var windowMock = {
-    open: sinon.stub(),
+    open: jasmine.createSpy('open'),
     sessionStorage: {},
     localStorage: {
       setItem: function () {},

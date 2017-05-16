@@ -49,7 +49,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Active User Services', function () {
     it('should return column data getActiveUserData', function () {
-      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.when(this.dataResponse(this.updateDates(_.cloneDeep(this.activeData.activeLineData)))));
+      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.resolve(this.dataResponse(this.updateDates(_.cloneDeep(this.activeData.activeLineData)))));
 
       this.SparkLineReportService.getActiveUserData(this.defaults.timeFilter[0]).then((response: IActiveUserWrapper): void => {
         expect(response).toEqual({
@@ -73,7 +73,7 @@ describe('Service: Customer Reports Service', function () {
     });
 
     it('should getMostActiveUserData', function () {
-      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.when({
+      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.resolve({
         data: _.cloneDeep(this.activeData.mostActive),
       }));
 
@@ -95,7 +95,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Conversation Service', function () {
     it('should return column data getConversationData', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(this.dataResponse(this.updateDates(_.cloneDeep(this.conversationData.apiResponse)))));
+      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.resolve(this.dataResponse(this.updateDates(_.cloneDeep(this.conversationData.apiResponse)))));
 
       this.SparkLineReportService.getConversationData(this.defaults.timeFilter[0]).then((response: IConversationWrapper): void => {
         expect(response).toEqual({
@@ -123,7 +123,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Media Service', function () {
     it('should getMediaQualityData', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(this.dataResponse(this.updateDates(_.cloneDeep(this.mediaData.callQuality.data[0].data)))));
+      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.resolve(this.dataResponse(this.updateDates(_.cloneDeep(this.mediaData.callQuality.data[0].data)))));
 
       this.SparkLineReportService.getMediaQualityData(this.defaults.timeFilter[0]).then((response: Array<IMediaData>): void => {
         expect(response).toEqual(this.updateDates(_.cloneDeep(this.mediaData.lineResponse), this.defaults.dayFormat));
@@ -143,7 +143,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Metrics Service', function () {
     it('should getMetricsData', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(this.updateDates({
+      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.resolve(this.updateDates({
         data: _.cloneDeep(this.metricsData.lineData),
       })));
 
@@ -215,7 +215,7 @@ describe('Service: Customer Reports Service', function () {
         });
       });
 
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(this.dataResponse(devicesData)));
+      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.resolve(this.dataResponse(devicesData)));
 
       this.SparkLineReportService.getDeviceData(this.defaults.timeFilter[0]).then((response: IEndpointContainer): void => {
         expect(response).toEqual(endpoints);

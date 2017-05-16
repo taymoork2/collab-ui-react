@@ -22,13 +22,13 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       "releaseChannel": "DEV",
     };
     $modalInstance = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
     $filter = _$filter_;
     /*
         MediaClusterServiceV2 = {
-          get: sinon.stub().returns(redirectTargetPromise),
-          getAll: sinon.stub().returns(redirectTargetPromise),
+          get: jasmine.createSpy('get').and.returnValue(redirectTargetPromise),
+          getAll: jasmine.createSpy('getAll').and.returnValue(redirectTargetPromise),
         };
     */
     FusionClusterService = _FusionClusterService_;

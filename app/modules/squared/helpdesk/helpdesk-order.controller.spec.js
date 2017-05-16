@@ -57,14 +57,13 @@ describe('Controller: HelpdeskOrderController', function () {
     });
     it('call Notification.errorWithTrackingId and supply the response data when promise is rejected', function () {
       $scope.$apply();
-      sinon.stub(HelpdeskService, 'getOrg');
       var rejectData = {
         data: {
           errorCode: 420000,
         },
       };
       var promise = $q.reject(rejectData);
-      HelpdeskService.getOrg.returns(promise);
+      HelpdeskService.getOrg.and.returnValue(promise);
       $scope.$apply();
 
       orderController = $controller('HelpdeskOrderController', {

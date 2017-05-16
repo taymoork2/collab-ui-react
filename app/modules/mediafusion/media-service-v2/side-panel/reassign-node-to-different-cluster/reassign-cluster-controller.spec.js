@@ -34,10 +34,10 @@ describe('Controller: ReassignClusterControllerV2', function () {
     $q = _$q_;
     $translate = _$translate_;
     modalInstanceMock = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
     windowMock = {
-      open: sinon.stub(),
+      open: jasmine.createSpy('open'),
     };
     spyOn(MediaClusterServiceV2, 'getAll').and.returnValue($q.resolve(clusterList));
 

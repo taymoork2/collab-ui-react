@@ -1,6 +1,7 @@
 module.exports = {
   requireAcceptTos: 'atlas-tos-required',
   dirSync: 'atlas-dir-sync',
+  atlas2017NameChange: 'atlas-2017-name-change',
   atlasCareTrials: 'atlas-care-trials',
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
   atlasContextServiceTrials: 'atlas-context-service-trials',
@@ -17,7 +18,6 @@ module.exports = {
   atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
-  atlasIdleLogout: 'atlas-idle-logout',
   atlasJabberInterop: 'atlas-jabber-interop',
   atlasMediaServiceMetrics: 'atlas-media-service-metrics',
   atlasMediaServiceMetricsMilestoneOne: 'atlas-media-service-metrics-milestone-one',

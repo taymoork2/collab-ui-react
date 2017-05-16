@@ -68,6 +68,8 @@ var AutoAttendantPage = function () {
 
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
 
+  this.sayMessageRemoveAction = this.sayMessageBody.element(by.css('div.aa-flex-row')).element(by.css('div.aa-action-delete'));
+
   this.messageOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div span.select-toggle'));
   this.playMessageOption = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
@@ -134,8 +136,13 @@ var AutoAttendantPage = function () {
 
   this.decisionFirst = element.all(by.css('div.aa-panel-body[name="Decision"]')).all(by.cssContainingText("h3", "If")).first();
   this.decisionIf = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div span.select-toggle'));
-  this.decisionIfDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(2);
+  this.decisionIfDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(6);
+  this.decisionIfSession = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifSessionVariable"] + div span.select-toggle'));
+
+  this.decisionIfSessionVarDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifSessionVariable"] + div div.dropdown-menu')).all(by.tagName('li')).get(0);
+
   this.decisionCountryCodeTextArea = element.all(by.name('countryCode')).first();
+  this.decisionVariableIsTextArea = element.all(by.name('sessionVariable')).first();
 
   this.decisionThen = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div span.select-toggle'));
   this.decisionThenDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(2);
@@ -146,6 +153,10 @@ var AutoAttendantPage = function () {
   this.callerInputTextFirst = element.all(by.name('callerInput')).first();
   this.callerInputNameVariable = element(by.name('callerInputNameVariable'));
   this.callerInputAddAction = element(by.name('aa-caller-input-add-action'));
+
+  this.callerInput = element(by.css('div.aa-panel-body[name="Caller Input"]'));
+
+  this.callerInputRemoveAction = this.callerInput.element(by.css('div.aa-flex-row')).element(by.css('div.aa-action-delete'));
 
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
@@ -326,7 +337,7 @@ var AutoAttendantPage = function () {
   this.dialByMessageVoice = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="voiceSelect"] + div span.select-toggle'));
   this.dialByMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
   this.trash = element.all(by.css('.aa-trash-icon')).last();
-  this.timeZone = element(by.css('#timeZoneInput > div > div > span.select-toggle'));
+  this.timeZone = element(by.css('div.modal-body')).element(by.css('select[name="timeZoneInput"] + div span.select-toggle'));
   this.firstTimeZoneElement = element(by.name('aaScheduleModalCtrl.timeZoneForm')).element(by.css('div.dropdown-menu')).all(by.tagName('li')).first();
   this.aaTimeZone = element(by.name('aaTimeZone'));
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
@@ -358,6 +369,7 @@ var AutoAttendantPage = function () {
   this.holidayBehaviour = element(by.cssContainingText('.cs-checkbox', 'Holidays Follow Closed Behavior'));
   this.scheduletrash = element.all(by.css('.aa-schedule-trash')).first();
   this.modalsave = element(by.id('saveOpenClosedBtn'));
+  this.varNameSave = element(by.name('varNameSave'));
   this.modalcancel = element(by.id('cancelDeleteFeature'));
   this.scheduleCloseButton = element(by.css('.modal-header button.close'));
 

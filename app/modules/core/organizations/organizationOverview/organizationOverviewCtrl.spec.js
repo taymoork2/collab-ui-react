@@ -3,7 +3,7 @@
 describe('Controller: organizationOverviewCtrl', function () {
   var controller, $scope, Orgservice, $q, $controller, Notification, currentOrganization;
   var authInfo = {
-    getOrgId: sinon.stub(),
+    getOrgId: jasmine.createSpy('getOrgId'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {

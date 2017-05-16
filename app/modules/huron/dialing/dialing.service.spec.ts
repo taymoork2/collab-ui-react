@@ -15,7 +15,7 @@ describe('Service: DialingService', () => {
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
-    spyOn(this.$state, 'go').and.returnValue(this.$q.when());
+    spyOn(this.$state, 'go').and.returnValue(this.$q.resolve());
 
     let getDialingResponseEmpty: ICOSRestrictionResponse = {
       customer: [],

@@ -112,13 +112,13 @@
     //from authinfo
     describe('authorize', function () {
       beforeEach(function () {
-        UrlConfig.getAdminServiceUrl = sinon.stub().returns('path/');
+        UrlConfig.getAdminServiceUrl = jasmine.createSpy('getAdminServiceUrl').and.returnValue('path/');
       });
 
       describe('given user is not admin', function () {
 
         beforeEach(function () {
-          UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+          UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
           spyOn(Auth, 'authorize').and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve({
@@ -366,7 +366,7 @@
         });
         spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
         spyOn(featureToggleService, 'supports').and.returnValue($q.resolve(featureIsEnabled));
-        // featureToggleService.supports = jasmine.stub().and.returnValue($q.when(featureIsEnabled));
+        // featureToggleService.supports = jasmine.stub().and.returnValue($q.resolve(featureIsEnabled));
         initTabsController();
         broadcastEvent('TABS_UPDATED');
         $scope.$apply();

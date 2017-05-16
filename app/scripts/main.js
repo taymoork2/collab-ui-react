@@ -131,6 +131,7 @@
     require('modules/hercules/services/service-descriptor'),
     require('modules/hercules/services/uss-service'),
     require('modules/hercules/services/service-descriptor'),
+    require('modules/hercules/cluster-card').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
@@ -148,6 +149,7 @@
 
   angular.module('Messenger', [
     'Core',
+    require('modules/core/scripts/services/accountorgservice'),
     require('modules/shared').default,
   ]);
 

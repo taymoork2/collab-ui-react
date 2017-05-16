@@ -6,7 +6,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
+  function AABuilderActionsCtrl($scope, $translate, $controller, $modal, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, CustomVariableService) {
 
     var vm = this;
     var appendSpecialCharHelp = "<br><br>" + $translate.instant('autoAttendant.sayMessageSpecialChar');
@@ -112,16 +112,75 @@
         });
       }
     }
+    function openVarNamesModal(vname, thisCeHasVar) {
+      return $modal.open({
+        templateUrl: 'modules/huron/features/autoAttendant/builder/aaVarNames.tpl.html',
+        controller: 'AAVarNamesModalCtrl',
+        controllerAs: 'aaVarNamesModalCtrl',
+        type: 'dialog',
+        resolve: {
+          varNames: function () {
+            return vname;
+          },
+          ceHasVar: function () {
+            return thisCeHasVar;
+          },
+        },
+      }).result.then(function () {
+        // user clicked Ok
+        return true;
+      }, function () {
+        // user clicked cancel
+        return false;
+      });
+    }
+
+    function checkIfModal(varNames, thisCeHasVar) {
+      if (!_.isEmpty(varNames) || thisCeHasVar) {
+        // there are dependent Ce's
+        return openVarNamesModal(varNames, thisCeHasVar);
+      }
+      // no dependent Ces, good to go
+      return true;
+    }
+
+    function checkVarNameDependencies(varNameToCheck) {
+
+      // flag as we need to alert if the current Ce uses this variable.
+      // Current Ce will not be returned in list of dependant Ce
+      var thisCeHasVar = AACommonService.collectThisCeActionValue(vm.ui).filter(function (value) {
+        return _.isEqual(value, varNameToCheck);
+      }).length > 1; // one for this CallerInput
+
+      return CustomVariableService.getVariableDependencies(varNameToCheck).then(function (varNames) {
+        return checkIfModal(varNames, thisCeHasVar);
+      }, function () {
+        return checkIfModal([], thisCeHasVar);
+      });
+    }
+    function deleteMenu(uiMenu, index) {
+      uiMenu.deleteEntryAt(index);
+      AACommonService.setActionStatus(true);
+    }
 
     function removeAction(index) {
+
       var uiMenu = vm.ui[vm.schedule];
       var entryI = uiMenu.entries[index];
       if (AutoAttendantCeMenuModelService.isCeMenu(entryI)) {
         AutoAttendantCeMenuModelService.deleteCeMenuMap(entryI.getId());
       }
-      uiMenu.deleteEntryAt(index);
 
-      AACommonService.setActionStatus(true);
+      if (_.has(entryI, 'actions[0].variableName')) {
+        checkVarNameDependencies(entryI.actions[0].variableName).then(function (okToDelete) {
+          if (okToDelete) {
+            deleteMenu(uiMenu, index);
+          }
+        });
+
+      } else {
+        deleteMenu(uiMenu, index);
+      }
     }
 
     function setOption() {
@@ -177,6 +236,7 @@
     }
 
     function activate() {
+
       setFeatureToggledActions();
       vm.index = $scope.index;
       vm.schedule = $scope.schedule;

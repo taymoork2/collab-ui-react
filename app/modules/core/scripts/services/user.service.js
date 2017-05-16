@@ -606,7 +606,7 @@
             entitlementOrLicense.properties.internalExtension = user.internalExtension;
           }
           if (user.directLine) {
-            entitlementOrLicense.properties.directLine = PhoneNumberService.getDIDValue(user.directLine);
+            entitlementOrLicense.properties.directLine = PhoneNumberService.getE164Format(user.directLine);
           }
         }
 

@@ -11,7 +11,7 @@ describe('Service: CallerIDService', () => {
       'LineService',
       '$q',
     );
-    spyOn(this.CallerIDService, 'listCompanyNumbers').and.returnValue(this.$q.when([]));
+    spyOn(this.CallerIDService, 'listCompanyNumbers').and.returnValue(this.$q.resolve([]));
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('11111');
     this.callerIdResponse = <ICallerID> {
       externalCallerIdType: {

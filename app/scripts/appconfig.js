@@ -1006,6 +1006,7 @@
             },
             params: {
               manageUsers: false,
+              readOnly: false,
             },
           })
           .state('users.convert.services', {
@@ -2273,17 +2274,17 @@
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
               },
-              setCustomer: /* @ngInject */ function (Orgservice, $stateParams, HuronCompassService) {
-                HuronCompassService.setIsCustomer(true);
-                return Orgservice.isTestOrg($stateParams.currentCustomer.customerOrgId).then(function (result) {
-                  $stateParams.isTestOrg = result;
-                });
-              },
             },
             params: {
               currentCustomer: {},
             },
             data: {},
+            onEnter: /* @ngInject */ function (Orgservice, $stateParams, HuronCompassService) {
+              HuronCompassService.setIsCustomer(true);
+              Orgservice.isTestOrg($stateParams.currentCustomer.customerOrgId).then(function (result) {
+                $stateParams.isTestOrg = result;
+              });
+            },
             onExit: /* @ngInject */ function (HuronCompassService) {
               HuronCompassService.setIsCustomer(false);
               HuronCompassService.setCustomerBaseDomain();

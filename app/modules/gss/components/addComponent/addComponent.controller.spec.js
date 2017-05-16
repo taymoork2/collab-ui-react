@@ -29,7 +29,7 @@ describe('controller: AddComponentCtrl', function () {
   function initController() {
     controller = $controller('AddComponentCtrl', {
       $modalInstance: {
-        close: sinon.stub(),
+        close: jasmine.createSpy('close'),
       },
       $scope: $scope,
       ComponentsService: ComponentsService,
