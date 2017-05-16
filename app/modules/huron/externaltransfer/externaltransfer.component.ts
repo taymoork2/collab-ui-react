@@ -42,14 +42,14 @@ class ExternalTransferCtrl implements ng.IComponentController {
     this.options = [];
     this.$q.all({
       orgSetting: this.getOrgSetting(),
-      userSetting: this.ExternalTransferService.getDefaultSettingForUser(this.memberId),
+      defaultSetting: this.ExternalTransferService.getDefaultSetting(this.memberId, this.memberType),
     }).then(
       response => {
         let orgExtTransfer = _.get(response, 'orgSetting')['allowExternalTransfer'];
         this.orgSetting = this.$translate.instant('serviceSetupModal.externalTransfer.orgSetting', {
           state: this.getSetting(orgExtTransfer),
         });
-        let userExtTransfer: string = <string>_.get(response, 'userSetting');
+        let userExtTransfer: string = <string>_.get(response, 'defaultSetting');
         switch (userExtTransfer) {
           case this.default:
             this.selected = this.orgSetting;
@@ -85,7 +85,7 @@ class ExternalTransferCtrl implements ng.IComponentController {
         allowExternalTransfer = this.default;
         break;
     }
-    this.ExternalTransferService.updateSettingsForUser(this.memberId, allowExternalTransfer).then(() => {
+    this.ExternalTransferService.updateSettings(this.memberId, this.memberType, allowExternalTransfer).then(() => {
       this.saveInProcess = false;
       this.reset();
       this.Notification.success('serviceSetupModal.externalTransfer.success');
