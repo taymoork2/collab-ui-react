@@ -3,9 +3,9 @@
 describe('Controller: HelpdeskOrgController', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var Authinfo, q, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService, HelpdeskHuronService, Notification, FusionClusterService, Orgservice;
+  var Authinfo, q, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService, HelpdeskHuronService, Notification, HybridServicesClusterService, Orgservice;
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$stateParams_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _HelpdeskHuronService_, _HelpdeskService_, _LicenseService_, _Notification_, _FusionClusterService_, _Orgservice_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$stateParams_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _HelpdeskHuronService_, _HelpdeskService_, _LicenseService_, _Notification_, _HybridServicesClusterService_, _Orgservice_) {
     HelpdeskService = _HelpdeskService_;
     FeatureToggleService = _FeatureToggleService_;
     $scope = _$rootScope_.$new();
@@ -18,10 +18,10 @@ describe('Controller: HelpdeskOrgController', function () {
     Authinfo = _Authinfo_;
     HelpdeskHuronService = _HelpdeskHuronService_;
     Notification = _Notification_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     Orgservice = _Orgservice_;
 
-    spyOn(FusionClusterService, 'getAll').and.returnValue(q.resolve([]));
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue(q.resolve([]));
   }));
 
   describe('Org controller', function () {
@@ -41,7 +41,7 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        FusionClusterService: FusionClusterService,
+        HybridServicesClusterService: HybridServicesClusterService,
       });
     });
 

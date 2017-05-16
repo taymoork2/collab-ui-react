@@ -1,4 +1,5 @@
 import { ConnectorType, ICluster, IResourceGroup, IReleaseChannelsResponse } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface IOption {
   label: string;
@@ -12,7 +13,7 @@ export class ResourceGroupService {
     private $http: ng.IHttpService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private UrlConfig,
   ) {
     this.extractDataFromResponse = this.extractDataFromResponse.bind(this);
@@ -97,13 +98,13 @@ export class ResourceGroupService {
   }
 
   public resourceGroupHasEligibleCluster(resourceGroupId: string, connectorType: ConnectorType): ng.IPromise<boolean> {
-    return this.FusionClusterService.getAll()
+    return this.HybridServicesClusterService.getAll()
       .then(clusters => {
         let clustersInGroup: ICluster[];
         if (resourceGroupId !== '') {
-          clustersInGroup = this.FusionClusterService.getClustersForResourceGroup(resourceGroupId, clusters);
+          clustersInGroup = this.HybridServicesClusterService.getClustersForResourceGroup(resourceGroupId, clusters);
         } else {
-          clustersInGroup = this.FusionClusterService.getUnassignedClusters(clusters);
+          clustersInGroup = this.HybridServicesClusterService.getUnassignedClusters(clusters);
         }
 
         // No clusters in group: obviously not going to work

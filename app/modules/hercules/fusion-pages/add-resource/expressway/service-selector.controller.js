@@ -5,7 +5,7 @@
     .controller('ExpresswayServiceSelectorController', ExpresswayServiceSelectorController);
 
   /* @ngInject */
-  function ExpresswayServiceSelectorController($stateParams, $translate, Authinfo, Config, FusionClusterService) {
+  function ExpresswayServiceSelectorController($stateParams, $translate, Authinfo, Config, HybridServicesClusterService) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -38,7 +38,7 @@
 
     function getSetupState() {
       // A cluster type is said to be setup if there is at least one cluster with one connector
-      return FusionClusterService.getAll()
+      return HybridServicesClusterService.getAll()
         .then(function (clusters) {
           return {
             call: hasServiceSetUp(clusters, 'c_ucmc'),

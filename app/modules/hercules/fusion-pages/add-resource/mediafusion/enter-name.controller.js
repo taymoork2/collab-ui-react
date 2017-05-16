@@ -5,7 +5,7 @@
     .controller('MediafusionEnterNameController', MediafusionEnterNameController);
 
   /* @ngInject */
-  function MediafusionEnterNameController($stateParams, $translate, FusionClusterService, HybridServicesExtrasService, Notification) {
+  function MediafusionEnterNameController($stateParams, $translate, HybridServicesClusterService, HybridServicesExtrasService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     var clusterId = null;
@@ -29,7 +29,7 @@
 
     function provisionCluster(data) {
       vm.provisioning = true;
-      return FusionClusterService.preregisterCluster(data.name, 'stable', 'mf_mgmt')
+      return HybridServicesClusterService.preregisterCluster(data.name, 'stable', 'mf_mgmt')
         .then(function (cluster) {
           clusterId = cluster.id;
           return cluster;

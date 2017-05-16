@@ -6,7 +6,7 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $state, $translate, Authinfo, FusionClusterService) {
+  function HDSServiceController($modal, $state, $translate, Authinfo, HybridServicesClusterService) {
 
 
     var vm = this;
@@ -34,7 +34,7 @@
       },
     };
 
-    FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity')
+    HybridServicesClusterService.serviceIsSetUp('spark-hybrid-datasecurity')
       .then(function (enabled) {
         if (!enabled) {
           vm.addResourceModal.resolve.firstTimeSetup = true;

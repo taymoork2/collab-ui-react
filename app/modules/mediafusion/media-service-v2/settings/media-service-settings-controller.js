@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsControllerV2($stateParams, Analytics, FusionClusterService, hasMFVIdeoFeatureToggle, Authinfo, Orgservice, MediaClusterServiceV2, Notification) {
+  function MediaServiceSettingsControllerV2($stateParams, Analytics, HybridServicesClusterService, hasMFVIdeoFeatureToggle, Authinfo, Orgservice, MediaClusterServiceV2, Notification) {
     var vm = this;
     vm.config = '';
     vm.wx2users = '';
@@ -57,7 +57,7 @@
 
     function createPropertySetAndAssignClusters() {
       // First get all clusters to form cluster id list
-      FusionClusterService.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, {
             targetType: 'mf_mgmt',

@@ -1,6 +1,7 @@
 import { ICluster, ConnectorType, IConnector } from 'modules/hercules/hybrid-services.types';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface INodes {
   hostname: string;
@@ -21,15 +22,15 @@ export class NodeListComponentCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    public $translate: ng.translate.ITranslateService,
-    public FusionClusterService,
-    public HybridServicesClusterStatesService: HybridServicesClusterStatesService,
-    public Notification: Notification,
+    private $translate: ng.translate.ITranslateService,
+    private HybridServicesClusterService: HybridServicesClusterService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    private Notification: Notification,
   ) {}
 
   public $onInit() {
     if (this.cluster) {
-      this.FusionClusterService.get(this.cluster.id)
+      this.HybridServicesClusterService.get(this.cluster.id)
         .then(cluster => {
           this.hosts = this.buildSidepanelConnectorList(cluster, this.connectorType);
         })

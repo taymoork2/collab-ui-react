@@ -1,27 +1,27 @@
 'use strict';
 
 describe('Controller: HDSSettingsController', function () {
-  var $controller, $q, $scope, controller, Authinfo, Orgservice, HDSService, FusionClusterService;
+  var $controller, $q, $scope, controller, Authinfo, Orgservice, HDSService, HybridServicesClusterService;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('HDS'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _Authinfo_, _Orgservice_, _HDSService_, _FusionClusterService_) {
+  function dependencies($rootScope, _$controller_, _$q_, _Authinfo_, _Orgservice_, _HDSService_, _HybridServicesClusterService_) {
     $controller = _$controller_;
     $q = _$q_;
     $scope = $rootScope.$new();
     Authinfo = _Authinfo_;
     Orgservice = _Orgservice_;
     HDSService = _HDSService_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
   }
 
   function initSpies() {
     spyOn(Authinfo, 'getOrgId').and.returnValue('123456');
     spyOn(HDSService, 'getHdsTrialUsers').and.returnValue($q.resolve({}));
-    spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve({}));
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve({}));
   }
 
   function initController() {
@@ -29,7 +29,7 @@ describe('Controller: HDSSettingsController', function () {
       $scope: $scope,
       Orgservice: Orgservice,
       HDSService: HDSService,
-      FusionClusterService: FusionClusterService,
+      HybridServicesClusterService: HybridServicesClusterService,
     });
     $scope.$apply();
   }

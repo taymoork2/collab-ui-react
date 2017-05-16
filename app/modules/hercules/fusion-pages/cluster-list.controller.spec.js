@@ -1,28 +1,28 @@
 'use strict';
 
 describe('Controller: FusionClusterListController', function () {
-  var controller, $controller, $q, $rootScope, Analytics, Authinfo, EnterprisePrivateTrunkService, FusionClusterService, Notification, ResourceGroupService;
+  var controller, $controller, $q, $rootScope, Analytics, Authinfo, EnterprisePrivateTrunkService, HybridServicesClusterService, Notification, ResourceGroupService;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$rootScope_, _$controller_, _$q_, _Analytics_, _Authinfo_, _EnterprisePrivateTrunkService_, _FusionClusterService_, _Notification_, _ResourceGroupService_) {
+  function dependencies(_$rootScope_, _$controller_, _$q_, _Analytics_, _Authinfo_, _EnterprisePrivateTrunkService_, _HybridServicesClusterService_, _Notification_, _ResourceGroupService_) {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
     $q = _$q_;
     Analytics = _Analytics_;
     Authinfo = _Authinfo_;
     EnterprisePrivateTrunkService = _EnterprisePrivateTrunkService_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     Notification = _Notification_;
     ResourceGroupService = _ResourceGroupService_;
   }
 
   function initSpies() {
-    spyOn(FusionClusterService, 'getAll');
-    spyOn(FusionClusterService, 'getResourceGroups').and.returnValue($q.resolve({
+    spyOn(HybridServicesClusterService, 'getAll');
+    spyOn(HybridServicesClusterService, 'getResourceGroups').and.returnValue($q.resolve({
       groups: {},
     }));
     spyOn(EnterprisePrivateTrunkService, 'fetch');
@@ -41,7 +41,7 @@ describe('Controller: FusionClusterListController', function () {
 
   describe('init', function () {
     beforeEach(function () {
-      FusionClusterService.getAll.and.returnValue($q.resolve());
+      HybridServicesClusterService.getAll.and.returnValue($q.resolve());
       initController(false);
     });
 
@@ -56,17 +56,17 @@ describe('Controller: FusionClusterListController', function () {
 
   describe('after loading clusters', function () {
     it('should call Notification.errorWithTrackingId if loading failed', function () {
-      FusionClusterService.getResourceGroups.and.returnValue($q.reject());
+      HybridServicesClusterService.getResourceGroups.and.returnValue($q.reject());
       initController(false);
       expect(controller.loading).toBe(true);
       expect(Notification.errorWithTrackingId).not.toHaveBeenCalled();
-      $rootScope.$apply(); // force FusionClusterService.getAll() to return
+      $rootScope.$apply(); // force HybridServicesClusterService.getAll() to return
       expect(controller.loading).toBe(false);
       expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
     it('should update filters and displayed clusters', function () {
-      FusionClusterService.getResourceGroups.and.returnValue($q.resolve({ unassigned: [{
+      HybridServicesClusterService.getResourceGroups.and.returnValue($q.resolve({ unassigned: [{
         targetType: 'c_mgmt',
         connectors: [{
           alarms: [],
@@ -106,7 +106,7 @@ describe('Controller: FusionClusterListController', function () {
       expect(controller.filters[3].count).toBe(0);
       expect(controller.filters[4].count).toBe(0);
       expect(controller.displayedGroups.length).toBe(0);
-      $rootScope.$apply(); // force FusionClusterService.getAll() to return
+      $rootScope.$apply(); // force HybridServicesClusterService.getAll() to return
 
       expect(controller.filters[0].count).toBe(1);
       expect(controller.filters[1].count).toBe(1);

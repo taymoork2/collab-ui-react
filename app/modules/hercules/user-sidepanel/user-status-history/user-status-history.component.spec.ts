@@ -9,13 +9,13 @@ describe('Component: userStatusHistory', () => {
 
   beforeEach(function () {
     this.initModules(userStatusHistory);
-    this.injectDependencies('$q', '$stateParams', 'USSService', 'Authinfo', 'Notification', 'HybridServicesI18NService', 'FusionClusterService', 'ResourceGroupService');
+    this.injectDependencies('$q', '$stateParams', 'USSService', 'Authinfo', 'Notification', 'HybridServicesI18NService', 'HybridServicesClusterService', 'ResourceGroupService');
     this.$stateParams.currentUser = { id: 'balle' };
   });
 
   function initComponent() {
     spyOn(this.USSService, 'getUserJournal').and.returnValue(this.$q.resolve(mockJournalEntries));
-    spyOn(this.FusionClusterService, 'getAll').and.returnValue(this.$q.resolve(mockClusterList));
+    spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue(this.$q.resolve(mockClusterList));
     spyOn(this.HybridServicesI18NService, 'getLocalTimestamp').and.returnValue('');
     spyOn(this.ResourceGroupService, 'getAll').and.returnValue(this.$q.resolve(mockResourceGroups));
     this.compileComponent('userStatusHistory', {

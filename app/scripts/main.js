@@ -137,6 +137,8 @@
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
     require('modules/hercules/services/excel-service').default,
+    require('modules/hercules/services/hybrid-services-cluster.service').default,
+    require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/service-descriptor'),
     require('modules/hercules/services/uss-service'),
     require('modules/hercules/services/service-descriptor'),

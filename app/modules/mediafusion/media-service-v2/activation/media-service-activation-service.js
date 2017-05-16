@@ -5,7 +5,7 @@
     .service('MediaServiceActivationV2', MediaServiceActivationV2);
 
   /* @ngInject */
-  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, FusionClusterService, ServiceDescriptor) {
+  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, HybridServicesClusterService, ServiceDescriptor) {
     var vm = this;
     vm.mediaServiceId = 'squared-fusion-media';
 
@@ -92,7 +92,7 @@
       if (!_.isUndefined(vm.isMediaServiceEnabled)) {
         isMediaService.resolve(vm.isMediaServiceEnabled);
       } else {
-        FusionClusterService.serviceIsSetUp(vm.mediaServiceId).then(function (enabled) {
+        HybridServicesClusterService.serviceIsSetUp(vm.mediaServiceId).then(function (enabled) {
           if (enabled) {
             vm.isMediaServiceEnabled = enabled;
           }

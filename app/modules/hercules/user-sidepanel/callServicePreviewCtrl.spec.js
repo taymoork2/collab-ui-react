@@ -3,9 +3,9 @@
 describe('Directive Controller: CallServicePreviewCtrl', function () {
   beforeEach(angular.mock.module('Hercules'));
 
-  var $scope, $rootScope, $controller, $q, USSService, $state, $stateParams, FeatureToggleService, Notification, FusionClusterService, ResourceGroupService, $translate, Userservice, Authinfo, UriVerificationService, DomainManagementService, UCCService;
+  var $scope, $rootScope, $controller, $q, USSService, $state, $stateParams, FeatureToggleService, Notification, HybridServicesClusterService, ResourceGroupService, $translate, Userservice, Authinfo, UriVerificationService, DomainManagementService, UCCService;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$state_, _$stateParams_, _Authinfo_, _USSService_, _$q_, _Notification_, _FusionClusterService_, _ResourceGroupService_, _FeatureToggleService_, _$translate_, _Userservice_, _UriVerificationService_, _DomainManagementService_, _UCCService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$state_, _$stateParams_, _Authinfo_, _USSService_, _$q_, _Notification_, _HybridServicesClusterService_, _ResourceGroupService_, _FeatureToggleService_, _$translate_, _Userservice_, _UriVerificationService_, _DomainManagementService_, _UCCService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -13,7 +13,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     $q = _$q_;
     $state = _$state_;
     Notification = _Notification_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     ResourceGroupService = _ResourceGroupService_;
     FeatureToggleService = _FeatureToggleService_;
     $stateParams = _$stateParams_;
@@ -41,7 +41,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     spyOn(USSService, 'getStatusesForUser').and.returnValue($q.resolve(userStatuses));
     spyOn(USSService, 'refreshEntitlementsForUser').and.returnValue($q.resolve({}));
     spyOn(UCCService, 'getUserDiscovery').and.returnValue($q.resolve(userDiscovery));
-    spyOn(FusionClusterService, 'get').and.returnValue($q.resolve(cluster));
+    spyOn(HybridServicesClusterService, 'get').and.returnValue($q.resolve(cluster));
     spyOn(DomainManagementService, 'getVerifiedDomains').and.returnValue($q.resolve(domains));
   }));
 
@@ -54,7 +54,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
       Userservice: Userservice,
       Notification: Notification,
       USSService: USSService,
-      FusionClusterService: FusionClusterService,
+      HybridServicesClusterService: HybridServicesClusterService,
       UriVerificationService: UriVerificationService,
       DomainManagementService: DomainManagementService,
       $translate: $translate,

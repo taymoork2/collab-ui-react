@@ -6,7 +6,7 @@
     .controller('ResourceGroupSettingsController', ResourceGroupSettingsController);
 
   /* @ngInject */
-  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $translate, $state, FusionClusterService, $modal) {
+  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $translate, $state, HybridServicesClusterService, $modal) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.clusters = {
@@ -45,7 +45,7 @@
     }
 
     function determineIfRemoveAllowed() {
-      FusionClusterService.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.allowRemove = _.every(clusters, function (c) {
             return c.resourceGroupId !== $stateParams.id;
