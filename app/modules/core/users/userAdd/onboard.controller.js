@@ -1594,6 +1594,29 @@ require('./_user-add.scss');
       initResults();
     };
 
+    $scope.skipErrorsOrFinish = function () {
+      if ($scope.results.errors.length > 0) {
+        return 'usersPage.skipErrorsAndFinish';
+      } else {
+        return 'common.finish';
+      }
+    };
+
+    $scope.goToUsersPage = function () {
+      $previousState.forget('modalMemo');
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalyltics());
+      $state.go('users.list');
+    };
+
+    $scope.fixBulkErrors = function () {
+      if (isFTW) {
+        $scope.wizard.goToStep('manualEntry');
+      } else {
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
+        $state.go('users.add');
+      }
+    };
+
     function onboardUsers(optionalOnboard) {
       var deferred = $q.defer();
       initResults();
@@ -1750,29 +1773,6 @@ require('./_user-add.scss');
             $scope.results.errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
           }
         }
-
-        $scope.skipErrorsOrFinish = function () {
-          if ($scope.results.errors.length > 0) {
-            return 'usersPage.skipErrorsAndFinish';
-          } else {
-            return 'common.finish';
-          }
-        };
-
-        $scope.goToUsersPage = function () {
-          $previousState.forget('modalMemo');
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalyltics());
-          $state.go('users.list');
-        };
-
-        $scope.fixBulkErrors = function () {
-          if (isFTW) {
-            $scope.wizard.goToStep('manualEntry');
-          } else {
-            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
-            $state.go('users.add');
-          }
-        };
 
         //Displaying notifications
         if ($scope.results.resultList.length === usersList.length) {
