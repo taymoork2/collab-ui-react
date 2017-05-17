@@ -8,5 +8,5 @@ export default angular
     require('angular-translate'),
     callFeatureFallbackDestination,
   ])
-  .component('ucCallParkFallbackDesination', new CallParkFallbackDestinationComponent())
+  .component('ucCallParkFallbackDestination', new CallParkFallbackDestinationComponent())
   .name;

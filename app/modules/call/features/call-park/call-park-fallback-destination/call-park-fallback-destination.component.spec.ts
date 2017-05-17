@@ -15,7 +15,7 @@ describe('Component: callFeatureFallbackDestination', () => {
   });
 
   function initComponent() {
-    this.compileComponent('ucCallParkFallbackDesination', {
+    this.compileComponent('ucCallParkFallbackDestination', {
       fallbackDestination: 'fallbackDestination',
       onMemberRemovedFn: 'onMemberRemovedFn',
       onChangeFn: 'onChangeFn(fallbackDestination)',
