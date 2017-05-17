@@ -1,7 +1,7 @@
 import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER } from './pstn.const';
 
 import { Notification } from 'modules/core/notifications/notification.service';
-import { PstnModel, IOrder, IOrderPayload } from './pstn.model';
+import { PstnModel, IOrder } from './pstn.model';
 import pstnModel from './pstn.model';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { PhoneNumberType } from 'google-libphonenumber';
@@ -352,13 +352,13 @@ export class PstnService {
 
   public orderNumbers(customerId: string, carrierId: string, numbers: Array<string>): ng.IPromise<any> {
     let promises: any = [];
-    let payload: IOrderPayload = {
+    let payload = {
       pstn: {
-        numbers: [],
+        numbers: [] as Array<string>,
       },
       tollFree: {
         numberType: NUMTYPE_TOLLFREE,
-        numbers: [],
+        numbers: [] as Array<string>,
       },
     };
     _.forEach(numbers, number => {

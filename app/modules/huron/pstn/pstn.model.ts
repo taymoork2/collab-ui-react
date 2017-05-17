@@ -6,16 +6,6 @@ export interface IOrder {
   data: any;
 }
 
-export interface IOrderPayload {
-  pstn: {
-    numbers: string[];
-  };
-  tollFree: {
-    numberType: string;
-    numbers: string[];
-  };
-}
-
 export class PstnModel {
   private customerId: string;
   private customerName: string;
