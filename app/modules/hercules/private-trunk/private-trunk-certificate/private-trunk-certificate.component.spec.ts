@@ -2,7 +2,7 @@ import privateTrunkCertificateModule from './index';
 
 describe('Component: privateTrunkCertificate component', () => {
   const CHK_BOX = 'input#certificateChk';
-  const ICON_UPLOAD = '.icon.icon-upload-contain';
+  const ICON_UPLOAD = '.icon.icon-upload';
 
   beforeEach(function() {
     this.initModules(privateTrunkCertificateModule);
