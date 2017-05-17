@@ -1,7 +1,7 @@
 import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER } from './pstn.const';
 
 import { Notification } from 'modules/core/notifications/notification.service';
-import { PstnModel, IOrder } from './pstn.model';
+import { PstnModel, IOrder, IOrderPayload } from './pstn.model';
 import pstnModel from './pstn.model';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { PhoneNumberType } from 'google-libphonenumber';
@@ -352,7 +352,7 @@ export class PstnService {
 
   public orderNumbers(customerId: string, carrierId: string, numbers: Array<string>): ng.IPromise<any> {
     let promises: any = [];
-    let payload = {
+    let payload: IOrderPayload = {
       pstn: {
         numbers: [],
       },
@@ -363,15 +363,15 @@ export class PstnService {
     };
     _.forEach(numbers, number => {
       const phoneNumberType: PhoneNumberType = this.PhoneNumberService.getPhoneNumberType(number);
-      if (phoneNumberType === PhoneNumberType.FIXED_LINE_OR_MOBILE || phoneNumberType === PhoneNumberType.FIXED_LINE) {
-        payload.pstn.numbers.push(<never>number);
-      } else if (phoneNumberType === PhoneNumberType.TOLL_FREE) {
-        payload.tollFree.numbers.push(<never>number);
-      } else {
+      if (phoneNumberType === PhoneNumberType.TOLL_FREE) {
+        payload.tollFree.numbers.push(number);
+      } else if (phoneNumberType === PhoneNumberType.UNKNOWN) {
         this.Notification.error('pstnSetup.errors.unsupportedNumberType', {
           type: phoneNumberType,
           number: number,
         });
+      } else {
+        payload.pstn.numbers.push(number);
       }
     });
     if (payload.pstn.numbers.length > 0) {

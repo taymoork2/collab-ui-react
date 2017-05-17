@@ -68,6 +68,8 @@ export class HybridServicesI18NService {
 }
 
 export default angular
-  .module('hercules.i18n', [])
+  .module('hercules.i18n', [
+    require('angular-translate'),
+  ])
   .service('HybridServicesI18NService', HybridServicesI18NService)
   .name;

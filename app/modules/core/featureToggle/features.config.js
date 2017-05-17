@@ -1,9 +1,9 @@
 module.exports = {
-  requireAcceptTos: 'atlas-tos-required',
   dirSync: 'atlas-dir-sync',
   atlas2017NameChange: 'atlas-2017-name-change',
   atlasCareTrials: 'atlas-care-trials',
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
+  atlasCareAutomatedRouteTrials: 'care-automated-routing',
   atlasContextServiceTrials: 'atlas-context-service-trials',
   atlasContextDictionaryEdit: 'atlas-context-dictionary-edit',
   atlasDarling: 'atlas-darling',
@@ -29,7 +29,6 @@ module.exports = {
   atlasNewUserExport: 'atlas-new-user-export',
   atlasNurturingEmails: 'atlas-nurturing-emails',
   atlasPartnerManagement: 'atlas-partner-management',
-  atlasPhonesCanada: 'atlas-phones-canada',
   atlasPinSettings: 'atlas-pin-settings',
   atlasPMRonM2: 'atlas-pmr-on-m2',
   atlasReadOnlyAdmin: 'atlas-read-only-admin',

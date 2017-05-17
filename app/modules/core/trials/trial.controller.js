@@ -86,7 +86,6 @@
     vm.hasUserServices = hasUserServices;
     _licenseCountDefaultQuantity = vm.trialData.details.licenseCount;
 
-
     var preset = (!isExistingOrg()) ? getNewOrgPreset() : getExistingOrgPreset();
     var paidServices = (!isExistingOrg()) ? {} : getPaidServices();
     _.extend(vm.paidServices, paidServices);
@@ -970,7 +969,7 @@
       if (country && (_.get(country, 'id') !== 'N/A')) {
         countryCode = country.id;
       } else if (_.get(country, 'id') === 'N/A') {
-        countryCode = "US";
+        countryCode = 'US';
       } else {
         countryCode = TrialPstnService.getCountryCode();
       }

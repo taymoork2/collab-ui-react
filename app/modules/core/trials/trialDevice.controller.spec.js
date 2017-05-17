@@ -34,7 +34,6 @@ describe('Controller: TrialDeviceController', function () {
     spyOn(this.Orgservice, 'getOrg');
     this.limitData = this.TrialDeviceService.getDeviceLimit();
     spyOn(this.Analytics, 'trackTrialSteps');
-    spyOn(this.FeatureToggleService, 'atlasPhonesCanadaGetStatus').and.returnValue(this.$q.resolve(false));
 
     this.initController = function () {
       this.$scope.trialData = this.trialData.enabled;
@@ -435,8 +434,7 @@ describe('Controller: TrialDeviceController', function () {
       var countryList = this.controller.getCountriesForSelectedDevices();
       expect(countryList.length).toBeGreaterThan(2);
     });
-    it('should have a list of countries to be US and Canada only when CISCO_SX10 and Desk Phone is selected AND FT is true', function () {
-      this.FeatureToggleService.atlasPhonesCanadaGetStatus.and.returnValue(this.$q.resolve(true));
+    it('should have a list of countries to be US and Canada only when CISCO_SX10 and Desk Phone is selected', function () {
       this.initController();
       this.controller.sx10.enabled = true;
       this.controller.sx10.quantity = 1;
@@ -447,19 +445,6 @@ describe('Controller: TrialDeviceController', function () {
       expect(countryList.length).toBe(2);
       expect(countryList).toContain({ country: 'United States' });
       expect(countryList).toContain({ country: 'Canada' });
-    });
-    it('should have a list of countries to be US only when CISCO_SX10 and Desk Phone is selected and FT is false', function () {
-
-      this.controller.sx10.enabled = true;
-      this.controller.sx10.quantity = 1;
-      this.controller.phone8865.enabled = true;
-      this.controller.phone8865.quantity = 1;
-      this.FeatureToggleService.atlasPhonesCanadaGetStatus.and.returnValue(this.$q.resolve(false));
-      var countryList = this.controller.getCountriesForSelectedDevices();
-      expect(countryList.length).toBe(1);
-      expect(countryList).toContain({ country: 'United States' });
-      expect(countryList).not.toContain({ country: 'Canada' });
-
     });
     it('should have a list of countries to still be US only when MX300 phone is selected', function () {
       this.controller.sx10.enabled = true;
