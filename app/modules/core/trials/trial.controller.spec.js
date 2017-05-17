@@ -1166,7 +1166,6 @@ describe('Controller: TrialCtrl:', function () {
     });
 
     describe('Care offer trial', function () {
-
       describe('primary behaviors:', function () {
         it('Message and Care are enabled by default', function () {
           expect(controller.messageTrial.enabled).toBeTruthy();
@@ -1268,7 +1267,6 @@ describe('Controller: TrialCtrl:', function () {
         });
 
         describe('validateAdvanceCareLicense:', function () {
-
           it('advance care license validation disallows value greater than total users.', function () {
             controller.details.licenseCount = 10;
             controller.advanceCareTrial.enabled = true;
@@ -1524,7 +1522,6 @@ describe('Controller: TrialCtrl:', function () {
       });
 
       describe('with context service checked', function () {
-
         it('should enable context service', function () {
           controller.contextTrial.enabled = true;
           controller.callTrial.enabled = false;

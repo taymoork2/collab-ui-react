@@ -12,17 +12,19 @@
         var remoteIdpUrl = UrlConfig.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp?attributes=id&attributes=entityId';
 
         $http.get(remoteIdpUrl)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved meta url');
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       },
 
@@ -38,17 +40,19 @@
         };
 
         $http.post(remoteIdpUrl, payload)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Posted metadataXml: ' + metadataXmlContent);
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       },
 
@@ -70,47 +74,51 @@
           url: metaUrl,
           data: payload,
         })
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Posted metadataXml: ' + metadataXmlContent);
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       },
 
       deleteMeta: function (metaUrl, callback) {
         $http.delete(metaUrl)
-          .success(function (data, status) {
-            if (status === 204) {
+          .then(function (response) {
+            if (response.status === 204) {
               Log.debug('Successfully deleted resource: ' + metaUrl);
-              callback(status);
+              callback(response.status);
             }
           })
-          .error(function (data, status) {
-            callback(status);
+          .catch(function (response) {
+            callback(response.status);
           });
       },
 
       downloadHostedSp: function (callback) {
         var hostedSpUrl = UrlConfig.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/hosted/sp';
         $http.get(hostedSpUrl)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved metadata file');
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
 
       },

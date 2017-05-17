@@ -164,6 +164,6 @@ export class HybridServicesClusterStatesService {
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.cluster-states', [])
   .service('HybridServicesClusterStatesService', HybridServicesClusterStatesService)
   .name;

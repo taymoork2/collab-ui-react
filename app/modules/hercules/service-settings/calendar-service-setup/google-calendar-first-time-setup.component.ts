@@ -10,7 +10,15 @@ interface IStep {
   canGoNext: () => boolean;
 }
 
-export class GoogleCalendarSetupCtrl implements ng.IComponentController {
+interface IData {
+  adminAccount: string;
+  clientName: string;
+  scope: string;
+  testAccount: string;
+  useResources: boolean;
+}
+
+export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController {
   private steps: IStep[] = [{
     name: 'loading',
     next: () => { this.currentStep = 'authorization'; },
@@ -36,7 +44,7 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
           this.currentStep = 'completion';
         })
         .catch((err) => {
-          this.Notification.errorWithTrackingId(err, 'hercules.settings.googleCalendar.setupModal.testAccount.error');
+          this.Notification.errorWithTrackingId(err, 'hercules.gcalSetupModal.testAccount.error');
         })
         .finally(() => {
           this.processing = false;
@@ -52,7 +60,9 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
     canGoNext: () => false,
     back: () => {},
   }];
-  private data: any = {
+  private data: IData = {
+    clientName: '',
+    scope: '',
     testAccount: this.Authinfo.getPrimaryEmail(),
     adminAccount: '',
     useResources: false,
@@ -90,7 +100,7 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
         this.next();
       })
       .catch((err) => {
-        this.Notification.errorWithTrackingId(err, 'hercules.settings.googleCalendar.setupModal.error');
+        this.Notification.errorWithTrackingId(err, 'hercules.gcalSetupModal.error');
       });
   }
 
@@ -102,6 +112,12 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
   public canGoNext(): boolean {
     const currentStep = _.find(this.steps, step => step.name === this.currentStep);
     return currentStep.canGoNext();
+  }
+
+  public onCheckChange(): void {
+    if (!this.data.useResources) {
+      this.data.adminAccount = '';
+    }
   }
 
   public done(): void {
@@ -121,11 +137,24 @@ export class GoogleCalendarSetupCtrl implements ng.IComponentController {
   public dismiss(): void {
     this.CloudConnectorService.dismissSetupModal();
   }
+
+  public goToUsers(): void {
+    this.dismiss();
+    this.$state.go('users.list');
+  }
+
+  public manageUsers(): void {
+    this.dismiss();
+    this.$state.go('users.list')
+      .then(() => {
+        this.$state.go('users.manage.picker');
+      });
+  }
 }
 
-export class GoogleCalendarSetupComponent implements ng.IComponentOptions {
-  public controller = GoogleCalendarSetupCtrl;
-  public templateUrl = 'modules/hercules/service-settings/calendar-service-setup/google-calendar-setup.component.html';
+export class GoogleCalendarFirstTimeSetupComponent implements ng.IComponentOptions {
+  public controller = GoogleCalendarFirstTimeSetupCtrl;
+  public templateUrl = 'modules/hercules/service-settings/calendar-service-setup/google-calendar-first-time-setup.component.html';
   public bindings = {
     firstTimeSetup: '=',
   };

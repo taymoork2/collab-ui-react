@@ -20,52 +20,6 @@ describe('Service: AASessionVariableService', function () {
 
   }));
 
-  describe('collectThisCeVarName', function () {
-    var AutoAttendantCeMenuModelService;
-    var aaUiModel;
-    var schedule;
-    var index;
-    var schedules;
-
-    beforeEach(inject(function (_AutoAttendantCeMenuModelService_) {
-      schedule = 'openHours';
-      index = '0';
-      aaUiModel = {
-        openHours: {},
-      };
-
-      schedules = ['openHours', 'closedHours'];
-      AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
-
-      AutoAttendantCeMenuModelService.clearCeMenuMap();
-      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-      aaUiModel.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
-
-      $scope.schedule = schedule;
-      $scope.index = index;
-      var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      var menuClosed = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      aaUiModel['openHours'].addEntryAt(index, menuOpen);
-      aaUiModel['closedHours'].addEntryAt(index, menuClosed);
-
-      var action = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
-      action.variableName = 'Closed Variable';
-      menuClosed.addAction(action);
-
-      var action2 = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
-      action2.variableName = 'Open Variable';
-      menuOpen.addAction(action2);
-
-    }));
-
-    it('should return list of sessionVarOptions', function () {
-      var res = AASessionVariableService.collectThisCeVarName(aaUiModel, schedules);
-      // verify data returned
-      expect(res).toBeDefined(2);
-    });
-
-  });
-
   describe('getSessionVariables', function () {
     var notFoundResponse = {
       'status': 404,

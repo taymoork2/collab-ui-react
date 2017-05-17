@@ -17,7 +17,7 @@ describe('Service: LineListService', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1'),
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {

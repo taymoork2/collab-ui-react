@@ -496,25 +496,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
-    it('should load Avril site to Email response and set the Voicemail Email Options', function () {
-      controller.model.companyVoicemail.companyVoicemailEnabled = true;
-      controller.model.companyVoicemail.voicemailToEmail = true;
-      controller.save();
-      $scope.$apply();
-
-      expect(ServiceSetup.getAvrilSite).toHaveBeenCalled();
-      expect(controller.model.companyVoicemail.voicemailEmailOptions).toEqual('VM_E_PT');
-    });
-
-    it('should load Avril Voicemail response and Set Voicemail Options', function () {
-      controller.model.companyVoicemail.companyVoicemailEnabled = true;
-      controller.save();
-      $scope.$apply();
-
-      expect(ServiceSetup.getAvrilSite).toHaveBeenCalled();
-      expect(controller.model.companyVoicemail.voicemailOptions).toEqual('SparkPhoneVM');
-    });
-
     it('should update site if there is a new outbound steering digit', function () {
       controller.model.site.steeringDigit = '7';
       controller.save();
@@ -1250,4 +1231,39 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(angular.element(element).hasClass('sticky')).toBe(true);
     });
   });
+
+  describe('TestAvrilEnable', function () {
+    beforeEach(inject(function ($controller) {
+      $scope = $rootScope;
+
+      site = sites[0];
+      spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(site));
+      FeatureToggleService.supports.and.returnValue($q.resolve(true));
+      controller = $controller('HuronSettingsCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
+      $httpBackend.flush();
+    }));
+
+    it('should load Avril site to Email response and set the Voicemail Email Options', function () {
+      controller.model.companyVoicemail.companyVoicemailEnabled = true;
+      controller.model.companyVoicemail.voicemailToEmail = true;
+      controller.save();
+      $scope.$apply();
+      expect(ServiceSetup.getAvrilSite).toHaveBeenCalled();
+      expect(controller.model.companyVoicemail.voicemailEmailOptions).toEqual('VM_E_PT');
+    });
+
+
+    it('should load Avril Voicemail response and Set Voicemail Options', function () {
+      controller.model.companyVoicemail.companyVoicemailEnabled = true;
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.getAvrilSite).toHaveBeenCalled();
+      expect(controller.model.companyVoicemail.voicemailOptions).toEqual('SparkPhoneVM');
+    });
+  });
+
 });

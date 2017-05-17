@@ -321,6 +321,26 @@
       "numCsatScores":1,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"00000000-d720-4ad8-8e94-f88cf403aade"
+    }, {
+      "avgCsatScore":5,
+      "tasksAssigned":2,
+      "tasksHandled":2,
+      "createdTime":"2017-01-10T06:00:00.000Z",
+      "handleTime":2,
+      "mediaType":"chat",
+      "numCsatScores":2,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"00000001-d720-4ad8-8e94-f88cf403aade"
+    }, {
+      "avgCsatScore":5,
+      "tasksAssigned":2,
+      "tasksHandled":2,
+      "createdTime":"2017-01-10T06:00:00.000Z",
+      "handleTime":2,
+      "mediaType":"chat",
+      "numCsatScores":2,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"00000002-d720-4ad8-8e94-f88cf403aade"
     }],
     "metadata": {
       "jobName": "user_contact_stats_fifteen_minutes",
@@ -394,6 +414,19 @@
       "id": "77cacfcd-f089-418b-b70e-8406f6e67911",
       "emails": [{
         "value": "sunlight-user1@outlook.com"
+      }]
+    }]
+  },
+  "ciNonCareUserStats": {
+    "Resources": [{
+      "displayName":"NonCare User",
+      "name": {
+        "givenName": "A GT",
+        "familyName": "Non Care user"
+      },
+      "id": "00000000-d720-4ad8-8e94-f88cf403aade",
+      "emails": [{
+        "value": "sunlight@outlook.com"
       }]
     }]
   }

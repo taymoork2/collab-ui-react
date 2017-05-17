@@ -61,14 +61,14 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       nextTab: jasmine.createSpy('nextTab'),
     };
 
-    spyOn(this.SparkDomainManagementService, 'addSipDomain').and.returnValue(this.$q.when({
+    spyOn(this.SparkDomainManagementService, 'addSipDomain').and.returnValue(this.$q.resolve({
       data: {
         isDomainAvailable: false,
         isDomainReserved: true,
       },
     }));
 
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when([{
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve([{
       licenses: [{
         offerName: 'SD',
       }],
@@ -78,7 +78,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       callback(this.orgServiceJSONFixture.getOrg, 200);
     });
 
-    spyOn(this.ServiceDescriptor, 'isServiceEnabled').and.returnValue(this.$q.when(true));
+    spyOn(this.ServiceDescriptor, 'isServiceEnabled').and.returnValue(this.$q.resolve(true));
 
     this.initController = (): void => {
       this.controller = this.$controller(SipDomainSettingController, {
@@ -99,9 +99,9 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
   describe('FeatureToggleService returns false', function () {
     beforeEach(function () {
-      spyOn(this.FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue(this.$q.when(false));
+      spyOn(this.FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue(this.$q.resolve(false));
 
-      spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.when({
+      spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.resolve({
         data: {
           isDomainAvailable: true,
           isDomainReserved: false,
@@ -218,7 +218,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     };
 
     beforeEach(function () {
-      spyOn(this.FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue(this.$q.when(true));
+      spyOn(this.FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue(this.$q.resolve(true));
     });
 
     it('should load with expected defaults', function () {
@@ -305,7 +305,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     describe('verifyAvailabilityAndValidity should set controller.verified based on the inputValue', function () {
       it('available response', function () {
-        spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.when(this.availableResponse));
+        spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.resolve(this.availableResponse));
         this.initController();
         this.controller.form = getForm();
         this.controller.verifyAvailabilityAndValidity();
@@ -319,7 +319,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       });
 
       it('unavailable', function () {
-        spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.when(this.unavailableResponse));
+        spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.resolve(this.unavailableResponse));
         this.initController();
         this.controller.form = getForm();
         this.controller.verifyAvailabilityAndValidity();
@@ -386,7 +386,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       });
 
       it('should save after inputValue is updated', function () {
-        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.when(this.unavailableResponse));
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.resolve(this.unavailableResponse));
         this.initController();
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
@@ -408,7 +408,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       });
 
       it('should signal an error if save returns with isDomainReserved as false', function () {
-        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.when(this.availableResponse));
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.resolve(this.availableResponse));
         this.initController();
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
@@ -487,7 +487,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       });
 
       it('should only call toggleSipForm', function () {
-        this.ServiceDescriptor.isServiceEnabled.and.returnValue(this.$q.when(false));
+        this.ServiceDescriptor.isServiceEnabled.and.returnValue(this.$q.resolve(false));
         spyOn(this.$modal, 'open');
         this.initController();
         spyOn(this.controller, 'toggleSipForm').and.callThrough();
@@ -507,9 +507,9 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
       it('should verify through a modal', function () {
         spyOn(this.$modal, 'open').and.returnValue({
-          result: this.$q.when(true),
+          result: this.$q.resolve(true),
         });
-        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.when(this.unavailableResponse));
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.resolve(this.unavailableResponse));
         this.initController();
 
         this.controller.form = getForm();
@@ -532,7 +532,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         spyOn(this.$modal, 'open').and.returnValue({
           result: this.$q.reject(false),
         });
-        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.when(this.unavailableResponse));
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.resolve(this.unavailableResponse));
         this.initController();
 
         this.controller.form = getForm();
@@ -567,7 +567,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
 
     it('checkRoomLicense function should set isRoomLicensed to false based on license returned', function () {
-      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.when([{
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.resolve([{
         licenses: [{
           offerName: 'CF',
         }],
@@ -582,7 +582,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
 
     it('checkRoomLicense function should set isRoomLicensed to true based on license returned [Spark Board]', function () {
-      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.when([{
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.resolve([{
         licenses: [{
           offerName: 'CF',
         }],
@@ -597,7 +597,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
 
     it('checkRoomLicense function should set isRoomLicensed to true based on license returned [Shared Devices]', function () {
-      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.when([{
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.resolve([{
         licenses: [{
           offerName: 'CF',
         }],

@@ -5,7 +5,7 @@
     .service('AccountService', AccountService);
 
   /* @ngInject */
-  function AccountService($http, LogMetricsService, Log, UrlConfig) {
+  function AccountService($http, $q, LogMetricsService, Log, UrlConfig) {
     return {
       createAccount: function (customerOrgName, customerAdminEmail, partnerAdminEmail, isPartner, beId, begeoId, duration, licenseCount, offersList, startDate) {
         var accountUrl = UrlConfig.getAdminServiceUrl() + 'accounts';
@@ -32,11 +32,13 @@
 
         if (customerOrgName.length > 0 && customerAdminEmail.length > 0 && offersList.length > 0) {
           return $http.post(accountUrl, accountRequest)
-            .success(function (data, status) {
-              LogMetricsService.logMetrics('Start Organization', LogMetricsService.getEventType('organizationCreated'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
+            .then(function (response) {
+              LogMetricsService.logMetrics('Start Organization', LogMetricsService.getEventType('organizationCreated'), LogMetricsService.getEventAction('buttonClick'), response.status, moment(), 1, null);
+              return response;
             })
-            .error(function (data, status) {
-              LogMetricsService.logMetrics('Start Organization', LogMetricsService.getEventType('organizationCreated'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
+            .catch(function (response) {
+              LogMetricsService.logMetrics('Start Organization', LogMetricsService.getEventType('organizationCreated'), LogMetricsService.getEventAction('buttonClick'), response.status, moment(), 1, null);
+              return $q.reject(response);
             });
         }
       },
@@ -45,16 +47,18 @@
         var accountUrl = UrlConfig.getAdminServiceUrl() + 'accounts/' + accountId;
 
         $http.get(accountUrl)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       },
 
@@ -77,17 +81,19 @@
           url: accountUrl,
           data: payload,
         })
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Posted orgDataForAccount: ' + payload);
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       },
     };

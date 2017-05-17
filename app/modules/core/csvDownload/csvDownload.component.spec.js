@@ -24,7 +24,7 @@ describe('csvDownload', function () {
 
   function initDependencySpies() {
     spyOn(this.FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.Analytics, 'trackCsv').and.returnValue(this.$q.when());
+    spyOn(this.Analytics, 'trackCsv').and.returnValue(this.$q.resolve());
     spyOn(this.$state, 'go').and.callFake(_.noop);
   }
 
@@ -171,7 +171,7 @@ describe('csvDownload', function () {
     beforeEach(function () {
       this.$window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () { });
 
-      spyOn(this.CsvDownloadService, 'getCsv').and.returnValue(this.$q.when('blob'));
+      spyOn(this.CsvDownloadService, 'getCsv').and.returnValue(this.$q.resolve('blob'));
       spyOn(this.CsvDownloadService, 'openInIE').and.callFake(function () { });
       spyOn(this.CsvDownloadService, 'revokeObjectUrl').and.callFake(function () { });
     });

@@ -133,13 +133,19 @@
 
       var editTrialUrl = trialsUrl + '/' + trialId;
 
-      function logEditTrialMetric(data, status) {
+      function logEditTrialMetric(status) {
         LogMetricsService.logMetrics('Edit Trial', LogMetricsService.getEventType('trialEdited'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, trialData);
       }
 
       return $http.patch(editTrialUrl, trialData)
-        .success(logEditTrialMetric)
-        .error(logEditTrialMetric);
+        .then(function (response) {
+          logEditTrialMetric(response.status);
+          return response;
+        })
+        .catch(function (response) {
+          logEditTrialMetric(response.status);
+          return $q.reject(response);
+        });
     }
 
     function startTrial(custId) {
@@ -156,7 +162,7 @@
         offers: _getOffers(data),
       };
 
-      function logStartTrialMetric(data, status) {
+      function logStartTrialMetric(status) {
         // delete PII
         delete trialData.customerName;
         delete trialData.customerEmail;
@@ -164,8 +170,14 @@
       }
 
       return $http.post(addTrialUrl, trialData)
-        .success(logStartTrialMetric)
-        .error(logStartTrialMetric);
+        .then(function (response) {
+          logStartTrialMetric(response.status);
+          return response;
+        })
+        .catch(function (response) {
+          logStartTrialMetric(response.status);
+          return $q.reject(response);
+        });
     }
 
     function notifyPartnerTrialExt() {

@@ -12,8 +12,8 @@ describe('Controller: DidAddCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1'),
-    getOrgName: sinon.stub().returns('awesomeco'),
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('awesomeco'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -47,9 +47,9 @@ describe('Controller: DidAddCtrl', function () {
     $scope = $rootScope.$new();
     $scope.trial = trial;
     $state.modal = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
       result: {
-        finally: sinon.stub(),
+        finally: jasmine.createSpy('finally'),
       },
     };
     HuronConfig = _HuronConfig_;

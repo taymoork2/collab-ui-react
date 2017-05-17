@@ -107,6 +107,9 @@ require('./_user-add.scss');
     $scope.isCareAndCVCEnabled = Authinfo.isCareVoiceAndCVC();
     $scope.isCareEnabled = $scope.isCareAndCDCEnabled || $scope.isCareAndCVCEnabled;
 
+    $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+    $scope.convertUsersReadOnly = $stateParams.readOnly || $scope.isDirSyncEnabled;
+
     $scope.controlMsg = controlMsg;
 
     initController();
@@ -1360,8 +1363,6 @@ require('./_user-add.scss');
     };
     var isDuplicate = false;
 
-    $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
-
     function setInvalidToken(token) {
       angular.element(token.relatedTarget).addClass('invalid');
       $scope.invalidcount++;
@@ -2299,7 +2300,7 @@ require('./_user-add.scss');
     };
 
     $scope.convertDisabled = function () {
-      return $scope.gridApi.selection.getSelectedRows().length === 0;
+      return $scope.isDirSyncEnabled || !$scope.gridApi || $scope.gridApi.selection.getSelectedRows().length === 0;
     };
 
     getUnlicensedUsers();
@@ -2309,8 +2310,8 @@ require('./_user-add.scss');
       rowHeight: 45,
       enableHorizontalScrollbar: 0,
       selectionRowHeaderWidth: 50,
-      enableRowHeaderSelection: true,
-      enableFullRowSelection: true,
+      enableRowHeaderSelection: !$scope.convertUsersReadOnly,
+      enableFullRowSelection: !$scope.convertUsersReadOnly,
       useExternalSorting: false,
       enableColumnMenus: false,
       showFilter: false,
@@ -2322,6 +2323,7 @@ require('./_user-add.scss');
             gridApi.saveState.restore($scope, $scope.selectedState);
           }, 100);
         }
+        $timeout(gridApi.core.handleWindowResize, 200);
       },
       columnDefs: [{
 
@@ -2329,8 +2331,6 @@ require('./_user-add.scss');
         displayName: $translate.instant('usersPage.displayNameHeader'),
         resizable: false,
         sortable: true,
-        minWidth: 449,
-        maxWidth: 449,
       }, {
         field: 'userName',
         displayName: $translate.instant('homePage.emailAddress'),
@@ -2338,8 +2338,6 @@ require('./_user-add.scss');
         sort: {
           direction: 'desc',
           priority: 0,
-          minWidth: 449,
-          maxWidth: 449,
         },
         sortCellFiltered: true,
       }],

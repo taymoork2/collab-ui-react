@@ -23,6 +23,7 @@ export class CsdmConverter {
 
     updatedPlace.updateFrom(this.helper, this,
       {
+        url: updatedPlace.url,
         type: device.type || updatedPlace.type,
         cisUuid: device.cisUuid || device.uuid,
         displayName: device.displayName,

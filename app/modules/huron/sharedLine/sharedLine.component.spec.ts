@@ -17,7 +17,7 @@ describe('Component: sharedLine', () => {
       '$q',
     );
 
-    this.$scope.getUserList = jasmine.createSpy('getUserList').and.returnValue(this.$q.when([]));
+    this.$scope.getUserList = jasmine.createSpy('getUserList').and.returnValue(this.$q.resolve([]));
     this.$scope.onSharedLineChangeFn = jasmine.createSpy('onSharedLineChangeFn');
     this.$scope.onDeleteSharedLineMemberFn = jasmine.createSpy('onDeleteSharedLineMemberFn');
   });

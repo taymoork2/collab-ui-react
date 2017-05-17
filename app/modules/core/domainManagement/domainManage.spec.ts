@@ -1,7 +1,5 @@
 import testModule from './index';
 
-declare let sinon: any;
-
 describe('Constructor of', () => {
 
   let Config, $q, $rootScope, DomainManagementService;
@@ -17,11 +15,11 @@ describe('Constructor of', () => {
   describe('DomainManagementCtrl', () => {
     let ctrl;
     beforeEach(inject(($controller) => {
-      DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve());
+      DomainManagementService.getVerifiedDomains = jasmine.createSpy('getVerifiedDomains').and.returnValue($q.resolve());
       ctrl = $controller('DomainManagementCtrl', {
-        Authinfo: { getOrgId: sinon.stub().returns('org-id') },
+        Authinfo: { getOrgId: jasmine.createSpy('getOrgId').and.returnValue('org-id') },
         CiService: {
-          getUser: sinon.stub().returns($q.resolve({ userName: 'logged-on-user' })),
+          getUser: jasmine.createSpy('getUser').and.returnValue($q.resolve({ userName: 'logged-on-user' })),
         },
       });
     }));
@@ -36,8 +34,8 @@ describe('Constructor of', () => {
     let ctrl;
     beforeEach(inject(($controller) => {
       ctrl = $controller('DomainManageInstructionsCtrl', {
-        $stateParams: { domain: 'test.example.com', loggedOnUser: { email: sinon.stub() } },
-        $previousState: { go: sinon.stub() },
+        $stateParams: { domain: 'test.example.com', loggedOnUser: { email: jasmine.createSpy('email') } },
+        $previousState: { go: jasmine.createSpy('go') },
       });
     }));
 
@@ -50,8 +48,8 @@ describe('Constructor of', () => {
     let ctrl;
     beforeEach(inject(($controller) => {
       ctrl = $controller('DomainManageClaimCtrl', {
-        $state: { params: { domain: { text: 'test.example.com' }, loggedOnUser: { email: sinon.stub() } } },
-        $previousState: { go: sinon.stub() },
+        $state: { params: { domain: { text: 'test.example.com' }, loggedOnUser: { email: jasmine.createSpy('email') } } },
+        $previousState: { go: jasmine.createSpy('go') },
       });
     }));
 

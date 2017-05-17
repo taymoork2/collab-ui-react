@@ -1,7 +1,7 @@
 <div ng-form="privateTrunkDestinationForm" class="private-trunk">
   <h5 translate="servicesOverview.cards.privateTrunk.destinationTitle"></h5>
      <div class="cs-radio-group">
-        <input
+        <input ng-if="$ctrl.isFirstTimeSetup"
         cs-input
         type="radio"
         ng-model="$ctrl.destinationRadio"
@@ -10,10 +10,11 @@
         ng-value="'new'"
         cs-input-label="{{'servicesOverview.cards.privateTrunk.destination' | translate}}"
         cs-input-help-text="{{'servicesOverview.cards.privateTrunk.destinationHelp'| translate}}">
-        <div ng-if="$ctrl.destinationRadio==='new'">
-          <div class="row cs-input-group modal-destination">
+        <div ng-if="$ctrl.destinationRadio==='new' || !$ctrl.isFirstTimeSetup">
+          <div ng-if="!$ctrl.isFirstTimeSetup" class="bottom-margin" translate="servicesOverview.cards.privateTrunk.destination"></div>
+          <div class="row">
             <div class="columns medium-5 large-5 small-5">
-              <span class="label-align"translate="servicesOverview.cards.privateTrunk.sipLabel"></span>
+              <span class="label-align" translate="servicesOverview.cards.privateTrunk.sipLabel"></span>
             </div>
             <div class="columns medium-6 large-6 small-6">
               <span class="label-2-align" translate="servicesOverview.cards.privateTrunk.displayLabel"></span>
@@ -35,7 +36,7 @@
                     cs-input-validators="$ctrl.validators"
                     cs-input-async-validators="$ctrl.asyncValidators"
                     cs-input-messages="$ctrl.errorMessages.newAddress"
-                    ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
+                    ng-model-options="{updateOn: 'default blur', debounce: { default: 1000, blur: 0 } }"
                     is-disabled= "$ctrl.destinationRadio!=='new'">
                 </div>
                 <div class="columns medium-5 large-5 small-5">
@@ -51,6 +52,7 @@
                     ng-change="$ctrl.changeSIPDestination()"
                     ng-required="true"
                     cs-input-messages="$ctrl.errorMessages.name"
+                    cs-input-validators="$ctrl.nameValidators"
                     is-disabled= "$ctrl.destinationRadio!=='new'">
                 </div>
                 <div class="columns medium-2 large-2 small-2">
@@ -58,12 +60,15 @@
                 </div>
               </div>
             </div>
-            <div class="columns medium-6 add-align">
+            <div class="columns medium-5 label-align" ng-if="!$ctrl.isFirstTimeSetup" >
+              <small><em>{{'servicesOverview.cards.privateTrunk.destinationHelp'| translate}}"</small></em>
+            </div>
+            <div class="columns medium-6 add-align" ng-if="$ctrl.isFirstTimeSetup">
               <a id="addDestination" href="" translate="servicesOverview.cards.privateTrunk.addDestination" ng-if="privateTrunkDestinationForm.$valid" ng-click="$ctrl.addDestination()"></a>
             </div>
           </div>
         </div>
-        <input
+        <input ng-if="$ctrl.isFirstTimeSetup"
           cs-input
           type="radio"
           ng-model="$ctrl.destinationRadio"
@@ -71,8 +76,7 @@
           name="destinationRadio2"
           ng-value="'hybrid'"
           ng-disabled="$ctrl.isEmptyHybridAddress()"
-          cs-input-label="{{'servicesOverview.cards.privateTrunk.hybridDestination' | translate}}"
-          ng-change="$ctrl.change()">
+          cs-input-label="{{'servicesOverview.cards.privateTrunk.hybridDestination' | translate}}">
           <div ng-if="$ctrl.destinationRadio==='hybrid'">
             <div class="row cs-input-group ">
               <div class="columns medium-5 large-5">

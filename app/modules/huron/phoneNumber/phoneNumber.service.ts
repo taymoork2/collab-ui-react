@@ -33,6 +33,8 @@ export class PhoneNumberService {
   /**
    * Returns phone number type as defined in https://github.com/googlei18n/libphonenumber.
    * FIXED_LINE: 0
+   * MOBILE: 1,
+   * FIXED_LINE_OR_MOBILE: 2
    * TOLL_FREE: 3,
    * PREMIUM_RATE: 4,
    * SHARED_COST: 5,

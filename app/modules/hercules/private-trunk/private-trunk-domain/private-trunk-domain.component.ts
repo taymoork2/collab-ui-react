@@ -14,6 +14,7 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
   public selectPlaceHolder: string;
   public onChangeFn: Function;
   public domainDesc: { title: string, desc: string };
+  public isFirstTimeSetup: boolean;
 
   /* @ngInject */
   constructor(
@@ -31,7 +32,7 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
     if (_.isUndefined(this.domainOptionRadio)) {
       this.domainOptionRadio = DomainRadioType.DOMAIN;
     }
-    if (this.isFirstTimeSetup()) {
+    if (this.isFirstTimeSetup) {
       this.domainDesc = {
         title: this.$translate.instant('servicesOverview.cards.privateTrunk.select'),
         desc: this.$translate.instant('servicesOverview.cards.privateTrunk.selectDomainDesc'),
@@ -42,10 +43,6 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
         desc: this.$translate.instant('servicesOverview.cards.privateTrunk.domainDesc'),
       };
     }
-  }
-
-  public isFirstTimeSetup(): boolean {
-    return (this.$state.current.name === 'services-overview');
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
@@ -126,6 +123,7 @@ export class PrivateTrunkDomainComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkDomainCtrl;
   public templateUrl = 'modules/hercules/private-trunk/private-trunk-domain/private-trunk-domain.html';
   public bindings = {
+    isFirstTimeSetup: '<',
     domains: '<',
     domainSelected: '<',
     isDomain: '<',

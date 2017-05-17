@@ -30,11 +30,11 @@ describe('Controller: DeviceUsageCtrl', function () {
     Notification = _Notification_;
     $modal = _$modal_;
 
-    sinon.stub(DeviceUsageGraphService, 'makeChart');
-    DeviceUsageGraphService.makeChart.returns(amchartMock());
+    spyOn(DeviceUsageGraphService, 'makeChart');
+    DeviceUsageGraphService.makeChart.and.returnValue(amchartMock());
 
-    sinon.stub(DeviceUsageModelService, 'getModelsForRange');
-    DeviceUsageModelService.getModelsForRange.returns($q.resolve([]));
+    spyOn(DeviceUsageModelService, 'getModelsForRange');
+    DeviceUsageModelService.getModelsForRange.and.returnValue($q.resolve([]));
 
   }));
 
@@ -50,23 +50,23 @@ describe('Controller: DeviceUsageCtrl', function () {
         $state: $state,
       });
 
-      splunkService = sinon.stub(DeviceUsageSplunkMetricsService, 'reportOperation');
+      splunkService = spyOn(DeviceUsageSplunkMetricsService, 'reportOperation');
     });
 
 
     it('starts with fetching initial data based on default last 7 days range', function (done) {
-      sinon.stub(DeviceUsageService, 'getDataForRange');
-      sinon.stub(DeviceUsageService, 'extractStats');
-      sinon.stub(DeviceUsageService, 'resolveDeviceData');
+      spyOn(DeviceUsageService, 'getDataForRange');
+      spyOn(DeviceUsageService, 'extractStats');
+      spyOn(DeviceUsageService, 'resolveDeviceData');
       var deviceData = {
         reportItems: [
           { totalDuration: 42 },
         ],
         missingDays: false,
       };
-      DeviceUsageService.getDataForRange.returns($q.resolve(deviceData));
-      DeviceUsageService.extractStats.returns($q.resolve([]));
-      DeviceUsageService.resolveDeviceData.returns($q.resolve([]));
+      DeviceUsageService.getDataForRange.and.returnValue($q.resolve(deviceData));
+      DeviceUsageService.extractStats.and.returnValue($q.resolve([]));
+      DeviceUsageService.resolveDeviceData.and.returnValue($q.resolve([]));
 
       expect(controller.waitingForDeviceMetrics).toBe(true);
       controller.init();
@@ -117,7 +117,7 @@ describe('Controller: DeviceUsageCtrl', function () {
 
     it('splunk is reported when date range is selected', function () {
       controller.doTimeUpdate();
-      expect(splunkService.callCount).toBe(1);
+      expect(splunkService.calls.count()).toBe(1);
     });
 
     describe('export device usage data', function () {
@@ -168,7 +168,7 @@ describe('Controller: DeviceUsageCtrl', function () {
         fakeModal.dismiss(); // used cancels the export
         expect(DeviceUsageExportService.exportData).not.toHaveBeenCalled();
         expect(controller.exporting).toBeFalsy();
-        expect(splunkService.callCount).toBe(0);
+        expect(splunkService.calls.count()).toBe(0);
       });
 
       it('exports status 100 indicates export progress finished', function () {
@@ -178,7 +178,7 @@ describe('Controller: DeviceUsageCtrl', function () {
         controller.exportStatus(100);
         expect(Notification.success).toHaveBeenCalledWith('reportsPage.usageReports.export.deviceUsageListReadyForDownload', 'reportsPage.usageReports.export.exportCompleted');
         expect(controller.exporting).toBeFalsy();
-        expect(splunkService.callCount).toBe(1);
+        expect(splunkService.calls.count()).toBe(1);
       });
 
       it('export cancelled (for some reason) mid-flight closes the dialog and shows a toaster', function () {
@@ -189,7 +189,7 @@ describe('Controller: DeviceUsageCtrl', function () {
         controller.exportStatus(-1);
         expect(Notification.warning).toHaveBeenCalledWith('reportsPage.usageReports.export.deviceUsageExportFailedOrCancelled');
         expect(controller.exporting).toBeFalsy();
-        expect(splunkService.callCount).toBe(0);
+        expect(splunkService.calls.count()).toBe(0);
       });
 
     });

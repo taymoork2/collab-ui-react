@@ -43,7 +43,7 @@
             readonly: false,
             valid: true,
           }, {
-            model: 'CISCO_8841',
+            model: 'CISCO_7832',
             enabled: false,
             quantity: 0,
             readonly: false,

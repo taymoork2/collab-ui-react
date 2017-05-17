@@ -63,12 +63,12 @@ require('./ediscovery.scss');
         state: "ABORTED",
       }).then(function () {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
-          Notification.success('ediscovery.search.reportCancelled');
+          Notification.success('ediscovery.searchResults.reportCancelled');
         }
         pollAvalonReport();
       }, function (err) {
         if (err.status !== 410) {
-          Notification.error('ediscovery.search.reportCancelFailed');
+          Notification.error('ediscovery.searchResults.reportCancelFailed');
         }
       }).finally(function () {
         delete $scope.reportsBeingCancelled[id];

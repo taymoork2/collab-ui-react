@@ -11,17 +11,17 @@ describe('Controller: UpgradeNowControllerV2', function () {
     clusterId = '134';
 
     ClusterService = {
-      upgradeSoftware: sinon.stub(),
+      upgradeSoftware: jasmine.createSpy('upgradeSoftware'),
     };
     Notification = _Notification_;
     $q = _$q_;
     $translate = _$translate_;
 
     modalInstanceMock = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
     windowMock = {
-      open: sinon.stub(),
+      open: jasmine.createSpy('open'),
     };
     controller = $controller('UpgradeNowControllerV2', {
       $scope: $rootScope.$new(),
@@ -41,7 +41,7 @@ describe('Controller: UpgradeNowControllerV2', function () {
   });
 
   it('check if upgrade is called', function () {
-    spyOn(ClusterService, 'upgradeSoftware').and.returnValue($q.resolve());
+    ClusterService.upgradeSoftware.and.returnValue($q.resolve());
     controller.upgrade();
     expect(ClusterService.upgradeSoftware).toHaveBeenCalled();
     expect(controller.saving).toBe(true);
@@ -50,14 +50,14 @@ describe('Controller: UpgradeNowControllerV2', function () {
 
   it('check if upgradeSoftware is called with  clusterId', function () {
 
-    spyOn(ClusterService, 'upgradeSoftware').and.returnValue($q.resolve());
+    ClusterService.upgradeSoftware.and.returnValue($q.resolve());
     controller.upgrade();
     expect(ClusterService.upgradeSoftware).toHaveBeenCalledWith(clusterId, 'mf_mgmt');
   });
 
   it('Should go to success module of upgrade', function () {
     var upgradeDefered = $q.defer();
-    spyOn(ClusterService, 'upgradeSoftware').and.returnValue(upgradeDefered.promise);
+    ClusterService.upgradeSoftware.and.returnValue(upgradeDefered.promise);
     upgradeDefered.resolve();
     $rootScope.$apply();
 
@@ -67,7 +67,7 @@ describe('Controller: UpgradeNowControllerV2', function () {
   });
   it('Should go to failure module of upgrade', function () {
     var upgradeDefered = $q.defer();
-    spyOn(ClusterService, 'upgradeSoftware').and.returnValue(upgradeDefered.promise);
+    ClusterService.upgradeSoftware.and.returnValue(upgradeDefered.promise);
     upgradeDefered.reject();
     $rootScope.$apply();
 

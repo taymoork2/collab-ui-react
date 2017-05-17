@@ -48,10 +48,12 @@ describe('Service: HelpdeskLogService', function () {
       tempURL: 'http://download.com',
     };
 
-    sinon.stub(LogService, 'listLogs');
-    sinon.stub(LogService, 'downloadLog');
-    LogService.listLogs.yields(logs);
-    LogService.downloadLog.yields(download);
+    spyOn(LogService, 'listLogs').and.callFake(function (userId, callback) {
+      callback(logs);
+    });
+    spyOn(LogService, 'downloadLog').and.callFake(function (filename, callback) {
+      callback(download);
+    });
 
     spyOn(LogService, 'searchLogs').and.returnValue($q.resolve(lastPushedLog));
   }));

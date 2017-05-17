@@ -112,13 +112,13 @@ describe('Controller: SecuritySettingController', () => {
     });
 
     function initSetAppSec() {
-      AccountOrgService.setAppSecurity.and.returnValue($q.when({}));
+      AccountOrgService.setAppSecurity.and.returnValue($q.resolve({}));
     }
   });
 
   function initGetAppSecWithResult(result: any) {
     return () => {
-      AccountOrgService.getAppSecurity.and.returnValue($q.when(result));
+      AccountOrgService.getAppSecurity.and.returnValue($q.resolve(result));
     };
   }
 

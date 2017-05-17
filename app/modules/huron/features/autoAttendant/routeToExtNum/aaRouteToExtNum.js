@@ -42,9 +42,14 @@
 
     var fromRouteCall = false;
     var fromDecision = false;
+    vm.getPhoneNumber = getPhoneNumber;
 
 
     /////////////////////
+
+    function getPhoneNumber() {
+      return vm.model.phoneNumberInput.phoneNumber;
+    }
 
     function populateUiModel() {
       var entry, action;
@@ -63,9 +68,9 @@
 
     }
 
-    function saveUiModel() {
+    function saveUiModel(data) {
       var entry, action;
-      var num = vm.model.phoneNumberInput.phoneNumber;
+      var num = data;
 
       if (num) {
         num = _.replace(num, /[-\s]*/g, '');

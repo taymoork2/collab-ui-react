@@ -1,5 +1,6 @@
 import { CmcUserData } from './cmcUserData';
 import { ICmcUser } from './cmcUser.interface';
+import { ICmcOrgStatusResponse } from './cmc.interface';
 
 export class CmcService {
 
@@ -33,7 +34,7 @@ export class CmcService {
     let deferred = this.$q.defer();
     this.Orgservice.getOrg((data, success) => {
       if (success) {
-        deferred.resolve(true);
+        deferred.resolve(this.hasCmcService(data.services));
         this.$log.debug('org data:', data);
       } else {
         deferred.resolve(false);
@@ -42,6 +43,97 @@ export class CmcService {
       basicInfo: true,
     });
     return deferred.promise;
+  }
+
+  // TODO Adapt to cmc status call
+  public preCheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
+    return this.mockStatus(orgId);
+  }
+
+  private mockStatus(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
+    this.$log.debug('orgId', orgId);
+    let errorMock = {
+      message: 'Invalid OrgId',
+      errors: [
+        {
+          description: 'The orgid is not found',
+        },
+      ],
+      trackingId: 'CMC_e7a4c176-0ffa-4de0-9534-88d9ccfc7c71',
+    };
+
+    let okMock: ICmcOrgStatusResponse = {
+      status: 'ok',
+      details: {
+        providers: {
+          mobileProvider: {
+            id: 'mobileProvider_id',
+            name: 'mobileProvider_name',
+            description: 'mobileProvider_description',
+            address: 'mobileProvider_address',
+            authName: 'mobileProvider_authName',
+            url: 'mobileProvider_url',
+            passthroughHeaders: ['headerXyz'],
+          },
+          ucProvider: {
+            id: 'ucProvider_id',
+            name: 'ucProvider_name',
+            description: 'ucProvider_description',
+            address: 'ucProvider_address',
+            authName: 'ucProvider_authName',
+            url: 'ucProvider_url',
+          },
+        },
+      },
+    };
+
+    let nokMock: ICmcOrgStatusResponse = {
+      status: 'error',
+      details: {
+        providers: {
+          mobileProvider: {
+            id: 'mobileProvider_id',
+            name: 'mobileProvider_name',
+            description: 'mobileProvider_description',
+            address: 'mobileProvider_address',
+            authName: 'mobileProvider_authName',
+            url: 'mobileProvider_url',
+            passthroughHeaders: ['headerXyz'],
+          },
+          ucProvider: {
+            id: 'ucProvider_id',
+            name: 'ucProvider_name',
+            description: 'ucProvider_description',
+            address: 'ucProvider_address',
+            authName: 'ucProvider_authName',
+            url: 'ucProvider_url',
+          },
+        },
+      },
+      issues: [
+        {
+          code: 2003,
+          message: 'Call Service Aware is not provisioned.',
+        },
+      ],
+    };
+
+    switch (_.random(1, 3)) {
+      case 1:
+        return this.$q.resolve(okMock);
+      case 2:
+        return this.$q.reject(errorMock);
+      case 3:
+        return this.$q.resolve(nokMock);
+    }
+
+    return this.$q.resolve(okMock);
+  }
+
+  private hasCmcService(services: string[]): boolean {
+    return !!_.find(services, (service) => {
+      return service === 'cmc';
+    });
   }
 
   private extractMobileNumber(user: ICmcUser): any {

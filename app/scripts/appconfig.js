@@ -119,7 +119,7 @@
           })
           .state('login', {
             parent: 'loginLazyLoad',
-            url: '/login',
+            url: '/login?bmmp_env',
             views: {
               'main@': {
                 template: '<login/>',
@@ -1006,6 +1006,7 @@
             },
             params: {
               manageUsers: false,
+              readOnly: false,
             },
           })
           .state('users.convert.services', {
@@ -1494,6 +1495,30 @@
               },
             },
           })
+          .state('cmc-base', {
+            abstract: true,
+            parent: 'main',
+            templateUrl: 'modules/cmc/details/cmc-details.html',
+          })
+          .state('cmc', {
+            parent: 'cmc-base',
+            views: {
+              'header': {
+                template: '<cmc-details-header></cmc-details-header>',
+              },
+              'main': {
+                template: '<div ui-view></div>',
+              },
+            },
+          })
+          .state('cmc.settings', {
+            url: '/services/cmc-settings',
+            template: '<cmc-details-settings></cmc-details-settings>',
+          })
+          .state('cmc.status', {
+            url: '/services/cmc-status',
+            template: '<cmc-details-status></cmc-details-status>',
+          })
 
           // FOR Development: allow editing of user's feature toggles
           .state('edit-featuretoggles', {
@@ -1938,6 +1963,22 @@
               },
             },
           })
+          .state('place-overview.communication.externaltransfer', {
+            template: '<uc-external-transfer member-type="places" member-id="$resolve.ownerId"></uc-external-transfer>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/externaltransfer'));
+                }, 'place-call-externaltransfer');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.externaltransfer').data.displayName = $translate.instant('serviceSetupModal.externalTransfer.title');
+              },
+            },
+          })
           .state('place-overview.hybrid-services-squared-fusion-cal', {
             templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
             controller: 'CalendarServicePreviewCtrl',
@@ -2163,26 +2204,14 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gmTdNumbers', {
-            data: {},
-            parent: 'largepanel',
-            views: {
-              'sidepanel@': { template: '<gm-td-numbers></gm-td-numbers>' },
-              'header@gmTdNumbers': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
-            },
-          })
           .state('gmTdDetails', {
             data: {},
             params: { info: {} },
             parent: 'sidepanel',
             views: {
               'sidepanel@': { template: '<gm-td-details></gm-td-details>' },
-              'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' } },
-          })
-          .state('gmTdDetails.numbersView', {
-            onEnter: SidePanelLargeOpen,
-            onExit: SidePanelLargeClose,
-            template: '<gm-td-numbers-view></gm-td-numbers-view>',
+              'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
+            },
           })
           .state('gmTdDetails.sites', {
             params: { data: {} },
@@ -2191,6 +2220,20 @@
           .state('gmTdDetails.notes', {
             template: '<gm-td-notes></gm-td-notes>',
             params: { obj: {} },
+          })
+          .state('gmTdNumbersRequest', {
+            data: {},
+            params: { info: {} },
+            parent: 'largepanel',
+            views: {
+              'sidepanel@': { template: '<gm-td-numbers></gm-td-numbers>' },
+              'header@gmTdNumbersRequest': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
+            },
+          })
+          .state('gmTdDetails.gmTdNumbers', {
+            template: '<gm-td-numbers></gm-td-numbers>',
+            onEnter: SidePanelLargeOpen,
+            onExit: SidePanelLargeClose,
           })
           .state('gemCbgDetails', {
             data: {},
@@ -2504,18 +2547,17 @@
             parent: 'main',
           })
           .state('helpdesk', {
-            url: '/helpdesk',
             template: '<div ui-view></div>',
             controller: 'HelpdeskController',
             controllerAs: 'helpdeskCtrl',
             parent: 'helpdesk-main',
           })
           .state('helpdesk.search', {
-            url: '/',
+            url: '/helpdesk',
             templateUrl: 'modules/squared/helpdesk/helpdesk-search.html',
           })
           .state('helpdesk.user', {
-            url: '/user/:orgId/:id',
+            url: '/helpdesk/user/:orgId/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-user.html',
             controller: 'HelpdeskUserController',
             controllerAs: 'helpdeskUserCtrl',
@@ -2526,7 +2568,7 @@
             },
           })
           .state('helpdesk.order', {
-            url: '/order/:orderId/:id',
+            url: '/helpdesk/order/:orderId/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
             controller: 'HelpdeskOrderController',
             controllerAs: 'helpdeskOrderCtrl',
@@ -2535,7 +2577,7 @@
             },
           })
           .state('helpdesk.org', {
-            url: '/org/:id',
+            url: '/helpdesk/org/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
             controller: 'HelpdeskOrgController',
             controllerAs: 'helpdeskOrgCtrl',
@@ -2545,7 +2587,7 @@
             },
           })
           .state('helpdesk.cloudberry-device', {
-            url: '/cloudberryDevice/:orgId/:id',
+            url: '/helpdesk/cloudberryDevice/:orgId/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-cloudberry-device.html',
             controller: 'HelpdeskCloudberryDeviceController',
             controllerAs: 'helpdeskDeviceCtrl',
@@ -2556,7 +2598,7 @@
             },
           })
           .state('helpdesk.huron-device', {
-            url: '/huronDevice/:orgId/:id',
+            url: '/helpdesk/huronDevice/:orgId/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-huron-device.html',
             controller: 'HelpdeskHuronDeviceController',
             controllerAs: 'helpdeskDeviceCtrl',
@@ -3628,6 +3670,9 @@
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
+              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
+              },
             },
           })
           .state('add-resource.expressway', {
@@ -3806,6 +3851,11 @@
             },
             parent: 'main',
             abstract: true,
+            resolve: {
+              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
+              },
+            },
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
@@ -3856,6 +3906,11 @@
               clusterId: null,
             },
             parent: 'main',
+            resolve: {
+              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
+              },
+            },
           })
           .state('call-service.list', {
             url: '/services/call',

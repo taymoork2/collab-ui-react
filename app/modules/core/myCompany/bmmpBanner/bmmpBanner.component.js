@@ -11,7 +11,7 @@
   ////////////////////
 
   /* ngInject */
-  function BmmpBannerCtrl($scope, $translate, Authinfo, UrlConfig) {
+  function BmmpBannerCtrl($scope, $translate, Authinfo, BmmpService) {
     var vm = this;
 
     // undocumented parameters provided by BMMP widget team
@@ -19,7 +19,7 @@
       userId: Authinfo.getUserId(),
       locale: $translate.use(),
       appName: 'atlas',
-      apiBaseUrl: UrlConfig.getBmmpUrl(),
+      apiBaseUrl: BmmpService.getBmmpUrl(),
     };
 
     vm.$onInit = onInit;

@@ -6,7 +6,7 @@
     .controller('TrialDeviceController', TrialDeviceController);
 
   /* @ngInject */
-  function TrialDeviceController($scope, $stateParams, $translate, Analytics, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
+  function TrialDeviceController($scope, $stateParams, $translate, Analytics, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
     var vm = this;
 
     var _trialCallData = TrialCallService.getData();
@@ -14,10 +14,8 @@
     var _trialDeviceData = TrialDeviceService.getData();
     // used if the default contry list associated with the device needs to be patched
     // with a different value like in case of a feature toggle. If there are no shipping FTs - should be empty
-    var _shipCountryListReplacement = [{
-      default: TrialDeviceService.listTypes.ROLLOUT2,
-      override: TrialDeviceService.listTypes.US_ONLY,
-    }];
+    // ex: default: TrialDeviceService.listTypes.ROLLOUT2 / override: TrialDeviceService.listTypes.US_ONLY,
+    var _shipCountryListReplacement = [];
     vm.deviceLimit = TrialDeviceService.getDeviceLimit();
 
     var trialStartDate = _.get($stateParams, 'currentTrial.startDate');
@@ -74,7 +72,7 @@
       phone8845: {
         trialDeviceQuantityValidator: '',
       },
-      phone8841: {
+      phone7832: {
         trialDeviceQuantityValidator: '',
       },
       phone7841: {
@@ -143,8 +141,8 @@
     vm.phone8845 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_8845',
     });
-    vm.phone8841 = _.find(_trialCallData.details.phones, {
-      model: 'CISCO_8841',
+    vm.phone7832 = _.find(_trialCallData.details.phones, {
+      model: 'CISCO_7832',
     });
     vm.phone7841 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_7841',
@@ -155,7 +153,7 @@
     vm.setQuantity(vm.mx300);
     vm.setQuantity(vm.phone8865);
     vm.setQuantity(vm.phone8845);
-    vm.setQuantity(vm.phone8841);
+    vm.setQuantity(vm.phone7832);
     vm.setQuantity(vm.phone7841);
 
     // algendel: this notifies if any new devices have been added. Same function as __addWatcher that went away.
@@ -212,12 +210,6 @@
 
       vm.countries = getCountryList();
       Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
-
-      FeatureToggleService.atlasPhonesCanadaGetStatus().then(function (result) {
-        if (result) {
-          _shipCountryListReplacement = [];
-        }
-      });
 
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
       if (!_.isUndefined(limitsPromise)) {
