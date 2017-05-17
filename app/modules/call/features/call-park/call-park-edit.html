@@ -7,7 +7,7 @@
   <div class="loading-container" ng-if="$ctrl.isLoading">
     <i class='icon icon-spinner'></i>
   </div>
-  <form novalidate class="cs-form" name="$ctrl.form" role="form" ng-if="!$ctrl.isLoading">
+  <form novalidate class="cs-form content-container" name="$ctrl.form" role="form" ng-if="!$ctrl.isLoading">
     <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
       <p translate="common.saveLabel"></p>
       <button

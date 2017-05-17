@@ -8,13 +8,13 @@
  *
  * @export
  * @param {any} $translate - Translate Service
- * @param {any} TelephoneNumberService - Telephone Number service located in modules/huron/telephony/telephoneNumber.service.js
+ * @param {any} PhoneNumberService - Telephone Number service located in modules/huron/telephony/telephoneNumber.service.js
  * @returns {string} - The formatted number.
  */
 import { Line } from 'modules/huron/lines/services';
 
 /* @ngInject */
-export function callFeatureMemberNumberFormatterFilter($translate, TelephoneNumberService) {
+export function callFeatureMemberNumberFormatterFilter($translate, PhoneNumberService) {
   return filter;
 
   function filter(number: Line, includeExternal: boolean = false): string {
@@ -22,7 +22,7 @@ export function callFeatureMemberNumberFormatterFilter($translate, TelephoneNumb
     let externalNumber = _.get(number, 'external');
 
     if (includeExternal && externalNumber) {
-      formattedNumber += ' ' + $translate.instant('common.and') + ' ' + TelephoneNumberService.getDIDLabel(externalNumber);
+      formattedNumber += ' ' + $translate.instant('common.and') + ' ' + PhoneNumberService.getNationalFormat(externalNumber);
     }
     return formattedNumber;
   }

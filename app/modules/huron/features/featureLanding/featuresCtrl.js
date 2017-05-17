@@ -214,7 +214,6 @@ require('./_feature-landing.scss');
     }
 
     vm.editHuronFeature = function (feature, $event) {
-      $event.preventDefault();
       $event.stopImmediatePropagation();
       if (feature.filterValue === 'AA') {
         vm.aaModel.aaName = feature.cardName;

@@ -102,7 +102,6 @@
     'ngIcal',
     'huron.paging-group',
     'huron.call-pickup.setup-assistant',
-    'huron.telephoneNumber',
     'huron.bulk-enable-vm',
     'huron.TerminusServices',
     'huron.externalNumberService',
