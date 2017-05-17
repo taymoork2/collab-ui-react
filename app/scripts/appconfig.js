@@ -3177,9 +3177,6 @@
               clusterId: null,
             },
             resolve: {
-              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
@@ -3193,11 +3190,6 @@
                 templateUrl: 'modules/context/fields/hybrid-context-fields.html',
                 controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
-              },
-            },
-            resolve: {
-              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
               },
             },
           })
@@ -3263,11 +3255,6 @@
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
-              },
-            },
-            resolve: {
-              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
               },
             },
           })
