@@ -81,7 +81,8 @@
       variable.isWarn = !_.isUndefined(vm.sessionVarOptions[nameInput]);
 
       if (!variable.isWarn) {
-        variable.isWarn = AACommonService.collectThisCeActionValue(ui).filter(function (value) {
+        // args to collect - ui to examine, true for sessionVars, false for conditionals
+        variable.isWarn = AACommonService.collectThisCeActionValue(ui, true, false).filter(function (value) {
           return _.isEqual(value, nameInput);
         }).length > 1;
       }
