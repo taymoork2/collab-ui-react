@@ -9,19 +9,19 @@ describe('Service: USSService', function () {
   var translations = {};
 
   beforeEach(angular.mock.module(function ($provide) {
-    hubOn = sinon.spy();
+    hubOn = jasmine.createSpy('hubOn');
     CsdmHubFactory = {
-      create: sinon.stub(),
+      create: jasmine.createSpy('create'),
     };
-    CsdmHubFactory.create.returns({
+    CsdmHubFactory.create.and.returnValue({
       on: hubOn,
-      onListener: sinon.stub(),
+      onListener: jasmine.createSpy('onListener'),
     });
     $provide.value('CsdmHubFactory', CsdmHubFactory);
   }));
   beforeEach(inject(function (_$httpBackend_, _USSService_, _Authinfo_, _$translate_, _HybridServicesI18NService_) {
     Authinfo = _Authinfo_;
-    Authinfo.getOrgId = sinon.stub().returns('456');
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('456');
     $translate = _$translate_;
     spyOn($translate, 'instant').and.callFake(function (key) {
       return translations[key] || key;
@@ -305,9 +305,9 @@ describe('Service: USSService', function () {
 
   describe('subscribeStatusesSummary', function () {
     it('should have some specific functions', function () {
-      expect(hubOn.called).toBe(false);
+      expect(hubOn).not.toHaveBeenCalled();
       USSService.subscribeStatusesSummary('blah', function () {});
-      expect(hubOn.called).toBe(true);
+      expect(hubOn).toHaveBeenCalled();
     });
   });
 

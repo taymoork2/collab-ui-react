@@ -1,7 +1,7 @@
 import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { IExtendedCluster, ConnectorType, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
 
-class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
+export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   private clusterId: string;
 

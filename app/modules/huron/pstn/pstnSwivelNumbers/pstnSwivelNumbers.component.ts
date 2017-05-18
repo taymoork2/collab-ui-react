@@ -1,8 +1,7 @@
 import { Notification } from 'modules/core/notifications';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { TIMEOUT } from './index';
 import { TokenMethods } from './tokenMethods';
-
-declare var phoneUtils: any;
 
 export class PstnSwivelNumbersComponent implements ng.IComponentOptions {
   public controller = PstnSwivelNumbersCtrl;
@@ -37,7 +36,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
               private Notification: Notification,
-              private TelephoneNumberService,
+              private PhoneNumberService: PhoneNumberService,
               private $translate: ng.translate.ITranslateService) {
 
     this.tokenplaceholder = this.$translate.instant('didManageModal.inputPlacehoder');
@@ -63,7 +62,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
       e.attrs.value = '+'.concat(e.attrs.value);
     }
     try {
-      e.attrs.value = e.attrs.label = phoneUtils.formatE164(e.attrs.value);
+      e.attrs.value = e.attrs.label = this.PhoneNumberService.getE164Format(e.attrs.value);
     } catch (e) {
       //noop
     }
@@ -88,7 +87,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
           return token.value;
         }));
       });
-    } else if (!this.TelephoneNumberService.internationalNumberValidator(e.attrs.value)) {
+    } else if (!this.PhoneNumberService.internationalNumberValidator(e.attrs.value)) {
       angular.element(e.relatedTarget).addClass('invalid');
       e.attrs.invalid = true;
       this.invalidCount++;
@@ -107,7 +106,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   public editToken(e): void {
     this.removeNumber(e.attrs.value);
     // If invalid token, show the label text in the edit input
-    if (!this.TelephoneNumberService.internationalNumberValidator(e.attrs.value)) {
+    if (!this.PhoneNumberService.internationalNumberValidator(e.attrs.value)) {
       e.attrs.value = e.attrs.label;
       this.invalidCount--;
     }

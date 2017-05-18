@@ -18,8 +18,8 @@ describe('Directive: ShowReadOnly', function () {
     scope = _$rootScope_.$new();
     Authinfo = _Authinfo_;
     translate = _$translate_;
-    sinon.stub(Authinfo, 'isReadOnlyAdmin');
-    Authinfo.isReadOnlyAdmin.returns(true);
+    spyOn(Authinfo, 'isReadOnlyAdmin');
+    Authinfo.isReadOnlyAdmin.and.returnValue(true);
     directiveElem = getCompiledElement();
   }));
 
@@ -31,7 +31,7 @@ describe('Directive: ShowReadOnly', function () {
   }
 
   it('should be wrapped in div element', function () {
-    expect(Authinfo.isReadOnlyAdmin.callCount).toBe(1);
+    expect(Authinfo.isReadOnlyAdmin.calls.count()).toBe(1);
     var divElement = directiveElem.find('div');
     expect(divElement).toBeDefined();
     expect(divElement.text()).toEqual(translate.instant('readOnlyModal.banner'));

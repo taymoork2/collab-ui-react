@@ -10,7 +10,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
   var $httpBackend, controller, Authinfo, MediaClusterServiceV2, $q, properties;
 
   Authinfo = {
-    getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632f806-ad09-4a26-a0c0-a49a13f38873'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {

@@ -142,7 +142,9 @@
         deleteCluster();
       } else {
         fromCluster = vm.cluster;
-        MediaClusterServiceV2.moveV2Host(host.id, fromCluster.id, toCluster.data.id).success(incrementSuccessCount(host, toCluster)).error(incrementFailureCount(host));
+        MediaClusterServiceV2.moveV2Host(host.id, fromCluster.id, toCluster.data.id)
+          .then(incrementSuccessCount(host, toCluster))
+          .catch(incrementFailureCount(host));
       }
     }
 

@@ -4,30 +4,8 @@ var testModule = require('./authinfo');
 
 describe('Authinfo:', function () {
   var injector, Service;
-
-  var defaultConfig = {
-    restrictedStates: {
-      customer: [],
-      partner: [],
-    },
-    publicStates: [],
-    ciscoOnly: [],
-    ciscoOrgId: '',
-    ciscoMockOrgId: '',
-    roleStates: {},
-    serviceStates: {},
-  };
-  var defaultUser = {
-    name: 'Test',
-    orgId: 'abc',
-    orgName: 'DEADBEEF',
-    addUserEnabled: false,
-    entitleUserEnabled: false,
-    services: [],
-    roles: [],
-    managedOrgs: [],
-    setupDone: true,
-  };
+  var defaultConfig;
+  var defaultUser;
 
   beforeEach(function () {
     angular.mock.module(testModule);
@@ -37,6 +15,35 @@ describe('Authinfo:', function () {
     Service = function () {
       return injector.get('Authinfo');
     };
+
+    defaultConfig = {
+      restrictedStates: {
+        customer: [],
+        partner: [],
+      },
+      publicStates: [],
+      ciscoOnly: [],
+      ciscoOrgId: '',
+      ciscoMockOrgId: '',
+      roleStates: {},
+      serviceStates: {},
+    };
+
+    defaultUser = {
+      name: 'Test',
+      orgId: 'abc',
+      orgName: 'DEADBEEF',
+      addUserEnabled: false,
+      entitleUserEnabled: false,
+      services: [],
+      roles: [],
+      managedOrgs: [],
+      setupDone: true,
+    };
+  });
+
+  afterEach(function () {
+    injector = Service = defaultConfig = defaultUser = undefined;
   });
 
   describe('initialization', function () {
@@ -103,6 +110,43 @@ describe('Authinfo:', function () {
       Authinfo.updateAccountInfo(accountData);
       var response = Authinfo.getLicenseIsTrial();
       expect(response).not.toBeDefined();
+    });
+  });
+
+  describe('adding/removing entitlments (aka. \'services\')', function () {
+    var Authinfo, fakeEntitlement;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      fakeEntitlement = {
+        ciName: 'fake-entitlement-1',
+      };
+    });
+
+    afterEach(function () {
+      Authinfo = fakeEntitlement = undefined;
+    });
+
+    it('should add an entitlement', function () {
+      expect(Authinfo.getServices().length).toBe(0);
+      Authinfo.addEntitlement(fakeEntitlement);
+      expect(Authinfo.getServices().length).toBe(1);
+
+      // adding an entitlement that already exists does nothing
+      Authinfo.addEntitlement(fakeEntitlement);
+      expect(Authinfo.getServices().length).toBe(1);
+    });
+
+    it('should remove an entitlement', function () {
+      Authinfo.addEntitlement(fakeEntitlement);
+      expect(Authinfo.getServices().length).toBe(1);
+      Authinfo.removeEntitlement('fake-entitlement-1');
+      expect(Authinfo.getServices().length).toBe(0);
+
+      // removing an entitlement that isn't present IS allowed, just does nothing
+      var result = Authinfo.removeEntitlement('fake-entitlement-1');
+      expect(result).toBe(undefined);
+      expect(Authinfo.getServices().length).toBe(0);
     });
   });
 

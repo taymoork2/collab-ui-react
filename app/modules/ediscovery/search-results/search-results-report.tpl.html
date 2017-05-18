@@ -5,7 +5,7 @@
 <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state === 'COMPLETED'">
   <div class="columns small-12 medium-12 large-10">
     <div class="result-section">
-      <h6 translate="ediscovery.search.reportSize"></h6>
+      <h6 translate="ediscovery.searchResults.reportSize"></h6>
       <span>{{ediscoverySearchCtrl.report.sizeInBytes | bytesFilter : 2 }}</span>
     </div>
   </div>
@@ -13,7 +13,7 @@
 <div class="report-parameters">
   <div class="columns small-12 medium-12 large-10">
     <div class="input-section">
-      <h6 translate="ediscovery.search.reportName"></h6>
+      <h6 translate="ediscovery.reportsList.reportName"></h6>
       <input required id="displayName" class="cs-input report-name" ng-model="ediscoverySearchCtrl.searchCriteria.displayName">
       <h6 translate="ediscovery.searchResults.description"></h6>
       <input id="displayName" class="cs-input report-name" ng-model="ediscoverySearchCtrl.generateDescription">
@@ -28,7 +28,7 @@
   <div ng-show="!ediscoverySearchCtrl.report || (ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.state === 'ABORTED')">
     <div class="columns small-12 medium-12 large-10">
       <div class="input-section" ng-if="!ediscoverySearchCtrl.createReportInProgress">
-        <button translate="ediscovery.search.generateReport"
+        <button translate="ediscovery.reportsList.generateReport"
           ng-disabled="!ediscoverySearchCtrl.searchCriteria.displayName || ediscoverySearchCtrl.dateValidationError"
           type="button"
           class="btn--primary"

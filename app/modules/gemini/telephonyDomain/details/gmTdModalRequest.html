@@ -17,12 +17,14 @@
             cs-input
             required
             type="text"
-            ng-maxlength="15"
+            ng-maxlength="60"
             name="customerName"
-            cs-input-messages="$ctrl.messages"
-            ng-model="$ctrl.data.customerName"
-            placeholder="{{::'gemini.tds.request.customerPlaceholder' | translate}}"
+            ng-model="$ctrl.data.domainName"
+            cs-input-messages="$ctrl.messages.customerName"
+            cs-input-warning="$ctrl.onWarning()"
+            cs-input-warning-message="{{$ctrl.messages.customerName.warning}}"
             cs-input-label="{{::'gemini.tds.request.labelCustomerName' | translate}}"
+            placeholder="{{::'gemini.tds.request.customerPlaceholder' | translate}}"
             cs-input-help-text="{{::'gemini.tds.request.customerHelpText' | translate}}"
           >
         </div>
@@ -30,10 +32,12 @@
           <input
             cs-input
             type="text"
-            ng-maxlength="200"
+            ng-maxlength="50"
+            name="partnerName"
             ng-model="$ctrl.data.customerAttribute"
-            cs-input-label="{{::'gemini.tds.request.partnerName' | translate}}"
-            placeholder="{{::'gemini.tds.request.partnerPlaceholder' | translate}}">
+            cs-input-messages="$ctrl.messages.partnerName"
+            placeholder="{{::'gemini.tds.request.partnerPlaceholder' | translate}}"
+            cs-input-label="{{::'gemini.tds.request.partnerName' | translate}}">
         </div>
       </div>
     </div>
@@ -47,17 +51,27 @@
         <div class="section-title-row medium-6">
           <span class="section-name" translate="gemini.tds.request.region"></span>
           <cs-select
+            required
             filter="false"
-            name="partnerName"
+            name="region"
             options="$ctrl.options"
             ng-model="$ctrl.selected"
+            is-disabled="$ctrl.data.telephonyDomainId"
             placeholder="$ctrl.selectPlaceholder"
           ></cs-select>
           <input type="hidden" ng-model="$ctrl.selected.value" required>
         </div>
         <div class="section-title-row">
           <span translate="gemini.tds.request.noteText"></span>
-          <textarea rows="2" ng-maxlength="2048" ng-model="$ctrl.data.notes" class="form-control optional-row" placeholder="{{::'gemini.tds.request.notePlaceholder' | translate}}"></textarea>
+          <textarea rows="2"
+                    cs-input
+                    ng-maxlength="50"
+                    name="noteToCiscoTeam"
+                    class="form-control optional-row"
+                    ng-model="$ctrl.data.noteToCiscoTeam"
+                    ng-disabled="$ctrl.data.telephonyDomainId"
+                    cs-input-messages="$ctrl.messages.noteToCiscoTeam"
+                    placeholder="{{::'gemini.tds.request.notePlaceholder' | translate}}"></textarea>
         </div>
       </div>
     </div>

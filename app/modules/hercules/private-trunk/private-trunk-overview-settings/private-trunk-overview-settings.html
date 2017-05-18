@@ -3,13 +3,14 @@
   <setting-section>
     <div class="sub-section">
       <private-trunk-domain
+        is-first-time-setup = false
         domain-selected="$ctrl.domainSelected"
         domains="$ctrl.domains"
         is-domain="$ctrl.isDomain"
         on-change-fn="$ctrl.setSelectedDomain(isDomain, domainSelected)">
       </private-trunk-domain>
       <private-trunk-certificate
-        is-settings = "true"
+        is-first-time-setup = false
         is-certificate-default = "$ctrl.isCertificateDefault"
         is-importing = "$ctrl.isImporting"
         formatted-cert-list="$ctrl.formattedCertList"
@@ -19,6 +20,6 @@
       </private-trunk-certificate>
      </div>
   </setting-section>
-  <deactivate-section class="private-trunk needs-border-top" service-id="'ept'" deactivate-modal-options="$ctrl.privateTrunkDeactivateModalOptions"></deactivate-section>
+  <deactivate-section class="private-trunk needs-border-top" service-id="'ept'" deactivate-modal-options="$ctrl.modalOptions"></deactivate-section>
   <documentation-section class="private-trunk needs-border-top" service-id="'ept'"></documentation-section>
 </div>

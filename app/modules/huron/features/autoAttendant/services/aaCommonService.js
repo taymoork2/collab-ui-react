@@ -23,8 +23,11 @@
     var returnedCallerToggle = false;
     var uniqueId = 0;
     var restApiToggle = false;
+    var aaRestApiStatus = false;
 
     var invalidList = {};
+    var schedules = ['openHours', 'closedHours', 'Holidays'];
+
     var service = {
       isFormDirty: isFormDirty,
       setSayMessageStatus: setSayMessageStatus,
@@ -32,6 +35,7 @@
       setCallerInputStatus: setCallerInputStatus,
       setDecisionStatus: setDecisionStatus,
       setActionStatus: setActionStatus,
+      setRestApiStatus: setRestApiStatus,
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
@@ -48,6 +52,7 @@
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isReturnedCallerToggle: isReturnedCallerToggle,
+      collectThisCeActionValue: collectThisCeActionValue,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -67,7 +72,7 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus || aaDecisionStatus;
+      return aaQueueSettingsStatus || aaRestApiStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus || aaDecisionStatus;
     }
 
     function isValid() {
@@ -102,6 +107,7 @@
 
     function resetFormStatus() {
       aaSayMessageForm = false;
+      aaRestApiStatus = false;
       aaPhoneMenuOptions = false;
       aaCallerInputStatus = false;
       aaDecisionStatus = false;
@@ -115,6 +121,10 @@
 
     function setSayMessageStatus(status) {
       aaSayMessageForm = status;
+    }
+
+    function setRestApiStatus(status) {
+      aaRestApiStatus = status;
     }
 
     function setPhoneMenuStatus(status) {
@@ -225,6 +235,43 @@
 
       AutoAttendantCeMenuModelService.updateDefaultActionSet(aaRecord, ui.hasClosedHours);
     }
+    function collectActionValue(entry, varNames) {
+      _.forEach(entry, function (value, key) {
+        if (_.isArray(value)) {
+          _.forEach(value, function (nowEntry) {
+            return collectActionValue(nowEntry, varNames);
+          });
+        }
+
+        if (key === 'variableName') {
+          if (_.has(entry, 'newVariableValue')) {
+            varNames.push(entry.newVariableValue);
+          } else {
+            varNames.push(value);
+          }
+        }
+        if (key === 'if') {
+          varNames.push(_.get(value, 'leftCondition', ''));
+        }
+
+        if (AutoAttendantCeMenuModelService.isCeMenuEntry(value)) {
+          return collectActionValue(value, varNames);
+        }
+      });
+      return varNames;
+
+    }
+    function collectThisCeActionValue(ui) {
+      var varNames = [];
+      // collect all Var names used in the Ce except for this screen
+
+      _.forEach(schedules, function (schedule) {
+        varNames = collectActionValue(ui[schedule], varNames);
+      });
+
+      return varNames;
+
+    }
 
   }
 
@@ -254,4 +301,6 @@
     return keys;
 
   }
+
+
 })();

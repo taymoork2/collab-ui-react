@@ -12,7 +12,6 @@
         <i class="icon icon-spinner"></i>
       </div>
       <div ng-if="$ctrl.model.length == 0 && !$ctrl.isLoading">
-        <h3 translate="gemini.cbgs.notes.noNotes"></h3>
         <small translate="gemini.cbgs.notes.noNoteMsg"></small>
       </div>
 
@@ -30,16 +29,29 @@
     </div>
     <div class="columns medium-6">
       <span class="feature-name" translate="gemini.cbgs.notes.newNote"></span>
-      <form name="note" novalidate>
-        <textarea rows="5" ng-maxlength="2048" ng-model="$ctrl.newNote" required
-                  class="form-control optional-row"
-                  placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
-        <button class="btn btn--primary" cs-btn
-                loading="$ctrl.isSubmitting"
-                ng-click="$ctrl.onSave()"
-                ng-disabled="!$ctrl.newNote">
-          <span translate="gemini.cbgs.notes.addNote"></span>
-        </button>
+      <form name="noteForm" novalidate
+            ng-class="{'error': noteForm.noteContent.$invalid && noteForm.noteContent.$dirty && noteForm.noteContent.$touched}">
+        <div class="cs-input-group medium-12 columns">
+          <textarea name="noteContent" rows="5" ng-maxlength="2048" ng-model="$ctrl.newNote" required
+                    class="form-control optional-row"
+                    placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
+        </div>
+        <div class="pull-left">
+          <button class="btn btn--primary" cs-btn
+                  loading="$ctrl.isSubmitting"
+                  ng-click="$ctrl.onSave()"
+                  ng-disabled="noteForm.$invalid">
+            <span translate="gemini.cbgs.notes.addNote"></span>
+          </button>
+        </div>
+        <div class="pull-right">
+          <div class="cs-input__messages" ng-messages="noteForm.noteContent.$error" role="alert" ng-if='noteForm.noteContent.$touched'>
+            <div class="message" ng-message="required" translate="common.invalidRequired"></div>
+            <div class="message" ng-message="maxlength"
+                 translate="gemini.inputLengthError"
+                 translate-values="{length: 2048, field: 'note'}"></div>
+          </div>
+        </div>
       </form>
     </div>
     <div class="clearfix"></div>

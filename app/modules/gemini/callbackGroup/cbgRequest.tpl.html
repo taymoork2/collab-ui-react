@@ -18,9 +18,12 @@
             cs-input
             required
             type="text"
-            ng-maxlength="60"
-            cs-input-messages="forms.messages"
+            ng-maxlength="64"
+            name="customerName"
             ng-model="cbgrCtrl.model.customerName"
+            cs-input-warning="cbgrCtrl.onWarning()"
+            cs-input-messages="cbgrCtrl.messages.customerName"
+            cs-input-warning-message="{{cbgrCtrl.messages.customerName.warning}}"
             cs-input-label="{{::'gemini.cbgs.request.labelCustomer' | translate}}"
             placeholder="{{::'gemini.cbgs.request.customerPlaceholder' | translate}}">
         </div>

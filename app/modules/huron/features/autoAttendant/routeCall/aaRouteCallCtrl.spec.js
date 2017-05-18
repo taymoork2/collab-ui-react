@@ -19,13 +19,13 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   }, {
     "label": 'autoAttendant.phoneMenuRouteHunt',
   }, {
+    "label": 'autoAttendant.phoneMenuRouteQueue',
+  }, {
     "label": 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
     "label": 'autoAttendant.phoneMenuRouteUser',
   }, {
     "label": 'autoAttendant.phoneMenuRouteVM',
-  }, {
-    "label": 'autoAttendant.phoneMenuRouteQueue',
   }];
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));

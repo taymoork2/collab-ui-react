@@ -68,7 +68,7 @@ describe('Service: Report Service', () => {
 
   describe('Active User Services', function () {
     beforeEach(function () {
-      spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
+      spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.resolve({
         data: activeUserData.detailedAPI,
       }));
     });
@@ -120,7 +120,7 @@ describe('Service: Report Service', () => {
 
   describe('Most Active User Services', function () {
     it('should getActiveTableData for an existing customer', function () {
-      spyOn(this.CommonReportService, 'getPartnerReportByReportType').and.returnValue(this.$q.when({
+      spyOn(this.CommonReportService, 'getPartnerReportByReportType').and.returnValue(this.$q.resolve({
         data: _.cloneDeep(activeUserData.mostActiveAPI),
       }));
       this.ReportService.getActiveTableData(customerData.customerOptions, timeFilter).then(function (response) {
@@ -141,7 +141,7 @@ describe('Service: Report Service', () => {
 
   describe('Media Quality Services', function () {
     it('should get MediaQuality Metrics', function () {
-      spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
+      spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.resolve({
         data: mediaQualityData.mediaQualityAPI,
       }));
       this.ReportService.getMediaQualityMetrics(customerData.customerOptions, timeFilter).then(function (response) {
@@ -159,7 +159,7 @@ describe('Service: Report Service', () => {
 
   describe('Call Metrics Services', function () {
     it('should get Call Metrics', function () {
-      spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
+      spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.resolve({
         data: _.cloneDeep(callMetricsData.callMetricsAPI),
       }));
       this.ReportService.getCallMetricsData(customerData.customerOptions, timeFilter).then(function (response) {
@@ -184,7 +184,7 @@ describe('Service: Report Service', () => {
         data[3].splitClasses = undefined;
       });
 
-      spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
+      spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.resolve({
         data: _.cloneDeep(registeredEndpointsData.registeredEndpointsAPI),
       }));
       this.ReportService.getRegisteredEndpoints(customerData.customerOptions, timeFilter).then(function (response) {

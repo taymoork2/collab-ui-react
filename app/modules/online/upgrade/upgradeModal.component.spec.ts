@@ -27,7 +27,7 @@ describe('Component: upgradeModal', () => {
     spyOn(this.Auth, 'logout');
     spyOn(this.Notification, 'success');
     spyOn(this.OnlineUpgradeService, 'getSubscriptionId').and.returnValue(subscriptionId);
-    spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.when(productInstanceResponse));
+    spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
     spyOn(this.OnlineUpgradeService, 'cancelSubscriptions').and.returnValue(this.$q.resolve());
     spyOn(this.OnlineUpgradeService, 'dismissModal');
 

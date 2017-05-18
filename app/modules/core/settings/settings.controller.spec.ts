@@ -1,8 +1,11 @@
 /// <reference path="settings.controller.ts"/>
+
+import testModule from './index';
+
 describe('SettingsCtrl', function () {
 
   beforeEach(function () {
-    this.initModules('Core', 'Huron', 'Sunlight');
+    this.initModules(testModule);
     this.injectDependencies('$rootScope', '$scope', '$stateParams', '$controller', '$q', '$timeout', 'Authinfo', 'FeatureToggleService', 'Orgservice');
 
     spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.reject());
@@ -10,8 +13,8 @@ describe('SettingsCtrl', function () {
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(false);
     spyOn(this.Authinfo, 'isDirectCustomer').and.returnValue(false);
 
-    spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.when(true));
-    spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue(this.$q.resolve(true));
   });
 
   function initController(injectors) {

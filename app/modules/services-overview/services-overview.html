@@ -28,5 +28,17 @@
       </cs-card>
     </cs-card-layout>
 
+    <div cr-feature-toggle feature-show="atlas-mobile-convergence">
+      <h5><span translate="servicesOverview.mobileServices"></span></h5>
+      <cs-card-layout>
+        <cs-card class="small"
+                 ng-class="card.cardClass"
+                 ng-repeat="card in servicesOverviewCtrl.getCmcCards()"
+                 ng-if="card.display">
+          <article ng-include="card.template"></article>
+        </cs-card>
+      </cs-card-layout>
+    </div>
+
   </div>
 </div>

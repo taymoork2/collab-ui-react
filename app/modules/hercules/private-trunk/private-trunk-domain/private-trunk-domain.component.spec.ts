@@ -20,6 +20,7 @@ describe('Component: PrivateTrunkDomain component', () => {
     );
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.compileComponent('privateTrunkDomain', {
+      isFirstTimeSetup: true,
       domainSelected: 'selected',
       domains: 'verifiedDomain',
       isDomain: true,

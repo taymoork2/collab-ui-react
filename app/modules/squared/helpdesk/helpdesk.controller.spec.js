@@ -163,48 +163,48 @@ describe('Controller: HelpdeskController', function () {
     }];
 
     beforeEach(function () {
-      sinon.stub(HelpdeskService, 'searchUsers');
-      sinon.stub(HelpdeskService, 'searchOrgs');
-      sinon.stub(HelpdeskService, 'searchOrders');
-      sinon.stub(HelpdeskService, 'searchCloudberryDevices');
-      sinon.stub(HelpdeskService, 'findAndResolveOrgsForUserResults');
-      sinon.stub(HelpdeskService, 'getOrg');
-      sinon.stub(HelpdeskHuronService, 'searchDevices');
-      sinon.stub(HelpdeskHuronService, 'findDevicesMatchingNumber');
-      sinon.stub(Authinfo, 'isInDelegatedAdministrationOrg');
-      sinon.stub(Authinfo, 'getOrgId');
-      sinon.stub(Authinfo, 'getOrgName');
-      sinon.stub(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').returns(q.resolve(true));
+      spyOn(HelpdeskService, 'searchUsers');
+      spyOn(HelpdeskService, 'searchOrgs');
+      spyOn(HelpdeskService, 'searchOrders');
+      spyOn(HelpdeskService, 'searchCloudberryDevices');
+      spyOn(HelpdeskService, 'findAndResolveOrgsForUserResults');
+      spyOn(HelpdeskService, 'getOrg');
+      spyOn(HelpdeskHuronService, 'searchDevices');
+      spyOn(HelpdeskHuronService, 'findDevicesMatchingNumber');
+      spyOn(Authinfo, 'isInDelegatedAdministrationOrg');
+      spyOn(Authinfo, 'getOrgId');
+      spyOn(Authinfo, 'getOrgName');
+      spyOn(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').and.returnValue(q.resolve(true));
 
       var deferredUserResult = q.defer();
       deferredUserResult.resolve(userSearchResult);
-      HelpdeskService.searchUsers.returns(deferredUserResult.promise);
+      HelpdeskService.searchUsers.and.returnValue(deferredUserResult.promise);
 
       var deferredOrgsResult = q.defer();
       deferredOrgsResult.resolve(orgSearchResult);
-      HelpdeskService.searchOrgs.returns(deferredOrgsResult.promise);
+      HelpdeskService.searchOrgs.and.returnValue(deferredOrgsResult.promise);
 
       var deferredCloudberryDeviceResult = q.defer();
       deferredCloudberryDeviceResult.resolve(cloudberryDevices);
-      HelpdeskService.searchCloudberryDevices.returns(deferredCloudberryDeviceResult.promise);
+      HelpdeskService.searchCloudberryDevices.and.returnValue(deferredCloudberryDeviceResult.promise);
 
       var deferredHuronDeviceResult = q.defer();
       deferredHuronDeviceResult.resolve(huronDevices);
-      HelpdeskHuronService.searchDevices.returns(deferredHuronDeviceResult.promise);
+      HelpdeskHuronService.searchDevices.and.returnValue(deferredHuronDeviceResult.promise);
 
-      HelpdeskService.findAndResolveOrgsForUserResults.returns(deferredUserResult.promise);
+      HelpdeskService.findAndResolveOrgsForUserResults.and.returnValue(deferredUserResult.promise);
 
       var deferredfindDevicesMatchingNumberResult = q.defer();
       deferredfindDevicesMatchingNumberResult.resolve([]);
-      HelpdeskHuronService.findDevicesMatchingNumber.returns(deferredfindDevicesMatchingNumberResult.promise);
+      HelpdeskHuronService.findDevicesMatchingNumber.and.returnValue(deferredfindDevicesMatchingNumberResult.promise);
 
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve(orgLookupResult);
-      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+      HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
-      Authinfo.isInDelegatedAdministrationOrg.returns(true);
-      Authinfo.getOrgId.returns('foo');
-      Authinfo.getOrgName.returns('bar');
+      Authinfo.isInDelegatedAdministrationOrg.and.returnValue(true);
+      Authinfo.getOrgId.and.returnValue('foo');
+      Authinfo.getOrgName.and.returnValue('bar');
 
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
@@ -281,7 +281,7 @@ describe('Controller: HelpdeskController', function () {
         "displayName": "Bill Gates Foundation",
         "services": ['spark-room-system', 'ciscouc'],
       });
-      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+      HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
       controller.initSearchWithOrgFilter({
         "id": "e6ac8f0b-6cea-492d-875d-8edf159a844c",
@@ -341,7 +341,7 @@ describe('Controller: HelpdeskController', function () {
     });
 
     it('customer help desk gets the orgFiltered search set', function () {
-      Authinfo.isInDelegatedAdministrationOrg.returns(false);
+      Authinfo.isInDelegatedAdministrationOrg.and.returnValue(false);
 
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
@@ -368,7 +368,7 @@ describe('Controller: HelpdeskController', function () {
       controller.isOrderSearchEnabled = true;
       var deferredOrdersResult = q.defer();
       deferredOrdersResult.resolve(orderSearchResult);
-      HelpdeskService.searchOrders.returns(deferredOrdersResult.promise);
+      HelpdeskService.searchOrders.and.returnValue(deferredOrdersResult.promise);
 
       expect(controller.showOrdersResultPane()).toBeFalsy();
       expect(controller.searchingForOrders).toBeFalsy();
@@ -383,7 +383,7 @@ describe('Controller: HelpdeskController', function () {
       controller.isOrderSearchEnabled = true;
       var deferredOrdersResult = q.defer();
       deferredOrdersResult.resolve(orderSearchResult2);
-      HelpdeskService.searchOrders.returns(deferredOrdersResult.promise);
+      HelpdeskService.searchOrders.and.returnValue(deferredOrdersResult.promise);
 
       expect(controller.showOrdersResultPane()).toBeFalsy();
       expect(controller.searchingForOrders).toBeFalsy();
@@ -426,12 +426,12 @@ describe('Controller: HelpdeskController', function () {
   describe("backend http error", function () {
 
     beforeEach(function () {
-      sinon.stub(HelpdeskService, 'searchUsers');
-      sinon.stub(HelpdeskService, 'searchOrgs');
-      sinon.stub(Authinfo, 'isInDelegatedAdministrationOrg');
-      sinon.stub(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').returns(q.resolve(true));
+      spyOn(HelpdeskService, 'searchUsers');
+      spyOn(HelpdeskService, 'searchOrgs');
+      spyOn(Authinfo, 'isInDelegatedAdministrationOrg');
+      spyOn(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').and.returnValue(q.resolve(true));
 
-      Authinfo.isInDelegatedAdministrationOrg.returns(true);
+      Authinfo.isInDelegatedAdministrationOrg.and.returnValue(true);
 
     });
 
@@ -440,8 +440,8 @@ describe('Controller: HelpdeskController', function () {
       deferred.reject({
         "status": 400,
       });
-      HelpdeskService.searchUsers.returns(deferred.promise);
-      HelpdeskService.searchOrgs.returns(deferred.promise);
+      HelpdeskService.searchUsers.and.returnValue(deferred.promise);
+      HelpdeskService.searchOrgs.and.returnValue(deferred.promise);
 
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
@@ -469,8 +469,8 @@ describe('Controller: HelpdeskController', function () {
       deferred.reject({
         "status": 401,
       });
-      HelpdeskService.searchUsers.returns(deferred.promise);
-      HelpdeskService.searchOrgs.returns(deferred.promise);
+      HelpdeskService.searchUsers.and.returnValue(deferred.promise);
+      HelpdeskService.searchOrgs.and.returnValue(deferred.promise);
 
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,

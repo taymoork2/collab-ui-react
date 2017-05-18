@@ -16,8 +16,10 @@ class GmTdHeaderCtrl implements ng.IComponentController {
     private Notification: Notification,
   ) {
     this.model = this.tdBaseInfo;
-    this.customerId = this.model.customerId;
-    this.ccaDomainId = this.model.ccaDomainId;
+    if (this.model) {
+      this.customerId = this.model.customerId;
+      this.ccaDomainId = this.model.ccaDomainId;
+    }
   }
 
   public $onInit() {
@@ -33,6 +35,12 @@ class GmTdHeaderCtrl implements ng.IComponentController {
   }
 
   private getRemedyTicket() {
+    this.remedyTicket = this.gemService.getStorage('remedyTicket');
+    if (this.remedyTicket) {
+      this.remedyTicketLoading = false;
+      return;
+    }
+
     let type = 7;
     this.gemService.getRemedyTicket(this.customerId, type)
       .then((res) => {
@@ -55,6 +63,7 @@ class GmTdHeaderCtrl implements ng.IComponentController {
   public onOpenRemedyTicket() {
     this.$window.open(this.remedyTicket.ticketUrl, '_blank');
   }
+
 }
 
 export class GmTdHeaderComponent implements ng.IComponentOptions {

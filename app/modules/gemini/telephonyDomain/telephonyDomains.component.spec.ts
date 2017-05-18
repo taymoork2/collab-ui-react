@@ -32,11 +32,26 @@ describe('Component: gmTelephonyDomains', () => {
         webDomainName: 'TestWebDomainlrwcx',
       },
     ];
+
+    this.fakeModal = {
+      result: {
+        then: function (okCallback, cancelCallback) {
+          this.okCallback = okCallback;
+          this.cancelCallback = cancelCallback;
+        },
+      },
+      ok: function (item) {
+        this.result.okCallback(item);
+      },
+      cancel: function (type) {
+        this.result.cancelCallback(type);
+      },
+    };
   });
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', '$state', '$timeout', '$stateParams', '$rootScope', 'TelephonyDomainService', 'Notification');
+    this.injectDependencies('$q', '$scope', '$state', '$timeout', '$modal', '$stateParams', '$rootScope', 'TelephonyDomainService', 'Notification');
 
     initSpies.apply(this);
     this.$stateParams.companyName = 'E_Atlas-Test-5';
@@ -48,6 +63,7 @@ describe('Component: gmTelephonyDomains', () => {
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.$modal, 'open').and.returnValue(this.fakeModal);
     spyOn(this.TelephonyDomainService, 'getTelephonyDomains').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'telephonyDomainsExportCSV').and.returnValue(this.$q.resolve());
   }
@@ -138,6 +154,15 @@ describe('Component: gmTelephonyDomains', () => {
       this.$timeout.flush();
 
       expect(this.Notification.errorResponse).toHaveBeenCalled();
+    });
+  });
+
+  describe('onRequest', () => {
+    it('should open request TD modal', function() {
+      initComponent.call(this);
+      this.controller.onRequest();
+      this.fakeModal.ok();
+      expect(this.$state.go).toHaveBeenCalled();
     });
   });
 });

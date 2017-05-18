@@ -1,0 +1,26 @@
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.hg-edit-numbers {
+  .cs-card-layout {
+    @include vr-spacing(ml, 1, 0px, true);
+    @include vr-spacing(pb, 1);
+    height: 100% !important;
+    margin-right: auto;
+    margin-left: 0;
+    overflow: auto;
+    display: inline-flex;
+    flex-flow: row wrap;
+    flex: 1;
+    align-content: flex-start;
+    justify-content: flex-start;
+
+    .overlay-panel & {
+      @include vr-spacing(ml, 26, 0px, true);
+      position: fixed !important;
+      height: 16rem !important;
+      width: 54rem;
+      left: 50%;
+      justify-content: center;
+    }
+  }
+}

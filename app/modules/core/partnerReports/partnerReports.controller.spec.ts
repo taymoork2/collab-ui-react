@@ -42,7 +42,7 @@ describe('Controller: Partner Reports', () => {
     spyOn(this.$rootScope, '$broadcast').and.returnValue({});
     spyOn(this, '$timeout').and.callThrough();
 
-    spyOn(this.ReportService, 'getOverallActiveUserData').and.returnValue(this.$q.when({}));
+    spyOn(this.ReportService, 'getOverallActiveUserData').and.returnValue(this.$q.resolve({}));
 
     spyOn(this.GraphService, 'getActiveUsersGraph').and.returnValue({
       dataProvider: _.cloneDeep(this.activeUserData.detailedResponse),
@@ -83,17 +83,17 @@ describe('Controller: Partner Reports', () => {
       this.activeUserSecondaryOptions.table.data = _.cloneDeep(this.activeUserData.mostActiveResponse);
       this.endpointOptions.table.data = _.cloneDeep(this.endpointsData.registeredEndpointResponse);
 
-      spyOn(this.ReportService, 'getActiveUserData').and.returnValue(this.$q.when({
+      spyOn(this.ReportService, 'getActiveUserData').and.returnValue(this.$q.resolve({
         graphData: _.cloneDeep(this.activeUserData.detailedResponse),
         isActiveUsers: true,
         popData: _.cloneDeep(this.activeUserData.activePopResponse),
         overallPopulation: 33,
       }));
-      spyOn(this.ReportService, 'getActiveTableData').and.returnValue(this.$q.when(_.cloneDeep(this.activeUserData.mostActiveResponse)));
-      spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.when(_.cloneDeep(this.customerData.customerResponse)));
-      spyOn(this.ReportService, 'getMediaQualityMetrics').and.returnValue(this.$q.when(_.cloneDeep(this.mediaQualityData.mediaQualityResponse)));
-      spyOn(this.ReportService, 'getCallMetricsData').and.returnValue(this.$q.when(_.cloneDeep(this.callMetricsData.callMetricsResponse)));
-      spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.when(_.cloneDeep(this.endpointsData.registeredEndpointResponse)));
+      spyOn(this.ReportService, 'getActiveTableData').and.returnValue(this.$q.resolve(_.cloneDeep(this.activeUserData.mostActiveResponse)));
+      spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.resolve(_.cloneDeep(this.customerData.customerResponse)));
+      spyOn(this.ReportService, 'getMediaQualityMetrics').and.returnValue(this.$q.resolve(_.cloneDeep(this.mediaQualityData.mediaQualityResponse)));
+      spyOn(this.ReportService, 'getCallMetricsData').and.returnValue(this.$q.resolve(_.cloneDeep(this.callMetricsData.callMetricsResponse)));
+      spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.resolve(_.cloneDeep(this.endpointsData.registeredEndpointResponse)));
 
       this.initController();
     });
@@ -198,20 +198,20 @@ describe('Controller: Partner Reports', () => {
       this.endpointOptions.table.dummy = true;
       this.callOptions.state = this.ctrlData.EMPTY;
 
-      spyOn(this.ReportService, 'getActiveUserData').and.returnValue(this.$q.when({
+      spyOn(this.ReportService, 'getActiveUserData').and.returnValue(this.$q.resolve({
         graphData: [],
         isActiveUsers: false,
         popData: [],
         overallPopulation: 0,
       }));
-      spyOn(this.ReportService, 'getActiveTableData').and.returnValue(this.$q.when([]));
-      spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.when([]));
-      spyOn(this.ReportService, 'getMediaQualityMetrics').and.returnValue(this.$q.when([]));
-      spyOn(this.ReportService, 'getCallMetricsData').and.returnValue(this.$q.when({
+      spyOn(this.ReportService, 'getActiveTableData').and.returnValue(this.$q.resolve([]));
+      spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.resolve([]));
+      spyOn(this.ReportService, 'getMediaQualityMetrics').and.returnValue(this.$q.resolve([]));
+      spyOn(this.ReportService, 'getCallMetricsData').and.returnValue(this.$q.resolve({
         dataProvider: [],
         displayData: {},
       }));
-      spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.when([]));
+      spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.resolve([]));
 
       this.initController();
     });

@@ -141,12 +141,12 @@ var auth = {
   },
   'wbx-t31BTSTestAdmin-Reports-Configure': {
     user: 'provteam+mc200@csgtrials.webex.com',
-    pass: 'Cisco!23',
+    pass: 'Cisco!234',
     org: '2039e7a3-6feb-4293-b87d-354ba68b0295',
   },
   'wbx-t30BTSTestAdmin-Reports-Configure': {
     user: 'provteam+mc25@csgtrials.webex.com',
-    pass: 'Cisco!23',
+    pass: 'Cisco!234',
     org: '52cd61a3-a950-47c3-8218-55429ff88eb7',
   },
   'wbx-t31BTSTestAdmin-UserSettings': {
@@ -156,7 +156,7 @@ var auth = {
   },
   'wbx-t30BTSTestAdmin-UserSettings': {
     user: 'provteam+ee@csgtrials.webex.com',
-    pass: 'Cisco!23',
+    pass: 'Cisco!234',
     org: 'fc3868a5-5bfd-47d5-b39f-52af4d6ede42',
   },
   'wbx-t31RegressionTestAdmin': {
@@ -171,12 +171,12 @@ var auth = {
   },
   'wbx-t30BTSTestAdmin-MultiLicense': {
     user: 'provteam+mc25@csgtrials.webex.com',
-    pass: 'Cisco!23',
+    pass: 'Cisco!234',
     org: '52cd61a3-a950-47c3-8218-55429ff88eb7',
   },
   'wbx-t30BTSTestAdmin-SingleLicense': {
     user: 'provteam+mc@csgtrials.webex.com',
-    pass: 'Cisco!23',
+    pass: 'Cisco!234',
     org: '0988dcdc-af6e-4624-9387-b4b6fa7df4e3',
   },
   'wbx-singleCenterLicenseTestAdmin': {

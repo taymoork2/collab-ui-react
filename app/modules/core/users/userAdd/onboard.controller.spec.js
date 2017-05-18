@@ -67,9 +67,9 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return this.$q.when(this.mock.headers);
+        return this.$q.resolve(this.mock.headers);
       } else {
-        return this.$q.when({});
+        return this.$q.resolve({});
       }
     }.bind(this));
 
@@ -83,25 +83,25 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     spyOn(this.TelephonyInfoService, 'getInternalNumberPool').and.returnValue(this.mock.internalNumbers);
-    spyOn(this.TelephonyInfoService, 'loadInternalNumberPool').and.returnValue(this.$q.when(this.mock.internalNumbers));
+    spyOn(this.TelephonyInfoService, 'loadInternalNumberPool').and.returnValue(this.$q.resolve(this.mock.internalNumbers));
     spyOn(this.TelephonyInfoService, 'getExternalNumberPool').and.returnValue(this.mock.externalNumbers);
-    spyOn(this.DialPlanService, 'getDialPlan').and.returnValue(this.$q.when({
+    spyOn(this.DialPlanService, 'getDialPlan').and.returnValue(this.$q.resolve({
       extensionGenerated: 'false',
     }));
 
-    spyOn(this.TelephonyInfoService, 'loadExternalNumberPool').and.returnValue(this.$q.when(this.mock.externalNumbers));
-    spyOn(this.TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue(this.$q.when(this.mock.externalNumberPoolMap));
+    spyOn(this.TelephonyInfoService, 'loadExternalNumberPool').and.returnValue(this.$q.resolve(this.mock.externalNumbers));
+    spyOn(this.TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue(this.$q.resolve(this.mock.externalNumberPoolMap));
 
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.mock.getMyFeatureToggles);
-    spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.when(this.mock.sites));
-    spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.when(this.mock.sites));
+    spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.resolve(this.mock.sites));
+    spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.resolve(this.mock.sites));
 
     spyOn(this.Userservice, 'onboardUsers');
     spyOn(this.Userservice, 'bulkOnboardUsers');
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.mock.getMigrateUsers);
     spyOn(this.Userservice, 'updateUsers');
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
-    spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.when({}));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.mock.getLicensesUsage));
+    spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.resolve({}));
   }
 
   function onboardUsersResponse(statusCode, responseMessage) {

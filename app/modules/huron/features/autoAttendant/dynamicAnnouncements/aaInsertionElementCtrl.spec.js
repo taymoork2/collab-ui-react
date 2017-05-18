@@ -22,7 +22,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
     it('should validate controller creation', function () {
       expect(controller).toBeDefined();
       expect(controller.mainClickFn).toBeDefined();
-      expect(controller.closeClickFn).toBeDefined();
+      //expect(controller.closeClickFn).toBeDefined();
     });
 
     describe('setUp', function () {

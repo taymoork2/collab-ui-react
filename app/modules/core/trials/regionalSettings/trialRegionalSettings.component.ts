@@ -1,13 +1,15 @@
 import { HuronCountryService } from 'modules/huron/countries';
-import { HuronCompassService } from '../../../huron/compass/compass.service';
+import { HuronCompassService } from 'modules/huron/compass/compass.service';
 
 export class TrialRegionalSettingsComponent implements ng.IComponentOptions {
   public controller = TrialRegionalSettingsCtrl;
   public templateUrl = 'modules/core/trials/regionalSettings/trialRegionalSettings.html';
   public bindings = {
     callTrialEnabled: '<',
-    onChangeFn: '&',
     defaultCountry: '<',
+    onChangeFn: '&',
+    showError: '<',
+    selectName: '@',
   };
 }
 
@@ -15,7 +17,10 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
   public defaultCountry: ICountry;
   public countryList;
   public onChangeFn: Function;
+  public showError: boolean;
   public placeholder: string;
+  public errorMessage: string;
+  public selectName: string;
   private notApplicable: ICountry;
   private ftHuronFederatedSparkCall: any;
 
@@ -31,6 +36,7 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.placeholder = this.$translate.instant('serviceSetupModal.defaultCountryPlaceholder');
+    this.errorMessage = this.$translate.instant('common.invalidRequired');
     const promises = {
       countryList: this.HuronCountryService.getCountryList(),
       huronFederatedSparkCall: this.FeatureToggleService.supports('huron-federated-spark-call'),
@@ -80,6 +86,10 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
     this.onChangeFn({
       country: this.defaultCountry,
     });
+  }
+
+  public displayError(): boolean {
+    return this.showError && _.isEmpty(this.defaultCountry);
   }
 }
 

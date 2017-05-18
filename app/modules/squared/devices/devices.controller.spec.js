@@ -47,7 +47,7 @@ describe('Controller: DevicesCtrl', function () {
     });
 
     spyOn(AccountOrgService, 'getAccount').and.returnValue({
-      success: _.noop,
+      then: _.noop,
     });
 
     spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));

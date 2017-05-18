@@ -18,7 +18,7 @@
   <tbody ng-repeat="node in $ctrl.data.nodes | orderBy:'name' track by node.serial">
     <tr class="hostname">
       <td colspan="4">
-        {{::node.name}}
+        <span class="nodename">{{::node.name}}</span>
         <div class="pull-right">
           <span class="node-serial" translate="hercules.nodesPage.serial" translate-value-serial="{{::node.serial}}"></span>
           <span cs-dropdown>
@@ -60,10 +60,12 @@
         <span class="icon icon-circle status-indicator" ng-class="connector.status.cssClass"></span>
         {{::connector.statusName}}
         <span class="badge warning" ng-if="connector.maintenanceMode === 'on'" translate="hercules.fusion.list.maintenance"></span>
-        <span class="badge" ng-if="connector.maintenanceMode === 'pending'" translate="hercules.fusion.list.pendingMaintenance"></span>
-        <span class="badge info" ng-if="connector.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
+        <span class="badge" ng-if="connector.maintenanceMode === 'pending'" translate="hercules.fusion.list.pendingMaintenance"
+              tooltip="{{ 'hercules.nodesPage.pendingTooltip' | translate }}" tooltip-trigger="mouseenter" tooltip-placement="top"></span>
+        <span ng-show="false" class="badge info" ng-if="connector.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
       </td>
       <td>{{::connector.version}}</td>
     </tr>
+    <tr class="connector-row-filler"><td></td><td></td><td></td></tr>
   </tbody>
 </table>

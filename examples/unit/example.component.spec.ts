@@ -54,7 +54,7 @@ describe('Component: Example', () => {
 
   describe('doSomething()', function () {
     it('should do something', function () {
-      this.ExampleService.getAndAddSomething.and.returnValue(this.$q.when());
+      this.ExampleService.getAndAddSomething.and.returnValue(this.$q.resolve());
       this.controller.doSomething('one');
 
       expect(this.controller.loading).toBe(true);

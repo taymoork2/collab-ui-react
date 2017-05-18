@@ -24,7 +24,7 @@ describe('userCsv.controller', function () {
   function initDependencySpies() {
     var _this = this;
     spyOn(this.$state, 'go').and.returnValue(this.$q.resolve());
-    spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.when());
+    spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.resolve());
     spyOn(this.Authinfo, 'isOnline').and.returnValue(true);
     this.modalDefer = this.$q.defer();
     spyOn(this.$modal, 'open').and.returnValue({

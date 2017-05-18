@@ -1,4 +1,4 @@
-import { Notification } from '../../../core/notifications/notification.service';
+import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
 
 class GmTdNotesCtrl implements ng.IComponentController {
@@ -49,14 +49,14 @@ class GmTdNotesCtrl implements ng.IComponentController {
     let postData = {
       customerID: this.customerId,
       siteID: this.ccaDomainId,
-      action: 'add_note',
+      action: 'add_notes_td',
       actionFor: 'Telephony Domain',
       objectName: this.newNote,
     };
 
     let notes = _.get(postData, 'objectName');
-    if (this.getByteLength(notes) > this.noteMaxByte) {
-      this.Notification.error('Enter a maximum of 2048 characters');
+    if (this.gemService.getByteLength(notes) > this.noteMaxByte) {
+      this.Notification.error('gemini.cbgs.notes.errorMsg.maxLength', { maxLength: this.noteMaxByte });
       return;
     }
 
@@ -70,12 +70,19 @@ class GmTdNotesCtrl implements ng.IComponentController {
         return;
       }
 
+      if (!resJson.body) {
+        this.Notification.error('gemini.errorCode.genericError');
+        return;
+      }
+
       this.allNotes.unshift(resJson.body);
       this.isShowAll = _.size(this.allNotes) > this.showNotesNum;
       this.notes = _.size(this.allNotes) > this.showNotesNum ? _.slice(this.allNotes, 0, this.showNotesNum) : this.allNotes;
       this.newNote = '';
 
-      this.$scope.$emit('tdNotesUpdated', this.allNotes);
+      this.$scope.$$childTail.$$prevSibling.noteForm.$setPristine();
+
+      this.$scope.$emit('detailWatch', { notes: this.allNotes });
     });
   }
 
@@ -83,21 +90,6 @@ class GmTdNotesCtrl implements ng.IComponentController {
     this.PreviousState.go();
   }
 
-  private getByteLength(str) {
-    let totalLength = 0;
-    let charCode;
-    for (let i = 0; i < str.length; i++) {
-      charCode = str.charCodeAt(i);
-      if (charCode < 0x007f) {
-        totalLength = totalLength + 1;
-      } else if ((0x0080 <= charCode) && (charCode <= 0x07ff)) {
-        totalLength += 2;
-      } else if ((0x0800 <= charCode) && (charCode <= 0xffff)) {
-        totalLength += 3;
-      }
-    }
-    return totalLength;
-  }
 }
 
 export class GmTdNotesComponent implements ng.IComponentOptions {

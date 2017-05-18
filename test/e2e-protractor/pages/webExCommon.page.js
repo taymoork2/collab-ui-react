@@ -17,7 +17,7 @@ var WebExCommon = function () {
   this.BTS1 = {
     siteUrl: 't30test-mc25.webex.com',
     testAdminUsername: 'provteam+mc25@csgtrials.webex.com',
-    testAdminPassword: 'Cisco!23',
+    testAdminPassword: 'Cisco!234',
   };
 
   this.BTS1.siteElement = element(by.id(this.BTS1.siteUrl));
@@ -36,7 +36,7 @@ var WebExCommon = function () {
   this.BTS2 = {
     siteUrl: 't30test-mc200.webex.com',
     testAdminUsername: 'provteam+mc@csgtrials.webex.com',
-    testAdminPassword: 'Cisco!23',
+    testAdminPassword: 'Cisco!234',
   };
 
   this.BTS2.siteElement = element(by.id(this.BTS2.siteUrl));
@@ -55,7 +55,7 @@ var WebExCommon = function () {
   this.BTS3 = {
     siteUrl: 't30test-ee.webex.com',
     testAdminUsername: 'provteam+ee@csgtrials.webex.com',
-    testAdminPassword: 'Cisco!23',
+    testAdminPassword: 'Cisco!234',
   };
 
   this.BTS3.siteElement = element(by.id(this.BTS3.siteUrl));
@@ -74,7 +74,7 @@ var WebExCommon = function () {
   this.BTS4 = {
     siteUrl: 't30test-mc200-cmr.webex.com', //The sitename is misleading; its actually a T31 site
     testAdminUsername: 'provteam+mc200@csgtrials.webex.com',
-    testAdminPassword: 'Cisco!23',
+    testAdminPassword: 'Cisco!234',
   };
 
   this.BTS4.siteElement = element(by.id(this.BTS4.siteUrl));

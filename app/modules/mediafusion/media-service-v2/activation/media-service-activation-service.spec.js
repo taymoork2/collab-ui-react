@@ -14,9 +14,9 @@ describe('MediaServiceActivationV2', function () {
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       authinfo = {
-        getOrgId: sinon.stub(),
+        getOrgId: jasmine.createSpy('getOrgId'),
       };
-      authinfo.getOrgId.returns("12345");
+      authinfo.getOrgId.and.returnValue("12345");
       $provide.value('Authinfo', authinfo);
     });
   });

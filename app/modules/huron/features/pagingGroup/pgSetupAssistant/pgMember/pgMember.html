@@ -10,7 +10,7 @@
            typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchMembers($viewValue) | limitTo:10"
            typeahead-on-select="$ctrl.selectMembers($item)"
            typeahead-template-url="userTemplate.html"
-           placeholder="{{:: 'pagingGroup.memberPlaceholder' | translate}}"
+           placeholder="{{:: 'common.selectMembers' | translate}}"
            typeahead-min-length="3" typeahead-wait-ms="300" focus-on/>
     <p class="input-description" translate="pagingGroup.memberHint"></p>
     <div class="warning">

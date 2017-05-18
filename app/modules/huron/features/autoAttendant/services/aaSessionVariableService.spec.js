@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: AASessionVariableService', function () {
+describe('Service: AASessionVariableService', function () {
   var customVarJson = getJSONFixture('huron/json/autoAttendant/aaCustomVariables.json');
   var q;
   var $timeout;
@@ -19,7 +19,6 @@ describe('Controller: AASessionVariableService', function () {
     q = $q;
 
   }));
-
 
   describe('getSessionVariables', function () {
     var notFoundResponse = {

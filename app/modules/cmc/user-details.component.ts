@@ -1,6 +1,7 @@
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
 import { IUser } from 'modules/core/auth/user/user';
 import { CmcService } from './cmc.service';
+import { ICmcOrgStatusResponse } from './cmc.interface';
 
 class CmcUserDetailsController implements ng.IComponentController {
 
@@ -41,6 +42,12 @@ class CmcUserDetailsController implements ng.IComponentController {
         this.CmcService.allowCmcSettings(this.user.meta.organizationID).then((res: boolean) =>  {
           this.$log.debug('allowCmcSettings:', res);
           this.allowCmcSettings = res;
+          if (this.allowCmcSettings) {
+            this.CmcService.preCheckOrg(this.user.meta.organizationID).then((res: ICmcOrgStatusResponse) => {
+              this.$log.debug('CMC mock status', res);
+              this.allowCmcSettings = res.status === 'ok';
+            });
+          }
         });
       }
     }

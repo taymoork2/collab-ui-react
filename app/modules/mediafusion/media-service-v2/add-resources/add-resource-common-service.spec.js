@@ -5,7 +5,7 @@
     var httpBackend, $q, AddResourceCommonServiceV2, MediaClusterServiceV2, MediaServiceActivationV2, authinfo, Notification;
     beforeEach(inject(function (_$q_, _AddResourceCommonServiceV2_, $httpBackend, _MediaClusterServiceV2_, _MediaServiceActivationV2_, _Authinfo_, _Notification_) {
       authinfo = _Authinfo_;
-      authinfo.getOrgId = sinon.stub().returns('orgId');
+      authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('orgId');
       httpBackend = $httpBackend;
       httpBackend.when('GET', /^\w+.*/).respond({});
       AddResourceCommonServiceV2 = _AddResourceCommonServiceV2_;

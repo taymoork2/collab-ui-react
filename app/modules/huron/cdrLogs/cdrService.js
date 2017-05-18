@@ -38,21 +38,24 @@
       var name = _.replace(userName, /@/g, '%40').replace(/\+/g, '%2B');
       var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq "' + name + '"';
 
-      $http.get(url).success(function (data) {
-        if (_.isArray(data.Resources) && (data.Resources.length > 0)) {
-          defer.resolve(data.Resources[0].id);
-        } else {
-          Log.debug('User does not exist in this org.');
-          Notification.error('cdrLogs.nonexistentUser', {
-            calltype: calltype,
-          });
+      $http.get(url)
+        .then(function (response) {
+          var data = response.data;
+          if (_.isArray(data.Resources) && (data.Resources.length > 0)) {
+            defer.resolve(data.Resources[0].id);
+          } else {
+            Log.debug('User does not exist in this org.');
+            Notification.error('cdrLogs.nonexistentUser', {
+              calltype: calltype,
+            });
+            defer.reject(null);
+          }
+        })
+        .catch(function (response) {
+          Log.debug('Failed to retrieve user data. Status: ' + response.status);
+          Notification.error('cdrLogs.userDataError');
           defer.reject(null);
-        }
-      }).error(function (data, status) {
-        Log.debug('Failed to retrieve user data. Status: ' + status);
-        Notification.error('cdrLogs.userDataError');
-        defer.reject(null);
-      });
+        });
 
       return defer.promise;
     }
@@ -375,28 +378,28 @@
           url: cdrUrl,
           data: query,
           timeout: cancelPromise.promise,
-        }).success(function (response) {
-          defer.resolve(response);
-        }).error(function (response, status) {
+        }).then(function (response) {
+          defer.resolve(response.data);
+        }).catch(function (response) {
           // if this specific error is received, retry once; error cause unknown
-          if (status === 500 && response === retryError) {
+          if (response.status === 500 && response.data === retryError) {
             $http({
               method: "POST",
               url: cdrUrl,
               data: query,
               timeout: cancelPromise.promise,
-            }).success(function (secondaryResponse) {
+            }).then(function (secondaryResponse) {
               defer.resolve(secondaryResponse);
-            }).error(function (secondaryResponse, secondaryStatus) {
+            }).catch(function (secondaryResponse) {
               defer.reject({
-                'response': secondaryResponse,
-                'status': secondaryStatus,
+                'response': secondaryResponse.data,
+                'status': secondaryResponse.status,
               });
             });
           } else {
             defer.reject({
-              'response': response,
-              'status': status,
+              'response': response.data,
+              'status': response.status,
             });
           }
         });

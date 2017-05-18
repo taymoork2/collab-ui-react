@@ -14,7 +14,7 @@ describe('Component: OrdersOverview', () => {
     this.$scope.currentCustomer = _.cloneDeep(customer);
   });
   function initComponent() {
-    spyOn(this.PstnService, 'getFormattedNumberOrders').and.returnValue(this.$q.when(_.cloneDeep(customerOrders)));
+    spyOn(this.PstnService, 'getFormattedNumberOrders').and.returnValue(this.$q.resolve(_.cloneDeep(customerOrders)));
     this.compileComponent('ucOrdersOverview', {
       currentCustomer: 'currentCustomer',
     });

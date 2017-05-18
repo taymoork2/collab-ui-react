@@ -36,12 +36,12 @@ describe('TimingInterceptor', function () {
         requestTimestamp: now - 15000,
       },
     };
-    Config.isProd = sinon.stub().returns(false);
-    $log.error = sinon.stub();
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(false);
+    $log.error = jasmine.createSpy('error');
 
     Interceptor.response(response);
 
-    expect($log.error.callCount).toBe(1);
+    expect($log.error.calls.count()).toBe(1);
   });
 
   it('should not log in prod', function () {
@@ -50,12 +50,12 @@ describe('TimingInterceptor', function () {
         requestTimestamp: now - 15000,
       },
     };
-    Config.isProd = sinon.stub().returns(true);
-    $log.error = sinon.stub();
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(true);
+    $log.error = jasmine.createSpy('error');
 
     Interceptor.response(response);
 
-    expect($log.error.callCount).toBe(0);
+    expect($log.error.calls.count()).toBe(0);
   });
 
   it('should not log if thresold not reached', function () {
@@ -64,12 +64,12 @@ describe('TimingInterceptor', function () {
         requestTimestamp: now,
       },
     };
-    Config.isProd = sinon.stub().returns(false);
-    $log.error = sinon.stub();
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(false);
+    $log.error = jasmine.createSpy('error');
 
     Interceptor.response(response);
 
-    expect($log.error.callCount).toBe(0);
+    expect($log.error.calls.count()).toBe(0);
   });
 
   it('should return rejected promise from responseError', function (done) {

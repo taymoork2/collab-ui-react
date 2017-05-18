@@ -79,7 +79,7 @@
 
     function getHuntGroups() {
 
-      return HuntGroupService.getListOfHuntGroups().then(function (hgPool) {
+      return HuntGroupService.getHuntGroupList().then(function (hgPool) {
         _.each(hgPool, function (aHuntGroup) {
           vm.huntGroups.push({
             description: aHuntGroup.name.concat(' (').concat(_.head(_.map(aHuntGroup.numbers, 'number'))).concat(')'),

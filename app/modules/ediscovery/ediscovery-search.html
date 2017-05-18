@@ -1,9 +1,9 @@
 <div class="ediscovery-search">
-  <div ng-class="(ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle) ? 'advanced-search' : 'basic-search'">
+  <div ng-class="ediscoverySearchCtrl.roomInfo ? 'advanced-search' : 'basic-search'">
     <div class="ediscovery-search-bar">
 
       <!-- Updated Search -->
-      <div ng-if="!ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle && !ediscoverySearchCtrl.searchingForRoom">
+      <div ng-if="!ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.searchingForRoom">
         <div class="main-heading">
           <h1 translate="ediscovery.heading"></h1>
         </div>
@@ -106,6 +106,6 @@
     </div>
   </div>
 
-  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle" ng-include="'modules/ediscovery/ediscovery-search-result-adv.html'"></div>
+  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo" ng-include="'modules/ediscovery/ediscovery-search-result-adv.html'"></div>
 
 </div>

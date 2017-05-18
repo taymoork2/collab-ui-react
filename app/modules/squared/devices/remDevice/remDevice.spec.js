@@ -3,7 +3,7 @@
 describe('Controller: RemDeviceController', function () {
   var controller, $q, $rootScope, $httpBackend, CsdmDeviceService, CsdmHuronDeviceService, CsdmPlaceService, device;
   var fakeModal = {
-    close: sinon.stub(),
+    close: jasmine.createSpy('close'),
   };
 
   var cisUidOfPlace = 'a19b308a-PlaceWithDevice-71898e423bec';
@@ -44,7 +44,6 @@ describe('Controller: RemDeviceController', function () {
 
       spyOn(CsdmDeviceService, 'deleteItem').and.returnValue($q.resolve());
       spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.resolve());
-      spyOn(fakeModal, 'close');
 
       controller = $controller('RemDeviceController', {
         $modalInstance: fakeModal,

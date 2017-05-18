@@ -1,4 +1,4 @@
-import { IExternalLinkedAccount } from '../../common/ExternalLinkedAccount';
+import IExternalLinkedAccount = csdm.IExternalLinkedAccount;
 export class CallConnectOptions implements ng.IComponentController {
   private dismiss: Function;
   private wizardData: {

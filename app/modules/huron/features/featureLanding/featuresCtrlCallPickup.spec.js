@@ -2,7 +2,7 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService, CallPickupGroupService;
+  var featureCtrl, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, PhoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService, CallPickupGroupService;
   var listOfPIs = getJSONFixture('huron/json/features/callPickup/pickupList.json');
   var emptylistOfPIs = [];
   var getPIListSuccessResp = function (data) {
@@ -38,7 +38,7 @@ describe('Features Controller', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_, _PagingGroupService_, _CallPickupGroupService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _PhoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_, _PagingGroupService_, _CallPickupGroupService_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $state = _$state_;
@@ -50,7 +50,7 @@ describe('Features Controller', function () {
     CallParkService = _CallParkService_;
     PagingGroupService = _PagingGroupService_;
     CallPickupGroupService = _CallPickupGroupService_;
-    TelephoneNumberService = _TelephoneNumberService_;
+    PhoneNumberService = _PhoneNumberService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAModelService = _AAModelService_;
     Log = _Log_;
@@ -60,7 +60,7 @@ describe('Features Controller', function () {
     //create mock deferred object which will be used to return promises
     getDeferred = $q.defer();
     //Using a Jasmine Spy to return a promise when methods of the PagingGroupService are called
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve([]));
+    spyOn(HuntGroupService, 'getHuntGroupList').and.returnValue($q.resolve([]));
     spyOn(CallParkService, 'getCallParkList').and.returnValue($q.resolve([]));
     spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(getDeferred.promise);
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.resolve());
@@ -79,7 +79,7 @@ describe('Features Controller', function () {
       $timeout: $timeout,
       Authinfo: Authinfo,
       CallPickupGroupService: CallPickupGroupService,
-      TelephoneNumberService: TelephoneNumberService,
+      PhoneNumberService: PhoneNumberService,
       Log: Log,
       Notification: Notification,
     });

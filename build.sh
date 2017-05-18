@@ -175,9 +175,9 @@ fi
 rm -f wx2-admin-web-client.*.tar.gz
 
 # important: we untar with '--strip-components=1', so use 'dist/*' and NOT './dist/*'
-tar -zcvf "$APP_ARCHIVE" dist/*
-tar -zcvf "$SOURCE_MAP_ARCHIVE" dist-source-map/*
-tar -zcvf "$COVERAGE_ARCHIVE" ./test/coverage/
+tar -zcvf "$APP_ARCHIVE" dist/* &> "${APP_ARCHIVE}--files-list"
+tar -zcvf "$SOURCE_MAP_ARCHIVE" dist-source-map/* &> "${SOURCE_MAP_ARCHIVE}--files-list"
+tar -zcvf "$COVERAGE_ARCHIVE" ./test/coverage/ &> "${COVERAGE_ARCHIVE}--files-list"
 
 # archive e2e test results
 tar -cf "$E2E_TEST_RESULTS_ARCHIVE" "./test/e2e-protractor/reports/${BUILD_TAG}"

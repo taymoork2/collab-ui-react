@@ -6,23 +6,38 @@
   .controller('AARestApiCtrl', AARestApiCtrl);
 
   /* @ngInject */
-  function AARestApiCtrl($modal, $scope, AAUiModelService) {
+  function AARestApiCtrl($modal, $scope, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
 
+    var doREST = 'doREST';
+    var action;
+
     vm.method = '';
     vm.url = '';
+    vm.uniqueCtrlIdentifer = '';
+
     vm.openConfigureApiModal = openConfigureApiModal;
 
     /////////////////////
 
     function openConfigureApiModal() {
       openModal().result.then(function () {
-        vm.method = vm.menuEntry.doRest.method;
-        vm.url = vm.menuEntry.doRest.url;
-        return vm.menuEntry.doRest;
+        vm.method = action.method;
+        vm.url = action.url;
+        if (!_.isEmpty(vm.method) && !_.isEmpty(vm.url)) {
+          AACommonService.setRestApiStatus(true);
+          AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
+        }
       });
     }
+
+    $scope.$on(
+      "$destroy",
+      function () {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
+      }
+    );
 
     function openModal() {
       return $modal.open({
@@ -41,13 +56,27 @@
       });
     }
 
+    function populateUiModel() {
+      vm.method = action.method;
+      vm.url = action.url;
+    }
+
     function activate() {
       var ui = AAUiModelService.getUiModel();
       vm.uiMenu = ui[$scope.schedule];
       vm.menuEntry = vm.uiMenu.entries[$scope.index];
-      if (!_.has(vm.menuEntry, 'doRest')) {
-        vm.menuEntry.doRest = {};
+      action = _.get(vm.menuEntry, 'actions[0]', '');
+      vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, AACommonService.getUniqueId());
+      if (!action || action.getName() !== doREST) {
+        action = AutoAttendantCeMenuModelService.newCeActionEntry(doREST, '');
+        action.url = '';
+        action.method = '';
+        vm.menuEntry.addAction(action);
+        AACommonService.setRestApiStatus(false);
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
       }
+
+      populateUiModel();
     }
 
     activate();

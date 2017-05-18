@@ -6,8 +6,13 @@
     .controller('AAConfigureApiModalCtrl', AAConfigureApiModalCtrl);
 
   /* @ngInject */
-  function AAConfigureApiModalCtrl(AAModelService, $modalInstance, AAUiModelService, aa_schedule, aa_index, $translate, AASessionVariableService) {
+  function AAConfigureApiModalCtrl(AAModelService, $modalInstance, AAUiModelService, aa_schedule, aa_index, $translate, AASessionVariableService, AACommonService) {
     var vm = this;
+
+    var GET = 'GET';
+    var ui;
+    var apiConfig;
+    var action;
 
     vm.url = '';
 
@@ -15,6 +20,7 @@
     vm.variableSet = [{
       value: '',
       variableName: '',
+      isWarn: false,
     }];
 
     vm.selectVariablePlaceholder = $translate.instant('autoAttendant.selectVariablePlaceholder');
@@ -23,18 +29,62 @@
     vm.addVariableSet = addVariableSet;
     vm.save = save;
     vm.isNewVariable = isNewVariable;
+    vm.canShowWarn = canShowWarn;
+    vm.isSaveDisabled = isSaveDisabled;
 
-    var GET = 'GET';
     vm.newVariable = $translate.instant('autoAttendant.newVariable');
+    vm.validationMsgs = {
+      maxlength: $translate.instant('autoAttendant.callerInputVariableTooLongMsg'),
+      minlength: $translate.instant('autoAttendant.callerInputVariableTooShortMsg'),
+      required: $translate.instant('autoAttendant.callerInputVariableRequiredMsg'),
+      pattern: $translate.instant('autoAttendant.invalidCharacter'),
+    };
+
+    vm.maxVariableLength = 16;
+    vm.minVariableLength = 3;
 
     /////////////////////
 
     function save() {
-      vm.menuEntry.doRest.url = vm.url;
-      vm.menuEntry.doRest.variableSet = vm.variableSet;
+      action.url = vm.url;
+      action.variableSet = vm.variableSet;
       //for now set method to GET as default
-      vm.menuEntry.doRest.method = GET;
+      action.method = GET;
       $modalInstance.close();
+    }
+
+    function isSaveDisabled() {
+      return (_.isEmpty(vm.url) || areVariableSetsEmpty());
+    }
+
+    function areVariableSetsEmpty() {
+      var status = false;
+      _.forEach(vm.variableSet, function (variable) {
+        if (_.isEmpty(variable.value) || _.isEmpty(variable.variableName === vm.newVariable ? variable.newVariableValue : variable.variableName)) {
+          status = true;
+        }
+      });
+      return status;
+    }
+
+    function canShowWarn(variable) {
+      // if invalid (from html, too short or too long nameInput is undefined
+      var nameInput = variable.newVariableValue;
+      AACommonService.setIsValid(apiConfig, nameInput);
+
+      action.variableSet = vm.variableSet;
+      if (!nameInput) {
+        // don't bother with undefined for warnings as other lanes could have invalid inputs also
+        variable.isWarn = false;
+        return;
+      }
+      variable.isWarn = !_.isUndefined(vm.sessionVarOptions[nameInput]);
+
+      if (!variable.isWarn) {
+        variable.isWarn = AACommonService.collectThisCeActionValue(ui).filter(function (value) {
+          return _.isEqual(value, nameInput);
+        }).length > 1;
+      }
     }
 
     function isNewVariable(name) {
@@ -57,17 +107,25 @@
     }
 
     function populateUiModel() {
-      if (!_.isEmpty(vm.menuEntry.doRest)) {
-        vm.url = vm.menuEntry.doRest.url;
-        vm.variableSet = vm.menuEntry.doRest.variableSet;
+      if (!_.isEmpty(action)) {
+        vm.url = action.url;
+        if (!_.isEmpty(action.variableSet)) {
+          vm.variableSet = action.variableSet;
+        }
       }
     }
 
     function activate() {
-      var ui = AAUiModelService.getUiModel();
+      ui = AAUiModelService.getUiModel();
+      apiConfig = 'apiConfig' + aa_schedule + "-" + aa_index + "-" + AACommonService.getUniqueId();
       var uiMenu = ui[aa_schedule];
+
+      ui = AAUiModelService.getUiModel();
       vm.sessionVarOptions.push(vm.newVariable);
       vm.menuEntry = uiMenu.entries[aa_index];
+      if (!_.isUndefined(vm.menuEntry.actions[0])) {
+        action = vm.menuEntry.actions[0];
+      }
       populateUiModel();
     }
 

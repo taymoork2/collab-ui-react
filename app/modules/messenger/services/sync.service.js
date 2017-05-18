@@ -6,7 +6,7 @@
     .factory('SyncService', SyncService);
 
   /* @ngInject */
-  function SyncService($http, $q, $translate, Config, Authinfo, Log, UrlConfig) {
+  function SyncService($http, $q, $translate, Authinfo, Config, Log, UrlConfig) {
     // Interface ---------------------------------------------------------------
 
     // Internal data

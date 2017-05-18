@@ -5,6 +5,7 @@ import {
 } from '../pstnProviders';
 import { PstnModel } from '../pstn.model';
 import { PstnService } from '../pstn.service';
+import { Notification } from 'modules/core/notifications/notification.service';
 
 
 const CC_CANADA = 'CA';
@@ -47,6 +48,7 @@ export class PstnTermsOfServiceCtrl implements ng.IComponentController {
     private PstnService: PstnService,
     private PstnProvidersService: PstnProvidersService,
     private $rootScope: ng.IRootScopeService,
+    private Notification: Notification,
   ) {}
 
   public $onInit() {
@@ -71,7 +73,8 @@ export class PstnTermsOfServiceCtrl implements ng.IComponentController {
       .then(() => {
         this.$rootScope.$broadcast(PSTN_TOS_ACCEPT);
         this.onDismiss();
-      });
+      }).catch(response => this.Notification.errorResponse(response))
+      .finally(() => this.loading = false);
   }
 
   public onDismissClick(): void {

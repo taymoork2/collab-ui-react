@@ -108,7 +108,7 @@ describe('Service: PstnService', function () {
       'PstnModel',
       'HuronConfig',
       'CountryCodes',
-      'TelephoneNumberService',
+      'PhoneNumberService',
      );
     spyOn(this.Authinfo, 'getCallPartnerOrgId').and.returnValue(suite.partnerId);
     spyOn(this.Authinfo, 'isPartner');

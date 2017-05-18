@@ -35,7 +35,8 @@
       return $http.get(url, {
         responseType: 'arraybuffer',
         timeout: exportCanceler.promise,
-      }).success(function (data) {
+      }).then(function (response) {
+        var data = response.data;
         var fileName = 'device-usage.csv';
         var file = new $window.Blob([data], {
           type: 'application/json',
@@ -61,6 +62,7 @@
           }, 100);
         }
         statusCallback(100);
+        return response;
       }).catch(function (error) {
         statusCallback(-1);
         $log.warn("Device usage export was not successful, reason:", error);

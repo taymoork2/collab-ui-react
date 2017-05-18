@@ -27,7 +27,7 @@ describe('Component: classOfService', () => {
 
   function initDependencySpies() {
     spyOn(this.Authinfo, 'getLicenseIsTrial').and.returnValue(true);
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
   }
 
   function initComponent() {

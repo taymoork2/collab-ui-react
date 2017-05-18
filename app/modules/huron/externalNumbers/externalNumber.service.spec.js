@@ -256,6 +256,15 @@ describe('Service: ExternalNumberService', function () {
       });
     });
 
+    it('should return null for existing Terminus customer carrier info if PSTN has not been setup', function () {
+      PstnService.getCustomerV2.and.returnValue($q.resolve({}));
+      ExternalNumberService.isTerminusCustomer(customerId).then(function (response) {
+        expect(response).toBe(true);
+        var result = ExternalNumberService.getCarrierInfo(customerId);
+        expect(result).toBe(null);
+      });
+    });
+
     it('should return true for no Terminus customer and has no numbers', function () {
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(noNumberResponse);
       PstnService.getCustomerV2.and.returnValue($q.reject());

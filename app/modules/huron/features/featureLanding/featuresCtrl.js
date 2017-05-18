@@ -22,6 +22,7 @@ require('./_feature-landing.scss');
     vm.filterText = '';
     vm.placeholder = {};
     vm.cardColor = {};
+    vm.badgeColor = {};
     vm.aaModel = {};
     var featureToBeDeleted = {};
     vm.noFeatures = false;
@@ -60,12 +61,13 @@ require('./_feature-landing.scss');
     vm.features = [{
       name: 'HG',
       getFeature: function () {
-        return HuntGroupService.getListOfHuntGroups();
+        return HuntGroupService.getHuntGroupList();
       },
       formatter: HuronFeaturesListService.huntGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.hgName',
       color: 'alerts',
+      badge: 'alert',
     }, {
       name: 'AA',
       getFeature: function () {
@@ -75,6 +77,7 @@ require('./_feature-landing.scss');
       isEmpty: false,
       i18n: 'huronFeatureDetails.aaName',
       color: 'primary',
+      badge: 'primary',
     }, {
       name: 'CP',
       getFeature: function () {
@@ -84,6 +87,7 @@ require('./_feature-landing.scss');
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',
       color: 'cta',
+      badge: 'info',
     }, {
       name: 'PG',
       getFeature: function () {
@@ -93,6 +97,7 @@ require('./_feature-landing.scss');
       isEmpty: false,
       i18n: 'huronFeatureDetails.pgName',
       color: 'people',
+      badge: 'success',
     }, {
       name: 'PI',
       getFeature: function () {
@@ -102,6 +107,7 @@ require('./_feature-landing.scss');
       isEmpty: false,
       i18n: 'huronFeatureDetails.piName',
       color: 'attention',
+      badge: 'warning',
     }];
 
     init();
@@ -111,6 +117,10 @@ require('./_feature-landing.scss');
 
       _.forEach(vm.features, function (feature) {
         vm.cardColor[feature.name] = feature.color;
+      });
+
+      _.forEach(vm.features, function (feature) {
+        vm.badgeColor[feature.name] = feature.badge;
       });
 
       vm.pageState = 'Loading';
@@ -203,7 +213,8 @@ require('./_feature-landing.scss');
       }
     }
 
-    vm.editHuronFeature = function (feature) {
+    vm.editHuronFeature = function (feature, $event) {
+      $event.stopImmediatePropagation();
       if (feature.filterValue === 'AA') {
         vm.aaModel.aaName = feature.cardName;
         $state.go('huronfeatures.aabuilder', {
@@ -228,7 +239,9 @@ require('./_feature-landing.scss');
       }
     };
 
-    vm.deleteHuronFeature = function (feature) {
+    vm.deleteHuronFeature = function (feature, $event) {
+      $event.preventDefault();
+      $event.stopImmediatePropagation();
       if (feature.hasDepends) {
         Notification.error('huronFeatureDetails.aaDeleteBlocked', {
           aaNames: feature.dependsNames.join(", "),
@@ -244,7 +257,9 @@ require('./_feature-landing.scss');
       });
     };
 
-    vm.detailsHuronFeature = function (feature) {
+    vm.detailsHuronFeature = function (feature, $event) {
+      $event.preventDefault();
+      $event.stopImmediatePropagation();
       $state.go('huronfeatures.aaListDepends', {
         detailsFeatureName: feature.cardName,
         detailsFeatureId: feature.id,

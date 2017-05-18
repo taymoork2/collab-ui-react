@@ -140,6 +140,18 @@
       integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1',
     },
+    SunlightPickNotificationUrl: {
+      dev: 'https://notifs.devus1.ciscoccservice.com/notifs/v1/publish',
+      cfe: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
+      integration: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
+      prod: 'https://notifs.produs1.ciscoccservice.com/notifs/v1/publish',
+    },
+    SunlightPushNotificationUrl: {
+      dev: 'https://ar.devus1.ciscoccservice.com/ar/v1/publish/taskState',
+      cfe: 'https://ar.appstaging.ciscoccservice.com/ar/v1/publish/taskState',
+      integration: 'https://ar.appstaging.ciscoccservice.com/ar/v1/publish/taskState',
+      prod: 'https://ar.produs1.ciscoccservice.com/ar/v1/publish/taskState',
+    },
     CcfsUrl: {
       dev: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightdev&callbackUrl=',
       cfe: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
@@ -157,12 +169,6 @@
       cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
       integration: 'https://hades.huron-int.com/api/v1/elasticsearch/',
       prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
-    },
-    BmmpUrl: {
-      dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
-      cfe: 'https://bmmp.ciscospark.com/api/v1',
-      integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
-      prod: 'https://bmmp.ciscospark.com/api/v1',
     },
     GeminiUrl: {
       dev: 'https://hfccap2.qa.webex.com/pcs/api/v2/',

@@ -13,23 +13,22 @@ describe('Service: HelpdeskSplunkReporterService', function () {
   describe("splunk reporting", function () {
 
     it("reportOperation reports to logMetricsService", function () {
-      sinon.stub(LogMetricsService, 'logMetrics');
+      spyOn(LogMetricsService, 'logMetrics');
       Service.reportOperation("whatever");
-      expect(LogMetricsService.logMetrics.callCount).toBe(1);
+      expect(LogMetricsService.logMetrics.calls.count()).toBe(1);
     });
 
     it("reportStats reports to logMetriceService", function () {
-      sinon.stub(LogMetricsService, 'logMetrics');
+      spyOn(LogMetricsService, 'logMetrics');
       Service.reportStats("searchString", {}, moment(), "1234");
-      expect(LogMetricsService.logMetrics.callCount).toBe(1);
+      expect(LogMetricsService.logMetrics.calls.count()).toBe(1);
     });
 
     it("reportOperation reports as HELPDESKOPERATION", function () {
-      var logMetrics = sinon.spy(LogMetricsService, 'logMetrics');
+      var logMetrics = spyOn(LogMetricsService, 'logMetrics');
       Service.reportOperation("search");
-      var anyTime = sinon.match.any;
-
-      sinon.assert.calledWith(logMetrics,
+      var anyTime = jasmine.any(Object);
+      expect(logMetrics).toHaveBeenCalledWith(
         "helpdesk",
         "HELPDESKOPERATION",
         "BUTTONCLICK",
@@ -42,7 +41,7 @@ describe('Service: HelpdeskSplunkReporterService', function () {
     });
 
     it("reportStats reports as HELPDESKSEARCH", function () {
-      var logMetrics = sinon.spy(LogMetricsService, 'logMetrics');
+      var logMetrics = spyOn(LogMetricsService, 'logMetrics');
 
       var searchString = "whatever";
       var result = {
@@ -51,10 +50,10 @@ describe('Service: HelpdeskSplunkReporterService', function () {
       var orgId = "12345";
       var statsResult = Service.reportStats(searchString, result, moment(), orgId);
 
-      var anyTime = sinon.match.any;
-      var anyJsonBlob = sinon.match.any;
+      var anyTime = jasmine.any(Object);
+      var anyJsonBlob = jasmine.any(Object);
 
-      sinon.assert.calledWith(logMetrics,
+      expect(logMetrics).toHaveBeenCalledWith(
         "helpdesk",
         "HELPDESKSEARCH",
         "BUTTONCLICK",

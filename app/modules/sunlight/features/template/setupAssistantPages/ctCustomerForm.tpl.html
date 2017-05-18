@@ -15,12 +15,12 @@
     <div ng-switch="getType(field).id">
       <div class="ct-flex-container">
         <div class="ct-country-select h5" ng-switch-when="phone" >
-          <cs-country-select
+          <cs-phone-number
                   id="phone-{{fieldName}}"
                   name="phone"
-                  ng-model="getPhoneNumber(field)"
+                  e164-phone-number="getPhoneNumber(field)"
                   is-disabled="true">
-          </cs-country-select>
+          </cs-phone-number>
         </div>
       </div>
 

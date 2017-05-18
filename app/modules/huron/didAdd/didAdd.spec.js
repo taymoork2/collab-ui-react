@@ -12,8 +12,8 @@ describe('Controller: DidAddCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1'),
-    getOrgName: sinon.stub().returns('awesomeco'),
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('awesomeco'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -47,9 +47,9 @@ describe('Controller: DidAddCtrl', function () {
     $scope = $rootScope.$new();
     $scope.trial = trial;
     $state.modal = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
       result: {
-        finally: sinon.stub(),
+        finally: jasmine.createSpy('finally'),
       },
     };
     HuronConfig = _HuronConfig_;
@@ -102,36 +102,6 @@ describe('Controller: DidAddCtrl', function () {
 
       it('should have tokenmethods object', function () {
         expect(controller.tokenmethods).toBeDefined();
-      });
-
-      describe('tokenmethods.createtoken function', function () {
-        it('should exist', function () {
-          expect(controller.tokenmethods.createtoken).toBeDefined();
-        });
-
-        it('should format the token properly and add a +1 to the number +1 (123) 456-7890', function () {
-          var element = {
-            attrs: {
-              value: '2145556789',
-              label: '2145556789',
-            },
-          };
-          controller.tokenmethods.createtoken(element);
-          expect(element.attrs.value).toEqual('+12145556789');
-          expect(element.attrs.label).toEqual('(214) 555-6789');
-        });
-
-        it('should not format the token if an invalid number', function () {
-          var element = {
-            attrs: {
-              value: '111 222 3333',
-              label: '111 222 3333',
-            },
-          };
-          controller.tokenmethods.createtoken(element);
-          expect(element.attrs.value).toEqual('1112223333');
-          expect(element.attrs.label).toEqual('111 222 3333');
-        });
       });
 
       describe('tokenmethods.createdtoken function', function () {

@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Service: LineListService', function () {
-  var $httpBackend, $q, $scope, ExternalNumberService, HuronConfig, LineListService, PstnService, PstnModel;
 
+  var $httpBackend, $q, $scope, ExternalNumberService, HuronConfig, LineListService, PstnService;
   var lines = getJSONFixture('huron/json/lines/numbers.json');
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
   var pendingLines = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbersV2.json'));
@@ -11,21 +11,20 @@ describe('Service: LineListService', function () {
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
-    getCallPartnerOrgId: jasmine.createSpy('getCallPartnerOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1'),
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, _$q_, _ExternalNumberService_, _HuronConfig_, _LineListService_, _PstnService_, _PstnModel_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, _$q_, _ExternalNumberService_, _HuronConfig_, _LineListService_, _PstnService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -33,22 +32,14 @@ describe('Service: LineListService', function () {
     HuronConfig = _HuronConfig_;
     LineListService = _LineListService_;
     PstnService = _PstnService_;
-    PstnModel = _PstnModel_;
 
     spyOn(PstnService, 'listPendingOrdersWithDetail').and.returnValue($q.resolve());
     spyOn(PstnService, 'translateStatusMessage');
     spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'getCarrierInfo').and.returnValue($q.resolve(carrierInfo));
-    spyOn(PstnModel, 'isResellerExists').and.returnValue($q.resolve(true));
   }));
 
   describe('getLineList', function () {
-
-    afterEach(function () {
-      $httpBackend.flush();
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
-    });
 
     it('should have the right carrierInfo', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
@@ -166,23 +157,6 @@ describe('Service: LineListService', function () {
         });
     });
 
-  });
-
-  describe('getLineList', function () {
-
-    it('should check reseller in terminus with true/false value', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/resellers/' + Authinfo.getCallPartnerOrgId()).respond(200);
-      LineListService.isResellerExists()
-        .then(function (response) {
-          expect(response).toBe(true);
-        });
-      PstnModel.isResellerExists.and.returnValue($q.resolve(false));
-      $scope.$apply();
-      LineListService.isResellerExists()
-        .then(function (response) {
-          expect(response).toBe(true);
-        });
-    });
   });
 
 });
