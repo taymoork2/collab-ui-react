@@ -4122,7 +4122,7 @@
             parent: 'mainLazyLoad',
             views: {
               'main@': {
-                templateUrl: 'modules/squared/partnerManagement/pm-main.html',
+                templateUrl: 'modules/squared/partner-management/pm-main.html',
               },
             },
             abstract: true,
@@ -4136,25 +4136,25 @@
           })
           .state('partnerManagement.search', {
             url: '/',
-            templateUrl: 'modules/squared/partnerManagement/pm-search.html',
+            templateUrl: 'modules/squared/partner-management/pm-search.html',
           })
           .state('partnerManagement.searchResults', {
-            templateUrl: 'modules/squared/partnerManagement/pm-searchResults.html',
+            templateUrl: 'modules/squared/partner-management/pm-searchResults.html',
           })
           .state('partnerManagement.orgExists', {
-            templateUrl: 'modules/squared/partnerManagement/pm-orgExists.html',
+            templateUrl: 'modules/squared/partner-management/pm-orgExists.html',
           })
           .state('partnerManagement.orgClaimed', {
-            templateUrl: 'modules/squared/partnerManagement/pm-orgClaimed.html',
+            templateUrl: 'modules/squared/partner-management/pm-orgClaimed.html',
           })
           .state('partnerManagement.contactAdmin', {
-            templateUrl: 'modules/squared/partnerManagement/pm-contactAdmin.html',
+            templateUrl: 'modules/squared/partner-management/pm-contactAdmin.html',
           })
           .state('partnerManagement.create', {
-            templateUrl: 'modules/squared/partnerManagement/pm-create.html',
+            templateUrl: 'modules/squared/partner-management/pm-create.html',
           })
           .state('partnerManagement.createSuccess', {
-            templateUrl: 'modules/squared/partnerManagement/pm-createSuccess.html',
+            templateUrl: 'modules/squared/partner-management/pm-createSuccess.html',
           });
 
         $stateProvider

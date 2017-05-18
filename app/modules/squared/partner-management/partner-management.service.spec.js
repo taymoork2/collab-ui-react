@@ -14,7 +14,9 @@ describe('PartnerManagementService:', function () {
     svc = UrlConfig = $httpBackend = $sanitize = email = org = undefined;
   });
 
-  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module(
+    require('./index').default
+  ));
 
   beforeEach(inject(function (_$httpBackend_, _$sanitize_, _PartnerManagementService_, _UrlConfig_) {
     svc = _PartnerManagementService_;
