@@ -11,9 +11,11 @@ export class CmcService {
     private Orgservice,
     private Config,
     private UrlConfig,
+    private CmcServiceMock,
     private $http: ng.IHttpService,
   ) {
   }
+
 
   public setData(user: ICmcUser, data: CmcUserData) {
     this.setMobileNumber(user, data.mobileNumber);
@@ -47,88 +49,7 @@ export class CmcService {
 
   // TODO Adapt to cmc status call
   public preCheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
-    return this.mockStatus(orgId);
-  }
-
-  private mockStatus(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
-    this.$log.debug('orgId', orgId);
-    let errorMock = {
-      message: 'Invalid OrgId',
-      errors: [
-        {
-          description: 'The orgid is not found',
-        },
-      ],
-      trackingId: 'CMC_e7a4c176-0ffa-4de0-9534-88d9ccfc7c71',
-    };
-
-    let okMock: ICmcOrgStatusResponse = {
-      status: 'ok',
-      details: {
-        providers: {
-          mobileProvider: {
-            id: 'mobileProvider_id',
-            name: 'Ericsson Mock',
-            description: 'mobileProvider_description',
-            address: 'mobileProvider_address',
-            authName: 'mobileProvider_authName',
-            url: 'mobileProvider_url',
-            passthroughHeaders: ['headerXyz'],
-          },
-          ucProvider: {
-            id: 'ucProvider_id',
-            name: 'Telstra Mock',
-            description: 'ucProvider_description',
-            address: 'ucProvider_address',
-            authName: 'ucProvider_authName',
-            url: 'ucProvider_url',
-          },
-        },
-      },
-    };
-
-    let nokMock: ICmcOrgStatusResponse = {
-      status: 'error',
-      details: {
-        providers: {
-          mobileProvider: {
-            id: 'mobileProvider_id',
-            name: 'Ericsson Mock',
-            description: 'mobileProvider_description',
-            address: 'mobileProvider_address',
-            authName: 'mobileProvider_authName',
-            url: 'mobileProvider_url',
-            passthroughHeaders: ['headerXyz'],
-          },
-          ucProvider: {
-            id: 'ucProvider_id',
-            name: 'Telstra Mock',
-            description: 'ucProvider_description',
-            address: 'ucProvider_address',
-            authName: 'ucProvider_authName',
-            url: 'ucProvider_url',
-          },
-        },
-      },
-      issues: [
-        {
-          code: 2003,
-          message: 'Call Service Aware is not provisioned.',
-        },
-      ],
-    };
-
-    let random_happenin = _.random(1, 3);
-    this.$log.info('radom', random_happenin);
-    switch (random_happenin) {
-      case 1:
-        return this.$q.resolve(okMock);
-      case 2:
-        return this.$q.reject(errorMock);
-      case 3:
-        return this.$q.resolve(nokMock);
-    }
-    return this.$q.resolve(okMock);
+    return this.CmcServiceMock.mockStatus(orgId);
   }
 
   private hasCmcService(services: string[]): boolean {

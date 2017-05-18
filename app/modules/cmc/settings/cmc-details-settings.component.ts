@@ -35,6 +35,9 @@ class CmcDetailsSettingsComponentCtrl implements ng.IComponentController {
             label: res.details.providers.mobileProvider.name,
           };
         }
+      })
+      .catch((res: ICmcOrgStatusResponse) => {
+        this.$log.info('Error Result from preCheckOrg:', res);
       });
   }
 }

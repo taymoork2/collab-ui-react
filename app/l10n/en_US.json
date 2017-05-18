@@ -2621,6 +2621,9 @@
     }
   },
   "cmc": {
+    "failures": {
+      "preCheckFailure": "Status check of org failed"
+    },
     "menu": {
       "mobileServices": "Mobile Services",
       "mobileConvergenceService": "Mobile Convergence Service"
