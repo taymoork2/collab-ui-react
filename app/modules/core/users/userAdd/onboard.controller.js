@@ -1550,7 +1550,7 @@ require('./_user-add.scss');
     };
 
     $scope.skipErrorsOrFinish = function () {
-      if ($scope.results.errors.length > 0) {
+      if (_.get($scope, 'results.errors.length')) {
         return 'usersPage.skipErrorsAndFinish';
       } else {
         return 'common.finish';
