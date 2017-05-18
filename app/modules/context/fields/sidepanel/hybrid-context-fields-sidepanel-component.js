@@ -24,8 +24,8 @@ require('./_fields-sidepanel.scss');
     vm.searchable = true;
     vm.lastUpdated = $filter('date')(vm.field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
     vm.publiclyAccessible = false; //indicate whether the field is base or custom field
-    vm.inUse = false;
-    vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldPage.notInUseTooltip');
+    vm.inUse = true;
+    vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldPage.inUseTooltip');
     vm.actionList = [{
       actionKey: 'common.edit',
       actionFunction: function () {
@@ -52,8 +52,8 @@ require('./_fields-sidepanel.scss');
           vm.fetchFailure = false;
           vm.associatedFieldsets = fieldsetIds;
           vm.inUse = fieldsetIds.length > 0;
-          if (vm.inUse) {
-            vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldPage.inUseTooltip');
+          if (!vm.inUse) {
+            vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldPage.notInUseTooltip');
           }
         }).catch(function () {
           vm.fetchFailure = true;

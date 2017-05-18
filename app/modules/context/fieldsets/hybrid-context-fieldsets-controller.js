@@ -229,7 +229,7 @@ require('../fields/_fields-list.scss');
 
       var lowerStr = str.toLowerCase();
       var containSearchStr = function (fieldset) {
-        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdated', 'publiclyAccessibleUI'];
+        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdatedUI', 'publiclyAccessibleUI'];
         return _.some(propertiesToCheck, function (property) {
           var value;
           if (property === 'numOfFields') {

@@ -61,7 +61,7 @@ describe('Service: contextFieldsetsService', function () {
         'lastUpdated': '2017-02-10T19:37:36.998Z',
       }];
 
-    this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=id:*&maxEntries=200').respond(200, fieldsetData);
+    this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=id:*&maxEntries=1500').respond(200, fieldsetData);
     this.ContextFieldsetsService.getFieldsets().then(function (response) {
       expect(response[0].id).toEqual('aaa_custom_fieldset');
       expect(response[0].lastUpdated).not.toBeNull();
@@ -71,7 +71,7 @@ describe('Service: contextFieldsetsService', function () {
 
 
   it('should reject when get fieldset is called and get returns failure response', function () {
-    this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=id:*&maxEntries=200').respond(404, 'Not found');
+    this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=id:*&maxEntries=1500').respond(404, 'Not found');
     this.ContextFieldsetsService.getFieldsets().then(function (errorResponse) {
       expect(errorResponse.data).toBe('Not found');
       expect(errorResponse.status).toBe(404);
@@ -81,7 +81,7 @@ describe('Service: contextFieldsetsService', function () {
 
   it('should reject when get fieldset membership is called and get returns failure response', function () {
     fieldId = 'someField';
-    this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=fieldId:' + fieldId + '&maxEntries=200').respond(404, 'Not found');
+    this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=fieldId:' + fieldId + '&maxEntries=1500').respond(404, 'Not found');
     this.ContextFieldsetsService.getFieldMembership(fieldId).then(function (errorResponse) {
       expect(errorResponse.data).toBe('Not found');
       expect(errorResponse.status).toBe(404);
@@ -152,7 +152,7 @@ describe('Service: contextFieldsetsService', function () {
         'lastUpdated': '2017-02-10T19:37:36.998Z',
       }];
 
-    this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=fieldId:' + fieldId + '&maxEntries=200').respond(200, fieldsetData);
+    this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=fieldId:' + fieldId + '&maxEntries=1500').respond(200, fieldsetData);
     this.ContextFieldsetsService.getFieldMembership(fieldId).then(function (response) {
       expect(response.length).toEqual(2);
       expect(response[0]).toEqual('aaa_custom_fieldset');
@@ -165,7 +165,7 @@ describe('Service: contextFieldsetsService', function () {
     fieldId = 'AAA_TEST_FIELD';
     fieldsetData = [];
 
-    this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=fieldId:' + fieldId + '&maxEntries=200').respond(200, fieldsetData);
+    this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=fieldId:' + fieldId + '&maxEntries=1500').respond(200, fieldsetData);
     this.ContextFieldsetsService.getFieldMembership(fieldId).then(function (response) {
       expect(response).not.toBeNull();
       expect(response.length).toEqual(0);
