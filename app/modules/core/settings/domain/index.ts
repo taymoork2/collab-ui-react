@@ -7,6 +7,7 @@ export default angular.module('core.settings.domain', [
   require('collab-ui-ng').default,
   require('scripts/app.templates'),
   require('modules/core/scripts/services/org.service'),
+  require('modules/core/domainManagement').default,
 ])
   .component('domainsSetting', new DomainsSettingComponent())
   .name;

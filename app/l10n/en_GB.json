@@ -4085,7 +4085,7 @@
     "feature2": "Service available in all provinces/territories",
     "feature3": "Local and Can/U.S. Long Distance calling",
     "feature4": "Number port/Transfer fee included",
-    "feature5": "Basic 999 included",
+    "feature5": "Basic 911 included",
     "feature6": "Taxes additional"
   },
   "westucFeatures": {
@@ -4095,7 +4095,7 @@
     "feature4": "Directory listing",
     "feature5": "E999",
     "feature6": "No set-up fees"
-  },  
+  },
   "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",

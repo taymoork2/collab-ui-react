@@ -1,3 +1,6 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/text-overflow';
+
 hs-resource-group-card {
   display: block;
   width: 100%;
@@ -19,7 +22,7 @@ hs-resource-group-card {
       border-bottom: 1px solid $gray-light-3;
 
       > .resource-group-caret > h4 {
-        @include text-overflow;
+        @include text-overflow();
 
         display: inline;
         font-size: 16px;

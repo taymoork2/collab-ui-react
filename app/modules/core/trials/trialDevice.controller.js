@@ -6,7 +6,7 @@
     .controller('TrialDeviceController', TrialDeviceController);
 
   /* @ngInject */
-  function TrialDeviceController($scope, $stateParams, $translate, Analytics, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
+  function TrialDeviceController($scope, $stateParams, $translate, Analytics, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
     var vm = this;
 
     var _trialCallData = TrialCallService.getData();
@@ -14,10 +14,8 @@
     var _trialDeviceData = TrialDeviceService.getData();
     // used if the default contry list associated with the device needs to be patched
     // with a different value like in case of a feature toggle. If there are no shipping FTs - should be empty
-    var _shipCountryListReplacement = [{
-      default: TrialDeviceService.listTypes.ROLLOUT2,
-      override: TrialDeviceService.listTypes.US_ONLY,
-    }];
+    // ex: default: TrialDeviceService.listTypes.ROLLOUT2 / override: TrialDeviceService.listTypes.US_ONLY,
+    var _shipCountryListReplacement = [];
     vm.deviceLimit = TrialDeviceService.getDeviceLimit();
 
     var trialStartDate = _.get($stateParams, 'currentTrial.startDate');
@@ -212,12 +210,6 @@
 
       vm.countries = getCountryList();
       Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
-
-      FeatureToggleService.atlasPhonesCanadaGetStatus().then(function (result) {
-        if (result) {
-          _shipCountryListReplacement = [];
-        }
-      });
 
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
       if (!_.isUndefined(limitsPromise)) {

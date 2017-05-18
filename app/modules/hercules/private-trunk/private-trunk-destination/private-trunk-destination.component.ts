@@ -13,7 +13,7 @@ export enum DestinationRadioType {
   HYBRID = <any>'hybrid',
 }
 const DOMAIN_MAX_LENGTH = 253;
-const MIN_PORT = 0;
+const MIN_PORT = 1024;
 const MAX_PORT = 65535;
 export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   public privateTrunkResource: PrivateTrunkResource;
@@ -26,7 +26,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   public asyncValidators: Object;
   public validationMessages: Object;
   public isFirstTimeSetup: boolean;
-  public checkDuplicates: boolean;
+  public duplicateCountCheck: number;
 
   /* @ngInject */
   constructor(
@@ -39,7 +39,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit(): void {
-    this.checkDuplicates = false;
+    this.duplicateCountCheck = 2;
     if (_.isUndefined(this.privateTrunkResource)) {
       this.privateTrunkResource = new PrivateTrunkResource();
       this.addDestination();
@@ -104,13 +104,14 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     this.privateTrunkResource = _.cloneDeep(privateTrunkResource.currentValue);
     if (!_.isUndefined(this.privateTrunkResource) && !_.isEmpty(this.privateTrunkResource.hybridDestination.name)) {
       this.destinationRadio = DestinationRadioType.HYBRID;
+      this.duplicateCountCheck = 1;
     }
   }
 
   public addDestination(): void {
     let dest = new Destination();
     this.privateTrunkResource.destinations.push(dest);
-    this.checkDuplicates = true;
+    this.duplicateCountCheck = 1;
   }
 
   public delete(index): void {
@@ -125,9 +126,9 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   public changeDestination(index: number): void {
     if (this.privateTrunkResource.destinations[index].address) {
       let destination = this.privateTrunkResource.destinations[index];
-      this.checkDuplicates  = true;
       if ( !_.isEmpty(destination.address) && !_.isEmpty(destination.name)) {
         this.changeSIPDestination();
+        this.duplicateCountCheck = 1;
       }
     }
   }
@@ -140,10 +141,10 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 
   public duplicatesInViewValidation(viewValue: string, field: string): boolean {
     let count = 0;
-    if (this.checkDuplicates && this.privateTrunkResource.destinations.length > 1 ) {
+    if (this.privateTrunkResource.destinations.length > 1 && viewValue ) {
       count = _.get(_.countBy(this.privateTrunkResource.destinations, field), viewValue, 0);
     }
-    return count < 1;
+    return count < this.duplicateCountCheck;
   }
 
   public uniqueDomainValidation(viewValue: string): ng.IPromise<boolean> {
@@ -161,12 +162,16 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 
   public portValidation(viewValue: string) {
     let port = _.split(viewValue, ':');
-    return ((!_.isUndefined(port) && port.length > 1) ? _.inRange(_.toNumber(port[1]), MIN_PORT, MAX_PORT) : true );
+    return ((!_.isUndefined(port) && port.length > 1) ? _.toNumber(port[1]) === 0 || _.inRange(_.toNumber(port[1]), MIN_PORT, MAX_PORT) : true );
   }
 
   public domainlengthValidation(viewValue) {
     let value = _.split(viewValue, ':', 2);
     return value[0].length <= DOMAIN_MAX_LENGTH;
+  }
+
+  public onRadioHybridChange() {
+    this.duplicateCountCheck = 2;
   }
 
   public changeSIPDestination(): void {

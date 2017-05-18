@@ -1,6 +1,6 @@
 import { IHuronService, IEmergencyAddress, IEmergency, IState, IEmergencyServicesData, IEmergencyServicesStateParams, IDevice } from './index';
 import { MemberService } from 'modules/huron/members';
-import { FeatureMemberService } from 'modules/huron/features/featureMember.service';
+import { FeatureMemberService } from 'modules/huron/features/services/featureMember.service';
 import { HuronCompassService } from 'modules/huron/compass/compass.service';
 import { PstnService } from '../../../huron/pstn/pstn.service';
 import { PstnModel } from '../../../huron/pstn/pstn.model';

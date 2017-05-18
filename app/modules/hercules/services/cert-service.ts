@@ -48,6 +48,9 @@ export class CertService {
   }
 }
 export default angular
-  .module('hercules.cert', [])
+  .module('hercules.cert', [
+    require('modules/core/scripts/services/utils'),
+    require('modules/core/config/urlConfig'),
+  ])
   .service('CertService', CertService)
   .name;

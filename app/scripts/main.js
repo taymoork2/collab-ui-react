@@ -102,7 +102,6 @@
     'ngIcal',
     'huron.paging-group',
     'huron.call-pickup.setup-assistant',
-    'huron.call-park',
     'huron.bulk-enable-vm',
     'huron.TerminusServices',
     'huron.externalNumberService',
@@ -113,6 +112,7 @@
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
     require('modules/huron/lines/deleteExternalNumber').default,
+    require('modules/call/features').default,
   ])
   .constant('ASTParser', require('acorn'))
   .constant('ASTWalker', require('acorn/dist/walk'));
@@ -127,11 +127,14 @@
     require('modules/hercules/service-settings/calendar-service-setup').default,
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
+    require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/excel-service').default,
     require('modules/hercules/services/service-descriptor'),
     require('modules/hercules/services/uss-service'),
     require('modules/hercules/services/service-descriptor'),
     require('modules/hercules/cluster-card').default,
+    require('modules/hercules/resource-group-card').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
