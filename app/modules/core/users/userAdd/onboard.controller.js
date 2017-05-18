@@ -822,37 +822,6 @@ require('./_user-add.scss');
       return false;
     };
 
-    // [Services] -> [Services] (merges Service[s] w/ same license)
-    var mergeMultipleLicenseSubscriptions = function (fetched) {
-      // Construct a mapping from License to (array of) Service object(s)
-      var services = fetched.reduce(function (object, service) {
-        var key = service.license.licenseType;
-        if (key in object) {
-          object[key].push(service);
-        } else {
-          object[key] = [service];
-        }
-        return object;
-      }, {});
-
-      // Merge all services with the same License into a single Service
-      return _.values(services).map(function (array) {
-        var result = {
-          licenses: [],
-        };
-        array.forEach(function (service) {
-          var copy = _.cloneDeep(service);
-          copy.licenses = [copy.license];
-          delete copy.license;
-          _.mergeWith(result, copy, function (left, right) {
-            if (_.isArray(left)) return left.concat(right);
-          });
-        });
-        return result;
-      });
-
-    };
-
     var getAccountServices = function () {
       var services = {
         message: Authinfo.getMessageServices(),
@@ -861,7 +830,7 @@ require('./_user-add.scss');
         care: Authinfo.getCareServices(),
       };
       if (services.message) {
-        services.message = mergeMultipleLicenseSubscriptions(services.message);
+        services.message = OnboardService.mergeMultipleLicenseSubscriptions(services.message);
         $scope.messageFeatures = $scope.messageFeatures.concat(services.message);
         if (userLicenseIds) {
           _.forEach($scope.messageFeatures[1].licenses, function (license) {
