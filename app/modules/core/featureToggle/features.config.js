@@ -197,4 +197,5 @@ module.exports = {
   hI802: "h-i802",
   csdmPlaceGuiSettings: "csdm-place-gui-settings",
   atlasHybridPartnerRegistration: 'atlas-hybrid-partner-registration',
+  csdmAtaCpc: "csdm-ata-cpc",
 };
