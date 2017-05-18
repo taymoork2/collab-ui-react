@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, DialPlanService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -904,20 +904,6 @@ require('./_user-add.scss');
       value: 2,
       name: 'collabRadio',
       id: 'collabRadio2',
-    };
-
-    $scope.tableOptions = {
-      cursorcolor: chartColors.gray,
-      cursorminheight: 50,
-      cursorborder: "0px",
-      cursorwidth: "7px",
-      railpadding: {
-        top: 0,
-        right: 3,
-        left: 0,
-        bottom: 0,
-      },
-      autohidemode: "leave",
     };
 
     var nameTemplate = '<div class="ui-grid-cell-contents"><span class="name-display-style">{{row.entity.name}}</span>' +
