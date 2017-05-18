@@ -77,7 +77,7 @@
     "collab-amcharts": "~3.19.4",
     "collab-ui": "~4.0.1",
     "collab-ui-formly": "~2.0.3",
-    "collab-ui-ng": "~4.0.0",
+    "collab-ui-ng": "~4.2.0",
     "collab-ui-stickyfill": "~1.1.5",
     "crypto-js": "^3.1.8",
     "d3": "~3.5.5",

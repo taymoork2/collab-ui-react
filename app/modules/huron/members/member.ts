@@ -3,6 +3,7 @@ import { Line } from 'modules/huron/lines/services/line';
 export enum MemberType {
   USER_REAL_USER = <any>'user',
   USER_PLACE = <any>'place',
+  USER_GROUP = <any>'group',
 }
 
 export class Member {

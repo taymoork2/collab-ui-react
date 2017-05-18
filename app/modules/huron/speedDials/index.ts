@@ -1,7 +1,7 @@
 import { SpeedDialComponent } from './speedDials.component';
 import { SpeedDialService } from './speedDial.service';
 import notifications from 'modules/core/notifications';
-import featureMemberService from 'modules/huron/features';
+import featureMemberService from 'modules/huron/features/services';
 
 export { SpeedDialService, ISpeedDial } from './speedDial.service';
 

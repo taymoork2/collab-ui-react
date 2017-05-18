@@ -16,6 +16,10 @@
     padding-bottom: 1.5rem;
   }
 
+  .padding-labels {
+    padding-left: 1.5rem;
+  }
+
   .cert-word-wrap {
     word-wrap: break-word;
     .bold {
@@ -75,8 +79,8 @@
   .float-right-view {
     float: right;
     position: relative;
-    padding-right: .5rem;
-    padding-top: rem-calc(10);
+    padding-right: 1.5rem;
+    padding-top: 1rem;
   }
 
   .margin-input {
@@ -96,17 +100,20 @@
   }
 
   .cert-icon {
-    line-height: 1.5;
-    padding-left: .5rem;
+    line-height: 2;
+    padding-left: 1.5rem;
   }
 
   .box.singlebox-margin {
-    margin: 0 rem-calc(16) rem-calc(8);
+    margin: 0 1rem .5rem;
   }
 
   .box.multibox-margin {
     @include vr-spacing(m, .5);
-    @include vr-spacing(pb, .5);
+  }
+
+  .padding-multi {
+    padding-bottom: .5rem;
   }
 
   .columns .box {
@@ -117,6 +124,12 @@
     flex-grow: column;
     flex: 1 1 auto;
 
+    &.multibox-margin {
+      border: thin solid $gray-light-2;
+      box-shadow: 0 1px 2px 0 $gray-light-2, inset 0 1px 0 0 $gray-lightest;
+      border-radius: 2px;
+    }
+
     .box-content {
       align-self: center;
       display: flex;
@@ -124,10 +137,10 @@
     }
 
     .box-disabled {
-      background-color: $gray-lightest;
+      background-color: $gray-light-3;
     }
 
-    .icon.icon-upload-contain {
+    .icon.icon-upload {
       font-size: 1.5rem;
       display: inline;
       &:hover,
@@ -146,7 +159,7 @@
     .icon.close-icon-align {
       float: right;
       font-size: 1rem;
-      padding-right: .5rem;
+      padding-right: 1rem;
       line-height: 2;
     }
 

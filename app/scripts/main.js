@@ -102,7 +102,6 @@
     'ngIcal',
     'huron.paging-group',
     'huron.call-pickup.setup-assistant',
-    'huron.call-park',
     'huron.bulk-enable-vm',
     'huron.TerminusServices',
     'huron.externalNumberService',
@@ -113,6 +112,7 @@
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
     require('modules/huron/lines/deleteExternalNumber').default,
+    require('modules/call/features').default,
   ])
   .constant('ASTParser', require('acorn'))
   .constant('ASTWalker', require('acorn/dist/walk'));

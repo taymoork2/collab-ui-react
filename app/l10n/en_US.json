@@ -1167,6 +1167,8 @@
     "learnMore": "Learn More",
     "leave": "Leave",
     "metrics": "Metrics",
+    "members": "Members",
+    "memberCount": "{{count}} Members",
     "modal": "Modal",
     "modify": "Modify",
     "new": "New",
@@ -1193,6 +1195,7 @@
     "remove": "Remove",
     "rename": "Rename",
     "required": "Required",
+    "reorder": "Reorder",
     "reset": "Reset",
     "resources": "Resources",
     "result": "Result",
@@ -1200,11 +1203,16 @@
     "save": "Save",
     "saveLabel": "Do you want to save your changes?",
     "search": "Search",
+    "searchMembers": "Search Members",
+    "searchAddMembers": "Search & Add Members",
     "select": "Select",
     "selectLanguage": "Select a language",
     "service": "Service",
     "settings": "Settings",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
+    "selectMembers": "Select Members",
+    "showLess": "Show Less",
+    "showMore": "Show More",
     "status": "Status",
     "step": "Step",
     "submit": "Submit",
@@ -2613,6 +2621,9 @@
     }
   },
   "cmc": {
+    "failures": {
+      "preCheckFailure": "Status check of org failed"
+    },
     "menu": {
       "mobileServices": "Mobile Services",
       "mobileConvergenceService": "Mobile Convergence Service"
@@ -2627,6 +2638,18 @@
     },
     "details": {
       "invalidInput": "Always provide valid mobile number when enabling"
+    },
+    "settingsPage": {
+      "title": "Mobile  Convergence service",
+      "description": "Settings for the Mobile Converence service",
+      "mobileProvider": {
+        "title": "Mobile Provider",
+        "description": "Mobile provider for the CMC service"
+      },
+      "serviceProvider": {
+        "title": "Service Provider",
+        "description": "Service provider for the CMC service"
+      }
     }
   },
   "context": {
@@ -3964,6 +3987,9 @@
     "editNumbers": "Edit Phone Numbers",
     "pendingNumbersTooltip": "Numbers can be in pending status for various reasons. Thank you for your patience during normal processing time. If it is taking longer than expected, please contact your provider.",
     "listError": "Failed to load phone number list.",
+    "deleteNumber": "Delete Number",
+    "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
+    "deleteWarning": "This cannot be reversed.  You will lose this number indefinitely.",
     "allNumbers": "{count, plural, =1{# Number} other{# Numbers}}",
     "pendingNumbers": "{count, plural, =1{# Pending Number} other{# Pending Numbers}}",
     "unassignedNumbers": "{count, plural, =1{# Unassigned Number} other{# Unassigned Numbers}}",
@@ -4158,7 +4184,7 @@
     "feature6": "Taxes additional"
   },
   "westucFeatures": {
-    "feature1": "Unlimited* calling in the U.S.",
+    "feature1": "Unlimited calling in the fifty U.S. states subject to West Fair Use Policy.",
     "feature2": "1 DID telephone number (new or ported)",
     "feature3": "Caller ID",
     "feature4": "Directory listing",
@@ -4219,7 +4245,7 @@
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialSparkBoardQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialCareQuantity": "K1 and K2 licenses should be between 1 and 50 each and not exceed the Licenses Quantity in total.",
-    "careLicenseCountExceedsTotalCount": "Care license requested is more than the message license quantity.",
+    "careLicenseCountExceedsTotalCount": "Number of Licenses should be between 1 and 999 and no less than total Care license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Devices",
     "roomSystem": "Room Device",
@@ -4703,7 +4729,10 @@
     "saved": "The settings are saved. You will have to reboot the device for the changes to take effect",
     "t38Warning": "Warning: T.38 faxes will not be encrypted",
     "t38Label": "T.38 Fax Protocol",
-    "savedT38": "T.38 settings updated"
+    "savedT38": "T.38 settings updated",
+    "cpcWarning": "Enable analog devices that support auto disconnect based on silence detection",
+    "cpcLabel": "Silence Detection",
+    "savedCpc": "Silence Detection successfully updated"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -6430,14 +6459,19 @@
     "modalTitle": "Hunt Group",
     "title": "hunt group",
     "createTitle": "Create Hunt Group",
+    "settingsTitle": "Hunt Group Settings",
+    "callSettingsTitle": "Call Settings",
+    "huntingMethodMembersTitle": "Hunting Method and Members",
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
-    "numberPlaceholder": "Select Hunt Group Numbers",
-    "numberHint": "When this number is called, this hunt group is activated",
+    "numberTitle": "Select Internal Numbers",
+    "numberDesc": "When these numbers are called, this hunt group is activated.",
+    "numberPlaceholder": "Enter Extension",
+    "numberHint": "e.g. 5555",
     "methodTitle": "Select Hunting Method",
-    "methodHint": "This defines which member gets the call first.",
-    "memberPlaceholder": "Select Hunt Group Members",
+    "methodHint": "Define which member gets the call first.",
     "memberHint": "These are the users who pickup the hunt group calls",
+    "fallbackTitle": "Select Fallback Destination Number",
     "fallbackPlaceholder": "Enter Fallback Destination",
     "fallbackHint": "This is where the call goes if it was not answered by this hunt group",
     "voiceCheckLabel": "Send call directly to voicemail",
@@ -6483,26 +6517,26 @@
       }
     },
     "nameLabel": "Hunt Group Name",
-    "nameDesc": "This will also be the name callers see (i.e. alerting name).",
+    "nameDesc": "Name callers will see when alerted.",
     "numbersLabel": "Hunt Group Numbers",
     "numberSingular": "Number",
     "numberPlural": "Numbers",
     "numbersInputPlaceHolder": "Start typing here",
     "ringTimeLabel": "Member's Max Ring Time",
-    "ringTimeSecondaryLabel": "secs",
-    "ringTimeDesc": "The maximum amount of time a member's line will ring before it sent to the next number.",
+    "ringTimeSecondaryLabel": "Seconds",
+    "ringTimeDesc": "Maximum amount of time a member's line will ring before it is sent to the next number.",
     "waitTimeLabel": "Caller Max Wait Time",
-    "waitTimeSecondaryLabel": "mins",
-    "waitTimeDesc": "The maximum time a caller will be in waiting before sent to fallback destination.",
+    "waitTimeSecondaryLabel": "Minutes",
+    "waitTimeDesc": "Maximum amount of time caller will wait before being sent to fallback destination.",
     "fallbackLabel": "Fallback Destination",
     "fallbackDesc": "This is where the call goes if it was not answered by this hunt group.",
-    "methodAndMemberLabel": "Hunting Method and Members",
-    "methodDesc": "This defines which member gets the call first.",
+    "methodLabel": "Hunting Method",
+    "methodDesc": "Define which member gets the call first.",
+    "membersLabel": "Hunt Group Members",
     "membersDesc": "Drag and drop to reorder members hunt group sequence.",
-    "saveLabel": "Do you want to save your changes?",
     "remove": "Remove",
     "removeMem": "Remove Member",
-    "addMemberLabel": "Add & Search Members",
+    "addMemberLabel": "Search & Add Members",
     "successSave": "'{{huntGroupName}}' hunt group has been created successfully",
     "successUpdate": "'{{huntGroupName}}' hunt group has been updated successfully",
     "errorNamePattern": "May only contain alphanumeric, space, period, underscore and dash.",
@@ -6518,7 +6552,7 @@
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select at least one member",
     "invalidFallback": "Select a number or enter a new valid number",
-    "error": {
+    "error" : {
       "required": "This field is required",
       "minRingSecs": "The shortest ring duration is {{secs}} seconds",
       "maxRingSecs": "The longest ring duration is {{secs}} seconds"

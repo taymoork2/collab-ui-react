@@ -110,4 +110,70 @@ describe('Component: hsClusterCard', function () {
       });
     });
   });
+  // ControllerHdsCluster is covering tests for HDS cluster types
+  describe('ControllerHdsCluster', function () {
+    let $componentController;
+    let controllerHdsCluster, $state;
+
+    let mockHDSCluster = {
+      id: 2,
+      name: 'IntegrationCluster',
+      connectors: [{
+        id: 'hds_app@2e2dc646db1e4369a40e013e05e6d092',
+        connectorType: 'hds_app',
+        hostname: 'hds-test1.cisco.com',
+        hostSerial: '2e2dc646db1e4',
+      }],
+      targetType: 'hds_app',
+      servicesStatuses: [{
+        serviceId: 'spark-hybrid-datasecurity',
+        state: {
+          name: 'running',
+          severity: 1,
+          label: 'unknown',
+        },
+        total: 1,
+      }],
+    };
+
+    beforeEach(inject(function ($injector) {
+      $componentController = $injector.get('$componentController');
+      $state = $injector.get('$state');
+      controllerHdsCluster = $componentController('hsClusterCard', {
+        $scope: {},
+      }, {
+        cluster: mockHDSCluster,
+      });
+    }));
+
+    it('should bind to the correct cluster type', function () {
+      expect(controllerHdsCluster.cluster.targetType).toEqual(mockHDSCluster.targetType);
+    });
+
+    it('should hide footer', function () {
+      expect(controllerHdsCluster.hideFooter(controllerHdsCluster.cluster)).toBe(false);
+    });
+
+    it('should have services', function () {
+      expect(controllerHdsCluster.hasServices(controllerHdsCluster.cluster)).toBe(true);
+    });
+
+    it('clicking on settings should change state to hds-cluster.settings', function () {
+      spyOn($state, 'go');
+      controllerHdsCluster.openSettings(controllerHdsCluster.cluster.targetType,
+                                        controllerHdsCluster.cluster.id);
+      expect($state.go).toHaveBeenCalledWith('hds-cluster.settings',
+                                             { id: controllerHdsCluster.cluster.id });
+    });
+
+    it('clicking on service name should change state to hds-cluster.list', function () {
+      spyOn($state, 'go');
+      controllerHdsCluster.openSettings(controllerHdsCluster.cluster.targetType,
+                                        controllerHdsCluster.cluster.id);
+      expect($state.go).toHaveBeenCalledWith('hds-cluster.settings', { id: 2 });
+    });
+
+
+  });
+
 });

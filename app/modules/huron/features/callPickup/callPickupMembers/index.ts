@@ -1,7 +1,7 @@
 import { CallPickupMembersComponent } from './callPickupMembers.component';
 import memberService from 'modules/huron/members';
 import notifications from 'modules/core/notifications';
-import featureMemberService from 'modules/huron/features';
+import featureMemberService from 'modules/huron/features/services';
 import callPickupGroupService from 'modules/huron/features/callPickup/services/';
 import focusModule from 'modules/core/focus';
 

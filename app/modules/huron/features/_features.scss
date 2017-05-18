@@ -2,8 +2,6 @@
  *      Features Style imports
  ************************************/
 
-@import 'components/callFeatureEdit/call-feature-edit';
-@import 'components/callFeatureMembers/call-feature-members';
 @import 'autoAttendant/aa';
 
 @import '~collab-ui/scss/settings/colors';
@@ -15,9 +13,7 @@
   max-width: 100%;
   padding: 0 1rem;
 
-  .btn--right.saveCallPark:not(.disabled),
-  .btn--right.saveCallPickup:not(.disabled),
-  .btn--right.savePagingGroup:not(.disabled) {
+  .btn--right.save-call-feature:not(.disabled) {
     background: $color-cta;
   }
 
@@ -28,4 +24,8 @@
 
 .cs-setupassistant--content {
   height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
+}
+
+.feature-step-title {
+  margin-bottom: rem-calc(40);
 }

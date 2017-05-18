@@ -559,6 +559,23 @@ describe('Huron Device', function () {
     });
   });
 
+  describe('CPC support', function () {
+    beforeEach(initController);
+
+
+    it('should init controller', function () {
+      expect(controller).toBeDefined();
+    });
+
+    it('should update CPC setting', function () {
+      controller.saveCpcSettings();
+      $scope.$apply();
+
+      $timeout.flush();
+      expect($stateParams.huronDeviceService.setSettingsForAta).toHaveBeenCalledWith(jasmine.any(Object), { cpcDelay: 2 });
+    });
+  });
+
   describe('country support', function () {
     beforeEach(initController);
 

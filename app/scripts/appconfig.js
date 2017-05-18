@@ -2883,7 +2883,7 @@
                 template: '<uc-huron-details-header></uc-huron-details-header>',
               },
               'main': {
-                template: '<div ui-view></div>',
+                template: '<div ui-view autoscroll="true"></div>',
               },
             },
             resolve: {
@@ -3046,7 +3046,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/features/callPark/callPark'));
+                  done(require('modules/call/features/call-park'));
                 }, 'call-park');
               }),
             },
@@ -3061,7 +3061,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/features/callPark/callPark'));
+                  done(require('modules/call/features/call-park'));
                 }, 'call-park');
               }),
             },
@@ -3069,18 +3069,24 @@
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
             parent: 'hurondetails',
-            templateUrl: 'modules/huron/features/huntGroup/hgSetupAssistant.tpl.html',
-            controller: 'HuntGroupSetupAssistantCtrl',
-            controllerAs: 'huntGroupSA',
+            template: '<uc-hunt-group></uc-hunt-group>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/call/features/hunt-group'], done);
+              }),
+            },
           })
           .state('huntgroupedit', {
             url: '/features/hg/edit',
             parent: 'main',
-            templateUrl: 'modules/huron/features/huntGroup/edit/hgEdit.tpl.html',
-            controller: 'HuntGroupEditCtrl',
-            controllerAs: 'hge',
+            template: '<uc-hunt-group></uc-hunt-group>',
             params: {
               feature: null,
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/call/features/hunt-group'], done);
+              }),
             },
           })
           .state('huronPagingGroup', {

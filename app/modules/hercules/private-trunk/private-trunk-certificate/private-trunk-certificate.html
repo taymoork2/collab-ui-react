@@ -33,7 +33,7 @@
             file-type=".pem .crt .der"
             file-suffix="pem crt der">
             <label class="icon-label" for="upload">
-              <span class="icon icon-upload-contain"></span>
+              <span class="icon icon-upload"></span>
               <span class="body-small span-text" translate="hercules.settings.call.certificatesUpload"></span>
             </label>
             <input
@@ -54,14 +54,14 @@
     </div>
       <div ng-repeat="cert in $ctrl.formattedCertList">
         <div class="columns large-6 medium-6 small-6">
-          <div class="box multibox-margin">
+          <div class="box multibox-margin padding-multi">
             <div>
               <i class="icon icon-certified icon-lg cert-icon cert-color"></i>
-              <span class="span-filename" >{{cert.commonName}}</span>
+              <span class="span-filename">{{cert.commonName}}</span>
               <i class="icon icon-close close-icon-align" ng-click="$ctrl.deleteCert(cert.certId)"></i>
             </div>
             <div ng-repeat="(key, value) in cert" ng-if="key!=='certId'">
-              <div class="body-small columns large-6 medium-6 small-6 cert-word-wrap bold ">{{$ctrl.certLabels[$index]}}</div>
+              <div class="body-small columns large-6 medium-6 small-6 cert-word-wrap bold padding-labels">{{$ctrl.certLabels[$index]}}</div>
               <div ng-if="$index<8" class="body-small columns medium-6 small-6 large-6 cert-word-wrap">{{value}}</div>
               <div ng-if="$index>7" class=" body-small columns medium-6 small-6 large-6">{{value| date:'fullDate'}}</div>
             </div>
@@ -78,7 +78,7 @@
         <a class= "body-small" href="" translate="servicesOverview.cards.privateTrunk.restore" ng-click="$ctrl.deleteAllCerts()">'.'</a>
       </div>
       <div class="columns large-9 medium-12 small-12">
-        <div class="box singlebox-margin">
+        <div class="box multibox-margin">
            <div ng-class="{'box-disabled': $ctrl.formattedCertList.length}">
               <i class="icon icon-certified icon-lg cert-icon" ng-class="{'cert-color': !$ctrl.formattedCertList.length}" ></i>
               <span class="span-filename" translate="servicesOverview.cards.privateTrunk.certificateDefaultList"></span>

@@ -197,13 +197,13 @@ describe('Component: callPickupSetupAssistant', () => {
       expect(this.controller.animation).toEqual('slide-left');
     });
 
-    it('should add class saveCallPickup on last page', function () {
+    it('should add class save-call-feature on last page', function () {
       let arrowButton = 'button.btn--circle.btn--primary.btn--right';
       spyOn(this.controller, 'getLastIndex').and.returnValue(1);
       this.controller.index = 0;
       this.controller.nextPage();
       expect(this.controller.index).toEqual(1);
-      expect(this.view.find(arrowButton)).toHaveClass('saveCallPickup');
+      expect(this.view.find(arrowButton)).toHaveClass('save-call-feature');
     });
 
     it('should decrement index if its last page', function() {
