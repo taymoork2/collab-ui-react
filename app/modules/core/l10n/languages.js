@@ -1,5 +1,3 @@
-(function () {
-  'use strict';
 
   var DEFAULT_LANGUAGE = 'en_US';
 
@@ -168,9 +166,4 @@
     }
   }
 
-  module.exports = angular
-    .module('core.languages', [])
-    .provider('languages', LanguagesProvider)
-    .name;
-
-}());
+  module.exports = LanguagesProvider;
