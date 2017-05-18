@@ -77,10 +77,11 @@
         }).$promise;
       },
 
-      setCompanyMediaOnHold: function (mediaId) {
+      setCompanyMediaOnHold: function (mediaId, assignmentInfo) {
         return MediaManagerService.save({
           orgId: Authinfo.getOrgId(),
           mediaFileId: mediaId,
+          assignments: assignmentInfo,
         }).$promise;
       },
 
