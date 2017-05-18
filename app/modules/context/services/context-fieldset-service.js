@@ -8,6 +8,7 @@
   var createPath = '/dictionary/fieldset/v1';
   var getPath = '/dictionary/fieldset/v1/id/';
   var statusPath = '/dictionary/fieldset/v1/status/';
+  var MAX_ENTRIES_FOR_FIELDSET_SEARCH = 1500;
 
   /* @ngInject */
   function contextFieldsetsService($http, Discovery) {
@@ -32,7 +33,7 @@
           return $http.get(dictionaryUrl + searchPath, {
             params: {
               q: searchQuery,
-              maxEntries: 200,
+              maxEntries: MAX_ENTRIES_FOR_FIELDSET_SEARCH,
             },
           })
             .then(function (response) {
@@ -48,7 +49,7 @@
           return $http.get(dictionaryUrl + searchPath, {
             params: {
               q: searchQuery + fieldId,
-              maxEntries: 200,
+              maxEntries: MAX_ENTRIES_FOR_FIELDSET_SEARCH,
             },
           });
         }).then(function (response) {

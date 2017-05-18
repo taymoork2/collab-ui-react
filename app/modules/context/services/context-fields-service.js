@@ -7,6 +7,7 @@
   var searchPath = '/dictionary/field/v1/search';
   var createPath = '/dictionary/field/v1';
   var idPath = '/dictionary/field/v1/id/';
+  var MAX_ENTRIES_FOR_FIELD_SEARCH = 1500;
 
   /* @ngInject */
   function contextFieldsService($http, Discovery) {
@@ -30,7 +31,7 @@
           return $http.get(dictionaryUrl + searchPath, {
             params: {
               q: searchQuery,
-              maxEntries: 200,
+              maxEntries: MAX_ENTRIES_FOR_FIELD_SEARCH,
             },
           });
         })
