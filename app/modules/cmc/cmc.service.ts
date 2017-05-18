@@ -4,6 +4,9 @@ import { ICmcOrgStatusResponse } from './cmc.interface';
 
 export class CmcService {
 
+  private dockerUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
+  private useDocker: boolean = false;
+
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
@@ -49,7 +52,14 @@ export class CmcService {
 
   // TODO Adapt to cmc status call
   public preCheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
-    return this.CmcServiceMock.mockStatus(orgId);
+    if (this.useDocker) {
+      let url: string = this.dockerUrl + `/organizations/${orgId}/status`;
+      return this.$http.get(url).then((response) => {
+        return response.data;
+      });
+    } else {
+      return this.CmcServiceMock.mockStatus(orgId);
+    }
   }
 
   private hasCmcService(services: string[]): boolean {
