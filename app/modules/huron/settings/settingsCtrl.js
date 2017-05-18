@@ -1831,7 +1831,7 @@
     }
 
     function saveCallerId() {
-      var rawPattern = PhoneNumberService.getNationalFormat(vm.model.callerId.callerIdNumber);
+      var rawPattern = PhoneNumberService.getE164Format(vm.model.callerId.callerIdNumber, vm.customer.countryCode);
       var newCallerIdNumber = _.find(vm.allExternalNumbers, function (externalNumber) {
         return externalNumber.pattern === rawPattern;
       });
