@@ -5,13 +5,14 @@ class AddResourceComponentCtrl implements ng.IComponentController {
   private modalWindowOptions: any;
   private isPartnerAdmin = false;
   private hasPartnerRegistrationFeatureToggle = false;
-
+  public title: string;
   /* @ngInject */
   constructor(
     private $modal,
     private $state,
     private Authinfo,
     private FeatureToggleService,
+    private $translate: ng.translate.ITranslateService,
   ) {  }
 
   public $onInit() {
@@ -22,6 +23,10 @@ class AddResourceComponentCtrl implements ng.IComponentController {
       .then(enabled => {
         this.hasPartnerRegistrationFeatureToggle = enabled;
       });
+    this.title = this.$translate.instant('hercules.overview.add-resource-button');
+    if (this.$state.current.name === 'private-trunk-overview.settings' || this.$state.current.name === 'private-trunk-overview.list') {
+      this.title = this.$translate.instant('servicesOverview.cards.privateTrunk.destinationTitle');
+    }
   }
 
   public openAddResourceModal = () => {

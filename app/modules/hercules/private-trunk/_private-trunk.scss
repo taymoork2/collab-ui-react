@@ -1,7 +1,7 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/tools/functions/core';
-
+@import './private-trunk-setup/_private-trunk-setup';
 .private-trunk {
   .padding-p {
     padding-right: 4.5rem;
@@ -81,14 +81,16 @@
     position: relative;
     padding-right: 1.5rem;
     padding-top: 1rem;
+    line-height: 1;
   }
 
   .margin-input {
-    margin: rem-calc(16) 0;
+    margin: 1rem 0;
   }
 
   .cert-top-margin {
     margin-top: 1.5rem;
+    margin-bottom: 1rem;
   }
 
   .cert-left {
@@ -105,15 +107,19 @@
   }
 
   .box.singlebox-margin {
-    margin: 0 1rem .5rem;
+    margin: .5rem 0 .5rem -.5rem;
   }
 
   .box.multibox-margin {
-    @include vr-spacing(m, .5);
+    margin: 1rem 0 .5rem -.5rem;
   }
 
   .padding-multi {
     padding-bottom: .5rem;
+  }
+
+  .margin-left {
+    margin-left: 1.5rem;
   }
 
   .columns .box {
@@ -129,7 +135,9 @@
       box-shadow: 0 1px 2px 0 $gray-light-2, inset 0 1px 0 0 $gray-lightest;
       border-radius: 2px;
     }
-
+    &:nth-child(2n+1) {
+      margin-right: 1rem;
+    }
     .box-content {
       align-self: center;
       display: flex;
@@ -148,6 +156,7 @@
       &:focus {
         color: $brand-primary;
       }
+      line-height: 1.5;
     }
 
     .icon-label {

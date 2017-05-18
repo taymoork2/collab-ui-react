@@ -1,5 +1,5 @@
 <div ng-form="privateTrunkDestinationForm" class="private-trunk">
-  <h5 translate="servicesOverview.cards.privateTrunk.destinationTitle"></h5>
+  <h5 ng-if=$ctrl.isFirstTimeSetup translate="servicesOverview.cards.privateTrunk.destinationTitle"></h5>
      <div class="cs-radio-group">
         <input ng-if="$ctrl.isFirstTimeSetup"
         cs-input
