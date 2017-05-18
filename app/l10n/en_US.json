@@ -282,6 +282,7 @@
     }
   },
   "onboardModal": {
+    "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
