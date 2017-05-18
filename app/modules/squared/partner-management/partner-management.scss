@@ -4,7 +4,7 @@
 @import '~collab-ui/scss/tools/placeholders/page-layout';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
-.partner-main {
+.partner-management-main {
   font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background-color: $brand-white;
   margin-left: 2rem;
@@ -169,7 +169,7 @@
   }
 
   .pm-btn {
-    width: 147px;
+    min-width: 147px;
     white-space: nowrap;
   }
 

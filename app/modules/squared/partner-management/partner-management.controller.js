@@ -13,7 +13,6 @@
     var vm = this;
     var svc = PartnerManagementService;
 
-    $scope.vm = vm;
     vm.isLoading = false;
 
     vm.partnerPlaceholder = $translate.instant('partnerManagement.create.selectPartnerPlaceholder');
@@ -101,7 +100,7 @@
         if (!_.isEmpty(resp.data) &&
           (resp.data.message === ('Organization ' + vm.data.name + ' already exists in CI'))) {
           vm.duplicateName = vm.data.name;
-          $scope.$$childHead.createForm.name.$validate();
+          vm.createForm.name.$validate();
         } else {
           Notification.errorWithTrackingId(resp,
             'partnerManagement.error.createFailed',

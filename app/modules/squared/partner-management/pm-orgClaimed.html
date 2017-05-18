@@ -1,4 +1,4 @@
-<div class="partner-main centered" tabindex="0">
+<div class="partner-management-main centered" tabindex="0">
     <div class="row">
       <div class="main-heading">
         <h2 translate="partnerManagement.orgClaimed.heading"></h2>
@@ -26,7 +26,7 @@
       <hr class="pm-rule">
       <div class="row">
         <div class="columns medium-12 text-right">
-            <button cs-btn id="done" type="button" ng-click="vm.done()" class="btn btn--primary pm-btn" loading="vm.isLoading">
+            <button cs-btn id="done" type="button" ng-click="vm.done()" class="btn btn--primary pm-btn" ng-disabled="vm.showSpinner">
                 <span translate="partnerManagement.done"></span>
             </button>
         </div>
