@@ -4184,7 +4184,7 @@
     "feature6": "Taxes additional"
   },
   "westucFeatures": {
-    "feature1": "Unlimited* calling in the U.S.",
+    "feature1": "Unlimited calling in the fifty U.S. states subject to West Fair Use Policy.",
     "feature2": "1 DID telephone number (new or ported)",
     "feature3": "Caller ID",
     "feature4": "Directory listing",
@@ -4729,7 +4729,10 @@
     "saved": "The settings are saved. You will have to reboot the device for the changes to take effect",
     "t38Warning": "Warning: T.38 faxes will not be encrypted",
     "t38Label": "T.38 Fax Protocol",
-    "savedT38": "T.38 settings updated"
+    "savedT38": "T.38 settings updated",
+    "cpcWarning": "Enable analog devices that support auto disconnect based on silence detection",
+    "cpcLabel": "Silence Detection",
+    "savedCpc": "Silence Detection successfully updated"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
