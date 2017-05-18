@@ -148,7 +148,7 @@
 
       // flag as we need to alert if the current Ce uses this variable.
       // Current Ce will not be returned in list of dependant Ce
-      var thisCeHasVar = AACommonService.collectThisCeActionValue(vm.ui).filter(function (value) {
+      var thisCeHasVar = AACommonService.collectThisCeActionValue(vm.ui, true, true).filter(function (value) {
         return _.isEqual(value, varNameToCheck);
       }).length > 1; // one for this CallerInput
 
