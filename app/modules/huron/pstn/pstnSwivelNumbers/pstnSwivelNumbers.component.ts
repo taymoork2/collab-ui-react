@@ -37,7 +37,8 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   constructor(private $timeout: ng.ITimeoutService,
               private Notification: Notification,
               private PhoneNumberService: PhoneNumberService,
-              private $translate: ng.translate.ITranslateService) {
+              private $translate: ng.translate.ITranslateService,
+              private FeatureToggleService) {
 
     this.tokenplaceholder = this.$translate.instant('didManageModal.inputPlacehoder');
     this.tokenmethods = new TokenMethods(
@@ -46,6 +47,15 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
       this.editToken.bind(this),
       this.removeToken.bind(this),
     );
+  }
+
+  public $onInit() {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
+      .then((result) => {
+        if (result) {
+          _.set(this.tokenoptions, 'limit', 250);
+        }
+      });
   }
 
   public $onChanges(changes): void {

@@ -169,7 +169,7 @@ describe('Controller: LineListCtrl', function () {
     it('should change the state on reseller exists true', function () {
       controller.showProviderDetails();
 
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: customerInfo.orgId,
         customerName: customerInfo.customerName,
         customerEmail: customerInfo.customerAdminEmail,

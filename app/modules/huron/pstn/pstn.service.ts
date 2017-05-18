@@ -413,6 +413,42 @@ export class PstnService {
     return this.$q.all(promises);
   }
 
+  public orderNumbersV2Swivel(customerId: string, numbers: Array<string>): ng.IPromise<any> {
+    let promises: any = [];
+    let tfnNumbers: any = [];
+
+    tfnNumbers = _.remove(numbers, number => {
+      return this.PhoneNumberService.getPhoneNumberType(number) === PhoneNumberType.TOLL_FREE;
+    });
+
+    let tfnPayload = {
+      numbers: tfnNumbers,
+      numberType: NUMTYPE_TOLLFREE,
+      createdBy: this.setCreatedBy(),
+    };
+
+    let didPayload = {
+      numbers: numbers,
+      numberType: NUMTYPE_DID,
+      createdBy: this.setCreatedBy(),
+    };
+
+    if (numbers.length > 0) {
+      let pstnPromise = this.TerminusOrderV2Service.save({
+          customerId: customerId,
+      }, didPayload).$promise;
+      promises.push(pstnPromise);
+    }
+
+    if (tfnNumbers.length > 0) {
+      let tollFreePromise = this.TerminusOrderV2Service.save({
+          customerId: customerId,
+      }, tfnPayload).$promise;
+      promises.push(tollFreePromise);
+    }
+    return this.$q.all(promises);
+  }
+
   public portNumbers(customerId: string, _carrierId: string, numbers: Array<string>): ng.IPromise<any> {
     let promises: any = [];
     let tfnNumbers: any = [];

@@ -63,6 +63,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
   public tokenmethods: TokenMethods;
   public titles: {};
+  public dismiss: Function;
 
   private did: DirectInwardDialing = new DirectInwardDialing();
 
@@ -256,6 +257,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         });
         return;
       case 7:
+        this.PstnModel.clear();
         this.close();
         return;
     }
@@ -384,5 +386,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public onAcknowledge(value: boolean): void {
     this.emergencyAcknowledge = value;
+  }
+
+  public dismissModal() {
+    this.PstnModel.clear();
+    this.dismiss();
   }
 }
