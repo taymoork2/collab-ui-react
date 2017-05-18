@@ -4703,7 +4703,10 @@
     "saved": "The settings are saved. You will have to reboot the device for the changes to take effect",
     "t38Warning": "Warning: T.38 faxes will not be encrypted",
     "t38Label": "T.38 Fax Protocol",
-    "savedT38": "T.38 settings updated"
+    "savedT38": "T.38 settings updated",
+    "cpcWarning": "Enable analog devices that support auto disconnect based on silence detection",
+    "cpcLabel": "Silence Detection",
+    "savedCpc": "Silence Detection successfully updated"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
