@@ -99,8 +99,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public getCapabilities(): void {
     if (!this.isTrial) {
       this.PstnWizardService.hasTollFreeCapability().then(result => {
-        this.showTollFreeNumbers = result;
-        this.getTollFreeInventory();
+        if (result) {
+          this.showTollFreeNumbers = result;
+          this.getTollFreeInventory();
+        }
       })
       .catch(response => this.Notification.errorResponse(response, 'pstnSetup.errors.capabilities'));
     }
