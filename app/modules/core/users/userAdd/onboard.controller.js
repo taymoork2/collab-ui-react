@@ -824,7 +824,7 @@ require('./_user-add.scss');
 
     var getAccountServices = function () {
       var services = {
-        message: Authinfo.getMessageServices(),
+        message: Authinfo.getMessageServices({ assignableOnly: true }),
         conference: Authinfo.getConferenceServices(),
         communication: Authinfo.getCommunicationServices(),
         care: Authinfo.getCareServices(),
@@ -832,13 +832,14 @@ require('./_user-add.scss');
       if (services.message) {
         services.message = OnboardService.mergeMultipleLicenseSubscriptions(services.message);
         $scope.messageFeatures = $scope.messageFeatures.concat(services.message);
+        var licenses = _.get($scope.messageFeatures, '[1].licenses', []);
         if (userLicenseIds) {
-          _.forEach($scope.messageFeatures[1].licenses, function (license) {
+          _.forEach(licenses, function (license) {
             license.model = userLicenseIds.indexOf(license.licenseId) >= 0;
           });
         }
 
-        if ($scope.messageFeatures[1].licenses.length > 1) {
+        if (licenses.length > 1) {
           $scope.radioStates.msgRadio = true;
         }
       }
