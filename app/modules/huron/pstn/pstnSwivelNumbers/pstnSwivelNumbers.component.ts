@@ -24,7 +24,6 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   public tokenoptions: Object = {
     delimiter: [',', ';'],
     createTokensOnBlur: true,
-    limit: 50,
     tokens: [],
     minLength: 9,
     beautify: false,
@@ -50,11 +49,14 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   }
 
   public $onInit() {
+    const tokenfieldlimit: string = 'limit';
+    const maxNumberOfByopTokens: number = 250;
+    const maxNumberOfTokens: number = 50;
+
     this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
-      .then((result) => {
-        if (result) {
-          _.set(this.tokenoptions, 'limit', 250);
-        }
+      .then((supported) => {
+        let numberOfTokens = supported ? maxNumberOfByopTokens : maxNumberOfTokens;
+        _.set(this.tokenoptions, tokenfieldlimit, numberOfTokens);
       });
   }
 

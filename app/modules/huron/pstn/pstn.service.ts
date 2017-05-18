@@ -413,9 +413,9 @@ export class PstnService {
     return this.$q.all(promises);
   }
 
-  public orderNumbersV2Swivel(customerId: string, numbers: Array<string>): ng.IPromise<any> {
-    let promises: any = [];
-    let tfnNumbers: any = [];
+  public orderNumbersV2Swivel(customerId: string, numbers: Array<string>): ng.IPromise<any[]> {
+    let promises: Array<ng.IPromise<any>> = [];
+    let tfnNumbers: string[] = [];
 
     tfnNumbers = _.remove(numbers, number => {
       return this.PhoneNumberService.getPhoneNumberType(number) === PhoneNumberType.TOLL_FREE;

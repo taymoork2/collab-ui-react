@@ -257,8 +257,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         });
         return;
       case 7:
-        this.PstnModel.clear();
-        this.close();
+        this.dismissModal();
         return;
     }
     this.step += 1;

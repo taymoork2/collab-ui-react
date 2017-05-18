@@ -161,7 +161,7 @@ export class PstnWizardService {
   }
 
   private createNumbers(): ng.IPromise<any> {
-    let promises: any = [];
+    let promises: Array<ng.IPromise<any>> = [];
     let errors: any = [];
     let promise;
 
