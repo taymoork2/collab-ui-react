@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var Feature = require('./feature.helper-class');
+
   module.exports = OnboardService;
 
   /* @ngInject */

@@ -1259,11 +1259,7 @@ require('./_user-add.scss');
     //***
     //*********************************************************************
 
-    function Feature(name, state) {
-      this.entitlementName = name;
-      this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
-      this.properties = {};
-    }
+    var Feature = require('./feature.helper-class');
 
     function LicenseFeature(name, bAdd) {
       return {
