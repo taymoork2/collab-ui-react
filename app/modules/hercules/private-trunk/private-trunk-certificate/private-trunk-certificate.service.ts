@@ -68,7 +68,10 @@ export class PrivateTrunkCertificateService {
       type: 'dialog',
     })
       .result.then(() => {
-        return this.deleteUploadedCerts();
+        _.forEach(this.formattedCertList, (cert) => {
+          this.CertService.deleteCert(cert.certId);
+        });
+        this.formattedCertList = [];
       });
   }
 
