@@ -1,9 +1,9 @@
 <div ng-form="privateTrunkCertificateForm" class="private-trunk">
   <h5 ng-if="!$ctrl.isFirstTimeSetup" class="cert-top-margin" translate="servicesOverview.cards.privateTrunk.certificateTitle"></h5>
   <h4 ng-if="$ctrl.isFirstTimeSetup" translate="servicesOverview.cards.privateTrunk.certificateTitle"></h4>
-  <span class="span-font-size" translate="servicesOverview.cards.privateTrunk.certDesc" translate-values="{href: 'https://help.webex.com/docs/DOC-4302'}"></span>
-  <span ng-if="$ctrl.isCustomCertificateEnabled" class="span-font-size" translate="servicesOverview.cards.privateTrunk.upload"></span>
-  <span class="span-font-size" translate="servicesOverview.cards.privateTrunk.click" translate-values="{}" ng-click=""></span>
+  <span class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.certDesc" translate-values="{href: 'https://help.webex.com/docs/DOC-4302'}"></span>
+  <span ng-if="$ctrl.isCustomCertificateEnabled" class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.upload"></span>
+  <span class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.click" translate-values="{href: 'http://www.cisco.com/go/private-trunking'}"></span>
   <div ng-if="$ctrl.isCustomCertificateEnabled">
     <div class="margin-input">
       <input
