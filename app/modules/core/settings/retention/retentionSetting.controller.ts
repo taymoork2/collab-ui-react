@@ -136,7 +136,7 @@ export class RetentionSettingController {
     this.selectedRetention = this.getSelectedRetention(this.selectedRetentionType).toString();
     if (this.dataLoaded && this.selectedRetention && this.initialRetention) {
       // confirm if the selected time period is shorter
-      if ((this.selectedRetentionType !== RETENTION_TYPES.INDEFINITE && Number(this.selectedRetention) < Number(this.initialRetention)) || this.initialRetention === '-1') {
+      if ((this.selectedRetentionType !== RETENTION_TYPES.INDEFINITE && ((Number(this.selectedRetention) < Number(this.initialRetention)) || this.initialRetention === '-1'))) {
         this.$modal.open({
           type: 'dialog',
           templateUrl: 'modules/core/settings/retention/confirmLowerRetention.tpl.html',
