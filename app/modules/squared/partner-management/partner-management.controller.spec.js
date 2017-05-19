@@ -12,12 +12,12 @@ describe('PartnerManagementController:', function () {
   var $scope;
   var svc;
   var $state;
-  var ctrl;
+  var vm;
   var Notification;
 
   // TODO: switch this over to using `this.*()` methods for dependency injection
   afterEach(function () {
-    $controller = $q = $scope = svc = $state = ctrl = Notification = undefined;
+    $controller = $q = $scope = svc = $state = vm = Notification = undefined;
   });
 
   beforeEach(inject (function (_$controller_, _$q_, _$rootScope_, _$state_,
@@ -32,7 +32,7 @@ describe('PartnerManagementController:', function () {
   }));
 
   function initController() {
-    ctrl = $controller('PartnerManagementController', {
+    vm = $controller('PartnerManagementController', {
       $scope: $scope,
       $state: $state,
       PartnerManagementService: svc,
@@ -110,11 +110,11 @@ describe('PartnerManagementController:', function () {
     });
 
     it('should clear data when startOver is called', function () {
-      var d = _.clone($scope.vm.data);
-      $scope.vm.data = makeFormData();
-      expect(JSON.stringify(d) === JSON.stringify($scope.vm.data)).toBe(false);
-      $scope.vm.startOver();
-      expect(JSON.stringify(d) === JSON.stringify($scope.vm.data)).toBe(true);
+      var d = _.clone(vm.data);
+      vm.data = makeFormData();
+      expect(JSON.stringify(d) === JSON.stringify(vm.data)).toBe(false);
+      vm.startOver();
+      expect(JSON.stringify(d) === JSON.stringify(vm.data)).toBe(true);
       // Until we have a real solution to GC issues...
       d = undefined;
     });
@@ -127,11 +127,11 @@ describe('PartnerManagementController:', function () {
           data: { orgMatchBy: 'EMAIL_ADDRESS',
                   organizations: [{ orgId: '123', displayName: 'test name', }] },
         }));
-        $scope.vm.search();
+        vm.search();
         $scope.$apply();
         expect($state.go).toHaveBeenCalledWith('partnerManagement.orgExists');
-        $scope.vm.data.orgDetails[0].value = ''; // blank out date due to locale issues
-        expect(JSON.stringify($scope.vm.data.orgDetails)).toEqual(getOrgDetailsString());
+        vm.data.orgDetails[0].value = ''; // blank out date due to locale issues
+        expect(JSON.stringify(vm.data.orgDetails)).toEqual(getOrgDetailsString());
       });
 
       it('should go to orgClaimed when search returns DOMAIN_CLAIMED', function () {
@@ -140,7 +140,7 @@ describe('PartnerManagementController:', function () {
           data: { orgMatchBy: 'DOMAIN_CLAIMED',
                   organizations: [{ orgId: '123', displayName: 'test name', }] },
         }));
-        $scope.vm.search();
+        vm.search();
         $scope.$apply();
         expect($state.go).toHaveBeenCalledWith('partnerManagement.orgClaimed');
       });
@@ -151,7 +151,7 @@ describe('PartnerManagementController:', function () {
           data: { orgMatchBy: 'DOMAIN',
                   organizations: [{ orgId: '123', displayName: 'test name', }] },
         }));
-        $scope.vm.search();
+        vm.search();
         $scope.$apply();
         expect($state.go).toHaveBeenCalledWith('partnerManagement.searchResults');
       });
@@ -162,7 +162,7 @@ describe('PartnerManagementController:', function () {
           data: { orgMatchBy: 'NO_MATCH',
                   organizations: [{ orgId: '123', displayName: 'test name', }] },
         }));
-        $scope.vm.search();
+        vm.search();
         $scope.$apply();
         expect($state.go).toHaveBeenCalledWith('partnerManagement.create');
       });
@@ -178,14 +178,14 @@ describe('PartnerManagementController:', function () {
             data: { orgMatchBy: 'INVALID',
                     organizations: [{ orgId: '123', displayName: 'test name', }] },
           }));
-          $scope.vm.search();
+          vm.search();
           $scope.$apply();
           expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         });
 
         it('should show error when search does not return 200', function () {
           spyOn(svc, 'search').and.returnValue($q.reject({ status: 400, }));
-          $scope.vm.search();
+          vm.search();
           $scope.$apply();
           expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         });
@@ -195,7 +195,7 @@ describe('PartnerManagementController:', function () {
     // CREATE API
     describe('create API', function () {
       beforeEach( function () {
-        $scope.vm.data = makeFormData();
+        vm.data = makeFormData();
         $scope.$$childHead = {
           createForm: { name: { $validate: function () { return true; }, }}
         };
@@ -203,7 +203,7 @@ describe('PartnerManagementController:', function () {
 
       it('should show got to createSuccess on successful resp', function () {
         spyOn(svc, 'create').and.returnValue($q.when({ status: 200, }));
-        $scope.vm.create();
+        vm.create();
         $scope.$apply();
         expect($state.go).toHaveBeenCalledWith('partnerManagement.createSuccess');
       });
@@ -215,16 +215,17 @@ describe('PartnerManagementController:', function () {
 
         it('should invalidate form on duplicate name', function () {
           spyOn(svc, 'create').and.returnValue($q.reject({ status: 409,
-            data: { message: 'Organization ' + $scope.vm.data.name +
+            data: { message: 'Organization ' + vm.data.name +
               ' already exists in CI' }}));
-          $scope.vm.create();
+          vm.createForm = {name: {$validate: _.noop}};
+          vm.create();
           $scope.$apply();
-          expect($scope.vm.duplicateName).toBe($scope.vm.data.name);
+          expect(vm.duplicateName).toBe(vm.data.name);
         });
 
         it ('should show error when create fails', function () {
           spyOn(svc, 'create').and.returnValue($q.reject({ status: 504, }));
-          $scope.vm.create();
+          vm.create();
           $scope.$apply();
           expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         })
