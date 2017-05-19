@@ -31,53 +31,45 @@
     };
 
     obj.isCIEnabledSite = function (siteUrl) {
-      var funcName = "isCIEnabledSite()";
-      var logMsg = "";
+      // var funcName = "isCIEnabledSite()";
+      // var logMsg = "";
 
       var licenses = Authinfo.getLicenses();
-      var result = true;
 
       var confLicenses = _.filter(licenses, {
+        licenseType: 'CONFERENCING',
+        siteUrl: siteUrl,
+      });
+
+      var cmrLicenses = _.filter(licenses, {
+        licenseType: 'CMR',
+        siteUrl: siteUrl,
+      });
+
+      var confLicensesNotCI = _.filter(licenses, {
         siteUrl: siteUrl,
         licenseType: 'CONFERENCING',
         isCIUnifiedSite: false,
       });
 
+      var cmrLicensesNotCI = _.filter(licenses, {
+        licenseType: 'CMR',
+        siteUrl: siteUrl,
+        isCIUnifiedSite: false,
+      });
+
+      var webexLicensesLen = confLicenses.length + cmrLicenses.length;
+      var webexLicensesNotCILen = confLicensesNotCI.length + cmrLicensesNotCI.length;
+
       if (
-        (null != confLicenses) &&
-        (0 < confLicenses.length)
+        (0 < webexLicensesNotCILen) &&
+        (webexLicensesNotCILen == webexLicensesLen)
       ) {
 
-        logMsg = funcName + "\n" +
-          "siteUrl=" + siteUrl + "\n" +
-          "confLicenses=" + JSON.stringify(confLicenses);
-        $log.log(logMsg);
-
-        result = false;
+        return false;
       }
 
-      if (result) {
-        var cmrLicenses = _.filter(licenses, {
-          siteUrl: siteUrl,
-          licenseType: 'CMR',
-          isCIUnifiedSite: false,
-        });
-
-        if (
-          (null != cmrLicenses) &&
-          (0 < cmrLicenses.length)
-        ) {
-
-          logMsg = funcName + "\n" +
-            "siteUrl=" + siteUrl + "\n" +
-            "cmrLicenses=" + JSON.stringify(cmrLicenses);
-          $log.log(logMsg);
-
-          result = false;
-        }
-      }
-
-      return result;
+      return true;
     }; // isCIEnabledSite()
 
     obj.getSiteNameAndType = function (siteUrl) {

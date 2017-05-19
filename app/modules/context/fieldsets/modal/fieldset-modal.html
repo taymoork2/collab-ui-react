@@ -3,7 +3,8 @@
     <span class="sr-only" translate="common.close"></span>
   </button>
   <h3 ng-if="$ctrl.createMode" class="modal-title" translate="context.dictionary.fieldsetPage.createNew"></h3>
-  <h3 ng-if="!$ctrl.createMode" class="modal-title">
+  <h3 ng-if="!$ctrl.createMode" class="modal-title" tooltip-class="context-tooltip" tooltip-trigger="mouseenter"
+      tooltip-placement="bottom" tooltip-animation="true" tooltip="{{$ctrl.fieldsetData.id}}">
     <span translate="context.dictionary.update"></span>
     <span>{{$ctrl.fieldsetData.id}}</span>
   </h3>
@@ -30,6 +31,7 @@
             cs-input-group-size="medium-12"
             cs-input-messages="$ctrl.validationMessages"
             cs-input-validators="$ctrl.validators"
+            focus-on
             ng-disabled="!$ctrl.createMode">
 
           <!-- DESCRIPTION -->
@@ -54,7 +56,7 @@
 
         <!-- Search fields typeahead input box or error messages-->
         <span ng-if="$ctrl.allSelectableFields.length === 0 && !$ctrl.fetchFailed" translate="context.dictionary.fieldsetPage.noFields"></span>
-        <div  ng-if="$ctrl.allSelectableFields.length === 0 && $ctrl.fetchFailed" class="context-retry-error">
+        <div  ng-if="!$ctrl.allSelectableFields && $ctrl.fetchFailed" class="context-retry-error">
           <i class="icon icon-error"></i>
           <span translate="context.dictionary.fieldsetPage.loadFailure" class="failure-message"></span>
           <button translate="common.retry" class="retry-action" ng-click="$ctrl.loadFields()" ng-disabled="$ctrl.fetchInProgress"></button>
@@ -67,6 +69,7 @@
                    typeahead-template-url="fieldTemplate.html"
                    typeahead-on-select="$ctrl.selectField($item)"
                    placeholder="{{'context.dictionary.fieldsetPage.searchFields' | translate}}"
+                   focus-on
                    typeahead-wait-ms="500"/>
           </div>
           <script type="text/ng-template" id="fieldTemplate.html">

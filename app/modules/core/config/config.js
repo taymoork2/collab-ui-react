@@ -413,6 +413,7 @@
       Application: ['organizations', 'organization-overview'],
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
+      Partner_Management: ['partnerManagement'],
     };
 
     if (config.isDev()) {

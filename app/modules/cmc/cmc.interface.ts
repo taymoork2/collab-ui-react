@@ -11,10 +11,15 @@ export interface ICmcMobileProvider extends ICmcProvider {
   passthroughHeaders?: string[];
 }
 
+export interface ICmcIssue {
+  code: number;
+  message: string;
+}
+
 export interface ICmcOrgStatusResponse {
   status: string;
   details?: {
     providers: {mobileProvider: ICmcMobileProvider, ucProvider: ICmcProvider},
   };
-  issues?: {code: number, message: string}[];
+  issues?: ICmcIssue[];
 }

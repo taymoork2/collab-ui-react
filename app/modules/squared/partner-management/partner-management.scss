@@ -1,0 +1,191 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.partner-management-main {
+  font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: $brand-white;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding-top: 5rem;
+  padding-bottom: 2rem;
+  min-height: 100vh;
+  text-align: center;
+  outline: none;
+  box-shadow: none;
+
+  a:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .icon-exit {
+    display: none;
+  }
+
+  .main-heading {
+    padding-top: 74px;
+    display: inline-block;
+    text-align: left;
+    min-height: 560px;
+
+    .results-header {
+      float: left;
+      padding-right: 40px;
+    }
+
+    .search-form {
+      float: right;
+      width: 310px;
+    }
+
+    .desc-panel {
+      padding-top: 17px;
+      padding-bottom: 4px;
+    }
+
+    .desc-text {
+      font-family: $brand-font-cisco-TT-Extra-Light;
+      font-size: 26px;
+      color: $gray-light-1;
+    }
+
+    .create-form {
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
+
+    .input-checked {
+      float: left;
+    }
+
+    #email-label {
+      margin-bottom: -0.875rem;
+    }
+
+    #check-glyph {
+      padding-left: 10px;
+    }
+
+    #lifeCycleDiv {
+      padding-top: 15px;
+    }
+
+    @media only screen and (max-width: 500px) {
+      .help {
+        font-size: 0.7rem;
+      }
+    }
+
+    .orgClaimed-panel {
+      margin-top: 10px;
+      max-height: 356px;
+      overflow-y: auto;
+
+      .icon {
+        line-height: 15px;
+
+        &.icon-user {
+          bottom: -15px;
+        }
+      }
+    }
+
+    .card-panel {
+      padding-top: 17px;
+      padding-bottom: 120px;
+      padding-left: 0px;
+      margin-left: -8px;
+    }
+
+    .card-article {
+      min-height: 377px;
+      padding-left: 100px;
+    }
+
+    .card-header {
+      padding-left: 0px;
+      padding-bottom: 32px;
+    }
+
+    .card-spinner {
+      padding-right: 100px;
+      padding-top: 40px;
+    }
+
+    .card-header {
+      font-family: $brand-font-thin;
+      font-size: 24px;
+      color: $gray-dark-1;
+    }
+
+    .card-details {
+      overflow: hidden;
+    }
+
+    .card-email {
+      display: inline-block;
+    }
+
+    .results-panal {
+      border-top: 1px solid black;
+    }
+
+    .results-details {
+      border-left: 1px solid black;
+    }
+  }
+
+  .orgExists-heading {
+    padding-top: 64px;
+  }
+
+  h2 {
+    color: $color-primary-base;
+  }
+
+  #btnSearch {
+    float: right;
+    padding-top: 4px;
+  }
+
+  #noMatchText {
+    color: $color-primary-base;
+    text-align: left;
+    padding-left: 86px;
+    width: 420px;
+  }
+
+  .pm-rule {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  .pm-step {
+    color: $gray-light-1;
+    font-size: 16px;
+  }
+
+  .pm-btn {
+    min-width: 147px;
+    white-space: nowrap;
+  }
+
+  .pm-btn-pad {
+    padding-right: 15px;
+  }
+
+  .pm-spinner--large {
+    font-size: 4rem;
+  }
+
+  .pm-16 {
+    padding-bottom: 16px;
+  }
+
+  .dots {
+    font-size: 1rem;
+  }
+}

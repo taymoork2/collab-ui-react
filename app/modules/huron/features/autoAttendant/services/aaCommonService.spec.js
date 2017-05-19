@@ -268,7 +268,7 @@
 
         aaUiModel['openHours'].entries[0].addAction(action);
 
-        var result = AACommonService.collectThisCeActionValue(aaUiModel);
+        var result = AACommonService.collectThisCeActionValue(aaUiModel, true, false);
         expect(result[0]).toEqual('My variable name');
       });
 
@@ -284,7 +284,7 @@
 
         aaUiModel['openHours'].entries[0].addAction(action);
 
-        var result = AACommonService.collectThisCeActionValue(aaUiModel);
+        var result = AACommonService.collectThisCeActionValue(aaUiModel, false, true);
         expect(result[0]).toEqual('My variable name');
 
       });
@@ -299,7 +299,7 @@
 
         aaUiModel['openHours'].entries[0].addAction(action);
 
-        var result = AACommonService.collectThisCeActionValue(aaUiModel);
+        var result = AACommonService.collectThisCeActionValue(aaUiModel, true, false);
         expect(result.length).toEqual(0);
 
       });
@@ -323,7 +323,7 @@
       action2.variableName = 'Open Variable';
       menuOpen.addAction(action2);
 
-      var res = AACommonService.collectThisCeActionValue(aaUiModel);
+      var res = AACommonService.collectThisCeActionValue(aaUiModel, true);
       // verify data returned
       expect(res).toBeDefined(2);
     });

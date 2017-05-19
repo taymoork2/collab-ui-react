@@ -1,1 +1,42 @@
-Placeholder for settings for org: {{$ctrl.orgId}}
+<div class="settings">
+<div class="cs-form__section">
+  <div class="section__info">
+    <div cs-sticky>
+      <h4 class="section__title" translate="cmc.settingsPage.title"></h4>
+    </div>
+  </div>
+  <div class="section__content">
+    <div class="sub-section">
+      <label class="control-label" translate="cmc.settingsPage.mobileProvider.title"></label>
+      <p class="description-block" translate="cmc.settingsPage.mobileProvider.description"></p>
+      <div class="medium-5 display-flex">
+        <cs-select
+          name="cmcMobileProvider"
+          ng-model="$ctrl.mobileProvider"
+          labelfield="label"
+          valuefield="value"
+          filter="false"
+          is-disabled="true"
+        ></cs-select>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <label class="control-label" translate="cmc.settingsPage.serviceProvider.title"></label>
+      <p class="description-block" translate="cmc.settingsPage.serviceProvider.description"></p>
+      <div class="medium-5 display-flex">
+        <cs-select
+          name="cmcServiceProvider"
+          ng-model="$ctrl.ucProvider"
+          labelfield="label"
+          valuefield="value"
+          filter="false"
+          is-disabled="true"
+        ></cs-select>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
