@@ -1,0 +1,18 @@
+<div class="partner-management-main centered" tabindex="0">
+    <div class="row">
+      <div class="columns medium-12 main-heading">
+        <h2>{{'partnerManagement.created.heading' | translate:vm.data }}</h2>
+        <div class="desc-panel">
+            <span class="input-spacing" translate="partnerManagement.created.desc"></span>
+        </div>
+      </div>
+      <hr class="pm-rule">
+      <div class="row">
+        <div class="columns medium-12 text-right">
+            <button cs-btn id="done" type="button" ng-click="vm.done()" class="btn btn--primary pm-btn" loading="vm.isLoading">
+                <span translate="partnerManagement.done"></span>
+            </button>
+        </div>
+      </div>
+    </div>
+</div>

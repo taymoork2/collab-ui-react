@@ -4199,6 +4199,46 @@
           });
 
         $stateProvider
+          .state('partnerManagement-main', {
+            parent: 'mainLazyLoad',
+            views: {
+              'main@': {
+                templateUrl: 'modules/squared/partner-management/pm-main.html',
+              },
+            },
+            abstract: true,
+          })
+          .state('partnerManagement', {
+            url: '/partnerManagement',
+            template: '<div ui-view></div>',
+            controller: 'PartnerManagementController',
+            controllerAs: 'ctrl',
+            parent: 'partnerManagement-main',
+          })
+          .state('partnerManagement.search', {
+            url: '/',
+            templateUrl: 'modules/squared/partner-management/pm-search.html',
+          })
+          .state('partnerManagement.searchResults', {
+            templateUrl: 'modules/squared/partner-management/pm-searchResults.html',
+          })
+          .state('partnerManagement.orgExists', {
+            templateUrl: 'modules/squared/partner-management/pm-orgExists.html',
+          })
+          .state('partnerManagement.orgClaimed', {
+            templateUrl: 'modules/squared/partner-management/pm-orgClaimed.html',
+          })
+          .state('partnerManagement.contactAdmin', {
+            templateUrl: 'modules/squared/partner-management/pm-contactAdmin.html',
+          })
+          .state('partnerManagement.create', {
+            templateUrl: 'modules/squared/partner-management/pm-create.html',
+          })
+          .state('partnerManagement.createSuccess', {
+            templateUrl: 'modules/squared/partner-management/pm-createSuccess.html',
+          });
+
+        $stateProvider
           .state('messenger', {
             parent: 'main',
             url: '/services/messenger',

@@ -43,8 +43,23 @@ describe('Controller: SupportCtrl', function () {
   });
 
   it('should show CdrCallFlowLink for user has devsupport or devops role', function () {
-    $scope.initializeShowCdrCallFlowLink();
+    $scope.initializeShowLinks();
     expect($scope.showCdrCallFlowLink).toEqual(true);
+  });
+
+  it('should show PartnerManagementLink if user has partner management role', function () {
+    var orgRoles = currentUser.roles;
+    currentUser.roles.push('atlas-portal.cisco.partnermgmt');
+    $scope.initializeShowLinks();
+    expect($scope.showPartnerManagementLink).toEqual(true);
+
+    // revert current user to original set of roles
+    currentUser.roles = orgRoles;
+  });
+
+  it('should NOT show PartnerManagementLink if user does NOT have partner management role', function () {
+    $scope.initializeShowLinks();
+    expect($scope.showPartnerManagementLink).toEqual(false);
   });
 
   it('should return cisdoDevRole true for user that has devsupport or devops role', function () {

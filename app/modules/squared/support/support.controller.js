@@ -23,13 +23,15 @@ require('./_support.scss');
     $scope.helpContent = 'Help content is provided';
     $scope.searchInput = 'none';
     $scope.showCdrCallFlowLink = false;
+    $scope.showPartnerManagementLink = false;
     $scope.isCiscoDevRole = isCiscoDevRole;
-    $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
+    $scope.initializeShowLinks = initializeShowLinks;
     $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
     $scope.gridRefresh = false;
     $scope.gotoHelpdesk = gotoHelpdesk;
     $scope.gotoCdrSupport = gotoCdrSupport;
     $scope.gotoEdiscovery = gotoEdiscovery;
+    $scope.gotoPartnerManagement = gotoPartnerManagement;
 
     var vm = this;
     vm.masonryRefreshed = false;
@@ -49,11 +51,25 @@ require('./_support.scss');
       $window.open(url, '_blank');
     }
 
-    function initializeShowCdrCallFlowLink() {
+    function gotoPartnerManagement() {
+      // Don't open new tab for this tool
+      $state.go('partnerManagement.search');
+    }
+
+    function initializeShowLinks() {
       Userservice.getUser('me', function (user, status) {
         if (user.success) {
+          var bReinstate = false;
           if (isCiscoDevRole(user.roles)) {
             $scope.showCdrCallFlowLink = true;
+            bReinstate = true;
+          }
+          if (isPartnerManagementRole(user.roles)) {
+            $scope.showPartnerManagementLink = true;
+            bReinstate = true;
+          }
+
+          if (bReinstate === true) {
             reInstantiateMasonry();
           }
         } else {
@@ -80,6 +96,11 @@ require('./_support.scss');
         }
       }
       return false;
+    }
+
+    function isPartnerManagementRole(roleArray) {
+      return Array.isArray(roleArray) &&
+        (roleArray.indexOf('atlas-portal.cisco.partnermgmt') >= 0);
     }
 
     $scope.showHelpdeskLink = function () {
@@ -195,7 +216,7 @@ require('./_support.scss');
     var init = function () {
       getHealthMetrics();
       getOrg();
-      initializeShowCdrCallFlowLink();
+      initializeShowLinks();
     };
 
     init();

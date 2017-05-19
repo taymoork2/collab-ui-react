@@ -1,0 +1,33 @@
+<div class="partner-management-main centered" tabindex="0">
+    <div class="row">
+        <div class="main-heading columns medium-12">
+            <h2 translate="partnerManagement.searchResults.heading"></h2>
+            <div class="desc-panel">
+                <p><h5 translate="partnerManagement.searchResults.desc"></h5></p>
+                <h5 translate="partnerManagement.searchResults.desc2"></h5>
+            </div>
+            <div class="row results-panel">
+                Under Construction
+                <div class="columns medium-4">
+                    <div ui-grid="{data: vm.data.domainMatches}"></div>
+                </div>
+                <div class="colums medium-8">
+                </div>
+            </div>
+        </div>
+        <hr class="pm-rule">
+        <div class="row">
+            <div class="columns medium-12">
+                <div class="text-right">
+                    <button cs-btn id="create" type="button" ng-click="vm.createNewOrg()" class="btn pm-btn pm-btn-pad" ng-disabled="vm.isLoading">
+                        <span translate="partnerManagement.createNewOrg"></span>
+                    </button>
+                    <button cs-btn id="choose" type="button" ng-click="vm.chooseThisOrg()" class="btn btn--primary pm-btn" ng-disabled="createForm.$invalid" loading="vm.isLoading">
+                        <span translate="partnerManagement.chooseThisOrg"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

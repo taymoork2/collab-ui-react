@@ -1,0 +1,35 @@
+<div class="partner-management-main centered" tabindex="0">
+    <div class="row">
+      <div class="main-heading">
+        <h2 translate="partnerManagement.orgClaimed.heading"></h2>
+        <div class="desc-panel">
+            <h5>{{ 'partnerManagement.orgClaimed.desc' | translate:vm.data }}</h5>
+        </div>
+
+        <div class="orgClaimed-panel">
+          <div ng-if="vm.showSpinner">
+            <div cs-loader class="dots"></div>
+          </div>
+          <div ng-if="!vm.showSpinner">
+            <cs-card-member
+              class="card-email"
+              ng-repeat="admin in vm.data.orgRaw.fullAdmins"
+              cs-type="simple"
+              cs-image="admin.thumbnail"
+              cs-member-type="user"
+              cs-title="admin.displayName"
+              cs-subtitle="admin.primaryEmail">
+            </cs-card-member>
+          </div>
+        </div>
+      </div>
+      <hr class="pm-rule">
+      <div class="row">
+        <div class="columns medium-12 text-right">
+            <button cs-btn id="done" type="button" ng-click="vm.done()" class="btn btn--primary pm-btn" ng-disabled="vm.showSpinner">
+                <span translate="partnerManagement.done"></span>
+            </button>
+        </div>
+      </div>
+    </div>
+</div>
