@@ -17,11 +17,11 @@ describe('ServicesOverviewHybridCallCard', () => {
   }
 
   function initSpies() {
-    spyOn(Authinfo, 'isFusionUC');
+    spyOn(Authinfo, 'isFusionIMP');
   }
 
   it('should have sane defaults', () => {
-    Authinfo.isFusionUC.and.returnValue(false); // used for .display
+    Authinfo.isFusionIMP.and.returnValue(false); // used for .display
     card = new ServicesOverviewImpCard(Authinfo, HybridServicesClusterStatesService);
     expect(card.active).toBe(false);
     expect(card.display).toBe(false);
@@ -29,7 +29,7 @@ describe('ServicesOverviewHybridCallCard', () => {
   });
 
   it('should be displayed if the user has the spark-hybrid-impinterop entitlement', () => {
-    Authinfo.isFusionUC.and.returnValue(true);
+    Authinfo.isFusionIMP.and.returnValue(true);
     card = new ServicesOverviewImpCard(Authinfo, HybridServicesClusterStatesService);
     expect(card.display).toBe(true);
   });

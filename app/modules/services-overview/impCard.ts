@@ -41,13 +41,13 @@ export class ServicesOverviewImpCard extends ServicesOverviewHybridCard {
   ) {
     super({
       active: false,
-      cardClass: 'call',
+      cardClass: 'imp',
       cardType: CardType.hybrid,
       description: 'servicesOverview.cards.hybridImp.description',
       name: 'servicesOverview.cards.hybridImp.title',
       routerState: 'imp-service.list',
       service: 'spark-hybrid-impinterop',
     }, HybridServicesClusterStatesService);
-    this.display = Authinfo.isFusionUC();
+    this.display = Authinfo.isFusionIMP();
   }
 }

@@ -498,6 +498,9 @@
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);
       },
+      isFusionIMP: function () {
+        return isEntitled(Config.entitlements.imp);
+      },
       isFusionMedia: function () {
         return isEntitled(Config.entitlements.mediafusion);
       },

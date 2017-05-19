@@ -1,5 +1,6 @@
 import { ExpresswayContainerController } from '../common-expressway-based/expressway-common-container.controller';
 import { Notification } from 'modules/core/notifications';
+import { ClusterService } from 'modules/hercules/services/cluster-service';
 
 export class ImpServiceContainerController extends ExpresswayContainerController {
 
@@ -32,7 +33,7 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     $state: ng.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
     Authinfo,
-    ClusterService,
+    ClusterService: ClusterService,
     hasPartnerRegistrationFeatureToggle,
     Notification: Notification,
     private $translate: ng.translate.ITranslateService,
