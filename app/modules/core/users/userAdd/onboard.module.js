@@ -1,4 +1,5 @@
 var OnboardService = require('./onboard.service');
+var MessengerInteropService = require('./messenger-interop.service').default;
 
 require('./_user-add.scss');
 
@@ -11,5 +12,6 @@ require('./_user-add.scss');
       require('modules/core/config/config'),
     ])
     .service('OnboardService', OnboardService)
+    .service('MessengerInteropService', MessengerInteropService)
     .name;
 })();

@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, DialPlanService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -822,6 +822,9 @@ require('./_user-add.scss');
       return false;
     };
 
+    $scope.hasAssignableMessageItems = MessengerInteropService.hasAssignableMessageItems.bind(MessengerInteropService);
+    $scope.hasAssignableMessageOrgEntitlement = MessengerInteropService.hasAssignableMessageOrgEntitlement.bind(MessengerInteropService);
+
     var getAccountServices = function () {
       var services = {
         message: Authinfo.getMessageServices({ assignableOnly: true }),
@@ -1185,19 +1188,9 @@ require('./_user-add.scss');
       }
     }
 
-    var getEntitlements = function (action) {
-      var entitleList = [];
-      var state = null;
-      for (var key in $scope.entitlements) {
-        state = $scope.entitlements[key];
-        if ((action === 'add' && state) || (action === 'entitle' && state)) {
-          entitleList.push(new Feature(key, state));
-        }
-      }
-
-      Log.debug(entitleList);
-      return entitleList;
-    };
+    function getEntitlements(action) {
+      return OnboardService.getEntitlements(action, $scope.entitlements);
+    }
 
     // Hybrid Services entitlements
     var getExtensionEntitlements = function (action) {
@@ -1766,11 +1759,22 @@ require('./_user-add.scss');
           entitleList = [],
           licenseList = [],
           chunk = Config.batchSize;
+
+        // notes:
+        // - start with all enabled entitlements
+        entitleList = getEntitlements('add');
+
+        // - as of 2017-05-19, this conditional branch does not collect enabled entitlements
+        // TODO: determine what '$scope.collabRadio === 1' means, and re-write this more readably
         if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
           licenseList = getAccountLicenses('additive');
-        } else {
-          entitleList = getEntitlements('add');
+
+          // - so either isolate the messenger interop entitlement, or reset the list
+          entitleList = MessengerInteropService.hasAssignableMessageOrgEntitlement()
+            ? _.filter(entitleList, { entitlementName: 'messengerInterop' })
+            : [];
         }
+
         entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
         for (var i = 0; i < usersList.length; i += chunk) {

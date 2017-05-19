@@ -6,13 +6,14 @@
   module.exports = OnboardService;
 
   /* @ngInject */
-  function OnboardService(Authinfo, Config) {
+  function OnboardService() {
     var service = {
       huronCallEntitlement: false,
       validateEmail: validateEmail,
       usersToOnboard: [],
       maxUsersInManual: 25,
       mergeMultipleLicenseSubscriptions: mergeMultipleLicenseSubscriptions,
+      getEntitlements: getEntitlements,
     };
 
     return service;
@@ -64,6 +65,18 @@
         });
         return result;
       });
+    }
+
+    function getEntitlements(action, entitlements) {
+      var result = [];
+      _.forEach(entitlements, function (state, key) {
+        if (state) {
+          if (action === 'add' || action === 'entitle') {
+            result.push(new Feature(key, state));
+          }
+        }
+      });
+      return result;
     }
   }
 })();
