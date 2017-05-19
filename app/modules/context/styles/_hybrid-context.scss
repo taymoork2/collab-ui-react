@@ -233,16 +233,16 @@
   cursor: default;
 }
 
-#contextDeleteButton {
+.btn--delete {
   margin: 1rem 0;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-}
 
-.btn--delete {
   font-size: 0.875rem;
   color: $gray-light-1;
+  background-color: transparent;
+  border-color: transparent;
 
   &:hover,
   &:active,
