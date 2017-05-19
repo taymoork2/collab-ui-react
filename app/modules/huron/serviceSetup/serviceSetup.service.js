@@ -81,6 +81,7 @@
         return MediaManagerService.save({
           orgId: Authinfo.getOrgId(),
           mediaFileId: mediaId,
+          //TODO (yorao): Check during EFT. Assignments might not require sending empty array in the future with potential changes to Rhesos API. Remove empty array pass when chagnes are available.
           assignments: assignmentInfo || [],
         }).$promise;
       },
