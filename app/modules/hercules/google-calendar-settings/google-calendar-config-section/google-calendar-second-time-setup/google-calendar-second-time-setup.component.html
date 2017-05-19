@@ -1,0 +1,44 @@
+<div class="modal-header">
+  <div class="modal-title" translate="hercules.gcalSecondSetupModal.modalTitle"></div>
+</div>
+<div class="modal-body">
+  <div ng-if="$ctrl.loading" class="modal-step">
+    <div class="text-center">
+      <i class="icon icon-spinner icon-3x"></i>
+    </div>
+  </div>
+  <div ng-if="!$ctrl.loading" class="modal-step">
+    <h4 class="section__title" translate="hercules.gcalSecondSetupModal.title"></h4>
+    <p translate="hercules.gcalSecondSetupModal.line1"></p>
+    <ol>
+      <li translate="hercules.gcalSetupModal.authorization.item1"></li>
+      <li translate="hercules.gcalSetupModal.authorization.item2"></li>
+      <li translate="hercules.gcalSetupModal.authorization.item3"></li>
+      <li translate="hercules.gcalSetupModal.authorization.item4"></li>
+    </ol>
+    <google-calendar-api-information client-id="$ctrl.data.clientName" scope="$ctrl.data.scope"></google-calendar-api-information>
+    <ol>
+      <li value="5" translate="hercules.gcalSetupModal.authorization.item5"></li>
+      <li translate="hercules.gcalSetupModal.authorization.item6"></li>
+    </ol>
+    <div ng-form="$ctrl.testAccountForm">
+      <h4 class="section__title" translate="hercules.gcalSetupModal.testAccount.title"></h4>
+      <p translate="hercules.gcalSetupModal.testAccount.line1">></p>
+      <div class="cs-input-group" ng-class="{'error': testAccountForm.testAccount.$invalid}">
+        <input
+          cs-input
+          class="medium-6"
+          type="email"
+          name="testAccount"
+          required
+          ng-model="$ctrl.data.testAccount"
+          cs-input-messages="$ctrl.errorMessages.testAccount">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn--primary" ng-disabled="$ctrl.loading || $ctrl.testAccountForm.testAccount.$invalid" ng-click="$ctrl.submit()" cs-btn loading="$ctrl.processing">
+    <span translate="common.test"></span>
+  </button>
+</div>

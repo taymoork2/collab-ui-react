@@ -155,12 +155,14 @@ class CsdmHuronDeviceService {
           inputAudioLevel: null,
           outputAudioLevel: null,
           t38FaxEnabled: false,
+          cpcDelay: 2,
         };
         if (res.data) {
           response.port = res.data.port;
           response.inputAudioLevel = res.data.inputAudioLevel;
           response.outputAudioLevel = res.data.outputAudioLevel;
           response.t38FaxEnabled = res.data.t38FaxEnabled;
+          response.cpcDelay = res.data.cpcDelay;
         }
         return response;
       });

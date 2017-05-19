@@ -14,7 +14,7 @@
           </div>
           <p><span class="badge badge--outline" ng-class="huronFeaturesCtrl.badgeColor[huronFeature.filterValue]">{{:: huronFeature.featureName | translate}}</span></p>
         </header>
-        <section class="card-body" ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))">
+        <section class="card-body">
           <div class="card-section" ng-if="(huronFeaturesCtrl.featureFilter(huronFeature))">
             <span class="card-section-num" ng-if="(huronFeature.numbers.length <= 1)" ng-repeat="number in huronFeature.numbers">{{number | telephoneNumber}}</span>
             <span class="card-section-num" ng-if="(huronFeature.numbers.length > 1)">{{:: huronFeature.numbers.length + ' '+ ('huronHuntGroup.numbers' | translate)}}</span>

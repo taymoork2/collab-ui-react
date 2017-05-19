@@ -1,30 +1,31 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.dismissModal()" ng-disabled= "$ctrl.isSetup" >
+  <button type="button" class="close" ng-click="$ctrl.dismissModal()" ng-disabled= "$ctrl.isSetup || $ctrl.currentStepIndex === 4" >
     <span class="sr-only" translate="common.close"></span>
   </button>
   <h3 class="modal-title" translate="servicesOverview.cards.privateTrunk.setupTitle"></h5>
 </div>
 <div ng-form="$ctrl.privateTrunkSetupForm" class="modal-body">
   <private-trunk-domain ng-if="$ctrl.currentStepIndex === 1"
+    is-first-time-setup = true
     domain-selected="$ctrl.domainSelected"
     domains="$ctrl.domains"
     is-domain="$ctrl.isDomain"
     on-change-fn="$ctrl.setSelectedDomain(isDomain, domainSelected)">
   </private-trunk-domain>
   <private-trunk-destination ng-if="$ctrl.currentStepIndex === 2"
+    is-first-time-setup ="$ctrl.isFirstTimeSetup"
     private-trunk-resource="$ctrl.privateTrunkResource"
     on-change-fn="$ctrl.setResources(privateTrunkResource)">
   </private-trunk-destination>
   <private-trunk-certificate ng-if="$ctrl.currentStepIndex === 3"
-    is-settings = "false"
+    is-first-time-setup = true
     is-certificate-default = "$ctrl.isCertificateDefault"
     is-importing = "$ctrl.isImporting"
     formatted-cert-list="$ctrl.formattedCertList"
     on-change-fn="$ctrl.uploadFile(file)"
-    on-delete-cert-fn="$ctrl.deleteCert(certId)"
     on-change-option-fn="$ctrl.changeOption(isCertificateDefault)">
   </private-trunk-certificate>
-  <private-trunk-setup-complete ng-if="$ctrl.currentStepIndex === 4 && $ctrl.isFirstTimeSetup()"
+  <private-trunk-setup-complete ng-if="$ctrl.currentStepIndex === 4 && $ctrl.isFirstTimeSetup"
     verified-domains="$ctrl.selectedVerifiedDomains">
   </private-trunk-setup-complete`>
 </div>

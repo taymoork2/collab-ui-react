@@ -4,8 +4,8 @@ describe('Directive: ucExternalNumberOverview', function () {
   beforeEach(function () {
     this.initModules('Huron', 'Sunlight');
     this.injectDependencies('$q', 'FeatureToggleService', 'ExternalNumberService');
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when());
-    spyOn(this.ExternalNumberService, 'refreshNumbers').and.returnValue(this.$q.when());
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve());
+    spyOn(this.ExternalNumberService, 'refreshNumbers').and.returnValue(this.$q.resolve());
     this.compileComponent('ucExternalNumberOverview');
   });
 

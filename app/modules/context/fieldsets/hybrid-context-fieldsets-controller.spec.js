@@ -296,7 +296,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
         'id': 'strMatchInLastUpdated',
-        'lastUpdated': '2017-02-15T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-15T19:37:36.998Z',
         'numOfFields': '4',
       },
       {
@@ -319,7 +319,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/fieldset5',
         'id': 'fieldset5',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
         'numOfFields': '2',
       },
       {
@@ -342,7 +342,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/notThisfieldset',
         'id': 'notThisfieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
         'numOfFields': '2',
       },
       {
@@ -360,7 +360,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/strMatchInDescription',
         'id': 'strMatchInDescription',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
         'numOfFields': '1',
       },
       {
@@ -398,7 +398,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/strMatchViaNumFields',
         'id': 'strMatchViaNumFields',
-        'lastUpdated': '2017-02-12T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-12T19:37:36.998Z',
         'numOfFields': '5',
       }];
 
@@ -449,7 +449,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/First',
         'id': 'First',
-        'lastUpdated': '2017-02-15T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-15T19:37:36.998Z',
       },
       {
         'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
@@ -471,7 +471,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/strMatchInDescription',
         'id': 'strMatchInDescription',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
       },
       {
         'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
@@ -493,7 +493,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/notThisfieldset',
         'id': 'notThisfieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
       },
       {
         'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
@@ -510,7 +510,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
         'id': 'strMatchInLastUpdated',
-        'lastUpdated': 'first in date',
+        'lastUpdatedUI': 'first in date',
       },
       {
         'otherKey1': 'First',

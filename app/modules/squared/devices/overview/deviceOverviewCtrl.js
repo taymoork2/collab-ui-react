@@ -21,6 +21,7 @@
     deviceOverview.hideE911Edit = true;
     deviceOverview.faxEnabled = false;
     deviceOverview.t38FeatureToggle = false;
+    deviceOverview.cpcFeatureToggle = false;
     deviceOverview.actionList = [{
       actionKey: 'common.edit',
       actionFunction: goToEmergencyServices,
@@ -28,6 +29,9 @@
     function init() {
       FeatureToggleService.csdmT38GetStatus().then(function (response) {
         deviceOverview.t38FeatureToggle = response;
+      });
+      FeatureToggleService.csdmAtaCpcGetStatus().then(function (response) {
+        deviceOverview.cpcFeatureToggle = response;
       });
 
       displayDevice($stateParams.currentDevice);
@@ -72,7 +76,7 @@
       }
 
       if (deviceOverview.currentDevice.isATA) {
-        getT38Settings();
+        getAtaSettings();
       }
 
       deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
@@ -87,11 +91,14 @@
       resetSelectedChannel();
     }
 
-    function getT38Settings() {
+    function getAtaSettings() {
       deviceOverview.updatingT38Settings = true;
+      deviceOverview.updatingCpcSettings = true;
       huronDeviceService.getAtaInfo(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.faxEnabled = result.t38FaxEnabled;
+        deviceOverview.cpcEnabled = result.cpcDelay > 2;
         deviceOverview.updatingT38Settings = false;
+        deviceOverview.updatingCpcSettings = false;
       });
     }
 
@@ -213,6 +220,25 @@
         .finally(function () {
           deviceOverview.updatingT38Settings = false;
         });
+      }, 100);
+    };
+
+    deviceOverview.saveCpcSettings = function () {
+      deviceOverview.updatingCpcSettings = true;
+      $timeout(function () {
+        var settings = {
+          cpcDelay: deviceOverview.cpcEnabled ? 240 : 2,
+        };
+        huronDeviceService.setSettingsForAta(deviceOverview.currentDevice, settings)
+          .then(function () {
+            Notification.success('ataSettings.savedCpc');
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
+          })
+          .finally(function () {
+            deviceOverview.updatingCpcSettings = false;
+          });
       }, 100);
     };
 

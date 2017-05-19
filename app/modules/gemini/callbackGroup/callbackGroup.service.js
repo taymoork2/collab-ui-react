@@ -74,9 +74,9 @@
       return $http.get(url).then(extractData);
     }
 
-    function getHistories(customerId, ccaGroupId, groupName) {
-      var url = UrlConfig.getGeminiUrl() + 'activityLogs' + '/' + customerId + '/' + ccaGroupId + '/Callback%20Group/' + groupName;
-      return $http.get(url).then(extractData);
+    function getHistories(data) {
+      var url = UrlConfig.getGeminiUrl() + 'activityLogs';
+      return $http.put(url, data).then(extractData);
     }
 
     function getDownloadCountryUrl() {
@@ -93,7 +93,7 @@
       return getCallbackGroups(customerId).then(function (res) {
         lines = res.content.data.body;
         var headerLine = {
-          groupName: $translate.instant('gemini.cbgs.field.cbgName'),
+          customerName: $translate.instant('gemini.cbgs.field.cbgName'),
           totalSites: $translate.instant('gemini.cbgs.field.totalSites'),
           status: $translate.instant('gemini.cbgs.field.status_'),
           customerAttribute: $translate.instant('gemini.cbgs.field.alias'),
@@ -114,17 +114,13 @@
     function formateCsvData(data) {
       var newData = [];
       var oneLine = {};
-      var cabte = data.customerAttribute;
-      var groupName = (data.groupName ? data.groupName : data.customerName);
       var status = (data.status ? $translate.instant('gemini.cbgs.field.status.' + data.status) : '');
-      cabte = (_.isNumber(cabte) ? '="' + cabte + '"' : cabte);
-      groupName = (_.isNumber(groupName) ? '="' + groupName + '"' : groupName);
 
       if (!data.callbackGroupSites.length) {
-        oneLine.groupName = groupName;
+        oneLine.customerName = number2CsvString(data.customerName);
         oneLine.totalSites = data.totalSites;
         oneLine.status = status;
-        oneLine.customerAttribute = cabte;
+        oneLine.customerAttribute = number2CsvString(data.customerAttribute);
         oneLine.sites = '';
         newData.push(oneLine);
         return newData;
@@ -133,12 +129,12 @@
       _.forEach(data.callbackGroupSites, function (row, key) {
         oneLine = {};
         if (!key) { // the first
-          oneLine.groupName = groupName;
+          oneLine.customerName = number2CsvString(data.customerName);
           oneLine.totalSites = data.totalSites;
           oneLine.status = status;
-          oneLine.customerAttribute = cabte;
+          oneLine.customerAttribute = number2CsvString(data.customerAttribute);
         } else {
-          oneLine.groupName = '';
+          oneLine.customerName = '';
           oneLine.totalSites = '';
           oneLine.status = '';
           oneLine.customerAttribute = '';
@@ -147,6 +143,11 @@
         newData.push(oneLine);
       });
       return newData;
+    }
+
+    function number2CsvString(data) {
+      var reg = /^[\d]+$/;
+      return reg.test(data) ? '\t' + data + '\t' : data;
     }
   }
 })();

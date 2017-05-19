@@ -3,6 +3,7 @@ import { ServicesOverviewMessageCard } from './messageCard';
 import { ServicesOverviewMeetingCard } from './meetingCard';
 import { ServicesOverviewCallCard } from './cloudCallCard';
 import { ServicesOverviewCareCard } from './careCard';
+import { ServicesOverviewCmcCard } from './servicesOverviewCmcCard';
 import { ServicesOverviewHybridServicesCard } from './hybridServicesCard';
 import { ServicesOverviewHybridAndGoogleCalendarCard } from './hybridAndGoogleCalendarCard';
 import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
@@ -45,6 +46,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewCallCard(this.Authinfo, this.Config),
       new ServicesOverviewCareCard(this.Authinfo),
       new ServicesOverviewHybridServicesCard(this.Authinfo),
+      new ServicesOverviewCmcCard(this.Authinfo),
       new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridCalendarCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.HybridServicesClusterStatesService),
@@ -120,6 +122,12 @@ export class ServicesOverviewCtrl {
   public getHybridCards() {
     return _.filter(this.cards, {
       cardType: CardType.hybrid,
+    });
+  }
+
+  public getCmcCards() {
+    return _.filter(this.cards, {
+      cardType: CardType.cmc,
     });
   }
 

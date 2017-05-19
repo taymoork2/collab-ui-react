@@ -41,7 +41,7 @@ describe('component: cbgEditCountry', function () {
     $stateParams.obj = {};
     $state.current.data = {};
     $stateParams.obj.info = preData.getCurrentCallbackGroup;
-    ctrl = $componentCtrl('cbgEditCountry', { $scope: $scope, $state: $state });
+    ctrl = $componentCtrl('cbgEditCountry', { $scope: $scope, $state: $state, $element: angular.element('') });
   }
 
   describe('$onInit', function () {

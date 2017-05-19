@@ -1,7 +1,11 @@
 import { CmcUserData } from './cmcUserData';
 import { ICmcUser } from './cmcUser.interface';
+import { ICmcOrgStatusResponse } from './cmc.interface';
 
 export class CmcService {
+
+  private dockerUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
+  private useDocker: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -10,9 +14,11 @@ export class CmcService {
     private Orgservice,
     private Config,
     private UrlConfig,
+    private CmcServiceMock,
     private $http: ng.IHttpService,
   ) {
   }
+
 
   public setData(user: ICmcUser, data: CmcUserData) {
     this.setMobileNumber(user, data.mobileNumber);
@@ -21,7 +27,7 @@ export class CmcService {
   }
 
   public getData(user: ICmcUser): CmcUserData {
-    this.$log.warn('Getting data for user=', user);
+    this.$log.info('Getting data for user=', user);
     let entitled = this.extractCmcEntitlement(user);
     let mobileNumber = this.extractMobileNumber(user);
     return new CmcUserData(mobileNumber, entitled);
@@ -33,7 +39,7 @@ export class CmcService {
     let deferred = this.$q.defer();
     this.Orgservice.getOrg((data, success) => {
       if (success) {
-        deferred.resolve(true);
+        deferred.resolve(this.hasCmcService(data.services));
         this.$log.debug('org data:', data);
       } else {
         deferred.resolve(false);
@@ -42,6 +48,24 @@ export class CmcService {
       basicInfo: true,
     });
     return deferred.promise;
+  }
+
+  // TODO Adapt to cmc status call
+  public preCheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
+    if (this.useDocker) {
+      let url: string = this.dockerUrl + `/organizations/${orgId}/status`;
+      return this.$http.get(url).then((response) => {
+        return response.data;
+      });
+    } else {
+      return this.CmcServiceMock.mockStatus(orgId);
+    }
+  }
+
+  private hasCmcService(services: string[]): boolean {
+    return !!_.find(services, (service) => {
+      return service === 'cmc';
+    });
   }
 
   private extractMobileNumber(user: ICmcUser): any {

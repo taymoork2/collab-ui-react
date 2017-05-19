@@ -8,12 +8,13 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
   public fileName: string;
   public isParsing: boolean;
   public uploadProgress: number;
+  public isDisabled: boolean;
 
   /* @ngInject */
   public constructor(
     private $modal,
-    private $scope: ng.IScope,
-    private $timeout: ng.ITimeoutService,
+    private $scope,
+    private $timeout,
     private Notification: Notification,
   ) {
     this.$ = jQuery;
@@ -45,18 +46,24 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
     this.isParsing = true;
     let lines: any[];
     if (this.file) {
-      this.setProgress(0);
-      lines = this.$.csv.toArrays(this.file);
+      try {
+        this.setProgress(0);
+        lines = this.$.csv.toArrays(this.file);
 
-      if (!_.isArray(lines) || lines.length <= 1) {
-        this.Notification.error('gemini.tds.numbers.import.resultMsg.noItemFound');
-        return;
-      }
+        if (!_.isArray(lines) || lines.length <= 1) {
+          this.Notification.error('gemini.tds.numbers.import.resultMsg.noItemFound');
+          this.setProgress(100);
+          this.isParsing = false;
+          return;
+        }
 
-      if (_.isArray(lines) && lines.length > 1 && _.isArray(lines[0])) {
-        lines.shift();
-        let items: any[] = this.getItemsFromArray(lines);
-        this.onImported({ numbers: items });
+        if (_.isArray(lines) && lines.length > 1 && _.isArray(lines[0])) {
+          lines.shift();
+          let items: any[] = this.getItemsFromArray(lines);
+          this.onImported({ numbers: items });
+        }
+      } catch (ex) {
+        this.Notification.error('firstTimeWizard.uploadCsvBadFormat');
       }
     }
     this.$timeout(() => {
@@ -83,7 +90,7 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
         tollType: this.stripFieldValue(item[3]),
         phoneType: this.stripFieldValue(item[4]),
         country: this.stripFieldValue(item[5]),
-        isHidden: this.stripFieldValue(item[6]) === 'Display' ? 'false' : 'true',
+        isHidden: this.stripFieldValue(item[6]) === 'Hidden' ? 'true' : 'false',
       });
     });
 
@@ -108,13 +115,14 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
   }
 
   public onFileTypeError(): void {
-    this.Notification.error('firstTimeWizard.csvFileTypeError');
+    this.Notification.error('gemini.tds.numbers.import.invalidFileType');
   }
 }
 
 export class GmTdImportNumbersFromCsvComponent implements ng.IComponentOptions {
   public bindings = {
     onImported: '&',
+    isDisabled: '<',
   };
   public controller = GmTdImportNumbersFromCsvCtrl;
   public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdImportNumbersFromCsv.tpl.html';

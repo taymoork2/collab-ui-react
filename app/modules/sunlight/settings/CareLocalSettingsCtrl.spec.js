@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Care Local Settings', function () {
-  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope;
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope, FeatureToggleService;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
@@ -12,13 +12,15 @@ describe('Controller: Care Local Settings', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
       sunlightConfigService = _SunlightConfigService_;
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
       $scope = _$rootScope_.$new();
       $interval = _$interval_;
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
+      FeatureToggleService = _FeatureToggleService_;
+      spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
       controller = $controller('CareLocalSettingsCtrl', {
@@ -26,6 +28,7 @@ describe('Controller: Care Local Settings', function () {
         $interval: $intervalSpy,
         Notification: Notification,
       });
+      $scope.routingSelector = { dirty: false };
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
         var deferred = $q.defer();
         deferred.resolve('fake update response');
@@ -153,7 +156,7 @@ describe('Controller: Care Local Settings', function () {
 
 describe('Care Settings - when org has K2 entitlement', function () {
   var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
-    $scope, q;
+    $scope, q, FeatureToggleService;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
@@ -164,7 +167,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
       q = $q;
       sunlightConfigService = _SunlightConfigService_;
       $httpBackend = _$httpBackend_;
@@ -174,11 +177,14 @@ describe('Care Settings - when org has K2 entitlement', function () {
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
+      FeatureToggleService = _FeatureToggleService_;
+      spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
       controller = $controller('CareLocalSettingsCtrl', {
         $scope: $scope,
         $interval: $intervalSpy,
         Notification: Notification,
       });
+      $scope.routingSelector = { dirty: false };
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
         var deferred = q.defer();
         deferred.resolve('fake update response');
@@ -289,5 +295,113 @@ describe('Care Settings - when org has K2 entitlement', function () {
     $httpBackend.verifyNoOutstandingRequest();
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+  });
+});
+
+describe('Care Settings - Routing Toggling', function () {
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope, q, FeatureToggleService;
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
+    isCareVoice: jasmine.createSpy('isCareVoice').and.returnValue(false),
+  };
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
+  beforeEach(
+      inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
+        sunlightConfigService = _SunlightConfigService_;
+        $httpBackend = _$httpBackend_;
+        Notification = _Notification_;
+        q = $q;
+        $scope = _$rootScope_.$new();
+        $interval = _$interval_;
+        $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
+        FeatureToggleService = _FeatureToggleService_;
+        spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
+        orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+        sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
+        controller = $controller('CareLocalSettingsCtrl', {
+          $scope: $scope,
+          $interval: $intervalSpy,
+          Notification: Notification,
+        });
+        $scope.routingSelector = { dirty: false,
+          $setPristine: function () { },
+          $setUntouched: function () { } };
+      })
+  );
+  it('should show Pick Routing as selected.', function () {
+    spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.resolve('fake update response');
+      return deferred.promise;
+    });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.flush();
+    expect(controller).toBeDefined();
+    expect(controller.selectedRouting).toBe(controller.RoutingType.PICK);
+  });
+
+  it('should show Push Routing as selected.', function () {
+    spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.resolve('fake update response');
+      return deferred.promise;
+    });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "push" });
+    $httpBackend.flush();
+    expect(controller).toBeDefined();
+    expect(controller.selectedRouting).toBe(controller.RoutingType.PUSH);
+  });
+
+  it('should show success toaster if routing update backend API success', function () {
+    spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.resolve('fake update response');
+      return deferred.promise;
+    });
+    spyOn(Notification, 'success').and.callFake(function () {
+      return true;
+    });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.flush();
+    controller.isProcessing = true;
+    controller.updateRoutingType();
+    $scope.$apply();
+    expect(Notification.success).toHaveBeenCalled();
+    expect(controller.selectedRouting).toBe(controller.RoutingType.PICK);
+    expect(controller.isProcessing).toBe(false);
+  });
+
+  it('should show failure toaster if routing update backend API fails', function () {
+    spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.reject('fake update response');
+      return deferred.promise;
+    });
+    spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
+      return true;
+    });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.flush();
+    controller.updateRoutingType();
+    $scope.$apply();
+    expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+  });
+
+  it('should reset form if routing toggle is canceled', function () {
+    spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.resolve('fake update response');
+      return deferred.promise;
+    });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.flush();
+    controller.savedRoutingType = controller.RoutingType.PUSH;
+    controller.cancelEdit();
+    $scope.$apply();
+    expect(controller.selectedRouting).toBe(controller.RoutingType.PUSH);
   });
 });

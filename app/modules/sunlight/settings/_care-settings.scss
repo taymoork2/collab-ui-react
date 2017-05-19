@@ -1,0 +1,35 @@
+.care-settings {
+  min-height: 88vh;
+  .save-care-section {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    @include vr-spacing(pt, 1.25);
+    @include vr-spacing(pr,8.25);
+    @include vr-spacing(pb, 1.25);
+    @include vr-spacing(pl,4);
+    z-index: $zindex-popover;
+    background-color: $gray-light-4;
+
+    p {
+      flex: 1;
+    }
+  }
+
+  .care-warning-message {
+    font-family: CiscoSans;
+    color: $color-attention-darker;
+    line-height: initial;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    top: rem-calc(-24);
+  }
+  .warning-sign {
+    color: $color-attention-base;
+    @include vr-spacing(mr, 0.5);
+  }
+}
+

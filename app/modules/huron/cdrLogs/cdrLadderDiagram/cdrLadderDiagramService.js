@@ -140,28 +140,28 @@
         url: cdrUrl,
         data: esQuery,
         timeout: TIMEOUT_IN_MILI,
-      }).success(function (response) {
-        defer.resolve(response);
-      }).error(function (response, status) {
+      }).then(function (response) {
+        defer.resolve(response.data);
+      }).catch(function (response) {
         // if this specific error is received, retry once; error caused by hystrix connection timeout
-        if (status === 500 && response === retryError) {
+        if (response.status === 500 && response.data === retryError) {
           $http({
             method: "POST",
             url: cdrUrl,
             data: esQuery,
             timeout: TIMEOUT_IN_MILI,
-          }).success(function (secondaryResponse) {
-            defer.resolve(secondaryResponse);
-          }).error(function (secondaryResponse, secondaryStatus) {
+          }).then(function (secondaryResponse) {
+            defer.resolve(secondaryResponse.data);
+          }).catch(function (secondaryResponse) {
             defer.reject({
-              'response': secondaryResponse,
-              'status': secondaryStatus,
+              'response': secondaryResponse.data,
+              'status': secondaryResponse.status,
             });
           });
         } else {
           defer.reject({
-            'response': response,
-            'status': status,
+            'response': response.data,
+            'status': response.status,
           });
         }
       });
@@ -181,14 +181,14 @@
           'Accept': 'application/json, application/xml',
         },
       })
-        .success(function (response) {
-          defer.resolve(response);
+        .then(function (response) {
+          defer.resolve(response.data);
         })
-        .error(function (response, status) {
+        .catch(function (response) {
           Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
           defer.reject({
-            'response': response,
-            'status': status,
+            'response': response.data,
+            'status': response.status,
           });
         });
       return defer.promise;
@@ -210,14 +210,14 @@
           'Accept': 'application/json',
         },
       })
-        .success(function (response) {
-          defer.resolve(response);
+        .then(function (response) {
+          defer.resolve(response.data);
         })
-        .error(function (response, status) {
+        .catch(function (response) {
           Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
           defer.reject({
-            'response': response,
-            'status': status,
+            'response': response.data,
+            'status': response.status,
           });
         });
       return defer.promise;

@@ -1,0 +1,45 @@
+<script type="text/ng-template" id="hgNumbersTemplate.html">
+  <a>
+    <span ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<div class="typeahead-large with-feature-title" ng-if="$ctrl.isNew">
+  <div class="feature-title" translate="huronHuntGroup.numberTitle"></div>
+  <div class="feature-desc" translate="huronHuntGroup.numberDesc"></div>
+  <input
+    ng-model="$ctrl.selectedNumber"
+    ng-class="{'error': $ctrl.errorNumberInput}"
+    typeahead="number for number in $ctrl.getNumberList($viewValue) | limitTo:10"
+    typeahead-on-select="$ctrl.selectNumber($item)"
+    typeahead-template-url="hgNumbersTemplate.html"
+    typeahead-min-length="3"
+    typeahead-wait-ms="200"
+    placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"
+    ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
+    focus-on>
+  <p class="input-description" translate="huronHuntGroup.numberHint"></p>
+</div>
+<div class="typeahead" ng-if="!$ctrl.isNew">
+  <input
+    cs-input
+    ng-model="$ctrl.selectedNumber"
+    ng-class="{'error': $ctrl.errorNumberInput}"
+    typeahead="number for number in $ctrl.getNumberList($viewValue) | limitTo:10"
+    typeahead-on-select="$ctrl.selectNumber($item)"
+    typeahead-template-url="hgNumbersTemplate.html"
+    typeahead-min-length="3"
+    typeahead-wait-ms="200"
+    placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"
+    cs-input-size="small-12"
+    no-dirty>
+</div>
+<div class="hg-edit-numbers">
+  <cs-card-layout>
+    <cs-card-number
+      ng-repeat="number in $ctrl.numbers track by number.uuid"
+      cs-id="number.uuid"
+      cs-title="number.number"
+      on-remove-fn="$ctrl.removeNumber(number)">
+    </cs-card-number>
+  </cs-card-layout>
+</div>

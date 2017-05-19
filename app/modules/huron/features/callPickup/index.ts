@@ -6,7 +6,7 @@ import callPickupMembers from './callPickupMembers';
 import callPickupNotificationTimer from './callPickupNotificationTimer';
 import callPickupNotifications from './callPickupNotifications';
 import callPickupGroupService from 'modules/huron/features/callPickup/services';
-import featureMemberService from 'modules/huron/features';
+import featureMemberService from 'modules/huron/features/services';
 
 export default angular
   .module('huron.call-pickup.setup-assistant', [

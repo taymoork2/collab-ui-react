@@ -354,24 +354,24 @@ export class PstnService {
     let promises: any = [];
     let payload = {
       pstn: {
-        numbers: [],
+        numbers: [] as Array<string>,
       },
       tollFree: {
         numberType: NUMTYPE_TOLLFREE,
-        numbers: [],
+        numbers: [] as Array<string>,
       },
     };
     _.forEach(numbers, number => {
       const phoneNumberType: PhoneNumberType = this.PhoneNumberService.getPhoneNumberType(number);
-      if (phoneNumberType === PhoneNumberType.FIXED_LINE_OR_MOBILE || phoneNumberType === PhoneNumberType.FIXED_LINE) {
-        payload.pstn.numbers.push(<never>number);
-      } else if (phoneNumberType === PhoneNumberType.TOLL_FREE) {
-        payload.tollFree.numbers.push(<never>number);
-      } else {
+      if (phoneNumberType === PhoneNumberType.TOLL_FREE) {
+        payload.tollFree.numbers.push(number);
+      } else if (phoneNumberType === PhoneNumberType.UNKNOWN) {
         this.Notification.error('pstnSetup.errors.unsupportedNumberType', {
           type: phoneNumberType,
           number: number,
         });
+      } else {
+        payload.pstn.numbers.push(number);
       }
     });
     if (payload.pstn.numbers.length > 0) {

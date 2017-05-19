@@ -21,7 +21,7 @@
     var columnDefs = [{
       width: '20%',
       sortable: true,
-      field: 'groupName',
+      field: 'customerName',
       displayName: $translate.instant('gemini.cbgs.field.cbgName'),
       cellTooltip: true,
     }, {
@@ -126,7 +126,7 @@
 
       cbgService.getCallbackGroups(vm.customerId)
         .then(function (res) {
-          var cbgs = _.get(res, 'content.data.body');
+          var cbgs = _.get(res, 'content.data.body', []);
           $scope.gridData = cbgs;
           $scope.gridData_ = cbgs;
           _.forEach($scope.gridData, function (row) {
@@ -134,11 +134,11 @@
             row.groupName = (row.groupName ? row.groupName : row.customerName);
             row.status_ = (row.status ? $translate.instant('gemini.cbgs.field.status.' + row.status) : '');
           });
+          vm.isDownload = cbgs.length > 0;
           vm.gridRefresh = false;
         })
         .catch(function (err) {
-          // TODO will defined the wording
-          Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+          Notification.errorResponse(err, 'gemini.errorCode.genericError');
           vm.gridRefresh = true;
         });
     }

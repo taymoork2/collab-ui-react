@@ -18,13 +18,13 @@ describe('component: emergencyServices', () => {
     this.$httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(location.areas);
 
     spyOn(this.EmergencyServicesService, 'getOptions').and
-    .returnValue(this.$q.when(['1', '2']));
+    .returnValue(this.$q.resolve(['1', '2']));
 
     spyOn(this.EmergencyServicesService, 'getCompanyECN').and
-    .returnValue(this.$q.when('1'));
+    .returnValue(this.$q.resolve('1'));
 
     spyOn(this.EmergencyServicesService, 'getImpactedUsers').and
-    .returnValue(this.$q.when([]));
+    .returnValue(this.$q.resolve([]));
 
     spyOn(this.EmergencyServicesService, 'getInitialData').and
     .returnValue({
@@ -42,7 +42,7 @@ describe('component: emergencyServices', () => {
     });
 
     spyOn(this.EmergencyServicesService, 'getAddressForNumber').and
-    .returnValue(this.$q.when({
+    .returnValue(this.$q.resolve({
       e911Address: {
 
       },

@@ -2,9 +2,9 @@
   <div class="sub-section">
     <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.apiClientAccess"></h5>
     <p class="sub-section__description" translate="hercules.settings.googleCalendar.description"></p>
-    <google-calendar-api-information client-id="$ctrl.apiKey.apiClientId" scope="$ctrl.apiKey.scopes[0]"></google-calendar-api-information>
+    <button type="button" class="btn" ng-click="$ctrl.openUpdateModal()" translate="hercules.settings.googleCalendar.cta"></button>
   </div>
-  <div class="sub-section" ng-form="$ctrl.testAccountForm">
+  <div class="sub-section" ng-form="$ctrl.aclAdminAccountForm">
     <h5 class="sub-section__label" translate="hercules.gcalSetupModal.testAccount.title2"></h5>
     <!-- component? -->
     <p>
@@ -12,6 +12,7 @@
         cs-input
         type="checkbox"
         ng-model="$ctrl.useResources"
+        ng-change="$ctrl.onCheckChange()"
         id="resources"
         name="resources"
         cs-input-label="{{'hercules.gcalSetupModal.testAccount.useResources' | translate}}">
@@ -20,7 +21,7 @@
       <p translate="hercules.gcalSetupModal.testAccount.line2"></p>
       <p translate="hercules.gcalSetupModal.testAccount.line3"></p>
       <h5 class="hidden-subtitle" translate="hercules.gcalSetupModal.testAccount.subtitle"></h5>
-      <div class="cs-input-group" ng-class="{'error': testAccountForm.aclAdminAccount.$touched && testAccountForm.aclAdminAccount.$invalid}">
+      <div class="cs-input-group" ng-class="{'error': aclAdminAccountForm.aclAdminAccount.$touched && aclAdminAccountForm.aclAdminAccount.$invalid}">
         <input
           cs-input
           class="medium-6"
@@ -30,7 +31,15 @@
           ng-model="$ctrl.aclAdminAccount"
           cs-input-messages="$ctrl.errorMessages.aclAdminAccount">
       </div>
-      <button type="button" class="btn disabled" cs-ctn loading="$ctrl.saving">Saving temporary disabled</button>
+      <button
+        cs-ctn
+        type="button"
+        class="btn"
+        ng-click="$ctrl.updateAclAdminAccount()"
+        ng-show="$ctrl.aclAdminAccountForm.aclAdminAccount.$dirty"
+        ng-disabled="$ctrl.aclAdminAccountForm.aclAdminAccount.$invalid"
+        loading="$ctrl.saving"
+        translate="common.save"></button>
     </div>
     <!-- /component? -->
   </div>

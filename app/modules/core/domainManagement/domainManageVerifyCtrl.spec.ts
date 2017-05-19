@@ -1,7 +1,5 @@
 import testModule from './index';
 
-declare let sinon: any;
-
 describe('DomainManagementVerifyCtrl', () => {
   let Config, Controller, $rootScope, $q, Translate, Injector, DomainManagementService;
   beforeEach(angular.mock.module(testModule));
@@ -19,7 +17,7 @@ describe('DomainManagementVerifyCtrl', () => {
   let domainManagementVerifyCtrlFactory = (domainManageService, user, domain, mockToken = true) => {
 
     if (mockToken) {
-      domainManageService.getToken = sinon.stub().returns($q.resolve());
+      domainManageService.getToken = jasmine.createSpy('getToken').and.returnValue($q.resolve());
     }
     return Controller('DomainManageVerifyCtrl', {
       $state: { params: { domain: domain, loggedOnUser: user } },
@@ -27,7 +25,7 @@ describe('DomainManagementVerifyCtrl', () => {
       DomainManagementService: domainManageService,
       $translate: Translate,
       LogMetricsService: {
-        logMetrics: sinon.stub(),
+        logMetrics: jasmine.createSpy('logMetrics'),
         eventType: { domainManageVerify: 'verify' },
         eventAction: { buttonClick: 'click' },
       },
@@ -57,16 +55,16 @@ describe('DomainManagementVerifyCtrl', () => {
 
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList = [{ text: 'superdomain.com', status: 'verified' }];
-    DomainManagementService.verifyDomain = sinon.stub().returns(deferred.promise);
-    DomainManagementService.getToken = sinon.stub().returns($q.resolve('faketoken'));
+    DomainManagementService.verifyDomain = jasmine.createSpy('verifyDomain').and.returnValue(deferred.promise);
+    DomainManagementService.getToken = jasmine.createSpy('getToken').and.returnValue($q.resolve('faketoken'));
     ctrl = domainManagementVerifyCtrlFactory(
       DomainManagementService, user, domain, false,
     );
 
     ctrl.verify();
 
-    expect(DomainManagementService.verifyDomain.callCount).toBe(1);
-    expect(DomainManagementService.getToken.callCount).toBe(1);
+    expect(DomainManagementService.verifyDomain.calls.count()).toBe(1);
+    expect(DomainManagementService.getToken.calls.count()).toBe(1);
 
     deferred.reject('error-in-verify');
     ctrl.error = 'not-the-error-we-expect';
@@ -91,7 +89,7 @@ describe('DomainManagementVerifyCtrl', () => {
 
     ctrl.learnMore();
     $rootScope.$digest();
-    expect(ctrl.LogMetricsService.logMetrics.callCount).toBe(1);
+    expect(ctrl.LogMetricsService.logMetrics.calls.count()).toBe(1);
   });
 
   describe('with no previous domains verified', () => {
@@ -164,13 +162,13 @@ describe('DomainManagementVerifyCtrl', () => {
     });
 
     it('should invoke verifyDomain on service', () => {
-      DomainManagementService.verifyDomain = sinon.stub().returns($q.resolve({}));
-      ctrl.$previousState = { go: sinon.stub() };
+      DomainManagementService.verifyDomain = jasmine.createSpy('verifyDomain').and.returnValue($q.resolve({}));
+      ctrl.$previousState = { go: jasmine.createSpy('go') };
 
       ctrl.verify();
       $rootScope.$digest();
-      expect(DomainManagementService.verifyDomain.callCount).toBe(1);
-      expect(DomainManagementService.getToken.callCount).toBe(0);
+      expect(DomainManagementService.verifyDomain.calls.count()).toBe(1);
+      expect(DomainManagementService.getToken.calls.count()).toBe(0);
     });
   });
 });

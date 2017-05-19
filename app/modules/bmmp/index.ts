@@ -5,8 +5,10 @@ export * from './bmmp.service';
 
 export default angular
   .module('bmmp', [
+    require('modules/core/config/config'),
     require('modules/core/config/urlConfig'),
     require('modules/core/scripts/services/authinfo'),
+    require('modules/core/storage').default,
   ])
   .service('BmmpService', BmmpService)
   .name;

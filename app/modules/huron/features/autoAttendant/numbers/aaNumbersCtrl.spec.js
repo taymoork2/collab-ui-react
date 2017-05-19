@@ -86,8 +86,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1'),
-    getOrgName: sinon.stub().returns('awesomeco'),
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('awesomeco'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {

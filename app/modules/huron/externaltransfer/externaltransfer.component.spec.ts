@@ -29,7 +29,6 @@ describe('Component: externaltransferUser', () => {
     };
   });
 
-
   beforeEach(function () {
     this.initModules(externalServiceModule);
     this.injectDependencies(
@@ -46,9 +45,9 @@ describe('Component: externaltransferUser', () => {
     this.getUserSettings = this.$q.defer();
     this.saveExternalTransferDefer = this.$q.defer();
     spyOn(this.HuronSiteService, 'getSite').and.returnValue(this.getOrgSettings.promise);
-    spyOn(this.ExternalTransferService, 'getDefaultSettingForUser').and.returnValue(this.getUserSettings.promise);
+    spyOn(this.ExternalTransferService, 'getDefaultSetting').and.returnValue(this.getUserSettings.promise);
     spyOn(this.$translate, 'instant').and.callThrough();
-    spyOn(this.ExternalTransferService, 'updateSettingsForUser').and.returnValue(this.saveExternalTransferDefer.promise);
+    spyOn(this.ExternalTransferService, 'updateSettings').and.returnValue(this.saveExternalTransferDefer.promise);
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'errorWithTrackingId');
   });
@@ -129,4 +128,3 @@ describe('Component: externaltransferUser', () => {
     });
   });
 });
-

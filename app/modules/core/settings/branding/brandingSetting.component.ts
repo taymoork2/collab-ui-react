@@ -1,5 +1,5 @@
 import { SettingSection } from '../settingSection';
-import { BrandingCtrl } from 'modules/core/partnerProfile/branding';
+const BrandingCtrl = require('modules/core/partnerProfile/branding/brandingCtrl');
 
 export class BrandingSetting extends SettingSection {
   /* @ngInject */
@@ -12,6 +12,6 @@ export class BrandingSetting extends SettingSection {
 
 export class BrandingSettingComponent implements ng.IComponentOptions {
   public controller = BrandingCtrl;
-  public controllerAs: 'bctrl';
+  public controllerAs = 'bctrl';
   public templateUrl = 'modules/core/partnerProfile/branding/branding.tpl.html';
 }

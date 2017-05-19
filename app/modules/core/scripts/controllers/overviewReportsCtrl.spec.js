@@ -52,7 +52,7 @@ describe('Controller: Overview Reports', function () {
 
       PartnerService = {
         getManagedOrgsList: jasmine.createSpy('getManagedOrgsList').and.callFake(function () {
-          return q.when({
+          return q.resolve({
             data: {
               organizations: _.cloneDeep(customerData.customerResponse),
             },

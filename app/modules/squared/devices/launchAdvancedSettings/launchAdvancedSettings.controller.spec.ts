@@ -29,18 +29,18 @@ describe('LaunchAdvancedSettingsController', () => {
     state.$controller = _$controller_;
 
     state.$scope = {
-      $apply: sinon.stub(),
+      $apply: jasmine.createSpy('apply'),
     };
 
     state.authInfo = {
-      getPrimaryEmail: sinon.stub().returns('getPrimaryEmail@getPrimaryEmail'),
-      getUserName: sinon.stub().returns('getUserName'),
+      getPrimaryEmail: jasmine.createSpy('getPrimaryEmail').and.returnValue('getPrimaryEmail@getPrimaryEmail'),
+      getUserName: jasmine.createSpy('getUserName').and.returnValue('getUserName'),
     };
     state.CsdmDeviceService = {
-      sendAdvancedSettingsOtp: sinon.stub(),
+      sendAdvancedSettingsOtp: jasmine.createSpy('sendAdvancedSettingsOtp'),
     };
     state.$modalInstance = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
   }));
 

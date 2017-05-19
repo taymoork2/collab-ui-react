@@ -3,7 +3,9 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 cr-convert-users-modal {
-  height: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 
   .manage-users-dialog {
     // 100% - header - footer
@@ -17,15 +19,17 @@ cr-convert-users-modal {
 }
 
 .convert-users {
-  #convertCancelButton {
-    margin-right: 10px;
+  .unlicensed-user-list {
+    border: solid $gray-light-2 1px;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
   }
 
   .gridStyle {
-    width: 898px;
-    height: 491px;
+    flex: 1 1 0;
+    min-height: 0;
     background-color: $brand-white;
-    border: solid $gray-light-2 1px;
   }
 
   .explanation {
@@ -33,7 +37,7 @@ cr-convert-users-modal {
   }
 
   .search {
-    width: 898px;
+    width: 100%;
     position: relative;
     margin-bottom: 15px;
     margin-top: 15px;

@@ -74,7 +74,7 @@
     "objectName": null,
     "siteID": "ff808081582992dd01589a5b232410bb",
     "customerID": "ff808081570807760157d570572619f4",
-    "action": "submit_callback_group",
+    "action": "submit_cg_move_site",
     "actionFor": "Callback Group",
     "email": "liqing@qa.webex.com"
   }, {
@@ -115,7 +115,55 @@
     "actionFor": null,
     "email": "liqing@qa.webex.com"
   }, {
+    "id": "c253554d-32f6-4f56-b584-2e8a45ab5c22",
+    "userId": "liqing@qa.webex.com",
+    "userName": "qing li",
+    "actionTime": "Nov 15, 2016 05:21:39",
+    "hasLogFile": false,
+    "objectName": "tete",
+    "siteID": "ff8080815823e72c0158244952240022",
+    "customerID": "ff808081527ccb3f0152e39ec555010c",
+    "action": "add_note",
+    "actionFor": null,
+    "email": "liqing@qa.webex.com"
+  }, {
+    "id": "c253554d-3236-4fc6-b584-2e8a45ab5c22",
+    "userId": "liqing@qa.webex.com",
+    "userName": "qing li",
+    "actionTime": "Nov 15, 2016 05:21:39",
+    "hasLogFile": false,
+    "objectName": "tete",
+    "siteID": "ff8080815823e72c0158244952240022",
+    "customerID": "ff808081527ccb3f0152e39ec555010c",
+    "action": "add_note",
+    "actionFor": null,
+    "email": "liqing@qa.webex.com"
+  }, {
+    "id": "c253554d-32f6-4fc6-b524-2e8a45ab5c22",
+    "userId": "liqing@qa.webex.com",
+    "userName": "qing li",
+    "actionTime": "Nov 15, 2016 05:21:39",
+    "hasLogFile": false,
+    "objectName": "tete",
+    "siteID": "ff8080815823e72c0158244952240022",
+    "customerID": "ff808081527ccb3f0152e39ec555010c",
+    "action": "add_note",
+    "actionFor": null,
+    "email": "liqing@qa.webex.com"
+  }, {
     "id": "c253554d-32f6-4fc6-b584-2e8a45ab5c22",
+    "userId": "liqing@qa.webex.com",
+    "userName": "qing li",
+    "actionTime": "Nov 15, 2016 05:21:39",
+    "hasLogFile": false,
+    "objectName": "tete",
+    "siteID": "ff8080815823e72c0158244952240022",
+    "customerID": "ff808081527ccb3f0152e39ec555010c",
+    "action": "add_note",
+    "actionFor": null,
+    "email": "liqing@qa.webex.com"
+  }, {
+    "id": "c253554d-35f6-4fc6-b584-2e8a45ab5c22",
     "userId": "liqing@qa.webex.com",
     "userName": "qing li",
     "actionTime": "Nov 15, 2016 05:21:39",

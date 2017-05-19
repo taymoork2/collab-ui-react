@@ -1,0 +1,37 @@
+{
+  "members": [
+    {
+      "type": "USER_REAL_USER",
+      "uuid": "06c93aaf-e056-4bca-a97f-22d868de7da2",
+      "firstName": "Captain",
+      "lastName": "Marvel",
+      "userName": "annakordeczka1+sparkcall@gmail.com",
+      "displayName": null,
+      "url": "https://cmi.huron-int.com/api/v2/customers/57f8e857-d859-44d0-bf3e-bf86af1d57c9/users/06c93aaf-e056-4bca-a97f-22d868de7da2",
+      "numbers": [
+        {
+          "uuid": "ac9c1e11-e649-4185-966a-0e874501ba53",
+          "internal": "206",
+          "external": "+17077315990",
+          "siteToSite": "8100206",
+          "incomingCallMaximum": 2,
+          "primary": true,
+          "url": "https://cmi.huron-int.com/api/v2/customers/57f8e857-d859-44d0-bf3e-bf86af1d57c9/users/06c93aaf-e056-4bca-a97f-22d868de7da2/numbers/ac9c1e11-e649-4185-966a-0e874501ba53"
+        }
+      ]
+    }
+  ],
+  "url": "https://cmi.huron-int.com/api/v2/customers/57f8e857-d859-44d0-bf3e-bf86af1d57c9/members?name=cap&wide=true",
+  "paging": {
+    "next": [
+      "https://cmi.huron-int.com/api/v2/customers/57f8e857-d859-44d0-bf3e-bf86af1d57c9/members?name=cap&wide=true&offset=50&limit=50"
+    ],
+    "prev": [
+      "https://cmi.huron-int.com/api/v2/customers/57f8e857-d859-44d0-bf3e-bf86af1d57c9/members?name=cap&wide=true&offset=0&limit=50"
+    ],
+    "limit": 50,
+    "offset": 0,
+    "pages": null,
+    "count": null
+  }
+}

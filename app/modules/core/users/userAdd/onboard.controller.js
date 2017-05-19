@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, DialPlanService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -106,6 +106,9 @@ require('./_user-add.scss');
     $scope.isCareAndCDCEnabled = Authinfo.isCareAndCDC();
     $scope.isCareAndCVCEnabled = Authinfo.isCareVoiceAndCVC();
     $scope.isCareEnabled = $scope.isCareAndCDCEnabled || $scope.isCareAndCVCEnabled;
+
+    $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+    $scope.convertUsersReadOnly = $stateParams.readOnly || $scope.isDirSyncEnabled;
 
     $scope.controlMsg = controlMsg;
 
@@ -819,37 +822,6 @@ require('./_user-add.scss');
       return false;
     };
 
-    // [Services] -> [Services] (merges Service[s] w/ same license)
-    var mergeMultipleLicenseSubscriptions = function (fetched) {
-      // Construct a mapping from License to (array of) Service object(s)
-      var services = fetched.reduce(function (object, service) {
-        var key = service.license.licenseType;
-        if (key in object) {
-          object[key].push(service);
-        } else {
-          object[key] = [service];
-        }
-        return object;
-      }, {});
-
-      // Merge all services with the same License into a single Service
-      return _.values(services).map(function (array) {
-        var result = {
-          licenses: [],
-        };
-        array.forEach(function (service) {
-          var copy = _.cloneDeep(service);
-          copy.licenses = [copy.license];
-          delete copy.license;
-          _.mergeWith(result, copy, function (left, right) {
-            if (_.isArray(left)) return left.concat(right);
-          });
-        });
-        return result;
-      });
-
-    };
-
     var getAccountServices = function () {
       var services = {
         message: Authinfo.getMessageServices(),
@@ -858,7 +830,7 @@ require('./_user-add.scss');
         care: Authinfo.getCareServices(),
       };
       if (services.message) {
-        services.message = mergeMultipleLicenseSubscriptions(services.message);
+        services.message = OnboardService.mergeMultipleLicenseSubscriptions(services.message);
         $scope.messageFeatures = $scope.messageFeatures.concat(services.message);
         if (userLicenseIds) {
           _.forEach($scope.messageFeatures[1].licenses, function (license) {
@@ -901,20 +873,6 @@ require('./_user-add.scss');
       value: 2,
       name: 'collabRadio',
       id: 'collabRadio2',
-    };
-
-    $scope.tableOptions = {
-      cursorcolor: chartColors.gray,
-      cursorminheight: 50,
-      cursorborder: "0px",
-      cursorwidth: "7px",
-      railpadding: {
-        top: 0,
-        right: 3,
-        left: 0,
-        bottom: 0,
-      },
-      autohidemode: "leave",
     };
 
     var nameTemplate = '<div class="ui-grid-cell-contents"><span class="name-display-style">{{row.entity.name}}</span>' +
@@ -1360,8 +1318,6 @@ require('./_user-add.scss');
     };
     var isDuplicate = false;
 
-    $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
-
     function setInvalidToken(token) {
       angular.element(token.relatedTarget).addClass('invalid');
       $scope.invalidcount++;
@@ -1593,6 +1549,29 @@ require('./_user-add.scss');
       initResults();
     };
 
+    $scope.skipErrorsOrFinish = function () {
+      if (_.get($scope, 'results.errors.length')) {
+        return 'usersPage.skipErrorsAndFinish';
+      } else {
+        return 'common.finish';
+      }
+    };
+
+    $scope.goToUsersPage = function () {
+      $previousState.forget('modalMemo');
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalyltics());
+      $state.go('users.list');
+    };
+
+    $scope.fixBulkErrors = function () {
+      if (isFTW) {
+        $scope.wizard.goToStep('manualEntry');
+      } else {
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
+        $state.go('users.add');
+      }
+    };
+
     function onboardUsers(optionalOnboard) {
       var deferred = $q.defer();
       initResults();
@@ -1749,29 +1728,6 @@ require('./_user-add.scss');
             $scope.results.errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
           }
         }
-
-        $scope.skipErrorsOrFinish = function () {
-          if ($scope.results.errors.length > 0) {
-            return 'usersPage.skipErrorsAndFinish';
-          } else {
-            return 'common.finish';
-          }
-        };
-
-        $scope.goToUsersPage = function () {
-          $previousState.forget('modalMemo');
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalyltics());
-          $state.go('users.list');
-        };
-
-        $scope.fixBulkErrors = function () {
-          if (isFTW) {
-            $scope.wizard.goToStep('manualEntry');
-          } else {
-            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
-            $state.go('users.add');
-          }
-        };
 
         //Displaying notifications
         if ($scope.results.resultList.length === usersList.length) {
@@ -2299,7 +2255,7 @@ require('./_user-add.scss');
     };
 
     $scope.convertDisabled = function () {
-      return $scope.gridApi.selection.getSelectedRows().length === 0;
+      return $scope.isDirSyncEnabled || !$scope.gridApi || $scope.gridApi.selection.getSelectedRows().length === 0;
     };
 
     getUnlicensedUsers();
@@ -2309,8 +2265,8 @@ require('./_user-add.scss');
       rowHeight: 45,
       enableHorizontalScrollbar: 0,
       selectionRowHeaderWidth: 50,
-      enableRowHeaderSelection: true,
-      enableFullRowSelection: true,
+      enableRowHeaderSelection: !$scope.convertUsersReadOnly,
+      enableFullRowSelection: !$scope.convertUsersReadOnly,
       useExternalSorting: false,
       enableColumnMenus: false,
       showFilter: false,
@@ -2322,6 +2278,7 @@ require('./_user-add.scss');
             gridApi.saveState.restore($scope, $scope.selectedState);
           }, 100);
         }
+        $timeout(gridApi.core.handleWindowResize, 200);
       },
       columnDefs: [{
 
@@ -2329,8 +2286,6 @@ require('./_user-add.scss');
         displayName: $translate.instant('usersPage.displayNameHeader'),
         resizable: false,
         sortable: true,
-        minWidth: 449,
-        maxWidth: 449,
       }, {
         field: 'userName',
         displayName: $translate.instant('homePage.emailAddress'),
@@ -2338,8 +2293,6 @@ require('./_user-add.scss');
         sort: {
           direction: 'desc',
           priority: 0,
-          minWidth: 449,
-          maxWidth: 449,
         },
         sortCellFiltered: true,
       }],

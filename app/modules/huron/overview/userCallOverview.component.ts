@@ -13,9 +13,8 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   public customerVmEnabled: boolean = false;
   public userVmEnabled: boolean = false;
   public userServices: Array<string> = [];
-  public snrEnabled: boolean = false;
   private externalTransferFeatureToggle;
-
+  public snrEnabled: boolean = false;
 
   /* @ngInject */
   constructor(

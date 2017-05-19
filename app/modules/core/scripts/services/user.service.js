@@ -82,20 +82,24 @@
           method: 'PATCH',
           url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
           data: userData,
-        }).success(function (data, status, headers) {
+        }).then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           $rootScope.$broadcast('Userservice::updateUsers');
           data.success = true;
           if (_.isFunction(callback)) {
-            callback(data, status, method, headers);
+            callback(data, response.status, method, response.headers);
           }
-        }).error(function (data, status, headers) {
+          return response;
+        }).catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
+          data.status = response.status;
           if (_.isFunction(callback)) {
-            callback(data, status, method, headers);
+            callback(data, response.status, method, response.headers);
           }
+          return $q.reject(response);
         });
       } else {
         return $q.resolve();
@@ -127,18 +131,20 @@
       if (userData.users.length > 0) {
 
         $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users', userData)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             $rootScope.$broadcast('Userservice::updateUsers');
             data.success = true;
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
+            data.status = response.status;
 
-            callback(data, status);
+            callback(data, response.status);
           });
       } else {
         callback('No valid emails entered.');
@@ -159,16 +165,20 @@
       return $http.get(scimUrl, {
         cache: !noCache,
       })
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
+          return response;
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
+          return $q.reject(response);
         });
     }
 
@@ -256,16 +266,18 @@
       if (userData.inviteList.length > 0) {
 
         $http.post(apiUrl, userData)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       } else {
         callback('No valid emails entered.');
@@ -278,16 +290,18 @@
         'adminEmail': adminEmail,
       };
       $http.post(userUrl + 'user/mail/provisioning', requestBody)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
         });
     }
 
@@ -335,16 +349,18 @@
       }
 
       $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
         });
     }
 
@@ -590,7 +606,7 @@
             entitlementOrLicense.properties.internalExtension = user.internalExtension;
           }
           if (user.directLine) {
-            entitlementOrLicense.properties.directLine = PhoneNumberService.getDIDValue(user.directLine);
+            entitlementOrLicense.properties.directLine = PhoneNumberService.getE164Format(user.directLine);
           }
         }
 

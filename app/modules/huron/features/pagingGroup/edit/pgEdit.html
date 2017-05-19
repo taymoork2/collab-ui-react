@@ -49,8 +49,8 @@
       <div class="section__content">
         <div class="pg-search-add">
           <input id="paging-group-member" type="text" ng-click="$ctrl.resetFilter()" ng-model="$ctrl.memberName"class="cs-input"
-            typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchMembers('MEMBER') | limitTo:10" typeahead-template-url="userTemplate.html"
-            typeahead-on-select="$ctrl.selectMembers($item)" placeholder="{{:: 'pagingGroup.editMemberPlaceholder' | translate}}"
+            typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchMembers($viewValue) | limitTo:10" typeahead-template-url="userTemplate.html"
+            typeahead-on-select="$ctrl.selectMembers($item)" placeholder="{{:: 'common.selectMembers' | translate}}"
             typeahead-min-length="3" typeahead-wait-ms="300">
           <div class="search-member">
             <i class="icon icon-search"></i>
@@ -74,13 +74,13 @@
         </div>
         <div class="pg-footer">
           <span class="member-count">
-                      {{$ctrl.getUserCount() + ('pagingGroup.users' | translate)}}
-                  </span>
+            {{$ctrl.getUserCount() + ('pagingGroup.users' | translate)}}
+          </span>
           <a class="line-show-more-less-text" ng-click="$ctrl.showMoreClicked('USER_REAL_USER', 'MEMBER')" ng-show="$ctrl.showMoreButton('USER_REAL_USER', 'MEMBER')">
-            <span translate="telephonyPreview.showMore"></span>
+            <span translate="common.showMore"></span>
           </a>
           <a class="line-show-more-less-text" ng-click="$ctrl.showLessClicked('USER_REAL_USER', 'MEMBER')" ng-show="$ctrl.showLessButton('USER_REAL_USER', 'MEMBER')">
-            <span translate="telephonyPreview.showLess"></span>
+            <span translate="common.showLess"></span>
           </a>
         </div>
 
@@ -101,13 +101,13 @@
         </div>
         <div class="pg-footer">
           <span class="member-count">
-                      {{$ctrl.getPlaceCount() + ('pagingGroup.places' | translate)}}
-                  </span>
+            {{$ctrl.getPlaceCount() + ('pagingGroup.places' | translate)}}
+          </span>
           <a class="line-show-more-less-text" ng-click="$ctrl.showMoreClicked('USER_PLACE', 'MEMBER')" ng-show="$ctrl.showMoreButton('USER_PLACE', 'MEMBER')">
-            <span translate="telephonyPreview.showMore"></span>
+            <span translate="common.showMore"></span>
           </a>
           <a class="line-show-more-less-text" ng-click="$ctrl.showLessClicked('USER_PLACE', 'MEMBER')" ng-show="$ctrl.showLessButton('USER_PLACE', 'MEMBER')">
-            <span translate="telephonyPreview.showLess"></span>
+            <span translate="common.showLess"></span>
           </a>
         </div>
       </div>
@@ -118,28 +118,28 @@
         <h6 class="section__description" translate="pagingGroup.initiatorEditHint"></h6>
       </div>
       <div class="section__content">
-        <div class="cs-radio-group"> 
-          <input cs-input type="radio" 
-             ng-model="$ctrl.initiatorType" 
-             name="allRadio" 
+        <div class="cs-radio-group">
+          <input cs-input type="radio"
+             ng-model="$ctrl.initiatorType"
+             name="allRadio"
              ng-change="$ctrl.onChange()"
-             id="public" 
+             id="public"
              value="PUBLIC"
              ng-change="$ctrl.onChange()"
              cs-input-label="{{:: 'pagingGroup.all' | translate}}">
-         <input cs-input type="radio" 
-             ng-model="$ctrl.initiatorType" 
-             id="membersonly" 
+         <input cs-input type="radio"
+             ng-model="$ctrl.initiatorType"
+             id="membersonly"
              ng-change="$ctrl.onChange()"
-             name="allMembersRadio" 
+             name="allMembersRadio"
              value="MEMBERS_ONLY"
              ng-change="$ctrl.onChange()"
              cs-input-label="{{:: 'pagingGroup.allMembers' | translate}}">
-         <input cs-input type="radio" 
-             ng-model="$ctrl.initiatorType" 
-             id="custom" 
+         <input cs-input type="radio"
+             ng-model="$ctrl.initiatorType"
+             id="custom"
              ng-change="$ctrl.onChange()"
-             name="customRadio" 
+             name="customRadio"
              value="CUSTOM"
              ng-change="$ctrl.onChange()"
              cs-input-label="{{:: 'pagingGroup.custom' | translate}}">
@@ -179,7 +179,7 @@
           <a class="line-show-more-less-text" ng-click="$ctrl.showLessClicked('', 'INITIATOR')" ng-show="$ctrl.showLessButton('', 'INITIATOR')">
             <span translate="telephonyPreview.showLess"></span>
           </a>
-        </div>        
+        </div>
       </div>
     </div>
   </form>

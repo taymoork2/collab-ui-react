@@ -1,0 +1,6 @@
+<div ng-if="!$ctrl.callParkId">
+  <ng-include src="'modules/call/features/call-park/call-park-add.html'"></ng-include>
+</div>
+<div class="call-park-edit" ng-if="$ctrl.callParkId">
+  <ng-include src="'modules/call/features/call-park/call-park-edit.html'"></ng-include>
+</div>

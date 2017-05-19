@@ -290,17 +290,21 @@
       }
 
       return $http.get(listUrl)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('Callback with search=' + searchStr);
-          callback(data, status, searchStr);
+          callback(data, response.status, searchStr);
+          return response;
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status, searchStr);
+          data.status = response.status;
+          callback(data, response.status, searchStr);
+          return $q.reject(response);
         });
     }
 
@@ -316,17 +320,19 @@
         url: generateUserReportsUrl,
         data: requestData,
       })
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('UserListService.generateUserReport - executing callback...');
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
         });
     }
 
@@ -338,7 +344,8 @@
       $rootScope.$emit(Config.idleTabKeepAliveEvent);
 
       $http.get(userReportsUrl)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           if (data.status !== 'success') {
             // Set 3 second delay to limit the amount times we
             // continually hit the user reports REST api.
@@ -349,16 +356,17 @@
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('UserListService.getUserReport - executing callback...');
-            callback(data, status);
+            callback(data, response.status);
             // delete the cached report, so that the next one will be fresh.
             $http.delete(userReportsUrl);
           }
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
         });
     }
 
@@ -482,16 +490,18 @@
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
 
       $http.get(adminUrl)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
         });
     }
 
@@ -502,17 +512,19 @@
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
 
       return $http.get(adminUrl)
-        .catch(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.extend({}, data, {
             success: false,
-            status: status,
+            status: response.status,
           });
           return $q.reject(data);
         })
-        .then(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.extend({}, data, {
             success: true,
-            status: status,
+            status: response.status,
           });
           return data;
         });

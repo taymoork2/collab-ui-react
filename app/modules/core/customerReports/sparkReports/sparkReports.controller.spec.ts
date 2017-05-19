@@ -71,7 +71,7 @@ describe('Controller: Customer Reports Ctrl', function () {
 
   describe('FeatureToggleService returns false', function () {
     beforeEach(function () {
-      spyOn(this.FeatureToggleService, 'atlasReportsUpdateGetStatus').and.returnValue(this.$q.when(false));
+      spyOn(this.FeatureToggleService, 'atlasReportsUpdateGetStatus').and.returnValue(this.$q.resolve(false));
 
       spyOn(this.SparkGraphService, 'setActiveUsersGraph').and.returnValue({
         dataProvider: _.cloneDeep(this.dummyData.activeUser.one),
@@ -92,16 +92,16 @@ describe('Controller: Customer Reports Ctrl', function () {
         dataProvider: _.cloneDeep(this.devicesJson.response.graphData),
       });
 
-      spyOn(this.SparkReportService, 'getActiveUserData').and.returnValue(this.$q.when({
+      spyOn(this.SparkReportService, 'getActiveUserData').and.returnValue(this.$q.resolve({
         graphData: _.cloneDeep(this.activeData.activeResponse),
         isActiveUsers: true,
       }));
-      spyOn(this.SparkReportService, 'getMostActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(this.activeData.mostActiveResponse)));
-      spyOn(this.SparkReportService, 'getAvgRoomData').and.returnValue(this.$q.when(_.cloneDeep(this.roomData.response)));
-      spyOn(this.SparkReportService, 'getFilesSharedData').and.returnValue(this.$q.when(_.cloneDeep(this.fileData.response)));
-      spyOn(this.SparkReportService, 'getMediaQualityData').and.returnValue(this.$q.when(_.cloneDeep(this.mediaData.response)));
-      spyOn(this.SparkReportService, 'getCallMetricsData').and.returnValue(this.$q.when(_.cloneDeep(this.metricsData.response)));
-      spyOn(this.SparkReportService, 'getDeviceData').and.returnValue(this.$q.when(_.cloneDeep(this.devicesJson.response)));
+      spyOn(this.SparkReportService, 'getMostActiveUserData').and.returnValue(this.$q.resolve(_.cloneDeep(this.activeData.mostActiveResponse)));
+      spyOn(this.SparkReportService, 'getAvgRoomData').and.returnValue(this.$q.resolve(_.cloneDeep(this.roomData.response)));
+      spyOn(this.SparkReportService, 'getFilesSharedData').and.returnValue(this.$q.resolve(_.cloneDeep(this.fileData.response)));
+      spyOn(this.SparkReportService, 'getMediaQualityData').and.returnValue(this.$q.resolve(_.cloneDeep(this.mediaData.response)));
+      spyOn(this.SparkReportService, 'getCallMetricsData').and.returnValue(this.$q.resolve(_.cloneDeep(this.metricsData.response)));
+      spyOn(this.SparkReportService, 'getDeviceData').and.returnValue(this.$q.resolve(_.cloneDeep(this.devicesJson.response)));
 
       spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.callThrough();
       spyOn(this.DummySparkDataService, 'dummyAvgRoomData').and.callThrough();
@@ -268,7 +268,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       this.activeDropdownArray = _.cloneDeep(this.activeData.dropdownOptions);
 
       spyOn(this.$rootScope, '$broadcast').and.callThrough();
-      spyOn(this.FeatureToggleService, 'atlasReportsUpdateGetStatus').and.returnValue(this.$q.when(true));
+      spyOn(this.FeatureToggleService, 'atlasReportsUpdateGetStatus').and.returnValue(this.$q.resolve(true));
 
       spyOn(this.SparkGraphService, 'setActiveLineGraph').and.returnValue({
         dataProvider: _.cloneDeep(this.activeData.activeLineResponse),
@@ -295,24 +295,24 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
       spyOn(this.SparkGraphService, 'showHideActiveLineGraph');
 
-      spyOn(this.SparkLineReportService, 'getActiveUserData').and.returnValue(this.$q.when({
+      spyOn(this.SparkLineReportService, 'getActiveUserData').and.returnValue(this.$q.resolve({
         graphData: _.cloneDeep(this.activeData.activeLineResponse),
         isActiveUsers: true,
       }));
-      spyOn(this.SparkLineReportService, 'getMediaQualityData').and.returnValue(this.$q.when(_.cloneDeep(this.mediaData.response)));
-      spyOn(this.SparkLineReportService, 'getMostActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(this.activeData.mostActiveResponse)));
-      spyOn(this.SparkLineReportService, 'getConversationData').and.returnValue(this.$q.when({
+      spyOn(this.SparkLineReportService, 'getMediaQualityData').and.returnValue(this.$q.resolve(_.cloneDeep(this.mediaData.response)));
+      spyOn(this.SparkLineReportService, 'getMostActiveUserData').and.returnValue(this.$q.resolve(_.cloneDeep(this.activeData.mostActiveResponse)));
+      spyOn(this.SparkLineReportService, 'getConversationData').and.returnValue(this.$q.resolve({
         array: _.cloneDeep(this.conversationData.response),
         hasRooms: true,
         hasFiles: true,
       }));
-      spyOn(this.SparkLineReportService, 'getDeviceData').and.returnValue(this.$q.when(_.cloneDeep(this.devicesJson.response)));
+      spyOn(this.SparkLineReportService, 'getDeviceData').and.returnValue(this.$q.resolve(_.cloneDeep(this.devicesJson.response)));
 
       const lineResponse: Array<IMetricsData> = [];
       for (let i = 0; i < 7; i++) {
         lineResponse.push(_.cloneDeep(this.metricsData.lineResponse));
       }
-      spyOn(this.SparkLineReportService, 'getMetricsData').and.returnValue(this.$q.when(lineResponse));
+      spyOn(this.SparkLineReportService, 'getMetricsData').and.returnValue(this.$q.resolve(lineResponse));
 
       spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.callThrough();
       spyOn(this.DummySparkDataService, 'dummyConversationData').and.callThrough();

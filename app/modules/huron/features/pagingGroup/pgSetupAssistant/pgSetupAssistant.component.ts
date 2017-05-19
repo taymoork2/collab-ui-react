@@ -84,7 +84,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
       if (this.index === this.lastIndex) {
         //Change the green arrow button to a blue one
         let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
-        arrowButton.removeClass('savePagingGroup');
+        arrowButton.removeClass('save-call-feature');
         //Hide helpText
         let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
         helpText.removeClass('active');
@@ -101,7 +101,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
       if (this.index === this.lastIndex) {
         //Change the blue arrow button to a green one
         let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
-        arrowButton.addClass('savePagingGroup');
+        arrowButton.addClass('save-call-feature');
       } else if (this.index === this.lastIndex + 1) {
         this.savePagingGroup();
         this.index--;

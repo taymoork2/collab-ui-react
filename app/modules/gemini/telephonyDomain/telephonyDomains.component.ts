@@ -2,7 +2,6 @@ import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from './telephonyDomain.service';
 
-
 export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
@@ -52,6 +51,7 @@ class TelephonyDomains implements ng.IComponentController {
       this.gridData = [];
       this.gridRefresh = true;
       this.setGridData();
+      this.setGridOptions();
     });
     this.$scope.$on('$destroy', deregister);
   }
@@ -69,11 +69,12 @@ class TelephonyDomains implements ng.IComponentController {
   }
 
   public onRequest() {
+    this.gemService.setStorage('currentTelephonyDomain', {});
     this.$modal.open({
       type: 'full',
       template: '<gm-td-modal-request dismiss="$dismiss()" close="$close()" class="new-field-modal"></gm-td-modal-request>',
     }).result.then(() => {
-      this.$state.go('gmTdNumbers');
+      this.$state.go('gmTdNumbersRequest');
     });
   }
 
@@ -119,7 +120,7 @@ class TelephonyDomains implements ng.IComponentController {
     this.TelephonyDomainService.getTelephonyDomains(this.customerId)
       .then((res) => {
         if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('error'); //TODO Wording
+          this.Notification.error('gemini.errorCode.loadError');
         }
 
         let data: any = _.get(res, 'content.data.body');

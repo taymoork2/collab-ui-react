@@ -59,3 +59,13 @@ describe('ExampleFeatureService', () => {
   });
 });
 ```
+
+### Tips:
+
+#### Cheetsheet of Injected Dependencies -> `require()`-modules
+
+| Dependency | `require()`-module |
+| ---------- | ------------------ |
+| `$sanitize` | `require('angular-sanitize')` |
+| `$state` | `require('angular-ui-router')` |
+| `$translate` | `require('angular-translate')` |

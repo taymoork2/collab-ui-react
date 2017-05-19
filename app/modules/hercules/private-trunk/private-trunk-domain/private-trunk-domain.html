@@ -1,8 +1,8 @@
 <div ng-form="privateTrunkDomainForm" class="private-trunk">
-  <div ng-class="{'top-margin': !$ctrl.isFirstTimeSetup()}"></div>
+  <div ng-class="{'top-margin': !$ctrl.isFirstTimeSetup}"></div>
   <h5>{{$ctrl.domainDesc.title}}</h5>
-  <p>{{$ctrl.domainDesc.desc}}</p>
-  <div class="cs-radio-group" ng-if="$ctrl.isFirstTimeSetup()">
+  <div class="body-medium margin-input">{{$ctrl.domainDesc.desc}}</div>
+  <div class="cs-radio-group" ng-if="$ctrl.isFirstTimeSetup">
       <input
         cs-input
         type="radio"
@@ -34,7 +34,7 @@
         cs-input-label="{{'servicesOverview.cards.privateTrunk.radioSelect2' | translate}}"
         ng-change="$ctrl.changeRadio()">
      </div>
-     <div class="small-6 medium-6 large-6 cs-input-group" ng-if="!$ctrl.isFirstTimeSetup()">
+     <div class="small-6 medium-6 large-6 cs-input-group" ng-if="!$ctrl.isFirstTimeSetup">
         <cs-select
           ng-model="$ctrl.domainSelected"
           options="$ctrl.domainOptions"
@@ -44,6 +44,6 @@
           plural="Domains"
           on-change-fn="$ctrl.changeSelected()">
         </cs-select>
-        <a href="" translate="servicesOverview.cards.privateTrunk.verifyADomain" ng-click="$ctrl.gotoSettings()"></a>
+        <a href="" class="body-small bottom-margin" translate="servicesOverview.cards.privateTrunk.verifyADomain" ng-click="$ctrl.gotoSettings()"></a>
      </div>
 </div>

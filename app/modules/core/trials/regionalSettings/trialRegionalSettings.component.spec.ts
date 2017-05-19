@@ -2,19 +2,18 @@ describe('Component: trialRegionalSettings', () => {
   const COUNTRY_SELECT = '.csSelect-container[name="defaultCountry"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const PLACEHOLDER = '.placeholder';
-
-  let countryList = getJSONFixture('core/json/trials/countryList.json');
+  const ERROR_DIV = 'div.ellipsis span.text-wrap';
+  const ERROR_MSG = 'common.invalidRequired';
 
   beforeEach(function () {
     this.initModules('trial.regionalSettings');
-    this.injectDependencies(
-      '$scope',
-      '$q',
-      'HuronCountryService',
-      'FeatureToggleService',
-    );
+    this.injectDependencies('$scope', '$q', 'HuronCountryService', 'FeatureToggleService');
+
+    let countryList = getJSONFixture('core/json/trials/countryList.json');
+
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     spyOn(this.HuronCountryService, 'getCountryList').and.returnValue(countryList);
+    this.$scope.defaultCountry = '';
   });
 
   function initComponent() {
@@ -22,6 +21,8 @@ describe('Component: trialRegionalSettings', () => {
       callTrialEnabled: 'callTrialEnabled',
       defaultCountry: '',
       onChangeFn: 'onChangeFn(country)',
+      showError: 'true',
+      selectName: 'defaultCountry',
     });
   }
 
@@ -70,6 +71,8 @@ describe('Component: trialRegionalSettings', () => {
     it('should have a drop down select box with European options', function () {
       expect(this.view).toContainElement(COUNTRY_SELECT);
       expect(this.view.find(COUNTRY_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('Austria');
+      expect(this.view).toContainElement(ERROR_DIV);
+      expect(this.view.find(ERROR_DIV)).toHaveText(ERROR_MSG);
     });
 
     it('should have a placeholder', function () {
@@ -81,6 +84,7 @@ describe('Component: trialRegionalSettings', () => {
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(jasmine.objectContaining({
         id: 'AT',
       }));
+      expect(this.view).not.toContainElement(ERROR_DIV);
     });
 
     describe('When call trial is false', () => {

@@ -7,6 +7,10 @@
   @extend %grid-subheader;
   @extend %page-background-white;
 
+  .user-list__content {
+    position: relative;
+  }
+
   .ui-grid-cell:first-child,
   .ui-grid-header-cell:first-child {
     border-right: 0;
@@ -76,9 +80,15 @@
 
   .too-many-users {
     position: absolute;
-    top: 150px;
-    left: 0;
-    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+  }
+
+  .too-many-users__content {
+    margin: auto;
+    margin-top: 150px;
     text-align: center;
     color: $gray-darker;
   }

@@ -57,7 +57,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
       it('should validate controller creation', function () {
         expect(controller).toBeDefined();
         expect(controller.variableOptions.length).toEqual(5);
-        expect(controller.readAsOptions.length).toEqual(3);
+        expect(controller.readAsOptions.length).toEqual(4);
       });
     });
 
@@ -76,7 +76,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
       it('should validate controller creation', function () {
         expect(controller).toBeDefined();
         expect(controller.variableOptions.length).toEqual(6);
-        expect(controller.readAsOptions.length).toEqual(3);
+        expect(controller.readAsOptions.length).toEqual(4);
       });
     });
 
@@ -117,7 +117,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
 
       it('should be false', function () {
         controller.variableSelection.label = true;
-        expect(controller.isSaveEnabled()).toEqual(false);
+        expect(controller.isSaveEnabled()).toEqual(true);
       });
 
       it('should be true', function () {

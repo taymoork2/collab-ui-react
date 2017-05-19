@@ -1767,6 +1767,5 @@
       return (objectType(obj) === 'CeMenuEntry');
     }
 
-
   }
 })();

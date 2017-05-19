@@ -153,7 +153,13 @@
     }
 
     function getHistories() {
-      cbgService.getHistories(vm.customerId, groupId, vm.model.groupName)
+      var data = {
+        siteId: groupId,
+        objectID: vm.model.groupName,
+        customerId: vm.customerId,
+        actionFor: 'Callback Group',
+      };
+      cbgService.getHistories(data)
         .then(function (res) {
           var resJson = _.get(res.content, 'data');
           if (resJson.returnCode) {
@@ -161,7 +167,10 @@
             return;
           }
           vm.hisLoading = false;
-          vm.allHistories = resJson.body;
+          vm.allHistories = _.filter(resJson.body, function (item) {
+            return item.action !== 'add_notes_cg';
+          });
+
           _.forEach(vm.allHistories, function (item) {
             item.action = _.upperFirst(item.action);
 

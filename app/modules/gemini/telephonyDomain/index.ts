@@ -1,24 +1,28 @@
 import { GmTdSitesComponent } from './details/gmTdSites.component';
 import { GmTdNotesComponent } from './details/gmTdNotes.component';
 import { TelephonyDomainService } from './telephonyDomain.service';
-import { GmImportTdComponent } from './details/gmImportTd.component';
-import { GmTdNumbersComponent } from './details/gmTdNumbers.component';
 import { GmTdDetailsComponent } from './details/gmTdDetails.component';
 import { TelephonyDomainsComponent } from './telephonyDomains.component';
-import { GmTdHistoriesComponent } from './details/gmTdHistories.component';
-import { GmTdNumbersViewComponent } from './details/gmTdNumbersView.component';
 import { GmTdModalRequestComponent } from './details/gmTdModalRequest.component';
+import { GmTdNumbersComponent } from './details/gmTdNumbers.component';
+import { GmTdHistoriesComponent } from './details/gmTdHistories.component';
+import { GmTdNotesViewComponent } from './details/gmTdNotesView.component';
+import { GmTdHeaderComponent } from './details/gmTdHeader.component';
+import { GmTdImportNumbersFromCsvComponent } from './details/gmTdImportNumbersFromCsv.component';
+import { GmImportTdComponent } from './details/gmImportTd.component';
 
 export default angular
   .module('Gemini')
   .service('TelephonyDomainService', TelephonyDomainService)
   .component('gmTdNotes', new GmTdNotesComponent())
   .component('gmTdSites', new GmTdSitesComponent())
-  .component('gmImportTd', new GmImportTdComponent())
   .component('gmTdDetails', new GmTdDetailsComponent())
-  .component('gmTdNumbers', new GmTdNumbersComponent())
-  .component('gmTdHistories', new GmTdHistoriesComponent())
-  .component('gmTdNumbersView', new GmTdNumbersViewComponent())
   .component('gmTdModalRequest', new GmTdModalRequestComponent())
   .component('gmTelephonyDomains', new TelephonyDomainsComponent())
+  .component('gmTdNumbers', new GmTdNumbersComponent())
+  .component('gmTdHistories', new GmTdHistoriesComponent())
+  .component('gmTdNotesView', new GmTdNotesViewComponent())
+  .component('gmTdHeader', new GmTdHeaderComponent())
+  .component('gmTdImportNumbersFromCsv', new GmTdImportNumbersFromCsvComponent())
+  .component('gmImportTd', new GmImportTdComponent())
   .name;

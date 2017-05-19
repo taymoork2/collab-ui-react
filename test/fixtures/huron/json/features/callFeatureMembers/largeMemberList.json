@@ -1,0 +1,112 @@
+[
+  {
+    "uuid": "15ce5a48-9e2f-49ec-b13f-ad49ef87ce5d",
+    "name": "Asgard",
+    "showName": true,
+    "number": "201",
+    "type": "place",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "4c2ecd95-4c22-44b5-804b-0e2ce0df439a"
+  },
+  {
+    "uuid": "e7c51c74-c327-49a1-af1f-306a6bb636d3",
+    "name": "Bruce Wayne",
+    "showName": true,
+    "number": "503",
+    "type": "user",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "d98e0bda-7e03-4a14-98d7-e56a55213502"
+  },
+  {
+    "uuid": "f205b8fc-b90a-472b-9d72-787f1ba04bbe",
+    "name": "Clark Kent",
+    "showName": true,
+    "number": "504",
+    "type": "user",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "af5a895e-9f84-4bab-9227-a7363f4cfc19"
+  },
+  {
+    "uuid": "d1fd60e1-64d2-4d0b-9408-edd22b10224d",
+    "name": "Natasha Romanova",
+    "showName": true,
+    "number": "502",
+    "type": "user",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "436ea59c-89eb-4e62-a577-0dbbac59a44a"
+  },
+  {
+    "uuid": "f2b0e253-e366-461c-8f3e-c52818709b5e",
+    "name": "Steve Rogers",
+    "showName": true,
+    "number": "505",
+    "type": "user",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "67e4e696-fefd-4427-8999-46aa7035087f"
+  },
+  {
+    "uuid": "db1e7c7c-87c5-4775-b5f8-e65c8cbae559",
+    "name": "Diana Prince",
+    "showName": true,
+    "number": "550",
+    "type": "user",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "de236749-e30e-4f6b-9276-63f4f1e25cfc"
+  },
+  {
+    "uuid": "4027101c-2c35-4b01-b156-013944c17b19",
+    "name": "Clint Barton",
+    "showName": true,
+    "number": "220",
+    "type": "user",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "fa29a501-622c-4d60-b3d8-8762445864be"
+  },
+  {
+    "uuid": "3e8ab75f-6472-4c6c-bc91-ed9bdca48c76",
+    "name": "Tony Stark",
+    "showName": true,
+    "number": "508",
+    "type": "user",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "a2d7c8e9-a97c-47b9-b811-3d0accb2b9b5"
+  },
+  {
+    "uuid": "9360a77e-193a-4033-a04c-6e999dd6eb73",
+    "name": "Thor Odinson",
+    "showName": true,
+    "number": "500",
+    "type": "user",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "170ee920-29d6-4aed-b85a-583f8af6bdc6"
+  },
+  {
+    "uuid": "634db865-d9ef-4336-9c26-3b1b42391d2b",
+    "name": "Nick Fury",
+    "showName": true,
+    "number": "501",
+    "type": "user",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "68d0233f-df1b-4833-a323-84b94050fef1"
+  },
+  {
+    "uuid": "5544cfcf-9ff2-4a2a-8731-672d69bdb521",
+    "name": "Peter Parker",
+    "showName": true,
+    "number": "507",
+    "type": "user",
+    "cardType": "simple",
+    "memberItems": [],
+    "memberItemId": "21e6bf6a-e98b-43e5-b238-18d9c100ff45"
+  }
+]

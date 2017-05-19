@@ -1,6 +1,7 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/tools/functions/core';
+
 .private-trunk {
   .padding-p {
     padding-right: 4.5rem;
@@ -13,6 +14,10 @@
   }
   .padding-p-bottom {
     padding-bottom: 1.5rem;
+  }
+
+  .padding-labels {
+    padding-left: 1.5rem;
   }
 
   .cert-word-wrap {
@@ -39,6 +44,9 @@
   .top-margin {
     margin-top: -4rem;
   }
+  .bottom-margin {
+    margin-bottom: .75rem;
+  }
 
   .domain-list {
     padding-left: 1rem;
@@ -48,29 +56,64 @@
     @include vr-spacing(mt, 0.25);
     @include vr-spacing(mr, 0.5);
   }
+
   .exit-icon {
     padding-top: .5rem;
     font-size: 1.25rem;
     position: absolute;
     cursor: pointer;
   }
+
+  .span-font-size {
+    font-size: 1rem;
+  }
+
   .add-align {
     padding-left: 1.5rem;
   }
+
   .label-align {
     padding-left: 1.25rem;
   }
-  .label-2-align {
+
+  .float-right-view {
+    float: right;
+    position: relative;
+    padding-right: 1.5rem;
+    padding-top: 1rem;
+  }
+
+  .margin-input {
+    margin: rem-calc(16) 0;
+  }
+
+  .cert-top-margin {
+    margin-top: 1.5rem;
+  }
+
+  .cert-left {
+    margin-left: 1.5rem;
+  }
+
+  .cert-color {
+    color: $color-attention-light;
+  }
+
+  .cert-icon {
+    line-height: 2;
     padding-left: 1.5rem;
   }
 
   .box.singlebox-margin {
-    margin: 0 rem_calc(16) rem_calc(8);
+    margin: 0 1rem .5rem;
   }
 
   .box.multibox-margin {
     @include vr-spacing(m, .5);
-    @include vr-spacing(pb, .5);
+  }
+
+  .padding-multi {
+    padding-bottom: .5rem;
   }
 
   .columns .box {
@@ -81,16 +124,25 @@
     flex-grow: column;
     flex: 1 1 auto;
 
+    &.multibox-margin {
+      border: thin solid $gray-light-2;
+      box-shadow: 0 1px 2px 0 $gray-light-2, inset 0 1px 0 0 $gray-lightest;
+      border-radius: 2px;
+    }
+
     .box-content {
       align-self: center;
       display: flex;
       background: transparent;
     }
 
-    .icon.icon-upload-contain {
+    .box-disabled {
+      background-color: $gray-light-3;
+    }
+
+    .icon.icon-upload {
       font-size: 1.5rem;
       display: inline;
-      line-height: 2rem;
       &:hover,
       &:active,
       &:focus {
@@ -105,18 +157,15 @@
     }
 
     .icon.close-icon-align {
-      position: relative;
       float: right;
-      font-size: .75rem;
-      line-height: 1rem;
-      padding-right: .5rem;
-      padding-top: .25rem;
+      font-size: 1rem;
+      padding-right: 1rem;
+      line-height: 2;
     }
 
     .span-filename {
       padding-left: .5rem;
       font-size: 1rem;
-      line-height: 2rem;
     }
     .prompt {
       padding-bottom: .5rem;
@@ -132,6 +181,7 @@
       }
     }
   }
+
   .flex-center-container {
     flex: 1 1 auto;
     display: flex;
