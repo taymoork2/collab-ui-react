@@ -1976,8 +1976,7 @@
     }
 
     function assignMediaOnHold() {
-      var assignmentInfo = [];
-      return ServiceSetup.setCompanyMediaOnHold(vm.model.mediaOnHold.value, assignmentInfo);
+      return ServiceSetup.setCompanyMediaOnHold(vm.model.mediaOnHold.value);
     }
 
     function shouldUpdateVoicemailPostalCode() {

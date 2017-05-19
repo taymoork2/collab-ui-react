@@ -81,7 +81,7 @@
         return MediaManagerService.save({
           orgId: Authinfo.getOrgId(),
           mediaFileId: mediaId,
-          assignments: assignmentInfo,
+          assignments: assignmentInfo || [],
         }).$promise;
       },
 
