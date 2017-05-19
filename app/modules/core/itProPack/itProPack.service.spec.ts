@@ -56,4 +56,34 @@ describe('ITProPackService', () => {
       expect(promise).toBeResolved();
     });
   });
+
+  describe('hasITProPackPurchasedOrNotEnabled()', () => {
+    it('should return true if both atlas-it-pro-pack-purchased is enabled and atlas-it-pro-pack FTs is enabled', function(){
+      let promise = this.ITProPackService.hasITProPackPurchasedOrNotEnabled().then(result => {
+        expect(result).toBeTruthy();
+      });
+      this.$rootScope.$digest();
+      expect(promise).toBeResolved();
+    });
+
+    it('should return true if atlas-it-pro-pack-purchased is disabled and atlas-it-pro-pack FT is disabled ', function(){
+      this.FeatureToggleService.atlasITProPackGetStatus.and.returnValue(this.$q.resolve(false));
+      this.FeatureToggleService.atlasITProPackPurchasedGetStatus.and.returnValue(this.$q.resolve(false));
+      let promise = this.ITProPackService.hasITProPackPurchasedOrNotEnabled().then(result => {
+        expect(result).toBeTruthy();
+      });
+      this.$rootScope.$digest();
+      expect(promise).toBeResolved();
+    });
+
+    it('should return false if atlas-it-pro-pack-purchased is disabled and atlas-it-pro-pack FT is enabled ', function(){
+      this.FeatureToggleService.atlasITProPackGetStatus.and.returnValue(this.$q.resolve(true));
+      this.FeatureToggleService.atlasITProPackPurchasedGetStatus.and.returnValue(this.$q.resolve(false));
+      let promise = this.ITProPackService.hasITProPackPurchasedOrNotEnabled().then(result => {
+        expect(result).toBeFalsy();
+      });
+      this.$rootScope.$digest();
+      expect(promise).toBeResolved();
+    });
+  });
 });
