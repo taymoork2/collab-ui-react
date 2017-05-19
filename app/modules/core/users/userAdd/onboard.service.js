@@ -1,12 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.onboard')
-    .factory('OnboardService', OnboardService);
+  module.exports = OnboardService;
 
   /* @ngInject */
-  function OnboardService() {
+  function OnboardService(Authinfo, Config) {
     var service = {
       huronCallEntitlement: false,
       validateEmail: validateEmail,
