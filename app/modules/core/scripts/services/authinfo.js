@@ -299,10 +299,11 @@
       },
       getMessageServices: function (params) {
         if (_.get(params, 'assignableOnly')) {
-          return _.filter(authData.messageServices, function (serviceFeature) {
+          var result = _.filter(authData.messageServices, function (serviceFeature) {
             var license = _.get(serviceFeature, 'license');
             return !this.isExternallyManagedLicense(license);
           }.bind(this));
+          return _.size(result) ? result : null;
         }
         return authData.messageServices;
       },
