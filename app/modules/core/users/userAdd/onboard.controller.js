@@ -823,7 +823,12 @@ require('./_user-add.scss');
     };
 
     $scope.hasAssignableMessageItems = MessengerInteropService.hasAssignableMessageItems.bind(MessengerInteropService);
-    $scope.hasAssignableMessageOrgEntitlement = MessengerInteropService.hasAssignableMessageOrgEntitlement.bind(MessengerInteropService);
+    $scope.showMessengerInteropToggle = function () {
+      if (!_.get($state, 'current.data.showMessengerInteropToggle')) {
+        return false;
+      }
+      return MessengerInteropService.hasAssignableMessageOrgEntitlement();
+    };
 
     var getAccountServices = function () {
       var services = {
