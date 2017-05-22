@@ -53,6 +53,16 @@ _.forEach(files, function (fileName) {
   if (missingOtherPluralKeywords.length) {
     throw new Error(`${languageFile} contains plural translations with missing other keyword (other):\r\n ${missingOtherPluralKeywords.join('\r\n')}`);
   }
+
+  var invalidMessageFormatSyntax = _.filter(translationValues, filterMessageFormatSyntax);
+  if (invalidMessageFormatSyntax.length) {
+    throw new Error(`${languageFile} contains invalid MessageFormat.
+
+https://github.com/messageformat/messageformat.js#what-does-it-look-like
+Requires 'plural' or 'select' keyword in the translation syntax:
+
+${invalidMessageFormatSyntax.join('\r\n')}`);
+  }
 });
 
 function flatten(objectOrArray) {
@@ -74,4 +84,8 @@ function filterDisallowedPluralKeywords(value) {
 
 function filterMissingOtherPluralKeyword(value) {
   return _.includes(value, 'plural,') && !PLURAL_OTHER_REGEXP.test(value);
+}
+
+function filterMessageFormatSyntax(value) {
+  return /\{\s*[a-z]+\s*,(?!\s*(plural|select|selectordinal)\s*,).*\}\s*\}/.test(value);
 }
