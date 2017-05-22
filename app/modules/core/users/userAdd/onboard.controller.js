@@ -1271,22 +1271,7 @@ require('./_user-add.scss');
     };
 
     //email validation logic
-    var validateEmail = function (input) {
-      var emailregex = /\S+@\S+\.\S+/;
-      var emailregexbrackets = /<\s*\S+@\S+\.\S+\s*>/;
-      var emailregexquotes = /"\s*\S+@\S+\.\S+\s*"/;
-      var valid = false;
-
-      if (/[<>]/.test(input) && emailregexbrackets.test(input)) {
-        valid = true;
-      } else if (/["]/.test(input) && emailregexquotes.test(input)) {
-        valid = true;
-      } else if (!/[<>]/.test(input) && !/["]/.test(input) && emailregex.test(input)) {
-        valid = true;
-      }
-
-      return valid;
-    };
+    var validateEmail = OnboardService.validateEmail;
 
     var wizardNextText = function () {
       var userCount = angular.element('.token-label').length;
