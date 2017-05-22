@@ -1,6 +1,12 @@
 <button type="button"
-        class="btn btn--primary"
+        class="btn"
         ng-disabled="!$ctrl.destinationUrl"
         ng-click="$ctrl.openVerificationModal()">
-  <span translate="hercules.settings.verifySipDestination.verify"></span>
+  <span translate="common.verify"></span>
+</button>
+<button type="button"
+        class="btn btn--primary"
+        ng-disabled="!$ctrl.destinationUrl"
+        ng-click="$ctrl.save()">
+  <span translate="common.save"></span>
 </button>
