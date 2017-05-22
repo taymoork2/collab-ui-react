@@ -272,7 +272,7 @@ export class MySubscriptionCtrl {
                   type: this.CARE,
                 });
               }
-            } else {
+            } else if (license.offerName !== this.Config.offerCodes.MGMTPRO) {
               if (license.offerName === this.Config.offerCodes.CF) {
                 offer.class = this.MEETING_CLASS;
               } else {

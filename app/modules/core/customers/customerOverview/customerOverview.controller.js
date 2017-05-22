@@ -40,6 +40,7 @@ require('./_customer-overview.scss');
     vm.isDeleting = false;
     vm.isOrgSetup = null;
     vm.isUpdateStatusEnabled = true;
+    vm.isProPackEnabled = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -61,15 +62,20 @@ require('./_customer-overview.scss');
 
     vm.loadingCustomerPortal = true;
 
-    $q.all([FeatureToggleService.atlasCareTrialsGetStatus(), FeatureToggleService.atlasCareInboundTrialsGetStatus()])
-      .then(function (results) {
-        if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
-          vm.showRoomSystems = true;
-        }
-        var isCareEnabled = results[0];
-        var isAdvanceCareEnabled = results[1];
-        setOffers(isCareEnabled, isAdvanceCareEnabled);
-      });
+    $q.all([
+      FeatureToggleService.atlasCareTrialsGetStatus(),
+      FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+      FeatureToggleService.atlasITProPackGetStatus(),
+    ]).then(function (results) {
+      if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
+        vm.showRoomSystems = true;
+      }
+      var isCareEnabled = results[0];
+      var isAdvanceCareEnabled = results[1];
+      vm.isProPackEnabled = results[2];
+
+      setOffers(isCareEnabled, isAdvanceCareEnabled);
+    });
 
 
     function setOffers(isCareEnabled, isAdvanceCareEnabled) {

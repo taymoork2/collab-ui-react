@@ -411,6 +411,7 @@
         notes: {},
         isPartner: false,
         isTrialData: _.get(options, 'isTrialData', false),
+        isPremium: false,
       };
 
       var licensesAndOffersData = parseLicensesAndOffers(customer, options);
@@ -420,6 +421,11 @@
       dataObj.isPartner = _.get(customer, 'isPartner', false);
       dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
       dataObj.licenseList = customer.licenses;
+
+      var premiumLicenses = _.filter(customer.licenses, function (license) {
+        return license.offerName === Config.offerCodes.MGMTPRO;
+      });
+      dataObj.isPremium = _.some(premiumLicenses);
 
       var daysDone = TrialService.calcDaysUsed(customer.startDate);
       dataObj.daysUsed = daysDone;
