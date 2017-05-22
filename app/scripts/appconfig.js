@@ -3924,6 +3924,9 @@
               callServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-resources.html',
               },
+              controller: /* @ngInject */ function (Analytics) {
+                return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
+              },
             },
             params: {
               clusterId: null,
@@ -3976,9 +3979,6 @@
             views: {
               impServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html',
-              },
-              controller: /* @ngInject */ function (Analytics) {
-                return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
               },
             },
             params: {

@@ -1,4 +1,4 @@
-import { ExpresswayContainerController } from '../common-expressway-based/expressway-common-container.controller';
+import { ExpresswayContainerController } from 'modules/hercules/service-specific-pages/common-expressway-based/expressway-common-container.controller';
 import { Notification } from 'modules/core/notifications';
 import { ClusterService } from 'modules/hercules/services/cluster-service';
 
