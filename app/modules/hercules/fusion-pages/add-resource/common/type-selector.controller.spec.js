@@ -20,14 +20,16 @@ describe('Controller: TypeSelectorController', function () {
     spyOn(Authinfo, 'isEntitled');
     spyOn(FusionClusterService, 'serviceIsSetUp');
     spyOn($stateParams.wizard, 'next');
+    spyOn(Authinfo, 'isCustomerLaunchedFromPartner');
     Authinfo.isEntitled.and.returnValue(true);
+    Authinfo.isCustomerLaunchedFromPartner.and.returnValue(false);
   }));
 
-  function initController() {
+  function initController(hasPartnerRegistrationFeatureToggle) {
     return $controller('TypeSelectorController', {
       $stateParams: $stateParams,
       hasCucmSupportFeatureToggle: true,
-      hasPartnerRegistrationFeatureToggle: false,
+      hasPartnerRegistrationFeatureToggle: hasPartnerRegistrationFeatureToggle,
     });
   }
 
@@ -122,6 +124,22 @@ describe('Controller: TypeSelectorController', function () {
       initController();
       $rootScope.$apply();
       expect($stateParams.wizard.next).toHaveBeenCalled();
+    });
+
+    it('should overwrite hasSetup to false and the help texts for media and context when partner admin', function () {
+      Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
+      FusionClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMockAlwaysTrue);
+      var controller = initController(true);
+      expect(controller.hasSetup).toBe(undefined);
+      $rootScope.$apply();
+      expect(controller.hasSetup).toEqual({
+        expressway: true,
+        mediafusion: false,
+        context: false,
+        cucm: true,
+      });
+      expect(controller._translation.mediafusionHelpText).toEqual('hercules.fusion.add-resource.type.partner-registration-not-supported');
+      expect(controller._translation.contextHelpText).toEqual('hercules.fusion.add-resource.type.partner-registration-not-supported');
     });
   });
 });
