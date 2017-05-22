@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var Feature = require('./feature.helper-class');
+  var Feature = require('./feature.model').default;
 
   module.exports = OnboardService;
 

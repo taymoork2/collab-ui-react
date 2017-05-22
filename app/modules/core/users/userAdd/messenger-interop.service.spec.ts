@@ -1,6 +1,6 @@
 // TODO: change these back to ES6 'import' statements, once these can be converted over to typescript
 const moduleName = require('./onboard.module');
-const Feature = require('./feature.helper-class');
+const Feature = require('./feature.model').default;
 
 describe('MessengerInteropService', () => {
   beforeEach(function () {

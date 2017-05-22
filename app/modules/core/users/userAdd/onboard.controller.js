@@ -1252,7 +1252,7 @@ require('./_user-add.scss');
     //***
     //*********************************************************************
 
-    var Feature = require('./feature.helper-class');
+    var Feature = require('./feature.model').default;
 
     function LicenseFeature(name, bAdd) {
       return {
