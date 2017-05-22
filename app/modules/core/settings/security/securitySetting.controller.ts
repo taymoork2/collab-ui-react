@@ -7,22 +7,34 @@ export class SecuritySettingController {
 
   private _isSparkClientSecurityEnabled: boolean;
   public isSparkClientSecurityLoaded: boolean = false;
+  public isProPackPurchased: boolean = false;
 
   private orgId: string;
 
   /* @ngInject */
   constructor(
-    private Notification,
+    private $q,
     private AccountOrgService,
     private Authinfo,
+    private ITProPackService,
+    private Notification,
   ) {
     this.orgId = this.Authinfo.getOrgId();
     this.loadSetting();
   }
 
   private loadSetting() {
-    this.AccountOrgService.getAppSecurity(this.orgId)
-      .then((response) => this.appSecuritySettingLoaded(response));
+    let promises = {
+      security: this.AccountOrgService.getAppSecurity(this.orgId),
+      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+    };
+
+    this.$q.all(promises)
+      .then((response) => {
+        this.appSecuritySettingLoaded(response.security);
+        this.isProPackPurchased = response.proPackPurchased;
+
+      });
   }
 
   private appSecuritySettingLoaded(response: ng.IHttpPromiseCallbackArg<IGetAppSecurityResponse>) {
