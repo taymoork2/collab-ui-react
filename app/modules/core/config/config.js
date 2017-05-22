@@ -217,6 +217,7 @@
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC', // Care Digital Channel
         CVC: 'CVC', // Care Voice Channel
+        MSGR: 'MSGR', // WebEx Messenger (as of 2017-05-17, managed externally and not managed by Atlas)
       },
 
       licenseStatus: {

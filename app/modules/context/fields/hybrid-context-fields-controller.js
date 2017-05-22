@@ -1,14 +1,15 @@
 require('./_fields-list.scss');
-
 (function () {
   'use strict';
+
+  var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
 
   angular
     .module('Context')
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, Authinfo, hasContextDictionaryEditFeatureToggle) {
+  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, hasContextDictionaryEditFeatureToggle, PropertyService, Authinfo) {
     var vm = this;
     var eventListeners = [];
 
@@ -22,6 +23,9 @@ require('./_fields-list.scss');
     vm.fieldsList = {
       allFields: [],
     };
+    vm.showNew = false;
+    vm.maxFieldsAllowed = PropertyConstants.MAX_FIELDS_DEFAULT_VALUE;
+    vm.maxLimitReachedTooltip = $translate.instant('context.dictionary.fieldPage.limitReached');
 
     vm.filterBySearchStr = filterBySearchStr;
     vm.filterList = filterList;
@@ -43,6 +47,7 @@ require('./_fields-list.scss');
         callback: function (newField) {
           var fieldCopy = _.cloneDeep(newField);
           vm.fieldsList.allFields.unshift(processField(fieldCopy));
+          checkFieldsLimit();
           filterList(vm.searchStr);
         },
       });
@@ -151,16 +156,26 @@ require('./_fields-list.scss');
 
       var promises = {
         getAndProcessFieldsPromise: getAndProcessFieldsPromise,
+        getMaxFieldsAllowed: getMaxFieldsAllowed(),
       };
 
       return $q.all(promises)
         .then(function () {
           vm.gridApi.infiniteScroll.dataLoaded();
+          checkFieldsLimit();
         })
         .finally(function () {
           vm.gridRefresh = false;
           vm.load = false;
         });
+    }
+
+    function checkFieldsLimit() {
+      var customFields = vm.fieldsList.allFields.filter(function (field) {
+        return _.get(field, 'publiclyAccessibleUI', '').toLowerCase() !== 'cisco';
+      });
+
+      vm.showNew = customFields.length < vm.maxFieldsAllowed;
     }
 
     function initializeGrid() {
@@ -267,6 +282,19 @@ require('./_fields-list.scss');
         });
       };
       return $q.resolve(fieldList.filter(containSearchString));
+    }
+
+    function getMaxFieldsAllowed() {
+      return PropertyService.getProperty(PropertyConstants.MAX_FIELDS_PROP_NAME, Authinfo.getOrgId())
+        .then(function (value) {
+          vm.maxFieldsAllowed = value;
+        })
+        .catch(function (err) {
+          Log.error('unable to get max fields allowed property', err);
+        })
+        .then(function () {
+          return vm.maxFieldsetsAllowed;
+        });
     }
   }
 }());

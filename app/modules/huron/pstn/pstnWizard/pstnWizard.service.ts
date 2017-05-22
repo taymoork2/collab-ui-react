@@ -26,6 +26,7 @@ export class PstnWizardService {
   private newTollFreeOrders: Array<IOrder> = [];
   private newOrders: Array<IOrder> = [];
   private orderCart: Array<IOrder> = [];
+  private ftEnterprisePrivateTrunking: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -37,6 +38,7 @@ export class PstnWizardService {
     private $translate: ng.translate.ITranslateService,
     private PhoneNumberService: PhoneNumberService,
     private Orgservice,
+    private FeatureToggleService,
   ) {
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.STEP_TITLE = {
@@ -150,8 +152,16 @@ export class PstnWizardService {
     }
   }
 
+  private getEnterprisePrivateTrunkingFeatureToggle(): ng.IPromise<any> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
+      .then((supported) => {
+        this.ftEnterprisePrivateTrunking = supported;
+        return supported;
+      });
+  }
+
   private createNumbers(): ng.IPromise<any> {
-    let promises: any = [];
+    let promises: Array<ng.IPromise<any>> = [];
     let errors: any = [];
     let promise;
 
@@ -176,8 +186,13 @@ export class PstnWizardService {
     }
 
     if (this.swivelOrders.length > 0) {
-      promise = this.PstnService.orderNumbers(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), <Array<string>>_.get(this, 'swivelOrders[0].data.numbers'))
-        .catch(pushErrorArray);
+      if (this.ftEnterprisePrivateTrunking) {
+        promise = this.PstnService.orderNumbersV2Swivel(this.PstnModel.getCustomerId(), <Array<string>>_.get(this, 'swivelOrders[0].data.numbers'))
+          .catch(pushErrorArray);
+      } else {
+        promise = this.PstnService.orderNumbers(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), <Array<string>>_.get(this, 'swivelOrders[0].data.numbers'))
+          .catch(pushErrorArray);
+      }
       promises.push(promise);
     }
 
@@ -243,6 +258,7 @@ export class PstnWizardService {
     }
     return promise
       .then(this.createSite.bind(this))
+      .then(this.getEnterprisePrivateTrunkingFeatureToggle.bind(this))
       .then(this.createNumbers.bind(this));
   }
 

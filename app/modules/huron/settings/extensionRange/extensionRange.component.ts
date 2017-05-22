@@ -1,9 +1,11 @@
 import { Site } from 'modules/huron/sites';
 import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 
+const MAX_NUMBER_RANGE_COUNT: number = 20;
+
 class ExtensionRangeCtrl implements ng.IComponentController {
   public site: Site;
-  public numberRanges: Array<IExtensionRange>;
+  public numberRanges: IExtensionRange[];
   public firstTimeSetup: boolean;
   public onChangeFn: Function;
   public extensionRangeForm: ng.IFormController;
@@ -29,7 +31,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    if (this.numberRanges && this.numberRanges.length === 0) {
+    if (this.firstTimeSetup) {
       this.numberRanges = [{
         beginNumber: this.DEFAULT_START_RANGE,
         endNumber: this.DEFAULT_END_RANGE,
@@ -45,12 +47,14 @@ class ExtensionRangeCtrl implements ng.IComponentController {
   }
 
   public addExtensionRange(): void {
-    this.numberRanges.push({
-      beginNumber: '',
-      endNumber: '',
-    });
-    this.extensionRangeForm.$setDirty();
-    this.onExtensionRangeChange();
+    if (this.numberRanges.length < MAX_NUMBER_RANGE_COUNT) {
+      this.numberRanges.push({
+        beginNumber: '',
+        endNumber: '',
+      });
+      this.extensionRangeForm.$setDirty();
+      this.onExtensionRangeChange();
+    }
   }
 
   public removeExtensionRange(internalNumberRange): void {

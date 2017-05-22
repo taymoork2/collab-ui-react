@@ -1,6 +1,8 @@
 import { Notification } from 'modules/core/notifications';
 import { ContextFieldsetsService } from 'modules/context/services/context-fieldset-service';
 import { ContextFieldsService } from 'modules/context/services/context-fields-service';
+import { PropertyService, PropertyConstants } from 'modules/context/services/context-property-service';
+import { Authinfo } from 'modules/core/scripts/services/authinfo';
 
 /**
  * Fieldset data structure
@@ -55,6 +57,10 @@ class FieldsetModalCtrl implements ng.IComponentController {
 
   public createMode: Boolean;                  //whether the modal is for create or edit
   public existingFieldsetData: IFieldsetData;  //The fieldset passed in for edit
+
+  public enableFieldsSelection: Boolean = false; //whether enable the fields selection
+
+  private maxFieldsPerFieldsetAllowed: number = PropertyConstants.MAX_FIELDS_PER_FIELDSET_DEFAULT_VALUE; //maximum fields per fieldset allowed
   private publiclyAccessibleMap: Object;       //Map for publiclyAccessible
 
   /* @ngInject */
@@ -65,6 +71,8 @@ class FieldsetModalCtrl implements ng.IComponentController {
     protected ContextFieldsetsService: ContextFieldsetsService,
     protected ContextFieldsService: ContextFieldsService,
     protected Notification: Notification,
+    protected PropertyService: PropertyService,
+    protected Authinfo: Authinfo,
   ) {}
 
   /**
@@ -118,7 +126,35 @@ class FieldsetModalCtrl implements ng.IComponentController {
      : _.cloneDeep(this.existingFieldsetData);
 
     // load existing fields
-    this.loadFields();
+    this.loadFields()
+      .then( () => {
+        this.getMaxFieldsAllowed();
+      });
+  }
+
+  public setFieldsSelection () {
+    this.enableFieldsSelection = this.fields.length < this.maxFieldsPerFieldsetAllowed;
+  }
+
+
+  /**
+   * Get the maximum fields allowed value per org
+   */
+  public getMaxFieldsAllowed () {
+    this.actionInProgress = true;
+    return this.PropertyService.getProperty(PropertyConstants.MAX_FIELDS_PER_FIELDSET_PROP_NAME, this.Authinfo.getOrgId())
+      .then(value => {
+        this.maxFieldsPerFieldsetAllowed = value;
+      })
+      .catch( () => {
+        this.fetchFailed = true;
+        this.actionInProgress = false;
+      })
+      .then(() => {
+        this.setFieldsSelection();
+        this.actionInProgress = false;
+        return this.maxFieldsPerFieldsetAllowed;
+      });
   }
 
   /**
@@ -126,14 +162,12 @@ class FieldsetModalCtrl implements ng.IComponentController {
    */
   public loadFields() {
     this.actionInProgress = true;
-    this.ContextFieldsService.getFields()
+    return this.ContextFieldsService.getFields()
       .then(data => {
         let allFields = this.processedFields(data);
         this.fields = this.getSelectedFields(allFields);
         this.allSelectableFields = this.searchOnlyAvailableFields(allFields);
         this.sortFields(this.allSelectableFields);
-        this.actionInProgress = false;
-        this.fetchFailed = false;
       })
       .catch( err => {
         this.fetchFailed = true;
@@ -308,6 +342,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
     this.fields.push(field);
     this.fieldsetData.fields.push(field.id);
     _.pull(this.allSelectableFields, field);
+    this.setFieldsSelection();
   }
 
   /**
@@ -320,6 +355,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
     this.allSelectableFields.push(field);
     this.sortFields(this.allSelectableFields);
     form.$setDirty();
+    this.setFieldsSelection();
   }
 
   /**

@@ -1,9 +1,12 @@
 import fieldsetModule from './fieldset-modal.component';
+import { PropertyConstants } from 'modules/context/services/context-property-service';
 
 describe('Component: context fieldset modal', () => {
 
   let fieldsetServiceCreateSpy, fieldServiceSpy, fieldsetServiceUpdateSpy;
   let formIsSetDirty;
+
+  const MOCK_ORG_ID: string = 'mock-org-id';
 
   const mockedFieldset = {
     id: 'id',
@@ -56,14 +59,18 @@ describe('Component: context fieldset modal', () => {
       '$scope',
       '$translate',
       'Analytics',
+      'Authinfo',
       'ContextFieldsetsService',
       'ContextFieldsService',
       'Notification',
+      'PropertyService',
     );
     spyOn(this.$translate, 'instant').and.callThrough();
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
     spyOn(this.Analytics, 'trackEvent');
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(MOCK_ORG_ID);
+    spyOn(this.PropertyService, 'getProperty').and.returnValue(this.$q.reject( { status: 404, statusText: 'mocked error' } ));
     fieldsetServiceCreateSpy = spyOn(this.ContextFieldsetsService, 'createAndGetFieldset').and.returnValue(this.$q.resolve(mockedFieldset));
     fieldServiceSpy = spyOn(this.ContextFieldsService, 'getFields').and.returnValue(this.$q.resolve(mockedFields));
     fieldsetServiceUpdateSpy = spyOn(this.ContextFieldsetsService, 'updateAndGetFieldset').and.returnValue(this.$q.resolve(mockedUpdateFieldset));
@@ -217,6 +224,28 @@ describe('Component: context fieldset modal', () => {
       expect(this.controller.allSelectableFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
       expect(this.controller.allSelectableFields[0].fieldInfo).toEqual('context.dictionary.fieldPage.unencrypted, String');
     });
+
+    it('should set the selected fields of the fieldset correctly', function (done) {
+      let fields = new Array<string>();
+      mockedFields.forEach(field => {
+        fields.push(field.id);
+      });
+      let existingFieldsetData = {
+        id: 'EXISTING_FIELDSET',
+        description: 'a description',
+        fields: fields,
+        lastUpdated: new Date().toISOString(),
+        publiclyAccessible: false,
+        publiclyAccessibleUI: '',
+      };
+      this.controller.fieldsetData = existingFieldsetData;
+      this.controller.loadFields()
+        .then(() => {
+          expect(this.controller.fields.length).toBe(3);
+          done();
+        });
+      this.$scope.$apply();
+    });
   });
 
   describe('getSelectedFields', function () {
@@ -346,6 +375,62 @@ describe('Component: context fieldset modal', () => {
         done();
       }).catch(done.fail);
       this.$scope.$apply();
+    });
+  });
+
+  describe('field limits', function() {
+    const MAX_FIELDS_PER_FIELDSET_PROPERTY = PropertyConstants.MAX_FIELDS_PER_FIELDSET_PROP_NAME;
+    const MAX_FIELDS_PER_FIELDSET = PropertyConstants.MAX_FIELDS_PER_FIELDSET_DEFAULT_VALUE;
+
+    afterEach(function (done) {
+      expect(this.PropertyService.getProperty).toHaveBeenCalledWith(MAX_FIELDS_PER_FIELDSET_PROPERTY, MOCK_ORG_ID);
+      done();
+    });
+
+    describe('getMaxFields', function () {
+      beforeEach(function () {
+        this.getAndExpectValue = function (expectedValue, done) {
+          this.controller.getMaxFieldsAllowed()
+            .then(max => {
+              expect(max).toBe(expectedValue);
+              expect(this.controller.actionInProgress).toBe(false);
+              expect(this.controller.maxFieldsPerFieldsetAllowed).toBe(expectedValue);
+              done();
+            })
+            .catch(err => {
+              done.fail(err);
+            });
+          this.$scope.$apply();
+        };
+
+        this.setThenGetAndExpectValue = function (expectedValue, done) {
+          this.PropertyService.getProperty.and.returnValue(this.$q.resolve(expectedValue));
+          this.getAndExpectValue(expectedValue, done);
+        };
+      });
+
+      describe('PropertyService failures and bad data', function () {
+        it('should use the default if property not found', function (done) {
+          this.getAndExpectValue(MAX_FIELDS_PER_FIELDSET, done);
+        });
+
+        it('should use the default value when random PropertyService error', function (done) {
+          this.PropertyService.getProperty.and.returnValue(this.$q.reject('random-mocked-error'));
+          this.getAndExpectValue(MAX_FIELDS_PER_FIELDSET, done);
+        });
+
+        it('should use the default value when property is NaN', function (done) {
+          this.PropertyService.getProperty.and.returnValue(this.$q.reject('Not a number'));
+          this.getAndExpectValue(MAX_FIELDS_PER_FIELDSET, done);
+        });
+
+        for (let i = -1; i <= 1; i++) {
+          it('should use the returned value from the property service when the PropertyService return the default + ' + i, function (done) {
+            const maxFieldsPerFieldset = MAX_FIELDS_PER_FIELDSET + i;
+            this.setThenGetAndExpectValue(maxFieldsPerFieldset, done);
+          });
+        }
+      });
     });
   });
 });

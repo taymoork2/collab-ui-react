@@ -4,9 +4,16 @@ import { RetentionSettingController } from './retentionSetting.controller';
 
 export class RetentionSetting extends SettingSection {
 
+  public icon: string = '';
+  public tooltipText: string = '';
+
   /* @ngInject */
-  public constructor() {
+  public constructor(proPackPurchased: boolean) {
     super('retention');
+    if (!proPackPurchased) {
+      this.icon = 'icon-certified';
+      this.tooltipText = 'globalSettings.retention.proPackInfoCopy';
+    }
   }
 }
 

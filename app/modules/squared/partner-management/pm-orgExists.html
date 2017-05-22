@@ -35,7 +35,7 @@
       <hr class="pm-rule">
       <div class="row">
         <div class="columns medium-12 text-right">
-            <button cs-btn id="done" type="button" ng-click="vm.done()" class="btn btn--primary pm-btn" loading="vm.isLoading">
+            <button cs-btn id="done" type="button" ng-click="vm.done()" class="btn btn--primary pm-btn" loading="vm.isLoading" ng-disabled="vm.showSpinner">
                 <span translate="partnerManagement.done"></span>
             </button>
         </div>

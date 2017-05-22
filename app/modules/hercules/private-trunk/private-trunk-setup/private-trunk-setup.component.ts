@@ -29,6 +29,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public privateTrunkResource: PrivateTrunkResource;
   private resourceAddSuccess: boolean = true;
   private privateTrunkAddError: boolean = false;
+  private setupTitle: string;
   //certs
   public formattedCertList: IformattedCertificate[];
   public isImporting: boolean = false;
@@ -60,9 +61,11 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
     if (_.isUndefined(this.currentStepIndex)) {
       this.currentStepIndex = 1;
     }
+    this.setupTitle = this.$translate.instant('servicesOverview.cards.privateTrunk.setupTitle');
     this.isFirstTimeSetup = (this.$state.current.name === 'services-overview');
     if (!this.isFirstTimeSetup) {
       this.currentStepIndex = 2;
+      this.setupTitle = this.$translate.instant('servicesOverview.cards.privateTrunk.destinationTitle');
     }
 
     this.isDomain = true;
@@ -262,8 +265,9 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
   public dismissModal(): void {
+    let templateUrl = (this.isFirstTimeSetup) ? 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html' : 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-destination-cancel-confirm.html';
     this.$modal.open({
-      templateUrl: 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html',
+      templateUrl: templateUrl,
       type: 'dialog',
     })
       .result.then(() => {

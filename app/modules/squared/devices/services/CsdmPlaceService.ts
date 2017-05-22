@@ -56,7 +56,7 @@ export class CsdmPlaceService {
   }
 
   public createCmiPlace(name, entitlements, directoryNumber, externalNumber) {
-    return this.createPlace(name, entitlements || ['ciscouc'], directoryNumber, externalNumber, 'room', null);
+    return this.createPlace(name, entitlements || ['ciscouc', 'webex-squared'], directoryNumber, externalNumber, 'room', null);
   }
 
   public createPlace(name, entitlements, directoryNumber, externalNumber, machineType, externalLinkedAccounts): ng.IPromise<IPlace> {

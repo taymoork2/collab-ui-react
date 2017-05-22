@@ -11,16 +11,17 @@ describe('Component: privateTrunkCertificate component', () => {
       '$translate',
       'PrivateTrunkCertificateService',
       '$httpBackend',
+      'FeatureToggleService',
+      '$q',
     );
   });
 
   function initComponent() {
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
-    this.$scope.onDeleteCertFn = jasmine.createSpy('onDeleteCertFn');
     this.$scope.onChangeOptionFn = jasmine.createSpy('onChangeOptionFn');
-
     spyOn(this.PrivateTrunkCertificateService, 'deleteCert');
     spyOn(this.PrivateTrunkCertificateService, 'deleteCerts');
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
 
     this.compileComponent('privateTrunkCertificate', {
       isFirstTimeSetup: true,
@@ -39,11 +40,11 @@ describe('Component: privateTrunkCertificate component', () => {
       this.$httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('should have both radio buttons for SIP certificate Setup', function() {
+    it('should have checkbox custom certificate Setup', function() {
       expect(this.view).toContainElement(CHK_BOX);
     });
 
-    it('should verify a default Cisco Certificate option is selected', function() {
+    it('should verify a custom Cisco Certificate is selected', function() {
       expect(this.view).toContainElement(CHK_BOX);
       this.view.find(CHK_BOX).click();
       expect(this.view.find(CHK_BOX)).toBeChecked();

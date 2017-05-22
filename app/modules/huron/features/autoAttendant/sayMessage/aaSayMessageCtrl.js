@@ -113,10 +113,7 @@
       }
     }
 
-    function populateUiModel() {
-      if (!vm.isMediaUploadToggle) {
-        vm.messageInput = vm.actionEntry.getValue();
-      }
+    function populateVoice() {
 
       vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 
@@ -125,6 +122,13 @@
 
       vm.voiceBackup = vm.voiceOption;
       setVoiceOptions();
+      vm.actionEntry.setVoice(vm.voiceOption.value);
+    }
+
+    function populateUiModel() {
+      if (!vm.isMediaUploadToggle) {
+        vm.messageInput = vm.actionEntry.getValue();
+      }
 
       var menu = vm.menuEntry;
       if (menu.entries) {
@@ -338,6 +342,7 @@
       //and is also feature toggled
       vm.isMediaUploadToggle = AACommonService.isMediaUploadToggle();
       setActionEntry();
+      populateVoice();
       if (vm.sayMessageType === sayMessageType.MENUKEY) {
         addDefaultAction();
       }

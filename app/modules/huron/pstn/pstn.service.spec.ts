@@ -91,6 +91,22 @@ describe('Service: PstnService', function () {
     numbers: onlyPstnNumbers,
   };
 
+  let swivelOrderPayload: any = {
+    numbers: onlyPstnNumbers.concat(onlyTollFreeNumbers),
+  };
+
+  let swivelOrderV2DidPayload: any = {
+    numbers: onlyPstnNumbers,
+    numberType: 'DID',
+    createdBy: 'PARTNER',
+  };
+
+  let swivelOrderV2TfnPayload: any = {
+    numbers: onlyTollFreeNumbers,
+    numberType: 'TOLLFREE',
+    createdBy: 'PARTNER',
+  };
+
   // dependencies
   beforeEach(function () {
     this.initModules(
@@ -328,6 +344,20 @@ describe('Service: PstnService', function () {
   it('should displayBatchIdOnly order status message since status includes Batch id = None', function () {
     let translated = this.PstnService.translateStatusMessage(orders[5]);
     expect(translated).toEqual('370827,370829');
+  });
+
+  it('should make V2 SWIVEL order API call', function () {
+    this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
+    this.Authinfo.isPartner.and.returnValue(true);
+    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders', swivelOrderV2DidPayload).respond(201);
+    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders', swivelOrderV2TfnPayload).respond(201);
+    let swivelOrderData = _.cloneDeep(swivelOrderPayload);
+    let promise = this.PstnService.orderNumbersV2Swivel(suite.customerId, swivelOrderData.numbers);
+    promise.then(function () {
+      expect(swivelOrderData.numbers.length).toEqual(2);
+      expect(swivelOrderData.numbers.sort()).toEqual(onlyPstnNumbers.sort());
+    });
+    this.$httpBackend.flush();
   });
 
   describe('getCarrierTollFreeInventory', function () {

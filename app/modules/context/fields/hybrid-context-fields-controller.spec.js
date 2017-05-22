@@ -1,8 +1,10 @@
 'use strict';
 
+var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
+
 describe('HybridContextFieldsCtrl', function () {
 
-  var $controller, $scope, $state, $q, controller, ContextFieldsService, Log, Notification, LogMetricsService, Authinfo;
+  var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsService, Log, Notification, LogMetricsService, PropertyService;
   var fakeGridApi = {
     infiniteScroll: {
       dataLoaded: jasmine.createSpy('dataLoaded'),
@@ -24,19 +26,21 @@ describe('HybridContextFieldsCtrl', function () {
   beforeEach(initSpies);
 
   afterAll(function () {
-    $controller = $scope = $state = $q = controller = ContextFieldsService = Authinfo = Log = Notification = fakeGridApi = LogMetricsService = undefined;
+    $controller = $scope = $state = $q = Authinfo = controller = ContextFieldsService = Log = Notification = PropertyService = fakeGridApi = LogMetricsService = undefined;
   });
 
-  function dependencies($rootScope, _$controller_, _$q_, _$state_, _Authinfo_, _ContextFieldsService_, _Log_, _Notification_, _LogMetricsService_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$state_, _Authinfo_, _ContextFieldsService_, _Log_, _Notification_, _LogMetricsService_, _PropertyService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     $state = _$state_;
+    Authinfo = _Authinfo_;
     ContextFieldsService = _ContextFieldsService_;
     Log = _Log_;
     Notification = _Notification_;
     LogMetricsService = _LogMetricsService_;
     Authinfo = _Authinfo_;
+    PropertyService = _PropertyService_;
   }
 
   function initSpies() {
@@ -46,6 +50,7 @@ describe('HybridContextFieldsCtrl', function () {
     spyOn(Notification, 'error');
     spyOn(LogMetricsService, 'logMetrics');
     spyOn(Authinfo, 'getOrgName').and.returnValue('orgName');
+    spyOn(PropertyService, 'getProperty').and.returnValue($q.reject(undefined));
   }
 
   function initController() {
@@ -457,6 +462,55 @@ describe('HybridContextFieldsCtrl', function () {
           done();
         });
       $scope.$apply();
+    });
+  });
+
+  describe('max fields allowed', function () {
+
+    var DEFAULT_MAX_FIELDS = PropertyConstants.MAX_FIELDS_DEFAULT_VALUE;
+    var ORG_ID = 'some-org';
+    var MAX_FIELDS_PROPERTY = PropertyConstants.MAX_FIELDS_PROP_NAME;
+
+    beforeEach(function () {
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
+        'description': 'Field for abcd',
+        'classification': 'PII',
+        'publiclyAccessible': 'false',
+        'searchable': 'false',
+        'translations': { 'english': 'First Name' },
+        'refUrl': '/dictionary/field/v1/id/FieldContainsSearchStr',
+        'id': 'FieldContainsSearchStr',
+        'dataType': 'double',
+      }, {
+        'description': 'Field for xyz',
+        'classification': 'PII',
+        'publiclyAccessible': 'false',
+        'searchable': 'false',
+        'translations': { 'english': 'First Name' },
+        'refUrl': '/dictionary/field/v1/id/FieldNotContainSearchStr',
+        'id': 'FieldNotContainSearchStr',
+        'dataType': 'double',
+      }]));
+      controller = initController();
+      spyOn(Authinfo, 'getOrgId').and.returnValue(ORG_ID);
+    });
+
+    afterEach(function () {
+      expect(PropertyService.getProperty).toHaveBeenCalledWith(MAX_FIELDS_PROPERTY, ORG_ID);
+    });
+
+    it('should have the default max fields', function () {
+      $scope.$apply();
+      expect(controller.maxFieldsAllowed).toBe(DEFAULT_MAX_FIELDS);
+      expect(controller.showNew).toBe(true);
+    });
+
+    it('should overrides the max fields property and new is disabled', function () {
+      var maxFields = 2;
+      PropertyService.getProperty.and.returnValue($q.resolve(maxFields));
+      $scope.$apply();
+      expect(controller.maxFieldsAllowed).toBe(maxFields);
+      expect(controller.showNew).toBe(false);
     });
   });
 });

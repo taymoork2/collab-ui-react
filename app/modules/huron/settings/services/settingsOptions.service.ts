@@ -13,6 +13,7 @@ export class HuronSettingsOptions {
   public companyVoicemailOptions: Array<IOption>;
   public emergencyServiceNumberOptions: Array<IEmergencyNumberOption>;
   public dialPlan: IDialPlan;
+  public extensionsAssigned: boolean;
 }
 
 export interface IEmergencyNumberOption extends IOption {
@@ -28,6 +29,8 @@ export class HuronSettingsOptionsService {
     private NumberService: NumberService,
     private PhoneNumberService: PhoneNumberService,
     private DialPlanService: DialPlanService,
+    private Authinfo,
+    private DirectoryNumberService,
   ) { }
 
   public getOptions(): ng.IPromise<HuronSettingsOptions> {
@@ -42,6 +45,7 @@ export class HuronSettingsOptionsService {
       companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined),
       emergencyServiceNumbers: this.loadEmergencyServiceNumbers(undefined),
       dialPlan: this.loadDialPlan(),
+      extensionsAssigned: this.testForExtensions(),
     }).then(response => {
       settingsOptions.dateFormatOptions = _.get<Array<IOption>>(response, 'dateFormatOptions');
       settingsOptions.timeFormatOptions = _.get<Array<IOption>>(response, 'timeFormatOptions');
@@ -52,6 +56,7 @@ export class HuronSettingsOptionsService {
       settingsOptions.companyVoicemailOptions = _.get<Array<IOption>>(response, 'companyVoicemailOptions');
       settingsOptions.emergencyServiceNumberOptions = _.get<Array<IEmergencyNumberOption>>(response, 'emergencyServiceNumbers');
       settingsOptions.dialPlan = _.get<IDialPlan>(response, 'dialPlan');
+      settingsOptions.extensionsAssigned = _.get<boolean>(response, 'extensionsAssigned');
       return settingsOptions;
     });
   }
@@ -121,8 +126,17 @@ export class HuronSettingsOptionsService {
       });
   }
 
-  public loadDialPlan(): ng.IPromise<IDialPlan> {
+  private loadDialPlan(): ng.IPromise<IDialPlan> {
     return this.DialPlanService.getDialPlan();
+  }
+
+  private testForExtensions(): ng.IPromise<boolean> {
+    return this.DirectoryNumberService.query({
+      customerId: this.Authinfo.getOrgId(),
+    }).$promise
+      .then(extensionList => {
+        return (_.isArray(extensionList) && extensionList.length > 0);
+      });
   }
 
 }

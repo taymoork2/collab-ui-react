@@ -113,7 +113,7 @@ describe('Authinfo:', function () {
     });
   });
 
-  describe('adding/removing entitlments (aka. \'services\')', function () {
+  describe('managing entitlements (aka. "services"):', function () {
     var Authinfo, fakeEntitlement;
 
     beforeEach(function () {
@@ -127,26 +127,102 @@ describe('Authinfo:', function () {
       Authinfo = fakeEntitlement = undefined;
     });
 
-    it('should add an entitlement', function () {
-      expect(Authinfo.getServices().length).toBe(0);
-      Authinfo.addEntitlement(fakeEntitlement);
-      expect(Authinfo.getServices().length).toBe(1);
+    describe('addEntitlement():', function () {
+      it('should add an entitlement', function () {
+        expect(Authinfo.getServices().length).toBe(0);
+        Authinfo.addEntitlement(fakeEntitlement);
+        expect(Authinfo.getServices().length).toBe(1);
 
-      // adding an entitlement that already exists does nothing
-      Authinfo.addEntitlement(fakeEntitlement);
-      expect(Authinfo.getServices().length).toBe(1);
+        // adding an entitlement that already exists does nothing
+        Authinfo.addEntitlement(fakeEntitlement);
+        expect(Authinfo.getServices().length).toBe(1);
+      });
     });
 
-    it('should remove an entitlement', function () {
-      Authinfo.addEntitlement(fakeEntitlement);
-      expect(Authinfo.getServices().length).toBe(1);
-      Authinfo.removeEntitlement('fake-entitlement-1');
-      expect(Authinfo.getServices().length).toBe(0);
+    describe('removeEntitlement():', function () {
+      it('should remove an entitlement', function () {
+        Authinfo.addEntitlement(fakeEntitlement);
+        expect(Authinfo.getServices().length).toBe(1);
+        Authinfo.removeEntitlement('fake-entitlement-1');
+        expect(Authinfo.getServices().length).toBe(0);
 
-      // removing an entitlement that isn't present IS allowed, just does nothing
-      var result = Authinfo.removeEntitlement('fake-entitlement-1');
-      expect(result).toBe(undefined);
-      expect(Authinfo.getServices().length).toBe(0);
+        // removing an entitlement that isn't present IS allowed, just does nothing
+        var result = Authinfo.removeEntitlement('fake-entitlement-1');
+        expect(result).toBe(undefined);
+        expect(Authinfo.getServices().length).toBe(0);
+      });
+    });
+  });
+
+  describe('getMessageServices():', function () {
+    var Authinfo, accountData, result, fakeLicenseNonMessaging, fakeLicenseMs, fakeLicenseMsgr;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      accountData = {};
+      _.set(accountData, 'customers[0].licenses', []);
+      result = undefined;
+      fakeLicenseNonMessaging = {
+        licenseType: 'not-MESSAGING',
+        offerName: 'fake-offer-name',
+      };
+      fakeLicenseMs = {
+        licenseType: 'MESSAGING',
+        offerName: 'MS',
+      };
+      fakeLicenseMsgr = {
+        licenseType: 'MESSAGING',
+        offerName: 'MSGR',
+      };
+    });
+
+    afterEach(function () {
+      Authinfo = accountData = result = fakeLicenseNonMessaging = fakeLicenseMs = fakeLicenseMsgr = undefined;
+    });
+
+    it('should return the list of services with licenses that are of "MESSAGING"-type', function () {
+      accountData.customers[0].licenses.push(fakeLicenseNonMessaging);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices();
+      expect(result).toBe(null);
+
+      accountData.customers[0].licenses.push(fakeLicenseMsgr);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices();
+      expect(result.length).toBe(1);
+
+      accountData.customers[0].licenses.push(fakeLicenseMs);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices();
+      expect(result.length).toBe(2);
+    });
+
+    it('should return the list of services with licenses that are of "MESSAGING"-type and not "MSGR" offer code', function () {
+      accountData.customers[0].licenses.push(fakeLicenseNonMessaging);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices({ assignableOnly: true });
+      expect(result).toBe(null);
+
+      accountData.customers[0].licenses.push(fakeLicenseMs);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices({ assignableOnly: true });
+      expect(result.length).toBe(1);
+
+      accountData.customers[0].licenses.push(fakeLicenseMsgr);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices({ assignableOnly: true });
+      expect(result.length).toBe(1);
+
+    });
+  });
+
+  describe('isExternallyManagedLicense():', function () {
+    it('should return true if the "offerName" property is "MSGR"', function () {
+      var Authinfo = setupUser();
+      var result = Authinfo.isExternallyManagedLicense({ offerName: 'MSGR' });
+      expect(result).toBe(true);
+      result = Authinfo.isExternallyManagedLicense({ offerName: 'something-else' });
+      expect(result).toBe(false);
     });
   });
 

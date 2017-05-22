@@ -1702,7 +1702,7 @@
         .then(function (response) {
           loadMediaOnHoldOptions(response);
           _.forEach(response, function (media) {
-            if (media.entityIdSet && _.includes(media.entityIdSet, media.orgId)) {
+            if (media.assignments && _.find(media.assignments, ['idType', 'ORG_ID'])) {
               vm.model.mediaOnHold = _.find(vm.mediaOnHoldOptions, function (option) {
                 return option.value === media.rhesosId;
               });

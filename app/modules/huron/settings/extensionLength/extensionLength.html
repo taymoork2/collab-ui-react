@@ -7,7 +7,11 @@
     options="$ctrl.extensionLengthOptions"
     on-change-fn="$ctrl.onExtensionLengthChanged()"
     filter="false"
-    required="true"
-    is-disabled="!$ctrl.firstTimeSetup">
+    is-disabled="$ctrl.isDisabled"
+    required="true">
   </cs-select>
 </div>
+<p ng-if="$ctrl.showHelpText"
+  class="help-block">
+  {{$ctrl.helpText}}
+</p>

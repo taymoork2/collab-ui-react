@@ -67,11 +67,11 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
     this.domainSelected = _.cloneDeep(domainSelected);
     this.isDomain = isDomain;
     this.selectedVerifiedDomains = _.map(this.domainSelected, domainOption => domainOption.value);
+    this.updatePrivateTrunk();
   }
 
   public updatePrivateTrunk(): void {
     this.PrivateTrunkService.setPrivateTrunk(this.selectedVerifiedDomains)
-      .then(() => this.Notification.notify( 'servicesOverview.cards.privateTrunk.error.privateTrunkSuccess'))
       .catch(error => this.Notification.notify(error, 'servicesOverview.cards.privateTrunk.error.privateTrunkError'));
   }
 

@@ -2,7 +2,7 @@
   <button type="button" class="close" ng-click="$ctrl.dismissModal()" ng-disabled= "$ctrl.isSetup || $ctrl.currentStepIndex === 4" >
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h3 class="modal-title" translate="servicesOverview.cards.privateTrunk.setupTitle"></h5>
+  <h3 class="modal-title">{{$ctrl.setupTitle}}</h3>
 </div>
 <div ng-form="$ctrl.privateTrunkSetupForm" class="modal-body">
   <private-trunk-domain ng-if="$ctrl.currentStepIndex === 1"

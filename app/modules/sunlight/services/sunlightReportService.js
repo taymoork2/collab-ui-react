@@ -80,7 +80,7 @@
                   return ciUser.id;
                 });
 
-                var ciNonCareUserIds = _.difference(reportedUserIds, ciCareUsers, ciCareUserIds);
+                var ciNonCareUserIds = _.difference(reportedUserIds, ciCareUserIds);
                 if (ciNonCareUserIds.length > 0) {
                   getNonCareUserDetails(ciNonCareUserIds, ciCareUsers, reportingUserData, resolve);
                 } else {
@@ -115,7 +115,8 @@
     function getNonCareCiUsers(ciNonCareUserIds) {
       return $q(function (resolve, reject) {
         var userPromises = [];
-        var userIdChunks = _.chunk(ciNonCareUserIds, 50);
+        //the userIds need to be passed as query param and hence limited to 40 at a time
+        var userIdChunks = _.chunk(ciNonCareUserIds, 40);
         _.forEach(userIdChunks, function (userIdList) {
           userPromises.push(getCareUsersByIds(userIdList));
         });

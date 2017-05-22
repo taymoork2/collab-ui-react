@@ -6,8 +6,9 @@
   module.exports = TrialPstnService;
 
   /* @ngInject */
-  function TrialPstnService($q, Config, Notification, PstnServiceAddressService, PstnService) {
+  function TrialPstnService($q, Config, Notification, PstnServiceAddressService, PstnService, FeatureToggleService) {
     var _trialData;
+    var ftEnterprisePrivateTrunking = false;
     var service = {
       getData: getData,
       reset: reset,
@@ -78,7 +79,8 @@
             return createPstnCustomerV2(customerOrgId)
               .then(_.partial(createCustomerSite, customerOrgId))
               .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
-              .then(_.partial(orderNumbers, customerOrgId)); // Terminus V1 order API doesn't support swivel orders
+              .then(_.partial(getEnterprisePrivateTrunkingFeatureToggle))
+              .then(_.partial(orderNumbers, customerOrgId));
           } else {
             return createPstnCustomerV2(customerOrgId)
               .then(_.partial(createCustomerSite, customerOrgId))
@@ -140,15 +142,33 @@
       });
     }
 
+    function getEnterprisePrivateTrunkingFeatureToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking)
+        .then(function (supported) {
+          ftEnterprisePrivateTrunking = supported;
+          return supported;
+        });
+    }
+
     function orderNumbers(customerOrgId) {
-      return PstnService.orderNumbers(
-        customerOrgId,
-        _trialData.details.pstnProvider.uuid,
-        _trialData.details.pstnNumberInfo.numbers
-      ).catch(function (response) {
-        Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
-        return $q.reject(response);
-      });
+      if (ftEnterprisePrivateTrunking) {
+        return PstnService.orderNumbersV2Swivel(
+          customerOrgId,
+          _trialData.details.pstnNumberInfo.numbers
+        ).catch(function (response) {
+          Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
+          return $q.reject(response);
+        });
+      } else {
+        return PstnService.orderNumbers(
+          customerOrgId,
+          _trialData.details.pstnProvider.uuid,
+          _trialData.details.pstnNumberInfo.numbers
+        ).catch(function (response) {
+          Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
+          return $q.reject(response);
+        });
+      }
     }
 
     function orderNumbersV2(customerOrgId) {

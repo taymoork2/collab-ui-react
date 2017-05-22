@@ -11,7 +11,7 @@ export class ITProPackService {
       return result;
     });
   }
-
+  // This will be true if the ProPack Toggle and propack is purchased are true
   public hasITProPackPurchased(): ng.IPromise<boolean> {
     let promises = {
       proPack: this.hasITProPackEnabled(),
@@ -21,4 +21,16 @@ export class ITProPackService {
       return result.proPack && result.proPackPurchased;
     });
   }
+
+  // This will be true if the ProPack Toggle is false OR propack is purchased
+  public hasITProPackPurchasedOrNotEnabled(): ng.IPromise<boolean> {
+    let promises = {
+      proPack: this.hasITProPackEnabled(),
+      proPackPurchased: this.FeatureToggleService.atlasITProPackPurchasedGetStatus(),
+    };
+    return this.$q.all(promises).then(result => {
+      return !result.proPack || result.proPackPurchased;
+    });
+  }
+
 }

@@ -63,6 +63,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
   public tokenmethods: TokenMethods;
   public titles: {};
+  public dismiss: Function;
 
   private did: DirectInwardDialing = new DirectInwardDialing();
 
@@ -99,8 +100,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public getCapabilities(): void {
     if (!this.isTrial) {
       this.PstnWizardService.hasTollFreeCapability().then(result => {
-        this.showTollFreeNumbers = result;
-        this.getTollFreeInventory();
+        if (result) {
+          this.showTollFreeNumbers = result;
+          this.getTollFreeInventory();
+        }
       })
       .catch(response => this.Notification.errorResponse(response, 'pstnSetup.errors.capabilities'));
     }
@@ -254,7 +257,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         });
         return;
       case 7:
-        this.close();
+        this.dismissModal();
         return;
     }
     this.step += 1;
@@ -382,5 +385,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public onAcknowledge(value: boolean): void {
     this.emergencyAcknowledge = value;
+  }
+
+  public dismissModal() {
+    this.PstnModel.clear();
+    this.dismiss();
   }
 }

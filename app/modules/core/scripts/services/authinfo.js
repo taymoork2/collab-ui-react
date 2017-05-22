@@ -297,7 +297,14 @@
       getSubscriptions: function () {
         return authData.subscriptions;
       },
-      getMessageServices: function () {
+      getMessageServices: function (params) {
+        if (_.get(params, 'assignableOnly')) {
+          var result = _.filter(authData.messageServices, function (serviceFeature) {
+            var license = _.get(serviceFeature, 'license');
+            return !this.isExternallyManagedLicense(license);
+          }.bind(this));
+          return _.size(result) ? result : null;
+        }
         return authData.messageServices;
       },
       getConferenceServices: function () {
@@ -586,6 +593,11 @@
           return;
         }
         _.remove(this.getServices(), { ciName: entitlement });
+      },
+      isExternallyManagedLicense: function (license) {
+        // as of 2017-05-17, only licenses matching { offerName: 'MSGR' } are known to be managed externally
+        var offerName = _.get(license, 'offerName');
+        return offerName === Config.offerCodes.MSGR;
       },
     };
   }

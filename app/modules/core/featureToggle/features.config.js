@@ -188,6 +188,7 @@ module.exports = {
   huronNetworkLocaleMX: 'huron-l10n-network-locale-mx',
   atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
   huronEnterprisePrivateTrunking: 'huron-i387-enterprise-private-trunking',
+  hf6932Certificate: 'h-f6932-certificate',
   webexMetrics: 'webex-metrics',
   huronCustomerAdminPMP: "huron-customer-admin-pmp",
   hRegionalTones: "h-regional-tones",
