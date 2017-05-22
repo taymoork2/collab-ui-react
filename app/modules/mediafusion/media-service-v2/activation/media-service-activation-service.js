@@ -35,6 +35,8 @@
         function success() {
           setisMediaServiceEnabled(true);
           enableOrpheusForMediaFusion();
+          enableRhesosEntitlement();
+          enableCallServiceEntitlement();
         },
         function error() {
           Notification.error('mediaFusion.mediaServiceActivationFailure');
@@ -140,6 +142,20 @@
     var deactivateHybridMedia = function () {
       var url = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId() + '/deactivate_hybrid_media';
       return $http.delete(url);
+    };
+
+    var enableRhesosEntitlement = function () {
+      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/rhesos';
+      return $http.post(url);
+    };
+
+    var enableCallServiceEntitlement = function () {
+      var payload = {
+        "selfSubscribe": true,
+        "roles": ["Spark_CallService"],
+      };
+      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/spark';
+      return $http.post(url, payload);
     };
 
     return {
