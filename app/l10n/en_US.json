@@ -6749,7 +6749,7 @@
     "retention": {
       "title": "Retention",
       "subsectionLabel": "Spark Message Data",
-      "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system. <br/> There is a 5GB total storage limit.  After limit is reached, older data will be removed first.",
+      "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system. <br/> There is a 5GB total storage limit per user.  After limit is reached, older data will be removed first.",
       "retentionOption": "Past {{number}} months",
       "indefiniteRetentionOption": "Indefinitely",
       "monthInvalid": "Must be between 1 and 120 months",
