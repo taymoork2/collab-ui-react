@@ -9,16 +9,16 @@ beforeEach(angular.mock.module('oc.lazyLoad', function ($provide) {
 }));
 
 var testDurations;
-var beforeAllMock = jasmine.Suite.prototype.beforeAll
+var beforeAllMock = jasmine.Suite.prototype.beforeAll;
 jasmine.Suite.prototype.beforeAll = function () {
   self.lastSuite = this.result
   beforeAllMock.apply(this, arguments)
-}
-var executeMock = jasmine.Spec.prototype.execute
+};
+var executeMock = jasmine.Spec.prototype.execute;
 jasmine.Spec.prototype.execute = function () {
   self.lastTest = this.result
   executeMock.apply(this, arguments)
-}
+};
 
 logLongDurationTests();
 
@@ -48,7 +48,7 @@ beforeEach(function () {
         this[provider] = _provider;
       }.bind(this)]);
     }, this));
-  }
+  };
 
   /**
    * Inject each argument and assign to this context
@@ -95,9 +95,19 @@ beforeEach(function () {
    * @param {String} templateString String to compile
    */
   this.compileTemplate = function (templateString) {
+    this.compileTemplateNoApply(templateString);
+    this.$scope.$apply();
+  };
+
+  /**
+   * Compile a template string on this.view, but don't apply scope.
+   * Must call <code>this.$scope.$apply()</code> for the template string to actually be compiled and the view to be valid.
+   *
+   * @param {String} templateString String to compile
+   */
+  this.compileTemplateNoApply = function (templateString) {
     this.injectDependencies('$compile', '$scope');
     this.view = this.$compile(angular.element(templateString))(this.$scope);
-    this.$scope.$apply();
   };
 
   /**
@@ -123,18 +133,58 @@ beforeEach(function () {
    * @param {String} componentParamsObj Optional object of component bindings
    */
   this.compileComponent = function (componentName, componentParamsObj) {
+    var componentString = this.buildComponentTemplateString(componentName, componentParamsObj);
+    this.compileTemplate(componentString);
+    this.controller = this.view.controller(componentName);
+  };
+
+  /**
+   * Constructs and compiles a component without applying scope.
+   * Sets this.view and this.controller with compiled template and controller. Must call <code>this.$scope.$apply()</code>
+   * for the component to actually be compiled and the view to be valid.
+   *
+   * @param {String} componentName Name of the component
+   * @param {Object} componentParamsObj Optional object of component bindings. Any members whose values are objects will
+   *                  also be added to the scope (<code>this.$scope</code>)
+   */
+  this.compileComponentNoApply = function (componentName, componentParamsObj) {
+    var componentString = this.buildComponentTemplateString(componentName, componentParamsObj);
+    this.compileTemplateNoApply(componentString);
+    this.controller = this.view.controller(componentName);
+  };
+
+  /**
+   * Builds a template string for compiling a component.
+   *
+   * @param (String} componentName Name of the component
+   * @param {Object} componentParamsObj Optional object of component bindings. Any members whose values are objects will
+   *                  also be added to the scope (<code>this.$scope</code>)
+   * @returns {string} A template string suitable for compiling
+   */
+  this.buildComponentTemplateString = function (componentName, componentParamsObj) {
     var component = _.kebabCase(componentName);
     var componentParams = '';
+    this.injectDependencies('$scope'); // just in case we have objects to inject
+    // save this.$scope to be accessible inside _.reduce()
+    var scope = this.$scope;
     if (_.isObject(componentParamsObj)) {
       componentParams = _.reduce(componentParamsObj, function (result, value, key) {
-        result += ' ' + _.kebabCase(key) + '="' + value + '"';
+        var valueString;
+        if (!_.isString(value)) {
+          // set value to the name of the key added to scope
+          valueString = key;
+          // add to scope
+          scope[key] = value;
+        } else {
+          valueString = value;
+        }
+        result += ' ' + _.kebabCase(key) + '="' + valueString + '"';
         return result;
       }, '');
     }
     var componentString = '<' + component + componentParams + '></' + component + '>';
-    this.compileTemplate(componentString);
-    this.controller = this.view.controller(componentName);
-  };
+    return componentString;
+  }
 });
 
 describe('Global Unit Test Config', function () {
@@ -152,7 +202,7 @@ describe('Global Unit Test Config', function () {
 function logLongDurationTests() {
   beforeAll(function () {
     testDurations = [];
-  })
+  });
 
   beforeEach(function () {
     this.startTime = new Date();
@@ -164,7 +214,7 @@ function logLongDurationTests() {
       name: self.lastTest.fullName,
       duration: this.endTime - this.startTime,
     });
-  })
+  });
 
   afterAll(function () {
     var longTests = _.chain(testDurations)
