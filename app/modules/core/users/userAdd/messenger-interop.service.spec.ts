@@ -4,7 +4,7 @@ const Feature = require('./feature.model').default;
 
 describe('MessengerInteropService', () => {
   beforeEach(function () {
-    this.initModules('core.onboard');
+    this.initModules(moduleName);
     this.injectDependencies(
       'Authinfo',
       'Config',
