@@ -1006,6 +1006,7 @@
             },
             params: {
               manageUsers: false,
+              readOnly: false,
             },
           })
           .state('users.convert.services', {
@@ -1962,6 +1963,22 @@
               },
             },
           })
+          .state('place-overview.communication.externaltransfer', {
+            template: '<uc-external-transfer member-type="places" member-id="$resolve.ownerId"></uc-external-transfer>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/externaltransfer'));
+                }, 'place-call-externaltransfer');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.externaltransfer').data.displayName = $translate.instant('serviceSetupModal.externalTransfer.title');
+              },
+            },
+          })
           .state('place-overview.hybrid-services-squared-fusion-cal', {
             templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
             controller: 'CalendarServicePreviewCtrl',
@@ -2273,17 +2290,17 @@
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
               },
-              setCustomer: /* @ngInject */ function (Orgservice, $stateParams, HuronCompassService) {
-                HuronCompassService.setIsCustomer(true);
-                return Orgservice.isTestOrg($stateParams.currentCustomer.customerOrgId).then(function (result) {
-                  $stateParams.isTestOrg = result;
-                });
-              },
             },
             params: {
               currentCustomer: {},
             },
             data: {},
+            onEnter: /* @ngInject */ function (Orgservice, $stateParams, HuronCompassService) {
+              HuronCompassService.setIsCustomer(true);
+              Orgservice.isTestOrg($stateParams.currentCustomer.customerOrgId).then(function (result) {
+                $stateParams.isTestOrg = result;
+              });
+            },
             onExit: /* @ngInject */ function (HuronCompassService) {
               HuronCompassService.setIsCustomer(false);
               HuronCompassService.setCustomerBaseDomain();
@@ -2866,7 +2883,7 @@
                 template: '<uc-huron-details-header></uc-huron-details-header>',
               },
               'main': {
-                template: '<div ui-view></div>',
+                template: '<div ui-view autoscroll="true"></div>',
               },
             },
             resolve: {
@@ -3029,7 +3046,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/features/callPark/callPark'));
+                  done(require('modules/call/features/call-park'));
                 }, 'call-park');
               }),
             },
@@ -3044,7 +3061,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/features/callPark/callPark'));
+                  done(require('modules/call/features/call-park'));
                 }, 'call-park');
               }),
             },
@@ -3052,18 +3069,24 @@
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
             parent: 'hurondetails',
-            templateUrl: 'modules/huron/features/huntGroup/hgSetupAssistant.tpl.html',
-            controller: 'HuntGroupSetupAssistantCtrl',
-            controllerAs: 'huntGroupSA',
+            template: '<uc-hunt-group></uc-hunt-group>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/call/features/hunt-group'], done);
+              }),
+            },
           })
           .state('huntgroupedit', {
             url: '/features/hg/edit',
             parent: 'main',
-            templateUrl: 'modules/huron/features/huntGroup/edit/hgEdit.tpl.html',
-            controller: 'HuntGroupEditCtrl',
-            controllerAs: 'hge',
+            template: '<uc-hunt-group></uc-hunt-group>',
             params: {
               feature: null,
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/call/features/hunt-group'], done);
+              }),
             },
           })
           .state('huronPagingGroup', {
@@ -4173,6 +4196,46 @@
             controller: 'EdiscoveryReportsController',
             controllerAs: 'ediscoveryCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-reports.html',
+          });
+
+        $stateProvider
+          .state('partnerManagement-main', {
+            parent: 'mainLazyLoad',
+            views: {
+              'main@': {
+                templateUrl: 'modules/squared/partner-management/pm-main.html',
+              },
+            },
+            abstract: true,
+          })
+          .state('partnerManagement', {
+            url: '/partnerManagement',
+            template: '<div ui-view></div>',
+            controller: 'PartnerManagementController',
+            controllerAs: 'ctrl',
+            parent: 'partnerManagement-main',
+          })
+          .state('partnerManagement.search', {
+            url: '/',
+            templateUrl: 'modules/squared/partner-management/pm-search.html',
+          })
+          .state('partnerManagement.searchResults', {
+            templateUrl: 'modules/squared/partner-management/pm-searchResults.html',
+          })
+          .state('partnerManagement.orgExists', {
+            templateUrl: 'modules/squared/partner-management/pm-orgExists.html',
+          })
+          .state('partnerManagement.orgClaimed', {
+            templateUrl: 'modules/squared/partner-management/pm-orgClaimed.html',
+          })
+          .state('partnerManagement.contactAdmin', {
+            templateUrl: 'modules/squared/partner-management/pm-contactAdmin.html',
+          })
+          .state('partnerManagement.create', {
+            templateUrl: 'modules/squared/partner-management/pm-create.html',
+          })
+          .state('partnerManagement.createSuccess', {
+            templateUrl: 'modules/squared/partner-management/pm-createSuccess.html',
           });
 
         $stateProvider

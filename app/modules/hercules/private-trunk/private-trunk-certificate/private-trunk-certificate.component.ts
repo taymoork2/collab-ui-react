@@ -1,28 +1,26 @@
 import { IformattedCertificate } from 'modules/hercules/services/certificate-formatter-service';
-
-export enum CertificateRadioType {
-  DEFAULT = <any>'default',
-  NEW = <any>'new',
-}
+import { PrivateTrunkCertificateService } from './';
 
 export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
-  public certificateRadio: CertificateRadioType = CertificateRadioType.DEFAULT;
+  public certificateCustom: boolean = false;
   public certificate: any;
   public file: File;
   public onChangeFn: Function;
-  public onDeleteCertFn: Function;
   public onChangeOptionFn: Function;
-  public formattedCertList: IformattedCertificate;
-  public certLabels: Array<string>;
+  public formattedCertList: IformattedCertificate[];
+  public certLabels: string[];
   public isImporting: boolean = false;
   public isFirstTimeSetup: boolean;
   public certTitle: string;
   public certDesc: string;
+  public isCustomCertificateEnabled: boolean;
 
   /* @ngInject */
   constructor(
    private $scope: ng.IScope,
    private $translate: ng.translate.ITranslateService,
+   private PrivateTrunkCertificateService: PrivateTrunkCertificateService,
+   private FeatureToggleService,
    ) {
 
   }
@@ -31,6 +29,11 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
     this.$scope.$watch(() => this.file,
     file => this.onChangeFile(file),
     );
+    this.isCustomCertificateEnabled = false;
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hf6932Certificate).then(result => {
+      this.isCustomCertificateEnabled = result;
+      this.formattedCertList = !this.isCustomCertificateEnabled ? [] : this.formattedCertList;
+    });
 
     this.certLabels = [
       this.$translate.instant('hercules.settings.call.certificatesEmailAddress'),
@@ -51,7 +54,7 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { formattedCertList, isImporting, isCertificateDefault } = changes;
+    const { formattedCertList, isImporting } = changes;
 
     if (!_.isUndefined(formattedCertList)) {
       this.setFormattedCertList(formattedCertList.currentValue);
@@ -60,30 +63,49 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
     if (!_.isUndefined(isImporting)) {
       this.isImporting = isImporting.currentValue;
     }
-    if (!_.isUndefined(isCertificateDefault)) {
-      this.certificateRadio = isCertificateDefault.currentValue ? CertificateRadioType.DEFAULT : CertificateRadioType.NEW;
+  }
+
+  public isCustomEnabled(): boolean {
+    return this.isCustomCertificateEnabled && !_.isEmpty(this.formattedCertList);
+  }
+
+  public setFormattedCertList(formattedCertList: IformattedCertificate[]): void {
+    this.formattedCertList = _.cloneDeep(formattedCertList);
+    if (!_.isUndefined(this.formattedCertList) && this.formattedCertList.length) {
+      this.certificateCustom = true;
     }
   }
 
-  public setFormattedCertList(formattedCertList: IformattedCertificate): void {
-    this.formattedCertList = _.cloneDeep(formattedCertList);
-  }
+  public deleteCert(certId: string) {
 
-  public changeOption() {
-    this.onChangeOptionFn({
-      isCertificateDefault: (this.certificateRadio === CertificateRadioType.DEFAULT),
+    this.PrivateTrunkCertificateService.deleteCert(certId)
+    .then( cert => {
+      if (cert) {
+        this.formattedCertList = cert.formattedCertList || [];
+      }
+      if (!cert.formattedCertList.length) {
+        this.certificateCustom = false;
+      }
     });
   }
 
-  public deleteCert(certId: string): void {
-    this.onDeleteCertFn({
-      certId: certId,
+  public deleteAllCerts() {
+    this.PrivateTrunkCertificateService.deleteCerts()
+    .then( () => {
+      this.formattedCertList = [];
+      this.certificateCustom = false;
     });
   }
 
   public onChangeFile(file) {
     this.onChangeFn ({
       file: file,
+    });
+  }
+
+  public changeOption() {
+    this.onChangeOptionFn ({
+      isCertificateDefault: !this.certificateCustom,
     });
   }
 }
@@ -95,9 +117,7 @@ export class PrivateTrunkCertificateComponent implements ng.IComponentOptions {
     isFirstTimeSetup: '<',
     formattedCertList: '<',
     isImporting: '<',
-    isCertificateDefault: '<',
     onChangeFn: '&',
-    onDeleteCertFn: '&',
     onChangeOptionFn: '&',
   };
 }

@@ -14,9 +14,9 @@ describe('MediaServiceActivationV2', function () {
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       authinfo = {
-        getOrgId: sinon.stub(),
+        getOrgId: jasmine.createSpy('getOrgId'),
       };
-      authinfo.getOrgId.returns("12345");
+      authinfo.getOrgId.and.returnValue("12345");
       $provide.value('Authinfo', authinfo);
     });
   });
@@ -60,6 +60,12 @@ describe('MediaServiceActivationV2', function () {
       identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
       mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "mocked"],
     });
+    $httpBackend.when('POST', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/12345/services/rhesos').respond({
+      statusCode: 200,
+    });
+    $httpBackend.when('POST', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/12345/services/spark').respond({
+      statusCode: 200,
+    });
     $httpBackend.when('PATCH', /^\w+.*/).respond({});
     $httpBackend.when('PUT', /^\w+.*/).respond({});
     spyOn(ServiceDescriptor, 'enableService').and.returnValue($q.resolve({}));
@@ -70,6 +76,7 @@ describe('MediaServiceActivationV2', function () {
   it('enableOrpheusForMediaFusion should handle the error when getUserIdentityOrgToMediaAgentOrgMapping promise fails', function () {
     $httpBackend.when('GET', /^\w+.*/).respond(500, null);
     $httpBackend.when('PUT', /^\w+.*/).respond(500, null);
+    $httpBackend.when('POST', /^\w+.*/).respond(500, null);
     $httpBackend.when('PATCH', /^\w+.*/).respond({});
     spyOn(ServiceDescriptor, 'enableService').and.callThrough();
     spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.reject({}));

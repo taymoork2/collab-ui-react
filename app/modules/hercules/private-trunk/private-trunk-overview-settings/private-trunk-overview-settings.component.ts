@@ -3,6 +3,7 @@ import { PrivateTrunkCertificateService } from 'modules/hercules/private-trunk/p
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
 import { IOption } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/';
+import { Notification } from 'modules/core/notifications';
 
 export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController {
   public hasPrivateTrunkFeatureToggle: boolean;
@@ -25,6 +26,7 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
     private PrivateTrunkCertificateService: PrivateTrunkCertificateService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private PrivateTrunkService: PrivateTrunkService,
+    private Notification: Notification,
   ) {
   }
 
@@ -65,6 +67,12 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
     this.domainSelected = _.cloneDeep(domainSelected);
     this.isDomain = isDomain;
     this.selectedVerifiedDomains = _.map(this.domainSelected, domainOption => domainOption.value);
+    this.updatePrivateTrunk();
+  }
+
+  public updatePrivateTrunk(): void {
+    this.PrivateTrunkService.setPrivateTrunk(this.selectedVerifiedDomains)
+      .catch(error => this.Notification.notify(error, 'servicesOverview.cards.privateTrunk.error.privateTrunkError'));
   }
 
   public uploadFile(file: File): void {
@@ -81,16 +89,6 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
           this.isImporting = false;
         }
       });
-  }
-
-  public deleteCert(certId: string): void {
-    this.PrivateTrunkCertificateService.deleteCert(certId)
-    .then( cert => {
-      if (cert) {
-        this.formattedCertList = cert.formattedCertList || [];
-        this.isCertificateDefault =  (!_.isArray(this.formattedCertList) || this.formattedCertList.length === 0);
-      }
-    });
   }
 
   public changeOption(isCertificateDefault: boolean): void {

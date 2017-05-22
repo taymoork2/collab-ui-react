@@ -13,7 +13,6 @@
     var ui;
     var apiConfig;
     var action;
-    var schedules = ['openHours', 'closedHours', 'Holidays'];
 
     vm.url = '';
 
@@ -82,7 +81,8 @@
       variable.isWarn = !_.isUndefined(vm.sessionVarOptions[nameInput]);
 
       if (!variable.isWarn) {
-        variable.isWarn = AASessionVariableService.collectThisCeVarName(ui, schedules).filter(function (value) {
+        // args to collect - ui to examine, true for sessionVars, false for conditionals
+        variable.isWarn = AACommonService.collectThisCeActionValue(ui, true, false).filter(function (value) {
           return _.isEqual(value, nameInput);
         }).length > 1;
       }

@@ -115,7 +115,7 @@ describe('HelpdeskCardsService', function () {
     });
 
     it('should return correct call card for org with huron-site-dial-digit & huron-local-dialing features', function () {
-      sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
+      spyOn(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
         "steeringDigit": null,
@@ -126,16 +126,16 @@ describe('HelpdeskCardsService', function () {
         "mediaTraversalMode": "TURNOnly",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
-      HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
+      HelpdeskHuronService.getOrgSiteInfo.and.returnValue(deferredSiteInfoResult.promise);
 
-      sinon.stub(HelpdeskHuronService, 'getTenantInfo');
+      spyOn(HelpdeskHuronService, 'getTenantInfo');
       var deferredTenantInfoResult = q.defer();
       deferredTenantInfoResult.resolve({
         "name": "SomeTestCustomer",
         "regionCode": "940",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
-      HelpdeskHuronService.getTenantInfo.returns(deferredTenantInfoResult.promise);
+      HelpdeskHuronService.getTenantInfo.and.returnValue(deferredTenantInfoResult.promise);
 
       var card = HelpdeskCardsOrgService.getCallCardForOrg(org, licenses, true, true);
       $scope.$apply();

@@ -26,6 +26,8 @@
     var aaRestApiStatus = false;
 
     var invalidList = {};
+    var schedules = ['openHours', 'closedHours', 'Holidays'];
+
     var service = {
       isFormDirty: isFormDirty,
       setSayMessageStatus: setSayMessageStatus,
@@ -50,6 +52,7 @@
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isReturnedCallerToggle: isReturnedCallerToggle,
+      collectThisCeActionValue: collectThisCeActionValue,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -232,6 +235,43 @@
 
       AutoAttendantCeMenuModelService.updateDefaultActionSet(aaRecord, ui.hasClosedHours);
     }
+    function collectActionValue(entry, varNames, isFindSessionVar, isFindConditionals) {
+      _.forEach(entry, function (value, key) {
+        if (_.isArray(value)) {
+          _.forEach(value, function (nowEntry) {
+            return collectActionValue(nowEntry, varNames, isFindSessionVar, isFindConditionals);
+          });
+        }
+
+        if (isFindSessionVar && key === 'variableName') {
+          if (_.has(entry, 'newVariableValue')) {
+            varNames.push(entry.newVariableValue);
+          } else {
+            varNames.push(value);
+          }
+        }
+        if (isFindConditionals && key === 'if') {
+          varNames.push(_.get(value, 'leftCondition', ''));
+        }
+
+        if (AutoAttendantCeMenuModelService.isCeMenuEntry(value)) {
+          return collectActionValue(value, varNames, isFindSessionVar, isFindConditionals);
+        }
+      });
+      return varNames;
+
+    }
+    function collectThisCeActionValue(ui, isFindSessionVar, isFindConditionals) {
+      var varNames = [];
+      // collect all Var names used in the Ce except for this screen
+
+      _.forEach(schedules, function (schedule) {
+        varNames = collectActionValue(ui[schedule], varNames, isFindSessionVar, isFindConditionals);
+      });
+
+      return varNames;
+
+    }
 
   }
 
@@ -261,4 +301,6 @@
     return keys;
 
   }
+
+
 })();

@@ -29,6 +29,15 @@
     }
   }
 
+  .ui-grid-ui-error {
+    color: $color-negative-base;
+  }
+
+  .ui-grid-ui-deleted {
+    color: $gray-light-1;
+    font-style: italic;
+  }
+
   .ui-grid-header-cell-wrapper {
     background-color: $gray-light-3;
     text-align: left;

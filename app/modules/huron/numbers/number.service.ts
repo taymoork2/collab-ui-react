@@ -1,9 +1,4 @@
-import { INumber } from './number';
-
-export enum NumberType {
-  INTERNAL = <any>'internal',
-  EXTERNAL = <any>'external',
-}
+import { INumber, NumberType } from './number';
 
 export enum NumberOrder {
   ASCENDING = <any>'asc',

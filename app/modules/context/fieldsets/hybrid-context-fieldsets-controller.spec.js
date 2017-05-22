@@ -2,7 +2,11 @@
 
 describe('HybridContextFieldsetsCtrl', function () {
 
-  var $controller, $scope, $state, $q, controller, ContextFieldsetsService, Log, Notification, Authinfo;
+  var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
+
+  var MOCK_ORG_ID = 'mocked-org-id';
+
+  var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsetsService, Log, Notification, PropertyService;
   var fakeGridApi = {
     infiniteScroll: {
       dataLoaded: jasmine.createSpy('dataLoaded'),
@@ -24,18 +28,20 @@ describe('HybridContextFieldsetsCtrl', function () {
   beforeEach(initSpies);
 
   afterAll(function () {
-    $controller = $scope = $state = $q = controller = ContextFieldsetsService = Log = Notification = Authinfo = fakeGridApi = undefined;
+    $controller = $scope = $state = $q = Authinfo = controller = ContextFieldsetsService = Log = Notification = PropertyService = fakeGridApi = undefined;
   });
 
-  function dependencies($rootScope, _$controller_, _$q_, _$state_, _ContextFieldsetsService_, _Log_, _Notification_, _Authinfo_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$state_, _Authinfo_, _ContextFieldsetsService_, _Log_, _Notification_, _PropertyService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     $state = _$state_;
+    Authinfo = _Authinfo_;
     ContextFieldsetsService = _ContextFieldsetsService_;
     Log = _Log_;
     Notification = _Notification_;
     Authinfo = _Authinfo_;
+    PropertyService = _PropertyService_;
   }
 
   function initSpies() {
@@ -44,6 +50,8 @@ describe('HybridContextFieldsetsCtrl', function () {
     spyOn(Log, 'debug');
     spyOn(Notification, 'error');
     spyOn(Authinfo, 'getOrgName').and.returnValue('orgName');
+    spyOn(PropertyService, 'getProperty').and.returnValue($q.reject(undefined));
+    spyOn(Authinfo, 'getOrgId').and.returnValue(MOCK_ORG_ID);
   }
 
   function initController() {
@@ -296,7 +304,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
         'id': 'strMatchInLastUpdated',
-        'lastUpdated': '2017-02-15T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-15T19:37:36.998Z',
         'numOfFields': '4',
       },
       {
@@ -319,7 +327,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/fieldset5',
         'id': 'fieldset5',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
         'numOfFields': '2',
       },
       {
@@ -342,7 +350,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/notThisfieldset',
         'id': 'notThisfieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
         'numOfFields': '2',
       },
       {
@@ -360,7 +368,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/strMatchInDescription',
         'id': 'strMatchInDescription',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
         'numOfFields': '1',
       },
       {
@@ -398,7 +406,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/strMatchViaNumFields',
         'id': 'strMatchViaNumFields',
-        'lastUpdated': '2017-02-12T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-12T19:37:36.998Z',
         'numOfFields': '5',
       }];
 
@@ -449,7 +457,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/First',
         'id': 'First',
-        'lastUpdated': '2017-02-15T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-15T19:37:36.998Z',
       },
       {
         'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
@@ -471,7 +479,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/strMatchInDescription',
         'id': 'strMatchInDescription',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
       },
       {
         'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
@@ -493,7 +501,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/notThisfieldset',
         'id': 'notThisfieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
       },
       {
         'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
@@ -510,7 +518,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         'refUrl': '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
         'id': 'strMatchInLastUpdated',
-        'lastUpdated': 'first in date',
+        'lastUpdatedUI': 'first in date',
       },
       {
         'otherKey1': 'First',
@@ -768,6 +776,81 @@ describe('HybridContextFieldsetsCtrl', function () {
       expect(controller.gridOptions.data[0].id).toEqual('bbb_custom_fieldset');
       expect(controller.gridOptions.data[1].id).toEqual('ccc_custom_fieldset');
       expect(controller.placeholder.count).toBe(2);
+    });
+  });
+
+  describe('max fieldsets allowed', function () {
+    var DEFAULT_MAX_FIELDSETS = PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE;
+    var MAX_FIELDSETS_PROPERTY = PropertyConstants.MAX_FIELDSETS_PROP_NAME;
+
+    beforeEach(function () {
+      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
+        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        'description': 'aaa custom fieldset with some long description description description description description',
+        'fields': [
+          'AAA_TEST_FIELD',
+        ],
+        'publiclyAccessibleUI': 'false',
+        'fieldDefinitions': [
+          {
+            'id': 'AAA_TEST_FIELD',
+            'lastUpdated': '2017-02-02T17:12:33.167Z',
+          },
+        ],
+        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+        'id': 'aaa_custom_fieldset',
+      },
+      {
+        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        'description': 'bbb custom fieldset with some description',
+        'fields': [
+          'BBB_TEST_FIELD',
+        ],
+        'publiclyAccessibleUI': 'false',
+        'fieldDefinitions': [
+          {
+            'id': 'BBB_TEST_FIELD',
+            'lastUpdated': '2017-02-02T17:12:33.167Z',
+          },
+        ],
+        'refUrl': '/dictionary/fieldset/v1/id/bbb_custom_fieldset',
+        'id': 'bbb_custom_fieldset',
+      },
+      {
+        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        'description': 'bbb custom fieldset with some description',
+        'fields': [
+          'CCC_TEST_FIELD',
+        ],
+        'publiclyAccessibleUI': 'false',
+        'fieldDefinitions': [
+          {
+            'id': 'BBB_TEST_FIELD',
+            'lastUpdated': '2017-02-02T17:12:33.167Z',
+          },
+        ],
+        'refUrl': '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
+        'id': 'ccc_custom_fieldset',
+      }]));
+      controller = initController();
+    });
+
+    afterEach(function () {
+      expect(PropertyService.getProperty).toHaveBeenCalledWith(MAX_FIELDSETS_PROPERTY, MOCK_ORG_ID);
+    });
+
+    it('should have the default max fields', function () {
+      $scope.$apply();
+      expect(controller.maxFieldsetsAllowed).toBe(DEFAULT_MAX_FIELDSETS);
+      expect(controller.showNew).toBe(true);
+    });
+
+    it('should overrides the max fields property and new is disabled', function () {
+      var maxFields = 2;
+      PropertyService.getProperty.and.returnValue($q.resolve(maxFields));
+      $scope.$apply();
+      expect(controller.maxFieldsetsAllowed).toBe(maxFields);
+      expect(controller.showNew).toBe(false);
     });
   });
 });

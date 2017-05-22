@@ -71,6 +71,7 @@
         fusion_mgmt: 'squared-fusion-mgmt',
         room_system: 'spark-room-system',
         fusion_ec: 'squared-fusion-ec',
+        messenger_interop: 'messenger-interop',
         messenger: 'webex-messenger',
         care: 'cloud-contact-center',
         care_inbound_voice: 'cloud-contact-center-inbound-voice',
@@ -216,6 +217,7 @@
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC', // Care Digital Channel
         CVC: 'CVC', // Care Voice Channel
+        MSGR: 'MSGR', // WebEx Messenger (as of 2017-05-17, managed externally and not managed by Atlas)
       },
 
       licenseStatus: {
@@ -412,6 +414,7 @@
       Application: ['organizations', 'organization-overview'],
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
+      Partner_Management: ['partnerManagement'],
     };
 
     if (config.isDev()) {

@@ -7,14 +7,13 @@
 
   /* @ngInject */
 
-  function AACallerInputCtrl($scope, $translate, CustomVariableService, AAModelService, AAUiModelService, AASessionVariableService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
+  function AACallerInputCtrl($scope, $translate, CustomVariableService, AAModelService, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
 
     var vm = this;
 
     var myId;
 
     var sessionVarOptions = [];
-    var schedules = ['openHours', 'closedHours', 'Holidays'];
 
     var languageOption = {
       label: '',
@@ -194,7 +193,8 @@
       vm.isWarn = !_.isUndefined(sessionVarOptions[vm.nameInput]);
 
       if (!vm.isWarn) {
-        vm.isWarn = AASessionVariableService.collectThisCeVarName(ui, schedules).filter(function (value) {
+        // args to collect - ui to examine, true for sessionVars, false for conditionals
+        vm.isWarn = AACommonService.collectThisCeActionValue(ui, true, false).filter(function (value) {
           return _.isEqual(value, vm.nameInput);
         }).length > 1;
       }

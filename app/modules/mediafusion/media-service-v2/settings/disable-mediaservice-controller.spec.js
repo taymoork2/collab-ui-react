@@ -10,11 +10,11 @@ describe('Controller: DisableMediaServiceController', function () {
 
   // var serviceId = "squared-fusion-media";
   var modalInstance = {
-    dismiss: sinon.stub(),
-    close: sinon.stub(),
+    dismiss: jasmine.createSpy('dismiss'),
+    close: jasmine.createSpy('close'),
   };
   var authInfo = {
-    getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632f806-ad09-4a26-a0c0-a49a13f38873'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -27,7 +27,7 @@ describe('Controller: DisableMediaServiceController', function () {
     ServiceDescriptor = _ServiceDescriptor_;
     Notification = _Notification_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
-    sinon.stub($state, 'go');
+    spyOn($state, 'go');
     httpMock = _$httpBackend_;
     httpMock.when('GET', /^\w+.*/).respond({});
     controller = $controller('DisableMediaServiceController', {
@@ -46,7 +46,6 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(controller).toBeDefined();
   });
   it('should call the dismiss for cancel', function () {
-    spyOn(modalInstance, 'dismiss');
     controller.cancel();
     expect(modalInstance.dismiss).toHaveBeenCalled();
   });
@@ -65,7 +64,6 @@ describe('Controller: DisableMediaServiceController', function () {
     spyOn(MediaServiceActivationV2, 'disableOrpheusForMediaFusion');
     spyOn(MediaServiceActivationV2, 'deactivateHybridMedia');
     spyOn(Notification, 'success');
-    spyOn(modalInstance, 'close');
     controller.clusterIds = ['cluster1', 'cluster2'];
     controller.deactivate();
     httpMock.verifyNoOutstandingExpectation();
@@ -83,7 +81,6 @@ describe('Controller: DisableMediaServiceController', function () {
       'status': 500,
     }));
     spyOn(Notification, 'error');
-    spyOn(modalInstance, 'close');
     controller.clusterIds = ['cluster1', 'cluster2'];
     controller.deactivate();
     httpMock.verifyNoOutstandingExpectation();

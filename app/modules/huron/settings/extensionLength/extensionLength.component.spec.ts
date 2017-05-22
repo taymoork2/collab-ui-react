@@ -4,7 +4,7 @@ describe('Component: extensionLength', () => {
   const EXTENSION_LENGTH_SELECT = '.csSelect-container[name="extensionLength"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const SELECT_TOGGLE = '.select-toggle';
-  const EXTENSION_LENGTH_THREE = '3';
+  const EXTENSION_LENGTH_SIX = '6';
   const EXTENSION_LENGTH_TEN = '10';
 
   beforeEach(function() {
@@ -14,17 +14,20 @@ describe('Component: extensionLength', () => {
     );
 
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
+  });
 
+  function initComponent() {
     this.compileComponent('ucExtensionLength', {
       firstTimeSetup: 'firstTimeSetup',
       extensionLength: 'extensionLength',
+      extensionsAssigned: 'extensionsAssigned',
+      extensionLengthSavedFn: 'extensionLengthSavedFn()',
       onChangeFn: 'onChangeFn(extensionLength)',
     });
+  }
 
-    this.$scope.extensionLength = EXTENSION_LENGTH_THREE;
-  });
-
-  describe('firstTimeSetup = true', () => {
+  xdescribe('firstTimeSetup = true', () => {
+    beforeEach(initComponent);
     beforeEach(function() {
       this.$scope.firstTimeSetup = true;
       this.$scope.$apply();
@@ -52,15 +55,24 @@ describe('Component: extensionLength', () => {
     });
   });
 
-  describe('firstTimeSetup = false', () => {
+  describe('firstTimeSetup = false and extensionsAssigned = true', () => {
     beforeEach(function() {
       this.$scope.firstTimeSetup = false;
+      this.$scope.extensionsAssigned = true;
+      this.$scope.extensionLength = EXTENSION_LENGTH_SIX;
       this.$scope.$apply();
     });
+    beforeEach(initComponent);
 
-    it('should be disabled when firstTimeSetup = false', function() {
-      expect(this.view.find(EXTENSION_LENGTH_SELECT).find(SELECT_TOGGLE)).toHaveClass('disabled');
+    it('should have a select box with only options 6 thru 10', function() {
+      expect(this.view).toContainElement(EXTENSION_LENGTH_SELECT);
+      expect(this.view.find(EXTENSION_LENGTH_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('6');
+      expect(this.view.find(EXTENSION_LENGTH_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('7');
+      expect(this.view.find(EXTENSION_LENGTH_SELECT).find(DROPDOWN_OPTIONS).get(2)).toHaveText('8');
+      expect(this.view.find(EXTENSION_LENGTH_SELECT).find(DROPDOWN_OPTIONS).get(3)).toHaveText('9');
+      expect(this.view.find(EXTENSION_LENGTH_SELECT).find(DROPDOWN_OPTIONS).get(4)).toHaveText('10');
     });
+
   });
 
 });

@@ -1,45 +1,60 @@
 (function () {
   'use strict';
 
-  /*var $controller, MailValidatorService, Notification;
+  var $controller, $q, HDSService;
   var $scope;
-  var ctrl;*/
+  var ctrl;
 
   describe('Controller: EditTrialUsersController', function () {
     beforeEach(angular.mock.module('Hercules'));
     beforeEach(angular.mock.module('HDS'));
 
-    /*beforeEach(inject(function (_$controller_, _$rootScope_, _MailValidatorService_, _Notification_) {
-      $scope = _$rootScope_.$new();
-      MailValidatorService = _MailValidatorService_;
-      Notification = _Notification_;
+    beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _HDSService_) {
       $controller = _$controller_;
+      $q = _$q_;
+      $scope = _$rootScope_.$new();
+      HDSService = _HDSService_;
+      spyOn(HDSService, 'getHdsTrialUserGroupID').and.returnValue($q.resolve({}));
     }));
 
     function initController() {
       ctrl = $controller('AddTrialUsersController');
       $scope.$apply();
-    }*/
+    }
 
     describe('Initialization Tests', function () {
 
-      /*it('controller should be defined', function () {
-        initController();
-        expect(ctrl).toBeDefined();
-      });
-      it('addUser should notify success for valid emailTrialUsers', function () {
+      it('addUser should see savingEmail as true for valid emailTrialUsers', function () {
         initController();
         var emails = [{
           text: 'abc@cisco.com',
         }];
+        ctrl.savingEmail = false;
         ctrl.emailTrialUsers = emails;
-        spyOn(Notification, 'success');
-        spyOn(MailValidatorService, 'isValidEmailCsv').and.returnValue(true);
         ctrl.addUser();
-        //expect(Notification.success).toHaveBeenCalled();
         expect(ctrl.savingEmail).toBe(true);
-      });*/
-      // TODO: we will add more when back end API is clear
+      });
+
+      it('addUser should see savingEmail as false for invalid emailTrialUsers', function () {
+        var emails = [{
+          "text": "abc",
+        }];
+        ctrl.savingEmail = false;
+        ctrl.emailTrialUsers = emails;
+        ctrl.addUser();
+        expect(ctrl.savingEmail).toBe(false);
+      });
+
+      it('removeUser should see savingEmail as true for valid emailTrialUsers', function () {
+        initController();
+        var emails = [{
+          text: 'abc@cisco.com',
+        }];
+        ctrl.savingEmail = false;
+        ctrl.emailTrialUsers = emails;
+        ctrl.removeUser();
+        expect(ctrl.savingEmail).toBe(true);
+      });
 
     });
   });

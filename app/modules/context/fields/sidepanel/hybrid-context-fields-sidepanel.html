@@ -1,4 +1,4 @@
-<span class="context-fields-sidepanel">
+<span class="context-sidepanel context-fields-sidepanel">
   <!-- header for the side panel -->
   <div ui-view="header"></div>
 
@@ -41,11 +41,6 @@
         </div>
 
         <div class="feature">
-          <span class="feature-name" translate="context.dictionary.fieldPage.fieldId"></span>
-          <span class="feature-details">{{$ctrl.field.id}}</span>
-        </div>
-
-        <div class="feature">
           <span class="feature-name" translate="context.dictionary.fieldPage.label"></span>
           <span class="feature-details">{{$ctrl.field.translations.en_US}}</span>
         </div>
@@ -75,34 +70,39 @@
 
          <div class="feature">
             <span class="feature-name"  translate="context.dictionary.dateUpdated"></span>
-            <span class="feature-details  context-updated-date" ng-if="$ctrl.field.lastUpdatedUI">{{$ctrl.field.lastUpdatedUI}}</span>
+            <span class="feature-details" ng-if="$ctrl.field.lastUpdatedUI">{{$ctrl.field.lastUpdatedUI}}</span>
             <span class="feature-details" ng-if="!$ctrl.field.lastUpdatedUI" translate="context.dictionary.unavailable"></span>
          </div>
 
-         <div class="associated-fieldsets-block">
-            <p translate="context.dictionary.fieldPage.associatedFieldsets"></p>
-           <!-- show if no fieldsets are returned -->
-           <span ng-if="$ctrl.associatedFieldsets.length === 0 && !$ctrl.fetchFailure" translate="common.none" class="context-fieldsets-none"></span>
-           <!-- show if failed to retrieve list of fieldsets -->
-            <div ng-if="$ctrl.associatedFieldsets.length === 0 && $ctrl.fetchFailure" class="associated-fieldsets">
-              <i class="icon icon-error"></i>
-              <span translate="context.dictionary.fieldPage.associatedFieldsetsError" class="failure-message"></span>
-              <button translate="common.retry" class="retry-action" ng-click="$ctrl._getAssociatedFieldsets()" ng-disabled="$ctrl.fetchInProgress"></button>
-            </div>
-           <!-- show if successfully retrieved list of associated fieldsets -->
-            <div ng-if="$ctrl.associatedFieldsets.length > 0" class="token" ng-repeat="id in $ctrl.associatedFieldsets">{{id}}</div>
-          </div>
+        <!-- Associatate Fieldsets -->
+        <!-- if no fieldsets are returned -->
+        <div ng-if="$ctrl.associatedFieldsets.length === 0 && !$ctrl.fetchFailure" class="feature">
+          <span class="feature-name"  translate="context.dictionary.fieldPage.associatedFieldsets"></span>
+          <span class="feature-details" translate="common.none"></span>
         </div>
-
+        <!--  if failed to retrieve list of fieldsets -->
+        <div ng-if="$ctrl.associatedFieldsets.length === 0 && $ctrl.fetchFailure" class="context-retry-error">
+          <div class="feature" translate="context.dictionary.fieldPage.associatedFieldsets"></div>
+          <i class="icon icon-error"></i>
+          <span translate="context.dictionary.fieldPage.associatedFieldsetsError" class="failure-message"></span>
+          <button translate="common.retry" class="retry-action" ng-click="$ctrl._getAssociatedFieldsets()" ng-disabled="$ctrl.fetchInProgress"></button>
+        </div>
+        <!-- if successfully retrieved list of associated fieldsets -->
+        <div ng-if="$ctrl.associatedFieldsets.length > 0">
+          <div class="feature" translate="context.dictionary.fieldPage.associatedFieldsets"></div>
+          <div class="token" ng-repeat="id in $ctrl.associatedFieldsets">{{id}}</div>
+        </div>
       </div>
     </cs-sp-section>
 
-    <cs-sp-section ng-if="$ctrl.isEditable()">
-      <div class="section-title-row section-name" translate="context.dictionary.actions"></div>
-      <div>
-        <button class="btn btn--negative" ng-click="$ctrl.openDeleteConfirmDialog()" translate="common.delete"></button>
-      </div>
-    </cs-sp-section>
+    <button
+      class="btn--delete"
+      cs-btn
+      ng-if="$ctrl.isEditable()"
+      ng-click="$ctrl.openDeleteConfirmDialog()">
+      <i class="icon icon-trash"></i>
+      <span translate="context.dictionary.fieldPage.deleteField"></span>
+    </button>
 
   </cs-sp-container>
 </span>

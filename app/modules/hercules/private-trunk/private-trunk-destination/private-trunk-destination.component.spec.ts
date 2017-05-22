@@ -48,7 +48,7 @@ describe('Component: privateTrunkDestination component', () => {
     expect(this.view).toContainElement(INPUT_ADDRESS);
     expect(this.view).toContainElement(INPUT_NAME);
     this.view.find(INPUT_ADDRESS).val('destination').change();
-    this.view.find(INPUT_NAME).val('name').change();
+    this.view.find(INPUT_NAME).val('name').change().blur();
     expect(this.$scope.onChangeFn).toHaveBeenCalled();
   });
 
@@ -60,10 +60,10 @@ describe('Component: privateTrunkDestination component', () => {
     this.view.find(RADIO_OPTION1).click().click();
     expect(this.view.find(RADIO_OPTION1)).toBeChecked();
     this.view.find(INPUT_ADDRESS).val(destination).change().blur();
-    this.view.find(INPUT_NAME).val(name).change();
+    this.view.find(INPUT_NAME).val(name).change().blur();
     this.view.find(ADD_DESTINATION).click();
     this.view.find(INPUT_ADDRESS1).val(destination).change().blur();
-    this.view.find(INPUT_NAME1).val(name).change();
+    this.view.find(INPUT_NAME1).val(name).change().blur();
     expect(this.view).toContainElement(INPUT_ADDRESS1);
     expect(this.view).toContainElement(EXIT_ICON);
     expect(this.$scope.onChangeFn).toHaveBeenCalled();

@@ -282,6 +282,7 @@
     }
   },
   "onboardModal": {
+    "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
@@ -723,7 +724,9 @@
     "media_type_callback": "Callbacks",
     "media_type_voice": "Inbound Calls",
     "taskDataGetError": "There was an error while loading the {{dataType}} data.",
-    "tableDataGetError": "There was an error while loading the detailed efficient user data."
+    "tableDataGetError": "There was an error while loading the detailed efficient user data.",
+    "errorLoadingName": "Error Loading Name",
+    "deletedUser": "Deleted User "
   },
   "activeUsers": {
     "active": "Active",
@@ -970,6 +973,10 @@
         "viewCdrCallFlowDesc": "Open the tool in a new tab",
         "ediscovery": "Activity Reports",
         "launchEdicoveryDesc": "Open the Activity Reports dashboard in a new tab",
+        "partnerManagement": "Manage Partner Accounts",
+        "viewPartnerManagementDesc": "The actions below open new tabs",
+        "viewPartnerManagement": "Create New Partner Org",
+        "editPartner": "Edit Partner Org",
         "viewEdiscovery": "View Activity Reports"
       }
     }
@@ -1165,6 +1172,8 @@
     "learnMore": "Learn More",
     "leave": "Leave",
     "metrics": "Metrics",
+    "members": "Members",
+    "memberCount": "{{count}} Members",
     "modal": "Modal",
     "modify": "Modify",
     "new": "New",
@@ -1191,6 +1200,7 @@
     "remove": "Remove",
     "rename": "Rename",
     "required": "Required",
+    "reorder": "Reorder",
     "reset": "Reset",
     "resources": "Resources",
     "result": "Result",
@@ -1198,11 +1208,16 @@
     "save": "Save",
     "saveLabel": "Do you want to save your changes?",
     "search": "Search",
+    "searchMembers": "Search Members",
+    "searchAddMembers": "Search & Add Members",
     "select": "Select",
     "selectLanguage": "Select a language",
     "service": "Service",
     "settings": "Settings",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
+    "selectMembers": "Select Members",
+    "showLess": "Show Less",
+    "showMore": "Show More",
     "status": "Status",
     "step": "Step",
     "submit": "Submit",
@@ -1275,6 +1290,7 @@
     "convertUsers": "Convert Unlicensed Users",
     "unlicensedUsers": "Unlicensed Users",
     "convertUsersText": "Convert employees to a licensed user who have signed up for Cisco Spark on their own with a company email address.  Licensed users receive additional enterprise features, and are subject to your organization’s policies and administration.",
+    "convertUsersDirSyncEnabledWarning": "Users cannot be converted while Directory Synchronization is enabled. Disable Directory Synchronization from the Settings page in order to convert users.",
     "convertError": " could not be converted. Contact support for assistance converting this user.",
     "cancel": "Cancel",
     "emailAddress": "Email Address",
@@ -1398,7 +1414,18 @@
     "extensionLengthDescription": "Specify the total number of digits users must dial before placing an external call. All sites share the same extension length.",
     "extensionLengthHelpText": "After being set, this value can only be changed if no extensions are assigned.",
     "extensionLengthServicesHelpText": "Enabled only when no extensions have been assigned.",
+    "extensionLengthSingleOptionHelpText": "Option {{minExtLength}} only available when no extensions have been assigned.",
+    "extensionLengthRangeOptionHelpText": "Options {{minExtLength}} thru {{extLengthMinusOne}} only available when no extensions have been assigned.",
     "saveCallSettingsExtensionLengthAllowed": "After you specify the length of extensions, you can only change this value if you remove Auto Attendants, Hunt Groups and  the Call entitlement from all users. Removing the Call entitlement deletes all call service data for every user (for example, speed dials and voicemail messages).",
+    "choosePrefixTitle": "Choose Prefix",
+    "extensionPrefixDescription": "You have chosen a longer extension length.  Please specify digit(s) to prepend to extensions not mapped to phone numbers.",
+    "extensionPrefixExample": "Example: Extension 555 will change to {{prefix}}555",
+    "extensionPrefixLengthValidation": "Extension prefix must contain {{prefixLength}} digits.",
+    "extensionLengthSaveSuccess": "Extension length saved successfully.",
+    "extensionLengthSaveFail": "Failed to update extension length.",
+    "saveChangesFirstTitle": "Save Changes First",
+    "saveChangesFirstMessage": "You have other changes on this page.  If you continue without saving, you will lose these changes.",
+    "continueWithoutSaving": "Continue without saving",
     "reservedDigits": "Reserved Digits",
     "siteSteeringDigit": "Site-to-Site Dial Digit",
     "siteSteeringDigitDescription": "Select a digit to reserve for dialing between sites. Extensions between 9000 and 9999 are not recommended for assignment.",
@@ -1480,6 +1507,8 @@
     "localDialingTitle": "Local Dialing",
     "localDialingDesc": "Auto-prepend a country code and area code to phone calls for simplified local dialing. Not recommended for locations with multiple area codes.",
     "localDialingNumberTitle": "Prepended Area Code",
+    "extensionLengthIncreaseWarning": "Changing the extension length will change all extensions.  All phones will restart automatically.",
+    "extensionLengthDecreaseWarning": "Decreasing the extension length will remove all extension ranges.",
     "routingPrefix": {
       "title": "Routing Prefix",
       "radioReserve": "Reserve a prefix",
@@ -1785,7 +1814,7 @@
       "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later.",
       "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
-      "partnersCannotConfigureClusters": "Partner administrators may not set up Hybrid Services or add clusters when viewing customer organizations."
+      "partnersCannotConfigureClusters": "You cannot add this resource. A customer administrator must perform this step."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -2103,7 +2132,7 @@
       "authorization": {
         "title": "Authorize Cisco Collaboration Cloud on your G Suite account",
         "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Collaboration Cloud on your G Suite account.",
-        "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to Sevurity.",
+        "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to Security.",
         "item2": "Click <strong>Show more</strong> and then <strong>Advanced settings</strong>.",
         "item3": "Click <strong>Manage API Client Access</strong>.",
         "item4": "Copy the client name and scope to your clipboard.",
@@ -2125,8 +2154,8 @@
         "line1": "Great! Google Calendar is correctly configured.",
         "line2": "You can now enable Hybrid Calendar for your users.",
         "line3": "To enable users, you can:",
-        "item1": "Enable them individually from the <a href=\"#\">users page</a>.",
-        "item2": "Enable them in bulk using the <a href=\"#\">CSV template</a>.",
+        "item1": "Enable them individually from the <a ng-click=\"{{onclick}}\">users page</a>.",
+        "item2": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
         "line4": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\">documentation</a> if you need help enabling users."
       }
     },
@@ -2423,7 +2452,8 @@
           "mediafusion-not-setup": "Media Service not set up",
           "context-description": "Can run Hybrid Context",
           "context-not-setup": "Context not set up",
-          "cucm-description": "Cisco Unified Communications Manager"
+          "cucm-description": "Cisco Unified Communications Manager",
+          "partner-registration-not-supported": "Partner administrators cannot configure these resources"
         },
         "expressway": {
           "services": {
@@ -2610,6 +2640,9 @@
     }
   },
   "cmc": {
+    "failures": {
+      "preCheckFailure": "Status check of org failed"
+    },
     "menu": {
       "mobileServices": "Mobile Services",
       "mobileConvergenceService": "Mobile Convergence Service"
@@ -2624,6 +2657,18 @@
     },
     "details": {
       "invalidInput": "Always provide valid mobile number when enabling"
+    },
+    "settingsPage": {
+      "title": "Mobile  Convergence service",
+      "description": "Settings for the Mobile Converence service",
+      "mobileProvider": {
+        "title": "Mobile Provider",
+        "description": "Mobile provider for the CMC service"
+      },
+      "serviceProvider": {
+        "title": "Service Provider",
+        "description": "Service provider for the CMC service"
+      }
     }
   },
   "context": {
@@ -2690,7 +2735,9 @@
         "inUseTooltip": "Field associated with fieldsets.",
         "notInUseTooltip": "Field not associated with any fieldsets.",
         "deleteField": "Delete Field",
-        "deleteConfirmationText": "Are you sure you want to delete this field?"
+        "deleteConfirmationText": "Are you sure you want to delete this field?",
+        "limitReached": "Maximum fields reached.",
+        "fieldLimitReadFailed": "Unable to retrieve fields limit. Refresh your browser to try again"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -2701,7 +2748,6 @@
         "fieldsetIdPlaceholder": "For eg. sales.shoppingcart",
         "descriptionPlaceholder": "What is this fieldset for?",
         "createNew": "Create New Fieldset",
-        "fieldsetAttributes": "Fieldset Attributes",
         "addOrEditFields": "Search and Select fields you want in this fieldset.",
         "searchFields": "Search Fields",
         "loadFailure": "Unable to retrieve fields.",
@@ -2719,7 +2765,10 @@
         "deleteFieldset": "Delete Fieldset",
         "deleteConfirmationText": "Are you sure you want to delete this fieldset?",
         "inUseTooltip": "Fieldset associated with objects.",
-        "notInUseTooltip": "Fieldset not associated with any objects."
+        "notInUseTooltip": "Fieldset not associated with any objects.",
+        "limitReached": "Maximum fieldsets reached",
+        "fieldMaxLimitReached": "Maximum fields in fieldset reached.",
+        "fieldsetLimitReadFailed": "Unable to retrieve fieldsets limit. Refresh your browser to try again"
       }
     }
   },
@@ -2936,7 +2985,6 @@
       "emailAddress": "Email Addresses",
       "spaceId": "Space Id",
       "dateRange": "Date Range",
-      "messages": "Messages Contains",
       "notApplicable": "N/A",
       "reportSummary": "Report Summary",
       "spaces": "Spaces",
@@ -3145,6 +3193,7 @@
     "careSettingsTimeout": "Request timed out while checking Care setup status.",
     "careSettingsChecking": "Checking Care setup status.",
     "setUpCareFailure": "Failed to setup Care. Please try again or skip this step for now and set it up from the Settings page in Care. Users cannot have Care license until this setup is complete.",
+    "careSettingsUpdateFailed": "Care settings could not be saved at this time.",
     "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
@@ -3303,11 +3352,12 @@
     "invalidCharacter": "Invalid character entered.",
     "callerInputCnvtDigit": "Convert digit input to text string value.",
     "callerInputMaxLenStr": "Max Length of String",
+    "varNamesDependenciesTitle": "Variable Dependencies",
+    "varNamesDependentCes": "Are you sure? This variable is used in...",
     "callerInputVariableTooLongMsg": "Maximum length of input variable is exceeded.",
     "callerInputVariableTooShortMsg": "Variable name is too short.",
     "callerInputVariableRequiredMsg": "Variable name is required.",
     "callerInputVariableDuplicateMsg": "Variable is used in this or another AA. Might be overwritten.",
-    "callerInputValue": "Input Value",
     "callerInputValue": "Input Value",
     "callerInputLabel": "Name",
     "callerInputNamePlaceHolder": "Name Variable",
@@ -3398,7 +3448,6 @@
     "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
     "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
-    "addDynamicText": "Add Dynamic Text",
     "dynamicText": "Dynamic Text",
     "variable": "Variable",
     "readAs": "Read as",
@@ -3962,6 +4011,9 @@
     "editNumbers": "Edit Phone Numbers",
     "pendingNumbersTooltip": "Numbers can be in pending status for various reasons. Thank you for your patience during normal processing time. If it is taking longer than expected, please contact your provider.",
     "listError": "Failed to load phone number list.",
+    "deleteNumber": "Delete Number",
+    "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
+    "deleteWarning": "This cannot be reversed.  You will lose this number indefinitely.",
     "allNumbers": "{count, plural, =1{# Number} other{# Numbers}}",
     "pendingNumbers": "{count, plural, =1{# Pending Number} other{# Pending Numbers}}",
     "unassignedNumbers": "{count, plural, =1{# Unassigned Number} other{# Unassigned Numbers}}",
@@ -4156,7 +4208,7 @@
     "feature6": "Taxes additional"
   },
   "westucFeatures": {
-    "feature1": "Unlimited* calling in the U.S.",
+    "feature1": "Unlimited calling in the fifty U.S. states subject to West Fair Use Policy.",
     "feature2": "1 DID telephone number (new or ported)",
     "feature3": "Caller ID",
     "feature4": "Directory listing",
@@ -4217,7 +4269,7 @@
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialSparkBoardQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialCareQuantity": "K1 and K2 licenses should be between 1 and 50 each and not exceed the Licenses Quantity in total.",
-    "careLicenseCountExceedsTotalCount": "Care license requested is more than the message license quantity.",
+    "careLicenseCountExceedsTotalCount": "Number of Licenses should be between 1 and 999 and no less than total Care license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Devices",
     "roomSystem": "Room Device",
@@ -4281,7 +4333,6 @@
       "invalidRoomSystemsQuantity": "Limited to {{max}} Spark Room Devices",
       "invalidPhonesQuantity": "Limited to {{max}} Personal & Shared Desk Phones",
       "shippingInfo": "Shipping Information",
-      "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
       "recipient": "Where will the devices be shipped?",
       "customer": "Customer",
       "partner": "Partner",
@@ -4702,7 +4753,10 @@
     "saved": "The settings are saved. You will have to reboot the device for the changes to take effect",
     "t38Warning": "Warning: T.38 faxes will not be encrypted",
     "t38Label": "T.38 Fax Protocol",
-    "savedT38": "T.38 settings updated"
+    "savedT38": "T.38 settings updated",
+    "cpcWarning": "Enable analog devices that support auto disconnect based on silence detection",
+    "cpcLabel": "Silence Detection",
+    "savedCpc": "Silence Detection successfully updated"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -5017,8 +5071,6 @@
       "threeMonths2": "last three months",
       "lastRefresh": "Last Refreshed at",
       "clusterAvailability": "Cluster Availability for",
-      "callReject": "Call Rejects  for",
-      "node": "Node",
       "callVolumes": "Call Activity",
       "callLocal": "Calls on premise",
       "callReject": "Calls overflowed to cloud",
@@ -5084,7 +5136,6 @@
       "totalMeetings": "Total Number of Meetings",
       "meetOnPrem": "Meeting Host Type",
       "clientTypes": "Client Types",
-      "clientType": "Client Type",
       "clients": "Clients",
       "noOfMeet": "Number of Meetings",
       "meetingLocationTitle": "Total Meetings by Host Type",
@@ -6023,7 +6074,29 @@
       "setUpCare": "Care",
       "setUpDescription": "Setup Care to add this license for your users so that your organization can take advantage of Care service.",
       "setUpCareSuccess": "Care service has been setup successfully.",
-      "setUpCareFailure": "Failed to setup Care. Please try again. Users cannot have Care license until this setup is complete."
+      "setUpCareFailure": "Failed to setup Care. Please try again. Users cannot have Care license until this setup is complete.",
+      "routing": {
+        "header": "Routing",
+        "description": "This setting is applicable to all users in the organization.",
+        "pick": {
+          "Header": "Pick Routing",
+          "Label": "Users can pick tasks from a queue based on their capacity."
+        },
+        "automated": {
+          "Header": "Automated Routing",
+          "Label": "Users are offered tasks based on their availability and capacity."
+        }
+      },
+      "saveModal": {
+        "Header": "Care Settings",
+        "BodyMsg1": "Are you sure you want to change your care settings?",
+        "BodyMsg2": "Do you want to save your care settings?",
+        "Save": "Yes",
+        "Cancel": "No"
+      },
+      "routingChangeWarnMsgLine1": "Routing changes require up to 15 minutes to take effect.",
+      "routingChangeWarnMsgLine2": "We recommend changing this setting during off hours or when users are not signed in.",
+      "routingChangeWarnMsgLine3": "Users are required to sign in again to receive tasks as per the new routing."
     },
     "featuresNotYetConfiguredPage": {
       "createCareTemplate": "Create a Care Template",
@@ -6131,6 +6204,7 @@
     },
     "jabberInteropHeading": "Cisco Spark / Jabber Interop",
     "jabberInteropTooltip": "Messaging interoperability between Cisco Spark and WebEx Messenger Jabber.",
+    "jabberInteropUpdateSuccessful": "Jabber Interop updated successfully.",
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
     "authRedirectTooltip": "If enabled, users will login to Common Identity. If disabled, users will login to Messenger.",
     "pwdSyncHeading": "Sync Passwords From Messenger",
@@ -6149,6 +6223,7 @@
     "errorFailedGettingCISyncStatus": "Failed getting Jabber Messenger Sync status: ",
     "errorFailedRefreshingCISyncStatus": "Failed refreshing Jabber Messenger Sync status: ",
     "errorFailedUpdatingCISync": "Failed updating Jabber Messenger Sync status: ",
+    "errorFailedUpdatingJabberInterop": "Failed to update Jabber Interop. Please try again.",
     "errorLacksEntitlements": "User lacks Customer Success Admin Role or Common Identity entitlements to view this content: ",
     "errorLacksFullAdmin": "User lacks Full Admin role in Common Identity to view this content",
     "errorLacksRole": "User lacks appropriate role in Common Identity to view this content",
@@ -6167,7 +6242,7 @@
     "orgAdminLinkText": "Launch Cisco WebEx Messenger Admin Tool",
     "orgAdminLinkTooltip": "Continue to mange your Jabber users in the Messenger Org Admin tool",
     "pageTitle": "WebEx Messenger",
-    "patchSuccessful": "Jabber Messenger Sync updated successfully",
+    "patchSuccessful": "Jabber Messenger Sync updated successfully.",
     "refresh": "Refresh",
     "refreshFailed": "Failed refreshing Jabber Messenger Sync status",
     "syncStatusHeading": "User Synchronization From Messenger",
@@ -6408,14 +6483,19 @@
     "modalTitle": "Hunt Group",
     "title": "hunt group",
     "createTitle": "Create Hunt Group",
+    "settingsTitle": "Hunt Group Settings",
+    "callSettingsTitle": "Call Settings",
+    "huntingMethodMembersTitle": "Hunting Method and Members",
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
-    "numberPlaceholder": "Select Hunt Group Numbers",
-    "numberHint": "When this number is called, this hunt group is activated",
+    "numberTitle": "Select Internal Numbers",
+    "numberDesc": "When these numbers are called, this hunt group is activated.",
+    "numberPlaceholder": "Enter Extension",
+    "numberHint": "e.g. 5555",
     "methodTitle": "Select Hunting Method",
-    "methodHint": "This defines which member gets the call first.",
-    "memberPlaceholder": "Select Hunt Group Members",
+    "methodHint": "Define which member gets the call first.",
     "memberHint": "These are the users who pickup the hunt group calls",
+    "fallbackTitle": "Select Fallback Destination Number",
     "fallbackPlaceholder": "Enter Fallback Destination",
     "fallbackHint": "This is where the call goes if it was not answered by this hunt group",
     "voiceCheckLabel": "Send call directly to voicemail",
@@ -6461,26 +6541,26 @@
       }
     },
     "nameLabel": "Hunt Group Name",
-    "nameDesc": "This will also be the name callers see (i.e. alerting name).",
+    "nameDesc": "Name callers will see when alerted.",
     "numbersLabel": "Hunt Group Numbers",
     "numberSingular": "Number",
     "numberPlural": "Numbers",
     "numbersInputPlaceHolder": "Start typing here",
     "ringTimeLabel": "Member's Max Ring Time",
-    "ringTimeSecondaryLabel": "secs",
-    "ringTimeDesc": "The maximum amount of time a member's line will ring before it sent to the next number.",
+    "ringTimeSecondaryLabel": "Seconds",
+    "ringTimeDesc": "Maximum amount of time a member's line will ring before it is sent to the next number.",
     "waitTimeLabel": "Caller Max Wait Time",
-    "waitTimeSecondaryLabel": "mins",
-    "waitTimeDesc": "The maximum time a caller will be in waiting before sent to fallback destination.",
+    "waitTimeSecondaryLabel": "Minutes",
+    "waitTimeDesc": "Maximum amount of time caller will wait before being sent to fallback destination.",
     "fallbackLabel": "Fallback Destination",
     "fallbackDesc": "This is where the call goes if it was not answered by this hunt group.",
-    "methodAndMemberLabel": "Hunting Method and Members",
-    "methodDesc": "This defines which member gets the call first.",
+    "methodLabel": "Hunting Method",
+    "methodDesc": "Define which member gets the call first.",
+    "membersLabel": "Hunt Group Members",
     "membersDesc": "Drag and drop to reorder members hunt group sequence.",
-    "saveLabel": "Do you want to save your changes?",
     "remove": "Remove",
     "removeMem": "Remove Member",
-    "addMemberLabel": "Add & Search Members",
+    "addMemberLabel": "Search & Add Members",
     "successSave": "'{{huntGroupName}}' hunt group has been created successfully",
     "successUpdate": "'{{huntGroupName}}' hunt group has been updated successfully",
     "errorNamePattern": "May only contain alphanumeric, space, period, underscore and dash.",
@@ -6496,7 +6576,7 @@
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select at least one member",
     "invalidFallback": "Select a number or enter a new valid number",
-    "error": {
+    "error" : {
       "required": "This field is required",
       "minRingSecs": "The shortest ring duration is {{secs}} seconds",
       "maxRingSecs": "The longest ring duration is {{secs}} seconds"
@@ -6663,12 +6743,14 @@
     "retention": {
       "title": "Retention",
       "subsectionLabel": "Spark Message Data",
-      "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system.",
-      "retentionOption1": "90 days",
-      "retentionOption2": "180 days",
-      "retentionOption3": "1 year",
-      "retentionOption4": "2 years",
-      "retentionOption5": "Keep until storage is full (Oldest will be deleted first)",
+      "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system. <br/> There is a 5GB total storage limit.  After limit is reached, older data will be removed first.",
+      "retentionOption": "Past {{number}} months",
+      "indefiniteRetentionOption": "Indefinitely",
+      "monthInvalid": "Should be between 1 an 120 months",
+      "defaultRetentionOption": "Default retention time",
+      "customRetentionOption": "Custom retention time between 1 and 120 months",
+      "customRetentionMonths": "months",
+      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about your IT Pro Package.",
       "modalTitle": "Update Retention Time",
       "modalBody1": "Are you sure you want to update the retention time for Spark Message to a shorter period?",
       "modalBody2": "Any additional data older than the new time period will be deleted.",
@@ -6882,7 +6964,6 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
-    "care": "Care",
     "rooms": "Rooms",
     "claimedDomain": "Claimed Domains",
     "hybridServices": "Hybrid Services",
@@ -7071,6 +7152,82 @@
       "orgNotEnabled": "Organization not enabled."
     }
   },
+  "partnerManagement": {
+    "browserTabHeaderTitle": "Partner Management",
+    "navHeaderTitle": "Cloud Collaboration Management",
+    "back": "Back",
+    "next": "Next",
+    "startOver": "Start Over",
+    "done": "Done",
+    "createNewOrg": "Create New Org",
+    "chooseThisOrg": "Choose This Org",
+    "step1": "Step 1 of 2",
+    "step2": "Step 2 of 2",
+    "exampleEmail": "name@domain.com",
+    "retrieving": "(retrieving...)",
+    "error": {
+      "email": "This is not a valid email address",
+      "noMatch": "The values do not match",
+      "required": "This field is required",
+      "searchFailed": "Search failed ({{msg}})",
+      "createFailed": "Create partner org failed ({{msg}})",
+      "nameInUse": "This name is already in use, try another",
+      "unexpectedResp": "The server returned an unexpected response",
+      "getOrgDetails": "Could not retrieve org details ({{msg}})",
+      "timeout": "timeout"
+    },
+    "search": {
+      "heading": "Create new partner organization",
+      "email": "Admin Email Address",
+      "confirmEmail": "Confirm Admin Email Address",
+      "name": "Company Name",
+      "confirmName": "Confirm Company Name",
+      "desc": "Step 1: Enter the email address of the admin for this partner"
+    },
+    "searchResults": {
+      "heading": "Does this organization already exist?",
+      "desc": "Based on the domain of the email address that you entered, the user may belong to one of the following partner organizations. If the organization you are looking for is in the list below please select it.",
+      "desc2": "Or if you want to create a new organization then click on the Create New Org button."
+    },
+    "create": {
+      "desc": "Step 2: Enter partner details",
+      "type": "Partner Type",
+      "lifeCycleCB": "LifeCycle Partner",
+      "createPartnerOrg": "Create Partner Org",
+      "selectPartnerPlaceholder": "Choose partner type",
+      "partnerTypes": {
+        "DISTI": "Distributor",
+        "DVAR": "DVAR (Tier-1 Partner)",
+        "RESELLER": "Tier-2 Reseller"
+      }
+    },
+    "created": {
+      "heading": "{{name}} has been created",
+      "desc": "A new partner organization has been created and an email has been sent to the customer admin."
+    },
+    "orgExists": {
+      "heading": "This partner organization already exists",
+      "desc": "The email, {{email}}, has been claimed by the following partner organization. This user cannot be added to another organization."
+    },
+    "orgClaimed": {
+      "heading": "This user is already in an organization",
+      "desc": "Based on the email address, the user has been matched to an exiting user account in the {{name}} organization.  Please have the user contact an Admin of this organization if they want access to the CCM portal."
+    },
+    "contactAdmin": {
+      "heading": "An admin of {{name}} must add the user",
+      "desc_single": "If the user wants access to the CCM portal, an existing partner administrator at {{name}} must make them an administrator. Please contact {{adminEmail}}.",
+      "desc_multi": "If the user wants access to the CCM portal, an existing partner administrator at {{name}} must make them an administrator. Please contact one of the following partner admins:"
+    },
+    "orgDetails": {
+      "createDate": "Account Created:",
+      "activeSubs": "Number of active subscriptions:",
+      "managedCusts": "Number of managed customers:",
+      "domains": "Claimed Domains:",
+      "users": "Number of users at Partner:",
+      "admins": "Full Admins:",
+      "orgId": "Org ID:"
+    }
+  },
   "activation": {
     "verificationComplete": "Verification Complete",
     "returnToApp": "Return to Spark on your mobile device and complete the registration.",
@@ -7086,7 +7243,7 @@
     "title": "Domains",
     "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service.",
     "addDomain": "Add Domain",
-    "verifyDomain": "Verify",
+    "verifyDomain": "Verify Domain",
     "claimDomain": "Claim",
     "list": {
       "domainHeader": "Domain",
@@ -7259,7 +7416,7 @@
         "error": {
           "invalidMaxLength": "Domain/SRV length cannot be more than {{max}}.",
           "invalidChars": "Domain name is invalid. It should have an extension and the allowed characters only. Allowed set is \"[a-z][A-Z][0-9]-.\"",
-          "invalidPort": "Port can only range between {{min}} and {{max}}",
+          "invalidPort": "Port can be 0 or range between {{min}} and {{max}}",
           "invalidUniqueEntry": "Duplicate entry, this SIP Destination address is already in use in some other tenant",
           "invalidUniqueAddressEntry": "Duplicate entry, check all SIP Destinations here, this address already exists",
           "invalidUniqueNameEntry": "Duplicate entry, check all SIP Destinations here, this name already exists",
@@ -7276,7 +7433,7 @@
         },
         "prereqTitle": "Enterprise Private Trunking prerequisites",
         "setupTitle": "Set up Enterprise Private Trunking ",
-        "setupDescription": "Before you set up Private Trunking, complete the following prerequisites. See the <a ng-click=\"{{onclick}}\">documentation</a> for guidance.",
+        "setupDescription": "Before you set up Private Trunking, complete the following prerequisites. See the <a href=\"{{href}}\" target=\"_blank\">documentation</a> for guidance.",
         "domainVerification": "Domain verification",
         "domainError": "You don't have any verified domain. You need at least one verified domain for setting up Enterprise Private Trunking. ",
         "domains": "Domains",
@@ -7286,7 +7443,7 @@
         "domainDesc": "Select a domain that you want to use for private trunking. Click Settings and go to the Domains section to add and verify domains.",
         "basicConnectivity": "Basic connectivity between the cloud and on-premises",
         "certificateHelp": "The Spark Call certificate authority are in the Expresssway-E trust store. See ",
-        "help": "<a ng-click=\"{{onclick}}\">help</a>.",
+        "help": "<a href=\"{{href}}\" target=\"_blank\">help</a>.",
         "dNSzoneHelp": "The DNS zone has been created on the Expressway-E to accept the inbound connection from the cloud. See ",
         "defaultTrustHelp": "Use Certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
         "fullService": "Full service: in and outbound calling",
@@ -7309,17 +7466,25 @@
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "addSipDestination": "Add SIP destination",
         "certificateTitle": "Certificates",
-        "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
-        "certificateTitleSettings": "Certificates for Encrypted SIP Calls",
-        "certificateDescSettings": "Use certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure the hostnames are on a verified domain. For help, click here.",
-        "certificateRadio1": "Use default trust list",
-        "certificateRadio2": "I want to upload my own certificate",
+        "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration default trust list or upload your own.",
+        "certDesc": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration default trust list</a>",
+        "upload": "or upload your own. If you use your own, make sure the hostnames are on a verified domain",
+        "click": ". For help, <a href=\"{{href}}\" target=\"_blank\">click here</a>.",
+        "certificateDefault": "Default Cisco Certificates",
+        "certificateDefaultInactive": "Default Cisco Certificates - inactive",
+        "inactiveHelp": "The default trust list is ignored if you upload your own certificates. ",
+        "restore": "Restore default certificates.",
+        "certificateDefaultList": "Cisco Collaboration default trust list",
+        "certificateCustom": "Upload your own certificate",
+        "view": "View",
         "dragAndDropKeyFileHere": "Drag and drop the certificate file here or ",
         "clickToBrowse": "click to browse",
         "fileReadyForImport": "File ready for import",
         "certificateDelete": "Are you sure you want to remove this certificate?",
+        "certificatesDelete": "Are you sure you want to revert back to the default trust list? This action deletes all uploaded certificates.",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
         "cancelBody": "Are you sure you want to cancel?",
+        "cancelHeaderDest": "Cancel Add SIP Destination",
         "setupCompete": "Set up complete",
         "great": "Great! You configured private trunking for your Cisco Spark organization.",
         "callSelection": "Your call selections",

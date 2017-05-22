@@ -311,7 +311,6 @@
         playAction.description = '';
         playAction.value = '';
         playAction.deleteUrl = '';
-        playAction.voice = '';
       }
       vm.state = vm.WAIT;
       vm.progress = 0;

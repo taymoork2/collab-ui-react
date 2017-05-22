@@ -26,14 +26,14 @@ describe('Controller: PartnerProfileCtrl', () => {
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
-    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve());
     spyOn(UserListService, 'listPartners');
     spyOn(Orgservice, 'getOrg');
-    spyOn(BrandService, 'getLogoUrl').and.returnValue($q.when('logoUrl'));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.when());
-    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.when());
-    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.when());
+    spyOn(BrandService, 'getLogoUrl').and.returnValue($q.resolve('logoUrl'));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.resolve());
   }
 
   function initController() {

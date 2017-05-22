@@ -40,25 +40,10 @@ describe('Service: IdleTimeoutService: ', function () {
     spyOn(Auth, 'isLoggedIn').and.returnValue(true);
     spyOn($window.localStorage, 'setItem');
     spyOn($window.localStorage, 'removeItem');
-    spyOn(FeatureToggleService, 'atlasIdleLogoutGetStatus').and.returnValue($q.resolve(false));
   }
-  describe('Should with FT disabled:', () => {
-    it('start the timer on init', () => {
-      IdleTimeoutService.init();
-      expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Starting Tab Timer');
-    });
 
-    it('not wire events on login', () => {
-      IdleTimeoutService.init();
-      $rootScope.$broadcast('LOGIN');
-      $rootScope.$digest();
-      expect(Log.debug).not.toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Wiring up events');
-    });
-  });
-
-  describe('Should with FT enabled', () => {
+  describe('Should on initializing', () => {
     beforeEach(() => {
-      FeatureToggleService.atlasIdleLogoutGetStatus.and.returnValue($q.resolve(true));
       IdleTimeoutService.init();
       $rootScope.$broadcast('LOGIN');
       $rootScope.$digest();

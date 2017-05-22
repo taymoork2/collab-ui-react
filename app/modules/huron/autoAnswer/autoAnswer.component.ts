@@ -3,7 +3,7 @@ import { AutoAnswerMember, AutoAnswerPhone } from './autoAnswer';
 import { AutoAnswerConst } from './autoAnswer.service';
 import { MemberType } from 'modules/huron/members';
 import { LineConsumerType } from 'modules/huron/lines/services/line.service';
-import { MemberTypeConst } from 'modules/huron/features/featureMember.service';
+import { MemberTypeConst } from 'modules/huron/features/services/featureMember.service';
 
 export class AutoAnswerCtrl implements ng.IComponentController {
   public onChangeFn: Function;

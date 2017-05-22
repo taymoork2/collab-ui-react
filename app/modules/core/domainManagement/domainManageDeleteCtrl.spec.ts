@@ -1,7 +1,5 @@
 import testModule from './index';
 
-declare let sinon: any;
-
 describe('DomainManageDeleteCtrl', () => {
 
   let Config, $q, $rootScope, $controller, $translate, DomainManagementService: any;
@@ -25,7 +23,7 @@ describe('DomainManageDeleteCtrl', () => {
 
     return $controller('DomainManageDeleteCtrl', {
       $stateParams: { domain: domain, loggedOnUser: user },
-      $previousState: { go: sinon.stub() },
+      $previousState: { go: jasmine.createSpy('go') },
     });
   };
 
@@ -157,43 +155,43 @@ describe('DomainManageDeleteCtrl', () => {
 
   it('delete a verified domain should invoke unverifyDomain on service', () => {
     let ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
-    DomainManagementService.unverifyDomain = sinon.stub().returns($q.resolve());
+    DomainManagementService.unverifyDomain = jasmine.createSpy('unverifyDomain').and.returnValue($q.resolve());
 
     ctrl.deleteDomain();
 
     $rootScope.$digest();
-    expect(DomainManagementService.unverifyDomain.callCount).toBe(1);
+    expect(DomainManagementService.unverifyDomain.calls.count()).toBe(1);
   });
 
   it('delete a claimed domain should invoke unclaimDomain on service', () => {
     let ctrl = controllerFactory({ text: 'test.example.com', status: 'claimed' });
-    DomainManagementService.unclaimDomain = sinon.stub().returns($q.resolve());
+    DomainManagementService.unclaimDomain = jasmine.createSpy('unclaimDomain').and.returnValue($q.resolve());
 
     ctrl.deleteDomain();
 
     $rootScope.$digest();
-    expect(DomainManagementService.unclaimDomain.callCount).toBe(1);
+    expect(DomainManagementService.unclaimDomain.calls.count()).toBe(1);
   });
 
   it('delete a non-verified domain should invoke unclaimDomain on service', () => {
     let ctrl = controllerFactory({ text: 'test.example.com', status: 'not-verified' });
-    DomainManagementService.unclaimDomain = sinon.stub().returns($q.resolve());
+    DomainManagementService.unclaimDomain = jasmine.createSpy('unclaimDomain').and.returnValue($q.resolve());
 
     ctrl.deleteDomain();
 
     $rootScope.$digest();
-    expect(DomainManagementService.unclaimDomain.callCount).toBe(1);
+    expect(DomainManagementService.unclaimDomain.calls.count()).toBe(1);
   });
 
   it('delete a proper pending domain should invoke unverifyDomain on service', () => {
     let ctrl = controllerFactory({ text: 'test.example.com', status: 'pending' });
-    DomainManagementService.unclaimDomain = sinon.stub().returns($q.resolve());
-    DomainManagementService.unverifyDomain = sinon.stub().returns($q.resolve());
+    DomainManagementService.unclaimDomain = jasmine.createSpy('unclaimDomain').and.returnValue($q.resolve());
+    DomainManagementService.unverifyDomain = jasmine.createSpy('unverifyDomain').and.returnValue($q.resolve());
 
     ctrl.deleteDomain();
 
     $rootScope.$digest();
-    expect(DomainManagementService.unclaimDomain.callCount).toBe(0);
-    expect(DomainManagementService.unverifyDomain.callCount).toBe(1);
+    expect(DomainManagementService.unclaimDomain.calls.count()).toBe(0);
+    expect(DomainManagementService.unverifyDomain.calls.count()).toBe(1);
   });
 });

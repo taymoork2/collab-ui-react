@@ -28,7 +28,6 @@
         min: $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount'),
         number: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
         required: $translate.instant('common.invalidRequired'),
-        pattern: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
       },
       care: {
         max: $translate.instant('partnerHomePage.invalidTrialCareQuantity'),
@@ -85,7 +84,6 @@
     vm.advanceCareTrial = vm.trialData.trials.advanceCareTrial;
     vm.hasUserServices = hasUserServices;
     _licenseCountDefaultQuantity = vm.trialData.details.licenseCount;
-
 
     var preset = (!isExistingOrg()) ? getNewOrgPreset() : getExistingOrgPreset();
     var paidServices = (!isExistingOrg()) ? {} : getPaidServices();
@@ -155,7 +153,7 @@
       careLicenseInputDisabledExpression: careLicenseInputDisabledExpression,
       advanceCareLicenseInputDisabledExpression: advanceCareLicenseInputDisabledExpression,
       getCareMaxLicenseCount: getCareMaxLicenseCount,
-      getMinTotalCare: getMinTotalCare,
+      getMinUserLicenseRequired: getMinUserLicenseRequired,
       saveTrialPstn: saveTrialPstn,
       saveTrialContext: saveTrialContext,
       getNewOrgInitResults: getNewOrgInitResults,
@@ -712,8 +710,22 @@
       return careTrial.enabled ? careTrial.details.quantity : paidCareTrialQuantity;
     }
 
-    function getMinTotalCare() {
-      return getCareLicenseCount(vm.careTrial) + getCareLicenseCount(vm.advanceCareTrial);
+    function getMinUserLicenseRequired() {
+      var totalCare = getCareLicenseCount(vm.careTrial) + getCareLicenseCount(vm.advanceCareTrial);
+      var paidMessageLicenseCount = _.get(vm.messageTrial, 'paid', 0);
+      // Has no user services but might have purchased message licenses.
+      // Care should validate against those licenses so 0 is OK.
+      // If care licenses number > purchased Message licenses the error should be in care license validation.
+      if (!vm.hasUserServices()) {
+        return 0;
+      }
+      // Has user services in trial
+      // If no message purchased should be > total care and > 0
+      if (paidMessageLicenseCount === 0) {
+        return Math.max(totalCare, 1);
+      }
+      // Has purchased message
+      return 1; // Care will validate against purchased message licenses.
     }
 
     function getCareMaxLicenseCount(careType) {
@@ -970,7 +982,7 @@
       if (country && (_.get(country, 'id') !== 'N/A')) {
         countryCode = country.id;
       } else if (_.get(country, 'id') === 'N/A') {
-        countryCode = "US";
+        countryCode = 'US';
       } else {
         countryCode = TrialPstnService.getCountryCode();
       }

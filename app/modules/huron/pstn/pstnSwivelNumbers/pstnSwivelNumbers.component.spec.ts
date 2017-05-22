@@ -7,7 +7,11 @@ describe('Component: PstnSwivelNumbersComponent', () => {
     this.injectDependencies(
       '$scope',
       '$timeout',
+      '$q',
+      'FeatureToggleService',
     );
+
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
   });
 
   function initComponent() {
@@ -23,6 +27,7 @@ describe('Component: PstnSwivelNumbersComponent', () => {
     it('should be initialized', function () {
       this.$timeout.flush();
       expect(this.controller.setSwivelNumberTokens).toHaveBeenCalled();
+      expect(_.get(this.controller.tokenoptions, 'limit')).toEqual(250);
     });
 
   });

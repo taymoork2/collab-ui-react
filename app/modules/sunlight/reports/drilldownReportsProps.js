@@ -59,6 +59,9 @@
               width: '60%',
               sortable: true,
               sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+              cellClass: function (grid, row) {
+                return getClassName(grid, row);
+              },
             }, {
               field: 'tasksHandled',
               id: 'tasksHandled',
@@ -123,6 +126,9 @@
               width: '60%',
               sortable: true,
               sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+              cellClass: function (grid, row) {
+                return getClassName(grid, row);
+              },
             }, {
               field: 'avgCsatScore',
               id: 'averageCsat',
@@ -188,6 +194,9 @@
               width: '60%',
               sortable: true,
               sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+              cellClass: function (grid, row) {
+                return getClassName(grid, row);
+              },
             }, {
               field: 'handleTime',
               id: 'handleTime',
@@ -213,5 +222,16 @@
         },
       };
     }
+  }
+
+  function getClassName(grid, row) {
+    var className = "";
+
+    if (row.entity.isError) {
+      className = 'ui-grid-ui-error';
+    } else if (row.entity.isUserDeleted) {
+      className = 'ui-grid-ui-deleted';
+    }
+    return className;
   }
 })();

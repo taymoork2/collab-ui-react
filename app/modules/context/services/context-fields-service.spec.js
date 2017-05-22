@@ -34,7 +34,7 @@ describe('Service: contextFieldsService', function () {
           'id': 'Agent_ID',
           'lastUpdated': '2017-01-23T16:48:50.021Z' }];
 
-      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/field/v1/search?q=id:*&maxEntries=200').respond(200, fieldData);
+      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/field/v1/search?q=id:*&maxEntries=1500').respond(200, fieldData);
       this.ContextFieldsService.getFields().then(function (response) {
         expect(response[0].dataType).toEqual('string');
         expect(response[0].classification).toEqual('PII');
@@ -46,7 +46,7 @@ describe('Service: contextFieldsService', function () {
     });
 
     it('should reject when get fields is called and get returns failure response', function () {
-      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/field/v1/search?q=id:*&maxEntries=200').respond(404, 'Not found');
+      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/field/v1/search?q=id:*&maxEntries=1500').respond(404, 'Not found');
       this.ContextFieldsService.getFields().then(function () {
         fail('ContextFieldsService.getFields should have rejected');
       }).catch(function (errorResponse) {

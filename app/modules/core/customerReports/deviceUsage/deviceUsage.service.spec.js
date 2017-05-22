@@ -153,8 +153,8 @@ describe('DeviceUsageService', function () {
     });
 
     it('replaces missing days with data indicating zero use', function () {
-      sinon.stub(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.returns("1234");
+      spyOn(Authinfo, 'getOrgId');
+      Authinfo.getOrgId.and.returnValue("1234");
       var usageRequest = urlBase + '/1234/reports/device/usage?interval=day&from=2010-10-25&to=2016-10-28&categories=aggregate&countryCodes=aggregate&accounts=aggregate&models=aggregate';
       $httpBackend
         .when('GET', usageRequest)
@@ -277,8 +277,8 @@ describe('DeviceUsageService', function () {
         peopleCount2,
       ];
 
-      sinon.stub(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.returns("1234");
+      spyOn(Authinfo, 'getOrgId');
+      Authinfo.getOrgId.and.returnValue("1234");
       var least = urlBase + '/1234/reports/device/usage/aggregate?interval=day&from=2010-10-25&to=2016-10-28&countryCodes=aggregate&models=__&orderBy=callDuration&descending=false&limit=20';
       $httpBackend
         .when('GET', least)
@@ -322,8 +322,8 @@ describe('DeviceUsageService', function () {
     });
 
     it('resolves name from accoundIds and returns result in same sequence as listed in devices request', function () {
-      sinon.stub(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.returns("1234");
+      spyOn(Authinfo, 'getOrgId');
+      Authinfo.getOrgId.and.returnValue("1234");
       var devicesRequest = urlBase + '/1234/reports/devices?accountIds=1111,2222,3333,4444,5555';
       $httpBackend
         .when('GET', devicesRequest)

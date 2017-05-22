@@ -6,7 +6,7 @@
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService) {
+  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, ModalService, FeatureToggleService, UrlConfig) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
@@ -25,6 +25,101 @@
 
     vm.state = vm.ONBOARDED;
     vm.errorCount = 0;
+
+    vm.RoutingType = {
+      PICK: "pick",
+      PUSH: "push",
+    };
+
+    vm.routingTypes = [
+      {
+        Header: $translate.instant('sunlightDetails.settings.routing.pick.Header'),
+        Label: $translate.instant('sunlightDetails.settings.routing.pick.Label'),
+        Value: vm.RoutingType.PICK,
+      },
+      {
+        Header: $translate.instant('sunlightDetails.settings.routing.automated.Header'),
+        Label: $translate.instant('sunlightDetails.settings.routing.automated.Label'),
+        Value: vm.RoutingType.PUSH,
+      },
+    ];
+
+    vm.showRouterToggle = false;
+    vm.savedRoutingType = vm.RoutingType.PICK;
+
+    vm.enableRoutingMechanism = function () {
+      return !vm.selectedRouting;
+    };
+
+    $scope.$on('$locationChangeStart', function (event, next) {
+      if ($scope.routingSelector.$dirty) {
+        event.preventDefault();
+        var message = "sunlightDetails.settings.saveModal.BodyMsg2";
+        vm.openSaveModal(message).result.then(function () {
+          vm.updateRoutingType();
+          gotoSelectedPage(next);
+        }, function () {
+          gotoSelectedPage(next);
+        });
+      }
+    });
+
+    function gotoSelectedPage(next) {
+      $scope.$$listeners.$locationChangeStart = [];
+      var destination = next.substr(next.indexOf('#') + 1, next.length).trim();
+      $location.path(destination);
+    }
+
+    vm.openModal = function () {
+      var message = "sunlightDetails.settings.saveModal.BodyMsg1";
+      vm.openSaveModal(message).result.then(vm.updateRoutingType);
+    };
+
+    vm.openSaveModal = function (message) {
+      return ModalService.open({
+        title: $translate.instant('sunlightDetails.settings.saveModal.Header'),
+        message: $translate.instant(message),
+        close: $translate.instant('common.yes'),
+        dismiss: $translate.instant('common.no'),
+      });
+    };
+    vm.updateRoutingType = function () {
+      vm.isProcessing = true;
+      SunlightConfigService.updateChatConfig(getSelectedRoutingToUpdate()).then(function (results) {
+        Log.debug('Care setting: Routing mechanism update is success', results);
+        Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
+        vm.isProcessing = false;
+        vm.savedRoutingType = vm.selectedRouting;
+        resetFrom();
+      }, function (error) {
+        vm.cancelEdit();
+        Log.error('Care setting: Routing mechanism update is failure', error);
+        Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.careSettingsUpdateFailed'));
+      });
+    };
+
+    vm.cancelEdit = function () {
+      vm.selectedRouting = vm.savedRoutingType;
+      resetFrom();
+    };
+
+    function resetFrom() {
+      if ($scope.routingSelector) {
+        $scope.routingSelector.$setPristine();
+        $scope.routingSelector.$setUntouched();
+      }
+    }
+
+    function getSelectedRoutingToUpdate() {
+      var routingData = {};
+      routingData.routingType = vm.selectedRouting;
+      if (vm.selectedRouting === vm.RoutingType.PUSH) {
+        routingData.notificationUrls = [UrlConfig.getSunlightPushNotificationUrl()];
+      } else {
+        routingData.notificationUrls = [UrlConfig.getSunlightPickNotificationUrl()];
+      }
+      return routingData;
+    }
 
     vm.onboardToCare = function () {
       vm.state = vm.IN_PROGRESS;
@@ -110,6 +205,8 @@
     function getOnboardingStatus(result) {
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
       vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
+      vm.selectedRouting = _.get(result, 'data.routingType', vm.RoutingType.PICK);
+      vm.savedRoutingType = vm.selectedRouting;
       var onboardingStatus = vm.csOnboardingStatus;
       if (Authinfo.isCareVoice()) {
         // to give priority to pending status
@@ -123,6 +220,9 @@
     }
 
     function init() {
+      FeatureToggleService.atlasCareAutomatedRouteTrialsGetStatus().then(function (result) {
+        vm.showRouterToggle = result;
+      });
       SunlightConfigService.getChatConfig().then(function (result) {
         var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {

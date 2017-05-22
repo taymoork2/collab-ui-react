@@ -3,12 +3,14 @@ require('../fields/_fields-list.scss');
 (function () {
   'use strict';
 
+  var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
+
   angular
     .module('Context')
     .controller('HybridContextFieldsetsCtrl', HybridContextFieldsetsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsetsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsetsService, Notification, Authinfo, hasContextDictionaryEditFeatureToggle) {
+  function HybridContextFieldsetsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsetsService, Notification, hasContextDictionaryEditFeatureToggle, PropertyService, Authinfo) {
     //Initialize variables
     var vm = this;
     var eventListeners = [];
@@ -23,6 +25,10 @@ require('../fields/_fields-list.scss');
     vm.fieldsetsList = {
       allFieldsets: [],
     };
+
+    vm.showNew = false;
+    vm.maxFieldsetsAllowed = PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE;
+    vm.maxLimitReachedTooltip = $translate.instant('context.dictionary.fieldsetPage.limitReached');
 
     vm.filterBySearchStr = filterBySearchStr;
     vm.filterList = filterList;
@@ -43,6 +49,7 @@ require('../fields/_fields-list.scss');
         callback: function (newFieldset) {
           var fieldsetCopy = _.cloneDeep(newFieldset);
           vm.fieldsetsList.allFieldsets.unshift(processFieldset(fieldsetCopy));
+          checkFieldsetsLimit();
           filterList(vm.searchStr);
         },
       });
@@ -127,17 +134,26 @@ require('../fields/_fields-list.scss');
 
       var promises = {
         getAndProcessFieldsetsPromise: getAndProcessFieldsetsPromise,
+        getMaxFieldsetsAllowed: getMaxFieldsetsAllowed(),
       };
 
       return $q.all(promises)
         .then(function () {
           vm.gridApi.infiniteScroll.dataLoaded();
+          checkFieldsetsLimit();
         })
         .finally(function () {
           vm.gridRefresh = false;
           vm.load = false;
         });
 
+    }
+
+    function checkFieldsetsLimit() {
+      var customFieldsets = vm.fieldsetsList.allFieldsets.filter(function (fieldset) {
+        return _.get(fieldset, 'publiclyAccessibleUI', '').toLowerCase() !== 'cisco';
+      });
+      vm.showNew = customFieldsets.length < vm.maxFieldsetsAllowed;
     }
 
     function initializeGrid() {
@@ -229,7 +245,7 @@ require('../fields/_fields-list.scss');
 
       var lowerStr = str.toLowerCase();
       var containSearchStr = function (fieldset) {
-        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdated', 'publiclyAccessibleUI'];
+        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdatedUI', 'publiclyAccessibleUI'];
         return _.some(propertiesToCheck, function (property) {
           var value;
           if (property === 'numOfFields') {
@@ -241,6 +257,19 @@ require('../fields/_fields-list.scss');
         });
       };
       return $q.resolve(fieldsetList.filter(containSearchStr));
+    }
+
+    function getMaxFieldsetsAllowed() {
+      PropertyService.getProperty(PropertyConstants.MAX_FIELDSETS_PROP_NAME, Authinfo.getOrgId())
+        .then(function (value) {
+          vm.maxFieldsetsAllowed = value;
+        })
+        .catch(function (err) {
+          Log.error('unable to get max fieldsets allowed property', err);
+        })
+        .then(function () {
+          return vm.maxFieldsetsAllowed;
+        });
     }
   }
 }());

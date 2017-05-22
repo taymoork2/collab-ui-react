@@ -13,7 +13,7 @@ describe('orgService', function () {
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       Auth = {
-        setAccessToken: sinon.stub(),
+        setAccessToken: jasmine.createSpy('setAccessToken'),
       };
 
       Authinfo = {
@@ -47,7 +47,7 @@ describe('orgService', function () {
         },
       };
       Log = {
-        debug: sinon.stub(),
+        debug: jasmine.createSpy('debug'),
       };
       $provide.value('Auth', Auth);
       $provide.value('Authinfo', Authinfo);
@@ -71,12 +71,12 @@ describe('orgService', function () {
   });
 
   it('should successfully get an organization for a given orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should successfully get an organization for a given orgId and resolve the returned promise', function () {
@@ -94,12 +94,12 @@ describe('orgService', function () {
   });
 
   it('should fail to get an organization for a given orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(500, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should fail to get an organization for a given orgId and reject the returned promise', function () {
@@ -110,69 +110,69 @@ describe('orgService', function () {
   });
 
   it('should get an organization for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should fail to get an organization for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(500, {});
     Orgservice.getOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get an admin organization for a given orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should successfully get an admin organization for a given orgId with disableCache', function () {
     var params = {
       disableCache: true,
     };
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=true").respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId(), params);
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should fail to get an admin organization for a given orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get an admin organization for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should fail to get an admin organization for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get an admin organization for a given orgId as when called as a promise', function () {
@@ -196,48 +196,48 @@ describe('orgService', function () {
   });
 
   it('should successfully get unlicensed users for random orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(200, {});
     Orgservice.getUnlicensedUsers(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should fail to get unlicensed users for random orgId', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(500, {});
     Orgservice.getUnlicensedUsers(callback, Authinfo.getOrgId());
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get unlicensed users for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(200, {});
     Orgservice.getUnlicensedUsers(callback);
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should successfully get unlicensedUsers with searchStr', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers?searchPrefix=sqtest').respond(200, {});
     Orgservice.getUnlicensedUsers(callback, null, 'sqtest');
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(true);
   });
 
   it('should fail to get unlicensed users for getOrgId provided by Authinfo', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(500, {});
     Orgservice.getUnlicensedUsers(callback);
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(callback.calls.count()).toBe(1);
+    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should set setup done', function () {
@@ -455,7 +455,7 @@ describe('orgService', function () {
   });
 
   it('should overwrite current settings with new settings', function () {
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     var currentSettings = {
       'orgSettings': ['{"reportingSiteUrl": "http://example.com", "isCiscoSupport": true}'],
     };

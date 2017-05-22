@@ -86,8 +86,14 @@
     .constant('addressparser', require('emailjs-addressparser'));
 
   // TODO fix circular dependencies between modules
-  angular.module('Squared', ['Core', 'Hercules', 'Huron', 'Sunlight',
-    require('modules/squared/devices/services/CsdmPoller')]);
+  angular.module('Squared', [
+    'Core',
+    'Hercules',
+    'Huron',
+    'Sunlight',
+    require('modules/squared/devices/services/CsdmPoller'),
+    require('modules/squared/partner-management').default,
+  ]);
 
   angular.module('DigitalRiver', ['Core']);
 
@@ -102,10 +108,10 @@
     'ngIcal',
     'huron.paging-group',
     'huron.call-pickup.setup-assistant',
-    'huron.call-park',
     'huron.bulk-enable-vm',
     'huron.TerminusServices',
     'huron.externalNumberService',
+    require('modules/huron/lineSettings/callerIdService'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
@@ -113,6 +119,7 @@
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
     require('modules/huron/lines/deleteExternalNumber').default,
+    require('modules/call/features').default,
   ])
   .constant('ASTParser', require('acorn'))
   .constant('ASTWalker', require('acorn/dist/walk'));
@@ -127,10 +134,14 @@
     require('modules/hercules/service-settings/calendar-service-setup').default,
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
+    require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/excel-service').default,
     require('modules/hercules/services/service-descriptor'),
     require('modules/hercules/services/uss-service'),
     require('modules/hercules/services/service-descriptor'),
+    require('modules/hercules/cluster-card').default,
+    require('modules/hercules/resource-group-card').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
@@ -148,6 +159,7 @@
 
   angular.module('Messenger', [
     'Core',
+    require('modules/core/scripts/services/accountorgservice'),
     require('modules/shared').default,
   ]);
 

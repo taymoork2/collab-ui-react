@@ -6,15 +6,17 @@ describe('SettingsCtrl', function () {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$rootScope', '$scope', '$stateParams', '$controller', '$q', '$timeout', 'Authinfo', 'FeatureToggleService', 'Orgservice');
+    this.injectDependencies('$rootScope', '$scope', '$stateParams', '$controller', '$q', '$timeout', 'Authinfo', 'FeatureToggleService', 'ITProPackService', 'Orgservice');
 
     spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.reject());
     spyOn(this.Authinfo, 'isPartner').and.returnValue(false);
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(false);
     spyOn(this.Authinfo, 'isDirectCustomer').and.returnValue(false);
 
-    spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.when(true));
-    spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue(this.$q.when(true));
+
+    spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.ITProPackService, 'hasITProPackPurchasedOrNotEnabled');
   });
 
   function initController(injectors) {

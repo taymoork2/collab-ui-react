@@ -94,7 +94,7 @@ describe('Component: sharedMeetingReport', function () {
         let APIResponse: any = _.cloneDeep(this.data.APIResponse);
         APIResponse.MaxConcurrentMeetings = this.createMaxMeetings(this.controller.timeSelected.value);
 
-        return this.$q.when({
+        return this.$q.resolve({
           data: APIResponse,
         });
       });
@@ -103,7 +103,7 @@ describe('Component: sharedMeetingReport', function () {
         let APIResponse: any = _.cloneDeep(this.data.APIResponse);
         APIResponse.ConcurrentMeetingsDetail = this.createMeetings();
 
-        return this.$q.when({
+        return this.$q.resolve({
           data: APIResponse,
         });
       });
@@ -227,7 +227,7 @@ describe('Component: sharedMeetingReport', function () {
         let APIResponse: any = _.cloneDeep(this.data.APIResponse);
         APIResponse.MaxConcurrentMeetings = this.createMaxMeetings(this.controller.timeSelected.value);
 
-        return this.$q.when({
+        return this.$q.resolve({
           data: APIResponse,
         });
       });

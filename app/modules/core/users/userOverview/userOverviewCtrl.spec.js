@@ -37,14 +37,14 @@ describe('Controller: UserOverviewCtrl', function () {
         });
         return index > -1;
       };
-      return _this.$q.when(getUserResponse);
+      return _this.$q.resolve(getUserResponse);
     });
 
-    spyOn(this.Userservice, 'resendInvitation').and.returnValue(this.$q.when({}));
-    spyOn(this.FeatureToggleService, 'getFeatureForUser').and.returnValue(this.$q.when(function () { return true; }));
-    spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.$q.when(function () { return _this.featureToggles; }));
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
-    spyOn(this.FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue(this.$q.when(false));
+    spyOn(this.Userservice, 'resendInvitation').and.returnValue(this.$q.resolve({}));
+    spyOn(this.FeatureToggleService, 'getFeatureForUser').and.returnValue(this.$q.resolve(function () { return true; }));
+    spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.$q.resolve(function () { return _this.featureToggles; }));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.Authinfo, 'isCSB').and.returnValue(false);
 
     spyOn(this.Notification, 'success');
@@ -99,7 +99,7 @@ describe('Controller: UserOverviewCtrl', function () {
 
     it('should handle an empty response from feature toggles', function () {
       this.Authinfo.isSquaredTeamMember.and.returnValue(true);
-      this.FeatureToggleService.getFeaturesForUser.and.returnValue(this.$q.when());
+      this.FeatureToggleService.getFeaturesForUser.and.returnValue(this.$q.resolve());
 
       initController.apply(this);
       expect(this.FeatureToggleService.getFeaturesForUser).toHaveBeenCalled();

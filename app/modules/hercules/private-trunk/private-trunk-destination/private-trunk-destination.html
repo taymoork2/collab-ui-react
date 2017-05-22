@@ -1,5 +1,5 @@
 <div ng-form="privateTrunkDestinationForm" class="private-trunk">
-  <h5 translate="servicesOverview.cards.privateTrunk.destinationTitle"></h5>
+  <h4 ng-if=$ctrl.isFirstTimeSetup translate="servicesOverview.cards.privateTrunk.destinationTitle"></h4>
      <div class="cs-radio-group">
         <input ng-if="$ctrl.isFirstTimeSetup"
         cs-input
@@ -17,7 +17,7 @@
               <span class="label-align" translate="servicesOverview.cards.privateTrunk.sipLabel"></span>
             </div>
             <div class="columns medium-6 large-6 small-6">
-              <span class="label-2-align" translate="servicesOverview.cards.privateTrunk.displayLabel"></span>
+              <span class="add-align" translate="servicesOverview.cards.privateTrunk.displayLabel"></span>
             </div>
             <div ng-repeat="dest in $ctrl.privateTrunkResource.destinations">
               <div class="row">
@@ -51,6 +51,7 @@
                     placeholder="{{'servicesOverview.cards.privateTrunk.displayName' | translate}}"
                     ng-change="$ctrl.changeSIPDestination()"
                     ng-required="true"
+                    ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
                     cs-input-messages="$ctrl.errorMessages.name"
                     cs-input-validators="$ctrl.nameValidators"
                     is-disabled= "$ctrl.destinationRadio!=='new'">
@@ -76,8 +77,8 @@
           name="destinationRadio2"
           ng-value="'hybrid'"
           ng-disabled="$ctrl.isEmptyHybridAddress()"
-          cs-input-label="{{'servicesOverview.cards.privateTrunk.hybridDestination' | translate}}"
-          ng-change="$ctrl.change()">
+          ng-change="$ctrl.onRadioHybridChange()"
+          cs-input-label="{{'servicesOverview.cards.privateTrunk.hybridDestination' | translate}}">
           <div ng-if="$ctrl.destinationRadio==='hybrid'">
             <div class="row cs-input-group ">
               <div class="columns medium-5 large-5">

@@ -15,7 +15,7 @@ export class PrivateTrunkPrereqService {
     this.dismissModal();
     this.domainModal = this.$modal.open({
       template: '<private-trunk-prereq class="modal-content"></private-trunk-prereq>',
-      type: 'small',
+      type: 'full',
     });
   }
 

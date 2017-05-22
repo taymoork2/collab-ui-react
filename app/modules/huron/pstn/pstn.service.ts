@@ -354,24 +354,24 @@ export class PstnService {
     let promises: any = [];
     let payload = {
       pstn: {
-        numbers: [],
+        numbers: [] as Array<string>,
       },
       tollFree: {
         numberType: NUMTYPE_TOLLFREE,
-        numbers: [],
+        numbers: [] as Array<string>,
       },
     };
     _.forEach(numbers, number => {
       const phoneNumberType: PhoneNumberType = this.PhoneNumberService.getPhoneNumberType(number);
-      if (phoneNumberType === PhoneNumberType.FIXED_LINE_OR_MOBILE || phoneNumberType === PhoneNumberType.FIXED_LINE) {
-        payload.pstn.numbers.push(<never>number);
-      } else if (phoneNumberType === PhoneNumberType.TOLL_FREE) {
-        payload.tollFree.numbers.push(<never>number);
-      } else {
+      if (phoneNumberType === PhoneNumberType.TOLL_FREE) {
+        payload.tollFree.numbers.push(number);
+      } else if (phoneNumberType === PhoneNumberType.UNKNOWN) {
         this.Notification.error('pstnSetup.errors.unsupportedNumberType', {
           type: phoneNumberType,
           number: number,
         });
+      } else {
+        payload.pstn.numbers.push(number);
       }
     });
     if (payload.pstn.numbers.length > 0) {
@@ -410,6 +410,42 @@ export class PstnService {
         this.Notification.error('pstnSetup.errors.unsupportedOrderType', order.numberType);
       }
     });
+    return this.$q.all(promises);
+  }
+
+  public orderNumbersV2Swivel(customerId: string, numbers: Array<string>): ng.IPromise<any[]> {
+    let promises: Array<ng.IPromise<any>> = [];
+    let tfnNumbers: string[] = [];
+
+    tfnNumbers = _.remove(numbers, number => {
+      return this.PhoneNumberService.getPhoneNumberType(number) === PhoneNumberType.TOLL_FREE;
+    });
+
+    let tfnPayload = {
+      numbers: tfnNumbers,
+      numberType: NUMTYPE_TOLLFREE,
+      createdBy: this.setCreatedBy(),
+    };
+
+    let didPayload = {
+      numbers: numbers,
+      numberType: NUMTYPE_DID,
+      createdBy: this.setCreatedBy(),
+    };
+
+    if (numbers.length > 0) {
+      let pstnPromise = this.TerminusOrderV2Service.save({
+          customerId: customerId,
+      }, didPayload).$promise;
+      promises.push(pstnPromise);
+    }
+
+    if (tfnNumbers.length > 0) {
+      let tollFreePromise = this.TerminusOrderV2Service.save({
+          customerId: customerId,
+      }, tfnPayload).$promise;
+      promises.push(tollFreePromise);
+    }
     return this.$q.all(promises);
   }
 
