@@ -3945,6 +3945,9 @@
               hasVoicemailFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
               },
+              hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
+              },
             },
           })
           .state('imp-service', {
@@ -3968,9 +3971,6 @@
             resolve: {
               hasHybridImpFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp);
-              },
-              hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
               },
             },
           })
