@@ -19,7 +19,7 @@
     'core.localize',
     'core.logmetricsservice',
     require('modules/core/notifications').default,
-    'core.onboard',
+    require('modules/core/users/userAdd/onboard.module'),
     'core.pageparam',
     'core.previousstate',
     'core.trackingId',
@@ -127,7 +127,7 @@
   angular.module('Hercules', [
     'Core',
     'Squared',
-    'core.onboard',
+    require('modules/core/users/userAdd/onboard.module'),
     'ngTagsInput',
     require('modules/hercules/private-trunk/private-trunk-setup').default,
     require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
