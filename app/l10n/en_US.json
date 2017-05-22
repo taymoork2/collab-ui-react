@@ -1921,7 +1921,8 @@
       "spark-hybrid-datasecurity": "Hybrid Data Security",
       "squared-fusion-media": "Hybrid Media Service",
       "hybrid-context": "Hybrid Context Service",
-      "ept": "Enterprise Private Trunking"
+      "ept": "Enterprise Private Trunking",
+      "hybrid-imp": "Hybrid IM & Presence"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -7383,6 +7384,14 @@
       "hybridMedia": {
         "title": "Hybrid Media",
         "description": "Extends cloud media to use premises-based resources for calls and meetings.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "hybridImp": {
+        "title": "Hybrid IM & Presence",
+        "description": "Dummy text to be updated",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
