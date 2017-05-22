@@ -96,7 +96,7 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/hunt-group/huntGroupCancelModal.html',
+      templateUrl: 'modules/call/features/hunt-group/hunt-group-cancel-modal.html',
       type: 'dialog',
     });
   }
