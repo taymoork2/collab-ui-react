@@ -6778,7 +6778,8 @@
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "description": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "description": "Users can only launch the Cisco Spark app on protected devices or workstations",
+      "proPackInfoCopy": "This premium feature is available with Pro Pack. Contact your partner to learn more."
     },
     "support": {
       "title": "Support",
