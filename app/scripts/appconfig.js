@@ -2774,11 +2774,11 @@
           .state('pstnWizard', {
             parent: 'modal',
             params: {
-              customerId: {},
-              customerName: {},
-              customerEmail: {},
-              customerCommunicationLicenseIsTrial: {},
-              customerRoomSystemsLicenseIsTrial: {},
+              customerId: '',
+              customerName: '',
+              customerEmail: '',
+              customerCommunicationLicenseIsTrial: '',
+              customerRoomSystemsLicenseIsTrial: '',
             },
             views: {
               'modal@': {
