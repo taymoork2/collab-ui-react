@@ -12,7 +12,7 @@ describe('CmcService', () => {
   });
 
   it('should have CmcService resources available', function () {
-    expect(this.CmcService.setData).toBeTruthy();
+    expect(this.CmcService.getUserData).toBeTruthy();
   });
 
   it('should determine whether cmc settings are allowed for this org', function (done) {
