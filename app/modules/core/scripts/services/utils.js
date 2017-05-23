@@ -236,13 +236,7 @@
       },
 
       areEntitlementsActive: function (entitlements) {
-        var result = false;
-        for (var key in entitlements) {
-          if (entitlements[key] === true) {
-            result = true;
-          }
-        }
-        return result;
+        return _.some(entitlements, Boolean);
       },
 
       getUUID: function () {
