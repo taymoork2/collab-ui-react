@@ -6584,6 +6584,8 @@
     "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
+    "callsToSparkAppTitle": "Hunt Group calls to Spark App",
+    "callsToSparkAppLabel": "Simultaneously send Hunt Group calls to members’ Spark app",
     "memberFetchFailure": "Unable to get members.",
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select at least one member",
