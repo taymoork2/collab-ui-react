@@ -1236,6 +1236,7 @@
     "upload": "Upload",
     "user": "User",
     "users": "Users",
+    "verify": "Verify",
     "voice": "Voice",
     "warning": "Warning",
     "yes": "Yes"
@@ -2247,7 +2248,6 @@
       "verifySipDestination": {
         "contactCiscoSupport": "Please try again later, or contact your Cisco Support representative if the problem persists.",
         "errorFromServer": "Could not verify SIP destination. The server returned the following error message:",
-        "verify": "Verify and Save",
         "title": "Verify SIP Destination",
         "testResultsHeader": "Test Results",
         "testResults": {
