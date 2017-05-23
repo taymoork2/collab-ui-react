@@ -10,7 +10,7 @@
         features="$ctrl.services"
         on-feature-click="$ctrl.clickService(feature)">
       </feature-list>
-      <hercules-cloud-extensions place="$ctrl.getCurrentPlace" eservice="$ctrl.editCloudberryServices" ng-if="$ctrl.csdmHybridCalendarFeature"></hercules-cloud-extensions>
+      <hercules-cloud-extensions place="$ctrl.getCurrentPlace" eservice="$ctrl.editCloudberryServices" ng-if="$ctrl.anyHybridServiceToggle()"></hercules-cloud-extensions>
     </cs-sp-section>
 
     <cs-sp-section>
