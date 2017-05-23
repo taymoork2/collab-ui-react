@@ -6,7 +6,9 @@ describe('Controller: UserOverviewCtrl', function () {
 
   function init() {
     this.initModules(testModule, 'WebExApp', 'Sunlight', 'Huron');
-    this.injectDependencies('$scope', '$controller', '$q', 'UserOverviewService', 'Utils', 'FeatureToggleService', 'Config', 'Authinfo', 'Userservice', 'UrlConfig', 'Notification', 'ServiceSetup');
+    this.injectDependencies('$controller', '$q', '$scope', 'Authinfo', 'Config', 'FeatureToggleService',
+      'MessengerInteropService', 'Notification', 'ServiceSetup', 'UrlConfig', 'UserOverviewService', 'Userservice',
+      'Utils');
     initData.apply(this);
     initDependencySpies.apply(this);
     initStateParams.apply(this);
@@ -47,6 +49,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(this.FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.Authinfo, 'isCSB').and.returnValue(false);
 
+    spyOn(this.MessengerInteropService, 'hasAssignableMessageOrgEntitlement');
     spyOn(this.Notification, 'success');
     spyOn(this.Authinfo, 'isSquaredTeamMember').and.returnValue(false);
     spyOn(this.ServiceSetup, 'getAllLanguages').and.returnValue(this.$q.resolve(this.languages));
@@ -68,10 +71,11 @@ describe('Controller: UserOverviewCtrl', function () {
     this.controller = this.$controller('UserOverviewCtrl', {
       $scope: this.$scope,
       $stateParams: this.$stateParams,
-      Config: this.Config,
       Authinfo: this.Authinfo,
-      Userservice: this.Userservice,
+      Config: this.Config,
       FeatureToggleService: this.FeatureToggleService,
+      MessengerInteropService: this.MessengerInteropService,
+      Userservice: this.Userservice,
     });
     this.$scope.$apply();
   }
@@ -116,6 +120,18 @@ describe('Controller: UserOverviewCtrl', function () {
       initController.apply(this);
       expect(this.controller.currentUser.trainSiteNames).toHaveLength(1);
     });
+
+    it('should have available messaging actions if user has assignable jabber interop entitlement', function () {
+      initController.apply(this);
+      var msgState = _.find(this.controller.services, { state: 'messaging' });
+      expect(msgState.actionAvailable).toBe(false);
+
+      this.MessengerInteropService.hasAssignableMessageOrgEntitlement.and.returnValue(true);
+      initController.apply(this);
+      msgState = _.find(this.controller.services, { state: 'messaging' });
+      expect(msgState.actionAvailable).toBe(true);
+    });
+
   });
 
   describe('Reload User on events', function () {
@@ -124,26 +140,26 @@ describe('Controller: UserOverviewCtrl', function () {
     });
 
     it('should reload the user data from identity response and set subTitleCard to title', function () {
-      this.updatedUser.title = "Test";
-      this.updatedUser.displayName = "Display Name";
+      this.updatedUser.title = 'Test';
+      this.updatedUser.displayName = 'Display Name';
       this.$scope.$broadcast('USER_LIST_UPDATED');
       this.$scope.$digest();
-      expect(this.controller.subTitleCard).toBe("Test");
+      expect(this.controller.subTitleCard).toBe('Test');
     });
 
     it('should reload the user data from identity response and set title with givenName and FamilyName', function () {
       this.updatedUser.name = {
-        givenName: "Given Name",
-        familyName: "Family Name",
+        givenName: 'Given Name',
+        familyName: 'Family Name',
       };
       this.$scope.$broadcast('entitlementsUpdated');
       this.$scope.$digest();
-      expect(this.controller.titleCard).toEqual("Given Name Family Name");
+      expect(this.controller.titleCard).toEqual('Given Name Family Name');
     });
 
     it('should reload the user data from identity response and set subTitleCard to addresses', function () {
       this.updatedUser.addresses.push({
-        "locality": "AddressLine1",
+        locality: 'AddressLine1',
       });
       this.$scope.$broadcast('USER_LIST_UPDATED');
       this.$scope.$digest();
@@ -174,10 +190,10 @@ describe('Controller: UserOverviewCtrl', function () {
     });
 
     it('should set the title to displayName when user data is updated with displayName', function () {
-      this.updatedUser.displayName = "Display Name";
+      this.updatedUser.displayName = 'Display Name';
       this.$scope.$broadcast('entitlementsUpdated');
       this.$scope.$digest();
-      expect(this.controller.titleCard).toEqual("Display Name");
+      expect(this.controller.titleCard).toEqual('Display Name');
     });
 
     it('should reload the user data from identity when user list is updated with cloud-contact-center entitlement', function () {
@@ -256,7 +272,7 @@ describe('Controller: UserOverviewCtrl', function () {
         uuid: '111112',
         userStatus: 'pending',
         dirsyncEnabled: true,
-        entitlements: ["squared-call-initiation", "spark", "webex-squared"],
+        entitlements: ['squared-call-initiation', 'spark', 'webex-squared'],
       };
     });
 
