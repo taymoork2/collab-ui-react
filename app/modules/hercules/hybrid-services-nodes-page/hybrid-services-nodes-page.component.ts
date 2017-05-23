@@ -20,6 +20,7 @@ interface ISimplifiedConnector {
 interface ISimplifiedNode {
   name: string;
   serial: string;
+  pendingTooltip: string;
   maintenanceMode: ConnectorMaintenanceMode;
   connectors: ISimplifiedConnector[];
 }
@@ -259,6 +260,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
           return <ISimplifiedNode>{
             name: node.hostname,
             serial: node.serial,
+            pendingTooltip: this.$translate.instant(`hercules.nodesPage.pendingTooltip`, { date: moment(node.lastMaintenanceModeEnabledTimestamp).format('LLL') }),
             maintenanceMode: node.maintenanceMode,
             connectors: connectors,
           };
@@ -280,6 +282,12 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
       return 'pending';
     } else {
       return fromHeartbeat;
+    }
+  }
+
+  public $onDestroy(): void {
+    if (this.refreshTimeout) {
+      this.$timeout.cancel(this.refreshTimeout);
     }
   }
 }

@@ -144,6 +144,7 @@
     require('modules/hercules/services/service-descriptor'),
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/resource-group-card').default,
+    require('modules/hercules/hybrid-services-nodes-page').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
@@ -205,11 +206,11 @@
     .name;
 
   // require all modules first
-  requireAll(require.context("modules/", true, /\.module\.(js|ts)$/));
+  requireAll(require.context('modules/', true, /\.module\.(js|ts)$/));
   // require all other app files - ignore bootstrap.js, preload.js, newrelic
-  requireAll(require.context("../", true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
+  requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
   // require all other assets
-  requireAll(require.context("../", true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
+  requireAll(require.context('../', true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
 
   function requireAll(requireContext) {
     return requireContext.keys().map(requireContext);

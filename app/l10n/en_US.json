@@ -2634,7 +2634,7 @@
       "goToNode": "Go to node",
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
-      "pendingTooltip": "Maintenance mode has been requested. Please wait until the node is ready.",
+      "pendingTooltip": "Pending since: {{date}}. Maintenance mode has been requested. Please wait until the node is ready.",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
         "message": "<p>The Hybrid Media node will be put in maintenance mode as soon as the call activity ends or a two hour timeout is reached. Please wait for the node to move from \"Pending Maintenance\" to \"Maintenance\" before you proceed.</p><p>No alarm notifications are sent for nodes in maintenance mode.</p>",
