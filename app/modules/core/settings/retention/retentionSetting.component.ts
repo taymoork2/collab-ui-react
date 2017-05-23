@@ -1,19 +1,12 @@
-import { SettingSection } from '../settingSection';
+import { ProPackSettingSection } from '../proPackSettingSection';
 
 import { RetentionSettingController } from './retentionSetting.controller';
 
-export class RetentionSetting extends SettingSection {
-
-  public icon: string = '';
-  public tooltipText: string = '';
+export class RetentionSetting extends ProPackSettingSection {
 
   /* @ngInject */
   public constructor(proPackPurchased: boolean) {
-    super('retention');
-    if (!proPackPurchased) {
-      this.icon = 'icon-certified';
-      this.tooltipText = 'globalSettings.retention.proPackInfoCopy';
-    }
+    super('retention', proPackPurchased);
   }
 }
 

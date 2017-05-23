@@ -184,6 +184,13 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onDecreaseExtensionLength(extensionLength: string): void {
+    this.huronSettingsData.internalNumberRanges = [];
+    this.huronSettingsData.site.extensionLength = extensionLength;
+    this.setShowDialPlanChangedDialogFlag();
+    this.checkForChanges();
+  }
+
   public onExtensionLengthSaved(): void {
     this.$onInit();
   }

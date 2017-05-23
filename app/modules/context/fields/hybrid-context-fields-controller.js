@@ -9,11 +9,10 @@ require('./_fields-list.scss');
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, hasContextDictionaryEditFeatureToggle, PropertyService, Authinfo) {
+  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, PropertyService, Authinfo) {
     var vm = this;
     var eventListeners = [];
 
-    vm.hasContextDictionaryEditFeatureToggle = hasContextDictionaryEditFeatureToggle;
     vm.load = true;
     vm.fetchFailed = false;
     vm.currentDataPosition = 0;

@@ -777,80 +777,107 @@ describe('HybridContextFieldsetsCtrl', function () {
       expect(controller.gridOptions.data[1].id).toEqual('ccc_custom_fieldset');
       expect(controller.placeholder.count).toBe(2);
     });
+
+    describe('max fieldsets allowed', function () {
+      var DEFAULT_MAX_FIELDSETS = PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE;
+      var MAX_FIELDSETS_PROPERTY = PropertyConstants.MAX_FIELDSETS_PROP_NAME;
+
+      beforeEach(function () {
+        ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
+          'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
+          'description': 'aaa custom fieldset with some long description description description description description',
+          'fields': [
+            'AAA_TEST_FIELD',
+          ],
+          'publiclyAccessibleUI': 'false',
+          'fieldDefinitions': [
+            {
+              'id': 'AAA_TEST_FIELD',
+              'lastUpdated': '2017-02-02T17:12:33.167Z',
+            },
+          ],
+          'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+          'id': 'aaa_custom_fieldset',
+        },
+        {
+          'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
+          'description': 'bbb custom fieldset with some description',
+          'fields': [
+            'BBB_TEST_FIELD',
+          ],
+          'publiclyAccessibleUI': 'false',
+          'fieldDefinitions': [
+            {
+              'id': 'BBB_TEST_FIELD',
+              'lastUpdated': '2017-02-02T17:12:33.167Z',
+            },
+          ],
+          'refUrl': '/dictionary/fieldset/v1/id/bbb_custom_fieldset',
+          'id': 'bbb_custom_fieldset',
+        },
+        {
+          'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
+          'description': 'bbb custom fieldset with some description',
+          'fields': [
+            'CCC_TEST_FIELD',
+          ],
+          'publiclyAccessibleUI': 'false',
+          'fieldDefinitions': [
+            {
+              'id': 'BBB_TEST_FIELD',
+              'lastUpdated': '2017-02-02T17:12:33.167Z',
+            },
+          ],
+          'refUrl': '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
+          'id': 'ccc_custom_fieldset',
+        }]));
+        controller = initController();
+      });
+
+      afterEach(function () {
+        expect(PropertyService.getProperty).toHaveBeenCalledWith(MAX_FIELDSETS_PROPERTY, MOCK_ORG_ID);
+      });
+
+      it('should have the default max fields', function () {
+        $scope.$apply();
+        expect(controller.maxFieldsetsAllowed).toBe(DEFAULT_MAX_FIELDSETS);
+        expect(controller.showNew).toBe(true);
+      });
+
+      it('should overrides the max fields property and new is disabled', function () {
+        var maxFields = 2;
+        PropertyService.getProperty.and.returnValue($q.resolve(maxFields));
+        $scope.$apply();
+        expect(controller.maxFieldsetsAllowed).toBe(maxFields);
+        expect(controller.showNew).toBe(false);
+      });
+    });
   });
 
-  describe('max fieldsets allowed', function () {
-    var DEFAULT_MAX_FIELDSETS = PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE;
-    var MAX_FIELDSETS_PROPERTY = PropertyConstants.MAX_FIELDSETS_PROP_NAME;
+  describe('fieldset edit feature', function () {
+    var featureToggleSpy;
 
     beforeEach(function () {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa custom fieldset with some long description description description description description',
-        'fields': [
-          'AAA_TEST_FIELD',
-        ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
-          {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
-          },
-        ],
-        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-        'id': 'aaa_custom_fieldset',
-      },
-      {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'bbb custom fieldset with some description',
-        'fields': [
-          'BBB_TEST_FIELD',
-        ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
-          {
-            'id': 'BBB_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
-          },
-        ],
-        'refUrl': '/dictionary/fieldset/v1/id/bbb_custom_fieldset',
-        'id': 'bbb_custom_fieldset',
-      },
-      {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'bbb custom fieldset with some description',
-        'fields': [
-          'CCC_TEST_FIELD',
-        ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
-          {
-            'id': 'BBB_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
-          },
-        ],
-        'refUrl': '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
-        'id': 'ccc_custom_fieldset',
-      }]));
-      controller = initController();
+      this.injectDependencies('FeatureToggleService', '$rootScope', '$controller', '$q', '$state', 'Authinfo', 'ContextFieldsetsService', 'Log', 'Notification', 'LogMetricsService');
+      featureToggleSpy = spyOn(this.FeatureToggleService, 'supports');
+      this.ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
     });
 
     afterEach(function () {
-      expect(PropertyService.getProperty).toHaveBeenCalledWith(MAX_FIELDSETS_PROPERTY, MOCK_ORG_ID);
+      // NOTE: these tests can probably be removed with the next story. We only need to temporarily validate to ensure
+      // these feature flags are not being checked when compiling the component/view
+      expect(this.FeatureToggleService.supports).not.toHaveBeenCalledWith('contact-center-context');
+      expect(this.FeatureToggleService.supports).not.toHaveBeenCalledWith('atlas-context-dictionary-edit');
     });
 
-    it('should have the default max fields', function () {
-      $scope.$apply();
-      expect(controller.maxFieldsetsAllowed).toBe(DEFAULT_MAX_FIELDSETS);
-      expect(controller.showNew).toBe(true);
-    });
-
-    it('should overrides the max fields property and new is disabled', function () {
-      var maxFields = 2;
-      PropertyService.getProperty.and.returnValue($q.resolve(maxFields));
-      $scope.$apply();
-      expect(controller.maxFieldsetsAllowed).toBe(maxFields);
-      expect(controller.showNew).toBe(false);
+    it('should show fieldset-edit elements even if feature toggle is false', function () {
+      featureToggleSpy.and.returnValue($q.resolve(false));
+      this.compileView('HybridContextFieldsetsCtrl', 'modules/context/fieldsets/hybrid-context-fieldsets.html', { controllerAs: 'contextFieldsets' });
+      var button = this.view.find('button'); // there's only one button for now
+      expect(button).toExist();
+      expect(button).toHaveClass('btn');
+      expect(button).toHaveClass('btn--people'); // ok, just because that's what it is (people???)
+      expect(button).toHaveText('common.new');
     });
   });
 });

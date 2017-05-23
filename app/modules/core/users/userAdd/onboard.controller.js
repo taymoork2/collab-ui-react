@@ -823,7 +823,12 @@ require('./_user-add.scss');
     };
 
     $scope.hasAssignableMessageItems = MessengerInteropService.hasAssignableMessageItems.bind(MessengerInteropService);
-    $scope.hasAssignableMessageOrgEntitlement = MessengerInteropService.hasAssignableMessageOrgEntitlement.bind(MessengerInteropService);
+    $scope.showMessengerInteropToggle = function () {
+      if (!_.get($state, 'current.data.showMessengerInteropToggle')) {
+        return false;
+      }
+      return MessengerInteropService.hasAssignableMessageOrgEntitlement();
+    };
 
     var getAccountServices = function () {
       var services = {
@@ -1271,22 +1276,7 @@ require('./_user-add.scss');
     };
 
     //email validation logic
-    var validateEmail = function (input) {
-      var emailregex = /\S+@\S+\.\S+/;
-      var emailregexbrackets = /<\s*\S+@\S+\.\S+\s*>/;
-      var emailregexquotes = /"\s*\S+@\S+\.\S+\s*"/;
-      var valid = false;
-
-      if (/[<>]/.test(input) && emailregexbrackets.test(input)) {
-        valid = true;
-      } else if (/["]/.test(input) && emailregexquotes.test(input)) {
-        valid = true;
-      } else if (!/[<>]/.test(input) && !/["]/.test(input) && emailregex.test(input)) {
-        valid = true;
-      }
-
-      return valid;
-    };
+    var validateEmail = OnboardService.validateEmail;
 
     var wizardNextText = function () {
       var userCount = angular.element('.token-label').length;
