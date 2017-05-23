@@ -185,17 +185,21 @@
     "text": "mediaQuality.poor",
     "hidden": false
   }],
-  "exportMenu": [{
-    "id": "saveAs",
-    "label": "reportsPage.saveAs"
-  }, {
-    "id": "jpg",
-    "label": "reportsPage.jpg"
-  }, {
-    "id": "png",
-    "label": "reportsPage.png"
-  }, {
-    "id": "pdf",
-    "label": "reportsPage.pdf"
-  }]
+
+  "exportMenu": {
+    "header": {
+      "id": "saveAs",
+      "label": "reportsPage.saveAs"
+    },
+    "menu": [{
+      "id": "jpg",
+      "label": "reportsPage.jpg"
+    }, {
+      "id": "png",
+      "label": "reportsPage.png"
+    }, {
+      "id": "pdf",
+      "label": "reportsPage.pdf"
+    }]
+  }
 }

@@ -4,7 +4,7 @@ import { ReportConstants } from './reportConstants.service';
 import { ChartColors } from '../../config/chartColors';
 import {
   IEndpointData,
-  IExportMenu,
+  IExportDropdown,
   IReportCard,
   IReportDropdown,
   IReportsHeader,
@@ -483,30 +483,32 @@ export class ReportPrintService {
   }
 
   // Single Report Export Functions
-  public createExportMenu(chart: any): Array<IExportMenu> {
-    return [{
-      id: 'saveAs',
-      label: this.$translate.instant('reportsPage.saveAs'),
-      click: undefined,
-    }, {
-      id: this.JPG,
-      label: this.$translate.instant('reportsPage.jpg'),
-      click: (): void => {
-        this.exportJPG(chart);
+  public createExportMenu(chart: any): IExportDropdown {
+    return {
+      header: {
+        id: 'saveAs',
+        label: this.$translate.instant('reportsPage.saveAs'),
       },
-    }, {
-      id: this.PNG,
-      label: this.$translate.instant('reportsPage.png'),
-      click: (): void => {
-        this.exportPNG(chart);
-      },
-    }, {
-      id: this.PDF,
-      label: this.$translate.instant('reportsPage.pdf'),
-      click: (): void => {
-        this.exportPDF(chart);
-      },
-    }];
+      menu: [{
+        id: this.JPG,
+        label: this.$translate.instant('reportsPage.jpg'),
+        click: (): void => {
+          this.exportJPG(chart);
+        },
+      }, {
+        id: this.PNG,
+        label: this.$translate.instant('reportsPage.png'),
+        click: (): void => {
+          this.exportPNG(chart);
+        },
+      }, {
+        id: this.PDF,
+        label: this.$translate.instant('reportsPage.pdf'),
+        click: (): void => {
+          this.exportPDF(chart);
+        },
+      }],
+    };
   }
 
   private exportJPG(chart: any): void {
