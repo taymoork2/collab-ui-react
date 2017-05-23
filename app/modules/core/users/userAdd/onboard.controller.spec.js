@@ -6,13 +6,14 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule);
-    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup', 'LogMetricsService');
+    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'MessengerInteropService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup', 'LogMetricsService');
     initDependencySpies.apply(this);
   }
 
   function initController() {
     this.initController('OnboardCtrl', {
       $scope: this.$scope,
+      $state: this.$state,
     });
   }
 
@@ -72,6 +73,8 @@ describe('OnboardCtrl: Ctrl', function () {
         return this.$q.resolve({});
       }
     }.bind(this));
+
+    spyOn(this.MessengerInteropService, 'hasAssignableMessageOrgEntitlement');
 
     spyOn(this.Notification, 'notify');
 
@@ -233,7 +236,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('setLicenseAvailabity', function () {
+  describe('setLicenseAvailability', function () {
     beforeEach(initController);
 
     it('Should have been initialized', function () {
@@ -1238,6 +1241,30 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.$scope.manageUsers).toBeTruthy();
       this.$scope.goToManageUsers();
       expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+    });
+  });
+
+  describe('showMessengerInteropToggle():', function () {
+    it('should return true only if both "$state.current.data.showMessengerInteropToggle" and "MessengerInteropService.hasAssignableMessageOrgEntitlement()" are true', function () {
+      _.set(this.$state, 'current.data.showMessengerInteropToggle', false);
+      initController.apply(this);
+      this.$scope.$apply();
+      expect(this.$scope.showMessengerInteropToggle()).toBe(false);
+      expect(this.MessengerInteropService.hasAssignableMessageOrgEntitlement).not.toHaveBeenCalled();
+
+      _.set(this.$state, 'current.data.showMessengerInteropToggle', true);
+      this.MessengerInteropService.hasAssignableMessageOrgEntitlement.and.returnValue(false);
+      initController.apply(this);
+      this.$scope.$apply();
+      expect(this.$scope.showMessengerInteropToggle()).toBe(false);
+      expect(this.MessengerInteropService.hasAssignableMessageOrgEntitlement).toHaveBeenCalled();
+
+      _.set(this.$state, 'current.data.showMessengerInteropToggle', true);
+      this.MessengerInteropService.hasAssignableMessageOrgEntitlement.and.returnValue(true);
+      initController.apply(this);
+      this.$scope.$apply();
+      expect(this.$scope.showMessengerInteropToggle()).toBe(true);
+      expect(this.MessengerInteropService.hasAssignableMessageOrgEntitlement).toHaveBeenCalled();
     });
   });
 
