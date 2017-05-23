@@ -2,6 +2,7 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { HuntGroupService } from 'modules/call/features/hunt-group';
 
 export class HuronSettingsOptions {
   public preferredLanguageOptions: Array<IOption>;
@@ -29,8 +30,10 @@ export class HuronSettingsOptionsService {
     private NumberService: NumberService,
     private PhoneNumberService: PhoneNumberService,
     private DialPlanService: DialPlanService,
+    private HuntGroupService: HuntGroupService,
     private Authinfo,
     private DirectoryNumberService,
+    private CeService,
   ) { }
 
   public getOptions(): ng.IPromise<HuronSettingsOptions> {
@@ -45,7 +48,7 @@ export class HuronSettingsOptionsService {
       companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined),
       emergencyServiceNumbers: this.loadEmergencyServiceNumbers(undefined),
       dialPlan: this.loadDialPlan(),
-      extensionsAssigned: this.testForExtensions(),
+      extensionsAssigned: this.areExtensionsAssigned(),
     }).then(response => {
       settingsOptions.dateFormatOptions = _.get<Array<IOption>>(response, 'dateFormatOptions');
       settingsOptions.timeFormatOptions = _.get<Array<IOption>>(response, 'timeFormatOptions');
@@ -137,6 +140,41 @@ export class HuronSettingsOptionsService {
       .then(extensionList => {
         return (_.isArray(extensionList) && extensionList.length > 0);
       });
+  }
+
+  private testForHuntGroup(): ng.IPromise<boolean> {
+    return this.HuntGroupService.getHuntGroupList()
+      .then(huntGroupList => {
+        return (_.isArray(huntGroupList) && huntGroupList.length > 0);
+      });
+  }
+
+  private testForAutoAttendant(): ng.IPromise<boolean> {
+    return this.CeService.query({
+      customerId: this.Authinfo.getOrgId(),
+    }).$promise
+      .then(aaList => {
+        return (_.isArray(aaList) && aaList.length > 0);
+      })
+      .catch(() => false);
+  }
+
+  private areExtensionsAssigned(): ng.IPromise<any> {
+    return this.$q.all({
+      extensions: this.testForExtensions(),
+      huntGroups: this.testForHuntGroup(),
+      autoAttendant: this.testForAutoAttendant(),
+    }).then(response => {
+      if (response.extensions) {
+        return true;
+      } else if (response.huntGroups) {
+        return true;
+      } else if (response.autoAttendant) {
+        return true;
+      } else {
+        return false;
+      }
+    });
   }
 
 }
