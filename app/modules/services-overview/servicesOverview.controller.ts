@@ -8,6 +8,7 @@ import { ServicesOverviewHybridServicesCard } from './hybridServicesCard';
 import { ServicesOverviewHybridAndGoogleCalendarCard } from './hybridAndGoogleCalendarCard';
 import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
 import { ServicesOverviewHybridCallCard } from './hybridCallCard';
+import { ServicesOverviewImpCard } from './impCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
@@ -18,6 +19,7 @@ import { ITProPackService }  from 'modules/core/itProPack/itProPack.service';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 import { ICluster } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 export class ServicesOverviewCtrl {
 
@@ -35,7 +37,7 @@ export class ServicesOverviewCtrl {
     private Config,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FeatureToggleService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private ITProPackService: ITProPackService,
@@ -54,6 +56,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridContextCard(this.HybridServicesClusterStatesService),
       new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService, this.HybridServicesClusterStatesService),
+      new ServicesOverviewImpCard(this.Authinfo, this.HybridServicesClusterStatesService),
     ];
 
     this.loadWebexSiteList();
@@ -95,6 +98,10 @@ export class ServicesOverviewCtrl {
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(supports => {
         this.forwardEvent('googleCalendarFeatureToggleEventHandler', supports);
+      });
+    this.FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp)
+      .then(supports => {
+        this.forwardEvent('atlasHybridImpFeatureToggleEventHandler', supports);
       });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking)
@@ -154,15 +161,15 @@ export class ServicesOverviewCtrl {
   }
 
   private loadHybridServicesStatuses() {
-    this.FusionClusterService.getAll()
-      .then((clusterList: Array<ICluster>) => {
+    this.HybridServicesClusterService.getAll()
+      .then((clusterList) => {
         let servicesStatuses: Array<any> = [
-          this.FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList),
-          this.FusionClusterService.getStatusForService('squared-fusion-cal', clusterList),
-          this.FusionClusterService.getStatusForService('squared-fusion-uc', clusterList),
-          this.FusionClusterService.getStatusForService('squared-fusion-media', clusterList),
-          this.FusionClusterService.getStatusForService('spark-hybrid-datasecurity', clusterList),
-          this.FusionClusterService.getStatusForService('contact-center-context', clusterList),
+          this.HybridServicesClusterService.getStatusForService('squared-fusion-mgmt', clusterList),
+          this.HybridServicesClusterService.getStatusForService('squared-fusion-cal', clusterList),
+          this.HybridServicesClusterService.getStatusForService('squared-fusion-uc', clusterList),
+          this.HybridServicesClusterService.getStatusForService('squared-fusion-media', clusterList),
+          this.HybridServicesClusterService.getStatusForService('spark-hybrid-datasecurity', clusterList),
+          this.HybridServicesClusterService.getStatusForService('contact-center-context', clusterList),
         ];
         this.forwardEvent('hybridStatusEventHandler', servicesStatuses);
         this.forwardEvent('hybridClustersEventHandler', clusterList);

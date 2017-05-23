@@ -9,7 +9,7 @@
   * [Creating Reusable Components](#creating-reusable-components)
     + [Tweaking an Existing Component or Creating Another?](#tweaking-an-existing-component-or-creating-another)
   * [AngularJS Services](#angularjs-services)
-    + [FusionClusterService (FMS)](#fusionclusterservice-fms)
+    + [HybridServicesClusterService (FMS)](#hybridservicesclusterservice-fms)
     + [ClusterService (FMS) (:warning:deprecated)](#clusterservice-fms-warning-deprecated)
     + [USSService (USS)](#ussservice-uss)
     + [(Other Services we should mention?)](#other-services-we-should-mention)
@@ -105,15 +105,15 @@ Code that's duplicated between several controllers and/or components most likely
 
 The Hybrid Services Management team maintains some AngularJS services that are responsible for communicating with the (Java) microservices that provide a management backend for many hybrid services; the most important microservices are [FMS](https://sqbu-github.cisco.com/WebExSquared/fusion-management-service) and [USS](https://sqbu-github.cisco.com/WebExSquared/user-status-service). The corresponding AngularJS services are located in the `hybrid-services/common/services/` folder. **You should under no circumstances create new AngularJS services that communicate with these backend services**, you should rather expand the existing services.
  
-#### FusionClusterService (FMS)
+#### HybridServicesClusterService (FMS)
 
-`FusionClusterService` is the most important AngularJS service for Hybrid Services. It communicates with the FMS backend to exchange information about the organization, the clusters, the services and the resource groups.
+`HybridServicesClusterService` is the most important AngularJS service for Hybrid Services. It communicates with the FMS backend to exchange information about the organization, the clusters, the services and the resource groups.
 
 It's main method is `.getAll()` which calls the "one size fits all" endpoint `/organizations/{orgId}?fields=@wide`. Other methods call `getAll()` internally.
 
 #### ClusterService (FMS) (:warning:deprecated)
 
-`ClusterService` usage is deprecated even though it is still used in some places. It's main advantage over `FusionClusterService` is its caching and pubsub capabilities. `ClusterService` automatically polls data from FMS every 30 seconds and caches it. It also exposes a` .subscribe()` method for controllers and components to receive up-to-date data after each poll.
+`ClusterService` usage is deprecated even though it is still used in some places. It's main advantage over `HybridServicesClusterService` is its caching and pubsub capabilities. `ClusterService` automatically polls data from FMS every 30 seconds and caches it. It also exposes a` .subscribe()` method for controllers and components to receive up-to-date data after each poll.
 
 #### USSService (USS)
 
@@ -132,7 +132,7 @@ ES6-style promises is the only way you should be doing async programming, and co
 Use promise chaining if necessary, and follow this pattern:
 
 ```javascript
-FusionClusterService.functionReturningSomePromise()
+HybridServicesClusterService.functionReturningSomePromise()
 .then(data => {
   // Do something to the data, for example filter it using lodash.
   // Don't forget to return the (modified) data.

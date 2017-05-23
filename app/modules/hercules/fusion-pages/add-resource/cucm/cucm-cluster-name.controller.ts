@@ -1,5 +1,6 @@
 import { FmsOrgSettings } from 'modules/hercules/services/fms-org-settings.service';
 import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 export class CucmClusterNameController {
 
@@ -15,7 +16,7 @@ export class CucmClusterNameController {
     private $translate: ng.translate.ITranslateService,
     private $stateParams: ng.ui.IStateParamsService,
     private FmsOrgSettings: FmsOrgSettings,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
     private Notification,
   ) {
@@ -58,7 +59,7 @@ export class CucmClusterNameController {
 
   private provisionCluster() {
     this.provisioning = true;
-    return this.FusionClusterService.preregisterCluster(this.clusterName, this.releaseChannel, 'ucm_mgmt')
+    return this.HybridServicesClusterService.preregisterCluster(this.clusterName, this.releaseChannel, 'ucm_mgmt')
       .then((cluster) => {
         this.clusterId = cluster.id;
       })

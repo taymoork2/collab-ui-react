@@ -6,7 +6,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard($q, Authinfo, Config, FeatureToggleService, FusionClusterService, CloudConnectorService) {
+  function OverviewHybridServicesCard($q, Authinfo, Config, FeatureToggleService, HybridServicesClusterService, CloudConnectorService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -26,7 +26,7 @@
             hasGoogleCalendarFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar),
           }).then(function (featureToggles) {
             return $q.all({
-              clusterList: FusionClusterService.getAll(),
+              clusterList: HybridServicesClusterService.getAll(),
               gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) && featureToggles.hasGoogleCalendarFeatureToggle ? CloudConnectorService.getService() : $q.resolve({}),
               featureToggles: featureToggles,
             });
@@ -35,19 +35,19 @@
               card.serviceList.push(response.gcalService);
             }
             if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {
-              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-cal', response.clusterList));
+              card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-cal', response.clusterList));
             }
             if (Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
-              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-uc', response.clusterList));
+              card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-uc', response.clusterList));
             }
             if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
-              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', response.clusterList));
+              card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-media', response.clusterList));
             }
             if (Authinfo.isEntitled(Config.entitlements.hds)) {
-              card.serviceList.push(FusionClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList));
+              card.serviceList.push(HybridServicesClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList));
             }
             if (response.featureToggles.hasContactCenterContextFeatureToggle && Authinfo.isEntitled(Config.entitlements.context)) {
-              card.serviceList.push(FusionClusterService.getStatusForService('contact-center-context', response.clusterList));
+              card.serviceList.push(HybridServicesClusterService.getStatusForService('contact-center-context', response.clusterList));
             }
             card.enabled = _.some(card.serviceList, function (service) {
               return service.setup;

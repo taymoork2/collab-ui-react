@@ -2,18 +2,18 @@ import { ResourceGroupService } from 'modules/hercules/services/resource-group.s
 import { ConnectorType } from 'modules/hercules/hybrid-services.types';
 
 describe('Service: ResourceGroupService', function () {
-  let ResourceGroupService: ResourceGroupService, $httpBackend, $rootScope, FusionClusterService, $q;
+  let ResourceGroupService: ResourceGroupService, $httpBackend, $rootScope, HybridServicesClusterService, $q;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('core.urlconfig'));
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(inject(dependencies));
 
-  function dependencies(_$rootScope_, _$httpBackend_, _ResourceGroupService_, _FusionClusterService_, _$q_) {
+  function dependencies(_$rootScope_, _$httpBackend_, _ResourceGroupService_, _HybridServicesClusterService_, _$q_) {
     $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
     ResourceGroupService = _ResourceGroupService_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     $q = _$q_;
   }
 
@@ -83,7 +83,7 @@ describe('Service: ResourceGroupService', function () {
       const resourceGroupId = '';
       const connectorType = 'c_cal';
 
-      spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve([]));
+      spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve([]));
       ResourceGroupService.resourceGroupHasEligibleCluster(resourceGroupId, connectorType)
         .then((hasEligibleCluster) => {
           resolvedValue = hasEligibleCluster;
@@ -100,7 +100,7 @@ describe('Service: ResourceGroupService', function () {
       const resourceGroupId = '2c2bdd6d-8149-4090-bbb6-fd87edd5416f';
       const connectorType = 'c_cal';
 
-      spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
+      spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
       ResourceGroupService.resourceGroupHasEligibleCluster(resourceGroupId, connectorType)
         .then((hasEligibleCluster) => {
           resolvedValue = hasEligibleCluster;
@@ -116,7 +116,7 @@ describe('Service: ResourceGroupService', function () {
       const resourceGroupId = '00e48fd5-4d2e-4f24-b5a8-80e14aa06a01';
       const connectorType = 'c_cal';
 
-      spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
+      spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
       ResourceGroupService.resourceGroupHasEligibleCluster(resourceGroupId, connectorType)
         .then((hasEligibleCluster) => {
           resolvedValue = hasEligibleCluster;
@@ -132,7 +132,7 @@ describe('Service: ResourceGroupService', function () {
       const resourceGroupId = '';
       const connectorType = 'c_cal';
 
-      spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
+      spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
       ResourceGroupService.resourceGroupHasEligibleCluster(resourceGroupId, connectorType)
         .then((hasEligibleCluster) => {
           resolvedValue = hasEligibleCluster;
@@ -148,7 +148,7 @@ describe('Service: ResourceGroupService', function () {
       const resourceGroupId = '2c2bdd6d-8149-4090-bbb6-fd87edd5416f';
       const connectorType = 'c_jose_mourinho';
 
-      spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
+      spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
 
       ResourceGroupService.resourceGroupHasEligibleCluster(resourceGroupId, (connectorType as ConnectorType))
         .then((hasEligibleCluster) => {

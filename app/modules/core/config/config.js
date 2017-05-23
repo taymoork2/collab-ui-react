@@ -79,6 +79,7 @@
         fusion_google_cal: 'squared-fusion-gcal',
         fusion_khaos: 'squared-fusion-khaos',
         message: 'squared-room-moderation',
+        imp: 'spark-hybrid-impinterop',
       },
 
       licenseModel: {
@@ -94,6 +95,7 @@
         message: 'MESSAGE',
         meetings: 'MEETINGS', // to be deprecated; use meeting && webex
         meeting: 'MEETING',
+        management: 'MANAGEMENT',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
         sparkBoard: 'SPARKBOARDS',
@@ -218,6 +220,7 @@
         CDC: 'CDC', // Care Digital Channel
         CVC: 'CVC', // Care Voice Channel
         MSGR: 'MSGR', // WebEx Messenger (as of 2017-05-17, managed externally and not managed by Atlas)
+        MGMTPRO: 'MGMTPRO', // IT Pro Pack
       },
 
       licenseStatus: {
@@ -555,6 +558,9 @@
         'cmc',
         'cmc.status',
         'cmc.settings',
+      ],
+      'spark-hybrid-impinterop': [
+        'imp-service',
       ],
     };
 

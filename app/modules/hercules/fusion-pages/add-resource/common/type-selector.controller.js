@@ -5,7 +5,7 @@
     .controller('TypeSelectorController', TypeSelectorController);
 
   /* @ngInject */
-  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, FusionClusterService, hasCucmSupportFeatureToggle, hasPartnerRegistrationFeatureToggle) {
+  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, HybridServicesClusterService, hasCucmSupportFeatureToggle, hasPartnerRegistrationFeatureToggle) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -59,6 +59,13 @@
           contextHelpText: vm.hasSetup.context ? $translate.instant('hercules.fusion.add-resource.type.context-description') : $translate.instant('hercules.fusion.add-resource.type.context-not-setup'),
           cucmHelpText: $translate.instant('hercules.fusion.add-resource.type.cucm-description'),
         };
+        // Only Expressway supports the partner registration
+        if (Authinfo.isCustomerLaunchedFromPartner() && hasPartnerRegistrationFeatureToggle) {
+          vm.hasSetup.mediafusion = false;
+          vm.hasSetup.context = false;
+          vm._translation.mediafusionHelpText = $translate.instant('hercules.fusion.add-resource.type.partner-registration-not-supported');
+          vm._translation.contextHelpText = $translate.instant('hercules.fusion.add-resource.type.partner-registration-not-supported');
+        }
         vm.UIstate = 'success';
       })
       .catch(function () {
@@ -69,9 +76,9 @@
       var promises = _.map(services, function (service) {
         switch (service) {
           case 'expressway':
-            return FusionClusterService.serviceIsSetUp('squared-fusion-mgmt');
+            return HybridServicesClusterService.serviceIsSetUp('squared-fusion-mgmt');
           case 'mediafusion':
-            return FusionClusterService.serviceIsSetUp('squared-fusion-media');
+            return HybridServicesClusterService.serviceIsSetUp('squared-fusion-media');
           default:
             return true;
         }

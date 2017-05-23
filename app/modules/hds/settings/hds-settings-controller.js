@@ -6,7 +6,7 @@
     .controller('HDSSettingsController', HDSSettingsController);
 
   /* @ngInject */
-  function HDSSettingsController($modal, $q, $state, $translate, Analytics, Authinfo, Orgservice, HDSService, FusionClusterService, Notification) {
+  function HDSSettingsController($modal, $q, $state, $translate, Analytics, Authinfo, Orgservice, HDSService, HybridServicesClusterService, Notification) {
     var vm = this;
     vm.lock = false;
     vm.PRE_TRIAL = 'pre_trial';    // service status Trial/Production mode
@@ -89,7 +89,7 @@
     }
 
     function getResourceInfo() {
-      FusionClusterService.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.numResourceNodes = _.reduce(clusters, function (total, cluster) {
             if (cluster.targetType === 'hds_app') {

@@ -95,10 +95,11 @@
                     </div>
                   </div>
                   <div class="subscription-description subscription-detail" ng-if="mcpSub.isSharedMeetingsLicense(offer) && mcpSub.isSharedMeetingsReportsEnabled">
-                    <div class="h5 license-detail" ng-class="{'warning': offer.usage > offer.volume}" translate="sharedMeetingReports.hostsSharingLicenses" translate-values="{usage: offer.usage, volume: offer.volume}"></div>
-                    <div>
-                      <span class="h6" translate="sharedMeetingReports.title"></span>
-                      <a class="name h6 link" ng-click="mcpSub.launchSharedMeetingsLicenseUsageReport(offer.siteUrl)" translate="sharedMeetingReports.link"></a>
+                    <div class="h5 license-detail" ng-class="{'warning': offer.usage > offer.volume}" translate="sharedMeetingReports.hostsSharingLicenses" translate-values="{usage: offer.usage}"></div>
+                    <div class="h5 license-detail" ng-class="{'warning': offer.usage > offer.volume}" translate="sharedMeetingReports.volumeOfLicenses" translate-values="{volume: offer.volume}">
+                    </div>
+                    <span class="h6" translate="sharedMeetingReports.title"></span>
+                    <a class="name h6 link" ng-click="mcpSub.launchSharedMeetingsLicenseUsageReport(offer.siteUrl)" translate="sharedMeetingReports.link"></a>
                     </div>
                   </div>
                   <div class="subscription-description subscription-detail" ng-if="mcpSub.isSharedMeetingsLicense(offer) && mcpSub.isSharedMeetingsReportsEnabled">

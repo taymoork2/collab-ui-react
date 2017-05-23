@@ -647,14 +647,16 @@
   "sharedMeetingReports": {
     "title": "SHARED MEETING USAGE",
     "link": "View Report",
-    "hostsSharingLicenses": "{{usage}} hosts using {{volume}} shared licenses",
+    "hostsSharingLicenses": "{{usage}} users",
+    "volumeOfLicenses": "{{volume}} shared meetings licenses",
     "availableSharedLicenses": "Available Shared Licenses: ",
     "sharedMeetingReport": "Shared Meeting Report",
     "sharedMeetingUsage": "Shared Meetings Usage",
-    "sharedMeetingDescription": "This graph shows the number of concurrent meetings per month.",
-    "concurrentMeetingsTitle": "Actual number of concurrent mettings held",
+    "sharedMeetingDescription": "This graph shows the number of peak concurrent meetings per month.",
+    "sharedMeetingNote": "PLEASE NOTE concurrent Spark Meetings are not yet included in this report, but will be added soon.",
+    "concurrentMeetingsTitle": "Actual number of peak concurrent mettings held",
     "concurrentMeetings": "Concurrent Meetings",
-    "maxMeetingsTitle": "Maximum number of concurrent meetings allowed",
+    "maxMeetingsTitle": "Maximum number of peak concurrent meetings allowed",
     "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data.",
     "errorLoadingSharedMeetingDetails": "There was a problem loading the Shared Meeting Report details data.",
     "siteUrlError": "Site URL is undefined.  Cannot retrieve shared meetings report.",
@@ -1234,6 +1236,7 @@
     "upload": "Upload",
     "user": "User",
     "users": "Users",
+    "verify": "Verify",
     "voice": "Voice",
     "warning": "Warning",
     "yes": "Yes"
@@ -1814,7 +1817,7 @@
       "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later.",
       "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
-      "partnersCannotConfigureClusters": "Partner administrators may not set up Hybrid Services or add clusters when viewing customer organizations."
+      "partnersCannotConfigureClusters": "You cannot add this resource. A customer administrator must perform this step."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -1921,7 +1924,8 @@
       "spark-hybrid-datasecurity": "Hybrid Data Security",
       "squared-fusion-media": "Hybrid Media Service",
       "hybrid-context": "Hybrid Context Service",
-      "ept": "Enterprise Private Trunking"
+      "ept": "Enterprise Private Trunking",
+      "hybrid-imp": "Hybrid IM & Presence"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -2244,7 +2248,6 @@
       "verifySipDestination": {
         "contactCiscoSupport": "Please try again later, or contact your Cisco Support representative if the problem persists.",
         "errorFromServer": "Could not verify SIP destination. The server returned the following error message:",
-        "verify": "Verify and Save",
         "title": "Verify SIP Destination",
         "testResultsHeader": "Test Results",
         "testResults": {
@@ -2452,7 +2455,8 @@
           "mediafusion-not-setup": "Media Service not set up",
           "context-description": "Can run Hybrid Context",
           "context-not-setup": "Context not set up",
-          "cucm-description": "Cisco Unified Communications Manager"
+          "cucm-description": "Cisco Unified Communications Manager",
+          "partner-registration-not-supported": "Partner administrators cannot configure these resources"
         },
         "expressway": {
           "services": {
@@ -4478,6 +4482,8 @@
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
+    "premiumAccounts": "IT Pro Pack Accounts",
+    "premiumCustomer": "IT Pro Pack Customer",
     "daysRemaining": "{count, plural, =1{# day} other{# days}} remaining",
     "daysLeftToPurchase": "{count, plural, =1{# day} other{# days}} left to purchase",
     "daysLeftToRenew": "{count, plural, =1{# day} other{# days}} left to renew",
@@ -4573,6 +4579,7 @@
     "trialAccountsFilter": "Trial Accounts ({{count}})",
     "activeAccountsFilter": "Purchased Accounts ({{count}})",
     "expiredAccountsFilter": "Expired Accounts ({{count}})",
+    "premiumAccountsFilter": "IT Pro Pack Accounts ({{count}})",
     "orderRequest": "Order Request",
     "subscriptions": "Subscriptions",
     "viewSubscriptionInfo": "View Subscription Info",
@@ -7387,6 +7394,14 @@
           "settings": "Settings"
         }
       },
+      "hybridImp": {
+        "title": "Hybrid IM & Presence",
+        "description": "Dummy text to be updated",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
         "description": "Manage your encryption keys and other security services on-premises.",
@@ -7449,8 +7464,9 @@
         "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
         "routingHelp": "The correct routing must be configured on CUCM. See ",
         "select": "Select verified domain",
-        "selectDomain": "Select domain",
-        "selectDomains": "Select domains",
+        "selectDomain": "Select Domain",
+        "singular": " Domain Selected",
+        "plural": " Domains Selected",
         "selectDomainDesc": "Select the verified domains that you want to route over the enterprise trunk. If you do not select any options, calls route as normal URI dialing over the internet. See the documentation for more help",
         "radioSelect1": "I want to use a verified domain for Private Trunking",
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",

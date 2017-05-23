@@ -4,7 +4,7 @@ describe('ExportUserStatusesController', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, FusionClusterService, ExcelService, ResourceGroupService;
+  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, HybridServicesClusterService, ExcelService, ResourceGroupService;
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
@@ -67,7 +67,7 @@ describe('ExportUserStatusesController', function () {
     };
     spyOn(USSService, 'getAllStatuses').and.callThrough();
 
-    FusionClusterService = {
+    HybridServicesClusterService = {
       getAll: function () {
         return $q.resolve([{
           id: 'a5140c4a-9f6e-11e5-a58e-005056b12db1',
@@ -80,7 +80,7 @@ describe('ExportUserStatusesController', function () {
         }]);
       },
     };
-    spyOn(FusionClusterService, 'getAll').and.callThrough();
+    spyOn(HybridServicesClusterService, 'getAll').and.callThrough();
 
     UserDetails = {
       getUsers: function (stateInfos) {
@@ -111,7 +111,7 @@ describe('ExportUserStatusesController', function () {
       USSService: USSService,
       UserDetails: UserDetails,
       ExcelService: ExcelService,
-      FusionClusterService: FusionClusterService,
+      HybridServicesClusterService: HybridServicesClusterService,
       ResourceGroupService: ResourceGroupService,
     });
     vm.statusTypes = [{
@@ -141,12 +141,12 @@ describe('ExportUserStatusesController', function () {
       $rootScope.$apply();
       expect(USSService.getAllStatuses).toHaveBeenCalled();
     });
-    it('should call FusionClusterService.getAll if there at least one clusterId', function () {
+    it('should call HybridServicesClusterService.getAll if there at least one clusterId', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(FusionClusterService.getAll).toHaveBeenCalled();
+      expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
     });
-    it('should not call FusionClusterService.getAll if there no clusterIds', function () {
+    it('should not call HybridServicesClusterService.getAll if there no clusterIds', function () {
       USSService.getAll = function () {
         return $q.resolve([{
           userId: 'DEADBEEF',
@@ -157,7 +157,7 @@ describe('ExportUserStatusesController', function () {
       };
       vm.exportCSV();
       $rootScope.$apply();
-      expect(FusionClusterService.getAll).toHaveBeenCalled();
+      expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
     });
     it('should call UserDetails.getUsers as much as it has to', function () {
       vm.exportCSV();

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
+  var $httpBackend, $q, $controller, $state, $scope, Analytics, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
   var controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -32,12 +32,13 @@ describe('Controller: CustomerListCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _Authinfo_, _Config_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _Analytics_, _Authinfo_, _Config_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = $rootScope.$new();
     $state = _$state_;
+    Analytics = _Analytics_;
     Authinfo = _Authinfo_;
     Config = _Config_;
     HuronConfig = _HuronConfig_;
@@ -52,6 +53,7 @@ describe('Controller: CustomerListCtrl', function () {
       CUSTOMER: 2,
     };
 
+    spyOn(Analytics, 'trackPremiumEvent');
     spyOn($state, 'go');
     spyOn(Notification, 'error');
 
@@ -62,12 +64,10 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve(managedOrgsResponse));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.resolve({}));
 
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-      $q.resolve(false)
-    );
-    spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue(
-      $q.resolve(false)
-    );
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasITProPackGetStatus').and.returnValue($q.resolve(false));
+
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
@@ -188,7 +188,6 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
-
       initController();
       expect(controller.managedOrgsList).toBeDefined();
       expect(controller.managedOrgsList.length).toEqual(5);
@@ -237,13 +236,11 @@ describe('Controller: CustomerListCtrl', function () {
       expect(PartnerService.getManagedOrgsList.calls.count()).toEqual(2);
       expect(PartnerService.getManagedOrgsList).toHaveBeenCalledWith('1234');
     });
-
   });
 
-
   describe('filterColumns', function () {
-    beforeEach(initController);
     it('return 9 items in the filter list without Care with care FT turned off', function () {
+      initController();
       expect(controller.filter.options.length).toBe(9);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'sparkBoard',
@@ -251,12 +248,14 @@ describe('Controller: CustomerListCtrl', function () {
       expect(controller.filter.options).not.toContain(jasmine.objectContaining({
         value: 'care',
       }));
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'premium',
+      }));
     });
 
     it('show care in the filter list with care FT on', function () {
       FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
       initController();
-      $scope.$apply();
       expect(controller.filter.options.length).toBe(10);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'care',
@@ -265,24 +264,57 @@ describe('Controller: CustomerListCtrl', function () {
         value: 'sparkBoard',
       }));
     });
+
+    it('show Pro Pack in the filter list with correct FT on', function () {
+      FeatureToggleService.atlasITProPackGetStatus.and.returnValue($q.resolve(true));
+      initController();
+      expect(controller.filter.options.length).toBe(10);
+      expect(controller.filter.options).toContain(jasmine.objectContaining({
+        value: 'premium',
+      }));
+    });
   });
 
   describe('updateResultCount function', function () {
-    beforeEach(initController);
-
     it('should update the count on the filters based on the number of rows that met the criteria', function () {
-
+      initController();
       controller.filter.options = [{
         value: 'trial',
         label: '',
         isSelected: false,
         isAccountFilter: true,
+        isPremiumFilter: false,
         count: 0,
       }];
 
       controller._helpers.updateResultCount(controller.gridOptions.data);
       var activeFilter = _.find(controller.filter.options, { value: 'trial' });
       expect(activeFilter.count).toBe(2);
+    });
+
+    it('should fire a call to analytics only when the premium filter is first selected, not unselected', function () {
+      FeatureToggleService.atlasITProPackGetStatus.and.returnValue($q.resolve(true));
+      initController();
+      controller.filter.options = [{
+        value: 'premium',
+        label: '',
+        isSelected: true,
+        isAccountFilter: false,
+        isPremiumFilter: true,
+        previousState: false,
+        count: 0,
+      }];
+
+      controller._helpers.updateResultCount(controller.gridOptions.data);
+      expect(Analytics.trackPremiumEvent).toHaveBeenCalledWith(Analytics.sections.PREMIUM.eventNames.PREMIUM_FILTER);
+      Analytics.trackPremiumEvent.calls.reset();
+
+      controller._helpers.updateResultCount(controller.gridOptions.data);
+      expect(Analytics.trackPremiumEvent).not.toHaveBeenCalled();
+
+      controller.filter.options[0].isSelected = false;
+      controller._helpers.updateResultCount(controller.gridOptions.data);
+      expect(Analytics.trackPremiumEvent).not.toHaveBeenCalled();
     });
   });
 

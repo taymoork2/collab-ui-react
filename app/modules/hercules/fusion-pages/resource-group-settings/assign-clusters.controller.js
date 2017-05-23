@@ -5,7 +5,7 @@
     .controller('AssignClustersController', AssignClustersController);
 
   /* @ngInject */
-  function AssignClustersController($modalInstance, $q, resourceGroup, FusionClusterService, ResourceGroupService, Notification) {
+  function AssignClustersController($modalInstance, $q, resourceGroup, HybridServicesClusterService, ResourceGroupService, Notification) {
     var vm = this;
     vm.loadingState = true;
     vm.savingState = false;
@@ -27,7 +27,7 @@
     loadData();
 
     function loadData() {
-      return FusionClusterService.getResourceGroups()
+      return HybridServicesClusterService.getResourceGroups()
         .then(function (response) {
           var group = _.find(response.groups, { id: resourceGroup.id });
           vm.originalData.availableClusters = filterNonExpresswayClusters(response.unassigned);

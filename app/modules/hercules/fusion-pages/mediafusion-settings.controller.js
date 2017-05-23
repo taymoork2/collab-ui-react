@@ -6,7 +6,7 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, FusionClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle) {
+  function MediafusionClusterSettingsController($stateParams, HybridServicesClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle) {
     var vm = this;
     vm.saveSipTrunk = saveSipTrunk;
     vm.hasMFFeatureToggle = hasMFFeatureToggle;
@@ -38,7 +38,7 @@
     loadCluster($stateParams.id);
 
     function loadCluster(clusterid) {
-      FusionClusterService.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           var cluster = _.find(clusters, function (c) {
             return c.id === clusterid;
