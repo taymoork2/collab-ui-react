@@ -2655,8 +2655,13 @@
       "settings": "Settings",
       "status": "Status"
     },
-    "settings": {
-      "mobileNumber": "Mobile Number"
+    "userSettings": {
+      "mobileNumber": "Mobile Number",
+      "enabled": "Enabled",
+      "status": "Status",
+      "menuStatus": {
+        "error": "Error"
+      }
     },
     "details": {
       "invalidInput": "Always provide valid mobile number when enabling"

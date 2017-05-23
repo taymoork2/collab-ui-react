@@ -80,6 +80,7 @@
         fusion_khaos: 'squared-fusion-khaos',
         message: 'squared-room-moderation',
         imp: 'spark-hybrid-impinterop',
+        cmc: 'cmc',
       },
 
       licenseModel: {
