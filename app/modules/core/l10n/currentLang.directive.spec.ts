@@ -9,10 +9,6 @@ describe('currentLanguage Directive', () => {
     this.compileTemplate('<div current-language></div>');
   });
 
-  it('should set default language', function() {
-    expect(this.view.attr('lang')).toEqual(_.kebabCase(this.$translate.fallbackLanguage()));
-  });
-
   it('should change lang when $translation language changes', function(done) {
     expect(this.view.attr('lang')).toEqual(_.kebabCase(this.$translate.fallbackLanguage()));
 

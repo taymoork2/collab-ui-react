@@ -315,7 +315,7 @@
               $previousState.memo(sidepanelMemo);
             }
 
-            var template = '<cs-sidepanel';
+            var template = '<cs-sidepanel role="complementary"';
             template += options.type ? ' size="' + options.type + '"' : '';
             template += '></cs-sidepanel>';
             $state.sidepanel = $modal.open({
