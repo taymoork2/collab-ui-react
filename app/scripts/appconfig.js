@@ -894,6 +894,9 @@
                 },
               },
             },
+            data: {
+              showMessengerInteropToggle: true,
+            },
           })
           .state('users.add.services.dn', {
             views: {
