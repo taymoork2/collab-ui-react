@@ -2984,7 +2984,8 @@
       "searchRoomPlaceholder": "Enter space ID",
       "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
       "messages": "Where <b>Messages</b> contains",
-      "messagesPlaceholder": "e.g. project AND manager",
+      "messagesPlaceholder": "Enter comma separated values",
+      "messagesHelpText": "e.g. project, manager",
       "noMatchesFound": "No Matches Found",
       "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about our IT Pro Package."
     },
@@ -3042,6 +3043,21 @@
       "waitingForDownload": "Downloading, please wait...",
       "expires": "Expires",
       "expired": "Expired"
+    },
+    "originalConsole": {
+      "reportNameNotEmpty": "Report Name can not be empty",
+      "reportNamePlaceholder": "Enter report name",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "reportDateRange": "Date Range",
+      "noRangeSpecified": "No date range specified",
+      "takeMeToReports": "Take Me to Reports",
+      "dateTo": "to",
+      "endDateUntil": "until",
+      "endDateOnward": "onward",
+      "startDatePlaceholder": "Choose a Start Date",
+      "endDatePlaceholder": "Choose an End Date",
+      "generatedAt": "Generated At"
     },
     "tabs": {
       "search": "Search",
