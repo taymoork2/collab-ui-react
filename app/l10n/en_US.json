@@ -4289,7 +4289,13 @@
     "defaultCountry": "Default Country",
     "defaultCountryDesc": "Specify the country to set the correct dial tone on user devices.",
     "defaultCountryPlaceholder": "Select your country",
-    "pstnCountry": "Choose the country where calling services (including PSTN) will be provisioned."
+    "pstnCountry": "Choose the country where calling services (including PSTN) will be provisioned.",
+    "aria": {
+      "daysLeft": "{count, plural, =1{# day} other{# days}} left in trial",
+      "userTotals": "{{users}} of {{licenses}} licenses used",
+      "daysSinceExp": "Expired {count, plural, =1{# day} other{# days}} ago"
+    }
+
   },
   "trialModal": {
     "addTrial": {

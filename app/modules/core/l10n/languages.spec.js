@@ -1,5 +1,7 @@
 'use strict';
 
+var testModule = require('./index').default;
+
 describe('Languages', function () {
 
   beforeEach(function init() {
@@ -14,7 +16,7 @@ describe('Languages', function () {
     angular.mock.module(function ($provide) {
       $provide.provider('$window', $windowProvider);
     });
-    this.initModules('Core');
+    this.initModules(testModule);
     this.injectProviders('languagesProvider');
     this.injectDependencies('languages');
   });
