@@ -161,7 +161,24 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields.length).toBe(1);
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
-      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('Integer');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.integer');
+      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
+    });
+
+    it('should process field data when dataType is date time', function () {
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
+        'publiclyAccessible': 'false',
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'refUrl': '/dictionary/field/v1/id/NoDataType',
+        'id': 'NoDataType',
+        'dataType': 'date',
+      }]));
+      controller = initController();
+      $scope.$apply();
+      expect(controller.fieldsList.allFields.length).toBe(1);
+      expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
+      expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.date');
       expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
     });
 
@@ -181,7 +198,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields.length).toBe(1);
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.encrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
-      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('Integer');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.integer');
       expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
     });
 
@@ -200,7 +217,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields.length).toBe(1);
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
-      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('Boolean');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.boolean');
       expect(controller.fieldsList.allFields[0].description).toEqual('Field for TestBoolean');
       expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
     });
@@ -221,7 +238,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields.length).toBe(1);
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.piiEncrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.no');
-      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('Double');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.double');
       expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
     });
 
@@ -239,7 +256,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields.length).toBe(1);
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
-      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('Boolean');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.boolean');
       expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
     });
   });

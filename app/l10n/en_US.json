@@ -2692,10 +2692,11 @@
       "welcome": "Welcome to the Context Dictionary",
       "unavailable": "Unavailable",
       "dataTypes": {
-        "boolean": "Boolean",
-        "double": "Double",
-        "integer": "Integer",
-        "string": "String"
+        "boolean": "Toggle",
+        "date": "Date Time",
+        "double": "Decimal",
+        "integer": "Number",
+        "string": "Short Text"
       },
       "status": "Status",
       "inUse": "In Use",
