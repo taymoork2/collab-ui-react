@@ -116,6 +116,8 @@
             } else {
               angular.element('.icon-' + user.id).html($translate.instant('usersPage.inactive'));
             }
+            // successful update, reset 'Save' button state
+            $scope.saveDisabled = true;
             Notification.success(resultMsg);
           } else {
             if (userStatus === 404) {
