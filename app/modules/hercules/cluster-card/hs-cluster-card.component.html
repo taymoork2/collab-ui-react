@@ -10,7 +10,7 @@
           <span translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></span>
           <span class="badge badge--outline alert" ng-if="$ctrl.hasAlarms($ctrl.cluster)" translate="hercules.fusion.list.alarms"></span>
           <span class="badge badge--outline warning" ng-if="$ctrl.isInMaintenance($ctrl.cluster)" translate="hercules.fusion.list.maintenance"></span>
-          <span ng-show="false" class="badge badge--outline info" ng-if="$ctrl.hasUpgradeAvailable($ctrl.cluster)" translate="hercules.fusion.list.upgrade"></span>
+          <span class="badge badge--outline info" ng-if="$ctrl.hasUpgradeAvailable($ctrl.cluster)" translate="hercules.fusion.list.upgrade"></span>
         </a>
       </div>
     </header>

@@ -317,7 +317,7 @@ export class HybridServicesClusterService {
   public updateHost(serial: string, params: any, orgId?: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/hosts/${serial}`;
     return this.$http.patch(url, params)
-    .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse);
   }
 
   // PRIVATE
