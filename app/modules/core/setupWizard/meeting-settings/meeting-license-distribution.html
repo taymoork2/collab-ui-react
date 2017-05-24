@@ -1,0 +1,35 @@
+<div class="meeting-settings">
+  <div class="distribute-licenses-heading">
+    <h4 translate="firstTimeWizard.distributeYourWebExLicenses"></h4>
+  </div>
+  <div class="row element-spacing">
+    <div class="col-md-4 col-md-offset-4">
+      <cs-card>
+        <article>
+          <section class="row">
+            <p class="col-sm-7" translate="firstTimeWizard.meetingCenterLicensesRemaining"></p>
+            <p class="col-sm-5 count align-license-count">{{meetingCtrl.calculateLicensesRemaining()}}</p>
+          </section>
+        </article>
+      </cs-card>
+    </div>
+  </div>
+  <div class="row" ng-repeat="site in meetingCtrl.sitesArray">
+    <div class="col-md-4">{{site.name}}.webex.com</div>
+    <div class="col-md-4">
+      <input
+        cs-input
+        class="align-license-count"
+        type="text"
+        id="site-license-count{{$index}}"
+        name="site-license-count{{$index}}"
+        cs-input-size="medium-12"
+        placeholder="{{::'firstTimeWizard.enterNumberOfLicenses' | translate}}"
+        ng-model="site.licenseCount">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4" translate="common.total"></div>
+    <div class="col-md-4 count align-license-count">{{meetingCtrl.sumOfWebExLicensesAssigned()}}</div>
+  </div>
+</div>
