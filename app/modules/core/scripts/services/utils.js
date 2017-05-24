@@ -236,7 +236,9 @@
       },
 
       areEntitlementsActive: function (entitlements) {
-        return _.some(entitlements, Boolean);
+        return _.some(entitlements, function (entitlementValue) {
+          return entitlementValue === true;
+        });
       },
 
       getUUID: function () {
