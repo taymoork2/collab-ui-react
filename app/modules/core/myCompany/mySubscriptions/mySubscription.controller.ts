@@ -319,6 +319,11 @@ export class MySubscriptionCtrl {
         }
       });
 
+      if (_.find(this.subscriptionDetails, 'isOnline')) {
+        // create cookie for Digital River
+        this.DigitalRiverService.getDigitalRiverToken();
+      }
+
       let enterpriseSubs = 1;
       let enterpriseTrials = 1;
       this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((instances) => {
@@ -359,7 +364,7 @@ export class MySubscriptionCtrl {
         this.bmmpAttr = {
           subscriptionId: subscription.internalSubscriptionId,
           productInstanceId: subscription.productInstanceId,
-          changeplanOverride: urlResponse,
+          changeplanOverride: subscription.changeplanOverride,
         };
       }
       this.broadcastSingleSubscription(subscription, undefined);
