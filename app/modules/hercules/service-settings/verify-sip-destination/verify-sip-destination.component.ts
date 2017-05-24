@@ -2,7 +2,6 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
 
   public destinationUrl: string;
   private onDestinationSave: Function;
-  private onDestinationClear: Function;
 
   /* @ngInject */
   constructor(
@@ -25,16 +24,11 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
       controllerAs: 'vm',
       templateUrl: 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html',
       type: 'full',
-    })
-      .result
-      .then((savedDespiteWarnings: boolean) => {
-        this.onDestinationSave({ warn: savedDespiteWarnings });
-      })
-      .catch((error) => {
-        if (error) {
-          this.onDestinationClear();
-        }
-      });
+    });
+  }
+
+  public save(): void {
+    this.onDestinationSave();
   }
 }
 
@@ -44,6 +38,5 @@ export class VerifySipDestinationComponent implements ng.IComponentOptions {
   public bindings = {
     destinationUrl: '<',
     onDestinationSave: '&',
-    onDestinationClear: '&',
   };
 }

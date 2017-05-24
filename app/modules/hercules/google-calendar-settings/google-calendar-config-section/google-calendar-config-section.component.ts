@@ -15,7 +15,7 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
       email: this.$translate.instant('common.invalidEmail'),
     },
   };
-  public testAccountForm: ng.IFormController;
+  public aclAdminAccountForm: ng.IFormController;
   public saving = false;
 
   /* @ngInject */
@@ -31,7 +31,8 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
       this.CloudConnectorService.getApiKey(),
       this.CloudConnectorService.getService(),
     ])
-      .then(([ apiKey, { aclAdminAccount = '' } ]) => {
+      .then(([ apiKey, service]) => {
+        const aclAdminAccount = service.aclAdminAccount || '';
         this.apiKey = apiKey;
         this.aclAdminAccount = aclAdminAccount;
         this.useResources = !!aclAdminAccount;
@@ -41,22 +42,29 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
       });
   }
 
-  public updateConfig() {
-    this.saving = true;
-    // this.CloudConnectorService.updateConfig({
-    //   apiClientId: this.apiKey.apiClientId,
-    //   aclAdminAccount: this.data.adminAccount,
-    //   testEmailAccount: this.data.testAccount,
-    // })
-    //   .then(() => {
-    //     this.saving = false;
-    //   })
-    //   .catch((err) => {
-    //     this.Notification.errorWithTrackingId(err, 'hercules.settings.googleCalendar.setupModal.testAccount.error');
-    //   })
-    //   .finally(() => {
-    //     this.saving = false;
-    //   });
+  public onCheckChange(): void {
+    if (!this.useResources) {
+      this.aclAdminAccount = '';
+    }
+  }
+
+  public openUpdateModal(): void {
+    this.CloudConnectorService.openSecondSetupModal();
+  }
+
+  public updateAclAdminAccount(): void {
+    this.CloudConnectorService.updateConfig({
+      aclAdminAccount: this.aclAdminAccount,
+    })
+      .then(() => {
+        this.saving = false;
+      })
+      .catch((err) => {
+        this.Notification.errorWithTrackingId(err, 'hercules.gcalSetupModal.testAccount.error');
+      })
+      .finally(() => {
+        this.saving = false;
+      });
   }
 }
 

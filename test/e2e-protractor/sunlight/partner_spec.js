@@ -39,7 +39,7 @@ describe('Spark Care Partner flow', function () {
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
       utils.clickEscape();
-    }, LONG_TIMEOUT);
+    });
 
     it('should find the newly added care trial in customer list', function (done) {
       clickTrialRowAndPreview();

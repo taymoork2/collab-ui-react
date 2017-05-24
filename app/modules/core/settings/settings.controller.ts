@@ -1,14 +1,14 @@
-import './_settings.scss';
+
 import { SettingSection } from './settingSection';
-import { AuthenticationSetting } from './authenticationSetting.component';
-import { BrandingSetting } from './brandingSetting.component';
-import { DomainsSetting } from './domainsSetting.component';
-import { RetentionSetting } from './retentionSetting.component';
-import { SecuritySetting } from './securitySetting.component';
-import { SipDomainSetting } from './sipDomainSetting.component';
+import { AuthenticationSetting } from './authentication/authenticationSetting.component';
+import { BrandingSetting } from './branding/brandingSetting.component';
+import { DomainsSetting } from './domain/domainsSetting.component';
+import { RetentionSetting } from './retention/retentionSetting.component';
+import { SecuritySetting } from './security/securitySetting.component';
+import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';
-import { DirSyncSetting } from './dirSyncSetting.component';
+import { DirSyncSetting } from './dirsync/dirSyncSetting.component';
 
 export class SettingsCtrl {
 
@@ -32,11 +32,13 @@ export class SettingsCtrl {
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
+    private $q: ng.IQService,
     private $stateParams: ng.ui.IStateParamsService,
     private $timeout: ng.ITimeoutService,
     private Authinfo,
     private Orgservice,
     private FeatureToggleService,
+    private ITProPackService,
   ) {
   }
 
@@ -108,21 +110,27 @@ export class SettingsCtrl {
   }
 
   private initSecurity() {
-    this.FeatureToggleService.atlasPinSettingsGetStatus().then((toggle) => {
-      if (toggle) {
-        this.security = new SecuritySetting();
+    let promises = {
+      pinSettingsToggle: this.FeatureToggleService.atlasPinSettingsGetStatus(),
+      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+    };
+    this.$q.all(promises).then((result) => {
+      if (result.pinSettingsToggle) {
+        this.security = new SecuritySetting(result.proPackPurchased);
       }
     });
   }
 
   private initRetention() {
-    this.FeatureToggleService.atlasDataRetentionSettingsGetStatus().then((toggle) => {
-      if (toggle) {
-        this.retention = new RetentionSetting();
+    let promises = {
+      retentionToggle: this.FeatureToggleService.atlasDataRetentionSettingsGetStatus(),
+      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+    };
+
+    this.$q.all(promises).then((result) => {
+      if (result.retentionToggle) {
+        this.retention = new RetentionSetting(result.proPackPurchased);
       }
     });
   }
 }
-angular
-  .module('Core')
-  .controller('SettingsCtrl', SettingsCtrl);

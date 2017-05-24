@@ -58,6 +58,12 @@ describe('Service: PstnWizardService', () => {
     numberType: 'DID',
     orderType: 'BLOCK_ORDER',
   };
+  let customerOrgId = '123-456-7890';
+  let swivelProvider = {
+    uuid: '098-7654-321',
+    apiImplementation: 'SWIVEL',
+  };
+  let swivelOrder = ['+4697793400', '+18007164851'];
 
   beforeEach(function () {
     this.initModules(pstnWizard);
@@ -67,7 +73,13 @@ describe('Service: PstnWizardService', () => {
       'HuronConfig',
       'PstnWizardService',
       '$q',
+      'PstnModel',
+      'PstnService',
+      'FeatureToggleService',
+      '$rootScope',
     );
+
+    installPromiseMatchers();
   });
 
   describe('showOrderQuantity', function () {
@@ -115,6 +127,37 @@ describe('Service: PstnWizardService', () => {
 
     it('should format an advanced order with nxx', function () {
       expect(this.PstnWizardService.formatTelephoneNumber(advancedNxxOrder)).toEqual('(' + advancedNxxOrder.data.areaCode + ') ' + advancedNxxOrder.data.nxx + '-XXXX');
+    });
+  });
+
+  describe('create numbers for BYOP', function () {
+    beforeEach(function () {
+      spyOn(this.PstnService, 'orderNumbersV2Swivel').and.returnValue(this.$q.resolve());
+      spyOn(this.PstnService, 'orderNumbers').and.returnValue(this.$q.resolve());
+      spyOn(this.PstnModel, 'isCustomerExists').and.returnValue(false);
+      spyOn(this.PstnModel, 'getCustomerId').and.returnValue(customerOrgId);
+      spyOn(this.PstnModel, 'getProvider').and.returnValue(swivelProvider);
+      spyOn(this.PstnModel, 'getProviderId').and.returnValue(swivelProvider.uuid);
+      spyOn(this.PstnService, 'createCustomerV2').and.returnValue(this.$q.resolve());
+      this.PstnWizardService.setSwivelOrder(swivelOrder);
+    });
+
+    it('should call V2 order API if huronEnterprisePrivateTrunking feature toggle is on', function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      let promise = this.PstnWizardService.placeOrder().then(() => {
+        expect(this.PstnService.orderNumbersV2Swivel).toHaveBeenCalledWith(customerOrgId, swivelOrder);
+      });
+      this.$rootScope.$digest();
+      expect(promise).toBeResolved();
+    });
+
+    it('should call V1 order API if huronEnterprisePrivateTrunking feature toggle is off', function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      let promise = this.PstnWizardService.placeOrder().then(() => {
+        expect(this.PstnService.orderNumbers).toHaveBeenCalledWith(customerOrgId, swivelProvider.uuid, swivelOrder);
+      });
+      this.$rootScope.$digest();
+      expect(promise).toBeResolved();
     });
   });
 

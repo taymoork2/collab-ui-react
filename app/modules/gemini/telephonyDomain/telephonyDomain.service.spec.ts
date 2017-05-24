@@ -9,7 +9,7 @@ describe('Service: TelephonyDomainService', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('TelephonyDomainService', 'UrlConfig', '$httpBackend');
+    this.injectDependencies('$q', 'gemService', 'TelephonyDomainService', 'UrlConfig', '$httpBackend');
   });
 
   afterEach(function () {
@@ -88,7 +88,7 @@ describe('Service: TelephonyDomainService', () => {
     it('should get correct data when call getNotes', function () {
       const notes = [{ id: '9ce78fcf-1dff-499c-9bae-57ccef22e660', userId: 'feng5@mailinator.com', userName: 'Feng Wu-Partner Admin', objectID: null, objectName: 'note', siteID: '8a607bdb59baadf5015a650a2003157e', action: 'add_note' }];
       const mockData = setData.call(this, 'content.data.body', notes);
-      const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${this.customerId}/${this.ccaDomainId}/add_note_td`;
+      const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${this.customerId}/${this.ccaDomainId}/add_notes_td`;
       this.$httpBackend.expectGET(url).respond(200, mockData);
 
       this.TelephonyDomainService.getNotes(this.customerId, this.ccaDomainId).then((res) => {
@@ -112,13 +112,73 @@ describe('Service: TelephonyDomainService', () => {
     it('should get correct data when call getHistories', function () {
       const histories = [{ id: '9ce78fcf-1dff-499c-9bae-57ccef22e660', userId: 'feng5@mailinator.com', objectID: '0520_Bing_TD_02', objectName: 'comment', siteID: '8a607bdb59baadf5015a650a2003157e', action: 'rejected' }];
       const mockData = setData.call(this, 'content.data.body', histories);
-      const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${this.customerId}/${this.ccaDomainId}/Telephony%20Domain/${this.domainName}`;
-      this.$httpBackend.expectGET(url).respond(200, mockData);
+      const url = `${this.UrlConfig.getGeminiUrl()}activityLogs`;
+      this.$httpBackend.expectPUT(url).respond(200, mockData);
 
-      this.TelephonyDomainService.getHistories(this.customerId, this.ccaDomainId, this.domainName).then((res) => {
+      this.TelephonyDomainService.getHistories().then((res) => {
         expect(res.content.data.body[0].objectName).toEqual('comment');
       });
       this.$httpBackend.flush();
+    });
+
+    it('should get correct data when call getCountries', function () {
+      const items = [{
+        countryId: '1',
+        countryName: 'Country #1',
+      }];
+      const mockData = setData.call(this, 'content.data.body', items);
+      const url = `${this.UrlConfig.getGeminiUrl()}countries`;
+      this.$httpBackend.expectGET(url).respond(200, mockData);
+
+      this.TelephonyDomainService.getCountries().then((res) => {
+        expect(res.content.data.body.length).toBe(1);
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('should get correct data when call getAccessNumberInfo', function () {
+      const item = {};
+      const mockData = setData.call(this, 'content.data.body', item);
+      const url = `${this.TelephonyDomainService.url}getAccessNumberInfo`;
+      this.$httpBackend.expectPOST(url).respond(200, mockData);
+
+      this.TelephonyDomainService.getAccessNumberInfo().then((res) => {
+        expect(res.content.data.body).toBeTruthy();
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('should be successful when call postTelephonyDomain', function () {
+      const item = {};
+      const mockData = setData.call(this, 'content.data.body', item);
+      const customerId = '123142345234523';
+      const url = `${this.TelephonyDomainService.url}customerId/${customerId}`;
+      this.$httpBackend.expectPOST(url).respond(200, mockData);
+
+      this.TelephonyDomainService.postTelephonyDomain(customerId, {}).then((res) => {
+        expect(res.content.data.body).toBeTruthy();
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('should update status of Telephony Domain successfully', function () {
+      const customerId: string = '';
+      const ccaDomainId: string = '';
+      const telephonyDomainId: string = '';
+      const operation: string = 'cancel';
+      const mockData = setData.call(this, 'content.data.body', {});
+      const url: string = `${this.TelephonyDomainService.url}cancelSubmission`;
+
+      this.$httpBackend.expectPOST(url).respond(200, mockData);
+      this.TelephonyDomainService.updateTelephonyDomainStatus(customerId, ccaDomainId, telephonyDomainId, operation).then((res) => {
+        expect(res.content.data.body).toBeTruthy();
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('should get the template url of phone numbers', function () {
+      const url = this.TelephonyDomainService.getDownloadUrl();
+      expect(url).toBeTruthy();
     });
 
     it('should move site for Telephony Domain', function () {
@@ -131,6 +191,56 @@ describe('Service: TelephonyDomainService', () => {
         expect(res.content.data.body.siteId).toEqual(858622);
       });
       this.$httpBackend.flush();
+    });
+  });
+
+  describe('Export CSV for Phone Numbers', function () {
+    it('only export the header when no phone numbers exist', function () {
+      spyOn(this.TelephonyDomainService, 'getNumbers').and.returnValue(this.$q.resolve());
+      const mockData = setData.call(this, 'content.data.body', []);
+      this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(mockData));
+      this.TelephonyDomainService.exportNumbersToCSV(this.customerId, this.ccaDomainId).then((res) => {
+        expect(res.length).toBe(1);
+      });
+    });
+
+    it('export phone numbers', function () {
+      spyOn(this.TelephonyDomainService, 'getNumbers').and.returnValue(this.$q.resolve());
+      const mockData = setData.call(this, 'content.data.body', [{
+        phoneNumber: '121313123',
+        phoneLabel: 'Label',
+        defaultNumber: '1',
+        tollType: 'CCA Toll',
+        globalListDisplay: '1',
+        isHidden: 'true',
+        countryId: '#1',
+      }, {
+        phoneNumber: '121312123',
+        phoneLabel: 'Label',
+        defaultNumber: '0',
+        tollType: 'CCA Toll',
+        globalListDisplay: '1',
+        isHidden: 'true',
+        countryId: '#2',
+      }, {
+        phoneNumber: '121314123',
+        phoneLabel: null,
+        defaultNumber: '1',
+        tollType: 'CCA Toll Free',
+        globalListDisplay: '0',
+        isHidden: 'false',
+        countryId: '#3',
+      }]);
+      this.gemService.setStorage('countryId2NameMapping', {
+        '#1': 'Country #1',
+        '#2': 'Country #1',
+        '#3': 'Country #1',
+      });
+      this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(mockData));
+      this.TelephonyDomainService.exportNumbersToCSV(this.customerId, this.ccaDomainId).then((res) => {
+        expect(res.length).toBe(4);
+      });
+
     });
   });
 
@@ -147,7 +257,7 @@ describe('Service: TelephonyDomainService', () => {
     });
 
     it('generate correct data with no primaryBridge when export Telephony Domains list', function () {
-      const telephonyDomains = [{ domainName: 'Test12', primaryBridgeName: null, backupBridgeName: 'backupBridgeName', status: 'A', telephonyDomainSites: [], webDomainName: 'TestWebDomaindHQrq', description: 'CustomAttribute' }];
+      const telephonyDomains = [{ domainName: 'Test12', primaryBridgeName: null, backupBridgeName: 'backupBridgeName', status: null, telephonyDomainSites: [], webDomainName: null, customerAttribute: null }];
       const mockData = setData.call(this, 'content.data.body', telephonyDomains);
       const url = `${this.UrlConfig.getGeminiUrl()}telephonydomain/customerId/${this.customerId}`;
       this.$httpBackend.expectGET(url).respond(200, mockData);

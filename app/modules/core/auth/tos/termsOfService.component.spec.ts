@@ -30,7 +30,7 @@ describe('TermsOfService', () => {
     spyOn(this.$state, 'go').and.callFake(_.noop);
     spyOn(this.$modal, 'open').and.returnValue(true);
     spyOn(this.TOSService, 'dismissModal').and.callFake(_.noop);
-    spyOn(this.TOSService, 'acceptTOS').and.returnValue(this.$q.when());
+    spyOn(this.TOSService, 'acceptTOS').and.returnValue(this.$q.resolve());
     spyOn(this.TOSService, 'hasAcceptedTOS').and.returnValue(false);
     this.$window.frames['tos-frame'] = {
       document: document.implementation.createHTMLDocument('tos-frame'),

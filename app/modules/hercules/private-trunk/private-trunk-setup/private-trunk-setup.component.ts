@@ -8,8 +8,8 @@ import { PrivateTrunkCertificateService } from 'modules/hercules/private-trunk/p
 import { Notification } from 'modules/core/notifications';
 
 export interface  ICertificateArray {
-  keys: Array<string>;
-  values: Array<string>;
+  keys: string[];
+  values: string[];
 }
 
 export class PrivateTrunkSetupCtrl implements ng.IComponentController {
@@ -20,18 +20,18 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public currentStepIndex: number;
 
   //domain
-  public domains: Array<string>;
+  public domains: string[];
   public isDomain: boolean;
-  public selectedVerifiedDomains: Array<string>;
-  public domainSelected: Array<IOption>;
+  public selectedVerifiedDomains: string[];
+  public domainSelected: IOption[];
 
-  //resource/privatetrunk
+  //resource/SIP Destinations
   public privateTrunkResource: PrivateTrunkResource;
-  private resourceAddSuccess: boolean = false;
+  private resourceAddSuccess: boolean = true;
   private privateTrunkAddError: boolean = false;
-
+  private setupTitle: string;
   //certs
-  public formattedCertList: Array<IformattedCertificate>;
+  public formattedCertList: IformattedCertificate[];
   public isImporting: boolean = false;
   public isCertificateDefault: boolean = true;
 
@@ -40,8 +40,9 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public btnLabel1: string;
   public btnLabel2: string;
   public privateTrunkSetupForm: ng.IFormController;
-
-  private errors: Array<any> = [];
+  private dismiss: Function;
+  public isFirstTimeSetup: boolean;
+  public promises: ng.IPromise<any>[] = [];
 
   /* @ngInject */
   constructor(
@@ -60,6 +61,13 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
     if (_.isUndefined(this.currentStepIndex)) {
       this.currentStepIndex = 1;
     }
+    this.setupTitle = this.$translate.instant('servicesOverview.cards.privateTrunk.setupTitle');
+    this.isFirstTimeSetup = (this.$state.current.name === 'services-overview');
+    if (!this.isFirstTimeSetup) {
+      this.currentStepIndex = 2;
+      this.setupTitle = this.$translate.instant('servicesOverview.cards.privateTrunk.destinationTitle');
+    }
+
     this.isDomain = true;
     this.initDomainInfo();
     if (_.isUndefined(this.domainSelected)) {
@@ -84,9 +92,6 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   public previousStep(): void {
     this.currentStepIndex = (this.currentStepIndex > PrivateTrunkSetupCtrl.MIN_INDEX) ? --this.currentStepIndex : this.currentStepIndex;
-    if (this.privateTrunkSetupForm.$dirty) {
-      this.errors = [];
-    }
   }
 
   public isNextButton(): boolean  {
@@ -96,13 +101,35 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       case 2:
         return this.privateTrunkSetupForm.$valid;
       case 3:
-        return this.isCertificateChoiceValid() && !this.errors.length;
+        return this.isCertificateChoiceValid();
       default: break;
     }
     return false;
   }
 
-  public setSelectedDomain(isDomain: boolean, domainSelected: Array<IOption>): void {
+  public isClose(): boolean {
+    return (this.currentStepIndex === 1 || this.currentStepIndex === 2 && !this.isFirstTimeSetup);
+  }
+
+  public leftButtonLabel(): string {
+    let label = this.$translate.instant('common.close');
+    if (this.isClose()) {
+      label = this.$translate.instant('common.close');
+    } else if (this.currentStepIndex < 4) {
+      label = this.$translate.instant('common.back');
+    }
+    return label;
+  }
+
+  public leftButtonAction(): void {
+    if (this.isClose()) {
+      this.dismissModal();
+    } else if (this.currentStepIndex < 4) {
+      this.previousStep();
+    }
+  }
+
+  public setSelectedDomain(isDomain: boolean, domainSelected: IOption[]): void {
     this.domainSelected = _.cloneDeep(domainSelected);
     this.isDomain = isDomain;
     this.selectedVerifiedDomains = _.map(this.domainSelected, domainOption => domainOption.value);
@@ -127,15 +154,6 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       });
   }
 
-  public deleteCert(certId: string) {
-    this.PrivateTrunkCertificateService.deleteCert(certId)
-    .then( cert => {
-      if (cert) {
-        this.formattedCertList = cert.formattedCertList || [];
-      }
-    });
-  }
-
   public changeOption(isCertificateDefault: boolean): void {
     this.isCertificateDefault = isCertificateDefault;
     if (!this.isCertificateDefault) {
@@ -158,65 +176,81 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       .then((cert) => {
         if (!_.isUndefined(cert)) {
           this.formattedCertList = cert.formattedCertList;
-          this.isCertificateDefault =  (!_.isArray(this.formattedCertList) || this.formattedCertList.length === 0);
         }
       });
   }
 
   public createPrivateTrunk(): ng.IPromise<any> {
-    this.isSetup = true;
-    let promises: Array<ng.IPromise<any>> = [];
+    return this.PrivateTrunkService.setPrivateTrunk(this.selectedVerifiedDomains)
+      .catch(error => {
+        this.privateTrunkAddError = true;
+        this.Notification.notify(error, 'servicesOverview.cards.privateTrunk.error.privateTrunkError');
+      });
+  }
+
+  public addSipDestinations(): ng.IPromise<any> {
     if (!_.isEmpty(this.privateTrunkResource.hybridDestination.name)) {
       this.privateTrunkResource.destinations = [];
       this.privateTrunkResource.destinations.push(this.privateTrunkResource.hybridDestination);
     }
-    _.forEach(this.privateTrunkResource.destinations, (dest) => {
-      let addressPort: Array<string> = dest.address.split(':');
-      let resource: IPrivateTrunkResource = {
-        name: dest.name,
-        address: addressPort[0],
-      };
+    // Create the first SIP Destination
+    let resource = this.getResource(_.first(this.privateTrunkResource.destinations));
+    this.promises.push(this.PrivateTrunkService.createPrivateTrunkResource(resource)
+      .then(() => {
+        this.resourceAddSuccess = true;
+        //Add rest of the resources
+        _.forEach (_.drop(this.privateTrunkResource.destinations, 1), dest => {
+          let resource = this.getResource(dest);
+          this.promises.push(this.PrivateTrunkService.createPrivateTrunkResource(resource)
+            .catch(error => {
+              this.Notification.notify(error, 'servicesOverview.cards.privateTrunk.error.resourceError');
+            }));
+        });
+      }).catch(error => {
+        this.Notification.notify(error, 'servicesOverview.cards.privateTrunk.error.resourceError');
+      }));
+    return this.$q.all(this.promises);
+  }
 
-      if (addressPort[1]) {
-        resource.port =  _.toNumber(addressPort[1]);
-      }
-      promises.push(this.PrivateTrunkService.createPrivateTrunkResource(resource)
-        .catch(error => {
-          this.resourceAddSuccess = false;
-          this.errors.push(this.Notification.processErrorResponse(error, 'servicesOverview.cards.privateTrunk.error.resourceError'));
-        }));
-    });
+  public getResource(dest): IPrivateTrunkResource {
+    let addressPort: string[] = dest.address.split(':');
+    let resource: IPrivateTrunkResource = {
+      name: dest.name,
+      address: addressPort[0],
+    };
 
-    if (!_.isEmpty(this.selectedVerifiedDomains)) {
-      promises.push(this.PrivateTrunkService.setPrivateTrunk(this.selectedVerifiedDomains)
-        .catch(error => {
-          this.privateTrunkAddError = true;
-          this.errors.push(this.Notification.processErrorResponse(error, 'servicesOverview.cards.privateTrunk.error.privateTrunkError'));
-        }));
+    if (addressPort[1]) {
+      resource.port =  _.toNumber(addressPort[1]);
     }
-    return this.$q.all(promises).then(() => {
-      if (this.errors.length > 0) {
-        this.errors.splice(0, 0, this.$translate.instant(''));
-        this.Notification.notify(this.errors, 'servicesOverview.cards.privateTrunk.error.privateTrunkError');
-      }
-    });
+    return resource;
   }
 
   public setupPrivateTrunk (): void {
-    //cleanup certificates if the option changed to cisco default
-    if (this.isCertificateDefault) {
-      this.PrivateTrunkCertificateService.deleteUploadedCerts();
-    }
-    this.createPrivateTrunk()
-      .then(() => {
+    this.isSetup = true;
+    let promises: ng.IPromise<any>[] = [];
+
+    promises.push(this.addSipDestinations());
+    if (this.isFirstTimeSetup) {
+      promises.push(this.createPrivateTrunk());
+      this.$q.all(promises).then(() => {
         this.isSetup = false;
-        if (!this.errors.length) {
+        if (!this.privateTrunkAddError || this.resourceAddSuccess) {
           this.currentStepIndex++;
         }
-        if (this.privateTrunkAddError) {
+        if (this.privateTrunkAddError || !this.resourceAddSuccess) {
           this.cleanupOnError();
         }
       });
+    } else {
+      this.$q.all(promises).then(() => {
+        this.isSetup = false;
+        if (this.resourceAddSuccess) {
+          this.Notification.success('servicesOverview.cards.privateTrunk.success.resource');
+        }
+        this.$state.go('private-trunk-overview.list');
+        this.dismiss();
+      });
+    }
   }
 
   public cleanupOnError(): void {
@@ -230,15 +264,23 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
     this.$state.go('private-trunk-overview.settings');
   }
 
-  public dismiss(): void {
+  public dismissModal(): void {
+    let templateUrl = (this.isFirstTimeSetup) ? 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html' : 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-destination-cancel-confirm.html';
     this.$modal.open({
-      templateUrl: 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html',
+      templateUrl: templateUrl,
       type: 'dialog',
     })
       .result.then(() => {
         this.PrivateTrunkCertificateService.deleteUploadedCerts();
-        this.PrivateTrunkPrereqService.dismissModal();
-        this.$state.go('services-overview');
+        if (!this.isFirstTimeSetup) {
+          this.dismiss();
+          this.$state.go('private-trunk-overview.settings');
+        } else {
+          this.PrivateTrunkPrereqService.dismissModal();
+          if ( this.currentStepIndex ===  PrivateTrunkSetupCtrl.MAX_INDEX ) {
+            this.$state.go('private-trunk-overview.settings');
+          }
+        }
       });
   }
 
@@ -249,5 +291,6 @@ export class PrivateTrunkSetupComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup.html';
   public bindings = {
     currentStepIndex: '<',
+    dismiss: '&',
   };
 }

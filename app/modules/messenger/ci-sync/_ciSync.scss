@@ -1,4 +1,31 @@
+body.messenger-state {
+  background-color: $white;
+}
+
 .container-ci-sync {
+  .org-info-section {
+    .row {
+      margin-top: 8px;
+    }
+    .row--first {
+      margin-top: 0;
+    }
+
+    .links-row {
+      margin-top: 14px;
+      margin-left: -4px;
+    }
+  }
+
+  .options-section {
+    .row {
+      margin-top: 14px;
+    }
+    .row--first {
+      margin-top: 0;
+    }
+  }
+
   .bottom-padding {
     padding-bottom: 30px;
   }
@@ -14,38 +41,7 @@
     padding-top: 10px;
   }
 
-  .indented {
-    margin-left: 50px;
-  }
-
-  .info {
-    .info-header {
-      font-family: 'CiscoSansTT Thick', Helvetica;
-      font-size: 22px;
-    }
-
-    .data-item {
-      font-family: Consolas, 'Courier New';
-    }
-
-    .data-key {
-      font-weight: bold;
-    }
-  }
-
-  .no-click {
-    pointer-events: none;
-  }
-
   .right-5 {
     padding-left: 5px;
-  }
-
-  .sub-info {
-    margin-top: 50px;
-  }
-
-  .sync-stats {
-    min-width: 350px;
   }
 }

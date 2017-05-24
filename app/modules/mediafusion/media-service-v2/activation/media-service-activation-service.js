@@ -5,7 +5,7 @@
     .service('MediaServiceActivationV2', MediaServiceActivationV2);
 
   /* @ngInject */
-  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, FusionClusterService, ServiceDescriptor) {
+  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, HybridServicesClusterService, ServiceDescriptor) {
     var vm = this;
     vm.mediaServiceId = 'squared-fusion-media';
 
@@ -35,6 +35,8 @@
         function success() {
           setisMediaServiceEnabled(true);
           enableOrpheusForMediaFusion();
+          enableRhesosEntitlement();
+          enableCallServiceEntitlement();
         },
         function error() {
           Notification.error('mediaFusion.mediaServiceActivationFailure');
@@ -90,7 +92,7 @@
       if (!_.isUndefined(vm.isMediaServiceEnabled)) {
         isMediaService.resolve(vm.isMediaServiceEnabled);
       } else {
-        FusionClusterService.serviceIsSetUp(vm.mediaServiceId).then(function (enabled) {
+        HybridServicesClusterService.serviceIsSetUp(vm.mediaServiceId).then(function (enabled) {
           if (enabled) {
             vm.isMediaServiceEnabled = enabled;
           }
@@ -140,6 +142,20 @@
     var deactivateHybridMedia = function () {
       var url = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId() + '/deactivate_hybrid_media';
       return $http.delete(url);
+    };
+
+    var enableRhesosEntitlement = function () {
+      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/rhesos';
+      return $http.post(url);
+    };
+
+    var enableCallServiceEntitlement = function () {
+      var payload = {
+        "selfSubscribe": true,
+        "roles": ["Spark_CallService"],
+      };
+      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/spark';
+      return $http.post(url, payload);
     };
 
     return {

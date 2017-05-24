@@ -6,8 +6,8 @@
     .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig, UserRoleService) {
-    var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Config, TrialService, UrlConfig, UserRoleService) {
+    var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/sitesProvOrderStatus';
 
     var customerStatus = {
@@ -242,7 +242,7 @@
     }
 
     function getManagedOrgsList(searchText) {
-      return $http.get(managedOrgsUrl, {
+      return $http.get(_.replace(managedOrgsUrl, '%s', Authinfo.getOrgId()), {
         params: {
           customerName: searchText,
         },
@@ -250,11 +250,13 @@
     }
 
     function modifyManagedOrgs(customerOrgId) {
-      return Auth.getAuthorizationUrlList().then(function (response) {
-        if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
+      return $q(function (resolve) {
+        if (_.includes(Authinfo.getManagedOrgs(), customerOrgId)) {
+          resolve();
+        } else {
           var primaryEmail = Authinfo.getPrimaryEmail();
-          Analytics.trackPartnerActions(Analytics.sections.TRIAL.eventNames.PATCH, response.data.orgId, response.data.uuid);
-          return UserRoleService.enableFullAdmin(primaryEmail, customerOrgId);
+          Analytics.trackPartnerActions(Analytics.sections.TRIAL.eventNames.PATCH, Authinfo.getUserOrgId(), Authinfo.getUserId());
+          resolve(UserRoleService.enableFullAdmin(primaryEmail, customerOrgId));
         }
       });
     }
@@ -409,6 +411,7 @@
         notes: {},
         isPartner: false,
         isTrialData: _.get(options, 'isTrialData', false),
+        isPremium: false,
       };
 
       var licensesAndOffersData = parseLicensesAndOffers(customer, options);
@@ -418,6 +421,11 @@
       dataObj.isPartner = _.get(customer, 'isPartner', false);
       dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
       dataObj.licenseList = customer.licenses;
+
+      var premiumLicenses = _.filter(customer.licenses, function (license) {
+        return license.offerName === Config.offerCodes.MGMTPRO;
+      });
+      dataObj.isPremium = _.some(premiumLicenses);
 
       var daysDone = TrialService.calcDaysUsed(customer.startDate);
       dataObj.daysUsed = daysDone;

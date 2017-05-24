@@ -17,19 +17,19 @@ describe('Component: bulkEnableVm', () => {
 
   describe('Component: bulkEnableVm', () => {
     beforeEach(function () {
-      spyOn(this.BulkEnableVmService, 'getSparkCallUserCountRetry').and.returnValue(this.$q.when(4));
+      spyOn(this.BulkEnableVmService, 'getSparkCallUserCountRetry').and.returnValue(this.$q.resolve(4));
       spyOn(this.BulkEnableVmService, 'getUsersRetry');
       spyOn(this.BulkEnableVmService, 'getUserServicesRetry');
       spyOn(this.BulkEnableVmService, 'getUserSitetoSiteNumberRetry');
       spyOn(this.BulkEnableVmService, 'enableUserVmRetry');
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(false));
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
     });
     describe('Voicemail for all users enabled', () => {
       beforeEach(function () {
-        this.BulkEnableVmService.getUsersRetry.and.returnValue(this.$q.when(commonUsers));
-        this.BulkEnableVmService.getUserServicesRetry.and.returnValue(this.$q.when(services));
-        this.BulkEnableVmService.getUserSitetoSiteNumberRetry.and.returnValue(this.$q.when('123456'));
-        this.BulkEnableVmService.enableUserVmRetry.and.returnValue(this.$q.when());
+        this.BulkEnableVmService.getUsersRetry.and.returnValue(this.$q.resolve(commonUsers));
+        this.BulkEnableVmService.getUserServicesRetry.and.returnValue(this.$q.resolve(services));
+        this.BulkEnableVmService.getUserSitetoSiteNumberRetry.and.returnValue(this.$q.resolve('123456'));
+        this.BulkEnableVmService.enableUserVmRetry.and.returnValue(this.$q.resolve());
       });
       beforeEach(initComponent);
       it('Voicemail enable counters are updated correctly', function () {
@@ -48,9 +48,9 @@ describe('Component: bulkEnableVm', () => {
 
     describe('Voicemail for users not updated when users list is empty', () => {
       beforeEach(function () {
-        this.BulkEnableVmService.getUsersRetry.and.returnValue(this.$q.when([]));
-        this.BulkEnableVmService.getUserServicesRetry.and.returnValue(this.$q.when(services));
-        this.BulkEnableVmService.getUserSitetoSiteNumberRetry.and.returnValue(this.$q.when('123456'));
+        this.BulkEnableVmService.getUsersRetry.and.returnValue(this.$q.resolve([]));
+        this.BulkEnableVmService.getUserServicesRetry.and.returnValue(this.$q.resolve(services));
+        this.BulkEnableVmService.getUserSitetoSiteNumberRetry.and.returnValue(this.$q.resolve('123456'));
       });
       beforeEach(initComponent);
       it('Voicemail is not updated for users', function () {
@@ -72,9 +72,9 @@ describe('Component: bulkEnableVm', () => {
           statusText: 'User Not Found',
           config: { headers: { TrackingID: 'Atlas_122ea2dafea3444555_Service Unavailable' } },
         };
-        this.BulkEnableVmService.getUsersRetry.and.returnValue(this.$q.when(commonUsers));
+        this.BulkEnableVmService.getUsersRetry.and.returnValue(this.$q.resolve(commonUsers));
         this.BulkEnableVmService.getUserServicesRetry.and.returnValue(this.$q.reject(error));
-        this.BulkEnableVmService.getUserSitetoSiteNumberRetry.and.returnValue(this.$q.when('123456'));
+        this.BulkEnableVmService.getUserSitetoSiteNumberRetry.and.returnValue(this.$q.resolve('123456'));
       });
       beforeEach(initComponent);
       it('Voicemail enable updates the error array when 503 is returned', function () {
@@ -94,9 +94,9 @@ describe('Component: bulkEnableVm', () => {
           statusText: 'User Not Found',
           config: { headers: { TrackingID: 'Atlas_122ea2dafea3444555_Service Unavailable' } },
         };
-        this.BulkEnableVmService.getUsersRetry.and.returnValue(this.$q.when(commonUsers));
+        this.BulkEnableVmService.getUsersRetry.and.returnValue(this.$q.resolve(commonUsers));
         this.BulkEnableVmService.getUserServicesRetry.and.returnValue(this.$q.reject(error));
-        this.BulkEnableVmService.getUserSitetoSiteNumberRetry.and.returnValue(this.$q.when('123456'));
+        this.BulkEnableVmService.getUserSitetoSiteNumberRetry.and.returnValue(this.$q.resolve('123456'));
       });
       beforeEach(initComponent);
       it('Voicemail enable does not updates the error array when 404 is returned', function () {
@@ -116,9 +116,9 @@ describe('Component: bulkEnableVm', () => {
           statusText: 'User Not Found',
           config: { headers: { TrackingID: 'Atlas_122ea2dafea3444555_Service Unavailable' } },
         };
-        this.BulkEnableVmService.getUsersRetry.and.returnValue(this.$q.when(commonUsers));
-        this.BulkEnableVmService.getUserSitetoSiteNumberRetry.and.returnValue(this.$q.when('123456'));
-        this.BulkEnableVmService.getUserServicesRetry.and.returnValue(this.$q.when(services));
+        this.BulkEnableVmService.getUsersRetry.and.returnValue(this.$q.resolve(commonUsers));
+        this.BulkEnableVmService.getUserSitetoSiteNumberRetry.and.returnValue(this.$q.resolve('123456'));
+        this.BulkEnableVmService.getUserServicesRetry.and.returnValue(this.$q.resolve(services));
         this.BulkEnableVmService.enableUserVmRetry.and.returnValue(this.$q.reject(error));
       });
       beforeEach(initComponent);

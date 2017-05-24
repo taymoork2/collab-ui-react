@@ -39,7 +39,6 @@ describe('Controller: LineListCtrl', function () {
     controller = $controller('LinesListCtrl', {
       $scope: $scope,
       $state: $state,
-      Notification: Notification,
       Authinfo: Authinfo,
     });
 
@@ -167,34 +166,16 @@ describe('Controller: LineListCtrl', function () {
 
   describe('showProviderDetails, true case', function () {
 
-    beforeEach(function () {
-      spyOn(LineListService, 'isResellerExists').and.returnValue($q.resolve(true));
-    });
-
     it('should change the state on reseller exists true', function () {
       controller.showProviderDetails();
-      $timeout.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: customerInfo.orgId,
         customerName: customerInfo.customerName,
         customerEmail: customerInfo.customerAdminEmail,
         customerCommunicationLicenseIsTrial: true,
         customerRoomSystemsLicenseIsTrial: true,
       });
-    });
-
-  });
-
-  describe('showProviderDetails, false case', function () {
-
-    beforeEach(function () {
-      spyOn(LineListService, 'isResellerExists').and.returnValue($q.resolve(false));
-    });
-
-    it('should throw notification on reseller exists false', function () {
-      controller.showProviderDetails();
-      $timeout.flush();
-      expect(Notification.error).toHaveBeenCalled();
     });
 
   });

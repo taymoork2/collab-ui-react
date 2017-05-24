@@ -3,6 +3,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface ISimplifiedConnector {
   alarms: IConnectorAlarm[];
@@ -46,7 +47,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private ModalService,
@@ -97,15 +98,19 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   }
 
   public enableMaintenanceMode(node: ISimplifiedNode): void {
+    let message = this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.message');
+    if (this.data.targetType === 'c_mgmt') {
+      message = this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.expresswayMessage');
+    }
     this.ModalService.open({
       title: this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.title'),
-      message: this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.message'),
+      message: message,
       close: this.$translate.instant('common.enable'),
       dismiss: this.$translate.instant('common.cancel'),
     })
     .result
     .then(() => {
-      return this.FusionClusterService.updateHost(node.serial, {
+      return this.HybridServicesClusterService.updateHost(node.serial, {
         maintenanceMode: 'on',
       })
       .then(response => {
@@ -127,7 +132,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     })
     .result
     .then(() => {
-      return this.FusionClusterService.updateHost(node.serial, {
+      return this.HybridServicesClusterService.updateHost(node.serial, {
         maintenanceMode: 'off',
       })
       .then(() => {
@@ -186,7 +191,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
       this.refreshing = true;
     }
     let clusterCache: ICluster;
-    return this.FusionClusterService.get(id)
+    return this.HybridServicesClusterService.get(id)
       .then((cluster: ICluster) => {
         clusterCache = cluster;
         return this.getSerials(cluster);
@@ -217,7 +222,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
 
   private fetchNodes(serials: string[]) {
     const promises = _.map(serials, (serial) => {
-      return this.FusionClusterService.getHost(serial);
+      return this.HybridServicesClusterService.getHost(serial);
     });
     return this.$q.all(promises);
   }

@@ -1,7 +1,8 @@
-import domainManagement from './index';
+import testModule from './index';
+
 describe('DomainManagementService', () => {
 
-  beforeEach(angular.mock.module(domainManagement));
+  beforeEach(angular.mock.module(testModule));
 
   let $httpBackend, DomainManagementService: any, UrlConfig, Authinfo, $rootScope;
 
@@ -305,7 +306,7 @@ describe('DomainManagementService', () => {
 
 describe('Syncing verified domains with care', function () {
 
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(testModule));
 
   let $httpBackend, DomainManagementService: any, UrlConfig, Authinfo, $rootScope, scomUrl, sunlightConfigUrl;
 

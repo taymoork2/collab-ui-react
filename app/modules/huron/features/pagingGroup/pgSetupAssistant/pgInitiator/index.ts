@@ -1,6 +1,6 @@
 import { PgInitiatorComponent } from './pgInitiator.component';
 import notifications from 'modules/core/notifications';
-import featureMemberService from 'modules/huron/features';
+import featureMemberService from 'modules/huron/features/services';
 
 export default angular
   .module('huron.paging-group.initiator', [

@@ -149,7 +149,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct spark domain mgmt url', function () {
     whenCalling('getSparkDomainManagementUrl').expectUrlToBe({
       dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      cfe: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
       integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
@@ -371,6 +371,24 @@ describe('UrlConfigSpec', function () {
     });
   });
 
+  it('should return correct sunlight pick notification url', function () {
+    whenCalling('getSunlightPickNotificationUrl').expectUrlToBe({
+      dev: 'https://notifs.devus1.ciscoccservice.com/notifs/v1/publish',
+      cfe: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
+      integration: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
+      prod: 'https://notifs.produs1.ciscoccservice.com/notifs/v1/publish',
+    });
+  });
+
+  it('should return correct sunlight push notification url', function () {
+    whenCalling('getSunlightPushNotificationUrl').expectUrlToBe({
+      dev: 'https://ar.devus1.ciscoccservice.com/ar/v1/publish/taskState',
+      cfe: 'https://ar.appstaging.ciscoccservice.com/ar/v1/publish/taskState',
+      integration: 'https://ar.appstaging.ciscoccservice.com/ar/v1/publish/taskState',
+      prod: 'https://ar.produs1.ciscoccservice.com/ar/v1/publish/taskState',
+    });
+  });
+
   it('should return correct prod admin url', function () {
     whenCalling('getProdAdminServiceUrl').expectUrlToBe({
       dev: 'https://atlas-a.wbx2.com/admin/api/v1/',
@@ -404,15 +422,6 @@ describe('UrlConfigSpec', function () {
       cfe: 'https://web.ciscospark.com/',
       integration: 'https://web.ciscospark.com/',
       prod: 'https://web.ciscospark.com/',
-    });
-  });
-
-  it('should return correct bmmp client url', function () {
-    whenCalling('getBmmpUrl', 'foo').expectUrlToBe({
-      dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
-      cfe: 'https://bmmp.ciscospark.com/api/v1',
-      integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
-      prod: 'https://bmmp.ciscospark.com/api/v1',
     });
   });
 

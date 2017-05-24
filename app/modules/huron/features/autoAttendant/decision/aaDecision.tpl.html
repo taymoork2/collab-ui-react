@@ -5,7 +5,7 @@
   </div>
   <div ng-switch="aaDecisionCtrl.ifOption.value">
      <div ng-class= "{'session-variable' : aaDecisionCtrl.isWarn}">
-       <cs-select ng-switch-when="sessionVariable" is-warn="{{ aaDecisionCtrl.isWarn }}" warn-msg="{{ aaDecisionCtrl.varMissingWarning }}" ng-model="aaDecisionCtrl.sessionVarOption" options="aaDecisionCtrl.sessionVarOptions" icon="icon-chevron-down" placeholder="aaDecisionCtrl.selectVariablePlaceholder" ng-change= "aaDecisionCtrl.setIfDecision()">
+       <cs-select ng-switch-when="sessionVariable" name="ifSessionVariable" is-warn="{{ aaDecisionCtrl.isWarn }}" warn-msg="{{ aaDecisionCtrl.varMissingWarning }}" ng-model="aaDecisionCtrl.sessionVarOption" options="aaDecisionCtrl.sessionVarOptions" icon="icon-chevron-down" placeholder="aaDecisionCtrl.selectVariablePlaceholder" ng-change="aaDecisionCtrl.setIfDecision()">
        </cs-select>
     </div>
     <p ng-if="aaDecisionCtrl.ifOption.value != 'callerReturned' && aaDecisionCtrl.ifOption.value != ''" translate="autoAttendant.actionIs"></p>

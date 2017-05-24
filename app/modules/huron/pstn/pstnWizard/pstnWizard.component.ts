@@ -7,7 +7,7 @@ import { TokenMethods } from '../pstnSwivelNumbers';
 import { TOKEN_FIELD_ID } from '../pstn.const';
 import { PstnService } from '../pstn.service';
 import { PstnModel, IOrder } from '../pstn.model';
-
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class PstnWizardComponent implements ng.IComponentOptions {
   public controller = PstnWizardCtrl;
@@ -63,6 +63,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
   public tokenmethods: TokenMethods;
   public titles: {};
+  public dismiss: Function;
 
   private did: DirectInwardDialing = new DirectInwardDialing();
 
@@ -76,7 +77,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private PstnService: PstnService,
               private $translate: ng.translate.ITranslateService,
               private PstnWizardService: PstnWizardService,
-              private TelephoneNumberService,
+              private PhoneNumberService: PhoneNumberService,
               ) {
     this.contact = this.PstnWizardService.getContact();
     this.address = _.cloneDeep(PstnModel.getServiceAddress());
@@ -99,8 +100,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public getCapabilities(): void {
     if (!this.isTrial) {
       this.PstnWizardService.hasTollFreeCapability().then(result => {
-        this.showTollFreeNumbers = result;
-        this.getTollFreeInventory();
+        if (result) {
+          this.showTollFreeNumbers = result;
+          this.getTollFreeInventory();
+        }
       })
       .catch(response => this.Notification.errorResponse(response, 'pstnSetup.errors.capabilities'));
     }
@@ -119,8 +122,8 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public createToken(e): void {
     let tokenNumber = e.attrs.label;
-    e.attrs.value = this.TelephoneNumberService.getDIDValue(tokenNumber);
-    e.attrs.label = this.TelephoneNumberService.getDIDLabel(tokenNumber);
+    e.attrs.value = this.PhoneNumberService.getE164Format(tokenNumber);
+    e.attrs.label = this.PhoneNumberService.getNationalFormat(tokenNumber);
   }
 
   public createdToken(e): void {
@@ -137,7 +140,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public isTokenInvalid(value): boolean {
-    return !this.TelephoneNumberService.validateDID(value) ||
+    return !this.PhoneNumberService.validateDID(value) ||
       _.includes(this.did.getList(), value);
   }
 
@@ -254,7 +257,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         });
         return;
       case 7:
-        this.close();
+        this.dismissModal();
         return;
     }
     this.step += 1;
@@ -350,7 +353,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     return angular.element('#' + this.tokenfieldId).parent().find('.token.invalid');
   }
 
-  public formatTelephoneNumber(telephoneNumber: IOrder): string {
+  public formatTelephoneNumber(telephoneNumber: IOrder): string | undefined {
     return this.PstnWizardService.formatTelephoneNumber(telephoneNumber);
   }
 
@@ -382,5 +385,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public onAcknowledge(value: boolean): void {
     this.emergencyAcknowledge = value;
+  }
+
+  public dismissModal() {
+    this.PstnModel.clear();
+    this.dismiss();
   }
 }

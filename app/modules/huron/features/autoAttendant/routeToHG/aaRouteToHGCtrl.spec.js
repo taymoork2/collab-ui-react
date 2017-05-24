@@ -120,7 +120,7 @@ describe('Controller: AARouteToHGCtrl', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve(huntGroups));
+    spyOn(HuntGroupService, 'getHuntGroupList').and.returnValue($q.resolve(huntGroups));
   }));
 
   describe('fromDecision', function () {

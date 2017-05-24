@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('RetentionService', RetentionService);
+  module.exports = angular.module('core.retentionService', [
+    require('angular-resource'),
+    require('modules/core/config/urlConfig'),
+  ])
+    .service('RetentionService', RetentionService)
+    .name;
 
   /* @ngInject */
   function RetentionService($resource, $q, UrlConfig) {

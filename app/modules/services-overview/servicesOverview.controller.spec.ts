@@ -45,6 +45,12 @@ describe('ServiceOverviewCtrl', () => {
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridDataSecurity.title' }).length).toBe(1);
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridContext.title' }).length).toBe(1);
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.privateTrunk.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridImp.title' }).length).toBe(1);
+    });
+
+    it('should create a cmc card', () => {
+      initController();
+      expect(_.filter(ctrl.getCmcCards(), { name: 'servicesOverview.cards.cmc.title' }).length).toBe(1);
     });
   });
 });

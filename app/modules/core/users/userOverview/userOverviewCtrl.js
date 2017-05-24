@@ -5,8 +5,8 @@
 
   /* @ngInject */
   function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q,
-    Authinfo, Config, DirSyncService, FeatureToggleService, Notification, SunlightConfigService,
-    Userservice, UserOverviewService) {
+    Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService,
+    Notification, SunlightConfigService, Userservice, UserOverviewService) {
     var vm = this;
 
     vm.currentUser = $stateParams.currentUser;
@@ -65,7 +65,7 @@
     };
     var preferredLanguageState = {
       name: $translate.instant('preferredLanguage.title'),
-      detail: "",
+      detail: '',
       state: 'userDetails',
       dirsyncEnabled: false,
       actionAvailable: true,
@@ -239,6 +239,10 @@
           msgState.detail = $translate.instant('onboardModal.paidMsg');
           msgState.actionAvailable = getDisplayableServices('MESSAGING');
         }
+      }
+      // allow access to user-level jabber interop entitlement if org-level entitlement is set
+      if (MessengerInteropService.hasAssignableMessageOrgEntitlement()) {
+        msgState.actionAvailable = true;
       }
       vm.services.push(msgState);
 

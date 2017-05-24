@@ -290,7 +290,7 @@
     function massageDevice(device) {
       device.displayName = device.name;
       device.isHuronDevice = true;
-      device.image = device.model ? 'images/devices/' + (device.model.trim().replace(/ /g, '_') + '.png').toLowerCase() : 'images/devices-hi/unknown.png';
+      device.image = device.model ? 'images/devices-hi/' + (device.model.trim().replace(/ /g, '_') + '.png').toLowerCase() : 'images/devices-hi/unknown.png';
       if (!device.deviceStatus) {
         if (device.registrationStatus) {
           device.deviceStatus = {

@@ -25,12 +25,11 @@
           required>
         <cs-call-destination
           class="row"
-          model="$ctrl.customCallDest"
+          model="$ctrl.customCallerIdNumber"
           size="medium-12"
           inputs="$ctrl.callerIdInputs"
           select-type="select"
           custom-number-translations="$ctrl.customTranslations"
-          external-number-region-code-fn="$ctrl.getRegionCode()"
           on-change-fn="$ctrl.setCallerIdNumber(model)">
         </cs-call-destination>
       </div>

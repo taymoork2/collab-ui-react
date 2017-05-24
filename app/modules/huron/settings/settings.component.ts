@@ -1,4 +1,4 @@
-import { HuronSettingsService, HuronSettingsOptionsService, HuronSettingsOptions, HuronSettingsData, IEmergencyNumberOption } from 'modules/huron/settings';
+import { HuronSettingsService, HuronSettingsOptionsService, HuronSettingsOptions, HuronSettingsData, IEmergencyNumberOption } from 'modules/huron/settings/services';
 import { Notification } from 'modules/core/notifications';
 import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { CompanyNumber } from 'modules/huron/settings/companyCallerId';
@@ -99,12 +99,11 @@ class HuronSettingsCtrl implements ng.IComponentController {
         this.$scope.$emit('wizardNextButtonDisable', !!loading);
       });
     }
-
   }
 
   private initSettingsComponent(): ng.IPromise<any> {
     return this.HuronSettingsOptionsService.getOptions().then(options => this.settingsOptions = options)
-    .then( () => {
+    .then(() => {
       return this.HuronSettingsService.get(this.siteId).then(huronSettingsData => this.huronSettingsData = huronSettingsData);
     });
   }
@@ -183,6 +182,17 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.huronSettingsData.site.extensionLength = extensionLength;
     this.setShowDialPlanChangedDialogFlag();
     this.checkForChanges();
+  }
+
+  public onDecreaseExtensionLength(extensionLength: string): void {
+    this.huronSettingsData.internalNumberRanges = [];
+    this.huronSettingsData.site.extensionLength = extensionLength;
+    this.setShowDialPlanChangedDialogFlag();
+    this.checkForChanges();
+  }
+
+  public onExtensionLengthSaved(): void {
+    this.$onInit();
   }
 
   public onSteeringDigitChanged(steeringDigit: string): void {

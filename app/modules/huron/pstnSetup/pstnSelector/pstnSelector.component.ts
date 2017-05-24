@@ -1,4 +1,6 @@
 import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, MIN_BLOCK_QUANTITY, MAX_BLOCK_QUANTITY } from 'modules/huron/pstn/pstn.const';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
+
 class PstnSelectorCtrl implements ng.IComponentController {
   public search: Function;
   public addToCart: Function;
@@ -19,8 +21,10 @@ class PstnSelectorCtrl implements ng.IComponentController {
   public validSearch;
 
   /* @ngInject */
-  constructor(private TelephoneNumberService,
-              private $translate) { }
+  constructor(
+    private PhoneNumberService: PhoneNumberService,
+    private $translate: ng.translate.ITranslateService,
+  ) { }
 
   public $onInit() {
     this.numberType = this.numberType || 'DID';
@@ -96,10 +100,10 @@ class PstnSelectorCtrl implements ng.IComponentController {
 
   public getCommonPattern(telephoneNumber) {
     if (_.isString(telephoneNumber)) {
-      return this.TelephoneNumberService.getDIDLabel(telephoneNumber);
+      return this.PhoneNumberService.getNationalFormat(telephoneNumber);
     } else {
-      let firstNumber = this.TelephoneNumberService.getDIDLabel(_.head(telephoneNumber));
-      let lastNumber = this.TelephoneNumberService.getDIDLabel(_.last(telephoneNumber));
+      let firstNumber = this.PhoneNumberService.getNationalFormat(_.head<string>(telephoneNumber));
+      let lastNumber = this.PhoneNumberService.getNationalFormat(_.last<string>(telephoneNumber));
       if (this.isConsecutiveArray(telephoneNumber)) {
         return firstNumber + ' - ' + _.last(lastNumber.split('-'));
       } else {

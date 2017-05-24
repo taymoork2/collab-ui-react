@@ -36,6 +36,10 @@ describe('Features Controller', function () {
     'featureName': 'huronHuntGroup.hg',
     'filterValue': 'AA',
   }];
+  var $event = {
+    preventDefault: function () {},
+    stopImmediatePropagation: function () {},
+  };
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -63,7 +67,7 @@ describe('Features Controller', function () {
     getDeferred = $q.defer();
 
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getDeferred.promise);
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve());
+    spyOn(HuntGroupService, 'getHuntGroupList').and.returnValue($q.resolve());
     spyOn(CallParkService, 'getCallParkList').and.returnValue($q.resolve(emptyListOfCPs.callparks));
     spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(getDeferred.promise);
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.resolve());
@@ -106,7 +110,7 @@ describe('Features Controller', function () {
     $scope.$apply();
     $timeout.flush();
 
-    featureCtrl.deleteHuronFeature(AAs[0]);
+    featureCtrl.deleteHuronFeature(AAs[0], $event);
     expect($state.go).toHaveBeenCalledWith('huronfeatures.deleteFeature', {
       deleteFeatureName: AAs[0].cardName,
       deleteFeatureId: AAs[0].id,
@@ -114,7 +118,7 @@ describe('Features Controller', function () {
     });
   });
   it('should be able to edit an AA function ', function () {
-    featureCtrl.editHuronFeature(AAs[0]);
+    featureCtrl.editHuronFeature(AAs[0], $event);
     expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {
       aaName: AAs[0].cardName,
     });
@@ -172,7 +176,7 @@ describe('Features Controller', function () {
 
     saveFeature = featureCtrl.listOfFeatures[2];
 
-    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[2]);
+    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[2], $event);
 
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: AAs[0].cardName,
@@ -195,7 +199,7 @@ describe('Features Controller', function () {
 
     saveFeature = featureCtrl.listOfFeatures[1];
 
-    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[1]);
+    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[1], $event);
 
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: AAs[0].cardName,
@@ -219,7 +223,7 @@ describe('Features Controller', function () {
 
     saveFeature = featureCtrl.listOfFeatures[0];
 
-    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[0]);
+    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[0], $event);
 
     expect(Notification.error).toHaveBeenCalledWith('huronFeatureDetails.aaDeleteBlocked', jasmine.any(Object));
 

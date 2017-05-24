@@ -73,6 +73,7 @@ describe('controller: CbgsCtrl', function () {
     it('should return correct array data when invoked cbgService.getCallbackGroups', function () {
       controller.gridRefresh = true;
       cbgService.getCallbackGroups.and.returnValue($q.resolve(callbackGroups));
+      initController();
       $scope.$apply();
       expect(controller.gridRefresh).toBe(false);
     });

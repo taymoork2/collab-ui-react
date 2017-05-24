@@ -6,21 +6,21 @@ describe('HelpdeskCardsService', function () {
   var HelpdeskCardsOrgService;
   var LicenseService;
   var HelpdeskHuronService;
-  var FusionClusterService;
+  var HybridServicesClusterService;
   var $scope, q;
   var CloudConnectorService;
   var UCCService;
 
-  beforeEach(inject(function (_HelpdeskCardsOrgService_, _$q_, _LicenseService_, _$rootScope_, _HelpdeskHuronService_, _FusionClusterService_, _CloudConnectorService_, _UCCService_) {
+  beforeEach(inject(function (_HelpdeskCardsOrgService_, _$q_, _LicenseService_, _$rootScope_, _HelpdeskHuronService_, _HybridServicesClusterService_, _CloudConnectorService_, _UCCService_) {
     HelpdeskCardsOrgService = _HelpdeskCardsOrgService_;
     LicenseService = _LicenseService_;
     HelpdeskHuronService = _HelpdeskHuronService_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     $scope = _$rootScope_.$new();
     q = _$q_;
     CloudConnectorService = _CloudConnectorService_;
     UCCService = _UCCService_;
-    spyOn(FusionClusterService, 'getAll').and.returnValue(q.resolve(getJSONFixture('hercules/fusion-cluster-service-test-clusters.json')));
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue(q.resolve(getJSONFixture('hercules/fusion-cluster-service-test-clusters.json')));
   }));
 
   describe('Org Cards', function () {
@@ -64,7 +64,7 @@ describe('HelpdeskCardsService', function () {
     });
 
     afterEach(function () {
-      HelpdeskCardsOrgService = LicenseService = HelpdeskHuronService = FusionClusterService = $scope = q = CloudConnectorService = UCCService = undefined;
+      HelpdeskCardsOrgService = LicenseService = HelpdeskHuronService = HybridServicesClusterService = $scope = q = CloudConnectorService = UCCService = undefined;
     });
 
     it('should return correct message card for org', function () {
@@ -115,7 +115,7 @@ describe('HelpdeskCardsService', function () {
     });
 
     it('should return correct call card for org with huron-site-dial-digit & huron-local-dialing features', function () {
-      sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
+      spyOn(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
         "steeringDigit": null,
@@ -126,16 +126,16 @@ describe('HelpdeskCardsService', function () {
         "mediaTraversalMode": "TURNOnly",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
-      HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
+      HelpdeskHuronService.getOrgSiteInfo.and.returnValue(deferredSiteInfoResult.promise);
 
-      sinon.stub(HelpdeskHuronService, 'getTenantInfo');
+      spyOn(HelpdeskHuronService, 'getTenantInfo');
       var deferredTenantInfoResult = q.defer();
       deferredTenantInfoResult.resolve({
         "name": "SomeTestCustomer",
         "regionCode": "940",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
-      HelpdeskHuronService.getTenantInfo.returns(deferredTenantInfoResult.promise);
+      HelpdeskHuronService.getTenantInfo.and.returnValue(deferredTenantInfoResult.promise);
 
       var card = HelpdeskCardsOrgService.getCallCardForOrg(org, licenses, true, true);
       $scope.$apply();

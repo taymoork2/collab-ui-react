@@ -4,27 +4,17 @@ describe('Controller: SoftwareUpgradeController', function () {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
 
-  var $q, $scope, $controller, controller, $translate, modalInstance, cluster, ClusterService, HybridServicesExtrasService, Notification;
-  beforeEach(inject(function (_$q_, _$controller_, $rootScope, _$translate_, _Notification_) {
+  var $q, $scope, $controller, controller, modalInstance, cluster, HybridServicesExtrasService;
+  beforeEach(inject(function (_$q_, _$controller_, $rootScope, _HybridServicesExtrasService_) {
     $q = _$q_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
-    $translate = _$translate_;
-    Notification = _Notification_;
 
-    ClusterService = {
-      upgradeSoftware: sinon.stub(),
-    };
-    HybridServicesExtrasService = {
-      getReleaseNotes: sinon.stub(),
-    };
+    HybridServicesExtrasService = _HybridServicesExtrasService_;
     modalInstance = {
-      close: sinon.stub(),
+      close: function () {},
     };
 
-    spyOn($translate, 'instant');
-    spyOn(ClusterService, 'upgradeSoftware').and.returnValue($q.resolve());
-    spyOn(Notification, 'error');
     $scope.$apply();
   }));
 
@@ -40,17 +30,12 @@ describe('Controller: SoftwareUpgradeController', function () {
     };
 
     controller = $controller('SoftwareUpgradeController', {
-      $translate: $translate,
       $modalInstance: modalInstance,
       servicesId: ['squared-fusion-cal'],
       connectorType: "c_cal",
       availableVersion: "1",
       cluster: cluster,
-      ClusterService: ClusterService,
-      HybridServicesExtrasService: HybridServicesExtrasService,
-      Notification: Notification,
-    })
-    ;
+    });
     $scope.$apply();
   }
 

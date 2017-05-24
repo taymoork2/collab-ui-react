@@ -4,12 +4,12 @@ describe('Controller: HostDeregisterControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $rootScope, controller, connectorId, FusionClusterService, $q, modalInstanceMock;
+  var $rootScope, controller, connectorId, HybridServicesClusterService, $q, modalInstanceMock;
 
-  beforeEach(inject(function (_$rootScope_, $controller, _FusionClusterService_, _$q_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _HybridServicesClusterService_, _$q_) {
     $rootScope = _$rootScope_;
     connectorId = '12345';
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     $q = _$q_;
 
     modalInstanceMock = {
@@ -28,23 +28,23 @@ describe('Controller: HostDeregisterControllerV2', function () {
   });
 
   it('should call deregisterEcpNode', function () {
-    spyOn(FusionClusterService, 'deregisterEcpNode').and.returnValue($q.resolve());
+    spyOn(HybridServicesClusterService, 'deregisterEcpNode').and.returnValue($q.resolve());
     controller.deregister();
-    expect(FusionClusterService.deregisterEcpNode).toHaveBeenCalled();
+    expect(HybridServicesClusterService.deregisterEcpNode).toHaveBeenCalled();
     expect(controller.saving).toBe(true);
 
   });
 
   it('should call deregisterEcpNode with connectorId', function () {
 
-    spyOn(FusionClusterService, 'deregisterEcpNode').and.returnValue($q.resolve());
+    spyOn(HybridServicesClusterService, 'deregisterEcpNode').and.returnValue($q.resolve());
     controller.deregister();
-    expect(FusionClusterService.deregisterEcpNode).toHaveBeenCalledWith(connectorId);
+    expect(HybridServicesClusterService.deregisterEcpNode).toHaveBeenCalledWith(connectorId);
   });
 
   it('should go to success module of deregister', function () {
     var deregisterDefered = $q.defer();
-    spyOn(FusionClusterService, 'deregisterEcpNode').and.returnValue(deregisterDefered.promise);
+    spyOn(HybridServicesClusterService, 'deregisterEcpNode').and.returnValue(deregisterDefered.promise);
     deregisterDefered.resolve();
     $rootScope.$apply();
 
@@ -54,7 +54,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
   });
   it('should go to failure module of deregister', function () {
     var deregisterDefered = $q.defer();
-    spyOn(FusionClusterService, 'deregisterEcpNode').and.returnValue(deregisterDefered.promise);
+    spyOn(HybridServicesClusterService, 'deregisterEcpNode').and.returnValue(deregisterDefered.promise);
     deregisterDefered.reject();
     $rootScope.$apply();
 

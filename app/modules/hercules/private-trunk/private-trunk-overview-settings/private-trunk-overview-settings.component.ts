@@ -3,25 +3,30 @@ import { PrivateTrunkCertificateService } from 'modules/hercules/private-trunk/p
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
 import { IOption } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/';
+import { Notification } from 'modules/core/notifications';
 
 export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController {
   public hasPrivateTrunkFeatureToggle: boolean;
   public backState = 'services-overview';
   public certificates: ICertificate;
-  public formattedCertList: Array<IformattedCertificate>;
+  public formattedCertList: IformattedCertificate[];
   public isImporting: boolean = false;
   public isCertificateDefault: boolean;
-  public domains: Array<string>;
+  public domains: string[];
   public isDomain: boolean;
-  public selectedVerifiedDomains: Array<string>;
-  public domainSelected: Array<IOption>;
-
+  public selectedVerifiedDomains: string[];
+  public domainSelected: IOption[] = [];
+  public modalOptions: any = {
+    template: '<private-trunk-deactivate dismiss="$dismiss()" class="modal-content"></private-trunk-deactivate>',
+    type: 'dialog',
+  };
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
     private PrivateTrunkCertificateService: PrivateTrunkCertificateService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private PrivateTrunkService: PrivateTrunkService,
+    private Notification: Notification,
   ) {
   }
 
@@ -37,16 +42,12 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
   public initDomainInfo(): void {
     this.PrivateTrunkPrereqService.getVerifiedDomains().then(verifiedDomains => {
       this.domains = verifiedDomains;
-    });
-    this.PrivateTrunkService.getPrivateTrunk().then(res => {
-      this.selectedVerifiedDomains = res.domains || [];
-      this.isDomain = true;
-      this.domainSelected = _.map(this.domains, domain => {
-        if (!_.isUndefined(_.find(this.selectedVerifiedDomains, selected => selected === domain))) {
+      this.PrivateTrunkService.getPrivateTrunk().then(res => {
+        this.selectedVerifiedDomains = res.domains || [];
+        this.isDomain = true;
+        this.domainSelected = _.map(this.selectedVerifiedDomains, domain => {
           return ({ value: domain, label: domain, isSelected: true });
-        } else {
-          return ({ value: domain, label: domain, isSelected: false });
-        }
+        });
       });
     });
   }
@@ -62,10 +63,16 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
       });
   }
 
-  public setSelectedDomain(isDomain: boolean, domainSelected: Array<IOption>): void {
+  public setSelectedDomain(isDomain: boolean, domainSelected: IOption[]): void {
     this.domainSelected = _.cloneDeep(domainSelected);
     this.isDomain = isDomain;
     this.selectedVerifiedDomains = _.map(this.domainSelected, domainOption => domainOption.value);
+    this.updatePrivateTrunk();
+  }
+
+  public updatePrivateTrunk(): void {
+    this.PrivateTrunkService.setPrivateTrunk(this.selectedVerifiedDomains)
+      .catch(error => this.Notification.notify(error, 'servicesOverview.cards.privateTrunk.error.privateTrunkError'));
   }
 
   public uploadFile(file: File): void {
@@ -82,16 +89,6 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
           this.isImporting = false;
         }
       });
-  }
-
-  public deleteCert(certId: string): void {
-    this.PrivateTrunkCertificateService.deleteCert(certId)
-    .then( cert => {
-      if (cert) {
-        this.formattedCertList = cert.formattedCertList || [];
-        this.isCertificateDefault =  (!_.isArray(this.formattedCertList) || this.formattedCertList.length === 0);
-      }
-    });
   }
 
   public changeOption(isCertificateDefault: boolean): void {

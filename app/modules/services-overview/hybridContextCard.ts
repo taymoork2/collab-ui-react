@@ -34,12 +34,9 @@ export class ServicesOverviewHybridContextCard extends ServicesOverviewHybridCar
     return [this.setupButton];
   }
 
-  public hybridContextToggleEventHandler(hasFeature: boolean) {
-    this.display = hasFeature;
-  }
-
   /* @ngInject */
   public constructor(
+    private Authinfo,
     HybridServicesClusterStatesService: HybridServicesClusterStatesService,
   ) {
     super({
@@ -52,5 +49,6 @@ export class ServicesOverviewHybridContextCard extends ServicesOverviewHybridCar
       routerState: 'context-resources',
       service: 'contact-center-context',
     }, HybridServicesClusterStatesService);
+    this.display = this.Authinfo.isContactCenterContext();
   }
 }

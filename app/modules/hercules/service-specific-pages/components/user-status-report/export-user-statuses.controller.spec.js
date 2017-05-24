@@ -4,7 +4,7 @@ describe('ExportUserStatusesController', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, FusionClusterService, ExcelService, ResourceGroupService;
+  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, HybridServicesClusterService, ExcelService, ResourceGroupService;
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
@@ -15,7 +15,7 @@ describe('ExportUserStatusesController', function () {
             displayName: 'myService',
           }];
         },
-        getOrgId: sinon.stub().returns('5632-f806-org'),
+        getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632-f806-org'),
       };
       $provide.value('Authinfo', Authinfo);
     });
@@ -34,8 +34,8 @@ describe('ExportUserStatusesController', function () {
     scope = $rootScope.$new();
 
     ExcelService = {
-      createFile: sinon.stub(),
-      downloadFile: sinon.stub(),
+      createFile: jasmine.createSpy('createFile'),
+      downloadFile: jasmine.createSpy('downloadFile'),
     };
 
     var userStatusSummary = [{
@@ -65,9 +65,9 @@ describe('ExportUserStatusesController', function () {
         );
       },
     };
-    sinon.spy(USSService, 'getAllStatuses');
+    spyOn(USSService, 'getAllStatuses').and.callThrough();
 
-    FusionClusterService = {
+    HybridServicesClusterService = {
       getAll: function () {
         return $q.resolve([{
           id: 'a5140c4a-9f6e-11e5-a58e-005056b12db1',
@@ -80,7 +80,7 @@ describe('ExportUserStatusesController', function () {
         }]);
       },
     };
-    sinon.spy(FusionClusterService, 'getAll');
+    spyOn(HybridServicesClusterService, 'getAll').and.callThrough();
 
     UserDetails = {
       getUsers: function (stateInfos) {
@@ -90,8 +90,7 @@ describe('ExportUserStatusesController', function () {
         return ['whatever', 'foo', 'bar'];
       },
     };
-    sinon.spy(UserDetails, 'getUsers');
-    sinon.spy(ResourceGroupService, 'getAll');
+    spyOn(UserDetails, 'getUsers').and.callThrough();
 
     ResourceGroupService = {
       getAll: function () {
@@ -100,7 +99,7 @@ describe('ExportUserStatusesController', function () {
     };
 
     var $modalInstance = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
 
     vm = $controller('ExportUserStatusesController', {
@@ -112,7 +111,7 @@ describe('ExportUserStatusesController', function () {
       USSService: USSService,
       UserDetails: UserDetails,
       ExcelService: ExcelService,
-      FusionClusterService: FusionClusterService,
+      HybridServicesClusterService: HybridServicesClusterService,
       ResourceGroupService: ResourceGroupService,
     });
     vm.statusTypes = [{
@@ -140,14 +139,14 @@ describe('ExportUserStatusesController', function () {
     it('should call USSService.getStatuses', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(USSService.getAllStatuses.called).toBe(true);
+      expect(USSService.getAllStatuses).toHaveBeenCalled();
     });
-    it('should call FusionClusterService.getAll if there at least one clusterId', function () {
+    it('should call HybridServicesClusterService.getAll if there at least one clusterId', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(FusionClusterService.getAll.called).toBe(true);
+      expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
     });
-    it('should not call FusionClusterService.getAll if there no clusterIds', function () {
+    it('should not call HybridServicesClusterService.getAll if there no clusterIds', function () {
       USSService.getAll = function () {
         return $q.resolve([{
           userId: 'DEADBEEF',
@@ -158,18 +157,18 @@ describe('ExportUserStatusesController', function () {
       };
       vm.exportCSV();
       $rootScope.$apply();
-      expect(FusionClusterService.getAll.called).toBe(true);
+      expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
     });
     it('should call UserDetails.getUsers as much as it has to', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(UserDetails.getUsers.callCount).toBe(2);
+      expect(UserDetails.getUsers.calls.count()).toBe(2);
     });
     it('should call ExcelService.createFile and ExcelService.downloadFile', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(ExcelService.createFile.called).toBe(true);
-      expect(ExcelService.downloadFile.called).toBe(true);
+      expect(ExcelService.createFile).toHaveBeenCalled();
+      expect(ExcelService.downloadFile).toHaveBeenCalled();
     });
     it('should not actually finish export when exportCanceled is true', function () {
       vm.exportCanceled = true;

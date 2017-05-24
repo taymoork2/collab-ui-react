@@ -15,9 +15,11 @@
   </section>
 
   <section class="columns medium-6">
-    <div class="status" ng-if="$ctrl.model.status">
-      <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
-        {{$ctrl.model.status_}}
+    <div class="status">
+      <span ng-if="$ctrl.model.status">
+        <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
+          {{$ctrl.model.status_}}
+      </span>
     </div>
 
     <div ng-if="$ctrl.remedyTicketLoading && $ctrl.showRemedyTicket">

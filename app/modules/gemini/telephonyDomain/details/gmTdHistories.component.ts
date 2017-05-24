@@ -18,7 +18,6 @@ class GmTdHistories implements ng.IComponentController {
   /* @ngInject */
   public constructor(
     private gemService,
-    private $stateParams,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
@@ -28,8 +27,8 @@ class GmTdHistories implements ng.IComponentController {
     this.customerId = currentTD.customerId;
     this.ccaDomainId = currentTD.ccaDomainId;
 
-    if (_.has(this.$stateParams, 'info.histories')) {
-      this.model = _.get(this.$stateParams, 'info.histories', []);
+    this.model = this.gemService.getStorage('currentTdHistories');
+    if (this.model && this.model.length) {
       this._getDataFromHttp = false;
     }
   }
@@ -51,11 +50,18 @@ class GmTdHistories implements ng.IComponentController {
       return;
     }
 
+    const data = {
+      siteId: this.ccaDomainId,
+      objectID: this.domainName,
+      customerId: this.customerId,
+      actionFor: 'Telephony Domain',
+    };
+
     this.isLoading = true;
-    this.TelephonyDomainService.getHistories(this.customerId, this.ccaDomainId, this.domainName)
+    this.TelephonyDomainService.getHistories(data)
       .then((res) => {
         if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('error'); //TODO Wording
+          this.Notification.error('gemini.errorCode.loadError');
           return;
         }
 

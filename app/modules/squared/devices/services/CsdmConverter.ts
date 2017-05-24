@@ -2,6 +2,7 @@ import IDevice = csdm.IDevice;
 import IPlace = csdm.IPlace;
 import Dictionary = _.Dictionary;
 import IPlaceExtended = csdm.IPlaceExtended;
+import ICode = csdm.ICode;
 
 export class CsdmConverter {
   private helper: Helper;
@@ -22,6 +23,7 @@ export class CsdmConverter {
 
     updatedPlace.updateFrom(this.helper, this,
       {
+        url: updatedPlace.url,
         type: device.type || updatedPlace.type,
         cisUuid: device.cisUuid || device.uuid,
         displayName: device.displayName,
@@ -80,6 +82,7 @@ export class CsdmConverter {
 }
 
 class CloudberryDevice implements IDevice {
+  public state: { readableState: string };
   public isATA: boolean;
   public serial: string;
   public isOnline: boolean;
@@ -87,7 +90,6 @@ class CloudberryDevice implements IDevice {
   public canDelete: boolean;
   public canReportProblem: boolean;
   public supportsCustomTags: boolean;
-  public state: {};
   public cisUuid: string;
   public image: string;
   public sipUrl: string;
@@ -109,8 +111,8 @@ class CloudberryDevice implements IDevice {
   public photos: string[];
   public cssColorClass: string;
   public upgradeChannel: { label: string; value: string };
-  private readableActiveInterface: string;
-  private diagnosticsEvents: { type: string; message: string }[];
+  public readableActiveInterface: string;
+  public diagnosticsEvents: { type: string; message: string }[];
   private rsuKey: string;
   private hasRemoteSupport: boolean;
   private hasAdvancedSettings: boolean;
@@ -155,6 +157,11 @@ class CloudberryDevice implements IDevice {
 }
 
 class HuronDevice implements IDevice {
+  public state: { readableState: string };
+  public diagnosticsEvents: csdm.IDeviceDiagnosticEvent[];
+  public upgradeChannel: csdm.IDeviceUpgradeChannel;
+  public hasIssues: boolean;
+  public readableActiveInterface: string;
   public cssColorClass: string;
   public photos: string[];
   public product: string;
@@ -177,7 +184,6 @@ class HuronDevice implements IDevice {
   public tags: string[];
   public readonly type: string;
   public isHuronDevice: boolean;
-  public state: {};
   private huronId: string;
   private addOnModuleCount: number;
 
@@ -460,7 +466,7 @@ class Helper {
   }
 }
 
-class Code {
+class Code implements ICode {
   private expiryTime: any;
   private activationCode: string;
 

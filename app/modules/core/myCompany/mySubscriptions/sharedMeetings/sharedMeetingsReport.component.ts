@@ -226,11 +226,10 @@ class SharedMeetingsReportCtrl {
   }
 }
 
-angular.module('Core')
-  .component('sharedMeetingReport', {
-    templateUrl: 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html',
-    controller: SharedMeetingsReportCtrl,
-    bindings: {
-      siteUrl: '@',
-    },
-  });
+export class SharedMeetingComponent implements ng.IComponentOptions {
+  public templateUrl = 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html';
+  public controller = SharedMeetingsReportCtrl;
+  public bindings = {
+    siteUrl: '@',
+  };
+}

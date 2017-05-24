@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, FusionClusterService, MediaClusterServiceV2, Notification, cluster) {
+  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, HybridServicesClusterService, MediaClusterServiceV2, Notification, cluster) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -75,7 +75,7 @@
     };
 
     function defuseHost(host) {
-      FusionClusterService.deregisterEcpNode(host.id)
+      HybridServicesClusterService.deregisterEcpNode(host.id)
         .then(incrementSuccessDefuse(host))
         .catch(incrementFailureCount(host));
     }
@@ -142,7 +142,9 @@
         deleteCluster();
       } else {
         fromCluster = vm.cluster;
-        MediaClusterServiceV2.moveV2Host(host.id, fromCluster.id, toCluster.data.id).success(incrementSuccessCount(host, toCluster)).error(incrementFailureCount(host));
+        MediaClusterServiceV2.moveV2Host(host.id, fromCluster.id, toCluster.data.id)
+          .then(incrementSuccessCount(host, toCluster))
+          .catch(incrementFailureCount(host));
       }
     }
 

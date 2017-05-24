@@ -1,104 +1,133 @@
 /// <reference path="retentionSetting.controller.ts"/>
-namespace globalsettings {
 
-  describe('Controller: RetentionSettingController', () => {
+import { RetentionSettingController } from './retentionSetting.controller';
+import testModule from './index';
 
-    let controller: RetentionSettingController;
-    let $scope, $controller, $q;
-    let RetentionService, Authinfo;
-    let secondRetentionOption: string;
+describe('Controller: RetentionSettingController', () => {
 
-    beforeEach(angular.mock.module('Core'));
-    beforeEach(angular.mock.module('Huron'));
+  let controller: RetentionSettingController;
+  let $scope, $controller, $q;
+  let RetentionService, Authinfo, ITProPackService;
+  let secondRetentionOption: string;
 
-    beforeEach(inject(dependencies));
-    beforeEach(initSpies);
+  beforeEach(angular.mock.module(testModule));
 
-    function dependencies($rootScope, _$controller_, _$q_, _RetentionService_, _Authinfo_) {
-      $scope = $rootScope.$new();
-      $controller = _$controller_;
-      $q = _$q_;
-      RetentionService = _RetentionService_;
-      Authinfo = _Authinfo_;
-    }
+  beforeEach(inject(dependencies));
+  beforeEach(initSpies);
 
-    function initSpies() {
-      spyOn(RetentionService, 'getRetention');
-      spyOn(RetentionService, 'setRetention');
-    }
+  function dependencies($rootScope, _$controller_, _$q_, _RetentionService_, _ITProPackService_, _Authinfo_) {
+    $scope = $rootScope.$new();
+    $controller = _$controller_;
+    $q = _$q_;
+    RetentionService = _RetentionService_;
+    Authinfo = _Authinfo_;
+    ITProPackService = _ITProPackService_;
+  }
 
-    function initController() {
-      controller = $controller('RetentionSettingController', {
-        $scope: $scope,
-      });
-      $scope.$apply();
+  function initSpies() {
+    spyOn(RetentionService, 'getRetention').and.returnValue($q.resolve({
+      sparkDataRetentionDays: secondRetentionOption,
+    }));
+    spyOn(RetentionService, 'setRetention').and.returnValue($q.resolve());
+    spyOn(ITProPackService, 'hasITProPackPurchasedOrNotEnabled').and.returnValue($q.resolve(false));
+  }
 
-      secondRetentionOption = controller.retentionOptions[0].value; // We just pick one of them
-    }
+  function initController() {
+    controller = $controller(RetentionSettingController, {
+      $scope: $scope,
+    });
+    $scope.$apply();
+    secondRetentionOption = controller.retentionOptions[0].value; // We just pick one of them
+  }
 
-    describe('contructor()', () => {
+  describe('contructor()', () => {
 
-      describe('when getRetention is not provided with parameters', () => {
-        beforeEach(initFailureSpy);
-        beforeEach(initController);
+    describe('when getRetention is not provided with parameters', () => {
+      beforeEach(initFailureSpy);
+      beforeEach(initController);
 
-        it('should set dataloaded and no value for selected retention policy', () => {
-          expect(controller.dataLoaded).toBeTruthy();
-          expect(controller.selectedRetention).toBeFalsy();
-        });
-
-        function initFailureSpy() {
-          RetentionService.getRetention.and.returnValue($q.reject(''));
-        }
-      });
-
-      describe('when getRetention returns a value from the pre-defined options', () => {
-        beforeEach(initSpyWithRetention);
-        beforeEach(initController);
-
-        it('should set data loaded and retention policy to that option', () => {
-          expect(controller.dataLoaded).toBeTruthy();
-          expect(controller.selectedRetention).toBeTruthy();
-          expect(controller.selectedRetention.value).toBe(secondRetentionOption);
-        });
-
-        function initSpyWithRetention() {
-          RetentionService.getRetention.and.returnValue($q.when({
-            sparkDataRetentionDays: secondRetentionOption,
-          }));
-        }
+      it('should set dataloaded and no value for selected retention policy', () => {
+        expect(controller.dataLoaded).toBeTruthy();
+        expect(controller.initialRetention).toBe('');
       });
 
-      describe('when getRetention returns a value outside the pre-defined options', () => {
-        beforeEach(initSpyWithRetention);
-        beforeEach(initController);
+      function initFailureSpy() {
+        RetentionService.getRetention.and.returnValue($q.reject(''));
+      }
+    });
 
-        it('should set data loaded but should not set the retention policy', () => {
-          expect(controller.dataLoaded).toBeTruthy();
-          expect(controller.selectedRetention).toBeFalsy();
-        });
+    describe('when getRetention returns a value from the pre-defined options', () => {
+      beforeEach(initSpyWithRetention);
+      beforeEach(initController);
 
-        function initSpyWithRetention() {
-          RetentionService.getRetention.and.returnValue($q.when({
-            sparkDataRetentionDays: 45444,
-          }));
-        }
+      it('should set data loaded and retention policy to that option', () => {
+        expect(controller.dataLoaded).toBeTruthy();
+        expect(controller.initialRetention).toBe(secondRetentionOption);
+        expect(controller.selectedRetentionDefault.value).toBe(secondRetentionOption);
+        expect(controller.selectedRetentionMonths).toBe(undefined);
+        expect(controller.selectedRetentionType).toBe(controller.RETENTION_TYPES.DEFAULT);
       });
 
-      describe('when getRetention returns insufficient data', () => {
-        beforeEach(initSpyInsufficientResponse);
-        beforeEach(initController);
+      function initSpyWithRetention() {
+        RetentionService.getRetention.and.returnValue($q.resolve({
+          sparkDataRetentionDays: secondRetentionOption,
+        }));
+      }
+    });
 
-        it('should set data loaded and default value for the retention policy', () => {
-          expect(controller.dataLoaded).toBeTruthy();
-          expect(controller.selectedRetention).toBeTruthy();
-          expect(controller.selectedRetention.value).toBe(controller.RETENTION_DEFAULT);
-        });
+    describe('when getRetention returns a value outside the pre-defined options', () => {
+      beforeEach(initSpyWithRetention);
+      beforeEach(initController);
 
-        function initSpyInsufficientResponse() {
-          RetentionService.getRetention.and.returnValue($q.when({}));
-        }
+      it('should set data loaded but should round renetion policy to months', () => {
+        expect(controller.dataLoaded).toBeTruthy();
+        expect(controller.initialRetention).toBe('45444');
+        expect(controller.selectedRetentionMonths).toBe(1514);
+        expect(controller.selectedRetentionDefault).toEqual({ value: '', label: '' });
+        expect(controller.selectedRetentionType).toBe(controller.RETENTION_TYPES.CUSTOM_MONTH);
       });
+
+      function initSpyWithRetention() {
+        RetentionService.getRetention.and.returnValue($q.resolve({
+          sparkDataRetentionDays: '45444',
+        }));
+      }
+    });
+
+    describe('when getRetention returns a value \'indefnite\'', () => {
+      beforeEach(initSpyWithRetention);
+      beforeEach(initController);
+
+      it('should set data loaded with retentionType == indefinite and blank values selectionRetenitonMonths and ...Default', () => {
+        expect(controller.dataLoaded).toBeTruthy();
+        expect(controller.initialRetention).toBe('-1');
+        expect(controller.selectedRetentionMonths).toBe(undefined);
+        expect(controller.selectedRetentionDefault).toEqual({ value: '', label: '' });
+        expect(controller.selectedRetentionType).toBe(controller.RETENTION_TYPES.INDEFINITE);
+      });
+
+      function initSpyWithRetention() {
+        RetentionService.getRetention.and.returnValue($q.resolve({
+          sparkDataRetentionDays: '-1',
+        }));
+      }
+    });
+
+    describe('when getRetention returns insufficient data', () => {
+      beforeEach(initSpyInsufficientResponse);
+      beforeEach(initController);
+
+      //algendel: I don't think it's a right behavior. This way incorrect value will not get updated.
+      it('should set data loaded and default value for the retention policy', () => {
+        expect(controller.selectedRetentionDefault).toEqual({ value: '', label: '' });
+        expect(controller.selectedRetentionMonths).toEqual(undefined);
+        expect(controller.initialRetention).toBe(controller.RETENTION_DEFAULT);
+        expect(controller.selectedRetentionType).toBe(controller.RETENTION_TYPES.INDEFINITE);
+      });
+
+      function initSpyInsufficientResponse() {
+        RetentionService.getRetention.and.returnValue($q.resolve({}));
+      }
     });
 
     describe('updateRetention', () => {
@@ -106,21 +135,20 @@ namespace globalsettings {
       beforeEach(initController);
 
       it('should call RetentionService to save the value', () => {
-        controller.initialRetention = controller.retentionOptions[1];
-        controller.initialRetention.value = '180';
-        controller.selectedRetention = controller.retentionOptions[1];
-        controller.selectedRetention.value = '180';
-
+        controller.initialRetention = controller.retentionOptions[1].value;
+        controller.selectedRetentionDefault = controller.retentionOptions[1];
+        controller.selectedRetentionType = controller.RETENTION_TYPES.DEFAULT;
         controller.updateRetention();
 
         expect(RetentionService.setRetention)
           .toHaveBeenCalledWith(Authinfo.getOrgId(), '180');
+        expect(true).toBe(true);
       });
 
       function initSpyIncompleteResponse() {
-        RetentionService.getRetention.and.returnValue($q.when({}));
-        RetentionService.setRetention.and.returnValue($q.when({}));
+        RetentionService.getRetention.and.returnValue($q.resolve({}));
+        RetentionService.setRetention.and.returnValue($q.resolve({}));
       }
     });
   });
-}
+});

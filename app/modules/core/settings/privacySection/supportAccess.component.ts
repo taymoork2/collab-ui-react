@@ -1,6 +1,8 @@
-namespace globalsettings {
-  angular.module('Core').component('supportAccessSetting', {
-    controller: 'PrivacySettingController as vm',
-    templateUrl: 'modules/core/settings/privacySection/supportAccess.tpl.html',
-  });
+
+import { PrivacySettingController } from './privacy.settings.controller';
+
+export class SupportAccessSettingComponent implements ng.IComponentOptions {
+  public controller = PrivacySettingController;
+  public controllerAs = 'vm';
+  public templateUrl = 'modules/core/settings/privacySection/supportAccess.tpl.html';
 }

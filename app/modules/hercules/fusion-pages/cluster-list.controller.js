@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, EnterprisePrivateTrunkService, FusionClusterService, HybridServicesClusterStatesService, Notification, ResourceGroupService, WizardFactory, hasCucmSupportFeatureToggle, hasEnterprisePrivateTrunkingFeatureToggle) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, EnterprisePrivateTrunkService, HybridServicesClusterService, HybridServicesClusterStatesService, Notification, ResourceGroupService, WizardFactory, hasCucmSupportFeatureToggle, hasEnterprisePrivateTrunkingFeatureToggle) {
     var vm = this;
     var groupsCache = [];
     vm.displayedGroups = _.cloneDeep(groupsCache);
@@ -36,7 +36,7 @@
 
     function loadResources() {
       vm.loading = true;
-      FusionClusterService.getResourceGroups()
+      HybridServicesClusterService.getResourceGroups()
         .then(function (response) {
           var formattedData = formatDataForTheUI(response);
           groupsCache = formattedData;

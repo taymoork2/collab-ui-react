@@ -129,17 +129,17 @@ describe('Service: cbgService', function () {
     $httpBackend.expectGET(url).respond(200, mockData);
 
     cbgService.getNotes(customerId, groupId).then(function (res) {
-      expect(res.content.data.body.length).toBe(2);
+      expect(res.content.data.body.length).toBe(6);
     });
     $httpBackend.flush();
   });
 
   it('should return correct response info in getHistories', function () {
     var mockData = setData('content.data.body', preData.getHistories);
-    var url = UrlConfig.getGeminiUrl() + 'activityLogs/' + customerId + '/' + groupId + '/Callback%20Group/groupName';
-    $httpBackend.expectGET(url).respond(200, mockData);
+    var url = UrlConfig.getGeminiUrl() + 'activityLogs';
+    $httpBackend.expectPUT(url).respond(200, mockData);
 
-    cbgService.getHistories(customerId, groupId, 'groupName').then(function (res) {
+    cbgService.getHistories().then(function (res) {
       expect(res.content.data.body.length).toBe(3);
     });
     $httpBackend.flush();

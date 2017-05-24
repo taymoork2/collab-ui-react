@@ -15,14 +15,14 @@ export class PrivateTrunkPrereqService {
     this.dismissModal();
     this.domainModal = this.$modal.open({
       template: '<private-trunk-prereq class="modal-content"></private-trunk-prereq>',
-      type: 'small',
+      type: 'full',
     });
   }
 
-  public openSetupModal(currentStep: number = 1): void {
+  public openSetupModal(): void {
     this.dismissModal();
     this.domainModal = this.$modal.open({
-      template: '<private-trunk-setup class="modal-content" currentStepIndex=' + currentStep + '></private-trunk-setup>',
+      template: '<private-trunk-setup class="modal-content"></private-trunk-setup>',
       type: 'full',
       keyboard: false,
     });

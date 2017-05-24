@@ -141,7 +141,7 @@
                 <a class="edit-message-link" ng-click="updateIncidentCtrl.showEditMessage(message)"
                    translate="common.edit">
                 </a>
-                <a class="edit-message-link" ng-click="updateIncidentCtrl.deleteMessage(message)"
+                <a class="edit-message-link" ng-if="!updateIncidentCtrl.isIncidentStatusResolved()" ng-click="updateIncidentCtrl.deleteMessage(message)"
                    translate="common.delete">
                 </a>
               </div>

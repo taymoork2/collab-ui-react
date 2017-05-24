@@ -8,7 +8,7 @@ require('./_customer-overview.scss');
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialPstnService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialPstnService, TrialService, Userservice) {
 
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -40,6 +40,7 @@ require('./_customer-overview.scss');
     vm.isDeleting = false;
     vm.isOrgSetup = null;
     vm.isUpdateStatusEnabled = true;
+    vm.isProPackEnabled = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -59,15 +60,22 @@ require('./_customer-overview.scss');
     var QTY = _.toUpper($translate.instant('common.quantity'));
     var FREE = _.toUpper($translate.instant('customerPage.free'));
 
-    $q.all([FeatureToggleService.atlasCareTrialsGetStatus(), FeatureToggleService.atlasCareInboundTrialsGetStatus()])
-      .then(function (results) {
-        if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
-          vm.showRoomSystems = true;
-        }
-        var isCareEnabled = results[0];
-        var isAdvanceCareEnabled = results[1];
-        setOffers(isCareEnabled, isAdvanceCareEnabled);
-      });
+    vm.loadingCustomerPortal = true;
+
+    $q.all([
+      FeatureToggleService.atlasCareTrialsGetStatus(),
+      FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+      FeatureToggleService.atlasITProPackGetStatus(),
+    ]).then(function (results) {
+      if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
+        vm.showRoomSystems = true;
+      }
+      var isCareEnabled = results[0];
+      var isAdvanceCareEnabled = results[1];
+      vm.isProPackEnabled = results[2];
+
+      setOffers(isCareEnabled, isAdvanceCareEnabled);
+    });
 
 
     function setOffers(isCareEnabled, isAdvanceCareEnabled) {
@@ -219,33 +227,32 @@ require('./_customer-overview.scss');
         // non-admin users (e.g. sales admins) should not try to update their own licenses, but
         // instead launch the portal immediately
         if (!vm._helpers.canUpdateLicensesForSelf()) {
-          return vm._helpers.openCustomerPortal();
+          return;
         }
 
-        if (licIds.length > 0) {
-          return vm._helpers.updateUsers([emailObj], licIds).then(vm._helpers.openCustomerPortal);
+        if (licIds.length) {
+          return vm._helpers.updateUsers([emailObj], licIds);
         }
 
-        AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
-          var accountsLength = _.get(response, 'data.accounts.length', 0);
-          if (!accountsLength) {
-            return vm._helpers.openCustomerPortal();
-          }
-
+        return AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
           var updateUsersList = [];
-          for (var i = 0; i < accountsLength; i++) {
-            var account = response.data.accounts[i];
-            var lics = account.licenses;
-            var licIds = collectLicenseIdsForWebexSites(lics);
-            updateUsersList.push(vm._helpers.updateUsers([emailObj], licIds));
-          }
-
-          return $q.all(updateUsersList).then(vm._helpers.openCustomerPortal);
+          var accounts = _.get(response, 'data.accounts', []);
+          _.forEach(accounts, function (account) {
+            var accountLicIds = collectLicenseIdsForWebexSites(account.licenses);
+            if (accountLicIds.length) {
+              updateUsersList.push(vm._helpers.updateUsers([emailObj], licIds));
+            }
+          });
+          return $q.all(updateUsersList);
         });
       })
+      .then(vm._helpers.openCustomerPortal)
       .catch(function (response) {
         Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
         return response;
+      })
+      .finally(function () {
+        vm.loadingCustomerPortal = false;
       });
     }
 
@@ -253,19 +260,42 @@ require('./_customer-overview.scss');
       return Authinfo.isAdmin();
     }
 
-    // TODO: 'Userservice.updateUsers' needs to be heavily re-worked, so we shim the logic we need
-    //   to reject as-needed here instead to expedite the fix for ATLAS-1465.
+    // TODO: track analytic behavior and see if this is being used correctly or can be removed
     function updateUsers(userInfoList, licenses) {
       if (!vm._helpers.canUpdateLicensesForSelf()) {
         Notification.error('customerPage.updateLicensesAuthError');
         return $q.reject();
       }
 
-      return Userservice.updateUsers(userInfoList, licenses, null, 'updateUserLicense', _.noop);
+      return Userservice.updateUsers(userInfoList, licenses, null, 'updateUserLicense', _.noop)
+        .catch(function (response) {
+          trackPatchUsersResponse();
+          return $q.reject(response);
+        })
+        .then(function (response) {
+          trackPatchUsersResponse(response);
+          return response;
+        });
+    }
+
+    function trackPatchUsersResponse(response) {
+      var userResponses = _.get(response, 'data.userResponse');
+      var httpResponses = _.map(userResponses, 'httpStatus');
+      var hasError = _.isEmpty(httpResponses) || _.some(httpResponses, function (httpResponse) {
+        return httpResponse >= 400;
+      });
+      var hasSuccess = _.some(httpResponses, function (httpResponse) {
+        return httpResponse >= 200 && httpResponse < 300;
+      });
+      Analytics.trackEvent(Analytics.sections.PARTNER.eventNames.LAUNCH_CUSTOMER_PATCH_USERS, {
+        hasError: hasError,
+        hasSuccess: hasSuccess,
+        partnerUserId: Authinfo.getUserId(),
+        partnerOrgId: Authinfo.getUserOrgId(),
+      });
     }
 
     function openCustomerPortal() {
-      vm.loadingCustomerPortal = false;
       var openWindow = $window.open($state.href('login_swap', {
         customerOrgId: vm.customerOrgId,
         customerOrgName: vm.customerName,
@@ -377,6 +407,9 @@ require('./_customer-overview.scss');
                 });
               }
             });
+        })
+        .finally(function () {
+          vm.loadingCustomerPortal = false;
         });
     }
 

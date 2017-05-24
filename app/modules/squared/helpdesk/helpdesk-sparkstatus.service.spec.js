@@ -30,8 +30,9 @@ describe('Service: HelpdeskSparkStatusService', function () {
     }];
 
     beforeEach(function () {
-      sinon.stub(ReportsService, 'healthMonitor');
-      ReportsService.healthMonitor.yields(healthReport);
+      spyOn(ReportsService, 'healthMonitor').and.callFake(function (callback) {
+        callback(healthReport);
+      });
     });
 
     it("Gives list of all health components", function () {
@@ -93,8 +94,9 @@ describe('Service: HelpdeskSparkStatusService', function () {
         "success": false,
       };
 
-      sinon.stub(ReportsService, 'healthMonitor');
-      ReportsService.healthMonitor.yields(healthReport);
+      spyOn(ReportsService, 'healthMonitor').and.callFake(function (callback) {
+        callback(healthReport);
+      });
 
       Service.getHealthStatuses().then(function () {
         fail();

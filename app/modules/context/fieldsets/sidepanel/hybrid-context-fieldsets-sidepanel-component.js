@@ -18,7 +18,7 @@ require('./_fieldsets-sidepanel.scss');
   function ContextFieldsetsSidepanelCtrl(Analytics, ContextFieldsetsService, Notification, ModalService, $filter, $state, $translate) {
 
     var vm = this;
-    vm.inUse = false;
+    vm.inUse = true;
     vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldsetPage.notInUseTooltip');
     vm.hasDescription = false;
     vm.statusFetchFailure = false;

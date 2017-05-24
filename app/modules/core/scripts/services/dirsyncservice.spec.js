@@ -12,7 +12,7 @@ describe('DirSyncServiceOld', function () {
           getAdminServiceUrl: function () {
             return '/foo/';
           },
-          getOauth2Url: sinon.stub(),
+          getOauth2Url: jasmine.createSpy('Url'),
         };
         Authinfo = {
           getOrgId: function () {
@@ -20,7 +20,7 @@ describe('DirSyncServiceOld', function () {
           },
         };
         Log = {
-          debug: sinon.stub(),
+          debug: jasmine.createSpy('debug'),
         };
         $provide.value('Log', Log);
         $provide.value('UrlConfig', UrlConfig);
@@ -47,13 +47,13 @@ describe('DirSyncServiceOld', function () {
         )
         .respond(500);
 
-      var callback = sinon.stub();
+      var callback = jasmine.createSpy('callback');
       DirSyncServiceOld.getDirSyncStatus(callback);
 
       $httpBackend.flush();
 
-      expect(callback.callCount).toBe(1);
-      expect(callback.args[0][0].success).toBe(false);
+      expect(callback.calls.count()).toBe(1);
+      expect(callback.calls.argsFor(0)[0].success).toBe(false);
     });
 
     it('should set status to true when request succeed', function () {
@@ -66,14 +66,14 @@ describe('DirSyncServiceOld', function () {
           serviceMode: 'ENABLED',
         });
 
-      var callback = sinon.stub();
+      var callback = jasmine.createSpy('callback');
       DirSyncServiceOld.getDirSyncStatus(callback);
 
       $httpBackend.flush();
 
-      expect(callback.callCount).toBe(1);
-      expect(callback.args[0][0].success).toBe(true);
-      expect(callback.args[0][0].serviceMode).toBe('ENABLED');
+      expect(callback.calls.count()).toBe(1);
+      expect(callback.calls.argsFor(0)[0].success).toBe(true);
+      expect(callback.calls.argsFor(0)[0].serviceMode).toBe('ENABLED');
     });
 
   });

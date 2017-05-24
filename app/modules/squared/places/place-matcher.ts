@@ -19,17 +19,9 @@ export class PlaceMatcher implements IMatcher<IPlace> {
   }
 
   private termMatchesAnyFieldOfItem(term: string, item: IPlace): boolean {
-    return ['displayName']
+    return item && ['displayName', 'readableType', 'sipUrl']
         .some((field) => {
-          return item && _.includes(_.toLower(item[field]), term);
-        })
-      || ['readableType']
-        .some((field) => {
-          return item && _.includes(_.toLower(item[field]), term);
-        })
-      || ['sipUrl']
-        .some((field) => {
-          return item && _.includes(_.toLower(item[field]), term);
+          return _.includes(_.toLower(item[field]), term);
         });
   }
 }

@@ -2,7 +2,7 @@
 
 describe('ServiceDescriptor', function () {
   // load the service's module
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(require('./service-descriptor')));
 
   // instantiate service
   var Service, $httpBackend, authinfo;
@@ -10,9 +10,9 @@ describe('ServiceDescriptor', function () {
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       authinfo = {
-        getOrgId: sinon.stub(),
+        getOrgId: jasmine.createSpy('getOrgId'),
       };
-      authinfo.getOrgId.returns('12345');
+      authinfo.getOrgId.and.returnValue('12345');
       $provide.value('Authinfo', authinfo);
     });
   });

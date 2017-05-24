@@ -8,7 +8,7 @@ describe('Service: HuronAssignedLine', function () {
   beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1'),
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {

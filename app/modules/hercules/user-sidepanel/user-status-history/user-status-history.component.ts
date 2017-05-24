@@ -7,6 +7,7 @@ import find = require('lodash/find');
 import take = require('lodash/take');
 import some = require('lodash/some');
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 class UserStatusHistoryCtrl implements ng.IComponentController {
   public readonly numEntriesToShow = 20;
@@ -22,7 +23,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
     private Authinfo,
     private Notification: Notification,
     private HybridServicesI18NService: HybridServicesI18NService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private ResourceGroupService,
   ) {
     this.userId = (this.$stateParams.currentUser && this.$stateParams.currentUser.id) || this.$stateParams.currentPlace.cisUuid;
@@ -55,7 +56,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
 
   private setHomedConnectors() {
     if (some(this.historyEntries, entry => { return entry.payload.clusterId; })) {
-      this.FusionClusterService.getAll()
+      this.HybridServicesClusterService.getAll()
         .then(clusterList => {
           forEach(this.historyEntries, entry => {
             entry.homedCluster = find(clusterList, { id: entry.payload.clusterId });

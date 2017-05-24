@@ -8,7 +8,7 @@
       httpBackend = $httpBackend;
       httpBackend.when('GET', /^\w+.*/).respond({});
       redirectTargetPromise = {
-        then: sinon.stub(),
+        then: jasmine.createSpy('then'),
       };
       $state = {
         'params': {
@@ -18,7 +18,7 @@
           'fromClusters': true,
         },
         'modal': {
-          close: sinon.stub(),
+          close: jasmine.createSpy('close'),
         },
       };
       $stateParams = _$stateParams_;

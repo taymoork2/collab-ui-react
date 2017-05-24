@@ -128,8 +128,9 @@
               cs-input-size="medium-4"
               cs-input-messages="trial.validationMessages.care"
               ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K1)}}"
-              ng-required="trial.careTrial.enabled;"
-              ng-disabled="trial._helpers.careLicenseInputDisabledExpression()"
+              min="1"
+              ng-required="trial.careTrial.enabled"
+              ng-disabled="!trial.careTrial.enabled"
               ng-model-options="{'allowInvalid': true}">
           </div>
           <div class="cs-form-group row" ng-if="trial.showAdvanceCare">
@@ -145,8 +146,9 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-messages="trial.validationMessages.care"
               ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K2)}}"
-              ng-required="trial.advanceCareTrial.enabled;"
-              ng-disabled="trial._helpers.advanceCareLicenseInputDisabledExpression()"
+              min="1"
+              ng-required="trial.advanceCareTrial.enabled"
+              ng-disabled="!trial.advanceCareTrial.enabled"
               ng-model-options="{'allowInvalid': true}">
           </div>
         </div>
@@ -167,6 +169,8 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-messages="trial.validationMessages.roomSystem"
               ng-min="0" ng-max="{{::trial.validationData.roomSystemMax}}"
+              min="1"
+              ng-disabled="!trial.roomSystemTrial.enabled"
               ng-required="trial.roomSystemTrial.enabled">
           </div>
           <div ng-if="!trial.sparkBoardTrial.paid && trial.sbTrial" class="cs-form-group row">
@@ -183,6 +187,8 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-messages="trial.validationMessages.roomSystem"
               ng-min="0" ng-max="{{trial.validationData.roomSystemMax}}"
+              min="1"
+              ng-disabled="!trial.sparkBoardTrial.enabled"
               ng-required="trial.sparkBoardTrial.enabled">
           </div>
         </div>
@@ -225,7 +231,8 @@
           cs-input-messages="trial.validationMessages.licenseNumber"
           ng-required="trial.hasUserServices()"
           ng-disabled="!trial.hasUserServices()"
-          ng-min="{{trial._helpers.getMinTotalCare()}}" ng-max="{{ trial.validationData.trialLicenseMax }}">
+          min="0"
+          ng-min="{{trial._helpers.getMinUserLicenseRequired()}}" ng-max="{{ trial.validationData.trialLicenseMax }}">
       </div>
     </div>
     <!-- trial duration edit-->
@@ -267,9 +274,11 @@
     <!-- regional settings -->
     <trial-regional-settings
       ng-if="!trial.preset.call && (trial.roomSystemTrial.enabled || trial.callTrial.enabled)"
+      select-name="'defaultCountry'"
       call-trial-enabled="trial.callTrial.enabled"
       on-change-fn="trial.setDefaultCountry(country)"
-      default-country="trial.details.country">
+      default-country="trial.details.country"
+      show-error="trialForm.customerName.$touched || trialForm.customerEmail.$touched || trialForm.isValidLocation.$touched || trialForm.defaultCountry.$touched">
     </trial-regional-settings>
 
     <!-- context service trial -->

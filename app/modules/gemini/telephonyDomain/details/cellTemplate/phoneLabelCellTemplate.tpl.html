@@ -1,0 +1,22 @@
+<div ng-if="grid.appScope.isEdit"
+     class="ui-grid-cell-contents"
+     ng-class="{'error': row.entity.validation.label.invalid || row.entity.duplicatedRowValidation.invalid}"
+     tooltip-class="tn-error"
+     tooltip-append-to-body="true"
+     tooltip-is-open="row.entity.validation.label.show"
+     tooltip-html-unsafe="{{row.entity.validation.label.message}}">
+  <input id="{{row.uid}}-label"
+         placeholder="Phone Label"
+         cs-input
+         maxlength="85"
+         ng-disabled="grid.appScope.submitLoading"
+         type="text"
+         title="{{row.entity.label}}"
+         ng-change="grid.appScope.validateLabel(row, '{{row.entity.label}}')"
+         ng-model="row.entity.label">
+</div>
+<div ng-if="!grid.appScope.isEdit"
+     class="ui-grid-cell-contents read-only-text"
+     title="{{row.entity.label}}">
+  {{row.entity.label}}
+</div>

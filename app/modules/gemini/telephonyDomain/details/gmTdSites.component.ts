@@ -67,8 +67,7 @@ class GmTdSites implements ng.IComponentController {
       _.remove(this.sites, (obj: any) => {
         return obj.siteId === site.siteId;
       });
-      this.$scope.$emit('tdSitesUpdated', this.sites);
-      this.$scope.$emit('tdUpdated', this.sites);
+      this.$scope.$emit('detailWatch', { sitesLength: this.sites.length, isLoadingHistories: true });
     });
   }
 

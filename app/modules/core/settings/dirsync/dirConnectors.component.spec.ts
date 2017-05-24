@@ -1,4 +1,4 @@
-import testModule from './dirConnectors.component';
+import testModule from './index';
 
 describe('DirConnectors Component', () => {
 

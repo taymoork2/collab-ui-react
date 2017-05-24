@@ -30,28 +30,38 @@
           <h5 translate="supportPage.cards.tools.helpdeskSupport"></h5>
           <p class="content" translate="supportPage.cards.tools.launchHelpdeskDesc"></p>
           <a target="_blank">
-            <button id="toolsCardHelpdeskButton" ng-click="gotoHelpdesk()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewHelpdeskSupport"></button>
+            <button id="toolsCardHelpdeskButton" ng-click="gotoHelpdesk()" class="btn btn--people btn--medium" translate="supportPage.cards.tools.viewHelpdeskSupport"></button>
           </a>
         </div>
 
-        <br>
-
         <div ng-if="showEdiscoveryLink()">
+          <br>
           <h5 translate="supportPage.cards.tools.ediscovery"></h5>
           <p class="content" translate="supportPage.cards.tools.launchEdicoveryDesc"></p>
           <a target="_blank">
-            <button id="toolsCardEdiscoveryButton" ng-click="gotoEdiscovery()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewEdiscovery"></button>
+            <button id="toolsCardEdiscoveryButton" ng-click="gotoEdiscovery()" class="btn btn--people btn--medium" translate="supportPage.cards.tools.viewEdiscovery"></button>
           </a>
         </div>
 
-        <br>
-
         <div ng-show="showCdrCallFlowLink">
+          <br>
           <h5 translate="supportPage.cards.tools.cdrLogs"></h5>
           <p class="content" translate="supportPage.cards.tools.viewCdrCallFlowDesc"></p>
           <a>
-            <button id="toolsCardCdrCallFlowButton" ng-click="gotoCdrSupport()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewCdrCallFlow"></button>
+            <button id="toolsCardCdrCallFlowButton" ng-click="gotoCdrSupport()" class="btn btn--people btn--medium" translate="supportPage.cards.tools.viewCdrCallFlow"></button>
           </a>
+        </div>
+
+        <div ng-if="showPartnerManagementLink">
+          <br>
+          <h5 translate="supportPage.cards.tools.partnerManagement"></h5>
+          <p class="content" translate="supportPage.cards.tools.viewPartnerManagementDesc"></p>
+          <div>
+            <button id="toolsCardPartnerManagementButton" ng-click="gotoPartnerManagement()" class="btn btn--people btn--medium support-btn" translate="supportPage.cards.tools.viewPartnerManagement"></button>
+          </div>
+          <div class="support-btn-spacing">
+            <button id="toolsCardEditPartnerButton" ng-click="" ng-disabled="true" class="btn btn--people btn--medium support-btn" translate="supportPage.cards.tools.editPartner"></button>
+          </div>
         </div>
       </section>
     </article>

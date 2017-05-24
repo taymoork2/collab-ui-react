@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $state, $scope, $translate, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($rootScope, $state, $scope, $translate, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
@@ -221,7 +221,7 @@ require('./_overview.scss');
     }
 
     function findAnyUrgentUpgradeInHybridServices() {
-      FusionClusterService.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           // c_mgmt will be tested when it will have its own service page back
           var connectorsToTest = ['c_cal', 'c_ucmc'];

@@ -1,6 +1,6 @@
 import { Site, EmergencyCallbackNumber } from 'modules/huron/sites';
-import { IEmergencyNumberOption } from 'modules/huron/settings/settingsOptions.service';
-import { HuronSettingsService, E911_ADDRESS_PENDING } from 'modules/huron/settings';
+import { HuronSettingsService, E911_ADDRESS_PENDING, IEmergencyNumberOption } from 'modules/huron/settings/services';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 class EmergencyServiceNumberCtrl implements ng.IComponentController {
   public site: Site;
@@ -19,7 +19,7 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private HuronSettingsService: HuronSettingsService,
-    private TelephoneNumberService,
+    private PhoneNumberService: PhoneNumberService,
     private ModalService,
   ) {
     this.filterPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
@@ -43,7 +43,7 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
         this.selectedNumber = {
           value: emergencyCallbackNumber.currentValue.uuid,
           pattern: emergencyCallbackNumber.currentValue.pattern,
-          label: this.TelephoneNumberService.getDIDLabel(emergencyCallbackNumber.currentValue.pattern),
+          label: this.PhoneNumberService.getNationalFormat(emergencyCallbackNumber.currentValue.pattern),
         };
       } else {
         this.showMissingEmergencyCallbackNumber = true;

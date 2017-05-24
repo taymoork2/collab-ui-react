@@ -1,17 +1,20 @@
 import { SpeedDialService, ISpeedDial } from './speedDial.service';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
-import { HuronCustomerService } from 'modules/huron/customer/customer.service';
+
 interface IValidationMessages {
   required: string;
   pattern: string;
 }
+
 interface ITranslationMessages {
   placeholderText: string;
   helpText: string;
 }
+
 const SPEED_DIAL_LIMIT = 125;
 const inputs: string[] = ['external', 'uri', 'custom'];
+
 class SpeedDialCtrl implements ng.IComponentController {
   private ownerId: string;
   private ownerType: string;
@@ -27,16 +30,15 @@ class SpeedDialCtrl implements ng.IComponentController {
   private customTranslations: ITranslationMessages;
   private actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
+  private callDestInputs: string[];
+  private optionSelected: string = '';
+
   public ownerName: string = '';
   public isValid: boolean = false;
   public extension: string = '';
   public inputType: any;
   public callPickupEnabled: boolean = false;
- // private
-  private callDest: any;
-  private callDestInputs: string[];
   public form: ng.IFormController;
-  private optionSelected: string = '';
 
   /* @ngInject */
   constructor(
@@ -45,9 +47,7 @@ class SpeedDialCtrl implements ng.IComponentController {
     private dragularService,
     private Notification: Notification,
     private SpeedDialService: SpeedDialService,
-    private TelephoneNumberService,
-    private $timeout,
-    private HuronCustomerService: HuronCustomerService,
+    private $timeout: ng.ITimeoutService,
     private BlfInternalExtValidation,
     private Authinfo,
     private FeatureMemberService,
@@ -92,9 +92,9 @@ class SpeedDialCtrl implements ng.IComponentController {
     this.actionList = _.cloneDeep(this.actionListCopy);
   }
 
-  public extensionOwned() {
+  public extensionOwned(number: string): void {
     this.$timeout(() => {
-      this.extension = this.callDest.phoneNumber;
+      this.extension = number;
       if (this.form['$ctrl.callDestinationForm']) {
         this.optionSelected = this.form['$ctrl.callDestinationForm'].CallDestTypeSelect.$viewValue.input;
       }
@@ -139,11 +139,11 @@ class SpeedDialCtrl implements ng.IComponentController {
     }, 100);
   }
 
-  public setSpeedDial(model) {
-    this.callDest = model;
+  public setSpeedDial(number): void {
+    this.newNumber = number;
     this.isValid = false;
     this.callPickupEnabled = false;
-    this.extensionOwned();
+    this.extensionOwned(this.newNumber);
   }
 
   public save(): void {
@@ -154,20 +154,13 @@ class SpeedDialCtrl implements ng.IComponentController {
       sd.edit = false;
       sd.label = this.newLabel;
       sd.callPickupEnabled = this.callPickupEnabled;
-      this.newNumber = this.callDest.phoneNumber;
-      if (this.TelephoneNumberService.validateDID(this.callDest.phoneNumber)) {
-        this.newNumber = this.TelephoneNumberService.getDIDValue(this.callDest.phoneNumber);
-      } else if (this.callDest.phoneNumber.indexOf('@') === -1) {
-        this.newNumber = _.replace(this.callDest.phoneNumber, /-/g, '');
-      }
-      sd.number = this.newNumber.replace(/ /g, '');
+      sd.number = _.replace(this.newNumber, / /g, '');
     } else if (this.reordering) {
       this.updateIndex();
       this.copyList = undefined;
     }
 
     this.SpeedDialService.updateSpeedDials(this.ownerType, this.ownerId, this.speedDialList).then(() => {
-      this.callDest = 'undefined';
       this.isValid = false;
       this.reordering = false;
       this.editing = false;
@@ -201,7 +194,6 @@ class SpeedDialCtrl implements ng.IComponentController {
       }
       this.newLabel = '';
       this.newNumber = '';
-      this.callDest = 'undefined';
       this.callPickupEnabled = false;
       this.isValid = false;
     } else if (this.reordering) {
@@ -236,16 +228,12 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.editing = true;
       sd.edit = true;
       this.newLabel = sd.label;
+      this.newNumber = sd.number;
       this.callPickupEnabled = <boolean>sd.callPickupEnabled;
       if (sd.number) {
-        this.callDest = this.TelephoneNumberService.getDestinationObject(sd.number);
-        this.extensionOwned();
+        this.extensionOwned(sd.number);
       }
     }
-  }
-
-  public getRegionCode() {
-    return this.HuronCustomerService.getVoiceCustomer();
   }
 
   public delete(sd): void {

@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FmsOrgSettings, FusionClusterService, HybridServicesExtrasService, HybridServicesUtilsService, $modal, $state, ResourceGroupService) {
+  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, $modal, $state, ResourceGroupService) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -108,14 +108,14 @@
     }
 
     function preregisterCluster(clusterName) {
-      return FusionClusterService.preregisterCluster(clusterName, vm.releaseChannel, 'c_mgmt')
+      return HybridServicesClusterService.preregisterCluster(clusterName, vm.releaseChannel, 'c_mgmt')
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');
         });
     }
 
     function provisionConnector(connectorType, clusterId) {
-      return FusionClusterService.provisionConnector(clusterId, connectorType)
+      return HybridServicesClusterService.provisionConnector(clusterId, connectorType)
         .then(function () {
           return clusterId;
         })
@@ -142,7 +142,7 @@
     }
 
     function findAndPopulateExistingExpressways(connectorType) {
-      FusionClusterService.getAll()
+      HybridServicesClusterService.getAll()
         .then(getAllExpressways)
         .then(updateConnectorNameList)
         .then(_.partial(removeAlreadyProvisionedExpressways, connectorType))
@@ -203,7 +203,7 @@
 
     function provisionExpresswayWithNewConnector(clusterId, connectorType) {
       vm.loading = true;
-      FusionClusterService.provisionConnector(clusterId, connectorType)
+      HybridServicesClusterService.provisionConnector(clusterId, connectorType)
         .then(function () {
           vm.provisioningToExistingExpresswayCompleted = true;
           setHostNameForCluster(clusterId);
@@ -219,7 +219,7 @@
     }
 
     function setHostNameForCluster(clusterId) {
-      FusionClusterService.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (allClusters) {
           return _.find(allClusters, function (cluster) {
             return cluster.id === clusterId;

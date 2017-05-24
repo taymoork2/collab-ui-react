@@ -1,3 +1,5 @@
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+
 require('./_hybrid-data-security-cluster-settings.scss');
 
 class HybridDataSecurityClusterSettingsPageCtrl implements ng.IComponentController {
@@ -7,7 +9,7 @@ class HybridDataSecurityClusterSettingsPageCtrl implements ng.IComponentControll
   /* @ngInject */
   constructor(
     private $rootScope: ng.IRootScopeService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
@@ -18,7 +20,7 @@ class HybridDataSecurityClusterSettingsPageCtrl implements ng.IComponentControll
   }
 
   private loadCluster(clusterId) {
-    return this.FusionClusterService.get(clusterId)
+    return this.HybridServicesClusterService.get(clusterId)
       .then((cluster) => {
         this.cluster = cluster;
       });

@@ -1,7 +1,12 @@
 import { CmcUserData } from './cmcUserData';
 import { ICmcUser } from './cmcUser.interface';
-
+import { ICmcOrgStatusResponse } from './cmc.interface';
+import { ICmcUserStatusResponse } from './cmc.interface';
+import { ICmcIssue } from './cmc.interface';
 export class CmcService {
+
+  private dockerUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
+  private useDocker: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -10,30 +15,44 @@ export class CmcService {
     private Orgservice,
     private Config,
     private UrlConfig,
+    private CmcServiceMock,
     private $http: ng.IHttpService,
   ) {
   }
 
-  public setData(user: ICmcUser, data: CmcUserData) {
-    this.setMobileNumber(user, data.mobileNumber);
-    this.setEntitlement(user, data.entitled);
-    // TODO: Handler error properly
+  public setUserData(user: ICmcUser, data: CmcUserData) {
+
+    let mobileNumberSet: ng.IPromise<any> = this.setMobileNumber(user, data.mobileNumber);
+    let entitlementSet: ng.IPromise<any> = this.setEntitlement(user, data.entitled);
+    this.$q.all(
+      [
+        mobileNumberSet,
+        entitlementSet,
+      ],
+    )
+      .then((res: any) => {
+        this.$log.info('user data set:', res);
+      })
+      .catch((error: any) => {
+        // TODO: Handler error properly
+        this.$log.warn('Error setting user data:', error);
+      });
   }
 
-  public getData(user: ICmcUser): CmcUserData {
-    this.$log.warn('Getting data for user=', user);
-    let entitled = this.extractCmcEntitlement(user);
+  public getUserData(user: ICmcUser): CmcUserData {
+    this.$log.info('Getting data for user=', user);
+    let entitled = this.hasCmcEntitlement(user);
     let mobileNumber = this.extractMobileNumber(user);
     return new CmcUserData(mobileNumber, entitled);
   }
 
   // TODO: Find out when cmc settings should be unavailable...
-  public allowCmcSettings(orgId: string) {
+  public allowCmcSettings(orgId: string): ng.IPromise<boolean> {
     // based on org entitlements ?
     let deferred = this.$q.defer();
     this.Orgservice.getOrg((data, success) => {
       if (success) {
-        deferred.resolve(true);
+        deferred.resolve(this.hasCmcService(data.services));
         this.$log.debug('org data:', data);
       } else {
         deferred.resolve(false);
@@ -42,6 +61,45 @@ export class CmcService {
       basicInfo: true,
     });
     return deferred.promise;
+  }
+
+  // TODO Adapt to cmc status call
+  public preCheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
+    if (this.useDocker) {
+      let url: string = this.dockerUrl + `/organizations/${orgId}/status`;
+      return this.$http.get(url).then((response) => {
+        return response.data;
+      });
+    } else {
+      return this.CmcServiceMock.mockOrgStatus(orgId);
+    }
+  }
+
+  // TODO Preliminary poor mans user precheck
+  //      which only checks call aware entitlement.
+  //      It's wrapped in a promise to make it easier
+  //      to replace by CI or CMC requests
+  public preCheckUser(user: ICmcUser): ng.IPromise<ICmcUserStatusResponse> {
+    let status: string = this.hasCallAwareEntitlement(user) ? 'ok' : 'error';
+    let issues: ICmcIssue[] = [];
+    if (status === 'error') {
+      issues.push({
+        code: 5000, // TODO: Define 'official' code
+        message: 'User is not entitled for call aware', // TODO: Translation
+      });
+    }
+
+    let res = {
+      status: status,
+      issues: issues,
+    };
+    return this.$q.resolve(res);
+  }
+
+  private hasCmcService(services: string[]): boolean {
+    return !!_.find(services, (service) => {
+      return service === this.Config.entitlements.cmc;
+    });
   }
 
   private extractMobileNumber(user: ICmcUser): any {
@@ -55,40 +113,25 @@ export class CmcService {
     }
   }
 
-  private extractCmcEntitlement(user: ICmcUser): boolean {
-    return _.includes(user.entitlements, 'cmc');
+  private hasCmcEntitlement(user: ICmcUser): boolean {
+    return _.includes(user.entitlements, this.Config.entitlements.cmc);
   }
 
-  private setEntitlement(user: ICmcUser, entitle: boolean) {
+  private hasCallAwareEntitlement(user: ICmcUser): boolean {
+    return _.includes(user.entitlements, this.Config.entitlements.fusion_uc); //'squared-fusion-uc');
+  }
 
+  private setEntitlement(user: ICmcUser, entitle: boolean): IPromise<any> {
     let url = this.UrlConfig.getAdminServiceUrl() + 'organization/' + user.meta.organizationID + '/users/' + user.id + '/actions/onboardcmcuser/invoke';
     //let url = 'http://localhost:8080/atlas-server/admin/api/v1/' + 'organization/' + user.meta.organizationID + '/users/' + user.id + '/actions/onboardcmcuser/invoke';
     if (!entitle) {
       url += '?removeEntitlement=true';
     }
     this.$log.info('Updating cmc entitlement using url:', url);
-    this.$http.post(url, {})
-      .then((res) => {
-        this.$log.info('cmc entitlement request result:', res);
-      })
-      .catch((error) => {
-        this.$log.warn('cmc entitlement request failed:', error);
-      });
+    return this.$http.post(url, {});
   }
 
-  private updateUserData(user: ICmcUser, userMobileData) {
-    let scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
-    this.$log.info('Updating user', user);
-    this.$log.info('User data', userMobileData);
-    this.$log.info('Using scim url:', scimUrl);
-    return this.$http({
-      method: 'PATCH',
-      url: scimUrl,
-      data: userMobileData,
-    });
-  }
-
-  private setMobileNumber(user: ICmcUser, number: string) {
+  private setMobileNumber(user: ICmcUser, number: string): IPromise<any>  {
     let userMobileData = {
       schemas: this.Config.scimSchemas,
       phoneNumbers: [
@@ -99,13 +142,15 @@ export class CmcService {
       ],
     };
 
-    return this.updateUserData(user, userMobileData)
-      .then((res) => {
-        this.$log.info('User updated with new data:', res);
-      })
-      .catch((error) => {
-        // TODO: what to do when mobile number update fails
-        this.$log.warn('Update user failed:', error);
-      });
+    let scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
+    this.$log.info('Updating user', user);
+    this.$log.info('User data', userMobileData);
+    return this.$http({
+      method: 'PATCH',
+      url: scimUrl,
+      data: userMobileData,
+    });
+
   }
+
 }

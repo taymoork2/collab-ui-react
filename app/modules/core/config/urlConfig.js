@@ -70,7 +70,7 @@
     },
     SparkDomainManagementUrl: {
       dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      cfe: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
       integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     },
@@ -140,6 +140,18 @@
       integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1',
     },
+    SunlightPickNotificationUrl: {
+      dev: 'https://notifs.devus1.ciscoccservice.com/notifs/v1/publish',
+      cfe: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
+      integration: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
+      prod: 'https://notifs.produs1.ciscoccservice.com/notifs/v1/publish',
+    },
+    SunlightPushNotificationUrl: {
+      dev: 'https://ar.devus1.ciscoccservice.com/ar/v1/publish/taskState',
+      cfe: 'https://ar.appstaging.ciscoccservice.com/ar/v1/publish/taskState',
+      integration: 'https://ar.appstaging.ciscoccservice.com/ar/v1/publish/taskState',
+      prod: 'https://ar.produs1.ciscoccservice.com/ar/v1/publish/taskState',
+    },
     CcfsUrl: {
       dev: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightdev&callbackUrl=',
       cfe: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
@@ -157,12 +169,6 @@
       cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
       integration: 'https://hades.huron-int.com/api/v1/elasticsearch/',
       prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
-    },
-    BmmpUrl: {
-      dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
-      cfe: 'https://bmmp.ciscospark.com/api/v1',
-      integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
-      prod: 'https://bmmp.ciscospark.com/api/v1',
     },
     GeminiUrl: {
       dev: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
@@ -190,7 +196,7 @@
     },
     CccUrl: {
       dev: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
-      cfe: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
+      cfe: 'https://calendar-cloud-connector-loada.ciscospark.com/api/v1',
       integration: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
       prod: 'https://calendar-cloud-connector-a.wbx2.com/api/v1',
     },
@@ -202,13 +208,13 @@
     },
     HybridEncryptionServiceUrl: {
       dev: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
-      cfe: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
+      cfe: 'https://encryption-loada.ciscospark.com/encryption/api/v1',
       integration: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
       prod: 'https://encryption-a.wbx2.com/encryption/api/v1',
     },
     L2sipUrl: {
       dev: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
-      cfe: 'https://l2sip-integration-web.wbx2.com/l2sip/api/v1',
+      cfe: 'https://l2sip-loada.ciscospark.com/api/v1',
       integration: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1', // Tool is not working in integration, we need to point to prod for now.
       prod: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
     },
@@ -224,7 +230,18 @@
       integration: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
-
+    WebexMetricsUrl: {
+      dev: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
+      cfe: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
+      integration: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
+      prod: '',
+    },
+    SparkMetricsUrl: {
+      dev: 'https://ds2-win2012-01/',
+      cfe: 'https://ds2-win2012-01/',
+      integration: 'https://ds2-win2012-01/',
+      prod: '',
+    },
     // urls same for all environments
 
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
@@ -241,11 +258,6 @@
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
-    MeetingUsageUrl: 'https://ds2-qlikdemo.cisco.com/single/?appid=226f935e-50eb-4d67-8a22-4f3ea9a4f499&sheet=FyVmGa',
-    JoinMeetingTimeUrl: 'https://10.140.50.27/single/?appid=0983ec7e-fc3d-4a1e-b4ea-116b239ce3f1&sheet=461c49d5-3bbc-4fec-b06b-96a762a44f1d',
-    WebexReportInMashupUrl: 'https://ds2-qlikdemo.cisco.com/extensions/webex-report-allsite/webex-report-allsite.html',
-    WebexReportInQlikAppUrl: 'http://10.194.245.72:8080/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/singlesitereport/basic_webex_report_vSiteId/599/jacao/ds2-win2012-01',
-    SparkReportInMashupUrl: 'https://ds2-qlikdemo.cisco.com/extensions/spark_mashup/spark_mashup.html',
   };
 
   module.exports = angular

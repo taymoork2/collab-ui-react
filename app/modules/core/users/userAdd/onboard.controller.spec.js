@@ -6,13 +6,14 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule);
-    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup', 'LogMetricsService');
+    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'MessengerInteropService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup', 'LogMetricsService');
     initDependencySpies.apply(this);
   }
 
   function initController() {
     this.initController('OnboardCtrl', {
       $scope: this.$scope,
+      $state: this.$state,
     });
   }
 
@@ -67,11 +68,13 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return this.$q.when(this.mock.headers);
+        return this.$q.resolve(this.mock.headers);
       } else {
-        return this.$q.when({});
+        return this.$q.resolve({});
       }
     }.bind(this));
+
+    spyOn(this.MessengerInteropService, 'hasAssignableMessageOrgEntitlement');
 
     spyOn(this.Notification, 'notify');
 
@@ -83,25 +86,25 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     spyOn(this.TelephonyInfoService, 'getInternalNumberPool').and.returnValue(this.mock.internalNumbers);
-    spyOn(this.TelephonyInfoService, 'loadInternalNumberPool').and.returnValue(this.$q.when(this.mock.internalNumbers));
+    spyOn(this.TelephonyInfoService, 'loadInternalNumberPool').and.returnValue(this.$q.resolve(this.mock.internalNumbers));
     spyOn(this.TelephonyInfoService, 'getExternalNumberPool').and.returnValue(this.mock.externalNumbers);
-    spyOn(this.DialPlanService, 'getDialPlan').and.returnValue(this.$q.when({
+    spyOn(this.DialPlanService, 'getDialPlan').and.returnValue(this.$q.resolve({
       extensionGenerated: 'false',
     }));
 
-    spyOn(this.TelephonyInfoService, 'loadExternalNumberPool').and.returnValue(this.$q.when(this.mock.externalNumbers));
-    spyOn(this.TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue(this.$q.when(this.mock.externalNumberPoolMap));
+    spyOn(this.TelephonyInfoService, 'loadExternalNumberPool').and.returnValue(this.$q.resolve(this.mock.externalNumbers));
+    spyOn(this.TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue(this.$q.resolve(this.mock.externalNumberPoolMap));
 
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.mock.getMyFeatureToggles);
-    spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.when(this.mock.sites));
-    spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.when(this.mock.sites));
+    spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.resolve(this.mock.sites));
+    spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.resolve(this.mock.sites));
 
     spyOn(this.Userservice, 'onboardUsers');
     spyOn(this.Userservice, 'bulkOnboardUsers');
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.mock.getMigrateUsers);
     spyOn(this.Userservice, 'updateUsers');
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
-    spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.when({}));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.mock.getLicensesUsage));
+    spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.resolve({}));
   }
 
   function onboardUsersResponse(statusCode, responseMessage) {
@@ -233,7 +236,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('setLicenseAvailabity', function () {
+  describe('setLicenseAvailability', function () {
     beforeEach(initController);
 
     it('Should have been initialized', function () {
@@ -1238,6 +1241,30 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.$scope.manageUsers).toBeTruthy();
       this.$scope.goToManageUsers();
       expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+    });
+  });
+
+  describe('showMessengerInteropToggle():', function () {
+    it('should return true only if both "$state.current.data.showMessengerInteropToggle" and "MessengerInteropService.hasAssignableMessageOrgEntitlement()" are true', function () {
+      _.set(this.$state, 'current.data.showMessengerInteropToggle', false);
+      initController.apply(this);
+      this.$scope.$apply();
+      expect(this.$scope.showMessengerInteropToggle()).toBe(false);
+      expect(this.MessengerInteropService.hasAssignableMessageOrgEntitlement).not.toHaveBeenCalled();
+
+      _.set(this.$state, 'current.data.showMessengerInteropToggle', true);
+      this.MessengerInteropService.hasAssignableMessageOrgEntitlement.and.returnValue(false);
+      initController.apply(this);
+      this.$scope.$apply();
+      expect(this.$scope.showMessengerInteropToggle()).toBe(false);
+      expect(this.MessengerInteropService.hasAssignableMessageOrgEntitlement).toHaveBeenCalled();
+
+      _.set(this.$state, 'current.data.showMessengerInteropToggle', true);
+      this.MessengerInteropService.hasAssignableMessageOrgEntitlement.and.returnValue(true);
+      initController.apply(this);
+      this.$scope.$apply();
+      expect(this.$scope.showMessengerInteropToggle()).toBe(true);
+      expect(this.MessengerInteropService.hasAssignableMessageOrgEntitlement).toHaveBeenCalled();
     });
   });
 

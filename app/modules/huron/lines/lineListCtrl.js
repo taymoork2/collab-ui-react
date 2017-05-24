@@ -250,21 +250,23 @@
         }
       });
 
+    FeatureToggleService.supports(FeatureToggleService.features.huronPstn)
+      .then(function (supported) {
+        vm.hPstn = supported;
+      });
+
     function showProviderDetails() {
-      LineListService.isResellerExists().then(function (response) {
-        if (response) {
-          return $state.go('pstnSetup', {
-            customerId: Authinfo.getOrgId(),
-            customerName: Authinfo.getOrgName(),
-            customerEmail: Authinfo.getCustomerAdminEmail(),
-            customerCommunicationLicenseIsTrial: Authinfo.getLicenseIsTrial("COMMUNICATION", 'ciscouc'),
-            customerRoomSystemsLicenseIsTrial: Authinfo.getLicenseIsTrial("SHARED_DEVICES", false),
-          });
-        } else {
-          Notification.error('pstnSetup.resellerMissingError');
-        }
+      var state = vm.hPstn ? 'pstnWizard' : 'pstnSetup';
+      return $state.go(state, {
+        customerId: Authinfo.getOrgId(),
+        customerName: Authinfo.getOrgName(),
+        customerEmail: Authinfo.getCustomerAdminEmail(),
+        customerCommunicationLicenseIsTrial: Authinfo.getLicenseIsTrial("COMMUNICATION", 'ciscouc'),
+        customerRoomSystemsLicenseIsTrial: Authinfo.getLicenseIsTrial("SHARED_DEVICES", false),
       });
     }
+
+
     getLineList();
   }
 })();

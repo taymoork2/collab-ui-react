@@ -113,10 +113,7 @@
       }
     }
 
-    function populateUiModel() {
-      if (!vm.isMediaUploadToggle) {
-        vm.messageInput = vm.actionEntry.getValue();
-      }
+    function populateVoice() {
 
       vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 
@@ -125,6 +122,13 @@
 
       vm.voiceBackup = vm.voiceOption;
       setVoiceOptions();
+      vm.actionEntry.setVoice(vm.voiceOption.value);
+    }
+
+    function populateUiModel() {
+      if (!vm.isMediaUploadToggle) {
+        vm.messageInput = vm.actionEntry.getValue();
+      }
 
       var menu = vm.menuEntry;
       if (menu.entries) {
@@ -184,17 +188,10 @@
             header.setVoice(vm.voiceOption.value);
 
             vm.updateVoiceOption(vm.menuEntry);
-            return;
+            break;
           }
         case sayMessageType.MENUKEY:
-          {
-          // add the default repeat menu action as needed
-            if (!getRepeatAction(vm.menuEntry.entries[$scope.menuKeyIndex])) {
-              var repeatAction = AutoAttendantCeMenuModelService.newCeActionEntry(properties.REPEAT_NAME, '');
-              vm.menuEntry.entries[$scope.menuKeyIndex].addAction(repeatAction);
-            }
-            return undefined;
-          }
+          break;
         case sayMessageType.ACTION:
         // no special handling
       }
@@ -224,15 +221,6 @@
       if (menuEntry && menuEntry.actions && menuEntry.actions.length > 0) {
         var action = _.find(menuEntry.actions, function (action) {
           return _.indexOf(properties.NAME, action.name) >= 0;
-        });
-        return action;
-      }
-    }
-
-    function getRepeatAction(menuEntry) {
-      if (menuEntry && menuEntry.actions && menuEntry.actions.length > 0) {
-        var action = _.find(menuEntry.actions, function (action) {
-          return action.name === properties.REPEAT_NAME;
         });
         return action;
       }
@@ -314,8 +302,25 @@
       }
     }
 
+    function hasRepeatAction(menuEntry) {
+      var hasRepeat = false;
+      _.forEach(menuEntry.actions, function (action) {
+        if (_.isEqual(action.name, properties.REPEAT_NAME)) {
+          hasRepeat = true;
+        }
+      });
+      return hasRepeat;
+    }
+
+    function addDefaultAction() {
+      if (!hasRepeatAction(vm.menuEntry.entries[$scope.menuKeyIndex])) {
+        var repeatAction = AutoAttendantCeMenuModelService.newCeActionEntry(properties.REPEAT_NAME, '');
+        vm.menuEntry.entries[$scope.menuKeyIndex].addAction(repeatAction);
+      }
+    }
+
     function updateQueueSettingsLanguageVoice(menu) {
-      _.each(menu.entries, function (entry) {
+      _.forEach(menu.entries, function (entry) {
         var queueSettings = _.get(entry, 'actions[0].queueSettings');
         if (queueSettings) {
           queueSettings.language = AALanguageService.getLanguageCode(vm.languageOption);
@@ -337,6 +342,10 @@
       //and is also feature toggled
       vm.isMediaUploadToggle = AACommonService.isMediaUploadToggle();
       setActionEntry();
+      populateVoice();
+      if (vm.sayMessageType === sayMessageType.MENUKEY) {
+        addDefaultAction();
+      }
       populateUiModel();
     }
 

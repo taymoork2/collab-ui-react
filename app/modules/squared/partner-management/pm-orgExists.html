@@ -1,0 +1,44 @@
+<div class="partner-management-main centered" tabindex="0">
+    <div class="row">
+      <div class="main-heading columns medium-12 orgExists-heading">
+        <h2 translate="partnerManagement.orgExists.heading"></h2>
+        <div class="desc-panel">
+            <h5>{{'partnerManagement.orgExists.desc' | translate:vm.data }}</h5>
+        </div>
+        <div class="columns medium-10 card-panel">
+            <cs-card class="full">
+                <article class="card-article">
+                    <header class="card-header">
+                        <span class="card-header">{{vm.data.name}}</span>
+                    </header>
+                    <section>
+                        <div ng-if="vm.showSpinner" class="text-center card-spinner">
+                          <span class="pm-spinner--large">
+                            <i class="icon icon-spinner"></i>
+                          </span>
+                        </div>
+                        <div ng-if="!vm.showSpinner" class="card-details">
+                            <div class="row body-small pm-16" ng-repeat="detail in vm.data.orgDetails">
+                                <div class="columns medium-4">
+                                    {{detail.label}}
+                                </div>
+                                <div class="columns medium-8">
+                                    {{detail.value}}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </article>
+            </cs-card>
+        </div>
+      </div>
+      <hr class="pm-rule">
+      <div class="row">
+        <div class="columns medium-12 text-right">
+            <button cs-btn id="done" type="button" ng-click="vm.done()" class="btn btn--primary pm-btn" loading="vm.isLoading" ng-disabled="vm.showSpinner">
+                <span translate="partnerManagement.done"></span>
+            </button>
+        </div>
+      </div>
+    </div>
+</div>

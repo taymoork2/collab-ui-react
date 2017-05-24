@@ -4,9 +4,9 @@ import { CertService } from 'modules/hercules/services/cert-service';
 import { Notification } from 'modules/core/notifications';
 
 export class PrivateTrunkCertificateService {
-  private formattedCertList: Array<IformattedCertificate>;
+  private formattedCertList: IformattedCertificate[];
   private isImporting: boolean = false;
-  private uploadedCertIds: Array<string> = [];
+  private uploadedCertIds: string[] = [];
 
   /* @ngInject */
   constructor(
@@ -37,7 +37,7 @@ export class PrivateTrunkCertificateService {
     }
     return this.CertService.getCerts(this.Authinfo.getOrgId())
     .then( res => {
-      let certificates: Array<ICertificate> = res || [];
+      let certificates: ICertificate[] = res || [];
       this.formattedCertList = this.CertificateFormatterService.formatCerts(certificates);
       this.isImporting = false;
       return ({ formattedCertList: this.formattedCertList, isImporting: this.isImporting });
@@ -55,10 +55,23 @@ export class PrivateTrunkCertificateService {
     })
       .result.then(() => {
         return this.CertService.deleteCert(certId)
-        .then(() => { return this.getUpdatedCertInfo(certId);
-        }).catch(error => {
-          this.Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotDelete');
+          .then(() => { return this.getUpdatedCertInfo(certId);
+          }).catch(error => {
+            this.Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotDelete');
+          });
+      });
+  }
+
+  public deleteCerts(): ng.IPromise<any> {
+    return this.$modal.open({
+      templateUrl: 'modules/hercules/private-trunk/private-trunk-certificate/private-trunk-all-certificates-delete-confirm.html',
+      type: 'dialog',
+    })
+      .result.then(() => {
+        _.forEach(this.formattedCertList, (cert) => {
+          this.CertService.deleteCert(cert.certId);
         });
+        this.formattedCertList = [];
       });
   }
 

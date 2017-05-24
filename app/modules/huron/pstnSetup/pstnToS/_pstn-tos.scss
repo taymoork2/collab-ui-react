@@ -12,7 +12,9 @@
 
   .logo {
     width: 100%;
-    padding-bottom: 3.5rem;
+    max-width: rem-calc(320px);
+    max-height: rem-calc(130px);
+    padding-bottom: 2.5rem;
   }
 
   .noticeTitle,

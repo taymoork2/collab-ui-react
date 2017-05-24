@@ -94,7 +94,7 @@ export class HybridServicesUtilsService {
    * @param serviceType1 service id
    * @param serviceType2 service id
    */
-  public hybridServicesComparator(serviceType1: HybridServiceId, serviceType2: HybridServiceId): -1 | 0 | 1 {
+  public hybridServicesComparator = (serviceType1: HybridServiceId, serviceType2: HybridServiceId): -1 | 0 | 1 => {
     if (serviceType1 === serviceType2) {
       return 0;
     }

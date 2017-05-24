@@ -6,11 +6,17 @@
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <button class="btn btn--people"
-        ng-click="contextFields.createField()"
-        ng-disabled="contextFields.fetchFailed"
-        ng-if="contextFields.hasContextDictionaryEditFeatureToggle"
-        translate="common.new"></button>
+      <span ng-if="!contextFields.showNew" tooltip-class="context-tooltip" tooltip="{{contextFields.maxLimitReachedTooltip}}" tooltip-placement="left">
+        <button class="btn btn--people"
+          ng-disabled="contextFields.fetchFailed || !contextFields.showNew"
+          translate="common.new"></button>
+      </span>
+      <span ng-if="contextFields.showNew">
+        <button class="btn btn--people"
+                ng-click="contextFields.createField()"
+                ng-disabled="contextFields.fetchFailed || !contextFields.showNew"
+                translate="common.new"></button>
+      </span>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="row grid">

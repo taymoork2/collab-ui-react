@@ -1,11 +1,66 @@
 <div class="setting">
   <div class="large-9 columns">
-    <cs-select id="retentionTimeSelector"
-               name="retentionTime"
-               ng-model="vm.selectedRetention"
-               options="vm.retentionOptions"
-               on-change-fn="vm.updateRetention()"
-               is-disabled="!vm.dataLoaded">
-    </cs-select>
+    <div class="form-group">
+      <form name="vm.retentionSettings">
+      <div class="cs-radio-group">
+        <input
+          cs-input
+          type="radio"
+          ng-model="vm.selectedRetentionType"
+          id="retention--settings-radio-indefinite"
+          name="retentionSettingsRadioIndefinite"
+          ng-value="vm.RETENTION_TYPES.INDEFINITE"
+          ng-change="vm.resetSelectedRetention()"
+          cs-input-label="{{::'globalSettings.retention.indefiniteRetentionOption'| translate}}">
+
+        <input
+          cs-input
+          type="radio"
+          ng-model="vm.selectedRetentionType"
+          id="retention--settings-radio-default"
+          name="retentionSettingsRadioDefault"
+          ng-value="vm.RETENTION_TYPES.DEFAULT"
+          ng-disabled="!vm.proPackPurchased"
+          ng-change="vm.resetSelectedRetention()"
+          cs-input-label="{{::'globalSettings.retention.defaultRetentionOption'| translate}}">
+        <div class="cs-input-group cs-input-input medium-8 cs-input--nested-1">
+          <cs-select id="retention--settings-retentionTimeSelector"
+            name="retentionSettingsRetentionTime"
+            valuefield="value" labelfield="label"
+            ng-model="vm.selectedRetentionDefault"
+            options="vm.retentionOptions"
+            on-change-fn="vm.updateRetention()"
+            ng-required="vm.proPackPurchased && vm.selectedRetentionType==vm.RETENTION_TYPES.DEFAULT"
+            is-disabled="!vm.dataLoaded || vm.selectedRetentionType!=vm.RETENTION_TYPES.DEFAULT">
+          </cs-select>
+        </div>
+        <input
+          cs-input
+          type="radio"
+          ng-model="vm.selectedRetentionType"
+          id="retention--settings-radio-custom"
+          name="retentionSettingsRadioCustom"
+          ng-value="vm.RETENTION_TYPES.CUSTOM_MONTH"
+          ng-disabled="!vm.proPackPurchased"
+          ng-change="vm.resetSelectedRetention()"
+          cs-input-label="{{:: 'globalSettings.retention.customRetentionOption'| translate}}">
+        <div class="cs-input-group cs-input-input medium-10 cs-input--nested-1">
+          <input type="number" cs-input ng-model="vm.selectedRetentionMonths"
+              id="retention--settings-retentionMonths" name="retentionSettingsRetentionMonths"
+              ng-disabled="vm.selectedRetentionType!=vm.RETENTION_TYPES.CUSTOM_MONTH || !vm.proPackPurchased"
+              ng-required="vm.proPackPurchased && vm.selectedRetentionType==vm.RETENTION_TYPES.CUSTOM_MONTH"
+              cs-input-group-size="medium-10"
+              cs-input-size="medium-3"
+              max="120"
+              ng-max="120"
+              ng-min="1"
+              cs-input-messages="vm.validationMessages.month"
+              ng-change="vm.updateRetention()"
+              ng-model-options="{updateOn: 'default blur', debounce: { default: 1000, blur: 0 } }"
+              cs-input-secondary-label="{{::'globalSettings.retention.customRetentionMonths' | translate}}">
+        </div>
+        </form>
+      </div>
+    </div>
   </div>
 </div>

@@ -9,13 +9,13 @@ describe('Component: callForward', () => {
   const CALL_FWD_BUSY_VOICEMAIL = 'input#internalDirectVoicemail';
   const CALL_FWD_EXTERNAL_VOICEMAIL = 'input#externalDirectVoicemail';
   const CALL_FWD_BUSY_EXT_CHECK = 'input#ckForwardExternalCalls';
-  const CALL_FWD_PHONE_NUMBER = 'input.phone-number';
+  const CALL_FWD_PHONE_NUMBER = 'input[name="phoneinput"]';
   const CALL_FWD_NOANSWER_TIMER = 'input[name="callForwardTimer"]';
 
   beforeEach(function() {
     this.initModules(callForwardModule);
     this.injectDependencies(
-      '$scope', 'HuronCustomerService', 'Authinfo', '$q',
+      '$scope', '$q',
     );
     this.$scope.userVoicemailEnabled = true;
     this.$scope.callForward = new CallForward();
@@ -24,8 +24,6 @@ describe('Component: callForward', () => {
   });
 
   function initComponent() {
-    spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
-    spyOn(this.HuronCustomerService, 'getVoiceCustomer').and.returnValue(this.$q.resolve({ uuid: '123', regionCode: '214', dialPlanDetails: { countryCode: '+1' } }));
     this.compileComponent('ucCallForward', {
       callForward: 'callForward',
       userVoicemailEnabled: 'userVoicemailEnabled',
@@ -159,9 +157,8 @@ describe('Component: callForward', () => {
     it('should invoke `onChangeFn` when value is typed in call forward all combo box', function() {
       let callForward = new CallForward();
       callForward.callForwardAll.destination = '+19725551212';
-      this.view.find(CALL_FWD_PHONE_NUMBER).val('9725551212').change().blur();
+      this.view.find(CALL_FWD_PHONE_NUMBER).val('+19725551212').change().blur();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
-      expect(this.$scope.onChangeFn).toHaveBeenCalled();
     });
   });
 
@@ -179,7 +176,7 @@ describe('Component: callForward', () => {
       let callForward = new CallForward();
       callForward.callForwardBusy.internalDestination = '+19725551212';
       callForward.callForwardBusy.externalDestination = '+19725551212';
-      this.view.find(CALL_FWD_PHONE_NUMBER).val('9725551212').change().blur();
+      this.view.find(CALL_FWD_PHONE_NUMBER).val('+19725551212').change().blur();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
       expect(this.$scope.onChangeFn).toHaveBeenCalled();
     });

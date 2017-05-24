@@ -13,6 +13,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   public customerVmEnabled: boolean = false;
   public userVmEnabled: boolean = false;
   public userServices: Array<string> = [];
+  private externalTransferFeatureToggle;
   public snrEnabled: boolean = false;
 
   /* @ngInject */
@@ -25,6 +26,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     private HuronVoicemailService: HuronVoicemailService,
     private HuronUserService: HuronUserService,
     private $q: ng.IQService,
+    private FeatureToggleService,
 
   ) {
     this.currentUser = this.$stateParams.currentUser;
@@ -47,12 +49,14 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       1: this.HuronVoicemailService.isEnabledForCustomer(),
       2: this.HuronUserService.getUserServices(this.currentUser.id),
       3: this.HuronUserService.getRemoteDestinations(this.currentUser.id),
+      4: this.FeatureToggleService.supports(this.FeatureToggleService.features.hi1033),
     };
     this.$q.all(promises).then( data => {
       this.customerVmEnabled = data[1];
       this.userServices = data[2];
       let rd: UserRemoteDestination[] = data[3];
-      this.snrEnabled = (!_.isEmpty(rd) && rd[0].enableMobileConnect === 'true') ;
+      this.snrEnabled = (!_.isEmpty(rd) && rd[0].enableMobileConnect === 'true');
+      this.externalTransferFeatureToggle = data[4];
     }).then(() => {
       this.userVmEnabled = this.HuronVoicemailService.isEnabledForUser(this.userServices);
       this.initFeatures();
@@ -103,6 +107,15 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       actionAvailable: true,
     };
     this.features.push(cosService);
+    if (this.externalTransferFeatureToggle) {
+      service = {
+        name: this.$translate.instant('telephonyPreview.externalTransfer'),
+        state: 'externaltransfer',
+        detail: undefined,
+        actionAvailable: true,
+      };
+      this.features.push(service);
+    }
   }
 
   public clickFeature(feature: IFeature) {

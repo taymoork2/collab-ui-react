@@ -6,7 +6,7 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService, AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, ExternalNumberPool) {
+  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService, AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, PhoneNumberService, TelephonyInfoService, ExternalNumberPool) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -135,7 +135,7 @@
       if (vm.numberTypeList[number]) {
         resource.setType(vm.numberTypeList[number]);
       } else {
-        if (TelephoneNumberService.validateDID(number)) {
+        if (PhoneNumberService.validateDID(number)) {
           resource.setType(AANumberAssignmentService.EXTERNAL_NUMBER);
         } else {
           resource.setType(AANumberAssignmentService.DIRECTORY_NUMBER);
@@ -167,7 +167,7 @@
 
               // find first e164 number, move to array[0] if not already there
             var r = _.find(resources, function (resource) {
-              return (TelephoneNumberService.validateDID(resource.number));
+              return (PhoneNumberService.validateDID(resource.number));
             });
 
             if (!_.isUndefined(r)) {
@@ -290,7 +290,7 @@
 
       if (_.has(vm, 'ui.ceInfo.resources')) {
         _.forEach(vm.ui.ceInfo.resources, function (r) {
-          if (TelephoneNumberService.validateDID(r.number)) {
+          if (PhoneNumberService.validateDID(r.number)) {
             vm.numberTypeList[r.number] = AANumberAssignmentService.EXTERNAL_NUMBER;
           } else {
             vm.numberTypeList[r.number] = AANumberAssignmentService.DIRECTORY_NUMBER;

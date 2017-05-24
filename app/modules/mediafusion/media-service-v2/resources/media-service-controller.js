@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2($modal, $state, $translate, Authinfo, FusionClusterService) {
+  function MediaServiceControllerV2($modal, $state, $translate, Authinfo, HybridServicesClusterService) {
 
     var vm = this;
     vm.backState = 'services-overview';
@@ -34,7 +34,7 @@
       modalClass: 'redirect-add-resource',
     };
 
-    FusionClusterService.serviceIsSetUp('squared-fusion-media')
+    HybridServicesClusterService.serviceIsSetUp('squared-fusion-media')
       .then(function (enabled) {
         if (enabled) {
           vm.addResourceModal.resolve.firstTimeSetup = false;

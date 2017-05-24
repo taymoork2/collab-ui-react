@@ -1,8 +1,8 @@
 <div class="report-parameters">
-  <span class="result-title results-spacing" translate="ediscovery.search.reportStatus"></span>
+  <span class="result-title results-spacing" translate="ediscovery.searchResults.reportStatus"></span>
   <br>
   <h6 ng-if="ediscoverySearchCtrl.report.state === 'COMPLETED'"
-    translate="ediscovery.search.generatedAt"
+    translate="ediscovery.searchResults.generatedAt"
     translate-value-time="{{ediscoverySearchCtrl.report.createdTime | date: 'shortTime'}}"></h6>
   <br>
   <span class="result-title results-spacing" translate="ediscovery.searchResults.totalReportSize"></span>
@@ -14,10 +14,10 @@
               class="btn btn--primary"
               loading="ediscoverySearchCtrl.downloadingReport"
               ng-click="ediscoverySearchCtrl.downloadReport(ediscoverySearchCtrl.report)">
-        <span translate="ediscovery.search.downloadReport"></span>
+        <span translate="ediscovery.reportsList.downloadReport"></span>
       </button>
       <button ng-cloak type="button" class="btn"
-                translate="ediscovery.search.viewReportsList"
+                translate="ediscovery.searchResults.viewReportsList"
                 ui-sref="ediscovery.reports">
       </button>
       <!-- To be added when download content link is present -->
@@ -26,7 +26,7 @@
       </div> -->
       <div class="expiry-info">
         <i class="icon icon-warning"></i>
-        <span translate="ediscovery.search.expiryInfo"></span>
+        <span translate="ediscovery.searchResults.expiryInfo"></span>
       </div>
     </div>
   </div>

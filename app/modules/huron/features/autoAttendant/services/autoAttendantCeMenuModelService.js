@@ -285,7 +285,7 @@
 
 
   /* @ngInject */
-  function AutoAttendantCeMenuModelService(AAUtilityService) {
+  function AutoAttendantCeMenuModelService(AAUtilityService, $translate) {
 
     // cannot use aaCommon's defined variables because of circular dependency.
     // aaCommonService shou not have this service, need to refactor it out.
@@ -560,6 +560,12 @@
           return;
         }
         menuEntry.addAction(action);
+      } else if (!_.isUndefined(inAction.doREST)) {
+        action = new Action('doREST', '');
+        action.url = inAction.doREST.url;
+        action.method = inAction.doREST.method;
+        action.variableSet = parseResponseBlock(inAction.doREST);
+        menuEntry.addAction(action);
       } else if (inAction.conditional) {
         var exp;
 
@@ -604,7 +610,7 @@
       }
     }
     function parseLeftRightExpression(expression) {
-      return AAUtilityService.pullJSPieces(expression && expression.indexOf(AAUtilityService.CONSTANTS.js.func) === 0 ? expression : decodeURI(expression));
+      return AAUtilityService.pullJSPieces(expression && expression.indexOf(AAUtilityService.CONSTANTS.js.func) === 0 ? expression : decodeURIComponent(expression));
     }
 
 
@@ -1193,11 +1199,48 @@
               }
             } else if (actionName === 'conditional') {
               newActionArray[i][actionName] = createConditional(menuEntry.actions[0]);
+            } else if (actionName === 'doREST') {
+              newActionArray[i][actionName].url = menuEntry.actions[0].url;
+              newActionArray[i][actionName].method = menuEntry.actions[0].method;
+              newActionArray[i][actionName].responseActions = createResponseBlock(menuEntry.actions[0]);
             }
           }
         }
       }
       return newActionArray;
+    }
+
+    function createResponseBlock(action) {
+      var responseActions = [];
+      var newVariable = $translate.instant('autoAttendant.newVariable');
+      _.forEach(action.variableSet, function (variableSet) {
+        var assignVar = {};
+        var assignVarItem = {};
+        if (variableSet.variableName === newVariable) {
+          assignVarItem.variableName = variableSet.newVariableValue;
+        } else {
+          assignVarItem.variableName = variableSet.variableName;
+        }
+        if (_.startsWith(variableSet.value, '$Response.')) {
+          assignVarItem.value = variableSet.value;
+        } else {
+          assignVarItem.value = '$Response.' + variableSet.value;
+        }
+        assignVar.assignVar = assignVarItem;
+        responseActions.push(assignVar);
+      });
+      return responseActions;
+    }
+
+    function parseResponseBlock(inAction) {
+      var variableSet = [];
+      _.forEach(inAction.responseActions, function (responseAction) {
+        var varSetItem = {};
+        varSetItem.value = responseAction.assignVar.value;
+        varSetItem.variableName = responseAction.assignVar.variableName;
+        variableSet.push(varSetItem);
+      });
+      return variableSet;
     }
 
     function createInListObj(action) {
@@ -1207,7 +1250,7 @@
       } else {
         js = AAUtilityService.generateFunction(action.if.leftCondition, AAUtilityService.splitOnCommas(action.if.rightCondition));
       }
-      return encodeURI(js);
+      return encodeURIComponent(js);
     }
 
     function createObj(tag, action) {
@@ -1723,7 +1766,6 @@
     function isCeMenuEntry(obj) {
       return (objectType(obj) === 'CeMenuEntry');
     }
-
 
   }
 })();

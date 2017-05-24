@@ -11,39 +11,7 @@
     background-color: $gray-light-3;
     padding: 0px 7px;
     border-radius: 4px;
-  }
-
-  .associated-fieldsets {
-    i {
-      font-size: 18px;
-      margin-right: 5px;
-      vertical-align: middle;
-      color: $color-negative-base;
-    }
-    .failure-message {
-      font-family: $brand-font-regular;
-      font-size: 14px;
-      color: $color-negative-base;
-    }
-    .retry-action {
-      font-family: $brand-font-regular;
-      font-size: 14px;
-      color: $color-primary-base;
-      background: none;
-      padding: 0;
-      min-width: 0;
-    }
-    .retry-action:focus {
-      outline: none;
-      box-shadow: none;
-    }
-    .retry-action:disabled {
-      color: $gray-base;
-    }
-  }
-
-  .associated-fieldsets-block {
-    margin-bottom: 1rem;
-    margin-top: 0.3rem;
+    max-width: 100%;
+    overflow-wrap: break-word;
   }
 }

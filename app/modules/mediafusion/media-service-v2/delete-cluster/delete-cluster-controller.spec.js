@@ -4,8 +4,8 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $q, httpBackend, controller, cluster, $modalInstance, $filter, FusionClusterService, MediaClusterServiceV2, $state, $translate, Notification;
-  beforeEach(inject(function ($httpBackend, _FusionClusterService_, _MediaClusterServiceV2_, $controller, _$filter_, _$state_, _$translate_, _Notification_, _$q_) {
+  var $q, httpBackend, controller, cluster, $modalInstance, $filter, HybridServicesClusterService, MediaClusterServiceV2, $state, $translate, Notification;
+  beforeEach(inject(function ($httpBackend, _HybridServicesClusterService_, _MediaClusterServiceV2_, $controller, _$filter_, _$state_, _$translate_, _Notification_, _$q_) {
     cluster = {
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
       "name": "MFA_TEST1",
@@ -22,16 +22,16 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       "releaseChannel": "DEV",
     };
     $modalInstance = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
     };
     $filter = _$filter_;
     /*
         MediaClusterServiceV2 = {
-          get: sinon.stub().returns(redirectTargetPromise),
-          getAll: sinon.stub().returns(redirectTargetPromise),
+          get: jasmine.createSpy('get').and.returnValue(redirectTargetPromise),
+          getAll: jasmine.createSpy('getAll').and.returnValue(redirectTargetPromise),
         };
     */
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     $state = _$state_;
     $translate = _$translate_;
@@ -125,7 +125,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     expect(MediaClusterServiceV2.createClusterV2.calls.count()).toEqual(2);
   });
 
-  it('should invoke FusionClusterService.deregisterEcpNode when a node is being deregistered', function () {
+  it('should invoke HybridServicesClusterService.deregisterEcpNode when a node is being deregistered', function () {
     controller.cluster = cluster;
     controller.hosts = [{
       "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
@@ -148,11 +148,11 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       "name": "MFA_TEST2",
     }];
 
-    spyOn(FusionClusterService, 'deregisterEcpNode').and.callThrough();
+    spyOn(HybridServicesClusterService, 'deregisterEcpNode').and.callThrough();
     controller.deleteCluster();
     httpBackend.flush();
     expect(controller.isMove).toBe(true);
-    expect(FusionClusterService.deregisterEcpNode.calls.count()).toEqual(2);
+    expect(HybridServicesClusterService.deregisterEcpNode.calls.count()).toEqual(2);
   });
 
   it('check if the moveV2Host of MediaClusterServiceV2 is not invoked if the target cluster is not selected', function () {
@@ -236,7 +236,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     expect(controller.failedToDelete).toBe(true);
   });
 
-  it('should invoke FusionClusterService.deregisterEcpNode when a cluster is being deleted', function () {
+  it('should invoke HybridServicesClusterService.deregisterEcpNode when a cluster is being deleted', function () {
     controller.cluster = cluster;
     controller.hosts = [{
       "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
@@ -259,11 +259,11 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       "name": "MFA_TEST2",
     }];
 
-    spyOn(FusionClusterService, 'deregisterEcpNode').and.callThrough();
+    spyOn(HybridServicesClusterService, 'deregisterEcpNode').and.callThrough();
     controller.deleteCluster();
     httpBackend.verifyNoOutstandingExpectation();
     expect(controller.isMove).toBe(true);
-    expect(FusionClusterService.deregisterEcpNode.calls.count()).toEqual(2);
+    expect(HybridServicesClusterService.deregisterEcpNode.calls.count()).toEqual(2);
   });
   it('DeleteClusterSettingControllerV2 canContinue should enable continue button when the feild is filled', function () {
     controller.hosts = [{

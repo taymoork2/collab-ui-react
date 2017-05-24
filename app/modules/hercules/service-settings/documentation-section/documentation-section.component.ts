@@ -37,6 +37,9 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
       this.downloadLink = 'https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP';
     }
 
+    if (this.serviceId === 'ept') {
+      this.helpLink = 'http://www.cisco.com/go/private-trunking';
+    }
   }
 }
 

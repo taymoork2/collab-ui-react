@@ -1,0 +1,25 @@
+<div class="status">
+
+  <div ng-if="$ctrl.status.status === 'ok'">
+    <div class="ok">
+      CMC status is OK !
+    </div>
+  </div>
+
+  <div ng-if="$ctrl.status.status === 'error'">
+    <div class="error">CMC status is NOT OK:</div>
+    <div ng-repeat="issue in $ctrl.status.issues">
+      {{issue.message}} [{{issue.code}}] (mock)
+    </div>
+  </div>
+
+  <div ng-if="!$ctrl.status.status">
+    <div class="error">ERROR: CMC status check not performed because:</div>
+    <div ng-repeat="error in $ctrl.status.errors">
+      {{error.description}} (mock)
+    </div>
+  </div>
+
+</div>
+
+

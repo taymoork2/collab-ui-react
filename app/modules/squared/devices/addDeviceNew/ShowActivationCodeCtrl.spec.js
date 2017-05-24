@@ -3,13 +3,13 @@
 describe('ShowActivationCodeCtrl: Ctrl', function () {
   var controller, stateParams, $q, state, $scope, CsdmDataModelService, CsdmHuronPlaceService;
   var OtpService, CsdmEmailService, Notification, ActivationCodeEmailService, UserListService;
-  var USSService;
+  var USSService, $httpBackend, HuronConfig;
   var $controller;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _CsdmDataModelService_, _CsdmHuronPlaceService_, _OtpService_, _CsdmEmailService_, _ActivationCodeEmailService_, _Notification_, _UserListService_, _USSService_) {
+  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _CsdmDataModelService_, _CsdmHuronPlaceService_, _OtpService_, _CsdmEmailService_, _ActivationCodeEmailService_, _Notification_, _UserListService_, _USSService_, _$httpBackend_, _HuronConfig_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -23,6 +23,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     ActivationCodeEmailService = _ActivationCodeEmailService_;
     UserListService = _UserListService_;
     USSService = _USSService_;
+    $httpBackend = _$httpBackend_;
+    HuronConfig = _HuronConfig_;
   }));
 
   function initController() {
@@ -469,7 +471,9 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       userEmail = 'user@example.org';
       userFirstName = 'userFirstName';
       entitlements = ['something', 'else'];
-      externalIdentifiers = [{ type: 'squared-fusion-cal', GUID: 'test@example.com' }];
+      externalIdentifiers = [
+        { type: 'squared-fusion-cal', GUID: 'test@example.com' },
+        { type: 'squared-fusion-uc', GUID: 'test2@example.com' }];
       ussProps = [{ resourceGroup: '' }];
 
       cloudberryNewPlace = {
@@ -485,6 +489,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 directoryNumber: directoryNumber,
                 externalNumber: externalNumber,
                 externalCalendarIdentifier: [externalIdentifiers[0]],
+                externalHybridCallIdentifier: [externalIdentifiers[1]],
                 ussProps: ussProps,
               },
               recipient: {
@@ -648,6 +653,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       };
     });
 
+    afterEach(function () {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
     describe('of type cloudberry', function () {
 
       describe('with new place', function () {
@@ -664,7 +674,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, externalIdentifiers, ussProps);
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, externalIdentifiers);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
           expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
@@ -674,10 +684,12 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         describe('sending an activation email', function () {
 
           it('should send it to selected user and notify success', function () {
-            spyOn(CsdmEmailService, 'sendCloudberryEmail').and.returnValue($q.resolve({}));
+            $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/placeactivationcode/roomdevice').respond(200);
+            spyOn(CsdmEmailService, 'sendCloudberryEmail').and.callThrough();
             spyOn(Notification, 'notify').and.callThrough();
 
             controller.sendActivationCodeEmail();
+            $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendCloudberryEmail).toHaveBeenCalledWith(expectedEmailInfo);
             expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
@@ -707,7 +719,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, null, null);
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, null);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
           expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
@@ -737,10 +749,12 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         describe('sending an activation email', function () {
 
           it('should send it to selected user and notify success', function () {
-            spyOn(CsdmEmailService, 'sendCloudberryEmail').and.returnValue($q.resolve({}));
+            $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/placeactivationcode/roomdevice').respond(200);
+            spyOn(CsdmEmailService, 'sendCloudberryEmail').and.callThrough();
             spyOn(Notification, 'notify').and.callThrough();
 
             controller.sendActivationCodeEmail();
+            $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendCloudberryEmail).toHaveBeenCalledWith(expectedEmailInfo);
             expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
@@ -788,10 +802,12 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         describe('sending an activation email', function () {
 
           it('should send it to selected user and notify success', function () {
-            spyOn(CsdmEmailService, 'sendHuronEmail').and.returnValue($q.resolve({}));
+            $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/placeactivationcode/deskphone').respond(200);
+            spyOn(CsdmEmailService, 'sendHuronEmail').and.callThrough();
             spyOn(Notification, 'notify').and.callThrough();
 
             controller.sendActivationCodeEmail();
+            $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendHuronEmail).toHaveBeenCalledWith(expectedEmailInfo);
             expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
@@ -829,10 +845,12 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         describe('sending an activation email', function () {
 
           it('should send it to selected user and notify success', function () {
-            spyOn(CsdmEmailService, 'sendHuronEmail').and.returnValue($q.resolve());
+            $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/placeactivationcode/deskphone').respond(200);
+            spyOn(CsdmEmailService, 'sendHuronEmail').and.callThrough();
             spyOn(Notification, 'notify').and.callThrough();
 
             controller.sendActivationCodeEmail();
+            $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendHuronEmail).toHaveBeenCalledWith(expectedEmailInfo);
             expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
@@ -920,10 +938,12 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
         describe('sending an activation email', function () {
           it('should send it to selected user and notify success', function () {
-            spyOn(CsdmEmailService, 'sendPersonalEmail').and.returnValue($q.resolve({}));
+            $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/personalactivationcode/device').respond(200);
+            spyOn(CsdmEmailService, 'sendPersonalEmail').and.callThrough();
             spyOn(Notification, 'notify').and.callThrough();
 
             controller.sendActivationCodeEmail();
+            $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendPersonalEmail).toHaveBeenCalledWith(expectedEmailInfo);
             expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
@@ -960,10 +980,12 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
         describe('sending an activation email', function () {
           it('should send it to selected user and notify success', function () {
-            spyOn(CsdmEmailService, 'sendPersonalCloudberryEmail').and.returnValue($q.resolve({}));
+            $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/personalactivationcode/roomdevice').respond(200);
+            spyOn(CsdmEmailService, 'sendPersonalCloudberryEmail').and.callThrough();
             spyOn(Notification, 'notify').and.callThrough();
 
             controller.sendActivationCodeEmail();
+            $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendPersonalCloudberryEmail).toHaveBeenCalledWith(expectedEmailInfo);
             expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');

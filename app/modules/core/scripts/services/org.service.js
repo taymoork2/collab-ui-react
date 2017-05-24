@@ -72,7 +72,8 @@
       }
 
       return $http.get(scomUrl, config)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
 
@@ -84,13 +85,16 @@
           }
           _.assign(data.orgSettings, getCachedOrgSettings(orgId));
 
-          callback(data, status);
+          callback(data, response.status);
+          return response;
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
+          return $q.reject(response);
         });
     }
 
@@ -113,18 +117,22 @@
       }
 
       return $http.get(adminUrl, config)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
+          return response;
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           if (!data || !(data instanceof Object)) {
             data = {};
           }
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
+          return $q.reject(response);
         });
     }
 
@@ -232,16 +240,18 @@
       }
 
       $http.get(adminUrl)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
         });
     }
 
@@ -375,16 +385,18 @@
       }
 
       $http.get(scomUrl, config)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
         });
     }
 

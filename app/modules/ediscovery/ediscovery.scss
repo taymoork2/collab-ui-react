@@ -103,7 +103,6 @@
 
     .advanced-search {
       background-color: $gray-light-4;
-      padding-top: 8rem;
     }
 
     @media only screen and (max-height: 950px) {
@@ -312,15 +311,6 @@
           }
         }
 
-        .room-id {
-          color: $gray-base;
-          padding-bottom: 2.25rem;
-
-          @media only screen and (max-width: 800px) {
-            font-size: 1rem;
-          }
-        }
-
         .back-button {
           padding-left: 16px;
           padding-top: 24px;
@@ -402,11 +392,6 @@
             margin-bottom: 15px;
           }
 
-          .date-error {
-            margin-bottom: 0;
-            color: $color-negative-base;
-          }
-
           h6 {
             padding-bottom: 0.25rem;
             color: $gray-dark-2;
@@ -447,34 +432,6 @@
           i.icon-warning {
             color: $color-attention-base;
           }
-        }
-
-        .last-input-row {
-          padding-bottom: 0.75rem;
-        }
-      }
-
-      .report-logo-column {
-        max-width: 406px;
-
-        @media only screen and (max-width: 640px) {
-          max-width: 100%;
-        }
-      }
-
-      .report-logo {
-        color: $gray-base;
-        font-size: 210px;
-        padding-top: 1.5rem;
-
-        @media only screen and (max-width: 800px) {
-          font-size: 10rem;
-          padding-top: 0.75rem;
-        }
-
-        @media only screen and (max-width: 640px) {
-          font-size: 4rem;
-          height: 5rem;
         }
       }
 

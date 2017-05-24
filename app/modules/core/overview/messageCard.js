@@ -21,7 +21,7 @@
         card.notEnabledFooter = 'overview.contactPartner';
         card.trial = false;
         card.enabled = false;
-        card.cardClass = 'cs-card header-bar';
+        card.cardClass = 'cs-card';
         card.helper = OverviewHelper;
         card.showHealth = true;
 

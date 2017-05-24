@@ -29,6 +29,7 @@ describe ('Component: PrivateTrunkSetup', () => {
     spyOn(this.PrivateTrunkService, 'createPrivateTrunkResource');
     spyOn(this.PrivateTrunkService, 'setPrivateTrunk');
     spyOn(this.PrivateTrunkCertificateService, 'readCerts').and.returnValue(this.$q.resolve([]));
+    this.$state.current.name  = 'services-overview';
     this.compileComponent('privateTrunkSetup', {
     });
   }

@@ -14,6 +14,6 @@ export class SettingSection {
     this.title = `globalSettings.${ settingKey }.title`;
     this.subsectionLabel = `globalSettings.${ settingKey }.subsectionLabel`;
     this.subsectionDescription = `globalSettings.${ settingKey }.subsectionDescription`;
-    this.template = `modules/core/settings/setting-.${ settingKey }.tpl.html`;
+    this.template = ``;
   }
 }

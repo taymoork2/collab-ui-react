@@ -33,6 +33,10 @@
       SessionStorage.remove('logout');
     }
 
+    if ($stateParams.bmmp_env) {
+      SessionStorage.put(StorageKeys.BMMP_ENV, _.toLower($stateParams.bmmp_env));
+    }
+
     $scope.checkForIeWorkaround = Utils.checkForIeWorkaround();
 
     $scope.login = function (keyCode) {
