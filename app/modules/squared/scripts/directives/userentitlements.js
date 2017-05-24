@@ -6,7 +6,7 @@
     .directive('userEntitlements', userEntitlements);
 
   /* @ngInject */
-  function UserEntitlementsCtrl($scope, $timeout, Userservice, Log, $rootScope, Notification, $filter, Utils, Authinfo) {
+  function UserEntitlementsCtrl($scope, $rootScope, $timeout, $translate, Authinfo, Log, Notification, Userservice, Utils) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.entitlements = Utils.getSqEntitlements($scope.currentUser);
 
@@ -105,31 +105,33 @@
         'address': user.userName,
         'name': user.name,
       }], null, getUserEntitlementList(), 'changeEntitlement', function (data) {
-        var entitleResult = {
-          msg: null,
-          type: 'null',
-        };
+        var resultMsg;
         if (data.success) {
           var userStatus = data.userResponse[0].status;
           if (userStatus === 200) {
-            entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
-            entitleResult.type = 'success';
+            // TODO: l10n missing
+            resultMsg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
             if ($scope.entitlements.webExSquared === true) {
-              angular.element('.icon-' + user.id).html($filter('translate')('usersPage.active'));
+              angular.element('.icon-' + user.id).html($translate.instant('usersPage.active'));
             } else {
-              angular.element('.icon-' + user.id).html($filter('translate')('usersPage.inactive'));
+              angular.element('.icon-' + user.id).html($translate.instant('usersPage.inactive'));
             }
-          } else if (userStatus === 404) {
-            entitleResult.msg = 'Entitlements for ' + data.userResponse[0].email + ' do not exist.';
-            entitleResult.type = 'error';
-          } else if (userStatus === 409) {
-            entitleResult.msg = 'Entitlement(s) previously updated.';
-            entitleResult.type = 'error';
+            // successful update, reset 'Save' button state
+            $scope.saveDisabled = true;
+            Notification.success(resultMsg);
           } else {
-            entitleResult.msg = data.userResponse[0].email + '\'s entitlements were not updated, status: ' + userStatus;
-            entitleResult.type = 'error';
+            if (userStatus === 404) {
+              // TODO: l10n missing
+              resultMsg = 'Entitlements for ' + data.userResponse[0].email + ' do not exist.';
+            } else if (userStatus === 409) {
+              // TODO: l10n missing
+              resultMsg = 'Entitlement(s) previously updated.';
+            } else {
+              // TODO: l10n missing
+              resultMsg = data.userResponse[0].email + '\'s entitlements were not updated, status: ' + userStatus;
+            }
+            Notification.error(resultMsg);
           }
-          Notification.notify([entitleResult.msg], entitleResult.type);
           $scope.btn_saveLoad = false;
 
           var updatedUser = _.find($scope.queryuserslist, {
@@ -150,11 +152,8 @@
         } else {
           Log.error('Failed updating user with entitlements.');
           Log.error(data);
-          entitleResult = {
-            msg: 'Failed to update ' + user.userName + '\'s entitlements.',
-            type: 'error',
-          };
-          Notification.notify([entitleResult.msg], entitleResult.type);
+          resultMsg = 'Failed to update ' + user.userName + '\'s entitlements.';
+          Notification.error(resultMsg);
           $scope.btn_saveLoad = false;
         }
       });
