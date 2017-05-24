@@ -315,7 +315,7 @@
               $previousState.memo(sidepanelMemo);
             }
 
-            var template = '<cs-sidepanel';
+            var template = '<cs-sidepanel role="complementary"';
             template += options.type ? ' size="' + options.type + '"' : '';
             template += '></cs-sidepanel>';
             $state.sidepanel = $modal.open({
@@ -893,6 +893,9 @@
                   },
                 },
               },
+            },
+            data: {
+              showMessengerInteropToggle: true,
             },
           })
           .state('users.add.services.dn', {
@@ -2771,11 +2774,11 @@
           .state('pstnWizard', {
             parent: 'modal',
             params: {
-              customerId: {},
-              customerName: {},
-              customerEmail: {},
-              customerCommunicationLicenseIsTrial: {},
-              customerRoomSystemsLicenseIsTrial: {},
+              customerId: '',
+              customerName: '',
+              customerEmail: '',
+              customerCommunicationLicenseIsTrial: '',
+              customerRoomSystemsLicenseIsTrial: '',
             },
             views: {
               'modal@': {
@@ -3177,9 +3180,6 @@
               clusterId: null,
             },
             resolve: {
-              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
@@ -3193,11 +3193,6 @@
                 templateUrl: 'modules/context/fields/hybrid-context-fields.html',
                 controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
-              },
-            },
-            resolve: {
-              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
               },
             },
           })
@@ -3263,11 +3258,6 @@
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
-              },
-            },
-            resolve: {
-              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
               },
             },
           })

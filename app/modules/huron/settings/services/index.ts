@@ -3,6 +3,7 @@ import { HuronSettingsOptionsService } from './settingsOptions.service';
 import siteServiceModule from 'modules/huron/sites';
 import customerServiceModule from 'modules/huron/customer';
 import serviceSetupModule from 'modules/huron/serviceSetup';
+import avrilServiceModule from 'modules/huron/avril';
 
 export * from './settings.service';
 export * from './settingsOptions.service';
@@ -17,6 +18,7 @@ export default angular
     siteServiceModule,
     customerServiceModule,
     serviceSetupModule,
+    avrilServiceModule,
   ])
   .service('HuronSettingsService', HuronSettingsService)
   .service('HuronSettingsOptionsService', HuronSettingsOptionsService)

@@ -39,6 +39,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');
+    spyOn(this.DigitalRiverService, 'getDigitalRiverToken');
     spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.$q.resolve(drUrlResponse));
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
 
@@ -92,6 +93,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.subscriptionDetails).toEqual(this.data.subscriptionsFormatted);
 
     expect(this.controller.visibleSubscriptions).toBeTruthy();
+    expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
@@ -128,6 +130,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.subscriptionDetails).toEqual(this.data.trialSubscriptionData);
     expect(this.controller.visibleSubscriptions).toBeTruthy();
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
+    expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
   });
 
   describe('Tests for Named User Licenses : ', function () {

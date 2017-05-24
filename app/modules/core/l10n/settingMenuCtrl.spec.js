@@ -1,7 +1,9 @@
 'use strict';
 
+var testModule = require('./index').default;
+
 describe('settingsMenuCtrl', function () {
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(testModule));
 
   var controller, $translate;
 

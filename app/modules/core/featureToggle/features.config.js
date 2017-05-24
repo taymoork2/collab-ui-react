@@ -5,7 +5,6 @@ module.exports = {
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
   atlasCareAutomatedRouteTrials: 'care-automated-routing',
   atlasContextServiceTrials: 'atlas-context-service-trials',
-  atlasContextDictionaryEdit: 'atlas-context-dictionary-edit',
   atlasDarling: 'atlas-darling',
   atlasDataRetentionSettings: 'atlas-data-retention-settings',
   atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
@@ -62,7 +61,6 @@ module.exports = {
   calsvcOneButtonToPushInterval: 'calsvc-OneButtonToPush-interval',
   clientRingbackV2: 'client-ringback-v2',
   console: 'console',
-  contactCenterContext: 'contact-center-context',
   deleteContent: 'delete-content',
   disableCacheForFeatures: 'disableCacheForFeatures',
   enforceSparkContentEncryption: 'enforce-spark-content-encryption',
@@ -200,4 +198,5 @@ module.exports = {
   csdmPlaceGuiSettings: "csdm-place-gui-settings",
   atlasHybridPartnerRegistration: 'atlas-hybrid-partner-registration',
   csdmAtaCpc: "csdm-ata-cpc",
+  hi1487: "h-i1487",
 };

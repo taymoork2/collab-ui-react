@@ -7,7 +7,10 @@
       <div class="metrics-info">
         <div class="no-data" ng-if="$ctrl.value === $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">{{$ctrl.value}}</div>
         <div ng-if="$ctrl.value !== $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">
-          <div class="call-counts"><span tooltip="{{$ctrl.tooltipValue}}" class="cardTooltipClass">{{$ctrl.value}}</span></div>
+          <div class="call-counts">
+            <span tooltip="{{$ctrl.tooltipValue}}" class="cardTooltipClass">{{$ctrl.value}}</span>
+            <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername != $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
+          </div>
           <div class="spinner-position" ng-if="!$ctrl.value && $ctrl.value !== 0">
             <i class='icon icon-spinner icon-2x'></i>
           </div>

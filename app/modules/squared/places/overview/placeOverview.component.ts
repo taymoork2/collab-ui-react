@@ -252,6 +252,10 @@ class PlaceOverview implements ng.IComponentController {
     this.$state.go('place-overview.' + feature.state);
   }
 
+  public anyHybridServiceToggle() {
+    return this.csdmHybridCalendarFeature || this.csdmHybridCallFeature;
+  }
+
   public onGenerateOtpFn(): void {
     let wizardState = {
       data: {

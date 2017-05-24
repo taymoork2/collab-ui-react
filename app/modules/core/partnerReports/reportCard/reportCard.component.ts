@@ -99,7 +99,7 @@ class ReportCardCtrl {
     }
   }
 
-  public goToUsersTab() {
+  public goToUsersTab(): void {
     this.$state.go('users.list');
   }
 

@@ -11,7 +11,7 @@ export class CmcServiceMock {
   ) {
   }
 
-  public mockStatus(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
+  public mockOrgStatus(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
     this.$log.debug('orgId', orgId);
     let errorMock = {
       message: 'Invalid OrgId',
@@ -74,7 +74,7 @@ export class CmcServiceMock {
       issues: [
         {
           code: 2003,
-          message: 'Call Service Aware is not provisioned.',
+          message: 'Call Service Aware is not provisioned for this org.',
         },
       ],
     };

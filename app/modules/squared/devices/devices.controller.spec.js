@@ -51,6 +51,12 @@ describe('Controller: DevicesCtrl', function () {
     });
 
     spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
+
+    spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
   }
 
   function initController() {
@@ -154,15 +160,8 @@ describe('Controller: DevicesCtrl', function () {
   });
 
   describe('Feature toggle loading', function () {
-    beforeEach(function () {
-      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(true));
-      spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.resolve(true));
-      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
-      spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
-    });
 
     it('should resolve toggle loading', function () {
-      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
       controller = $controller('DevicesCtrl', {
         $scope: $scope,
         $state: $state,
@@ -175,7 +174,7 @@ describe('Controller: DevicesCtrl', function () {
 
     it('should resolve toggle loading if a promise fails', function () {
       var deferred = $q.defer();
-      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue(deferred.promise);
+      FeatureToggleService.csdmHybridCallGetStatus.and.returnValue(deferred.promise);
       controller = $controller('DevicesCtrl', {
         $scope: $scope,
         $state: $state,

@@ -22,6 +22,7 @@ class HuntGroupCtrl implements ng.IComponentController {
   public isLoading: boolean = false;
   public saveInProcess: boolean = false;
   public dragAndDropEnabled: boolean;
+  public isHi1487Supported: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -33,6 +34,7 @@ class HuntGroupCtrl implements ng.IComponentController {
     private HuntGroupService: HuntGroupService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
   ) {
     this.huntGroupId = _.get<string>(this.$stateParams.feature, 'id');
     this.title = _.get<string>(this.$stateParams.feature, 'cardName');
@@ -41,7 +43,12 @@ class HuntGroupCtrl implements ng.IComponentController {
   public $onInit(): void {
     if (this.$state.current.name === 'huntgroupedit' && !this.huntGroupId) {
       this.$state.go(this.huronFeaturesUrl);
+    } else {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.hi1487).then(result => {
+        this.isHi1487Supported = result;
+      });
     }
+
     this.isLoading = true;
     this.HuntGroupService.getHuntGroup(this.huntGroupId).then( huntGroup => {
       this.huntGroup = huntGroup;
@@ -94,9 +101,15 @@ class HuntGroupCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public setHuntGroupCallsToSparkApp(): void {
+    this.huntGroup.sendToApp = !this.huntGroup.sendToApp;
+    this.form.$setDirty();
+    this.checkForChanges();
+  }
+
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/hunt-group/huntGroupCancelModal.html',
+      templateUrl: 'modules/call/features/hunt-group/hunt-group-cancel-modal.html',
       type: 'dialog',
     });
   }

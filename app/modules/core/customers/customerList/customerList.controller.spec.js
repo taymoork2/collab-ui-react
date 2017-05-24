@@ -251,6 +251,9 @@ describe('Controller: CustomerListCtrl', function () {
       expect(controller.filter.options).not.toContain(jasmine.objectContaining({
         value: 'premium',
       }));
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'standard',
+      }));
     });
 
     it('show care in the filter list with care FT on', function () {
@@ -268,9 +271,12 @@ describe('Controller: CustomerListCtrl', function () {
     it('show Pro Pack in the filter list with correct FT on', function () {
       FeatureToggleService.atlasITProPackGetStatus.and.returnValue($q.resolve(true));
       initController();
-      expect(controller.filter.options.length).toBe(10);
+      expect(controller.filter.options.length).toBe(11);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'premium',
+      }));
+      expect(controller.filter.options).toContain(jasmine.objectContaining({
+        value: 'standard',
       }));
     });
   });

@@ -5,11 +5,13 @@
     .module('Core')
     .service('QlikService', QlikService);
 
-  function QlikService($http) {
-    var baseUrl = 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/singlesitereport2/basic_webex_report__vSiteId/599/cisco/dhdesai/ds2-win2012-01';
+  /* @ngInject */
+  function QlikService($http, $q, UrlConfig) {
+    var webExMetricsUrl = UrlConfig.getWebexMetricsUrl();
+    var sparkMetricsUrl = UrlConfig.getSparkMetricsUrl();
 
     var service = {
-      getQlikInfos: getQlikInfos,
+      getMetricsLink: getMetricsLink,
     };
 
     return service;
@@ -18,9 +20,15 @@
       return response.data;
     }
 
-    function getQlikInfos() {
-      return $http.get(baseUrl).then(extractData);
+    function catchError(error) {
+      return $q.reject(error);
+    }
+
+    function getMetricsLink(metricsType, paramData) {
+      var metricsLink = metricsType === 'webex' ? webExMetricsUrl : sparkMetricsUrl;
+      return $http.post(metricsLink, paramData).then(extractData).catch(catchError);
     }
 
   }
 }());
+

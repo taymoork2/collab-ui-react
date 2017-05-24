@@ -11,9 +11,13 @@ describe('Component: extensionLength', () => {
     this.initModules(extensionLengthModule);
     this.injectDependencies(
       '$scope',
+      'Authinfo',
+      '$httpBackend',
     );
 
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
+    this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
   });
 
   function initComponent() {
@@ -26,7 +30,7 @@ describe('Component: extensionLength', () => {
     });
   }
 
-  xdescribe('firstTimeSetup = true', () => {
+  describe('firstTimeSetup = true', () => {
     beforeEach(initComponent);
     beforeEach(function() {
       this.$scope.firstTimeSetup = true;

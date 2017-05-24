@@ -156,4 +156,64 @@ describe('Component: fields sidepanel', function () {
       expect($state.go).not.toHaveBeenCalled();
     });
   });
+
+  /**
+   * These tests do not validate the full UI of the feature. Just enough to validate that the feature is <em>present</em>
+   * in the UI.
+   */
+  describe('field-edit feature is present', function () {
+
+    var field = {
+      publiclyAccessibleUI: false,
+      translations: { 'english': 'First Name', 'french': 'Prénom' },
+      id: 'aaa_test',
+      lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+      description: 'a description',
+      searchable: 'yes',
+    };
+
+    beforeEach(function () {
+      this.injectDependencies(
+        '$q',
+        'FeatureToggleService'
+      );
+      this.featureSupportSpy = spyOn(this.FeatureToggleService, 'supports');
+      this.featureSupportSpy.and.returnValue(this.$q.resolve(false));
+      membershipReturnSpy.and.returnValue(this.$q.resolve([]));
+      this.compileComponentNoApply('contextFieldsSidepanel', { field: field });
+    });
+
+    afterEach(function () {
+      // NOTE: these tests can probably be removed with the next story. We only need to temporarily validate to ensure
+      // these feature flags are not being checked when compiling the component
+      expect(this.featureSupportSpy).not.toHaveBeenCalledWith('contact-center-context');
+      expect(this.featureSupportSpy).not.toHaveBeenCalledWith('atlas-context-dictionary-edit');
+    });
+
+    it('should have edit button', function () {
+      this.$scope.$apply();
+      var sectionTitle = this.view.find('section-title');
+      // there are 2 of these, but only 1 visible at a time
+      expect(sectionTitle.length).toBe(2, 'incorrect number of section-title elements');
+      var editableSectionTitle = sectionTitle.first();
+      expect(editableSectionTitle).toExist();
+      var button = editableSectionTitle.find('.as-button');
+      expect(button).toExist('expecting a button here');
+      expect(button).toHaveText('common.edit', 'this is likely not the edit button');
+    });
+
+    it('should have delete button', function () {
+      this.$scope.$apply();
+      var containerDiv = this.view.find('cs-sp-container');
+      var section = containerDiv.find('cs-sp-section');
+      expect(containerDiv.length).toBe(1, 'wrong number of cs-sp-section elements. layout change?');
+      var siblings = section.siblings();
+      // for now, there are two children, and the delete button is the second(last)
+      expect(siblings.length).toBe(1, 'incorrect number of expected cs-sp-section siblings -- button(s)');
+      var button = siblings.get(0);
+      expect(button.tagName).toBe('BUTTON', 'expecting a button to be here');
+      button = $(button);
+      expect(button).toHaveClass('btn--delete', 'this is likely not the delete button');
+    });
+  });
 });

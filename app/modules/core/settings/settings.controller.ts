@@ -108,9 +108,13 @@ export class SettingsCtrl {
   }
 
   private initSecurity() {
-    this.FeatureToggleService.atlasPinSettingsGetStatus().then((toggle) => {
-      if (toggle) {
-        this.security = new SecuritySetting();
+    let promises = {
+      pinSettingsToggle: this.FeatureToggleService.atlasPinSettingsGetStatus(),
+      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+    };
+    this.$q.all(promises).then((result) => {
+      if (result.pinSettingsToggle) {
+        this.security = new SecuritySetting(result.proPackPurchased);
       }
     });
   }

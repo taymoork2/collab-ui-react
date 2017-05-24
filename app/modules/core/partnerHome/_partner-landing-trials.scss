@@ -9,10 +9,6 @@
   background-color: $brand-white;
   border-color: $list-group-border;
   border-width: 1px;
-
-  .trial {
-    margin-bottom: 0.5rem;
-  }
 }
 
 .trials-refresh {
@@ -39,6 +35,8 @@
 .trialRow {
   display: flex;
   align-items: center;
+  position: relative;
+  top: -.5rem;
 }
 
 .trial-danger-text {
@@ -68,12 +66,6 @@
 .expired {
   color: $gray-dark;
   text-align: center;
-}
-
-.trialCustomer {
-  color: $brand-primary;
-  text-align: left;
-  margin-bottom: -0.75rem;
 }
 
 .trialLicense {

@@ -55,15 +55,8 @@
 
 </div>
 <div class="modal-footer">
-  <button ng-click="$dismiss(vm.hasWarningOrError())"
+  <button ng-click="$close()"
           class="btn"
-          translate="common.close"></button>
-  <button ng-click="$close(false)"
-          ng-if="!vm.hasWarningOrError() && vm.currentStep === 'result'"
-          class="btn--primary"
-          translate="common.save"></button>
-  <button ng-click="$close(true)"
-          ng-if="vm.hasWarningOrError() && vm.currentStep === 'result'"
-          class="btn--primary"
-          translate="hercules.settings.verifySipDestination.saveAnyway"></button>
+          translate="common.done"></button>
+
 </div>
