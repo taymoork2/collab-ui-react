@@ -360,12 +360,13 @@
     }
 
     function setOverflowIndicator() {
-      var response = MediaReportsService.getOverflowIndicator(vm.timeSelected, vm.clusterSelected);
-      if (response == vm.ABORT) {
-        return undefined;
-      } else {
-        vm.cardIndicator = response;
-      }
+      MediaReportsService.getOverflowIndicator(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (response == vm.ABORT) {
+          return undefined;
+        } else {
+          vm.cardIndicator = response.data.dataProvider[0].value;
+        }
+      });
     }
 
     function setTotalCallsPie() {

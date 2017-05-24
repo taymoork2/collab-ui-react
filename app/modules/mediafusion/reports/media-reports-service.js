@@ -88,13 +88,13 @@
     function addColorForMeetingsCard(response) {
       _.each(response.data.dataProvider, function (val) {
         if (val.name === 'ON_PREM') {
-          val.color = '#02bbcc';
+          val.color = '#22D5A3';
           val.name = vm.onPremisesHeading;
         } else if (val.name === 'CLOUD') {
-          val.color = '#30d557';
+          val.color = '#1FBBCA';
           val.name = vm.cloudHeading;
         } else if (val.name === 'HYBRID') {
-          val.color = '#ff7133';
+          val.color = '#FD713E';
           val.name = vm.hybridHeading;
         }
       });
@@ -335,19 +335,22 @@
       });
     }
 
-    function getOverflowIndicator() {
-      // vm.overflow_indicator = '/overflow_indicator';
-      // var returnData = [];
-      // return $http.get(vm.urlBase + getQuerys(vm.overflow_indicator, cluster, time)).then(function (response) {
-      //   if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
-      //     return response;
-      //   } else {
-      //     return returnData;
-      //   }
-      // }, function (error) {
-      //   return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallCallVolumeGraphError'), returnData);
-      // });
-      return -5;
+    function getOverflowIndicator(time, cluster) {
+      if (cluster === vm.allClusters) {
+        vm.participant_change = '/overflow_participant_change';
+      } else {
+        vm.participant_change = '/redirect_participant_change';
+      }
+      var returnData = [];
+      return $http.get(vm.urlBase + getQuerys(vm.participant_change, cluster, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
+          return response;
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallCallVolumeGraphError'), returnData);
+      });
     }
 
     function returnErrorCheck(error, message, returnItem) {
