@@ -46,14 +46,14 @@ var AutoAttendantPage = function () {
   this.addAANumbers = element(by.css('.aa-selected-phones .icon-chevron-down'));
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
   this.numberDropDownOptions = element(by.css(' .aa-selected-phones .select-options')).all(by.tagName('li'));
-  this.saveButton = element(by.name('saveButton'));
+  this.saveButton = element.all(by.name('saveButton')).first();
   this.closeEditButton = element(by.id('close-panel'));
   this.testCardName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
   this.testCardClick = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
   this.testImportCardName = element(by.css('p[title="' + deleteUtils.testAAImportName + '"]'));
   this.testImportCardName = element(by.css('p[title="' + deleteUtils.testAAImportName + '"]'));
+  this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
 
-  this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
   this.testImportCardDelete = this.testImportCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
   this.aaCard = element(by.css('.card-body'));
 
@@ -156,7 +156,9 @@ var AutoAttendantPage = function () {
 
   this.callerInput = element(by.css('div.aa-panel-body[name="Caller Input"]'));
 
-  this.callerInputRemoveAction = this.callerInput.element(by.css('div.aa-flex-row')).element(by.css('div.aa-action-delete'));
+  this.callerInputRemoveAction = this.callerInput.all(by.css('div.aa-flex-row')).first().element(by.css('div.aa-action-delete'));
+
+  // this.callerInputRemoveAction = element(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.css('div.aa-flex-row')).first().element(by.css('div.aa-action-delete'));
 
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
@@ -314,17 +316,21 @@ var AutoAttendantPage = function () {
   this.configureApiURL = element(by.id('configureApiUrl'));
   this.addDynamicFeature = element(by.id('addDynamicFeature'));
   this.sessionVar = element(by.id('sessionVar'));
+  this.sessionVarAll = element.all(by.id('sessionVar'));
+
   this.newSessionVar = this.sessionVar.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
   this.addVariableToSet = element(by.id('addVariableToSet'));
+  this.newVariableName = element(by.name('newVariableName'));
   this.saveBtn = element(by.id('saveBtn'));
   this.restApiUrlLabel = element(by.css('.aa-rest-api-url'));
+  this.restResponseDataBlock = element(by.name('response'));
+
+  this.restApiTrash = element.all(by.css('.aa-trash-icon')).get(1);
 
   this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));
   this.routeExternal = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
   this.routeQueueCall = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(0);
-  this.routeExternalNumber = this.routeCall.element(by.css('input.phone-number'));
-
   this.dialByExtension = element(by.css('div.aa-panel-body[name="Dial by Extension"]'));
 
   this.dialByMessageOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div span.select-toggle'));
@@ -395,6 +401,7 @@ var AutoAttendantPage = function () {
   this.assertUpdateError = assertUpdateError;
   this.assertCreateSuccess = assertCreateSuccess;
   this.assertImportSuccess = assertImportSuccess;
+  this.clearNotifications = clearNotifications;
   this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
   this.assertDeleteSuccess = assertDeleteSuccess;
   this.scrollIntoView = scrollIntoView;
@@ -421,6 +428,10 @@ var AutoAttendantPage = function () {
 
   function assertDeleteSuccess(test) {
     notifications.assertSuccess(test + ' Auto Attendant has been deleted successfully');
+  }
+
+  function clearNotifications() {
+    return notifications.clearNotifications();
   }
 
   function scrollIntoView(el) {
