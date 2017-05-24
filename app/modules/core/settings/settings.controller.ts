@@ -95,9 +95,7 @@ export class SettingsCtrl {
   }
 
   private initBranding() {
-    if (this.Authinfo.isPartner() || this.Authinfo.isDirectCustomer()) {
-      this.branding = new BrandingSetting();
-    } else if (this.Authinfo.isCustomerAdmin()) {
+    if (this.Authinfo.isCustomerAdmin()) {
       let params = {
         basicInfo: true,
       };
