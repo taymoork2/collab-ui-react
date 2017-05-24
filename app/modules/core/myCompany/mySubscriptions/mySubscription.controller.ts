@@ -364,7 +364,7 @@ export class MySubscriptionCtrl {
         this.bmmpAttr = {
           subscriptionId: subscription.internalSubscriptionId,
           productInstanceId: subscription.productInstanceId,
-          changeplanOverride: urlResponse,
+          changeplanOverride: subscription.changeplanOverride,
         };
       }
       this.broadcastSingleSubscription(subscription, undefined);
