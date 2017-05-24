@@ -238,36 +238,24 @@ describe('Component: Fieldset SidePanel', function () {
     beforeEach(function () {
       this.initModules('Core', 'Context');
       this.injectDependencies(
-        '$http',
-        '$scope',
         '$q',
-        '$filter',
-        '$state',
-        '$translate',
-        'Analytics',
         'ContextFieldsetsService',
-        'FeatureToggleService',
-        'ModalService',
-        'Notification'
+        'FeatureToggleService'
       );
 
-      spyOn(this.Notification, 'success');
-      spyOn(this.Notification, 'error');
-      spyOn(this.Analytics, 'trackEvent');
-      spyOn(this.$state, 'go');
-      spyOn(this.ContextFieldsetsService, 'getInUse');
-      this.ContextFieldsetsService.getInUse.and.returnValue(this.$q.resolve(false));
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      this.getInUseSpy = spyOn(this.ContextFieldsetsService, 'getInUse');
+      this.getInUseSpy.and.returnValue(this.$q.resolve(false));
+      this.featureSupportSpy = spyOn(this.FeatureToggleService, 'supports');
+      this.featureSupportSpy.and.returnValue(this.$q.resolve(false));
 
-      this.$scope.fieldset = customFieldset;
-      this.compileComponent('contextFieldsetsSidepanel', { fieldset: 'fieldset' });
+      this.compileComponentNoApply('contextFieldsetsSidepanel', { fieldset: customFieldset });
     });
 
     afterEach(function () {
       // NOTE: these tests can probably be removed with the next story. We only need to temporarily validate to ensure
       // these feature flags are not being checked when compiling the component
-      expect(this.FeatureToggleService.supports).not.toHaveBeenCalledWith('contact-center-context');
-      expect(this.FeatureToggleService.supports).not.toHaveBeenCalledWith('atlas-context-dictionary-edit');
+      expect(this.featureSupportSpy).not.toHaveBeenCalledWith('contact-center-context');
+      expect(this.featureSupportSpy).not.toHaveBeenCalledWith('atlas-context-dictionary-edit');
     });
 
     it('should have edit button', function () {
