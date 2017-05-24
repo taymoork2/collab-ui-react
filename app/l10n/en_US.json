@@ -647,14 +647,16 @@
   "sharedMeetingReports": {
     "title": "SHARED MEETING USAGE",
     "link": "View Report",
-    "hostsSharingLicenses": "{{usage}} hosts using {{volume}} shared licenses",
+    "hostsSharingLicenses": "{{usage}} users",
+    "volumeOfLicenses": "{{volume}} shared meetings licenses",
     "availableSharedLicenses": "Available Shared Licenses: ",
     "sharedMeetingReport": "Shared Meeting Report",
     "sharedMeetingUsage": "Shared Meetings Usage",
-    "sharedMeetingDescription": "This graph shows the number of concurrent meetings per month.",
-    "concurrentMeetingsTitle": "Actual number of concurrent mettings held",
+    "sharedMeetingDescription": "This graph shows the number of peak concurrent meetings per month.",
+    "sharedMeetingNote": "PLEASE NOTE concurrent Spark Meetings are not yet included in this report, but will be added soon.",
+    "concurrentMeetingsTitle": "Actual number of peak concurrent mettings held",
     "concurrentMeetings": "Concurrent Meetings",
-    "maxMeetingsTitle": "Maximum number of concurrent meetings allowed",
+    "maxMeetingsTitle": "Maximum number of peak concurrent meetings allowed",
     "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data.",
     "errorLoadingSharedMeetingDetails": "There was a problem loading the Shared Meeting Report details data.",
     "siteUrlError": "Site URL is undefined.  Cannot retrieve shared meetings report.",
@@ -1234,6 +1236,7 @@
     "upload": "Upload",
     "user": "User",
     "users": "Users",
+    "verify": "Verify",
     "voice": "Voice",
     "warning": "Warning",
     "yes": "Yes"
@@ -1921,7 +1924,8 @@
       "spark-hybrid-datasecurity": "Hybrid Data Security",
       "squared-fusion-media": "Hybrid Media Service",
       "hybrid-context": "Hybrid Context Service",
-      "ept": "Enterprise Private Trunking"
+      "ept": "Enterprise Private Trunking",
+      "hybrid-imp": "Hybrid IM & Presence"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -2244,7 +2248,6 @@
       "verifySipDestination": {
         "contactCiscoSupport": "Please try again later, or contact your Cisco Support representative if the problem persists.",
         "errorFromServer": "Could not verify SIP destination. The server returned the following error message:",
-        "verify": "Verify and Save",
         "title": "Verify SIP Destination",
         "testResultsHeader": "Test Results",
         "testResults": {
@@ -2652,8 +2655,13 @@
       "settings": "Settings",
       "status": "Status"
     },
-    "settings": {
-      "mobileNumber": "Mobile Number"
+    "userSettings": {
+      "mobileNumber": "Mobile Number",
+      "enabled": "Enabled",
+      "status": "Status",
+      "menuStatus": {
+        "error": "Error"
+      }
     },
     "details": {
       "invalidInput": "Always provide valid mobile number when enabling"
@@ -4479,6 +4487,8 @@
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
+    "premiumAccounts": "IT Pro Pack Accounts",
+    "premiumCustomer": "IT Pro Pack Customer",
     "daysRemaining": "{count, plural, =1{# day} other{# days}} remaining",
     "daysLeftToPurchase": "{count, plural, =1{# day} other{# days}} left to purchase",
     "daysLeftToRenew": "{count, plural, =1{# day} other{# days}} left to renew",
@@ -4574,6 +4584,7 @@
     "trialAccountsFilter": "Trial Accounts ({{count}})",
     "activeAccountsFilter": "Purchased Accounts ({{count}})",
     "expiredAccountsFilter": "Expired Accounts ({{count}})",
+    "premiumAccountsFilter": "IT Pro Pack Accounts ({{count}})",
     "orderRequest": "Order Request",
     "subscriptions": "Subscriptions",
     "viewSubscriptionInfo": "View Subscription Info",
@@ -6743,14 +6754,14 @@
     "retention": {
       "title": "Retention",
       "subsectionLabel": "Spark Message Data",
-      "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system. <br/> There is a 5GB total storage limit.  After limit is reached, older data will be removed first.",
+      "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system. <br/> There is a 5GB total storage limit per user.  After limit is reached, older data will be removed first.",
       "retentionOption": "Past {{number}} months",
       "indefiniteRetentionOption": "Indefinitely",
-      "monthInvalid": "Should be between 1 an 120 months",
+      "monthInvalid": "Must be between 1 and 120 months",
       "defaultRetentionOption": "Default retention time",
       "customRetentionOption": "Custom retention time between 1 and 120 months",
       "customRetentionMonths": "months",
-      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about your IT Pro Package.",
+      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about our IT Pro Package.",
       "modalTitle": "Update Retention Time",
       "modalBody1": "Are you sure you want to update the retention time for Spark Message to a shorter period?",
       "modalBody2": "Any additional data older than the new time period will be deleted.",
@@ -6772,7 +6783,8 @@
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "description": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "proPackInfoCopy": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
+      "description": "Users can only launch the Cisco Spark app on mobile devices protected with lock screens."
     },
     "support": {
       "title": "Support",
@@ -7388,6 +7400,14 @@
           "settings": "Settings"
         }
       },
+      "hybridImp": {
+        "title": "Hybrid IM & Presence",
+        "description": "Dummy text to be updated",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
         "description": "Manage your encryption keys and other security services on-premises.",
@@ -7450,8 +7470,9 @@
         "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
         "routingHelp": "The correct routing must be configured on CUCM. See ",
         "select": "Select verified domain",
-        "selectDomain": "Select domain",
-        "selectDomains": "Select domains",
+        "selectDomain": "Select Domain",
+        "singular": " Domain Selected",
+        "plural": " Domains Selected",
         "selectDomainDesc": "Select the verified domains that you want to route over the enterprise trunk. If you do not select any options, calls route as normal URI dialing over the internet. See the documentation for more help",
         "radioSelect1": "I want to use a verified domain for Private Trunking",
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",

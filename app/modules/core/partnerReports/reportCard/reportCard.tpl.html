@@ -65,7 +65,7 @@
           <p ng-if="!$ctrl.secondaryIsEmpty() && !$ctrl.secondaryIsError()">{{$ctrl.getDescription($ctrl.secondaryOptions.description, $ctrl.secondaryOptions.alternateTranslations)}}</p>
           <p ng-if="$ctrl.secondaryIsEmpty()">
             {{$ctrl.getDescription($ctrl.secondaryOptions.emptyDescription, $ctrl.secondaryOptions.alternateTranslations)}}
-            <a ng-click="$ctrl.goToUsersTab()" translate='activeUsers.usersTab'></a>
+            <a href ng-click="$ctrl.goToUsersTab()" translate='activeUsers.usersTab'></a>
           </p>
           <p ng-if="$ctrl.secondaryIsError()">
             <i class="icon icon-warning no-data-warning"></i>
@@ -93,7 +93,7 @@
           </div>
         </div>
         <div class="box-match">
-          <a ng-click="$ctrl.openCloseSecondaryReport()">
+          <a href ng-click="$ctrl.openCloseSecondaryReport()">
             <span ng-if="!$ctrl.secondaryReport" translate="{{::$ctrl.options.id}}.show"></span>
             <span ng-if="$ctrl.secondaryReport" translate="{{::$ctrl.options.id}}.hide"></span>
           </a>

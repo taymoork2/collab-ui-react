@@ -2,7 +2,7 @@ import { IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { NodeListComponentCtrl } from 'modules/hercules/cluster-sidepanel/node-list/node-list.component';
 
 describe('Component: hybridServicesNodeList', () => {
-  let $componentController, $q: ng.IQService, $rootScope: ng.IRootScopeService, FusionClusterService;
+  let $componentController, $q: ng.IQService, $rootScope: ng.IRootScopeService, HybridServicesClusterService;
   let controller: NodeListComponentCtrl;
 
   beforeEach(angular.mock.module('Hercules'));
@@ -10,15 +10,15 @@ describe('Component: hybridServicesNodeList', () => {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$componentController_, _$q_, _$rootScope_, _FusionClusterService_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _HybridServicesClusterService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $rootScope = _$rootScope_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
   }
 
   function initSpies() {
-    spyOn(FusionClusterService, 'get').and.returnValue($q.resolve({}));
+    spyOn(HybridServicesClusterService, 'get').and.returnValue($q.resolve({}));
   }
 
   function initController(bindings = {}) {
@@ -286,7 +286,7 @@ describe('Component: hybridServicesNodeList', () => {
           total: 4,
         }],
       };
-      FusionClusterService.get.and.returnValue($q.resolve(incomingCluster));
+      HybridServicesClusterService.get.and.returnValue($q.resolve(incomingCluster));
       initController({
         cluster: {
           id: '1',
@@ -348,7 +348,7 @@ describe('Component: hybridServicesNodeList', () => {
         targetType: 'hds_app',
         servicesStatuses: [],
       };
-      FusionClusterService.get.and.returnValue($q.resolve(incomingCluster));
+      HybridServicesClusterService.get.and.returnValue($q.resolve(incomingCluster));
       initController({
         cluster: {
           id: '1',

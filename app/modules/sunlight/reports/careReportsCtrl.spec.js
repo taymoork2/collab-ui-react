@@ -102,29 +102,6 @@ describe('Controller: Care Reports Controller', function () {
     timeOptions = mediaTypeOptions = spiedAuthinfo = undefined;
   });
 
-  describe('CareReportsController - Care Inbound feature enabled', function () {
-    it('should default to all tasks', function (done) {
-      spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
-      $timeout(function () {
-        expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'all', true]);
-        expect(controller.mediaTypeOptions[3].name).toEqual('voice');
-        done();
-      }, 100);
-      $timeout.flush();
-    });
-  });
-
-  describe('CareReportsController - Inbound disabled', function () {
-    it('should default to chat task type', function (done) {
-      spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(false));
-      $timeout(function () {
-        expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
-        done();
-      }, 100);
-      $timeout.flush();
-    });
-  });
-
   describe('CareReportsController - Init', function () {
     it('should show five time options', function () {
       expect(controller).toBeDefined();
@@ -132,11 +109,10 @@ describe('Controller: Care Reports Controller', function () {
     });
 
     it('should show two media type options', function () {
-      expect(controller.mediaTypeOptions.length).toEqual(3);
+      expect(controller.mediaTypeOptions.length).toEqual(4);
     });
 
     it('should make calls to data services with correct options', function (done) {
-      spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(false));
       $timeout(function () {
         expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);

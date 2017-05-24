@@ -5,7 +5,7 @@
     .controller('TypeSelectorController', TypeSelectorController);
 
   /* @ngInject */
-  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, FusionClusterService, hasCucmSupportFeatureToggle, hasPartnerRegistrationFeatureToggle) {
+  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, HybridServicesClusterService, hasCucmSupportFeatureToggle, hasPartnerRegistrationFeatureToggle) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -76,9 +76,9 @@
       var promises = _.map(services, function (service) {
         switch (service) {
           case 'expressway':
-            return FusionClusterService.serviceIsSetUp('squared-fusion-mgmt');
+            return HybridServicesClusterService.serviceIsSetUp('squared-fusion-mgmt');
           case 'mediafusion':
-            return FusionClusterService.serviceIsSetUp('squared-fusion-media');
+            return HybridServicesClusterService.serviceIsSetUp('squared-fusion-media');
           default:
             return true;
         }

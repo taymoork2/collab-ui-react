@@ -11,7 +11,7 @@
     });
 
   /* @ngInject */
-  function EmergencyUpgradeConfigurationCtrl($translate, FusionClusterService, Notification) {
+  function EmergencyUpgradeConfigurationCtrl($translate, HybridServicesClusterService, Notification) {
     var vm = this;
     var clusterId;
 
@@ -65,7 +65,7 @@
     }
 
     function getUpgradeSchedule(id) {
-      return FusionClusterService.get(id)
+      return HybridServicesClusterService.get(id)
         .then(function (cluster) {
           return cluster.upgradeSchedule;
         });
@@ -73,7 +73,7 @@
 
     function updateEmergencyUpgradeAndUI(data) {
       vm.syncing = true;
-      return FusionClusterService.setUpgradeSchedule(clusterId, {
+      return HybridServicesClusterService.setUpgradeSchedule(clusterId, {
         urgentScheduleTime: data.value,
       })
         .then(updateUI)

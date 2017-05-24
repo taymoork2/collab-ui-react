@@ -8,14 +8,14 @@
 <cs-sp-container class="user-details">
   <cs-sp-section>
     <div class="section-title-row">
-      <span class="section-name">Enable</span>
+      <span class="section-name" translate="cmc.userSettings.enabled"></span>
       <cs-toggle-switch toggle-id="cmcEntitledToggle" ng-model="$ctrl.entitled" cs-change="$ctrl.entitle(toggleValue)" size="small">
       </cs-toggle-switch>
     </div>
     <div class="section-title-row">
-      <span class="section-name" translate="cmc.settings.mobileNumber"></span>
+      <span class="section-name" translate="cmc.userSettings.mobileNumber"></span>
       <form name="mobileForm">
-        <input cs-input name="mobile" ng-pattern="/^\+(?:[0-9]?){6,14}[0-9]$/"
+        <input cs-input id="cmcUserSettingMobile" name="mobile" ng-pattern="/^\+(?:[0-9]?){6,14}[0-9]$/"
                type="text" placeholder="Mobile" ng-model="$ctrl.mobileNumber"
                ng-change="$ctrl.dataChanged()" cs-input-messages="$ctrl.messages"/>
       </form>
@@ -23,5 +23,17 @@
     <div class="section-title-row" ng-if="$ctrl.invalid">
       <div class="cmc-invalid">{{$ctrl.invalidMessage}}</div>
     </div>
+
+    <div class="section-title-row">
+      <span class="section-name" translate="cmc.userSettings.status"></span>
+      <div ng-if="$ctrl.issues.length > 0" class="feature-name status-error">
+        <div ng-repeat="issue in $ctrl.issues">
+          <a href="" ui-sref="cmc.status">{{issue.message}}</a>
+        </div>
+      </div>
+    </div>
+
+
   </cs-sp-section>
+
 </cs-sp-container>

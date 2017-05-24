@@ -184,7 +184,7 @@ describe('Controller: AddResourceController', function () {
       connectorType: newConnectorType,
       serviceId: 'squared-fusion-cal',
       ClusterService: clusterServiceMock,
-      FusionClusterService: fusionClusterServiceMock,
+      HybridServicesClusterService: fusionClusterServiceMock,
       FmsOrgSettings: FmsOrgSettingsMock,
       HybridServicesExtrasService: hybridServicesExtrasServiceMock,
       firstTimeSetup: false,

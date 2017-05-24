@@ -34,9 +34,9 @@
          ng-change="dd.resizeCards()">
     </div>
     <div class="pull-left">
-      <a ng-click="dd.toggleDrilldownReport()">
-        <div ng-if="!dd.display()">{{dd.props.show()}}</div>
-        <div ng-if="dd.display()">{{dd.props.hide()}}</div>
+      <a href ng-click="dd.toggleDrilldownReport()">
+        <span ng-if="!dd.display()">{{dd.props.show()}}</span>
+        <span ng-if="dd.display()">{{dd.props.hide()}}</span>
       </a>
     </div>
   </div>

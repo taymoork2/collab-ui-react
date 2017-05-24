@@ -894,6 +894,9 @@
                 },
               },
             },
+            data: {
+              showMessengerInteropToggle: true,
+            },
           })
           .state('users.add.services.dn', {
             views: {
@@ -3177,9 +3180,6 @@
               clusterId: null,
             },
             resolve: {
-              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
@@ -3193,11 +3193,6 @@
                 templateUrl: 'modules/context/fields/hybrid-context-fields.html',
                 controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
-              },
-            },
-            resolve: {
-              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
               },
             },
           })
@@ -3263,11 +3258,6 @@
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
-              },
-            },
-            resolve: {
-              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
               },
             },
           })
@@ -3948,6 +3938,41 @@
               hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
               },
+            },
+          })
+          .state('imp-service', {
+            templateUrl: 'modules/hercules/service-specific-pages/imp-service-pages/imp-service-container.html',
+            controller: 'ImpServiceContainerController',
+            controllerAs: 'vm',
+            params: {
+              clusterId: null,
+            },
+            parent: 'main',
+          })
+          .state('imp-service.settings', {
+            url: '/services/imp/settings',
+            views: {
+              impServiceView: {
+                controllerAs: 'impServiceSettings',
+                controller: 'ImpServiceSettingsController',
+                templateUrl: 'modules/hercules/service-settings/imp-service-settings.html',
+              },
+            },
+            resolve: {
+              hasHybridImpFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp);
+              },
+            },
+          })
+          .state('imp-service.list', {
+            url: '/services/imp',
+            views: {
+              impServiceView: {
+                templateUrl: 'modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html',
+              },
+            },
+            params: {
+              clusterId: null,
             },
           })
           .state('private-trunk-settings', {

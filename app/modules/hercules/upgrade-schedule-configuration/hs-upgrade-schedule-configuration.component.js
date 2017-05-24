@@ -12,7 +12,7 @@
     });
 
   /* @ngInject */
-  function UpgradeScheduleConfigurationCtrl($rootScope, $scope, $q, $translate, $window, $modal, Authinfo, FusionClusterService, Notification, TimezoneService) {
+  function UpgradeScheduleConfigurationCtrl($rootScope, $scope, $q, $translate, $window, $modal, Authinfo, HybridServicesClusterService, Notification, TimezoneService) {
     var vm = this;
     var KEYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     vm.$onInit = $onInit;
@@ -57,7 +57,7 @@
 
     function updateUI() {
       vm.syncing = true;
-      return FusionClusterService.get(vm.clusterId)
+      return HybridServicesClusterService.get(vm.clusterId)
         .then(function (cluster) {
           return cluster.upgradeSchedule;
         })
@@ -109,14 +109,14 @@
       } else {
         scheduleDays = [data.scheduleDay.value];
       }
-      return FusionClusterService.setUpgradeSchedule(vm.clusterId, {
+      return HybridServicesClusterService.setUpgradeSchedule(vm.clusterId, {
         scheduleTime: data.scheduleTime.value,
         scheduleTimeZone: data.scheduleTimeZone.value,
         scheduleDays: scheduleDays,
       })
         .then(function deleteMoratoria() {
           var promises = vm.upgradeSchedule.moratoria.map(function (moratorium) {
-            return FusionClusterService.deleteMoratoria(vm.clusterId, moratorium.id);
+            return HybridServicesClusterService.deleteMoratoria(vm.clusterId, moratorium.id);
           });
           return $q.all(promises);
         })
@@ -132,7 +132,7 @@
     function postpone(event) {
       event.preventDefault();
       vm.syncing = true;
-      return FusionClusterService.postponeUpgradeSchedule(vm.clusterId, vm.upgradeSchedule.nextUpgradeWindow)
+      return HybridServicesClusterService.postponeUpgradeSchedule(vm.clusterId, vm.upgradeSchedule.nextUpgradeWindow)
         .then(updateUI);
     }
 

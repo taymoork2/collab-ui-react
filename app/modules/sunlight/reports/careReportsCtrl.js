@@ -3,7 +3,7 @@
 
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
-  function CareReportsController($log, $q, $scope, $timeout, $translate, CardUtils, CareReportsService, DrillDownReportProps, DummyCareReportService, FeatureToggleService, Notification, ReportConstants, SunlightReportService) {
+  function CareReportsController($log, $q, $scope, $timeout, $translate, CardUtils, CareReportsService, DrillDownReportProps, DummyCareReportService, Notification, ReportConstants, SunlightReportService) {
     var vm = this;
     var REFRESH = 'refresh';
     var SET = 'set';
@@ -68,9 +68,8 @@
     vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected);
 
     vm.filtersUpdate = filtersUpdate;
-    vm.inboundCallFeature = false;
 
-    var mediaTypes = ['all', 'chat', 'callback'];
+    var mediaTypes = ['all', 'chat', 'callback', 'voice'];
     vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
       return {
         value: i,
@@ -245,19 +244,6 @@
       CardUtils.resize(RESIZE_DELAY_IN_MS);
     }
 
-    function enableReportingFilters() {
-      if (vm.inboundCallFeature) {
-        mediaTypes.push("voice");
-      }
-      vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
-        return {
-          value: i,
-          name: name,
-          label: $translate.instant('careReportsPage.media_type_' + name),
-        };
-      });
-    }
-
     function resetCards(filter) {
       if (vm.currentFilter !== filter) {
         vm.displayEngagement = false;
@@ -274,14 +260,7 @@
       delayedResize();
     }
     $timeout(function () {
-      FeatureToggleService.atlasCareInboundTrialsGetStatus().then(function (enabled) {
-        vm.inboundCallFeature = enabled;
-        if (vm.inboundCallFeature) {
-          vm.mediaTypeSelected = vm.mediaTypeOptions[0];
-        }
-        enableReportingFilters();
-        filtersUpdate();
-      });
+      filtersUpdate();
     }, 30);
   }
 })();

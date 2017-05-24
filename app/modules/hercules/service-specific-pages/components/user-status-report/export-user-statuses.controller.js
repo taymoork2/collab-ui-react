@@ -6,7 +6,7 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService, FusionClusterService, ExcelService, ResourceGroupService) {
+  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService, HybridServicesClusterService, ExcelService, ResourceGroupService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
 
@@ -104,7 +104,7 @@
         // we have nothing to do
         return $q.resolve(statuses);
       }
-      return FusionClusterService.getAll()
+      return HybridServicesClusterService.getAll()
         .then(function (clusterList) {
           var clustersById = _.chain(clusterList)
             .keyBy('id')

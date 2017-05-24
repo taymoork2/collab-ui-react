@@ -5,7 +5,7 @@
     .controller('ExpresswayEnterNameController', ExpresswayEnterNameController);
 
   /* @ngInject */
-  function ExpresswayEnterNameController($q, $stateParams, $translate, FmsOrgSettings, FusionClusterService, HybridServicesExtrasService, Notification) {
+  function ExpresswayEnterNameController($q, $stateParams, $translate, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.name = '';
@@ -36,15 +36,15 @@
     function provisionCluster(data) {
       vm.provisioning = true;
       vm.clusterId = null;
-      return FusionClusterService.preregisterCluster(data.name, vm.releaseChannel, 'c_mgmt')
+      return HybridServicesClusterService.preregisterCluster(data.name, vm.releaseChannel, 'c_mgmt')
         .then(function (cluster) {
           vm.clusterId = cluster.id;
           var promises = [];
           if (data.selectedServices.call) {
-            promises.push(FusionClusterService.provisionConnector(vm.clusterId, 'c_ucmc'));
+            promises.push(HybridServicesClusterService.provisionConnector(vm.clusterId, 'c_ucmc'));
           }
           if (data.selectedServices.calendar) {
-            promises.push(FusionClusterService.provisionConnector(vm.clusterId, 'c_cal'));
+            promises.push(HybridServicesClusterService.provisionConnector(vm.clusterId, 'c_cal'));
           }
           return $q.all(promises);
         })

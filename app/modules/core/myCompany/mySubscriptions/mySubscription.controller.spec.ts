@@ -82,7 +82,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.subscriptionsFormatted[0].isOnline = true;
     this.data.subscriptionsFormatted[0].productInstanceId = productInstanceId;
     this.data.subscriptionsFormatted[0].name = productName;
-    this.data.subscriptionsFormatted[0].changeplanOverride = drUrlResponse;
+    this.data.subscriptionsFormatted[0].changeplanOverride = '';
     this.data.subscriptionsFormatted[0].internalSubscriptionId = onlineIntSubId;
     this.data.subscriptionsFormatted[0].quantity = 100;
     this.startController();

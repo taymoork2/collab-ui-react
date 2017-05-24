@@ -1,3 +1,5 @@
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+
 class HybridServicesClusterPageCtrl implements ng.IComponentController {
   public tabs: { title: string, state: string }[] = [];
   public localizedTitle: string;
@@ -9,7 +11,7 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
@@ -26,7 +28,7 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
   }
 
   private init(id) {
-    this.FusionClusterService.get(id)
+    this.HybridServicesClusterService.get(id)
       .then(cluster => {
         this.updateName(cluster.name);
         let route;

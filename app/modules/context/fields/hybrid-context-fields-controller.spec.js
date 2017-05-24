@@ -56,7 +56,6 @@ describe('HybridContextFieldsCtrl', function () {
   function initController() {
     var ctrl = $controller('HybridContextFieldsCtrl', {
       $scope: $scope,
-      hasContextDictionaryEditFeatureToggle: false,
     });
     ctrl.gridOptions.onRegisterApi(fakeGridApi);
     return ctrl;
@@ -463,54 +462,82 @@ describe('HybridContextFieldsCtrl', function () {
         });
       $scope.$apply();
     });
+
+    describe('max fields allowed', function () {
+
+      var DEFAULT_MAX_FIELDS = PropertyConstants.MAX_FIELDS_DEFAULT_VALUE;
+      var ORG_ID = 'some-org';
+      var MAX_FIELDS_PROPERTY = PropertyConstants.MAX_FIELDS_PROP_NAME;
+
+      beforeEach(function () {
+        ContextFieldsService.getFields.and.returnValue($q.resolve([{
+          'description': 'Field for abcd',
+          'classification': 'PII',
+          'publiclyAccessible': 'false',
+          'searchable': 'false',
+          'translations': { 'english': 'First Name' },
+          'refUrl': '/dictionary/field/v1/id/FieldContainsSearchStr',
+          'id': 'FieldContainsSearchStr',
+          'dataType': 'double',
+        }, {
+          'description': 'Field for xyz',
+          'classification': 'PII',
+          'publiclyAccessible': 'false',
+          'searchable': 'false',
+          'translations': { 'english': 'First Name' },
+          'refUrl': '/dictionary/field/v1/id/FieldNotContainSearchStr',
+          'id': 'FieldNotContainSearchStr',
+          'dataType': 'double',
+        }]));
+        controller = initController();
+        spyOn(Authinfo, 'getOrgId').and.returnValue(ORG_ID);
+      });
+
+      afterEach(function () {
+        expect(PropertyService.getProperty).toHaveBeenCalledWith(MAX_FIELDS_PROPERTY, ORG_ID);
+      });
+
+      it('should have the default max fields', function () {
+        $scope.$apply();
+        expect(controller.maxFieldsAllowed).toBe(DEFAULT_MAX_FIELDS);
+        expect(controller.showNew).toBe(true);
+      });
+
+      it('should overrides the max fields property and new is disabled', function () {
+        var maxFields = 2;
+        PropertyService.getProperty.and.returnValue($q.resolve(maxFields));
+        $scope.$apply();
+        expect(controller.maxFieldsAllowed).toBe(maxFields);
+        expect(controller.showNew).toBe(false);
+      });
+    });
   });
 
-  describe('max fields allowed', function () {
-
-    var DEFAULT_MAX_FIELDS = PropertyConstants.MAX_FIELDS_DEFAULT_VALUE;
-    var ORG_ID = 'some-org';
-    var MAX_FIELDS_PROPERTY = PropertyConstants.MAX_FIELDS_PROP_NAME;
+  describe('field edit feature', function () {
+    var featureToggleSpy;
 
     beforeEach(function () {
-      ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'description': 'Field for abcd',
-        'classification': 'PII',
-        'publiclyAccessible': 'false',
-        'searchable': 'false',
-        'translations': { 'english': 'First Name' },
-        'refUrl': '/dictionary/field/v1/id/FieldContainsSearchStr',
-        'id': 'FieldContainsSearchStr',
-        'dataType': 'double',
-      }, {
-        'description': 'Field for xyz',
-        'classification': 'PII',
-        'publiclyAccessible': 'false',
-        'searchable': 'false',
-        'translations': { 'english': 'First Name' },
-        'refUrl': '/dictionary/field/v1/id/FieldNotContainSearchStr',
-        'id': 'FieldNotContainSearchStr',
-        'dataType': 'double',
-      }]));
-      controller = initController();
-      spyOn(Authinfo, 'getOrgId').and.returnValue(ORG_ID);
+      this.injectDependencies('FeatureToggleService', '$rootScope', '$controller', '$q', '$state', 'Authinfo', 'ContextFieldsService', 'Log', 'Notification', 'LogMetricsService');
+      featureToggleSpy = spyOn(this.FeatureToggleService, 'supports');
+      this.ContextFieldsService.getFields.and.returnValue($q.resolve([]));
     });
 
     afterEach(function () {
-      expect(PropertyService.getProperty).toHaveBeenCalledWith(MAX_FIELDS_PROPERTY, ORG_ID);
+      // NOTE: these tests can probably be removed with the next story. We only need to temporarily validate to ensure
+      // these feature flags are not being checked when compiling the component/view
+      expect(this.FeatureToggleService.supports).not.toHaveBeenCalledWith('contact-center-context');
+      expect(this.FeatureToggleService.supports).not.toHaveBeenCalledWith('atlas-context-dictionary-edit');
     });
 
-    it('should have the default max fields', function () {
-      $scope.$apply();
-      expect(controller.maxFieldsAllowed).toBe(DEFAULT_MAX_FIELDS);
-      expect(controller.showNew).toBe(true);
-    });
-
-    it('should overrides the max fields property and new is disabled', function () {
-      var maxFields = 2;
-      PropertyService.getProperty.and.returnValue($q.resolve(maxFields));
-      $scope.$apply();
-      expect(controller.maxFieldsAllowed).toBe(maxFields);
-      expect(controller.showNew).toBe(false);
+    it('should show field-edit elements even if feature toggle is false', function () {
+      // set default result, just in case it's called
+      featureToggleSpy.and.returnValue($q.resolve(false));
+      this.compileView('HybridContextFieldsCtrl', 'modules/context/fields/hybrid-context-fields.html', { controllerAs: 'contextFields' });
+      var button = this.view.find('button'); // there's only one button for now
+      expect(button).toExist();
+      expect(button).toHaveClass('btn');
+      expect(button).toHaveClass('btn--people'); // ok, just because that's what it is (people???)
+      expect(button).toHaveText('common.new');
     });
   });
 });
