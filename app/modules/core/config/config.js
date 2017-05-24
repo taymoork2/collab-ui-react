@@ -482,6 +482,8 @@
         'callpickupedit',
         'device-overview',
         'devices',
+        'main-redux',
+        'devices-redux',
         'didadd',
         'huntgroups',
         'huronCallPark',

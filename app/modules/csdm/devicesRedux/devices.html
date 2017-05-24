@@ -1,0 +1,26 @@
+<div class="devices-redux">
+  <div ng-if="!devices.anyDevicesOrCodesLoaded">
+    <div style="padding: 100px; text-align: center;">
+      <i class="icon icon-2x icon-spinner"/>
+    </div>
+  </div>
+
+  <div ng-if="devices.subscriptionErrorsExist">
+    <div class="error-spinner">
+      <i class="icon icon-2x icon-spinner"/>
+    </div>
+  </div>
+
+  <div ng-if="devices.anyDevicesOrCodesLoaded">
+    <device-search search="devices.search" search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()" search-result-changed="devices.searchResultChanged(result)"></device-search>
+    <device-list devices="devices.searchResult" search-object="devices.searchObject"></device-list>
+    <div class="devices-content">
+      <div class="row">
+        <div class="large-12 columns" ui-view="leftPanel"></div>
+      </div>
+      <div class="row">
+        <div class="large-6 columns" ui-view="rightPanel"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2555,6 +2555,57 @@
               serviceId: {},
             },
           })
+          /*
+           devices
+           prototypes
+           */
+          .state('main-redux', {
+            views: {
+              'main@': {
+                templateUrl: 'modules/squared/mainRedux/main-redux.html',
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('./main'));
+                }, 'modules');
+              }),
+            },
+            abstract: true,
+            sticky: true,
+          })
+          .state('devices-redux', {
+            // abstract: true,
+            templateUrl: 'modules/csdm/devicesRedux/devices.html',
+            controller: 'DevicesReduxCtrl',
+            controllerAs: 'devices',
+            parent: 'main',
+          })
+          .state('devices-redux.search', {
+            url: '/devices-redux',
+            views: {
+              leftPanel: {
+                templateUrl: 'modules/csdm/devicesRedux/list.html',
+              },
+            },
+          })
+          .state('devices-redux.details', {
+            url: '/devices-redux/details',
+            views: {
+              leftPanel: {
+                controllerAs: 'deviceDetails',
+                controller: 'DevicesReduxDetailsCtrl',
+                templateUrl: 'modules/csdm/devicesRedux/details.html',
+              },
+            },
+            params: {
+              device: null,
+            },
+          })
+          /*
+           end: devices redux prototypes
+           */
           .state('devices', {
             url: '/devices',
             templateUrl: 'modules/squared/devices/devices.html',

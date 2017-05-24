@@ -1,0 +1,30 @@
+<div class="result-pane">
+  <div ng-repeat="group in lctrl.groupedDevices">
+    <div ng-if="group.devices">
+      <strong>{{group.displayName}}</strong>
+      <cs-card-layout class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
+        <cs-card class="small"
+                 ng-class="card.cardClass"
+                 ng-click="lctrl.expandDevice(device)"
+                 ng-repeat="device in group.devices | limitTo : lctrl.offsetForGroup(group) : 0">
+          <article ng-include="'modules/csdm/devicesRedux/deviceCard.html'"></article>
+        </cs-card>
+      </cs-card-layout>
+      <!--<ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
+        <li
+          ng-click="devices.expandDevice(device)"
+          ng-repeat="device in group.devices | limitTo : devices.offsetForGroup(group) : 0">
+          <div ng-include="'modules/squared/devicesRedux/deviceCard.html'"></div>
+        </li>
+      </ul>-->
+      <div
+        class="pager"
+        ng-if="group.devices.length > devices.offsetForGroup(group)">
+        <a
+          href ng-click="lctrl.increaseOffsetForGroup(group)">
+          Load more...
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
