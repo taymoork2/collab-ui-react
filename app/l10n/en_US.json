@@ -283,6 +283,7 @@
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
+    "ciscoSparkJabberInteropTooltip": "Enable messaging interoperability between Cisco Spark and Jabber, including exchange of messages, presence transformation and accessibility to Cisco Spark spaces.",
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
