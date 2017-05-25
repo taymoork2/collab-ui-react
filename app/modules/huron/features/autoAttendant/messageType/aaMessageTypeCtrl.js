@@ -65,7 +65,7 @@
 
     vm.MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024;
 
-    vm.addElement = '<aa-insertion-element element-text="DynamicText"></aa-insertion-element>';
+    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs"></aa-insertion-element>';
 
     //////////////////////////////////////////////////////
 

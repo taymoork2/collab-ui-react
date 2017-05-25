@@ -10,6 +10,7 @@
       restrict: 'AE',
       scope: {
         textValue: '@elementText',
+        readAs: '@readAs',
       },
       controller: 'AAInsertionElementCtrl',
       controllerAs: 'aaInsertionElement',
