@@ -80,13 +80,23 @@
             </div>
           </div>
           <div ng-if="showMessengerInteropToggle()">
-            <input
-              cs-input
-              type="checkbox"
-              ng-model="entitlements.messengerInterop"
-              id="onboard--add-entitlement--messenger-interop"
-              name="onboard--add-entitlement--messenger-interop"
-              cs-input-label="{{::'onboardModal.ciscoSparkJabberInterop' | translate}}">
+            <div class="pull-left">
+              <input
+                cs-input
+                type="checkbox"
+                ng-model="entitlements.messengerInterop"
+                id="onboard--add-entitlement--messenger-interop"
+                name="onboard--add-entitlement--messenger-interop"
+                cs-input-label="{{::'onboardModal.ciscoSparkJabberInterop' | translate}}">
+            </div>
+            <a>
+              <i
+                class="icon icon-info icon-offset-l"
+                tooltip="{{::'onboardModal.ciscoSparkJabberInteropTooltip' | translate}}"
+                tooltip-trigger="focus mouseenter"
+                tooltip-class="long-msg"
+                tooltip-placement="bottom"></i>
+            </a>
           </div>
         </div>
       </div>
