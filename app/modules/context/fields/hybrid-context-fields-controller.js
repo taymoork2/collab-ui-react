@@ -9,7 +9,7 @@ require('./_fields-list.scss');
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, PropertyService, Authinfo) {
+  function HybridContextFieldsCtrl($scope, $rootScope, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, PropertyService, Authinfo) {
     var vm = this;
     var eventListeners = [];
 
@@ -123,7 +123,7 @@ require('./_fields-list.scss');
       field.classificationUI = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
 
       if (field.lastUpdated) {
-        field.lastUpdatedUI = $filter('date')(field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+        field.lastUpdatedUI = moment(field.lastUpdated).format('LL');
       }
 
       var accessibleMap = {
@@ -230,6 +230,7 @@ require('./_fields-list.scss');
         enableRowHeaderSelection: false,
         enableColumnMenus: false,
         enableRowHashing: false,
+        enableSorting: true,
         onRegisterApi: onRegisterApi,
         columnDefs: [{
           field: 'id',

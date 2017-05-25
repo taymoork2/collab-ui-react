@@ -10,7 +10,7 @@ require('../fields/_fields-list.scss');
     .controller('HybridContextFieldsetsCtrl', HybridContextFieldsetsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsetsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsetsService, Notification, PropertyService, Authinfo) {
+  function HybridContextFieldsetsCtrl($scope, $rootScope, $state, $translate, Log, $q, ContextFieldsetsService, Notification, PropertyService, Authinfo) {
     //Initialize variables
     var vm = this;
     var eventListeners = [];
@@ -89,7 +89,7 @@ require('../fields/_fields-list.scss');
     function processFieldset(fieldset) {
 
       if (fieldset.lastUpdated) {
-        fieldset.lastUpdatedUI = $filter('date')(fieldset.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+        fieldset.lastUpdatedUI = moment(fieldset.lastUpdated).format('LL');
       }
 
       fieldset.numOfFields = (fieldset.fields) ? fieldset.fields.length : 0;
@@ -199,6 +199,7 @@ require('../fields/_fields-list.scss');
         enableRowHeaderSelection: false,
         enableColumnMenus: false,
         enableRowHashing: false,
+        enableSorting: true,
         onRegisterApi: onRegisterApi,
         columnDefs: [{
           field: 'id',

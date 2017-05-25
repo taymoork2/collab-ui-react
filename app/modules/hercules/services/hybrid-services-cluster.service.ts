@@ -39,6 +39,7 @@ interface IHost {
 type HighLevelStatusForService = 'setupNotComplete' | 'outage' | 'impaired' | 'operational';
 
 export class HybridServicesClusterService {
+  private static readonly CONTEXT_CONNECTOR_OLD_VERSION = '2.0.1-10131';
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
@@ -56,6 +57,7 @@ export class HybridServicesClusterService {
     this.extractClustersFromResponse = this.extractClustersFromResponse.bind(this);
     this.extractDataFromResponse = this.extractDataFromResponse.bind(this);
     this.filterUnknownClusters = this.filterUnknownClusters.bind(this);
+    this.filterBadContextConnectors = this.filterBadContextConnectors.bind(this);
     this.sortClusters = this.sortClusters.bind(this);
   }
 
@@ -88,7 +90,8 @@ export class HybridServicesClusterService {
     return this.$http.get(url)
       .then(this.extractDataFromResponse)
       .then((cluster: ICluster) => {
-        const clusters = this.addExtendedStateToConnectors([cluster]);
+        let clusters = this.filterBadContextConnectors([cluster]);
+        clusters = this.addExtendedStateToConnectors(clusters);
         return clusters[0];
       })
       .then((cluster) => {
@@ -102,6 +105,7 @@ export class HybridServicesClusterService {
     return this.$http.get<IFMSOrganization>(url)
       .then(this.extractClustersFromResponse)
       .then(this.filterUnknownClusters)
+      .then(this.filterBadContextConnectors)
       .then(this.addServicesStatuses)
       .then(this.sortClusters);
   }
@@ -124,6 +128,7 @@ export class HybridServicesClusterService {
       .then(this.extractDataFromResponse)
       .then((org) => {
         org.clusters = this.filterUnknownClusters(org.clusters);
+        org.clusters = this.filterBadContextConnectors(org.clusters);
         org.clusters = this.addExtendedStateToConnectors(org.clusters);
         org.clusters = this.addServicesStatuses(org.clusters);
         return org;
@@ -382,7 +387,7 @@ export class HybridServicesClusterService {
           total: hdsConnectors.length,
         }];
       } else if (cluster.targetType === 'cs_mgmt') {
-        const hybridContextConnectors = _.filter(cluster.connectors, { connectorType: 'cs_mgmt' });
+        const hybridContextConnectors = _.filter(cluster.connectors, connector => (connector.connectorType === 'cs_mgmt' || connector.connectorType === 'cs_context'));
         (cluster as IExtendedClusterFusion).servicesStatuses = [{
           serviceId: 'contact-center-context',
           state: this.HybridServicesClusterStatesService.getMergedStateSeverity(hybridContextConnectors),
@@ -439,6 +444,22 @@ export class HybridServicesClusterService {
   private filterUnknownClusters(clusters: ICluster[]): ICluster[] {
     return _.filter(clusters, cluster => {
       return cluster.targetType !== 'unknown';
+    });
+  }
+
+  /**
+   * Filtering the old Context Connectors.
+   * The issue is that the hosts show the new connectors as well as the old ones.
+   * The old ones disappear after a few days, but we need to remove them from the list so that overall state shows correctly.
+   * @param clusters
+   * @returns ICluster[] clusters
+   */
+  private filterBadContextConnectors(clusters: ICluster[]): ICluster[] {
+    return _.map(clusters, cluster => {
+      if (cluster.targetType === 'cs_mgmt') {
+        cluster.connectors = _.filter(cluster.connectors, connector => connector.runningVersion !== HybridServicesClusterService.CONTEXT_CONNECTOR_OLD_VERSION);
+      }
+      return cluster;
     });
   }
 
