@@ -6,16 +6,28 @@
     </header>
     <section>
       <div class="metrics-info">
-        <div class="no-data" ng-if="$ctrl.value === $ctrl.parentcntrl.noData">{{$ctrl.value}}</div>
-        <div ng-if="$ctrl.value !== $ctrl.parentcntrl.noData">
-          <div class="call-counts"><span tooltip="{{$ctrl.tooltipValue}}" class="cardTooltipClass">{{$ctrl.value}}</span></div>
+        <div class="no-data" ng-if="$ctrl.value === $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">{{$ctrl.value}}</div>
+        <div ng-if="$ctrl.value !== $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">
+          <div class="call-counts">
+            <span tooltip="{{$ctrl.tooltipValue}}" class="cardTooltipClass">{{$ctrl.value}}</span>
+            <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername != $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
+          </div>
           <div class="spinner-position" ng-if="!$ctrl.value && $ctrl.value !== 0">
             <i class='icon icon-spinner icon-2x'></i>
           </div>
         </div>
+        <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}"></div>
+        <div class="no-data-center-card" ng-if="$ctrl.chartOptions.noData">
+          <p>
+            <h3 class="no-data-card">
+            <i class='icon icon-warning no-data-warning-card'></i>
+            <span translate='mediaFusion.metrics.nodata'></span></h3>
+          <p>
+        </div>
       </div>
     </section>
-    <div ng-class="{'vis-hidden' : $ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters}" class="footer-section">
+    <div ng-class="{'vis-hidden' : $ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters, 'no-display': $ctrl.chartOptions.isShow==true}" class="footer-section">
+      <span ng-class="{'no-display': $ctrl.tooltipOptions.isShow==false || $ctrl.tooltipOptions.isShow==undefined}" class="availabilityDpdnSelector">{{$ctrl.parentcntrl.tooltipText}}</span>
       <cs-select ng-class="{'no-display': $ctrl.tooltipOptions.isShow==false || $ctrl.tooltipOptions.isShow==undefined}" class='sneak-peek-filter' ng-model="$ctrl.tooltipOptions.tooltipModel" options="$ctrl.tooltipOptions.values" on-change-fn="$ctrl.tooltipOptions.tooltipClickHandler()"></cs-select>
       <div ng-class="{'no-display': $ctrl.footerOptions.isShow==false || $ctrl.footerOptions.isShow==undefined}">
         {{$ctrl.footerOptions.footerDesc}} <span class="footer-value">{{$ctrl.footerOptions.value}}</span>
@@ -26,25 +38,12 @@
 
   <article class="face back" ng-class="{'no-display': !isFlipped}">
     <header>
-      <div class="metrics-header" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}"> {{$ctrl.parentcntrl.participants}} </div>
+      <div class="metrics-header"> {{$ctrl.headername}} </div>
     </header>
     <section>
-      <div class="metrics-info" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}">
-        <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer"></div>
-        <div class="no-data-center-card" ng-if="$ctrl.chartOptions.noData">
-          <p>
-            <h3 class="no-data-card">
-            <i class='icon icon-warning no-data-warning-card'></i>
-            <span translate='mediaFusion.metrics.nodata'></span></h3>
-          <p>
-        </div>
-      </div>
-      <div class="metrics-info" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">
-        <div class="card-desc-small">
-        <b translate="mediaFusion.metrics.totalCloud"></b>
-        <span translate="mediaFusion.metrics.cardDescription.cloudParticipants1"></span><br>
-        <b translate="mediaFusion.metrics.cloudcalls"></b>
-        <span translate="mediaFusion.metrics.cardDescription.cloudParticipants2"></span>
+      <div class="metrics-info">
+        <div class="card-desc">
+          <span translate="mediaFusion.metrics.cardDescription.clusterInServiceDesc" class="span-desc"></span>
         </div>
       </div>
     </section>
