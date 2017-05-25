@@ -55,6 +55,28 @@
         });
     }
 
+    function getAvalonServiceUrl() {
+      var orgId = Authinfo.getOrgId();
+      var cachedAvalonRoomsUrl = avalonRoomsUrlCache.get(orgId);
+      if (cachedAvalonRoomsUrl) {
+        var deferred = $q.defer();
+        deferred.resolve(cachedAvalonRoomsUrl);
+        return deferred.promise;
+      }
+      return $http
+        .get(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
+        .then(function (res) {
+          if (res.data && res.data.avalonRoomsUrl) {
+            avalonRoomsUrlCache.put(orgId, res.data);
+          }
+          return res.data;
+        });
+    }
+
+    function getAvalonRoomInfo(url) {
+      return $http.get(url).then(extractData);
+    }
+
     function getReport(id) {
       var orgId = Authinfo.getOrgId();
       if (useMock()) {
@@ -129,6 +151,17 @@
         });
     }
 
+    function runReport(runUrl, roomId, responseUrl, startDate, endDate) {
+      var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
+      var ed = (endDate !== null) ? moment.utc(endDate).add(1, 'days').toISOString() : null;
+      return $http.post(runUrl, {
+        "roomId": roomId,
+        "responseUrl": responseUrl,
+        "startDate": sd,
+        "endDate": ed,
+      });
+    }
+
     function patchReport(id, patchData) {
       var orgId = Authinfo.getOrgId();
       return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData);
@@ -184,11 +217,14 @@
 
     return {
       getArgonautServiceUrl: getArgonautServiceUrl,
+      getAvalonServiceUrl: getAvalonServiceUrl,
+      getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,
       getReports: getReports,
       deleteReports: deleteReports,
       createReport: createReport,
       generateReport: generateReport,
+      runReport: runReport,
       patchReport: patchReport,
       deleteReport: deleteReport,
       setEntitledForCompliance: setEntitledForCompliance,
