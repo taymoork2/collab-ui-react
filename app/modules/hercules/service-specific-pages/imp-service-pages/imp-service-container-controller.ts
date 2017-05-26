@@ -35,13 +35,14 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     Authinfo,
     ClusterService: ClusterService,
     hasPartnerRegistrationFeatureToggle,
+    hasNodesViewFeatureToggle,
     Notification: Notification,
     private $translate: ng.translate.ITranslateService,
     ServiceDescriptor,
     ServiceStateChecker,
     USSService,
   ) {
-    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle,  Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
+    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, hasNodesViewFeatureToggle, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
     this.clusterId = this.$stateParams['clusterId'];
   }
 }

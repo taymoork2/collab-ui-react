@@ -17,6 +17,7 @@ export abstract class ExpresswayContainerController {
     private Authinfo,
     private ClusterService: ClusterService,
     protected hasPartnerRegistrationFeatureToggle,
+    protected hasNodesViewFeatureToggle,
     protected Notification: Notification,
     protected ServiceDescriptor,
     private ServiceStateChecker,
@@ -24,7 +25,6 @@ export abstract class ExpresswayContainerController {
     protected servicesId: string[],
     private connectorType: ConnectorType,
   ) {
-
     this.firstTimeSetup();
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
