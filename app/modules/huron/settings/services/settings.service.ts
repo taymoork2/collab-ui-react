@@ -501,7 +501,7 @@ export class HuronSettingsService {
 
   private saveAutoAttendantSite(site: ISite): ng.IPromise<void> {
     return this.ServiceSetup.saveAutoAttendantSite({
-      siteSteeringDigit: site.steeringDigit === 'null' ? null : site.steeringDigit,
+      siteSteeringDigit: site.routingPrefix ? site.routingPrefix.substr(0, 1) : null,
       siteCode: site.routingPrefix ? site.routingPrefix.substr(1) : null,
       uuid: site.uuid,
     })
