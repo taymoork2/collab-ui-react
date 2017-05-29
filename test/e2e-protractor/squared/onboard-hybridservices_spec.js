@@ -79,7 +79,7 @@ describe('Onboard users with Hybrid Services', function () {
       activate.setup(null, testUser);
     });
 
-    it('should re-onboard with more entitlements to confirm the additive case', function () {
+    xit('should re-onboard with more entitlements to confirm the additive case', function () {
       users.createUser(testUser);
 
       // Select hybrid services
@@ -104,7 +104,7 @@ describe('Onboard users with Hybrid Services', function () {
   });
 
   describe('Onboard user with Call Service Aware', function () {
-    it('should add user (Message On, Aware on)', function () {
+    xit('should add user (Message On, Aware on)', function () {
       users.createUser(testUser);
 
       utils.click(users.paidMsgCheckbox);
@@ -118,7 +118,7 @@ describe('Onboard users with Hybrid Services', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function () {
+    xit('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
       utils.expectIsDisplayed(users.servicesPanel);
 
@@ -133,7 +133,7 @@ describe('Onboard users with Hybrid Services', function () {
   });
 
   describe('Onboard user with Call Service Connect', function () {
-    it('should add user (Calendar, Aware, and Connect all on)', function () {
+    xit('should add user (Calendar, Aware, and Connect all on)', function () {
       users.createUser(testUser);
 
       utils.click(users.paidMsgCheckbox);
@@ -149,7 +149,7 @@ describe('Onboard users with Hybrid Services', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function () {
+    xit('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
       utils.expectIsDisplayed(users.servicesPanel);
 
