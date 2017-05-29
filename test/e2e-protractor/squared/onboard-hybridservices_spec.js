@@ -79,15 +79,6 @@ describe('Onboard users with Hybrid Services', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function () {
-      utils.searchAndClick(testUser);
-      utils.expectIsDisplayed(users.servicesPanel);
-
-      utils.expectIsDisplayed(users.messageServiceFree);
-      utils.expectIsDisplayed(users.meetingServicePaid);
-      expectHybridServices('Status not found', 'Off', false);
-    });
-
     it('should re-onboard with more entitlements to confirm the additive case', function () {
       users.createUser(testUser);
 
