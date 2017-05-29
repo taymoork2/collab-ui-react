@@ -69,6 +69,8 @@ export class CmcService {
       let url: string = this.dockerUrl + `/organizations/${orgId}/status`;
       return this.$http.get(url).then((response) => {
         return response.data;
+      }, (error) => {
+        throw(error.data);
       });
     } else {
       return this.CmcServiceMock.mockOrgStatus(orgId);

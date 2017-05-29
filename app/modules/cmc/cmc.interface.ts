@@ -29,3 +29,10 @@ export interface ICmcOrgStatusResponse extends ICmcStatusResponse {
 
 export interface ICmcUserStatusResponse extends ICmcStatusResponse {
 }
+
+export interface ICmcError {
+  message: string;
+  errors?: {
+    description: string;
+  }[];
+}
