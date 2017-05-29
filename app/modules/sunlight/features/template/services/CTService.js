@@ -26,14 +26,32 @@
       getValidationMessages: getValidationMessages,
       getStatesBasedOnType: getStatesBasedOnType,
       getOverviewPageCards: getOverviewPageCards,
+      getPromptTimeOptions: getPromptTimeOptions,
+      getPromptTime: getPromptTime,
     };
     return service;
+
+    function getPromptTimeOptions() {
+      return [
+        { label: $translate.instant('careChatTpl.promptTimeOption1'), value: 60 },
+        { label: $translate.instant('careChatTpl.promptTimeOption2'), value: 180 },
+        { label: $translate.instant('careChatTpl.promptTimeOption3'), value: 300 },
+      ];
+    }
+
+    function getPromptTime(time) {
+      var timeOptions = getPromptTimeOptions();
+      return _.find(timeOptions, {
+        value: time || timeOptions[0].value,
+      });
+    }
 
     function getLengthValidationConstants() {
       return {
         singleLineMaxCharLimit25: 25,
         singleLineMaxCharLimit50: 50,
         multiLineMaxCharLimit: 250,
+        multiLineMaxCharLimit100: 100,
         empty: 0,
       };
     }
@@ -228,73 +246,85 @@
       };
     }
 
-    function getOverviewPageCards(mediaType) {
+    function getOverviewPageCards(mediaType, isProactiveFlagEnabled) {
+      var cards = [];
       switch (mediaType) {
         case 'chat':
-          return [
-            { name: 'customerInformation', mediaIcons: [] },
-            { name: 'agentUnavailable', mediaIcons: [] },
-            { name: 'offHours', mediaIcons: [] },
-            { name: 'feedback', mediaIcons: [] },
-          ];
+          if (isProactiveFlagEnabled) {
+            cards.push({ name: 'proactivePrompt', mediaIcons: [] });
+          }
+          cards.push({ name: 'customerInformation', mediaIcons: [] });
+          cards.push({ name: 'agentUnavailable', mediaIcons: [] });
+          cards.push({ name: 'offHours', mediaIcons: [] });
+          cards.push({ name: 'feedback', mediaIcons: [] });
+          break;
         case 'callback':
-          return [
-            { name: 'customerInformation', mediaIcons: [] },
-            { name: 'offHours', mediaIcons: [] },
-            { name: 'feedbackCallback', mediaIcons: [] },
-          ];
+          cards.push({ name: 'customerInformation', mediaIcons: [] });
+          cards.push({ name: 'offHours', mediaIcons: [] });
+          cards.push({ name: 'feedbackCallback', mediaIcons: [] });
+          break;
         case 'chatPlusCallback':
-          return [
-            { name: 'customerInformationChat', mediaIcons: ['icon-message'] },
-            { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
-            { name: 'feedback', mediaIcons: ['icon-message'] },
-            { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
-            { name: 'feedbackCallback', mediaIcons: ['icon-phone'] },
-            { name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] },
-
-          ];
+          if (isProactiveFlagEnabled) {
+            cards.push({ name: 'proactivePrompt', mediaIcons: ['icon-message'] });
+          }
+          cards.push({ name: 'customerInformationChat', mediaIcons: ['icon-message'] });
+          cards.push({ name: 'agentUnavailable', mediaIcons: ['icon-message'] });
+          cards.push({ name: 'feedback', mediaIcons: ['icon-message'] });
+          cards.push({ name: 'customerInformationCallback', mediaIcons: ['icon-phone'] });
+          cards.push({ name: 'feedbackCallback', mediaIcons: ['icon-phone'] });
+          cards.push({ name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] });
+          break;
         default:
-          return [];
+          return cards;
       }
+      return cards;
     }
 
-    function getStatesBasedOnType(mediaType) {
+    function getStatesBasedOnType(mediaType, isProactiveFlagEnabled) {
+      var states = [];
       switch (mediaType) {
         case 'chat':
-          return ['name',
-            'overview',
-            'customerInformation',
-            'agentUnavailable',
-            'offHours',
-            'feedback',
-            'profile',
-            'chatStatusMessages',
-            'summary',
-          ];
+          states.push('name');
+          states.push('overview');
+          if (isProactiveFlagEnabled) {
+            states.push('proactivePrompt');
+          }
+          states.push('customerInformation');
+          states.push('agentUnavailable');
+          states.push('offHours');
+          states.push('feedback');
+          states.push('profile');
+          states.push('chatStatusMessages');
+          states.push('summary');
+          break;
         case 'callback':
-          return ['name',
-            'overview',
-            'customerInformation',
-            'offHours',
-            'feedbackCallback',
-            'summary',
-          ];
+          states.push('name');
+          states.push('overview');
+          states.push('customerInformation');
+          states.push('offHours');
+          states.push('feedbackCallback');
+          states.push('summary');
+          break;
         case 'chatPlusCallback':
-          return ['name',
-            'overview',
-            'customerInformationChat',
-            'agentUnavailable',
-            'feedback',
-            'profile',
-            'chatStatusMessages',
-            'customerInformationCallback',
-            'feedbackCallback',
-            'offHours',
-            'summary',
-          ];
+          states.push('name');
+          states.push('overview');
+          if (isProactiveFlagEnabled) {
+            states.push('proactivePrompt');
+          }
+          states.push('customerInformationChat');
+          states.push('agentUnavailable');
+          states.push('feedback');
+          states.push('profile');
+          states.push('chatStatusMessages');
+          states.push('customerInformationCallback');
+          states.push('feedbackCallback');
+          states.push('offHours');
+          states.push('summary');
+          break;
         default:
-          return [];
+          return states;
       }
+      return states;
     }
   }
 })();

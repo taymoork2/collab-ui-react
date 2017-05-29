@@ -2,19 +2,20 @@
 
 describe('Care Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
+  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, FeatureToggleService, $state, $stateParams, LogMetricsService;
   var Notification, $translate, _scomUrl, $httpBackend;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Template';
   var NAME_PAGE_INDEX = 0;
   var OVERVIEW_PAGE_INDEX = 1;
-  var AGENT_UNAVAILABLE_PAGE_INDEX = 3;
-  var OFF_HOURS_PAGE_INDEX = 4;
-  var FEEDBACK_PAGE_INDEX = 5;
-  var PROFILE_PAGE_INDEX = 6;
-  var CHAT_STATUS_MESSAGES_PAGE_INDEX = 7;
-  var EMBED_CODE_PAGE_INDEX = 8;
+  var PROACTIVE_PROMPT_PAGE_INDEX = 2;
+  var AGENT_UNAVAILABLE_PAGE_INDEX = 4;
+  var OFF_HOURS_PAGE_INDEX = 5;
+  var FEEDBACK_PAGE_INDEX = 6;
+  var PROFILE_PAGE_INDEX = 7;
+  var CHAT_STATUS_MESSAGES_PAGE_INDEX = 8;
+  var EMBED_CODE_PAGE_INDEX = 9;
   var OrgName = 'Test-Org-Name';
   var OrgId = 'Test-Org-Id';
   var businessHours = getJSONFixture('sunlight/json/features/chatTemplateCreation/businessHoursSchedule.json');
@@ -127,6 +128,38 @@ describe('Care Setup Assistant Ctrl', function () {
       ] },
   };
 
+  var existingTemplateData = {
+    name: 'abcd',
+    configuration: {
+      mediaType: 'chat',
+      mediaSpecificConfiguration: {
+        useOrgProfile: true,
+        displayText: 'testOrg',
+        orgLogoUrl: '',
+        useAgentRealName: false,
+      },
+      pages: {
+        customerInformation: {
+          enabled: true,
+          fields: {},
+        },
+        offHours: {
+          enabled: false,
+          message: '',
+          schedule: {
+            businessDays: 'Monday',
+            open24Hours: true,
+            timings: {
+              startTime: '08:00 AM',
+              endTime: '12:00 AM',
+            },
+            timezone: 'America/New_York',
+          },
+        },
+      },
+    },
+  };
+
   var selectedDaysByDefault = businessHours.selectedDaysByDefault;
   var defaultTimeZone = businessHours.defaultTimeZone;
   var defaultDayPreview = businessHours.defaultDayPreview;
@@ -134,7 +167,7 @@ describe('Care Setup Assistant Ctrl', function () {
   var defaultTimings = businessHours.defaultTimings;
 
   afterEach(function () {
-    controller = $scope = $modal = $q = CTService = getLogoDeferred = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
+    controller = $scope = $modal = $q = CTService = getLogoDeferred = getTogglePromise = getLogoUrlDeferred = FeatureToggleService = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
     Notification = $translate = undefined;
   });
 
@@ -148,48 +181,68 @@ describe('Care Setup Assistant Ctrl', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
-    _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
-    $scope = _$rootScope_.$new();
-    $modal = _$modal_;
-    $q = _$q_;
-    $translate = _$translate_;
-    CTService = _CTService_;
-    SunlightConfigService = _SunlightConfigService_;
-    $state = _$state_;
-    Notification = _Notification_;
-    $stateParams = _$stateParams_;
-    LogMetricsService = _LogMetricsService_;
-    _scomUrl = UrlConfig.getScomUrl() + '/' + OrgId;
-    $httpBackend = _$httpBackend_;
+  var intializeCtrl = function (template, isEditFeature) {
+    return function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_, _FeatureToggleService_,
+      _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
+      $scope = _$rootScope_.$new();
+      $modal = _$modal_;
+      $q = _$q_;
+      $translate = _$translate_;
+      CTService = _CTService_;
+      FeatureToggleService = _FeatureToggleService_;
+      SunlightConfigService = _SunlightConfigService_;
+      $state = _$state_;
+      Notification = _Notification_;
+      $stateParams = _$stateParams_;
+      LogMetricsService = _LogMetricsService_;
+      _scomUrl = UrlConfig.getScomUrl() + '/' + OrgId;
+      $httpBackend = _$httpBackend_;
 
-    $stateParams.type = 'chat';
-
-    // set language to en_US to show AM and PM for startTime and endTime
-    $translate.use(businessHours.userLang);
-    //create mock deferred object which will be used to return promises
-    getLogoDeferred = $q.defer();
-    getLogoUrlDeferred = $q.defer();
-    spyOn($modal, 'open');
-    spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
-    spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
-    spyOn(Notification, 'success');
-    spyOn(Notification, 'errorWithTrackingId');
-    spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
-    spyOn(SunlightConfigService, 'updateChatConfig');
-    $stateParams = {
-      template: undefined,
-      isEditFeature: false,
+      // set language to en_US to show AM and PM for startTime and endTime
+      $translate.use(businessHours.userLang);
+      //create mock deferred object which will be used to return promises
+      getLogoDeferred = $q.defer();
+      getLogoUrlDeferred = $q.defer();
+      getTogglePromise = $q.defer();
+      spyOn(FeatureToggleService, 'atlasCareProactiveChatTrialsGetStatus').and.returnValue(getTogglePromise.promise);
+      spyOn($modal, 'open');
+      spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
+      spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
+      spyOn(Notification, 'success');
+      spyOn(Notification, 'errorWithTrackingId');
+      spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
+      spyOn(SunlightConfigService, 'updateChatConfig');
+      $stateParams = {
+        template: template || undefined,
+        isEditFeature: isEditFeature || false,
+        type: 'chat',
+      };
+      controller = $controller('CareSetupAssistantCtrl', {
+        $scope: $scope,
+        $stateParams: $stateParams,
+      });
     };
-    controller = $controller('CareSetupAssistantCtrl', {
-      $scope: $scope,
-    });
   };
 
   function checkStateOfNavigationButtons(pageIndex, previousButtonState, nextButtonState) {
     controller.currentState = controller.states[pageIndex];
     expect(controller.previousButton(pageIndex)).toEqual(previousButtonState);
     expect(controller.nextButton()).toEqual(nextButtonState);
+  }
+
+  function setPromptTime(time) {
+    var defaultPromptTime = {
+      label: 'careChatTpl.promptTimeOption1',
+      value: 60,
+    };
+
+    expect(controller.promptTime).toEqual(defaultPromptTime);
+    controller.promptTime = time;
+  }
+
+  function resolveTogglePromise() {
+    getTogglePromise.resolve(true);
+    $scope.$apply();
   }
 
   function resolveLogoPromise() {
@@ -211,8 +264,9 @@ describe('Care Setup Assistant Ctrl', function () {
 
   describe('should test the', function () {
 
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
+      resolveTogglePromise();
       resolveLogoPromise();
       resolveLogoUrlPromise();
     });
@@ -234,9 +288,9 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('Name Page', function () {
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
-      resolveLogoPromise();
+      resolveTogglePromise();
     });
     it("next button should be enabled when name is present", function () {
       controller.template.name = templateName;
@@ -265,8 +319,9 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('Feedback Page', function () {
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
+      resolveTogglePromise();
       controller.currentState = controller.states[FEEDBACK_PAGE_INDEX];
     });
 
@@ -305,8 +360,9 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('Profile Page', function () {
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
+      resolveTogglePromise();
       controller.currentState = controller.states[PROFILE_PAGE_INDEX];
     });
     it('set Organization name and prev/next should be enabled', function () {
@@ -337,7 +393,6 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('should set template profile to org profile if org profile is selected when nextBtn is clicked', function () {
-      resolveLogoPromise();
       resolveLogoUrlPromise();
       controller.selectedTemplateProfile = controller.profiles.org;
       controller.nextButton();
@@ -350,7 +405,6 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('should set template profile to agent profile if agent profile is selected when nextBtn is clicked', function () {
-      resolveLogoPromise();
       resolveLogoUrlPromise();
       controller.selectedTemplateProfile = controller.profiles.agent;
       controller.selectedAgentProfile = controller.agentNames.alias;
@@ -371,15 +425,16 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('Overview Page', function () {
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
-      resolveLogoPromise();
+      resolveTogglePromise();
     });
     it("should have previous and next button enabled", function () {
       checkStateOfNavigationButtons(OVERVIEW_PAGE_INDEX, true, true);
     });
 
     it("should initialize all cards as enabled ", function () {
+      expect(controller.template.configuration.proactivePrompt.enabled).toBe(true);
       expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);
       expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
@@ -389,9 +444,9 @@ describe('Care Setup Assistant Ctrl', function () {
 
   describe('Customer Info Page', function () {
 
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
-      resolveLogoPromise();
+      resolveTogglePromise();
     });
 
     it("should set the active item", function () {
@@ -565,11 +620,144 @@ describe('Care Setup Assistant Ctrl', function () {
     });
   });
 
-  describe('Off Hours Page', function () {
-    beforeEach(inject(intializeCtrl));
+  describe('Proactive Prompt Page', function () {
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
+      resolveTogglePromise();
+      controller.currentState = controller.states[PROACTIVE_PROMPT_PAGE_INDEX]; // set proactive prompt view
+    });
+
+    it("should set default promptTime, promptTitle and promptMessage", function () {
+      expect(controller.promptTime.label).toEqual('careChatTpl.promptTimeOption1');
+      expect(controller.promptTime.value).toEqual(60);
+      expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
+        .toEqual(controller.orgName);
+      expect(controller.template.configuration.proactivePrompt.fields.promptMessage.message)
+        .toEqual('careChatTpl.defaultPromptMessage');
+    });
+
+    it('should disable the next button if promptTitle is more than 25 characters', function () {
+      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = Array(27).join("a");
+      checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
+    });
+
+    it('should disable the next button if promptMessage is more than 100 characters', function () {
+      controller.template.configuration.proactivePrompt.fields.promptMessage.message = Array(102).join("a");
+      checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
+    });
+
+    it('should disable the next button when promptTitle has any invalid character', function () {
+      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = ">";
+      checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
+    });
+
+    it('should disable the next button when promptMessage has any invalid character', function () {
+      controller.template.configuration.proactivePrompt.fields.promptMessage.message = ">";
+      checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
+    });
+
+    it('should enable the previous and next button if all the fields are valid', function () {
+      controller.template.configuration.proactivePrompt.fields.promptTime = 60;
+      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = "Need Help?";
+      controller.template.configuration.proactivePrompt.fields.promptMessage.message = "Chat with specialists.";
+      checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, true);
+    });
+
+    it('should update the templateJSON with proactive prompt data', function () {
+      var promptTime = {
+        label: "3 minute",
+        value: 180,
+      };
+
+      var expectedJSON = {
+        enabled: true,
+        fields: {
+          promptTime: 180,
+          promptTitle: {
+            displayText: controller.orgName,
+          },
+          promptMessage: {
+            message: 'careChatTpl.defaultPromptMessage',
+          },
+        },
+      };
+
+      setPromptTime(promptTime);
+      controller.nextButton();
+      expect(controller.template.configuration.proactivePrompt).toEqual(expectedJSON);
+    });
+  });
+
+  describe('Proactive Prompt Data for existing templates', function () {
+    beforeEach(inject(intializeCtrl(existingTemplateData, true)));
+    beforeEach(function () {
+      resolveTogglePromise();
+    });
+
+    it('should update the existing template with the default proactive prompt data', function () {
+      var expectedJSON = {
+        enabled: false,
+        fields: {
+          promptTime: 60,
+          promptTitle: {
+            displayText: controller.orgName,
+          },
+          promptMessage: {
+            message: 'careChatTpl.defaultPromptMessage',
+          },
+        },
+      };
+
+      expect(controller.template.configuration.proactivePrompt).toEqual(expectedJSON);
+    });
+
+    it('should update the existing template with whatever proactive prompt data is set', function () {
+      var existingJSON = {
+        enabled: false,
+        fields: {
+          promptTime: 60,
+          promptTitle: {
+            displayText: controller.orgName,
+          },
+          promptMessage: {
+            message: 'careChatTpl.defaultPromptMessage',
+          },
+        },
+      };
+
+      var updatedJSON = {
+        enabled: true,
+        fields: {
+          promptTime: 300,
+          promptTitle: {
+            displayText: controller.orgName,
+          },
+          promptMessage: {
+            message: 'careChatTpl.defaultPromptMessage',
+          },
+        },
+      };
+
+      var promptTime = {
+        label: "5 minutes",
+        value: 300,
+      };
+
+      expect(controller.template.configuration.proactivePrompt).toEqual(existingJSON);
+      controller.currentState = controller.states[OVERVIEW_PAGE_INDEX];
+      controller.template.configuration.proactivePrompt.enabled = true;
+      controller.currentState = controller.states[PROACTIVE_PROMPT_PAGE_INDEX];
+      setPromptTime(promptTime);
+      controller.nextButton();
+      expect(controller.template.configuration.proactivePrompt).toEqual(updatedJSON);
+    });
+  });
+
+  describe('Off Hours Page', function () {
+    beforeEach(inject(intializeCtrl()));
+    beforeEach(function () {
+      resolveTogglePromise();
       controller.currentState = controller.states[OFF_HOURS_PAGE_INDEX]; // set to off hours view
-      resolveLogoPromise();
     });
 
     function setTimings(startTime) {
@@ -706,7 +894,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
   describe('Summary Page', function () {
     var deferred;
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
       deferred = $q.defer();
       spyOn(SunlightConfigService, 'createChatTemplate').and.returnValue(deferred.promise);
@@ -804,9 +992,9 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('Chat Status Messages Page', function () {
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
-      resolveLogoPromise();
+      resolveTogglePromise();
     });
     beforeEach(function () {
       controller.currentState = controller.states[CHAT_STATUS_MESSAGES_PAGE_INDEX];
@@ -836,8 +1024,9 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('Agent Unavailable Page', function () {
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
+      resolveTogglePromise();
       controller.currentState = controller.states[AGENT_UNAVAILABLE_PAGE_INDEX];
     });
 
@@ -862,11 +1051,10 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('For callback media', function () {
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
       controller.selectedMediaType = 'callback';
-      controller.setStates();
-      controller.setOverviewCards();
+      resolveTogglePromise();
       controller.getDefaultTemplate();
     });
 
@@ -903,11 +1091,10 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('For chat plus callback selected media type', function () {
-    beforeEach(inject(intializeCtrl));
+    beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
       controller.selectedMediaType = 'chatPlusCallback';
-      controller.setStates();
-      controller.setOverviewCards();
+      resolveTogglePromise();
       controller.getDefaultTemplate();
     });
 
@@ -915,6 +1102,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.states).toEqual([
         'name',
         'overview',
+        'proactivePrompt',
         'customerInformationChat',
         'agentUnavailable',
         'feedback',
@@ -929,6 +1117,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it('the overview page should have expected cards', function () {
       expect(controller.overviewCards).toEqual([
+        { name: 'proactivePrompt', mediaIcons: ['icon-message'] },
         { name: 'customerInformationChat', mediaIcons: ['icon-message'] },
         { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
         { name: 'feedback', mediaIcons: ['icon-message'] },
@@ -942,7 +1131,8 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.mediaType).toEqual('chatPlusCallback');
     });
 
-    it('should initialize only customer info & off-hours cards as enabled', function () {
+    it('should initialize all cards as enabled ', function () {
+      expect(controller.template.configuration.proactivePrompt.enabled).toBe(true);
       expect(controller.template.configuration.pages.customerInformationChat.enabled).toBe(true);
       expect(controller.template.configuration.pages.customerInformationCallback.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);

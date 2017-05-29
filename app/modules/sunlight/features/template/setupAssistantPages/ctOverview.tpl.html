@@ -7,8 +7,8 @@
   <div class="ct-sa-content overview-card-layout">
     <cs-card-layout block-view="true" class="ct-card-center">
       <cs-card ng-repeat="card in careSetupAssistant.overviewCards" class="medium">
-        <article ng-class="{'ct-card-border-enabled': careSetupAssistant.template.configuration.pages[card.name].enabled,
-                 'ct-card-border-disabled': !careSetupAssistant.template.configuration.pages[card.name].enabled}"
+        <article ng-class="{'ct-card-border-enabled': careSetupAssistant.getCardConfig(card.name).enabled,
+                 'ct-card-border-disabled': !careSetupAssistant.getCardConfig(card.name).enabled}"
                  class="ct-card-overview">
           <!--NOTE: Once we have card icons available, we should uncomment the below line-->
           <!--<i ng-class="['icon', 'icon-' + careChatSA.overview.{{card.name}},'icon-4x','ct-card-img']"></i>-->
@@ -30,7 +30,7 @@
               <div ng-switch-when="true">
                 <div tooltip="{{::'careChatTpl.customerInfoToggleTooltipMessage' | translate}}"
                      tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-animation="false">
-                  <cs-toggle-switch ng-model="careSetupAssistant.template.configuration.pages[card.name].enabled"
+                  <cs-toggle-switch ng-model="careSetupAssistant.getCardConfig(card.name).enabled"
                                     toggle-id={{card.name}}
                                     is-disabled="true"
                                     size="small">
@@ -38,7 +38,7 @@
                 </div>
               </div>
               <div ng-switch-default>
-                <cs-toggle-switch ng-model="careSetupAssistant.template.configuration.pages[card.name].enabled"
+                <cs-toggle-switch ng-model="careSetupAssistant.getCardConfig(card.name).enabled"
                                   toggle-id={{card.name}}
                                   size="small">
                 </cs-toggle-switch>

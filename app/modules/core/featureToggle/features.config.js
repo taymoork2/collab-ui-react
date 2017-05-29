@@ -3,6 +3,7 @@ module.exports = {
   atlas2017NameChange: 'atlas-2017-name-change',
   atlasCareTrials: 'atlas-care-trials',
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
+  atlasCareProactiveChatTrials: 'atlas-care-proactiveChat-trials',
   atlasCareAutomatedRouteTrials: 'care-automated-routing',
   atlasContextServiceTrials: 'atlas-context-service-trials',
   atlasDarling: 'atlas-darling',
