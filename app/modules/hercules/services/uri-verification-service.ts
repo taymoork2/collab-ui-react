@@ -1,4 +1,4 @@
-class UriVerificationService {
+export class UriVerificationService {
   // private
 
   /* @ngInject */

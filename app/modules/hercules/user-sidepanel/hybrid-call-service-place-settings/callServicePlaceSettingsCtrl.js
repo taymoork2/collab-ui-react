@@ -3,10 +3,13 @@
 
   angular
     .module('Hercules')
-    .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
+    .controller('CallServicePlaceSettingsCtrl', CallServicePlaceSettingsCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, HybridServicesClusterService, UriVerificationService, DomainManagementService, $translate, ResourceGroupService, UCCService, HybridServicesI18NService) {
+  function CallServicePlaceSettingsCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, HybridServicesClusterService, UriVerificationService, DomainManagementService, $translate, ResourceGroupService, UCCService, HybridServicesI18NService) {
+
+    $scope.userId = $stateParams.currentUserId;
+
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
     $scope.currentUser = $stateParams.currentUser || $stateParams.getCurrentPlace();

@@ -46,7 +46,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
   }));
 
   function initController() {
-    $controller('CallServicePreviewCtrl', {
+    $controller('CallServicePlaceSettingsCtrl', {
       $scope: $scope,
       $state: $state,
       $stateParams: $stateParams,
