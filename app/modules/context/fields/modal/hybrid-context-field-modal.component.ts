@@ -83,7 +83,7 @@ class FieldModalCtrl implements ng.IComponentController {
     this.publiclyAccessibleMap[this.$translate.instant('context.dictonary.cisco')] = true;
 
     // set up the options and placeholder for dataType
-    this.dataTypeOptions = _.keys(this.dataTypeApiMap);
+    this.dataTypeOptions = _.keys(this.dataTypeApiMap).sort();
     this.dataTypePlaceholder = this.$translate.instant('context.dictionary.fieldPage.dataTypePlaceholder');
 
     // set up the options and help test for classification (data privacy)

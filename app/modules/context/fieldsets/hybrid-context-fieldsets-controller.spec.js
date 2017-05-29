@@ -855,23 +855,26 @@ describe('HybridContextFieldsetsCtrl', function () {
   });
 
   describe('fieldset edit feature', function () {
-    var featureToggleSpy;
 
     beforeEach(function () {
-      this.injectDependencies('FeatureToggleService', '$rootScope', '$controller', '$q', '$state', 'Authinfo', 'ContextFieldsetsService', 'Log', 'Notification', 'LogMetricsService');
-      featureToggleSpy = spyOn(this.FeatureToggleService, 'supports');
+      this.injectDependencies(
+        '$q',
+        'ContextFieldsetsService',
+        'FeatureToggleService'
+      );
+      this.featureSupportSpy = spyOn(this.FeatureToggleService, 'supports');
       this.ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
     });
 
     afterEach(function () {
       // NOTE: these tests can probably be removed with the next story. We only need to temporarily validate to ensure
       // these feature flags are not being checked when compiling the component/view
-      expect(this.FeatureToggleService.supports).not.toHaveBeenCalledWith('contact-center-context');
-      expect(this.FeatureToggleService.supports).not.toHaveBeenCalledWith('atlas-context-dictionary-edit');
+      expect(this.featureSupportSpy).not.toHaveBeenCalledWith('contact-center-context');
+      expect(this.featureSupportSpy).not.toHaveBeenCalledWith('atlas-context-dictionary-edit');
     });
 
     it('should show fieldset-edit elements even if feature toggle is false', function () {
-      featureToggleSpy.and.returnValue($q.resolve(false));
+      this.featureSupportSpy.and.returnValue($q.resolve(false));
       this.compileView('HybridContextFieldsetsCtrl', 'modules/context/fieldsets/hybrid-context-fieldsets.html', { controllerAs: 'contextFieldsets' });
       var button = this.view.find('button'); // there's only one button for now
       expect(button).toExist();

@@ -9,6 +9,7 @@ module.exports = {
   atlasDataRetentionSettings: 'atlas-data-retention-settings',
   atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
   atlasDeviceExport: 'atlas-device-export',
+  atlasEdiscovery: 'atlas-ediscovery',
   atlasEmailStatus: 'atlas-email-status',
   atlasFTSWRemoveUsersSSO: 'atlas-ftsw-remove-users-sso',
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
@@ -198,4 +199,5 @@ module.exports = {
   csdmPlaceGuiSettings: "csdm-place-gui-settings",
   atlasHybridPartnerRegistration: 'atlas-hybrid-partner-registration',
   csdmAtaCpc: "csdm-ata-cpc",
+  hi1487: "h-i1487",
 };

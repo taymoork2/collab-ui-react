@@ -22,7 +22,7 @@ const NUMBER_FORMAT_DIRECT_LINE: string = 'NUMBER_FORMAT_DIRECT_LINE';
 export class HuntGroupService {
   private huntGroupResource: IHuntGroupResource;
   private huntGroupCopy: HuntGroup;
-  private huntGroupProperties: Array<string> = ['uuid', 'name', 'huntMethod', 'maxRingSecs', 'maxWaitMins', 'numbers', 'members'];
+  private huntGroupProperties: Array<string> = ['uuid', 'name', 'huntMethod', 'maxRingSecs', 'maxWaitMins', 'sendToApp', 'numbers', 'members'];
 
   /* @ngInject */
   constructor(

@@ -7,7 +7,9 @@ import huntGroupMethod from 'modules/call/features/hunt-group/hunt-group-method'
 import huntGroupMaxRingTime from 'modules/call/features/hunt-group/hunt-group-max-ring-time';
 import huntGroupMaxWaitTime from 'modules/call/features/hunt-group/hunt-group-max-wait-time';
 import callFeaturesShared from 'modules/call/features/shared';
+import huntGroupCallsToSparkApp from 'modules/call/features/hunt-group/hunt-group-calls-to-spark-app';
 import notifications from 'modules/core/notifications';
+import featureToggle from 'modules/core/featureToggle';
 
 export * from './hunt-group';
 export * from './hunt-group.service';
@@ -22,7 +24,9 @@ export default angular
     huntGroupMaxRingTime,
     huntGroupMaxWaitTime,
     callFeaturesShared,
+    huntGroupCallsToSparkApp,
     notifications,
+    featureToggle,
   ])
   .service('HuntGroupService', HuntGroupService)
   .component('ucHuntGroup', new HuntGroupComponent())

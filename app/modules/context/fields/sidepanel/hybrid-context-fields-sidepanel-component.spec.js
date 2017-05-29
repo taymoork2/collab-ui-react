@@ -173,20 +173,21 @@ describe('Component: fields sidepanel', function () {
     };
 
     beforeEach(function () {
-      this.injectDependencies('$scope', '$componentController', '$rootScope', '$state', '$q',
-                              'Analytics', 'ContextFieldsService', 'ContextFieldsetsService',
-                              'FeatureToggleService', 'ModalService', 'Notification');
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      this.injectDependencies(
+        '$q',
+        'FeatureToggleService'
+      );
+      this.featureSupportSpy = spyOn(this.FeatureToggleService, 'supports');
+      this.featureSupportSpy.and.returnValue(this.$q.resolve(false));
       membershipReturnSpy.and.returnValue(this.$q.resolve([]));
-      this.$scope.field = field;
-      this.compileComponent('contextFieldsSidepanel', { field: 'field' });
+      this.compileComponentNoApply('contextFieldsSidepanel', { field: field });
     });
 
     afterEach(function () {
       // NOTE: these tests can probably be removed with the next story. We only need to temporarily validate to ensure
       // these feature flags are not being checked when compiling the component
-      expect(this.FeatureToggleService.supports).not.toHaveBeenCalledWith('contact-center-context');
-      expect(this.FeatureToggleService.supports).not.toHaveBeenCalledWith('atlas-context-dictionary-edit');
+      expect(this.featureSupportSpy).not.toHaveBeenCalledWith('contact-center-context');
+      expect(this.featureSupportSpy).not.toHaveBeenCalledWith('atlas-context-dictionary-edit');
     });
 
     it('should have edit button', function () {

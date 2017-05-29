@@ -19,6 +19,13 @@ describe('Service: Media Reports Service', function () {
   vm.totalcallsdata = vm.totalCallsCardData.totolcalls;
   vm.availabilityCardData = getJSONFixture('mediafusion/json/metrics-graph-report/availabilityCardData.json');
   vm.availabilitydata = vm.availabilityCardData.availability;
+  vm.participantChangedata = {
+    "orgId": "11111111-2222-3333-a444-111111111bac",
+    "dataProvider": [{
+      "name": "participant_change",
+      "value": 2,
+    }],
+  };
 
   vm.allClusters = 'mediaFusion.metrics.allclusters';
   vm.sampleClusters = 'mediaFusion.metrics.sampleclusters';
@@ -60,6 +67,7 @@ describe('Service: Media Reports Service', function () {
     vm.participantDistributionUrl = vm.baseUrl + '/clusters_call_volume_with_insights/?relativeTime=4h';
     vm.clientTypeUrl = vm.baseUrl + '/client_type_trend/?relativeTime=4h';
     vm.meetingLcationUrl = vm.baseUrl + '/meeting_location_trend/?relativeTime=4h';
+    vm.participant_change = vm.baseUrl + '/overflow_participant_change/?relativeTime=4h';
 
   }));
 
@@ -240,6 +248,30 @@ describe('Service: Media Reports Service', function () {
       expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
       vm.MediaReportsService.getClusterAvailabilityData(vm.timeFilter, vm.allClusters).then(function (response) {
+        expect(response).toEqual([]);
+        expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+      });
+
+      vm.$httpBackend.flush();
+    });
+  });
+
+  describe('getOverflowIndicator on the Card', function () {
+    it('should get cluster availability percentage', function () {
+      vm.$httpBackend.whenGET(vm.participant_change).respond(vm.participantChangedata);
+
+      vm.MediaReportsService.getOverflowIndicator(vm.timeFilter, vm.allClusters).then(function (response) {
+        expect(response.data).toEqual(vm.participantChangedata);
+      });
+
+      vm.$httpBackend.flush();
+    });
+
+    it('should notify an error for cluster availability percentage failure', function () {
+      vm.$httpBackend.whenGET(vm.participant_change).respond(500, vm.error);
+      expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+
+      vm.MediaReportsService.getOverflowIndicator(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual([]);
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });

@@ -7,7 +7,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
   /* @ngInject */
   function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService,
-    ITProPackService, Notification, TokenService) {
+    FeatureToggleService, ITProPackService, Notification, TokenService) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
@@ -24,8 +24,10 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.validateDate = validateDate;
 
     /* Report Generation Functions */
+    vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.generateReport = generateReport;
+    vm.runReport = runReport;
     vm.reportProgress = reportProgress;
     vm.downloadReport = downloadReport;
     vm.cancelReport = cancelReport;
@@ -38,12 +40,14 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.searchInProgress = false;
     vm.currentReportId = null;
     vm.ongoingSearch = false;
+    vm.ediscoveryToggle = false;
     vm.itProPackPurchased = false;
     vm.itProPackEnabled = false;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchEmailPlaceholder');
     vm.searchHelpText = $translate.instant('ediscovery.searchParameters.searchEmailHelpText');
+    vm.messagesHelpText = $translate.instant('ediscovery.searchParameters.messagesHelpText');
     vm.searchByOptions = ['Email Address', 'Space ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;
@@ -89,9 +93,11 @@ var Spark = require('@ciscospark/spark-core').default;
       $q.all([
         ITProPackService.hasITProPackEnabled(),
         ITProPackService.hasITProPackPurchased(),
+        FeatureToggleService.atlasEdiscoveryGetStatus(),
       ]).then(function (toggles) {
         vm.itProPackEnabled = toggles[0];
         vm.itProPackPurchased = toggles[1];
+        vm.ediscoveryToggle = toggles[2];
       });
 
       if (report) {
@@ -307,27 +313,86 @@ var Spark = require('@ciscospark/spark-core').default;
         endDate: getEndDate(),
         keyword: vm.encryptedQuery,
         emailAddresses: vm.encryptedEmails,
-        roomIds: vm.unencryptedRoomIds,
+        roomIds: vm.ediscoveryToggle ? vm.unencryptedRoomIds : vm.searchCriteria.roomId,
       };
       EdiscoveryService.createReport(vm.createReportParams)
         .then(function (res) {
           vm.currentReportId = res.id;
-          var reportParams = {
-            emailAddresses: vm.encryptedEmails,
-            query: vm.encryptedQuery,
-            roomIds: vm.unencryptedRoomIds,
-            encryptionKeyUrl: vm.encryptionKeyUrl,
-            responseUri: res.url,
-            startDate: formatDate('api', getStartDate()),
-            endDate: formatDate('api', getEndDate(), true),
-          };
-          Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.GENERATE_REPORT);
-          generateReport(reportParams);
+          if (vm.ediscoveryToggle) {
+            var reportParams = {
+              emailAddresses: vm.encryptedEmails,
+              query: vm.encryptedQuery,
+              roomIds: vm.unencryptedRoomIds,
+              encryptionKeyUrl: vm.encryptionKeyUrl,
+              responseUri: res.url,
+              startDate: formatDate('api', getStartDate()),
+              endDate: formatDate('api', getEndDate(), true),
+            };
+            Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.GENERATE_REPORT);
+            generateReport(reportParams);
+          } else {
+            runReport(res.runUrl, res.url);
+          }
         })
         .catch(function () {
           Notification.error('ediscovery.searchResults.createReportFailed');
           vm.report = null;
           vm.createReportInProgress = false;
+        });
+    }
+
+    function searchForRoom(roomId) {
+      searchSetup();
+      vm.searchCriteria.roomId = roomId;
+      EdiscoveryService.getAvalonServiceUrl(roomId)
+        .then(function (result) {
+          return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
+        })
+        .then(function (result) {
+          vm.roomInfo = result;
+          vm.searchCriteria.startDate = formatDate('display', getStartDate()) || formatDate('display', result.published);
+          vm.searchCriteria.endDate = result.lastRelevantActivityDate ? formatDate('display', result.lastRelevantActivityDate) : formatDate('display', getEndDate());
+          vm.searchCriteria.displayName = result.displayName;
+          _.forEach(result.participants.items, function (response) {
+            vm.searchResults.keywords.push(response.emailAddress);
+          });
+        })
+        .catch(function (err) {
+          var status = err && err.status ? err.status : 500;
+          switch (status) {
+            case 400:
+              vm.error = $translate.instant("ediscovery.search.invalidRoomId", {
+                roomId: roomId,
+              });
+              break;
+            case 404:
+              vm.error = $translate.instant("ediscovery.search.roomNotFound", {
+                roomId: roomId,
+              });
+              break;
+            default:
+              vm.error = $translate.instant("ediscovery.search.roomNotFound", {
+                roomId: roomId,
+              });
+              Notification.error('ediscovery.search.roomLookupError');
+              break;
+          }
+        })
+        .finally(function () {
+          vm.searchingForRoom = false;
+        });
+    }
+
+    function runReport(runUrl, url) {
+      EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url, getStartDate(), getEndDate())
+        .catch(function () {
+          Notification.error('ediscovery.search.runFailed');
+          EdiscoveryService.patchReport(vm.currentReportId, {
+            state: "FAILED",
+            failureReason: "UNEXPECTED_FAILURE",
+          });
+        }).finally(function () {
+          enableAvalonPolling();
         });
     }
 
@@ -430,7 +495,8 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function searchButtonDisabled(_error) {
       var error = !_.isUndefined(_error) ? _error : false;
-      return error || vm.dateValidationError || vm.dateValidationWarning;
+      var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError || vm.dateValidationWarning) : disable;
     }
 
     function retrySearch() {

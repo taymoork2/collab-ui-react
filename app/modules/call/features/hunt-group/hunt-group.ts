@@ -16,6 +16,7 @@ export class HuntGroup {
   public huntMethod: HuntMethod | undefined;
   public maxRingSecs: string | undefined;
   public maxWaitMins: string | undefined;
+  public sendToApp: boolean;
   public fallbackDestination: FallbackDestination;
   public members: Array<CallFeatureMember>;
   public numbers: Array<HuntGroupNumber>;
@@ -26,6 +27,7 @@ export class HuntGroup {
     huntMethod?: HuntMethod,
     maxRingSecs?: string,
     maxWaitMins?: string,
+    sendToApp: boolean,
     members: Array<CallFeatureMember>,
     numbers: Array<HuntGroupNumber>,
   } = {
@@ -34,6 +36,7 @@ export class HuntGroup {
     huntMethod: HuntMethod.DA_LONGEST_IDLE_TIME,
     maxRingSecs: undefined,
     maxWaitMins: undefined,
+    sendToApp: true,
     members: [],
     numbers: [],
   }) {
@@ -42,6 +45,7 @@ export class HuntGroup {
     this.huntMethod = obj.huntMethod;
     this.maxRingSecs = obj.maxRingSecs;
     this.maxWaitMins = obj.maxWaitMins;
+    this.sendToApp = obj.sendToApp;
     this.members = obj.members;
     this.numbers = obj.numbers;
   }

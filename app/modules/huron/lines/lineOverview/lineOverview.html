@@ -29,6 +29,7 @@
       </uc-directory-number>
       <uc-call-forward
         call-forward="$ctrl.lineOverviewData.callForward"
+        is-primary="$ctrl.lineOverviewData.line.primary"
         user-voicemail-enabled="$ctrl.userVoicemailEnabled"
         owner-type="$ctrl.ownerType"
         ng-if="!$ctrl.isCloudberryPlace()"

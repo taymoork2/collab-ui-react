@@ -510,7 +510,7 @@
     }
 
     function notifyError(response) {
-      Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+      Notification.errorResponse(response, 'helpdesk.unexpectedError');
     }
 
     function openHybridServicesModal() {
@@ -531,7 +531,7 @@
           });
         })
         .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          Notification.errorResponse(error, 'hercules.genericFailure');
         })
         .finally(function () {
           vm.loadingHSData = false;

@@ -11,6 +11,7 @@
             <span tooltip="{{$ctrl.tooltipValue}}" class="cardTooltipClass">{{$ctrl.value}}
             <i class='icon icon-chevron-up indicator-icon' ng-class="{'no-display' : $ctrl.parentcntrl.cardIndicator < 0 || $ctrl.headername != $ctrl.parentcntrl.second_card_heading || $ctrl.parentcntrl.cardIndicator == 0}"></i>
             <i class='icon icon-chevron-down indicator-icon' ng-class="{'no-display' : $ctrl.parentcntrl.cardIndicator > 0 || $ctrl.headername != $ctrl.parentcntrl.second_card_heading || $ctrl.parentcntrl.cardIndicator == 0}"></i></span>
+            <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername != $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
           </div>
           <div class="spinner-position" ng-if="!$ctrl.value && $ctrl.value !== 0">
             <i class='icon icon-spinner icon-2x'></i>

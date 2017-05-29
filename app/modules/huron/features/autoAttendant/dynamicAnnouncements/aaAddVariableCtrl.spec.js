@@ -5,14 +5,16 @@ describe('Controller: AAAddVariableCtrl', function () {
   var $rootScope, $scope;
   var $q;
   var $modal, modal;
+  var $window;
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$modal_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$modal_, _$window_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $controller = _$controller_;
+    $window = _$window_;
     $q = _$q_;
     $modal = _$modal_;
 
@@ -70,9 +72,22 @@ describe('Controller: AAAddVariableCtrl', function () {
             return true;
           },
         };
+        var rangeGetter = function () {
+          return "testRange";
+        };
         spyOn(angular, 'element').and.returnValue(dynamicElement);
         spyOn(dynamicElement, 'scope').and.returnValue(scopeElement);
         spyOn(scopeElement, 'insertElement');
+        spyOn($window, 'getSelection').and.returnValue({
+          getRangeAt: rangeGetter,
+          rangeCount: true,
+          removeAllRanges: function () {
+            return true;
+          },
+          addRange: function () {
+            return true;
+          },
+        });
         $scope.dynamicElement = 'test';
         $scope.elementId = 'test';
         controller = $controller('AAAddVariableCtrl', {
@@ -84,10 +99,22 @@ describe('Controller: AAAddVariableCtrl', function () {
       it('should test the dynamicAdd', function () {
         controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
         expect($modal.open).toHaveBeenCalled();
-        modal.resolve();
+        var variableSelection = {
+          label: "testlabel",
+          value: "testValue",
+        };
+        var readAsSelection = {
+          label: "testRead",
+          value: "testReadValue",
+        };
+        var result = {
+          variable: variableSelection,
+          readAs: readAsSelection,
+        };
+        modal.resolve(result);
         $scope.$apply();
         expect(dynamicElement.scope).toHaveBeenCalled();
-        expect(scopeElement.insertElement).toHaveBeenCalledWith('test');
+        expect(scopeElement.insertElement).toHaveBeenCalledWith('test', "testRange");
       });
 
       it('should not test the dynamicAdd', function () {

@@ -283,6 +283,7 @@
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
+    "ciscoSparkJabberInteropTooltip": "Enable messaging interoperability between Cisco Spark and Jabber, including exchange of messages, presence transformation and accessibility to Cisco Spark spaces.",
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
@@ -1459,7 +1460,7 @@
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
-    "voicemailNoDirectNumbersError": "You must have unassigned direct lines to turn on external voicemail access.",
+    "voicemailNoDirectNumbersError": "Warning:  You must have unassigned direct lines to turn on external voicemail access.",
     "timezoneUpdateError": "Failed to update company timezone.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
@@ -2692,10 +2693,11 @@
       "welcome": "Welcome to the Context Dictionary",
       "unavailable": "Unavailable",
       "dataTypes": {
-        "boolean": "Boolean",
-        "double": "Double",
-        "integer": "Integer",
-        "string": "String"
+        "boolean": "Toggle",
+        "date": "Date Time",
+        "double": "Decimal",
+        "integer": "Number",
+        "string": "Short Text"
       },
       "status": "Status",
       "inUse": "In Use",
@@ -2719,8 +2721,8 @@
         "fieldUpdateFailure": "Unable to update field. Try again or contact customer support.",
         "fieldDeleteSuccess": "Field deleted successfully!",
         "fieldDeleteFailure": "Unable to delete field. Refresh your browser and try again.",
-        "dataType": "Data Type",
-        "dataTypePlaceholder": "Select Data Type",
+        "dataType": "Type",
+        "dataTypePlaceholder": "Select Type",
         "descriptionPlaceholder": "Enter field details",
         "classification": "Data Privacy",
         "searchable": "Searchable",
@@ -2737,7 +2739,6 @@
         "encryptedHelpText": "Is encrypted and contains no personally identifiable information",
         "unencrypted": "Unencrypted",
         "unencryptedHelpText": "Is not encrypted and contains no personally identifiable information",
-        "dateFormat": "MM/dd/yyyy",
         "noneFound": "No fields found",
         "fieldAttributes": "Field Attributes",
         "inUseTooltip": "Field associated with fieldsets.",
@@ -2983,7 +2984,8 @@
       "searchRoomPlaceholder": "Enter space ID",
       "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
       "messages": "Where <b>Messages</b> contains",
-      "messagesPlaceholder": "e.g. project AND manager",
+      "messagesPlaceholder": "Enter comma separated values",
+      "messagesHelpText": "e.g. project, manager",
       "noMatchesFound": "No Matches Found",
       "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about our IT Pro Package."
     },
@@ -3041,6 +3043,21 @@
       "waitingForDownload": "Downloading, please wait...",
       "expires": "Expires",
       "expired": "Expired"
+    },
+    "originalConsole": {
+      "reportNameNotEmpty": "Report Name can not be empty",
+      "reportNamePlaceholder": "Enter report name",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "reportDateRange": "Date Range",
+      "noRangeSpecified": "No date range specified",
+      "takeMeToReports": "Take Me to Reports",
+      "dateTo": "to",
+      "endDateUntil": "until",
+      "endDateOnward": "onward",
+      "startDatePlaceholder": "Choose a Start Date",
+      "endDatePlaceholder": "Choose an End Date",
+      "generatedAt": "Generated At"
     },
     "tabs": {
       "search": "Search",
@@ -4288,7 +4305,13 @@
     "defaultCountry": "Default Country",
     "defaultCountryDesc": "Specify the country to set the correct dial tone on user devices.",
     "defaultCountryPlaceholder": "Select your country",
-    "pstnCountry": "Choose the country where calling services (including PSTN) will be provisioned."
+    "pstnCountry": "Choose the country where calling services (including PSTN) will be provisioned.",
+    "aria": {
+      "daysLeft": "{count, plural, =1{# day} other{# days}} left in trial",
+      "userTotals": "{{users}} of {{licenses}} licenses used",
+      "daysSinceExp": "Expired {count, plural, =1{# day} other{# days}} ago"
+    }
+
   },
   "trialModal": {
     "addTrial": {
@@ -4487,8 +4510,8 @@
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
-    "premiumAccounts": "IT Pro Pack Accounts",
-    "premiumCustomer": "IT Pro Pack Customer",
+    "premiumAccounts": "Pro Pack Accounts",
+    "premiumCustomer": "Pro Pack Customer",
     "daysRemaining": "{count, plural, =1{# day} other{# days}} remaining",
     "daysLeftToPurchase": "{count, plural, =1{# day} other{# days}} left to purchase",
     "daysLeftToRenew": "{count, plural, =1{# day} other{# days}} left to renew",
@@ -4584,7 +4607,8 @@
     "trialAccountsFilter": "Trial Accounts ({{count}})",
     "activeAccountsFilter": "Purchased Accounts ({{count}})",
     "expiredAccountsFilter": "Expired Accounts ({{count}})",
-    "premiumAccountsFilter": "IT Pro Pack Accounts ({{count}})",
+    "premiumAccountsFilter": "Pro Pack Accounts ({{count}})",
+    "standardAccountsFilter": "Standard Accounts ({{count}})",
     "orderRequest": "Order Request",
     "subscriptions": "Subscriptions",
     "viewSubscriptionInfo": "View Subscription Info",
@@ -6499,10 +6523,10 @@
     "huntingMethodMembersTitle": "Hunting Method and Members",
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
-    "numberTitle": "Select Internal Numbers",
-    "numberDesc": "When these numbers are called, this hunt group is activated.",
-    "numberPlaceholder": "Enter Extension",
-    "numberHint": "e.g. 5555",
+    "numberTitle": "Select Pilot Numbers",
+    "numberDesc": "When these numbers are called, this hunt group is will ring.",
+    "numberPlaceholder": "Enter Number or Extension",
+    "numberHint": "e.g. 5555, 333444555, +1333444555",
     "methodTitle": "Select Hunting Method",
     "methodHint": "Define which member gets the call first.",
     "memberHint": "These are the users who pickup the hunt group calls",
@@ -6583,6 +6607,8 @@
     "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
+    "callsToSparkAppTitle": "Hunt Group calls to Spark App",
+    "callsToSparkAppLabel": "Simultaneously send Hunt Group calls to members’ Spark app",
     "memberFetchFailure": "Unable to get members.",
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select at least one member",
@@ -7155,7 +7181,8 @@
       "duplicateName": "Organization name already in use",
       "validationFailure": "Unable to validate",
       "editNameSuccess": "Organization name successfully updated.",
-      "editNameFailure": "Failed to update customer name."
+      "editNameFailure": "Failed to update customer name.",
+      "displayNameError": "Could not get customer display name."
     },
     "care": "Care",
     "hybridVoicemail": {

@@ -8,7 +8,7 @@ require('./_partner-landing-trials.scss');
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $state, $window, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function PartnerHomeCtrl($scope, $state, $window, $translate, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -22,6 +22,8 @@ require('./_partner-landing-trials.scss');
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.getProgressStatus = getProgressStatus;
     $scope.getDaysAgo = getDaysAgo;
+    $scope.ariaTrialLabel = ariaTrialLabel;
+    $scope.ariaExpLabel = ariaExpLabel;
 
     init();
 
@@ -40,6 +42,20 @@ require('./_partner-landing-trials.scss');
           $scope.isTestOrg = isTestOrg;
         });
 
+    }
+
+    function ariaTrialLabel(trial) {
+      var label = trial.customerName + ', ' +
+        $translate.instant('partnerHomePage.aria.daysLeft', { count: trial.daysLeft }, "messageformat") + ', ' +
+        $translate.instant('partnerHomePage.aria.userTotals', { users: trial.usage, licenses: trial.licenses });
+      return label;
+    }
+
+    function ariaExpLabel(trial) {
+      var label = trial.customerName + ', ' +
+        $translate.instant('partnerHomePage.aria.daysSinceExp', { count: getDaysAgo(trial.daysLeft) }, 'messageformat') + ', ' +
+        $translate.instant('partnerHomePage.aria.userTotals', { users: trial.usage, licenses: trial.licenses });
+      return label;
     }
 
     function openAddTrialModal() {
