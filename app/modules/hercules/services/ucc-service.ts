@@ -1,4 +1,9 @@
 import { HybridVoicemailStatus } from 'modules/hercules/hybrid-services.types';
+
+export interface IUserDiscoveryInfo {
+  directoryURI: string;
+}
+
 interface IResult {
   errors?: any;
   message: string;
@@ -43,7 +48,7 @@ export class UCCService {
     return res.data;
   }
 
-  public getUserDiscovery(userId: string, orgId?: string): ng.IPromise<IResult> {
+  public getUserDiscovery(userId: string, orgId?: string): ng.IPromise<IUserDiscoveryInfo> {
     if (_.isUndefined(orgId)) {
       orgId = this.Authinfo.getOrgId();
     }
