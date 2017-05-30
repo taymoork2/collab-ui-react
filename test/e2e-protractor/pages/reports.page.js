@@ -1,6 +1,5 @@
 'use strict';
 
-/* global TIMEOUT */
 /* global LONG_TIMEOUT */
 
 var ReportsPage = function () {

@@ -1,6 +1,6 @@
 'use strict';
 
-/* global inviteusers xdescribe xafterAll manageUsersPage*/
+/* global inviteusers xdescribe manageUsersPage*/
 /* global LONG_TIMEOUT */
 
 // NOTE: This test is superceeded by manageusers-csv_spec.js

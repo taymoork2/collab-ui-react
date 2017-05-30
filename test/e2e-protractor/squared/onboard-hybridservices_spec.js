@@ -1,7 +1,5 @@
 'use strict';
 
-/* global LONG_TIMEOUT */
-
 describe('Onboard users with Hybrid Services', function () {
   var token;
   var testUser = utils.randomTestGmailwithSalt('hybridservices');

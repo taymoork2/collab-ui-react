@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  /* global Uint8Array:false */
-
   angular
     .module('Sunlight')
     .service('CTService', CTService);
