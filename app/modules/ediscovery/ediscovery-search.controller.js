@@ -29,6 +29,7 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.generateReport = generateReport;
     vm.runReport = runReport;
     vm.reportProgress = reportProgress;
+    vm.openReportModal = openReportModal;
     vm.downloadReport = downloadReport;
     vm.cancelReport = cancelReport;
     vm.keyPressHandler = keyPressHandler;
@@ -438,6 +439,13 @@ var Spark = require('@ciscospark/spark-core').default;
       } else {
         return 0;
       }
+    }
+
+    function openReportModal(report) {
+      EdiscoveryService.openReportModal($scope);
+      $scope.reportHeader = $translate.instant('ediscovery.reportsList.modalHeader', {
+        name: report.displayName,
+      });
     }
 
     function downloadReport(report) {

@@ -14,12 +14,15 @@ require('./ediscovery.scss');
     vm.concat = false;
     vm.moreReports = false;
 
+    $scope.openReportModal = openReportModal;
     $scope.downloadReport = downloadReport;
-    $scope.downloadingReportId = undefined;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
     $scope.viewReport = viewReport;
+
+    $scope.reportHeader = 'hello';
+    $scope.downloadingReportId = undefined;
     $scope.oldOffset = 0;
     $scope.offset = 0;
     $scope.limit = 10;
@@ -42,6 +45,14 @@ require('./ediscovery.scss');
     vm.reports = [];
 
     pollAvalonReport();
+
+    function openReportModal(report) {
+      EdiscoveryService.openReportModal($scope);
+      $scope.reportHeader = $translate.instant('ediscovery.reportsList.modalHeader', {
+        name: report.displayName,
+      });
+      $scope.modalPlaceholder = $translate.instant('ediscovery.reportsList.modalPlaceholder');
+    }
 
     function downloadReport(report) {
       $scope.downloadingReportId = report.id;

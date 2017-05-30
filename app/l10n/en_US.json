@@ -3073,7 +3073,10 @@
       "anotherDownloadInProgress": "Another download is in progress",
       "waitingForDownload": "Downloading, please wait...",
       "expires": "Expires",
-      "expired": "Expired"
+      "expired": "Expired",
+      "modalHeader": "Download {{name}} Report",
+      "modalDescription": "To download this report from the report server, we need to validate the IP address. If you don't know your IP address, contact your administrator.",
+      "modalPlaceholder": "e.g. 192.168.1.1"
     },
     "originalConsole": {
       "subheading": "Find all relevant data for a space.",
