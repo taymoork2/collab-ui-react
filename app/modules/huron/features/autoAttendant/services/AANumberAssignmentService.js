@@ -27,6 +27,11 @@
       EXTERNAL_NUMBER: "externalNumber",
     };
 
+    var numberFormatMapping = [];
+    numberFormatMapping[service.NUMBER_FORMAT_DIRECT_LINE] = service.EXTERNAL_NUMBER;
+    numberFormatMapping[service.NUMBER_FORMAT_ENTERPRISE_LINE] = 'Not Used now';
+    numberFormatMapping[service.NUMBER_FORMAT_EXTENSION] = service.DIRECTORY_NUMBER;
+
     return service;
 
     // Get the assigned numbers for an AA
@@ -193,16 +198,22 @@
           }
 
         }
+        function isOurNumber(cmiNumber, resource) {
+          // if numbers match and the types match
+          return _.trimStart(cmiNumber.number, '+') === _.trimStart(resource.getNumber(), '+') &&
+            _.isEqual(numberFormatMapping[cmiNumber.type], resource.type);
+        }
 
         /* called from aaNumbersCtrl.js when new number is selected from list.
          * we can take advantage of this query instead of re-querying to obtain
          * the UUID from CMI
          */
         _.find(resources, function (resource) {
-          var cmiNumber = _.find(cmiAssignedNumbers, function (cmiNumber) {
-            return (_.trimStart(cmiNumber.number, '+') === _.trimStart(resource.getNumber(), '+'));
 
+          var cmiNumber = _.find(cmiAssignedNumbers, function (cmiNumber) {
+            return isOurNumber(cmiNumber, resource);
           });
+
           if (cmiNumber) {
             resource.setUUID(cmiNumber.uuid);
             resource.setNumber(cmiNumber.number);
