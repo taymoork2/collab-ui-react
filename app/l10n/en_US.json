@@ -2645,7 +2645,7 @@
   },
   "cmc": {
     "failures": {
-      "preCheckFailure": "Status check of org failed"
+      "preCheckFailure": "Status check of org failed with: {{msg}}"
     },
     "menu": {
       "mobileServices": "Mobile Services",

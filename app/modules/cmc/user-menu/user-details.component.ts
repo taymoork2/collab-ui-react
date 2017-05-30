@@ -1,7 +1,7 @@
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
 import { IUser } from 'modules/core/auth/user/user';
 import { CmcService } from './../cmc.service';
-import { ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcIssue, ICmcError } from './../cmc.interface';
+import { ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcIssue } from './../cmc.interface';
 import { Notification } from 'modules/core/notifications';
 
 class CmcUserDetailsController implements ng.IComponentController {
@@ -94,9 +94,13 @@ class CmcUserDetailsController implements ng.IComponentController {
         }
         return res;
       })
-      .catch((error: ICmcError) => {
-        this.$log.debug('error', error.message);
-        this.Notification.error('cmc.failures.preCheckFailure', error.errors);
+      .catch((error) => {
+        this.$log.debug('error', error);
+        let msg: string = 'unknown';
+        if (error.data && error.data.message) {
+          msg = error.data.message;
+        }
+        this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });
         this.services[ 0 ].actionAvailable = false;
         return this.$q.reject(error);
       });
