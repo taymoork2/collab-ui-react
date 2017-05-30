@@ -15,12 +15,13 @@
   <div class="row row-space body-spacing">
     <h3 class="column medium-5" translate="sharedMeetingReports.sharedMeetingUsage"></h3>
     <div ng-if="$ctrl.exportDropdown" class="grid-filter dropdown pull-right">
-      <a ng-click="$ctrl.toggleExportMenu()">
+      <a href ng-click="$ctrl.toggleExportMenu()">
         <i class='icon icon-three-dots export-dots'></i>
       </a>
       <ul class="dropdown-menu dropdown-primary" ng-class="{'export-visible': $ctrl.exportMenu}">
-        <li ng-repeat="object in $ctrl.exportDropdown" class="export-item">
-          <a id="{{object.id}}" ng-click="$ctrl.dropdownSelect(object)">
+        <li class="export-item"><a id="{{$ctrl.exportDropdown.header.id}}" translate="{{$ctrl.exportDropdown.header.label}}"></a></li>
+        <li ng-repeat="object in $ctrl.exportDropdown.menu" class="export-item" ng-click="$ctrl.dropdownSelect(object)">
+          <a id="{{object.id}}">
             <span translate="{{object.label}}"></span>
           </a>
         </li>
