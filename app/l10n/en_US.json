@@ -6338,6 +6338,8 @@
     "offHours_chat": "Off-Hours",
     "offHours_callback": "Off-Hours",
     "offHours_chatPlusCallback": "Global Off-Hours",
+    "proactivePrompt_chat": "Proactive Prompt",
+    "proactivePrompt_chatPlusCallback": "Proactive Prompt",
     "embedCode": "Embed Code",
     "profileDesc": "Configure how you want the organization and user profile to be represented for your company",
     "overviewDesc_chat": "Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care",
@@ -6350,6 +6352,11 @@
     "callFeedbackDesc": "This screen is used to collect feedback from a customer after the call ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown to a customer during business off-hours",
+    "proactivePromptDesc": "Configure how long to wait until the prompt is shown to the customer as well as what they will see on the prompt when it is shown. The proactive prompt will not pop up during off hours and when no agents are available to assist.",
+    "title": "Title",
+    "promptTimeDesc": "Show Prompt After",
+    "notNowBtn": "Not Now",
+    "chatNowBtn": "Chat Now",
     "offHoursMessage": "Message",
     "offHoursDefaultMessage": "We are currently offline. Please try again during our business hours.",
     "businessHours": "Business Hours",
@@ -6374,6 +6381,11 @@
     "preview": "Preview",
     "attributes": "Attributes",
     "windowTitleLabel": "Window Title",
+    "promptTimeLabel": "Select time",
+    "promptTimeOption1": "1 minute",
+    "promptTimeOption2": "3 minutes",
+    "promptTimeOption3": "5 minutes",
+    "defaultPromptMessage": "Chat with our solution specialists to help serve you better.",
     "defaultOrgLabel": "Organization",
     "defaultWelcomeText": "Welcome to",
     "defaultOrgText": "Cumulus Customer Care",
@@ -6441,6 +6453,12 @@
       "invalidCharacters": "Characters <, > are not allowed."
     },
     "ctOverview": {
+      "proactivePrompt": {
+        "title_chat": "Proactive Prompt",
+        "title_chatPlusCallback": "Proactive Prompt",
+        "desc_chat": "This screen is used to initiate customer interaction using a proactive prompt",
+        "desc_chatPlusCallback": "This screen is used to initiate customer interaction using a proactive prompt"
+      },
       "customerInformation": {
         "title_chat": "Customer Information",
         "title_callback": "Customer Information",

@@ -5,6 +5,7 @@
     'ctName',
     'ctProfile',
     'ctOverview',
+    'ctProactivePrompt',
     'ctCustomer',
     'ctFeedback',
     'ctAgentUnavailable',
