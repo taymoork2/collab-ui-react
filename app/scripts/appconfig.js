@@ -1401,29 +1401,79 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
-            controller: 'CallServicePreviewCtrl',
+            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-call-service-aggregated-section>',
             data: {
               displayName: 'Call Service',
             },
-            params: {
-              extensionId: {},
-              extensions: {},
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              userName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.userName;
+              },
             },
           })
-          .state('user-overview.hybrid-services-squared-fusion-uc.uc-history', {
+          .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings', {
+            template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"></hybrid-call-service-aware-user-settings>',
+            data: {
+              displayName: 'Aware',
+            },
+            params: {
+              userId: '',
+              userEmailAddress: '',
+              onEntitlementChange: Function,
+            },
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userId;
+              },
+              userEmailAddress: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userEmailAddress;
+              },
+              onEntitlementChange: /* @ngInject */ function ($stateParams) {
+                return $stateParams.onEntitlementChange;
+              },
+            },
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings.uc-history', {
             template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
             data: {
-              displayName: 'Aware Status History',
+              displayName: 'Status History',
             },
             params: {
               serviceId: {},
             },
           })
-          .state('user-overview.hybrid-services-squared-fusion-uc.ec-history', {
+          .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
+            template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"  voicemail-feature-toggled="$resolve.voicemailFeatureToggled"></hybrid-call-service-connect-user-settings>',
+            data: {
+              displayName: 'Connect',
+            },
+            params: {
+              userId: '',
+              userEmailAddress: '',
+              onEntitlementChange: Function,
+            },
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userId;
+              },
+              userEmailAddress: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userEmailAddress;
+              },
+              onEntitlementChange: /* @ngInject */ function ($stateParams) {
+                return $stateParams.onEntitlementChange;
+              },
+              voicemailFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
+              },
+            },
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings.ec-history', {
             template: '<user-status-history service-id="\'squared-fusion-ec\'"></user-status-history>',
             data: {
-              displayName: 'Connect Status History',
+              displayName: 'Status History',
             },
             params: {
               serviceId: {},
@@ -2028,8 +2078,8 @@
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc', {
-            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
-            controller: 'CallServicePreviewCtrl',
+            templateUrl: 'modules/hercules/user-sidepanel/hybrid-call-service-place-settings/callServicePlaceSettings.template.html',
+            controller: 'CallServicePlaceSettingsCtrl',
             data: {
               displayName: 'Call Service',
             },
