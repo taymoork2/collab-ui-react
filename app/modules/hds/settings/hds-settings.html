@@ -13,10 +13,22 @@
                 translate-compile>
             </p>
             <button class="btn btn--people"
+                    ng-if="(hdsSettings.dirsyncEnabled === false) ||
+                           (hdsSettings.dirsyncEnabled === true && hdsSettings.groupAssigned())"
                     ng-disabled="hdsSettings.numResourceNodes <= 0"
                     ng-click="hdsSettings.startTrial()"
                     translate="hds.resources.settings.servicePreTrialModeTitle">
             </button>
+            <p class="sub-section__description"
+               ng-if="hdsSettings.dirsyncEnabled === true && hdsSettings.groupAssigned()"
+               translate="hds.resources.settings.selectGroupDesc"
+               translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
+            </p>
+            <p class="sub-section__description"
+               ng-if="hdsSettings.dirsyncEnabled === true && !hdsSettings.groupAssigned()"
+               translate="hds.resources.settings.selectGroupError"
+               translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
+            </p>
         </div>
         <div ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
             <h5 class="sub-section__label" translate="hds.resources.settings.serviceTrialModeTitle"></h5>
@@ -28,18 +40,22 @@
                 translate-value-onclick="hdsSettings.addResource()"
                 translate-compile>
             </p>
-            <p ng-if="hdsSettings.numTrialUsers > 0" class="sub-section__description" translate="hds.resources.settings.serviceUserDesc"
+            <p ng-if="hdsSettings.numTrialUsers > 0 && hdsSettings.dirsyncEnabled === false" class="sub-section__description" translate="hds.resources.settings.serviceUserDesc"
                 translate-values="{users : hdsSettings.numTrialUsers}"
                 translate-value-onclick="hdsSettings.openAddTrialUsersModal()"
                 translate-value-onclick1="hdsSettings.openEditTrialUsersModal()"
                 translate-compile>
             </p>
-            <p ng-if="hdsSettings.numTrialUsers <= 0" class="sub-section__description" translate="hds.resources.settings.serviceUser0Desc"
+            <p ng-if="hdsSettings.numTrialUsers <= 0 && hdsSettings.dirsyncEnabled === false" class="sub-section__description" translate="hds.resources.settings.serviceUser0Desc"
                 translate-values="{users : hdsSettings.numTrialUsers}"
                 translate-value-onclick="hdsSettings.openAddTrialUsersModal()"
                 translate-compile>
             </p>
-
+            <p ng-if="hdsSettings.numTrialUsers > 0 && hdsSettings.dirsyncEnabled === true" class="sub-section__description" translate="hds.resources.settings.serviceUserDirsyncDesc"
+                translate-values="{users : hdsSettings.numTrialUsers}"
+                translate-value-onclick="hdsSettings.openEditTrialUsersModal()"
+                translate-compile>
+            </p>
             <h5 class="sub-section__label" translate="hds.resources.settings.serviceProductionModeTitle"></h5>
             <p class="sub-section__description" translate="hds.resources.settings.serviceProdMoveDesc"></p>
             <button class="btn btn--people"
