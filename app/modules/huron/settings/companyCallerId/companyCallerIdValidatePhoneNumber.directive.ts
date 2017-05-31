@@ -18,7 +18,7 @@ export class CallerIdPhoneNumberValidator implements ng.IDirective {
         value = modelValue;
       }
 
-      return this.PhoneNumberService.validateDID(value);
+      return this.PhoneNumberService.validateDID(value, _attrs.countryCode);
     };
   }
 
