@@ -168,7 +168,8 @@
     "careAddUserError": "Failed to add user to Care.",
     "careAddUserRoleError": "Error adding roles to user.",
     "careDeleteCESRoleError": "Error deleting CES role from user",
-    "loadError": "An error while loading the users list."
+    "loadError": "An error while loading the users list.",
+    "ciscoSparkJabberInteropTooltip": "Enable messaging between Cisco Spark and Jabber. Provide access for Jabber users to Cisco Spark spaces. Changes can take up to 24 hours."
   },
   "userManage": {
     "org": {
@@ -283,7 +284,7 @@
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
-    "ciscoSparkJabberInteropTooltip": "Enable messaging interoperability between Cisco Spark and Jabber, including exchange of messages, presence transformation and accessibility to Cisco Spark spaces.",
+    "ciscoSparkJabberInteropTooltip": "Messaging between Cisco Spark and Jabber.",
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
@@ -1893,7 +1894,6 @@
       "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
       "disableAwareHeader": "Disable Services",
       "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user."
-
     },
     "placeSidepanel": {
       "hybridCallNotActivated": "We're checking for the user account in Cisco Unified Communications Manager. This can take up to 30 minutes. Check back later for the status.",
