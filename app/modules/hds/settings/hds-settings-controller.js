@@ -151,15 +151,19 @@
                   trialSecurityService = server.securityService;
                 }
               });
-              getTrialUsersInfo();
+              if (vm.groupAssigned()) {
+                getTrialUsersInfo();
+              } else {
+                if (vm.dirsyncEnabled === true) {
+                  setHDSDefaultForAltHDSServersGroup();
+                  getTrialUsersInfo();
+                }
+              }
             } else {
               vm.model.serviceMode = vm.NA_MODE;
             }
           }
           getResourceInfo();
-          if (vm.dirsyncEnabled === true && !vm.groupAssigned()) {
-            setHDSDefaultForAltHDSServersGroup();
-          }
         } else {
           vm.model.serviceMode = vm.NA_MODE;
           Notification.error(localizedHdsModeError + status);
@@ -183,6 +187,7 @@
                     HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), altHdsServersJson)
                           .then(function () {
                             vm.model.serviceMode = vm.PRE_TRIAL;
+                            getTrialUsersInfo();
                           }).catch(function (error) {
                             Notification.errorWithTrackingId(error, localizedHdsModeError);
                           });

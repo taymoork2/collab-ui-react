@@ -13,12 +13,17 @@
                 translate-compile>
             </p>
             <button class="btn btn--people"
-                    ng-if="(hdsSettings.dirsyncEnabled === false) ||
-                           (hdsSettings.dirsyncEnabled === true && hdsSettings.groupAssigned())"
+                    ng-if="hdsSettings.groupAssigned()"
                     ng-disabled="hdsSettings.numResourceNodes <= 0"
                     ng-click="hdsSettings.startTrial()"
                     translate="hds.resources.settings.servicePreTrialModeTitle">
             </button>
+            <div ng-if="hdsSettings.dirsyncEnabled === false && !hdsSettings.groupAssigned()">
+              <i class="icon icon-circle status-indicator danger"></i>
+              <span class="sub-section__description"
+                 translate="hds.resources.settings.noGroupError">
+              </span>
+            </div>
             <p class="sub-section__description"
                ng-if="hdsSettings.dirsyncEnabled === true && hdsSettings.groupAssigned()"
                translate="hds.resources.settings.selectGroupDesc"
