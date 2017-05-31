@@ -6,7 +6,7 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $state, $translate, Authinfo, HybridServicesClusterService) {
+  function HDSServiceController($modal, $state, $translate, Authinfo, HybridServicesClusterService, HDSService, Log) {
 
 
     var vm = this;
@@ -37,6 +37,11 @@
     HybridServicesClusterService.serviceIsSetUp('spark-hybrid-datasecurity')
       .then(function (enabled) {
         if (!enabled) {
+          HDSService.enableHdsEntitlement()
+            .then(function () {
+            }).catch(function (error) {
+              Log.error('HDSService.enableHdsEntitlement() failed: ' + error);
+            });
           vm.addResourceModal.resolve.firstTimeSetup = true;
           if (Authinfo.isCustomerLaunchedFromPartner()) {
             $modal.open({
