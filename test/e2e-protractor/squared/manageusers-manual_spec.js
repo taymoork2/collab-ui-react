@@ -1,7 +1,6 @@
 'use strict';
 
-/* global manageUsersPage xafterAll */
-/* global LONG_TIMEOUT */
+/* global manageUsersPage */
 
 // NOTE: Be sure to re-enable the afterAll at line 144 when re-enabling this test!
 describe('Manage Users - Manual -', function () {

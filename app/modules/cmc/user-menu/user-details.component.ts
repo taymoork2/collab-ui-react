@@ -96,7 +96,11 @@ class CmcUserDetailsController implements ng.IComponentController {
       })
       .catch((error) => {
         this.$log.debug('error', error);
-        this.Notification.error('cmc.failures.preCheckFailure');
+        let msg: string = 'unknown';
+        if (error.data && error.data.message) {
+          msg = error.data.message;
+        }
+        this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });
         this.services[ 0 ].actionAvailable = false;
         return this.$q.reject(error);
       });

@@ -73,8 +73,8 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(false));
     });
 
-    it('call errorWithTrackingId and supply the response data when promise is rejected', function () {
-      spyOn(Notification, 'errorWithTrackingId');
+    it('call errorResponse and supply the response data when promise is rejected', function () {
+      spyOn(Notification, 'errorResponse');
       spyOn(HelpdeskService, 'getOrg');
       var rejectData = {
         data: {
@@ -91,8 +91,8 @@ describe('Controller: HelpdeskOrgController', function () {
         Notification: Notification,
       });
       $scope.$apply();
-      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
-      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
+      expect(Notification.errorResponse).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
     });
 
   });

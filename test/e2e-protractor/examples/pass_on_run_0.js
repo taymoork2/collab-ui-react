@@ -1,6 +1,6 @@
 'use strict';
 
-/* global getE2eRunCounter, getE2eRunCounterMax */
+/* global getE2eRunCounter */
 
 // notes:
 // - this spec is intentionally excluded

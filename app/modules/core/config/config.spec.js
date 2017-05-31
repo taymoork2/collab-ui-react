@@ -38,6 +38,7 @@ describe('Config', function () {
     expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialAdd');
     expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialEdit');
     expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('pstnSetup');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).not.toContain('settings');
   });
 
   it('should not have development states assigned to Full_Admin role in non-dev mode', function () {

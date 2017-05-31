@@ -4,6 +4,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
   public orgId;
   public status: ICmcOrgStatusResponse;
+  public error: any;
 
   /* @ngInject */
   constructor(
@@ -23,9 +24,9 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
         this.$log.info('Result from preCheckOrg:', res);
         this.status = res;
       })
-      .catch((res: ICmcOrgStatusResponse) => {
-        this.$log.info('Error Result from preCheckOrg:', res);
-        this.status = res;
+      .catch((error) => {
+        this.$log.info('Error Result from preCheckOrg:', error);
+        this.error = error.data;
       })
     ;
   }

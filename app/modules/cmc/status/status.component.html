@@ -13,13 +13,9 @@
     </div>
   </div>
 
-  <div ng-if="!$ctrl.status.status">
+  <div ng-if="$ctrl.error">
     <div class="error">ERROR: CMC status check not performed because:</div>
-    <div ng-repeat="error in $ctrl.status.errors">
-      {{error.description}} (mock)
-    </div>
+    <div>{{$ctrl.error.message}}</div>
   </div>
 
 </div>
-
-

@@ -38,10 +38,10 @@ describe('SettingsCtrl', function () {
     });
 
     it('should create the ctrl and add the partner setting sections', function () {
-      expect(this.controller.branding).toBeTruthy();
       expect(this.controller.support).toBeTruthy();
 
       // these do not exist for Partner admins
+      expect(this.controller.branding).toBeTruthy();
       expect(this.controller.security).toBeFalsy();
       expect(this.controller.authentication).toBeFalsy();
       expect(this.controller.domains).toBeFalsy();

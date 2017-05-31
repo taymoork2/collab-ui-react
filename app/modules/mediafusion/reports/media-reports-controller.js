@@ -140,6 +140,7 @@
     vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
     vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostType');
     vm.tooltipText = '';
+    vm.cardIndicator = 0;
 
     setRefreshInterval();
     getCluster();
@@ -354,6 +355,17 @@
         vm.onpremShort = (vm.onprem == vm.noData) ? vm.noData : abbreviateNumber(vm.onprem);
         vm.onpremTooltip = checkForTooltip(vm.onpremShort) ? vm.onprem : '';
         vm.cloudOverflowTooltip = checkForTooltip(vm.second_card_value) ? vm.cloudOverflow : '';
+        setOverflowIndicator();
+      });
+    }
+
+    function setOverflowIndicator() {
+      MediaReportsService.getOverflowIndicator(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (response == vm.ABORT) {
+          return undefined;
+        } else {
+          vm.cardIndicator = response.data.dataProvider[0].value;
+        }
       });
     }
 

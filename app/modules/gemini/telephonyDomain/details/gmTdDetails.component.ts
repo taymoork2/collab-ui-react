@@ -184,7 +184,7 @@ class GmtdDetails implements ng.IComponentController {
         }
         this.hisLoading = false;
         this.allHistories = _.get(res, 'content.data.body', []);
-        this.allHistories = _.filter(this.allHistories, (item: any) : boolean => {
+        this.allHistories = _.filter(this.allHistories, (item: any): boolean => {
           return item.action !== 'add_notes_td';
         });
         _.forEach(this.allHistories, (item) => {

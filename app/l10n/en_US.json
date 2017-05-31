@@ -283,6 +283,7 @@
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
+    "ciscoSparkJabberInteropTooltip": "Enable messaging interoperability between Cisco Spark and Jabber, including exchange of messages, presence transformation and accessibility to Cisco Spark spaces.",
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
@@ -1184,6 +1185,7 @@
     "nodes": "Nodes",
     "none": "None",
     "notAvailable": "N/A",
+    "notFound": "Not found",
     "notSet": "Not set",
     "off": "Off",
     "offline": "Offline",
@@ -1881,9 +1883,17 @@
       "entitlements-dont-exist": "Service licenses for {{userName}} do not exist.",
       "previously-updated": "Could not save licenses. They are allocated somewhere else.",
       "not-updated": "Licenses could not be updated for {{userName}}.",
+      "not-updated-specific": "Licenses could not be updated for {{userName}}. The server returned the following error message: {{error}}.",
+      "readResourceGroupsFailed": "Could not read Resource Groups. Try again later.",
       "readUserStatusFailed": "Unable to read the current user status. Please try again later.",
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
-      "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists."
+      "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists.",
+      "couldNotReadConnectStatus": "Unable to read Call Service Connect organization status. Please contact support if the problem persists.",
+      "notEnabledInOrg": "Not enabled in organization",
+      "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
+      "disableAwareHeader": "Disable Services",
+      "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user."
+
     },
     "placeSidepanel": {
       "hybridCallNotActivated": "We're checking for the user account in Cisco Unified Communications Manager. This can take up to 30 minutes. Check back later for the status.",
@@ -2003,6 +2013,7 @@
         "squared-fusion-cal": "Calendar",
         "squared-fusion-gcal": "Calendar",
         "squared-fusion-ec": "Connect",
+        "squared-fusion-ec-and-voicemail": "Connect + Voicemail",
         "squared-fusion-ec-place": "Hybrid Call Service Connect"
       },
       "serviceDescriptions": {
@@ -2644,7 +2655,7 @@
   },
   "cmc": {
     "failures": {
-      "preCheckFailure": "Status check of org failed"
+      "preCheckFailure": "Status check of org failed with: {{msg}}"
     },
     "menu": {
       "mobileServices": "Mobile Services",
@@ -2720,8 +2731,8 @@
         "fieldUpdateFailure": "Unable to update field. Try again or contact customer support.",
         "fieldDeleteSuccess": "Field deleted successfully!",
         "fieldDeleteFailure": "Unable to delete field. Refresh your browser and try again.",
-        "dataType": "Data Type",
-        "dataTypePlaceholder": "Select Data Type",
+        "dataType": "Type",
+        "dataTypePlaceholder": "Select Type",
         "descriptionPlaceholder": "Enter field details",
         "classification": "Data Privacy",
         "searchable": "Searchable",
@@ -2738,7 +2749,6 @@
         "encryptedHelpText": "Is encrypted and contains no personally identifiable information",
         "unencrypted": "Unencrypted",
         "unencryptedHelpText": "Is not encrypted and contains no personally identifiable information",
-        "dateFormat": "MM/dd/yyyy",
         "noneFound": "No fields found",
         "fieldAttributes": "Field Attributes",
         "inUseTooltip": "Field associated with fieldsets.",
@@ -2984,7 +2994,8 @@
       "searchRoomPlaceholder": "Enter space ID",
       "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
       "messages": "Where <b>Messages</b> contains",
-      "messagesPlaceholder": "e.g. project AND manager",
+      "messagesPlaceholder": "Enter comma separated values",
+      "messagesHelpText": "e.g. project, manager",
       "noMatchesFound": "No Matches Found",
       "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about our IT Pro Package."
     },
@@ -3042,6 +3053,21 @@
       "waitingForDownload": "Downloading, please wait...",
       "expires": "Expires",
       "expired": "Expired"
+    },
+    "originalConsole": {
+      "reportNameNotEmpty": "Report Name can not be empty",
+      "reportNamePlaceholder": "Enter report name",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "reportDateRange": "Date Range",
+      "noRangeSpecified": "No date range specified",
+      "takeMeToReports": "Take Me to Reports",
+      "dateTo": "to",
+      "endDateUntil": "until",
+      "endDateOnward": "onward",
+      "startDatePlaceholder": "Choose a Start Date",
+      "endDatePlaceholder": "Choose an End Date",
+      "generatedAt": "Generated At"
     },
     "tabs": {
       "search": "Search",
@@ -6313,6 +6339,8 @@
     "offHours_chat": "Off-Hours",
     "offHours_callback": "Off-Hours",
     "offHours_chatPlusCallback": "Global Off-Hours",
+    "proactivePrompt_chat": "Proactive Prompt",
+    "proactivePrompt_chatPlusCallback": "Proactive Prompt",
     "embedCode": "Embed Code",
     "profileDesc": "Configure how you want the organization and user profile to be represented for your company",
     "overviewDesc_chat": "Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care",
@@ -6325,6 +6353,11 @@
     "callFeedbackDesc": "This screen is used to collect feedback from a customer after the call ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown to a customer during business off-hours",
+    "proactivePromptDesc": "Configure how long to wait until the prompt is shown to the customer as well as what they will see on the prompt when it is shown. The proactive prompt will not pop up during off hours and when no agents are available to assist.",
+    "title": "Title",
+    "promptTimeDesc": "Show Prompt After",
+    "notNowBtn": "Not Now",
+    "chatNowBtn": "Chat Now",
     "offHoursMessage": "Message",
     "offHoursDefaultMessage": "We are currently offline. Please try again during our business hours.",
     "businessHours": "Business Hours",
@@ -6349,6 +6382,11 @@
     "preview": "Preview",
     "attributes": "Attributes",
     "windowTitleLabel": "Window Title",
+    "promptTimeLabel": "Select time",
+    "promptTimeOption1": "1 minute",
+    "promptTimeOption2": "3 minutes",
+    "promptTimeOption3": "5 minutes",
+    "defaultPromptMessage": "Chat with our solution specialists to help serve you better.",
     "defaultOrgLabel": "Organization",
     "defaultWelcomeText": "Welcome to",
     "defaultOrgText": "Cumulus Customer Care",
@@ -6416,6 +6454,12 @@
       "invalidCharacters": "Characters <, > are not allowed."
     },
     "ctOverview": {
+      "proactivePrompt": {
+        "title_chat": "Proactive Prompt",
+        "title_chatPlusCallback": "Proactive Prompt",
+        "desc_chat": "This screen is used to initiate customer interaction using a proactive prompt",
+        "desc_chatPlusCallback": "This screen is used to initiate customer interaction using a proactive prompt"
+      },
       "customerInformation": {
         "title_chat": "Customer Information",
         "title_callback": "Customer Information",
@@ -6508,10 +6552,10 @@
     "huntingMethodMembersTitle": "Hunting Method and Members",
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
-    "numberTitle": "Select Internal Numbers",
-    "numberDesc": "When these numbers are called, this hunt group is activated.",
-    "numberPlaceholder": "Enter Extension",
-    "numberHint": "e.g. 5555",
+    "numberTitle": "Select Pilot Numbers",
+    "numberDesc": "When these numbers are called, this hunt group is will ring.",
+    "numberPlaceholder": "Enter Number or Extension",
+    "numberHint": "e.g. 5555, 333444555, +1333444555",
     "methodTitle": "Select Hunting Method",
     "methodHint": "Define which member gets the call first.",
     "memberHint": "These are the users who pickup the hunt group calls",
@@ -7166,7 +7210,8 @@
       "duplicateName": "Organization name already in use",
       "validationFailure": "Unable to validate",
       "editNameSuccess": "Organization name successfully updated.",
-      "editNameFailure": "Failed to update customer name."
+      "editNameFailure": "Failed to update customer name.",
+      "displayNameError": "Could not get customer display name."
     },
     "care": "Care",
     "hybridVoicemail": {

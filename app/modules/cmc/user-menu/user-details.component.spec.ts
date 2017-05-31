@@ -82,11 +82,15 @@ describe('Component: cmcUserDetails ', () => {
       done();
     });
 
-    it('show shows error toaster if org precheck request fails', function (done) {
+    it('show error toaster if org precheck request fails', function (done) {
       spyOn(this.CmcService, 'allowCmcSettings').and.returnValue(this.$q.resolve(true));
 
       spyOn(this.CmcService, 'preCheckOrg').and.returnValue(
-        this.$q.reject(),
+        this.$q.reject({
+          data: {
+            message: 'ERROR',
+          },
+        }),
       );
 
       spyOn(this.Notification, 'error');

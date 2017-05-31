@@ -14,6 +14,7 @@
     line-height: 1.75rem;
     word-wrap: break-word;
     min-width: 100%;
+    background-color: $white;
   }
 
   div.dynamic-prompt[data-placeholder]:not(:focus)[data-div-placeholder-content]::before {

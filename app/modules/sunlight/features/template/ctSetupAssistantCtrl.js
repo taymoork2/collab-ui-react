@@ -10,7 +10,7 @@
 
   /* @ngInject */
 
-  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
+  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CTService, FeatureToggleService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
     var vm = this;
     init();
 
@@ -44,23 +44,21 @@
     vm.getCustomerInformationBtnClass = getCustomerInformationBtnClass;
     vm.getTitle = getTitle;
     vm.isCategoryWarningRequired = isCategoryWarningRequired;
+    vm.getCardConfig = getCardConfig;
 
     // Setup Assistant pages with index
     vm.states = {};
 
-    vm.setStates = function () {
-      vm.states = CTService.getStatesBasedOnType(vm.selectedMediaType);
+    vm.setStates = function (isProactiveFlagEnabled) {
+      vm.states = CTService.getStatesBasedOnType(vm.selectedMediaType, isProactiveFlagEnabled);
+      vm.currentState = vm.states[0];
     };
-
-    vm.setStates();
 
     vm.overviewCards = {};
-    vm.setOverviewCards = function () {
-      vm.overviewCards = CTService.getOverviewPageCards(vm.selectedMediaType);
+    vm.setOverviewCards = function (isProactiveFlagEnabled) {
+      vm.overviewCards = CTService.getOverviewPageCards(vm.selectedMediaType, isProactiveFlagEnabled);
     };
-    vm.setOverviewCards();
 
-    vm.currentState = vm.states[0];
     vm.animationTimeout = 10;
     vm.escapeKey = 27;
 
@@ -102,6 +100,8 @@
     vm.ChatTemplateButtonText = $translate.instant('common.finish');
     vm.lengthConstants = CTService.getLengthValidationConstants();
     vm.isBusinessDaySelected = true;
+    vm.promptTime = CTService.getPromptTime();
+    vm.promptTimeOptions = CTService.getPromptTimeOptions();
 
     vm.InvalidCharacters = /[<>]/i; // add your invalid character to this regex
 
@@ -232,6 +232,18 @@
           displayText: vm.orgName,
           orgLogoUrl: vm.logoUrl,
           useAgentRealName: false,
+        },
+        proactivePrompt: {
+          enabled: true,
+          fields: {
+            promptTime: vm.promptTime.value,
+            promptTitle: {
+              displayText: vm.orgName,
+            },
+            promptMessage: {
+              message: $translate.instant('careChatTpl.defaultPromptMessage'),
+            },
+          },
         },
         pages: {
           customerInformation: {
@@ -548,6 +560,18 @@
           orgLogoUrl: vm.logoUrl,
           useAgentRealName: false,
         },
+        proactivePrompt: {
+          enabled: true,
+          fields: {
+            promptTime: vm.promptTime.value,
+            promptTitle: {
+              displayText: vm.orgName,
+            },
+            promptMessage: {
+              message: $translate.instant('careChatTpl.defaultPromptMessage'),
+            },
+          },
+        },
         pages: {
           customerInformationChat: {
             enabled: true,
@@ -831,6 +855,7 @@
     vm.singleLineValidationMessage25 = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit25);
     vm.singleLineValidationMessage50 = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit50);
     vm.multiLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.multiLineMaxCharLimit);
+    vm.multiLineValidationMessage100 = CTService.getValidationMessages(0, vm.lengthConstants.multiLineMaxCharLimit100);
 
 
     vm.overview = {
@@ -846,6 +871,7 @@
       // This will become dead once all the existing templates are saved with field4.
       populateCustomerInformationField4();
       populateFeedbackInformation();
+      populateProactivePromptInformation();
     }
 
     function populateCustomerInformationField4() {
@@ -900,6 +926,28 @@
       if ((vm.selectedMediaType === vm.mediaTypes.chatPlusCallback || vm.selectedMediaType === vm.mediaTypes.callback) && vm.template.configuration.pages.feedbackCallback === undefined) {
         vm.template.configuration.pages.feedbackCallback = _.cloneDeep(defaultFeedback);
 
+      }
+    }
+
+    function populateProactivePromptInformation() {
+      var defaultProactivePrompt = {
+        enabled: false,
+        fields: {
+          promptTime: vm.promptTime.value,
+          promptTitle: {
+            displayText: vm.orgName,
+          },
+          promptMessage: {
+            message: $translate.instant('careChatTpl.defaultPromptMessage'),
+          },
+        },
+      };
+
+      if (vm.selectedMediaType === vm.mediaTypes.chat || vm.selectedMediaType === vm.mediaTypes.chatPlusCallback) {
+        if (vm.template.configuration.proactivePrompt === undefined) {
+          vm.template.configuration.proactivePrompt = defaultProactivePrompt;
+        }
+        vm.promptTime = CTService.getPromptTime(vm.template.configuration.proactivePrompt.fields.promptTime);
       }
     }
 
@@ -964,6 +1012,10 @@
       return false;
     }
 
+    function getCardConfig(name) {
+      return name === 'proactivePrompt' ? vm.template.configuration[name] : vm.template.configuration.pages[name];
+    }
+
     function isValidField(fieldDisplayText, maxCharLimit) {
       return (fieldDisplayText.length <= maxCharLimit);
     }
@@ -997,6 +1049,17 @@
       && vm.isInputValid(getFeedbackModel().fields.feedbackQuery.displayText)
       && vm.isInputValid(getFeedbackModel().fields.comment.displayText)));
 
+    }
+
+    function isProactivePromptPageValid() {
+      if (isValidField(vm.template.configuration.proactivePrompt.fields.promptTitle.displayText, vm.lengthConstants.singleLineMaxCharLimit25) &&
+          isValidField(vm.template.configuration.proactivePrompt.fields.promptMessage.message, vm.lengthConstants.multiLineMaxCharLimit100) &&
+          vm.isInputValid(vm.template.configuration.proactivePrompt.fields.promptTitle.displayText) &&
+          vm.isInputValid(vm.template.configuration.proactivePrompt.fields.promptMessage.message)) {
+        vm.template.configuration.proactivePrompt.fields.promptTime = vm.promptTime.value;
+        return true;
+      }
+      return false;
     }
 
     function isStatusMessagesPageValid() {
@@ -1165,6 +1228,8 @@
           return isOffHoursPageValid();
         case 'name':
           return vm.isNamePageValid();
+        case 'proactivePrompt':
+          return isProactivePromptPageValid();
         case 'customerInformation':
         case 'customerInformationChat':
         case 'customerInformationCallback':
@@ -1200,6 +1265,10 @@
         return vm.states[last];
       }
       var nextPage = vm.template.configuration.pages[vm.states[next]];
+      if (vm.states[next] === 'proactivePrompt') {
+        nextPage = vm.template.configuration[vm.states[next]];
+      }
+
       if (nextPage && !nextPage.enabled) {
         return getAdjacentEnabledState(next, jump);
       } else {
@@ -1447,6 +1516,11 @@
     }
 
     function init() {
+      FeatureToggleService.atlasCareProactiveChatTrialsGetStatus().then(function (result) {
+        vm.setStates(result);
+        vm.setOverviewCards(result);
+      });
+
       CTService.getLogoUrl().then(function (url) {
         vm.logoUrl = url;
       });
@@ -1500,7 +1574,6 @@
         return $translate.instant('careChatTpl.feedbackDesc');
       }
     }
-
 
     function getTitle() {
       if (vm.isEditFeature) {

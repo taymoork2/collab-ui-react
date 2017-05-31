@@ -21,7 +21,7 @@ function webpackConfig(env) {
     _.set(cssLoader, 'options.minimize', true);
     // replace current loaders with ExtractTextPlugin
     scssLoaderRule.use = ExtractTextPlugin.extract({
-      fallbackLoader: 'style-loader',
+      fallback: 'style-loader',
       loader: scssLoaders,
     });
   }

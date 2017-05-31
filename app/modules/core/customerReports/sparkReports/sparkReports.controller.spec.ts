@@ -1,6 +1,6 @@
 import sparkReports from './index';
 import {
-  IExportMenu,
+  IExportDropdown,
   IFilterObject,
   IDropdownBase,
   IReportLabel,
@@ -157,8 +157,9 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(this.controller.displayEngagement).toBeTruthy();
         expect(this.controller.displayQuality).toBeTruthy();
 
-        _.forEach(this.controller.exportArrays, (array: Array<IExportMenu>): void => {
-          expect(array.length).toEqual(4);
+        _.forEach(this.controller.exportArrays, (dropdown: IExportDropdown): void => {
+          expect(dropdown.header).toEqual(this.ctrlData.exportMenu.header);
+          expect(dropdown.menu.length).toEqual(3);
         });
 
         expect(this.controller.activeOptions).toEqual(this.activeOptions);
@@ -377,10 +378,9 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(this.controller.displayEngagement).toBeTruthy();
         expect(this.controller.displayQuality).toBeTruthy();
 
-        _.forEach(this.controller.exportArrays, (array: Array<IExportMenu>): void => {
-          if (array) {
-            expect(array.length).toBe(4);
-          }
+        _.forEach(this.controller.exportArrays, (dropdown: IExportDropdown): void => {
+          expect(dropdown.header).toEqual(this.ctrlData.exportMenu.header);
+          expect(dropdown.menu.length).toEqual(3);
         });
 
         expect(this.controller.activeOptions).toEqual(this.activeOptions);

@@ -68,13 +68,13 @@
           }
         });
       }).catch(function (response) {
-        Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+        Notification.errorResponse(response, 'helpdesk.unexpectedError');
       });
       if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal')) {
         CloudConnectorService.getService(org.id).then(function (service) {
           hybridServicesCard.services.push(service);
         }).catch(function (response) {
-          Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+          Notification.errorResponse(response, 'helpdesk.unexpectedError');
         });
       }
       if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-ec')) {
@@ -86,7 +86,7 @@
             });
           })
           .catch(function (error) {
-            Notification.errorWithTrackingId(error, 'helpdesk.hybridVoicemail.cannotReadStatus');
+            Notification.errorResponse(error, 'helpdesk.hybridVoicemail.cannotReadStatus');
           });
       }
       return hybridServicesCard;

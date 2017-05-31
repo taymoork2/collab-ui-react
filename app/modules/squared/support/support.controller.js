@@ -3,8 +3,6 @@ require('./_support.scss');
 (function () {
   'use strict';
 
-  /* global Bloodhound */
-
   angular.module('Squared')
     .controller('SupportCtrl', SupportCtrl);
 

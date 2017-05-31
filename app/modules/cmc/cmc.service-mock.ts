@@ -14,14 +14,15 @@ export class CmcServiceMock {
   public mockOrgStatus(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
     this.$log.debug('orgId', orgId);
     let errorMock = {
-      message: 'Invalid OrgId',
-      errors: [
-        {
-          description: 'The orgid is not found',
-        },
-      ],
-      trackingId: 'CMC_e7a4c176-0ffa-4de0-9534-88d9ccfc7c71',
-    };
+      data : {
+        message: 'Invalid OrgId',
+        errors: [
+          {
+            description: 'The orgid is not found',
+          },
+        ],
+        trackingId: 'CMC_e7a4c176-0ffa-4de0-9534-88d9ccfc7c71',
+      }};
 
     let okMock: ICmcOrgStatusResponse = {
       status: 'ok',

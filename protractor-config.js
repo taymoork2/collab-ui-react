@@ -23,6 +23,7 @@ var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
 var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
+var WORKAROUND_PASS_SPEC = 'test/e2e-protractor/workaround/always_pass_spec.js';
 
 var maxInstances;
 if (process.env.SAUCE__MAX_INSTANCES) {
@@ -240,6 +241,11 @@ exports.config = {
         };
         this.jasmineDone = function () {
           if (hasFailure) {
+            if (!fs.existsSync(E2E_FAIL_RETRY)) {
+              // Sauce Labs Ticket 39647 - individual spec exits with error code 100
+              // TODO: temporary - need to run more than one spec at a time
+              fs.appendFileSync(E2E_FAIL_RETRY, WORKAROUND_PASS_SPEC + NEWLINE);
+            }
             fs.appendFileSync(E2E_FAIL_RETRY, testFile + NEWLINE);
           }
         };
