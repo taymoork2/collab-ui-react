@@ -72,7 +72,10 @@ export interface IExtendedClusterServiceStatus {
 export interface IHost {
   connectors: IConnector[];
   hostname: string;
+  lastMaintenanceModeEnabledTimestamp: string;
   maintenanceMode: ConnectorMaintenanceMode;
+  platform?: 'expressway';
+  platformVersion?: string;
   serial: string;
   url: string;
 }
@@ -150,6 +153,12 @@ export interface IConnectorStatus {
       state: 'ok' | 'error';
       stateDescription: string;
     }[];
+  };
+  users?: {
+    assignedRoomCount: number;
+    assignedUserCount: number;
+    totalFaultyCount: number | null;
+    totalSubscribedCount: number | null;
   };
 }
 

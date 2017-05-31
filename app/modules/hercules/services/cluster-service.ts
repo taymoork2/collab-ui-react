@@ -1,5 +1,7 @@
 import { IFMSOrganization, ICluster, IConnector, IExtendedCluster, IExtendedConnector, ConnectorType, IClusterAggregate, IConnectorAlarm, IExtendedConnectorAlarm, ExtendedConnectorState } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { CsdmPollerFactory as CsdmPoller, CsdmHubFactory } from 'modules/squared/devices/services/CsdmPoller';
+import { CsdmCacheUpdater } from 'modules/squared/devices/services/CsdmCacheUpdater';
 
 interface IClusterCache {
   c_mgmt: any;
@@ -35,9 +37,9 @@ export class ClusterService {
   constructor(
     private $http: ng.IHttpService,
     private Authinfo,
-    private CsdmCacheUpdater,
-    private CsdmHubFactory,
-    private CsdmPoller,
+    private CsdmCacheUpdater: CsdmCacheUpdater,
+    private CsdmHubFactory: CsdmHubFactory,
+    private CsdmPoller: CsdmPoller,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private UrlConfig,
   ) {}
@@ -339,6 +341,8 @@ export class ClusterService {
 }
 
 export default angular
-  .module('Hercules')
+  .module('core.cluster-service', [
+    // TO COMPLETE
+  ])
   .service('ClusterService', ClusterService)
   .name;

@@ -2069,6 +2069,14 @@
       "urgentUpgrade": "An urgent upgrade is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
     },
+    "connectorUpgrade": {
+      "title": "Connector Upgrade",
+      "text": "You are about to update the following nodes in this cluster:",
+      "XtoY": "{{name}} to {{version}}",
+      "releaseNotes": "Release Notes",
+      "releaseNotesLink": "Open in a new tab",
+      "upgradeNow": "Upgrade Now"
+    },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
       "upgradeScheduleHeader": "Upgrade",
@@ -2451,6 +2459,7 @@
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Expressway again in the Add Resource dialog.",
         "go-to-expressway": "Go to Expressway",
         "upgrade": "Upgrade available",
+        "upgrading": "Installing upgrade",
         "alarms": "Alarms",
         "maintenance": "Maintenance",
         "pendingMaintenance": "Pending maintenance"
@@ -2634,7 +2643,7 @@
       "goToNode": "Go to node",
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
-      "pendingTooltip": "Maintenance mode has been requested. Please wait until the node is ready.",
+      "pendingTooltip": "Pending since: {{date}}. Maintenance mode has been requested. Please wait until the node is ready.",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
         "message": "<p>The Hybrid Media node will be put in maintenance mode as soon as the call activity ends or a two hour timeout is reached. Please wait for the node to move from \"Pending Maintenance\" to \"Maintenance\" before you proceed.</p><p>No alarm notifications are sent for nodes in maintenance mode.</p>",
@@ -2643,7 +2652,10 @@
       "disableMaintenanceModeModal": {
         "title": "Disable maintenance mode",
         "message": "Are you sure you want to disable maintenance mode for this node?"
-      }
+      },
+      "alertBannerNumber": "{count, plural, =1{Upgrade} other{Upgrades}} available.",
+      "alertBannerTime": "The upgrade will be applied on {{date}}.",
+      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Install now</a>?"
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"

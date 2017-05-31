@@ -3220,7 +3220,7 @@
                 template: '<context-resources-sub-header></context-resources-sub-header>',
               },
               'contextServiceView': {
-                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
                 },
@@ -3232,6 +3232,9 @@
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -3443,7 +3446,7 @@
             url: '/list',
             views: {
               sipDestinationList: {
-                template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
               },
             },
             params: {
@@ -3452,6 +3455,9 @@
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -3539,7 +3545,7 @@
             url: '/hds/resources',
             views: {
               'fullPane': {
-                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
                 },
@@ -3551,6 +3557,9 @@
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -3901,6 +3910,9 @@
               hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
               },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           .state('calendar-service.list', {
@@ -3955,6 +3967,9 @@
             resolve: {
               hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -4206,7 +4221,7 @@
             url: '/mediaserviceV2',
             views: {
               'fullPane': {
-                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
                 },
@@ -4218,6 +4233,9 @@
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
