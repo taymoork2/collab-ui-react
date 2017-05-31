@@ -2967,7 +2967,7 @@
     "browserTabHeaderTitle": "Cisco Spark Activity Reports",
     "heading": "Search Cisco Spark Space Activity",
     "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
-    "searchTip": "Search data by room ID",
+    "searchTip": "Search data by space ID",
     "unableToDownloadFile": "Unable to download file",
     "timeout": "Timeout",
     "dateError": {
@@ -3067,6 +3067,7 @@
       "expired": "Expired"
     },
     "originalConsole": {
+      "subheading": "Find all relevant data for a space.",
       "reportNameNotEmpty": "Report Name can not be empty",
       "reportNamePlaceholder": "Enter report name",
       "startDate": "Start Date",
