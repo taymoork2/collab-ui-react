@@ -110,6 +110,9 @@
     }
     //the user enteres a char into the key input area
     function keyInputChanged(keyIndex, whichKey) {
+
+      AACommonService.setIsValid(myId, whichKey.value);
+
       vm.inputActions[keyIndex].value = whichKey.value;
 
       AACommonService.setCallerInputStatus(true);

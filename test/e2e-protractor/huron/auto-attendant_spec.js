@@ -522,23 +522,32 @@ describe('Huron Auto Attendant', function () {
     }, 120000);
 
     it('should add Caller Input via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-      autoattendant.scrollIntoView(autoattendant.addStepLast);
-      utils.click(autoattendant.addStepLast);
-      utils.expectIsDisplayed(autoattendant.newStep);
-      utils.click(autoattendant.newStepMenu);
+      autoattendant.clearNotifications().then(function() {
+        autoattendant.scrollIntoView(autoattendant.addStepLast);
+        utils.click(autoattendant.addStepLast);
+        utils.expectIsDisplayed(autoattendant.newStep);
+        utils.click(autoattendant.newStepMenu);
 
-      // 4th/last menu option is Caller Input
-      utils.click(autoattendant.newStepCallerInput);
-      utils.wait(autoattendant.callerInputFirst, 12000);
-      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
-      utils.sendKeys(autoattendant.callerInputNameVariable, "named Variable");
-      utils.click(autoattendant.callerInputGetDigits);
-      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
-      utils.click(autoattendant.callerInputAddAction);
-      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
-      utils.sendKeys(autoattendant.callerInputTextFirst, "Auto Attendant");
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+        // 4th/last menu option is Caller Input
+        utils.click(autoattendant.newStepCallerInput);
+        utils.wait(autoattendant.callerInputFirst, 120000);
+        autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+        utils.sendKeys(autoattendant.callerInputNameVariable, "named Variable");
+        utils.click(autoattendant.callerInputGetDigits);
+        autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+        utils.click(autoattendant.callerInputAddAction);
+        autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+        utils.sendKeys(autoattendant.callerInputTextFirst, "Cisco_");
+        utils.wait(autoattendant.saveButton, 120000);
+        utils.expectIsDisabled(autoattendant.saveButton);
+        utils.clear(autoattendant.callerInputTextFirst);
+        utils.sendKeys(autoattendant.callerInputTextFirst, "Auto Attendant");
+        utils.wait(autoattendant.saveButton, 120000);
+        utils.expectIsEnabled(autoattendant.saveButton);
+        utils.click(autoattendant.saveButton);
+        autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      });
+
     }, 120000);
 
     it('should add Decision Conditional via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
