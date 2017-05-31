@@ -174,13 +174,13 @@
                     vm.defaultHDSGroup = group.Resources[0];
                     vm.trialUserGroupId = vm.defaultHDSGroup.id;
                     //Assign group id to each server
-                    _.each(vm.altHdsServers, function (server) {
+                    _.forEach(vm.altHdsServers, function (server) {
                       server.groupId = vm.defaultHDSGroup.id;
                     });
-                    var myJSON = {
+                    var altHdsServersJson = {
                       'altHdsServers': vm.altHdsServers,
                     };
-                    HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
+                    HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), altHdsServersJson)
                           .then(function () {
                             vm.model.serviceMode = vm.PRE_TRIAL;
                           }).catch(function (error) {

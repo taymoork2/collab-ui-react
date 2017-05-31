@@ -24,11 +24,13 @@
                translate="hds.resources.settings.selectGroupDesc"
                translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
             </p>
-            <p class="sub-section__description"
-               ng-if="hdsSettings.dirsyncEnabled === true && !hdsSettings.groupAssigned()"
-               translate="hds.resources.settings.selectGroupError"
-               translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
-            </p>
+            <div ng-if="hdsSettings.dirsyncEnabled === true && !hdsSettings.groupAssigned()">
+              <i class="icon icon-circle status-indicator danger"></i>
+              <span class="sub-section__description"
+                 translate="hds.resources.settings.selectGroupError"
+                 translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
+              </span>
+            </div>
         </div>
         <div ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
             <h5 class="sub-section__label" translate="hds.resources.settings.serviceTrialModeTitle"></h5>
