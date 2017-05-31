@@ -6,6 +6,7 @@
   function CommonReportsGraphService($translate, chartColors) {
     var amchartsImages = './amcharts/images/';
     // Base variables for building grids and charts
+    AmCharts.translations["export"]["en"]["menu.label.save.data"] = $translate.instant('reportsPage.saveAs');
     var baseVariables = [];
     baseVariables['column'] = {
       'type': 'column',
@@ -139,7 +140,7 @@
           'class': 'export-main',
           'label': $translate.instant('reportsPage.downloadOptions'),
           'title': $translate.instant('reportsPage.saveAs'),
-          'menu': ['PRINT', 'PNG', 'JPG', 'PDF', 'CSV', 'XLSX'],
+          'menu': ['save.data', 'PNG', 'JPG', 'PDF', 'CSV', 'XLSX'],
         }],
       };
       return baseVariables['export'];
