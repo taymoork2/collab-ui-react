@@ -21,7 +21,9 @@ describe('component: speedDial', () => {
       'Authinfo',
       'BlfURIValidation',
       'HuronConfig',
+      'UrlConfig',
       '$httpBackend',
+      'FeatureMemberService',
     );
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.callDestInputs = ['external', 'uri', 'custom'];
@@ -34,9 +36,10 @@ describe('component: speedDial', () => {
       speedDials: [],
     }));
     spyOn(this.SpeedDialService, 'updateSpeedDials').and.returnValue(this.$q.resolve());
+    spyOn(this.FeatureMemberService, 'getFullNameFromUser').and.returnValue(this.$q.resolve({ user: { displayName: 'John Doe' } }));
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     spyOn(this.HuronCustomerService, 'getVoiceCustomer').and.returnValue(this.$q.resolve({ uuid: '123', dialingPlanDetails: { regionCode: '', countryCode: '+1' } }));
-    this.$httpBackend.whenGET(this.HuronConfig.getCmiUrl() + '/common/customers/' + this.Authinfo.getOrgId() + '/users/12345').respond(200);
+    this.$httpBackend.whenGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/12345').respond(200);
   });
 
   afterEach(function () {
