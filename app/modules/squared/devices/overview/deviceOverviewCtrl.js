@@ -10,7 +10,7 @@
     FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal,
     ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService,
     TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService,
-    FeatureToggleService) {
+    FeatureToggleService, ConfirmAtaRebootModal) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -22,6 +22,7 @@
     deviceOverview.faxEnabled = false;
     deviceOverview.t38FeatureToggle = false;
     deviceOverview.cpcFeatureToggle = false;
+    deviceOverview.disableAtaRebootSettings = true;
     deviceOverview.actionList = [{
       actionKey: 'common.edit',
       actionFunction: goToEmergencyServices,
@@ -32,6 +33,10 @@
       });
       FeatureToggleService.csdmAtaCpcGetStatus().then(function (response) {
         deviceOverview.cpcFeatureToggle = response;
+      });
+      FeatureToggleService.csdmAtaRebootGetStatus().then(function (response) {
+        deviceOverview.ataRebootWarningToggle = response;
+        deviceOverview.disableAtaRebootSettings = false;
       });
 
       displayDevice($stateParams.currentDevice);
@@ -65,18 +70,18 @@
       if (deviceOverview.currentDevice.isHuronDevice) {
         if (!deviceOverview.tzIsLoaded) {
           initTimeZoneOptions().then(function () {
-            loadDeviceInfo();
+            getCurrentDeviceInfo();
           });
         }
         if (!deviceOverview.countryIsLoaded) {
           initCountryOptions().then(function () {
-            loadDeviceInfo();
+            getCurrentDeviceInfo();
           });
         }
       }
 
       if (deviceOverview.currentDevice.isATA) {
-        getAtaSettings();
+        getCurrentAtaSettings();
       }
 
       deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
@@ -91,7 +96,7 @@
       resetSelectedChannel();
     }
 
-    function getAtaSettings() {
+    function getCurrentAtaSettings() {
       deviceOverview.updatingT38Settings = true;
       deviceOverview.updatingCpcSettings = true;
       huronDeviceService.getAtaInfo(deviceOverview.currentDevice).then(function (result) {
@@ -161,7 +166,7 @@
       }
     }
 
-    function loadDeviceInfo() {
+    function getCurrentDeviceInfo() {
       huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result.timeZone;
         deviceOverview.emergencyCallbackNumber = result.emergencyCallbackNumber;
@@ -205,6 +210,19 @@
     }
 
     deviceOverview.saveT38Settings = function () {
+      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+        ConfirmAtaRebootModal
+          .open({
+            name: $translate.instant('ataSettings.t38Label'),
+          })
+          .then(executeSaveT38Settings)
+          .catch(getCurrentAtaSettings);
+      } else {
+        executeSaveT38Settings();
+      }
+    };
+
+    function executeSaveT38Settings() {
       deviceOverview.updatingT38Settings = true;
       $timeout(function () {
         var settings = {
@@ -221,9 +239,22 @@
           deviceOverview.updatingT38Settings = false;
         });
       }, 100);
-    };
+    }
 
     deviceOverview.saveCpcSettings = function () {
+      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+        ConfirmAtaRebootModal
+          .open({
+            name: $translate.instant('ataSettings.cpcLabel'),
+          })
+          .then(executeSaveCpcSettings)
+          .catch(getCurrentAtaSettings);
+      } else {
+        executeSaveCpcSettings();
+      }
+    };
+
+    function executeSaveCpcSettings() {
       deviceOverview.updatingCpcSettings = true;
       $timeout(function () {
         var settings = {
@@ -235,14 +266,27 @@
           })
           .catch(function (error) {
             Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
+            getCurrentAtaSettings();
           })
           .finally(function () {
             deviceOverview.updatingCpcSettings = false;
           });
       }, 100);
-    };
+    }
 
     deviceOverview.saveTimeZoneAndWait = function () {
+      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+        ConfirmAtaRebootModal
+          .open({ name: $translate.instant('deviceOverviewPage.timeZone'),
+          })
+          .then(executeSaveTimeZoneAndWait)
+          .catch(getCurrentDeviceInfo);
+      } else {
+        executeSaveTimeZoneAndWait();
+      }
+    };
+
+    function executeSaveTimeZoneAndWait() {
       var newValue = deviceOverview.selectedTimeZone.id;
       if (newValue !== deviceOverview.timeZone) {
         deviceOverview.updatingTimeZone = true;
@@ -250,15 +294,28 @@
           .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
           .catch(function (error) {
             Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
-            loadDeviceInfo();
+            getCurrentDeviceInfo();
           })
           .finally(function () {
             deviceOverview.updatingTimeZone = false;
           });
       }
-    };
+    }
 
     deviceOverview.saveCountryAndWait = function () {
+      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+        ConfirmAtaRebootModal
+          .open({
+            name: $translate.instant('deviceOverviewPage.country'),
+          })
+          .then(executeSaveCountryAndWait)
+          .catch(getCurrentDeviceInfo);
+      } else {
+        executeSaveCountryAndWait();
+      }
+    };
+
+    function executeSaveCountryAndWait() {
       var newValue = deviceOverview.selectedCountry.value;
       if (newValue !== deviceOverview.country) {
         deviceOverview.updatingCountry = true;
@@ -266,14 +323,14 @@
           .then(_.partial(waitForDeviceToUpdateCountry, newValue))
           .catch(function (error) {
             Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
-            loadDeviceInfo();
+            getCurrentDeviceInfo();
           })
           .finally(function () {
             deviceOverview.updatingCountry = false;
             deviceOverview.selectedCountry = DeviceOverviewService.findCountryByCode(deviceOverview.countryOptions, newValue);
           });
       }
-    };
+    }
 
     function goToEmergencyServices() {
       var data = {
