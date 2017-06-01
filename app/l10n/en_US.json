@@ -2667,7 +2667,8 @@
   },
   "cmc": {
     "failures": {
-      "preCheckFailure": "Status check of org failed with: {{msg}}"
+      "preCheckFailure": "Status check of org failed with: {{msg}}",
+      "saveFailure": "Save failed with: {{msg}}"
     },
     "menu": {
       "mobileServices": "Mobile Services",

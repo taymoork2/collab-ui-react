@@ -20,23 +20,15 @@ export class CmcService {
   ) {
   }
 
-  public setUserData(user: ICmcUser, data: CmcUserData) {
-
+  public setUserData(user: ICmcUser, data: CmcUserData): ng.IPromise<any> {
     let mobileNumberSet: ng.IPromise<any> = this.setMobileNumber(user, data.mobileNumber);
     let entitlementSet: ng.IPromise<any> = this.setEntitlement(user, data.entitled);
-    this.$q.all(
+    return this.$q.all(
       [
         mobileNumberSet,
         entitlementSet,
       ],
-    )
-      .then((res: any) => {
-        this.$log.info('user data set:', res);
-      })
-      .catch((error: any) => {
-        // TODO: Handler error properly
-        this.$log.warn('Error setting user data:', error);
-      });
+    );
   }
 
   public getUserData(user: ICmcUser): CmcUserData {
