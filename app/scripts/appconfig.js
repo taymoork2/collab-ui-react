@@ -3412,7 +3412,11 @@
           .state('private-trunk-overview', {
             url: '/private-trunk-overview',
             parent: 'main',
-            template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
+            template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle" back-to="$resolve.backState"></private-trunk-overview>',
+            params: {
+              backState: null,
+              clusterId: null,
+            },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -3421,6 +3425,9 @@
               }),
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
+              },
+              backState: /* @ngInject */ function ($stateParams) {
+                return $stateParams.backState;
               },
             },
           })
@@ -3448,9 +3455,6 @@
               sipDestinationList: {
                 template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
               },
-            },
-            params: {
-              clusterId: null,
             },
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
@@ -3540,6 +3544,10 @@
             controller: 'HDSServiceController',
             controllerAs: 'hdsServiceController',
             parent: 'main',
+            params: {
+              clusterId: null,
+              backState: null,
+            },
           })
           .state('hds.list', {
             url: '/hds/resources',
@@ -3550,9 +3558,6 @@
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
                 },
               },
-            },
-            params: {
-              clusterId: null,
             },
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
@@ -3902,6 +3907,7 @@
             controller: 'CalendarServiceContainerController',
             controllerAs: 'vm',
             params: {
+              backState: null,
               clusterId: null,
             },
             parent: 'main',
@@ -3924,9 +3930,6 @@
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_LIST);
                 },
               },
-            },
-            params: {
-              clusterId: null,
             },
           })
           .state('calendar-service.settings', {
@@ -3961,6 +3964,7 @@
             controller: 'CallServiceContainerController',
             controllerAs: 'vm',
             params: {
+              backState: null,
               clusterId: null,
             },
             parent: 'main',
@@ -3982,9 +3986,6 @@
               controller: /* @ngInject */ function (Analytics) {
                 return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
               },
-            },
-            params: {
-              clusterId: null,
             },
           })
           .state('call-service.settings', {
@@ -4216,6 +4217,10 @@
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
             parent: 'main',
+            params: {
+              backState: null,
+              clusterId: null,
+            },
           })
           .state('media-service-v2.list', {
             url: '/mediaserviceV2',
@@ -4226,9 +4231,6 @@
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
                 },
               },
-            },
-            params: {
-              clusterId: null,
             },
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {

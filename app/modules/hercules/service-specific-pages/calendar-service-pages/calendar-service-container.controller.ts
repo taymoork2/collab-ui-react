@@ -43,6 +43,9 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
   ) {
     super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, hasNodesViewFeatureToggle, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
     this.clusterId = this.$stateParams['clusterId'];
+    if (this.$stateParams['backTo']) {
+      this.backState = this.$stateParams['backTo'];
+    }
   }
 
 }
