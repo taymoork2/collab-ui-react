@@ -5780,6 +5780,7 @@
     "alwaysProvisionWithLatest": "Provision new WebEx Sites with the latest client version",
     "webexClientVersionUpdated": "Webex client version updated",
     "webexClientVersionUpdatedFailed": "Webex client version update failed",
+    "webExClientVersionInvalid": "Choose another version as {{clientVersion}} is no longer supported.",
     "webexVersionUseLatestTrue": "Latest version of Webex client will be used",
     "webexVersionUseLatestFalse": "Selected version of Webex client will be used",
     "webexVersionUseLatestUpdateFailed": "Could not update",
