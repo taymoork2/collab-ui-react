@@ -6,7 +6,7 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $state, $translate, Authinfo, HybridServicesClusterService, HDSService, Log) {
+  function HDSServiceController($modal, $state, $translate, Authinfo, HybridServicesClusterService, HDSService, Notification) {
 
 
     var vm = this;
@@ -38,19 +38,19 @@
       .then(function (enabled) {
         if (!enabled) {
           HDSService.enableHdsEntitlement()
-            .then(function () {
-            }).catch(function (error) {
-              Log.error('HDSService.enableHdsEntitlement() failed: ' + error);
+            .catch(function (error) {
+              Notification.errorWithTrackingId(error, 'HDSServiceController - HDSService.enableHdsEntitlement()');
+            }).finally(function () {
+              vm.addResourceModal.resolve.firstTimeSetup = true;
+              if (Authinfo.isCustomerLaunchedFromPartner()) {
+                $modal.open({
+                  templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+                  type: 'dialog',
+                });
+                return;
+              }
+              $modal.open(vm.addResourceModal);
             });
-          vm.addResourceModal.resolve.firstTimeSetup = true;
-          if (Authinfo.isCustomerLaunchedFromPartner()) {
-            $modal.open({
-              templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
-              type: 'dialog',
-            });
-            return;
-          }
-          $modal.open(vm.addResourceModal);
         }
       });
 
