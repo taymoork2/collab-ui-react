@@ -7,29 +7,36 @@
   function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig) {
     var features = require('./features.config');
     var toggles = {};
+
+    // returns huron feature toggle value for the given user or user's org
+    var huronUserResource;
+
+    // returns huron feature toggle value for the given customer; must be full admin or partner admin for the customer
     var huronCustomerResource;
 
     var orgResource = $resource(UrlConfig.getFeatureUrl() + '/features/rules/:id', {
       id: '@id',
-    }, {
-      get: {
-        method: 'GET',
-        cache: true,
-      },
-      refresh: {
-        method: 'GET',
-        cache: false,
-      },
-    });
+    },
+      {
+        get: {
+          method: 'GET',
+          cache: true,
+        },
+        refresh: {
+          method: 'GET',
+          cache: false,
+        },
+      });
 
     var userResource = $resource(UrlConfig.getFeatureUrl() + '/features/users/:id', {
       id: '@id',
-    }, {
-      get: {
-        method: 'GET',
-        cache: true,
-      },
-    });
+    },
+      {
+        get: {
+          method: 'GET',
+          cache: true,
+        },
+      });
 
     var service = {
       getUrl: getUrl,
@@ -49,10 +56,12 @@
     return service;
 
     function init() {
-      setHuronCustomerResource(HuronConfig.getToggleUrl());
+      setHuronUserResource(HuronConfig.getMinervaUrl());
+      setHuronCustomerResource(HuronConfig.getMinervaUrl());
       // setup listener
       $rootScope.$on('COMPASS_BASE_DOMAIN_CHANGED', function () {
-        setHuronCustomerResource(HuronConfig.getToggleUrl());
+        setHuronUserResource(HuronConfig.getMinervaUrl());
+        setHuronCustomerResource(HuronConfig.getMinervaUrl());
       });
       return _.reduce(features, function (status, feature, key) {
         status[key + 'GetStatus'] = function () {
@@ -111,6 +120,43 @@
       });
     }
 
+    function getHuronToggle(feature) {
+      if (Authinfo.isSquaredUC()) {
+        if (Authinfo.isCustomerLaunchedFromPartner()) {
+          return getHuronToggleForCustomer(Authinfo.getOrgId(), feature);
+        }
+
+        return getHuronToggleForUser(Authinfo.getUserId(), feature);
+      }
+
+      return $q.resolve(false);
+    }
+
+    function getHuronToggleForUser(userId, feature) {
+      return huronUserResource.get({
+        userId: userId,
+        featureName: feature,
+      }).$promise.then(function (data) {
+        toggles[feature] = data.val;
+        return data.val;
+      }).catch(function () {
+        return false;
+      });
+    }
+
+
+    function getHuronToggleForCustomer(customerId, feature) {
+      return huronCustomerResource.get({
+        customerId: customerId,
+        featureName: feature,
+      }).$promise.then(function (data) {
+        toggles[feature] = data.val;
+        return data.val;
+      }).catch(function () {
+        return false;
+      });
+    }
+
     function getFeature(isUser, id, feature) {
       if (!feature) {
         return $q.reject('feature is undefined');
@@ -127,7 +173,7 @@
 
       return atlasToggle.then(function (toggle) {
         if (!toggle) {
-          return getHuronTogglesForCustomer(feature);
+          return getHuronToggle(feature);
         } else {
           return toggle;
         }
@@ -162,16 +208,16 @@
             cache: true,
           }).then(function (response) {
             return getFeatureForUser(_.get(response, 'data.id'), feature)
-            .then(function (result) {
-              if (!result) {
-                return getHuronTogglesForCustomer(feature);
-              } else {
-                return result;
-              }
-            }).then(function (toggleValue) {
-              toggles[feature] = toggleValue;
-              resolve(toggleValue);
-            });
+              .then(function (result) {
+                if (!result) {
+                  return getHuronToggle(feature);
+                } else {
+                  return result;
+                }
+              }).then(function (toggleValue) {
+                toggles[feature] = toggleValue;
+                resolve(toggleValue);
+              });
           }).catch(function () {
             return false;
           });
@@ -222,33 +268,32 @@
       }
     }
 
-    function getHuronTogglesForCustomer(feature) {
-      return huronCustomerResource.query({
-        customerId: Authinfo.getOrgId(),
-      }).$promise.then(function (data) {
-        var toggle = _.find(data, function (huronFeature) {
-          return huronFeature.key === feature;
+    function setHuronUserResource() {
+      huronUserResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
+        userId: '@userId',
+        featureName: '@featureName',
+      },
+        {
+          get: {
+            method: 'GET',
+            cache: true,
+          },
         });
-        if (toggle) {
-          return toggle.val;
-        } else {
-          return false;
-        }
-      }).catch(function () {
-        return false;
-      });
     }
 
-    function setHuronCustomerResource(toggleUrl) {
-      huronCustomerResource = $resource(toggleUrl + '/features/customers/export/developer/id/:customerId', {
+    function setHuronCustomerResource() {
+      huronCustomerResource = $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
         customerId: '@customerId',
-      }, {
-        query: {
-          method: 'GET',
-          isArray: true,
-          cache: true,
-        },
-      });
+        featureName: '@featureName',
+      },
+        {
+          get: {
+            method: 'GET',
+            cache: true,
+          },
+        });
     }
+
   }
+
 })();
