@@ -4,6 +4,7 @@ import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { Notification } from 'modules/core/notifications';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/huron/settings/companyCallerId';
 import { AvrilService, IAvrilSite, AvrilSite, IAvrilFeatures, AvrilFeatures } from 'modules/huron/avril';
+import { TerminusService } from 'modules/huron/pstn';
 
 export class HuronSettingsData {
   public customer: CustomerSettings;
@@ -71,8 +72,8 @@ export class HuronSettingsService {
     private CustomerCosRestrictionServiceV2,
     private CallerId,
     private VoicemailMessageAction,
-    private TerminusUserDeviceE911Service,
     private FeatureToggleService,
+    private TerminusService: TerminusService,
   ) {
 
     this.FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable)
@@ -582,7 +583,7 @@ export class HuronSettingsService {
   }
 
   public getE911State(pattern: string): ng.IPromise<string> {
-    return this.TerminusUserDeviceE911Service.get({
+    return this.TerminusService.customerNumberE911V2().get({
       customerId: this.Authinfo.getOrgId(),
       number: pattern,
     }).$promise

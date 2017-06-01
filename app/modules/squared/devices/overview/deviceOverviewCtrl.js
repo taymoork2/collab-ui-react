@@ -9,7 +9,7 @@
   function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo,
     FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal,
     ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService,
-    TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService,
+    TerminusService, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService,
     FeatureToggleService, ConfirmAtaRebootModal) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
@@ -131,7 +131,7 @@
     }
 
     function getEmergencyAddress() {
-      TerminusUserDeviceE911Service.get({
+      TerminusService.customerNumberE911V2().get({
         customerId: Authinfo.getOrgId(),
         number: deviceOverview.emergencyCallbackNumber,
       }).$promise.then(function (info) {
