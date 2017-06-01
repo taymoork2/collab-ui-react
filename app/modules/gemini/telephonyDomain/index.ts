@@ -1,6 +1,8 @@
 import { GmTdSitesComponent } from './details/gmTdSites.component';
 import { GmTdNotesComponent } from './details/gmTdNotes.component';
 import { TelephonyDomainService } from './telephonyDomain.service';
+import { TelephonyNumberValidateService } from './details/telephonyNumberValidate.service';
+import { TelephonyNumberDataService } from './details/telephonyNumberData.service';
 import { GmTdDetailsComponent } from './details/gmTdDetails.component';
 import { TelephonyDomainsComponent } from './telephonyDomains.component';
 import { GmTdModalRequestComponent } from './details/gmTdModalRequest.component';
@@ -14,6 +16,8 @@ import { GmImportTdComponent } from './details/gmImportTd.component';
 export default angular
   .module('Gemini')
   .service('TelephonyDomainService', TelephonyDomainService)
+  .service('TelephonyNumberDataService', TelephonyNumberDataService)
+  .service('TelephonyNumberValidateService', TelephonyNumberValidateService)
   .component('gmTdNotes', new GmTdNotesComponent())
   .component('gmTdSites', new GmTdSitesComponent())
   .component('gmTdDetails', new GmTdDetailsComponent())

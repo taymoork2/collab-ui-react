@@ -1,0 +1,66 @@
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/settings/settings-collab-ui';
+
+.gemini-request-callbackgroup {
+  .input-icon {
+    position: relative;
+
+    .icon {
+      position: absolute;
+      top: $toast-padding;
+      left: $toast-padding;
+    }
+
+    input {
+      padding-left: $ui-padding--huge;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  .select-mini {
+    .select-toggle {
+      padding: 0.2825rem 0.35rem;
+      height: auto;
+      line-height: 1;
+
+      .icon {
+        top: 0;
+      }
+    }
+
+    .ui-grid-cell-contents {
+      padding-left: 10px;
+    }
+
+    .ui-grid-selection-row-header-buttons:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+.gemCbgDetails-notes-state,
+.gemCbgDetails-sites-state,
+.gemCbgDetails-editCountry-state {
+  cs-alert-banner {
+    display: none;
+  }
+}
+
+.gemini-select-country {
+  .upload-file-box {
+    position: relative;
+  }
+
+  .country-upload-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    opacity: 0;
+  }
+
+  .tag {
+    white-space: normal;
+  }
+}

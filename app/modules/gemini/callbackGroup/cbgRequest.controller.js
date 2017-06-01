@@ -1,3 +1,6 @@
+require('../style/common.scss');
+require('../style/callbackGroup.scss');
+
 (function () {
   'use strict';
 

@@ -1,0 +1,304 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/settings';
+@import '~collab-ui/scss/objects/tables';
+
+.gm-td-histories,
+.gm-td-notes-view {
+  &.section {
+    .side-panel-section {
+      margin-bottom: 0;
+      border-bottom: solid 1px $gray-light-4;
+    }
+
+    .section-title-row {
+      padding-left: 2rem;
+
+      .section-name {
+        position: relative;
+
+        i {
+          position: absolute;
+          top: -.2rem;
+          left: -2.2rem;
+          width: 2rem;
+          text-align: right;
+          display: block;
+          cursor: pointer;
+
+          &:focus {
+            outline: none;
+            box-shadow: none;
+          }
+        }
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+
+    .section-content {
+      padding-left: 2rem;
+
+      .columns {
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+.gm-td-histories {
+  &.section {
+    .side-panel-section {
+      border-bottom: none;
+    }
+  }
+}
+
+.gmTdDetails-notes-state,
+.gmTdDetails-sites-state {
+  cs-alert-banner {
+    display: none;
+  }
+}
+
+.gmTdNumbersRequest-state,
+.gmTdDetails-gmTdNumbers-state {
+  .side-panel {
+    z-index: 1000;
+
+    .customer-overview.gemini-side-panel {
+      .page-sub-header {
+        padding: .75rem 1rem;
+      }
+
+      .page-sub-header__right {
+        button,
+        .btn {
+          margin-left: 12px;
+        }
+      }
+
+      .side-panel-container {
+        padding: 0;
+        padding-bottom: 50px;
+
+        .breadcrumb-container {
+          padding: 0 1rem;
+        }
+
+        .grid-his-note {
+          height: calc(100vh - 390px);
+          overflow-y: scroll;
+          overflow-x: hidden;
+        }
+      }
+
+      .ui-grid-row:hover {
+        background-color: transparent;
+      }
+
+      .ui-grid-contents-wrapper {
+        overflow: inherit !important;
+
+        .ui-grid-header-cell-row {
+          .ui-grid-cell-contents {
+            padding: 10px 10px 10px 15px;
+          }
+        }
+      }
+
+      .ui-grid-viewport {
+        overflow: inherit !important;
+
+        .cell-border-none {
+          border: none;
+        }
+
+        .ui-grid-cell-contents {
+          padding: 5px 3px;
+
+          .cs-input {
+            width: 100%;
+            border-color: transparent;
+            text-overflow: ellipsis;
+
+            &:focus {
+              border-color: #0387B8;
+              text-overflow: inherit;
+            }
+          }
+
+          .select-toggle {
+            border-color: transparent;
+
+            &:focus {
+              border-color: #0387B8;
+            }
+
+            i.icon {
+              margin-right: -6px;
+            }
+          }
+        }
+
+        .read-only-text {
+          padding: 10px 5px 10px 15px;
+        }
+
+        .select-overflow {
+          overflow: inherit;
+        }
+
+        .error {
+          .cs-input {
+            &:focus {
+              border-color: #F96452;
+            }
+          }
+
+          .select-toggle {
+            &:focus {
+              border-color: #F96452;
+            }
+          }
+        }
+
+        .dropdown-menu {
+          min-width: 122px;
+
+          .select-options {
+            max-height: 175px;
+          }
+          .select-options > li > a {
+            padding: 7px 16px;
+            min-height: 35px;
+          }
+        }
+      }
+
+      cs-alert-banner {
+        display: none;
+      }
+
+      .select-toggle {
+        .icon-chevron-right {
+          &::before {
+            color: #aeaeaf;
+          }
+        }
+      }
+    }
+  }
+
+  .ui-grid-header-cell-primary-focus {
+    i {
+      right: 0px;
+    }
+  }
+
+  .tn-error-msg {
+    &::before {
+      font-family: "Cisco_Toolkit_Icons";
+      color: #f96452;
+      content: '\E0B0';
+      margin-right: 4px;
+      vertical-align: top;
+    }
+  }
+}
+
+.gm-td-side-panel {
+  .side-panel-defaultToll {
+    ul {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      flex: wrap;
+      padding: $base-rem 0;
+
+      .defaultToll-item-num {
+        position: relative;
+        flex-grow: 2;
+        width: 1%;
+        color: $gray-base;
+        padding-right: $base-rem;
+      }
+
+      .defaultToll-item-toll {
+        position: relative;
+        width: 110px;
+        text-align: right;
+      }
+    }
+  }
+}
+
+.tooltip[popup-class="tn-error"] {
+  padding: 0;
+
+  .c-nub {
+    background-color: $color-alerts-lighter;
+    border: $table-border-style $table-border-size $color-alerts-base;
+    color: $color-alerts-base;
+    padding: ($table-row-padding / 4) $base-rem;
+    font-size: $toast-padding;
+  }
+}
+.tooltip.tip-right[popup-class="tn-error"] {
+  .nub {
+    top: $toast-padding;
+    border-color: transparent $color-alerts-base transparent transparent;
+
+    &::after {
+      position: absolute;
+      top: -$slider-bar-height;
+      left: -($slider-bar-height / 2);
+      content: "";
+      border: $slider-bar-height solid;
+      border-color: transparent $color-alerts-lighter transparent transparent;
+    }
+  }
+}
+
+.tooltip.tip-top[popup-class="tn-error"] {
+  .nub {
+    bottom: -$toast-padding-bottom;
+    border-color: $color-alerts-base transparent transparent transparent;
+
+    &::after {
+      position: absolute;
+      bottom: -($slider-bar-height / 2);
+      left: -$slider-bar-height;
+      content: "";
+      border: $slider-bar-height solid;
+      border-color: $color-alerts-lighter transparent transparent transparent;
+    }
+  }
+}
+
+.import-td-reconstruction {
+  .select-mini {
+    height: auto !important;
+    padding-left: 0;
+    border: 1px solid #ddd;
+  }
+
+  .ui-grid-viewport {
+    overflow: inherit !important;
+    height: auto !important;
+  }
+
+  .ui-grid-contents-wrapper {
+    overflow-y: hidden !important;
+  }
+
+  .ui-grid-cell {
+    border-color: transparent;
+  }
+}

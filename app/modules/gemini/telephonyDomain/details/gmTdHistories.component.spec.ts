@@ -1,9 +1,13 @@
 import testModule from '../index';
 
 describe('Component: gmTdHistories', () => {
+  beforeAll(function () {
+    this.preData = getJSONFixture('gemini/common.json');
+  });
+
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', 'Notification', 'gemService', 'TelephonyDomainService');
+    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', 'Notification', 'gemService', 'TelephonyDomainService');
     this.mockData = {
       content: {
         data: {
@@ -58,6 +62,10 @@ describe('Component: gmTdHistories', () => {
       }
       this.gemService.setStorage('currentTdHistories', histories);
     }
+
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
+    this.$httpBackend.flush();
 
     this.compileComponent('gmTdHistories', {});
     this.controller.onCollapse();
