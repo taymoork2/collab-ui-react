@@ -205,7 +205,10 @@ export class Notification {
       trackingId = _.get(response, 'data.trackingId'); // for CCATG API spec
     }
     if (!trackingId) {
-      trackingId = _.get(response, 'data.error.trackingId');  // falback to old data structure
+      trackingId = _.get(response, 'data.error.trackingId');  // fallback to old data structure
+    }
+    if (!trackingId) {
+      trackingId = _.get(response, 'config.headers.TrackingID');  // fallback for when request could not be made
     }
     if (_.isString(trackingId) && trackingId.length) {
       errorMsg = `${this.addTrailingPeriod(errorMsg)} TrackingID: ${trackingId}`;
