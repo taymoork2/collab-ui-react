@@ -12,7 +12,7 @@
   <input
     cs-input
     type="radio"
-    id="AltFallback"
+    id="alternate"
     name="altFallbackRadio"
     ng-model="$ctrl.destinationRule"
     ng-value="'TYPEFALLBACKRULE_ALTERNATE_DESTINATION'"
@@ -29,7 +29,7 @@
     ng-change="$ctrl.setHuntGroupDestinationRule('TYPEFALLBACKRULE_AUTOMATIC')"
     cs-input-label="{{:: 'huronHuntGroup.automatic'|translate}}"
     cs-input-help-text="{{:: 'huronHuntGroup.fallbackRule3Hint'|translate}}">
-  <div class="sub-section">
+  <div class="sub-section margin-sub-section">
     <h5 class="sub-section__title" translate="huronHuntGroup.fallbackNumber"></h5>
     <p class="sub-section__description" translate="huronHuntGroup.fallbackNumberHint"></p>
     <uc-fallback-destination
@@ -42,6 +42,7 @@
     <p class="sub-section__description" translate="huronHuntGroup.altFallbackHint"></p>
     <uc-fallback-destination
       fallback-destination="$ctrl.alternateDestination"
+      is-alternate="true"
       on-change-fn="$ctrl.setHuntGroupAlternateDestination(fallbackDestination)">
     </uc-fallback-destination>
     <div ng-if="$ctrl.destinationRule==='TYPEFALLBACKRULE_AUTOMATIC'">
@@ -50,7 +51,7 @@
          max-wait-mins="$ctrl.alternateDestination.timer"
          options="$ctrl.options"
          is-hunt-group-fallback-timer=true
-         on-change-fn="$ctrl.setTimertMins(minutes)">
+         on-change-fn="$ctrl.setTimerMins(minutes)">
        </uc-hunt-group-max-wait-time>
     </div>
   </div>
