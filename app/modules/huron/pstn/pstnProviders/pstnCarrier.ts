@@ -50,9 +50,29 @@ export interface IPstnCarrierStatic {
   name: string;
   logoSrc: string;
   logoAlt: string;
+  countryCode: string;
   docSrc: string;
   features: Array<any>;
 }
+
+export class PstnCarrierStatic implements IPstnCarrierStatic {
+  public name: string;
+  public logoSrc: string;
+  public logoAlt: string;
+  public countryCode: string;
+  public docSrc: string;
+  public features: Array<any>;
+
+  public constructor() {
+    this.name = '';
+    this.logoSrc = '';
+    this.logoAlt = '';
+    this.countryCode = '';
+    this.docSrc = '';
+    this.features = [];
+  }
+}
+
 
 export interface IPstnCarrierCapability {
   capability: string;
