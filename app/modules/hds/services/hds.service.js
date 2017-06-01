@@ -16,6 +16,7 @@
       createHdsTrialUsersGroup: createHdsTrialUsersGroup,
       deleteCIGroup: deleteCIGroup,
       getHdsTrialUserGroupID: getHdsTrialUserGroupID,
+      queryGroup: queryGroup,
       queryUser: queryUser,
       queryUsers: queryUsers,
       getHdsTrialUsers: getHdsTrialUsers,
@@ -69,6 +70,11 @@
         ],
       };
       return $http.post(serviceUrl, json).then(extractData);
+    }
+
+    function queryGroup(oid, groupName) {
+      var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '?filter=displayName eq "' + groupName + '"', 'Users', 'Groups');
+      return $http.get(serviceUrl).then(extractData);
     }
 
     function getHdsTrialUserGroupID() {
