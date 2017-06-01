@@ -2,7 +2,7 @@ declare let newrelic;
 
 describe('$exceptionHandler', function () {
   beforeEach(function () {
-    newrelic = jasmine.createSpyObj('newrelic', ['noticeError']);
+    newrelic = jasmine.createSpyObj('newrelic', ['noticeError', 'setCurrentRouteName']);
     this.initModules('wx2AdminWebClientApp');
     angular.mock.module(($provide, $exceptionHandlerProvider) => {
       $provide.value('BadService', {
