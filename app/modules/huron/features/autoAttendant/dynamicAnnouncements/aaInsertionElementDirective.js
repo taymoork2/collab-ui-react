@@ -10,6 +10,10 @@
       restrict: 'AE',
       scope: {
         textValue: '@elementText',
+        readAs: '@readAs',
+        elementId: '@elementId',
+        schedule: '@aaSchedule',
+        index: '=aaIndex',
       },
       controller: 'AAInsertionElementCtrl',
       controllerAs: 'aaInsertionElement',

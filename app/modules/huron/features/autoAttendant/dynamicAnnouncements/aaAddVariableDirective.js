@@ -11,6 +11,8 @@
       scope: {
         elementId: '@dynamicPromptId',
         dynamicElement: '=dynamicElementString',
+        schedule: '@aaSchedule',
+        index: '=aaIndex',
       },
       controller: 'AAAddVariableCtrl',
       controllerAs: 'aaAddVariable',

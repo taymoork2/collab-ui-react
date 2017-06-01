@@ -5,7 +5,7 @@
     .module('uc.autoattendant')
     .directive('dynamicPrompt', DynamicPrompt);
 
-  function DynamicPrompt($sce, $window, $compile) {
+  function DynamicPrompt($sce, $window, $compile, AADynaAnnounceService) {
     var CONSTANTS = {};
     CONSTANTS.read = 'blur keyup change';
     CONSTANTS.defaultElementParentType = 'span';
@@ -38,9 +38,9 @@
           });
         });
         read(false, element, scope, ngModel);
-        scope.insertElement = function (html) {
+        scope.insertElement = function (html, range) {
           scope.$evalAsync(function () {
-            doFormatInsertion(html, element, scope);
+            doFormatInsertion(html, element, scope, range);
           });
         };
       },
@@ -103,9 +103,9 @@
       }
     }
 
-    function doFormatInsertion(html, element, scope) {
+    function doFormatInsertion(html, element, scope, range) {
       if (html) {
-        addHtmlAtCaret(element, scope, getParentHtml(), html);
+        addHtmlAtCaret(element, scope, getParentHtml(), html, range);
         placeCaretAtEnd(element);
         ensureEndingBr(element, scope, getParentHtml());
       }
@@ -214,23 +214,20 @@
       read(false, element, scope, ngModel);
     }
 
-    function addHtmlAtCaret(element, scope, parentElementType, html) {
+    function addHtmlAtCaret(element, scope, parentElementType, html, range) {
       element.focus();
-      var selection;
-      var range;
-      if ($window.getSelection) {
-        selection = $window.getSelection();
-        if (selection.getRangeAt && selection.rangeCount) {
-          range = selection.getRangeAt(0);
-          range.deleteContents();
-          var el = $window.document.createElement(parentElementType);
-          el.setAttribute(CONSTANTS.contentEditable, 'false');
-          el.innerHTML = html;
-          $compile(el)(scope);
-          var frag = $window.document.createDocumentFragment();
-          frag.appendChild(el.firstChild);
-          range.insertNode(frag);
-        }
+      if (_.isUndefined(range)) {
+        range = AADynaAnnounceService.getRange();
+      }
+      if (range) {
+        range.deleteContents();
+        var el = $window.document.createElement(parentElementType);
+        el.setAttribute(CONSTANTS.contentEditable, 'false');
+        el.innerHTML = html;
+        $compile(el)(scope);
+        var frag = $window.document.createDocumentFragment();
+        frag.appendChild(el.firstChild);
+        range.insertNode(frag);
       }
     }
 

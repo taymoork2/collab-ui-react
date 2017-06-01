@@ -6,7 +6,7 @@
     .controller('AADynamicAnnouncementsModalCtrl', AADynamicAnnouncementsModalCtrl);
 
   /* @ngInject */
-  function AADynamicAnnouncementsModalCtrl($modalInstance, $translate, AASessionVariableService, AAModelService, AACommonService) {
+  function AADynamicAnnouncementsModalCtrl($modalInstance, $translate, AASessionVariableService, AAModelService, AACommonService, variableSelection, readAsSelection/*, aa_schedule, aa_index*/) {
     var vm = this;
 
     vm.selectPlaceholder = $translate.instant('common.select');
@@ -30,7 +30,10 @@
         value: '',
       },
     ];
-    vm.readAsSelection = vm.readAsOptions[3];
+    vm.readAsSelection = {
+      label: '',
+      value: '',
+    };
     vm.variableSelection = {
       label: '',
       value: '',
@@ -59,7 +62,11 @@
     //else the dismiss was called
     function ok() {
       //do something with ng-models
-      $modalInstance.close();
+      var result = {
+        variable: vm.variableSelection,
+        readAs: vm.readAsSelection,
+      };
+      $modalInstance.close(result);
     }
 
     function isSaveEnabled() {
@@ -75,6 +82,17 @@
     }
 
     function activate() {
+      vm.readAsSelection = _.find(vm.readAsOptions, { 'value': readAsSelection });
+      vm.variableSelection = _.find(vm.variableOptions, { 'value': variableSelection });
+      if (_.isUndefined(vm.readAsSelection)) {
+        vm.readAsSelection = vm.readAsOptions[3];
+      }
+      if (_.isUndefined(vm.variableSelection)) {
+        vm.variableSelection = {
+          label: '',
+          value: '',
+        };
+      }
       populateUiModel();
     }
 

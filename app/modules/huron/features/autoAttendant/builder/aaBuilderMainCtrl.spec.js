@@ -548,7 +548,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.setupTemplate();
 
       expect($scope.vm.ui.openHours['entries'].length).toEqual(2);
-      expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('say');
+      expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('play');
       expect($scope.vm.ui.openHours['entries'][1]['type']).toEqual('MENU_OPTION');
 
       expect($scope.vm.ui.openHours['entries'][1]['entries'].length).toEqual(1);

@@ -180,7 +180,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
       });
 
-      it('should be able to switch play action to say action', function () {
+      it('should be able to switch play action to dynamic action', function () {
         var c;
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('play', 'value for say message'));
@@ -200,7 +200,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         expect(c.actionEntry.value).toEqual('');
 
-        expect(c.actionEntry.name).toEqual('say');
+        expect(c.actionEntry.name).toEqual('dynamic');
 
       });
       it('should be able blank out old play action when record saved with save action', function () {
@@ -249,7 +249,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
         expect(c.actionEntry.name).toEqual('play');
 
       });
-      it('should be able blank out old say action when record saved with Play action', function () {
+      it('should be able blank out old say/dynamic action when record saved with Play action', function () {
         var c;
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('play', 'value for say message'));
@@ -270,7 +270,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         expect(c.actionEntry.value).toEqual('');
 
-        expect(c.actionEntry.name).toEqual('say');
+        expect(c.actionEntry.name).toEqual('dynamic');
 
         c.actionEntry.value = 'My old Say Message';
 
@@ -292,7 +292,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         expect(c.actionEntry.value).toEqual('');
 
-        expect(c.actionEntry.name).toEqual('say');
+        expect(c.actionEntry.name).toEqual('dynamic');
 
       });
 

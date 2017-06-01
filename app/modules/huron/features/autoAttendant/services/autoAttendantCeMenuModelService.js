@@ -443,13 +443,22 @@
     function parseAction(menuEntry, inAction) {
       //read from db
       var action;
-      if (!_.isUndefined(inAction.play)) {
+
+      if (!_.isUndefined(inAction.dynamic)) {
+        action = new Action('dynamic', '');
+        var dynamicList = inAction.dynamic.dynamicOperations;
+        menuEntry.dynamicList = dynamicList;
+        action.voice = dynamicList[0].say.voice;
+        menuEntry.addAction(action);
+      } else if (!_.isUndefined(inAction.play)) {
+
         action = new Action('play', decodeUtf8(inAction.play.url));
         setDescription(action, inAction.play);
         action.voice = inAction.play.voice;
         action.deleteUrl = decodeUtf8(inAction.play.deleteUrl);
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.say)) {
+
         action = new Action('say', decodeUtf8(inAction.say.value));
         setDescription(action, inAction.say);
         if (!_.isUndefined(inAction.say.voice)) {
@@ -457,6 +466,7 @@
         }
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.route)) {
+
         action = new Action('route', inAction.route.destination);
         setDescription(action, inAction.route);
         menuEntry.addAction(action);
@@ -1148,6 +1158,14 @@
       return true;
     }
 
+    function updateDynaListVoice(dynaList, voice) {
+      _.forEach(dynaList, function (opt) {
+        if (_.has(opt, 'say')) {
+          opt.say.voice = voice;
+        }
+      });
+    }
+
     function createWelcomeMenu(aaMenu) {
       var newActionArray = [];
       for (var i = 0; i < aaMenu.entries.length; i++) {
@@ -1163,7 +1181,13 @@
             if (!_.isUndefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
-            if (actionName === 'say') {
+            if (actionName === 'dynamic') {
+              var voice = menuEntry.actions[0].getVoice();
+              updateDynaListVoice(menuEntry.dynamicList, voice);
+              var dynamicOperations = menuEntry.dynamicList;
+              newActionArray[i].dynamic = {};
+              newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
+            } else if (actionName === 'say') {
               newActionArray[i][actionName].value = encodeUtf8(menuEntry.actions[0].getValue());
               newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
             } else if (actionName === 'play') {

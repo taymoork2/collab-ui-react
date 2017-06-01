@@ -28,6 +28,11 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
     dismiss: jasmine.createSpy('modalInstance.dismiss'),
   };
 
+  var selection = {
+    label: '',
+    value: '',
+  };
+
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
@@ -50,6 +55,8 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
         controller = $controller('AADynamicAnnouncementsModalCtrl', {
           $scope: $scope,
           $modalInstance: modalFake,
+          variableSelection: selection,
+          readAsSelection: selection,
         });
         $scope.$apply();
       });
@@ -69,6 +76,8 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
         controller = $controller('AADynamicAnnouncementsModalCtrl', {
           $scope: $scope,
           $modalInstance: modalFake,
+          variableSelection: selection,
+          readAsSelection: selection,
         });
         $scope.$apply();
       });
@@ -86,6 +95,8 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
         controller = $controller('AADynamicAnnouncementsModalCtrl', {
           $scope: $scope,
           $modalInstance: modalFake,
+          variableSelection: selection,
+          readAsSelection: selection,
         });
         $scope.$apply();
       });
@@ -102,6 +113,8 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
         controller = $controller('AADynamicAnnouncementsModalCtrl', {
           $scope: $scope,
           $modalInstance: modalFake,
+          variableSelection: selection,
+          readAsSelection: selection,
         });
         $scope.$apply();
       });
