@@ -197,7 +197,7 @@
     }
 
     function groupAssigned() {
-      return (angular.isString(vm.trialUserGroupId) && vm.trialUserGroupId.length > 0);
+      return (_.isString(vm.trialUserGroupId) && vm.trialUserGroupId.length > 0);
     }
 
     function recoverPreTrial() {
