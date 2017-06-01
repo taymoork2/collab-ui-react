@@ -27,6 +27,7 @@
       deleteHdsServerInfo: deleteHdsServerInfo,
       setOrgAltHdsServersHds: setOrgAltHdsServersHds,
       refreshEncryptionServerForTrialUsers: refreshEncryptionServerForTrialUsers,
+      enableHdsEntitlement: enableHdsEntitlement,
       getHDSInfo: getHDSInfo,
     };
 
@@ -272,6 +273,11 @@
 
     function refreshEncryptionServerForTrialUsers(gid) {
       var serviceUrl = UrlConfig.getHybridEncryptionServiceUrl() + '/flushTrialUserGroupCache/' + gid;
+      return $http.post(serviceUrl).then(extractData);
+    }
+
+    function enableHdsEntitlement() {
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services?configureService=sparkHybridDataSecurity';
       return $http.post(serviceUrl).then(extractData);
     }
 
