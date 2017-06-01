@@ -2847,7 +2847,9 @@
         "hdsModeGetError": "Failed to get HDS mode: ",
         "selectGroupDesc" : "Directory Synchronization is enabled for this organization. Users in the Active Directory group {{defaultGroup}} will be part of the trial.",
         "selectGroupError": "Directory Synchronization is enabled for this organization, but we can't find a group named {{defaultGroup}} in Active Directory. To start a trial, create this group in AD and perform a synchronization.",
-        "noGroupError": "We could not find trial group assigned to the organization. To start a trial, group needs to be assigned to the organization."
+        "noGroupError": "To start an HDS trial, your organization needs a trial group to add users to. Something's gone wrong, and we can't find one. You can try rerunning the HDS Setup Tool (using your existing ISO configuration file) or contact Cisco Support for help.",
+        "groupSizeLimitExceeded" : "Your trial group {{defaultGroup}} has more than 250 users. To start a trial, remove some users from the group in AD and perform a synchronization.",
+        "groupSizeLimitExceededinTrail" : "Your trial group {{defaultGroup}} has more than 250 users. Your key encryption routing might not work correctly for some users. Please remove some users from the group in AD and perform a synchronization."
       },
       "addTrialUsers": {
         "modalTitle": "Add Users to Trial Mode",

@@ -12,30 +12,39 @@
                 translate-value-onclick="hdsSettings.addResource()"
                 translate-compile>
             </p>
-            <button class="btn btn--people"
-                    ng-if="hdsSettings.groupAssigned()"
-                    ng-disabled="hdsSettings.numResourceNodes <= 0"
-                    ng-click="hdsSettings.startTrial()"
-                    translate="hds.resources.settings.servicePreTrialModeTitle">
-            </button>
             <div ng-if="hdsSettings.dirsyncEnabled === false && !hdsSettings.groupAssigned()">
               <i class="icon icon-circle status-indicator danger"></i>
               <span class="sub-section__description"
                  translate="hds.resources.settings.noGroupError">
               </span>
             </div>
-            <p class="sub-section__description"
-               ng-if="hdsSettings.dirsyncEnabled === true && hdsSettings.groupAssigned()"
-               translate="hds.resources.settings.selectGroupDesc"
-               translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
-            </p>
-            <div ng-if="hdsSettings.dirsyncEnabled === true && !hdsSettings.groupAssigned()">
-              <i class="icon icon-circle status-indicator danger"></i>
-              <span class="sub-section__description"
-                 translate="hds.resources.settings.selectGroupError"
+            <div ng-if="hdsSettings.dirsyncEnabled === true && hdsSettings.groupAssigned()">
+              <p ng-if="hdsSettings.numTrialUsers <= 250"
+                 class="sub-section__description"
+                 translate="hds.resources.settings.selectGroupDesc"
                  translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
-              </span>
+              </p>
+              <div ng-if="hdsSettings.numTrialUsers > 250">
+                <i class="icon icon-circle status-indicator danger"></i>
+                <span class="sub-section__description"
+                   translate="hds.resources.settings.groupSizeLimitExceeded"
+                   translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
+                </span>
+              </div>
             </div>
+            <div ng-if="hdsSettings.dirsyncEnabled === true && !hdsSettings.groupAssigned()">
+                <i class="icon icon-circle status-indicator danger"></i>
+                <span class="sub-section__description"
+                   translate="hds.resources.settings.selectGroupError"
+                   translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
+                </span>
+            </div>
+            <button class="btn btn--people"
+                    ng-if="hdsSettings.groupAssigned() && hdsSettings.numTrialUsers <= 250"
+                    ng-disabled="hdsSettings.numResourceNodes <= 0"
+                    ng-click="hdsSettings.startTrial()"
+                    translate="hds.resources.settings.servicePreTrialModeTitle">
+            </button>
         </div>
         <div ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
             <h5 class="sub-section__label" translate="hds.resources.settings.serviceTrialModeTitle"></h5>
@@ -47,6 +56,13 @@
                 translate-value-onclick="hdsSettings.addResource()"
                 translate-compile>
             </p>
+            <div ng-if="hdsSettings.numTrialUsers > 250">
+              <i class="icon icon-circle status-indicator danger"></i>
+              <span class="sub-section__description"
+                    translate="hds.resources.settings.groupSizeLimitExceededinTrail"
+                    translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
+              </span>
+            </div>
             <p ng-if="hdsSettings.numTrialUsers > 0 && hdsSettings.dirsyncEnabled === false" class="sub-section__description" translate="hds.resources.settings.serviceUserDesc"
                 translate-values="{users : hdsSettings.numTrialUsers}"
                 translate-value-onclick="hdsSettings.openAddTrialUsersModal()"
