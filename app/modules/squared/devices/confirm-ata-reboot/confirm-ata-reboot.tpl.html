@@ -1,0 +1,36 @@
+<!-- header -->
+<div class="modal-header">
+  <button
+    type="button"
+    class="close"
+    ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title">{{ car.getHeaderText() }}</h3>
+</div>
+
+<!-- body -->
+<div
+  class="modal-body">
+  <p>
+    <span>{{ car.getBodyTextExplanation() }}</span>
+  </p><p>
+  <span>{{ car.getBodyTextConfirmation() }}</span>
+</p>
+</div>
+
+<!-- footer -->
+<div
+  class="modal-footer">
+  <button
+    class="btn"
+    ng-click="$dismiss()">
+    <span
+      translate="common.no">
+    </span>
+  </button>
+  <button
+    class="btn btn--primary"
+    sq-click-promise="car.$modalInstance.close()" >
+    <span translate="common.yes"></span>
+  </button>
+</div>

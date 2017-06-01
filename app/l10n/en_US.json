@@ -4820,7 +4820,10 @@
     "savedT38": "T.38 settings updated",
     "cpcWarning": "Enable analog devices that support auto disconnect based on silence detection",
     "cpcLabel": "Silence Detection",
-    "savedCpc": "Silence Detection successfully updated"
+    "savedCpc": "Silence Detection successfully updated",
+    "confirmRebootHeader": "Change {{settingName}}",
+    "confirmRebootExplanation": "To change {{settingName}}, the device will need to perform a reboot.",
+    "confirmRebootConfirmation": "Are you sure you want to change {{settingName}}?"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
