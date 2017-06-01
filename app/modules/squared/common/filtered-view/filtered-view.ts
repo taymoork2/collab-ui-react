@@ -1,6 +1,7 @@
 import IPromise = ng.IPromise;
 
 export enum FilteredViewState {
+  initializing = <any> 'initializing',
   searching = <any> 'searching',
   emptydatasource = <any> 'emptydatasource',
   searchonly = <any> 'searchonly',
@@ -17,6 +18,7 @@ interface IViewFilter<T> {
 
 export class FilteredView<T> {
 
+  public readonly initializing: FilteredViewState = FilteredViewState.initializing;
   public readonly searchonly: FilteredViewState = FilteredViewState.searchonly;
   public readonly emptysearchresult: FilteredViewState = FilteredViewState.emptysearchresult;
   public readonly emptydatasource: FilteredViewState = FilteredViewState.emptydatasource;
@@ -31,7 +33,7 @@ export class FilteredView<T> {
   private currentSearchString: string;
   private currentServerSearchString: string;
   private currentFilter: IViewFilter<T> | null = null;
-  public listState: FilteredViewState = FilteredViewState.searching;
+  public listState: FilteredViewState = FilteredViewState.initializing;
 
   private searchTimer: ng.IPromise<any> | null;
   private searchTimeoutMs: number = 750;
@@ -177,7 +179,7 @@ export class FilteredView<T> {
     } else {
       if (this.filteredViewList.length > 0) {
         this.listState = FilteredViewState.showresult;
-      } else {
+      } else if (!this.isInState(FilteredViewState.initializing)) {
         if (!isSearchOnly && _.isEmpty(this.fetchedDataMap)) {
           this.listState = FilteredViewState.emptydatasource;
         } else {
