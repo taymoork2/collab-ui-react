@@ -3,9 +3,10 @@
 
   angular.module('Mediafusion').service('CommonReportsGraphService', CommonReportsGraphService);
   /* @ngInject */
-  function CommonReportsGraphService($translate, $window, chartColors) {
+  function CommonReportsGraphService($translate, chartColors) {
     var amchartsImages = './amcharts/images/';
     // Base variables for building grids and charts
+    AmCharts.translations["export"]["en"]["menu.label.save.data"] = $translate.instant('reportsPage.saveAs');
     var baseVariables = [];
     baseVariables['column'] = {
       'type': 'column',
@@ -138,27 +139,8 @@
         'menu': [{
           'class': 'export-main',
           'label': $translate.instant('reportsPage.downloadOptions'),
-          'menu': [{
-            'label': $translate.instant('reportsPage.saveAs'),
-            'title': $translate.instant('reportsPage.saveAs'),
-            'class': 'export-list',
-            'menu': ['PNG', 'JPG'],
-          }, {
-            'label': $translate.instant('reportsPage.pdf'),
-            'title': $translate.instant('reportsPage.pdf'),
-            click: function () {
-              this.capture({}, function () {
-                this.toPDF({}, function (data) {
-                  $window.open(data, 'amCharts.pdf');
-                });
-              });
-            },
-          }, {
-            'class': 'export-list',
-            'label': $translate.instant('reportsPage.export'),
-            'title': $translate.instant('reportsPage.export'),
-            'menu': ['CSV', 'XLSX'],
-          }],
+          'title': $translate.instant('reportsPage.saveAs'),
+          'menu': ['save.data', 'PNG', 'JPG', 'PDF', 'CSV', 'XLSX'],
         }],
       };
       return baseVariables['export'];
