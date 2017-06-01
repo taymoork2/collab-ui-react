@@ -2,12 +2,19 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h4 class="modal-title" translate="hercules.deactivateServiceComponent.deactivateServiceConfirmationButton"></h4>
+  <h4 class="modal-title"
+      translate="hercules.deactivateServiceComponent.deactivateServiceConfirmationHeader"
+      translate-values="{serviceName: $ctrl.localizedServiceName}"></h4>
 </div>
 <div class="modal-body hercules-fix-paragraphs deregister-expressway-modal">
 
-  <p translate="hercules.deactivateServiceComponent.deactivateServiceConfirmationText"
-     translate-values="{serviceName: $ctrl.localizedServiceName}">
+  <p ng-if="$ctrl.serviceId !== 'squared-fusion-gcal'"
+     translate="hercules.deactivateServiceComponent.deactivateServiceConfirmationText"
+     translate-values="{connectorName: $ctrl.localizedConnectorName}">
+  </p>
+
+  <p ng-if="$ctrl.serviceId === 'squared-fusion-gcal'"
+     translate="hercules.deactivateServiceComponent.deactivateServiceConfirmationTextGoogleCalendar">
   </p>
 
 </div>
@@ -22,6 +29,6 @@
           type="button"
           ng-disabled="$ctrl.loading"
           ng-click="$ctrl.confirmDeactivation()">
-    <span translate="hercules.deactivateServiceComponent.deactivateServiceConfirmationButton"></span>
+    <span translate="common.deactivate"></span>
   </button>
 </div>
