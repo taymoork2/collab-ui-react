@@ -215,8 +215,7 @@
               {{callTrial.validationMessages.phone8845.trialDeviceQuantityValidator}}
               </div>
             </div>
-            <!-- 7832 algendel: to add back when there is back end support -->
-            <div class="cs-checkbox-group medium-12" ng-if="false">
+            <div class="cs-checkbox-group medium-12">
               <input
                 cs-input
                 type="checkbox"
@@ -243,8 +242,7 @@
                 ng-required="callTrial.phone7832.enabled"
                 ng-disabled="callTrial.areTemplateOptionsDisabled(callTrial.phone7832)">
             </div>
-            <!-- 7832 algendel: to add back when there is back end support -->
-            <div  ng-if="false" ng-messages="trialForm.trialDevicesPhone7832Quantity.$error" class="cs-input__messages error medium-11 medium-offset-1">
+            <div ng-messages="trialForm.trialDevicesPhone7832Quantity.$error" class="cs-input__messages error medium-11 medium-offset-1">
               <div ng-message="trialDeviceQuantityValidator" class="message">
               {{callTrial.validationMessages.phone7832.trialDeviceQuantityValidator}}
               </div>

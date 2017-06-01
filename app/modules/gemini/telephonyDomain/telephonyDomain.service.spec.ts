@@ -2,6 +2,8 @@ import testModule from './index';
 
 describe('Service: TelephonyDomainService', () => {
   beforeAll(function () {
+    this.preData = getJSONFixture('gemini/common.json');
+
     this.domainName = '0520_Bing_TD_02';
     this.customerId = 'ff808081527ccb3f0153116a3531041e';
     this.ccaDomainId = '8a607bdb59baadf5015a650a2003157e';
@@ -10,6 +12,10 @@ describe('Service: TelephonyDomainService', () => {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$q', 'gemService', 'TelephonyDomainService', 'UrlConfig', '$httpBackend');
+
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
+    this.$httpBackend.flush();
   });
 
   afterEach(function () {
@@ -121,21 +127,6 @@ describe('Service: TelephonyDomainService', () => {
       this.$httpBackend.flush();
     });
 
-    it('should get correct data when call getCountries', function () {
-      const items = [{
-        countryId: '1',
-        countryName: 'Country #1',
-      }];
-      const mockData = setData.call(this, 'content.data.body', items);
-      const url = `${this.UrlConfig.getGeminiUrl()}countries`;
-      this.$httpBackend.expectGET(url).respond(200, mockData);
-
-      this.TelephonyDomainService.getCountries().then((res) => {
-        expect(res.content.data.body.length).toBe(1);
-      });
-      this.$httpBackend.flush();
-    });
-
     it('should get correct data when call getAccessNumberInfo', function () {
       const item = {};
       const mockData = setData.call(this, 'content.data.body', item);
@@ -231,11 +222,8 @@ describe('Service: TelephonyDomainService', () => {
         isHidden: 'false',
         countryId: '#3',
       }]);
-      this.gemService.setStorage('countryId2NameMapping', {
-        '#1': 'Country #1',
-        '#2': 'Country #1',
-        '#3': 'Country #1',
-      });
+      let countries = { countryId2NameMapping: { '#1': 'Country #1', '#2': 'Country #1', '#3': 'Country #1' } };
+      this.gemService.setStorage('gmCountry', countries);
       this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(mockData));
       this.TelephonyDomainService.exportNumbersToCSV(this.customerId, this.ccaDomainId).then((res) => {
         expect(res.length).toBe(4);

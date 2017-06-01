@@ -1,9 +1,13 @@
 import testModule from '../index';
 
 describe('Component: gmTdImportNumbersFromCsv', () => {
+  beforeAll(function () {
+    this.preData = getJSONFixture('gemini/common.json');
+  });
+
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', '$timeout', 'gemService', 'Notification', 'TelephonyDomainService', '$modal');
+    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', '$timeout', 'gemService', 'Notification', 'TelephonyDomainService', '$modal');
 
     initSpies.apply(this);
   });
@@ -14,6 +18,10 @@ describe('Component: gmTdImportNumbersFromCsv', () => {
   }
 
   function initComponent() {
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
+    this.$httpBackend.flush();
+
     this.compileComponent('gmTdImportNumbersFromCsv', {});
     this.$scope.$apply();
   }

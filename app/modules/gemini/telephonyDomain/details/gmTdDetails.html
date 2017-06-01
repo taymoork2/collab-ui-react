@@ -20,18 +20,19 @@
         <div class="row">
           <div class="pull-left medium-3">
 
-            <div class="feature-name">{{::'gemini.tds.field.partnerTdName' | translate}}: </div>
+            <div class="feature-name">{{::'gemini.tds.field.partnerTdName' | translate}}:</div>
 
 
           </div>
           <div class="pull-left medium-6">
-            <div tooltip="{{$ctrl.model.customerAttribute.length>33 ? $ctrl.model.customerAttribute : ''}}">
+            <div popover-trigger="mouseenter" popover="{{$ctrl.model.customerAttribute.length>33 ? $ctrl.model.customerAttribute: ''}}">
               <div class="feature-name ellipsis">{{$ctrl.model.customerAttribute}}</div>
             </div>
           </div>
           <div class="pull-right medium-3">
           <span class="pull-right" ng-if="$ctrl.model.status">
-            <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
+            <i class="icon icon-circle status-indicator"
+               ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
             {{$ctrl.model.status_}}
           </span>
           </div>
@@ -64,7 +65,7 @@
             <div class="feature-name">{{::'gemini.tds.noteToCisco' | translate}}</div>
           </div>
           <div class="pull-right medium-8">
-            <div class="ellipsis" tooltip="{{$ctrl.model.noteToCiscoTeam.length>41 ? $ctrl.model.noteToCiscoTeam : ''}}">
+            <div class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.noteToCiscoTeam.length>41 ?$ctrl.model.customerAttribute:''}}">
               <div class="feature-name ellipsis text-right">{{$ctrl.model.noteToCiscoTeam}}</div>
             </div>
           </div>
@@ -72,15 +73,17 @@
       </cs-sp-section>
 
       <cs-sp-section>
-
         <div class="section-title-row">
           <div class="row" ng-if="$ctrl.remedyTicketLoading">
             <i class="icon icon-spinner"></i>
           </div>
-
           <div ng-if="!$ctrl.remedyTicketLoading">
             <p class="remedyTicket">{{::'gemini.cbgs.remedyTicket' | translate}}: <a ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a></p>
-            <p><small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} - {{$ctrl.remedyTicket.status}}</small></p>
+            <p>
+              <small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} -
+                {{$ctrl.remedyTicket.status}}
+              </small>
+            </p>
           </div>
         </div>
 
@@ -99,18 +102,35 @@
         <div class="side-panel-defaultToll">
           <ul>
             <li ng-if="$ctrl.model.defaultToll">
-              <div class="defaultToll-item-num"><div class="ellipsis"><span popover-trigger="mouseenter" popover="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultToll.phone}}</span></div></div>
-              <div class="defaultToll-item-num"><div class="ellipsis"><span popover-trigger="mouseenter" popover="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultToll.label}}</span></div></div>
-              <div class="defaultToll-item-toll"><div class="badge" translate="gemini.tds.defaultToll"></div></div>
+              <div class="defaultToll-item-num">
+                <div><span class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultToll.phone}}</span>
+                </div>
+              </div>
+              <div class="defaultToll-item-num">
+                <div><span class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultToll.label}}</span>
+                </div>
+              </div>
+              <div class="defaultToll-item-toll">
+                <div class="badge" translate="gemini.tds.defaultToll"></div>
+              </div>
             </li>
             <li ng-if="$ctrl.model.defaultTollFree">
-              <div class="defaultToll-item-num"><div class="ellipsis"><span popover-trigger="mouseenter" popover="{{$ctrl.model.defaultTollFree.phone}}">{{$ctrl.model.defaultTollFree.phone}}</span></div></div>
-              <div class="defaultToll-item-num"><div class="ellipsis"><span popover-trigger="mouseenter" popover="{{$ctrl.model.defaultTollFree.label}}">{{$ctrl.model.defaultTollFree.label}}</span></div></div>
-              <div class="defaultToll-item-toll"><div class="badge" translate="gemini.tds.defaultTollFree"></div></div>
+              <div class="defaultToll-item-num">
+                <div><span class="ellipsis" popover-trigger="mouseenter"
+                           popover="{{$ctrl.model.defaultTollFree.phone}}">{{$ctrl.model.defaultTollFree.phone}}</span>
+                </div>
+              </div>
+              <div class="defaultToll-item-num">
+                <div><span class="ellipsis" popover-trigger="mouseenter"
+                           popover="{{$ctrl.model.defaultTollFree.label}}">{{$ctrl.model.defaultTollFree.label}}</span>
+                </div>
+              </div>
+              <div class="defaultToll-item-toll">
+                <div class="badge" translate="gemini.tds.defaultTollFree"></div>
+              </div>
             </li>
           </ul>
         </div>
-
       </cs-sp-section>
 
       <cs-sp-section class="side-panel-note">
@@ -136,8 +156,14 @@
           <li ng-repeat="log in $ctrl.histories">
             <h6>{{log.action}}</h6>
             <h6 ng-if="log.objectName">{{log.objectName}}</h6>
-            <p><small>{{log.createdDate}} {{log.actionTime}} {{::'gemini.cbgs.by' | translate}} {{log.userName}} {{!log.email ? '' : '(' + log.email + ')'}}</small></p>
-            <p><small ng-if="log.moveSiteMsg">{{log.moveSiteMsg}}</small></p>
+            <p>
+              <small>{{log.createdDate}} {{log.actionTime}} {{::'gemini.cbgs.by' | translate}} {{log.userName}}
+                {{!log.email ? '' : '(' + log.email + ')'}}
+              </small>
+            </p>
+            <p>
+              <small ng-if="log.moveSiteMsg">{{log.moveSiteMsg}}</small>
+            </p>
           </li>
         </ul>
         <div ng-if="$ctrl.hisLoading">
@@ -149,7 +175,9 @@
       </cs-sp-section>
 
       <cs-sp-buttons>
-        <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.model.btnCancelSubmissionLoading" ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.model.isShowCancelSubmission" ng-disabled="$ctrl.model.btnCancelSubmissionDisable">
+        <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.model.btnCancelSubmissionLoading"
+                ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.model.isShowCancelSubmission"
+                ng-disabled="$ctrl.model.btnCancelSubmissionDisable">
           <span translate="gemini.button.cancelSubmission"></span>
         </button>
       </cs-sp-buttons>

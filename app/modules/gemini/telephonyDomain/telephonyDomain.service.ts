@@ -66,12 +66,7 @@ export class TelephonyDomainService {
   }
 
   public getDownloadUrl() {
-    return `${this.url}files/templates/telephony_numbers_template`;
-  }
-
-  public getCountries() {
-    const url = `${this.UrlConfig.getGeminiUrl()}countries`;
-    return this.$http.get(url).then(this.extractData);
+    return `${this.UrlConfig.getGeminiUrl()}files/templates/telephony_numbers_template`;
   }
 
   public getAccessNumberInfo(accessNumber: string) {
@@ -166,8 +161,10 @@ export class TelephonyDomainService {
       ? this.$translate.instant('gemini.tds.numbers.field.labels.hidden')
       : this.$translate.instant('gemini.tds.numbers.field.labels.display');
 
-    let countryId2NameMapping = this.gemService.getStorage('countryId2NameMapping');
-    item.countryName = countryId2NameMapping[item.countryId];
+    let gmCountry = this.gemService.getStorage('gmCountry');
+    if (gmCountry) {
+      item.countryName = gmCountry.countryId2NameMapping[item.countryId];
+    }
   }
 
   private formatNumbersData(data: any) {

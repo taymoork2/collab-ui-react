@@ -51,7 +51,7 @@ describe('Component: gmTelephonyDomains', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', '$state', '$timeout', '$modal', '$stateParams', '$rootScope', 'TelephonyDomainService', 'Notification');
+    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', '$state', '$timeout', '$modal', '$stateParams', '$rootScope', 'TelephonyDomainService', 'Notification');
 
     initSpies.apply(this);
     this.$stateParams.companyName = 'E_Atlas-Test-5';
@@ -69,6 +69,10 @@ describe('Component: gmTelephonyDomains', () => {
   }
 
   function initComponent() {
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
+    this.$httpBackend.flush();
+
     this.compileComponent('gmTelephonyDomains', {});
     this.$scope.$apply();
   }
