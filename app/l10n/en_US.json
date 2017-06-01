@@ -2522,7 +2522,7 @@
         "title": "Create new Resource Group",
         "name": {
           "title": "Resource Group name",
-          "description": "A resource group is a set of Expressway clusters to which you can assign a subset of your users. See the <strong>documentation</strong> for more guidance.",
+          "description": "A resource group is a set of Expressway clusters to which you can assign a subset of your users. See the <a href=\"https://help.webex.com/docs/DOC-16382#concept_8F7AFC2AFB9FC99CFBDF100238170AE2\" target=\"_blank\">documentation</a> for more guidance.",
           "subtitle": "Name",
           "placeholder": "Enter name"
         },
