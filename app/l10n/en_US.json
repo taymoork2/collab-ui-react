@@ -2123,10 +2123,12 @@
       "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
       "expresswayDataWiped": "{{connectorName}} will be removed from all of your Expressway clusters, and all connectors' local settings will be deleted.",
       "noClustersWillBeDeregistered": "Clusters will not be deregistered from Cisco Collaboration Cloud.",
-      "deactivateServiceConfirmationButton": "Confirm Deactivation",
-      "deactivateServiceConfirmationText": "You are about to deactivate {{serviceName}} from your Cisco Spark organization.",
+      "deactivateServiceConfirmationHeader": "Deactivate {{serviceName}}",
+      "deactivateServiceConfirmationTextGoogleCalendar": "Are you sure? Service-related features will be removed for users.",
+      "deactivateServiceConfirmationText": "Are you sure? {{connectorName}} and related configuration will be removed from your clusters and service-related features will be removed for users.",
       "serviceWasDeactivated": "{{serviceName}} successfully deactivated.",
-      "connectWarning": "You are about to deactivate Hybrid Call Service Connect. Be aware that this action deletes all Cisco Spark remote device configuration and disables the service for all users."
+      "connectWarning": "Are you sure? Remote device configuration will be removed and the service will be disabled for your users.",
+      "deactivateCallServiceConnect": "Deactivate Call Service Connect"
     },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
