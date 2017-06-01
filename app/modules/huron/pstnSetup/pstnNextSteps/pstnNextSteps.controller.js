@@ -5,20 +5,20 @@
     .controller('PstnNextStepsCtrl', PstnNextStepsCtrl);
 
   /* @ngInject */
-  function PstnNextStepsCtrl($window, $state, $stateParams, PstnSetup, TerminusOrderService) {
+  function PstnNextStepsCtrl($window, $state, $stateParams, PstnModel, TerminusOrderService) {
     var vm = this;
 
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.portOrders = $stateParams.portOrders;
     vm.pstnOrders = [];
-    vm.isTrial = PstnSetup.getIsTrial();
+    vm.isTrial = PstnModel.getIsTrial();
 
     getOrders();
 
     function getOrders() {
       return TerminusOrderService.query({
-        customerId: PstnSetup.getCustomerId(),
-        type: "PSTN"
+        customerId: PstnModel.getCustomerId(),
+        type: "PSTN",
       }).$promise.then(function (response) {
         vm.pstnOrders = response;
       });
@@ -28,8 +28,8 @@
 
     function launchCustomerPortal() {
       $window.open($state.href('login_swap', {
-        customerOrgId: PstnSetup.getCustomerId(),
-        customerOrgName: PstnSetup.getCustomerName()
+        customerOrgId: PstnModel.getCustomerId(),
+        customerOrgName: PstnModel.getCustomerName(),
       }));
     }
   }

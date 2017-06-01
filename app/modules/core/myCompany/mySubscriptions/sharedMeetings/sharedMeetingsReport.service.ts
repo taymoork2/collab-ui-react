@@ -1,17 +1,48 @@
-import { ISharedMeetingData } from './sharedMeetingsReport.interfaces';
+import { ISharedMeetingData, ISharedMeetingTimeFilter } from './sharedMeetingsReport.interfaces';
 import { CommonGraphService } from '../../../partnerReports/commonReportServices/commonGraph.service';
+import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
+import { Notification } from '../../../notifications/notification.service';
+
+interface IWindowService extends ng.IWindowService {
+  webkitURL: any;
+}
 
 export class SharedMeetingsReportService {
+  public readonly FILENAME: string = 'shared_meeting.csv';
   private readonly CHART_DIV: string = 'sharedMeetingsChart';
+  private readonly ONE_MONTH: number = 1;
+  private meetingModal: IToolkitModalServiceInstance |  undefined;
+  private blob: any;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $http: ng.IHttpService,
+    private $modal: IToolkitModalService,
+    private $window: IWindowService,
     private CommonGraphService: CommonGraphService,
+    private Notification: Notification,
     private UrlConfig,
     private chartColors,
   ) {}
+
+  public openModal(siteUrl: string): void {
+    if (siteUrl) {
+      this.meetingModal = this.$modal.open({
+        template: '<shared-meeting-report class="modal-content" site-url="' + siteUrl + '"></shared-meeting-report>',
+        type: 'full',
+      });
+    } else {
+      this.Notification.error('sharedMeetingReports.siteUrlError');
+    }
+  }
+
+  public dismissModal(): void {
+    if (this.meetingModal) {
+      this.meetingModal.dismiss();
+      this.meetingModal = undefined;
+    }
+  }
 
   public getMaxConcurrentMeetingsData(siteName: string, endMonth: string, startMonth: string): ng.IHttpPromise<any> {
     return this.$http.post(this.UrlConfig.getWebexMaxConcurrentMeetings(siteName), {
@@ -20,9 +51,37 @@ export class SharedMeetingsReportService {
     });
   }
 
-  public setChartData(data: Array<ISharedMeetingData>, chart: any): any {
+  public getDetailedReportData(siteName: string, endMonth: string, startMonth: string): ng.IHttpPromise<any> {
+    return this.$http.post(this.UrlConfig.getWebexConcurrentMeetings(siteName), {
+      StartMonth: startMonth,
+      EndMonth: endMonth,
+    });
+  }
+
+  public getDownloadCSV(csvString: string): string | undefined {
+    this.blob = new this.$window.Blob([csvString], { type: 'text/plain' });
+
+    // IE download option since IE won't download the created url
+    if (_.get(this.$window, 'navigator.msSaveOrOpenBlob', false)) {
+      return;
+    } else {
+      return (this.$window.URL || this.$window.webkitURL).createObjectURL(this.blob);
+    }
+  }
+
+  public downloadInternetExplorer(): void {
+    if (_.get(this.$window, 'navigator.msSaveOrOpenBlob', false)) {
+      this.$window.navigator.msSaveOrOpenBlob(this.blob, this.FILENAME);
+    }
+  }
+
+  public setChartData(data: Array<ISharedMeetingData>, chart: any, filter: ISharedMeetingTimeFilter): any {
     if (chart) {
+      chart.categoryAxis.showFirstLabel = true;
       chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
+      if (!_.isUndefined(filter) && filter.value === this.ONE_MONTH) {
+        chart.categoryAxis.showFirstLabel = false;
+      }
       if (!data[0].balloon) {
         chart.categoryAxis.gridColor = this.chartColors.grayLightThree;
       }
@@ -31,14 +90,20 @@ export class SharedMeetingsReportService {
       chart.graphs = this.createGraphs(data);
       chart.validateData();
     } else {
-      chart = this.createChart(data);
+      chart = this.createChart(data, filter);
     }
     return chart;
   }
 
-  private createChart(data: Array<ISharedMeetingData>): any {
+  private createChart(data: Array<ISharedMeetingData>, filter: ISharedMeetingTimeFilter): any {
     let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE_AXIS);
-    catAxis.showFirstLabel = false;
+    if (!_.isUndefined(filter) && filter.value === this.ONE_MONTH) {
+      catAxis.showFirstLabel = false;
+    }
+    if (!data[0].balloon) {
+      catAxis.gridColor = this.chartColors.grayLightThree;
+    }
+
     let valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].integersOnly = true;
 
@@ -47,10 +112,6 @@ export class SharedMeetingsReportService {
     chartCursor.valueLineEnabled = true;
     chartCursor.valueLineBalloonEnabled = true;
     chartCursor.cursorColor = this.chartColors.grayLightTwo;
-
-    if (!data[0].balloon) {
-      catAxis.gridColor = this.chartColors.grayLightThree;
-    }
 
     let chartData: any = this.CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, this.createGraphs(data), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
@@ -90,6 +151,3 @@ export class SharedMeetingsReportService {
     return graphs;
   }
 }
-
-angular.module('Core')
-  .service('SharedMeetingsReportService', SharedMeetingsReportService);

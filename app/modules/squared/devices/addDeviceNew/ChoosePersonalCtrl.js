@@ -16,7 +16,7 @@
 
     vm.model = {
       userInputOption: 0,
-      uploadProgress: 0
+      uploadProgress: 0,
     };
 
     vm.placeholder = $translate.instant('directoryNumberPanel.chooseNumber');
@@ -39,8 +39,8 @@
             var firstName = null;
             if (r.name) {
               name = r.name.givenName;
-              firstName = name.givenName;
-              if (r.name.familyName) {
+              firstName = r.name.givenName;
+              if (name && r.name.familyName) {
                 name += ' ' + r.name.familyName;
               }
             }
@@ -49,6 +49,9 @@
             }
             if (_.isEmpty(firstName)) {
               firstName = r.displayName;
+            }
+            if (_.isEmpty(name) && r.name && r.name.familyName) {
+              name = r.name.familyName;
             }
             if (_.isEmpty(name)) {
               name = r.userName;
@@ -95,15 +98,15 @@
           name: vm.displayName,
           cisUuid: vm.cisUuid,
           username: vm.userName,
-          isEntitledToHuron: vm.isEntitledToHuron
+          isEntitledToHuron: vm.isEntitledToHuron,
         },
         recipient: {
           displayName: vm.displayName,
           firstName: vm.firstName,
           cisUuid: vm.cisUuid,
           email: vm.userName,
-          organizationId: vm.organizationId
-        }
+          organizationId: vm.organizationId,
+        },
       });
     };
 

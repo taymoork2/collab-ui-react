@@ -27,8 +27,8 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
       this.helpLink = 'https://www.cisco.com/go/hybrid-services-media';
     }
     if (this.serviceId === 'spark-hybrid-datasecurity') {
-      this.downloadLink = 'https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'; // Update once we have HDS software images
-      this.helpLink = 'http://www.cisco.com/go/hybrid-services'; // Update once we have public HDS documentation
+      this.downloadLink = 'https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/hds.ova';
+      this.helpLink = 'http://www.cisco.com/go/hybrid-data-security';
     }
 
     /* Common for Expressway-based Hybrid Services */
@@ -37,6 +37,9 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
       this.downloadLink = 'https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP';
     }
 
+    if (this.serviceId === 'ept') {
+      this.helpLink = 'http://www.cisco.com/go/private-trunking';
+    }
   }
 }
 

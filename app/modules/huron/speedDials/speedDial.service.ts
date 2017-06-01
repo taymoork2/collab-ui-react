@@ -3,6 +3,7 @@ export interface ISpeedDial {
   label: string;
   number: string;
   index: number;
+  callPickupEnabled?: boolean;
 }
 
 interface IDialResource extends ng.resource.IResourceClass<ng.resource.IResource<{speedDials: ISpeedDial[]}>> {
@@ -15,6 +16,7 @@ export class SpeedDialService {
   constructor(
     private Authinfo,
     private $resource: ng.resource.IResourceService,
+    private UserServiceCommon,
     private HuronConfig) {
 
     let updateAction: ng.resource.IActionDescriptor = {
@@ -33,6 +35,16 @@ export class SpeedDialService {
     }).$promise;
   }
 
+  public getUserName(userId: string): ng.IPromise<string> {
+    return this.UserServiceCommon.get({
+      customerId: this.Authinfo.getOrgId(),
+      userId: userId,
+    }).$promise
+      .then((user) => {
+        return user;
+      });
+  }
+
   public updateSpeedDials(_type: string, _id: string, _list: ISpeedDial[]): ng.IPromise<boolean> {
     let data: { speedDials: ISpeedDial[] } = {
       speedDials: [],
@@ -42,6 +54,7 @@ export class SpeedDialService {
         index: sd.index,
         number: sd.number,
         label: sd.label,
+        callPickupEnabled: sd.callPickupEnabled,
       });
     });
     return this.dialService.update({

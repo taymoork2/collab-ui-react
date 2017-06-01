@@ -1,7 +1,7 @@
 'use strict';
 
 describe('component: cbgEditCountry', function () {
-  var $q, $scope, $state, $stateParams, $componentCtrl;
+  var $q, $scope, $state, $stateParams, $componentCtrl, $httpBackend, UrlConfig;
   var ctrl, PreviousState, cbgService, Notification;
   var preData = getJSONFixture('gemini/common.json');
 
@@ -12,13 +12,13 @@ describe('component: cbgEditCountry', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $scope = $state = $stateParams = $componentCtrl = ctrl = PreviousState = cbgService = Notification = undefined;
+    $q = $scope = $httpBackend = UrlConfig = $state = $stateParams = $componentCtrl = ctrl = PreviousState = cbgService = Notification = undefined;
   });
   afterAll(function () {
     preData = undefined;
   });
 
-  function dependencies(_$q_, _$state_, _$rootScope_, _$stateParams_, _$componentController_, _PreviousState_, _Notification_, _cbgService_) {
+  function dependencies(_$q_, _$state_, _$httpBackend_, _UrlConfig_, _$rootScope_, _$stateParams_, _$componentController_, _PreviousState_, _Notification_, _cbgService_) {
     $q = _$q_;
     $state = _$state_;
     cbgService = _cbgService_;
@@ -27,6 +27,8 @@ describe('component: cbgEditCountry', function () {
     Notification = _Notification_;
     PreviousState = _PreviousState_;
     $componentCtrl = _$componentController_;
+    $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
   }
 
   function initSpies() {
@@ -41,7 +43,11 @@ describe('component: cbgEditCountry', function () {
     $stateParams.obj = {};
     $state.current.data = {};
     $stateParams.obj.info = preData.getCurrentCallbackGroup;
-    ctrl = $componentCtrl('cbgEditCountry', { $scope: $scope, $state: $state });
+
+    var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
+    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+
+    ctrl = $componentCtrl('cbgEditCountry', { $scope: $scope, $state: $state, $element: angular.element('') });
   }
 
   describe('$onInit', function () {

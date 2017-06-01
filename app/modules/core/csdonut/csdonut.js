@@ -17,7 +17,7 @@
         hideusage: '=',
         ssize: '=',
         tsize: '=',
-        name: '='
+        name: '=',
       },
 
       controller: ['$scope', function controller($scope) {
@@ -40,7 +40,7 @@
           x: 0,
           y: 14,
           content: '',
-          color: '#6A6B6C'
+          color: '#6A6B6C',
         };
 
         var colour = d3.scale.category20();
@@ -263,7 +263,7 @@
             });
           });
         }, true);
-      }
+      },
     };
   }
 })();

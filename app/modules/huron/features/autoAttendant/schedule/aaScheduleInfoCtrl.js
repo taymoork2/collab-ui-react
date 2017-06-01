@@ -12,7 +12,7 @@
     /* schedule model  */
     vm.dayGroup = [{
       label: '',
-      hours: []
+      hours: [],
     }];
     vm.schedule = "";
     vm.openHours = [];
@@ -41,14 +41,14 @@
       var consolidateDate = {
         year: 2016,
         month: 3,
-        date: 11
+        date: 11,
       };
       //Prepares a list of days and the corresponding Open/Closed hours
-      vm.days = angular.copy(AAICalService.getDefaultDayHours());
+      vm.days = _.cloneDeep(AAICalService.getDefaultDayHours());
       _.forEach(vm.openhours, function (hour) {
         var dayhour = {
           starttime: 0,
-          endtime: 0
+          endtime: 0,
         };
         dayhour.starttime = moment(hour.starttime, "hh:mm A").set(consolidateDate);
         dayhour.endtime = moment(hour.endtime, "hh:mm A").set(consolidateDate);
@@ -83,7 +83,7 @@
 
     function addUniqueHours(day, dayhour) {
       if (!_.filter(day.hours, dayhour).length) {
-        day.hours.push(angular.copy(dayhour));
+        day.hours.push(_.cloneDeep(dayhour));
       }
     }
 
@@ -145,9 +145,9 @@
       var hh = moment().set('hour', '00').set('minute', '00').format('hh:mm A');
       var dayhour = {
         starttime: 0,
-        endtime: 0
+        endtime: 0,
       };
-      var closedHours = angular.copy(AAICalService.getDefaultDayHours());
+      var closedHours = _.cloneDeep(AAICalService.getDefaultDayHours());
       _.each(vm.days, function (day, index) {
         if (_.isUndefined(day.hours) || day.hours.length === 0) {
           //Inactive days will have all day closed 12:00am  - 12:00am
@@ -180,7 +180,7 @@
           }
         });
       });
-      vm.days = angular.copy(closedHours);
+      vm.days = _.cloneDeep(closedHours);
     }
 
     function prepareDayHourReport() {
@@ -195,12 +195,12 @@
         if (hour1.length && hour1[0].starttime && hour1[0].endtime && !isIndexPresent) {
           var range = {
             hours: [],
-            label: ''
+            label: '',
           };
           indices = [];
           indices.push(index);
           indexListed.push(index);
-          range.hours = angular.copy(hour1);
+          range.hours = _.cloneDeep(hour1);
           for (var i = index + 1; i < vm.days.length; i++) {
             var hour2 = vm.days[i].hours;
             if (hour1.length && hour2.length && hour1.length === hour2.length) {
@@ -236,7 +236,7 @@
       if (vm.aaModel.aaRecord.scheduleId) {
         AACalendarService.readCalendar(vm.aaModel.aaRecord.scheduleId).then(function (data) {
           var calhours = AAICalService.getHoursRanges(data);
-          vm.openhours = angular.copy(calhours.hours);
+          vm.openhours = _.cloneDeep(calhours.hours);
           vm.holidays = calhours.holidays;
 
           getScheduleTitle();

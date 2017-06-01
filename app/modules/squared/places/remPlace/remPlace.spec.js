@@ -3,14 +3,13 @@
 describe('Controller: RemPlaceController', function () {
   var controller, $q, $rootScope, $httpBackend, CsdmPlaceService, place;
   var fakeModal = {
-    close: sinon.stub()
+    close: jasmine.createSpy('close'),
   };
 
-  var pWithoutDeviceUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e';
+  var pWithoutDeviceUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e';
   var cisUidOfPlace = '938d9c32-placeWithoutDevice-88d7c1a7f63e';
-  var pWithDeviceUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec';
+  var pWithDeviceUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec';
   var cisUidOfPlaceWithDev = 'a19b308a-PlaceWithDevice-71898e423bec';
-  //var device1Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));
@@ -32,23 +31,21 @@ describe('Controller: RemPlaceController', function () {
       CsdmPlaceService = _CsdmPlaceService_;
 
       $httpBackend.whenGET('https://identity.webex.com/identity/scim/testOrg/v1/Users/me').respond({});
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron&checkDisplayName=false').respond([]);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices?checkDisplayName=false&checkOnline=false').respond(initialDevices);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices').respond(initialDevices);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/nonExistingDevices').respond([]);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/?shallow=true&type=all').respond(accounts);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron').respond([]);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices/?type=huron&checkDisplayName=false').respond([]);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices?checkDisplayName=false&checkOnline=false').respond(initialDevices);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices').respond(initialDevices);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/nonExistingDevices').respond([]);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/?shallow=true&type=all').respond(accounts);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices/?type=huron').respond([]);
 
       spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.resolve());
-      spyOn(fakeModal, 'close');
 
       controller = $controller('RemPlaceController', {
         $modalInstance: fakeModal,
-        place: place
+        place: place,
       });
 
-      CsdmDataModelService.getPlacesMap();
-      $httpBackend.flush();
+      CsdmDataModelService.isBigOrg = $q.resolve(false);
     }));
 
     afterEach(function () {
@@ -62,7 +59,7 @@ describe('Controller: RemPlaceController', function () {
         type: 'cloudberry',
         url: pWithoutDeviceUrl,
         cisUuid: cisUidOfPlace,
-        isPlace: true
+        isPlace: true,
       };
       controller.deletePlace();
       $rootScope.$digest();
@@ -76,7 +73,7 @@ describe('Controller: RemPlaceController', function () {
         type: 'cloudberry',
         url: pWithDeviceUrl,
         cisUuid: cisUidOfPlaceWithDev,
-        isPlace: true
+        isPlace: true,
       };
       controller.deletePlace();
       $rootScope.$digest();
@@ -90,7 +87,7 @@ describe('Controller: RemPlaceController', function () {
         type: 'huron',
         isHuronDevice: true,
         url: 'fake url',
-        isPlace: true
+        isPlace: true,
       };
       controller.deletePlace();
       $rootScope.$digest();

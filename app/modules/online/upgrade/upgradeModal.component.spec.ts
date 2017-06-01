@@ -1,8 +1,17 @@
 import onlineUpgradeModule from './index';
+import { IProdInst } from 'modules/online/upgrade/upgrade.service';
 
 describe('Component: upgradeModal', () => {
   const CANCEL_BUTTON = '.btn.btn--default';
   const BUY_BUTTON = '.btn.btn--primary';
+  const productInstanceId: string = '123';
+  const subscriptionId: string = '789';
+  const productName: string = 'productName';
+  const productInstanceResponse: IProdInst[] = [{
+    productInstanceId: productInstanceId,
+    subscriptionId: subscriptionId,
+    name: productName,
+  }];
 
   beforeEach(function () {
     this.initModules(onlineUpgradeModule);
@@ -17,8 +26,8 @@ describe('Component: upgradeModal', () => {
     spyOn(this.$state, 'go');
     spyOn(this.Auth, 'logout');
     spyOn(this.Notification, 'success');
-    spyOn(this.OnlineUpgradeService, 'getSubscriptionId').and.returnValue('123');
-    spyOn(this.OnlineUpgradeService, 'getProductInstanceId').and.returnValue(this.$q.when('987'));
+    spyOn(this.OnlineUpgradeService, 'getSubscriptionId').and.returnValue(subscriptionId);
+    spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
     spyOn(this.OnlineUpgradeService, 'cancelSubscriptions').and.returnValue(this.$q.resolve());
     spyOn(this.OnlineUpgradeService, 'dismissModal');
 
@@ -26,8 +35,8 @@ describe('Component: upgradeModal', () => {
   });
 
   it('should have a subscriptionId', function () {
-    expect(this.controller.bmmpAttr.subscriptionId).toEqual('123');
-    expect(this.controller.bmmpAttr.productInstanceId).toEqual('987');
+    expect(this.controller.bmmpAttr.subscriptionId).toEqual(subscriptionId);
+    expect(this.controller.bmmpAttr.productInstanceId).toEqual(productInstanceId);
   });
 
   it('should successfuly cancel subscriptions', function () {

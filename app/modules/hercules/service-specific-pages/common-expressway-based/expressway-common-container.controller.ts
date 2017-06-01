@@ -1,4 +1,6 @@
+import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { Notification } from 'modules/core/notifications';
+import { ConnectorType } from 'modules/hercules/hybrid-services.types';
 
 export abstract class ExpresswayContainerController {
 
@@ -7,17 +9,22 @@ export abstract class ExpresswayContainerController {
   protected subscribeStatusesSummary: any;
 
   /* @ngInject */
-  constructor(private $modal,
-              private $scope: ng.IScope,
-              private $state: ng.ui.IStateService,
-              private Authinfo,
-              private ClusterService,
-              private Notification: Notification,
-              protected ServiceDescriptor,
-              private ServiceStateChecker,
-              protected USSService,
-              protected servicesId: string[],
-              private connectorType: string ) {
+
+  constructor(
+    private $modal,
+    private $scope: ng.IScope,
+    private $state: ng.ui.IStateService,
+    private Authinfo,
+    private ClusterService: ClusterService,
+    protected hasPartnerRegistrationFeatureToggle,
+    protected hasNodesViewFeatureToggle,
+    protected Notification: Notification,
+    protected ServiceDescriptor,
+    private ServiceStateChecker,
+    protected USSService,
+    protected servicesId: string[],
+    private connectorType: ConnectorType,
+  ) {
     this.firstTimeSetup();
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
@@ -36,15 +43,11 @@ export abstract class ExpresswayContainerController {
   }
 
   protected firstTimeSetup(): void {
-    this.ServiceDescriptor.isServiceEnabled(this.servicesId[0], (error, enabled) => {
-      if (error) {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-        return;
-      }
+    this.ServiceDescriptor.isServiceEnabled(this.servicesId[0]).then((enabled) => {
       if (enabled) {
         return;
       }
-      if (this.Authinfo.isCustomerLaunchedFromPartner()) {
+      if (this.Authinfo.isCustomerLaunchedFromPartner() && !this.hasPartnerRegistrationFeatureToggle) {
         this.$modal.open({
           templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
           type: 'dialog',
@@ -66,7 +69,8 @@ export abstract class ExpresswayContainerController {
         .catch(() => {
           this.$state.go('services-overview');
         });
-
+    }).catch((response) => {
+      this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
     });
   }
 

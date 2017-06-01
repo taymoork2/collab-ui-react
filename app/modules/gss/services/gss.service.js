@@ -6,8 +6,8 @@
     .factory('GSSService', GSSService);
 
   function GSSService($http, UrlConfig) {
-
-    var url = UrlConfig.getGssUrl() + '/services';
+    var url = UrlConfig.getGssUrl();
+    var servicesUrl = url + '/services';
     var serviceId;
 
     var service = {
@@ -16,7 +16,9 @@
       setServiceId: setServiceId,
       addService: addService,
       deleteService: deleteService,
-      modifyService: modifyService
+      modifyService: modifyService,
+      syncCheck: syncCheck,
+      syncUp: syncUp,
     };
 
     return service;
@@ -26,7 +28,7 @@
     }
 
     function getServices() {
-      return $http.get(url)
+      return $http.get(servicesUrl)
         .then(extractData);
     }
 
@@ -39,26 +41,39 @@
     }
 
     function addService(serviceName, description) {
-      return $http.post(url, {
+      return $http.post(servicesUrl, {
         serviceName: serviceName,
-        description: description
+        description: description,
       }).then(extractData);
     }
 
     function deleteService(serviceId) {
-      var deleteUrl = url + '/' + serviceId;
+      var deleteUrl = servicesUrl + '/' + serviceId;
 
       return $http.delete(deleteUrl)
         .then(extractData);
     }
 
     function modifyService(serviceId, serviceName, description) {
-      var modifyUrl = url + '/' + serviceId;
+      var modifyUrl = servicesUrl + '/' + serviceId;
 
       return $http.put(modifyUrl, {
         serviceName: serviceName,
-        description: description
+        description: description,
       }).then(extractData);
+    }
+
+    function syncCheck() {
+      var compareVersionUrl = url + '/compareVersion';
+
+      return $http.get(compareVersionUrl)
+        .then(extractData);
+    }
+
+    function syncUp() {
+      var syncUpUrl = url + '/syncUpFromAWS';
+      return $http.post(syncUpUrl)
+        .then(extractData);
     }
   }
 }());

@@ -5,24 +5,53 @@
     .controller('TrialCtrl', TrialCtrl);
 
   /* @ngInject */
-  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCountryService, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
+  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, HuronCompassService) {
     var vm = this;
+    vm.careTypes = {
+      K1: 1,
+      K2: 2,
+    };
+
+    vm.validationMessages = {
+      general: {
+        required: $translate.instant('common.invalidRequired'),
+        email: $translate.instant('common.invalidEmail'),
+        trialUniqueAsyncValidator: '',
+      },
+      roomSystem: {
+        max: $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity'),
+        number: $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity'),
+        required: $translate.instant('common.invalidRequired'),
+      },
+      licenseNumber: {
+        max: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
+        min: $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount'),
+        number: $translate.instant('partnerHomePage.invalidTrialLicenseCount'),
+        required: $translate.instant('common.invalidRequired'),
+      },
+      care: {
+        max: $translate.instant('partnerHomePage.invalidTrialCareQuantity'),
+        required: $translate.instant('common.invalidRequired'),
+        number: $translate.instant('partnerHomePage.invalidTrialCareQuantity'),
+      },
+    };
+
+    vm.validationData = {
+      roomSystemMax: 20,
+      trialLicenseMax: 1000,
+      careMax: 50,
+    };
 
     var _careDefaultQuantity = 15;
     var _roomSystemDefaultQuantity = 5;
     var _licenseCountDefaultQuantity = 0;
     var _trialDurationDefaultLength = 30;
+    vm.licenseDurationOptions = [30, 60, 90];
+    vm.debounceTimeout = 2000;
 
-    var _messageTemplateOptionId = 'messageTrial';
-    var _meetingTemplateOptionId = 'meetingTrial';
-    var _webexTemplateOptionId = 'webexTrial';
-    var _callTemplateOptionId = 'callTrial';
-    var _roomSystemsTemplateOptionId = 'roomSystemsTrial';
-    var _sparkBoardTemplateOptionId = 'sparkBoardTrial';
+    vm.currentTrial = ($stateParams.currentTrial) ? _.cloneDeep($stateParams.currentTrial) : {};
+    vm.stateDetails = ($stateParams.details) ? _.cloneDeep($stateParams.details) : {};
 
-    var debounceTimeout = 2000;
-    vm.currentTrial = ($stateParams.currentTrial) ? angular.copy($stateParams.currentTrial) : {};
-    vm.stateDetails = ($stateParams.details) ? angular.copy($stateParams.details) : {};
     var mode = ($stateParams.mode === 'edit') ? 'edit' : 'add';
 
     vm.customerOrgId = undefined;
@@ -34,13 +63,13 @@
     $scope.trialData = vm.trialData;
     vm.details = vm.trialData.details;
     vm.licenseCountChanged = false;
-
     vm.uniqueName = false;
     vm.uniqueEmail = false;
-
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
     vm.showCare = false;
+    vm.showBasicCare = false;
+    vm.showAdvanceCare = false;
     vm.paidServicesForDisplay = null;
 
     vm.messageTrial = vm.trialData.trials.messageTrial;
@@ -52,20 +81,15 @@
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
     vm.careTrial = vm.trialData.trials.careTrial;
+    vm.advanceCareTrial = vm.trialData.trials.advanceCareTrial;
     vm.hasUserServices = hasUserServices;
     _licenseCountDefaultQuantity = vm.trialData.details.licenseCount;
 
-    vm.isNewTrial = isNewTrial;
-    vm.isEditTrial = isEditTrial;
-    vm.isExistingOrg = isExistingOrg;
-    vm.isAddTrialValid = isAddTrialValid;
-
-
-    var preset = (!vm.isExistingOrg()) ? getNewOrgPreset() : getExistingOrgPreset();
-    var paidServices = (!vm.isExistingOrg()) ? {} : getPaidServices();
+    var preset = (!isExistingOrg()) ? getNewOrgPreset() : getExistingOrgPreset();
+    var paidServices = (!isExistingOrg()) ? {} : getPaidServices();
     _.extend(vm.paidServices, paidServices);
     _.extend(vm.preset, preset);
-    var stateDefaults = (vm.isNewTrial()) ? getAddModeStateDefaults() : getEditModeStateDefaults();
+    var stateDefaults = (isNewTrial()) ? getAddModeStateDefaults() : getEditModeStateDefaults();
     _.extend(vm.stateDefaults, stateDefaults);
 
     vm.trialStates = [{
@@ -77,6 +101,10 @@
       trials: [vm.callTrial, vm.roomSystemTrial],
       enabled: true,
     }, {
+      name: 'trial.pstnDeprecated',
+      trials: [vm.pstnTrial],
+      enabled: true,
+    }, {
       name: 'trial.pstn',
       trials: [vm.pstnTrial],
       enabled: true,
@@ -86,445 +114,13 @@
       enabled: true,
     }];
     // Navigate trial modal in this order
-    vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.emergAddress', 'trial.call'];
+    vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call'];
     vm.navStates = ['trial.info'];
 
-    vm.nonTrialServices = [{
-      // Context Service Trial
-      model: vm.contextTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        label: $translate.instant('trials.context'),
-        id: 'contextTrial'
-      },
-    }];
-
-    vm.messageFields = [{
-      // Message Trial
-      model: vm.messageTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        label: $translate.instant('trials.message'),
-        id: _messageTemplateOptionId,
-
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.message;
-        },
-        'data.paid': function () {
-          return vm.messageTrial.paid;
-        },
-      }
-    }];
-
-    vm.meetingFields = [{
-      // Meeting Trial
-      model: vm.meetingTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        label: $translate.instant('trials.meeting'),
-        id: _meetingTemplateOptionId,
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.meeting;
-        },
-        'data.paid': function () {
-          return vm.meetingTrial.paid;
-        },
-      }
-    }];
-
-    vm.webexFields = [{
-      // Webex Trial
-      model: vm.webexTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        label: $translate.instant('trials.webex'),
-        id: _webexTemplateOptionId
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.webex;
-        },
-        'data.paid': function () {
-          return vm.webexTrial.paid;
-        },
-      }
-    }];
-
-    vm.callFields = [{
-      // Call Trial
-      model: vm.callTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        label: $translate.instant('trials.call'),
-        id: _callTemplateOptionId,
-
-        inputClass: 'medium-5 small-offset-1',
-        secondaryLabel: $translate.instant('trials.licenses')
-
-      },
-      hideExpression: function () {
-        return !vm.hasCallEntitlement;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.call;
-        },
-        'data.paid': function () {
-          return vm.callTrial.paid;
-        },
-      }
-    }];
-
-    vm.careFields = [{
-      // Care Trial
-      model: vm.careTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        id: 'careTrial',
-        label: $translate.instant('trials.care')
-      },
-      hideExpression: function () {
-        return !vm.showCare;
-      },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
-        },
-        'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression() || callOfferDisabledExpression() || vm.preset.care;
-        },
-        'data.paid': function () {
-          return vm.careTrial.paid;
-        },
-      }
-    }, {
-      model: vm.careTrial.details,
-      key: 'quantity',
-      type: 'input',
-      name: 'trialCareLicenseCount',
-      templateOptions: {
-        id: 'trialCareLicenseCount',
-        inputClass: 'medium-5 small-offset-1',
-        secondaryLabel: $translate.instant('trials.licenses'),
-        type: 'number'
-      },
-      modelOptions: {
-        allowInvalid: true
-      },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return vm.careTrial.enabled;
-        },
-        'templateOptions.disabled': function () {
-          return careLicenseInputDisabledExpression();
-        }
-      },
-      validators: {
-        quantity: {
-          expression: function ($viewValue, $modelValue) {
-            return validateCareLicense($viewValue, $modelValue);
-          },
-          message: function () {
-            return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
-          }
-        }
-      },
-      watcher: {
-        expression: function () {
-          return vm.details.licenseCount;
-        },
-        listener: function (field, newValue, oldValue) {
-          if (newValue !== oldValue) {
-            field.formControl.$validate();
-          }
-        }
-      }
-    }];
-
-    // Room Systems Trial
-    vm.roomSystemFields = [{
-      model: vm.roomSystemTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        label: $translate.instant('trials.roomSystem'),
-        id: _roomSystemsTemplateOptionId
-      },
-      watcher: {
-        listener: function (field, newValue, oldValue) {
-          if (newValue !== oldValue) {
-            field.model.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
-          }
-        }
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.roomSystems;
-        },
-        'data.paid': function () {
-          return vm.roomSystemTrial.paid;
-        },
-      },
-    }, {
-      model: vm.roomSystemTrial.details,
-      key: 'quantity',
-      type: 'input',
-      templateOptions: {
-        id: 'trialRoomSystemsAmount',
-        inputClass: 'medium-5 small-offset-1',
-        secondaryLabel: $translate.instant('trials.licenses'),
-        type: 'number'
-      },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return vm.roomSystemTrial.enabled;
-        },
-        'templateOptions.disabled': function () {
-          return !vm.roomSystemTrial.enabled || vm.roomSystemTrial.paid;
-        },
-      },
-      validators: {
-        quantity: {
-          expression: function ($viewValue, $modelValue) {
-            return !vm.roomSystemTrial.enabled || ValidationService.trialRoomSystemQuantity($viewValue, $modelValue);
-          },
-          message: function () {
-            return $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity');
-          }
-        }
-      }
-    }];
-
-    vm.sparkBoardFields = [{
-      model: vm.sparkBoardTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      templateOptions: {
-        id: _sparkBoardTemplateOptionId,
-        label: $translate.instant('trials.sparkBoardSystem')
-      },
-      watcher: {
-        listener: function (field, newValue, oldValue) {
-          if (newValue !== oldValue) {
-            field.model.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
-          }
-        }
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.sparkBoard;
-        },
-        'data.paid': function () {
-          return vm.sparkBoardTrial.paid;
-        },
-      }
-    }, {
-      model: vm.sparkBoardTrial.details,
-      key: 'quantity',
-      type: 'input',
-      templateOptions: {
-        id: 'trialSparkBoardAmount',
-        inputClass: 'medium-5 small-offset-1',
-        secondaryLabel: $translate.instant('trials.licenses'),
-        type: 'number'
-      },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return vm.sparkBoardTrial.enabled;
-        },
-        'templateOptions.disabled': function () {
-          return !vm.sparkBoardTrial.enabled || vm.sparkBoardTrial.paid;
-        },
-      },
-      validators: {
-        quantity: {
-          expression: function ($viewValue, $modelValue) {
-            return !vm.sparkBoardTrial.enabled || ValidationService.trialRoomSystemQuantity($viewValue, $modelValue);
-          },
-          message: function () {
-            return $translate.instant('partnerHomePage.invalidTrialSparkBoardQuantity');
-          }
-        }
-      }
-    }];
-
-    vm.licenseCountFields = [{
-      model: vm.details,
-      key: 'licenseCount',
-      type: 'input',
-      templateOptions: {
-        label: $translate.instant('trials.licenseQuantity'),
-        inputClass: 'medium-5',
-        type: 'number',
-        secondaryLabel: $translate.instant('trials.users')
-      },
-      modelOptions: {
-        allowInvalid: true
-      },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return hasUserServices();
-        },
-        'templateOptions.disabled': function () {
-          return !hasUserServices();
-        },
-        'model.licenseCount': function ($viewValue) {
-          if (hasUserServices()) {
-            return ($viewValue === 0) ? vm.stateDefaults.licenseCount : $viewValue;
-          } else {
-            return 0;
-          }
-        }
-      },
-      validators: {
-        count: {
-          expression: function ($viewValue, $modelValue) {
-            return !hasUserServices() || ValidationService.trialLicenseCount($viewValue, $modelValue);
-          },
-          message: function () {
-            return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          }
-        },
-        countWithCare: {
-          expression: function () {
-            return validateCareLicense(vm.careTrial.details.quantity);
-          },
-          message: function () {
-            return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
-          }
-        }
-      },
-      watcher: {
-        expression: function () {
-          return vm.careTrial.details.quantity;
-        },
-        listener: function (field, newValue, oldValue) {
-          if (newValue !== oldValue) {
-            field.formControl.$validate();
-          }
-        }
-      }
-    }];
-
-    vm.trialTermsFields = [{
-      model: vm.details,
-      key: 'licenseDuration',
-      type: 'select',
-      defaultValue: vm.stateDefaults.trialDuration,
-      templateOptions: {
-        labelfield: 'label',
-        required: true,
-        label: $translate.instant('partnerHomePage.duration'),
-        secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
-        labelClass: '',
-        inputClass: 'medium-5',
-        options: [30, 60, 90],
-        onChange: function () {
-          if (vm.isEditTrial()) {
-            vm.licenseCountChanged = true;
-            isProceedDisabled();
-          }
-        }
-      },
-    }];
-
-    /* ONLY FOR ADD */
-    vm.custInfoFields = [{
-      model: vm.details,
-      key: 'customerName',
-      type: 'cs-input',
-      templateOptions: {
-        label: $translate.instant('partnerHomePage.customerName'),
-        required: true,
-        maxlength: 50,
-        onInput: function (value, options) {
-          options.validation.show = false;
-          vm.uniqueName = false;
-        },
-        onBlur: function (value, options) {
-          options.validation.show = null;
-        }
-      },
-      asyncValidators: {
-        uniqueName: {
-          expression: function ($viewValue, $modelValue, scope) {
-            return $q(function (resolve, reject) {
-              validateField($viewValue, scope, 'organizationName', 'uniqueName', 'uniqueNameError').then(function (valid) {
-                if (valid) {
-                  resolve();
-                } else {
-                  reject();
-                }
-              });
-            });
-          },
-          message: function () {
-            return errorMessage('uniqueNameError');
-          },
-        }
-      },
-      modelOptions: {
-        updateOn: 'default blur',
-        debounce: {
-          default: debounceTimeout,
-          blur: 0
-        },
-      }
-    }, {
-      model: vm.details,
-      key: 'customerEmail',
-      type: 'cs-input',
-      templateOptions: {
-        label: $translate.instant('partnerHomePage.customerEmail'),
-        type: 'email',
-        required: true,
-        onInput: function (value, options) {
-          options.validation.show = false;
-          vm.uniqueEmail = false;
-        },
-        onBlur: function (value, options) {
-          options.validation.show = null;
-        }
-      },
-      asyncValidators: {
-        uniqueEmail: {
-          expression: function ($viewValue, $modelValue, scope) {
-            return $q(function (resolve, reject) {
-              validateField($viewValue, scope, 'endCustomerEmail', 'uniqueEmail', 'uniqueEmailError').then(function (valid) {
-                if (valid) {
-                  resolve();
-                } else {
-                  reject();
-                }
-              });
-            });
-          },
-          message: function () {
-            return errorMessage('uniqueEmailError');
-          }
-        }
-      },
-      modelOptions: {
-        updateOn: 'default blur',
-        debounce: {
-          default: debounceTimeout,
-          blur: 0
-        },
-      }
-    }];
-
-   // US12171 - always entitle call (previously Authinfo.isSquaredUC())
-
+    vm.isNewTrial = isNewTrial;
+    vm.isEditTrial = isEditTrial;
+    vm.isExistingOrg = isExistingOrg;
+    vm.isAddTrialValid = isAddTrialValid;
     vm.hasNextStep = hasNextStep;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
@@ -539,6 +135,8 @@
     vm.cancelModal = cancelModal;
     vm.getNextState = getNextState;
     vm.hasTrial = hasTrial;
+    vm.onTrialTermsChanged = onTrialTermsChanged;
+    vm.isLoading = isLoading;
     vm._helpers = {
       hasEnabled: hasEnabled,
       hasEnabledMessageTrial: hasEnabledMessageTrial,
@@ -548,39 +146,98 @@
       hasEnabledRoomSystemTrial: hasEnabledRoomSystemTrial,
       hasEnabledSparkBoardTrial: hasEnabledSparkBoardTrial,
       hasEnabledCareTrial: hasEnabledCareTrial,
+      hasEnabledAdvanceCareTrial: hasEnabledAdvanceCareTrial,
       hasEnabledAnyTrial: hasEnabledAnyTrial,
       messageOfferDisabledExpression: messageOfferDisabledExpression,
       callOfferDisabledExpression: callOfferDisabledExpression,
       careLicenseInputDisabledExpression: careLicenseInputDisabledExpression,
-      validateCareLicense: validateCareLicense,
+      advanceCareLicenseInputDisabledExpression: advanceCareLicenseInputDisabledExpression,
+      getCareMaxLicenseCount: getCareMaxLicenseCount,
+      getMinUserLicenseRequired: getMinUserLicenseRequired,
       saveTrialPstn: saveTrialPstn,
       saveTrialContext: saveTrialContext,
       getNewOrgInitResults: getNewOrgInitResults,
       getExistingOrgInitResults: getExistingOrgInitResults,
       getPaidLicense: getPaidLicense,
       hasOfferType: hasOfferType,
-      getPaidServicesForDisplay: getPaidServicesForDisplay
+      getPaidServicesForDisplay: getPaidServicesForDisplay,
     };
     vm.devicesModal = _.find(vm.trialStates, {
-      name: 'trial.call'
+      name: 'trial.call',
     });
     vm.setDefaultCountry = setDefaultCountry;
 
-    init();
+    //watch room systems trial 'enabled' for quantity
+    $scope.$watch(function () {
+      return vm.roomSystemTrial.enabled;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm.roomSystemTrial.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
+      }
+    });
 
+    //watch sparkboard 'enabled' for quantity
+    $scope.$watch(function () {
+      return vm.sparkBoardTrial.enabled;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm.sparkBoardTrial.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
+      }
+    });
+    // algendel: for care and advanced care the quantity is set by 'disabled expression' functions.
+    // We can just move the code that sets the quantity into the watch the same way we do with the others
+    // The only downside to that is difficulty testing the $watch vs. the function.
+
+    //watch care 'enabled' for quantity
+    $scope.$watch(function () {
+      return vm.careTrial.enabled;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm._helpers.careLicenseInputDisabledExpression();
+      }
+    });
+
+    //watch advance care 'enabled' for quantity
+    $scope.$watch(function () {
+      return vm.advanceCareTrial.enabled;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm._helpers.advanceCareLicenseInputDisabledExpression();
+      }
+    });
+
+    //watch hasUserServices for licence quantity
+    $scope.$watch(function () {
+      return hasUserServices();
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        if (newValue) {
+          if (vm.details.licenseCount === 0) {
+            vm.details.licenseCount = vm.stateDefaults.licenseCount;
+          }
+        } else {
+          vm.details.licenseCount = 0;
+        }
+      }
+    });
+
+    init();
     ///////////////////////
 
     function init() {
+      vm.loading = true;
       var isTestOrg = false;
+      vm.details.licenseCount = vm.stateDefaults.licenseCount;
       var overrideTestOrg = false;
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
       vm.pstnTrial.enabled = vm.hasCallEntitlement;
       var promises = {
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
-        ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
+        ftAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+        ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        huronCountryList: getCountryList(),
+        huronPstn: FeatureToggleService.supports(FeatureToggleService.features.huronPstn),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -592,7 +249,9 @@
         .then(function (results) {
           vm.showRoomSystems = true;
           vm.showContextServiceTrial = true;
-          vm.showCare = results.ftCareTrials;
+          vm.showBasicCare = results.ftCareTrials;
+          vm.showAdvanceCare = results.ftAdvanceCareTrials;
+          vm.showCare = vm.showBasicCare || vm.showAdvanceCare;
           vm.sbTrial = results.atlasDarling;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
           overrideTestOrg = results.ftShipDevices;
@@ -600,9 +259,21 @@
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
+          vm.huronPstn = results.huronPstn;
+
+          if (vm.huronPstn) {
+            vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
+          }
+
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
-          updateTrialService(_messageTemplateOptionId);
+          // TODO: algendel
+          // - remove this once the backend migration is verified complete (see: timtrinh)
+          // - the old 'COLLAB' offer trials have been changed so there is no need for this function any more
+          // - its description was as follows:
+          //   > If Webex Trials are enabled, we switch out offerType Collab for Message
+          //   > This requires changing the label it contains as well
+          // updateTrialService(_messageTemplateOptionId);
           vm.paidServicesForDisplay = getPaidServicesForDisplay(Authinfo.getOrgId(), Authinfo.getOrgName());
         })
         .finally(function () {
@@ -622,13 +293,7 @@
           }
 
           toggleTrial();
-        });
-    }
-
-    function getCountryList() {
-      return HuronCountryService.getCountryList()
-        .catch(function () {
-          return [];
+          vm.loading = false;
         });
     }
 
@@ -647,25 +312,9 @@
     function hasUserServices() {
       var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial];
       var result = _.some(services, {
-        enabled: true
+        enabled: true,
       });
       return result;
-    }
-
-    // If Webex Trials are enabled, we switch out offerType Collab for Message
-    // This requires changing the label it contains as well
-    function updateTrialService(templateOptionsId) {
-      var index = _.findIndex(vm.messageFields, function (individualService) {
-        return individualService.templateOptions.id === templateOptionsId;
-      });
-      if (index || vm.isEditTrial()) {
-        switch (templateOptionsId) {
-          case _messageTemplateOptionId:
-            vm.messageFields[0].model.type = Config.offerTypes.message;
-            vm.messageFields[0].templateOptions.label = $translate.instant('trials.message');
-            break;
-        }
-      }
     }
 
     function isPstn() {
@@ -673,11 +322,11 @@
     }
 
     function toggleTrial() {
-      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled && !vm.sparkBoardTrial.enabled) {
+      if ((!vm.callTrial.enabled && !vm.roomSystemTrial.enabled && !vm.sparkBoardTrial.enabled) || _.get(vm.details.country, 'id') === 'N/A') {
         vm.pstnTrial.enabled = false;
       }
 
-      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped && _.get(vm.details.country, 'id') !== 'N/A') {
         vm.pstnTrial.enabled = true;
       }
 
@@ -691,17 +340,14 @@
 
       setViewState('trial.call', canAddDevice());
       setViewState('trial.webex', hasEnabledWebexTrial());
-      setViewState('trial.pstn', isPstn());
-      setViewState('trial.emergAddress', isPstn());
-      var fieldsArray = [vm.messageFields, vm.meetingFields, vm.webexFields, vm.callFields, vm.licenseCountFields];
+      setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
+      setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
 
-      _.forEach(fieldsArray, function (fields) {
-        _.forEach(fields, function (service) {
-          if (typeof service.runExpressions === 'function') {
-            service.runExpressions();
-          }
-        });
-      });
+      if (vm.huronPstn) {
+        setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
+      } else {
+        setViewState('trial.pstnDeprecated', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
+      }
 
       addRemoveStates();
     }
@@ -709,7 +355,7 @@
     function addRemoveStates() {
       _.forEach(vm.trialStates, function (state) {
         if (!state.enabled || _.every(state.trials, {
-          enabled: false
+          enabled: false,
         })) {
           removeNavState(state.name);
         } else {
@@ -805,6 +451,7 @@
     }
 
     function closeDialogBox() {
+      cancelCustomer();
       sendToAnalytics(Analytics.sections.TRIAL.eventNames.NO);
       $state.modal.close();
     }
@@ -819,7 +466,7 @@
       return TrialService.editTrial(custId, trialId)
         .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.editError', {
-            customerName: vm.details.customerName
+            customerName: vm.details.customerName,
           });
           return $q.reject(response);
         })
@@ -858,7 +505,7 @@
       return TrialService.startTrial(vm.currentTrial.customerOrgId)
         .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.addError', {
-            customerName: vm.details.customerName
+            customerName: vm.details.customerName,
           });
           return $q.reject(response);
         }).then(function (response) {
@@ -874,7 +521,7 @@
         .then(function () {
           vm.finishSetup();
           return {
-            customerOrgId: vm.customerOrgId
+            customerOrgId: vm.customerOrgId,
           };
         })
         .finally(function () {
@@ -889,7 +536,7 @@
 
     function findOffer(configOption) {
       return _.find(vm.currentTrial.offers, {
-        id: configOption
+        id: configOption,
       });
     }
 
@@ -898,7 +545,7 @@
       var result = {
         label: label,
         qty: 0,
-        licenseItems: []
+        licenseItems: [],
       };
       if (offerNames && !_.isArray(offerNames)) {
         offerNames = [offerNames];
@@ -918,7 +565,7 @@
             result.licenseItems.push({
               partnerOrgId: license.partnerOrgId,
               label: label,
-              qty: license.volume
+              qty: license.volume,
             });
           }
         }
@@ -933,11 +580,14 @@
     function setViewState(modalStage, value) {
 
       _.find(vm.trialStates, {
-        name: modalStage
+        name: modalStage,
       }).enabled = value;
     }
 
     function isProceedDisabled() {
+      if (!vm.details.validLocation) {
+        return true;
+      }
       // ALINA PR note: change for adding to purchased. LicenseCount will be different
       var checks = [
         hasEnabledAnyTrial(vm, vm.preset),
@@ -945,9 +595,11 @@
         vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
         vm.preset.sparkBoard && (vm.preset.sparkBoardValue !== vm.sparkBoardTrial.details.quantity),
         vm.preset.care && (vm.preset.careLicenseValue !== vm.careTrial.details.quantity),
+        vm.preset.advanceCare && (vm.preset.advanceCareLicenseValue !== vm.advanceCareTrial.details.quantity),
         (vm.preset.licenseCount !== vm.details.licenseCount) && !(isNewTrial() && isExistingOrg()),
         vm.licenseCountChanged,
-        canAddDevice()
+        canAddDevice(),
+
       ];
 
       // bail at first true result
@@ -1005,6 +657,11 @@
       return hasEnabled(trial.enabled, preset.care);
     }
 
+    function hasEnabledAdvanceCareTrial(vmAdvanceCareTrial, vmPreset) {
+      var trial = vmAdvanceCareTrial || vm.advanceCareTrial;
+      var preset = vmPreset || vm.preset;
+      return hasEnabled(trial.enabled, preset.advanceCare);
+    }
 
     function hasEnabledAnyTrial(vm, vmPreset) {
       // TODO: look into discrepancy for 'roomSystem' vs. 'roomSystems'
@@ -1014,7 +671,8 @@
         hasEnabledCallTrial(vm.callTrial, vmPreset) ||
         hasEnabledRoomSystemTrial(vm.roomSystemTrial, vmPreset) ||
         hasEnabledSparkBoardTrial(vm.sparkBoardTrial, vmPreset) ||
-        hasEnabledCareTrial(vm.careTrial, vmPreset);
+        hasEnabledCareTrial(vm.careTrial, vmPreset) ||
+        hasEnabledAdvanceCareTrial(vm.advanceCareTrial, vmPreset);
     }
 
     function hasService(service) {
@@ -1024,6 +682,7 @@
     function messageOfferDisabledExpression() {
       if (!hasService(vm.messageTrial)) {
         vm.careTrial.enabled = false;
+        vm.advanceCareTrial.enabled = false;
       }
       return !hasService(vm.messageTrial);
     }
@@ -1031,6 +690,7 @@
     function callOfferDisabledExpression() {
       if (!hasService(vm.callTrial)) {
         vm.careTrial.enabled = false;
+        vm.advanceCareTrial.enabled = false;
       }
       return !hasService(vm.callTrial);
     }
@@ -1040,11 +700,40 @@
       return !vm.careTrial.enabled;
     }
 
-    function validateCareLicense($viewValue, $modelValue) {
-      //if message in trial -- use licenseCount -- otherwise use purchased quantity
-      var messageLicenseCount = (vm.messageTrial.enabled) ? vm.details.licenseCount : vm.messageTrial.paid;
-      return !vm.careTrial.enabled || ValidationService.trialCareQuantity(
-        $viewValue, $modelValue, messageLicenseCount);
+    function advanceCareLicenseInputDisabledExpression() {
+      vm.advanceCareTrial.details.quantity = (!vm.advanceCareTrial.enabled) ? 0 : (vm.advanceCareTrial.details.quantity || _careDefaultQuantity);
+      return !vm.advanceCareTrial.enabled;
+    }
+
+    function getCareLicenseCount(careTrial) {
+      var paidCareTrialQuantity = _.get(careTrial, 'paid', 0);
+      return careTrial.enabled ? careTrial.details.quantity : paidCareTrialQuantity;
+    }
+
+    function getMinUserLicenseRequired() {
+      var totalCare = getCareLicenseCount(vm.careTrial) + getCareLicenseCount(vm.advanceCareTrial);
+      var paidMessageLicenseCount = _.get(vm.messageTrial, 'paid', 0);
+      // Has no user services but might have purchased message licenses.
+      // Care should validate against those licenses so 0 is OK.
+      // If care licenses number > purchased Message licenses the error should be in care license validation.
+      if (!vm.hasUserServices()) {
+        return 0;
+      }
+      // Has user services in trial
+      // If no message purchased should be > total care and > 0
+      if (paidMessageLicenseCount === 0) {
+        return Math.max(totalCare, 1);
+      }
+      // Has purchased message
+      return 1; // Care will validate against purchased message licenses.
+    }
+
+    function getCareMaxLicenseCount(careType) {
+      var careTrial = (careType === vm.careTypes.K2) ? vm.careTrial : vm.advanceCareTrial;
+      var paidMessageLicenseCount = _.get(vm.messageTrial, 'paid', 0);
+      var messageLicenseCount = (vm.messageTrial.enabled) ? vm.details.licenseCount : paidMessageLicenseCount;
+      var max = messageLicenseCount - getCareLicenseCount(careTrial);
+      return Math.min(max, vm.validationData.careMax);
     }
 
     // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
@@ -1055,13 +744,21 @@
       sendToAnalytics(Analytics.eventNames.YES);
       $window.open($state.href('login_swap', {
         customerOrgId: customerOrgId,
-        customerOrgName: customerOrgName
+        customerOrgName: customerOrgName,
       }));
       $state.modal.close();
+      cancelCustomer();
     }
 
     function showDefaultFinish() {
       return !hasEnabledWebexTrial(vm.webexTrial, vm.preset);
+    }
+
+    function onTrialTermsChanged() {
+      if (vm.isEditTrial()) {
+        vm.licenseCountChanged = true;
+        isProceedDisabled();
+      }
     }
 
     function canAddDevice() {
@@ -1073,55 +770,32 @@
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
     }
 
+    function cancelCustomer() {
+      HuronCompassService.setIsCustomer(false);
+      HuronCompassService.setCustomerBaseDomain();
+    }
+
     function cancelModal() {
+      cancelCustomer();
       $state.modal.dismiss();
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }
+
+    function isLoading(form) {
+      return vm.loading || !_.isNil(form.$pending);
+    }
+
     function sendToAnalytics(eventName, extraData) {
       Analytics.trackTrialSteps(eventName, vm.trialData, extraData);
     }
 
     function isAddTrialValid(isFormValid) {
-      if (!(isFormValid && vm.hasTrial())) {
-        return false;
-      }
-      if (!vm.isExistingOrg()) {
-        return (vm.uniqueName && vm.uniqueEmail);
-      } else {
-        return true;
-      }
+      return vm.details.validLocation && (isFormValid && vm.hasTrial());
     }
 
-    function validateField($viewValue, scope, key, uniqueFlag, errorMsg) {
-      // Show loading glyph
-      vm.loading = true;
-      vm[errorMsg] = null;
-
-      // Fetch list of trials based on email in edit box...
-      return TrialService.shallowValidation(key, $viewValue).then(function (response) {
-        vm.loading = false;
-        if (!_.isUndefined(response.unique)) {
-          // name unique
-          vm[uniqueFlag] = true;
-          return true;
-        }
-
-        // Name in use, or API call failed
-        vm[errorMsg] = response.error;
-        scope.options.validation.show = true;
-        return false;
-      });
-    }
-
-    function errorMessage(key) {
-      if (_.isUndefined(vm[key]) || vm[key] === '') {
-        vm[key] = 'trialModal.errorFailSafe';
-      }
-      return $translate.instant(vm[key]);
-    }
 
     function getNewOrgPreset() {
-      return { };
+      return {};
     }
 
     function getExistingOrgPreset() {
@@ -1137,8 +811,10 @@
         sparkBoardValue: _.get(findOffer(Config.offerTypes.sparkBoard), 'licenseCount', 0),
         licenseDuration: _.get(vm, 'currentTrial.duration', 0),
         care: hasOfferType(Config.offerTypes.care),
+        advanceCare: hasOfferType(Config.offerTypes.advanceCare),
         careLicenseValue: _.get(findOffer(Config.offerTypes.care), 'licenseCount', 0),
-        context: false // we don't know this yet, so default to false
+        advanceCareLicenseValue: _.get(findOffer(Config.offerTypes.advanceCare), 'licenseCount', 0),
+        context: false, // we don't know this yet, so default to false
       };
     }
 
@@ -1152,6 +828,7 @@
         roomSystems: getPaidLicense(Config.licenseTypes.SHARED_DEVICES, Config.offerCodes.SD, $translate.instant('trials.roomSystem')),
         sparkBoard: getPaidLicense(Config.licenseTypes.SHARED_DEVICES, Config.offerCodes.SB, $translate.instant('trials.sparkBoardSystem')),
         care: getPaidLicense(Config.licenseTypes.CARE, undefined, $translate.instant('trials.care')),
+        advanceCare: getPaidLicense(Config.licenseTypes.ADVANCE_CARE, undefined, $translate.instant('trials.advanceCare')),
         context: getPaidLicense(Config.licenseTypes.CONTEXT, undefined, $translate.instant('trials.context')),
       };
     }
@@ -1162,7 +839,8 @@
         trialDuration: _trialDurationDefaultLength,
         roomSystemsDefault: _roomSystemDefaultQuantity,
         sparkBoardDefault: _roomSystemDefaultQuantity,
-        careDefault: _careDefaultQuantity
+        careDefault: _careDefaultQuantity,
+        advanceCareDefault: _careDefaultQuantity,
       };
     }
 
@@ -1173,24 +851,25 @@
     }
 
     function getPaidServicesForDisplay(myOrgId, myOrgName) {
-      var result = _.chain(vm.paidServices).filter(function (service) {
-        return service.qty > 0;
-      })
-      .map('licenseItems')
-      .flatten()
-      .map(function (service) {
-        if (service.partnerOrgId !== myOrgId) {
-          service.partnerOrg = $translate.instant('trials.anotherPartner');
-        } else {
-          service.partnerOrg = myOrgName;
-        }
-        return service;
-      })
-      .groupBy('partnerOrg')
-      .map(function (value, key) {
-        return { org: key, services: value };
-      })
-      .value();
+      var result = _.chain(vm.paidServices)
+        .filter(function (service) {
+          return service.qty > 0;
+        })
+        .map('licenseItems')
+        .flatten()
+        .map(function (service) {
+          if (service.partnerOrgId !== myOrgId) {
+            service.partnerOrg = $translate.instant('trials.anotherPartner');
+          } else {
+            service.partnerOrg = myOrgName;
+          }
+          return service;
+        })
+        .groupBy('partnerOrg')
+        .map(function (value, key) {
+          return { org: key, services: value };
+        })
+        .value();
       // sort so that user's org is on top.
       var myOrgsPaidServices = _.remove(result, { org: myOrgName });
       if (myOrgsPaidServices.length) {
@@ -1211,6 +890,8 @@
       _.set(initResults, 'sparkBoardTrial.details.quantity', stateDefaults.sparkBoardDefault);
       _.set(initResults, 'careTrial.enabled', results.ftCareTrials);
       _.set(initResults, 'careTrial.details.quantity', stateDefaults.careDefault);
+      _.set(initResults, 'advanceCareTrial.enabled', results.ftAdvanceCareTrials);
+      _.set(initResults, 'advanceCareTrial.details.quantity', stateDefaults.advanceCareDefault);
       return initResults;
     }
 
@@ -1233,6 +914,9 @@
       _.set(initResults, 'careTrial.enabled', preset.care);
       _.set(initResults, 'careTrial.paid', paidServices.care.qty);
       _.set(initResults, 'careTrial.details.quantity', preset.careLicenseValue || paidServices.care.qty);
+      _.set(initResults, 'advanceCareTrial.enabled', preset.advanceCare);
+      _.set(initResults, 'advanceCareTrial.paid', paidServices.advanceCare.qty);
+      _.set(initResults, 'advanceCareTrial.details.quantity', preset.advanceCareLicenseValue || paidServices.advanceCare.qty);
       if (isEditTrial()) {
         _.set(initResults, 'contextTrial.enabled', results.tcHasService);
         _.set(initResults, 'preset.context', results.tcHasService);
@@ -1253,7 +937,7 @@
       sendToAnalytics(Analytics.sections.TRIAL.eventNames.FINISH);
       //edit
       Notification.success(notifictionSuccessText, {
-        customerName: customerName
+        customerName: customerName,
       });
 
       if (_.isFunction(addNumbersCallback)) {
@@ -1286,11 +970,24 @@
       var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled;
       var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems));
       var hasValueChanged = !isExistingOrg() ? newOrgCondition : existingOrgCondition;
+      var countryCode;
 
       if (!hasValueChanged) {
         return;
       }
-      return HuronCustomer.create(customerOrgId, customerName, country, customerEmail)
+
+      //During 'Edit Trial', setDefaultCountry method is not called
+      //However, the TrialPstnService may have the country code set prior to
+      //trial code being instantiated
+      if (country && (_.get(country, 'id') !== 'N/A')) {
+        countryCode = country.id;
+      } else if (_.get(country, 'id') === 'N/A') {
+        countryCode = 'US';
+      } else {
+        countryCode = TrialPstnService.getCountryCode();
+      }
+
+      return HuronCustomer.create(customerOrgId, customerName, countryCode, customerEmail)
         .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.squareducError');
           return $q.reject(response);
@@ -1302,6 +999,7 @@
     }
 
     function setDefaultCountry(country) {
+      TrialPstnService.setCountryCode(country.id);
       vm.details.country = country;
     }
   }

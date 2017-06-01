@@ -16,7 +16,7 @@
       avrilUrl: {
         dev: 'https://avrildirmgmt.appstaging.ciscoccservice.com/avrildirmgmt/api/v1',
         integration: 'https://avrildirmgmt.appstaging.ciscoccservice.com/avrildirmgmt/api/v1',
-        prod: 'https://avrildirmgmt.produs1.ciscoccservice.com/avrildirmgmt/api/v1'
+        prod: 'https://avrildirmgmt.produs1.ciscoccservice.com/avrildirmgmt/api/v1',
       },
 
       getBaseDomain: function () {
@@ -64,6 +64,10 @@
         return 'https://minerva.' + this.getBaseDomain() + '/api/v1';
       },
 
+      getMmsUrl: function () {
+        return 'https://mms.' + this.getBaseDomain() + '/api/v1';
+      },
+
       getAvrilUrl: function () {
         if (Config.isDev()) {
           return this.avrilUrl.dev;
@@ -72,7 +76,7 @@
         } else {
           return this.avrilUrl.prod;
         }
-      }
+      },
     };
     return config;
   }

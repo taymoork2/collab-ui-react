@@ -1,5 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/page';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 $overlay-panel-height: 93px;
 
@@ -8,7 +9,7 @@ $overlay-panel-height: 93px;
   max-width: 100%;
   padding: 0 1rem;
 
-  .btn--right.saveCallPickup:not(.disabled) {
+  .btn--right.save-call-feature:not(.disabled) {
     background: $color-cta;
   }
 
@@ -26,7 +27,7 @@ $overlay-panel-height: 93px;
   }
 }
 
-.callpickup .overlay-panel .cs-card-layout{
+.callpickup .overlay-panel .cs-card-layout {
   height: 16rem !important;
   @include vr-spacing(ml, 28.5, 0px, true);
   @include vr-spacing(pb, 1);
@@ -76,22 +77,11 @@ $overlay-panel-height: 93px;
       border-top: solid rem(1px) $color-negative-base;
     }
   }
+}
 
-  .dropdown-menu {
-    span {
-      &.disabled {
-          color: $gray-light-1;
-      }
-    }
-    .active {
-      a {
-        &.disabled {
-          color: $gray-light-1;
-          background: $color-white;
-          cursor: default;
-        }
-      }
-    }
+#pickup-typeahead {
+  .disabled {
+    color: $gray-light-1;
   }
 }
 

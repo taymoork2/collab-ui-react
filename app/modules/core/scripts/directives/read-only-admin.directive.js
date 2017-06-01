@@ -17,7 +17,7 @@
     return {
       restrict: 'A',
       link: link,
-      priority: 100
+      priority: 100,
     };
 
   }
@@ -34,7 +34,7 @@
     return {
       restrict: 'A',
       link: link,
-      priority: 100
+      priority: 100,
     };
 
   }

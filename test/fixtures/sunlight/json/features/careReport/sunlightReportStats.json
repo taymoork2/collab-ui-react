@@ -223,8 +223,8 @@
   "reportUsersFifteenMinutesStats": {
     "data": [{
       "avgCsatScore":5,
-      "contactsAssigned":0,
-      "contactsHandled":0,
+      "tasksAssigned":0,
+      "tasksHandled":0,
       "createdTime":"2017-01-09T19:00:00.000Z",
       "handleTime":0,
       "mediaType":"chat",
@@ -233,8 +233,8 @@
       "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
     }, {
       "avgCsatScore":2,
-      "contactsAssigned":0,
-      "contactsHandled":1,
+      "tasksAssigned":0,
+      "tasksHandled":1,
       "createdTime":"2017-01-09T20:00:00.000Z",
       "handleTime":0,
       "mediaType":"chat",
@@ -243,8 +243,8 @@
       "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
     }, {
       "avgCsatScore":3.6666666666666665,
-      "contactsAssigned":4,
-      "contactsHandled":3,
+      "tasksAssigned":4,
+      "tasksHandled":3,
       "createdTime":"2017-01-10T04:30:00.000Z",
       "handleTime":27887,
       "mediaType":"chat",
@@ -253,8 +253,8 @@
       "userId":"3c3dd56c-67c3-4054-8d07-b090945e00b3"
     }, {
       "avgCsatScore":4,
-      "contactsAssigned":0,
-      "contactsHandled":0,
+      "tasksAssigned":0,
+      "tasksHandled":0,
       "createdTime":"2017-01-10T04:30:00.000Z",
       "handleTime":0,
       "mediaType":"chat",
@@ -263,8 +263,8 @@
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
       "avgCsatScore":4,
-      "contactsAssigned":0,
-      "contactsHandled":0,
+      "tasksAssigned":0,
+      "tasksHandled":0,
       "createdTime":"2017-01-10T04:30:00.000Z",
       "handleTime":0,
       "mediaType":"chat",
@@ -273,8 +273,8 @@
       "userId":"77cacfcd-f089-418b-b70e-8406f6e67911"
     }, {
       "avgCsatScore":0,
-      "contactsAssigned":3,
-      "contactsHandled":0,
+      "tasksAssigned":3,
+      "tasksHandled":0,
       "createdTime":"2017-01-10T04:45:00.000Z",
       "handleTime":0,
       "mediaType":"chat",
@@ -283,8 +283,8 @@
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
       "avgCsatScore":4,
-      "contactsAssigned":3,
-      "contactsHandled":4,
+      "tasksAssigned":3,
+      "tasksHandled":4,
       "createdTime":"2017-01-10T05:00:00.000Z",
       "handleTime":481947,
       "mediaType":"chat",
@@ -293,8 +293,8 @@
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
       "avgCsatScore":0,
-      "contactsAssigned":3,
-      "contactsHandled":3,
+      "tasksAssigned":3,
+      "tasksHandled":3,
       "createdTime":"2017-01-10T05:15:00.000Z",
       "handleTime":295342,
       "mediaType":"chat",
@@ -303,8 +303,8 @@
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
       "avgCsatScore":4,
-      "contactsAssigned":1,
-      "contactsHandled":0,
+      "tasksAssigned":1,
+      "tasksHandled":0,
       "createdTime":"2017-01-10T06:00:00.000Z",
       "handleTime":0,
       "mediaType":"chat",
@@ -313,14 +313,34 @@
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
       "avgCsatScore":4,
-      "contactsAssigned":1,
-      "contactsHandled":0,
+      "tasksAssigned":1,
+      "tasksHandled":0,
       "createdTime":"2017-01-10T06:00:00.000Z",
       "handleTime":0,
       "mediaType":"chat",
       "numCsatScores":1,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"00000000-d720-4ad8-8e94-f88cf403aade"
+    }, {
+      "avgCsatScore":5,
+      "tasksAssigned":2,
+      "tasksHandled":2,
+      "createdTime":"2017-01-10T06:00:00.000Z",
+      "handleTime":2,
+      "mediaType":"chat",
+      "numCsatScores":2,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"00000001-d720-4ad8-8e94-f88cf403aade"
+    }, {
+      "avgCsatScore":5,
+      "tasksAssigned":2,
+      "tasksHandled":2,
+      "createdTime":"2017-01-10T06:00:00.000Z",
+      "handleTime":2,
+      "mediaType":"chat",
+      "numCsatScores":2,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"00000002-d720-4ad8-8e94-f88cf403aade"
     }],
     "metadata": {
       "jobName": "user_contact_stats_fifteen_minutes",
@@ -330,8 +350,8 @@
     "reportUsersHourlyStats": {
     "data": [{
       "avgCsatScore":5,
-      "contactsAssigned":0,
-      "contactsHandled":0,
+      "tasksAssigned":0,
+      "tasksHandled":0,
       "createdTime":"2017-01-09T19:00:00.000Z",
       "handleTime":0,
       "mediaType":"chat",
@@ -340,8 +360,8 @@
       "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
     }, {
       "avgCsatScore":4,
-      "contactsAssigned":3,
-      "contactsHandled":4,
+      "tasksAssigned":3,
+      "tasksHandled":4,
       "createdTime":"2017-01-10T05:00:00.000Z",
       "handleTime":481947,
       "mediaType":"chat",
@@ -350,8 +370,8 @@
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
       "avgCsatScore":4,
-      "contactsAssigned":1,
-      "contactsHandled":0,
+      "tasksAssigned":1,
+      "tasksHandled":0,
       "createdTime":"2017-01-10T06:00:00.000Z",
       "handleTime":0,
       "mediaType":"chat",
@@ -394,6 +414,19 @@
       "id": "77cacfcd-f089-418b-b70e-8406f6e67911",
       "emails": [{
         "value": "sunlight-user1@outlook.com"
+      }]
+    }]
+  },
+  "ciNonCareUserStats": {
+    "Resources": [{
+      "displayName":"NonCare User",
+      "name": {
+        "givenName": "A GT",
+        "familyName": "Non Care user"
+      },
+      "id": "00000000-d720-4ad8-8e94-f88cf403aade",
+      "emails": [{
+        "value": "sunlight@outlook.com"
       }]
     }]
   }

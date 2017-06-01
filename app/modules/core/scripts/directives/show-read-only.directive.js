@@ -18,7 +18,7 @@ require('./_show-read-only.scss');
 
         observer.observe($window.document.body, {
           childList: true,
-          subtree: true
+          subtree: true,
         });
 
       }

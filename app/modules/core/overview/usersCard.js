@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($rootScope, $state, Config, Orgservice) {
+  function OverviewUsersCard($rootScope, $state, $translate, Config, DirSyncService, ModalService, Orgservice) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -15,7 +15,7 @@
         card.template = 'modules/core/overview/usersCard.tpl.html';
         card.cardClass = 'user-card';
         card.icon = 'icon-circle-user';
-
+        card.isUpdating = true;
         card.showLicenseCard = false;
 
         card.unlicensedUsersHandler = function (data) {
@@ -32,40 +32,80 @@
 
         function getUnassignedLicenses() {
           Orgservice.getLicensesUsage().then(function (response) {
-            var max = 0;
-            var licenseUsage = 0;
-            var licenseType = '';
-            var licenses = _.get(response[0], 'licenses');
-            if (licenses) {
-              _.forEach(licenses, function (data) {
-                if ((data.volume > max) && (data.licenseType !== Config.licenseTypes.STORAGE)) {
-                  max = data.volume;
-                  licenseUsage = data.usage;
-                  licenseType = data.licenseType;
-                } else if (data.volume === max && data.licenseType === Config.licenseTypes.MESSAGING) {
-                  licenseType = Config.licenseTypes.MESSAGING;
-                }
-                var remainder = max - licenseUsage;
-                card.licenseNumber = remainder < 0 ? 0 : remainder;
-                card.licenseType = licenseType;
-              });
+            var licenses = _.flatMap(response, 'licenses');
+            if (licenses.length > 0) {
+              displayLicenseData(licenses);
             }
           });
+        }
+
+        function displayLicenseData(licenses) {
+          var finalCounts = {};
+          _.forEach(licenses, function (data) {
+            if (data.licenseType in finalCounts) {
+              finalCounts[data.licenseType].volume = finalCounts[data.licenseType].volume + data.volume;
+              finalCounts[data.licenseType].usage = finalCounts[data.licenseType].usage + data.usage;
+            } else {
+              finalCounts[data.licenseType] = {
+                volume: data.volume,
+                usage: data.usage,
+              };
+            }
+          });
+
+          var displayKey;
+          var volume = 0;
+          var usage = 0;
+          _.forEach(finalCounts, function (countData, key) {
+            if ((key !== Config.licenseTypes.STORAGE && countData.volume > volume) || (key === Config.licenseTypes.MESSAGING && countData.volume === volume)) {
+              displayKey = key;
+              volume = countData.volume;
+              usage = countData.usage;
+            }
+          });
+
+          if (displayKey) {
+            card.licenseNumber = volume - usage;
+            card.licenseType = displayKey;
+          }
         }
 
         card.orgEventHandler = function (data) {
           if (data.success) {
             card.ssoEnabled = data.ssoEnabled || false;
-            card.dirsyncEnabled = data.dirsyncEnabled || false;
             //ssoEnabled is used in enterpriseSettingsCtrl so share through rootScope
             if (data.ssoEnabled) {
               $rootScope.ssoEnabled = true;
             }
           }
+          DirSyncService.refreshStatus()
+            .finally(function () {
+              card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
+              card.isUpdating = false;
+            });
+        };
+
+        function goToUsersConvert(options) {
+          $state.go('users.convert', options);
+        }
+
+        card.isConvertButtonDisabled = function () {
+          return card.isUpdating || !card.usersToConvert;
         };
 
         card.openConvertModal = function () {
-          $state.go('users.convert', {});
+          if (card.dirsyncEnabled) {
+            ModalService.open({
+              message: '<span>' + $translate.instant('homePage.convertUsersDirSyncEnabledWarning') + '</span>',
+              title: $translate.instant('userManage.ad.adStatus'),
+            }).result.then(function () {
+              goToUsersConvert({
+                readOnly: true,
+              });
+            });
+          } else {
+            goToUsersConvert();
+          }
         };
 
         card.showSSOSettings = function () {
@@ -73,6 +113,13 @@
             currentTab: 'enterpriseSettings',
             currentStep: 'init',
             onlyShowSingleTab: true,
+            showStandardModal: true,
+          });
+        };
+
+        card.showDirSyncSettings = function () {
+          $state.go('settings', {
+            showSettings: 'dirsync',
           });
         };
 
@@ -83,7 +130,7 @@
         };
 
         return card;
-      }
+      },
     };
   }
 })();

@@ -5,7 +5,7 @@
     .module('Gemini')
     .component('cbgSites', {
       controller: cbgSitesCtrl,
-      templateUrl: 'modules/gemini/callbackGroup/details/cbgSites.tpl.html'
+      templateUrl: 'modules/gemini/callbackGroup/details/cbgSites.tpl.html',
     });
 
   /* @ngInject */
@@ -33,7 +33,7 @@
     function onClick(site, toCbg) {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/gemini/callbackGroup/details/moveSiteConfirm.tpl.html'
+        templateUrl: 'modules/gemini/callbackGroup/details/moveSiteConfirm.tpl.html',
       }).result.then(function () {
         moveSite(site, toCbg);
       });
@@ -47,7 +47,7 @@
         targetGroupId: toCbg.toCcaGroupId,
         targetGroupName: toCbg.toGroupName, // TO,  targetGroupName , DB: Object_ID
         sourceGroupId: vm.currCbg.ccaGroupId,
-        sourceGroupName: vm.currCbg.groupName // From, DB: Object_Name
+        sourceGroupName: vm.currCbg.groupName, // From, DB: Object_Name
       };
       cbgService.moveSite(data).then(function (res) {
         var resJson = _.get(res.content, 'data');

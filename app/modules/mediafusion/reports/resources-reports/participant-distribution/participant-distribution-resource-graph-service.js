@@ -7,6 +7,7 @@
 
     var vm = this;
     vm.participantDistributiondiv = 'participantDistributiondiv';
+    vm.exportDiv = 'participant-export-div';
     vm.GUIDEAXIS = 'guideaxis';
     vm.AXIS = 'axis';
     vm.LEGEND = 'legend';
@@ -18,10 +19,12 @@
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     vm.participants = $translate.instant('mediaFusion.metrics.participants');
+    vm.allOn = $translate.instant('mediaFusion.metrics.allOn');
+    vm.allOff = $translate.instant('mediaFusion.metrics.allOff');
 
 
     return {
-      setParticipantDistributionGraph: setParticipantDistributionGraph
+      setParticipantDistributionGraph: setParticipantDistributionGraph,
     };
 
     function setParticipantDistributionGraph(response, participantDistributionChart, clusterSelected, clusterId, daterange, clusterMap) {
@@ -53,6 +56,8 @@
         participantDistributionChart.graphs = graphs;
         participantDistributionChart.startDuration = startDuration;
         participantDistributionChart.balloon.enabled = true;
+        participantDistributionChart.balloon.horizontalPadding = 3;
+        participantDistributionChart.balloon.verticalPadding = 2;
         participantDistributionChart.chartCursor.valueLineBalloonEnabled = true;
         participantDistributionChart.chartCursor.valueLineEnabled = true;
         participantDistributionChart.chartCursor.categoryBalloonEnabled = true;
@@ -83,7 +88,8 @@
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
       valueAxes[0].title = vm.participants;
-      valueAxes[0].titleRotation = 0;
+      //valueAxes[0].titleRotation = 0;
+      valueAxes[0].labelOffset = 28;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       catAxis.gridPosition = 'start';
@@ -130,10 +136,10 @@
       }
 
       var columnNames = {
-        'time': vm.timeStamp
+        'time': vm.timeStamp,
       };
       var exportFields = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         columnNames[value.valueField] = value.title + ' ' + vm.participants;
       });
       for (var key in columnNames) {
@@ -145,33 +151,26 @@
 
       if (!isDummy && clusterSelected === vm.allClusters) {
         graphs.push({
-          'title': 'All',
-          'id': 'all',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000',
-          'hidden': true
-        });
-
-        graphs.push({
-          'title': 'None',
+          'title': vm.allOff,
           'id': 'none',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000'
+          'lineColor': 'transparent',
         });
       }
-      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
+      chartData.chartCursor.balloonPointerOrientation = 'vertical';
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
+      if (chartData.graphs[0].lineColor == '#D7D7D8') {
+        chartData.legend.color = '#343537';
+      }
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
 
       chartData.legend.listeners = [{
         'event': 'hideItem',
-        "method": legendHandler
+        "method": legendHandler,
       }, {
         'event': 'showItem',
-        'method': legendHandler
+        'method': legendHandler,
       }];
 
       var chart = AmCharts.makeChart(vm.participantDistributiondiv, chartData);
@@ -185,7 +184,7 @@
     function handleClick(event) {
       var clickedCluster = event.target;
       $rootScope.$broadcast('clusterClickEvent', {
-        data: clickedCluster.title
+        data: clickedCluster.title,
       });
     }
 
@@ -195,25 +194,26 @@
       vm.zoomedEndTime = event.endDate;
       var selectedTime = {
         startTime: vm.zoomedStartTime,
-        endTime: vm.zoomedEndTime
+        endTime: vm.zoomedEndTime,
       };
 
       if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
+          data: selectedTime,
         });
       }
     }
 
     function getClusterName(graphs, clusterMap) {
+      var callsBallon = $translate.instant('mediaFusion.metrics.callsBallon');
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         var clusterName = _.findKey(clusterMap, function (val) {
           return val === value.valueField;
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <span class="graph-text">[[' + value.descriptionField + ']]</span></span>';
+          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + value.title + ' ' + callsBallon + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></p></div>';
           value.lineThickness = 2;
         }
         if (value.title !== value.valueField) {
@@ -226,22 +226,19 @@
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.id === 'all') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.showGraph(graph);
-          } else if (graph.id === 'all') {
+      if (evt.dataItem.title === vm.allOff) {
+        evt.dataItem.title = vm.allOn;
+        _.each(evt.chart.graphs, function (graph) {
+          if (graph.title != vm.allOn) {
             evt.chart.hideGraph(graph);
+          } else {
+            evt.chart.showGraph(graph);
           }
-
         });
-      } else if (evt.dataItem.id === 'none') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.hideGraph(graph);
-          } else if (graph.id === 'all') {
-            evt.chart.showGraph(graph);
-          }
+      } else if (evt.dataItem.title === vm.allOn) {
+        evt.dataItem.title = vm.allOff;
+        _.each(evt.chart.graphs, function (graph) {
+          evt.chart.showGraph(graph);
         });
       }
     }

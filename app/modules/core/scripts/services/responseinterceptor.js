@@ -3,7 +3,7 @@
 
   module.exports = angular
     .module('core.responseinterceptor', [
-      require('modules/core/scripts/services/log')
+      require('modules/core/scripts/services/log'),
     ])
     .factory('ResponseInterceptor', ResponseInterceptor)
     .name;
@@ -48,7 +48,7 @@
 
 
         return $q.reject(response);
-      }
+      },
     };
 
     function refreshTokenAndRetry(response, Auth) {

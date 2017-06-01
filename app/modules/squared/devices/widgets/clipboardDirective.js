@@ -12,7 +12,7 @@
     return {
       restrict: 'A',
       scope: {
-        sqClipboard: '&'
+        sqClipboard: '&',
       },
       link: function (scope, element) {
         if (!$window.document.queryCommandSupported('copy')) {
@@ -22,7 +22,7 @@
         var clipBoard = new Clipboard(element[0], {
           text: function () {
             return scope.sqClipboard();
-          }
+          },
         });
         clipBoard.on('success', function () {
           Notification.success(
@@ -41,7 +41,7 @@
         scope.$on('$destroy', function () {
           clipBoard.destroy();
         });
-      }
+      },
     };
   }
 

@@ -8,32 +8,32 @@ describe('Service: AACalendarService', function () {
     days: [{
       abbr: 'MO',
       index: 1,
-      active: false
+      active: false,
     }, {
       abbr: 'TU',
       index: 2,
-      active: false
+      active: false,
     }, {
       abbr: 'WE',
       index: 3,
-      active: false
+      active: false,
     }, {
       abbr: 'TH',
       index: 4,
-      active: false
+      active: false,
     }, {
       abbr: 'FR',
       index: 5,
-      active: false
+      active: false,
     }, {
       abbr: 'SA',
       index: 6,
-      active: false
+      active: false,
     }, {
       abbr: 'SU',
       index: 0,
-      active: false
-    }]
+      active: false,
+    }],
   };
 
   var days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
@@ -41,23 +41,23 @@ describe('Service: AACalendarService', function () {
   var ranks = [{
     label: 'ranks.first',
     index: 0,
-    number: 1
+    number: 1,
   }, {
     label: 'ranks.second',
     index: 1,
-    number: 2
+    number: 2,
   }, {
     label: 'ranks.third',
     index: 2,
-    number: 3
+    number: 3,
   }, {
     label: 'ranks.fourth',
     index: 3,
-    number: 4
+    number: 4,
   }, {
     label: 'ranks.last',
     index: -1,
-    number: -1
+    number: -1,
   }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -223,7 +223,7 @@ describe('Service: AACalendarService', function () {
         name: 'Christmas',
         date: '2016-12-25',
         allDay: true,
-        exactDate: true
+        exactDate: true,
       };
 
       AAICalService.addHoursRange('holiday', calendar, range);
@@ -246,7 +246,7 @@ describe('Service: AACalendarService', function () {
         date: '2016-12-25',
         starttime: starttime,
         endtime: endtime,
-        exactDate: true
+        exactDate: true,
       };
 
       AAICalService.addHoursRange('holiday', calendar, range);
@@ -269,7 +269,7 @@ describe('Service: AACalendarService', function () {
         date: '2016-12-25',
         starttime: starttime,
         endtime: '12:00 AM',
-        exactDate: true
+        exactDate: true,
       };
 
       AAICalService.addHoursRange('holiday', calendar, range);
@@ -294,7 +294,7 @@ describe('Service: AACalendarService', function () {
         date: '2016-12-25',
         allDay: true,
         exactDate: true,
-        recurAnnually: true
+        recurAnnually: true,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -315,15 +315,15 @@ describe('Service: AACalendarService', function () {
         name: 'Thanksgiving',
         month: {
           index: 10,
-          number: 11
+          number: 11,
         },
         day: {
           index: 4,
-          abbr: 'TH'
+          abbr: 'TH',
         },
         rank: AAICalService.getRanks()[3],
         allDay: true,
-        exactDate: false
+        exactDate: false,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -346,16 +346,16 @@ describe('Service: AACalendarService', function () {
         name: 'Thanksgiving',
         month: {
           index: 10,
-          number: 11
+          number: 11,
         },
         day: {
           index: 4,
-          abbr: 'TH'
+          abbr: 'TH',
         },
         rank: AAICalService.getRanks()[3],
         starttime: starttime,
         endtime: endtime,
-        exactDate: false
+        exactDate: false,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -378,16 +378,16 @@ describe('Service: AACalendarService', function () {
         name: 'Thanksgiving',
         month: {
           index: 10,
-          number: 11
+          number: 11,
         },
         day: {
           index: 4,
-          abbr: 'TH'
+          abbr: 'TH',
         },
         rank: AAICalService.getRanks()[3],
         allDay: true,
         exactDate: false,
-        recurAnnually: true
+        recurAnnually: true,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -410,16 +410,16 @@ describe('Service: AACalendarService', function () {
         name: 'Last Friday of Jan',
         month: {
           index: 0,
-          number: 1
+          number: 1,
         },
         day: {
           index: 5,
-          abbr: 'FR'
+          abbr: 'FR',
         },
         rank: AAICalService.getRanks()[4],
         allDay: true,
         exactDate: false,
-        recurAnnually: true
+        recurAnnually: true,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -442,16 +442,16 @@ describe('Service: AACalendarService', function () {
         name: 'First Friday of Feb',
         month: {
           index: 1,
-          number: 2
+          number: 2,
         },
         day: {
           index: 5,
-          abbr: 'FR'
+          abbr: 'FR',
         },
         rank: AAICalService.getRanks()[0],
         allDay: true,
         exactDate: false,
-        recurAnnually: true
+        recurAnnually: true,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};

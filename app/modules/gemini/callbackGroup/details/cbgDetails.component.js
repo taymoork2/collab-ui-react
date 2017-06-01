@@ -5,11 +5,11 @@
     .module('Gemini')
     .component('cbgDetails', {
       templateUrl: 'modules/gemini/callbackGroup/details/cbgDetails.tpl.html',
-      controller: CbgDetailsCtrl
+      controller: CbgDetailsCtrl,
     });
 
   /* @ngInject */
-  function CbgDetailsCtrl($state, $modal, $rootScope, $stateParams, $translate, $window, Notification, PreviousState, cbgService, gemService) {
+  function CbgDetailsCtrl($state, $modal, $scope, $rootScope, $stateParams, $translate, $window, Notification, PreviousState, cbgService, gemService) {
     var vm = this;
     var showHistoriesNum = 5;
     var groupId = _.get($stateParams, 'info.groupId', '');
@@ -27,20 +27,29 @@
     vm.onOpenRemedyTicket = onOpenRemedyTicket;
     vm.onCancelSubmission = onCancelSubmission;
     vm.cbgs = _.get($stateParams, 'info.cbgs', []);
+    vm.groupId = _.get($stateParams, 'info.groupId', '');
     vm.customerId = _.get($stateParams, 'info.customerId', '');
 
-
     function $onInit() {
+      listenNotesUpdated();
       getNotes();
       getRemedyTicket();
       getCurrentCallbackGroup();
       $state.current.data.displayName = $translate.instant('gemini.cbgs.overview');
     }
 
+    function listenNotesUpdated() {
+      var deregister = $rootScope.$on('cbgNotesUpdated', function (event, data) {
+        event.preventDefault();
+        vm.notes = data;
+      });
+      $scope.$on('$destroy', deregister);
+    }
+
     function onCancelSubmission() {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/gemini/callbackGroup/details/cancelSubmissionConfirm.tpl.html'
+        templateUrl: 'modules/gemini/callbackGroup/details/cancelSubmissionConfirm.tpl.html',
       }).result.then(function () {
         setButtonStatus('CancelSubmission');
         updateCallbackGroupStatus('cancel');
@@ -50,7 +59,7 @@
     function onApprove() {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/gemini/callbackGroup/details/approveConfirm.tpl.html'
+        templateUrl: 'modules/gemini/callbackGroup/details/approveConfirm.tpl.html',
       }).result.then(function () {
         setButtonStatus('Approve');
         updateCallbackGroupStatus('approve');
@@ -74,7 +83,7 @@
             $modalInstance.close();
           }
         },
-        templateUrl: 'modules/gemini/callbackGroup/details/declineSmallDialog.tpl.html'
+        templateUrl: 'modules/gemini/callbackGroup/details/declineSmallDialog.tpl.html',
       }).result.then(function () {
         updateCallbackGroupStatus('decline', { comments: vm.comments });
       });
@@ -127,18 +136,30 @@
     }
 
     function getRemedyTicket() {
-      gemService.getCbgRemedyTicket(vm.customerId)
+      var type = 9;
+      gemService.getRemedyTicket(vm.customerId, type)
         .then(function (res) {
-          var resArr = _.get(res.content, 'data');
+          var resArr = _.filter(_.get(res, 'content.data'), function (item) {
+            return item.description === vm.groupId;
+          });
+
           vm.remedyTicket = _.first(resArr);
-          vm.remedyTicket.createTime = moment(vm.remedyTicket.createTime).toDate().toString();
-          vm.remedyTicketLoading = false;
+          if (vm.remedyTicket) {
+            vm.remedyTicket.createTime = moment(vm.remedyTicket.createTime).toDate().toString();
+            vm.remedyTicketLoading = false;
+          }
         });
 
     }
 
     function getHistories() {
-      cbgService.getHistories(vm.customerId, groupId, vm.model.groupName)
+      var data = {
+        siteId: groupId,
+        objectID: vm.model.groupName,
+        customerId: vm.customerId,
+        actionFor: 'Callback Group',
+      };
+      cbgService.getHistories(data)
         .then(function (res) {
           var resJson = _.get(res.content, 'data');
           if (resJson.returnCode) {
@@ -146,9 +167,14 @@
             return;
           }
           vm.hisLoading = false;
-          vm.allHistories = resJson.body;
+          vm.allHistories = _.filter(resJson.body, function (item) {
+            return item.action !== 'add_notes_cg';
+          });
+
           _.forEach(vm.allHistories, function (item) {
-            if (item.action === 'submit_cg_move_site') {
+            item.action = _.upperFirst(item.action);
+
+            if (item.action === 'Submit_cg_move_site') {
               var moveSiteMsg = item.siteID + ' ' + $translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectName + ' to ' + item.objectID;
               item.objectName = '';
               item.moveSiteMsg = moveSiteMsg;
@@ -172,7 +198,7 @@
           if (operation === 'approve') {
             $modal.open({
               type: 'dialog',
-              templateUrl: 'modules/gemini/callbackGroup/details/provisionConfirm.tpl.html'
+              templateUrl: 'modules/gemini/callbackGroup/details/provisionConfirm.tpl.html',
             }).result.then(function () {
               updateCallbackGroupStatus('provision');
             });

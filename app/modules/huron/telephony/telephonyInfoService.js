@@ -25,11 +25,11 @@
         pattern: '',
         dnUsage: 'Undefined',
         userDnUuid: 'none',
-        dnSharedUsage: ''
+        dnSharedUsage: '',
       },
       alternateDirectoryNumber: {
         uuid: 'none',
-        pattern: ''
+        pattern: '',
       },
       esn: '',
       directoryNumbers: [],
@@ -38,14 +38,14 @@
       snrInfo: {
         destination: null,
         remoteDestinations: null,
-        singleNumberReachEnabled: false
+        singleNumberReachEnabled: false,
       },
       steeringDigit: '',
       siteSteeringDigit: '',
       siteCode: '',
       hasCustomerVoicemail: undefined,
       internationalDialingStatus: cbUseGlobal,
-      hideInternationalDialing: undefined
+      hideInternationalDialing: undefined,
     };
 
     var internalNumberPool = [];
@@ -72,7 +72,7 @@
       checkCustomerVoicemail: checkCustomerVoicemail,
       getTelephonyInfoObject: getTelephonyInfoObject,
       getInternationalDialing: getInternationalDialing,
-      getUserInternationalDialingDetails: getUserInternationalDialingDetails
+      getUserInternationalDialingDetails: getUserInternationalDialingDetails,
     };
 
     return telephonyInfoService;
@@ -108,11 +108,11 @@
         pattern: '',
         dnUsage: 'Undefined',
         userDnUuid: 'none',
-        dnSharedUsage: ''
+        dnSharedUsage: '',
       };
       telephonyInfo.alternateDirectoryNumber = {
         uuid: 'none',
-        pattern: ''
+        pattern: '',
       };
       telephonyInfo.directoryNumbers = [];
       telephonyInfo.voicemail = 'Off';
@@ -120,7 +120,7 @@
       telephonyInfo.snrInfo = {
         destination: null,
         remoteDestinations: null,
-        singleNumberReachEnabled: false
+        singleNumberReachEnabled: false,
       };
       telephonyInfo.internationalDialingStatus = cbUseGlobal;
       telephonyInfo.hasCustomerVoicemail = undefined;
@@ -162,7 +162,7 @@
     }
 
     function updateSnr(snr) {
-      telephonyInfo.snrInfo = angular.copy(snr);
+      telephonyInfo.snrInfo = _.cloneDeep(snr);
       telephonyInfo.singleNumberReach = (telephonyInfo.snrInfo.singleNumberReachEnabled === true) ? 'On' : 'Off';
       $rootScope.$broadcast(broadcastEvent);
     }
@@ -188,13 +188,13 @@
       telephonyInfo.alternateDirectoryNumber.pattern = pattern;
     }
 
-    function getRemoteDestinationInfo(userUuid) {
+    function getRemoteDestinationInfo(user) {
       return RemoteDestinationService.query({
         customerId: Authinfo.getOrgId(),
-        userId: userUuid
+        userId: user.id,
       }).$promise
         .then(function (remoteDestinationInfo) {
-          var snrInfo = angular.copy(telephonyInfo.snrInfo);
+          var snrInfo = _.cloneDeep(telephonyInfo.snrInfo);
           snrInfo.remoteDestinations = null;
           snrInfo.singleNumberReachEnabled = false;
           if (remoteDestinationInfo) {
@@ -206,6 +206,7 @@
             }
           }
           updateSnr(snrInfo);
+          return snrInfo;
         })
         .catch(function (response) {
           updateSnr({});
@@ -216,7 +217,7 @@
     function getUserDnInfo(userUuid) {
       return UserDirectoryNumberService.query({
         customerId: Authinfo.getOrgId(),
-        userId: userUuid
+        userId: userUuid,
       }).$promise
         .then(function (userDnInfo) {
           if (userDnInfo) {
@@ -229,7 +230,7 @@
                 'userDnUuid': userDnInfo[i].uuid,
                 'altDnUuid': '',
                 'altDnPattern': '',
-                'dnSharedUsage': ''
+                'dnSharedUsage': '',
               };
 
               if (userLine.dnUsage === 'Primary') {
@@ -248,7 +249,7 @@
 
               DirectoryNumberUserService.query({
                 'customerId': Authinfo.getOrgId(),
-                'directoryNumberId': userLine.uuid
+                'directoryNumberId': userLine.uuid,
               }).$promise
                 .then(function (data) {
                   if (this.dnUsage === 'Primary') {
@@ -280,7 +281,7 @@
     function getTelephonyUserInfo(userUuid) {
       return UserServiceCommon.get({
         customerId: Authinfo.getOrgId(),
-        userId: userUuid
+        userId: userUuid,
       }).$promise
         .then(function (telephonyUserInfo) {
           updateUserServices(telephonyUserInfo.services);
@@ -305,7 +306,7 @@
     }
 
     function getInternalNumberPool() {
-      return angular.copy(internalNumberPool);
+      return _.cloneDeep(internalNumberPool);
     }
 
     function loadInternalNumberPool(pattern, limit) {
@@ -317,19 +318,19 @@
         directorynumber: '',
         order: 'pattern',
         pattern: patternQuery,
-        limit: patternlimit
+        limit: patternlimit,
       }).$promise
         .then(function (intPool) {
           for (var i = 0; i < intPool.length; i++) {
             var dn = {
               uuid: intPool[i].uuid,
-              pattern: intPool[i].pattern
+              pattern: intPool[i].pattern,
             };
             intNumPool.push(dn);
           }
           internalNumberPool = intNumPool;
 
-          return angular.copy(internalNumberPool);
+          return _.cloneDeep(internalNumberPool);
         }).catch(function (response) {
           internalNumberPool = [];
           return $q.reject(response);
@@ -337,14 +338,14 @@
     }
 
     function getExternalNumberPool() {
-      return angular.copy(externalNumberPool);
+      return _.cloneDeep(externalNumberPool);
     }
 
     function loadExternalNumberPool(pattern, numberType) {
       // Adds a 'None' entry to the list of selectable external numbers
       var externalNumberPool = [{
         uuid: 'none',
-        pattern: $translate.instant('directoryNumberPanel.none')
+        pattern: $translate.instant('directoryNumberPanel.none'),
       }];
 
       return ExternalNumberPool.getExternalNumbers(
@@ -359,7 +360,7 @@
           _.forEach(extPool, function (externalNumber) {
             externalNumberPool.push({
               uuid: externalNumber.uuid,
-              pattern: externalNumber.pattern
+              pattern: externalNumber.pattern,
             });
           });
 
@@ -367,7 +368,7 @@
           if (telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
             externalNumberPool.push(telephonyInfo.alternateDirectoryNumber);
           }
-          return angular.copy(externalNumberPool);
+          return _.cloneDeep(externalNumberPool);
         }).catch(function (response) {
           externalNumberPool = [];
           return $q.reject(response);
@@ -378,7 +379,7 @@
       var finalNumberType = numberType || ExternalNumberPool.FIXED_LINE_OR_MOBILE;
       var extraQueries = {
         automaptodn: true,
-        automaptodncount: count
+        automaptodncount: count,
       };
       return ExternalNumberPool.getExternalNumbers(
         Authinfo.getOrgId(),
@@ -391,12 +392,12 @@
           var dn = {
             uuid: extPoolValue.uuid,
             pattern: extPoolValue.pattern,
-            directoryNumber: extPoolValue.directoryNumber
+            directoryNumber: extPoolValue.directoryNumber,
           };
           return dn;
         });
         externalNumberPool = extNumPool;
-        return angular.copy(externalNumberPool);
+        return _.cloneDeep(externalNumberPool);
       }).catch(function (response) {
         externalNumberPool = [];
         return $q.reject(response);

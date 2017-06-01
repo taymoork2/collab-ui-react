@@ -8,28 +8,18 @@ require('./_user-preview.scss');
     .controller('ConferencePreviewCtrl', ConferencePreviewCtrl);
 
   /* @ngInject */
-  function ConferencePreviewCtrl($scope, $state, $stateParams, $translate, Authinfo, Config, FeatureToggleService) {
+  function ConferencePreviewCtrl($scope, $state, $stateParams, $translate, Authinfo, Config) {
     var vm = this;
 
     vm.service = '';
     vm.sites = [];
     vm.siteUrls = [];
-    $scope.isSharedMeetingsEnabled = false;
-    $scope.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
 
     init();
 
     ////////////////
 
     function init() {
-      if (_.get($scope, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
-        $scope.isSharedMeetingsEnabled = _.get($scope, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue');
-      } else {
-        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
-          $scope.isSharedMeetingsEnabled = smpStatus;
-        });
-      }
-
       if ($stateParams.service) {
         vm.service = $stateParams.service;
       }
@@ -56,7 +46,7 @@ require('./_user-preview.scss');
 
       $scope.isSharedMeetingsLicense = function (siteUrl) {
         var service = _.find(vm.sites, { license: { siteUrl: siteUrl } });
-        return _.lowerCase(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
+        return _.toLower(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
       };
 
       $scope.determineLicenseType = function (siteUrl) {

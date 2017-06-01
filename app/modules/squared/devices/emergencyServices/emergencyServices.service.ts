@@ -1,12 +1,18 @@
 import { IHuronService, IEmergencyAddress, IEmergency, IState, IEmergencyServicesData, IEmergencyServicesStateParams, IDevice } from './index';
 import { MemberService } from 'modules/huron/members';
-import { FeatureMemberService } from 'modules/huron/features/featureMember.service';
+import { FeatureMemberService } from 'modules/huron/features/services/featureMember.service';
+import { HuronCompassService } from 'modules/huron/compass/compass.service';
+import { PstnService } from '../../../huron/pstn/pstn.service';
+import { PstnModel } from '../../../huron/pstn/pstn.model';
+import { TerminusService } from 'modules/huron/pstn';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
   private currentDevice: IDevice;
   private huronDeviceService: IHuronService;
   private stateOptions: IState[];
+  private locationLabel: string;
+  private zipLabel: string;
 
   /* @ngInject */
   constructor(
@@ -16,12 +22,17 @@ export class EmergencyServicesService {
     private Authinfo,
     private PstnServiceAddressService,
     private PstnSetupStatesService,
-    private TerminusUserDeviceE911Service,
+    private PstnModel: PstnModel,
+    private PstnService: PstnService,
+    private TerminusService: TerminusService,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
+    private HuronCompassService: HuronCompassService,
   ) {
-    this.PstnSetupStatesService.getStateProvinces().then((states) => {
-      this.stateOptions = states;
+    this.PstnSetupStatesService.getLocation(this.HuronCompassService.getCountryCode()).then((location) => {
+      this.zipLabel = location.zip;
+      this.locationLabel = location.type;
+      this.stateOptions = location.areas;
     });
   }
 
@@ -37,6 +48,8 @@ export class EmergencyServicesService {
     return {
       emergency: emergencyData,
       currentDevice: this.currentDevice,
+      locationLabel: this.locationLabel,
+      zipLabel: this.zipLabel,
       stateOptions: this.stateOptions,
       staticNumber: this.$stateParams.staticNumber,
     };
@@ -87,7 +100,7 @@ export class EmergencyServicesService {
   }
 
   public getAddressForNumber(number: string): ng.IPromise<{e911Address, status}> {
-    return this.TerminusUserDeviceE911Service.get({
+    return this.TerminusService.customerNumberE911V2().get({
       customerId: this.Authinfo.getOrgId(),
       number: number,
     }).$promise.then(response => {
@@ -113,7 +126,20 @@ export class EmergencyServicesService {
   }
 
   public validateAddress(address: IEmergencyAddress): ng.IPromise<any> {
-    return this.PstnServiceAddressService.lookupAddress(address, true);
+    //Make a request if we can't get the carrierId from the model
+    if (this.PstnModel.getProviderId() === undefined) {
+      return this.PstnService.getCustomer(this.Authinfo.getOrgId()).then((customer) => {
+        // update our model
+        this.PstnModel.setCustomerId(customer.uuid);
+        this.PstnModel.setCustomerName(customer.name);
+        this.PstnModel.setCustomerFirstName(customer.firstName);
+        this.PstnModel.setCustomerLastName(customer.lastName);
+        this.PstnModel.setCustomerEmail(customer.email);
+        return this.PstnServiceAddressService.lookupAddressV2(address, customer.pstnCarrierId, true);
+      });
+    } else {
+      return this.PstnServiceAddressService.lookupAddressV2(address, this.PstnModel.getProviderId(), true);
+    }
   }
 
   public saveAddress(emergency: IEmergency, address: IEmergencyAddress, useCompanyAddress: boolean): ng.IPromise<any> {
@@ -128,7 +154,7 @@ export class EmergencyServicesService {
         e911Address: address,
       };
     }
-    return this.TerminusUserDeviceE911Service
+    return this.TerminusService.customerNumberE911V2()
       .update({
         customerId: this.Authinfo.getOrgId(),
         number: emergency.emergencyNumber,

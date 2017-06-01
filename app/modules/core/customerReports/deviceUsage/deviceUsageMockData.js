@@ -18,7 +18,7 @@
 
     var service = {
       getRawData: getRawData,
-      getRawDataPromise: getRawDataPromise
+      getRawDataPromise: getRawDataPromise,
     };
     return service;
 
@@ -34,7 +34,7 @@
         'accountId': accountId,
         'pairedCount': _.random(0, maxPairedCallsPrDay),
         'deviceCategory': deviceCategory,
-        'totalDuration': secondsFromMinutes(_.random(1, 300))
+        'totalDuration': secondsFromMinutes(_.random(1, 300)),
       };
     }
 

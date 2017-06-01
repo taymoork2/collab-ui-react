@@ -13,7 +13,7 @@
       SUCCESS: 0,
       PARTIAL_FAILURE: 1,
       TOTAL_FAILURE: 2,
-      NOT_REQUESTED: 3
+      NOT_REQUESTED: 3,
     };
 
     vm.canShow = canShow;
@@ -23,7 +23,7 @@
     vm.sendRequest = sendRequest;
     vm._helpers = {
       getPartnerInfo: getPartnerInfo,
-      getWebexSiteUrl: getWebexSiteUrl
+      getWebexSiteUrl: getWebexSiteUrl,
     };
 
     init();
@@ -52,7 +52,7 @@
         })
         .then(function (results) {
           var notifySuccess = _.filter(results.data.notifyPartnerEmailStatusList, {
-            status: 200
+            status: 200,
           });
 
           if (notifySuccess.length === 0) {
@@ -63,7 +63,7 @@
             vm.requestResult = vm.requestResultEnum.SUCCESS;
           } else {
             Notification.error('trials.requestConfirmPartialFailNotifyMsg', {
-              partnerOrgName: partnerOrgName
+              partnerOrgName: partnerOrgName,
             });
             vm.requestResult = vm.requestResultEnum.PARTIAL_FAILURE;
           }

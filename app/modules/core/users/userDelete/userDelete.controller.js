@@ -64,7 +64,7 @@ require('./_user-delete.scss');
 
     function deleteUser() {
       var userData = {
-        email: vm.deleteUsername
+        email: vm.deleteUsername,
       };
 
       return Userservice.deactivateUser(userData);
@@ -72,7 +72,7 @@ require('./_user-delete.scss');
 
     function deleteSuccess() {
       Notification.success('usersPage.deleteUserSuccess', {
-        email: vm.deleteUsername
+        email: vm.deleteUsername,
       });
 
       var userId = vm.deleteUserUuId;
@@ -87,7 +87,7 @@ require('./_user-delete.scss');
 
     function deleteFromCareSuccess() {
       Notification.success('usersPage.deleteCareUserSuccess', {
-        email: vm.deleteUsername
+        email: vm.deleteUsername,
       });
     }
 
@@ -96,7 +96,7 @@ require('./_user-delete.scss');
         return;
       }
       Notification.errorResponse(response, 'usersPage.deleteCareUserFailure', {
-        email: vm.deleteUsername
+        email: vm.deleteUsername,
       });
     }
 

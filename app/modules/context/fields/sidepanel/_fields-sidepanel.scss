@@ -1,0 +1,17 @@
+@import 'modules/context/styles/_hybrid-context.scss';
+
+.context-fields-sidepanel {
+
+  .token {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-family: $brand-font-cisco-TT-Light;
+    background-color: $gray-light-3;
+    padding: 0px 7px;
+    border-radius: 4px;
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+}

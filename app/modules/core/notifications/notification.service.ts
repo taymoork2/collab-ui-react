@@ -47,13 +47,13 @@ export class Notification {
 
   public errorWithTrackingId(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
     let errorMsg = this.getErrorMessage(errorKey, errorParams);
-    errorMsg = this.buildResponseMessage(errorMsg, response, false);
+    errorMsg = this.addResponseMessage(errorMsg, response, false);
     this.notifyErrorResponse(errorMsg, response);
   }
 
   public processErrorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): string {
     let errorMsg = this.getErrorMessage(errorKey, errorParams);
-    return this.buildResponseMessage(errorMsg, response, true);
+    return this.addResponseMessage(errorMsg, response, true);
   }
 
   public errorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
@@ -81,7 +81,7 @@ export class Notification {
     if (!notifications.length) {
       return;
     }
-    let closeHtml = '<button type="button" class="close toast-close-button"><span class="sr-only">' + this.$translate.instant('common.close') + '</span></button>';
+    let closeHtml = `<button type="button" class="close toast-close-button"><span class="sr-only">${this.$translate.instant('common.close')}</span></button>`;
     let directiveData = {};
     _.set(directiveData, allowHtml ? Notification.HTML_MESSAGES : Notification.MESSAGES , notifications);
 
@@ -102,25 +102,29 @@ export class Notification {
     this.$timeout(() => this.preventToasters = false, 1000);
   }
 
-  private buildResponseMessage(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>, useResponseData: boolean = false): string {
+  private addResponseMessage(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>, useResponseData: boolean = false): string {
     let status = _.get<number>(response, 'status');
     if (this.isCancelledResponse(response)) {
-      errorMsg += ' ' + this.$translate.instant('errors.statusCancelled');
+      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusCancelled');
     } else if (this.isOfflineStatus(status)) {
-      errorMsg += ' ' + this.$translate.instant('errors.statusOffline');
+      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusOffline');
     } else if (this.isRejectedStatus(status)) {
-      errorMsg += ' ' + this.$translate.instant('errors.statusRejected');
+      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusRejected');
     } else if (this.isNotFoundStatus(status)) {
-      errorMsg += ' ' + this.$translate.instant('errors.status404');
+      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.status404');
     } else if (this.isUnauthorizedStatus(status)) {
-      errorMsg += ' ' + this.$translate.instant('errors.statusUnauthorized');
+      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusUnauthorized');
     } else if (this.isUnknownStatus(status)) {
-      errorMsg += ' ' + this.$translate.instant('errors.statusUnknown');
+      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusUnknown');
     } else if (useResponseData) {
-      errorMsg = this.addResponseMessage(errorMsg, response);
+      errorMsg = this.addMessageFromResponseData(errorMsg, response);
     }
     errorMsg = this.addTrackingId(errorMsg, response);
     return _.trim(errorMsg);
+  }
+
+  private addTranslateKeyMessage(message: string, translateKey: string): string {
+    return `${this.addTrailingPeriod(message)} ${this.$translate.instant(translateKey)}`;
   }
 
   private isCancelledResponse(response: ng.IHttpPromiseCallbackArg<any>): boolean {
@@ -146,21 +150,27 @@ export class Notification {
     return status === Notification.HTTP_STATUS.UNAUTHORIZED;
   }
 
-  private addResponseMessage(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
+  private addMessageFromResponseData(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
     let error: string;
     let errors: Array<any> | string;
+    let responseMessage: string | undefined;
     if ((errors = _.get(response, 'data.error.message', [])) && (_.isArray(errors) || _.isString(errors)) && errors.length) { // for CCATG API spec
-      errorMsg += ' ' + this.getMessageFromErrorDataStructure(errors);
+      responseMessage = this.getMessageFromErrorDataStructure(errors);
     } else if ((errors = _.get(response, 'data.errors', [])) && (_.isArray(errors) || _.isString(errors)) && errors.length) {  // fallback for Atlas responses
-      errorMsg += ' ' + this.getMessageFromErrorDataStructure(errors);
+      responseMessage = this.getMessageFromErrorDataStructure(errors);
     } else if ((error = _.get(response, 'data.errorMessage', '')) && _.isString(error) && error.length) {  // fallback for legacy/huron
-      errorMsg += ' ' + error;
+      responseMessage = error;
     } else if ((error = _.get(response, 'data.error', '')) && _.isString(error) && error.length) { // fallback for old data structure
-      errorMsg += ' ' + error;
+      responseMessage = error;
+    } else if ((error = _.get(response, 'data.message', '')) && _.isString(error) && error.length) { // fallback for format seen from services using ServerException from cisco-spark-base
+      responseMessage = error;
     } else if (_.isString(response)) {  // fallback for custom string rejections
-      errorMsg += ' ' + response;
+      responseMessage = response;
     } else {
       this.$log.warn('Unable to notify an error response', response);
+    }
+    if (responseMessage) {
+      errorMsg = `${this.addTrailingPeriod(errorMsg)} ${responseMessage}`;
     }
     return errorMsg;
   }
@@ -181,10 +191,7 @@ export class Notification {
         } else {
           errorString = _.get(error, 'description', '');
         }
-        if (errorString && !_.endsWith(errorString, '.')) {
-          errorString += '.';
-        }
-        return errorString;
+        return this.addTrailingPeriod(errorString);
       })
       .reject(_.isEmpty)
       .join(' ')
@@ -198,15 +205,27 @@ export class Notification {
       trackingId = _.get(response, 'data.trackingId'); // for CCATG API spec
     }
     if (!trackingId) {
-      trackingId = _.get(response, 'data.error.trackingId');  // falback to old data structure
+      trackingId = _.get(response, 'data.error.trackingId');  // fallback to old data structure
+    }
+    if (!trackingId) {
+      trackingId = _.get(response, 'config.headers.TrackingID');  // fallback for when request could not be made
     }
     if (_.isString(trackingId) && trackingId.length) {
-      if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-        errorMsg += '.';
-      }
-      errorMsg += ' TrackingID: ' + trackingId;
+      errorMsg = `${this.addTrailingPeriod(errorMsg)} TrackingID: ${trackingId}`;
     }
     return errorMsg;
+  }
+
+  private addTrailingPeriod(message?: string): string {
+    if (message) {
+      if (_.endsWith(message, '.')) {
+        return message;
+      } else {
+        return `${message}.`;
+      }
+    } else {
+      return '';
+    }
   }
 
   private getErrorMessage(key?: string, params?: Object): string {

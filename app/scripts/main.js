@@ -5,8 +5,8 @@
 
   angular.module('Core', [
     'angular-cache',
-    'atlas.templates',
-    'collab.ui',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
     'cisco.formly',
     require('modules/core/auth/tos').default,
     require('modules/core/auth/user').default,
@@ -14,19 +14,20 @@
     require('modules/core/auth/token.service'),
     require('modules/core/modal').default,
     'core.body',
-    'core.languages',
+    'core.chartColors',
+    require('modules/core/l10n').default,
     'core.localize',
     'core.logmetricsservice',
-    'core.notifications',
-    'core.onboard',
+    require('modules/core/notifications').default,
+    require('modules/core/users/userAdd/onboard.module'),
     'core.pageparam',
     'core.previousstate',
     'core.trackingId',
+    'core.itProPack',
     'core.trial',
     'core.utils',
     'csDonut',
     'ct.ui.router.extras.previous',
-    'cwill747.phonenumber',
     'ngAnimate',
     'ngclipboard',
     'ngCookies',
@@ -35,7 +36,7 @@
     'ngMessages',
     'ngFileUpload',
     'ngCsv',
-    'pascalprecht.translate',
+    require('angular-translate'),
     'ui.router',
     'ui.grid',
     'ui.grid.selection',
@@ -46,26 +47,53 @@
     'toaster',
     'rzModule',
     'dragularModule',
+    require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
     require('modules/core/featureToggle').default,
     require('modules/core/focus').default,
     require('modules/core/inlineEditText').default,
+    require('modules/core/learnMore').default,
+    require('modules/core/scrollIndicator').default,
+    require('modules/core/gridSpinner').default,
     require('modules/core/scripts/services/org.service'),
     require('modules/core/scripts/services/userlist.service'),
+    require('modules/core/scripts/services/brand.service'),
+    require('modules/core/scripts/services/sparkDomainManagement.service'),
     require('modules/core/users/userCsv/userCsv.service'),
+    require('modules/core/scripts/services/retention.service'),
+    require('modules/core/myCompany/mySubscriptions').default,
     require('modules/core/cards').default,
+    require('modules/core/customerReports/sparkReports').default,
+    require('modules/core/partnerReports/commonReportServices').default,
+    require('modules/core/partnerReports/reportCard').default,
+    require('modules/core/partnerReports/reportFilter').default,
+    require('modules/core/partnerReports/reportSlider').default,
+    require('modules/core/partnerProfile/branding').default,
     require('modules/core/window').default,
     require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module
     require('modules/online/upgrade').default,
     require('modules/core/trials/regionalSettings').default,
+    require('modules/core/trials/emergencyServices').default,
+    require('modules/core/settings').default,
     require('modules/huron/countries').default,
+    require('modules/huron/settings').default,
+    require('modules/huron/dialPlans').default,
+    require('modules/core/domainManagement').default,
+    require('modules/huron/features/featureLanding/hoverDelay.directive').default,
+    require('modules/core/validation').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
-    .constant('phone', require('google-libphonenumber'))
     .constant('addressparser', require('emailjs-addressparser'));
 
   // TODO fix circular dependencies between modules
-  angular.module('Squared', ['Core', 'Hercules', 'Huron', 'Sunlight']);
+  angular.module('Squared', [
+    'Core',
+    'Hercules',
+    'Huron',
+    'Sunlight',
+    require('modules/squared/devices/services/CsdmPoller'),
+    require('modules/squared/partner-management').default,
+  ]);
 
   angular.module('DigitalRiver', ['Core']);
 
@@ -80,34 +108,70 @@
     'ngIcal',
     'huron.paging-group',
     'huron.call-pickup.setup-assistant',
-    'huron.telephoneNumber',
-    'huron.call-park',
     'huron.bulk-enable-vm',
+    'huron.TerminusServices',
+    'huron.externalNumberService',
+    require('modules/huron/lineSettings/callerIdService'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
-    require('modules/huron/cos').default,
     require('modules/huron/pstn').default,
-    require('modules/huron/pstn/pstnProviders').default,
-    require('modules/huron/overview').default
+    require('modules/huron/pstnSetup/pstnSelector').default,
+    require('modules/huron/overview').default,
+    require('modules/huron/lines/deleteExternalNumber').default,
+    require('modules/call/features').default,
+  ])
+  .constant('ASTParser', require('acorn'))
+  .constant('ASTWalker', require('acorn/dist/walk'));
+
+  angular.module('Hercules', [
+    'Core',
+    'Squared',
+    'ngTagsInput',
+    require('modules/core/users/userAdd/onboard.module'),
+    require('modules/hercules/cluster-card').default,
+    require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
+    require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
+    require('modules/hercules/hybrid-services-nodes-page').default,
+    require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
+    require('modules/hercules/private-trunk/private-trunk-setup').default,
+    require('modules/hercules/resource-group-card').default,
+    require('modules/hercules/service-settings/calendar-service-setup').default,
+    require('modules/hercules/services/cluster-service').default,
+    require('modules/hercules/services/excel-service').default,
+    require('modules/hercules/services/hybrid-services-cluster-states.service').default,
+    require('modules/hercules/services/hybrid-services-cluster.service').default,
+    require('modules/hercules/services/hybrid-services-extras.service').default,
+    require('modules/hercules/services/hybrid-services-i18n.service').default,
+    require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/service-descriptor'),
+    require('modules/hercules/services/uss-service'),
   ]);
 
-  angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
-
-  angular.module('HDS', ['Core']);
+  angular.module('HDS', ['Core', 'Hercules']);
 
   angular.module('Ediscovery', ['Core']);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
-  angular.module('WebExApp', ['Core']);
+  angular.module('WebExApp', [
+    'Core',
+    require('modules/webex/utils').default,
+    require('modules/webex/xmlApi').default,
+    require('modules/webex/webexClientVersions/webexClientVersion.svc'),
+  ]);
 
-  angular.module('Messenger', ['Core']);
+  angular.module('Messenger', [
+    'Core',
+    require('modules/core/scripts/services/accountorgservice'),
+    require('modules/shared').default,
+  ]);
 
   angular.module('Sunlight', [
     'Core',
     'CareDetails',
-    'Sunlight.pagination'
+    'Sunlight.pagination',
+    require('modules/sunlight/services').default,
   ]);
 
   angular.module('Context', ['Core']);
@@ -115,6 +179,11 @@
   angular.module('GSS', ['Core']);
 
   angular.module('Gemini', ['Core']);
+
+  angular.module('CMC', [
+    'Core',
+    require('modules/cmc').default,
+  ]);
 
   module.exports = angular.module('Main', [
     'Core',
@@ -131,19 +200,20 @@
     'Context',
     'GSS',
     'oc.lazyLoad',
-    'Gemini'
+    'Gemini',
+    'CMC',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;
 
   // require all modules first
-  requireAll(require.context("modules/", true, /\.module\.(js|ts)$/));
-  // require all other app files - ignore bootstrap.js and preload.js
-  requireAll(require.context("../", true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$)).*\.(js|ts)$/));
+  requireAll(require.context('modules/', true, /\.module\.(js|ts)$/));
+  // require all other app files - ignore bootstrap.js, preload.js, newrelic
+  requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
   // require all other assets
-  requireAll(require.context("../", true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
+  requireAll(require.context('../', true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
 
   function requireAll(requireContext) {
-    return requireContext.keys().forEach(requireContext);
+    return requireContext.keys().map(requireContext);
   }
 }());

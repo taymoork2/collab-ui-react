@@ -4,7 +4,7 @@ describe('Directive: aaBuilderActions', function () {
   beforeEach(function () {
     this.initModules('Huron', 'Sunlight');
     this.injectDependencies('$q', 'FeatureToggleService');
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     this.compileComponent('aaBuilderActions');
   });
 

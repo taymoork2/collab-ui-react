@@ -1,0 +1,38 @@
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const _ = require('lodash');
+
+const isVendor = module => module.context && module.context.includes('node_modules');
+
+const commonsChunkPlugins = [
+  // separate app vendor files
+  new webpack.optimize.CommonsChunkPlugin({
+    chunks: ['bootstrap'],
+    name: 'bootstrap-vendor',
+    minChunks: isVendor,
+  }),
+  // separate async vendor files
+  new webpack.optimize.CommonsChunkPlugin({
+    chunks: ['modules'],
+    async: 'modules-vendor',
+    minChunks: isVendor,
+  }),
+  // separate runtime functions
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'manifest',
+    minChunks: Infinity,
+  }),
+];
+
+function getHtmlWebpackPlugin(options) {
+  return new HtmlWebpackPlugin(_.assignIn({
+    template: 'index.html',
+    chunks: ['manifest', 'newrelic', 'preload', 'styles', 'bootstrap-vendor', 'bootstrap'],
+    inject: false,
+    headChunks: ['manifest', 'newrelic'],
+    bodyChunks: ['preload', 'styles', 'bootstrap-vendor', 'bootstrap'],
+  }, options));
+}
+
+exports.commonsChunkPlugins = commonsChunkPlugins;
+exports.getHtmlWebpackPlugin = getHtmlWebpackPlugin;

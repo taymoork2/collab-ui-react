@@ -7,6 +7,7 @@
 
     var vm = this;
     vm.utilizationdiv = 'utilizationdiv';
+    vm.exportDiv = 'utilization-export-div';
     vm.GUIDEAXIS = 'guideaxis';
     vm.AXIS = 'axis';
     vm.LEGEND = 'legend';
@@ -15,6 +16,9 @@
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     vm.utilization = $translate.instant('mediaFusion.metrics.utilization');
+    vm.percentageTitle = $translate.instant('mediaFusion.metrics.percentageTitle');
+    vm.allOn = $translate.instant('mediaFusion.metrics.allOn');
+    vm.allOff = $translate.instant('mediaFusion.metrics.allOff');
 
     vm.zoomedEndTime = null;
     vm.zoomedStartTime = null;
@@ -23,7 +27,7 @@
     vm.dateSelected = null;
 
     return {
-      setUtilizationGraph: setUtilizationGraph
+      setUtilizationGraph: setUtilizationGraph,
     };
 
     function setUtilizationGraph(response, utilizationChart, clusterSelected, clusterId, daterange, clusterMap) {
@@ -84,9 +88,9 @@
       valueAxes[0].maximum = 100;
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
-      valueAxes[0].title = '%';
-      valueAxes[0].titleRotation = 180;
-      //valueAxes[0].guides.label = 'Utilization High';
+      valueAxes[0].title = vm.percentageTitle;
+      //valueAxes[0].titleRotation = 0;
+      valueAxes[0].labelOffset = 28;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       catAxis.gridPosition = 'start';
@@ -133,10 +137,10 @@
       }
 
       var columnNames = {
-        'time': vm.timeStamp
+        'time': vm.timeStamp,
       };
       var exportFields = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.title !== vm.average_utilzation) {
           columnNames[value.valueField] = value.title + ' ' + vm.utilization;
         } else {
@@ -151,33 +155,25 @@
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
       if (!isDummy && clusterSelected === vm.allClusters) {
         graphs.push({
-          'title': 'All',
-          'id': 'all',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000',
-          'hidden': true
-        });
-
-        graphs.push({
-          'title': 'None',
+          'title': vm.allOff,
           'id': 'none',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000'
+          'lineColor': 'transparent',
         });
       }
-      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
+      if (chartData.graphs[0].lineColor == '#D7D7D8') {
+        chartData.legend.color = '#343537';
+      }
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
 
       chartData.legend.listeners = [{
         'event': 'hideItem',
-        "method": legendHandler
+        "method": legendHandler,
       }, {
         'event': 'showItem',
-        'method': legendHandler
+        'method': legendHandler,
       }];
 
 
@@ -192,18 +188,18 @@
       vm.zoomedEndTime = event.endDate;
       var selectedTime = {
         startTime: vm.zoomedStartTime,
-        endTime: vm.zoomedEndTime
+        endTime: vm.zoomedEndTime,
       };
       if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
+          data: selectedTime,
         });
       }
     }
 
     function getClusterName(graphs, clusterMap) {
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         var clusterName = _.findKey(clusterMap, function (val) {
           return val === value.valueField;
         });
@@ -225,26 +221,25 @@
         }
       });
       tempData = _.sortBy(tempData, 'title');
+      var avgLegend = tempData.shift();
+      tempData.push(avgLegend);
       return tempData;
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.id === 'all') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.showGraph(graph);
-          } else if (graph.id === 'all') {
+      if (evt.dataItem.title === vm.allOff) {
+        evt.dataItem.title = vm.allOn;
+        _.each(evt.chart.graphs, function (graph) {
+          if (graph.title != vm.allOn) {
             evt.chart.hideGraph(graph);
+          } else {
+            evt.chart.showGraph(graph);
           }
-
         });
-      } else if (evt.dataItem.id === 'none') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.hideGraph(graph);
-          } else if (graph.id === 'all') {
-            evt.chart.showGraph(graph);
-          }
+      } else if (evt.dataItem.title === vm.allOn) {
+        evt.dataItem.title = vm.allOff;
+        _.each(evt.chart.graphs, function (graph) {
+          evt.chart.showGraph(graph);
         });
       }
     }

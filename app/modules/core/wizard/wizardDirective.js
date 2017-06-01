@@ -22,15 +22,15 @@ require('./_wizard.scss');
           return;
         }
 
-        if (_.has(scope, name)) {
+        if (_.hasIn(scope, name)) {
           promises.push($q.resolve(scope[name]()));
           return;
         } else if (tabControllerAs || subTabControllerAs) {
-          if (_.has(scope, tabControllerAs + '.' + name)) {
+          if (_.hasIn(scope, tabControllerAs + '.' + name)) {
             promises.push($q.resolve(scope[tabControllerAs][name]()));
             return;
           }
-          if (_.has(scope, subTabControllerAs + '.' + name)) {
+          if (_.hasIn(scope, subTabControllerAs + '.' + name)) {
             promises.push($q.resolve(scope[subTabControllerAs][name]()));
             return;
           }
@@ -49,13 +49,17 @@ require('./_wizard.scss');
   }
 
   /* @ngInject */
-  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
+  function WizardCtrl($controller, $modal,
+    $rootScope, $scope, $state, $stateParams, $timeout, $translate,
+    Authinfo, Config, PromiseHook, SessionStorage) {
     var vm = this;
     vm.current = {};
 
     vm.currentTab = $stateParams.currentTab;
     vm.currentStep = $stateParams.currentStep;
     vm.onlyShowSingleTab = $stateParams.onlyShowSingleTab;
+    vm.numberOfSteps = $stateParams.numberOfSteps;
+    vm.showStandardModal = $stateParams.showStandardModal;
 
     vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
@@ -95,12 +99,7 @@ require('./_wizard.scss');
     vm.showDoItLater = false;
     vm.wizardNextLoad = false;
 
-    vm.firstTimeSetup = true;
     vm.showSkipTabBtn = false;
-
-    vm.showTimezoneAndVoicemail = Authinfo.getLicenses().filter(function (license) {
-      return license.licenseType === Config.licenseTypes.COMMUNICATION;
-    }).length > 0;
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
@@ -112,7 +111,7 @@ require('./_wizard.scss');
     function initCurrent() {
       if ($stateParams.currentTab) {
         vm.current.tab = _.find(getTabs(), {
-          name: $stateParams.currentTab
+          name: $stateParams.currentTab,
         });
       } else {
         vm.current.tab = getTabs()[0];
@@ -120,14 +119,14 @@ require('./_wizard.scss');
 
       if ($stateParams.currentSubTab) {
         vm.current.subTab = _.find(getTab().subTabs, {
-          name: $stateParams.currentSubTab
+          name: $stateParams.currentSubTab,
         });
       }
 
       var steps = getSteps();
       if (steps.length) {
         var index = _.findIndex(steps, {
-          name: $stateParams.currentStep
+          name: $stateParams.currentStep,
         });
         if (index === -1) {
           index = 0;
@@ -136,17 +135,10 @@ require('./_wizard.scss');
       }
 
     }
-
     function init() {
-      ServiceSetup.listSites().then(function () {
-        if (ServiceSetup.sites.length !== 0) {
-          vm.firstTimeSetup = false;
-        }
-      }).finally(function () {
-        initCurrent();
-        setNextText();
-        vm.isNextDisabled = false;
-      });
+      initCurrent();
+      setNextText();
+      vm.isNextDisabled = false;
     }
 
     function getSteps() {
@@ -228,7 +220,7 @@ require('./_wizard.scss');
       var tab = getTab();
       if (tab && tab.controller) {
         return $controller(tab.controller, {
-          $scope: $scope
+          $scope: $scope,
         });
       }
     }
@@ -238,7 +230,7 @@ require('./_wizard.scss');
       var subTab = getSubTab();
       if (subTab && subTab.controller) {
         return $controller(subTab.controller, {
-          $scope: $scope
+          $scope: $scope,
         });
       }
     }
@@ -266,6 +258,9 @@ require('./_wizard.scss');
         if (tabIndex + 1 < tabs.length) {
           setTab(tabs[tabIndex + 1]);
         } else if (tabIndex + 1 === tabs.length && _.isFunction($scope.finish)) {
+          $timeout(function () {
+            vm.wizardNextLoad = true;
+          });
           $scope.finish();
         }
       }
@@ -285,44 +280,39 @@ require('./_wizard.scss');
 
     function nextStep() {
       var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
-      if (getTab().name === 'serviceSetup' && getStep().name === 'init' && vm.firstTimeSetup && vm.showTimezoneAndVoicemail) {
-        return ModalService.open({
-          title: $translate.instant('common.warning'),
-          message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),
-          close: $translate.instant('common.continue'),
-          dismiss: $translate.instant('common.cancel'),
-          btnType: 'negative'
-        })
-          .result.then(function () {
-            executeNextStep(subTabControllerAs);
-          });
-      } else {
-        executeNextStep(subTabControllerAs);
-      }
-    }
-
-    function executeNextStep(subTabControllerAs) {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
         if (getTab().name === 'enterpriseSettings') {
           if (getStep().name === 'enterpriseSipUrl') {
             $rootScope.$broadcast('wizard-enterprise-sip-url-event');
           } else if (getStep().name === 'enterprisePmrSetup') {
             $rootScope.$broadcast('wizard-enterprise-pmr-event');
+            nextStepSuccessful();
+          } else {
+            nextStepSuccessful();
           }
-        }
-
-        var steps = getSteps();
-        if (_.isArray(steps)) {
-          var index = steps.indexOf(getStep());
-          if (index + 1 < steps.length) {
-            setStep(steps[index + 1]);
-          } else if (index + 1 === steps.length) {
-            nextTab();
-          }
+        } else {
+          nextStepSuccessful();
         }
       }).finally(function () {
         vm.wizardNextLoad = false;
       });
+    }
+
+    var enterpriseSipSaveDeregister = $rootScope.$on('wizard-enterprise-sip-save', function () {
+      nextStepSuccessful();
+    });
+    $scope.$on('$destroy', enterpriseSipSaveDeregister);
+
+    function nextStepSuccessful() {
+      var steps = getSteps();
+      if (_.isArray(steps)) {
+        var index = steps.indexOf(getStep());
+        if (index + 1 < steps.length) {
+          setStep(steps[index + 1]);
+        } else if (index + 1 === steps.length) {
+          nextTab();
+        }
+      }
     }
 
     function goToStep(requestedStep) {
@@ -348,7 +338,7 @@ require('./_wizard.scss');
     }
 
     function isCustomerPartner() {
-      return Authinfo.getRoles().indexOf('CUSTOMER_PARTNER') > -1;
+      return Authinfo.hasRole('CUSTOMER_PARTNER');
     }
 
     function isFromPartnerLaunch() {
@@ -373,6 +363,10 @@ require('./_wizard.scss');
       return steps.indexOf(getStep()) === steps.length - 1;
     }
 
+    function isSingleTabSingleStep() {
+      return vm.onlyShowSingleTab && vm.numberOfSteps === 1;
+    }
+
     function isFirstTime() {
       return $scope.isFirstTime;
     }
@@ -386,7 +380,7 @@ require('./_wizard.scss');
     }
 
     function setNextText() {
-      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
+      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');
@@ -405,10 +399,14 @@ require('./_wizard.scss');
       event.stopPropagation();
       vm.isNextDisabled = status;
     });
+    $scope.$on('wizardNextButtonLoading', function (event, status) {
+      event.stopPropagation();
+      vm.wizardNextLoad = status;
+    });
 
     function openTermsAndConditions() {
       $modal.open({
-        templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html'
+        templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html',
       });
     }
 
@@ -442,9 +440,9 @@ require('./_wizard.scss');
       scope: {
         tabs: '=',
         finish: '=',
-        isFirstTime: "="
+        isFirstTime: "=",
       },
-      templateUrl: 'modules/core/wizard/wizard.tpl.html'
+      templateUrl: 'modules/core/wizard/wizard.tpl.html',
     };
 
     return directive;
@@ -454,7 +452,7 @@ require('./_wizard.scss');
     var directive = {
       require: '^crWizard',
       restrict: 'AE',
-      templateUrl: 'modules/core/wizard/wizardNav.tpl.html'
+      templateUrl: 'modules/core/wizard/wizardNav.tpl.html',
     };
 
     return directive;
@@ -467,7 +465,7 @@ require('./_wizard.scss');
       restrict: 'AE',
       scope: true,
       templateUrl: 'modules/core/wizard/wizardMain.tpl.html',
-      link: link
+      link: link,
     };
 
     return directive;
@@ -497,7 +495,7 @@ require('./_wizard.scss');
       restrict: 'AE',
       scope: true,
       templateUrl: 'modules/core/wizard/wizardButtons.tpl.html',
-      link: link
+      link: link,
     };
 
     return directive;

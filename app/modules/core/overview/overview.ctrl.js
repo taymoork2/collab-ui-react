@@ -8,10 +8,10 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $modal, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
+  function OverviewCtrl($rootScope, $state, $scope, $translate, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
-    var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
+    var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
@@ -25,19 +25,35 @@ require('./_overview.scss');
       OverviewCardFactory.createCareCard(),
       OverviewCardFactory.createRoomSystemsCard(),
       OverviewCardFactory.createHybridServicesCard(),
-      OverviewCardFactory.createUsersCard()
+      OverviewCardFactory.createUsersCard(),
     ];
 
     vm.notifications = [];
     vm.pstnToSNotification = null;
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
+    vm.notificationComparator = notificationComparator;
+    vm.ftHuronPstn = false;
 
-    vm.hasHDSFeatureToggle = false;
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
-      .then(function (reply) {
-        vm.hasHDSFeatureToggle = reply;
-      });
+    ////////////////////////////////
+
+    var notificationOrder = [
+      'alert',
+      'todo',
+      'info',
+      'new',
+    ];
+
+    // used to sort notifications in a specific order
+    function notificationComparator(a, b) {
+      var v1 = _.toLower(_.last(_.split(a.value, '.')));
+      var v2 = _.toLower(_.last(_.split(b.value, '.')));
+      if (_.isEqual(v1, v2)) {
+        return 0;
+      } else {
+        return (_.indexOf(notificationOrder, v1) < _.indexOf(notificationOrder, v2)) ? -1 : 1;
+      }
+    }
 
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {
@@ -52,30 +68,49 @@ require('./_overview.scss');
         resizeNotifications();
       }
 
-      Orgservice.getHybridServiceAcknowledged().then(function (response) {
-        if (response.status === 200) {
-          _.forEach(response.data.items, function (item) {
-            if (!item.acknowledged) {
-              if (item.id === Config.entitlements.fusion_cal) {
+      var hybridServiceNotificationFlags = _.chain([
+        Config.entitlements.fusion_cal,
+        Config.entitlements.fusion_gcal,
+        Config.entitlements.fusion_uc,
+        Config.entitlements.fusion_ec,
+        Config.entitlements.mediafusion,
+        Config.entitlements.hds,
+      ])
+      .filter(Authinfo.isEntitled)
+      .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
+      .value();
+
+      HybridServicesFlagService
+        .readFlags(hybridServiceNotificationFlags)
+        .then(function (flags) {
+          _.forEach(flags, function (flag) {
+            if (!flag.raised) {
+              if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_cal)) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
-              } else if (item.id === Config.entitlements.fusion_gcal && hasGoogleCalendarFeatureToggle) {
-                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, Orgservice));
-              } else if (item.id === Config.entitlements.fusion_uc) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal) && hasGoogleCalendarFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService));
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
-              } else if (item.id === Config.entitlements.fusion_ec) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_ec)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
-              } else if (item.id === Config.entitlements.mediafusion) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.mediafusion)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
-              } else if (item.id === Config.entitlements.hds && vm.hasHDSFeatureToggle) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
             }
           });
           resizeNotifications();
-        } else {
-          Log.error("Error in GET service acknowledged status");
-        }
-      });
+        })
+        .catch(function () {
+          Log.error('Error in GET service acknowledged status');
+        });
+
+      var params = {
+        basicInfo: true,
+        disableCache: true,
+      };
+
       Orgservice.getOrg(function (data, status) {
         if (status === 200) {
           vm.orgData = data;
@@ -87,11 +122,25 @@ require('./_overview.scss');
           if (vm.isDeviceManagement && _.isUndefined(data.orgSettings.allowCrashLogUpload)) {
             vm.notifications.push(OverviewNotificationFactory.createCrashLogNotification());
           }
+          if (Authinfo.isCare() || Authinfo.isCareVoice()) {
+            var hasMessage = Authinfo.isMessageEntitled();
+            var hasCall = Authinfo.isSquaredUC();
+            if (!hasMessage && !hasCall) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));
+            } else if (!hasMessage) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText'));
+            } else if (!hasCall) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
+            }
+          }
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
-      });
+      }, Authinfo.getOrgId(), params);
       Orgservice.getAdminOrgUsage()
         .then(function (response) {
           var sharedDevicesUsage = -1;
@@ -129,20 +178,35 @@ require('./_overview.scss');
         }
       });
 
+      FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
+        vm.ftHuronPstn = result;
+      });
+
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
     }
 
     function getTOSStatus() {
+      //Don't allow the Parner to accept ToS for the customer
+      if (Authinfo.isCustomerLaunchedFromPartner()) {
+        return;
+      }
       if (vm.orgData !== null) {
-        PstnSetupService.getCustomerV2(vm.orgData.id).then(function (customer) {
+        PstnService.getCustomerV2(vm.orgData.id).then(function (customer) {
           if (customer.trial) {
-            PstnSetupService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
+            PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
               if (!_.has(trial, 'acceptedDate')) {
-                vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
-                vm.notifications.push(vm.pstnToSNotification);
-                $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                if (vm.ftHuronPstn) {
+                  //This is the new TS version of ToS
+                  vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
+                  vm.notifications.push(vm.pstnToSNotification);
+                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                } else {
+                  vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
+                  vm.notifications.push(vm.pstnToSNotification);
+                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+                }
               }
             });
           }
@@ -157,7 +221,7 @@ require('./_overview.scss');
     }
 
     function findAnyUrgentUpgradeInHybridServices() {
-      FusionClusterService.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           // c_mgmt will be tested when it will have its own service page back
           var connectorsToTest = ['c_cal', 'c_ucmc'];
@@ -177,7 +241,7 @@ require('./_overview.scss');
     function removeCardUserTitle() {
       if (vm.isCSB) {
         _.remove(vm.cards, {
-          name: 'overview.cards.users.title'
+          name: 'overview.cards.users.title',
         });
       }
     }
@@ -190,7 +254,7 @@ require('./_overview.scss');
 
     function dismissNotification(notification) {
       vm.notifications = _.reject(vm.notifications, {
-        name: notification.name
+        name: notification.name,
       });
       notification.dismiss();
     }
@@ -216,7 +280,11 @@ require('./_overview.scss');
 
     SunlightReportService.getOverviewData();
 
-    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
+    var params = {
+      disableCache: true,
+      basicInfo: true,
+    };
+    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
 
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
@@ -226,12 +294,18 @@ require('./_overview.scss');
 
     $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
       vm.notifications = _.reject(vm.notifications, {
-        name: 'cloudSipUri'
+        name: 'cloudSipUri',
       });
     });
 
-    $rootScope.$watch('ssoEnabled', function () {
-      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
+    $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        var params = {
+          disableCache: true,
+          basicInfo: true,
+        };
+        Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
+      }
     });
   }
 })();

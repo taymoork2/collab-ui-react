@@ -1,6 +1,6 @@
 <div class="settings">
 
-  <cs-page-header title="globalSettings.pageTitle"></cs-page-header>
+  <cs-page-header title-name="globalSettings.pageTitle"></cs-page-header>
 
   <div class="cs-form">
     <setting-section setting="settingsCtrl.security" ng-if="settingsCtrl.security">
@@ -17,6 +17,10 @@
 
     <setting-section setting="settingsCtrl.sipDomain" ng-if="settingsCtrl.sipDomain">
       <sipdomain-setting show-save-button="true"></sipdomain-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.dirsync" ng-if="settingsCtrl.dirsync">
+      <dirsync-setting></dirsync-setting>
     </setting-section>
 
     <setting-section setting="settingsCtrl.authentication" ng-if="settingsCtrl.authentication">

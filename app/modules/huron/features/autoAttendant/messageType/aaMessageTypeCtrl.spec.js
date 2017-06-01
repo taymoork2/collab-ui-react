@@ -8,8 +8,8 @@ describe('Controller: AAMessageTypeCtrl', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'AA2'
-    }
+      name: 'AA2',
+    },
   };
 
   var schedule = 'openHours';
@@ -63,7 +63,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(c).toBeDefined();
@@ -81,7 +81,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(c).toBeDefined();
@@ -100,7 +100,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         c.messageInput = 'Hello World';
@@ -120,7 +120,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         c.messageOption.value = "uploadFile";
@@ -143,7 +143,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         c.actionEntry = menuEntry.actions[0];
@@ -166,7 +166,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         c.messageOption = c.messageOptions[0];
@@ -190,7 +190,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         c.messageOption = c.messageOptions[1];
@@ -213,7 +213,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         c.actionEntry = menuEntry.actions[0];
@@ -259,7 +259,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         c.actionEntry = menuEntry.actions[0];
@@ -319,7 +319,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
       // setup the options menu
       c = controller('AAMessageTypeCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.actionEntry.name).toEqual('say');
@@ -345,7 +345,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
       // setup the options menu
       c = controller('AAMessageTypeCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.actionEntry.name).toEqual('say');
@@ -373,7 +373,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
       // setup the options menu
       c = controller('AAMessageTypeCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.actionEntry.name).toEqual('say');
@@ -409,7 +409,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
       // setup the options menu
       c = controller('AAMessageTypeCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.actionEntry.name).toEqual('play');

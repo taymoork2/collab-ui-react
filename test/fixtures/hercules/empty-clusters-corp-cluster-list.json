@@ -4,7 +4,6 @@
   "connectors": [],
   "releaseChannel": "Stable",
   "provisioning": [],
-  "registered": true,
   "targetType": "mf_mgmt",
   "upgradeSchedule": {
     "scheduleDays": ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
@@ -27,8 +26,7 @@
     "hostname": "vcs-amz42-sjc.discotheque.com",
     "hostSerial": "04425696",
     "alarms": [],
-    "runningVersion": "1.0",
-    "registered": true
+    "runningVersion": "1.0"
   }],
   "releaseChannel": "Stable",
   "provisioning": [{
@@ -36,7 +34,6 @@
     "provisionedVersion": "1.0",
     "availableVersion": "1.0"
   }],
-  "registered": true,
   "targetType": "c_mgmt",
   "upgradeSchedule": {
     "scheduleDays": ["sunday"],

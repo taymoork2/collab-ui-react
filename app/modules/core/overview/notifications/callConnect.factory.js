@@ -6,7 +6,7 @@
     .factory('OverviewCallConnectNotification', OverviewCallConnectNotification);
 
   /* @ngInject */
-  function OverviewCallConnectNotification($state, Orgservice) {
+  function OverviewCallConnectNotification($state, HybridServicesFlagService, HybridServicesUtilsService) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,18 +14,18 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            Orgservice.setHybridServiceAcknowledged('call-connect-service');
+            HybridServicesFlagService.raiseFlag(HybridServicesUtilsService.getAckFlagForHybridServiceId('squared-fusion-ec'));
           },
           link: function () {
             $state.go('call-service.list');
           },
           linkText: 'homePage.getStarted',
           name: 'callConnect',
-          text: 'homePage.setUpCallConnectService'
+          text: 'homePage.setUpCallConnectService',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

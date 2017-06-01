@@ -46,7 +46,7 @@
 
     return {
       getHealthStatuses: getHealthStatuses,
-      highestSeverity: highestSeverity
+      highestSeverity: highestSeverity,
     };
   }
 

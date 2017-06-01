@@ -1,15 +1,17 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .service('SparkDomainManagementService', sparkDomainManagementService);
+  module.exports = angular.module('core.sparkDomainManagementService', [
+  ])
+    .service('SparkDomainManagementService', sparkDomainManagementService)
+    .name;
 
   /* @ngInject */
   function sparkDomainManagementService($http, $q, Authinfo, UrlConfig) {
     var sparksUrl = UrlConfig.getSparkDomainManagementUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings/domain';
     var service = {
       checkDomainAvailability: checkDomainAvailability,
-      addSipDomain: addSipDomain
+      addSipDomain: addSipDomain,
     };
 
     return service;
@@ -22,11 +24,11 @@
       var domainName = domain + UrlConfig.getSparkDomainCheckUrl();
       var payload = {
         'name': domainName,
-        'isVerifyDomainOnly': true
+        'isVerifyDomainOnly': true,
       };
 
       return $http.post(sparksUrl, payload, {
-        caching: true
+        caching: true,
       });
     }
 
@@ -38,7 +40,7 @@
       var domainName = domain + UrlConfig.getSparkDomainCheckUrl();
       var payload = {
         'name': domainName,
-        'isVerifyDomainOnly': false
+        'isVerifyDomainOnly': false,
       };
 
       return $http.post(sparksUrl, payload);

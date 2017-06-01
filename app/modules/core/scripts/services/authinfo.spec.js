@@ -4,30 +4,8 @@ var testModule = require('./authinfo');
 
 describe('Authinfo:', function () {
   var injector, Service;
-
-  var defaultConfig = {
-    restrictedStates: {
-      customer: [],
-      partner: []
-    },
-    publicStates: [],
-    ciscoOnly: [],
-    ciscoOrgId: '',
-    ciscoMockOrgId: '',
-    roleStates: {},
-    serviceStates: {}
-  };
-  var defaultUser = {
-    name: 'Test',
-    orgId: 'abc',
-    orgName: 'DEADBEEF',
-    addUserEnabled: false,
-    entitleUserEnabled: false,
-    services: [],
-    roles: [],
-    managedOrgs: [],
-    setupDone: true
-  };
+  var defaultConfig;
+  var defaultUser;
 
   beforeEach(function () {
     angular.mock.module(testModule);
@@ -37,6 +15,51 @@ describe('Authinfo:', function () {
     Service = function () {
       return injector.get('Authinfo');
     };
+
+    defaultConfig = {
+      restrictedStates: {
+        customer: [],
+        partner: [],
+      },
+      publicStates: [],
+      ciscoOnly: [],
+      ciscoOrgId: '',
+      ciscoMockOrgId: '',
+      roleStates: {},
+      serviceStates: {},
+    };
+
+    defaultUser = {
+      name: 'Test',
+      orgId: 'abc',
+      orgName: 'DEADBEEF',
+      addUserEnabled: false,
+      entitleUserEnabled: false,
+      services: [],
+      roles: [],
+      managedOrgs: [],
+      setupDone: true,
+    };
+  });
+
+  afterEach(function () {
+    injector = Service = defaultConfig = defaultUser = undefined;
+  });
+
+  describe('initialization', function () {
+    beforeEach(function () {
+      this.Authinfo = setupUser({
+        managedOrgs: undefined,
+        roles: undefined,
+        services: undefined,
+      });
+    });
+
+    it('should set empty arrays if initial collections are undefined', function () {
+      expect(this.Authinfo.getManagedOrgs()).toEqual([]);
+      expect(this.Authinfo.getRoles()).toEqual([]);
+      expect(this.Authinfo.getServices()).toEqual([]);
+    });
   });
 
   describe('getLicenseIsTrial():', function () {
@@ -51,8 +74,8 @@ describe('Authinfo:', function () {
           SC: 'onboardModal.supportCenter',
           TC: 'onboardModal.trainingCenter',
           EC: 'onboardModal.eventCenter',
-          CO: 'onboardModal.communication'
-        }
+          CO: 'onboardModal.communication',
+        },
       });
       Authinfo = setupUser();
 
@@ -90,6 +113,119 @@ describe('Authinfo:', function () {
     });
   });
 
+  describe('managing entitlements (aka. "services"):', function () {
+    var Authinfo, fakeEntitlement;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      fakeEntitlement = {
+        ciName: 'fake-entitlement-1',
+      };
+    });
+
+    afterEach(function () {
+      Authinfo = fakeEntitlement = undefined;
+    });
+
+    describe('addEntitlement():', function () {
+      it('should add an entitlement', function () {
+        expect(Authinfo.getServices().length).toBe(0);
+        Authinfo.addEntitlement(fakeEntitlement);
+        expect(Authinfo.getServices().length).toBe(1);
+
+        // adding an entitlement that already exists does nothing
+        Authinfo.addEntitlement(fakeEntitlement);
+        expect(Authinfo.getServices().length).toBe(1);
+      });
+    });
+
+    describe('removeEntitlement():', function () {
+      it('should remove an entitlement', function () {
+        Authinfo.addEntitlement(fakeEntitlement);
+        expect(Authinfo.getServices().length).toBe(1);
+        Authinfo.removeEntitlement('fake-entitlement-1');
+        expect(Authinfo.getServices().length).toBe(0);
+
+        // removing an entitlement that isn't present IS allowed, just does nothing
+        var result = Authinfo.removeEntitlement('fake-entitlement-1');
+        expect(result).toBe(undefined);
+        expect(Authinfo.getServices().length).toBe(0);
+      });
+    });
+  });
+
+  describe('getMessageServices():', function () {
+    var Authinfo, accountData, result, fakeLicenseNonMessaging, fakeLicenseMs, fakeLicenseMsgr;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      accountData = {};
+      _.set(accountData, 'customers[0].licenses', []);
+      result = undefined;
+      fakeLicenseNonMessaging = {
+        licenseType: 'not-MESSAGING',
+        offerName: 'fake-offer-name',
+      };
+      fakeLicenseMs = {
+        licenseType: 'MESSAGING',
+        offerName: 'MS',
+      };
+      fakeLicenseMsgr = {
+        licenseType: 'MESSAGING',
+        offerName: 'MSGR',
+      };
+    });
+
+    afterEach(function () {
+      Authinfo = accountData = result = fakeLicenseNonMessaging = fakeLicenseMs = fakeLicenseMsgr = undefined;
+    });
+
+    it('should return the list of services with licenses that are of "MESSAGING"-type', function () {
+      accountData.customers[0].licenses.push(fakeLicenseNonMessaging);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices();
+      expect(result).toBe(null);
+
+      accountData.customers[0].licenses.push(fakeLicenseMsgr);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices();
+      expect(result.length).toBe(1);
+
+      accountData.customers[0].licenses.push(fakeLicenseMs);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices();
+      expect(result.length).toBe(2);
+    });
+
+    it('should return the list of services with licenses that are of "MESSAGING"-type and not "MSGR" offer code', function () {
+      accountData.customers[0].licenses.push(fakeLicenseNonMessaging);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices({ assignableOnly: true });
+      expect(result).toBe(null);
+
+      accountData.customers[0].licenses.push(fakeLicenseMs);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices({ assignableOnly: true });
+      expect(result.length).toBe(1);
+
+      accountData.customers[0].licenses.push(fakeLicenseMsgr);
+      Authinfo.updateAccountInfo(accountData);
+      result = Authinfo.getMessageServices({ assignableOnly: true });
+      expect(result.length).toBe(1);
+
+    });
+  });
+
+  describe('isExternallyManagedLicense():', function () {
+    it('should return true if the "offerName" property is "MSGR"', function () {
+      var Authinfo = setupUser();
+      var result = Authinfo.isExternallyManagedLicense({ offerName: 'MSGR' });
+      expect(result).toBe(true);
+      result = Authinfo.isExternallyManagedLicense({ offerName: 'something-else' });
+      expect(result).toBe(false);
+    });
+  });
+
   describe('.isAllowedState', function () {
     it('should return false is the state is not defined and simple user', function () {
       setupConfig();
@@ -101,7 +237,7 @@ describe('Authinfo:', function () {
 
     it('should return true if the state is an in publicStates', function () {
       setupConfig({
-        publicStates: ['blah']
+        publicStates: ['blah'],
       });
 
       var Authinfo = setupUser();
@@ -113,13 +249,13 @@ describe('Authinfo:', function () {
       setupConfig({
         restrictedStates: {
           customer: [],
-          partner: ['blah']
+          partner: ['blah'],
         },
-        publicStates: ['blob', 'blah']
+        publicStates: ['blob', 'blah'],
       });
 
       var Authinfo = setupUser({
-        roles: ['PARTNER_ADMIN'] // OR PARTNER_USER
+        roles: ['PARTNER_ADMIN'], // OR PARTNER_USER
       });
 
       expect(Authinfo.isAllowedState('blob')).toBe(true);
@@ -130,13 +266,13 @@ describe('Authinfo:', function () {
       setupConfig({
         restrictedStates: {
           customer: ['blah'],
-          partner: []
+          partner: [],
         },
-        publicStates: ['blob', 'blah']
+        publicStates: ['blob', 'blah'],
       });
 
       var Authinfo = setupUser({
-        roles: ['pokemon'] // definitely not a partner role
+        roles: ['pokemon'], // definitely not a partner role
       });
 
       expect(Authinfo.isAllowedState('blob')).toBe(true);
@@ -147,11 +283,11 @@ describe('Authinfo:', function () {
       setupConfig({
         ciscoOnly: ['blah'],
         ciscoOrgId: '123',
-        ciscoMockOrgId: '456'
+        ciscoMockOrgId: '456',
       });
 
       var Authinfo = setupUser({
-        orgId: '123'
+        orgId: '123',
       });
 
       expect(Authinfo.isAllowedState('blah')).toBe(true);
@@ -159,7 +295,7 @@ describe('Authinfo:', function () {
       //////// Mock Org
 
       Authinfo = setupUser({
-        orgId: '456'
+        orgId: '456',
       });
 
       expect(Authinfo.isAllowedState('blah')).toBe(true);
@@ -169,13 +305,13 @@ describe('Authinfo:', function () {
       setupConfig({
         roleStates: {
           A_Role: [
-            'blah'
-          ]
-        }
+            'blah',
+          ],
+        },
       });
 
       var Authinfo = setupUser({
-        roles: ['A_Role']
+        roles: ['A_Role'],
       });
 
       expect(Authinfo.isAllowedState('blah')).toBe(true);
@@ -185,16 +321,16 @@ describe('Authinfo:', function () {
       setupConfig({
         serviceStates: {
           'le-service': [
-            'blah'
-          ]
-        }
+            'blah',
+          ],
+        },
       });
 
       var Authinfo = setupUser({
         services: [{
           // we don't care about the other service properties
-          ciName: 'le-service'
-        }]
+          ciName: 'le-service',
+        }],
       });
 
       expect(Authinfo.isAllowedState('blah')).toBe(true);
@@ -202,7 +338,7 @@ describe('Authinfo:', function () {
 
     it('should only care about the parent state', function () {
       setupConfig({
-        publicStates: ['blah']
+        publicStates: ['blah'],
       });
 
       var Authinfo = setupUser();
@@ -213,7 +349,7 @@ describe('Authinfo:', function () {
     it('should return true if user is in delegated administration org', function () {
       setupConfig();
       var Authinfo = setupUser({
-        isInDelegatedAdministrationOrg: true
+        isInDelegatedAdministrationOrg: true,
       });
       expect(Authinfo.isInDelegatedAdministrationOrg()).toBe(true);
     });
@@ -221,11 +357,11 @@ describe('Authinfo:', function () {
     it('should return true if user is part of Cisco Mock Org', function () {
       setupConfig({
         ciscoOnly: ['blah'],
-        ciscoMockOrgId: '4567'
+        ciscoMockOrgId: '4567',
       });
 
       var Authinfo = setupUser({
-        orgId: '4567'
+        orgId: '4567',
       });
 
       expect(Authinfo.isCiscoMock()).toBe(true);
@@ -235,7 +371,7 @@ describe('Authinfo:', function () {
       setupConfig();
 
       var Authinfo = setupUser({
-        roles: ['Help_Desk', 'Compliance_User']
+        roles: ['Help_Desk', 'Compliance_User'],
       });
 
       expect(Authinfo.isAllowedState('support')).toBe(true);
@@ -249,14 +385,14 @@ describe('Authinfo:', function () {
         "customerName": "Atlas_Test_1",
         "licenses": [{
           "licenseType": "CONFERENCING",
-          "siteUrl": "whatever"
-        }]
-      }]
+          "siteUrl": "whatever",
+        }],
+      }],
     };
 
     it('is patched with Site_Admin role if customer has full admin role.', function () {
       var Authinfo = setupUser({
-        roles: ['Full_Admin']
+        roles: ['Full_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
@@ -264,7 +400,7 @@ describe('Authinfo:', function () {
 
     it('is patched with Site_Admin role if customer has read only admin role.', function () {
       var Authinfo = setupUser({
-        roles: ['Readonly_Admin']
+        roles: ['Readonly_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
@@ -278,14 +414,14 @@ describe('Authinfo:', function () {
         "customerName": "Atlas_Test_2",
         "licenses": [{
           "licenseType": "CONFERENCING",
-          "linkedSiteUrl": "www.abc.com"
-        }]
-      }]
+          "linkedSiteUrl": "www.abc.com",
+        }],
+      }],
     };
 
     it('have linked site conference service', function () {
       var Authinfo = setupUser({
-        roles: ['Full_Admin']
+        roles: ['Full_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getConferenceServicesWithLinkedSiteUrl()).toBeTruthy();
@@ -294,7 +430,7 @@ describe('Authinfo:', function () {
 
     it('is patched with Site_Admin role if customer has full admin role.', function () {
       var Authinfo = setupUser({
-        roles: ['Full_Admin']
+        roles: ['Full_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
@@ -302,10 +438,40 @@ describe('Authinfo:', function () {
 
     it('is patched with Site_Admin role if customer has read only admin role.', function () {
       var Authinfo = setupUser({
-        roles: ['Readonly_Admin']
+        roles: ['Readonly_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
+    });
+  });
+
+  describe('customer with communication license', function () {
+
+    var accountData = getJSONFixture('core/json/authInfo/customer_comm_License.json');
+
+    it('gets the correct partner Id and customer admin Email.', function () {
+      var Authinfo = setupUser();
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getCommPartnerOrgId()).toEqual(accountData.customers[0].licenses[0].partnerOrgId);
+      expect(Authinfo.getCustomerAdminEmail()).toEqual(accountData.customers[0].customerAdminEmail);
+    });
+
+    it('gets the correct org id based on customer.', function () {
+      var Authinfo = setupUser({
+        roles: ['FULL_ADMIN'],
+      });
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getCallPartnerOrgId()).toEqual(accountData.customers[0].licenses[0].partnerOrgId);
+    });
+
+    it('gets the correct org id based partner through the customer portal.', function () {
+      var Authinfo = setupUser({
+        roles: ['FULL_ADMIN'],
+      });
+      //Partners do not have licenses set
+      accountData.customers[0].licenses = [];
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getCallPartnerOrgId()).toEqual(defaultUser.orgId);
     });
   });
 

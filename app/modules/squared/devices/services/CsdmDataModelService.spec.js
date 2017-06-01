@@ -9,14 +9,15 @@ describe('Service: CsdmDataModelService', function () {
   var testScope;
   var $timeout;
 
-  var placesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/';
+  var placesUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/';
   var pWithoutDeviceUuid = '938d9c32-placeWithoutDevice-88d7c1a7f63e';
   var pWithoutDeviceUrl = placesUrl + '938d9c32-placeWithoutDevice-88d7c1a7f63e';
-  var pWithDeviceUrl = placesUrl + 'a19b308a-PlaceWithDevice-71898e423bec';
-  var device1Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
-  var devicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices';
+  var pWithDevicesUuid = 'a19b308a-PlaceWithDevice-71898e423bec';
+  var pWithDeviceUrl = placesUrl + pWithDevicesUuid;
+  var device1Url = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
+  var devicesUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices';
 
-  var huronDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron';
+  var huronDevicesUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices/?type=huron';
   var pWithHuronDevice2Url = placesUrl + '68351854-Place2WithHuronDevice-c9c844421ec2';
   var huronDevice2Url = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa';
   var huronPersonalDeviceUrl = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-PERSON-ace151f631fa';
@@ -36,7 +37,7 @@ describe('Service: CsdmDataModelService', function () {
   beforeEach(inject(function (Authinfo) {
     spyOn(Authinfo, 'getOrgId').and.returnValue('testOrg');
     spyOn(Authinfo, 'getLicenses').and.returnValue([{
-      licenseType: 'COMMUNICATION'
+      licenseType: 'COMMUNICATION',
     }]);
   }));
 
@@ -47,10 +48,11 @@ describe('Service: CsdmDataModelService', function () {
     $timeout = _$timeout_;
     testScope = $rootScope.$new();
 
+    $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/?type=all&query=xy').respond({});
     $httpBackend.whenGET(devicesUrl + '?checkDisplayName=false&checkOnline=false').respond(initialHttpDevices);
     $httpBackend.whenGET(devicesUrl).respond(initialHttpDevices);
     $httpBackend.whenGET(huronDevicesUrl).respond(initialHuronDevices);
-    $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/?shallow=true&type=all').respond(accounts);
+    $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/?shallow=true&type=all').respond(accounts);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/testOrg/v1/Users/me').respond({});
 
   }));
@@ -142,7 +144,7 @@ describe('Service: CsdmDataModelService', function () {
     describe('reloadItem', function () {
       it(' should reload a device and update the device in both devices and places', function () {
         executeGetCallsAndInitPromises();
-        var deviceToReloadUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+        var deviceToReloadUrl = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
         var newDispName = "Cloud Side Updated Display Name";
         var devicesWithOneModified = JSON.parse(JSON.stringify(initialHttpDevices));
         devicesWithOneModified[deviceToReloadUrl].displayName = newDispName;
@@ -176,9 +178,9 @@ describe('Service: CsdmDataModelService', function () {
 
     it('add code to an existing place is not reflected in device list', function () {
       executeGetCallsAndInitPromises();
-      var codeToAddUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes/12121-code-to-add-21212";
+      var codeToAddUrl = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/codes/12121-code-to-add-21212";
 
-      $httpBackend.expectPOST("https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes")
+      $httpBackend.expectPOST("https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/codes")
         .respond({ url: codeToAddUrl, id: pWithoutDeviceUuid });  //api uses id
       var promiseExecuted, changeNotification;
 
@@ -204,7 +206,7 @@ describe('Service: CsdmDataModelService', function () {
 
     it('failing to delete device is not reflected in device list and place list returned by earlier getDevicesMap', function () {
       executeGetCallsAndInitPromises();
-      var deviceToDeleteUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+      var deviceToDeleteUrl = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
 
       $httpBackend.expectDELETE(deviceToDeleteUrl + '?keepPlace=true').respond(403);
 
@@ -287,7 +289,7 @@ describe('Service: CsdmDataModelService', function () {
     }
 
     it('delete cloudberry device is reflected in device list (all devices under same place) and place list', function () {
-      var deviceUrlToDelete = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f';
+      var deviceUrlToDelete = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f';
       testDeleteDeviceIsReflectedInDevAndPlaceList(deviceUrlToDelete, pWithDeviceUrl);
     });
 
@@ -297,8 +299,8 @@ describe('Service: CsdmDataModelService', function () {
 
     it('change device name is not possible', function () {
       executeGetCallsAndInitPromises();
-      var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
-      var originalName = "test device 2";
+      var deviceUrlToUpdate = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+      var originalName = "PlaceWithDevice";
       var newDeviceName = "This Is The New name !!";
       var promiseRejected;
 
@@ -372,7 +374,7 @@ describe('Service: CsdmDataModelService', function () {
     }
 
     it('add a cloudberry device tag is reflected in device list and place list', function () {
-      var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+      var deviceUrlToUpdate = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
       testAddTagIsReflectedInDevAndPlaceList(deviceUrlToUpdate, pWithDeviceUrl);
     });
 
@@ -381,7 +383,7 @@ describe('Service: CsdmDataModelService', function () {
     });
 
     it('add a device tag and sending in a cloned object is reflected in device list and place list', function () {
-      var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+      var deviceUrlToUpdate = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
       var promiseExecuted;
 
       $httpBackend.expectPATCH(deviceUrlToUpdate).respond(204);
@@ -420,7 +422,7 @@ describe('Service: CsdmDataModelService', function () {
     });
 
     it('failing to add a device tag is not reflected in device list and place list', function () {
-      var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+      var deviceUrlToUpdate = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
       var promiseExecuted;
 
       $httpBackend.expectPATCH(deviceUrlToUpdate).respond(403);
@@ -453,7 +455,7 @@ describe('Service: CsdmDataModelService', function () {
     });
 
     it('remove a device tag is reflected in device list and place list', function () {
-      var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+      var deviceUrlToUpdate = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
       var promiseExecuted;
 
       $httpBackend.expectPATCH(deviceUrlToUpdate).respond(204);
@@ -489,7 +491,7 @@ describe('Service: CsdmDataModelService', function () {
 
 
     it('failing to remove a device tag is not reflected in device list and place list', function () {
-      var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+      var deviceUrlToUpdate = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
       var promiseExecuted;
 
       $httpBackend.expectPATCH(deviceUrlToUpdate).respond(403);
@@ -623,7 +625,7 @@ describe('Service: CsdmDataModelService', function () {
 
       var updatedPlace = {
         'url': huronPlaceWithoutDeviceUrl,
-        'devices': { 'http://new/device': { 'url': 'http://new/device' } }
+        'devices': { 'http://new/device': { 'url': 'http://new/device' } },
       };
       $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
 
@@ -652,6 +654,45 @@ describe('Service: CsdmDataModelService', function () {
       expect(changeNotification).toBeTruthy();
     });
 
+    it('get should return an updated item and update the model when a personal device was activated', function () {
+
+      var expectCall, changeNotification;
+      var uWithDevicesUuid = '36437546-PERSON-b3b345441ba6';
+      var type = 'shouldJustBePassedThrough';
+      var devicesForUserUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices?type=' + type + '&cisUuid=' + uWithDevicesUuid;
+      var newPersonalDevice = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/' + uWithDevicesUuid;
+
+      CsdmDataModelService.getDevicesMap().then(function (devices) {
+        expect(Object.keys(devices).length).toBe(initialDeviceCount);
+
+        expect(initialDeviceMap['http://new/device']).toBeUndefined();
+        expect(Object.keys(initialDeviceMap)).not.toContain('http://new/device');
+        CsdmDataModelService.subscribeToChanges(testScope, function () {
+          changeNotification = "YES";
+        });
+
+        var userDevices = {};
+        userDevices[newPersonalDevice] = {
+          url: newPersonalDevice,
+        };
+        $httpBackend.expectGET(devicesForUserUrl).respond(userDevices);
+
+        CsdmDataModelService.reloadDevicesForUser(uWithDevicesUuid, type).then(function (returnedUserDevices) {
+          expect(Object.keys(returnedUserDevices)).toHaveLength(1);
+          expect(Object.keys(returnedUserDevices)).toContain(newPersonalDevice);
+          expectCall = true;
+
+          CsdmDataModelService.getDevicesMap().then(function (devicesFromMap) {
+            expect(Object.keys(devicesFromMap)).toHaveLength(initialDeviceCount + 1);
+            expect(Object.keys(devicesFromMap)).toContain(newPersonalDevice);
+          });
+        });
+      });
+      $httpBackend.flush();
+      expect(expectCall).toBe(true);
+      expect(changeNotification).toBeTruthy();
+    });
+
     it('get should return an updated item and update the model when place was renamed', function () {
 
       var expectCall, changeNotification;
@@ -660,7 +701,7 @@ describe('Service: CsdmDataModelService', function () {
       var newDisplayName = 'New display name! Wow!';
       var updatedPlace = {
         'displayName': newDisplayName,
-        'url': huronPlaceWithoutDeviceUrl
+        'url': huronPlaceWithoutDeviceUrl,
       };
       $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
 
@@ -684,14 +725,16 @@ describe('Service: CsdmDataModelService', function () {
       expect(changeNotification).toBeTruthy();
     });
 
-    it('get should return an updated item and update the model when a device was deleted', function () {
+    it('reloadItem should return an updated item and update the model when a device was deleted server side', function () {
 
       var expectCall, changeNotification;
       var placeToUpdateUrl = pWithDeviceUrl;
 
       var updatedPlace = {
+        'cisUuid': pWithDevicesUuid,
         'url': pWithDeviceUrl,
-        'devices': {}
+        'displayName': initialPlaceMap[pWithDeviceUrl].displayName,
+        'devices': {},
       };
       $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
 
@@ -734,8 +777,8 @@ describe('Service: CsdmDataModelService', function () {
         'sipUrl': newSipUrl,
         'displayName': newName,
         'devices': {
-          deviceToUpdateUrl: { 'url': deviceToUpdateUrl, 'sipUrl': newSipUrl }
-        }
+          deviceToUpdateUrl: { 'url': deviceToUpdateUrl, 'sipUrl': newSipUrl },
+        },
       };
 
       $httpBackend.expectPATCH(placeToUpdateUrl).respond(placeReturnedFromPatch);
@@ -860,9 +903,9 @@ describe('Service: CsdmDataModelService', function () {
     });
 
     it('should notify all devices in a place when notifyDevicesInPlace', function () {
-      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f/notify').respond(201, '');
-      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f/notify').respond(201, '');
-      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89/notify').respond(201, '');
+      $httpBackend.expectPOST('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f/notify').respond(201, '');
+      $httpBackend.expectPOST('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f/notify').respond(201, '');
+      $httpBackend.expectPOST('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89/notify').respond(201, '');
 
       CsdmDataModelService.notifyDevicesInPlace('a19b308a-PlaceWithDevice-71898e423bec', { foo: 'bar' });
 
@@ -945,7 +988,7 @@ describe('Service: CsdmDataModelService', function () {
       $rootScope.$apply();
 
       CsdmDataModelService.devicePollerOn('data', _.noop, {
-        scope: scope
+        scope: scope,
       });
 
       $rootScope.$digest();
@@ -1002,7 +1045,7 @@ describe('Service: CsdmDataModelService', function () {
 
       it('will keep references and include a new added device', function () {
 
-        var addedDevUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f";
+        var addedDevUrl = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f";
 
         var devicesWithOneAdded = JSON.parse(JSON.stringify(initialHttpDevices));
 
@@ -1010,10 +1053,10 @@ describe('Service: CsdmDataModelService', function () {
           "displayName": "addedDevice",
           "cisUuid": "a19b308a-AddedDevice-71898e423bec",
           "accountType": "MACHINE",
-          "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f",
+          "url": "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f",
           "createTime": "2016-09-15T01:12:01.105Z",
           "description": "[\"one\", \"two\", \"three\"]",
-          "product": "SX10"
+          "product": "SX10",
         };
 
         $httpBackend.expectGET(devicesUrl).respond(devicesWithOneAdded);
@@ -1073,7 +1116,15 @@ describe('Service: CsdmDataModelService', function () {
 
         var moddedDeviceRef = initialDeviceMap[moddedDevUrl];
 
-        devicesWithOneModified[moddedDevUrl].displayName = newDisplayName;
+        _(devicesWithOneModified)
+          .filter({
+            cisUuid: pWithDevicesUuid,
+          })
+          .forEach(function (device) {
+            device.displayName = newDisplayName;
+          });
+
+        expect(devicesWithOneModified[moddedDevUrl].displayName).toEqual(newDisplayName);
 
         $httpBackend.expectGET(devicesUrl).respond(devicesWithOneModified);
 

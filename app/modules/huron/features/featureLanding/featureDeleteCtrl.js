@@ -129,7 +129,7 @@
         $rootScope.$broadcast('HURON_FEATURE_DELETED');
         Notification.success('huronFeatureDetails.deleteSuccessText', {
           featureName: vm.featureName,
-          featureType: vm.featureType
+          featureType: vm.featureType,
         });
         reInstantiateMasonry();
       }, 250);
@@ -145,16 +145,16 @@
 
       var error = $translate.instant('huronFeatureDetails.deleteFailedText', {
         featureName: vm.featureName,
-        featureType: vm.featureType
+        featureType: vm.featureType,
       });
       if (response) {
         if (response.status) {
           error += $translate.instant('errors.statusError', {
-            status: response.status
+            status: response.status,
           });
           if (response.data && _.isString(response.data)) {
             error += ' ' + $translate.instant('huronFeatureDetails.messageError', {
-              message: response.data
+              message: response.data,
             });
           }
         } else {

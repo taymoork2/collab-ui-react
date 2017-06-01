@@ -6,7 +6,7 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
   var cosRestrictionsObject = getJSONFixture('huron/json/user/cosRestrictionsObject.json');
 
   var $stateParams = {
-    currentUser: currentUser
+    currentUser: currentUser,
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -27,7 +27,7 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
       $scope: $scope,
       $stateParams: $stateParams,
       InternationalDialing: InternationalDialing,
-      Notification: Notification
+      Notification: Notification,
     });
 
     $scope.$apply();

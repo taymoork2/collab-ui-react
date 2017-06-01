@@ -8,7 +8,7 @@ require('./_partner-landing-trials.scss');
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $state, $window, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService) {
+  function PartnerHomeCtrl($scope, $state, $window, $translate, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -22,8 +22,8 @@ require('./_partner-landing-trials.scss');
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.getProgressStatus = getProgressStatus;
     $scope.getDaysAgo = getDaysAgo;
-
-    $scope.featureTrialForPaid = trialForPaid;
+    $scope.ariaTrialLabel = ariaTrialLabel;
+    $scope.ariaExpLabel = ariaExpLabel;
 
     init();
 
@@ -37,19 +37,31 @@ require('./_partner-landing-trials.scss');
         $scope.activeCount = $scope.activeList.length;
       }
 
-      Orgservice.getOrg(function (data, status) {
-        if (data.success) {
-          $scope.isTestOrg = data.isTestOrg;
-        } else {
-          Log.error('Query org info failed. Status: ' + status);
-        }
-      });
+      Orgservice.isTestOrg()
+        .then(function (isTestOrg) {
+          $scope.isTestOrg = isTestOrg;
+        });
+
+    }
+
+    function ariaTrialLabel(trial) {
+      var label = trial.customerName + ', ' +
+        $translate.instant('partnerHomePage.aria.daysLeft', { count: trial.daysLeft }, "messageformat") + ', ' +
+        $translate.instant('partnerHomePage.aria.userTotals', { users: trial.usage, licenses: trial.licenses });
+      return label;
+    }
+
+    function ariaExpLabel(trial) {
+      var label = trial.customerName + ', ' +
+        $translate.instant('partnerHomePage.aria.daysSinceExp', { count: getDaysAgo(trial.daysLeft) }, 'messageformat') + ', ' +
+        $translate.instant('partnerHomePage.aria.userTotals', { users: trial.usage, licenses: trial.licenses });
+      return label;
     }
 
     function openAddTrialModal() {
       Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP);
 
-      var route = TrialService.getAddTrialRoute($scope.featureTrialForPaid);
+      var route = TrialService.getAddTrialRoute();
       $state.go(route.path, route.params).then(function () {
         $state.modal.result.finally(getTrialsList);
       });
@@ -76,14 +88,14 @@ require('./_partner-landing-trials.scss');
           Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
         })
         .then(function (response) {
-          return PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true);
+          return PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), { isTrialData: true });
         })
         .then(function (trialsList) {
           $scope.activeList = _.filter(trialsList, {
-            state: "ACTIVE"
+            state: "ACTIVE",
           });
           $scope.expiredList = _.filter(trialsList, {
-            state: "EXPIRED"
+            state: "EXPIRED",
           });
           $scope.showExpired = $scope.expiredList.length > 0;
           Log.debug('active trial records found:' + $scope.activeList.length);
@@ -98,7 +110,7 @@ require('./_partner-landing-trials.scss');
     function launchCustomerPortal(trial) {
       $window.open($state.href('login_swap', {
         customerOrgId: trial.customerOrgId,
-        customerOrgName: trial.customerName
+        customerOrgName: trial.customerName,
       }));
     }
   }

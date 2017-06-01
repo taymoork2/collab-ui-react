@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, trialForPaid, TrialService;
+  var $httpBackend, $q, $controller, $state, $scope, Analytics, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
   var controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -16,31 +16,29 @@ describe('Controller: CustomerListCtrl', function () {
     daysLeft: NaN,
     communications: {
       isTrial: false,
-      volume: 5
+      volume: 5,
     },
     licenseList: [{
       isTrial: false,
       volume: 5,
-      name: 'communications'
-    }]
-  };
-  var numberResponse = {
-    numbers: [1, 2, 3]
+      name: 'communications',
+    }],
   };
   var noNumberResponse = {
-    numbers: []
+    numbers: [],
   };
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _Authinfo_, _Config_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _Analytics_, _Authinfo_, _Config_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = $rootScope.$new();
     $state = _$state_;
+    Analytics = _Analytics_;
     Authinfo = _Authinfo_;
     Config = _Config_;
     HuronConfig = _HuronConfig_;
@@ -52,11 +50,10 @@ describe('Controller: CustomerListCtrl', function () {
     $scope.timeoutVal = 1;
     $rootScope.typeOfExport = {
       USER: 1,
-      CUSTOMER: 2
+      CUSTOMER: 2,
     };
 
-    trialForPaid = false;
-
+    spyOn(Analytics, 'trackPremiumEvent');
     spyOn($state, 'go');
     spyOn(Notification, 'error');
 
@@ -67,15 +64,17 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve(managedOrgsResponse));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.resolve({}));
 
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-      $q.resolve(false)
-    );
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasITProPackGetStatus').and.returnValue($q.resolve(false));
+
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
+    spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
 
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
@@ -88,7 +87,6 @@ describe('Controller: CustomerListCtrl', function () {
       $state: $state,
       Authinfo: Authinfo,
       Config: Config,
-      trialForPaid: trialForPaid
     });
 
     $scope.$apply();
@@ -113,15 +111,15 @@ describe('Controller: CustomerListCtrl', function () {
         numUsers: 10,
         activeUsers: 3,
         communications: {
-          isTrial: true
+          isTrial: true,
         },
         licenses: 10,
         deviceLicenses: 5,
         licenseList: [{
           isTrial: false,
           volume: 5,
-          name: 'communications'
-        }]
+          name: 'communications',
+        }],
       };
     });
 
@@ -190,7 +188,6 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
-
       initController();
       expect(controller.managedOrgsList).toBeDefined();
       expect(controller.managedOrgsList.length).toEqual(5);
@@ -200,16 +197,6 @@ describe('Controller: CustomerListCtrl', function () {
 
   describe('Click setup PSTN', function () {
     beforeEach(initController);
-
-    it('not Terminus customer and has e164 numbers, should route to DID add', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(404);
-      $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(numberResponse);
-      controller.addNumbers(testOrg);
-      $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('didadd', {
-        currentOrg: testOrg
-      });
-    });
 
     it('not Terminus customer and has no e164 numbers, should route to PSTN setup', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(404);
@@ -221,7 +208,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
         customerCommunicationLicenseIsTrial: testOrg.communications.isTrial,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -234,7 +221,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
         customerCommunicationLicenseIsTrial: testOrg.communications.isTrial,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
   });
@@ -249,52 +236,91 @@ describe('Controller: CustomerListCtrl', function () {
       expect(PartnerService.getManagedOrgsList.calls.count()).toEqual(2);
       expect(PartnerService.getManagedOrgsList).toHaveBeenCalledWith('1234');
     });
-
   });
 
-
   describe('filterColumns', function () {
-    beforeEach(initController);
     it('return 9 items in the filter list without Care with care FT turned off', function () {
+      initController();
       expect(controller.filter.options.length).toBe(9);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
-        value: 'sparkBoard'
+        value: 'sparkBoard',
       }));
       expect(controller.filter.options).not.toContain(jasmine.objectContaining({
-        value: 'care'
+        value: 'care',
+      }));
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'premium',
+      }));
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'standard',
       }));
     });
 
     it('show care in the filter list with care FT on', function () {
       FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
       initController();
-      $scope.$apply();
       expect(controller.filter.options.length).toBe(10);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
-        value: 'care'
+        value: 'care',
       }));
       expect(controller.filter.options).toContain(jasmine.objectContaining({
-        value: 'sparkBoard'
+        value: 'sparkBoard',
+      }));
+    });
+
+    it('show Pro Pack in the filter list with correct FT on', function () {
+      FeatureToggleService.atlasITProPackGetStatus.and.returnValue($q.resolve(true));
+      initController();
+      expect(controller.filter.options.length).toBe(11);
+      expect(controller.filter.options).toContain(jasmine.objectContaining({
+        value: 'premium',
+      }));
+      expect(controller.filter.options).toContain(jasmine.objectContaining({
+        value: 'standard',
       }));
     });
   });
 
   describe('updateResultCount function', function () {
-    beforeEach(initController);
-
     it('should update the count on the filters based on the number of rows that met the criteria', function () {
-
+      initController();
       controller.filter.options = [{
         value: 'trial',
         label: '',
         isSelected: false,
         isAccountFilter: true,
-        count: 0
+        isPremiumFilter: false,
+        count: 0,
       }];
 
       controller._helpers.updateResultCount(controller.gridOptions.data);
       var activeFilter = _.find(controller.filter.options, { value: 'trial' });
       expect(activeFilter.count).toBe(2);
+    });
+
+    it('should fire a call to analytics only when the premium filter is first selected, not unselected', function () {
+      FeatureToggleService.atlasITProPackGetStatus.and.returnValue($q.resolve(true));
+      initController();
+      controller.filter.options = [{
+        value: 'premium',
+        label: '',
+        isSelected: true,
+        isAccountFilter: false,
+        isPremiumFilter: true,
+        previousState: false,
+        count: 0,
+      }];
+
+      controller._helpers.updateResultCount(controller.gridOptions.data);
+      expect(Analytics.trackPremiumEvent).toHaveBeenCalledWith(Analytics.sections.PREMIUM.eventNames.PREMIUM_FILTER);
+      Analytics.trackPremiumEvent.calls.reset();
+
+      controller._helpers.updateResultCount(controller.gridOptions.data);
+      expect(Analytics.trackPremiumEvent).not.toHaveBeenCalled();
+
+      controller.filter.options[0].isSelected = false;
+      controller._helpers.updateResultCount(controller.gridOptions.data);
+      expect(Analytics.trackPremiumEvent).not.toHaveBeenCalled();
     });
   });
 
@@ -303,12 +329,12 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(function () {
       initController();
       compareObject = {
-        licenseType: 'MESSAGING'
+        licenseType: 'MESSAGING',
       };
       src = {
         status: undefined,
         customerName: '47ciscocomCmiPartnerOrg',
-        sortOrder: 0
+        sortOrder: 0,
       };
       licenses = _.cloneDeep(managedOrgsResponse.data.organizations[0].licenses);
     });
@@ -346,7 +372,7 @@ describe('Controller: CustomerListCtrl', function () {
         }, {
           'licenseId': 'CF_14aee12e-62f0-431b-afe0-58554d064ec3',
           'licenseType': 'CONFERENCING',
-        }]
+        }],
       };
 
       var result = controller.getSubfields(entry, 'meeting');
@@ -355,7 +381,7 @@ describe('Controller: CustomerListCtrl', function () {
 
     it('should return the EE for 2nd webex column if there is no webex license', function () {
       var entry = {
-        'licenseList': [{}]
+        'licenseList': [{}],
       };
 
       var result = controller.getSubfields(entry, 'meeting');
@@ -373,7 +399,7 @@ describe('Controller: CustomerListCtrl', function () {
           'offerName': 'CMR',
           'licenseType': 'CMR',
           'status': 'ACTIVE',
-        }]
+        }],
       };
 
       var result = controller.getSubfields(entry, 'meeting');
@@ -390,8 +416,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com',
         communications: {
-          isTrial: true
-        }
+          isTrial: true,
+        },
       };
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
@@ -401,7 +427,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: org.customerName,
         customerEmail: org.customerEmail,
         customerCommunicationLicenseIsTrial: true,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -411,8 +437,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com',
         communications: {
-          isTrial: false
-        }
+          isTrial: false,
+        },
       };
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
@@ -422,7 +448,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: org.customerName,
         customerEmail: org.customerEmail,
         customerCommunicationLicenseIsTrial: false,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -430,7 +456,7 @@ describe('Controller: CustomerListCtrl', function () {
       var org = {
         customerOrgId: '1234-34534-afdagfg-425345-afaf',
         customerName: 'ControllerTestOrg',
-        customerEmail: 'customer@cisco.com'
+        customerEmail: 'customer@cisco.com',
       };
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
@@ -440,7 +466,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: org.customerName,
         customerEmail: org.customerEmail,
         customerCommunicationLicenseIsTrial: true,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -451,8 +477,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerEmail: 'customer@cisco.com',
         isPartner: true,
         communications: {
-          isTrial: true
-        }
+          isTrial: true,
+        },
       };
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
@@ -462,7 +488,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: org.customerName,
         customerEmail: org.customerEmail,
         customerCommunicationLicenseIsTrial: false,
-        customerRoomSystemsLicenseIsTrial: false
+        customerRoomSystemsLicenseIsTrial: false,
       });
     });
   });
@@ -477,16 +503,4 @@ describe('Controller: CustomerListCtrl', function () {
     });
   });
 
-  xdescribe('getTrialRoute', function () {
-    it('should return a path to new \'trial\' with FT set to true', function () {
-      var result = controller._helpers.getTrialRoute(false, {});
-      expect(result.path).toEqual('trial.info');
-    });
-    it('should return a path to \'trialAdd\' when FT set to false', function () {
-      FeatureToggleService.supports.and.returnValue($q.resolve(false));
-      initController();
-      var result = controller._helpers.getTrialRoute(false, {});
-      expect(result.path).toEqual('trialAdd.info');
-    });
-  });
 });

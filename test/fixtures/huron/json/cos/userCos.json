@@ -1,0 +1,37 @@
+{
+  "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/places/56931a6e-018c-44d6-9e0a-4cc572739829/features/restrictions",
+  "place": [
+    {
+      "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/places/56931a6e-018c-44d6-9e0a-4cc572739829/features/restrictions/7b8c9b68-cf9f-40a9-aef7-24b1a14457cd",
+      "uuid": "7b8c9b68-cf9f-40a9-aef7-24b1a14457cd",
+      "restriction": "DIALINGCOSTAG_NATIONAL",
+      "blocked": false
+    }
+  ],
+  "customer": [
+    {
+      "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/features/restrictions",
+      "uuid": null,
+      "restriction": "DIALINGCOSTAG_PREMIUM",
+      "blocked": false
+    },
+    {
+      "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/features/restrictions",
+      "uuid": null,
+      "restriction": "DIALINGCOSTAG_INTERNATIONAL",
+      "blocked": true
+    },
+    {
+      "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/features/restrictions",
+      "uuid": null,
+      "restriction": "DIALINGCOSTAG_MOBILE",
+      "blocked": true
+    },
+    {
+      "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/features/restrictions",
+      "uuid": null,
+      "restriction": "DIALINGCOSTAG_NATIONAL",
+      "blocked": false
+    }
+  ]
+}

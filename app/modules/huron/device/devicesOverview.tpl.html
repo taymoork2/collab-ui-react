@@ -1,34 +1,18 @@
-<div class="section-title-row">
-  <span class="section-name" translate="usersPreview.devicesPreview"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.showGenerateOtpLink">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-          <i class="icon icon-three-dots"></i>
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li><a ng-click="ucDevices.resetCode()" translate="usersPreview.generateActivationCode"></a></li>
-        </ul>
-      </span>
-</div>
+<cs-sp-section>
+  <uc-device-list
+    owner-type="user"
+    device-list="ucDevices.devices"
+    devices-loaded="ucDevices.loadedDevicesPromise"
+    multiple-otp=true
+    on-generate-fn="ucDevices.onGenerateOtpFn()"
+    on-show-device-detail-fn="ucDevices.showDeviceDetails(device)">
+  </uc-device-list>
+</cs-sp-section>
 
-<div ng-if="ucDevices.showGenerateOtpButton">
-  <div class="section-content">
-    <div class="generate-activation-code" translate="usersPreview.generateActivationCodeText"></div>
-    <div class="generate-activation-code" translate="usersPreview.generateActivationCodeDesc"></div>
-    <button class="btn btn--people btn-center"
-            ng-click="ucDevices.resetCode()"
-            ng-disabled="ucDevices.generateCodeIsDisabled"
-            translate="usersPreview.generateActivationCode"></button>
-  </div>
-</div>
-
-<div class="feature-list">
-  <ul>
-    <li class="feature" ng-repeat="device in ucDevices.devices">
-      <a ng-click="ucDevices.showDeviceDetails(device)">
-        <i class="icon icon-circle status-indicator" ng-class="device.cssColorClass"></i>
-        <span class="feature-name">{{device.product}}</span> <span class="feature-status" ng-if="device.addOnModuleCount > 0">{{ :: 'deviceOverviewPage.kemAbbreviation' | translate }}: {{device.addOnModuleCount}}</span>
-        <i class="feature-arrow"></i>
-      </a>
-    </li>
-  </ul>
-</div>
+<cs-sp-section ng-if="ucDevices.showDeviceSettings">
+  <uc-device-settings
+    owner-type="user"
+    owner-id="ucDevices.currentUser.id"
+    device-list="ucDevices.devices">
+  </uc-device-settings>
+</cs-sp-section>

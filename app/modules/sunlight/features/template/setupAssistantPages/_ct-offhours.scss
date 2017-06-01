@@ -28,6 +28,7 @@
   }
 
   .offhours-preview-message {
+    white-space: pre-line;
     height: 7rem;
     overflow: hidden;
     width: rem-calc(300px);

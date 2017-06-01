@@ -1,6 +1,8 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/layout';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/settings/page';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .support {
   @extend %content-header;
@@ -248,4 +250,12 @@
       top: 70%;
     }
   }
+}
+
+.support-btn {
+  width: 210px;
+}
+
+.support-btn-spacing {
+  padding-top: 0.65rem;
 }

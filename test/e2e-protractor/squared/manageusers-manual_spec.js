@@ -1,7 +1,6 @@
 'use strict';
 
-/* global manageUsersPage xafterAll */
-/* global LONG_TIMEOUT */
+/* global manageUsersPage */
 
 // NOTE: Be sure to re-enable the afterAll at line 144 when re-enabling this test!
 describe('Manage Users - Manual -', function () {
@@ -11,7 +10,7 @@ describe('Manage Users - Manual -', function () {
     return {
       email: utils.randomTestGmailwithSalt('manual'),
       first: 'EmailOnly',
-      last: 'McTestuser-' + utils.randomDid()
+      last: 'McTestuser-' + utils.randomDid(),
     };
   });
 
@@ -19,7 +18,7 @@ describe('Manage Users - Manual -', function () {
     return {
       email: utils.randomTestGmailwithSalt('manual'),
       first: 'NamesAndEmail',
-      last: 'McTestuser-' + utils.randomDid()
+      last: 'McTestuser-' + utils.randomDid(),
     };
   });
 
@@ -126,8 +125,8 @@ describe('Manage Users - Manual -', function () {
       utils.click(manageUsersPage.buttons.finish);
     });
 
-    it('should confirm invited users exist and have licenses/entitlements set', function () {
-      _.each(allUsers, function (user) {
+    _.forEach(allUsers, function (user) {
+      it('should confirm invited user ' + user.email + ' exists and has licenses/entitlements set', function () {
         utils.searchAndClick(user.email);
         utils.expectIsDisplayed(users.servicesPanel);
 
@@ -140,7 +139,7 @@ describe('Manage Users - Manual -', function () {
 
     // delete all the users we created
     afterAll(function () {
-      _.each(allUsers, function (user) {
+      _.forEach(allUsers, function (user) {
         deleteUtils.deleteUser(user.email, token);
       });
     });

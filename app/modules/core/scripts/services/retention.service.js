@@ -1,28 +1,31 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('RetentionService', RetentionService);
+  module.exports = angular.module('core.retentionService', [
+    require('angular-resource'),
+    require('modules/core/config/urlConfig'),
+  ])
+    .service('RetentionService', RetentionService)
+    .name;
 
   /* @ngInject */
   function RetentionService($resource, $q, UrlConfig) {
     var accountUrl = UrlConfig.getAdminServiceUrl();
 
     var retentionResource = $resource(accountUrl + 'organizations/:orgId/settings/sparkDataRetentionDays', {
-      orgId: '@orgId'
+      orgId: '@orgId',
     }, {
       get: {
-        method: 'GET'
+        method: 'GET',
       },
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
 
     var service = {
       getRetention: getRetention,
-      setRetention: setRetention
+      setRetention: setRetention,
     };
 
     return service;
@@ -33,7 +36,7 @@
       }
 
       return retentionResource.get({
-        orgId: org
+        orgId: org,
       }).$promise;
     }
 
@@ -46,11 +49,11 @@
       }
 
       var payload = {
-        sparkDataRetentionDays: days
+        sparkDataRetentionDays: days,
       };
 
       return retentionResource.update({
-        orgId: org
+        orgId: org,
       }, payload).$promise;
     }
   }

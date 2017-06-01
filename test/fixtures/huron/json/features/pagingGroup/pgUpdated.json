@@ -1,7 +1,6 @@
 {
   "groupId": "bbcd1234-abcd-abcd-abcddef123456",
   "name": "Test2",
-  "extension": "5000",
   "members": [ 
   {
     "memberId": "0002", 
@@ -13,5 +12,16 @@
     "deviceIds": [], 
     "type": "USER"
   }
+  ],
+  "initiatorType": "CUSTOM",
+  "initiators": [
+    { 
+      "initiatorId": "0001",
+      "type": "USER" 
+    },
+    { 
+      "initiatorId": "0002", 
+      "type": "PLACE" 
+    }
   ]
 }

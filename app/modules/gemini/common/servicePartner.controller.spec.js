@@ -1,8 +1,9 @@
 'use strict';
 
 describe('controller: servicePartnerCtrl', function () {
-  var $q, $scope, $controller, defer, controller, gemService, Notification;
+  var $q, $scope, $controller, defer, controller, gemService, Notification, $httpBackend, UrlConfig;
   var spData = getJSONFixture('gemini/servicepartner.json');
+  var preData = getJSONFixture('gemini/common.json');
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
@@ -10,13 +11,15 @@ describe('controller: servicePartnerCtrl', function () {
   beforeEach(initSpec);
   beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _gemService_, _Notification_) {
+  function dependencies(_$q_, _$httpBackend_, _UrlConfig_, $rootScope, _$controller_, _gemService_, _Notification_) {
     $q = _$q_;
     defer = $q.defer();
     gemService = _gemService_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
     Notification = _Notification_;
+    $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
   }
 
   function initSpec() {
@@ -25,9 +28,12 @@ describe('controller: servicePartnerCtrl', function () {
   }
 
   function initController() {
+    var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
+    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+
     controller = $controller('servicePartnerCtrl', {
       $scope: $scope,
-      gemService: gemService
+      gemService: gemService,
     });
   }
 

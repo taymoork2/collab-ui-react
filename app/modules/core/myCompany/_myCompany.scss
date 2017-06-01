@@ -1,4 +1,4 @@
-@import 'styles/toolkit/layout';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .my-company-page {
   @extend %grid-subheader;
@@ -7,6 +7,10 @@
   .my-company-info-state &,
   .my-company-orders-state & {
     @extend %page-background-white;
+  }
+
+  .content-container {
+    height: 100%;
   }
 
   iframe {
@@ -18,9 +22,12 @@
 }
 
 .btn--myCompany {
+  .header-label {
+    margin-right: 0.75rem !important;
+  }
+
   .icon {
     position: static !important;
-    margin-left: 0.75rem !important;
   }
 }
 
@@ -31,4 +38,12 @@
   .icon {
     margin-right: 0.5rem;
   }
+}
+
+.a-order-history {
+  display: inline-block;
+}
+
+.iconspacer {
+  padding-left: 30px;
 }

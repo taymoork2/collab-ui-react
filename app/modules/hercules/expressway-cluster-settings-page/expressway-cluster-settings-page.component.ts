@@ -1,4 +1,5 @@
 import { Notification } from 'modules/core/notifications';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface IResourceGroupOptions {
   label: string;
@@ -24,14 +25,13 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     title: 'hercules.expresswayClusterSettings.deactivateServicesHeader',
   };
   public localizedClusterNameWatermark = this.$translate.instant('hercules.expresswayClusterSettings.clusterNameWatermark');
-  public hasResourceGroupFeatureToggle: boolean;
 
   /* @ngInject */
   constructor(
     private $modal,
     private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
     private ResourceGroupService,
   ) {
@@ -40,7 +40,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
-    let clusterId = changes['clusterId'];
+    const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.loadCluster(clusterId.currentValue);
     }
@@ -51,19 +51,17 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
       .then(cluster => {
         this.enabledServices = _.map<any, string>(cluster.provisioning, 'connectorType');
 
-        if (this.hasResourceGroupFeatureToggle) {
-          this.ResourceGroupService.getAll()
-            .then(this.buildResourceOptions)
-            .then(groups => {
-              this.resourceGroupOptions = groups;
-              return cluster.resourceGroupId;
-            })
-            .then(this.getCurrentResourceGroup)
-            .then(group => {
-              this.originalResourceGroup = group;
-              this.selectedResourceGroup = group;
-            });
-        }
+        this.ResourceGroupService.getAll()
+          .then(this.buildResourceOptions)
+          .then(groups => {
+            this.resourceGroupOptions = groups;
+            return cluster.resourceGroupId;
+          })
+          .then(this.getCurrentResourceGroup)
+          .then(group => {
+            this.originalResourceGroup = group;
+            this.selectedResourceGroup = group;
+          });
       })
       .catch(error => {
         this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
@@ -71,7 +69,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   }
 
   private refreshClusterData(id) {
-    return this.FusionClusterService.get(id)
+    return this.HybridServicesClusterService.get(id)
       .then((cluster) => {
         this.cluster = cluster;
         return cluster;
@@ -219,7 +217,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     return this.$translate.instant('hercules.serviceNameFromConnectorType.' + connector);
   }
 
-  /* Callback function used by <rename-and-deregister-cluster-section>  */
+  /* Callback function used by <hs-rename-and-deregister-cluster-section>  */
   public nameUpdated(name) {
     this.$rootScope.$emit('cluster-name-update', name);
   }
@@ -230,6 +228,5 @@ export class ExpresswayClusterSettingsPageComponent implements ng.IComponentOpti
   public templateUrl = 'modules/hercules/expressway-cluster-settings-page/expressway-cluster-settings-page.html';
   public bindings = {
     clusterId: '<',
-    hasResourceGroupFeatureToggle: '<',
   };
 }

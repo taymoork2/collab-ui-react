@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -50,10 +50,24 @@ require('./_user-add.scss');
     $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
     var isFTW = false;
-    $scope.isSharedMeetingsEnabled = false;
     $scope.isReset = false;
     $scope.showExtensions = true;
     $scope.isResetEnabled = false;
+
+    $scope.careRadioValue = {
+      NONE: $translate.instant('onboardModal.paidNone'),
+      K1: $translate.instant('onboardModal.paidCDC'),
+      K2: $translate.instant('onboardModal.paidCVC'),
+    };
+
+    $scope.radioStates = {
+      commRadio: false,
+      msgRadio: false,
+      careRadio: $scope.careRadioValue.NONE,
+      initialCareRadioState: $scope.careRadioValue.NONE, // For generating Metrics
+    };
+
+    $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
 
     $scope.convertUsersFlow = false;
     $scope.editServicesFlow = false;
@@ -62,7 +76,7 @@ require('./_user-add.scss');
     // model can be removed after switching to controllerAs
     $scope.model = {
       userInputOption: 0,
-      uploadProgress: 0
+      uploadProgress: 0,
     };
 
     $scope.strFirstName = $translate.instant('usersPage.firstNamePlaceHolder');
@@ -75,12 +89,12 @@ require('./_user-add.scss');
       label: $scope.strEmailAddress,
       value: 0,
       name: 'radioOption',
-      id: 'radioEmail'
+      id: 'radioEmail',
     }, {
       label: strNameAndEmailAdress,
       value: 1,
       name: 'radioOption',
-      id: 'radioNamesAndEmail'
+      id: 'radioNamesAndEmail',
     }];
 
     OnboardService.huronCallEntitlement = false;
@@ -89,19 +103,14 @@ require('./_user-add.scss');
     $scope.cancelModal = cancelModal;
     var currentUserHasCall = false;
 
-    $scope.isCareEnabled = Authinfo.isCare();
-    $scope.enableCareService = true;
+    $scope.isCareAndCDCEnabled = Authinfo.isCareAndCDC();
+    $scope.isCareAndCVCEnabled = Authinfo.isCareVoiceAndCVC();
+    $scope.isCareEnabled = $scope.isCareAndCDCEnabled || $scope.isCareAndCVCEnabled;
 
-    $scope.sharedMeetingsFeatureDefaultToggle = { default: true, defaultValue: true };
-    if (_.get($scope, 'sharedMeetingsFeatureDefaultToggle.default')) {
-      $scope.isSharedMeetingsEnabled = _.get($scope, 'sharedMeetingsFeatureDefaultToggle.defaultValue');
-    } else {
-      FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
-        $scope.isSharedMeetingsEnabled = smpStatus;
-      });
-    }
+    $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+    $scope.convertUsersReadOnly = $stateParams.readOnly || $scope.isDirSyncEnabled;
 
-    $scope.controlCare = controlCare;
+    $scope.controlMsg = controlMsg;
 
     initController();
 
@@ -174,7 +183,7 @@ require('./_user-add.scss');
       $scope.results = {
         resultList: [],
         errors: [],
-        warnings: []
+        warnings: [],
       };
     }
 
@@ -240,15 +249,15 @@ require('./_user-add.scss');
     function loadExternalNumberPool(pattern) {
       // Numbers loaded here should be limited to standard DID numbers. No Toll-Free numbers.
       return TelephonyInfoService.loadExternalNumberPool(pattern, ExternalNumberPool.FIXED_LINE_OR_MOBILE)
-      .then(function (externalNumberPool) {
-        $scope.externalNumberPool = externalNumberPool;
-      }).catch(function (response) {
-        $scope.externalNumberPool = [{
-          uuid: 'none',
-          pattern: $translate.instant('directoryNumberPanel.none')
-        }];
-        Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
-      });
+        .then(function (externalNumberPool) {
+          $scope.externalNumberPool = externalNumberPool;
+        }).catch(function (response) {
+          $scope.externalNumberPool = [{
+            uuid: 'none',
+            pattern: $translate.instant('directoryNumberPanel.none'),
+          }];
+          Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
+        });
     }
 
     function mapDidToDn() {
@@ -258,19 +267,19 @@ require('./_user-add.scss');
 
       // Numbers loaded here should be limited to standard DID numbers. No Toll-Free numbers.
       TelephonyInfoService.loadExtPoolWithMapping(count, ExternalNumberPool.FIXED_LINE_OR_MOBILE)
-      .then(function (externalNumberMapping) {
-        $scope.externalNumberMapping = externalNumberMapping;
-        assignMapUserList(count, externalNumberMapping);
-        $scope.isMapped = true;
-        $scope.isMapInProgress = false;
-        $scope.validateDnForUser();
-      }).catch(function (response) {
-        $scope.isMapInProgress = false;
-        $scope.isMapped = false;
-        $scope.isMapEnabled = true;
-        $scope.externalNumberMapping = [];
-        Notification.errorResponse(response, 'directoryNumberPanel.externalNumberMappingError');
-      });
+        .then(function (externalNumberMapping) {
+          $scope.externalNumberMapping = externalNumberMapping;
+          assignMapUserList(count, externalNumberMapping);
+          $scope.isMapped = true;
+          $scope.isMapInProgress = false;
+          $scope.validateDnForUser();
+        }).catch(function (response) {
+          $scope.isMapInProgress = false;
+          $scope.isMapped = false;
+          $scope.isMapEnabled = true;
+          $scope.externalNumberMapping = [];
+          Notification.errorResponse(response, 'directoryNumberPanel.externalNumberMappingError');
+        });
     }
 
     function assignDNForUserList() {
@@ -300,7 +309,6 @@ require('./_user-add.scss');
     }
 
     function assignMapUserList(count, externalNumberMappings) {
-
       for (var i = 0; i < $scope.usrlist.length; i++) {
         if (i <= externalNumberMappings.length - 1) {
           if (externalNumberMappings[i].directoryNumber !== null) {
@@ -321,7 +329,7 @@ require('./_user-add.scss');
     function checkDidDnDupes() {
       var didDnDupe = {
         didDupe: false,
-        dnDupe: false
+        dnDupe: false,
       };
       for (var i = 0; i < $scope.usrlist.length - 1; i++) {
         for (var j = i + 1; j < $scope.usrlist.length; j++) {
@@ -375,23 +383,22 @@ require('./_user-add.scss');
 
         // Populate list with single user for updateUserLicense()
         $scope.usrlist = [{
-          address: _.get($scope, 'currentUser.userName', '')
+          address: _.get($scope, 'currentUser.userName', ''),
         }];
         activateDID();
         $state.go('editService.dn');
       } else {
         $scope.updateUserLicense();
       }
-
     };
 
     function toggleShowExtensions() {
-      return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+      return DialPlanService.getDialPlan().then(function (response) {
         var indexOfDidColumn = _.findIndex($scope.addDnGridOptions.columnDefs, {
-          field: 'externalNumber'
+          field: 'externalNumber',
         });
         var indexOfDnColumn = _.findIndex($scope.addDnGridOptions.columnDefs, {
-          field: 'internalExtension'
+          field: 'internalExtension',
         });
         if (response.extensionGenerated === "true") {
           $scope.showExtensions = false;
@@ -423,7 +430,7 @@ require('./_user-add.scss');
         // if the externalNumber was changed, find a matching DN and set the internalNumber to match
         if (modifiedFieldName === "externalNumber") {
           var matchingDn = _.find($scope.internalNumberPool, {
-            pattern: rowEntity.externalNumber.pattern.substr(-dnLength)
+            pattern: rowEntity.externalNumber.pattern.substr(-dnLength),
           });
           if (matchingDn) {
             rowEntity.assignedDn = matchingDn;
@@ -484,12 +491,15 @@ require('./_user-add.scss');
     $scope.conferenceFeatures = [];
     $scope.communicationFeatures = [];
     $scope.careFeatures = [];
+    $scope.cdcCareFeature = [];
+    $scope.cvcCareFeature = [];
     $scope.licenses = [];
     $scope.licenseStatus = [];
     $scope.populateConf = populateConf;
     $scope.disableCheckbox = disableCheckbox;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
+    $scope.setCareService = setCareService;
     $scope.checkMessageVisibility = checkMessageVisibility;
     var convertUsersCount = 0;
     var convertStartTime = 0;
@@ -584,13 +594,6 @@ require('./_user-add.scss');
       }
     }
 
-    $scope.radioStates = {
-      commRadio: false,
-      msgRadio: false,
-      careRadio: false,
-      initialCareRadioState: false // For generating Metrics
-    };
-
     function getSelectedKeys(obj) {
       var result = _.reduce(obj, function (result, v, k) {
         if (v === true) {
@@ -607,7 +610,7 @@ require('./_user-add.scss');
         numberOfErrors: $scope.results.errors.length,
         usersAdded: $scope.numAddedUsers,
         usersUpdated: $scope.numUpdatedUsers,
-        servicesSelected: getSelectedKeys()
+        servicesSelected: getSelectedKeys(),
       };
     }
 
@@ -619,7 +622,7 @@ require('./_user-add.scss');
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
         } else if (userEnts[x] === 'cloud-contact-center') {
-          setCareSevice();
+          setCareService();
         }
       }
     }
@@ -629,43 +632,25 @@ require('./_user-add.scss');
         $scope.radioStates.msgRadio = true;
       }
       if (userInvites.cc) {
-        setCareSevice();
+        setCareService();
       }
     }
 
-    function setCareSevice() {
-      if (getServiceDetails('CD')) {
-        SunlightConfigService.getUserInfo($scope.currentUser.id)
-          .then(function () {
-            Userservice.getUser($scope.currentUser.id, true, function (data) {
-              if (data.success) {
-                var hasSyncKms = _.find(data.roles, function (r) {
-                  return r === Config.backend_roles.spark_synckms;
-                });
-                var hasContextServiceEntitlement = _.find(data.entitlements, function (r) {
-                  return r === Config.entitlements.context;
-                });
-                if (hasSyncKms && hasContextServiceEntitlement) {
-                  $scope.radioStates.careRadio = true;
-                  $scope.radioStates.initialCareRadioState = true;
-                  $scope.enableCareService = true;
-                }
-              }
-            });
-          },
-        function () {
-          $scope.radioStates.careRadio = false;
-        });
+    function setCareService() {
+      if (hasLicense('CD')) {
+        $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K1;
+      } else if (hasLicense('CV')) {
+        $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K2;
+      } else {
+        $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
       }
     }
 
-    function getServiceDetails(licensePrefix) {
-      var hasLicense = _.find($scope.currentUser.licenseID, function (userLicense) {
+    function hasLicense(licensePrefix) {
+      return _.find($scope.currentUser.licenseID, function (userLicense) {
         return (userLicense.substring(0, 2) === licensePrefix);
       });
-      return hasLicense;
     }
-
 
     function shouldAddCallService() {
       return !currentUserHasCall && ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC);
@@ -683,7 +668,7 @@ require('./_user-add.scss');
         isTrial: _.get(obj, 'license.isTrial', false),
         status: _.get(obj, 'license.status', ''),
         confModel: false,
-        cmrModel: false
+        cmrModel: false,
       };
     }
 
@@ -707,10 +692,10 @@ require('./_user-add.scss');
 
       var formatLicense = function (site) {
         var confMatches = _.filter(confFeatures, {
-          siteUrl: site
+          siteUrl: site,
         });
         var cmrMatches = _.filter(cmrFeatures, {
-          siteUrl: site
+          siteUrl: site,
         });
         var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
         return {
@@ -719,7 +704,7 @@ require('./_user-add.scss');
           confLic: confMatches,
           cmrLic: cmrMatches,
           isCISite: isCISiteFlag,
-          siteAdminUrl: (isCISiteFlag ? '' : WebExUtilsFact.getSiteAdminUrl(site))
+          siteAdminUrl: (isCISiteFlag ? '' : WebExUtilsFact.getSiteAdminUrl(site)),
         };
       };
 
@@ -727,7 +712,7 @@ require('./_user-add.scss');
         var temp = {
           confFeature: confs[i],
           confModel: false,
-          confId: 'conf-' + i
+          confId: 'conf-' + i,
         };
 
         var confNoUrl = _.chain(confs)
@@ -791,23 +776,31 @@ require('./_user-add.scss');
 
     /* TODO: Refactor this functions into MultipleSubscriptions Controller */
     $scope.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-      return _.some($scope.basicLicenses, function (service) {
-        if (_.get(service, 'billing') === subscriptionId) {
-          return !_.has(service, 'site');
-        }
-      });
+      if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+        return _.some($scope.basicLicenses, function (service) {
+          if (_.get(service, 'billing') === subscriptionId) {
+            return !_.has(service, 'site');
+          }
+        });
+      } else {
+        return $scope.hasBasicLicenses;
+      }
     };
 
     /* TODO: Refactor this functions into MultipleSubscriptions Controller */
     $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
       var advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
-      return _.some(advancedLicensesInSubscription, function (service) {
-        return _.has(service, 'site');
-      });
+      if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+        return _.some(advancedLicensesInSubscription, function (service) {
+          return _.has(service, 'site');
+        });
+      } else {
+        return $scope.hasAdvancedLicenses;
+      }
     };
 
     $scope.isSharedMeetingsLicense = function (license) {
-      return _.lowerCase(_.get(license, 'confLic[0].licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
+      return _.toLower(_.get(license, 'confLic[0].licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
     };
 
     $scope.determineLicenseType = function (license) {
@@ -818,6 +811,10 @@ require('./_user-add.scss');
       return $scope.isSharedMeetingsLicense(license) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
     };
 
+    $scope.careTooltip = function () {
+      return '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.careTooltip') + '</div>';
+    };
+
     $scope.isSubscribeable = function (license) {
       if (license.status === 'ACTIVE' || license.status === 'PENDING') {
         return (license.volume > 0);
@@ -825,55 +822,32 @@ require('./_user-add.scss');
       return false;
     };
 
-    // [Services] -> [Services] (merges Service[s] w/ same license)
-    var mergeMultipleLicenseSubscriptions = function (fetched) {
-
-      // Construct a mapping from License to (array of) Service object(s)
-      var services = fetched.reduce(function (object, service) {
-        var key = service.license.licenseType;
-        if (key in object) {
-          object[key].push(service);
-        } else {
-          object[key] = [service];
-        }
-        return object;
-      }, {});
-
-      // Merge all services with the same License into a single Service
-      return _.values(services).map(function (array) {
-        var result = {
-          licenses: []
-        };
-        array.forEach(function (service) {
-          var copy = angular.copy(service);
-          copy.licenses = [copy.license];
-          delete copy.license;
-          _.mergeWith(result, copy, function (left, right) {
-            if (_.isArray(left)) return left.concat(right);
-          });
-        });
-        return result;
-      });
-
+    $scope.hasAssignableMessageItems = MessengerInteropService.hasAssignableMessageItems.bind(MessengerInteropService);
+    $scope.showMessengerInteropToggle = function () {
+      if (!_.get($state, 'current.data.showMessengerInteropToggle')) {
+        return false;
+      }
+      return MessengerInteropService.hasAssignableMessageOrgEntitlement();
     };
 
     var getAccountServices = function () {
       var services = {
-        message: Authinfo.getMessageServices(),
+        message: Authinfo.getMessageServices({ assignableOnly: true }),
         conference: Authinfo.getConferenceServices(),
         communication: Authinfo.getCommunicationServices(),
-        care: Authinfo.getCareServices()
+        care: Authinfo.getCareServices(),
       };
       if (services.message) {
-        services.message = mergeMultipleLicenseSubscriptions(services.message);
+        services.message = OnboardService.mergeMultipleLicenseSubscriptions(services.message);
         $scope.messageFeatures = $scope.messageFeatures.concat(services.message);
+        var licenses = _.get($scope.messageFeatures, '[1].licenses', []);
         if (userLicenseIds) {
-          _.forEach($scope.messageFeatures[1].licenses, function (license) {
+          _.forEach(licenses, function (license) {
             license.model = userLicenseIds.indexOf(license.licenseId) >= 0;
           });
         }
 
-        if ($scope.messageFeatures[1].licenses.length > 1) {
+        if (licenses.length > 1) {
           $scope.radioStates.msgRadio = true;
         }
       }
@@ -887,6 +861,8 @@ require('./_user-add.scss');
       }
       if (services.care) {
         $scope.careFeatures = $scope.careFeatures.concat(services.care);
+        $scope.cdcCareFeature = getCareFeature(Config.offerCodes.CDC);
+        $scope.cvcCareFeature = getCareFeature(Config.offerCodes.CVC);
       }
     };
 
@@ -898,28 +874,14 @@ require('./_user-add.scss');
       label: $translate.instant('onboardModal.enableCollab'),
       value: 1,
       name: 'collabRadio',
-      id: 'collabRadio1'
+      id: 'collabRadio1',
     };
 
     $scope.collabRadio2 = {
       label: $translate.instant('onboardModal.enableCollabGroup'),
       value: 2,
       name: 'collabRadio',
-      id: 'collabRadio2'
-    };
-
-    $scope.tableOptions = {
-      cursorcolor: chartColors.gray,
-      cursorminheight: 50,
-      cursorborder: "0px",
-      cursorwidth: "7px",
-      railpadding: {
-        top: 0,
-        right: 3,
-        left: 0,
-        bottom: 0
-      },
-      autohidemode: "leave"
+      id: 'collabRadio2',
     };
 
     var nameTemplate = '<div class="ui-grid-cell-contents"><span class="name-display-style">{{row.entity.name}}</span>' +
@@ -990,8 +952,6 @@ require('./_user-add.scss');
           }
         }
       }
-      // Control Care behavior
-      $scope.controlCare();
     });
 
     $scope.$watch('wizard.current.step', function () {
@@ -1013,8 +973,7 @@ require('./_user-add.scss');
     });
 
     $scope.$watch('radioStates.msgRadio', function () {
-      // Control Care behavior
-      $scope.controlCare();
+      $scope.controlMsg();
     });
 
     $scope.validateDnForUser = function () {
@@ -1039,10 +998,10 @@ require('./_user-add.scss');
       enableColumnMenus: false,
       columnDefs: [{
         field: 'name',
-        displayName: $translate.instant('usersPage.nameHeader'),
+        displayName: $translate.instant('common.user'),
         sortable: false,
         cellTemplate: nameTemplate,
-        width: '*'
+        width: '*',
       }, {
         field: 'externalNumber',
         displayName: $translate.instant('usersPage.directLineHeader'),
@@ -1050,7 +1009,7 @@ require('./_user-add.scss');
         cellTemplate: externalExtensionTemplate,
         maxWidth: 220,
         minWidth: 140,
-        width: '*'
+        width: '*',
       }, {
         field: 'internalExtension',
         displayName: $translate.instant('usersPage.extensionHeader'),
@@ -1058,8 +1017,8 @@ require('./_user-add.scss');
         cellTemplate: internalExtensionTemplate,
         maxWidth: 220,
         minWidth: 140,
-        width: '*'
-      }]
+        width: '*',
+      }],
     };
     $scope.collabRadio = 1;
 
@@ -1081,7 +1040,7 @@ require('./_user-add.scss');
         }
         idList = idList.concat(_(license.confLic)
           .filter({
-            confModel: state
+            confModel: state,
           })
           .map('licenseId')
           .remove(undefined)
@@ -1090,7 +1049,7 @@ require('./_user-add.scss');
 
         idList = idList.concat(_(license.cmrLic)
           .filter({
-            cmrModel: state
+            cmrModel: state,
           })
           .map('licenseId')
           .remove(undefined)
@@ -1168,45 +1127,75 @@ require('./_user-add.scss');
           licenseList.push(new LicenseFeature($scope.communicationFeatures[1].license.licenseId, false));
         }
 
-        // Care: straightforward license, for now
-        var careIndex = $scope.radioStates.careRadio ? 1 : 0;
-        var selCareService = $scope.careFeatures[careIndex];
+        // BEGIN: Care License provisioning for users
+        var selCareService = {};
+
+        // get the selected care service according to care radio button selected
+        switch ($scope.radioStates.careRadio) {
+          case $scope.careRadioValue.K1:
+            if ($scope.cdcCareFeature.license.licenseId) {
+              selCareService = $scope.cdcCareFeature;
+            }
+            break;
+          case $scope.careRadioValue.K2:
+            if ($scope.cvcCareFeature.license.licenseId) {
+              selCareService = $scope.cvcCareFeature;
+            }
+            break;
+          case $scope.careRadioValue.NONE:
+            selCareService = $scope.careFeatures[0];
+            break;
+        }
+
+        // push and remove licenses in licenseList as per selected care service
         var licenseId = _.get(selCareService, 'license.licenseId', null);
         if (licenseId) {
           licenseList.push(new LicenseFeature(licenseId, true));
-        } else if (action === 'patch') {
-          licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
-          if (licenseId) {
-            licenseList.push(new LicenseFeature(licenseId, false));
+
+          if (_.startsWith(licenseId, Config.offerCodes.CDC)) {
+            removeCareLicence($scope.cvcCareFeature, licenseList);
+          } else if (_.startsWith(licenseId, Config.offerCodes.CVC)) {
+            removeCareLicence($scope.cdcCareFeature, licenseList);
           }
+        } else if (action === 'patch') { // will get invoked when None is selected in care radio
+          removeCareLicence($scope.cdcCareFeature, licenseList);
+          removeCareLicence($scope.cvcCareFeature, licenseList);
         }
+        // END: Care License provisioning for users
 
         // Metrics for care entitlement for users
         if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
-          if ($scope.radioStates.careRadio) {
+          if ($scope.radioStates.careRadio === $scope.careRadioValue.K1) {
             LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-          } else {
+          } else if ($scope.radioStates.careRadio === $scope.careRadioValue.K2) {
+            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careVoiceEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          }
+          if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K1) {
             LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          }
+          if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K2) {
+            LogMetricsService.logMetrics('Disabling careVoice for user', LogMetricsService.getEventType('careVoiceDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
           }
         }
       }
-
       return licenseList.length === 0 ? null : licenseList;
     }
 
-    var getEntitlements = function (action) {
-      var entitleList = [];
-      var state = null;
-      for (var key in $scope.entitlements) {
-        state = $scope.entitlements[key];
-        if ((action === 'add' && state) || (action === 'entitle' && state)) {
-          entitleList.push(new Feature(key, state));
-        }
-      }
+    function getCareFeature(offerName) {
+      return _.find($scope.careFeatures, function (careFeature) {
+        return _.startsWith(careFeature.license.licenseId, offerName);
+      });
+    }
 
-      Log.debug(entitleList);
-      return entitleList;
-    };
+    function removeCareLicence(careFeature, licenseList) {
+      if (careFeature && careFeature.license.licenseId) {
+        licenseList.push(new LicenseFeature(careFeature.license.licenseId, false));
+      }
+    }
+
+    function getEntitlements(action) {
+      return OnboardService.getEntitlements(action, $scope.entitlements);
+    }
 
     // Hybrid Services entitlements
     var getExtensionEntitlements = function (action) {
@@ -1228,7 +1217,7 @@ require('./_user-add.scss');
         usersList = [];
         var userObj = {
           'address': $scope.currentUser.userName,
-          'name': $scope.currentUser.name
+          'name': $scope.currentUser.name,
         };
         users.push(userObj);
         usersList.push(users);
@@ -1261,7 +1250,6 @@ require('./_user-add.scss');
         rdata.status = response.status || false;
         entitleUserCallback(rdata, response.status, 'updateUserLicense', response.headers);
       }
-
     };
 
     //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
@@ -1269,17 +1257,13 @@ require('./_user-add.scss');
     //***
     //*********************************************************************
 
-    function Feature(name, state) {
-      this.entitlementName = name;
-      this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
-      this.properties = {};
-    }
+    var Feature = require('./feature.model').default;
 
     function LicenseFeature(name, bAdd) {
       return {
         id: name.toString(),
         idOperation: bAdd ? 'ADD' : 'REMOVE',
-        properties: {}
+        properties: {},
       };
     }
 
@@ -1292,22 +1276,7 @@ require('./_user-add.scss');
     };
 
     //email validation logic
-    var validateEmail = function (input) {
-      var emailregex = /\S+@\S+\.\S+/;
-      var emailregexbrackets = /<\s*\S+@\S+\.\S+\s*>/;
-      var emailregexquotes = /"\s*\S+@\S+\.\S+\s*"/;
-      var valid = false;
-
-      if (/[<>]/.test(input) && emailregexbrackets.test(input)) {
-        valid = true;
-      } else if (/["]/.test(input) && emailregexquotes.test(input)) {
-        valid = true;
-      } else if (!/[<>]/.test(input) && !/["]/.test(input) && emailregex.test(input)) {
-        valid = true;
-      }
-
-      return valid;
-    };
+    var validateEmail = OnboardService.validateEmail;
 
     var wizardNextText = function () {
       var userCount = angular.element('.token-label').length;
@@ -1325,13 +1294,9 @@ require('./_user-add.scss');
     $scope.tokenplaceholder = $translate.instant('usersPage.userInput');
     $scope.tokenoptions = {
       delimiter: [',', ';'],
-      createTokensOnBlur: true
+      createTokensOnBlur: true,
     };
     var isDuplicate = false;
-
-    FeatureToggleService.supportsDirSync().then(function (supportsDirSync) {
-      $scope.isDirSyncEnabled = supportsDirSync;
-    });
 
     function setInvalidToken(token) {
       angular.element(token.relatedTarget).addClass('invalid');
@@ -1397,7 +1362,7 @@ require('./_user-add.scss');
           wizardNextText();
           checkPlaceholder();
         });
-      }
+      },
     };
 
     function isEmailAlreadyPresent(input) {
@@ -1489,7 +1454,7 @@ require('./_user-add.scss');
           $scope.currentUserCount = usersListLength;
           Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
             Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
-              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()]
+              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
             }
           );
           $state.go('users.add.services');
@@ -1499,7 +1464,7 @@ require('./_user-add.scss');
           Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
             Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
               emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
-              error: 'no users'
+              error: 'no users',
             }
           );
         } else {
@@ -1507,7 +1472,7 @@ require('./_user-add.scss');
           Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
             Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
               emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
-              error: 'invalid users'
+              error: 'invalid users',
             }
           );
           Notification.error('usersPage.validEmailInput');
@@ -1564,6 +1529,29 @@ require('./_user-add.scss');
       initResults();
     };
 
+    $scope.skipErrorsOrFinish = function () {
+      if (_.get($scope, 'results.errors.length')) {
+        return 'usersPage.skipErrorsAndFinish';
+      } else {
+        return 'common.finish';
+      }
+    };
+
+    $scope.goToUsersPage = function () {
+      $previousState.forget('modalMemo');
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalyltics());
+      $state.go('users.list');
+    };
+
+    $scope.fixBulkErrors = function () {
+      if (isFTW) {
+        $scope.wizard.goToStep('manualEntry');
+      } else {
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
+        $state.go('users.add');
+      }
+    };
+
     function onboardUsers(optionalOnboard) {
       var deferred = $q.defer();
       initResults();
@@ -1578,7 +1566,7 @@ require('./_user-add.scss');
         _.forEach(response.data.userResponse, function (user) {
           var userResult = {
             email: user.email,
-            alertType: null
+            alertType: null,
           };
 
           var httpStatus = user.httpStatus;
@@ -1587,7 +1575,7 @@ require('./_user-add.scss');
             case 200:
             case 201: {
               userResult.message = $translate.instant('usersPage.onboardSuccess', {
-                email: userResult.email
+                email: userResult.email,
               });
               userResult.alertType = 'success';
               if (httpStatus === 200) {
@@ -1597,7 +1585,7 @@ require('./_user-add.scss');
               }
               if (user.message === '700000') {
                 userResult.message = $translate.instant('usersPage.onboardedWithoutLicense', {
-                  email: userResult.email
+                  email: userResult.email,
                 });
                 userResult.alertType = 'warning';
               }
@@ -1611,7 +1599,7 @@ require('./_user-add.scss');
               switch (user.message) {
                 case Config.messageErrors.userExistsError: {
                   userResult.message = $translate.instant('usersPage.userExistsError', {
-                    email: userResult.email
+                    email: userResult.email,
                   });
                   break;
                 }
@@ -1619,25 +1607,25 @@ require('./_user-add.scss');
                 case Config.messageErrors.claimedDomainError: {
                   userResult.message = $translate.instant('usersPage.claimedDomainError', {
                     email: userResult.email,
-                    domain: userResult.email.split('@')[1]
+                    domain: userResult.email.split('@')[1],
                   });
                   break;
                 }
                 case Config.messageErrors.userExistsInDiffOrgError: {
                   userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
-                    email: userResult.email
+                    email: userResult.email,
                   });
                   break;
                 }
                 case Config.messageErrors.notSetupForManUserAddError: {
                   userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
-                    email: userResult.email
+                    email: userResult.email,
                   });
                   break;
                 }
                 case Config.messageErrors.userExistsDomainClaimError: {
                   userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
-                    email: userResult.email
+                    email: userResult.email,
                   });
                   break;
                 }
@@ -1647,19 +1635,19 @@ require('./_user-add.scss');
                 }
                 case Config.messageErrors.unableToMigrateError: {
                   userResult.message = $translate.instant('usersPage.unableToMigrateError', {
-                    email: userResult.email
+                    email: userResult.email,
                   });
                   break;
                 }
                 case Config.messageErrors.insufficientEntitlementsError: {
                   userResult.message = $translate.instant('usersPage.insufficientEntitlementsError', {
-                    email: userResult.email
+                    email: userResult.email,
                   });
                   break;
                 }
                 default: {
                   userResult.message = $translate.instant('usersPage.accessDeniedError', {
-                    email: userResult.email
+                    email: userResult.email,
                   });
                   break;
                 }
@@ -1679,7 +1667,7 @@ require('./_user-add.scss');
                 default: {
                   userResult.message = $translate.instant('usersPage.onboardError', {
                     email: userResult.email,
-                    status: httpStatus
+                    status: httpStatus,
                   });
                   break;
                 }
@@ -1689,7 +1677,7 @@ require('./_user-add.scss');
             default: {
               userResult.message = $translate.instant('usersPage.onboardError', {
                 email: userResult.email,
-                status: httpStatus
+                status: httpStatus,
               });
               break;
             }
@@ -1720,29 +1708,6 @@ require('./_user-add.scss');
             $scope.results.errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
           }
         }
-
-        $scope.skipErrorsOrFinish = function () {
-          if ($scope.results.errors.length > 0) {
-            return 'usersPage.skipErrorsAndFinish';
-          } else {
-            return 'common.finish';
-          }
-        };
-
-        $scope.goToUsersPage = function () {
-          $previousState.forget('modalMemo');
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalyltics());
-          $state.go('users.list');
-        };
-
-        $scope.fixBulkErrors = function () {
-          if (isFTW) {
-            $scope.wizard.goToStep('manualEntry');
-          } else {
-            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
-            $state.go('users.add');
-          }
-        };
 
         //Displaying notifications
         if ($scope.results.resultList.length === usersList.length) {
@@ -1784,11 +1749,22 @@ require('./_user-add.scss');
           entitleList = [],
           licenseList = [],
           chunk = Config.batchSize;
+
+        // notes:
+        // - start with all enabled entitlements
+        entitleList = getEntitlements('add');
+
+        // - as of 2017-05-19, this conditional branch does not collect enabled entitlements
+        // TODO: determine what '$scope.collabRadio === 1' means, and re-write this more readably
         if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
           licenseList = getAccountLicenses('additive');
-        } else {
-          entitleList = getEntitlements('add');
+
+          // - so either isolate the messenger interop entitlement, or reset the list
+          entitleList = MessengerInteropService.hasAssignableMessageOrgEntitlement()
+            ? _.filter(entitleList, { entitlementName: 'messengerInterop' })
+            : [];
         }
+
         entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
         for (var i = 0; i < usersList.length; i += chunk) {
@@ -1810,7 +1786,7 @@ require('./_user-add.scss');
     $scope.updateExtensionEntitlements = function (entitlements) {
       $scope.hybridCallServiceAware = _.some(entitlements, {
         entitlementName: 'squaredFusionUC',
-        entitlementState: 'ACTIVE'
+        entitlementState: 'ACTIVE',
       });
       $scope.extensionEntitlements = entitlements;
     };
@@ -1829,7 +1805,7 @@ require('./_user-add.scss');
         _.forEach(userResponseArray, function (userResponseItem) {
           var userResult = {
             email: userResponseItem.email,
-            alertType: null
+            alertType: null,
           };
 
           var httpStatus = userResponseItem.status;
@@ -1852,6 +1828,12 @@ require('./_user-add.scss');
               isComplete = false;
               break;
             }
+            case 408: {
+              userResult.message = $translate.instant('onboardModal.result.408');
+              userResult.alertType = 'danger';
+              isComplete = false;
+              break;
+            }
             case 409: {
               userResult.message = $translate.instant('onboardModal.result.409');
               userResult.alertType = 'danger';
@@ -1861,7 +1843,7 @@ require('./_user-add.scss');
             default: {
               if (userResponseItem.message === Config.messageErrors.hybridServicesComboError) {
                 userResult.message = $translate.instant('onboardModal.result.400094', {
-                  status: httpStatus
+                  status: httpStatus,
                 });
                 userResult.alertType = 'danger';
                 isComplete = false;
@@ -1871,7 +1853,7 @@ require('./_user-add.scss');
                 isComplete = false;
               } else {
                 userResult.message = $translate.instant('onboardModal.result.other', {
-                  status: httpStatus
+                  status: httpStatus,
                 });
                 userResult.alertType = 'danger';
                 isComplete = false;
@@ -1907,11 +1889,11 @@ require('./_user-add.scss');
         var error = null;
         if (status) {
           error = $translate.instant('errors.statusError', {
-            status: status
+            status: status,
           });
           if (data && _.isString(data.message)) {
             error += ' ' + $translate.instant('usersPage.messageError', {
-              message: data.message
+              message: data.message,
             });
           }
         } else {
@@ -1948,7 +1930,7 @@ require('./_user-add.scss');
           var msg = 'Migrated ' + $scope.numUpdatedUsers + ' users';
           var migratedata = {
             totalUsers: convertUsersCount,
-            successfullyConverted: $scope.numUpdatedUsers
+            successfullyConverted: $scope.numUpdatedUsers,
           };
           LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, $scope.numUpdatedUsers, migratedata);
         }
@@ -2063,7 +2045,7 @@ require('./_user-add.scss');
     };
 
     var watchCheckboxes = function () {
-      $timeout(function () {});
+      $timeout(function () { });
       var flag = false;
       $scope.$watchCollection('entitlements', function (newEntitlements, oldEntitlements) {
         if (flag) {
@@ -2206,7 +2188,7 @@ require('./_user-add.scss');
             $scope.results.errors.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
           } else {
             var user = {
-              'address': data.userResponse[i].email
+              'address': data.userResponse[i].email,
             };
             var userArray = batch.filter(match);
             user.assignedDn = userArray[0].assignedDn;
@@ -2240,7 +2222,7 @@ require('./_user-add.scss');
             var msg = 'Migrated ' + $scope.numUpdatedUsers + ' users';
             var migratedata = {
               totalUsers: convertUsersCount,
-              successfullyConverted: $scope.numUpdatedUsers
+              successfullyConverted: $scope.numUpdatedUsers,
             };
             LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, $scope.numUpdatedUsers, migratedata);
           }
@@ -2264,7 +2246,7 @@ require('./_user-add.scss');
     };
 
     $scope.convertDisabled = function () {
-      return $scope.gridApi.selection.getSelectedRows().length === 0;
+      return $scope.isDirSyncEnabled || !$scope.gridApi || $scope.gridApi.selection.getSelectedRows().length === 0;
     };
 
     getUnlicensedUsers();
@@ -2274,8 +2256,8 @@ require('./_user-add.scss');
       rowHeight: 45,
       enableHorizontalScrollbar: 0,
       selectionRowHeaderWidth: 50,
-      enableRowHeaderSelection: true,
-      enableFullRowSelection: true,
+      enableRowHeaderSelection: !$scope.convertUsersReadOnly,
+      enableFullRowSelection: !$scope.convertUsersReadOnly,
       useExternalSorting: false,
       enableColumnMenus: false,
       showFilter: false,
@@ -2287,6 +2269,7 @@ require('./_user-add.scss');
             gridApi.saveState.restore($scope, $scope.selectedState);
           }, 100);
         }
+        $timeout(gridApi.core.handleWindowResize, 200);
       },
       columnDefs: [{
 
@@ -2294,8 +2277,6 @@ require('./_user-add.scss');
         displayName: $translate.instant('usersPage.displayNameHeader'),
         resizable: false,
         sortable: true,
-        minWidth: 449,
-        maxWidth: 449
       }, {
         field: 'userName',
         displayName: $translate.instant('homePage.emailAddress'),
@@ -2303,11 +2284,9 @@ require('./_user-add.scss');
         sort: {
           direction: 'desc',
           priority: 0,
-          minWidth: 449,
-          maxWidth: 449
         },
-        sortCellFiltered: true
-      }]
+        sortCellFiltered: true,
+      }],
     };
 
     /////////////////////////////////
@@ -2333,7 +2312,7 @@ require('./_user-add.scss');
       var data = {
         'newUsersCount': $scope.model.numNewUsers || 0,
         'updatedUsersCount': $scope.model.numExistingUsers || 0,
-        'errorUsersCount': _.isArray($scope.model.userErrorArray) ? $scope.model.userErrorArray.length : 0
+        'errorUsersCount': _.isArray($scope.model.userErrorArray) ? $scope.model.userErrorArray.length : 0,
       };
       LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
     }
@@ -2347,9 +2326,9 @@ require('./_user-add.scss');
     // Bulk DirSync Onboarding logic
     // Wizard hooks
     $scope.installConnectorNext = function () {
-      return FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
+      return DirSyncService.refreshStatus().then(function () {
         return $q(function (resolve, reject) {
-          if (dirSyncEnabled) {
+          if (DirSyncService.isDirSyncEnabled()) {
             // getStatus() is in the parent scope - AddUserCtrl
             if (_.isFunction($scope.getStatus)) {
               return $scope.getStatus().then(function () {
@@ -2365,7 +2344,6 @@ require('./_user-add.scss');
             resolve();
           }
         });
-
       });
     };
 
@@ -2423,14 +2401,14 @@ require('./_user-add.scss');
         $scope.model.userErrorArray.push({
           row: row,
           email: email,
-          error: errorMsg
+          error: errorMsg,
         });
         UserCsvService.setCsvStat({
           userErrorArray: [{
             row: row,
             email: email,
-            error: errorMsg
-          }]
+            error: errorMsg,
+          }],
         });
       }
 
@@ -2452,7 +2430,7 @@ require('./_user-add.scss');
               }
               // Build list of successful onboards and patches
               var addItem = {
-                address: user.email
+                address: user.email,
               };
               if (addItem.address.length > 0) {
                 addedUsersList.push(addItem);
@@ -2488,7 +2466,7 @@ require('./_user-add.scss');
       } else {
         entitleList = getEntitlements('add');
         isCommunicationSelected = !!_.find(entitleList, {
-          entitlementName: 'ciscoUC'
+          entitlementName: 'ciscoUC',
         });
       }
       entitleList = entitleList.concat(getExtensionEntitlements('add'));
@@ -2551,7 +2529,7 @@ require('./_user-add.scss');
               name: NAME_DELIMITER,
               displayName: '',
               internalExtension: '',
-              directLine: ''
+              directLine: '',
             });
           }
         }
@@ -2576,12 +2554,9 @@ require('./_user-add.scss');
       $state.modal.dismiss();
     }
 
-    function controlCare() {
-      if ($scope.radioStates.msgRadio) {
-        $scope.enableCareService = true;
-      } else {
-        $scope.enableCareService = false;
-        $scope.radioStates.careRadio = false;
+    function controlMsg() {
+      if (!$scope.radioStates.msgRadio) {
+        $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
       }
     }
 

@@ -1,0 +1,254 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.context-fields-state {
+  background-color: $gray-lightest;
+  overflow: hidden;
+}
+
+.context-fieldsets-state {
+  background-color: $gray-lightest;
+  overflow: hidden;
+}
+
+.context-sidepanel-title {
+  max-width: 90% !important;
+}
+
+.context-modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .modal-title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+.context-sidepanel {
+
+  .feature-name {
+    min-width: 20%;
+  }
+
+  .feature-details {
+    overflow-wrap: break-word;
+    max-width: 80%;
+  }
+}
+
+.context-modal-body {
+
+  label.cs-checkbox {
+    width: 0;
+  }
+
+  textarea {
+    resize: none;
+    height: 100px;
+  }
+
+  .context-modal-content {
+    width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section__info {
+    margin-bottom: 16px;
+  }
+
+  .field-list-item-wrapper {
+    text-align: center;
+  }
+
+  .field-list-item {
+    text-align: left;
+    padding: 10px 0px;
+    cursor: default;
+    width: 42rem;
+  }
+
+  .field-list-item .column-one {
+    float: left;
+    width: 60%;
+    line-height: 100%;
+    font-size: 0.875rem;
+    font-family: $brand-font-light;
+    color: $gray-dark-1;
+    text-overflow: ellipsis;
+    padding-left: 2%;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-top: 2px;
+    cursor: default;
+  }
+
+  .field-list-item .column-two {
+    float: left;
+    width: 35%;
+    line-height: 100%;
+    font-size: 0.875rem;
+    font-family: $brand-font-light;
+    color: $gray-dark-1;
+    text-overflow: ellipsis;
+    padding-left: 4%;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-top: 2px;
+    cursor: default;
+  }
+
+  .field-list-item .column-three {
+    float: left;
+    width: 5%;
+    line-height: 100%;
+    font-size: 0.875rem;
+    font-family: $brand-font-light;
+    color: $gray-dark-1;
+    padding-top: 1px;
+    padding-left: 1%;
+    cursor: pointer;
+  }
+
+  .btn--white {
+    border-radius: 2px;
+    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+  }
+
+  .btn--white:hover {
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+  }
+
+  .typeahead-search {
+    .context-fields-searchbox {
+      width: 42rem;
+    }
+    .dropdown-menu {
+      width: 42rem;
+
+      &.active:hover {
+        background: #ebebec;
+      }
+    }
+
+    .disabled-state {
+      width: 42rem;
+    }
+
+    .field-drop-down span.field-drop-down-id {
+      float: left;
+      width: 29rem;
+      line-height: 24px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      padding-top: 6px;
+      padding-left: 16px;
+    }
+
+    .field-drop-down span.field-drop-down-fieldinfo {
+      float: left;
+      line-height: 24px;
+      padding-top: 6px;
+      padding-left: 16px;
+    }
+  }
+}
+
+.no-results {
+  font-size: 0.875rem;
+  font-family: $brand-font-light;
+  color: $gray-dark-1;
+  line-height: 24px;
+}
+
+.context-retry-error {
+  i {
+    font-size: 18px;
+    margin-right: 5px;
+    vertical-align: middle;
+    color: $color-negative-base;
+  }
+  .failure-message {
+    font-family: $brand-font-regular;
+    font-size: 14px;
+    color: $color-negative-base;
+  }
+  .retry-action {
+    font-family: $brand-font-regular;
+    font-size: 14px;
+    color: $color-primary-base;
+    background: none;
+    padding: 0;
+    min-width: 0;
+  }
+  .retry-action:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  .retry-action:disabled {
+    color: $gray-base;
+  }
+}
+
+.tooltip[popup-class="context-tooltip"] .c-nub {
+  font-size: small;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 300px;
+}
+
+.section-wrapper {
+  margin-top: 24px;
+}
+
+.context-padded-multi-line {
+  display: inline;
+  font-size: 0.75rem;
+  position: relative;
+  top: -9px;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.context-status-block {
+  display: inline-block;
+  font-size: 0.75rem;
+}
+
+.context-fieldsets-none {
+  font-size: 0.75rem;
+  position: relative;
+  top: -22px;
+  left: 456px;
+}
+
+.context-nocursor {
+  cursor: default;
+}
+
+.btn--delete {
+  margin: 1rem 0;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+
+  font-size: 0.875rem;
+  color: $gray-light-1;
+  background-color: transparent;
+  border-color: transparent;
+
+  &:hover,
+  &:active,
+  &:focus {
+    color: $color-negative-base;
+    background-color: transparent;
+    outline: none;
+  }
+}

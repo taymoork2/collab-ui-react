@@ -4,6 +4,10 @@
   @include vr-spacing(mt, .75);
   @include vr-spacing(mb, 1);
 
+  .session-variable {
+    @include vr-spacing(mb, 1.5);
+  }
+
   .aa-flex-row {
     @include vr-spacing(ml, 0);
     @include vr-spacing(mb, 0);
@@ -12,6 +16,25 @@
   .aa-then {
     @include vr-spacing(mt, 1.5);
     @include vr-spacing(mb, .75);
+  }
+
+  .select-toggle {
+    @include vr-spacing(pr, 1.75);
+
+    > i {
+      &.icon {
+        right: -0.3rem;
+      }
+    }
+  }
+
+  .select-list {
+    .dropdown-menu {
+      width: 100%;
+    }
+    .msg-container {
+      line-height: 1rem;
+    }
   }
 
   .aa-decision-textarea {

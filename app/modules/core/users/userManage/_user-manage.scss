@@ -1,5 +1,14 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.modal-content .center-spinner {
+  height: 100%;
+
+  .icon {
+    top: 50%;
+    left: 50%;
+  }
+}
 
 .modal-usermanage-dialog {
   width: 900px;
@@ -68,12 +77,6 @@
       font-weight: bolder;
       position: relative;
       top: 0.1rem;
-    }
-
-    .ui-grid .grid-refresh {
-      position: fixed;
-      top: 50%;
-      left: 50%;
     }
 
     .ds-sync {

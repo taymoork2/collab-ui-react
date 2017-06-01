@@ -9,7 +9,7 @@
   function AAUiScheduleService($q, AutoAttendantCeInfoModelService, AACalendarService, AAICalService) {
 
     var service = {
-      create8To5Schedule: create8To5Schedule
+      create8To5Schedule: create8To5Schedule,
     };
 
     return service;

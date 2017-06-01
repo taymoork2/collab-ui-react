@@ -43,7 +43,7 @@
               headers: {
                 'Content-Type': csvAPI.contentType,
                 'Authorization': 'Bearer ' + accessToken,
-              }
+              },
             };
 
             if ("POST" == csvAPI.method) {
@@ -79,7 +79,7 @@
         siteUrl: siteUrl,
         isMockResult: mockFlag,
         status: null, // can be any one of WebExApiGatewayConstsService.csvStatusTypes[]
-        details: null
+        details: null,
       };
 
       var errorResult = {
@@ -88,7 +88,7 @@
         status: 'error',
         errorId: null,
         errorDesc: null,
-        details: null
+        details: null,
       };
 
       var deferredResponse = $q.defer();
@@ -243,7 +243,7 @@
       var newData = new Uint8Array(intBytes);
 
       var blob = new $window.Blob([newData], {
-        type: 'text/csv;charset=UTF-16LE;'
+        type: 'text/csv;charset=UTF-16LE;',
       });
 
       return blob;
@@ -377,7 +377,7 @@
                 siteUrl: siteUrl,
                 isCSVSupported: t31Site,
                 isIframeSupported: true,
-                isAdminReportEnabled: isAdminReportEnabled
+                isAdminReportEnabled: isAdminReportEnabled,
               };
 
               logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
@@ -394,7 +394,7 @@
               var isSiteSupportsIframeResult = {
                 siteUrl: siteUrl,
                 error: "getSiteDataError",
-                response: response
+                response: response,
               };
 
               logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
@@ -413,7 +413,7 @@
           var result = {
             siteUrl: siteUrl,
             error: "getSessionTicketError",
-            response: response
+            response: response,
           };
 
           logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
@@ -430,7 +430,7 @@
 
         return $q.all({
           siteVersionXml: siteVersionXml,
-          siteInfoXml: siteInfoXml
+          siteInfoXml: siteInfoXml,
         });
       } // getSiteData()
 

@@ -6,7 +6,7 @@
   /* @ngInject */
   function ModalService($modal, $translate) {
     var service = {
-      open: openModal
+      open: openModal,
     };
 
     return service;
@@ -39,8 +39,8 @@
           },
           btnType: function () {
             return 'btn--' + (options.btnType || 'primary');
-          }
-        }
+          },
+        },
       });
     }
   }

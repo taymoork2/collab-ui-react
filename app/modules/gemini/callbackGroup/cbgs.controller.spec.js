@@ -1,8 +1,9 @@
 'use strict';
 
 describe('controller: CbgsCtrl', function () {
-  var $q, $scope, $state, filter, innerFilterSpy, $timeout, $controller, defer, deferCSV, controller, cbgService, Notification;
+  var $q, $scope, $state, $stateParams, filter, innerFilterSpy, $timeout, $controller, controller, cbgService, Notification, $httpBackend, UrlConfig;
   var callbackGroups = getJSONFixture('gemini/callbackGroups.json');
+  var preData = getJSONFixture('gemini/common.json');
   var currentCallbackGroup = {
     "callbackGroupSites": [],
     "ccaGroupId": "ff808081552e92e101552efcdb750081",
@@ -10,7 +11,7 @@ describe('controller: CbgsCtrl', function () {
     "customerName": "Test-Feng",
     "groupName": "CB_11111_Test-Feng",
     "status": "P",
-    "totalSites": 0
+    "totalSites": 0,
   };
 
   beforeEach(angular.mock.module('Core'));
@@ -19,34 +20,44 @@ describe('controller: CbgsCtrl', function () {
   beforeEach(initSpecs);
   beforeEach(initController);
 
-  function dependencies(_$q_, _$state_, _$timeout_, $rootScope, _$controller_, _cbgService_, _Notification_) {
+  afterEach(function () {
+    $q = $httpBackend = UrlConfig = $scope = $state = filter = innerFilterSpy = $timeout = $controller = controller = cbgService = Notification = undefined;
+  });
+
+  afterAll(function () {
+    callbackGroups = currentCallbackGroup = undefined;
+  });
+
+  function dependencies(_$q_, _$state_, _$httpBackend_, _UrlConfig_, _$timeout_, $rootScope, _$controller_, _$stateParams_, _cbgService_, _Notification_) {
     $q = _$q_;
     $state = _$state_;
-    defer = $q.defer();
-    deferCSV = defer;
     $timeout = _$timeout_;
     cbgService = _cbgService_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
+    $stateParams = _$stateParams_;
     Notification = _Notification_;
+    $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
   }
 
   function initSpecs() {
     innerFilterSpy = jasmine.createSpy();
     filter = jasmine.createSpy().and.returnValue(innerFilterSpy);
-    spyOn($state, 'go').and.returnValue($q.resolve());
-    spyOn(Notification, 'errorResponse').and.returnValue($q.resolve());
-    spyOn(cbgService, 'cbgsExportCSV').and.returnValue(deferCSV.promise);
-    spyOn(cbgService, 'getCallbackGroups').and.returnValue(defer.promise);
+    spyOn($state, 'go');
+    spyOn(Notification, 'errorResponse');
+    spyOn(cbgService, 'cbgsExportCSV').and.returnValue($q.resolve());
+    spyOn(cbgService, 'getCallbackGroups').and.returnValue($q.resolve());
   }
 
-
   function initController() {
-    controller = $controller("CbgsCtrl", {
-      $scope: $scope,
-      $filter: filter,
-      cbgService: cbgService
-    });
+    $stateParams.companyName = 'CB_11111_Test-Feng';
+    $stateParams.customerId = $stateParams.customerId === '' ? $stateParams.customerId : 'ff808081552992ec0155299619cb0001';
+
+    var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
+    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+
+    controller = $controller("CbgsCtrl", { $scope: $scope, $filter: filter, $stateParams: $stateParams });
   }
 
   it('should $rootScope.$on execute', function () {
@@ -59,50 +70,47 @@ describe('controller: CbgsCtrl', function () {
     expect($state.go).toHaveBeenCalledWith('gem.modal.request', jasmine.any(Object));
   });
 
-  /* TODO next time will do
-   it('', function () {
-   var grid = new Grid({ id: 1 });
-   var gridApi = new GridApi(grid);
-   gridApi.selection = {
-   on: { rowSelectionChanged: sinon.stub.returns(currentCallbackGroup) }
-   };
-   controller.gridOptions.onRegisterApi(gridApi);
-   expect(1).toBe(1);
-   });
-   */
-
   it('should showCbgDetails have been called', function () {
     $scope.showCbgDetails(currentCallbackGroup);
     expect($state.go).toHaveBeenCalled();
   });
 
-  describe('should cbgService.getCallbackGroups', function () {
-    it('return correct array data ', function () {
-      defer.resolve(callbackGroups);
+  describe('init', function () {
+    it('should return correct array data when invoked cbgService.getCallbackGroups', function () {
       controller.gridRefresh = true;
+      cbgService.getCallbackGroups.and.returnValue($q.resolve(callbackGroups));
+      initController();
       $scope.$apply();
       expect(controller.gridRefresh).toBe(false);
     });
 
-    it('return uncorrect array data', function () {
-      defer.reject({});
+    it('should call Notification.errorResponse when invoked cbgService.getCallbackGroups return error response', function () {
+      cbgService.getCallbackGroups.and.returnValue($q.reject({ status: 404 }));
+      initController();
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
     });
+
+    it('should call $state.go when customerId\'s length is zero', function () {
+      $stateParams.customerId = '';
+      initController();
+      $scope.$apply();
+      expect($state.go).toHaveBeenCalled();
+    });
   });
 
-  describe('should exportCSV', function () {
-    it('return error', function () {
+  describe('exportCSV', function () {
+    it('should Notification.errorResponse when return error response', function () {
+      cbgService.cbgsExportCSV.and.returnValue($q.reject({ status: 404 }));
       controller.exportCSV();
-      deferCSV.reject({});
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('return correct data', function () {
-      controller.exportCSV();
       var csvData = { content: { data: { body: {} } } };
-      deferCSV.resolve(csvData);
+      cbgService.cbgsExportCSV.and.returnValue($q.resolve(csvData));
+      controller.exportCSV();
       $scope.$apply();
       $timeout.flush();
       expect(controller.exportLoading).toBe(false);

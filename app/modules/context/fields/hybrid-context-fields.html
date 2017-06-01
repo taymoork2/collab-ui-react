@@ -1,16 +1,37 @@
-<cs-page-sub-header>
-
-  <cs-page-sub-header-left>
-    <cs-searchfilter filters="" search-item-fn="" placeholder-text="Search fields">
-    </cs-searchfilter>
-  </cs-page-sub-header-left>
-
-  <cs-page-sub-header-right>
-    <new-button modal-window-options=""></new-button>
-  </cs-page-sub-header-right>
-
-</cs-page-sub-header>
-
-<div class="centered-info-pane">
-  <h3 translate="context.dictionary.welcome"></h3>
+<div class="context-list">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter
+        ng-model="contextFields.placeholder.count" search-item-fn="contextFields.filterList(searchStr)" placeholder-text="{{contextFields.placeholder.name}}">
+      </cs-searchfilter>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <span ng-if="!contextFields.showNew" tooltip-class="context-tooltip" tooltip="{{contextFields.maxLimitReachedTooltip}}" tooltip-placement="left">
+        <button class="btn btn--people"
+          ng-disabled="contextFields.fetchFailed || !contextFields.showNew"
+          translate="common.new"></button>
+      </span>
+      <span ng-if="contextFields.showNew">
+        <button class="btn btn--people"
+                ng-click="contextFields.createField()"
+                ng-disabled="contextFields.fetchFailed || !contextFields.showNew"
+                translate="common.new"></button>
+      </span>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="row grid">
+    <div ng-if="!contextFields.noSearchResults">
+      <div class="gridStyle" ui-grid="contextFields.gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
+      <div class="grid-refresh" ng-if="contextFields.gridRefresh">
+        <i class="icon icon-spinner icon-2x"></i>
+      </div>
+    </div>
+    <div class="search-noresults" ng-if="contextFields.noSearchResults">
+      <div class="none_found">
+        <i class="icon icon-circle-comp-negative" />
+        <span class="h2" translate="context.dictionary.fieldPage.noneFound"></span>
+        <span class="h5" translate="common.trySearchAgain"></span>
+      </div>
+    </div>
+  </div>
 </div>

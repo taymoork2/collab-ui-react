@@ -6,7 +6,7 @@
     .controller('HelpdeskOrgController', HelpdeskOrgController);
 
   /* @ngInject */
-  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, FusionClusterService, LicenseService, Notification, Orgservice, UrlConfig) {
+  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, HybridServicesClusterService, LicenseService, Notification, Orgservice, UrlConfig) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -22,6 +22,7 @@
     vm.hybridServicesCard = {};
     vm.roomSystemsCard = {};
     vm.userCard = {};
+    vm.careCard = {};
 
     vm.initialAdminUserLimit = 3;
     vm.adminUserLimit = vm.initialAdminUserLimit;
@@ -44,7 +45,7 @@
     vm.findServiceOrders = findServiceOrders;
     vm.openHybridServicesModal = openHybridServicesModal;
     vm._helpers = {
-      notifyError: notifyError
+      notifyError: notifyError,
     };
 
     vm.editOrgValidationMessages = {
@@ -133,8 +134,8 @@
             },
             data: function () {
               return vm.org;
-            }
-          }
+            },
+          },
         });
       }
     }
@@ -142,7 +143,7 @@
     function initOrgView(org) {
       vm.org = org;
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
-        numManages: org.manages ? org.manages.length : 0
+        numManages: org.manages ? org.manages.length : 0,
       }) : null;
 
       LicenseService.getLicensesInOrg(vm.orgId).then(function (licenses) {
@@ -165,6 +166,7 @@
       vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
       vm.cardsAvailable = true;
+      vm.careCard = HelpdeskCardsOrgService.getCareCardForOrg(vm.org, licenses);
     }
 
     function findManagedByOrgs(org) {
@@ -175,7 +177,7 @@
             if (displayName) {
               org.managedByOrgs.push({
                 id: managingOrg.orgId,
-                displayName: displayName
+                displayName: displayName,
               });
             }
           }, _.noop);
@@ -200,7 +202,7 @@
           CCW: 'Cisco Commerce',
           CCW_CSB: 'Cisco Commerce',
           CISCO_ONLINE_OPC: 'Cisco Online Trial',
-          DIGITAL_RIVER: 'Cisco Online Marketplace'
+          DIGITAL_RIVER: 'Cisco Online Marketplace',
         };
         vm.orderSystems = [];
         _.forEach(orders, function (order) {
@@ -215,8 +217,8 @@
     function findAdminUsers(org) {
       HelpdeskService.usersWithRole(org.id, 'id_full_admin', 100).then(function (users) {
         vm.adminUsers = users;
-        vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
-          numUsers: users.length
+        vm.showAllAdminUsersText = $translate.instant('common.showAllAdminUsers', {
+          numUsers: users.length,
         });
         vm.adminUsersAvailable = true;
       }, vm._helpers.notifyError);
@@ -230,6 +232,7 @@
           vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
           vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
           vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
+          vm.careCard = HelpdeskCardsOrgService.getCareCardForOrg(vm.org, licenses);
           vm.licenseUsageReady = true;
         }, _.noop);
       }
@@ -262,14 +265,14 @@
 
     function daysLeftText(license) {
       return $translate.instant('helpdesk.numDaysLeft', {
-        days: license.trialExpiresInDays
+        days: license.trialExpiresInDays,
       });
     }
 
     function usageText(usage, volume) {
       return $translate.instant('helpdesk.usage', {
         usage: usage,
-        volume: volume
+        volume: volume,
       });
     }
 
@@ -283,7 +286,7 @@
       HelpdeskService.elevateToReadonlyAdmin(vm.orgId).then(function () {
         $window.open($state.href('login_swap', {
           customerOrgId: vm.orgId,
-          customerOrgName: vm.org.displayName
+          customerOrgName: vm.org.displayName,
         }));
       }, vm._helpers.notifyError)
         .finally(function () {
@@ -293,7 +296,7 @@
 
     function openHybridServicesModal() {
       vm.loadingHSData = true;
-      FusionClusterService.getAll(vm.orgId)
+      HybridServicesClusterService.getAll(vm.orgId)
         .then(function (hsData) {
           $modal.open({
             templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
@@ -304,12 +307,12 @@
               },
               data: function () {
                 return hsData;
-              }
-            }
+              },
+            },
           });
         })
         .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          Notification.errorResponse(error, 'hercules.genericFailure');
         })
         .finally(function () {
           vm.loadingHSData = false;
@@ -317,7 +320,7 @@
     }
 
     function notifyError(response) {
-      Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+      Notification.errorResponse(response, 'helpdesk.unexpectedError');
     }
   }
 }());

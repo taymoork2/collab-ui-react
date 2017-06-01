@@ -3,9 +3,7 @@
 describe('Controller: ResetDeviceController', function () {
   var $httpBackend, controller, Notification;
   var url = "http://dummyUrl";
-  var fakeModal = {
-    close: sinon.stub()
-  };
+  var fakeModal;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));
@@ -18,13 +16,15 @@ describe('Controller: ResetDeviceController', function () {
       $httpBackend = _$httpBackend_;
 
       spyOn(Notification, 'errorResponse');
-      spyOn(fakeModal, 'close');
+      fakeModal = {
+        close: jasmine.createSpy('close'),
+      };
 
       controller = $controller('ResetDeviceController', {
         $modalInstance: fakeModal,
         device: {
-          url: url
-        }
+          url: url,
+        },
       });
     }));
 
@@ -34,7 +34,7 @@ describe('Controller: ResetDeviceController', function () {
     });
 
     it('should not notify on successful reset', function () {
-      $httpBackend.whenPUT(url).respond([200, {}]);
+      $httpBackend.expectPUT(url).respond([200, {}]);
       controller.resetDevice();
       $httpBackend.flush();
 
@@ -43,7 +43,7 @@ describe('Controller: ResetDeviceController', function () {
     });
 
     it('should notify on failed reset', function () {
-      $httpBackend.whenPUT(url).respond(500);
+      $httpBackend.expectPUT(url).respond(500);
       controller.resetDevice();
       $httpBackend.flush();
 

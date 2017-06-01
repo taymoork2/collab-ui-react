@@ -1,43 +1,81 @@
 import { Notification } from 'modules/core/notifications';
-import { IAlarm, IConnector } from 'modules/hercules/herculesInterfaces';
+import { IToolkitModalService } from 'modules/core/modal';
+import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
+import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface ISimplifiedConnector {
-  id: string;
-  alarms: IAlarm[];
+  alarms: IConnectorAlarm[];
   connectorType: string;
+  hasUpgradeAvailable: boolean;
+  id: string;
+  maintenanceMode: ConnectorMaintenanceMode;
   service: string;
+  status: IMergedStateSeverity;
   statusName: string;
-  status: string;
+  upgradeState: string;
   version: string;
 }
 
+interface ISimplifiedNode {
+  name: string;
+  serial: string;
+  pendingTooltip: string;
+  maintenanceMode: ConnectorMaintenanceMode;
+  connectors: ISimplifiedConnector[];
+}
+
+interface IData {
+  id: string;
+  name: string;
+  targetType: ClusterTargetType;
+  nodes: ISimplifiedNode[];
+}
+
 class HybridServicesNodesPageCtrl implements ng.IComponentController {
-  public data: any;
+  private REFRESH_INTERVAL = 30 * 1000;
+  private refreshTimeout: ng.IPromise<void> | null = null;
+  private clusterCache: ICluster;
+  public connectorTypesWithUpgrade: ConnectorType[] = [];
+  public nextUpgradeStartTime = '';
+  public data: IData;
   public gridOptions = {};
-  public loading = true;
+  public loading = true; // first load
+  public refreshing = false; // subsequant load of data
   public openedConnector: any;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
+    private $modal: IToolkitModalService,
+    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
-    private FusionClusterService,
-    private FusionClusterStatesService,
-    private FusionUtils,
+    private HybridServicesClusterService: HybridServicesClusterService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    private HybridServicesUtilsService: HybridServicesUtilsService,
+    private ModalService,
     private Notification: Notification,
   ) {
     this.hybridConnectorsComparator = this.hybridConnectorsComparator.bind(this);
+    this.getSerials = this.getSerials.bind(this);
+    this.fetchNodes = this.fetchNodes.bind(this);
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
-    let clusterId = changes['clusterId'];
+    const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.loadCluster(clusterId.currentValue);
+      this.HybridServicesClusterService.get(clusterId.currentValue)
+        .then((info) => {
+          this.nextUpgradeStartTime = moment(info.upgradeSchedule.nextUpgradeWindow.startTime).format('LLL');
+        });
     }
   }
 
   public hybridConnectorsComparator(a, b) {
-    return this.FusionUtils.hybridConnectorsComparator(a.value, b.value);
+    return this.HybridServicesUtilsService.hybridConnectorsComparator(a.value, b.value);
   }
 
   public openSidepanel(connector: ISimplifiedConnector) {
@@ -45,56 +83,250 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     this.$state.go('hybrid-services-connector-sidepanel', {
       connector: connector,
     });
+    // TODO: find how to unselect the current line when closing sidepanel
   }
 
   public isSidepanelOpen(connector) {
     return this.openedConnector === connector;
   }
 
+  public displayMaintenanceModeMenuItem(targetType: ClusterTargetType): boolean {
+    return _.includes(<ConnectorType[]>['c_mgmt', 'mf_mgmt'], targetType);
+  }
+
+  public displayGoToNodeMenuItem(targetType: ClusterTargetType): boolean {
+    return !_.includes(<ConnectorType[]>['mf_mgmt'], targetType);
+  }
+
+  public displayMoveNodeMenuItem(targetType: ClusterTargetType): boolean {
+    return _.includes(<ConnectorType[]>['mf_mgmt'], targetType);
+  }
+
+  public displayDeregisterNodeMenuItem(targetType: ClusterTargetType): boolean {
+    return _.includes(<ConnectorType[]>['mf_mgmt', 'hds_app'], targetType);
+  }
+
+  public enableMaintenanceMode(node: ISimplifiedNode): void {
+    let message = this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.message');
+    if (this.data.targetType === 'c_mgmt') {
+      message = this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.expresswayMessage');
+    }
+    this.ModalService.open({
+      title: this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.title'),
+      message: message,
+      close: this.$translate.instant('common.enable'),
+      dismiss: this.$translate.instant('common.cancel'),
+    })
+    .result
+    .then(() => {
+      return this.HybridServicesClusterService.updateHost(node.serial, {
+        maintenanceMode: 'on',
+      })
+      .then(response => {
+        this.loadCluster(this.data.id);
+        return response;
+      })
+      .catch((error) => {
+        this.Notification.errorWithTrackingId(error);
+      });
+    });
+  }
+
+  public disableMaintenanceMode(node: ISimplifiedNode): void {
+    this.ModalService.open({
+      title: this.$translate.instant('hercules.nodesPage.disableMaintenanceModeModal.title'),
+      message: this.$translate.instant('hercules.nodesPage.disableMaintenanceModeModal.message'),
+      close: this.$translate.instant('common.disable'),
+      dismiss: this.$translate.instant('common.cancel'),
+    })
+    .result
+    .then(() => {
+      return this.HybridServicesClusterService.updateHost(node.serial, {
+        maintenanceMode: 'off',
+      })
+      .then(() => {
+        this.loadCluster(this.data.id);
+      })
+      .catch((error) => {
+        this.Notification.errorWithTrackingId(error);
+      });
+    });
+  }
+
+  public openMoveNodeModal(node: ISimplifiedNode): void {
+    this.$modal.open({
+      resolve: {
+        cluster: () => ({
+          id: this.data.id,
+          name: this.data.name,
+        }),
+        connector: () => ({
+          id: node.connectors[0].id,
+          hostname: node.name,
+        }),
+      },
+      type: 'small',
+      controller: 'ReassignClusterControllerV2',
+      controllerAs: 'reassignCluster',
+      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
+    })
+    .result
+    .then(() => {
+      this.loadCluster(this.data.id);
+    });
+  }
+
+  public openDeregisterNodeModal(node: ISimplifiedNode): void {
+    this.$modal.open({
+      resolve: {
+        connectorId: () => node.connectors[0].id,
+      },
+      type: 'dialog',
+      controller: 'HostDeregisterControllerV2',
+      controllerAs: 'hostDeregister',
+      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',
+    })
+    .result
+    .then(() => {
+      this.loadCluster(this.data.id);
+    });
+  }
+
+  public $onDestroy(): void {
+    if (this.refreshTimeout) {
+      this.$timeout.cancel(this.refreshTimeout);
+    }
+  }
+
   private loadCluster(id) {
-    this.loading = true;
-    return this.FusionClusterService.get(id)
-      .then(cluster => {
-        this.data = this.processData(cluster);
+    if (this.refreshTimeout) {
+      this.$timeout.cancel(this.refreshTimeout);
+    }
+    if (!this.loading) {
+      this.refreshing = true;
+    }
+    return this.HybridServicesClusterService.get(id)
+      .then((cluster: ICluster) => {
+        this.clusterCache = cluster;
+        return this.getSerials(cluster);
+      })
+      .then(this.fetchNodes)
+      .then((nodes: IHost[]) => {
+        this.data = this.processData(this.clusterCache, nodes);
+        return this.data;
       })
       .catch(response => {
         this.Notification.errorWithTrackingId(response, 'hercules.nodesPage.loadingError');
       })
       .finally(() => {
         this.loading = false;
+        this.refreshing = false;
+        this.refreshTimeout = this.$timeout(() => {
+          this.loadCluster(id);
+        }, this.REFRESH_INTERVAL);
       });
   }
 
-  private processData(cluster) {
-    const result = {
+  private getSerials(cluster: ICluster): string[] {
+    return _.chain(cluster.connectors)
+      .map(connector => connector.hostSerial)
+      .uniq()
+      .value();
+  }
+
+  private fetchNodes(serials: string[]) {
+    const promises = _.map(serials, (serial) => {
+      return this.HybridServicesClusterService.getHost(serial);
+    });
+    return this.$q.all(promises);
+  }
+
+  public openUpgradeModal(): void {
+    this.$modal.open({
+      templateUrl: 'modules/hercules/connector-upgrade-modal/connector-upgrade-modal.html',
+      type: 'small',
+      controller: 'ConnectorUpgradeController',
+      controllerAs: 'ConnectorUpgradeCtrl',
+      resolve: {
+        connectorTypes: () => this.connectorTypesWithUpgrade,
+        cluster: () => this.clusterCache,
+      },
+    })
+    .result
+    .then(() => {
+      this.loadCluster(this.data.id);
+    });
+  }
+
+  private processData(cluster: ICluster, nodes: IHost[]): IData {
+    this.connectorTypesWithUpgrade = _.chain(cluster.provisioning)
+      .filter((provisioning) => {
+        return _.some(cluster.connectors, (connector) => {
+          // The code checks if the connector:
+          // has the right type
+          // is not currently upgrading
+          // version is different from the available version
+          return provisioning.connectorType === connector.connectorType &&
+                connector.upgradeState === 'upgraded' &&
+                provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
+        });
+      })
+      .map((provisioning) => provisioning.connectorType)
+      .value();
+    const result: IData = {
+      id: cluster.id,
       name: cluster.name,
-      nodes: _.chain(cluster.connectors)
-        .reduce((acc, connector: IConnector) => {
-          const hostname = connector.hostname;
-          const mergedStatus = this.FusionClusterStatesService.getMergedStateSeverity([connector]);
-          const simplifiedConnector: ISimplifiedConnector = {
-            id: connector.id,
-            alarms: connector.alarms,
-            connectorType: connector.connectorType,
-            service: this.$translate.instant(`hercules.connectorNameFromConnectorType.${connector.connectorType}`),
-            statusName: this.$translate.instant(`hercules.status.${mergedStatus.name}`),
-            status: mergedStatus,
-            version: connector.runningVersion,
+      targetType: cluster.targetType,
+      nodes: _.chain(nodes)
+        .map((node) => {
+          // We have to base the transformation on the connectors from `cluster`, not from `nodes` because of
+          // https://sqbu-github.cisco.com/WebExSquared/fusion-management-service/issues/250
+          let connectors = _.chain(cluster.connectors)
+            .filter({ hostSerial: node.serial })
+            .map(connector => {
+              const mergedStatus = this.HybridServicesClusterStatesService.getMergedStateSeverity([connector]);
+              const simplifiedConnector: ISimplifiedConnector = {
+                alarms: connector.alarms,
+                connectorType: connector.connectorType,
+                hasUpgradeAvailable: _.includes(this.connectorTypesWithUpgrade, connector.connectorType),
+                id: connector.id,
+                maintenanceMode: this.getMaintenanceModeForConnector(connector),
+                service: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),
+                status: mergedStatus,
+                statusName: this.$translate.instant(`hercules.status.${mergedStatus.name}`),
+                upgradeState: connector.upgradeState,
+                version: connector.runningVersion,
+              };
+              return simplifiedConnector;
+            })
+            .value();
+
+          return <ISimplifiedNode>{
+            name: node.hostname,
+            serial: node.serial,
+            pendingTooltip: this.$translate.instant(`hercules.nodesPage.pendingTooltip`, { date: moment(node.lastMaintenanceModeEnabledTimestamp).format('LLL') }),
+            maintenanceMode: node.maintenanceMode,
+            connectors: connectors,
           };
-          if (acc[hostname]) {
-            acc[hostname].connectors.push(simplifiedConnector);
-          } else {
-            acc[hostname] = {
-              name: hostname,
-              connectors: [simplifiedConnector],
-            };
-          }
-          return acc;
-        }, {})
-        .toArray()
+        })
         .value(),
     };
     return result;
+  }
+
+  private getMaintenanceModeForConnector(connector: IConnector): ConnectorMaintenanceMode {
+    // `connector.maintenanceMode` should reflect the status it should be in (maps `maintenanceMode` on the node)
+    // `connector.connectorStatus.maintenanceMode` is the latest mode received via an heartbeat
+    const fromHeartbeat = _.get<IConnector, ConnectorMaintenanceMode>(connector, 'connectorStatus.maintenanceMode');
+    if (connector.maintenanceMode === 'off') {
+      return 'off';
+    } else if (connector.maintenanceMode === 'on' && _.includes(['stopped', 'disabled', 'offline'], connector.state)) {
+      return 'on';
+    } else if (connector.maintenanceMode === 'on' && fromHeartbeat === 'off') {
+      return 'pending';
+    } else {
+      return fromHeartbeat;
+    }
   }
 }
 

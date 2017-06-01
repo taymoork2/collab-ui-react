@@ -10,6 +10,33 @@
       <button class="btn btn--primary" cs-btn loading="settings.processing" ng-click="settings.openSaveModal()" ng-disabled="settings.form.$invalid"><span translate="common.save"></span></button>
     </div>
 
+    <!-- media On Hold -->
+    <div class="cs-form__section" ng-if="settings.companyMOHToggle">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="serviceSetupModal.mediaOnHold"></h4>
+        </div>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <label class="control-label" for="mediaOnHoldSelect" translate="serviceSetupModal.mediaOnHold"></label>
+          <div class="medium-5 display-flex">
+            <cs-select
+              name="mediaOnHoldSelect"
+              ng-model="settings.model.mediaOnHold"
+              options="settings.mediaOnHoldOptions"
+              labelfield="label"
+              valuefield="value"
+              filter="false"
+            ></cs-select>
+          </div>
+          <span class="warning-padding">
+            <a translate="mediaOnHoldPanel.mediaManager"></a>
+          </span>
+        </div>
+      </div>
+    </div>
+
     <!-- regional settings -->
     <div class="cs-form__section" ng-if="settings.showRegionAndVoicemail">
       <div class="section__info">
@@ -33,7 +60,7 @@
             ></cs-select>
           </div>
         </div>
-        <div class="sub-section" ng-if="settings.callDateTimeFormat">
+        <div class="sub-section">
           <label class="control-label" for="dateFormatSelect" translate="serviceSetupModal.dateFormat"></label>
           <p class="description-block" translate="serviceSetupModal.dfDescription"></p>
           <div class="medium-5">
@@ -47,7 +74,7 @@
             ></cs-select>
           </div>
         </div>
-        <div class="sub-section" ng-if="settings.callDateTimeFormat">
+        <div class="sub-section">
           <label class="control-label" for="timeFormatSelect" translate="serviceSetupModal.timeFormat"></label>
           <p class="description-block" translate="serviceSetupModal.tfDescription"></p>
           <div class="medium-5">
@@ -61,7 +88,7 @@
             ></cs-select>
           </div>
         </div>
-        <div class="sub-section service-setup service-setup-regional-settings" cr-feature-toggle feature-show="huron-l10n-user-locale">
+        <div class="sub-section service-setup service-setup-regional-settings">
           <label class="control-label" translate="serviceSetupModal.preferredLanguage"></label>
           <p class="description-block" translate="serviceSetupModal.preferredLanguageDescription"></p>
           <div class="medium-5">
@@ -75,8 +102,8 @@
             ></cs-select>
           </div>
         </div>
-        <div class="sub-section service-setup service-setup-regional-settings" cr-feature-toggle feature-show="huron-l10n-network-locale">
-          <label class="control-label" translate="serviceSetupModal.defaultCountry"></label>
+        <div class="sub-section service-setup service-setup-regional-settings" ng-if="settings.supportRegionalSettings()">
+          <label class="control-label" translate="serviceSetupModal.defaultTones"></label>
           <p class="description-block" translate="serviceSetupModal.defaultCountryDescription"></p>
           <div class="medium-5">
             <cs-select
@@ -161,20 +188,8 @@
       </div>
     </div>
 
-    <!-- international dialing selection -->
-    <div class="cs-form__section" cr-feature-toggle feature-hide="huron-customer-cos">
-      <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="internationalDialing.internationalDialing"></h4>
-        </div>
-      </div>
-      <div class="section__content">
-        <formly-form model="settings.model" fields="settings.internationalDialingSelection" form="settings.form"></formly-form>
-      </div>
-    </div>
-
     <!-- class of service selection -->
-    <div class="cs-form__section" cr-feature-toggle feature-show="huron-customer-cos">
+    <div class="cs-form__section">
       <div class="section__info">
         <div cs-sticky>
           <h4 class="section__title" translate="serviceSetupModal.cos.title"></h4>
@@ -182,7 +197,11 @@
         </div>
       </div>
       <div class="section__content">
-        <uc-cos-form input-model="settings.model.cosRestrictions" on-change-fn="settings.setCustomerCosRestrictions(restrictions)"></uc-cos-form>
+        <uc-cos-form
+          cos-restrictions="settings.model.cosRestrictions"
+          premium-numbers="settings.premiumNumbers"
+          on-change-fn="settings.setCustomerCosRestrictions(restrictions)">
+        </uc-cos-form>
       </div>
     </div>
 
@@ -218,6 +237,13 @@
         <div cs-sticky>
           <h4 class="section__title" translate="companyCallerId.companyCallerId"></h4>
           <h6 class="section__description" translate="companyCallerId.companyCallerIdDesc"></h6>
+          <cs-toggle-switch
+            class="caller-id-toggle"
+            ng-model="settings.model.callerId.callerIdEnabled"
+            toggle-id="caller-id-toggle"
+            size="medium"
+            name="caller-id-toggle">
+          </cs-toggle-switch>
         </div>
       </div>
       <div class="section__content">
@@ -230,6 +256,13 @@
       <div class="section__info">
         <div cs-sticky>
           <h4 class="section__title" translate="serviceSetupModal.companyVoicemail"></h4>
+          <cs-toggle-switch
+            class="voicemail-toggle"
+            ng-model="settings.model.companyVoicemail.companyVoicemailEnabled"
+            toggle-id="voicemail-toggle"
+            size="medium"
+            name="voicemail-toggle">
+          </cs-toggle-switch>
         </div>
       </div>
       <div class="section__content">

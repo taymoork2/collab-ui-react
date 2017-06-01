@@ -7,7 +7,7 @@
   /* @ngInject */
   function CallflowService($http, UrlConfig) {
     var service = {
-      getCallflowCharts: getCallflowCharts
+      getCallflowCharts: getCallflowCharts,
     };
 
     return service;

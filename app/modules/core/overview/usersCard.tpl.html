@@ -12,24 +12,27 @@
         <span translate="overview.cards.users.convertText" id="convertText"></span>
       </div>
       <div ng-if="card.showLicenseCard">
-        <span>You have <span class="convert-nr h4">{{card.licenseNumber}}</span> unassigned {{card.licenseType}} licenses</span>
+        <span translate="overview.cards.users.unassignedLicenses"
+          translate-values="{licenseNumber: card.licenseNumber, licenseType: card.licenseType}"></span>
       </div>
     </div>
-    <button ng-if="!card.showLicenseCard" id="convertButton" class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="!card.usersToConvert">
+    <button ng-if="!card.showLicenseCard" id="convertButton" class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="card.isConvertButtonDisabled()">
     </button>
-    <button ng-if="card.showLicenseCard" id="convertButton" class="btn btn--people" translate="overview.cards.licenses.manageUsersButton" ng-click="card.manageUsers()">
+    <button ng-if="card.showLicenseCard" id="convertButton" class="btn btn--primary" translate="overview.cards.licenses.manageUsersButton" ng-click="card.manageUsers()">
     </button>
   </div>
   <div class="status-block">
     <ul>
       <li>
-        <i class="icon icon-circle status-indicator" ng-class="card.dirsyncEnabled ? 'success' : 'disabled'"></i>
+        <i class="icon icon-spinner" ng-if="card.isUpdating"></i>
+        <i class="icon icon-circle status-indicator" ng-class="{ 'success' : card.dirsyncEnabled, 'disabled': !card.dirsyncEnabled }" ng-if="!card.isUpdating"></i>
         <span translate="overview.cards.users.directorySynchronization"></span>
+        <a id="viewDirSyncSettings"  ng-click="card.showDirSyncSettings()"><i class="icon-settings icon"></i></a>
       </li>
       <li>
         <i class="icon icon-circle status-indicator" ng-class="card.ssoEnabled ? 'success' : 'disabled' "></i>
         <span translate="overview.cards.users.singleSignOn"></span>
-        <a id="viewSsoSettings" class="icon-settings icon" ng-click="card.showSSOSettings()"></a>
+        <a id="viewSsoSettings"  ng-click="card.showSSOSettings()"><i class="icon-settings icon"></i></a>
       </li>
     </ul>
   </div>

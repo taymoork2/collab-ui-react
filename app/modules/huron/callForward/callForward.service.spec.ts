@@ -53,6 +53,7 @@ describe('Service: CallForwardService', () => {
     let callForward = new CallForward();
     callForward.callForwardBusy.internalDestination = '5555551212';
     callForward.callForwardBusy.externalDestination = '5555559999';
+    callForward.callForwardBusy.ringDurationTimer = 30;
 
     let callForwardPutPayload = {
       callForwardAll: {
@@ -70,6 +71,7 @@ describe('Service: CallForwardService', () => {
         externalVoicemailEnabled: false,
         internalDestination: '5555551212',
         internalVoicemailEnabled: false,
+        ringDurationTimer: 30,
       },
       callForwardNotRegistered: {
         externalDestination: '5555559999',

@@ -8,13 +8,13 @@ describe('Directive: aaRouteToQueue', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'aa'
-    }
+      name: 'aa',
+    },
   };
 
   var queue = [{
     queueName: 'Test Queue',
-    queueUrl: ''
+    queueUrl: '',
   }];
   var schedule = 'openHours';
   var index = '0';

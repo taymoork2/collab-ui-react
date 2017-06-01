@@ -13,8 +13,8 @@ describe('Controller: aaBuilderNameCtrl', function () {
     "assignedResources": [{
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }]
+      "trigger": "incomingCall",
+    }],
   };
 
   var aaModel = {};
@@ -58,11 +58,11 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
-    spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.resolve(angular.copy(ces)));
+    spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.resolve(_.cloneDeep(ces)));
     spyOn($rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('aaBuilderNameCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }));
@@ -74,8 +74,8 @@ describe('Controller: aaBuilderNameCtrl', function () {
   describe('saveAARecord', function () {
 
     beforeEach(function () {
-      spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(angular.copy(rawCeInfo)));
-      spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(angular.copy(rawCeInfo)));
+      spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
+      spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'success');
       spyOn(AutoAttendantCeInfoModelService, 'setCeInfo');

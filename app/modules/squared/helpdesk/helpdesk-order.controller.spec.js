@@ -20,7 +20,7 @@ describe('Controller: HelpdeskOrderController', function () {
     spyOn(HelpdeskService, 'getOrg').and.returnValue($.when(getJSONFixture('core/json/orders/orgResponse.json')));
     spyOn(HelpdeskService, 'editAdminEmail').and.returnValue($.when({}));
     spyOn(HelpdeskService, 'resendAdminEmail').and.returnValue($.when({}));
-    spyOn(Notification, 'errorWithTrackingId');
+    spyOn(Notification, 'errorResponse');
   }));
 
   describe('Order Controller Initialization with 1-tier order', function () {
@@ -29,7 +29,7 @@ describe('Controller: HelpdeskOrderController', function () {
       spyOn(HelpdeskService, 'searchOrders').and.returnValue($q.resolve(order1TierJson));
       orderController = $controller('HelpdeskOrderController', {
         HelpdeskService: HelpdeskService,
-        $stateParams: $stateParams
+        $stateParams: $stateParams,
       });
     });
 
@@ -55,27 +55,26 @@ describe('Controller: HelpdeskOrderController', function () {
       $scope.$apply();
       expect(orderController.customerEmailSent).toBe(new Date(1476222213.459667 * 1000).toUTCString());
     });
-    it('call Notification.errorWithTrackingId and supply the response data when promise is rejected', function () {
+    it('call Notification.errorResponse and supply the response data when promise is rejected', function () {
       $scope.$apply();
-      sinon.stub(HelpdeskService, 'getOrg');
       var rejectData = {
         data: {
-          errorCode: 420000
-        }
+          errorCode: 420000,
+        },
       };
       var promise = $q.reject(rejectData);
-      HelpdeskService.getOrg.returns(promise);
+      HelpdeskService.getOrg.and.returnValue(promise);
       $scope.$apply();
 
       orderController = $controller('HelpdeskOrderController', {
         HelpdeskService: HelpdeskService,
         $stateParams: $stateParams,
-        Notification: Notification
+        Notification: Notification,
       });
 
       $scope.$apply();
-      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
-      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
+      expect(Notification.errorResponse).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
     });
   });
 
@@ -85,7 +84,7 @@ describe('Controller: HelpdeskOrderController', function () {
       spyOn(HelpdeskService, 'searchOrders').and.returnValue($q.resolve(order2TierJson));
       orderController = $controller('HelpdeskOrderController', {
         HelpdeskService: HelpdeskService,
-        $stateParams: $stateParams
+        $stateParams: $stateParams,
       });
     });
 
@@ -105,7 +104,7 @@ describe('Controller: HelpdeskOrderController', function () {
       $stateParams.id = '67891234';
       spyOn(HelpdeskService, 'searchOrders').and.returnValue($.when(order1TierJson));
       orderController = $controller('HelpdeskOrderController', {
-        $stateParams: $stateParams
+        $stateParams: $stateParams,
       });
     });
 

@@ -13,7 +13,8 @@ describe('Directive: focusOn', () => {
     beforeEach(function () {
       this.compileTemplate('<div><input type="text" focus-on></div>');
       document.body.appendChild(this.view[0]);
-      this.$timeout.flush();
+      // should flush without error
+      expect(this.$timeout.flush).not.toThrow();
     });
 
     it('should immediately focus the input', function () {
@@ -26,7 +27,11 @@ describe('Directive: focusOn', () => {
       this.$scope.shouldFocus = false;
       this.compileTemplate('<div><input type="text" focus-on="shouldFocus"></div>');
       document.body.appendChild(this.view[0]);
-      this.$timeout.flush();
+      // TODO: should throw error because nothing to flush yet,
+      // but there is a queued deferred from `$state` injection
+      // https://github.com/angular-ui/ui-router/issues/3365
+      // https://github.com/angular/angular.js/issues/14336
+      _.attempt(this.$timeout.flush);
     });
 
     it('should only focus the input when condition is truthy', function () {

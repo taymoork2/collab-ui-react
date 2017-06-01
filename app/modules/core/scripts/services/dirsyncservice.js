@@ -2,27 +2,29 @@
   'use strict';
 
   angular.module('Core')
-    .service('DirSyncService', DirSyncService);
+    .service('DirSyncServiceOld', DirSyncServiceOld);
 
   /* @ngInject */
-  function DirSyncService($http, Log, Authinfo, UrlConfig) {
+  function DirSyncServiceOld($http, Log, Authinfo, UrlConfig) {
 
     var dirsyncUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/dirsync';
 
     return {
       getDirSyncDomain: function (callback) {
         $http.get(dirsyncUrl)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved dirsync status');
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       },
 
@@ -30,63 +32,69 @@
         var dirsyncStatusUrl = dirsyncUrl + '/status';
 
         $http.get(dirsyncStatusUrl)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved dirsync domain');
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       },
 
       postDomainName: function (domainName, callback) {
         var domainUrl = dirsyncUrl + '/domain';
         var payload = {
-          domainName: domainName
+          domainName: domainName,
         };
 
         $http.post(domainUrl, payload)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Created Directory Sync Domain: ' + domainName);
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       },
 
       syncUsers: function (incrSyncInterval, callback) {
         var payload = {
           incrSyncInterval: incrSyncInterval,
-          fullSyncEnable: true
+          fullSyncEnable: true,
         };
 
         $http({
           method: 'PATCH',
           url: dirsyncUrl,
-          data: payload
+          data: payload,
         })
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Started Directory Sync');
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       },
     };

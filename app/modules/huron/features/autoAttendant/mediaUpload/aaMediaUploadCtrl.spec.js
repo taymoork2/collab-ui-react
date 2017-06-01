@@ -19,7 +19,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var deferred;
 
   var ui = {
-    openHours: {}
+    openHours: {},
   };
   var uiMenu = {};
   var menuEntry = {};
@@ -44,17 +44,17 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var validFile = {
     lastModified: fileModified,
     name: fileNameValid,
-    size: fileSize
+    size: fileSize,
   };
   var validFile2 = {
     lastModified: fileModified2,
     name: fileNameValid2,
-    size: fileSize2
+    size: fileSize2,
   };
   var invalidFileByName = {
     lastModified: fileModified,
     name: fileNameInvalid,
-    size: fileSize
+    size: fileSize,
   };
   var invalidFileBySize = {
     lastModified: fileModified,
@@ -62,7 +62,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
     size: fileSizeInvalid,
   };
   var variantUrlPlayback = 'recordingPlayBackUrl';
-  var uploadUrl = 'http://54.183.25.170:8001/api/notify/upload' + '?customerId=' + 'orgid';
+  var uploadUrl = 'https://clio-manager-intb.ciscospark.com/clio-manager/api/v1/recordings/media';
   var voice = "Vanessa";
   var fileDuration = '(00:39)';
   var fileDescription = {
@@ -105,13 +105,15 @@ describe('Controller: AAMediaUploadCtrl', function () {
     $scope.change = function () {
       return true;
     };
+    $scope.mediaState = {};
+    $scope.mediaState.uploadInProgress = false;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
     spyOn(ModalService, 'open').and.returnValue({
-      result: modal.promise
+      result: modal.promise,
     });
     spyOn(Upload, 'mediaDuration').and.returnValue(deferred.promise);
-    spyOn(Analytics, 'trackEvent').and.returnValue($q.when[{
+    spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve[{
       sizeInMB: 1,
       durationInSeconds: 1,
       uuid: jasmine.any(String),
@@ -298,6 +300,17 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
         it('should call notifyAsSaved on ce saved broadcast', function () {
           expect(AAMediaUploadService.notifyAsSaved).toHaveBeenCalled();
+        });
+      });
+      describe('on Queue Cancelled', function () {
+        beforeEach(function () {
+          spyOn(AAMediaUploadService, 'notifyAsActive');
+          $rootScope.$broadcast('Queue_Cancelled');
+          $rootScope.$apply();
+        });
+
+        it('should call notifyAsActive to false on queue cancelled broadcast', function () {
+          expect(AAMediaUploadService.notifyAsActive).toHaveBeenCalledWith(jasmine.any(String), false);
         });
       });
     });
@@ -740,7 +753,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -755,7 +768,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -772,7 +785,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -790,7 +803,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -821,7 +834,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = 'false';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeTruthy();

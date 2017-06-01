@@ -1,18 +1,11 @@
 'use strict';
 
+var testModule = require('./directoryNumberService');
+
 describe('Service: DirectoryNumber', function () {
-  var $httpBackend, DirectoryNumber;
+  beforeEach(angular.mock.module(testModule));
 
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('ngResource'));
-
-  var authInfo = {
-    getOrgId: sinon.stub().returns('1')
-  };
-
-  beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
-  }));
+  var $httpBackend, DirectoryNumber, Authinfo;
 
   var directoryNumber = {
     uuid: '',
@@ -25,33 +18,36 @@ describe('Service: DirectoryNumber', function () {
     hasCustomAlertingName: false,
     callForwardAll: {
       voicemailEnabled: false,
-      destination: ''
+      destination: '',
     },
     callForwardBusy: {
       intVoiceMailEnabled: false,
       voicemailEnabled: false,
       intDestination: '',
-      destination: ''
+      destination: '',
     },
     callForwardNoAnswer: {
       intVoiceMailEnabled: false,
       voicemailEnabled: false,
       intDestination: '',
-      destination: ''
+      destination: '',
     },
     callForwardNotRegistered: {
       intVoiceMailEnabled: false,
       voicemailEnabled: false,
       intDestination: '',
-      destination: ''
-    }
+      destination: '',
+    },
   };
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _DirectoryNumber_) {
+      function (_$httpBackend_, _DirectoryNumber_, _Authinfo_) {
         $httpBackend = _$httpBackend_;
         DirectoryNumber = _DirectoryNumber_;
+        Authinfo = _Authinfo_;
+
+        spyOn(Authinfo, 'getOrgId').and.returnValue('1');
       }));
 
   afterEach(function () {

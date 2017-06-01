@@ -44,8 +44,8 @@ describe('OverviewCareCard', function () {
     var data = {
       components: [{
         id: card.helper.statusIds.SPARK_CARE,
-        status: 'partial_outage'
-      }]
+        status: 'partial_outage',
+      }],
     };
     card.healthStatusUpdatedHandler(data);
     expect(card.healthStatus).toEqual('warning');
@@ -63,8 +63,8 @@ describe('OverviewCareCard', function () {
         isTrial: false,
         trialId: "a8ef58a7-8c5d-4674-93e4-08d2b36f4f95",
         status: "ACTIVE",
-        partnerEmail: "admin@fancy-lawyer.com"
-      }
+        partnerEmail: "admin@fancy-lawyer.com",
+      },
     ]);
     expect(card.enabled).toBe(true);
     expect(card.trial).toBe(false);
@@ -83,8 +83,8 @@ describe('OverviewCareCard', function () {
         isTrial: true,
         trialId: "a8ef58a7-8c5d-4674-93e4-08d2b36f4f95",
         status: "ACTIVE",
-        partnerEmail: "admin@fancy-lawyer.com"
-      }
+        partnerEmail: "admin@fancy-lawyer.com",
+      },
     ]);
     expect(card.enabled).toBe(true);
     expect(card.trial).toBe(true);
@@ -100,7 +100,7 @@ describe('OverviewCareCard', function () {
       displayName: "Sunlight",
       isTestOrg: true,
       licenses: [],
-      success: true
+      success: true,
     });
     expect(card.enabled).toBe(true);
     expect(card.trial).toBe(false);

@@ -2,6 +2,7 @@ import { Member } from 'modules/huron/members';
 import { IMember, IPickupGroup, IMemberNumber, ICallPickupNumbers } from 'modules/huron/features/callPickup/services';
 import { Notification } from 'modules/core/notifications';
 import { CallPickupGroupService } from 'modules/huron/features/callPickup/services/callPickupGroup.service';
+import { IToolkitModalService } from 'modules/core/modal';
 
 class CallPickupMembersCtrl implements ng.IComponentController {
   public memberList: Member[] = [];
@@ -21,15 +22,18 @@ class CallPickupMembersCtrl implements ng.IComponentController {
     private FeatureMemberService,
     private $translate: ng.translate.ITranslateService,
     private CallPickupGroupService: CallPickupGroupService,
+    private $modal: IToolkitModalService,
+    private $scope,
+    private $element,
   ) { }
 
-  public fetchMembers(): void {
-    if (this.memberName) {
-      this.FeatureMemberService.getMemberSuggestionsByLimit(this.memberName, this.suggestionLimit)
+  public fetchMembers(memberName: String): void {
+    if (memberName) {
+      return this.FeatureMemberService.getMemberSuggestionsByLimit(memberName, this.suggestionLimit)
       .then(
         (members: Member[]) => {
           this.memberList = _.reject(members, mem => _.some(this.selectedMembers, member =>
-           member.member.uuid === mem.uuid ));
+          member.member.uuid === mem.uuid ));
           this.errorMemberInput = (this.memberList && this.memberList.length === 0);
           let scope = this;
           _.forEach(members, function(member) {
@@ -39,11 +43,13 @@ class CallPickupMembersCtrl implements ng.IComponentController {
                 member['disabled'] = disabled;
               });
           });
+          return this.memberList;
         });
     }
   }
 
   public selectMember(member: Member): void {
+    let scope = this;
     let isValid = this.CallPickupGroupService.verifyLineSelected(this.selectedMembers);
     this.memberName = '';
     if (this.selectedMembers.length < this.maxMembersAllowed) {
@@ -57,50 +63,65 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       this.FeatureMemberService.getMemberPicture(member.uuid).then(
         avatar => memberData.picturePath = avatar.thumbnailSrc,
       );
-
       this.CallPickupGroupService.getMemberNumbers(member.uuid)
-      .then((data: IMemberNumber[]) => {
-
-        let scope = this;
-        let checked = true;
-        _.forEach(data, function(memberNumber, index) {
-          scope.CallPickupGroupService.isLineInPickupGroup(memberNumber.internal)
-          .then((inPickupGroup: boolean) => {
-            let disabled = false;
-            let sublabel = '';
-
-            if (inPickupGroup) {
-              scope.CallPickupGroupService.getPickupGroupNameByLine(memberNumber.internal)
-              .then((pickupGroupName: string) => {
-                sublabel = 'Assigned to ' + pickupGroupName;
-                disabled = true;
-                memberData.checkboxes = scope.CallPickupGroupService.createCheckBox(memberData, data[index], index, sublabel, false, disabled);
-              });
-            } else {
-              memberData.checkboxes = scope.CallPickupGroupService.createCheckBox(memberData, data[index], index,
-                                                                                  sublabel, checked, disabled);
-              // Only check the first open line
-              if (checked) {
-                checked = false;
-              }
-            }
+      .then((memberNumbers: IMemberNumber[]) => {
+        this.CallPickupGroupService.createCheckboxes(memberData, memberNumbers)
+        .then(() => {
+          scope.selectedMembers.push(memberData);
+          if (!scope.isNew) {
+            scope.updateExistingCallPickup('select');
+          }
+          scope.onUpdate({
+            member: scope.selectedMembers,
+            isValidMember: isValid,
           });
-        });
-
-        memberData.saveNumbers.push(scope.getPrimaryNumber(data));
-        scope.selectedMembers.push(memberData);
-        if (!scope.isNew) {
-          scope.updateExistingCallPickup('select');
-        }
-        scope.onUpdate({
-          member: scope.selectedMembers,
-          isValidMember: isValid,
         });
       });
     } else {
       this.Notification.error('callPickup.memberLimitExceeded');
     }
     this.memberList = [];
+  }
+
+  private getActiveMember(): any {
+    let scope = this.$element.find('li.active').scope();
+    return scope['match']['model'];
+  }
+
+  public isActiveMemberDisabled(): boolean {
+    let model = this.getActiveMember();
+    let disabled = model['disabled'];
+    return disabled;
+  }
+
+  public displayModalLinesTaken(evt): void {
+    if (!this.isActiveMemberDisabled()) {
+      return;
+    }
+
+    let modalScope = this.$scope.$new();
+    let member = this.getActiveMember();
+
+    evt.stopPropagation();
+
+    modalScope.member = this.getDisplayName(member);
+    modalScope.lines = [];
+    modalScope.names = [];
+    this.CallPickupGroupService.getMemberNumbers(member.uuid)
+      .then((numbers: IMemberNumber[]) => {
+        _.forEach(numbers, num => {
+          this.CallPickupGroupService.isLineInPickupGroup(num.internal)
+          .then((name: string) => {
+            modalScope.lines.push(num.internal);
+            modalScope.names.push(name);
+          });
+        });
+      });
+    this.$modal.open({
+      templateUrl: 'modules/huron/features/callPickup/callPickupMembers/callPickupLinesTaken.html',
+      type: 'dialog',
+      scope: modalScope,
+    });
   }
 
   private updateExistingCallPickup(action: string) {
@@ -157,14 +178,6 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       member: scope.selectedMembers,
       isValidMember: this.CallPickupGroupService.verifyLineSelected(this.selectedMembers),
     });
-  }
-
-  private getPrimaryNumber(numbers: IMemberNumber[]): ICallPickupNumbers {
-    let saveNumbers: ICallPickupNumbers = {
-      uuid: _.find(numbers, { primary : true }).uuid,
-      internalNumber: _.find(numbers, { primary : true }).internal,
-    };
-    return saveNumbers;
   }
 
   public getMemberType(member: Member): string {

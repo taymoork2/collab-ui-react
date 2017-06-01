@@ -14,8 +14,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
     "assignedResources": [{
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }]
+      "trigger": "incomingCall",
+    }],
   };
 
   var fakeModal = {
@@ -23,14 +23,14 @@ describe('Controller: AAScheduleModalCtrl', function () {
       then: function (okCallback, cancelCallback) {
         this.okCallback = okCallback;
         this.cancelCallback = cancelCallback;
-      }
+      },
     },
     close: function (item) {
       this.result.okCallback(item);
     },
     dismiss: function (type) {
       this.result.cancelCallback(type);
-    }
+    },
   };
 
   function ce2CeInfo(rawCeInfo) {
@@ -74,35 +74,35 @@ describe('Controller: AAScheduleModalCtrl', function () {
     aaModel = {
       aaRecord: {
         scheduleId: '',
-        callExperienceName: 'AA1'
+        callExperienceName: 'AA1',
       },
       aaRecordUUID: '1111',
-      ceInfos: []
+      ceInfos: [],
     };
     aaModelWithScheduleId = {
       aaRecord: {
         scheduleId: '1',
-        callExperienceName: 'AA1'
+        callExperienceName: 'AA1',
       },
       aaRecordUUID: '1111',
-      ceInfos: []
+      ceInfos: [],
     };
     aaUiModel = {
       openHours: {},
       ceInfo: {
         name: 'AA2',
-        scheduleId: '1'
+        scheduleId: '1',
       },
       systemTimeZone: {
         id: 'America/Los_Angeles',
-        label: 'America/Los_Angeles'
+        label: 'America/Los_Angeles',
       },
       timeZone: {
         id: 'America/Los_Angeles',
-        label: 'America/Los_Angeles'
+        label: 'America/Los_Angeles',
       },
       isClosedHours: true,
-      isHolidays: false
+      isHolidays: false,
     };
     starttime = "08:00 AM";
     endtime = "05:00 PM";
@@ -112,26 +112,26 @@ describe('Controller: AAScheduleModalCtrl', function () {
     var defaultRange = {
       days: [{
         label: 'Monday',
-        active: false
+        active: false,
       }, {
         label: 'Tuesday',
-        active: false
+        active: false,
       }, {
         label: 'Wednesday',
-        active: false
+        active: false,
       }, {
         label: 'Thursday',
-        active: true
+        active: true,
       }, {
         label: 'Friday',
-        active: true
+        active: true,
       }, {
         label: 'Saturday',
-        active: false
+        active: false,
       }, {
         label: 'Sunday',
-        active: false
-      }]
+        active: false,
+      }],
     };
     var hours = defaultRange;
     hours.starttime = starttime;
@@ -141,32 +141,32 @@ describe('Controller: AAScheduleModalCtrl', function () {
       name: 'Thanksgiving',
       month: {
         index: 10,
-        number: 11
+        number: 11,
       },
       day: {
         index: 4,
-        abbr: 'TH'
+        abbr: 'TH',
       },
       rank: {
         label: 'ranks.fourth',
         index: 3,
-        number: 4
+        number: 4,
       },
       allDay: true,
       exactDate: false,
-      recurAnnually: true
+      recurAnnually: true,
     };
     var holiday2 = {
       name: 'Christmas',
       date: '2016-12-25',
       allDay: true,
       exactDate: true,
-      recurAnnually: true
+      recurAnnually: true,
     };
     holidays = [holiday1, holiday2];
     var data = {
       hours: openhours,
-      holidays: holidays
+      holidays: holidays,
     };
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
@@ -200,7 +200,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
     });
 
@@ -212,21 +212,21 @@ describe('Controller: AAScheduleModalCtrl', function () {
           $validate: function () {},
           $error: {
             compareTo: undefined,
-            required: undefined
-          }
+            required: undefined,
+          },
         },
         starttime0: {
           $setDirty: function () {},
           $validate: function () {},
           $error: {
             compareTo: undefined,
-            required: undefined
-          }
-        }
+            required: undefined,
+          },
+        },
       };
       controller.openhours = [{
         starttime: undefined,
-        endtime: undefined
+        endtime: undefined,
       }];
       $scope.$apply();
       //test the end time prints
@@ -265,7 +265,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
     });
 
@@ -279,7 +279,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('with an valid index should delete range', function () {
       controller.hoursForm = {
-        $setDirty: function () {}
+        $setDirty: function () {},
       };
       spyOn(controller.hoursForm, '$setDirty').and.returnValue(true);
       expect(controller.openhours.length).toEqual(0);
@@ -300,10 +300,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       controller.timeZoneForm = {
-        $setPristine: function () {}
+        $setPristine: function () {},
       };
       spyOn(controller.timeZoneForm, '$setPristine');
       $timeout.flush();
@@ -338,10 +338,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       controller.timeZoneForm = {
-        $pristine: true
+        $pristine: true,
       };
       spyOn(controller, 'saveTimeZone');
       controller.calendar = calendar;
@@ -368,10 +368,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       controller.timeZoneForm = {
-        $pristine: true
+        $pristine: true,
       };
       controller.calendar = calendar;
       controller.openhours = openhours;
@@ -397,10 +397,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       controller.timeZoneForm = {
-        $pristine: true
+        $pristine: true,
       };
       controller.openhours = [];
       controller.holidays = [];
@@ -432,10 +432,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       controller.timeZoneForm = {
-        $pristine: true
+        $pristine: true,
       };
       controller.isDeleted = false;
       controller.save();
@@ -460,12 +460,12 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       controller.aaModel = aaModel;
       controller.aaModel.aaRecord.assignedTimeZone = undefined;
       controller.timeZoneForm = {
-        $pristine: true
+        $pristine: true,
       };
     });
 
@@ -476,7 +476,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('should store time zone into aaRecord if there is a change in time zone drop-down list', function () {
       controller.timeZoneForm = {
-        $pristine: false
+        $pristine: false,
       };
       controller.saveTimeZone();
       expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
@@ -484,19 +484,19 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('should log a timezone event for a first-time change in time zone drop-down list', function () {
       controller.timeZoneForm = {
-        $pristine: false
+        $pristine: false,
       };
       controller.saveTimeZone();
       expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.TIME_ZONE, {
         type: 'change',
-        timezone: aaUiModel.timeZone.id
+        timezone: aaUiModel.timeZone.id,
       });
       expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
     });
 
     it('should NOT log a timezone event for subsequent change in time zone drop-down list', function () {
       controller.timeZoneForm = {
-        $pristine: false
+        $pristine: false,
       };
       controller.aaModel.aaRecord.assignedTimeZone = aaUiModel.timeZone.id;
 
@@ -507,7 +507,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('should NOT save timezone or log event for 24 Hours schedule', function () {
       controller.timeZoneForm = {
-        $pristine: false
+        $pristine: false,
       };
       controller.ui.isClosedHours = false;
       controller.ui.isHolidays = false;
@@ -529,7 +529,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
     });
 
@@ -541,21 +541,21 @@ describe('Controller: AAScheduleModalCtrl', function () {
           $validate: function () {},
           $error: {
             compareTo: undefined,
-            required: undefined
-          }
+            required: undefined,
+          },
         },
         starttime0: {
           $setDirty: function () {},
           $validate: function () {},
           $error: {
             compareTo: undefined,
-            required: undefined
-          }
-        }
+            required: undefined,
+          },
+        },
       };
       controller.openhours = [{
         starttime: undefined,
-        endtime: undefined
+        endtime: undefined,
       }];
       $scope.$apply();
       //test the end time prints
@@ -580,19 +580,19 @@ describe('Controller: AAScheduleModalCtrl', function () {
         endtime0: {
           $error: {
             compareTo: undefined,
-            required: undefined
-          }
+            required: undefined,
+          },
         },
         starttime0: {
           $error: {
             compareTo: undefined,
-            required: undefined
-          }
-        }
+            required: undefined,
+          },
+        },
       };
       controller.openhours = [{
         starttime: starttime,
-        endtime: endtime
+        endtime: endtime,
       }];
       $scope.$apply();
       controller.toggleSection('hours');
@@ -634,7 +634,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
     });
 
@@ -645,12 +645,12 @@ describe('Controller: AAScheduleModalCtrl', function () {
         $setDirty: function () {},
         holidayStart: {
           $viewValue: undefined,
-          $setPristine: function () {}
+          $setPristine: function () {},
         },
         holidayEnd: {
           $viewValue: undefined,
-          $setPristine: function () {}
-        }
+          $setPristine: function () {},
+        },
       };
       spyOn(controller.holidaysForm.holidayStart, '$setPristine').and.returnValue(true);
       spyOn(controller.holidaysForm.holidayEnd, '$setPristine').and.returnValue(true);
@@ -672,7 +672,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       $scope.$apply();
       expect(controller.holidays.length).toEqual(0);
@@ -689,10 +689,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       controller.timeZoneForm = {
-        $setPristine: function () {}
+        $setPristine: function () {},
       };
       spyOn(controller.timeZoneForm, '$setPristine');
       $timeout.flush();
@@ -711,7 +711,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       $scope.$apply();
       controller.holidays = [{}];
@@ -734,7 +734,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       controller.holidaysForm = {
         $valid: true,
@@ -742,12 +742,12 @@ describe('Controller: AAScheduleModalCtrl', function () {
         $setDirty: function () {},
         holidayStart: {
           $viewValue: undefined,
-          $setPristine: function () {}
+          $setPristine: function () {},
         },
         holidayEnd: {
           $viewValue: undefined,
-          $setPristine: function () {}
-        }
+          $setPristine: function () {},
+        },
       };
       spyOn(controller.holidaysForm.holidayStart, '$setPristine').and.returnValue(true);
       spyOn(controller.holidaysForm.holidayEnd, '$setPristine').and.returnValue(true);
@@ -778,7 +778,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     it('should add imported items', function () {
       fakeModal.close({
         holidays: [],
-        hours: []
+        hours: [],
       });
       $scope.$apply();
       expect(controller.holidays.length).toEqual(0);
@@ -796,39 +796,39 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       $scope.$apply();
       controller.holidaysForm = {
         holidayForm0: {
           holidayName: {
-            $setDirty: function () {}
+            $setDirty: function () {},
           },
           holidayDate: {
-            $setDirty: function () {}
+            $setDirty: function () {},
           },
           holidayStart: {
-            $setDirty: function () {}
+            $setDirty: function () {},
           },
           holidayEnd: {
-            $setDirty: function () {}
+            $setDirty: function () {},
           },
           month: {
             $error: {
-              required: undefined
-            }
+              required: undefined,
+            },
           },
           rank: {
             $error: {
-              required: undefined
-            }
+              required: undefined,
+            },
           },
           day: {
             $error: {
-              required: undefined
-            }
-          }
-        }
+              required: undefined,
+            },
+          },
+        },
       };
     });
 
@@ -841,7 +841,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         exactDate: false,
         month: '',
         rank: '',
-        day: ''
+        day: '',
       }];
       controller.forceCheckHoliday();
       expect(controller.holidaysForm.holidayForm0.holidayEnd.$setDirty).toHaveBeenCalled();
@@ -857,7 +857,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         exactDate: false,
         month: '',
         rank: '',
-        day: ''
+        day: '',
       }];
 
       controller.forceCheckHoliday();
@@ -870,7 +870,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     it('should not set the required', function () {
       controller.holidays = [{
         isOpen: true,
-        exactDate: true
+        exactDate: true,
       }];
       spyOn(controller, 'isHolidaysSavable').and.returnValue(true);
       controller.forceCheckHoliday();
@@ -901,7 +901,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       $scope.$apply();
     });
@@ -914,7 +914,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     it('should false', function () {
       var hours = {
         starttime: starttime,
-        endtime: endtime
+        endtime: endtime,
       };
       expect(controller.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)).toBeFalsy();
     });
@@ -922,7 +922,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     it('should false', function () {
       var hours = {
         starttime: starttime,
-        endtime: '12:00 AM'
+        endtime: '12:00 AM',
       };
       expect(controller.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)).toBeFalsy();
     });
@@ -930,7 +930,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     it('should true', function () {
       var hours = {
         starttime: endtime,
-        endtime: starttime
+        endtime: starttime,
       };
       expect(controller.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)).toBeTruthy();
     });
@@ -938,7 +938,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     it('should false', function () {
       var hours = {
         starttime: '12:00 AM',
-        endtime: '12:00 AM'
+        endtime: '12:00 AM',
       };
       expect(controller.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)).toBeFalsy();
     });
@@ -954,7 +954,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       controller.holidaysForm = {
         holidayForm0: {
@@ -962,10 +962,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
             $setDirty: function () {},
             $validate: function () {},
             $error: {
-              compareTo: undefined
-            }
-          }
-        }
+              compareTo: undefined,
+            },
+          },
+        },
       };
       $scope.$apply();
       spyOn(controller.holidaysForm.holidayForm0.holidayEnd, '$setDirty');
@@ -981,7 +981,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('holiday hours valid should have no error', function () {
       controller.holidays = [{
-        isOpen: true
+        isOpen: true,
       }];
       spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(false);
       controller.forceStartBeforeEndCheck();
@@ -992,7 +992,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('holiday hours invalid should have error', function () {
       controller.holidays = [{
-        isOpen: true
+        isOpen: true,
       }];
       spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(true);
       controller.forceStartBeforeEndCheck();
@@ -1012,20 +1012,20 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       controller.hoursForm = {
         endtime0: {
           $setDirty: function () {},
           $validate: function () {},
           $error: {
-            compareTo: undefined
-          }
-        }
+            compareTo: undefined,
+          },
+        },
       };
       controller.openhours = [{
         starttime: starttime,
-        endtime: endtime
+        endtime: endtime,
       }];
       $scope.$apply();
       spyOn(controller.hoursForm.endtime0, '$setDirty');
@@ -1059,7 +1059,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAICalService: AAICalService,
         AAModelService: AAModelService,
         AAUiModelService: AAUiModelService,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
       $scope.$apply();
     });
@@ -1071,11 +1071,11 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('name invalid should be false', function () {
       controller.holidays = [{
-        name: undefined
+        name: undefined,
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
-        name: ''
+        name: '',
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
     });
@@ -1084,13 +1084,13 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller.holidays = [{
         name: "Test",
         exactDate: true,
-        date: undefined
+        date: undefined,
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
         name: "Test",
         exactDate: true,
-        date: ''
+        date: '',
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
     });
@@ -1099,27 +1099,27 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller.holidays = [{
         name: "Test",
         exactDate: false,
-        month: undefined
+        month: undefined,
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
         name: "Test",
         exactDate: true,
-        month: ''
+        month: '',
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
         name: "Test",
         exactDate: false,
         month: {},
-        rank: undefined
+        rank: undefined,
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
         name: "Test",
         exactDate: true,
         month: {},
-        rank: ''
+        rank: '',
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
@@ -1127,7 +1127,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         exactDate: false,
         month: {},
         rank: {},
-        day: undefined
+        day: undefined,
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
@@ -1135,7 +1135,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         exactDate: true,
         month: {},
         rank: {},
-        day: ''
+        day: '',
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
     });
@@ -1145,7 +1145,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         name: "Test",
         exactDate: true,
         date: '2016-12-25',
-        allDay: false
+        allDay: false,
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
     });
@@ -1157,7 +1157,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
         $modalInstance: $modalInstance,
-        sectionToToggle: 'hours'
+        sectionToToggle: 'hours',
       });
     });
 
@@ -1165,7 +1165,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller.holidays = [{
         name: "Test",
         exactDate: true,
-        recurAnnually: false
+        recurAnnually: false,
       }];
       controller.exactDateChanged(controller.holidays[0]);
       expect(controller.holidays[0].recurAnnually).toBe(false);
@@ -1175,7 +1175,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller.holidays = [{
         name: "Test",
         exactDate: false,
-        recurAnnually: false
+        recurAnnually: false,
       }];
       controller.exactDateChanged(controller.holidays[0]);
       expect(controller.holidays[0].recurAnnually).toBe(true);

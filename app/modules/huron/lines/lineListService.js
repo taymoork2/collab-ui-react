@@ -1,19 +1,27 @@
 (function () {
   'use strict';
 
+  var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
+
   angular
     .module('Huron')
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnSetupService, UserLineAssociationService) {
+  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnService, UserLineAssociationService) {
 
     var customerId = Authinfo.getOrgId();
+    var apiImplementation = undefined;
+    var vendor = undefined;
+    var carrierName = undefined;
 
     // define functions available in this factory
     var service = {
       getLineList: getLineList,
-      exportCSV: exportCSV
+      exportCSV: exportCSV,
+      getApiImplementation: getApiImplementation,
+      getVendor: getVendor,
+      getCarrierName: getCarrierName,
     };
     return service;
 
@@ -21,7 +29,7 @@
       var wildcard = "%";
 
       var queryString = {
-        'customerId': customerId
+        'customerId': customerId,
       };
 
       if (searchStr.length > 0) {
@@ -48,11 +56,22 @@
       var linesPromise = UserLineAssociationService.query(queryString).$promise;
 
       return ExternalNumberService.isTerminusCustomer(customerId).then(function () {
-        var orderPromise = PstnSetupService.listPendingOrdersWithDetail(customerId);
+        var orderPromise = PstnService.listPendingOrdersWithDetail(customerId);
+        var carrierInfoPromise;
 
-        return $q.all([linesPromise, orderPromise]).then(function (results) {
+        if (_.isUndefined(apiImplementation)) {
+          carrierInfoPromise = ExternalNumberService.getCarrierInfo(customerId);
+        }
+
+        return $q.all([linesPromise, orderPromise, carrierInfoPromise]).then(function (results) {
           var lines = results[0];
           var orders = results[1];
+
+          if (!_.isUndefined(results[2]) && results[2] !== null) {
+            apiImplementation = _.get(results[2], 'apiImplementation');
+            vendor = _.get(results[2], 'vendor');
+            carrierName = _.get(results[2], 'name');
+          }
 
           var pendingLines = [];
           var nonProvisionedPendingLines = [];
@@ -62,16 +81,16 @@
           }
 
           _.forEach(orders, function (order) {
-            if (_.get(order, 'operation') === PstnSetupService.BLOCK_ORDER) {
+            if (_.get(order, 'operation') === BLOCK_ORDER) {
               if (!_.isUndefined(order.attributes.npa)) {
                 var areaCode = order.attributes.npa;
               } else {
-                areaCode = PstnSetupService.getAreaCode(order);
+                areaCode = PstnService.getAreaCode(order);
               }
               nonProvisionedPendingLines.push({
                 externalNumber: '(' + areaCode + ') XXX-XXXX ' + $translate.instant('linesPage.quantity', { count: order.numbers.length }),
                 status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
-                tooltip: PstnSetupService.translateStatusMessage(order),
+                tooltip: PstnService.translateStatusMessage(order),
               });
             } else {
               var numbers = _.get(order, 'numbers', []);
@@ -82,13 +101,13 @@
                 if (lineFound) {
                   dedupGrid(lineFound, gridData);
                   lineFound.status = order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
-                  lineFound.tooltip = PstnSetupService.translateStatusMessage(order);
+                  lineFound.tooltip = PstnService.translateStatusMessage(order);
                   pendingLines.push(lineFound);
                 } else {
                   nonProvisionedPendingLines.push({
                     externalNumber: number.number,
                     status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
-                    tooltip: PstnSetupService.translateStatusMessage(order)
+                    tooltip: PstnService.translateStatusMessage(order),
                   });
                 }
               });
@@ -117,6 +136,17 @@
         });
 
     } // end of function getLineList
+
+    function getApiImplementation() {
+      return apiImplementation;
+    }
+    function getVendor() {
+      return vendor;
+    }
+
+    function getCarrierName() {
+      return carrierName;
+    }
 
     function dedupGrid(newLine, grid) {
       _.remove(grid, function (row) {
@@ -182,5 +212,6 @@
       } // end of getLinesInBatches
       return deferred.promise;
     } // end of exportCSV
+
   } // end of function LineListService
 })();

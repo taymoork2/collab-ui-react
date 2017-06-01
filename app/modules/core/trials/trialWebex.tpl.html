@@ -17,10 +17,23 @@
         <h4 class="section__title" translate="trialModal.meeting.webexSiteUrl"></h4>
       </div>
       <div class="section__content">
-        <formly-form model="webexTrial.details" fields="webexTrial.siteUrlFields"></formly-form>
+        <input cs-input type="text"
+          name="siteUrl" id="trial--webex--siteUrl"
+          placeholder="{{::'trialModal.meeting.siteUrlPlaceholder' | translate}}"
+          ng-model="webexTrial.details.siteUrl"
+          required
+          cs-input-async-validators="webexTrial.siteUrlValidator"
+          cs-input-label="{{::'trialModal.meeting.siteUrl' | translate}}"
+          ng-model-options="{updateOn: 'blur', debounce: { blur: 0 } }">
+        <div class="cs-input-group" ng-class="{'error': trialForm.siteUrl.$invalid && trialForm.siteUrl.$touched}">
+          <div class="cs-input__messages" ng-messages="trialForm.siteUrl.$error" role="alert">
+            <div ng-repeat="(key, value) in webexTrial.errorMessages" class="message">
+              <span ng-message="{{key}}">{{value}}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
     <!-- customer timezone -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -28,19 +41,30 @@
         <p class="section__description" translate="trialModal.meeting.tzDescription"></p>
       </div>
       <div class="section__content">
-        <formly-form model="webexTrial.details" fields="webexTrial.timezoneFields"></formly-form>
+        <label for="trial--webex--timeZone" translate="trialModal.meeting.timezone" class="cs-input__label">
+        </label>
+        <cs-select
+          ng-model="webexTrial.details.timeZone"
+          options="webexTrial.timeZones"
+          placeholder="webexTrial.timeZoneInput.placeholder"
+          labelfield="label"
+          valuefield="timeZoneId"
+          input-placeholder="webexTrial.timeZoneInput.inputPlaceholder"
+          filter="true"
+          id="trial--webex--timeZone"
+          name="timeZone"
+          required
+          refresh-data-fn="webexTrial.getTimeZones(filter)">
+        </cs-select>
       </div>
     </div>
   </form>
 </div>
-
 <!-- footer -->
 <div class="modal-footer trials">
-  <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
-    translate="common.back">
+  <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading" translate="common.back">
   </button>
-  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn
-    loading="trial.loading || webexTrial.validatingUrl"
+  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading || webexTrial.validatingUrl"
     ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>

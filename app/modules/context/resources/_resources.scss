@@ -1,21 +1,8 @@
-.context {
-  background-color: $brand-white;
+@import '~collab-ui/scss/settings/colors';
 
-  .cs-centered-info-pane {
-    background-color: $brand-white;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    padding: 20%;
+.add-resource-modal {
+  p {
+    margin-top: 8px;
     color: $gray-base;
-
-    h3 {
-      color: $gray-base;
-    }
-
-    p {
-      margin-bottom: 1rem;
-    }
   }
 }
-

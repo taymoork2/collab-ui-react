@@ -1,0 +1,14 @@
+<div class="sub-section dir-connectors" ng-if="$ctrl.hasConnectors()">
+  <h5 class="sub-section__label" translate="globalSettings.dirsync.connectorsTitle"></h5>
+  <p class="sub-section__description">
+    <dir-sync-status-row
+      name="connector.name"
+      enabled="connector.isInService"
+      link-title="'globalSettings.dirsync.deregister'|translate"
+      on-click="$ctrl.deregister(connector)"
+      tooltip="{{connector.name}}"
+      tooltip-popup-delay="1000"
+      tooltip-placement="bottom-left"
+      ng-repeat="connector in $ctrl.connectors | orderBy: 'name'"></dir-sync-status-row>
+  </p>
+</div>

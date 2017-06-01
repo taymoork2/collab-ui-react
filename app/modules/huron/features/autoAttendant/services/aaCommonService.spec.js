@@ -9,30 +9,30 @@
 
     var sortedOptions = [{
       "title": 'autoAttendant.actionPhoneMenu',
-      "label": 'AutoAttendantTestLabel'
+      "label": 'AutoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionRouteCall',
-      "label": 'autoAttendantTestLabel'
+      "label": 'autoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionSayMessage',
-      "label": 'secondTestLabel'
+      "label": 'secondTestLabel',
     }, {
       "title": 'autoAttendant.phoneMenuDialExt',
-      "label": 'testLabel'
+      "label": 'testLabel',
     }];
 
     var unSortedOptions = [{
       "title": 'autoAttendant.actionRouteCall',
-      "label": 'testLabel'
+      "label": 'testLabel',
     }, {
       "title": 'autoAttendant.phoneMenuDialExt',
-      "label": 'autoAttendantTestLabel'
+      "label": 'autoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionSayMessage',
-      "label": 'AutoAttendantTestLabel'
+      "label": 'AutoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionPhoneMenu',
-      "label": 'secondTestLabel'
+      "label": 'secondTestLabel',
     }];
 
 
@@ -152,16 +152,6 @@
         expect(AACommonService.isValid()).toBeTruthy();
 
       });
-
-      it('setRouteQueueToggle should set to false', function () {
-        AACommonService.setRouteQueueToggle(false);
-        expect(AACommonService.isRouteQueueToggle()).toBeFalsy();
-      });
-
-      it('setRouteQueueToggle should set to true', function () {
-        AACommonService.setRouteQueueToggle(true);
-        expect(AACommonService.isRouteQueueToggle()).toBeTruthy();
-      });
       it('setCallerInputToggle should set to false', function () {
         AACommonService.setCallerInputToggle(false);
         expect(AACommonService.isCallerInputToggle()).toBeFalsy();
@@ -264,14 +254,88 @@
 
     });
 
+    describe('collectThisCeActionValue', function () {
+      it('should find the variable from runActionsOnInput (callerInput)', function () {
+
+        var aaUiModel = {};
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+        aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.inputType = 2;
+        action.variableName = 'My variable name';
+
+        aaUiModel['openHours'].entries[0].addAction(action);
+
+        var result = AACommonService.collectThisCeActionValue(aaUiModel, true, false);
+        expect(result[0]).toEqual('My variable name');
+      });
+
+      it('should find the variable from conditional (decision)', function () {
+
+        var aaUiModel = {};
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+        aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
+        action.if = { 'leftCondition': 'My variable name' };
+
+        aaUiModel['openHours'].entries[0].addAction(action);
+
+        var result = AACommonService.collectThisCeActionValue(aaUiModel, false, true);
+        expect(result[0]).toEqual('My variable name');
+
+      });
+      it('should not find the variable from conditional (decision)', function () {
+
+        var aaUiModel = {};
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+        aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('some action name', '');
+
+        aaUiModel['openHours'].entries[0].addAction(action);
+
+        var result = AACommonService.collectThisCeActionValue(aaUiModel, true, false);
+        expect(result.length).toEqual(0);
+
+      });
+    });
+    it('should return list of doRest', function () {
+      var aaUiModel = {};
+
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      var menuClosed = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      aaUiModel['openHours'].addEntryAt(0, menuOpen);
+      aaUiModel['closedHours'].addEntryAt(0, menuClosed);
+
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
+      action.variableName = 'Closed Variable';
+      menuClosed.addAction(action);
+
+      var action2 = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
+      action2.variableName = 'Open Variable';
+      menuOpen.addAction(action2);
+
+      var res = AACommonService.collectThisCeActionValue(aaUiModel, true);
+      // verify data returned
+      expect(res).toBeDefined(2);
+    });
+
     describe('keyActionAvailable', function () {
       it('should send back available keys minus 0, 1', function () {
         var expected = ['2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
 
         var inputActions = [{
-          key: '0'
+          key: '0',
         }, {
-          key: '1'
+          key: '1',
         }];
 
         var available = AACommonService.keyActionAvailable('', inputActions);
@@ -284,11 +348,11 @@
       it('should send back available keys minus 0, 1 but with 9', function () {
 
         var inputActions = [{
-          key: '0'
+          key: '0',
         }, {
-          key: '1'
+          key: '1',
         }, {
-          key: '9'
+          key: '9',
         }];
 
         var available = AACommonService.keyActionAvailable('9', inputActions);
@@ -301,11 +365,11 @@
         var expected = ['2', '3', '4', '5', '6', '7', '8', '#', '*'];
 
         var inputActions = [{
-          key: '0'
+          key: '0',
         }, {
-          key: '1'
+          key: '1',
         }, {
-          key: '9'
+          key: '9',
         }];
 
         var available = AACommonService.keyActionAvailable('5', inputActions);

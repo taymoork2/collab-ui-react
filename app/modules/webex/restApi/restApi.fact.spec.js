@@ -17,14 +17,14 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
     WebExApiGatewayConstsService.csvJobTypes = {
       typeNone: 0,
       typeImport: 1,
-      typeExport: 2
+      typeExport: 2,
     };
 
     WebExApiGatewayConstsService.csvJobStatus = {
       statusQueued: 0,
       statusPreProcess: 1,
       statusCompleted: 2,
-      statusInProcess: 3
+      statusInProcess: 3,
     };
 
     WebExApiGatewayConstsService.csvStates = {
@@ -35,7 +35,7 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
       exportCompletedWithErr: 'exportCompletedWithErr',
       importInProgress: 'importInProgress',
       importCompletedNoErr: 'importCompletedNoErr',
-      importCompletedWithErr: 'importCompletedWithErr'
+      importCompletedWithErr: 'importCompletedWithErr',
     };
   }));
 

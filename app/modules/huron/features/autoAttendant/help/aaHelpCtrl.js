@@ -42,7 +42,7 @@
     function sendMetrics() {
       if (vm.metric) {
         Analytics.trackEvent(AAMetricNameService.UI_HELP, {
-          icon: vm.metric
+          icon: vm.metric,
         });
       }
     }

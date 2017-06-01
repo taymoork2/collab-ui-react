@@ -1,7 +1,8 @@
 <div class="enterprise-sipDomain-page" ng-if="vm.toggle === false">
   <div class="title space-flow">
     <p class="paragraphSpacing">
-      <span translate="firstTimeWizard.setSipDomainDescription"></span>
+      <span ng-if="vm.isSSAReserved" translate="firstTimeWizard.currentSubdomainDescription" translate-values="{count: vm.subdomainCount}" translate-interpolation="messageformat"></span>
+      <span ng-if="!vm.isSSAReserved" translate="firstTimeWizard.subdomainDescription" translate-values="{count: vm.subdomainCount}" translate-interpolation="messageformat"></span>
     </p>
     <span>
       <a class="redirect-link" href translate="firstTimeWizard.setSipDomainLink" ng-click="vm.openSipHelpWiki()"></a>
@@ -65,7 +66,7 @@
   <div class="domain-flow">
     <div ng-if="vm.isSSAReserved" ng-class="{'domain-description': vm.showSaveButton}">
       <p translate="firstTimeWizard.currentSubdomainDescription" translate-values="{count: vm.subdomainCount}" translate-interpolation="messageformat"></p>
-      <p translate="firstTimeWizard.subdomainChangesDescription"></p>
+      <p ng-if="!vm.isCsc" translate="firstTimeWizard.subdomainChangesDescription"></p>
     </div>
     <p ng-if="!vm.isSSAReserved" translate="firstTimeWizard.subdomainDescription" translate-values="{count: vm.subdomainCount}" translate-interpolation="messageformat"></p>
 
@@ -85,12 +86,12 @@
       <span class="p">{{vm.inputValue}}.room{{vm.domainSuffix}}</span>
     </div>
 
-    <p ng-if="!vm.sipForm && vm.isSSAReserved" class="domain-space">
-      <a class="redirect-link" translate="firstTimeWizard.editSubdomain" ng-click="vm.toggleSipForm()"></a>
+    <p ng-if="!vm.sipForm && vm.isSSAReserved && !vm.isCsc" class="domain-space">
+      <a class="redirect-link" translate="firstTimeWizard.editSubdomain" ng-click="vm.editSubdomain()"></a>
     </p>
 
     <p class="domain domain-space-two" ng-if="vm.sipForm || !vm.isSSAReserved" translate="firstTimeWizard.enterSubdomain"></p>
-    <form name="vm.form" novalidate role="form" class="domain-form">
+    <form ng-show="vm.sipForm || !vm.isSSAReserved" name="vm.form" novalidate role="form" class="domain-form">
       <div class="domain-input" ng-if="vm.sipForm || !vm.isSSAReserved">
         <input cs-input
           id="sipDomainInput"
@@ -103,7 +104,15 @@
           ng-model="vm.inputValue">
       </div>
       <div ng-if="vm.sipForm || !vm.isSSAReserved" class="domain-buttons">
-        <button type="button" class="btn btn--cta" translate="firstTimeWizard.setSipDomainCheckAvailability" ng-click="vm.verifyAvailabilityAndValidity()" ng-disabled="vm.emptyOrUnchangedInput() || this.saving"></button>
+        <button
+          type="button"
+          class="btn btn--cta"
+          cs-btn
+          loading="vm.isSubdomainLoading"
+          ng-click="vm.verifyAvailabilityAndValidity()"
+          ng-disabled="vm.emptyOrUnchangedInput() || this.saving">
+          <span translate="firstTimeWizard.setSipDomainCheckAvailability"></span>
+        </button>
         <button type="button" class="btn" translate="common.cancel" ng-click="vm.toggleSipForm()" ng-disabled="this.saving"></button>
       </div>
     </form>

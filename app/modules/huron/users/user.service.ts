@@ -1,4 +1,4 @@
-import { UserV1, UserV2, UserNumber } from './user';
+import { UserV1, UserV2, UserNumber, UserRemoteDestination } from './user';
 
 interface IUserV1Resource extends ng.resource.IResourceClass<ng.resource.IResource<UserV1>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
@@ -7,9 +7,13 @@ interface IUserV1Resource extends ng.resource.IResourceClass<ng.resource.IResour
 interface IUserV2Resource extends ng.resource.IResourceClass<ng.resource.IResource<UserV2>> {
 }
 
+interface IRemoteDestinationResource extends UserRemoteDestination, ng.resource.IResourceClass<ng.resource.IResource<UserRemoteDestination>> {
+}
+
 export class HuronUserService {
   private userV1Resource: IUserV1Resource;
   private userV2Resource: IUserV2Resource;
+  private remoteDestinationResource: IRemoteDestinationResource;
 
   /* @ngInject */
   constructor(
@@ -28,6 +32,10 @@ export class HuronUserService {
       });
 
     this.userV2Resource = <IUserV2Resource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/', {},
+      {
+      });
+
+    this.remoteDestinationResource = <IRemoteDestinationResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/remotedestinations', {},
       {
       });
   }
@@ -64,5 +72,12 @@ export class HuronUserService {
     return this.getUserV2(userId).then(user => {
       return _.get(user, 'numbers', []);
     });
+  }
+
+  public getRemoteDestinations(userId: string): ng.IPromise<Array<any>> {
+    return this.remoteDestinationResource.query({
+      customerId: this.Authinfo.getOrgId(),
+      userId: userId,
+    }).$promise;
   }
 }

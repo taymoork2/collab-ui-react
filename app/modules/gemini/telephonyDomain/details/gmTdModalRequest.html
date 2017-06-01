@@ -1,0 +1,87 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="gemini.tds.request.modalTitle"></h3>
+</div>
+
+<div class="modal-body gemini-request-callbackgroup">
+  <form name="tdForm" novalidate>
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="gemini.tds.request.names"></h4>
+      </div>
+      <div class="section__content">
+        <div class="cs-input-group medium-12 columns">
+          <input
+            cs-input
+            required
+            type="text"
+            ng-maxlength="60"
+            name="customerName"
+            ng-model="$ctrl.data.domainName"
+            ng-disabled="$ctrl.data.telephonyDomainId"
+            cs-input-messages="$ctrl.messages.customerName"
+            cs-input-warning="$ctrl.onWarning()"
+            cs-input-warning-message="{{$ctrl.messages.customerName.warning}}"
+            cs-input-label="{{::'gemini.tds.request.labelCustomerName' | translate}}"
+            placeholder="{{::'gemini.tds.request.customerPlaceholder' | translate}}"
+            cs-input-help-text="{{::'gemini.tds.request.customerHelpText' | translate}}"
+          >
+        </div>
+        <div class="cs-input-group medium-12 columns">
+          <input
+            cs-input
+            type="text"
+            ng-maxlength="50"
+            name="partnerName"
+            ng-model="$ctrl.data.customerAttribute"
+            cs-input-messages="$ctrl.messages.partnerName"
+            placeholder="{{::'gemini.tds.request.partnerPlaceholder' | translate}}"
+            cs-input-label="{{::'gemini.tds.request.partnerName' | translate}}">
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="gemini.tds.request.regionNote"></h4>
+      </div>
+
+      <div class="cs-input-group section__content columns">
+        <div class="section-title-row medium-6">
+          <span class="section-name" translate="gemini.tds.request.region"></span>
+          <cs-select
+            required
+            filter="false"
+            name="region"
+            options="$ctrl.options"
+            ng-model="$ctrl.selected"
+            is-disabled="$ctrl.data.telephonyDomainId"
+            placeholder="$ctrl.selectPlaceholder"
+          ></cs-select>
+          <input type="hidden" ng-model="$ctrl.selected.value" required>
+        </div>
+        <div class="section-title-row">
+          <span translate="gemini.tds.request.noteText"></span>
+          <textarea rows="2"
+                    cs-input
+                    ng-maxlength="50"
+                    name="noteToCiscoTeam"
+                    class="form-control optional-row"
+                    ng-model="$ctrl.data.noteToCiscoTeam"
+                    ng-disabled="$ctrl.data.telephonyDomainId"
+                    cs-input-messages="$ctrl.messages.noteToCiscoTeam"
+                    placeholder="{{::'gemini.tds.request.notePlaceholder' | translate}}"></textarea>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="$ctrl.dismiss()"><span translate="common.cancel"></span></button>
+  <button type="button" class="btn btn--primary" name="nextButton" cs-btn loading="cbgrCtrl.loading" ng-click="tdForm.$setPristine(true); $ctrl.onNext()" ng-disabled="tdForm.$invalid">
+    <span translate="common.next"></span>
+  </button>
+</div>

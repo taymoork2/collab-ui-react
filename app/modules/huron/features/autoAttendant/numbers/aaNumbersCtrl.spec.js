@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: AABuilderNumbersCtrl', function () {
-  var controller, AANotificationService;
-  var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AANumberAssignmentService, AACommonService;
+  var control, AANotificationService;
+  var AAModelService, AAUiModelService, AutoAttendantCeInfoModelService, Authinfo, AANumberAssignmentService, AACommonService;
   var $rootScope, $scope, $q;
   var $httpBackend, HuronConfig;
   var url, cmiAAAsignmentURL;
@@ -16,33 +16,50 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
       "trigger": "incomingCall",
-      "number": "999999"
+      "number": "999999",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
     }, {
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3c",
-      "type": "directoryNumber",
+      "type": "externalNumber",
       "trigger": "incomingCall",
-      "number": "12068551179"
-    }]
+      "number": "12068551179",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3c",
+    }, {
+      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3d",
+      "type": "externalNumber",
+      "trigger": "incomingCall",
+      "number": "+12068551179",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3d",
+    }],
   };
 
   var cmiAAAssignedNumbers = [{
     "number": "2578",
     "type": "NUMBER_FORMAT_EXTENSION",
-    "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7"
+    "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7",
   }, {
     "number": "8002578",
     "type": "NUMBER_FORMAT_ENTERPRISE_LINE",
-    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a7"
+    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a7",
+  }, {
+    "number": "1111111",
+    "type": "NUMBER_FORMAT_EXTENSION",
+    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a8",
+  }, {
+    "number": "+2222222",
+    "type": "externalNumber",
+    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a9",
   }];
 
   var cmiAAAsignment = {
     "numbers": cmiAAAssignedNumbers,
-    "url": "https://cmi.huron-int.com/api/v2/customers/3338d491-d6ca-4786-82ed-cbe9efb02ad2/features/autoattendants/23a42558-6485-4dab-9505-704b6204410c/numbers"
+    "url": "https://cmi.huron-int.com/api/v2/customers/3338d491-d6ca-4786-82ed-cbe9efb02ad2/features/autoattendants/23a42558-6485-4dab-9505-704b6204410c/numbers",
   };
 
   var cmiAAAsignments = [cmiAAAsignment];
 
   var aaModel = {};
+  var aaUiModel = {};
 
   var errorSpy;
 
@@ -53,6 +70,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       resource.setId(rawCeInfo.assignedResources[j].id);
       resource.setTrigger(rawCeInfo.assignedResources[j].trigger);
       resource.setType(rawCeInfo.assignedResources[j].type);
+      resource.setUUID(rawCeInfo.assignedResources[j].uuid);
       if (!_.isUndefined(rawCeInfo.assignedResources[j].number)) {
         resource.setNumber(rawCeInfo.assignedResources[j].number);
       }
@@ -68,8 +86,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1'),
-    getOrgName: sinon.stub().returns('awesomeco')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('awesomeco'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -77,15 +95,16 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   }));
 
   beforeEach(inject(function (_$rootScope_, _$q_, $controller, _$httpBackend_, _HuronConfig_, _AutoAttendantCeInfoModelService_,
-    _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _Authinfo_, _AANotificationService_) {
+    _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _Authinfo_, _AANotificationService_, _AAUiModelService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope;
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
+    AAModelService = _AAModelService_;
+    AAUiModelService = _AAUiModelService_;
 
     AANumberAssignmentService = _AANumberAssignmentService_;
-    AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     Authinfo = _Authinfo_;
     AACommonService = _AACommonService_;
@@ -93,13 +112,14 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     AANotificationService = _AANotificationService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+    spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
 
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
       'pattern': '+9999999991',
-      'uuid': '9999999991-id'
+      'uuid': '9999999991-id',
     }, {
       'pattern': '+8888888881',
-      'uuid': '8888888881-id'
+      'uuid': '8888888881-id',
     }]);
 
     // for an external number query, return the number formatted with a +
@@ -111,7 +131,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
         var response = [{
           'pattern': '+' + pattern.replace(/\D/g, ''),
-          'uuid': pattern.replace(/\D/g, '') + '-id'
+          'uuid': pattern.replace(/\D/g, '') + '-id',
         }];
 
         return [200, response];
@@ -119,7 +139,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern').respond([{
       "pattern": "4000",
-      "uuid": "3f51ef5b-584f-42db-9ad8-8810b5e9e9ea"
+      "uuid": "3f51ef5b-584f-42db-9ad8-8810b5e9e9ea",
     }]);
 
     // CMI assignment will fail when there is any bad number in the list
@@ -138,36 +158,98 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     aaModel.aaRecordUUID = '2';
 
-    controller = $controller('AABuilderNumbersCtrl', {
-      $scope: $scope
+    var rawCeInfo2 = {
+      "assignedResources": [{
+        "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
+        "type": "directoryNumber",
+        "trigger": "incomingCall",
+        "number": "999999",
+        "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
+      }, {
+        "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3d",
+        "type": "externalNumber",
+        "trigger": "incomingCall",
+        "number": "1190",
+        "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3c",
+      }, {
+        "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3d",
+        "type": "externalNumber",
+        "trigger": "incomingCall",
+        "number": "+12068551179",
+        "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3d",
+      }, {
+        "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3d",
+        "type": "externalNumber",
+        "trigger": "incomingCall",
+        "number": "+12068551179",
+        "uuid": "",
+      }],
+    };
+
+    aaUiModel.ceInfo = ce2CeInfo(rawCeInfo2);
+
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools/00097a86-45ef-44a7-aa78-6d32a0ca1d3b').respond({
+      "pattern": "999990",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
     });
-    $scope.$apply();
+
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/00097a86-45ef-44a7-aa78-6d32a0ca1d3d').respond({
+      "pattern": "testNum",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3d",
+    });
+
+    control = $controller;
+
   }));
 
   afterEach(function () {
+    $rootScope = null;
+    $q = null;
+    $scope = null;
+    $httpBackend = null;
+    HuronConfig = null;
+    AAModelService = null;
+    AAUiModelService = null;
+
+    AANumberAssignmentService = null;
+    AutoAttendantCeInfoModelService = null;
+    Authinfo = null;
+    AACommonService = null;
+
+    AANotificationService = null;
+    control = null;
 
   });
   describe('checkResourceNumbers', function () {
 
     it('should map an E164 phone number correctly', function () {
+      var c = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
 
-      controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
+      c.ui.ceInfo = ce2CeInfo(rawCeInfo);
 
-      controller.loadNums();
+      c.loadNums();
 
       $scope.$apply();
 
-      expect(controller.numberTypeList[controller.ui.ceInfo.resources[0].number]).toEqual("directoryNumber");
+      expect(c.numberTypeList[c.ui.ceInfo.resources[0].number]).toEqual("directoryNumber");
 
-      expect(controller.numberTypeList[controller.ui.ceInfo.resources[1].number]).toEqual("externalNumber");
+      expect(c.numberTypeList[c.ui.ceInfo.resources[1].number]).toEqual("externalNumber");
 
     });
 
   });
 
   describe('addNumber', function () {
+    var controller;
 
     beforeEach(function () {
+      controller = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
 
       controller.numberTypeList[2064261234] = "externalNumber";
       controller.numberTypeList[1234] = "directoryNumber";
@@ -183,160 +265,87 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     });
 
     it('should move an external phone number from available to selected successfully', function () {
+      var resource;
+
       aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
+        name: rawCeInfo.callExperienceName,
       });
+      var phoneNumber = { "value": "2064261234" };
 
-      controller.availablePhoneNums[0] = {
-        label: "2064261234",
-        value: "2064261234"
-      };
-
-      controller.addNumber("2064261234");
+      controller.addNumber(phoneNumber);
 
       $scope.$apply();
+      resource = _.last(controller.ui.ceInfo.resources);
 
-      expect(controller.availablePhoneNums.length === 0);
+      expect(resource.number).toEqual(phoneNumber.value);
 
     });
 
-    it('should remove an internal phone number from available successfully', function () {
-      aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
-      });
-
-      controller.availablePhoneNums[0] = {
-        label: "1234",
-        value: "1234"
-      };
-
-      controller.addNumber("1234");
-
-      $scope.$apply();
-
-      controller.ui.ceInfo.getResources();
-
-      expect(controller.availablePhoneNums.length === 0);
-
-    });
 
     it('should sort combination of internal/external numbers with internals sorting last', function () {
 
       aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
+        name: rawCeInfo.callExperienceName,
       });
 
-      // start out with 2 external available numbers, with an internal in-between, that are not sorted
-      controller.availablePhoneNums[0] = {
-        label: "2064261234",
-        value: "2064261234"
-      };
       controller.numberTypeList["2064261234"] = "externalNumber";
+      controller.addNumber({
+        value: "2064261234",
+      });
 
-      controller.availablePhoneNums[1] = {
-        label: "1234",
-        value: "1234"
-      };
       controller.numberTypeList["1234"] = "directoryNumber";
-
-      controller.availablePhoneNums[2] = {
-        label: "1234567",
-        value: "1234567"
-      };
-      controller.numberTypeList["1234567"] = "externalNumber";
-
-      // add a number
-      controller.addNumber("2064261234");
-      $httpBackend.flush();
-      $scope.$apply();
-
-      // and we should be down to 2 available now
-      expect(controller.availablePhoneNums.length === 2);
+      controller.numberTypeList["1234567"] = "directoryNumber";
+      controller.numberTypeList["999999"] = "directoryNumber";
+      controller.numberTypeList["2065431111"] = "externalNumber";
 
       // add internal
-      controller.addNumber("1234");
+      controller.addNumber({
+        value: "1234",
+      });
+
       $httpBackend.flush();
       $scope.$apply();
-
-      // we should be down to 1 available
-      expect(controller.availablePhoneNums.length === 1);
 
       // add another
-      controller.addNumber("1234567");
+      controller.addNumber({
+        value: "1234567",
+      });
       $httpBackend.flush();
       $scope.$apply();
 
-      // we should be down to 0 available
-      expect(controller.availablePhoneNums.length === 0);
+      // add another
+      controller.addNumber({
+        value: "2065431111",
+      });
+      $httpBackend.flush();
+      $scope.$apply();
 
       var resources = controller.ui.ceInfo.getResources();
 
       // top line header is used for preferred, e164 should be on top.
       expect(resources[0].number).toEqual("12068551179");
 
-      // and the 1234567 should have sorted first after that - even though we added it last
-      expect(resources[1].number).toEqual("1234567");
+      // and the +12068551179 should have sorted first after that
+      expect(resources[1].number).toEqual("+12068551179");
 
-      // and the internal 1234 should have sorted last - special case for internal
-      expect(resources[resources.length - 1].number).toEqual("1234");
+      // and the 2064261234 should have sorted first after that
+      expect(resources[2].number).toEqual("2064261234");
 
-    });
+      // and the 2065431111 should have sorted first after that even though added last
+      expect(resources[3].number).toEqual("2065431111");
 
-    it('should not move a bad or missing phone number from available', function () {
-      aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
-      });
-
-      controller.availablePhoneNums[0] = {
-        label: "2064261234",
-        value: "2064261234"
-      };
-      controller.availablePhoneNums[1] = {
-        label: "1234",
-        value: "1234"
-      };
-
-      controller.addNumber('');
-      controller.addNumber('bogus');
-
-      $scope.$apply();
-
-      controller.ui.ceInfo.getResources();
-
-      expect(controller.availablePhoneNums.length === 2);
-
-    });
-
-    it('should not move a number that fails to assign in CMI', function () {
-      aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
-      });
-
-      controller.availablePhoneNums[0] = {
-        label: "bad",
-        value: "bad"
-      };
-
-      controller.addNumber('bad');
-
-      $httpBackend.flush();
-
-      $scope.$apply();
-
-      var resources = controller.ui.ceInfo.getResources();
-
-      expect(resources.length === 1);
+      // and the internal 999999should have sorted last - special case for internal
+      expect(resources[resources.length - 1].number).toEqual("999999");
 
     });
 
     it('should report error when cannot format extension on assignment', function () {
       aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
+        name: rawCeInfo.callExperienceName,
       });
-
       controller.availablePhoneNums[0] = {
         label: "1234",
-        value: "1234"
+        value: "1234",
       };
 
       errorSpy = jasmine.createSpy('error');
@@ -344,10 +353,12 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       spyOn(AANumberAssignmentService, 'formatAAExtensionResourcesBasedOnCMI').and.returnValue($q.reject({
         statusText: "server error",
-        status: 500
+        status: 500,
       }));
 
-      controller.addNumber("1234");
+      controller.addNumber({
+        value: "1234",
+      });
 
       $scope.$apply();
       $httpBackend.flush();
@@ -359,12 +370,22 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   });
 
   describe('removeNumber', function () {
+    var controller;
 
     beforeEach(function () {
+
+      spyOn(AANumberAssignmentService, 'formatAAE164ResourcesBasedOnCMI').and.callFake(function () {
+        return $q.resolve("{}");
+      });
 
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = aCe;
+
+      controller = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
 
       // controller.name = rawCeInfo.callExperienceName;
       controller.ui = {};
@@ -373,38 +394,33 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should move a phone number to available successfully', function () {
 
-      // start out as 2 available numbers that are not sorted
-      controller.availablePhoneNums[0] = {
-        label: "2345678",
-        value: "2345678"
-      };
-      controller.availablePhoneNums[1] = {
-        label: "1234567",
-        value: "1234567"
-      };
+      spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.callFake(function () {
+        return $q.resolve("{}");
+      });
 
-      controller.removeNumber(rawCeInfo.assignedResources[0].number);
+      var orig_length;
+
+      var resources = controller.ui.ceInfo.getResources();
+      orig_length = resources.length;
+
+      controller.removeNumber(resources[0]);
       $scope.$apply();
 
       // we should have 3 numbers now
-      expect(controller.availablePhoneNums.length).toEqual(3);
-      // and the 1234567 should have sorted first
-      expect(controller.availablePhoneNums[0].value).toEqual("1234567");
-      $httpBackend.flush();
       expect(AACommonService.isFormDirty()).toBe(true);
-      var numobj = controller.availablePhoneNums.filter(function (obj) {
-        return obj.value == rawCeInfo.assignedResources[0].number;
-      });
 
-      expect(numobj).toBeDefined();
+      expect(resources.length).toEqual(orig_length - 1);
 
     });
 
     it('should not move a bad or missing phone number to available', function () {
 
       controller.availablePhoneNums = [];
-
-      controller.removeNumber('');
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId("bad");
+      resource.setNumber('');
+      controller.removeNumber(resource);
 
       $scope.$apply();
 
@@ -413,6 +429,10 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     });
 
     it('should warn when fail to assign to CMI on remove', function () {
+      spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.callFake(function () {
+        return $q.reject("{}");
+      });
+
 
       errorSpy = jasmine.createSpy('error');
       AANotificationService.errorResponse = errorSpy;
@@ -425,7 +445,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       var resources = controller.ui.ceInfo.getResources();
 
       resources.push(resource);
-      controller.removeNumber(rawCeInfo.assignedResources[0].number);
+      controller.removeNumber(resources[0]);
       $scope.$apply();
       $httpBackend.flush();
       expect(AACommonService.isValid()).toBe(false);
@@ -434,45 +454,14 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     });
   });
 
-  describe('getDupeNumberAnyAA', function () {
-
-    beforeEach(function () {
-
-      aaModel.ceInfos = [];
-      aaModel.aaRecords = cesWithNumber;
-      aaModel.aaRecord = aCe;
-
-      // controller.name = rawCeInfo.callExperienceName;
-      controller.ui = {};
-      controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
-
-    });
-
-    it('should find a duplicate phone number', function () {
-
-      var ret = controller.getDupeNumberAnyAA(cesWithNumber[0].assignedResources[0].number);
-
-      $scope.$apply();
-
-      expect(ret).toEqual(true);
-
-    });
-
-    it('should not find a duplicate phone number', function () {
-
-      var ret = controller.getDupeNumberAnyAA("1234567");
-
-      $scope.$apply();
-
-      expect(ret).toEqual(false);
-
-    });
-
-  });
-
   describe('getExternalNumbers', function () {
+    var controller;
 
     beforeEach(function () {
+      controller = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
 
       aaModel.ceInfos = [];
       aaModel.aaRecords = cesWithNumber;
@@ -499,8 +488,13 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   });
 
   describe('getInternalNumbers', function () {
+    var controller;
 
     beforeEach(function () {
+      controller = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
 
       aaModel.ceInfos = [];
       aaModel.aaRecords = cesWithNumber;
@@ -527,8 +521,14 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   });
 
   describe('warnOnAssignedNumberDiscrepancies', function () {
+    var controller;
+    var errorResponseSpy;
 
     beforeEach(function () {
+      controller = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
 
       aaModel.ceInfos = [];
       aaModel.aaRecords = cesWithNumber;
@@ -583,6 +583,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     });
 
     it('should warn when CMI call fails', function () {
+      errorResponseSpy = jasmine.createSpy('errorReponse');
+      AANotificationService.errorResponse = errorResponseSpy;
 
       spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.returnValue($q.reject("bad"));
 
@@ -592,10 +594,103 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       $scope.$apply();
 
-      expect(errorSpy).toHaveBeenCalled();
+      expect(errorResponseSpy).toHaveBeenCalled();
       expect(AACommonService.isValid()).toBe(false);
 
     });
+
+  });
+
+  describe('UUID ', function () {
+    var controller;
+
+    beforeEach(function () {
+
+      aaModel.ceInfos = [];
+      aaModel.aaRecords = [];
+      aaModel.aaRecord = aCe;
+
+    });
+
+    it('should substitute new phone number based on uuid', function () {
+      var fromCMI = [{ 'number': '123456789', 'uuid': '00097a86-45ef-44a7-aa78-6d32a0ca1d3d' }];
+
+      spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
+        return $q.resolve(fromCMI);
+      });
+
+      controller = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
+      expect(controller.ui.ceInfo.resources[2].getNumber()).toEqual('123456789');
+
+    });
+
+    it('should set the uuid based on phone number', function () {
+      var fromCMI = [{ 'number': '12068551179', 'uuid': '987654321' }];
+
+      spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
+        return $q.resolve(fromCMI);
+      });
+
+      controller = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      expect(controller.ui.ceInfo.resources[2].getUUID()).toEqual('987654321');
+    });
+
+    it('should set the uuid based on phone number with plus', function () {
+      var fromCMI = [{ 'number': '+12068551179', 'uuid': '987654321' }];
+
+      spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
+        return $q.resolve(fromCMI);
+      });
+
+      controller = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      expect(controller.ui.ceInfo.resources[2].getUUID()).toEqual('987654321');
+    });
+
+    it('should set the uuid when original uuid not found', function () {
+      var fromCMI = [{ 'number': '12068551179', 'uuid': '987654321' }];
+
+      spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
+        return $q.resolve(fromCMI);
+      });
+
+      controller = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      expect(controller.ui.ceInfo.resources[2].getUUID()).toEqual('987654321');
+    });
+
+    it('should set the uuid when original uuid is empty', function () {
+      var fromCMI = [{ 'number': '12068551179', 'uuid': '987654321' }];
+
+      spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
+        return $q.resolve(fromCMI);
+      });
+
+      controller = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      expect(controller.ui.ceInfo.resources[3].getUUID()).toEqual('987654321');
+    });
+
 
   });
 

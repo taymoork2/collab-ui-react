@@ -8,7 +8,7 @@
       csvStatus: 'csvStatus',
       csvExport: 'csvExport',
       csvImport: 'csvImport',
-      csvFileDownload: 'csvFileDownload'
+      csvFileDownload: 'csvFileDownload',
     };
 
     this.csvAPIs = [{
@@ -16,7 +16,7 @@
       api: 'importexportstatus',
       method: 'POST',
       contentType: 'application/json;charset=utf-8',
-      data: {}
+      data: {},
     },
 
     {
@@ -24,7 +24,7 @@
       api: 'export',
       method: 'POST',
       contentType: 'application/json;charset=utf-8',
-      data: {}
+      data: {},
     },
 
     {
@@ -34,7 +34,7 @@
       headers: {
         contentType: 'undefined',
       },
-      data: {}
+      data: {},
     },
 
     {
@@ -42,21 +42,21 @@
       api: null,
       method: 'POST',
       contentType: 'application/json;charset=utf-8',
-      data: {}
+      data: {},
     },
     ];
 
     this.csvJobTypes = {
       typeNone: 0,
       typeImport: 1,
-      typeExport: 2
+      typeExport: 2,
     };
 
     this.csvJobStatus = {
       statusQueued: 0,
       statusPreProcess: 1,
       statusCompleted: 2,
-      statusInProcess: 3
+      statusInProcess: 3,
     };
 
     this.csvStates = {
@@ -67,7 +67,7 @@
       exportCompletedWithErr: 'exportCompletedWithErr',
       importInProgress: 'importInProgress',
       importCompletedNoErr: 'importCompletedNoErr',
-      importCompletedWithErr: 'importCompletedWithErr'
+      importCompletedWithErr: 'importCompletedWithErr',
     };
 
     this.csvStatusTypes = [

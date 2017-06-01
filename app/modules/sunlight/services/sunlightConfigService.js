@@ -5,9 +5,6 @@
 (function () {
   'use strict';
 
-  angular.module('Sunlight')
-    .service('SunlightConfigService', sunlightConfigService);
-
   /* @ngInject */
   function sunlightConfigService($http, UrlConfig, Authinfo) {
     var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/user';
@@ -22,7 +19,8 @@
       getChatConfig: getChatConfig,
       deleteUser: deleteUser,
       onBoardCare: onBoardCare,
-      updateChatConfig: updateChatConfig
+      updateChatConfig: updateChatConfig,
+      aaOnboard: aaOnboard,
     };
 
     return service;
@@ -66,5 +64,12 @@
         'csDiscoveryUrl': 'discovery.produs1.ciscoccservice.com' };
       return $http.put(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/csonboard', onboardPayload);
     }
+
+    function aaOnboard() {
+      var onboardPayload = {};
+      return $http.post(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/aaonboard', onboardPayload);
+    }
   }
+
+  module.exports = sunlightConfigService;
 })();

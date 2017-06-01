@@ -8,6 +8,8 @@ require('./_user-roles.scss');
 
   /* @ngInject */
   function UserRolesCtrl($q, $scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, FeatureToggleService, EdiscoveryService) {
+    var COMPLIANCE = 'compliance';
+
     $scope.currentUser = $stateParams.currentUser;
     $scope.sipAddr = '';
     $scope.dirsyncEnabled = false;
@@ -32,39 +34,39 @@ require('./_user-roles.scss');
     $scope.resetFormData = resetFormData;
     $scope.enableReadonlyAdminOption = false;
     $scope.rolesObj = {
-      adminRadioValue: 0
+      adminRadioValue: 0,
     };
     $scope.noAdmin = {
       label: $translate.instant('rolesPanel.noAdmin'),
       value: 0,
       name: 'adminRoles',
-      id: 'noAdmin'
+      id: 'noAdmin',
     };
     $scope.fullAdmin = {
       label: $translate.instant('rolesPanel.fullAdmin'),
       value: 1,
       name: 'adminRoles',
-      id: 'fullAdmin'
+      id: 'fullAdmin',
     };
     $scope.readonlyAdmin = {
       label: $translate.instant('rolesPanel.readonlyAdmin'),
       value: 3,
       name: 'adminRoles',
-      id: 'readonlyAdmin'
+      id: 'readonlyAdmin',
     };
     $scope.partialAdmin = {
       label: $translate.instant('rolesPanel.partialAdmin'),
       value: 2,
       name: 'partialAdmin',
-      id: 'partialAdmin'
+      id: 'partialAdmin',
     };
     $scope.messages = {
       displayName: {
-        notblank: $translate.instant('profilePage.displayNameEmptyError')
+        notblank: $translate.instant('profilePage.displayNameEmptyError'),
       },
       partialAdmin: {
-        noSelection: $translate.instant('rolesPanel.partialAdminError')
-      }
+        noSelection: $translate.instant('rolesPanel.partialAdminError'),
+      },
     };
 
     $scope.checkAdminDisplayName = checkAdminDisplayName;
@@ -98,7 +100,7 @@ require('./_user-roles.scss');
           Log.debug('Get existing org failed. Status: ' + status);
         }
       }, null, {
-        cache: true
+        cache: true,
       });
 
       if ($scope.currentUser) {
@@ -113,7 +115,7 @@ require('./_user-roles.scss');
       // data used in the form for editing
       $scope.formUserData = {
         name: _.clone(_.get($scope, 'currentUser.name')),
-        displayName: _.clone(_.get($scope, 'currentUser.displayName'))
+        displayName: _.clone(_.get($scope, 'currentUser.displayName')),
       };
     }
 
@@ -121,12 +123,12 @@ require('./_user-roles.scss');
       if (_.isArray(_.get($scope, 'currentUser.sipAddresses'))) {
         var sipAddrData = _.find($scope.currentUser.sipAddresses, {
           primary: true,
-          type: 'cloud-calling'
+          type: 'cloud-calling',
         });
 
         if (_.isEmpty(sipAddrData)) {
           sipAddrData = _.find($scope.currentUser.sipAddresses, {
-            type: 'cloud-calling'
+            type: 'cloud-calling',
           });
         }
 
@@ -144,7 +146,7 @@ require('./_user-roles.scss');
       $scope.rolesObj.helpdeskValue = hasRole(Config.backend_roles.helpdesk);
       $scope.rolesObj.orderAdminValue = hasRole(Config.backend_roles.orderadmin);
       $scope.rolesObj.partnerManagementValue = hasRole(Config.backend_roles.partner_management);
-      $scope.rolesObj.complianceValue = $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
+      $scope.rolesObj.complianceValue = isEntitledToCompliance();
 
       $scope.initialRoles = rolesFromScope();
     }
@@ -188,12 +190,15 @@ require('./_user-roles.scss');
 
     function updateRoles() {
       if ($scope.showComplianceRole && $scope.rolesObj.complianceValue !== isEntitledToCompliance()) {
+        $scope.updatingUser = true;
         EdiscoveryService.setEntitledForCompliance(Authinfo.getOrgId(), $scope.currentUser.id, $scope.rolesObj.complianceValue)
           .then(function () {
+            setComplianceEntitlement($scope.rolesObj.complianceValue);
             saveForm();
           })
           .catch(function (response) {
             Notification.errorResponse(response, 'profilePage.complianceError');
+            $scope.updatingUser = false;
           });
       } else {
         saveForm();
@@ -211,7 +216,7 @@ require('./_user-roles.scss');
               Config.roles[roleName] !== Config.roles.compliance_user) {
               roles.push({
                 'roleName': Config.roles[roleName],
-                'roleState': Config.roleState.inactive
+                'roleState': Config.roleState.inactive,
               });
             }
           }
@@ -219,79 +224,79 @@ require('./_user-roles.scss');
         case 1: // Full admin
           roles.push({
             'roleName': Config.roles.full_admin,
-            'roleState': Config.roleState.active
+            'roleState': Config.roleState.active,
           });
           roles.push({
             'roleName': Config.roles.readonly_admin,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           roles.push({
             'roleName': Config.roles.sales,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           roles.push({
             'roleName': Config.roles.billing,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           roles.push({
             'roleName': Config.roles.support,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           roles.push({
             'roleName': Config.roles.reports,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           break;
         case 2: // Some admin roles
           roles.push({
             'roleName': Config.roles.full_admin,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           roles.push({
             'roleName': Config.roles.readonly_admin,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           roles.push({
             'roleName': Config.roles.sales,
-            'roleState': checkPartialRoles($scope.rolesObj.salesAdminValue)
+            'roleState': checkPartialRoles($scope.rolesObj.salesAdminValue),
           });
           roles.push({
             'roleName': Config.roles.billing,
-            'roleState': checkPartialRoles($scope.rolesObj.billingAdminValue)
+            'roleState': checkPartialRoles($scope.rolesObj.billingAdminValue),
           });
           roles.push({
             'roleName': Config.roles.support,
-            'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
+            'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue),
           });
           roles.push({
             'roleName': Config.roles.reports,
-            'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
+            'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue),
           });
           break;
         case 3: // Readonly admin
           roles.push({
             'roleName': Config.roles.full_admin,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           roles.push({
             'roleName': Config.roles.readonly_admin,
-            'roleState': Config.roleState.active
+            'roleState': Config.roleState.active,
           });
           roles.push({
             'roleName': Config.roles.sales,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           roles.push({
             'roleName': Config.roles.billing,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           roles.push({
             'roleName': Config.roles.support,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           roles.push({
             'roleName': Config.roles.reports,
-            'roleState': Config.roleState.inactive
+            'roleState': Config.roleState.inactive,
           });
           break;
       }
@@ -299,26 +304,26 @@ require('./_user-roles.scss');
       // Help Desk
       roles.push({
         'roleName': Config.roles.helpdesk,
-        'roleState': ($scope.rolesObj.helpdeskValue ? Config.roleState.active : Config.roleState.inactive)
+        'roleState': ($scope.rolesObj.helpdeskValue ? Config.roleState.active : Config.roleState.inactive),
       });
 
       // Order Admin role for applicable users
       if ($scope.showOrderAdminRole) {
         roles.push({
           'roleName': Config.roles.orderadmin,
-          'roleState': ($scope.rolesObj.orderAdminValue ? Config.roleState.active : Config.roleState.inactive)
+          'roleState': ($scope.rolesObj.orderAdminValue ? Config.roleState.active : Config.roleState.inactive),
         });
       }
 
       // Partner Management
       roles.push({
         'roleName': Config.roles.partner_management,
-        'roleState': ($scope.rolesObj.partnerManagementValue ? Config.roleState.active : Config.roleState.inactive)
+        'roleState': ($scope.rolesObj.partnerManagementValue ? Config.roleState.active : Config.roleState.inactive),
       });
 
       roles.push({
         'roleName': Config.roles.spark_synckms,
-        'roleState': (hasRole(Config.backend_roles.spark_synckms) ? Config.roleState.active : Config.roleState.inactive)
+        'roleState': (hasRole(Config.backend_roles.spark_synckms) ? Config.roleState.active : Config.roleState.inactive),
       });
 
       return roles;
@@ -362,8 +367,8 @@ require('./_user-roles.scss');
         'schemas': Config.scimSchemas,
         'name': {},
         'meta': {
-          'attributes': []
-        }
+          'attributes': [],
+        },
       };
 
       if ($scope.formUserData.name) {
@@ -428,7 +433,15 @@ require('./_user-roles.scss');
     }
 
     function isEntitledToCompliance() {
-      return $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
+      return $scope.currentUser && _.includes($scope.currentUser.entitlements, COMPLIANCE);
+    }
+
+    function setComplianceEntitlement(compliant) {
+      if (compliant) {
+        $scope.currentUser.entitlements.push(COMPLIANCE);
+      } else {
+        _.pull($scope.currentUser.entitlements, COMPLIANCE);
+      }
     }
 
     function checkAdminDisplayName() {

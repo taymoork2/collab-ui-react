@@ -29,7 +29,7 @@ require('./_cdr-overview.scss');
       if (key.toLowerCase() !== '$$hashkey') {
         vm.cdr.push({
           'key': key,
-          'value': value
+          'value': value,
         });
       }
     });
@@ -42,9 +42,9 @@ require('./_cdr-overview.scss');
         top: 0,
         right: 3,
         left: 0,
-        bottom: 0
+        bottom: 0,
       },
-      autohidemode: "leave"
+      autohidemode: "leave",
     };
 
     vm.openLadderDiagram = function () {
@@ -52,7 +52,7 @@ require('./_cdr-overview.scss');
         call: $stateParams.call,
         uniqueIds: $stateParams.uniqueIds,
         events: $stateParams.events,
-        logstashPath: logstashPath
+        logstashPath: logstashPath,
       });
     };
 

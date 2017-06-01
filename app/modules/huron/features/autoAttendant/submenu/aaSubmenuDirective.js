@@ -13,11 +13,11 @@
         menuId: '@aaMenuId',
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
-        queues: "@aaQueues"
+        queues: "@aaQueues",
       },
       controller: 'AASubmenuCtrl',
       controllerAs: 'aaSubmenu',
-      templateUrl: 'modules/huron/features/autoAttendant/submenu/aaSubmenu.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/submenu/aaSubmenu.tpl.html',
     };
   }
 })();

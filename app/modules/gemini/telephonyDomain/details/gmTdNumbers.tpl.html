@@ -1,0 +1,52 @@
+<div class="customer-overview gemini-side-panel">
+  <div ui-view="header"></div>
+
+  <cs-sp-container>
+    <gm-td-header show-remedy-ticket="$ctrl.ccaDomainId" td-base-info="$ctrl.currentTD"></gm-td-header>
+
+    <cs-page-sub-header>
+      <cs-page-sub-header-left>
+        <h6>{{:: 'gemini.tds.phoneNumbers' | translate }}</h6>
+      </cs-page-sub-header-left>
+
+      <cs-page-sub-header-right>
+        <h6 class="text-left"><a ng-click="$ctrl.downloadTemplate()" translate="gemini.tds.request.download.csvTemplate"></a></h6>
+        <div ng-if="!$ctrl.exportLoading" class="no-animate">
+          <a ng-if="$ctrl.ccaDomainId" tooltip="{{::'gemini.export.exportToCSV' | translate}}" class="export-users" ng-csv="$ctrl.exportToCSV()" filename="{{::'gemini.tds.numbers.export.csvFilename' | translate}}" quote-strings="true">
+            <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
+          </a>
+          <a ng-if="!$ctrl.ccaDomainId" class="export-users">
+            <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
+          </a>
+        </div>
+        <div ng-if="$ctrl.exportLoading" class="btn btn-none no-animate" tooltip="{{::'gemini.export.exportInProcess' | translate}}">
+          <span class="export-users">
+            <i class="icon icon-spinner"></i>
+          </span>
+        </div>
+
+        <button ng-disabled="!$ctrl.isEdit || $ctrl.submitLoading" class="btn" translate="gemini.tds.request.importNumber.fromTd" ng-click="$ctrl.importTD()"></button>
+        <gm-td-import-numbers-from-csv is-disabled="!$ctrl.isEdit || $ctrl.submitLoading" on-imported="$ctrl.importNumberCSV(numbers)"></gm-td-import-numbers-from-csv>
+        <button class="btn btn--primary" ng-disabled="!$ctrl.isEdit || $ctrl.submitLoading" id="addNumber" translate="gemini.tds.request.addNumber" ng-click="$ctrl.addNumber()"></button>
+      </cs-page-sub-header-right>
+    </cs-page-sub-header>
+    <div class="grid-his-note">
+      <cs-sp-section>
+        <div class="gridStyle" ui-grid="$ctrl.TelephonyNumberDataService.gridOptions" ng-style="$ctrl.getGridHeight()"></div>
+        <div class="grid-refresh" ng-if="$ctrl.loading">
+          <i class="icon icon-spinner icon-2x"></i>
+        </div>
+      </cs-sp-section>
+
+      <gm-td-notes-view ng-if="$ctrl.ccaDomainId"></gm-td-notes-view>
+      <gm-td-histories ng-if="$ctrl.ccaDomainId"></gm-td-histories>
+    </div>
+    <cs-sp-buttons>
+      <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.submitLoading" ng-disabled="!$ctrl.TelephonyNumberDataService.gridOptions.data.length || !$ctrl.isEdit" ng-click="$ctrl.submitTD()">
+        <span translate="gemini.button.submitRequest"></span>
+      </button>
+      <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
+    </cs-sp-buttons>
+  </cs-sp-container>
+
+</div>

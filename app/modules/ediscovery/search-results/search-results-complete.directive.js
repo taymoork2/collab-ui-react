@@ -8,7 +8,7 @@
   function searchResultsComplete() {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/ediscovery/search-results/search-results-complete.tpl.html'
+      templateUrl: 'modules/ediscovery/search-results/search-results-complete.tpl.html',
     };
 
     return directive;

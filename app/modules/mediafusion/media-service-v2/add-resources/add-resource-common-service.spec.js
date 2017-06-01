@@ -5,7 +5,7 @@
     var httpBackend, $q, AddResourceCommonServiceV2, MediaClusterServiceV2, MediaServiceActivationV2, authinfo, Notification;
     beforeEach(inject(function (_$q_, _AddResourceCommonServiceV2_, $httpBackend, _MediaClusterServiceV2_, _MediaServiceActivationV2_, _Authinfo_, _Notification_) {
       authinfo = _Authinfo_;
-      authinfo.getOrgId = sinon.stub().returns('orgId');
+      authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('orgId');
       httpBackend = $httpBackend;
       httpBackend.when('GET', /^\w+.*/).respond({});
       AddResourceCommonServiceV2 = _AddResourceCommonServiceV2_;
@@ -21,8 +21,8 @@
         "targetType": 'mf_mgmt',
         "connectors": [{
           state: 'running',
-          hostname: 'doesnothavecalendar.example.org'
-        }]
+          hostname: 'doesnothavecalendar.example.org',
+        }],
       }];
       spyOn(MediaClusterServiceV2, 'getAll').and.returnValue($q.resolve(
         clusters
@@ -32,18 +32,25 @@
       expect(MediaClusterServiceV2.getAll).toHaveBeenCalled();
     });
     it('MediaClusterServiceV2 createClusterV2 should be called for addRedirectTargetClicked', function () {
-      httpBackend.when('POST', "https://hercules-integration.wbx2.com/v1/organizations/orgId/allowedRedirectTargets").respond({});
+      httpBackend.when('POST', "https://hercules-intb.ciscospark.com/v1/organizations/orgId/allowedRedirectTargets").respond({});
       spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.resolve({
         data: {
-          id: "12345"
-        } }));
+          id: "12345",
+        },
+      }));
+      spyOn(MediaClusterServiceV2, 'getPropertySets').and.returnValue($q.resolve({
+        data: {
+          propertySets: [],
+        },
+      }));
       AddResourceCommonServiceV2.addRedirectTargetClicked('hostName', 'enteredCluster');
       httpBackend.flush();
       expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
+      expect(MediaClusterServiceV2.getPropertySets).toHaveBeenCalled();
     });
     it('should notify error when the createClusterV2 call fails for addRedirectTargetClicked', function () {
       spyOn(Notification, 'errorWithTrackingId');
-      httpBackend.when('POST', "https://hercules-integration.wbx2.com/v1/organizations/orgId/allowedRedirectTargets").respond(500, null);
+      httpBackend.when('POST', "https://hercules-intb.ciscospark.com/v1/organizations/orgId/allowedRedirectTargets").respond(500, null);
       spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.reject());
       AddResourceCommonServiceV2.addRedirectTargetClicked('hostName', 'enteredCluster');
       httpBackend.verifyNoOutstandingExpectation();

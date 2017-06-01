@@ -5,7 +5,7 @@ describe('Call Forwarding', function () {
   var user = utils.randomTestGmail();
   var dropdownVariables = {
     'voicemail': 'Voicemail',
-    'addNew': 'Add New'
+    'addNew': 'Add New',
   };
   var snrLine = telephony.getRandomNumber();
   var externalCFLine = telephony.getRandomNumber();

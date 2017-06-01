@@ -22,8 +22,8 @@
         mkRoleChangesList: mkRoleChangesList,
         mkPayload: mkPayload,
         patchUserWithRoleChanges: patchUserWithRoleChanges,
-        patch: patch
-      }
+        patch: patch,
+      },
     };
 
     return service;
@@ -33,7 +33,7 @@
     function mkRoleChangePartial(roleName, roleState, targetOrgId) {
       var result = {
         roleName: roleName,
-        roleState: roleState
+        roleState: roleState,
       };
       if (targetOrgId) {
         result.orgId = targetOrgId;
@@ -53,8 +53,8 @@
       return {
         users: [{
           email: userName,
-          userRoles: roleChanges
-        }]
+          userRoles: roleChanges,
+        }],
       };
     }
 

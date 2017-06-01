@@ -5,9 +5,11 @@
 var HttpsProxyAgent = require("https-proxy-agent");
 var fs = require('fs');
 var appConfig = require('./config/config');
+var hostnameConfig = require('./app/config/hostname.config');
 var processEnvUtil = require('./utils/processEnvUtil')();
 var args = require('yargs').argv;
 var _ = require('lodash');
+var remote = require('selenium-webdriver/remote');
 
 var gatingSuites = _.chain(appConfig.e2eSuites).omit('huron').values().value();
 
@@ -47,7 +49,7 @@ exports.config = {
     browserName: 'chrome',
     screenResolution: '1680x1050',
     platform: process.env.SAUCE__USERNAME ? 'Windows 7' : undefined,
-    tunnelIdentifier: process.env.SC_TUNNEL_IDENTIFIER,
+    tunnelIdentifier: process.env.SAUCE__TUNNEL_ID,
     name: 'wx2-admin-web-client',
     build: process.env.BUILD_NUMBER,
 
@@ -64,7 +66,7 @@ exports.config = {
       },
     },
     shardTestFiles: true,
-    maxInstances: maxInstances
+    maxInstances: maxInstances,
   },
 
   plugins: [{
@@ -77,18 +79,21 @@ exports.config = {
       /object Object/,
       /favicon/,
       /\/browser-sync\//,
-    ]
+    ],
   }],
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
-  baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
+  baseUrl: getLaunchUrl(args),
 
   onPrepare: function () {
     global._ = require('lodash');
     browser.ignoreSynchronization = true;
 
     global.isSauce = !!(process.env.SAUCE__USERNAME && process.env.SAUCE__USERNAME.length > 0);
+    if (global.isSauce) {
+      browser.setFileDetector(new remote.FileDetector());
+    }
     global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
 
@@ -210,19 +215,19 @@ exports.config = {
         .takeRight()
         .trimStart('/')
         .value();
-      var jenkinsSubdir = processEnvUtil.isJenkins() ? process.env.BUILD_TAG : '';
+      var jenkinsSubdir = process.env.BUILD_TAG || '';
 
       jasmine.getEnv().addReporter(
         new jasmineReporters.JUnitXmlReporter({
           savePath: 'test/e2e-protractor/reports/' + jenkinsSubdir + '/run-' + processEnvUtil.getE2eRunCounter(),
-          consolidateAll: false
+          consolidateAll: false,
         })
       );
 
       jasmine.getEnv().addReporter(
         new SpecReporter({
           displayStacktrace: true,
-          displaySpecDuration: true
+          displaySpecDuration: true,
         })
       );
 
@@ -274,12 +279,12 @@ exports.config = {
     showColors: true,
     print: function () {},
     includeStackTrace: true,
-    defaultTimeoutInterval: VERY_LONG_TIMEOUT
+    defaultTimeoutInterval: VERY_LONG_TIMEOUT,
   },
 
   // The timeout for each script run on the browser. This should be longer
   // than the maximum time your application needs to stabilize between tasks.
-  allScriptsTimeout: VERY_LONG_TIMEOUT
+  allScriptsTimeout: VERY_LONG_TIMEOUT,
 };
 
 function Logger() {
@@ -304,10 +309,19 @@ function Logger() {
   return log;
 }
 
-// TODO: rip this out if no longer needed
 function mkProxyAgent() {
   if (process.env.SAUCE__ENABLE_WEB_PROXY === 'false') {
     return;
   }
   return new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
+}
+
+function getLaunchUrl(args) {
+  if (args.prod) {
+    return 'https://' + hostnameConfig.PRODUCTION;
+  }
+  if (args.int) {
+    return 'https://' + hostnameConfig.INTEGRATION;
+  }
+  return 'http://' + hostnameConfig.LOCAL + ':8000';
 }

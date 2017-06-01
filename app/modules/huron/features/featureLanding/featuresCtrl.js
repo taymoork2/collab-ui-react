@@ -8,7 +8,7 @@ require('./_feature-landing.scss');
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService, CallPickupGroupService, CardUtils) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, CallPickupGroupService, AutoAttendantCeInfoModelService, Notification, Log, CardUtils) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -22,25 +22,32 @@ require('./_feature-landing.scss');
     vm.filterText = '';
     vm.placeholder = {};
     vm.cardColor = {};
+    vm.badgeColor = {};
     vm.aaModel = {};
     var featureToBeDeleted = {};
     vm.noFeatures = false;
     vm.loading = true;
     vm.placeholder = {
-      'name': 'Search'
+      'name': 'Search',
     };
     vm.filters = [{
       name: $translate.instant('common.all'),
-      filterValue: 'all'
+      filterValue: 'all',
     }, {
       name: $translate.instant('autoAttendant.title'),
-      filterValue: 'AA'
-    }, {
-      name: $translate.instant('huronHuntGroup.modalTitle'),
-      filterValue: 'HG'
+      filterValue: 'AA',
     }, {
       name: $translate.instant('callPark.title'),
-      filterValue: 'CP'
+      filterValue: 'CP',
+    }, {
+      name: $translate.instant('callPickup.title'),
+      filterValue: 'PI',
+    }, {
+      name: $translate.instant('huronHuntGroup.modalTitle'),
+      filterValue: 'HG',
+    }, {
+      name: $translate.instant('pagingGroup.title'),
+      filterValue: 'PG',
     }];
 
     /* LIST OF FEATURES
@@ -54,12 +61,13 @@ require('./_feature-landing.scss');
     vm.features = [{
       name: 'HG',
       getFeature: function () {
-        return HuntGroupService.getListOfHuntGroups();
+        return HuntGroupService.getHuntGroupList();
       },
       formatter: HuronFeaturesListService.huntGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.hgName',
-      color: 'alerts'
+      color: 'alerts',
+      badge: 'alert',
     }, {
       name: 'AA',
       getFeature: function () {
@@ -68,7 +76,8 @@ require('./_feature-landing.scss');
       formatter: HuronFeaturesListService.autoAttendants,
       isEmpty: false,
       i18n: 'huronFeatureDetails.aaName',
-      color: 'primary'
+      color: 'primary',
+      badge: 'primary',
     }, {
       name: 'CP',
       getFeature: function () {
@@ -77,21 +86,9 @@ require('./_feature-landing.scss');
       formatter: HuronFeaturesListService.callParks,
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',
-      color: 'cta'
-    }];
-
-    var piFeature = {
-      name: 'PI',
-      getFeature: function () {
-        return CallPickupGroupService.getListOfPickupGroups();
-      },
-      formatter: HuronFeaturesListService.pickupGroups,
-      isEmpty: false,
-      i18n: 'huronFeatureDetails.piName',
-      color: 'attention'
-    };
-
-    var pgFeature = {
+      color: 'cta',
+      badge: 'info',
+    }, {
       name: 'PG',
       getFeature: function () {
         return PagingGroupService.getListOfPagingGroups();
@@ -99,40 +96,31 @@ require('./_feature-landing.scss');
       formatter: HuronFeaturesListService.pagingGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.pgName',
-      color: 'people'
-    };
+      color: 'people',
+      badge: 'success',
+    }, {
+      name: 'PI',
+      getFeature: function () {
+        return CallPickupGroupService.getListOfPickupGroups();
+      },
+      formatter: HuronFeaturesListService.pickupGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.piName',
+      color: 'attention',
+      badge: 'warning',
+    }];
 
-    var featureTogglePromises = [];
-    var callPickupPromise = FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup);
-    var pagingGroupPromise = FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup);
-
-    featureTogglePromises.push(callPickupPromise);
-    featureTogglePromises.push(pagingGroupPromise);
-    $q.all(featureTogglePromises).then(function (data) {
-      if (data[0] === true) {
-        var pi = {
-          name: $translate.instant('callPickup.title'),
-          filterValue: 'PI'
-        };
-        vm.features.push(piFeature);
-        vm.filters.push(pi);
-      }
-      if (data[1] === true) {
-        var pg = {
-          name: $translate.instant('pagingGroup.title'),
-          filterValue: 'PG'
-        };
-        vm.filters.push(pg);
-        vm.features.push(pgFeature);
-      }
-      init();
-    });
+    init();
 
     function init() {
       vm.loading = false;
 
       _.forEach(vm.features, function (feature) {
         vm.cardColor[feature.name] = feature.color;
+      });
+
+      _.forEach(vm.features, function (feature) {
+        vm.badgeColor[feature.name] = feature.badge;
       });
 
       vm.pageState = 'Loading';
@@ -159,7 +147,7 @@ require('./_feature-landing.scss');
 
     function reload() {
       $state.go($state.current, {}, {
-        reload: true
+        reload: true,
       });
     }
     vm.featureFilter = function (feature) {
@@ -198,7 +186,7 @@ require('./_feature-landing.scss');
 
       Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
       Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
-        featureType: $filter('translate')(feature.i18n)
+        featureType: $filter('translate')(feature.i18n),
       });
 
       feature.isEmpty = true;
@@ -225,35 +213,38 @@ require('./_feature-landing.scss');
       }
     }
 
-    vm.editHuronFeature = function (feature) {
+    vm.editHuronFeature = function (feature, $event) {
+      $event.stopImmediatePropagation();
       if (feature.filterValue === 'AA') {
         vm.aaModel.aaName = feature.cardName;
         $state.go('huronfeatures.aabuilder', {
-          aaName: vm.aaModel.aaName
+          aaName: vm.aaModel.aaName,
         });
       } else if (feature.filterValue === 'HG') {
         $state.go('huntgroupedit', {
-          feature: feature
+          feature: feature,
         });
       } else if (feature.filterValue === 'CP') {
         $state.go('callparkedit', {
-          feature: feature
+          feature: feature,
         });
       } else if (feature.filterValue === 'PG') {
         $state.go('huronPagingGroupEdit', {
-          feature: feature
+          feature: feature,
         });
       } else if (feature.filterValue === 'PI') {
         $state.go('callpickupedit', {
-          feature: feature
+          feature: feature,
         });
       }
     };
 
-    vm.deleteHuronFeature = function (feature) {
+    vm.deleteHuronFeature = function (feature, $event) {
+      $event.preventDefault();
+      $event.stopImmediatePropagation();
       if (feature.hasDepends) {
         Notification.error('huronFeatureDetails.aaDeleteBlocked', {
-          aaNames: feature.dependsNames.join(", ")
+          aaNames: feature.dependsNames.join(", "),
         });
         return;
       }
@@ -262,16 +253,18 @@ require('./_feature-landing.scss');
       $state.go('huronfeatures.deleteFeature', {
         deleteFeatureName: feature.cardName,
         deleteFeatureId: feature.id,
-        deleteFeatureType: feature.filterValue
+        deleteFeatureType: feature.filterValue,
       });
     };
 
-    vm.detailsHuronFeature = function (feature) {
+    vm.detailsHuronFeature = function (feature, $event) {
+      $event.preventDefault();
+      $event.stopImmediatePropagation();
       $state.go('huronfeatures.aaListDepends', {
         detailsFeatureName: feature.cardName,
         detailsFeatureId: feature.id,
         detailsFeatureType: feature.filterValue,
-        detailsDependsList: feature.dependsNames
+        detailsDependsList: feature.dependsNames,
       });
     };
 
@@ -335,7 +328,7 @@ require('./_feature-landing.scss');
       var modalInstance = $modal.open({
         templateUrl: 'modules/huron/features/newFeature/newFeatureModal.tpl.html',
         controller: 'NewFeatureModalCtrl',
-        controllerAs: 'newFeatureModalCtrl'
+        controllerAs: 'newFeatureModalCtrl',
       });
 
       /* Goto the corresponding Set up Assistant controller

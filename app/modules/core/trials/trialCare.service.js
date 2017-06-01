@@ -1,16 +1,14 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialCareService', TrialCareService);
+  module.exports = TrialCareService;
 
   /* @ngInject */
   function TrialCareService(Config) {
     var _trialData;
     var service = {
       getData: getData,
-      reset: reset
+      reset: reset,
     };
 
     return service;
@@ -31,11 +29,11 @@
         enabled: false,
         details: {
           enabled: false,
-          quantity: 15
-        }
+          quantity: 15,
+        },
       };
 
-      _trialData = angular.copy(defaults);
+      _trialData = _.clone(defaults);
       return _trialData;
     }
   }

@@ -1,5 +1,7 @@
 'use strict';
 
+var testModule = require('./index').default;
+
 describe('Template: branding', function () {
 
   var $scope, $controller, controller, $q, $templateCache, $compile, view;
@@ -15,13 +17,11 @@ describe('Template: branding', function () {
     if (view) {
       view.remove();
     }
-    view = undefined;
+    $scope = $controller = controller = $q = $templateCache = $compile = view = undefined;
+    Notification = Orgservice = UserListService = BrandService = FeatureToggleService = WebexClientVersion = Authinfo = undefined;
   });
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(angular.mock.module(testModule));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
@@ -50,7 +50,7 @@ describe('Template: branding', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,
-        orgSettings: {}
+        orgSettings: {},
       });
     });
     spyOn(BrandService, 'getLogoUrl').and.returnValue($q.resolve());
@@ -63,7 +63,7 @@ describe('Template: branding', function () {
 
   function compileView() {
     controller = $controller('BrandingCtrl as bctrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     var template = $templateCache.get('modules/core/partnerProfile/branding/branding.tpl.html');
     view = $compile(angular.element(template))($scope);

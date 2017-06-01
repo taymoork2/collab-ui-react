@@ -11,7 +11,7 @@
 
     var assignLineService = {
       assignDirectoryNumber: assignDirectoryNumber,
-      getUnassignedDirectoryNumber: getUnassignedDirectoryNumber
+      getUnassignedDirectoryNumber: getUnassignedDirectoryNumber,
     };
 
     return assignLineService;
@@ -32,7 +32,7 @@
       var assignedLine;
 
       return DirectoryNumberCopyService.query({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }).$promise
         .then(function (lineTemplates) {
           var siteId = Authinfo.getOrgId() + '_000001_ULT';
@@ -61,7 +61,7 @@
 
     function assignDn(userUuid, dnUsage, dnPattern) {
       return DirectoryNumberCopyService.query({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }).$promise
         .then(function (lineTemplates) {
           var siteId = Authinfo.getOrgId() + '_000001_ULT';
@@ -74,7 +74,7 @@
           }
 
           var directoryNumber = {
-            'pattern': dnPattern
+            'pattern': dnPattern,
           };
           return copyFromUlt(directoryNumber, dnUsage, userUuid);
         });
@@ -83,7 +83,7 @@
     function getUnassignedDirectoryNumber() {
       return InternalNumberPoolService.query({
         customerId: Authinfo.getOrgId(),
-        directorynumber: ''
+        directorynumber: '',
       }).$promise
         .then(function (directoryNumbers) {
           if (_.isArray(directoryNumbers) && directoryNumbers.length > 0) {
@@ -98,14 +98,14 @@
         'pattern': directoryNumber.pattern,
         'hasVoicemail': true,
         'user': {
-          'uuid': userUuid
+          'uuid': userUuid,
         },
-        'dnUsage': dnUsage
+        'dnUsage': dnUsage,
       };
 
       return DirectoryNumberCopyService.save({
         customerId: Authinfo.getOrgId(),
-        ultId: lineTemplate.uuid
+        ultId: lineTemplate.uuid,
       }, copyFromUltData, function (data, headers) {
         data.uuid = headers('location').split("/").pop();
         return data;

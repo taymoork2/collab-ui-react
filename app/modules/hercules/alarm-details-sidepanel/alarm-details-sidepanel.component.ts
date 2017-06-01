@@ -1,6 +1,7 @@
-import { IAlarm } from 'modules/hercules/herculesInterfaces';
+import { IExtendedConnectorAlarm } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
-interface IAlarmModified extends IAlarm {
+interface IAlarmModified extends IExtendedConnectorAlarm {
   alarmSolutionElements: any[];
 }
 
@@ -12,7 +13,7 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
     private $rootScope: ng.IRootScopeService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private FusionClusterStatesService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
   ) {}
 
   public $onInit() {
@@ -21,15 +22,19 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
-    let alarm = changes['alarm'];
+    const { alarm } = changes;
     if (alarm && alarm.currentValue) {
       this.init(alarm.currentValue);
     }
   }
 
-  public getAlarmSeverityCssClass = this.FusionClusterStatesService.getAlarmSeverityCssClass;
+  public getAlarmSeverityCssClass = this.HybridServicesClusterStatesService.getAlarmSeverityCssClass;
 
-  public parseDate = timestamp => new Date(Number(timestamp) * 1000);
+  // This hack should be removed once FMS starts using the correct format for alarm timestamps.
+  public parseDate = timestamp => {
+    const unix = moment.unix(timestamp);
+    return unix.isValid() ? unix.format() : moment(timestamp).format();
+  }
 
   private init(alarm: IAlarmModified) {
     if (alarm.solution) {

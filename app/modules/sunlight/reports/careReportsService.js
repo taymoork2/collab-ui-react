@@ -21,7 +21,7 @@
           showBalloon: false,
           lineColor: dummyColors[i],
           fillColors: dummyColors[i],
-          pattern: ''
+          pattern: '',
         });
       });
       chartConfig.export.enabled = false;
@@ -30,23 +30,29 @@
       return chartConfig;
     }
 
-    function showTaskIncomingGraph(div, data, categoryAxisTitle, isToday) {
-      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, isToday);
+    function showTaskIncomingGraph(div, data, categoryAxisTitle, title, isToday) {
+      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, title, isToday);
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function showTaskIncomingDummy(div, data, categoryAxisTitle, isToday) {
-      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, isToday);
+    function showTaskIncomingDummy(div, data, categoryAxisTitle, title, isToday) {
+      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, title, isToday);
 
       dummifyGraph(chartConfig);
 
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function getTaskIncomingGraphConfig(data, categoryAxisTitle, isToday) {
+    function getTaskIncomingGraphConfig(data, categoryAxisTitle, title, isToday) {
       today = isToday;
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
+
+      var titles = CareReportsGraphService.getBaseVariable('title');
+      if (!_.isUndefined(title)) {
+        titles[0].text = title;
+        titles[0].enabled = true;
+      }
 
       var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
       chartCursor.cursorAlpha = 1;
@@ -67,13 +73,13 @@
         fillColors: chartColors.colorLightRedFill,
         valueField: 'numTasksAbandonedState',
         showBalloon: true,
-        balloonFunction: balloonTextForTaskVolume
+        balloonFunction: balloonTextForTaskVolume,
       };
 
       var handledGraph = {
         title: $translate.instant('careReportsPage.handled'),
         lineColor: chartColors.ctaBase,
-        valueField: 'numTasksHandledState'
+        valueField: 'numTasksHandledState',
       };
 
       var graphsPartial = [handledGraph, abandonedGraph];
@@ -82,7 +88,7 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport);
+              'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
     function balloonTextForTaskVolume(graphDataItem, graph) {
@@ -157,22 +163,28 @@
       return categoryRange;
     }
 
-    function showTaskTimeGraph(div, data, categoryAxisTitle) {
-      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle);
+    function showTaskTimeGraph(div, data, categoryAxisTitle, title) {
+      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle, title);
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function showTaskTimeDummy(div, data, categoryAxisTitle) {
-      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle);
+    function showTaskTimeDummy(div, data, categoryAxisTitle, title) {
+      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle, title);
 
       dummifyGraph(chartConfig);
 
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function getTaskTimeGraphConfig(data, categoryAxisTitle) {
+    function getTaskTimeGraphConfig(data, categoryAxisTitle, title) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
+
+      var titles = CareReportsGraphService.getBaseVariable('title');
+      if (!_.isUndefined(title)) {
+        titles[0].text = title;
+        titles[0].enabled = true;
+      }
 
       var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
       chartCursor.cursorAlpha = 1;
@@ -189,7 +201,7 @@
       var pattern = {
         "url": "line_pattern.png",
         "width": 14,
-        "height": 14
+        "height": 14,
       };
 
       var queueGraph = {
@@ -201,13 +213,13 @@
         fillAlphas: 1,
         pattern: pattern,
         showBalloon: true,
-        balloonFunction: balloonTextForTaskTime
+        balloonFunction: balloonTextForTaskTime,
       };
       var handleGraph = {
         title: $translate.instant('careReportsPage.handleTime'),
         lineColor: chartColors.ctaBase,
         fillColors: chartColors.colorLightGreenFill,
-        valueField: 'avgTaskCloseTime'
+        valueField: 'avgTaskCloseTime',
       };
 
       var graphsPartial = [handleGraph, queueGraph];
@@ -216,25 +228,31 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport);
+              'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
-    function showTaskAggregateGraph(div, data, categoryAxisTitle) {
-      var chartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle);
+    function showTaskAggregateGraph(div, data, categoryAxisTitle, title) {
+      var chartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title);
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function showTaskAggregateDummy(div, data, categoryAxisTitle) {
-      var chartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle);
+    function showTaskAggregateDummy(div, data, categoryAxisTitle, title) {
+      var chartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title);
 
       dummifyGraph(chartConfig);
 
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function getTaskAggregateGraphConfig(data, categoryAxisTitle) {
+    function getTaskAggregateGraphConfig(data, categoryAxisTitle, title) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
+
+      var titles = CareReportsGraphService.getBaseVariable('title');
+      if (!_.isUndefined(title)) {
+        titles[0].text = title;
+        titles[0].enabled = true;
+      }
 
       var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
       chartCursor.cursorAlpha = 1;
@@ -251,7 +269,7 @@
       var pattern = {
         "url": "line_pattern.png",
         "width": 14,
-        "height": 14
+        "height": 14,
       };
 
       var inQueueGraph = {
@@ -263,7 +281,7 @@
         fillAlphas: 1,
         pattern: pattern,
         showBalloon: true,
-        balloonFunction: balloonTextForTaskAggregate
+        balloonFunction: balloonTextForTaskAggregate,
       };
 
       var assignedGraph = {
@@ -279,25 +297,31 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport);
+              'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
-    function showAverageCsatGraph(div, data, categoryAxisTitle) {
-      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle);
+    function showAverageCsatGraph(div, data, categoryAxisTitle, title) {
+      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle, title);
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function showAverageCsatDummy(div, data, categoryAxisTitle) {
-      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle);
+    function showAverageCsatDummy(div, data, categoryAxisTitle, title) {
+      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle, title);
 
       dummifyGraph(chartConfig);
 
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function getAverageCsatGraphConfig(data, categoryAxisTitle) {
+    function getAverageCsatGraphConfig(data, categoryAxisTitle, title) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
+
+      var titles = CareReportsGraphService.getBaseVariable('title');
+      if (!_.isUndefined(title)) {
+        titles[0].text = title;
+        titles[0].enabled = true;
+      }
 
       var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
       chartCursor.cursorAlpha = 1;
@@ -322,7 +346,7 @@
         bullet: 'circle',
         bulletAlpha: 0,
         bulletBorderAlpha: 0,
-        bulletSize: 2
+        bulletSize: 2,
       };
       var graphsPartial = [csatGraph];
       var graphs = _.map(graphsPartial, function (graph) {
@@ -330,7 +354,7 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport);
+              'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
     var service = {
@@ -346,7 +370,7 @@
       getTaskTimeGraphConfig: getTaskTimeGraphConfig,
       getAverageCsatGraphConfig: getAverageCsatGraphConfig,
       getTaskAggregateGraphConfig: getTaskAggregateGraphConfig,
-      millisToTime: millisToTime
+      millisToTime: millisToTime,
     };
 
     return service;

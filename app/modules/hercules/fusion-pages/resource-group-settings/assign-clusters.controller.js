@@ -5,16 +5,16 @@
     .controller('AssignClustersController', AssignClustersController);
 
   /* @ngInject */
-  function AssignClustersController($modalInstance, $q, resourceGroup, FusionClusterService, ResourceGroupService, Notification) {
+  function AssignClustersController($modalInstance, $q, resourceGroup, HybridServicesClusterService, ResourceGroupService, Notification) {
     var vm = this;
     vm.loadingState = true;
     vm.savingState = false;
     vm.resourceGroup = resourceGroup;
     vm.originalData = {
       availableClusters: [],
-      clustersInResourceGroup: []
+      clustersInResourceGroup: [],
     };
-    vm.newData = angular.copy(vm.originalData);
+    vm.newData = _.cloneDeep(vm.originalData);
     vm._helpers = {
       hasServices: hasServices,
       stateLabelToStatusClass: stateLabelToStatusClass,
@@ -27,12 +27,12 @@
     loadData();
 
     function loadData() {
-      return FusionClusterService.getResourceGroups()
+      return HybridServicesClusterService.getResourceGroups()
         .then(function (response) {
           var group = _.find(response.groups, { id: resourceGroup.id });
           vm.originalData.availableClusters = filterNonExpresswayClusters(response.unassigned);
           vm.originalData.clustersInResourceGroup = group.clusters;
-          vm.newData = angular.copy(vm.originalData);
+          vm.newData = _.cloneDeep(vm.originalData);
           vm.loadingState = false;
         })
         .catch(function (error) {

@@ -1,0 +1,46 @@
+<div class="partner-management-main centered" tabindex="0">
+    <div class="row">
+      <div class="main-heading columns medium-12">
+        <h2 translate="partnerManagement.search.heading"></h2>
+        <div class="desc-panel">
+            <span class="desc-text" translate="partnerManagement.search.desc"></span>
+        </div>
+
+        <div class="medium-6">
+            <form name="searchForm">
+                <input cs-input class="form-control" type="email" name="email"
+                    placeholder="{{::'partnerManagement.exampleEmail' | translate}}"
+                    ng-model="vm.data.email"
+                    cs-input-label="{{::'partnerManagement.search.email' | translate}}"
+                    cs-input-messages="vm.messages" required
+                    ng-blur="searchForm.confirmEmail.$validate()">
+
+                <input cs-input name="confirmEmail" class="form-control"
+                    placeholder="{{::'partnerManagement.exampleEmail' | translate}}"
+                    ng-model="vm.data.confirmEmail"
+                    ng-model-options="{updateOn: 'default blur', debounce: {default: 800, blur: 0}}"
+                    cs-input-label="{{::'partnerManagement.search.confirmEmail' | translate}}"
+                    cs-input-messages="vm.messages" required validate-match="{{searchForm.email.$viewValue}}">
+            </form>
+        </div>
+      </div>
+      <hr class="pm-rule">
+      <div class="row">
+        <div class="columns medium-4 text-left">
+            <span class="pm-step" translate="partnerManagement.step1"></span>
+        </div>
+        <div class="columns medium-8">
+            <div class="text-right">
+                <div class="text-right">
+                    <button cs-btn id="back" type="button" ng-click="vm.done()" class="btn pm-btn pm-btn-pad" ng-disabled="vm.isLoading">
+                        <span translate="partnerManagement.back"></span>
+                    </button>
+                    <button cs-btn id="next" type="button" ng-click="vm.search()" class="btn btn--primary pm-btn" ng-disabled="searchForm.$invalid" loading="vm.isLoading">
+                        <span translate="partnerManagement.next"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

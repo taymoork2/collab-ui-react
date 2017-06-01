@@ -36,7 +36,7 @@
       if (resources.length > 1) {
 
         return $translate.instant('autoAttendant.resourceCountPlusMore', {
-          count: resources.length - 1
+          count: resources.length - 1,
         });
       }
 

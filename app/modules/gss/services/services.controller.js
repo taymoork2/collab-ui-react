@@ -22,8 +22,8 @@
         templateUrl: 'modules/gss/services/editService/editService.tpl.html',
         modalClass: 'status-edit-service',
         resolve: {
-          theService: getService(service)
-        }
+          theService: getService(service),
+        },
       }).result.then(function () {
         refreshServices();
         notifyServiceEdited();
@@ -36,7 +36,7 @@
 
     function deleteService(service) {
       $state.go('gss.services.delete', {
-        service: service
+        service: service,
       });
     }
 

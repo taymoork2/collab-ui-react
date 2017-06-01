@@ -6,7 +6,7 @@ describe('Service: HuronUser', function () {
   var $httpBackend, HuronConfig, HuronUser;
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
@@ -33,7 +33,7 @@ describe('Service: HuronUser', function () {
     it('should default to empty firstName, lastName', function () {
       $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/common/customers/' + Authinfo.getOrgId() + '/users/' + userUuid, {
         'firstName': '',
-        'lastName': ''
+        'lastName': '',
       }).respond(200);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       HuronUser.update(userUuid, userData);
@@ -43,12 +43,12 @@ describe('Service: HuronUser', function () {
     it('should update firstName, lastName', function () {
       userData.name = {
         givenName: 'myFirstName',
-        familyName: 'myLastName'
+        familyName: 'myLastName',
       };
 
       $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/common/customers/' + Authinfo.getOrgId() + '/users/' + userUuid, {
         'firstName': userData.name.givenName,
-        'lastName': userData.name.familyName
+        'lastName': userData.name.familyName,
       }).respond(200);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       HuronUser.update(userUuid, userData);
@@ -61,14 +61,14 @@ describe('Service: HuronUser', function () {
     beforeEach(function () {
       userUuid = '123';
       userData = {
-        'email': 'test@gmail.com'
+        'email': 'test@gmail.com',
       };
     });
 
     it('should default to empty firstName, lastName', function () {
       $httpBackend.expectPOST(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users', {
         'uuid': userUuid,
-        'userName': userData.email
+        'userName': userData.email,
       }).respond(201);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/identity/users/otp').respond(201);
@@ -80,14 +80,14 @@ describe('Service: HuronUser', function () {
     it('should update firstName, lastName', function () {
       userData.name = {
         givenName: 'myFirstName',
-        familyName: 'myLastName'
+        familyName: 'myLastName',
       };
 
       $httpBackend.expectPOST(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users', {
         'uuid': userUuid,
         'userName': userData.email,
         'firstName': userData.name.givenName,
-        'lastName': userData.name.familyName
+        'lastName': userData.name.familyName,
       }).respond(201);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/identity/users/otp').respond(201);

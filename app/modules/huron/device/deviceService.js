@@ -17,7 +17,7 @@
       getCurrentDevice: getCurrentDevice,
       setCurrentDevice: setCurrentDevice,
       getTags: getTags,
-      decodeHuronTags: decodeHuronTags
+      decodeHuronTags: decodeHuronTags,
     };
 
     return service;
@@ -26,7 +26,7 @@
     function listDevices(userUuid) {
       return UserEndpointService.query({
         customerId: Authinfo.getOrgId(),
-        userId: userUuid
+        userId: userUuid,
       }).$promise;
     }
 
@@ -57,7 +57,7 @@
     function loadDevices(userUuid) {
       return UserEndpointService.query({
         customerId: Authinfo.getOrgId(),
-        userId: userUuid
+        userId: userUuid,
       }).$promise
         .then(function (devices) {
           var deviceList = [];
@@ -71,15 +71,15 @@
                 status: '',
                 ipAddress: '',
                 progressStatus: false,
-                isValid: true
-              }
+                isValid: true,
+              },
             };
 
             deviceList.push(device);
 
             SipEndpointService.get({
               customerId: Authinfo.getOrgId(),
-              sipEndpointId: device.uuid
+              sipEndpointId: device.uuid,
             }, function (endpoint) {
               this.model = endpoint.model;
               this.description = getTagString(decodeHuronTags(endpoint.description));
@@ -91,7 +91,7 @@
               customerId: Authinfo.getOrgId(),
               sipEndpointId: device.uuid,
               status: true,
-              ipaddress: true
+              ipaddress: true,
             }).$promise.then(function (endpoint) {
               if (!_.isUndefined(endpoint.registrationStatus) && angular.lowercase(endpoint.registrationStatus) === 'registered') {
                 this.deviceStatus.status = 'Online';
@@ -117,18 +117,18 @@
 
     function updateDevice(device) {
       var payload = {
-        description: device.description
+        description: device.description,
       };
       return SipEndpointService.update({
         customerId: Authinfo.getOrgId(),
-        sipEndpointId: device.uuid
+        sipEndpointId: device.uuid,
       }, payload).$promise;
     }
 
     function deleteDevice(device) {
       return SipEndpointService.delete({
         customerId: Authinfo.getOrgId(),
-        sipEndpointId: device.uuid
+        sipEndpointId: device.uuid,
       }).$promise;
     }
 

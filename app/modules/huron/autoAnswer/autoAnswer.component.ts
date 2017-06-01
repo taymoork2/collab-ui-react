@@ -3,7 +3,7 @@ import { AutoAnswerMember, AutoAnswerPhone } from './autoAnswer';
 import { AutoAnswerConst } from './autoAnswer.service';
 import { MemberType } from 'modules/huron/members';
 import { LineConsumerType } from 'modules/huron/lines/services/line.service';
-import { MemberTypeConst } from 'modules/huron/features/featureMember.service';
+import { MemberTypeConst } from 'modules/huron/features/services/featureMember.service';
 
 export class AutoAnswerCtrl implements ng.IComponentController {
   public onChangeFn: Function;
@@ -26,13 +26,13 @@ export class AutoAnswerCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let autoAnswerChanges = changes['autoAnswer'];
-    if (autoAnswerChanges) {
-      this.processPhoneListChange(autoAnswerChanges);
+    const { autoAnswer } = changes;
+    if (autoAnswer) {
+      this.processPhoneListChange(autoAnswer);
 
       if (!this.autoAnswerNoSupportedPhone) {
-        this.processAutoAnswerSelectionChange(autoAnswerChanges);
-        this.setCustomSharedLineMemberWarningMsg(autoAnswerChanges);
+        this.processAutoAnswerSelectionChange(autoAnswer);
+        this.setCustomSharedLineMemberWarningMsg(autoAnswer);
       }
     }
   }

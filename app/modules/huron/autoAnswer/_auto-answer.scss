@@ -1,4 +1,4 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
 
 .auto-answer {
   .auto-answer-title {
@@ -7,7 +7,8 @@
   .toggle-switch {
     float: right;
   }
-  .icon-info, .icon-warning {
+  .icon-info,
+  .icon-warning {
     top: 0.1rem;
     margin-right: 0.25rem;
     float: left;
@@ -16,9 +17,10 @@
     color: $color-primary-light;
   }
   .icon-warning {
-    color: $brand-warning;
+    color: $color-attention;
   }
-  #sharedline-member-warning, #multi-device-info,
+  #sharedline-member-warning,
+  #multi-device-info,
   #no-supported-device-warning {
     width: 90%;
     float: left;

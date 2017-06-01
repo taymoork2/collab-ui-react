@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialContextService', TrialContextService);
+  module.exports = TrialContextService;
 
   /* @ngInject */
   function TrialContextService($http, $q, Config, UrlConfig, LogMetricsService) {
@@ -13,7 +11,7 @@
       reset: reset,
       trialHasService: trialHasService,
       addService: addService,
-      removeService: removeService
+      removeService: removeService,
     };
 
     return service;
@@ -31,10 +29,10 @@
     function _makeTrial() {
       var defaults = {
         type: Config.offerTypes.context,
-        enabled: false
+        enabled: false,
       };
 
-      _trialData = angular.copy(defaults);
+      _trialData = _.cloneDeep(defaults);
       return _trialData;
     }
 

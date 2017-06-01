@@ -1,11 +1,10 @@
-@import 'styles/toolkit/layout';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 /*** PARTNERS ***/
 
 .partner-container {
-  @extend %card-container-padding;
-
   .tab-content {
     border-color: $gray-light-2;
   }

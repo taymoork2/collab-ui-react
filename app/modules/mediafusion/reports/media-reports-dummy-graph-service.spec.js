@@ -3,15 +3,15 @@
 describe('Service: Media Reports Dummy Graph', function () {
   var vm = this;
   vm.timeFilter = [{
-    value: 0
+    value: 0,
   }, {
-    value: 1
+    value: 1,
   }, {
-    value: 2
+    value: 2,
   }, {
-    value: 3
+    value: 3,
   }, {
-    value: 4
+    value: 4,
   }];
   vm.checkForDefined = function (for4hrs, for24hrs, forLastWeek, forLastMonth, forLastThreeMonth) {
     expect(for4hrs).toBeDefined();

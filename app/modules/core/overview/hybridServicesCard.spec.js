@@ -1,26 +1,26 @@
 describe('OverviewHybridServicesCard', function () {
-  var OverviewHybridServicesCard, $rootScope, Authinfo, FeatureToggleService, FusionClusterService, $q, CloudConnectorService;
+  var OverviewHybridServicesCard, $rootScope, Authinfo, FeatureToggleService, HybridServicesClusterService, $q, CloudConnectorService;
 
   afterEach(function () {
-    OverviewHybridServicesCard = $rootScope = Authinfo = FeatureToggleService = FusionClusterService = $q = undefined;
+    OverviewHybridServicesCard = $rootScope = Authinfo = FeatureToggleService = HybridServicesClusterService = $q = undefined;
   });
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Core'));
 
-  function dependencies(_Authinfo_, _FeatureToggleService_, _OverviewHybridServicesCard_, _$rootScope_, _FusionClusterService_, _$q_, _CloudConnectorService_) {
+  function dependencies(_Authinfo_, _FeatureToggleService_, _OverviewHybridServicesCard_, _$rootScope_, _HybridServicesClusterService_, _$q_, _CloudConnectorService_) {
     OverviewHybridServicesCard = _OverviewHybridServicesCard_;
     $q = _$q_;
     $rootScope = _$rootScope_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     CloudConnectorService = _CloudConnectorService_;
   }
 
   function initSpies() {
-    spyOn(FusionClusterService, 'getAll');
+    spyOn(HybridServicesClusterService, 'getAll');
     spyOn(Authinfo, 'isEntitled').and.returnValue(true);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ serviceId: 'squared-fusion-gcal', setup: false, statusCss: 'default' }));
@@ -31,7 +31,7 @@ describe('OverviewHybridServicesCard', function () {
 
   it('should not show card when no services are set up', function () {
     var clustersWithNothingInstalled = getJSONFixture('hercules/nothing-provisioned-cluster-list.json');
-    FusionClusterService.getAll.and.returnValue($q.resolve(clustersWithNothingInstalled));
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve(clustersWithNothingInstalled));
     var card = OverviewHybridServicesCard.createCard();
     $rootScope.$apply();
 
@@ -40,7 +40,7 @@ describe('OverviewHybridServicesCard', function () {
 
   it('should not show a service that is not set up', function () {
     var clustersWithNoServices = getJSONFixture('hercules/nothing-provisioned-cluster-list.json');
-    FusionClusterService.getAll.and.returnValue($q.resolve(clustersWithNoServices));
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve(clustersWithNoServices));
     var card = OverviewHybridServicesCard.createCard();
     $rootScope.$apply();
 
@@ -52,14 +52,14 @@ describe('OverviewHybridServicesCard', function () {
   });
 
   it('should show the card when services are set up', function () {
-    spyOn(FusionClusterService, 'getStatusForService');
-    FusionClusterService.getStatusForService.and.returnValue({
+    spyOn(HybridServicesClusterService, 'getStatusForService');
+    HybridServicesClusterService.getStatusForService.and.returnValue({
       serviceId: '',
       setup: true,
-      status: 'operational'
+      status: 'operational',
     });
     var clustersWithManyServices = getJSONFixture('hercules/disco-systems-cluster-list.json');
-    FusionClusterService.getAll.and.returnValue($q.resolve(clustersWithManyServices));
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve(clustersWithManyServices));
 
     var card = OverviewHybridServicesCard.createCard();
     $rootScope.$apply();
@@ -68,15 +68,15 @@ describe('OverviewHybridServicesCard', function () {
   });
 
   it('should not show Call if it is not set up, but still show Calendar', function () {
-    spyOn(FusionClusterService, 'getStatusForService').and.callFake(function (serviceId) {
+    spyOn(HybridServicesClusterService, 'getStatusForService').and.callFake(function (serviceId) {
       return {
         serviceId: serviceId,
         setup: serviceId === 'squared-fusion-cal',
-        status: 'operational'
+        status: 'operational',
       };
     });
     var clustersWithManyServices = getJSONFixture('hercules/disco-systems-cluster-list.json');
-    FusionClusterService.getAll.and.returnValue($q.resolve(clustersWithManyServices));
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve(clustersWithManyServices));
 
     var card = OverviewHybridServicesCard.createCard();
     $rootScope.$apply();
@@ -88,7 +88,7 @@ describe('OverviewHybridServicesCard', function () {
 
   it('should show card when google calendar is setup', function () {
     var clustersWithNothingInstalled = getJSONFixture('hercules/nothing-provisioned-cluster-list.json');
-    FusionClusterService.getAll.and.returnValue($q.resolve(clustersWithNothingInstalled));
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve(clustersWithNothingInstalled));
     CloudConnectorService.getService.and.returnValue($q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, statusCss: 'success' }));
     var card = OverviewHybridServicesCard.createCard();
     $rootScope.$apply();

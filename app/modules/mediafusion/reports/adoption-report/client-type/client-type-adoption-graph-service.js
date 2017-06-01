@@ -7,6 +7,7 @@
 
     var vm = this;
     vm.clientTypediv = 'clientTypediv';
+    vm.exportDiv = 'client-type-div';
     vm.GUIDEAXIS = 'guideaxis';
     vm.AXIS = 'axis';
     vm.LEGEND = 'legend';
@@ -16,10 +17,28 @@
     vm.zoomedStartTime = null;
 
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
-    vm.clientType = $translate.instant('mediaFusion.metrics.clientType');
+    vm.clients = $translate.instant('mediaFusion.metrics.clients');
+    vm.clientTypeTranMap = {
+      'ANDROID': $translate.instant('mediaFusion.metrics.clientType.android'),
+      'BLACKBERRY': $translate.instant('mediaFusion.metrics.clientType.blackberry'),
+      'DESKTOP': $translate.instant('mediaFusion.metrics.clientType.desktop'),
+      'IPAD': $translate.instant('mediaFusion.metrics.clientType.ipad'),
+      'IPHONE': $translate.instant('mediaFusion.metrics.clientType.iphone'),
+      'JABBER': $translate.instant('mediaFusion.metrics.clientType.jabber'),
+      'SIP': $translate.instant('mediaFusion.metrics.clientType.sip'),
+      'SPARK_BOARD': $translate.instant('mediaFusion.metrics.clientType.board'),
+      'TEST': $translate.instant('mediaFusion.metrics.clientType.test'),
+      'TP_ENDPOINT': $translate.instant('mediaFusion.metrics.clientType.tp'),
+      'UC': $translate.instant('mediaFusion.metrics.clientType.uc'),
+      'UNKNOWN': $translate.instant('mediaFusion.metrics.clientType.unknown'),
+      'WINDOWS_MOBILE': $translate.instant('mediaFusion.metrics.clientType.windows'),
+      'Total': $translate.instant('mediaFusion.metrics.clientType.total'),
+    };
+    vm.allOn = $translate.instant('mediaFusion.metrics.allOn');
+    vm.allOff = $translate.instant('mediaFusion.metrics.allOff');
 
     return {
-      setClientTypeGraph: setClientTypeGraph
+      setClientTypeGraph: setClientTypeGraph,
     };
 
     function setClientTypeGraph(response, clientTypeChart, daterange) {
@@ -72,8 +91,9 @@
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
       //Change to i10n
-      valueAxes[0].title = vm.clientType;
-      valueAxes[0].titleRotation = 0;
+      valueAxes[0].title = vm.clients;
+      //valueAxes[0].titleRotation = 0;
+      valueAxes[0].labelOffset = 28;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       catAxis.gridPosition = 'start';
@@ -120,10 +140,11 @@
       }
 
       var columnNames = {
-        'time': vm.timeStamp
+        'time': vm.timeStamp,
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
+        value.title = vm.clientTypeTranMap[value.title];
         columnNames[value.valueField] = value.title + ' ' + vm.clientType;
       });
       for (var key in columnNames) {
@@ -134,34 +155,26 @@
 
       if (!isDummy) {
         graphs.push({
-          'title': 'All',
-          'id': 'all',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000',
-          'hidden': true
-        });
-
-        graphs.push({
-          'title': 'None',
+          'title': vm.allOff,
           'id': 'none',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000'
+          'lineColor': 'transparent',
         });
       }
 
-      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
+      if (chartData.graphs[0].lineColor == '#D7D7D8') {
+        chartData.legend.color = '#343537';
+      }
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
 
       chartData.legend.listeners = [{
         'event': 'hideItem',
-        "method": legendHandler
+        "method": legendHandler,
       }, {
         'event': 'showItem',
-        'method': legendHandler
+        'method': legendHandler,
       }];
 
       var chart = AmCharts.makeChart(vm.clientTypediv, chartData);
@@ -176,12 +189,12 @@
       vm.zoomedEndTime = event.endDate;
       var selectedTime = {
         startTime: vm.zoomedStartTime,
-        endTime: vm.zoomedEndTime
+        endTime: vm.zoomedEndTime,
       };
 
       if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
+          data: selectedTime,
         });
       }
     }
@@ -189,7 +202,7 @@
     function getClusterName(graphs) {
       var tempData = [];
       _.forEach(graphs, function (value) {
-        value.balloonText = '<span class="graph-text">' + value.title + ' ' + '<span class="graph-number">[[value]]</span></span>';
+        value.balloonText = '<span class="graph-text">' + vm.clientTypeTranMap[value.title] + ' ' + '<span class="graph-number">[[value]]</span></span>';
         value.lineThickness = 2;
         tempData.push(value);
       });
@@ -198,22 +211,19 @@
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.id === 'all') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.showGraph(graph);
-          } else if (graph.id === 'all') {
+      if (evt.dataItem.title === vm.allOff) {
+        evt.dataItem.title = vm.allOn;
+        _.each(evt.chart.graphs, function (graph) {
+          if (graph.title != vm.allOn) {
             evt.chart.hideGraph(graph);
+          } else {
+            evt.chart.showGraph(graph);
           }
-
         });
-      } else if (evt.dataItem.id === 'none') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.hideGraph(graph);
-          } else if (graph.id === 'all') {
-            evt.chart.showGraph(graph);
-          }
+      } else if (evt.dataItem.title === vm.allOn) {
+        evt.dataItem.title = vm.allOff;
+        _.each(evt.chart.graphs, function (graph) {
+          evt.chart.showGraph(graph);
         });
       }
     }

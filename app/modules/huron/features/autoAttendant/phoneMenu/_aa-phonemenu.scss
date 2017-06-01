@@ -1,3 +1,5 @@
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+
 %aa-menu-vertical-line {
   position: relative;
 
@@ -80,6 +82,17 @@
 
     .form-group {
       @include vr-spacing(mb, 0.25);
+    }
+  }
+}
+
+@mixin aa-menu-toggle-button($right, $left) {
+  .select-toggle {
+    position: relative;
+    z-index: 1;
+    > i {
+      @include vr-spacing(mr, $right);
+      @include vr-spacing(ml, $left);
     }
   }
 }
@@ -179,7 +192,6 @@
     }
   }
 
-  .aa-pm-key-select,
   .aa-pm-action-select {
     @extend %aa-menu-select;
   }
@@ -189,6 +201,7 @@
   }
 
   .aa-pm-key-select {
+    @include aa-menu-toggle-button(0, -0.5);
     @include aa-menu-key-button($color-cta-base, 56);
   }
 

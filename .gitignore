@@ -1,4 +1,5 @@
 *.gz
+*.gz--files-list
 *.iml
 *.patch
 *.pyc
@@ -26,11 +27,14 @@ stats.json
 .history
 .vscode
 .history
+.tern-project
+package-lock.json
 yarn.lock
 
 build
 coverage
 dist
+dist-source-map
 plato
 screenshots
 typings/index.d.ts

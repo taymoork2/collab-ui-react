@@ -40,17 +40,17 @@
         function open(device) {
           return $modal.open({
             resolve: {
-              device: _.constant(device)
+              device: _.constant(device),
             },
             controllerAs: 'rdc',
             controller: 'RemDeviceController',
             templateUrl: 'modules/squared/devices/remDevice/remDevice.html',
-            type: 'dialog'
+            type: 'dialog',
           }).result;
         }
 
         return {
-          open: open
+          open: open,
         };
       }
     );

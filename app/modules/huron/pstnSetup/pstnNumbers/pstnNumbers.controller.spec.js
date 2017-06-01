@@ -1,91 +1,96 @@
 'use strict';
 
 describe('Controller: PstnNumbersCtrl', function () {
-  var controller, $compile, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, PstnSetupStatesService, FeatureToggleService;
+  var controller, $compile, $scope, $state, $q, $translate, PstnService, PstnModel, Notification, PstnSetupStatesService, FeatureToggleService;
   var element;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
   var orderCart = getJSONFixture('huron/json/pstnSetup/orderCart.json');
-
+  var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
+  var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
+  var NUMTYPE_TOLLFREE = require('modules/huron/pstn').NUMTYPE_TOLLFREE;
   var singleOrder = {
     "data": {
-      "numbers": "+12145551000"
+      "numbers": "+12145551000",
     },
     "numberType": "DID",
-    "orderType": "NUMBER_ORDER"
+    "orderType": "NUMBER_ORDER",
   };
   var consecutiveOrder = {
     "data": {
       "numbers": [
         "+12145551000",
-        "+12145551001"
-      ]
+        "+12145551001",
+      ],
     },
     "numberType": "DID",
-    "orderType": "NUMBER_ORDER"
+    "orderType": "NUMBER_ORDER",
   };
   var nonconsecutiveOrder = {
     "data": {
       "numbers": [
         "+12145551234",
-        "+12145551678"
-      ]
+        "+12145551678",
+      ],
     },
     "numberType": "DID",
-    "orderType": "NUMBER_ORDER"
+    "orderType": "NUMBER_ORDER",
   };
   var portOrder = {
     "data": {
       "numbers": [
         "+12145557001",
-        "+12145557002"
-      ]
+        "+12145557002",
+      ],
     },
-    "orderType": "PORT_ORDER"
+    "orderType": "PORT_ORDER",
   };
   var advancedOrder = {
     data: {
       areaCode: 321,
       length: 2,
-      consecutive: false
+      consecutive: false,
     },
     numberType: "DID",
-    orderType: "BLOCK_ORDER"
+    orderType: "BLOCK_ORDER",
   };
   var advancedNxxOrder = {
     data: {
       areaCode: 321,
       length: 2,
       nxx: 201,
-      consecutive: false
+      consecutive: false,
     },
     numberType: "DID",
-    orderType: "BLOCK_ORDER"
+    orderType: "BLOCK_ORDER",
   };
   var advancedTollFreeOrder = {
     data: {
       areaCode: 800,
       length: 3,
-      consecutive: false
+      consecutive: false,
     },
     numberType: "TOLLFREE",
-    orderType: "BLOCK_ORDER"
+    orderType: "BLOCK_ORDER",
   };
 
-  var states = [{
-    name: 'Texas',
-    abbreviation: 'TX'
-  }];
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   var response = {
     areaCodes: [{
       code: '123',
-      count: 15
+      count: 15,
     }, {
       code: '456',
-      count: 30
-    }]
+      count: 30,
+    }],
   };
 
   var serviceAddress = {
@@ -93,8 +98,12 @@ describe('Controller: PstnNumbersCtrl', function () {
     address2: '',
     city: 'Sample',
     state: 'TX',
-    zip: '77777'
+    zip: '77777',
   };
+
+  var capabilityWithTollFree = [
+    { capability: "TOLLFREE_ORDERING" },
+  ];
 
   afterEach(function () {
     if (element) {
@@ -106,30 +115,31 @@ describe('Controller: PstnNumbersCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
 
-  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _PstnSetupStatesService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnService_, _PstnModel_, _Notification_, _PstnSetupStatesService_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $compile = _$compile_;
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
-    PstnSetupService = _PstnSetupService_;
-    PstnSetup = _PstnSetup_;
+    PstnService = _PstnService_;
+    PstnModel = _PstnModel_;
     Notification = _Notification_;
     PstnSetupStatesService = _PstnSetupStatesService_;
     FeatureToggleService = _FeatureToggleService_;
 
-    PstnSetup.setCustomerId(customer.uuid);
-    PstnSetup.setCustomerName(customer.name);
-    PstnSetup.setProvider(customerCarrierList[0]);
+    PstnModel.setCustomerId(customer.uuid);
+    PstnModel.setCustomerName(customer.name);
+    PstnModel.setProvider(customerCarrierList[0]);
+    PstnModel.setCountryCode('US');
 
-    spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.resolve());
-    spyOn(PstnSetupService, 'releaseCarrierInventoryV2').and.returnValue($q.resolve());
-    spyOn(PstnSetupService, 'getCarrierInventory').and.returnValue($q.resolve(response));
-    spyOn(PstnSetupService, 'getCarrierTollFreeInventory').and.returnValue($q.resolve(response));
-    spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
+    spyOn(PstnService, 'releaseCarrierInventoryV2').and.returnValue($q.resolve());
+    spyOn(PstnService, 'getCarrierInventory').and.returnValue($q.resolve(response));
+    spyOn(PstnService, 'getCarrierTollFreeInventory').and.returnValue($q.resolve(response));
+    spyOn(PstnService, 'getCarrierCapabilities').and.returnValue($q.resolve());
+    spyOn(PstnModel, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
-    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
     spyOn($translate, 'instant').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
@@ -143,8 +153,8 @@ describe('Controller: PstnNumbersCtrl', function () {
     $state = undefined;
     $q = undefined;
     $translate = undefined;
-    PstnSetupService = undefined;
-    PstnSetup = undefined;
+    PstnService = undefined;
+    PstnModel = undefined;
     Notification = undefined;
     PstnSetupStatesService = undefined;
     FeatureToggleService = undefined;
@@ -161,7 +171,6 @@ describe('Controller: PstnNumbersCtrl', function () {
     advancedOrder = undefined;
     advancedNxxOrder = undefined;
     advancedTollFreeOrder = undefined;
-    states = undefined;
     response = undefined;
     serviceAddress = undefined;
   });
@@ -185,8 +194,8 @@ describe('Controller: PstnNumbersCtrl', function () {
       expect(controller.model.tollFree.quantity).toEqual(1);
     });
 
-    it('should have state set through pstnSetupService on first time', function () {
-      expect(controller.model.pstn.state).toEqual(states[0]);
+    it('should have state set through PstnService on first time', function () {
+      expect(controller.model.pstn.state).toEqual(location.areas[0]);
     });
 
     it('should have showTollFreeNumbers set to false if feature toggle returns false', function () {
@@ -212,6 +221,28 @@ describe('Controller: PstnNumbersCtrl', function () {
       expect(controller.orderNumbersTotal).toEqual(6);
       controller.goToReview();
       expect($state.go).toHaveBeenCalledWith('pstnSetup.review');
+    });
+  });
+
+  describe('getCapabilities', function () {
+    it('should not show toll-free tabs if trial', function () {
+      PstnModel.setIsTrial(true);
+      expect(controller.showTollFreeNumbers).toBe(false);
+    });
+
+    it('should not show toll-free tab in paid if not supported', function () {
+      PstnModel.setIsTrial(false);
+      controller.getCapabilities();
+      $scope.$apply();
+      expect(controller.showTollFreeNumbers).toBe(false);
+    });
+
+    it('should show toll-free tab in paid if supported', function () {
+      controller.isTrial = false;
+      PstnService.getCarrierCapabilities = jasmine.createSpy().and.returnValue($q.resolve(capabilityWithTollFree));
+      controller.getCapabilities();
+      $scope.$apply();
+      expect(controller.showTollFreeNumbers).toBe(true);
     });
   });
 
@@ -307,37 +338,37 @@ describe('Controller: PstnNumbersCtrl', function () {
   describe('addOrders', function () {
     it('should add an advanced PSTN order', function () {
       controller.model.pstn.areaCode = {
-        code: advancedOrder.data.areaCode
+        code: advancedOrder.data.areaCode,
       };
       controller.model.pstn.quantity = advancedOrder.data.length;
       controller.model.pstn.consecutive = advancedOrder.data.consecutive;
-      controller.addToCart(PstnSetupService.BLOCK_ORDER, PstnSetupService.NUMTYPE_DID);
+      controller.addToCart(BLOCK_ORDER, NUMTYPE_DID);
       expect(controller.orderCart).toContain({
         data: {
           areaCode: advancedOrder.data.areaCode,
           length: advancedOrder.data.length,
-          consecutive: advancedOrder.data.consecutive
+          consecutive: advancedOrder.data.consecutive,
         },
-        numberType: PstnSetupService.NUMTYPE_DID,
-        orderType: PstnSetupService.BLOCK_ORDER
+        numberType: NUMTYPE_DID,
+        orderType: BLOCK_ORDER,
       });
     });
 
     it('should add an advanced toll-free order', function () {
       controller.model.tollFree.areaCode = {
-        code: advancedTollFreeOrder.data.areaCode
+        code: advancedTollFreeOrder.data.areaCode,
       };
       controller.model.tollFree.quantity = advancedTollFreeOrder.data.length;
       controller.model.tollFree.consecutive = advancedTollFreeOrder.data.consecutive;
-      controller.addToCart(PstnSetupService.BLOCK_ORDER, PstnSetupService.NUMTYPE_TOLLFREE);
+      controller.addToCart(BLOCK_ORDER, NUMTYPE_TOLLFREE);
       expect(controller.orderCart).toContain({
         data: {
           areaCode: advancedTollFreeOrder.data.areaCode,
           length: advancedTollFreeOrder.data.length,
-          consecutive: advancedTollFreeOrder.data.consecutive
+          consecutive: advancedTollFreeOrder.data.consecutive,
         },
-        numberType: PstnSetupService.NUMTYPE_TOLLFREE,
-        orderType: PstnSetupService.BLOCK_ORDER
+        numberType: NUMTYPE_TOLLFREE,
+        orderType: BLOCK_ORDER,
       });
     });
   });

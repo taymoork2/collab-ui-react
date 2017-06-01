@@ -33,9 +33,9 @@
         advancedSettings: '@',
         adminEmailParam: '@',
         userEmailParam: '@',
-        webexAdvancedUrl: '@'
+        webexAdvancedUrl: '@',
       },
-      templateUrl: 'modules/core/launchSite/launchSite.tpl.html'
+      templateUrl: 'modules/core/launchSite/launchSite.tpl.html',
     };
   }
 })();

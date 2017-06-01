@@ -5,7 +5,7 @@
     .controller('PstnContractInfoCtrl', PstnContractInfoCtrl);
 
   /* @ngInject */
-  function PstnContractInfoCtrl($state, PstnSetup) {
+  function PstnContractInfoCtrl($state, PstnModel, FeatureToggleService) {
     var vm = this;
     vm.validateContactInfo = validateContactInfo;
     vm.hasBackButton = hasBackButton;
@@ -14,17 +14,22 @@
     init();
 
     function init() {
-      vm.companyName = PstnSetup.getCustomerName();
-      vm.firstName = PstnSetup.getCustomerFirstName();
-      vm.lastName = PstnSetup.getCustomerLastName();
-      vm.emailAddress = PstnSetup.getCustomerEmail();
+      vm.companyName = PstnModel.getCustomerName();
+      vm.firstName = PstnModel.getCustomerFirstName();
+      vm.lastName = PstnModel.getCustomerLastName();
+      vm.emailAddress = PstnModel.getCustomerEmail();
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
+      .then(function (results) {
+        vm.ftHuronFederatedSparkCall = results;
+      });
     }
 
     function setCustomerData() {
-      PstnSetup.setCustomerName(vm.companyName);
-      PstnSetup.setCustomerFirstName(vm.firstName);
-      PstnSetup.setCustomerLastName(vm.lastName);
-      PstnSetup.setCustomerEmail(vm.emailAddress);
+      PstnModel.setCustomerName(vm.companyName);
+      PstnModel.setCustomerFirstName(vm.firstName);
+      PstnModel.setCustomerLastName(vm.lastName);
+      PstnModel.setCustomerEmail(vm.emailAddress);
     }
 
     function validateContactInfo() {
@@ -37,7 +42,7 @@
     }
 
     function hasBackButton() {
-      return !PstnSetup.isCarrierExists() && !PstnSetup.isSingleCarrierReseller();
+      return !PstnModel.isCarrierExists() && !PstnModel.isSingleCarrierReseller();
     }
 
     function goBack() {

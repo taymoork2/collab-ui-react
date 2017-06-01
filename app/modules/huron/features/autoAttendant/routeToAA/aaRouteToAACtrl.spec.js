@@ -12,8 +12,8 @@ describe('Controller: AARouteToAACtrl', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'AA2'
-    }
+      name: 'AA2',
+    },
   };
   var schedule = 'openHours';
   var index = '0';
@@ -74,7 +74,7 @@ describe('Controller: AARouteToAACtrl', function () {
     describe('activate', function () {
       it('should be able to create new AA entry', function () {
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller).toBeDefined();
         expect(controller.menuEntry.actions[0].name).toEqual('goto');
@@ -83,7 +83,7 @@ describe('Controller: AARouteToAACtrl', function () {
 
       it('should initialize the options list', function () {
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller.options.length).toEqual(1);
         expect(controller.options[0]).toEqual("Oleg's Call Experience 1");
@@ -91,7 +91,7 @@ describe('Controller: AARouteToAACtrl', function () {
 
       it('should initialize aaName', function () {
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller.aaName).toEqual('');
       });
@@ -104,7 +104,7 @@ describe('Controller: AARouteToAACtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller.aaName).toEqual("Oleg's Call Experience 1");
       });
@@ -117,7 +117,7 @@ describe('Controller: AARouteToAACtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller.aaName).toEqual('');
         controller.aaName = "Oleg's Call Experience 1";
@@ -142,7 +142,7 @@ describe('Controller: AARouteToAACtrl', function () {
       it('should create a conditional action with a "then" clause', function () {
 
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].then).toBeDefined();
@@ -155,7 +155,7 @@ describe('Controller: AARouteToAACtrl', function () {
         aaUiModel[schedule].entries[0].actions[0] = undefined;
 
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('conditional');
@@ -169,7 +169,7 @@ describe('Controller: AARouteToAACtrl', function () {
         aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
 
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('conditional');
@@ -193,7 +193,7 @@ describe('Controller: AARouteToAACtrl', function () {
         $scope.fromRouteCall = true;
 
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('goto');
@@ -212,7 +212,7 @@ describe('Controller: AARouteToAACtrl', function () {
       it('should be able to create new AA entry from Route Call', function () {
 
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller).toBeDefined();
@@ -240,7 +240,7 @@ describe('Controller: AARouteToAACtrl', function () {
         $scope.fromFallback = true;
 
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         var fallbackAction = _.get(controller.menuEntry, 'actions[0].queueSettings.fallback.actions[0]');

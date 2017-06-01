@@ -51,9 +51,13 @@ exports.ts = {
       loader: 'ng-annotate-loader',
     },
     {
-      loader: 'ts-loader',
+      loader: 'awesome-typescript-loader',
+      options: {
+        silent: true,
+      },
     },
   ],
+  include: [appPath, testPath],
   exclude: [/node_modules/],
 };
 
@@ -73,6 +77,9 @@ exports.scss = {
     {
       // uses postcss.config.js for options (needed for ExtractTextPlugin)
       loader: 'postcss-loader',
+      options: {
+        sourceMap: true,
+      },
     },
     {
       loader: 'sass-loader',
@@ -158,7 +165,7 @@ exports.vendorImages = {
 };
 
 exports.dependencies = [{
-  test: require.resolve('jquery'),
+  test: /\/jquery.js$/,
   use: [
     {
       loader: 'expose-loader',

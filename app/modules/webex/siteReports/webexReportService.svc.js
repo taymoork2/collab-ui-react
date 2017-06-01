@@ -29,25 +29,25 @@
       "event_center_site_summary",
       "event_center_scheduled_events",
       "event_center_held_events",
-      "event_center_report_template"
+      "event_center_report_template",
     ];
 
     var support_center_pageids = ["support_center_support_sessions",
       "support_center_call_volume",
       "support_center_csr_activity",
       "support_center_url_referral",
-      "support_center_allocation_queue"
+      "support_center_allocation_queue",
     ];
 
     var training_center_pageids = ["training_usage",
       "registration",
       "recording",
       "coupon",
-      "attendee"
+      "attendee",
     ];
 
     var remote_access_pageids = ["remote_access_computer_usage",
-      "remote_access_csrs_usage", "remote_access_computer_tracking"
+      "remote_access_csrs_usage", "remote_access_computer_tracking",
     ];
 
     //This can be used for translations
@@ -76,7 +76,7 @@
       "recording": "tc_recorded_session_access_report",
       "registration": "tc_registration_report",
       "attendee": "tc_training_report_attendee",
-      "training_usage": "tc_usage"
+      "training_usage": "tc_usage",
     };
 
     //All card names are hard coded in all languages except for the commom
@@ -85,15 +85,17 @@
       "training_center": "Training Center",
       "support_center": "Support Center",
       "event_center": "Event Center",
-      "remote_access": "Remote Access"
+      "remote_access": "Remote Access",
     };
 
-    /*var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
+    /*
+    var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
       "support_center_allocation_queue"
-    ];*/
+    ];
+    */
 
     var pinnnedItems = ["meeting_in_progess", "training_usage", "event_center_overview",
-      "support_center_support_sessions", "remote_access_computer_usage"
+      "support_center_support_sessions", "remote_access_computer_usage",
     ];
 
     this.reverseMapping = function (mapping) {
@@ -266,12 +268,12 @@
     };
 
     this.getReports = function (siteUrl, mapJson) {
-      var funcName = "getReports()";
-      var logMsg = "";
+      // var funcName = "getReports()";
+      // var logMsg = "";
 
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
-      $log.log(logMsg);
+      // logMsg = funcName + "\n" +
+      //   "siteUrl=" + siteUrl;
+      // $log.log(logMsg);
 
       //get the reports list, for now hard code.
       var common_reports = new ReportsSection("common_reports", siteUrl, ["/x/y/z", "/u/io/p"], "CommonReports");
@@ -287,7 +289,7 @@
           [training_center_pageids, training_center],
           [support_center_pageids, support_center],
           [event_center_pageids, event_center],
-          [remote_access_pageids, remote_access]
+          [remote_access_pageids, remote_access],
         ].forEach(function (xs) {
           var section = xs[1];
           var category_Name = section.category_Name;
@@ -324,7 +326,9 @@
       // var logMsg = funcName;
 
       var siteUrl = requestedSiteUrl || '';
-      var siteName = WebExUtilsFact.getSiteName(siteUrl);
+      var siteNameObj = WebExUtilsFact.getSiteNameAndType(siteUrl);
+      var siteName = siteNameObj.siteName;
+      var isMCOnlineSite = siteNameObj.isMCOnlineSite;
 
       var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
         siteUrl,
@@ -335,13 +339,13 @@
       infoCardObj.iframeLinkObj1.iframePageObj = {
         id: "infoCardMeetingInProgress",
         label: $translate.instant("webexSiteReports.meeting_in_progess"),
-        uiSref: null
+        uiSref: null,
       };
 
       infoCardObj.iframeLinkObj2.iframePageObj = {
         id: "infoCardMeetingUsage",
         label: $translate.instant("webexSiteReports.meeting_usage"),
-        uiSref: null
+        uiSref: null,
       };
 
       var reportsObject = {
@@ -351,7 +355,8 @@
         cardsSectionId: siteUrl + "-" + "cardsSection",
         siteUrl: siteUrl,
         siteName: siteName,
-        infoCardObj: infoCardObj
+        infoCardObj: infoCardObj,
+        isMCOnlineSite: isMCOnlineSite,
       };
 
       WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
@@ -418,16 +423,34 @@
 
                 var i = 0;
                 var j = 0;
+                var reportPageId = null;
 
                 for (i = 0; i < rpts.sections.length; i++) {
                   if (rpts.sections[i].section_name === "common_reports") {
-                    for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
-                      if (rpts.sections[i].uisrefs[j].reportPageId === "meetings_in_progress") {
+                    for (j = rpts.sections[i].uisrefs.length - 1; j >= 0; j--) {
+                      reportPageId = rpts.sections[i].uisrefs[j].reportPageId;
+
+                      if (reportPageId === "meetings_in_progress") {
                         reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                      } else if (reportPageId === "meeting_usage") {
+                        reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
                       }
 
-                      if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage") {
-                        reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                      // the if-then-else below is a short-term fix to hide the usage report links for MCOnline sites
+                      // once useage reports is fixed for MCOnline sites, we can remove this short-term fix
+                      if (reportsObject.isMCOnlineSite) {
+                        if (
+                          ("meeting_usage" == reportPageId) ||
+                          ("recording_usage" == reportPageId) ||
+                          ("storage_utilization" == reportPageId)
+                        ) {
+
+                          logMsg = funcName + "\n" +
+                            "WARN: hide reportPageId=" + reportPageId;
+                          $log.log(logMsg);
+
+                          rpts.sections[i].uisrefs.splice(j, 1);
+                        }
                       }
                     }
                   }
@@ -467,7 +490,7 @@
       return $q.all({
         // siteInfoXml: siteInfoXml,
         // meetingTypesInfoXml: meetingTypesInfoXml,
-        reportPagesInfoXml: reportPagesInfoXml
+        reportPagesInfoXml: reportPagesInfoXml,
       });
     };
 

@@ -5,6 +5,8 @@ import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem
 import { Member } from 'modules/huron/members';
 import { ICallerID, CallerIDService } from 'modules/huron/callerId';
 import { AutoAnswer, AutoAnswerService } from 'modules/huron/autoAnswer';
+import { HuronVoicemailService } from 'modules/huron/voicemail';
+import { HuronUserService } from 'modules/huron/users';
 
 export class LineOverviewData {
   public line: Line;
@@ -13,13 +15,15 @@ export class LineOverviewData {
   public callerId: ICallerID;
   public companyNumbers: any;
   public autoAnswer: AutoAnswer;
+  public voicemailEnabled: boolean;
+  public services: Array<string>;
 }
 
 export class LineOverviewService {
 
   private numberProperties: Array<string> = ['uuid', 'primary', 'shared', 'internal', 'external', 'siteToSite', 'incomingCallMaximum'];
   private callForwardAllProperties: Array<string> = ['destination', 'voicemailEnabled'];
-  private callForwardBusyProperties: Array<string> = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled'];
+  private callForwardBusyProperties: Array<string> = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled', 'ringDurationTimer'];
   private lineOverviewDataCopy: LineOverviewData;
   private errors: Array<any> = [];
 
@@ -33,6 +37,9 @@ export class LineOverviewService {
     private Notification,
     private $q: ng.IQService,
     private CallerIDService: CallerIDService,
+    private HuronVoicemailService: HuronVoicemailService,
+    private HuronUserService: HuronUserService,
+    private FeatureToggleService,
   ) {}
 
   public get(consumerType: LineConsumerType, ownerId: string, numberId: string = ''): ng.IPromise<LineOverviewData> {
@@ -45,7 +52,8 @@ export class LineOverviewService {
     promises.push(this.getCallerId(consumerType, ownerId, numberId));
     promises.push(this.listCompanyNumbers());
     promises.push(this.getAutoAnswerSupportedDeviceAndMember(consumerType, ownerId, numberId));
-    return this.$q.all(promises).then( (data) => {
+    promises.push(this.HuronUserService.getUserServices(ownerId));
+    return this.$q.all(promises).then((data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
         return this.$q.reject();
@@ -56,6 +64,8 @@ export class LineOverviewService {
       lineOverviewData.callerId = data[3];
       lineOverviewData.companyNumbers = data[4];
       lineOverviewData.autoAnswer = data[5];
+      lineOverviewData.services = data[6];
+      lineOverviewData.voicemailEnabled = this.HuronVoicemailService.isEnabledForUser(lineOverviewData.services);
       this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
       return lineOverviewData;
     });
@@ -69,60 +79,41 @@ export class LineOverviewService {
     return _.isEqual(lineOverviewData, this.lineOverviewDataCopy);
   }
 
+  private rejectAndNotifyPossibleErrors(): void | ng.IPromise<any> {
+    if (this.errors.length > 0) {
+      this.Notification.notify(this.errors, 'error');
+      return this.$q.reject();
+    }
+  }
+
+  private createSharedLineMembers(consumerType: LineConsumerType, ownerId: string, lineOverviewData: LineOverviewData, newSharedLineMembers: Member[]) {
+    if (newSharedLineMembers.length > 0) {
+      let promises: Array<ng.IPromise<any>> = [];
+      _.forEach(newSharedLineMembers, (sharedLineMember) => {
+        promises.push(this.createSharedLine(consumerType, ownerId, lineOverviewData.line.uuid, sharedLineMember));
+      });
+      return this.$q.all(promises);
+    }
+  }
+
   public save(consumerType: LineConsumerType, ownerId: string, numberId: string = '', data: LineOverviewData, newSharedLineMembers: Member[]) {
     let lineOverviewData = new LineOverviewData();
     if (!data.line.uuid) {
       return this.createLine(consumerType, ownerId, data.line)
-        .then( (line) => {
-          if (this.errors.length > 0) {
-            this.Notification.notify(this.errors, 'error');
-            return this.$q.reject();
-          }
-          lineOverviewData.line = new Line({
-            uuid: line.uuid,
-            primary: line.primary,
-            shared: line.shared,
-            internal: line.internal,
-            incomingCallMaximum: line.incomingCallMaximum,
-            external: line.external,
-            siteToSite: line.siteToSite,
-          });
-        })
-        .then( () => {
-          return this.updateCallForward(consumerType, ownerId, lineOverviewData.line.uuid, data.callForward)
-            .then( () => {
-              if (this.errors.length > 0) {
-                this.Notification.notify(this.errors, 'error');
-                return this.$q.reject();
-              }
-              lineOverviewData.callForward = data.callForward;
-            });
-        })
-        .then( () => {
-          if (newSharedLineMembers.length > 0) {
-            let promises: Array<ng.IPromise<any>> = [];
-            _.forEach(newSharedLineMembers, (sharedLineMember) => {
-              promises.push(this.createSharedLine(consumerType, ownerId, lineOverviewData.line.uuid, sharedLineMember));
-            });
-            return this.$q.all(promises).then( () => {
-              if (this.errors.length > 0) {
-                this.Notification.notify(this.errors, 'error');
-                return this.$q.reject();
-              }
-            });
-          }
-        })
-        .then( () => {
-          if (this.errors.length > 0) {
-            this.Notification.notify(this.errors, 'error');
-            return this.$q.reject();
-          }
-          return this.get(consumerType, ownerId, lineOverviewData.line.uuid);
-        });
+        .then((line) => lineOverviewData.line = line)
+        .then(() => this.rejectAndNotifyPossibleErrors())
+        .then(() => this.updateCallForward(consumerType, ownerId, lineOverviewData.line.uuid, data.callForward))
+        .then(() => lineOverviewData.callForward = data.callForward)
+        .then(() => this.rejectAndNotifyPossibleErrors())
+        .then<any>(() => this.createSharedLineMembers(consumerType, ownerId, lineOverviewData, newSharedLineMembers))
+        .then(() => this.rejectAndNotifyPossibleErrors())
+        .then(() => this.get(consumerType, ownerId, lineOverviewData.line.uuid));
     } else { // update
       let promises: Array<ng.IPromise<any>> = [];
-      if (!_.isEqual(data.line, this.lineOverviewDataCopy.line)) {
+      let isLineUpdated: boolean = false;
+      if (!_.isEqual(data.line, _.get(this, 'lineOverviewDataCopy.line'))) {
         promises.push(this.updateLine(consumerType, ownerId, numberId, data.line));
+        isLineUpdated = true;
       }
 
       if (!_.isEqual(data.callForward, this.lineOverviewDataCopy.callForward)) {
@@ -156,19 +147,17 @@ export class LineOverviewService {
         }
       }
 
-      return this.$q.all(promises).then( () => {
-        if (this.errors.length > 0) {
-          this.Notification.notify(this.errors, 'error');
-          return this.$q.reject();
-        }
-        if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
-          return this.updateCallerId(consumerType, ownerId, numberId, data.callerId).then(() => {
-            return this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid);
-          });
-        } else {
-          return this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid);
-        }
-      });
+      return this.$q.all(promises)
+        .then(() => this.rejectAndNotifyPossibleErrors())
+        .then<any>(() => {
+          if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
+            return this.updateCallerId(consumerType, ownerId, numberId, data.callerId);
+          }
+          if (data.voicemailEnabled && isLineUpdated && consumerType === LineConsumerType.USERS) {
+            promises.push(this.HuronVoicemailService.update(ownerId, data.voicemailEnabled, this.lineOverviewDataCopy.services));
+          }
+        })
+        .then(() => this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid));
     }
   }
 
@@ -185,14 +174,15 @@ export class LineOverviewService {
     }
   }
 
-  private createLine(consumerType: LineConsumerType, ownerId: string, data: Line): ng.IPromise<Line | void> {
-    return this.LineService.createLine(consumerType, ownerId, data).then( location => {
+  private createLine(consumerType: LineConsumerType, ownerId: string, data: Line): ng.IPromise<Line> {
+    return this.LineService.createLine(consumerType, ownerId, data).then(location => {
       let newUuid = _.last(location.split('/'));
       return this.LineService.getLine(consumerType, ownerId, newUuid)
         .then(line => {
           return new Line(_.pick<Line, Line>(line, this.numberProperties));
         }).catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.createLineError'));
+          return new Line();
         });
     });
   }
@@ -214,8 +204,8 @@ export class LineOverviewService {
           if (callForwardRes.callForwardAll) {
             callForward.callForwardAll = new CallForwardAll(_.pick<CallForwardAll, CallForwardAll>(callForwardRes.callForwardAll, this.callForwardAllProperties));
           }
-          if (callForwardRes.callForwardBusy) {
-            callForward.callForwardBusy = new CallForwardBusy(_.pick<CallForwardBusy, CallForwardBusy>(callForwardRes.callForwardBusy, this.callForwardBusyProperties));
+          if (callForwardRes.callForwardNoAnswer) {
+            callForward.callForwardBusy = new CallForwardBusy(_.pick<CallForwardBusy, CallForwardBusy>(callForwardRes.callForwardNoAnswer, this.callForwardBusyProperties));
           }
           return callForward;
         }).catch(error => {
@@ -236,7 +226,7 @@ export class LineOverviewService {
       return this.$q.resolve([]);
     } else {
       return this.SharedLineService.getSharedLineList(consumerType, ownerId, numberId)
-        .then( sharedLines => {
+        .then(sharedLines => {
           let promises: Array<ng.IPromise<any>> = [];
           _.forEach(sharedLines, (sharedLine) => {
             promises.push(this.SharedLineService.getSharedLinePhoneList(consumerType, ownerId, numberId, sharedLine.uuid));
@@ -270,9 +260,9 @@ export class LineOverviewService {
       return this.$q.resolve({});
     } else {
       return this.AutoAnswerService.getSupportedPhonesAndMember(consumerType, ownerId, numberId)
-        .then ( autoAnswerRes => {
+        .then(autoAnswerRes => {
           if (!_.isUndefined(autoAnswerRes) && !_.isNull(autoAnswerRes) && !_.isUndefined(autoAnswerRes.member) &&
-              !_.isNull(autoAnswerRes.member) && autoAnswerRes.member.uuid !== ownerId) {
+            !_.isNull(autoAnswerRes.member) && autoAnswerRes.member.uuid !== ownerId) {
             autoAnswerRes.enabledForSharedLineMember = true;
           }
           return autoAnswerRes;
@@ -285,26 +275,20 @@ export class LineOverviewService {
   }
 
   private createSharedLine(consumerType: LineConsumerType, ownerId: string, numberId: string = '', data: Member) {
-    return this.SharedLineService.createSharedLine(consumerType, ownerId, numberId, data).then( () => {
-      return this.SharedLineService.getSharedLineList(consumerType, ownerId, numberId)
+    return this.SharedLineService.createSharedLine(consumerType, ownerId, numberId, data)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.getSharedLinesError'));
-        return [];
+        this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.createSharedLinesError'));
       });
-    }).catch(error => {
-      this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.createSharedLinesError'));
-      return [];
-    });
   }
 
   private updateSharedLinePhoneList(consumerType: LineConsumerType, ownerId: string, numberId: string, sharedLineId: string, data: Array<SharedLinePhoneListItem>) {
     return this.SharedLineService.updateSharedLinePhoneList(consumerType, ownerId, numberId, sharedLineId, data)
-    .catch(error => {
-      this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateSharedLinePhoneError'));
-    });
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateSharedLinePhoneError'));
+      });
   }
 
-  private updateCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string | undefined, data: any) {
+  private updateCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string | undefined, data: any): ng.IPromise<ICallerID> {
     return this.CallerIDService.updateCallerId(consumerType, ownerId, numberId, data);
   }
 
@@ -315,8 +299,15 @@ export class LineOverviewService {
   public getEsnPrefix(): ng.IPromise<string> {
     return this.HuronSiteService.listSites().then(sites => {
       if (sites.length > 0) {
-        return this.HuronSiteService.getSite(sites[0].uuid).then(site => {
-          return site.siteSteeringDigit + site.siteCode;
+        return this.HuronSiteService.getTheOnlySite().then(site => {
+          return this.FeatureToggleService.sparkCallTenDigitExtGetStatus()
+            .then(routingPrefixSupported => {
+              if (routingPrefixSupported) {
+                return _.get(site, 'routingPrefix', '');
+              } else {
+                return _.get(site, 'steeringDigit', '') + _.get(site, 'siteCode', '');
+              }
+            });
         });
       } else {
         return '';

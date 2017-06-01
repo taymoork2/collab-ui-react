@@ -10,6 +10,8 @@ export interface IEmergency {
 export interface IEmergencyServicesData {
   emergency: IEmergency;
   currentDevice: IDevice;
+  locationLabel: string;
+  zipLabel: string;
   stateOptions: IState[];
   staticNumber: boolean;
 }

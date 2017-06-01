@@ -26,7 +26,7 @@ getStdin()
     orgs = _.chain(orgs)
       .filter({
         'isAllowedToManage': true,
-        'isTestOrg': true
+        'isTestOrg': true,
       })
       .filter(function (org) {
         return re.test(org.customerName);

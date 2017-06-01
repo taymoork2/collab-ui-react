@@ -4,23 +4,27 @@
   /* @ngInject */
   function HelpdeskLogService($q, LogService, HelpdeskMockData, HelpdeskService) {
 
-    function searchForLastPushedLog(term) {
+    function searchLogs(term, _searchOptions) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(findLastLog(HelpdeskMockData.logs.search));
       }
-      var deferred = $q.defer();
-      LogService.searchLogs(term, function (data) {
-        if (data.success) {
-          if (data.metadataList && data.metadataList.length > 0) {
-            deferred.resolve(findLastLog(data.metadataList));
-          } else {
-            deferred.reject("NoLog");
-          }
-        } else {
-          deferred.reject("NoLog");
+      var searchOptions = _.extend({
+        timeSortOrder: 'descending',
+        limit: 1,
+      }, _searchOptions);
+      return LogService.searchLogs(term, searchOptions);
+    }
+
+    function searchForLastPushedLog(term) {
+      return searchLogs(term).then(function (response) {
+        var metadataList = _.get(response, 'data.metadataList');
+        if (_.size(metadataList)) {
+          return cleanLogMetadata(metadataList[0]);
         }
+        return $q.reject('NoLog');
+      }).catch(function () {
+        return $q.reject('NoLog');
       });
-      return deferred.promise;
     }
 
     function getLastPushedLogForUser(uuid) {
@@ -29,6 +33,7 @@
       }
 
       var deferred = $q.defer();
+      // TODO (mipark2): revisit this after moving 'LogService.listLogs()' away from callback-style
       LogService.listLogs(uuid, function (data) {
         if (data.success) {
           if (data.metadataList && data.metadataList.length > 0) {
@@ -49,6 +54,7 @@
       }
 
       var deferred = $q.defer();
+      // TODO (mipark2): revisit this after moving 'LogService.downloadLog()' away from callback-style
       LogService.downloadLog(filename, function (data) {
         if (data.success) {
           deferred.resolve(data.tempURL);
@@ -63,15 +69,18 @@
       var sorted = _.sortBy(metadataList, function (meta) {
         return new Date(meta.timestamp);
       });
-      var lastLog = _.last(sorted);
+      return cleanLogMetadata(_.last(sorted));
+    }
+
+    function cleanLogMetadata(logMetadata) {
       var platform = '';
-      if (lastLog.platform) {
-        platform = _.last(lastLog.platform.split('-')) || platform;
+      if (logMetadata.platform) {
+        platform = _.last(logMetadata.platform.split('-')) || platform;
       }
       return {
-        timestamp: lastLog.timestamp,
-        filename: lastLog.filename,
-        platform: platform
+        timestamp: logMetadata.timestamp,
+        filename: logMetadata.filename,
+        platform: platform,
       };
     }
 
@@ -82,9 +91,11 @@
     }
 
     return {
+      searchLogs: searchLogs,
       searchForLastPushedLog: searchForLastPushedLog,
       getLastPushedLogForUser: getLastPushedLogForUser,
-      downloadLog: downloadLog
+      downloadLog: downloadLog,
+      cleanLogMetadata: cleanLogMetadata,
     };
 
   }

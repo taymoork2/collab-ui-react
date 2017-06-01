@@ -4,7 +4,7 @@ describe('ExportUserStatusesController', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, ClusterService, ExcelService, ResourceGroupService;
+  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, HybridServicesClusterService, ExcelService, ResourceGroupService;
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
@@ -12,10 +12,10 @@ describe('ExportUserStatusesController', function () {
         getServices: function () {
           return [{
             ciName: 'squared-fusion-cal',
-            displayName: 'myService'
+            displayName: 'myService',
           }];
         },
-        getOrgId: sinon.stub().returns('5632-f806-org')
+        getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632-f806-org'),
       };
       $provide.value('Authinfo', Authinfo);
     });
@@ -34,8 +34,8 @@ describe('ExportUserStatusesController', function () {
     scope = $rootScope.$new();
 
     ExcelService = {
-      createFile: sinon.stub(),
-      downloadFile: sinon.stub()
+      createFile: jasmine.createSpy('createFile'),
+      downloadFile: jasmine.createSpy('downloadFile'),
     };
 
     var userStatusSummary = [{
@@ -45,7 +45,7 @@ describe('ExportUserStatusesController', function () {
       activated: 0,
       error: 12,
       deactivated: 0,
-      notEntitled: 0
+      notEntitled: 0,
     }];
 
     USSService = {
@@ -56,29 +56,31 @@ describe('ExportUserStatusesController', function () {
               userId: 'DEADBEEF' + i,
               orgId: '0FF1CE',
               connectorId: 'c_cal@aaa',
+              clusterId: 'a5140c4a-9f6e-11e5-a58e-005056b12db1',
               serviceId: 'squared-fusion-uc',
               entitled: true,
-              state: 'notActivated'
+              state: 'notActivated',
             };
           })
         );
-      }
+      },
     };
-    sinon.spy(USSService, 'getAllStatuses');
+    spyOn(USSService, 'getAllStatuses').and.callThrough();
 
-    ClusterService = {
-      getConnector: function (id) {
-        return $q.resolve({
-          id: id,
-          cluster_id: 'a5140c4a-9f6e-11e5-a58e-005056b12db1',
-          display_name: 'Calendar Connector',
-          host_name: 'deadbeef.rd.cisco.com',
-          cluster_name: 'deadbeef.rd.cisco.com',
-          connector_type: 'c_cal',
-        });
-      }
+    HybridServicesClusterService = {
+      getAll: function () {
+        return $q.resolve([{
+          id: 'a5140c4a-9f6e-11e5-a58e-005056b12db1',
+          name: 'deadbeef.rd.cisco.com',
+          connectors: [{
+            id: 'c_cal@aaa',
+            hostname: 'deadbeef.rd.cisco.com',
+            connectorType: 'c_cal',
+          }],
+        }]);
+      },
     };
-    sinon.spy(ClusterService, 'getConnector');
+    spyOn(HybridServicesClusterService, 'getAll').and.callThrough();
 
     UserDetails = {
       getUsers: function (stateInfos) {
@@ -86,19 +88,18 @@ describe('ExportUserStatusesController', function () {
       },
       getCSVColumnHeaders: function () {
         return ['whatever', 'foo', 'bar'];
-      }
+      },
     };
-    sinon.spy(UserDetails, 'getUsers');
-    sinon.spy(ResourceGroupService, 'getAll');
+    spyOn(UserDetails, 'getUsers').and.callThrough();
 
     ResourceGroupService = {
       getAll: function () {
         return $q.resolve([]);
-      }
+      },
     };
 
     var $modalInstance = {
-      close: sinon.stub()
+      close: jasmine.createSpy('close'),
     };
 
     vm = $controller('ExportUserStatusesController', {
@@ -110,13 +111,13 @@ describe('ExportUserStatusesController', function () {
       USSService: USSService,
       UserDetails: UserDetails,
       ExcelService: ExcelService,
-      ClusterService: ClusterService,
-      ResourceGroupService: ResourceGroupService
+      HybridServicesClusterService: HybridServicesClusterService,
+      ResourceGroupService: ResourceGroupService,
     });
     vm.statusTypes = [{
       stateType: 'notActivated',
       count: 51,
-      selected: true
+      selected: true,
     }];
   }));
 
@@ -138,23 +139,36 @@ describe('ExportUserStatusesController', function () {
     it('should call USSService.getStatuses', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(USSService.getAllStatuses.called).toBe(true);
+      expect(USSService.getAllStatuses).toHaveBeenCalled();
     });
-    it('should call ClusterService.getConnector if there at least one connectorId', function () {
+    it('should call HybridServicesClusterService.getAll if there at least one clusterId', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(ClusterService.getConnector.called).toBe(true);
+      expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
+    });
+    it('should not call HybridServicesClusterService.getAll if there no clusterIds', function () {
+      USSService.getAll = function () {
+        return $q.resolve([{
+          userId: 'DEADBEEF',
+          orgId: '0FF1CE',
+          serviceId: 'squared-fusion-uc',
+          state: 'error',
+        }]);
+      };
+      vm.exportCSV();
+      $rootScope.$apply();
+      expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
     });
     it('should call UserDetails.getUsers as much as it has to', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(UserDetails.getUsers.callCount).toBe(2);
+      expect(UserDetails.getUsers.calls.count()).toBe(2);
     });
     it('should call ExcelService.createFile and ExcelService.downloadFile', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(ExcelService.createFile.called).toBe(true);
-      expect(ExcelService.downloadFile.called).toBe(true);
+      expect(ExcelService.createFile).toHaveBeenCalled();
+      expect(ExcelService.downloadFile).toHaveBeenCalled();
     });
     it('should not actually finish export when exportCanceled is true', function () {
       vm.exportCanceled = true;

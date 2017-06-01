@@ -136,8 +136,6 @@
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, .5);
 
-    @extend .cs-input;
-
     border-color: $gray-light-3;
     cursor: default;
     color: $gray-dark-1;
@@ -291,6 +289,19 @@
 
     .ct-customer-info-category-input {
       @include vr-spacing(mt, 0.25);
+      .icon-warning::before {
+        color: $color-attention-base;
+      }
+      .category-validation-warning {
+        font-family: 'CiscoSansTT Regular';
+        padding-top: 0;
+        margin-left: 1rem;
+      }
+      .no-data-warning {
+        font-size: 1.13rem;
+        vertical-align: -12%;
+        padding-right: .2rem;
+      }
     }
   }
 
@@ -374,6 +385,7 @@
 
   .ct-add-contain {
     cursor: pointer;
+    outline: none;
   }
 
   .cs-input-group {
@@ -402,7 +414,7 @@
     @include vr-spacing(mb, 1);
   }
 
-  .block-display{
+  .block-display {
     display: flex;
   }
 

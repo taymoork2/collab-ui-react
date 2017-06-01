@@ -2,7 +2,7 @@
   'use strict';
 
   module.exports = angular.module('core.authinfo', [
-    'pascalprecht.translate',
+    require('angular-translate'),
     require('modules/core/config/config'),
     require('modules/core/config/tabConfig'),
   ])
@@ -11,6 +11,10 @@
 
   /* @ngInject */
   function Authinfo($rootScope, $translate, Config) {
+    var authData = getNewAuthData();
+    var hasCDCOffer = false;
+    var hasCVCOffer = false;
+
     function ServiceFeature(label, value, name, license) {
       this.label = label;
       this.value = value;
@@ -19,37 +23,40 @@
       this.isCustomerPartner = false;
     }
 
-    // AngularJS will instantiate a singleton by calling "new" on this function
-    var authData = {
-      username: null,
-      userId: null,
-      userOrgId: null,
-      orgName: null,
-      orgId: null,
-      addUserEnabled: null,
-      entitleUserEnabled: null,
-      managedOrgs: [],
-      entitlements: null,
-      services: null,
-      roles: [],
-      isInitialized: false,
-      setupDone: false,
-      licenses: [],
-      subscriptions: [],
-      messageServices: null,
-      conferenceServices: null,
-      communicationServices: null,
-      careServices: [],
-      conferenceServicesWithoutSiteUrl: null,
-      cmrServices: null,
-      hasAccount: false,
-      emails: null,
-      customerType: null,
-      commerceRelation: null,
-      customerAccounts: [],
-    };
+    function getNewAuthData() {
+      return {
+        addUserEnabled: null,
+        careServices: [],
+        cmrServices: null,
+        commerceRelation: null,
+        communicationServices: null,
+        conferenceServices: null,
+        conferenceServicesWithoutSiteUrl: null,
+        customerAccounts: [],
+        customerType: null,
+        emails: null,
+        entitleUserEnabled: null,
+        hasAccount: false,
+        isInitialized: false,
+        licenses: [],
+        managedOrgs: [],
+        messageServices: null,
+        orgId: null,
+        orgName: null,
+        roles: [],
+        services: [],
+        setupDone: false,
+        subscriptions: [],
+        userId: null,
+        userName: null,
+        userOrgId: null,
+        commPartnerOrgId: null,
+        roomPartnerOrgId: null,
+        customerAdminEmail: null,
+      };
+    }
 
-    var isEntitled = function (entitlement) {
+    function isEntitled(entitlement) {
       var services = authData.services;
       if (services) {
         for (var i = 0; i < services.length; i++) {
@@ -60,22 +67,21 @@
         }
       }
       return false;
-    };
+    }
 
     return {
       initialize: function (data) {
         authData.isInDelegatedAdministrationOrg = data.isInDelegatedAdministrationOrg;
-        authData.username = data.name;
+        authData.userName = data.name;
         authData.userId = data.uuid;
         authData.orgName = data.orgName;
         authData.orgId = data.orgId;
         authData.userOrgId = data.userOrgId;
         authData.addUserEnabled = data.addUserEnabled;
         authData.entitleUserEnabled = data.entitleUserEnabled;
-        authData.managedOrgs = data.managedOrgs;
-        authData.entitlements = data.entitlements;
-        authData.services = data.services;
-        authData.roles = data.roles;
+        authData.managedOrgs = data.managedOrgs || [];
+        authData.services = data.services || [];
+        authData.roles = data.roles || [];
         //if Full_Admin or WX2_User and has managedOrgs, add partnerustomers tab as allowed tab
         if (authData.managedOrgs && authData.managedOrgs.length > 0) {
           for (var i = 0; i < authData.roles.length; i++) {
@@ -94,19 +100,7 @@
         $rootScope.$broadcast('AuthinfoUpdated');
       },
       clear: function () {
-        authData.username = null;
-        authData.userId = null;
-        authData.orgName = null;
-        authData.orgId = null;
-        authData.addUserEnabled = null;
-        authData.entitleUserEnabled = null;
-        authData.entitlements = null;
-        authData.services = null;
-        authData.tabs = [];
-        authData.roles = [];
-        authData.isInitialized = false;
-        authData.setupDone = null;
-        authData.emails = null;
+        authData = getNewAuthData();
       },
       setEmails: function (data) {
         authData.emails = data;
@@ -141,6 +135,7 @@
           authData.customerId = _.get(authData.customerAccounts, '[0].customerId');
           authData.commerceRelation = _.get(authData.customerAccounts, '[0].commerceRelation', '');
           authData.subscriptions = _.get(authData.customerAccounts, '[0].subscriptions', []);
+          authData.customerAdminEmail = _.get(authData.customerAccounts, '[0].customerAdminEmail');
 
           for (var x = 0; x < authData.customerAccounts.length; x++) {
 
@@ -150,8 +145,12 @@
             //If org has subscriptions get the license information from subscriptions, else from licences
             if (_.has(customerAccount, 'licenses')) {
               customerAccountLicenses = _.get(customerAccount, 'licenses');
-            } else if (_.has(customerAccount, 'subscriptions[0].licenses')) {
-              customerAccountLicenses = _.get(customerAccount, 'subscriptions[0].licenses');
+            } else if (customerAccount.subscriptions) {
+              for (var subId = 0; subId < customerAccount.subscriptions.length; subId++) {
+                if (customerAccount.subscriptions[subId].licenses) {
+                  customerAccountLicenses = _.concat(customerAccountLicenses, customerAccount.subscriptions[subId].licenses);
+                }
+              }
             }
 
             for (var l = 0; l < customerAccountLicenses.length; l++) {
@@ -174,7 +173,7 @@
                     authData.roles.push('Site_Admin');
                   }
                   service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
-                    capacity: license.capacity
+                    capacity: license.capacity,
                   }), x + 1, 'confRadio', license);
                   if (license.siteUrl) {
                     confLicensesWithoutSiteUrl.push(service);
@@ -191,9 +190,21 @@
                 case Config.licenseTypes.COMMUNICATION:
                   service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
                   commLicenses.push(service);
+                  // store the partner for Communication license
+                  authData.commPartnerOrgId = license.partnerOrgId;
+                  break;
+                case Config.licenseTypes.SHARED_DEVICES:
+                  // store the partner for shared devices(room systems) license
+                  authData.roomPartnerOrgId = license.partnerOrgId;
                   break;
                 case Config.licenseTypes.CARE:
-                  service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
+                  if (license.offerName === Config.offerCodes.CDC) {
+                    service = new ServiceFeature($translate.instant('onboardModal.paidCDC'), x + 1, 'careRadio', license);
+                    hasCDCOffer = true;
+                  } else if (license.offerName === Config.offerCodes.CVC) {
+                    service = new ServiceFeature($translate.instant('onboardModal.paidCVC'), x + 1, 'careRadio', license);
+                    hasCVCOffer = true;
+                  }
                   careLicenses.push(service);
                   break;
                 case Config.licenseTypes.CMR:
@@ -233,6 +244,19 @@
         // The orgId of the managed org (can be a different org than the logged in user when delegated admin)
         return authData.orgId;
       },
+      getCommPartnerOrgId: function () {
+        // The orgId of the partner who enabled COMMUNICATION license
+        return authData.commPartnerOrgId;
+      },
+      getRoomPartnerOrgId: function () {
+        // The orgId of the partner who enabled SHARED_DEVICES license
+        return authData.roomPartnerOrgId;
+      },
+      // When partner logs in, it will be the partner admin email
+      // but partner admin chooses to login to customer portal it will be customer admin email
+      getCustomerAdminEmail: function () {
+        return authData.customerAdminEmail;
+      },
       getUserOrgId: function () {
         // The orgId of the org the user is homed (can be a different org than the org being managed in getOrgId)
         return authData.userOrgId;
@@ -247,16 +271,13 @@
       // IMPORTANT: 'username' can possibly reflect a user's display name, use 'getPrimaryEmail()'
       //   if needing the email value that the user logged in with
       getUserName: function () {
-        return authData.username;
+        return authData.userName;
       },
       setUserId: function (id) {
         authData.userId = id;
       },
       getUserId: function () {
         return authData.userId;
-      },
-      getUserEntitlements: function () {
-        return authData.entitlements;
       },
       isAddUserEnabled: function () {
         return authData.addUserEnabled;
@@ -276,7 +297,14 @@
       getSubscriptions: function () {
         return authData.subscriptions;
       },
-      getMessageServices: function () {
+      getMessageServices: function (params) {
+        if (_.get(params, 'assignableOnly')) {
+          var result = _.filter(authData.messageServices, function (serviceFeature) {
+            var license = _.get(serviceFeature, 'license');
+            return !this.isExternallyManagedLicense(license);
+          }.bind(this));
+          return _.size(result) ? result : null;
+        }
         return authData.messageServices;
       },
       getConferenceServices: function () {
@@ -477,6 +505,9 @@
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);
       },
+      isFusionIMP: function () {
+        return isEntitled(Config.entitlements.imp);
+      },
       isFusionMedia: function () {
         return isEntitled(Config.entitlements.mediafusion);
       },
@@ -495,8 +526,21 @@
       isContactCenterContext: function () {
         return isEntitled(Config.entitlements.context);
       },
+      isMessageEntitled: function () {
+        return isEntitled(Config.entitlements.message);
+      },
       isCare: function () {
         return isEntitled(Config.entitlements.care);
+      },
+      // TODO: refactor isCareVoice(), isCareAndCDC() and isCareVoiceAndCVC() when ccc-digital is getting implemented
+      isCareVoice: function () {
+        return isEntitled(Config.entitlements.care_inbound_voice);
+      },
+      isCareAndCDC: function () {
+        return isEntitled(Config.entitlements.care) && hasCDCOffer;
+      },
+      isCareVoiceAndCVC: function () {
+        return isEntitled(Config.entitlements.care_inbound_voice) && hasCVCOffer;
       },
       hasAccount: function () {
         return authData.hasAccount;
@@ -511,7 +555,7 @@
         return isEntitled(entitlement);
       },
       isUserAdmin: function () {
-        return this.getRoles().indexOf(Config.roles.full_admin) > -1;
+        return this.hasRole(Config.roles.full_admin);
       },
       isInDelegatedAdministrationOrg: function () {
         return authData.isInDelegatedAdministrationOrg;
@@ -530,7 +574,32 @@
       },
       isComplianceUser: function () {
         return this.hasRole(Config.roles.compliance_user);
-      }
+      },
+      getCallPartnerOrgId: function () {
+        // On Login to partner portal, orgid has the partner info
+        // On Login to customer portal, need to get the call partner info from services licenses data
+        if (this.isPartner()) {
+          this.getOrgId();
+        }
+        return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId() || this.getOrgId();
+      },
+      addEntitlement: function (entitlementObj) {
+        var entitlement = _.get(entitlementObj, 'ciName');
+        if (!isEntitled(entitlement)) {
+          this.getServices().push(entitlementObj);
+        }
+      },
+      removeEntitlement: function (entitlement) {
+        if (!isEntitled(entitlement)) {
+          return;
+        }
+        _.remove(this.getServices(), { ciName: entitlement });
+      },
+      isExternallyManagedLicense: function (license) {
+        // as of 2017-05-17, only licenses matching { offerName: 'MSGR' } are known to be managed externally
+        var offerName = _.get(license, 'offerName');
+        return offerName === Config.offerCodes.MSGR;
+      },
     };
   }
 })();

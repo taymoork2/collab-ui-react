@@ -10,7 +10,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
   var $httpBackend, controller, Authinfo, MediaClusterServiceV2, $q, properties;
 
   Authinfo = {
-    getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632f806-ad09-4a26-a0c0-a49a13f38873'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -19,18 +19,18 @@ describe('Controller: MediafusionClusterSettingsController', function () {
 
   beforeEach(inject(function (_$httpBackend_, $controller, _MediaClusterServiceV2_, _$q_) {
     $httpBackend = _$httpBackend_;
-    $httpBackend.when('GET', 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/5632f806-ad09-4a26-a0c0-a49a13f38873?fields=@wide').respond({});
+    $httpBackend.when('GET', 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/5632f806-ad09-4a26-a0c0-a49a13f38873?fields=@wide').respond({});
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     $q = _$q_;
     properties = {
-      'mf.ucSipTrunk': 'sipurl'
+      'mf.ucSipTrunk': 'sipurl',
     };
 
     spyOn(MediaClusterServiceV2, 'getProperties').and.returnValue($q.resolve(properties));
 
     controller = $controller('MediafusionClusterSettingsController', {
       $stateParams: {
-        id: '1234-5678-90'
+        id: '1234-5678-90',
       },
       MediaClusterServiceV2: MediaClusterServiceV2,
       $q: $q,

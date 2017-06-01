@@ -5,7 +5,7 @@
     .controller('ExpresswaySelectResourceGroupController', ExpresswaySelectResourceGroupController);
 
   /* @ngInject */
-  function ExpresswaySelectResourceGroupController($stateParams, $translate, FeatureToggleService, ResourceGroupService, Notification) {
+  function ExpresswaySelectResourceGroupController($stateParams, $translate, ResourceGroupService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.clusterId = wizardData.expressway.clusterId;
@@ -15,7 +15,7 @@
     vm.assignToResourceGroup = 'no';
     vm._translation = {
       assignYes: $translate.instant('hercules.addResourceDialog.assignYes'),
-      assignNo: $translate.instant('hercules.addResourceDialog.assignNo')
+      assignNo: $translate.instant('hercules.addResourceDialog.assignNo'),
     };
     vm.next = next;
     vm.canGoNext = canGoNext;
@@ -24,24 +24,17 @@
 
     function init() {
 
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-        .then(function (supported) {
-          if (!supported) {
-            $stateParams.wizard.next();
+      ResourceGroupService.getAllAsOptions()
+        .then(function (options) {
+          if (options.length > 0) {
+            vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
+            vm.loading = false;
           } else {
-            ResourceGroupService.getAllAsOptions()
-              .then(function (options) {
-                if (options.length > 0) {
-                  vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
-                  vm.loading = false;
-                } else {
-                  $stateParams.wizard.next();
-                }
-              })
-              .catch(function (error) {
-                Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-              });
+            $stateParams.wizard.next();
           }
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     }
 

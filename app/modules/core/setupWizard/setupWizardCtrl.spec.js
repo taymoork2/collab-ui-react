@@ -1,19 +1,20 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
+
   beforeEach(function () {
-    this.initModules(
-      'Core'
-    );
+    this.initModules('Core');
 
     this.injectDependencies(
       '$controller',
       '$q',
       '$scope',
       '$state',
+      '$stateParams',
       'Authinfo',
       'FeatureToggleService',
-      'Orgservice'
+      'Orgservice',
+      'DirSyncService'
     );
 
     this.usageFixture = getJSONFixture('core/json/organizations/usage.json');
@@ -25,14 +26,15 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
-      licenseType: 'SHARED_DEVICES'
+      licenseType: 'SHARED_DEVICES',
     }]);
+
+    spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
+    spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
 
     spyOn(this.FeatureToggleService, 'supports').and.callFake(function (feature) {
       return this.$q.resolve(_.includes(this.enabledFeatureToggles, feature));
     }.bind(this));
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
-    spyOn(this.FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve(this.usageFixture));
 
     this._expectStepIndex = _expectStepIndex;
@@ -44,18 +46,18 @@ describe('SetupWizardCtrl', function () {
 
   function _expectStepIndex(step, index) {
     expect(_.findIndex(this.$scope.tabs, {
-      name: step
+      name: step,
     })).toBe(index);
   }
 
   function _expectSubStepIndex(step, subStep, index) {
     expect(_.chain(this.$scope.tabs)
       .find({
-        name: step
+        name: step,
       })
       .get('steps')
       .findIndex({
-        name: subStep
+        name: subStep,
       })
       .value()).toBe(index);
   }
@@ -70,7 +72,7 @@ describe('SetupWizardCtrl', function () {
   function expectSubStepOrder(macroStep, subSteps) {
     // get the step
     var stepVal = _.find(this.$scope.tabs, {
-      name: macroStep
+      name: macroStep,
     });
 
     // verify substeps length
@@ -84,7 +86,7 @@ describe('SetupWizardCtrl', function () {
 
   function initController() {
     this.$controller('SetupWizardCtrl', {
-      $scope: this.$scope
+      $scope: this.$scope,
     });
     this.$scope.$apply();
   }
@@ -127,7 +129,7 @@ describe('SetupWizardCtrl', function () {
   describe('When has COMMUNICATION license', function () {
     beforeEach(function () {
       this.Authinfo.getLicenses.and.returnValue([{
-        licenseType: 'COMMUNICATION'
+        licenseType: 'COMMUNICATION',
       }]);
       this.initController();
     });
@@ -143,7 +145,7 @@ describe('SetupWizardCtrl', function () {
 
   describe('When dirsync is enabled', function () {
     beforeEach(function () {
-      this.FeatureToggleService.supportsDirSync.and.returnValue(this.$q.resolve(true));
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
       this.initController();
     });
 
@@ -221,12 +223,12 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       this.Authinfo.isSetupDone.and.returnValue(true);
       this.Authinfo.getLicenses.and.returnValue([{
-        licenseType: 'COMMUNICATION'
+        licenseType: 'COMMUNICATION',
       }]);
       this.Authinfo.isCare.and.returnValue(true);
 
       this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
-      this.FeatureToggleService.supportsDirSync.and.returnValue(this.$q.resolve(true));
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
 
       this.initController();
     });
@@ -236,7 +238,7 @@ describe('SetupWizardCtrl', function () {
       this.expectSubStepOrder('planReview', ['init']);
       this.expectSubStepOrder('serviceSetup', ['init']);
       this.expectSubStepOrder('messagingSetup', ['setup']);
-      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);
     });
   });
@@ -246,8 +248,8 @@ describe('SetupWizardCtrl', function () {
       $scope: this.$scope,
       $stateParams: {
         onlyShowSingleTab: true,
-        currentTab: 'messagingSetup'
-      }
+        currentTab: 'messagingSetup',
+      },
     });
     this.$scope.$apply();
 
@@ -260,8 +262,8 @@ describe('SetupWizardCtrl', function () {
       $stateParams: {
         currentTab: 'enterpriseSettings',
         currentStep: 'init',
-        onlyShowSingleTab: true
-      }
+        onlyShowSingleTab: true,
+      },
     });
     this.$scope.$apply();
     this.expectStepOrder(['enterpriseSettings']);
@@ -337,6 +339,29 @@ describe('SetupWizardCtrl', function () {
           this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
         });
       });
+    });
+  });
+
+  describe('stateParams with onlyShowSingleTab and numberOfSteps', function () {
+    it('should only contain a single tab and specific steps if numberOfSteps is set', function () {
+      _.set(this.$stateParams, 'onlyShowSingleTab', true);
+      _.set(this.$stateParams, 'currentTab', 'enterpriseSettings');
+      _.set(this.$stateParams, 'currentStep', 'init');
+      _.set(this.$stateParams, 'numberOfSteps', 1);
+      this.initController();
+
+      this.expectStepOrder(['enterpriseSettings']);
+      this.expectSubStepOrder('enterpriseSettings', ['init']);
+    });
+
+    it('should only contain a single tab and remaining steps if numberOfSteps is not set', function () {
+      _.set(this.$stateParams, 'onlyShowSingleTab', true);
+      _.set(this.$stateParams, 'currentTab', 'enterpriseSettings');
+      _.set(this.$stateParams, 'currentStep', 'init');
+      this.initController();
+
+      this.expectStepOrder(['enterpriseSettings']);
+      this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
   });
 });

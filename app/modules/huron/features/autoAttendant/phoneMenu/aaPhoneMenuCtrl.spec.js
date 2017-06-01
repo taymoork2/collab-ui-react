@@ -3,10 +3,10 @@
 describe('Controller: AAPhoneMenuCtrl', function () {
   var controller;
   var FeatureToggleService;
-  var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService, AACommonService;
+  var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService;
   var $rootScope, $scope, $q;
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';
@@ -15,7 +15,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   var queueName = 'Sunlight Queue 1';
   var queues = [{
     queueName: queueName,
-    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b'
+    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
 
   }];
 
@@ -77,7 +77,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _FeatureToggleService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_, _AACommonService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _FeatureToggleService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
@@ -86,14 +86,12 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     QueueHelperService = _QueueHelperService_;
-    AACommonService = _AACommonService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(QueueHelperService, 'listQueues').and.returnValue($q.resolve(queues));
 
     AutoAttendantCeMenuModelService.clearCeMenuMap();
-    AACommonService.setRouteQueueToggle(true);
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     $scope.schedule = schedule;
     $scope.index = index;
@@ -106,7 +104,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     aaUiModel['openHours'].addEntryAt(index, menu);
 
     controller = $controller('AAPhoneMenuCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -151,8 +149,8 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   describe('deleteKeyAction', function () {
     it('should delete an existing keyAction object from the selectedActions array', function () {
-      controller.selectedActions = angular.copy(data.selectedActions);
-      controller.menuEntry = angular.copy(data.ceMenu);
+      controller.selectedActions = _.cloneDeep(data.selectedActions);
+      controller.menuEntry = _.cloneDeep(data.ceMenu);
       controller.deleteKeyAction(0);
       expect(controller.selectedActions.length).toEqual(1);
       expect(controller.selectedActions[0]).toEqual(data.oneSelectedAction);
@@ -161,8 +159,8 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   describe('keyChanged', function () {
     it('should change the key for an existing action', function () {
-      controller.menuEntry = angular.copy(data.ceMenu);
-      controller.selectedActions = angular.copy(data.selectedActions);
+      controller.menuEntry = _.cloneDeep(data.ceMenu);
+      controller.selectedActions = _.cloneDeep(data.selectedActions);
       var newKey = '3';
       controller.keyChanged(0, newKey);
       expect(controller.selectedActions[0].key).toEqual(newKey);
@@ -171,12 +169,12 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   describe('keyActionChanged', function () {
     it('should write Repeat-this-Menu action to the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
+      var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -189,13 +187,13 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
 
     it('should change Repeat-Menu to Dial-by-Extension action in the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
+      var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2MenuEntry(ceMenu.entries[1]);
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -211,14 +209,14 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
 
     it('Should remove the submenu from menu map when switching from Play Submenu action to other action', function () {
-      var ceMenu = angular.copy(data.ceMenu);
+      var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2Menu(ceMenu.entries[2]);
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
         "headers": [],
-        "attempts": 4
+        "attempts": 4,
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -237,14 +235,14 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
 
     it('should change Repeat-Menu to Play Submenu action in the model and copy the attempts from main menu', function () {
-      var ceMenu = angular.copy(data.ceMenu);
+      var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2Menu(ceMenu.entries[2]);
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
         "headers": [],
-        "attempts": attempts
+        "attempts": attempts,
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -262,14 +260,14 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
 
     it('should successfully change a Say-Message button to a Route-To-User button', function () {
-      var ceMenuWithSay = angular.copy(data.ceMenuWithSay);
-      var ceMenuWithRouteToUser = angular.copy(data.ceMenuWithRouteToUser);
+      var ceMenuWithSay = _.cloneDeep(data.ceMenuWithSay);
+      var ceMenuWithRouteToUser = _.cloneDeep(data.ceMenuWithRouteToUser);
       var phoneMenuEntry = raw2MenuEntry(ceMenuWithSay.entries[0]);
       var expectEntry = raw2MenuEntry(ceMenuWithRouteToUser.entries[0]);
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       phoneMenu.entries.push(phoneMenuEntry);
       controller.menuEntry = phoneMenu;
@@ -295,7 +293,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   describe('populateUiMenu', function () {
     it('should read the CeMenu and populate the Option menu', function () {
-      controller.menuEntry = angular.copy(data.ceMenu);
+      controller.menuEntry = _.cloneDeep(data.ceMenu);
       controller.selectedActions = [];
       controller.populateOptionMenu();
       var expectedActions = [];
@@ -311,7 +309,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   describe('populateUiMenu', function () {
     it('should read the CeMenu and populate the Option menu with blank values', function () {
-      controller.menuEntry = angular.copy(data.ceMenu);
+      controller.menuEntry = _.cloneDeep(data.ceMenu);
       controller.menuEntry.entries[0].actions[0].name = "";
 
       controller.selectedActions = [];

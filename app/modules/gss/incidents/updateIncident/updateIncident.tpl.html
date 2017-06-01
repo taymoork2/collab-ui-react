@@ -59,7 +59,7 @@
 
       <div class="sub-section">
         <label class="cs-input__label" for="updateIncidentMessage" translate="gss.incidentsPage.message"></label>
-        <textarea id="updateIncidentMessage" ng-model="updateIncidentCtrl.incidentForUpdate.message"></textarea>
+        <textarea id="updateIncidentMessage" ng-model="updateIncidentCtrl.incidentForUpdate.message" maxlength="4000" ></textarea>
       </div>
 
       <div class="sub-section">
@@ -78,11 +78,11 @@
 
               <div class="columns medium-2">
                 <a ng-show="!groupComponent.isOverridden" ng-click="updateIncidentCtrl.toggleOverridden(groupComponent)"
-                   translate="gss.overrideStatus">
+                   translate="gss.useDerivedStatus">
                 </a>
 
                 <a ng-show="groupComponent.isOverridden" ng-click="updateIncidentCtrl.toggleOverridden(groupComponent)"
-                   translate="gss.useDerivedStatus">
+                   translate="gss.overrideStatus">
                 </a>
               </div>
 
@@ -130,8 +130,8 @@
 
     <div class="messages-section">
       <h3 translate="gss.previousUpdated"></h3>
-
-      <ul>
+      <span ng-show="updateIncidentCtrl.isLoadingMessage"><i class="icon icon-spinner icon-2x"></i></span>
+      <ul ng-show="!updateIncidentCtrl.isLoadingMessage">
         <li ng-repeat="message in updateIncidentCtrl.incidentForUpdate.messages">
           <div ng-init="updateIncidentCtrl.initMessageData(message)">
             <div ng-show="!message.isEditingMessage">
@@ -140,6 +140,9 @@
               <div>
                 <a class="edit-message-link" ng-click="updateIncidentCtrl.showEditMessage(message)"
                    translate="common.edit">
+                </a>
+                <a class="edit-message-link" ng-if="!updateIncidentCtrl.isIncidentStatusResolved()" ng-click="updateIncidentCtrl.deleteMessage(message)"
+                   translate="common.delete">
                 </a>
               </div>
             </div>
@@ -166,7 +169,7 @@
 
             <div>
               <span translate="gss.incidentsPage.postedAt"></span>
-              <span>{{ message.postAt | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
+              <span>{{ message.createTime | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
             </div>
             <div>
               <span translate="gss.incidentsPage.lastUpdatedOn"></span>

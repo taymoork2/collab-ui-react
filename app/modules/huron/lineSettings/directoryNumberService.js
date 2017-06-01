@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('DirectoryNumber', DirectoryNumber);
+  module.exports = angular.module('huron.directory-number-service', [
+    require('modules/core/auth/auth'),
+    require('modules/huron/telephony/cmiServices'),
+  ])
+    .service('DirectoryNumber', DirectoryNumber)
+    .name;
 
   /* @ngInject */
   function DirectoryNumber(Authinfo, UserDirectoryNumberService, DirectoryNumberService, AlternateNumberService) {
@@ -18,26 +21,26 @@
       hasCustomAlertingName: false,
       callForwardAll: {
         voicemailEnabled: false,
-        destination: ''
+        destination: '',
       },
       callForwardBusy: {
         intVoiceMailEnabled: false,
         voicemailEnabled: false,
         intDestination: '',
-        destination: ''
+        destination: '',
       },
       callForwardNoAnswer: {
         intVoiceMailEnabled: false,
         voicemailEnabled: false,
         intDestination: '',
-        destination: ''
+        destination: '',
       },
       callForwardNotRegistered: {
         intVoiceMailEnabled: false,
         voicemailEnabled: false,
         intDestination: '',
-        destination: ''
-      }
+        destination: '',
+      },
     };
 
     var service = {
@@ -51,21 +54,21 @@
       getAlternateNumbers: getAlternateNumbers,
       addAlternateNumber: addAlternateNumber,
       updateAlternateNumber: updateAlternateNumber,
-      deleteAlternateNumber: deleteAlternateNumber
+      deleteAlternateNumber: deleteAlternateNumber,
     };
 
     return service;
     /////////////////////
 
     function getNewDirectoryNumber() {
-      return angular.copy(directoryNumberPayload);
+      return _.cloneDeep(directoryNumberPayload);
     }
 
     function getDirectoryNumberESN(uuid) {
       var esn;
       return DirectoryNumberService.get({
         customerId: Authinfo.getOrgId(),
-        directoryNumberId: uuid
+        directoryNumberId: uuid,
       }).$promise
         .then(function (data) {
           if (typeof data.alternateNumbers.enterpriseNumber.pattern !== 'undefined') {
@@ -79,10 +82,10 @@
     function getDirectoryNumber(uuid) {
       return DirectoryNumberService.get({
         customerId: Authinfo.getOrgId(),
-        directoryNumberId: uuid
+        directoryNumberId: uuid,
       }).$promise
         .then(function (data) {
-          var dn = angular.copy(directoryNumberPayload);
+          var dn = _.cloneDeep(directoryNumberPayload);
           dn.uuid = data.uuid;
           dn.pattern = data.pattern;
           dn.alertingName = data.alertingName;
@@ -131,7 +134,7 @@
     function deleteDirectoryNumber(uuid) {
       return DirectoryNumberService.delete({
         customerId: Authinfo.getOrgId(),
-        directoryNumberId: uuid
+        directoryNumberId: uuid,
       }).$promise;
     }
 
@@ -139,16 +142,16 @@
       return UserDirectoryNumberService.delete({
         customerId: Authinfo.getOrgId(),
         userId: userUuid,
-        directoryNumberId: dnUuid
+        directoryNumberId: dnUuid,
       }).$promise;
     }
 
     function updateDirectoryNumber(dnUuid, dnSettings) {
-      var dnPayload = angular.copy(dnSettings);
+      var dnPayload = _.cloneDeep(dnSettings);
       delete dnPayload.uuid; // causes 500 error if present for PUT
       return DirectoryNumberService.update({
         customerId: Authinfo.getOrgId(),
-        directoryNumberId: dnUuid
+        directoryNumberId: dnUuid,
       }, dnPayload).$promise;
     }
 
@@ -160,7 +163,7 @@
       return AlternateNumberService.query({
         customerId: Authinfo.getOrgId(),
         directoryNumberId: dnUuid,
-        alternatenumbertype: '+E.164 Number'
+        alternatenumbertype: '+E.164 Number',
       }).$promise;
     }
 
@@ -173,14 +176,14 @@
         'alternateNumberType': '+E.164 Number',
         'numMask': pattern,
         'routePartition': {
-          'name': routePartition
+          'name': routePartition,
         },
-        'addLocalRoutePartition': true
+        'addLocalRoutePartition': true,
       };
 
       return AlternateNumberService.save({
         customerId: Authinfo.getOrgId(),
-        directoryNumberId: dnUuid
+        directoryNumberId: dnUuid,
       }, alternateNumber, function (data, headers) {
         data.uuid = headers('location').split("/").pop();
         return data;
@@ -189,13 +192,13 @@
 
     function updateAlternateNumber(dnUuid, altNumUuid, pattern) {
       var alternateNumber = {
-        'numMask': pattern
+        'numMask': pattern,
       };
 
       return AlternateNumberService.update({
         customerId: Authinfo.getOrgId(),
         directoryNumberId: dnUuid,
-        alternateNumberId: altNumUuid
+        alternateNumberId: altNumUuid,
       }, alternateNumber, function (data) {
         data.uuid = altNumUuid;
         return data;
@@ -206,7 +209,7 @@
       return AlternateNumberService.delete({
         customerId: Authinfo.getOrgId(),
         directoryNumberId: dnUuid,
-        alternateNumberId: altNumUuid
+        alternateNumberId: altNumUuid,
       }).$promise;
     }
 

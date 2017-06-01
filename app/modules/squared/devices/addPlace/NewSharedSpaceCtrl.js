@@ -19,8 +19,8 @@
     vm.next = function () {
       $stateParams.wizard.next({
         account: {
-          name: vm.deviceName
-        }
+          name: vm.deviceName,
+        },
       });
     };
 

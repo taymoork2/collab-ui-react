@@ -6,7 +6,11 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo,
+    FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal,
+    ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService,
+    TerminusService, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService,
+    FeatureToggleService, ConfirmAtaRebootModal) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -15,8 +19,26 @@
     deviceOverview.country = "";
     deviceOverview.selectedCountry = "";
     deviceOverview.hideE911Edit = true;
-
+    deviceOverview.faxEnabled = false;
+    deviceOverview.t38FeatureToggle = false;
+    deviceOverview.cpcFeatureToggle = false;
+    deviceOverview.disableAtaRebootSettings = true;
+    deviceOverview.actionList = [{
+      actionKey: 'common.edit',
+      actionFunction: goToEmergencyServices,
+    }];
     function init() {
+      FeatureToggleService.csdmT38GetStatus().then(function (response) {
+        deviceOverview.t38FeatureToggle = response;
+      });
+      FeatureToggleService.csdmAtaCpcGetStatus().then(function (response) {
+        deviceOverview.cpcFeatureToggle = response;
+      });
+      FeatureToggleService.csdmAtaRebootGetStatus().then(function (response) {
+        deviceOverview.ataRebootWarningToggle = response;
+        deviceOverview.disableAtaRebootSettings = false;
+      });
+
       displayDevice($stateParams.currentDevice);
 
       CsdmDataModelService.reloadItem($stateParams.currentDevice).then(function (updatedDevice) {
@@ -48,42 +70,59 @@
       if (deviceOverview.currentDevice.isHuronDevice) {
         if (!deviceOverview.tzIsLoaded) {
           initTimeZoneOptions().then(function () {
-            loadDeviceInfo();
+            getCurrentDeviceInfo();
           });
         }
         if (!deviceOverview.countryIsLoaded) {
           initCountryOptions().then(function () {
-            loadDeviceInfo();
+            getCurrentDeviceInfo();
           });
         }
       }
 
+      if (deviceOverview.currentDevice.isATA) {
+        getCurrentAtaSettings();
+      }
+
       deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
 
-      deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
-
-      deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isOnline;
+      FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(function (feature) {
+        var placeUpgradeChannelSupported = feature && deviceOverview.currentDevice.productFamily === 'Cloudberry';
+        deviceOverview.canChangeUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && deviceOverview.currentDevice.isOnline && !placeUpgradeChannelSupported;
+        deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && (!deviceOverview.currentDevice.isOnline || placeUpgradeChannelSupported);
+      });
 
       deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
       resetSelectedChannel();
     }
 
+    function getCurrentAtaSettings() {
+      deviceOverview.updatingT38Settings = true;
+      deviceOverview.updatingCpcSettings = true;
+      huronDeviceService.getAtaInfo(deviceOverview.currentDevice).then(function (result) {
+        deviceOverview.faxEnabled = result.t38FaxEnabled;
+        deviceOverview.cpcEnabled = result.cpcDelay > 2;
+        deviceOverview.updatingT38Settings = false;
+        deviceOverview.updatingCpcSettings = false;
+      });
+    }
+
     function getEmergencyInformation() {
       if (!deviceOverview.currentDevice.isHuronDevice) {
         deviceOverview.emergencyCallbackNumber = _.get(deviceOverview, 'lines[0].alternate');
         deviceOverview.showE911 = deviceOverview.emergencyCallbackNumber;
-        if (!deviceOverview.showE911) {
-          deviceOverview.hideE911Edit = false;
+        if (deviceOverview.showE911) {
+          getEmergencyAddress();
+        } else if (_.get(deviceOverview, 'lines[0]')) {
           EmergencyServicesService.getCompanyECN().then(function (result) {
             deviceOverview.showE911 = result;
             deviceOverview.emergencyCallbackNumber = result;
             if (result) {
+              deviceOverview.hideE911Edit = false;
               getEmergencyAddress();
             }
           });
-        } else {
-          getEmergencyAddress();
         }
       } else {
         deviceOverview.showE911 = true;
@@ -92,9 +131,9 @@
     }
 
     function getEmergencyAddress() {
-      TerminusUserDeviceE911Service.get({
+      TerminusService.customerNumberE911V2().get({
         customerId: Authinfo.getOrgId(),
-        number: deviceOverview.emergencyCallbackNumber
+        number: deviceOverview.emergencyCallbackNumber,
       }).$promise.then(function (info) {
         deviceOverview.emergencyAddress = info.e911Address;
         deviceOverview.emergencyAddressStatus = info.status;
@@ -119,27 +158,23 @@
 
     function initCountryOptions() {
       deviceOverview.countryPlaceholder = $translate.instant('deviceOverviewPage.countryPlaceholder');
-
       if (!deviceOverview.countryOptions) {
-        return ServiceSetup.getSiteCountries()
-          .then(function (countries) {
-            deviceOverview.countryOptions = _.sortBy(ServiceSetup.getTranslatedSiteCountries(countries), 'label');
-          });
+        return DeviceOverviewService.getCountryOptions().then(function (countries) {
+          deviceOverview.countryOptions = countries;
+        });
       } else {
         return $q.resolve();
       }
     }
 
-    function loadDeviceInfo() {
+    function getCurrentDeviceInfo() {
       huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result.timeZone;
         deviceOverview.emergencyCallbackNumber = result.emergencyCallbackNumber;
         deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
         deviceOverview.tzIsLoaded = true;
-        if (result.country) {
-          deviceOverview.country = result.country;
-          deviceOverview.selectedCountry = getCountryFromId(result.country);
-        }
+        deviceOverview.country = result.country;
+        deviceOverview.selectedCountry = DeviceOverviewService.findCountryByCode(deviceOverview.countryOptions, result.country);
         deviceOverview.countryIsLoaded = true;
       }).then(getEmergencyInformation);
     }
@@ -150,12 +185,6 @@
           return o.id === timeZone.timeZone;
         });
       }
-    }
-
-    function getCountryFromId(country) {
-      return _.find(deviceOverview.countryOptions, function (o) {
-        return o.value === country;
-      });
     }
 
     function pollLines() {
@@ -181,7 +210,84 @@
       });
     }
 
+    deviceOverview.saveT38Settings = function () {
+      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+        ConfirmAtaRebootModal
+          .open({
+            name: $translate.instant('ataSettings.t38Label'),
+          })
+          .then(executeSaveT38Settings)
+          .catch(getCurrentAtaSettings);
+      } else {
+        executeSaveT38Settings();
+      }
+    };
+
+    function executeSaveT38Settings() {
+      deviceOverview.updatingT38Settings = true;
+      $timeout(function () {
+        var settings = {
+          t38FaxEnabled: deviceOverview.faxEnabled,
+        };
+        huronDeviceService.setSettingsForAta(deviceOverview.currentDevice, settings)
+        .then(function () {
+          Notification.success('ataSettings.savedT38');
+        })
+        .catch(function (error) {
+          Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
+        })
+        .finally(function () {
+          deviceOverview.updatingT38Settings = false;
+        });
+      }, 100);
+    }
+
+    deviceOverview.saveCpcSettings = function () {
+      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+        ConfirmAtaRebootModal
+          .open({
+            name: $translate.instant('ataSettings.cpcLabel'),
+          })
+          .then(executeSaveCpcSettings)
+          .catch(getCurrentAtaSettings);
+      } else {
+        executeSaveCpcSettings();
+      }
+    };
+
+    function executeSaveCpcSettings() {
+      deviceOverview.updatingCpcSettings = true;
+      $timeout(function () {
+        var settings = {
+          cpcDelay: deviceOverview.cpcEnabled ? 240 : 2,
+        };
+        huronDeviceService.setSettingsForAta(deviceOverview.currentDevice, settings)
+          .then(function () {
+            Notification.success('ataSettings.savedCpc');
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
+            getCurrentAtaSettings();
+          })
+          .finally(function () {
+            deviceOverview.updatingCpcSettings = false;
+          });
+      }, 100);
+    }
+
     deviceOverview.saveTimeZoneAndWait = function () {
+      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+        ConfirmAtaRebootModal
+          .open({ name: $translate.instant('deviceOverviewPage.timeZone'),
+          })
+          .then(executeSaveTimeZoneAndWait)
+          .catch(getCurrentDeviceInfo);
+      } else {
+        executeSaveTimeZoneAndWait();
+      }
+    };
+
+    function executeSaveTimeZoneAndWait() {
       var newValue = deviceOverview.selectedTimeZone.id;
       if (newValue !== deviceOverview.timeZone) {
         deviceOverview.updatingTimeZone = true;
@@ -189,15 +295,28 @@
           .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
           .catch(function (error) {
             Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
-            loadDeviceInfo();
+            getCurrentDeviceInfo();
           })
           .finally(function () {
             deviceOverview.updatingTimeZone = false;
           });
       }
-    };
+    }
 
     deviceOverview.saveCountryAndWait = function () {
+      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+        ConfirmAtaRebootModal
+          .open({
+            name: $translate.instant('deviceOverviewPage.country'),
+          })
+          .then(executeSaveCountryAndWait)
+          .catch(getCurrentDeviceInfo);
+      } else {
+        executeSaveCountryAndWait();
+      }
+    };
+
+    function executeSaveCountryAndWait() {
       var newValue = deviceOverview.selectedCountry.value;
       if (newValue !== deviceOverview.country) {
         deviceOverview.updatingCountry = true;
@@ -205,21 +324,21 @@
           .then(_.partial(waitForDeviceToUpdateCountry, newValue))
           .catch(function (error) {
             Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
-            loadDeviceInfo();
+            getCurrentDeviceInfo();
           })
           .finally(function () {
             deviceOverview.updatingCountry = false;
-            deviceOverview.selectedCountry = getCountryFromId(newValue);
+            deviceOverview.selectedCountry = DeviceOverviewService.findCountryByCode(deviceOverview.countryOptions, newValue);
           });
       }
-    };
+    }
 
-    deviceOverview.goToEmergencyServices = function () {
+    function goToEmergencyServices() {
       var data = {
         currentAddress: deviceOverview.emergencyAddress,
         currentNumber: deviceOverview.emergencyCallbackNumber,
         status: deviceOverview.emergencyAddressStatus,
-        staticNumber: !deviceOverview.currentDevice.isHuronDevice
+        staticNumber: !deviceOverview.currentDevice.isHuronDevice,
       };
 
       if ($state.current.name === 'user-overview.csdmDevice' || $state.current.name === 'place-overview.csdmDevice') {
@@ -227,7 +346,7 @@
       } else {
         $state.go('device-overview.emergencyServices', data);
       }
-    };
+    }
 
     function waitForDeviceToUpdateTimeZone(newValue) {
       var deferred = $q.defer();
@@ -258,7 +377,8 @@
 
     function pollDeviceForNewCountry(newValue, endTime, deferred) {
       huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
-        if (result.country === newValue) {
+        //Temporary workaround to handle null reset until CMI Device API returns null.
+        if (result.country === newValue || newValue === null) {
           Notification.success('deviceOverviewPage.countryUpdated');
           return deferred.resolve();
         }
@@ -381,7 +501,7 @@
       }
       return {
         label: label,
-        value: channel
+        value: channel,
       };
     }
 

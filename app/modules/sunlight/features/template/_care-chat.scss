@@ -4,7 +4,6 @@
 .careChatSetup {
   @extend %content-header;
 
-
   .cs-setupassistant--content {
     .cs-card-container {
       @include vr-spacing(p, 0);

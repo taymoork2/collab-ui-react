@@ -58,18 +58,18 @@
           'autoGridCount': true,
           //'title': 'Last 7 Days',
           'centerLabels': true,
-          'equalSpacing': true
+          'equalSpacing': true,
         },
         'listeners': [],
         'export': {
-          'enabled': true
+          'enabled': true,
         },
         'chartCursor': {
           'enabled': true,
           'categoryBalloonDateFormat': 'YYYY-MM-DD',
           'cursorColor': chartColors.primaryDarker,
           'cursorAlpha': 0.5,
-          'valueLineAlpha': 0.5
+          'valueLineAlpha': 0.5,
         },
         'trendLines': [
 
@@ -89,8 +89,8 @@
             'bulletColor': '#ffffff',
             'bulletBorderAlpha': 1,
             'useLineColorForBulletBorder': true,
-            'labelFunction': getLabel
-          }
+            'labelFunction': getLabel,
+          },
         ],
         'guides': [
 
@@ -98,20 +98,20 @@
         'valueAxes': [
           {
             'id': 'ValueAxis-1',
-            'title': $translate.instant('reportsPage.usageReports.callHours')
-          }
+            'title': $translate.instant('reportsPage.usageReports.callHours'),
+          },
         ],
         'allLabels': [
 
         ],
         'balloon': {
-          'cornerRadius': 4
+          'cornerRadius': 4,
         },
         'legend': {
           'enabled': false,
           'useGraphSettings': true,
-          'valueWidth': 100
-        }
+          'valueWidth': 100,
+        },
       };
     }
 

@@ -8,7 +8,7 @@
     if (!avalonRoomsUrlCache) {
       avalonRoomsUrlCache = new CacheFactory('avalonRoomsUrlCache', {
         maxAge: 300 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
 
@@ -37,19 +37,21 @@
     }
 
     function getArgonautServiceUrl(argonautParam) {
-      var url = UrlConfig.getArgonautReportSizeUrl();
-      var emailAddress = _.get(argonautParam, 'emailAddress');
+      var url = UrlConfig.getArgonautReportUrl() + '/size';
+      var emailAddresses = _.get(argonautParam, 'emailAddresses', null);
+      var roomIds = _.get(argonautParam, 'roomIds');
       var encryptionKeyUrl = _.get(argonautParam, 'encryptionKeyUrl');
       var startDate = _.get(argonautParam, 'startDate');
       var endDate = _.get(argonautParam, 'endDate');
-      var query = _.get(argonautParam, 'query');
+      var query = _.get(argonautParam, 'query', null);
       return $http
         .post(url, {
-          emailAddress: emailAddress,
+          emailAddresses: emailAddresses,
+          roomIds: roomIds,
           encryptionKeyUrl: encryptionKeyUrl,
           startDate: startDate,
           endDate: endDate,
-          query: query
+          query: query,
         });
     }
 
@@ -97,9 +99,11 @@
     function createReport(postParams) {
       var orgId = Authinfo.getOrgId();
       var displayName = _.get(postParams, 'displayName');
-      var roomId = _.get(postParams, 'roomId');
       var startDate = _.get(postParams, 'startDate');
       var endDate = _.get(postParams, 'endDate');
+      var keyword = _.get(postParams, 'keyword');
+      var roomIds = _.get(postParams, 'roomIds');
+      var emailAddresses = _.get(postParams, 'emailAddresses');
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
       var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
       var roomParams = {
@@ -107,15 +111,17 @@
         roomQuery: {
           startDate: sd,
           endDate: ed,
-          roomId: roomId
-        }
+          keyword: keyword,
+          roomIds: roomIds,
+          emailAddresses: emailAddresses,
+        },
       };
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', roomParams)
         .then(extractData);
     }
 
-    //new report generation api using argonaut notes:
+    // new report generation api using argonaut notes:
     // caller must pass an options object with the following properties:
     // - 'emailAddresses' => an array of email addresses
     // - 'query' => keyword entered into the search
@@ -128,7 +134,7 @@
       var url = UrlConfig.getArgonautReportUrl();
       var emailAddresses = _.get(postParams, 'emailAddresses');
       var query = _.get(postParams, 'query', null);
-      var roomIds = _.get(postParams, 'roomIds', null);
+      var roomIds = _.get(postParams, 'roomIds');
       var encryptionKeyUrl = _.get(postParams, 'encryptionKeyUrl');
       var responseUri = _.get(postParams, 'responseUri');
       var sd = _.get(postParams, 'startDate');
@@ -141,7 +147,7 @@
           encryptionKeyUrl: encryptionKeyUrl,
           responseUri: responseUri,
           startDate: sd,
-          endDate: ed
+          endDate: ed,
         });
     }
 
@@ -152,7 +158,7 @@
         "roomId": roomId,
         "responseUrl": responseUrl,
         "startDate": sd,
-        "endDate": ed
+        "endDate": ed,
       });
     }
 
@@ -173,17 +179,18 @@
 
     function setEntitledForCompliance(orgId, userId, entitled) {
       return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
-        entitledForCompliance: entitled
+        entitledForCompliance: entitled,
       });
     }
 
     function downloadReport(report) {
       return $http.get(report.downloadUrl, {
-        responseType: 'arraybuffer'
-      }).success(function (data) {
+        responseType: 'arraybuffer',
+      }).then(function (response) {
+        var data = response.data;
         var fileName = 'report_' + report.id + '.zip';
         var file = new $window.Blob([data], {
-          type: 'application/zip'
+          type: 'application/zip',
         });
         if ($window.navigator.msSaveOrOpenBlob) {
           // IE
@@ -197,7 +204,7 @@
           downloadLink.attr({
             'href': $window.URL.createObjectURL(file),
             'download': fileName,
-            'target': '_blank'
+            'target': '_blank',
           });
           $document.find('body').append(downloadContainer);
           $timeout(function () {
@@ -221,7 +228,7 @@
       patchReport: patchReport,
       deleteReport: deleteReport,
       setEntitledForCompliance: setEntitledForCompliance,
-      downloadReport: downloadReport
+      downloadReport: downloadReport,
     };
   }
 

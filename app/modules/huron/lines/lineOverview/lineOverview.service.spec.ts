@@ -15,6 +15,8 @@ describe('Service: LineOverviewService', () => {
       'SharedLineService',
       'CallerIDService',
       'AutoAnswerService',
+      'HuronVoicemailService',
+      'HuronUserService',
       '$rootScope',
       '$scope',
       '$q',
@@ -109,7 +111,8 @@ describe('Service: LineOverviewService', () => {
           description: phone.description,
           model: phone.model,
           enabled: phone.enabled,
-          mode: phone.enabled ? phone.mode : undefined }));
+          mode: phone.enabled ? phone.mode : undefined,
+        }));
     });
     autoAnswerData.member = new AutoAnswerMember(_.get(autoAnswerRead, AutoAnswerConst.MEMBER));
     this.autoAnswer = autoAnswerData;
@@ -122,12 +125,13 @@ describe('Service: LineOverviewService', () => {
     this.lineOverview.callerId = this.callerId;
     this.lineOverview.companyNumbers = [];
     this.lineOverview.autoAnswer = this.autoAnswer;
+    this.lineOverview.voicemailEnabled = false;
+    this.lineOverview.services = [];
 
     this.getLineDefer = this.$q.defer();
     spyOn(this.LineService, 'getLine').and.returnValue(this.getLineDefer.promise);
 
-    this.updateLineDefer = this.$q.defer();
-    spyOn(this.LineService, 'updateLine').and.returnValue(this.updateLineDefer.promise);
+    spyOn(this.LineService, 'updateLine').and.returnValue(this.$q.resolve());
 
     this.createLineDefer = this.$q.defer();
     spyOn(this.LineOverviewService, 'createLine').and.returnValue(this.createLineDefer.promise);
@@ -165,6 +169,13 @@ describe('Service: LineOverviewService', () => {
 
     spyOn(this.LineOverviewService, 'cloneLineOverviewData').and.callThrough();
     spyOn(this.$q, 'all').and.callThrough();
+
+    this.userServiceDefer = this.$q.defer();
+    spyOn(this.HuronUserService, 'getUserServices').and.returnValue(this.userServiceDefer.promise);
+    spyOn(this.HuronVoicemailService, 'isEnabledForUser').and.returnValue(false);
+    spyOn(this.HuronVoicemailService, 'update').and.returnValue(this.$q.resolve(200));
+
+    installPromiseMatchers();
   });
 
   describe('get exising line', () => {
@@ -176,10 +187,11 @@ describe('Service: LineOverviewService', () => {
       this.getCallerIdDefer.resolve(this.callerId);
       this.listCompanyNumbersDefer.resolve([]);
       this.getAutoAnswerDefer.resolve(this.autoAnswer);
+      this.userServiceDefer.resolve([]);
     });
 
     it('should call LineService.getLine and CallForward.getCallForward', function () {
-      this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001').then( (lineOverview) => {
+      this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001').then((lineOverview) => {
         expect(lineOverview).toEqual(this.lineOverview);
       });
       this.$rootScope.$digest();
@@ -223,7 +235,7 @@ describe('Service: LineOverviewService', () => {
         this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
         this.$rootScope.$digest();
         this.lineOverview.line.external = '+9725551212';
-        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
+        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001', this.lineOverview, []);
         expect(this.LineService.updateLine).toHaveBeenCalled();
         expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
         expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
@@ -234,7 +246,7 @@ describe('Service: LineOverviewService', () => {
         this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
         this.$rootScope.$digest();
         this.lineOverview.callForward.callForwardAll.destination = '88888';
-        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
+        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001', this.lineOverview, []);
         expect(this.LineService.updateLine).not.toHaveBeenCalled();
         expect(this.CallForwardService.updateCallForward).toHaveBeenCalled();
         expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
@@ -245,7 +257,7 @@ describe('Service: LineOverviewService', () => {
         this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
         this.$rootScope.$digest();
         this.lineOverview.callerId.externalCallerIdType = 'EXT_CALLER_ID_CUSTOM';
-        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
+        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001', this.lineOverview, []);
         expect(this.LineService.updateLine).not.toHaveBeenCalled();
         expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
         expect(this.$q.all).toHaveBeenCalledWith([]);
@@ -253,17 +265,47 @@ describe('Service: LineOverviewService', () => {
       });
 
       it('should only update autoAnswer when only autoAnswer is changed', function () {
-        this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
-        this.$rootScope.$digest();
-        this.lineOverview.autoAnswer.phones[0].mode = AutoAnswerConst.HEADSET;
-        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
+        let promise = this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
+        promise.then(() => {
+          this.lineOverview.autoAnswer.phones[0].mode = AutoAnswerConst.HEADSET;
+          this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001', this.lineOverview, []);
 
-        expect(this.LineService.updateLine).not.toHaveBeenCalled();
-        expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
-        expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
-        expect(this.AutoAnswerService.createUpdateAutoAnswerPayload).toHaveBeenCalled();
-        expect(this.AutoAnswerService.updateAutoAnswer).toHaveBeenCalled();
+          expect(this.LineService.updateLine).not.toHaveBeenCalled();
+          expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
+          expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
+          expect(this.AutoAnswerService.createUpdateAutoAnswerPayload).toHaveBeenCalled();
+          expect(this.AutoAnswerService.updateAutoAnswer).toHaveBeenCalled();
+        });
+        this.$rootScope.$digest();
+        expect(promise).toBeResolved();
+
       });
+    });
+  });
+
+  describe('change extension', () => {
+    beforeEach(function () {
+      this.getLineDefer.resolve(_.cloneDeep(this.line));
+      this.getCallForwardDefer.resolve(_.cloneDeep(this.callForward));
+      this.getSharedLinesDefer.resolve(_.cloneDeep(this.sharedLines));
+      this.getSharedLinePhonesDefer.resolve(_.cloneDeep(this.sharedlinePhones));
+      this.getCallerIdDefer.resolve(_.cloneDeep(this.callerId));
+      this.getAutoAnswerDefer.resolve(_.cloneDeep(this.autoAnswer));
+      this.listCompanyNumbersDefer.resolve([]);
+      this.userServiceDefer.resolve([]);
+    });
+
+    it('save should call PUT after changing extension', function () {
+      let promise = this.LineOverviewService.get(LineConsumerType.USERS, '12345', '0000001');
+      promise.then((_lineOverviewData) => {
+        _lineOverviewData.line.internal = '55555';
+        _lineOverviewData.voicemailEnabled = true;
+        let promise2 = this.LineOverviewService.save(LineConsumerType.USERS, '12345', '0000001', _lineOverviewData, []);
+        promise2.then(() => {
+          expect(this.HuronVoicemailService.update).toHaveBeenCalled();
+        });
+      });
+      expect(promise).toBeResolved();
     });
   });
 
@@ -311,7 +353,7 @@ describe('Service: LineOverviewService', () => {
       lineOverviewNewLine.line = this.newLine;
       lineOverviewNewLine.callForward = this.callForward;
       lineOverviewNewLine.line.internal = '12345';
-      this.LineOverviewService.save(LineConsumerType.PLACES, '12345', this.newLine.uuid, lineOverviewNewLine, this.newSharedLineMembers);
+      this.LineOverviewService.save(LineConsumerType.PLACES, '12345', this.newLine.uuid, lineOverviewNewLine, this.newSharedLineMembers, []);
       this.$rootScope.$digest();
 
       expect(this.LineOverviewService.createLine).toHaveBeenCalled();

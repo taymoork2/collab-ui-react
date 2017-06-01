@@ -6,7 +6,7 @@
     .factory('OverviewHybridMediaNotification', OverviewHybridMediaNotification);
 
   /* @ngInject */
-  function OverviewHybridMediaNotification($state, Orgservice) {
+  function OverviewHybridMediaNotification($state, HybridServicesFlagService, HybridServicesUtilsService) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,18 +14,18 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            Orgservice.setHybridServiceAcknowledged('squared-fusion-media');
+            HybridServicesFlagService.raiseFlag(HybridServicesUtilsService.getAckFlagForHybridServiceId('squared-fusion-media'));
           },
           link: function () {
             $state.go('media-service-v2.list');
           },
           linkText: 'homePage.getStarted',
           name: 'media',
-          text: 'homePage.setUpHybridMediaService'
+          text: 'homePage.setUpHybridMediaService',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

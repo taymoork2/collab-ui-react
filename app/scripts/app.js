@@ -59,11 +59,8 @@
 
   require('./app.dependencies');
 
-  angular.module('atlas.templates', []);
-  // ngtemplate-loader will load templates into atlas.templates
-  requireAll(require.context("modules/", true, /\.\/.*\.html$/));
-
   angular.module('wx2AdminWebClientApp', [
+    require('./app.templates'),
     require('modules/core/scripts/controllers/bodyCtrl'),
     require('modules/core/analytics'),
     require('modules/core/auth/auth'),
@@ -72,20 +69,24 @@
     require('modules/core/auth/token.service'),
     require('modules/core/auth/idle').default,
     require('modules/core/config/config'),
+
+    // TODO: eventually a larger component encapsulating customer-overview should supercede this
+    require('modules/core/customers/customerSubscriptions/adminList').default,
+
     require('modules/core/featureToggle').default,
     require('modules/core/users').default,
     require('modules/core/csvDownload').default,
-    require('modules/core/l10n/languages'),
+    require('modules/core/l10n').default,
     require('modules/core/modal').default,
     require('modules/core/notifications').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/healthMonitor/healthService'),
     require('modules/core/users').default,
-    require('modules/core/scripts/services/storage'),
     require('modules/core/scripts/services/localize'),
     require('modules/core/scripts/services/utils'),
     require('modules/core/scripts/services/log'),
-    require('modules/core/scripts/services/sessionstorage'),
+    require('modules/core/storage').default,
+    require('modules/core/itProPack').default,
     require('modules/core/scripts/services/logmetricsservice'),
     require('modules/core/scripts/services/responseinterceptor'),
     require('modules/core/scripts/services/readonly.interceptor'),
@@ -95,8 +96,7 @@
     require('modules/core/trackingId/trackingId.module'),
     require('modules/online/analytics').default,
     require('modules/online/upgrade').default,
-    'atlas.templates',
-    'collab.ui',
+    require('collab-ui-ng').default,
     'ct.ui.router.extras.sticky',
     'ct.ui.router.extras.previous',
     'ngAnimate',
@@ -105,13 +105,9 @@
     'ngResource',
     'ngSanitize',
     'oc.lazyLoad',
-    'pascalprecht.translate',
+    require('angular-translate'),
     'ui.router',
   ]).run(require('./apprun'))
     .config(require('./app.exceptions.config').default);
   require('./appconfig');
-
-  function requireAll(requireContext) {
-    return requireContext.keys().forEach(requireContext);
-  }
 }());

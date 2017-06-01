@@ -14,19 +14,19 @@ describe('Controller:MediaServiceMetricsContoller', function () {
   var timeOptions = [{
     value: 0,
     label: 'mediaFusion.metrics.today',
-    description: 'mediaFusion.metrics.today2'
+    description: 'mediaFusion.metrics.today2',
   }, {
     value: 1,
     label: 'mediaFusion.metrics.week',
-    description: 'mediaFusion.metrics.week2'
+    description: 'mediaFusion.metrics.week2',
   }, {
     value: 2,
     label: 'mediaFusion.metrics.month',
-    description: 'mediaFusion.metrics.month2'
+    description: 'mediaFusion.metrics.month2',
   }, {
     value: 3,
     label: 'mediaFusion.metrics.threeMonths',
-    description: 'mediaFusion.metrics.threeMonths2'
+    description: 'mediaFusion.metrics.threeMonths2',
   }];
 
   var allClusters = 'mediaFusion.metrics.allclusters';
@@ -53,13 +53,13 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     Config = _Config_;
 
     spyOn(MetricsGraphService, 'setCallVolumeGraph').and.returnValue({
-      'dataProvider': callVolumeData
+      'dataProvider': callVolumeData,
     });
     spyOn(MetricsGraphService, 'setAvailabilityGraph').and.returnValue({
-      'dataProvider': clusteravailabilityData
+      'dataProvider': clusteravailabilityData,
     });
     spyOn(MetricsGraphService, 'setUtilizationGraph').and.returnValue({
-      'dataProvider': dummydata
+      'dataProvider': dummydata,
     });
     httpMock.when('GET', /^\w+.*/).respond({});
     spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.resolve(callVolumeGraphData));
@@ -82,7 +82,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       DummyMetricsReportService: DummyMetricsReportService,
       $interval: $interval,
       Log: Log,
-      Config: Config
+      Config: Config,
     });
     //$scope.$apply();
   }));
@@ -155,8 +155,8 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
           "callsOnPremise": 8,
-          "callsOverflow": 4
-        }
+          "callsOverflow": 4,
+        },
       };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
@@ -177,8 +177,8 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       var response = {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-          "callsOnPremise": 23
-        }
+          "callsOnPremise": 23,
+        },
       };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
@@ -197,8 +197,8 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       var response = {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-          "callsOverflow": 14
-        }
+          "callsOverflow": 14,
+        },
       };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
@@ -218,8 +218,8 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
           "callsOnPremise": 0,
-          "callsOverflow": 0
-        }
+          "callsOverflow": 0,
+        },
       };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
@@ -241,8 +241,8 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
           "clusterId": "MFA",
-          "callsRedirect": 14
-        }
+          "callsRedirect": 14,
+        },
       };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
@@ -261,8 +261,8 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       var response = {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-          "clusterId": "MFA"
-        }
+          "clusterId": "MFA",
+        },
       };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));

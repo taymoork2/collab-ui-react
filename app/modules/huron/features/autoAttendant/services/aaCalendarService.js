@@ -14,7 +14,7 @@
       createCalendar: createCalendar,
       updateCalendar: updateCalendar,
       deleteCalendar: deleteCalendar,
-      updateCalendarName: updateCalendarName
+      updateCalendarName: updateCalendarName,
     };
 
     return service;
@@ -23,14 +23,14 @@
 
     function listCalendars() {
       return calendarService.query({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }).$promise;
     }
 
     function readCalendar(aCalendarId) {
       return calendarService.get({
         customerId: Authinfo.getOrgId(),
-        scheduleId: aCalendarId
+        scheduleId: aCalendarId,
       }).$promise;
     }
 
@@ -38,11 +38,11 @@
 
       var data = {
         scheduleData: iCalendarDefinition,
-        scheduleName: calendarName
+        scheduleName: calendarName,
       };
 
       return calendarService.save({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       },
         data
       ).$promise;
@@ -52,12 +52,12 @@
 
       var data = {
         scheduleData: iCalendarDefinition,
-        scheduleName: calendarName
+        scheduleName: calendarName,
       };
 
       return calendarService.update({
         customerId: Authinfo.getOrgId(),
-        scheduleId: aCalendarId
+        scheduleId: aCalendarId,
       },
         data
       ).$promise;
@@ -66,7 +66,7 @@
     function deleteCalendar(aCalendarId) {
       return calendarService.delete({
         customerId: Authinfo.getOrgId(),
-        scheduleId: aCalendarId
+        scheduleId: aCalendarId,
       }).$promise;
 
     }
@@ -77,7 +77,7 @@
         deferred.resolve({
           scheduleId: scheduleId,
           calName: calName,
-          scheduleData: data.scheduleData
+          scheduleData: data.scheduleData,
         });
       }, function (error) {
         deferred.reject(error);

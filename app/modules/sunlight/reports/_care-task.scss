@@ -1,4 +1,4 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
 @import 'modules/sunlight/reports/_pagination';
 
 .care-card-report {
@@ -11,7 +11,7 @@
     text-align: center;
   }
 
- .ui-grid-viewport {
+  .ui-grid-viewport {
     height: auto !important;
   }
 
@@ -27,6 +27,15 @@
     &:hover {
       background-color: transparent;
     }
+  }
+
+  .ui-grid-ui-error {
+    color: $color-negative-base;
+  }
+
+  .ui-grid-ui-deleted {
+    color: $gray-light-1;
+    font-style: italic;
   }
 
   .ui-grid-header-cell-wrapper {
@@ -58,7 +67,7 @@
     border-right: rem-calc(1) solid $gray-light-2;
   }
 
-  .ui-grid-filter-container { display: none!important; }
+  .ui-grid-filter-container { display: none !important; }
 
   #paginator {
     float: right;
@@ -66,5 +75,17 @@
     margin-top: 0;
     padding-bottom: 0;
     padding-top: 0;
+  }
+}
+
+.amcharts-export-menu .export-main {
+  overflow: visible;
+
+  ul {
+    padding: 0;
+
+    .export-list {
+      overflow: visible;
+    }
   }
 }

@@ -24,7 +24,6 @@
          */
         ata.defaultInput = 3;
         ata.defaultOutput = 11;
-        ata.defaultImpedance = 0;
 
         /*
          * Settings, minimum, maximum and value.
@@ -37,8 +36,8 @@
           options: {
             showSelectionBar: true,
             floor: ata.inputMin,
-            ceil: ata.inputMax
-          }
+            ceil: ata.inputMax,
+          },
         };
 
         ata.outputMin = -14;
@@ -48,23 +47,11 @@
           options: {
             showSelectionBar: true,
             floor: ata.outputMin,
-            ceil: ata.outputMax
-          }
-        };
-
-        ata.impedanceMin = 0;
-        ata.impedanceMax = 7;
-        ata.impedanceOptions = {
-          value: ata.defaultImpedance,
-          options: {
-            showSelectionBar: true,
-            floor: ata.impedanceMin,
-            ceil: ata.impedanceMax
-          }
+            ceil: ata.outputMax,
+          },
         };
 
         huronDeviceService.getAtaInfo(ata.device).then(function (result) {
-          ata.impedanceOptions.value = result.impedance || ata.defaultImpedance;
           ata.inputOptions.value = result.inputAudioLevel || ata.defaultInput;
           ata.outputOptions.value = result.outputAudioLevel || ata.defaultOutput;
         });
@@ -79,7 +66,6 @@
          * Reset values.
          */
         ata.resetValues = function () {
-          ata.impedanceModel = ata.defaultImpedance;
           ata.inputModel = ata.defaultInput;
           ata.outputModel = ata.defaultOutput;
         };
@@ -92,7 +78,6 @@
           var settings = {
             inputAudioLevel: ata.inputOptions.value,
             outputAudioLevel: ata.outputOptions.value,
-            impedance: ata.impedanceOptions.value
           };
 
           huronDeviceService.setSettingsForAta(ata.device, settings).then(function () {
@@ -110,17 +95,17 @@
         function open(device) {
           return $modal.open({
             resolve: {
-              device: _.constant(device)
+              device: _.constant(device),
             },
             controllerAs: 'ata',
             controller: 'AtaDeviceController',
             templateUrl: 'modules/squared/devices/ataDevices/ataDevice.html',
-            type: 'modal'
+            type: 'modal',
           }).result;
         }
 
         return {
-          open: open
+          open: open,
         };
       }
     );

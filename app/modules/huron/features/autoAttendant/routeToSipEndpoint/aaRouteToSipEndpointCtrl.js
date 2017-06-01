@@ -15,7 +15,7 @@
     vm.model.sipInput = '';
     vm.uiMenu = {};
     vm.menuEntry = {
-      entries: []
+      entries: [],
     };
     vm.menuKeyEntry = {};
 

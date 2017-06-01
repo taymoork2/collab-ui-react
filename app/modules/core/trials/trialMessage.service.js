@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialMessageService', TrialMessageService);
+  module.exports = TrialMessageService;
 
   /* @ngInject */
   function TrialMessageService(Config) {
@@ -32,7 +30,7 @@
         'details': {},
       };
 
-      _trialData = angular.copy(defaults);
+      _trialData = _.cloneDeep(defaults);
       return _trialData;
     }
   }

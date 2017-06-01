@@ -6,24 +6,26 @@
     .controller('ResourceGroupSettingsController', ResourceGroupSettingsController);
 
   /* @ngInject */
-  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $translate, $state, FusionClusterService, $modal) {
+  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $translate, $state, HybridServicesClusterService, $modal) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.clusters = {
-      title: 'hercules.resourceGroupSettings.clustersHeader'
+      title: 'hercules.resourceGroupSettings.clustersHeader',
     };
     vm.users = {
-      title: 'hercules.resourceGroupSettings.usersHeader'
+      title: 'hercules.resourceGroupSettings.usersHeader',
     };
     vm.resourceGroup = {
-      title: 'hercules.resourceGroups.resourceGroupHeading'
+      title: 'hercules.resourceGroups.resourceGroupHeading',
     };
+    vm.userDocumentation = 'https://help.webex.com/docs/DOC-16382';
     vm.allowRemove = false;
+    vm.showResetSection = false;
     vm.setGroupName = setGroupName;
     vm.openDeleteGroupModal = openDeleteGroupModal;
     vm.openAssignClustersModal = openAssignClustersModal;
     vm.handleKeypress = handleKeypress;
-    vm.showResetSection = false;
+    vm.manageUsers = manageUsers;
 
     loadResourceGroup($stateParams.id);
     determineIfRemoveAllowed();
@@ -34,7 +36,7 @@
           vm.group = group;
           vm.newGroupName = group.name;
           vm.localizedTitle = $translate.instant('hercules.resourceGroupSettings.pageTitle', {
-            groupName: group.name
+            groupName: group.name,
           });
         })
         .catch(function (error) {
@@ -43,7 +45,7 @@
     }
 
     function determineIfRemoveAllowed() {
-      FusionClusterService.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.allowRemove = _.every(clusters, function (c) {
             return c.resourceGroupId !== $stateParams.id;
@@ -60,7 +62,7 @@
         .then(function () {
           vm.group.name = newName;
           vm.localizedTitle = $translate.instant('hercules.resourceGroupSettings.pageTitle', {
-            groupName: newName
+            groupName: newName,
           });
           Notification.success('hercules.resourceGroupSettings.groupNameSaved');
         }, function (response) {
@@ -77,12 +79,12 @@
         resolve: {
           resourceGroup: function () {
             return vm.group;
-          }
+          },
         },
         controller: 'ConfirmDeleteResourceGroupController',
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/confirm-delete-resource-group.html',
-        type: 'dialog'
+        type: 'dialog',
       }).result.then(function () {
         $state.go('cluster-list');
       });
@@ -93,7 +95,7 @@
         resolve: {
           resourceGroup: function () {
             return vm.group;
-          }
+          },
         },
         controller: 'AssignClustersController',
         controllerAs: 'vm',
@@ -112,6 +114,12 @@
       if (event.keyCode === 13) {
         setGroupName(vm.newGroupName);
       }
+    }
+
+    function manageUsers() {
+      $state.go('users.list').then(function () {
+        $state.go('users.manage.picker');
+      });
     }
   }
 })();

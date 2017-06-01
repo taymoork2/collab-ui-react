@@ -31,12 +31,12 @@
         .modifyService(vm.serviceId, vm.serviceName, vm.serviceDesc)
         .then(function () {
           Notification.success('gss.editServiceSucceed', {
-            serviceName: vm.serviceName
+            serviceName: vm.serviceName,
           });
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'gss.editServiceFailed', {
-            serviceName: vm.serviceName
+            serviceName: vm.serviceName,
           });
         })
         .finally(function () {

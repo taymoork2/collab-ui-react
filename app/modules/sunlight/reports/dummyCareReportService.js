@@ -11,7 +11,7 @@
     var hourFormat = 'HH:mm';
 
     return {
-      dummyOrgStatsData: dummyOrgStatsData
+      dummyOrgStatsData: dummyOrgStatsData,
     };
 
     function dummyOrgStatsData(timeSelected) {

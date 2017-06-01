@@ -19,12 +19,12 @@ require('./_partnerProfile.scss');
     // radio button values
     $scope.problemSiteInfo = {
       cisco: 0,
-      ext: 1
+      ext: 1,
     };
 
     $scope.helpSiteInfo = {
       cisco: 0,
-      ext: 1
+      ext: 1,
     };
     //For now restrict to one user (who is a partner)
     //$scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
@@ -77,6 +77,10 @@ require('./_partnerProfile.scss');
         }
       });
 
+      var params = {
+        disableCache: true,
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           var settings = data.orgSettings;
@@ -111,7 +115,7 @@ require('./_partnerProfile.scss');
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
         }
-      }, orgId, true);
+      }, orgId, params);
     };
 
     $scope.init();
@@ -181,7 +185,7 @@ require('./_partnerProfile.scss');
 
     function notifyError(response) {
       Notification.errorResponse(response, 'errors.statusError', {
-        status: response.status
+        status: response.status,
       });
     }
 

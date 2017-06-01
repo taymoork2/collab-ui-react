@@ -13,43 +13,47 @@
       listDevices: listDevices,
       addDevice: addDevice,
       deleteDevice: deleteDevice,
-      getDeviceStatus: getDeviceStatus
+      getDeviceStatus: getDeviceStatus,
     };
 
     return service;
 
     function listDevices(callback) {
       $http.get(deviceUrl)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
         });
     }
 
     function addDevice(newDeviceName, callback) {
       var deviceData = {
-        'name': newDeviceName
+        'name': newDeviceName,
       };
 
       if (deviceData.name.length > 0) {
         $http.post(deviceUrl, deviceData)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       } else {
         callback('No valid device entered.');
@@ -61,16 +65,18 @@
       if ((deviceUuid !== null) && (deviceUuid.length > 0)) {
         var deleteUrl = deviceUrl + '/' + deviceUuid;
         $http.delete(deleteUrl)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
-            callback(data, status);
+            callback(data, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, status);
+            data.status = response.status;
+            callback(data, response.status);
           });
       } else {
         callback('No valid device available to delete.');
@@ -82,16 +88,18 @@
       if ((deviceUuid !== null) && (deviceUuid.length > 0)) {
         var getStatusUrl = deviceUrl + '/' + deviceUuid + '/status';
         $http.get(getStatusUrl)
-          .success(function (data, status) {
+          .then(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = true;
-            callback(data, i, status);
+            callback(data, i, response.status);
           })
-          .error(function (data, status) {
+          .catch(function (response) {
+            var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
-            data.status = status;
-            callback(data, i, status);
+            data.status = response.status;
+            callback(data, i, response.status);
           });
       } else {
         callback('No valid device available.');

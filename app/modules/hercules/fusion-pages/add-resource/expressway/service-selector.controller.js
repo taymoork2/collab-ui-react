@@ -5,16 +5,16 @@
     .controller('ExpresswayServiceSelectorController', ExpresswayServiceSelectorController);
 
   /* @ngInject */
-  function ExpresswayServiceSelectorController($stateParams, $translate, Authinfo, Config, FusionClusterService) {
+  function ExpresswayServiceSelectorController($stateParams, $translate, Authinfo, Config, HybridServicesClusterService) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
       call: Authinfo.isEntitled(Config.entitlements.fusion_uc),
-      calendar: Authinfo.isEntitled(Config.entitlements.fusion_cal)
+      calendar: Authinfo.isEntitled(Config.entitlements.fusion_cal),
     };
     vm.selectedServices = {
       call: false,
-      calendar: false
+      calendar: false,
     };
     vm.next = next;
     vm.canGoNext = canGoNext;
@@ -28,7 +28,7 @@
         vm.hasSetup = setup;
         vm._translation = {
           call: vm.hasSetup.call ? $translate.instant('hercules.hybridServiceNames.squared-fusion-uc') : $translate.instant('hercules.fusion.add-resource.expressway.services.call-not-setup'),
-          calendar: vm.hasSetup.calendar ? $translate.instant('hercules.hybridServiceNames.squared-fusion-cal') : $translate.instant('hercules.fusion.add-resource.expressway.services.calendar-not-setup')
+          calendar: vm.hasSetup.calendar ? $translate.instant('hercules.hybridServiceNames.squared-fusion-cal') : $translate.instant('hercules.fusion.add-resource.expressway.services.calendar-not-setup'),
         };
         vm.UIstate = 'success';
       })
@@ -38,11 +38,11 @@
 
     function getSetupState() {
       // A cluster type is said to be setup if there is at least one cluster with one connector
-      return FusionClusterService.getAll()
+      return HybridServicesClusterService.getAll()
         .then(function (clusters) {
           return {
             call: hasServiceSetUp(clusters, 'c_ucmc'),
-            calendar: hasServiceSetUp(clusters, 'c_cal')
+            calendar: hasServiceSetUp(clusters, 'c_cal'),
           };
         });
     }
@@ -50,8 +50,8 @@
     function next() {
       $stateParams.wizard.next({
         expressway: {
-          selectedServices: vm.selectedServices
-        }
+          selectedServices: vm.selectedServices,
+        },
       });
     }
 

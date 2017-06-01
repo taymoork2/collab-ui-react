@@ -33,7 +33,7 @@
             element.addClass('active');
           }
         });
-      }
+      },
     };
   }
 
@@ -84,8 +84,8 @@
         placeholderAttr: '@',
         requiredAttr: '@',
         categoryAttr: '@',
-        mediaTypeAttr: '='
-      }
+        mediaTypeAttr: '=',
+      },
     };
   }
 
@@ -132,16 +132,17 @@
       return sortObjectByKeyName(data);
     };
 
-    $scope.defaultPhoneNumber = {
-      name: 'US',
-      code: 'us',
-      number: '1',
-      phoneNumber: '+12345556789'
+    $scope.phone = '+12345556789';
+
+    $scope.getPhoneNumber = function () {
+      // var defaultPhoneNumber = $scope.getPlaceholder(field);
+      // $scope.phone = defaultPhoneNumber || '+12345556789';
+      return $scope.phone;
     };
 
     var getAttribute = function (field, attributeName) {
       var attr = _.find(field.attributes, {
-        name: attributeName
+        name: attributeName,
       });
       if (attr) {
         return attr.value;

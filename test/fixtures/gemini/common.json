@@ -74,7 +74,7 @@
     "objectName": null,
     "siteID": "ff808081582992dd01589a5b232410bb",
     "customerID": "ff808081570807760157d570572619f4",
-    "action": "submit_callback_group",
+    "action": "submit_cg_move_site",
     "actionFor": "Callback Group",
     "email": "liqing@qa.webex.com"
   }, {
@@ -115,7 +115,55 @@
     "actionFor": null,
     "email": "liqing@qa.webex.com"
   }, {
+    "id": "c253554d-32f6-4f56-b584-2e8a45ab5c22",
+    "userId": "liqing@qa.webex.com",
+    "userName": "qing li",
+    "actionTime": "Nov 15, 2016 05:21:39",
+    "hasLogFile": false,
+    "objectName": "tete",
+    "siteID": "ff8080815823e72c0158244952240022",
+    "customerID": "ff808081527ccb3f0152e39ec555010c",
+    "action": "add_note",
+    "actionFor": null,
+    "email": "liqing@qa.webex.com"
+  }, {
+    "id": "c253554d-3236-4fc6-b584-2e8a45ab5c22",
+    "userId": "liqing@qa.webex.com",
+    "userName": "qing li",
+    "actionTime": "Nov 15, 2016 05:21:39",
+    "hasLogFile": false,
+    "objectName": "tete",
+    "siteID": "ff8080815823e72c0158244952240022",
+    "customerID": "ff808081527ccb3f0152e39ec555010c",
+    "action": "add_note",
+    "actionFor": null,
+    "email": "liqing@qa.webex.com"
+  }, {
+    "id": "c253554d-32f6-4fc6-b524-2e8a45ab5c22",
+    "userId": "liqing@qa.webex.com",
+    "userName": "qing li",
+    "actionTime": "Nov 15, 2016 05:21:39",
+    "hasLogFile": false,
+    "objectName": "tete",
+    "siteID": "ff8080815823e72c0158244952240022",
+    "customerID": "ff808081527ccb3f0152e39ec555010c",
+    "action": "add_note",
+    "actionFor": null,
+    "email": "liqing@qa.webex.com"
+  }, {
     "id": "c253554d-32f6-4fc6-b584-2e8a45ab5c22",
+    "userId": "liqing@qa.webex.com",
+    "userName": "qing li",
+    "actionTime": "Nov 15, 2016 05:21:39",
+    "hasLogFile": false,
+    "objectName": "tete",
+    "siteID": "ff8080815823e72c0158244952240022",
+    "customerID": "ff808081527ccb3f0152e39ec555010c",
+    "action": "add_note",
+    "actionFor": null,
+    "email": "liqing@qa.webex.com"
+  }, {
+    "id": "c253554d-35f6-4fc6-b584-2e8a45ab5c22",
     "userId": "liqing@qa.webex.com",
     "userName": "qing li",
     "actionTime": "Nov 15, 2016 05:21:39",
@@ -190,6 +238,86 @@
         "countryName": "United Kingdom"
       }
     ]
+  },
+  "submittedTD": {
+    "ccaDomainId": "ff808081527ccb3f0153116a3531041b",
+    "customerId": "ff808081527ccb3f0153116a3531041e",
+    "domainName": "xxy_test_TD",
+    "telephonyDomainId": "",
+    "region": "EMEA",
+    "isEdit": true
+  },
+  "gmTdNumber": {
+    "dnisId": "ff8080815bcce6c9015bead026e20d24",
+    "countryId": 1,
+    "tollType": "CCA Toll",
+    "phone": "1111111",
+    "label": "p1",
+    "dnisNumber": "11133333333",
+    "dnisNumberFormat": "11133333333",
+    "phoneType": "Domestic",
+    "defaultDialInLanguage": "",
+    "firstAltChoice": "",
+    "secondAltChoice": "",
+    "compareToSuperadminPhoneNumberStatus": "0",
+    "superAdminCallInNumberDto": null,
+    "spCustomerId": "ff808081570807760157d570572619f4",
+    "defaultNumber": "1",
+    "globalListDisplay": "1",
+    "ccaDomainId": "ff8080815bcce6c9015bead026df0d23",
+    "isHidden": "false"
+  },
+  "gmTdConstObject": {
+    "SELECT_TYPE": "Select Type",
+    "SELECT_COUNTRY": "Select Country",
+    "CCA_TOLL": "CCA Toll",
+    "CCA_TOLL_FREE": "CCA Toll Free",
+    "INTERNATIONAL": "International",
+    "DOMESTIC": "Domestic",
+    "DEFAULT_TOLL": "Default Toll",
+    "DEFAULT_TOLL_FREE": "Default Toll Free",
+    "DISPLAY": "Display",
+    "HIDDEN": "Hidden",
+    "NO": "NO",
+    "DATA_STATUS": { "NEW": 1, "UPDATED": 2, "DELETED": 3, "NO_CHANGE": 4 }
+  },
+  "gmTdAllOptions": {
+    "tollTypeOptions": [{ "label": "Select Type", "value": "" }, { "label": "CCA Toll", "value": "CCA Toll" }, { "label": "CCA Toll Free", "value": "CCA Toll Free" }],
+    "callTypeOptions": [{ "label": "Select Type", "value": "" }, { "label": "International", "value": "International" }, { "label": "Domestic", "value": "Domestic" }],
+    "_countryOptions": [{ "label": "Select Country", "value": "" }],
+    "countryOptions": [{ "label": "China", "value": "1"}, {"label": "US", "value": "2" }],
+    "countryId2NameMapping": { "1": "China", "2": "US" },
+    "countryName2IdMapping": { "China": "1", "US": "2" },
+    "isHiddenOptions": [{ "label": "Display", "value": "false" }, { "label": "Hidden", "value": "true" }],
+    "defaultNumberOptions": [{ "label": "", "value": "0" }],
+    "globalDisplayOptions": [{ "label": "Display", "value": "1" }, { "label": "NO", "value": "0" }]
+  },
+  "newAccessNumber": {
+    "id": 0,
+    "number": "123456789",
+    "tollType": null,
+    "callType": null,
+    "billingFormat": null,
+    "languages": null,
+    "accessNumberGroup": null
+  },
+  "exsitedAccessNumber": {
+    "id": 0,
+    "number": "123456789",
+    "tollType": "CCA Toll",
+    "callType": "Domestic",
+    "billingFormat": null,
+    "languages": null,
+    "accessNumberGroup": null
+  },
+  "nonccaAccessNumber": {
+    "id": 0,
+    "number": "123456789",
+    "tollType": "Toll",
+    "callType": "Domestic",
+    "billingFormat": null,
+    "languages": null,
+    "accessNumberGroup": null
   },
   "common": {
     "links": [],

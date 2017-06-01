@@ -52,8 +52,8 @@
 
     .unavailable-msg {
       @include vr-spacing(mb, 1);
-      @include vr-spacing(pv, 1);
-
+      @include vr-spacing(pb, 1);
+      white-space: pre-line;
       height: 14rem;
       width: rem-calc(300px);
       overflow: hidden;

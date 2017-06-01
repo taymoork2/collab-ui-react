@@ -6,14 +6,14 @@ describe('Controller: DidAddCtrl', function () {
   var customerVoiceNorthAmerica = getJSONFixture('huron/json/dialPlans/customervoice-nanp.json');
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1'),
-    getOrgName: sinon.stub().returns('awesomeco')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('awesomeco'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -24,16 +24,16 @@ describe('Controller: DidAddCtrl', function () {
     currentOrg: {
       customerOrgId: '1',
       customerName: 'JEFFCO',
-      customerEmail: 'jeffcoiscoolio@jeffco.com'
-    }
+      customerEmail: 'jeffcoiscoolio@jeffco.com',
+    },
   };
 
   var trial = {
     model: {
       customerEmail: 'flast@company.com',
       licenseDuration: '90',
-      customerOrgId: '0000000000000001'
-    }
+      customerOrgId: '0000000000000001',
+    },
   };
 
   beforeEach(inject(function (_$controller_, _$httpBackend_, _$rootScope_, _$state_, _$timeout_, _$window_, _HuronConfig_, _Notification_) {
@@ -47,28 +47,28 @@ describe('Controller: DidAddCtrl', function () {
     $scope = $rootScope.$new();
     $scope.trial = trial;
     $state.modal = {
-      close: sinon.stub(),
+      close: jasmine.createSpy('close'),
       result: {
-        finally: sinon.stub()
-      }
+        finally: jasmine.createSpy('finally'),
+      },
     };
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
       'pattern': '+12145559991',
-      'uuid': '12145559991-id'
+      'uuid': '12145559991-id',
     }, {
       'pattern': '+12145558881',
-      'uuid': '12145558881-id'
+      'uuid': '12145558881-id',
     }]);
 
-    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceNorthAmerica);
+    $httpBackend.whenGET(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/dialplans').respond(customerVoiceNorthAmerica);
 
     controller = $controller('DidAddCtrl', {
       $scope: $scope,
       $state: $state,
       $stateParams: stateParams,
-      $window: $window
+      $window: $window,
     });
     controller.unsavedTokens = '+12145559999,+12145558888,+12145557777,+12145556666,+12145555555';
     controller.successCount = 0;
@@ -104,36 +104,6 @@ describe('Controller: DidAddCtrl', function () {
         expect(controller.tokenmethods).toBeDefined();
       });
 
-      describe('tokenmethods.createtoken function', function () {
-        it('should exist', function () {
-          expect(controller.tokenmethods.createtoken).toBeDefined();
-        });
-
-        it('should format the token properly and add a +1 to the number +1 (123) 456-7890', function () {
-          var element = {
-            attrs: {
-              value: '2145556789',
-              label: '2145556789'
-            }
-          };
-          controller.tokenmethods.createtoken(element);
-          expect(element.attrs.value).toEqual('+12145556789');
-          expect(element.attrs.label).toEqual('(214) 555-6789');
-        });
-
-        it('should not format the token if an invalid number', function () {
-          var element = {
-            attrs: {
-              value: '111 222 3333',
-              label: '111 222 3333'
-            }
-          };
-          controller.tokenmethods.createtoken(element);
-          expect(element.attrs.value).toEqual('1112223333');
-          expect(element.attrs.label).toEqual('111 222 3333');
-        });
-      });
-
       describe('tokenmethods.createdtoken function', function () {
         it('should exist', function () {
           expect(controller.tokenmethods.createdtoken).toBeDefined();
@@ -143,8 +113,8 @@ describe('Controller: DidAddCtrl', function () {
           var element = {
             attrs: {
               value: '51234DUDE567890',
-              label: '51234DUDE567890'
-            }
+              label: '51234DUDE567890',
+            },
           };
           controller.tokenmethods.createdtoken(element);
           expect(controller.invalidcount).toBeGreaterThan(0);
@@ -154,8 +124,8 @@ describe('Controller: DidAddCtrl', function () {
           var element = {
             attrs: {
               value: '+12145556789',
-              label: '+12145556789'
-            }
+              label: '+12145556789',
+            },
           };
           controller.tokenmethods.createdtoken(element);
           expect(controller.submitBtnStatus).toBeTruthy();
@@ -173,19 +143,19 @@ describe('Controller: DidAddCtrl', function () {
         describe('Added DIDs', function () {
           beforeEach(function () {
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145559999'
+              'pattern': '+12145559999',
             }).respond(201);
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145558888'
+              'pattern': '+12145558888',
             }).respond(201);
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145557777'
+              'pattern': '+12145557777',
             }).respond(201);
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145556666'
+              'pattern': '+12145556666',
             }).respond(201);
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145555555'
+              'pattern': '+12145555555',
             }).respond(201);
             controller.submit();
             $httpBackend.flush();
@@ -205,7 +175,7 @@ describe('Controller: DidAddCtrl', function () {
           beforeEach(function () {
             controller.unsavedTokens = '+12145559991,+12145558888';
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145558888'
+              'pattern': '+12145558888',
             }).respond(201);
             controller.submit();
             $httpBackend.flush();

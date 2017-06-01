@@ -1,21 +1,23 @@
+import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { Notification } from 'modules/core/notifications';
+import { ConnectorType } from 'modules/hercules/hybrid-services.types';
+
 interface IConfirmDeleteHostController {
   removeHost(): void;
 }
 export class ConfirmDeleteHostController implements IConfirmDeleteHostController {
   /* @ngInject */
   constructor(
-    private ClusterService,
     private $modalInstance,
-    private cluster: any,
-    private Notification: Notification,
-    private hostSerial: string,
     private $state: ng.ui.IStateService,
-    private connectorType: string,
+    private ClusterService: ClusterService,
+    private connectorType: ConnectorType,
+    private hostSerial: string,
+    private Notification: Notification,
   ) {}
 
   public removeHost(): void {
-    this.ClusterService.deleteHost(this.cluster.id, this.hostSerial)
+    this.ClusterService.deleteHost(this.hostSerial)
       .then( () => {
         this.$modalInstance.close();
         if (this.connectorType === 'c_ucmc') {

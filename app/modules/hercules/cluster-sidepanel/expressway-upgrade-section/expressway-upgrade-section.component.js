@@ -12,15 +12,16 @@
     });
 
   /* @ngInject */
-  function expresswayUpgradeSectionCtrl($modal, $scope, $timeout, $translate, ClusterService, FusionUtils) {
+  function expresswayUpgradeSectionCtrl($modal, $scope, $timeout, $translate, ClusterService, HybridServicesUtilsService) {
     var vm = this;
     var promise = null;
     vm.clusterId = '';
     vm.connectorType = '';
     vm.cluster = {};
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
+    vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
-    vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
+    vm.servicesId = HybridServicesUtilsService.connectorType2ServicesId(vm.connectorType);
 
     vm.showUpgradeDialog = showUpgradeDialog;
     vm.$onInit = $onInit;
@@ -30,7 +31,7 @@
       $scope.$watch(function () {
         return [
           ClusterService.getCluster(vm.connectorType, vm.clusterId),
-          ClusterService.getCluster('c_mgmt', vm.clusterId)
+          ClusterService.getCluster('c_mgmt', vm.clusterId),
         ];
       }, function (newValue) {
         vm.cluster = newValue[0];
@@ -51,19 +52,19 @@
           numberOfHosts: _.size(vm.cluster.aggregates.hosts),
           showUpgradeWarning: function () {
             return (vm.softwareUpgrade.isUpgradeAvailable || vm.softwareUpgrade.isManagementUpgradeAvailable) && vm.softwareUpgrade.hasManagementUpgradeWarning;
-          }
+          },
         };
 
         if (isUpgrading) {
           vm.fakeUpgrade = false;
           var pendingHosts = _.chain(vm.cluster.aggregates.hosts)
             .filter({
-              upgradeState: 'pending'
+              upgradeState: 'pending',
             })
             .value();
           vm.upgradeDetails = {
             numberOfUpsmthngHosts: _.size(vm.cluster.aggregates.hosts) - pendingHosts.length,
-            upgradingHostname: findUpgradingHostname(vm.cluster.aggregates.hosts)
+            upgradingHostname: findUpgradingHostname(vm.cluster.aggregates.hosts),
           };
         }
 
@@ -71,12 +72,12 @@
           vm.fakeManagementUpgrade = false;
           var pendingManagementHosts = _.chain(vm.managementCluster.aggregates.hosts)
             .filter({
-              upgradeState: 'pending'
+              upgradeState: 'pending',
             })
             .value();
           vm.managementUpgradeDetails = {
             numberOfUpsmthngHosts: _.size(vm.managementCluster.aggregates.hosts) - pendingManagementHosts.length,
-            upgradingHostname: findUpgradingHostname(vm.managementCluster.aggregates.hosts)
+            upgradingHostname: findUpgradingHostname(vm.managementCluster.aggregates.hosts),
           };
         }
 
@@ -106,7 +107,7 @@
       if (changes.connectorType) {
         vm.connectorType = changes.connectorType.currentValue;
         vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
-        vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
+        vm.servicesId = HybridServicesUtilsService.connectorType2ServicesId(vm.connectorType);
       }
     }
 
@@ -128,8 +129,8 @@
           },
           availableVersion: function () {
             return availableVersion;
-          }
-        }
+          },
+        },
       }).result.then(function () {
         if (connectorType === 'c_mgmt') {
           vm.fakeManagementUpgrade = vm.showManagementUpgradeProgress = true;

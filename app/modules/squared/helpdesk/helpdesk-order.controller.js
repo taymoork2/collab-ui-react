@@ -32,7 +32,7 @@
     vm.partnerOrgExists = partnerOrgExists;
 
     vm._helpers = {
-      notifyError: notifyError
+      notifyError: notifyError,
     };
 
     var oneTier = '1-tier';
@@ -180,7 +180,7 @@
             getEmailStatus(false);
           }, 5000);
         }, function (response) {
-          Notification.errorWithTrackingId(response, 'helpdesk.editAdminEmailFailure');
+          Notification.errorResponse(response, 'helpdesk.editAdminEmailFailure');
         });
     }
 
@@ -207,7 +207,7 @@
             getEmailStatus(false);
           }, 5000);
         }, function (response) {
-          Notification.errorWithTrackingId(response, 'helpdesk.editAdminEmailFailure');
+          Notification.errorResponse(response, 'helpdesk.editAdminEmailFailure');
         });
     }
 
@@ -232,7 +232,7 @@
           }, 5000);
           Notification.success('helpdesk.resendMailSuccess');
         }, function (response) {
-          Notification.errorWithTrackingId(response, 'helpdesk.resendMailFailure');
+          Notification.errorResponse(response, 'helpdesk.resendMailFailure');
         });
     }
 
@@ -254,7 +254,7 @@
       return (vm.partnerOrgId);
     }
     function notifyError(response) {
-      Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+      Notification.errorResponse(response, 'helpdesk.unexpectedError');
     }
   }
 }());

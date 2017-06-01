@@ -5,11 +5,12 @@
     .controller('PstnServiceAddressCtrl', PstnServiceAddressCtrl);
 
   /* @ngInject */
-  function PstnServiceAddressCtrl($state, PstnServiceAddressService, PstnSetup, Notification) {
+  function PstnServiceAddressCtrl($state, PstnServiceAddressService, PstnModel, Notification) {
     var vm = this;
     vm.validateAddress = validateAddress;
     vm.hasBackButton = hasBackButton;
-    vm.validateNext = validateNext;
+    vm.resetAddress = resetAddress;
+    vm.next = next;
     vm.modify = modify;
     vm.goBack = goBack;
     vm.loading = false;
@@ -18,7 +19,8 @@
     init();
 
     function init() {
-      vm.address = angular.copy(PstnSetup.getServiceAddress());
+      vm.address = _.cloneDeep(PstnModel.getServiceAddress());
+      vm.countryCode = PstnModel.getCountryCode();
       // If address has been set in the model, set it as valid
       if (!_.isEmpty(vm.address)) {
         vm.isValid = true;
@@ -30,19 +32,21 @@
       vm.isValid = false;
     }
 
-    function validateNext() {
+    function next() {
       if (vm.isValid) {
         goToOrderNumbers();
+      } else {
+        validateAddress();
       }
     }
 
     function validateAddress() {
       vm.loading = true;
-      PstnServiceAddressService.lookupAddress(vm.address)
+      PstnServiceAddressService.lookupAddressV2(vm.address, PstnModel.getProviderId())
         .then(function (address) {
           if (address) {
             vm.address = address;
-            PstnSetup.setServiceAddress(address);
+            PstnModel.setServiceAddress(address);
             vm.isValid = true;
           } else {
             Notification.error('pstnSetup.serviceAddressNotFound');
@@ -61,11 +65,17 @@
     }
 
     function hasBackButton() {
-      return (!PstnSetup.isCarrierExists() && !PstnSetup.isSingleCarrierReseller()) || !PstnSetup.isCustomerExists();
+      return (!PstnModel.isCarrierExists() && !PstnModel.isSingleCarrierReseller()) || !PstnModel.isCustomerExists();
+    }
+
+    function resetAddress() {
+      vm.address = {};
+      PstnModel.setServiceAddress(vm.address);
+      vm.isValid = false;
     }
 
     function goBack() {
-      if (!PstnSetup.isCustomerExists()) {
+      if (!PstnModel.isCustomerExists()) {
         $state.go('pstnSetup.contractInfo');
       } else {
         $state.go('pstnSetup');

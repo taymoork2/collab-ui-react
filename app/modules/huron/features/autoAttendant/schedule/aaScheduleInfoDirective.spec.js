@@ -16,10 +16,10 @@ describe('Directive: aaScheduleInfo', function () {
   var aaModel = {
     aaRecord: {
       scheduleId: '1',
-      callExperienceName: 'AA1'
+      callExperienceName: 'AA1',
     },
     aaRecordUUID: '1111',
-    ceInfos: []
+    ceInfos: [],
   };
   var schedule = 'openHours';
   var openHours = [];
@@ -36,7 +36,7 @@ describe('Directive: aaScheduleInfo', function () {
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AACalendarService, 'readCalendar').and.returnValue($q.resolve());
-    spyOn(AAICalService, 'getHoursRanges').and.returnValue($q.resolve(angular.copy(openHours)));
+    spyOn(AAICalService, 'getHoursRanges').and.returnValue($q.resolve(_.cloneDeep(openHours)));
     $scope.schedule = schedule;
   }));
 

@@ -12,7 +12,7 @@
       controller: 'SettingsServiceAddressCtrl',
       controllerAs: 'settingsServiceAddress',
       bindToController: true,
-      scope: true
+      scope: true,
     };
 
     return directive;

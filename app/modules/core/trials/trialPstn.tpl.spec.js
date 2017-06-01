@@ -1,25 +1,24 @@
 'use strict';
 
 describe('Template: trialPstn.tpl.spec.js:', function () {
-  var $q, $compile, $controller, $scope, $templateCache, Analytics, Orgservice, PstnSetupStatesService, FeatureToggleService, PstnSetupService;
+  var $q, $compile, $controller, $scope, $templateCache, Analytics, Orgservice, PstnSetupStatesService, FeatureToggleService, PstnService;
   var view;
   var skipBtn, backBtn;
 
-  var states = [{
-    name: 'Texas',
-    abbreviation: 'TX'
-  }];
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   afterEach(function () {
     if (view) {
       view.remove();
     }
-    $q = $compile = $controller = $scope = $templateCache = Analytics = Orgservice = PstnSetupStatesService = FeatureToggleService = PstnSetupService = undefined;
+    $q = $compile = $controller = $scope = $templateCache = Analytics = Orgservice = PstnSetupStatesService = FeatureToggleService = PstnService = undefined;
     view = skipBtn = backBtn = undefined;
-  });
-
-  afterAll(function () {
-    states = undefined;
   });
 
   beforeEach(angular.mock.module('Huron'));
@@ -27,7 +26,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
   beforeEach(compileView);
 
 
-  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Analytics_, _Orgservice_, _PstnSetupStatesService_, _FeatureToggleService_, _PstnSetupService_) {
+  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Analytics_, _Orgservice_, _PstnSetupStatesService_, _FeatureToggleService_, _PstnService_) {
     $q = _$q_;
     $compile = _$compile_;
     $controller = _$controller_;
@@ -37,12 +36,12 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
     Analytics = _Analytics_;
-    PstnSetupService = _PstnSetupService_;
+    PstnService = _PstnService_;
 
-    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Analytics, 'trackTrialSteps');
-    spyOn(PstnSetupService, 'getResellerV2').and.returnValue($q.resolve());
+    spyOn(PstnService, 'getResellerV2').and.returnValue($q.resolve());
   }
 
   function compileView() {
@@ -50,7 +49,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     var template = $templateCache.get('modules/core/trials/trialPstn.tpl.html');
 
     $controller('TrialPstnCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     view = $compile(angular.element(template))($scope);
@@ -61,9 +60,9 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     beforeEach(findSkipBtn);
 
     function findSkipBtn() {
-      skipBtn = view.find('a.alt-btn-link');
+      skipBtn = view.find('.skip-btn');
     }
-    it('should match the selector \'a.alt-btn-lnk\'', function () {
+    it('should match the selector \'.skip-btn\'', function () {
       expect(skipBtn.length).toBe(1);
     });
 

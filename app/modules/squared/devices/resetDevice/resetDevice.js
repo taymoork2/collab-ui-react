@@ -30,16 +30,16 @@
           return $modal.open({
             type: 'dialog',
             resolve: {
-              device: _.constant(device)
+              device: _.constant(device),
             },
             controllerAs: 'rdc',
             controller: 'ResetDeviceController',
-            templateUrl: 'modules/squared/devices/resetDevice/resetDevice.html'
+            templateUrl: 'modules/squared/devices/resetDevice/resetDevice.html',
           }).result;
         }
 
         return {
-          open: open
+          open: open,
         };
       }
     );

@@ -11,23 +11,23 @@ describe('Controller: Customer Reports Ctrl', function () {
                             '$scope',
                             '$q');
     WebexReportService = {
-      initReportsObject: function () {}
+      initReportsObject: function () {},
     };
 
     WebExApiGatewayService = {
       siteFunctions: function (url) {
         var defer = this.$q.defer();
         defer.resolve({
-          siteUrl: url
+          siteUrl: url,
         });
         return defer.promise;
-      }
+      },
     };
 
     Userservice = {
       getUser: function (user) {
         expect(user).toBe('me');
-      }
+      },
     };
 
     controller = this.$controller('WebexReportsCtrl', {

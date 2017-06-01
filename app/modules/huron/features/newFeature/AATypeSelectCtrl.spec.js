@@ -7,7 +7,7 @@ describe('Controller: AATypeSelectCtrl', function () {
   var $scope, $state, $timeout;
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
-    dismiss: jasmine.createSpy('modalInstance.dismiss')
+    dismiss: jasmine.createSpy('modalInstance.dismiss'),
   };
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$timeout_, Orgservice) {
@@ -22,34 +22,34 @@ describe('Controller: AATypeSelectCtrl', function () {
       $scope: $scope,
       $modalInstance: modalFake,
       $timeout: $timeout,
-      $state: $state
+      $state: $state,
     });
   }));
 
   it("ok function call results in closing the Modal with the value chosen when item is 1", function () {
     var item = {
-      name: 'Basic'
+      name: 'Basic',
     };
     $scope.ok(item);
     $scope.$apply();
     $timeout.flush();
     expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {
       aaName: '',
-      aaTemplate: 'Basic'
+      aaTemplate: 'Basic',
     });
     expect(modalFake.close).toHaveBeenCalledWith(item);
   });
 
   it("ok function call results in closing the Modal with the value chosen when item is 2", function () {
     var item = {
-      name: 'Custom'
+      name: 'Custom',
     };
     $scope.ok(item);
     $scope.$apply();
     $timeout.flush();
     expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {
       aaName: '',
-      aaTemplate: 'Custom'
+      aaTemplate: 'Custom',
     });
     expect(modalFake.close).toHaveBeenCalledWith(item);
   });

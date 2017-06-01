@@ -6,7 +6,7 @@
     .controller('DeactivateServiceOnExpresswayModalController', DeactivateServiceOnExpresswayModalController);
 
   /* @ngInject */
-  function DeactivateServiceOnExpresswayModalController($modalInstance, FusionUtils, serviceId, clusterId, clusterName, FusionClusterService, Notification, $translate) {
+  function DeactivateServiceOnExpresswayModalController($modalInstance, HybridServicesUtilsService, serviceId, clusterId, clusterName, HybridServicesClusterService, Notification, $translate) {
     var vm = this;
     vm.connectorId = serviceId;
     vm.clusterName = clusterName;
@@ -16,7 +16,7 @@
 
     function deactivateService() {
       vm.loading = true;
-      FusionClusterService.deprovisionConnector(vm.clusterId, vm.connectorId)
+      HybridServicesClusterService.deprovisionConnector(vm.clusterId, vm.connectorId)
         .then($modalInstance.close)
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.genericFailure');
@@ -32,7 +32,7 @@
     vm.getIconClassForService = getIconClassForService;
 
     function getIconClassForService() {
-      return FusionUtils.serviceId2Icon(FusionUtils.connectorType2ServicesId(vm.connectorId)[0]);
+      return HybridServicesUtilsService.serviceId2Icon(HybridServicesUtilsService.connectorType2ServicesId(vm.connectorId)[0]);
     }
 
   }

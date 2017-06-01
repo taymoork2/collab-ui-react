@@ -28,17 +28,17 @@ describe('Service: Metrics Reports Service', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   var timeFilter = {
-    value: 0
+    value: 0,
   };
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   var error = {
     message: 'error',
     data: {
-      trackingId: "id"
-    }
+      trackingId: "id",
+    },
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -84,7 +84,7 @@ describe('Service: Metrics Reports Service', function () {
 
       MetricsReportService.getCallVolumeData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual({
-          graphData: responsedata
+          graphData: responsedata,
         });
       });
 
@@ -97,7 +97,7 @@ describe('Service: Metrics Reports Service', function () {
 
       MetricsReportService.getCallVolumeData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual({
-          graphData: []
+          graphData: [],
         });
         expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -113,7 +113,7 @@ describe('Service: Metrics Reports Service', function () {
       MetricsReportService.getUtilizationData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: utilizationresponse,
-          graphs: utilizationgraph
+          graphs: utilizationgraph,
         });
       });
 
@@ -127,7 +127,7 @@ describe('Service: Metrics Reports Service', function () {
       MetricsReportService.getUtilizationData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: [],
-          graphs: []
+          graphs: [],
         });
         expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });

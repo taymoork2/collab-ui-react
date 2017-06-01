@@ -1,9 +1,9 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const commonWebpack = require('./webpack.common');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const loaders = require('./loaders');
+const plugins = require('./plugins');
 const _ = require('lodash');
 
 function webpackConfig(env) {
@@ -21,7 +21,7 @@ function webpackConfig(env) {
     _.set(cssLoader, 'options.minimize', true);
     // replace current loaders with ExtractTextPlugin
     scssLoaderRule.use = ExtractTextPlugin.extract({
-      fallbackLoader: 'style-loader',
+      fallback: 'style-loader',
       loader: scssLoaders,
     });
   }
@@ -33,11 +33,10 @@ function webpackConfig(env) {
       publicPath: '/',
       filename: 'js/[name].[hash].js',
       chunkFilename: 'js/[name].[hash].js',
+      sourceMapFilename: '../dist-source-map/[file].map',
     },
-    plugins: [
-      new HtmlWebpackPlugin({
-        template: 'index.html',
-        inject: 'body',
+    plugins: plugins.commonsChunkPlugins.concat([
+      plugins.getHtmlWebpackPlugin({
         ngStrictDi: '',
         loadAdobeScripts: true,
       }),
@@ -48,8 +47,9 @@ function webpackConfig(env) {
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.optimize.UglifyJsPlugin({
         mangle: false,
+        sourceMap: true,
       }),
-    ],
+    ]),
     stats: {
       children: false, // hide output from children plugins
     },

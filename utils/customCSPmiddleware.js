@@ -23,10 +23,15 @@ module.exports = csp({
       'https://*.webexconnect.com',
       'https://wbxdmz.admin.ciscospark.com',
       'https://wbxbts.admin.ciscospark.com',
-      'blob:'
+      'blob:',
     ],
     frameSrc: [
       'https://buy.ciscospark.com', // Digital River
+      'https://ds2-qlikdemo.cisco.com',
+      'https://10.140.50.27',
+      'http://127.0.0.1:8000',
+      'https://ds2-qlikdemo',
+      'https://ds2-win2012-01',
     ],
     objectSrc: [
       'http://www.cisco.com', // Terms of Service
@@ -50,20 +55,24 @@ module.exports = csp({
       'https://cdn.mxpnl.com',
       'http://54.183.25.170:8001',
       'https://clio-manager-a.wbx2.com',
-      'https://clio-manager-integration.wbx2.com',
+      'https://clio-manager-intb.ciscospark.com',
       // manual DNS entry for local dev:
       'http://dev-admin.ciscospark.com:8000',
       'ws://dev-admin.ciscospark.com:8000',
       // Browser Sync:
       'ws://127.0.0.1:8000',
       'ws://localhost:8000',
+      'ws://127.0.0.1:8443',
+      'ws://localhost:8443',
       // Local Atlas Backend:
       'http://127.0.0.1:8080',
       'http://localhost:8080',
       'http://dev-admin.ciscospark.com:8080',
       'http://dpm.demdex.net', // Adobe DTM Omniture
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
-      'https://*.clouddrive.com' // CSV download
+      'https://*.clouddrive.com', // CSV download
+      'https://bam.nr-data.net', // New Relic Browser
+      'https://10.194.245.72:8443',
     ],
     fontSrc: [
       '\'self\'',
@@ -79,6 +88,7 @@ module.exports = csp({
       'http://webexglobal.112.2o7.net', // Adobe DTM Omniture
       'http://*.d1.sc.omtrdc.net', // Adobe DTM Omniture
       'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+      'https://bam.nr-data.net', // New Relic Browser
       // Webpack Dev
       'blob:',
     ],
@@ -95,6 +105,9 @@ module.exports = csp({
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
       'https://buy.ciscospark.com', // Digital River
       'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+      '127.0.0.1',
+      'https://js-agent.newrelic.com', // New Relic Browser
+      'https://bam.nr-data.net', // New Relic Browser
     ],
     styleSrc: [
       '\'self\'',
@@ -102,6 +115,6 @@ module.exports = csp({
       'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
       // Webpack Dev
       'blob:',
-    ]
-  }
+    ],
+  },
 });

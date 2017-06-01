@@ -21,7 +21,7 @@
         card.notEnabledFooter = 'overview.contactPartner';
         card.trial = false;
         card.enabled = false;
-        card.cardClass = 'cs-card header-bar';
+        card.cardClass = 'cs-card';
         card.helper = OverviewHelper;
         card.showHealth = true;
 
@@ -45,7 +45,7 @@
         card.licenseEventHandler = function (licenses) {
           card.allLicenses = licenses;
           card.trial = _.some(filterLicenses(licenses), {
-            'isTrial': true
+            'isTrial': true,
           });
 
           if (filterLicenses(licenses).length > 0) {
@@ -66,7 +66,7 @@
         };
 
         return card;
-      }
+      },
     };
   }
 })();

@@ -10,16 +10,16 @@
     var incidentStatusResolved = 'resolved';
     var incidentStatus = [{
       localizedStatus: $translate.instant('gss.incidentStatus.investigating'),
-      status: 'investigating'
+      status: 'investigating',
     }, {
       localizedStatus: $translate.instant('gss.incidentStatus.identified'),
-      status: 'identified'
+      status: 'identified',
     }, {
       localizedStatus: $translate.instant('gss.incidentStatus.monitoring'),
-      status: 'monitoring'
+      status: 'monitoring',
     }, {
       localizedStatus: $translate.instant('gss.incidentStatus.resolved'),
-      status: incidentStatusResolved
+      status: incidentStatusResolved,
     }];
 
     vm.goToNewIncidentPage = goToNewIncidentPage;
@@ -39,7 +39,7 @@
     function goToUpdateIncidentPage(incident) {
       $state.go('gss.incidents.update', {
         incident: incident,
-        actionType: 'update'
+        actionType: 'update',
       });
     }
 
@@ -49,7 +49,7 @@
         controller: 'AddComponentCtrl',
         controllerAs: 'addComponentCtrl',
         templateUrl: 'modules/gss/components/addComponent/addComponent.tpl.html',
-        modalClass: 'add-component'
+        modalClass: 'add-component',
       }).result.then(function () {
         loadComponents(GSSService.getServiceId());
       });
@@ -80,7 +80,7 @@
 
     function getLocalizedIncidentStatus(status) {
       return _.find(incidentStatus, {
-        status: status
+        status: status,
       }).localizedStatus;
     }
 
@@ -91,12 +91,12 @@
     function modifyComponentStatus(component, status) {
       DashboardService.modifyComponent({
         componentId: component.componentId,
-        status: status
+        status: status,
       }).then(function () {
         component.status = status;
         Notification.success('gss.componentStatusChanged', {
           componentName: component.componentName,
-          status: component.status
+          status: component.status,
         });
       }).catch(function (error) {
         Notification.errorWithTrackingId(error, 'gss.incidentsPage.noAffectedComponent');
@@ -106,7 +106,7 @@
     function modifyComponentOverridden(component, overridden) {
       DashboardService.modifyComponent({
         componentId: component.componentId,
-        status: overridden
+        status: overridden,
       });
     }
 
@@ -115,24 +115,24 @@
       vm.statuses = [
         {
           label: $translate.instant('gss.componentStatus.operational'),
-          value: 'operational'
+          value: 'operational',
         },
         {
           label: $translate.instant('gss.componentStatus.degradedPerformance'),
-          value: 'degraded_performance'
+          value: 'degraded_performance',
         },
         {
           label: $translate.instant('gss.componentStatus.partialOutage'),
-          value: 'partial_outage'
+          value: 'partial_outage',
         },
         {
           label: $translate.instant('gss.componentStatus.majorOutage'),
-          value: 'major_outage'
+          value: 'major_outage',
         },
         {
           label: $translate.instant('gss.componentStatus.underMaintenance'),
-          value: 'under_maintenance'
-        }
+          value: 'under_maintenance',
+        },
       ];
 
       $scope.$watch(
@@ -156,7 +156,7 @@
 
         Notification.success('gss.componentStatusChanged', {
           componentName: component.componentName,
-          status: component.statusObj.value
+          status: component.statusObj.value,
         });
       }
     }
@@ -175,7 +175,7 @@
 
     function getStatusPriority(statusObj) {
       return _.findIndex(vm.statuses, {
-        value: statusObj.value
+        value: statusObj.value,
       });
     }
 
@@ -212,7 +212,7 @@
 
     function getStatusObj(status) {
       return _.find(vm.statuses, {
-        value: status
+        value: status,
       });
     }
   }

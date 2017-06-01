@@ -6,7 +6,7 @@
    var orgId = '123';
 
    var spiedAuthinfo = {
-     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId)
+     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId),
    };
    var templateList = getJSONFixture('sunlight/json/features/chatTemplates/chatTemplateList.json');
 

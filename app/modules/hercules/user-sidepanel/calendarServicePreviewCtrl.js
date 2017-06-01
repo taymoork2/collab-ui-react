@@ -6,28 +6,31 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, ClusterService, $translate, ResourceGroupService, FeatureToggleService, FusionUtils) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, HybridServicesClusterService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesI18NService) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
-      'squared-fusion-gcal': 'squaredFusionGCal'
+      'squared-fusion-gcal': 'squaredFusionGCal',
     };
 
-    $scope.currentUser = $stateParams.currentUser;
-    $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
+    $scope.currentUser = $stateParams.currentUser || $stateParams.getCurrentPlace();
+    $scope.isPlace = $scope.currentUser.accountType === 'MACHINE';
+    $scope.isUser = !$scope.isPlace;
+    $scope.currentStateName = $state.current.name;
+    $scope.isInvitePending = $scope.isUser && Userservice.isInvitePending($scope.currentUser);
     $scope.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
     $scope.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
-      ServiceName: $scope.localizedServiceName
+      ServiceName: $scope.localizedServiceName,
     });
     $scope.extension = {
       id: $stateParams.extensionId,
-      entitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the entitlement as set in the UI (toggle)
+      entitled: $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the entitlement as set in the UI (toggle)
       hasShowPreferredWebExSiteNameFeatureToggle: false,
       preferredWebExSiteName: $translate.instant('hercules.cloudExtensions.preferredWebExSiteDefault'),
-      currentUserEntitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the actual entitlement on the user
+      currentUserEntitled: $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the actual entitlement on the user
       isExchange: function () {
         return this.id === 'squared-fusion-cal';
-      }
+      },
     };
     $scope.resourceGroup = {
       show: false,
@@ -56,12 +59,12 @@
       },
       updateShow: function () {
         this.show = $scope.extension.isExchange() && _.size(this.options) > 1;
-      }
+      },
     };
     $scope.resourceGroup.init();
 
     var isEntitled = function () {
-      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($scope.extension.id) > -1;
+      return $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf($scope.extension.id) > -1;
     };
 
     var isSetup = function (id) {
@@ -79,7 +82,7 @@
         this.selected = $scope.extension.id;
         this.exchangeEnabled = this.exchangeSetup && !isEntitled();
         this.googleEnabled = this.googleSetup && !isEntitled();
-      }
+      },
     };
     $scope.calendarType.init();
 
@@ -94,7 +97,11 @@
         $scope.extension.preferredWebExSiteName = Userservice.getPreferredWebExSiteForCalendaring($scope.currentUser);
         if (!$scope.extension.preferredWebExSiteName) {
           // Read org settings preference...
-          Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
+          var params = {
+            basicInfo: true,
+            disableCache: true,
+          };
+          Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params)
             .then(function (response) {
               if (_.get(response, 'data.orgSettings.calSvcpreferredWebExSite')) {
                 $scope.extension.preferredWebExSiteName = response.data.orgSettings.calSvcDefaultWebExSite;
@@ -114,6 +121,15 @@
       return $scope.extension.entitled !== isEntitled();
     };
 
+    if ($scope.isPlace && $scope.currentUser.externalLinkedAccounts) {
+      var existingHybridCallLink = _.head(_.filter($scope.currentUser.externalLinkedAccounts, function (linkedAccount) {
+        return linkedAccount && (linkedAccount.providerID === $scope.extension.id);
+      }));
+      if (existingHybridCallLink) {
+        $scope.emailOfMailbox = existingHybridCallLink.accountGUID;
+      }
+    }
+
     var updateStatus = function (userIsRefreshed) {
       if ($scope.isInvitePending) {
         return;
@@ -122,13 +138,14 @@
         $scope.extension.status = _.find(statuses, function (status) {
           return $scope.extension.id === status.serviceId;
         });
-        if ($scope.extension.status && $scope.extension.status.connectorId) {
-          ClusterService.getConnector($scope.extension.status.connectorId).then(function (connector) {
-            $scope.extension.homedConnector = connector;
+        if ($scope.extension.status && $scope.extension.status.clusterId) {
+          HybridServicesClusterService.get($scope.extension.status.clusterId).then(function (cluster) {
+            $scope.extension.homedCluster = cluster;
+            $scope.extension.homedConnector = _.find(cluster.connectors, { id: $scope.extension.status.connectorId });
           });
         }
         if ($scope.extension.status && $scope.extension.status.lastStateChange) {
-          $scope.extension.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.extension.status.lastStateChange);
+          $scope.extension.status.lastStateChangeText = HybridServicesI18NService.getTimeSinceText($scope.extension.status.lastStateChange);
         }
 
         // If we find no status in USS and the service is entitled, we try to refresh the user in USS and reload the statuses
@@ -170,45 +187,39 @@
     };
 
     var readResourceGroups = function () {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-        .then(function (supported) {
-          $scope.resourceGroupsFeatureToggle = supported;
-          if (supported) {
-            ResourceGroupService.getAllAsOptions().then(function (options) {
-              if (options.length > 0) {
-                $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
-                if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
-                  setSelectedResourceGroup($scope.extension.status.resourceGroupId);
-                } else {
-                  USSService.getUserProps($scope.currentUser.id).then(function (props) {
-                    if (props.resourceGroups && props.resourceGroups[$scope.extension.id]) {
-                      setSelectedResourceGroup(props.resourceGroups[$scope.extension.id]);
-                    } else {
-                      $scope.resourceGroup.displayWarningIfNecessary();
-                    }
-                  });
-                }
-                $scope.resourceGroup.updateShow();
+      ResourceGroupService.getAllAsOptions().then(function (options) {
+        if (options.length > 0) {
+          $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
+          if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
+            setSelectedResourceGroup($scope.extension.status.resourceGroupId);
+          } else {
+            USSService.getUserProps($scope.currentUser.id).then(function (props) {
+              if (props.resourceGroups && props.resourceGroups[$scope.extension.id]) {
+                setSelectedResourceGroup(props.resourceGroups[$scope.extension.id]);
+              } else {
+                $scope.resourceGroup.displayWarningIfNecessary();
               }
             });
           }
-        });
+          $scope.resourceGroup.updateShow();
+        }
+      });
     };
 
     var updateEntitlement = function (entitled) {
       $scope.savingEntitlements = true;
       var user = [{
-        'address': $scope.currentUser.userName
+        'address': $scope.currentUser.userName,
       }];
       var entitlement = [{
         entitlementName: $scope.entitlementNames[$scope.extension.id],
-        entitlementState: entitled === true ? 'ACTIVE' : 'INACTIVE'
+        entitlementState: entitled === true ? 'ACTIVE' : 'INACTIVE',
       }];
 
       Userservice.updateUsers(user, null, entitlement, 'updateEntitlement', function (data) {
         var entitleResult = {
           msg: null,
-          type: 'null'
+          type: 'null',
         };
         if (data.success) {
           var userStatus = data.userResponse[0].status;
@@ -217,13 +228,13 @@
               // Reset the status which will give the status loader icon
               $scope.extension.status = null;
             }
-            if (!$stateParams.currentUser.entitlements) {
-              $stateParams.currentUser.entitlements = [];
+            if (!$scope.currentUser.entitlements) {
+              $scope.currentUser.entitlements = [];
             }
             if (entitled) {
-              $stateParams.currentUser.entitlements.push($scope.extension.id);
+              $scope.currentUser.entitlements.push($scope.extension.id);
             } else {
-              _.remove($stateParams.currentUser.entitlements, function (entitlement) {
+              _.remove($scope.currentUser.entitlements, function (entitlement) {
                 return entitlement === $scope.extension.id;
               });
             }
@@ -233,7 +244,7 @@
             refreshUserInUss();
           } else if (userStatus === 404) {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.entitlements-dont-exist', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             });
             entitleResult.type = 'error';
           } else if (userStatus === 409) {
@@ -241,7 +252,7 @@
             entitleResult.type = 'error';
           } else {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.not-updated', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             });
             entitleResult.type = 'error';
           }
@@ -252,9 +263,9 @@
         } else {
           entitleResult = {
             msg: $translate.instant('hercules.userSidepanel.not-updated', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             }),
-            type: 'error'
+            type: 'error',
           };
           Notification.notify([entitleResult.msg], entitleResult.type);
         }
@@ -300,6 +311,10 @@
       $scope.showButtons = false;
     };
 
+    $scope.editCloudberryServices = function (service) {
+      $stateParams.editService(service);
+    };
+
     $scope.closePreview = function () {
       $state.go('users.list');
     };
@@ -325,9 +340,7 @@
 
     $scope.selectedCalendarTypeChanged = function (type) {
       $scope.extension.id = type;
-      if ($scope.resourceGroupsFeatureToggle) {
-        $scope.resourceGroup.updateShow();
-      }
+      $scope.resourceGroup.updateShow();
       $scope.calendarType.init();
     };
   }

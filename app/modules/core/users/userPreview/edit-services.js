@@ -10,7 +10,7 @@ require('./_user-preview.scss');
     return {
       restrict: 'EA',
       templateUrl: 'modules/core/users/userPreview/editServices.tpl.html',
-      controller: 'OnboardCtrl'
+      controller: 'OnboardCtrl',
     };
   }
 })();

@@ -1,9 +1,15 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/page';
 
 .ediscovery-app-container {
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
   min-height: 100vh;
+
+  .ediscovery-logo {
+    width: 48px;
+    margin-left: 29px;
+  }
 
   a:focus {
     box-shadow: none;
@@ -33,7 +39,7 @@
           margin-right: 1rem;
 
           a {
-            color: #aeaeaf;
+            color: $gray-light-1;
             font-size: 1.0625rem;
             //border-bottom: 3px solid transparent;
             //padding-bottom: 0.5rem;
@@ -45,7 +51,7 @@
           }
 
           a:hover {
-            //border-bottom-color: #AEAEAF;
+            //border-bottom-color: $gray-light-1;
           }
         }
       }
@@ -89,16 +95,23 @@
 
   .ediscovery-search {
     height: 100vh;
-    background-color: $brand-white;
-    padding-top: 9rem;
+
+    .basic-search {
+      background-color: $brand-white;
+      padding-top: 8rem;
+    }
+
+    .advanced-search {
+      background-color: $gray-light-4;
+    }
 
     @media only screen and (max-height: 950px) {
-      padding-top: 7rem;
+      padding-top: 6rem;
     }
 
     div.search-result-area {
       background-color: $gray-light-4;
-      min-height: calc(100% - 145px);
+      min-height: calc(100% - 200px);
       padding-top: 2.25rem;
 
       @media only screen and (max-height: 950px) {
@@ -108,7 +121,9 @@
     }
 
     div.search-error {
-      padding-top: 2rem;
+      padding-top: 0.5rem;
+      float: left;
+      padding-left: 20px;
     }
 
     .search-spinner {
@@ -123,10 +138,6 @@
 
       @media only screen and (max-height: 950px) {
         padding-bottom: 1rem;
-      }
-
-      .pointer {
-        cursor: pointer;
       }
 
       .main-heading {
@@ -150,55 +161,93 @@
         }
       }
 
-      .searchWarning {
+      .search-warning {
         color: $color-attention-base;
       }
 
-      .searchByRoom {
+      .search-warning-text {
+        color: $color-attention-darker;
+      }
+
+      .search-error {
+        color: $color-alerts-base;
+      }
+
+      .date-validation {
+        float: left;
+        padding: 3px;
+      }
+
+      .ediscovery-advanced-search {
         margin-top: 48px;
         display: inline-block;
         width: 50%;
 
+        .subheading {
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 1.71;
+          color: #858688;
+          margin-bottom: 8px;
+        }
+
         .cs-input {
           width: 100%;
+        }
+
+        .input-validation {
+          margin-top: 0;
+        }
+
+        .query-error-msg {
+          width: 250px;
         }
 
         .cs-datapicker-normal {
           max-width: 100%;
         }
 
-        .searchText {
-          float: left;
-          padding-left: 0.5rem;
+        .cs-datepicker {
+          display: block;
         }
 
-        .searchBox {
+        .search-spacing {
+          float: left;
+        }
+
+        .search-text {
+          color: #4f5051;
+        }
+
+        .search-box {
           padding-left: 0px;
         }
 
-        .selectList {
-          width: 50%;
+        .query-row {
+          padding-right: 0.5rem;
         }
 
-        .searchButton {
+        .search-button {
           float: left;
           width: 100px;
         }
 
-        #textInput {
-          margin-left: 0.5rem;
-        }
-
-        #smallBreak {
+        .small-gap {
           margin-top: 16px;
         }
 
-        #midBreak{
+        .mid-gap {
           padding-top: 24px;
         }
 
-        #largeBreak {
+        .large-gap {
           margin-top: 36px;
+        }
+
+        .icon-info {
+          width: 16px;
+          height: 16px;
+          color: #aeaeaf;
         }
       }
 
@@ -217,10 +266,6 @@
 
         @media only screen and (max-width: 640px) {
           max-width: 90%;
-        }
-
-        .searchInputForm {
-          margin-bottom: 0;
         }
 
         input {
@@ -340,9 +385,25 @@
           }
         }
 
+        .back-button {
+          padding-left: 16px;
+          padding-top: 24px;
+        }
+
+        .icon-info {
+          width: 16px;
+          height: 16px;
+          color: $gray-light-1;
+        }
+
+        .date-range-tooltip {
+          padding: 16px 24px 4px;
+        }
+
         .result-title {
           font-size: 12px;
           font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          padding-bottom: 4px;
         }
 
         .result-info {
@@ -352,31 +413,57 @@
           padding-bottom: 0px;
         }
 
+        .report-title {
+          font-family: 'CiscoSans';
+          font-size: 16px;
+          font-weight: 200;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.5;
+          letter-spacing: normal;
+          text-align: center;
+          color: #6a6b6c;
+        }
+
+        .report-info {
+          font-family: 'CiscoSans';
+          font-size: 26px;
+          font-weight: 200;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.23;
+          letter-spacing: normal;
+          text-align: center;
+          color: #049fd9;
+          padding-bottom: 20px;
+        }
+
         .report-header {
-          padding: 14px 18px;
+          padding: 0px 18px;
         }
 
         .report-parameters {
-          padding: 12px 32px;
+          padding: 0 32px 12px;
+
+          .results-spacing {
+            margin-top: 16px;
+          }
         }
 
-        .summaryHeader {
-          padding-left: 30px;
-        }
-
-        .reportError {
+        .report-error {
           padding: 1.5rem;
 
-          .reportWarning {
+          .report-warning {
             color: $color-attention-base;
           }
         }
 
         .input-section {
-          padding-bottom: 1.5rem;
+          padding-bottom: 2.5rem;
 
           .report-name {
             width: 100%;
+            margin-bottom: 15px;
           }
 
           .date-error {
@@ -388,6 +475,10 @@
             padding-bottom: 0.25rem;
             color: $gray-dark-2;
           }
+        }
+
+        .report-section {
+          overflow: hidden;
         }
 
         .result-section {
@@ -403,10 +494,6 @@
             padding-top: 0.5rem;
           }
 
-          i.icon-warning {
-            color: $color-attention-base;
-          }
-
           .report-timeout {
             padding-top: 1rem;
           }
@@ -420,6 +507,10 @@
 
         .expiry-info {
           padding-top: 1.5rem;
+
+          i.icon-warning {
+            color: $color-attention-base;
+          }
         }
 
         .last-input-row {

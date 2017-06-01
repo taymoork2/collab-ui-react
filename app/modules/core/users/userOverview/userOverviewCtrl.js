@@ -5,15 +5,17 @@
 
   /* @ngInject */
   function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q,
-    Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService,
-    Userservice, UserOverviewService) {
+    Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService,
+    Notification, SunlightConfigService, Userservice, UserOverviewService) {
     var vm = this;
 
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
+    vm.orgInfo = $stateParams.orgInfo;
 
     vm.services = [];
+    vm.userDetailList = [];
     vm.showGenerateOtpLink = false;
     vm.titleCard = '';
     vm.subTitleCard = '';
@@ -29,39 +31,51 @@
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
+    vm.clickUserDetailsService = clickUserDetailsService;
     vm.actionList = [];
-    vm.isSharedMeetingsEnabled = false;
-    vm.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
+    vm.hasSparkCall = false;
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
       icon: 'icon-circle-message',
       state: 'messaging',
       detail: $translate.instant('onboardModal.msgFree'),
-      actionAvailable: false
+      actionAvailable: false,
     };
     var commState = {
       name: $translate.instant('onboardModal.call'),
       icon: 'icon-circle-call',
       state: 'communication',
       detail: $translate.instant('onboardModal.callFree'),
-      actionAvailable: false
+      actionAvailable: false,
     };
     var confState = {
       name: $translate.instant('onboardModal.meeting'),
       icon: 'icon-circle-group',
       state: 'conferencing',
       detail: $translate.instant('onboardModal.mtgFree'),
-      actionAvailable: false
+      actionAvailable: false,
     };
     var contactCenterState = {
       name: $translate.instant('onboardModal.contactCenter'),
       icon: 'icon-circle-contact-centre',
       state: 'contactCenter',
       detail: $translate.instant('onboardModal.freeContactCenter'),
-      actionAvailable: true
+      actionAvailable: true,
     };
-
+    var preferredLanguageState = {
+      name: $translate.instant('preferredLanguage.title'),
+      detail: '',
+      state: 'userDetails',
+      dirsyncEnabled: false,
+      actionAvailable: true,
+    };
+    var preferredLanguageDetails = {
+      selectedLanguageCode: '',
+      languageOptions: [],
+      currentUserId: '',
+      hasSparkCall: false,
+    };
     init();
 
     /////////////////////////////
@@ -78,18 +92,11 @@
 
       vm.services = [];
 
-      if (_.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
-        vm.isSharedMeetingsEnabled = _.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue', false);
-      } else {
-        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
-          vm.isSharedMeetingsEnabled = smpStatus;
-        });
-      }
-
       initServices();
       initActionList();
       updateUserTitleCard();
       getUserFeatures();
+      initUserDetails();
       FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (enablePersonalCloudberry) {
         vm.showDevices = currentUserIsSquaredUC() || (enablePersonalCloudberry && Authinfo.isDeviceMgmt());
       });
@@ -112,7 +119,7 @@
 
     function initActionList() {
       var action = {
-        actionKey: 'common.edit'
+        actionKey: 'common.edit',
       };
       if (Authinfo.isCSB()) {
         action.actionFunction = goToUserRedirect;
@@ -125,7 +132,7 @@
 
     function goToEditService() {
       $state.go('editService', {
-        currentUser: vm.currentUser
+        currentUser: vm.currentUser,
       });
     }
 
@@ -136,6 +143,10 @@
 
     function clickService(feature) {
       $state.go('user-overview.' + feature.state);
+    }
+
+    function clickUserDetailsService(feature) {
+      $state.go('user-overview.' + feature.state, { 'preferredLanguageDetails': preferredLanguageDetails });
     }
 
     function getDisplayableServices(serviceName) {
@@ -152,7 +163,7 @@
       var userLicenses = vm.currentUser.licenseID;
       if (userLicenses) {
         for (var l = userLicenses.length - 1; l >= 0; l--) {
-          var licensePrefix = userLicenses[l].substring(0, 2);
+          var licensePrefix = userLicenses[l].substring(0, license.length);
           if (licensePrefix === license) {
             return true;
           }
@@ -172,7 +183,7 @@
         _.forEach(_.get(response, 'developer'), function (el) {
           if (el.val !== 'false' && el.val !== '0') {
             var newEl = {
-              key: el.key
+              key: el.key,
             };
             if (el.val !== 'true') {
               newEl.val = el.val;
@@ -223,51 +234,77 @@
     // this uses the entitlements returned from the getUser CI call.
     function initServices() {
 
-      if (vm.currentUser.hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-room-moderation') || !vm.hasAccount) {
         if (hasLicense('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');
           msgState.actionAvailable = getDisplayableServices('MESSAGING');
         }
       }
+      // allow access to user-level jabber interop entitlement if org-level entitlement is set
+      if (MessengerInteropService.hasAssignableMessageOrgEntitlement()) {
+        msgState.actionAvailable = true;
+      }
       vm.services.push(msgState);
 
-      if (vm.currentUser.hasEntitlement('cloudmeetings')) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'cloudmeetings')) {
         confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
         if (vm.currentUser.trainSiteNames) {
-          confState.detail = vm.isSharedMeetingsEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
+          confState.detail = $translate.instant('onboardModal.paidAdvancedConferencing');
         }
-      } else if (vm.currentUser.hasEntitlement('squared-syncup')) {
+      } else if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-syncup')) {
         if (hasLicense('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
         }
       }
       vm.services.push(confState);
 
-      if (vm.currentUser.hasEntitlement('ciscouc')) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'ciscouc')) {
         if (hasLicense('CO')) {
           commState.detail = $translate.instant('onboardModal.paidComm');
           commState.actionAvailable = true;
+          vm.hasSparkCall = true;
         }
       }
       vm.services.push(commState);
 
-      if (vm.currentUser.hasEntitlement('cloud-contact-center')) {
-        if (hasLicense('CD')) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'cloud-contact-center')) {
+        if (hasLicense('CDC') || hasLicense('CVC')) {
           SunlightConfigService.getUserInfo(vm.currentUser.id)
             .then(function () {
-              var hasSyncKms = _.find(vm.currentUser.roles, function (r) {
-                return r === Config.backend_roles.spark_synckms;
-              });
-              var hasContextServiceEntitlement = _.find(vm.currentUser.entitlements, function (r) {
-                return r === Config.entitlements.context;
-              });
-              if (hasSyncKms && hasContextServiceEntitlement) {
-                contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+              var hasSyncKms = _.includes(vm.currentUser.roles, Config.backend_roles.spark_synckms);
+              var hasCiscoucCES = _.includes(vm.currentUser.roles, Config.backend_roles.ciscouc_ces);
+              var hasContextServiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.context);
+              if ((hasSyncKms && hasContextServiceEntitlement) || hasCiscoucCES) {
+                if (hasLicense('CDC')) {
+                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                } else if (hasLicense('CVC')) {
+                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenterVoice');
+                }
                 vm.services.push(contactCenterState);
               }
             });
         }
       }
+    }
+
+    function initUserDetails() {
+      vm.userDetailList = [];
+      var ciLanguageCode = _.get(vm.currentUser, 'preferredLanguage');
+      var ciDirsyncEnabled = DirSyncService.isUserAttributeSynced(vm.orgInfo, 'preferredLanguage');
+      var formattedLanguage = ciLanguageCode ? UserOverviewService.formatLanguage(ciLanguageCode) : ciLanguageCode;
+      UserOverviewService.getUserPreferredLanguage(formattedLanguage).then(function (userLanguageDetails) {
+        preferredLanguageState.detail = !_.isEmpty(userLanguageDetails.language) ? _.get(userLanguageDetails.language, 'label') : formattedLanguage;
+        preferredLanguageDetails.languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
+      }).catch(function (error) {
+        Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
+      });
+      if (ciDirsyncEnabled) {
+        preferredLanguageState.dirsyncEnabled = ciDirsyncEnabled;
+      }
+      preferredLanguageDetails.selectedLanguageCode = formattedLanguage;
+      preferredLanguageDetails.currentUserId = vm.currentUser.id;
+      preferredLanguageDetails.hasSparkCall = vm.hasSparkCall;
+      vm.userDetailList.push(preferredLanguageState);
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {

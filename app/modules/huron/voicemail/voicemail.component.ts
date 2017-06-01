@@ -55,7 +55,7 @@ class VoicemailCtrl implements ng.IComponentController {
       .finally(() => {
         this.saveInProcess = false;
         this.reset();
-        this.$scope.$emit(VOICEMAIL_CHANGE);
+        this.$scope.$emit(VOICEMAIL_CHANGE, this.enableVoicemail);
       });
   }
 

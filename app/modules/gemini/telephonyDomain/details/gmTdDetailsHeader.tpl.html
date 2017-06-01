@@ -1,0 +1,15 @@
+<cs-sp-header>
+  <div class="header-image ng-scope">
+    <div class="user-img">
+      <i class="icon icon-user ng-scope"></i>
+    </div>
+  </div>
+  <div class="header-info" id="customer-info">
+    <div class="header-info-wrap">
+      <div class="header-title">
+        <span ng-bind="$ctrl.domainName"></span>
+        <a ng-if="$ctrl.isEdit" ng-click="$ctrl.onEditTD()"><i class="edit-button icon icon-edit"></i></a>
+      </div>
+    </div>
+  </div>
+</cs-sp-header>

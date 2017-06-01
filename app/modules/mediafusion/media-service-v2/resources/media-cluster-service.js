@@ -2,9 +2,9 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2) {
+  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo) {
     var clusterCache = {
-      mf_mgmt: {}
+      mf_mgmt: {},
     };
 
     function extractDataFromResponse(res) {
@@ -21,20 +21,22 @@
         .then(extractClustersFromResponse)
         .then(function (clusters) {
           // start modeling the response to match how the UI uses it
-          var onlyMfMgmt = _.filter(clusters, { targetType: 'mf_mgmt' });
+          var onlyMfMgmt = _.filter(clusters, {
+            targetType: 'mf_mgmt',
+          });
           return {
-            mf_mgmt: onlyMfMgmt
+            mf_mgmt: onlyMfMgmt,
           };
         })
         .then(function (clusters) {
           var result = {
-            mf_mgmt: addAggregatedData('mf_mgmt', clusters.mf_mgmt)
+            mf_mgmt: addAggregatedData('mf_mgmt', clusters.mf_mgmt),
           };
           return result;
         })
         .then(function (clusters) {
           var result = {
-            mf_mgmt: _.keyBy(clusters.mf_mgmt, 'id')
+            mf_mgmt: _.keyBy(clusters.mf_mgmt, 'id'),
           };
           return result;
         })
@@ -87,7 +89,7 @@
 
       return {
         label: label,
-        value: value
+        value: value,
       };
     }
 
@@ -97,7 +99,7 @@
         return {
           state: connector.state,
           stateSeverity: stateSeverity.label,
-          stateSeverityValue: stateSeverity.value
+          stateSeverityValue: stateSeverity.value,
         };
       } else {
         return previous;
@@ -111,20 +113,22 @@
     }
 
     function getUpgradeState(connectors) {
-      var allAreUpgraded = _.every(connectors, { upgradeState: 'upgraded' });
+      var allAreUpgraded = _.every(connectors, {
+        upgradeState: 'upgraded',
+      });
       return allAreUpgraded ? 'upgraded' : 'upgrading';
     }
 
     function mergeRunningState(connectors) {
       if (connectors.length == 0) {
         return {
-          state: 'no_hosts'
+          state: 'no_hosts',
         };
       }
       return _.chain(connectors)
         .map(overrideStateIfAlarms)
         .reduce(getMostSevereRunningState, {
-          stateSeverityValue: -1
+          stateSeverityValue: -1,
         })
         // .get('state')
         .value();
@@ -132,7 +136,9 @@
 
     function buildAggregates(type, cluster) {
       var connectors = cluster.connectors;
-      var provisioning = _.find(cluster.provisioning, { connectorType: type });
+      var provisioning = _.find(cluster.provisioning, {
+        connectorType: type,
+      });
       var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
         return connector.runningVersion !== provisioning.availableVersion;
       });
@@ -146,18 +152,24 @@
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
-        upgradePossible: upgradeAvailable && !_.some(cluster.connectors, { state: 'not_configured' }),
-        upgradeWarning: upgradeAvailable && !_.some(cluster.connectors, { state: 'offline' }),
+        upgradePossible: upgradeAvailable && !_.some(cluster.connectors, {
+          state: 'not_configured',
+        }),
+        upgradeWarning: upgradeAvailable && !_.some(cluster.connectors, {
+          state: 'offline',
+        }),
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
-          var connector = _.find(connectors, { hostname: host });
+          var connector = _.find(connectors, {
+            hostname: host,
+          });
           return {
             alarms: connector.alarms,
             hostname: host,
             state: connector.state,
-            upgradeState: connector.upgradeState
+            upgradeState: connector.upgradeState,
           };
-        })
+        }),
       };
     }
 
@@ -177,25 +189,27 @@
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
 
       $http.get(url)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           if (!data || !(data instanceof Object)) {
             data = {};
           }
           data.success = false;
-          data.status = status;
-          callback(data, status);
+          data.status = response.status;
+          callback(data, response.status);
         });
 
       //return $http.get(url).then(extractDataFromResponse);
     };
 
     var getClustersV2 = function () {
-      var url = MediaConfigServiceV2.getV2Url() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide';
 
       return $http.get(url).then(extractDataFromResponse);
     };
@@ -204,10 +218,10 @@
       var payLoad = {
         "name": clusterName,
         "releaseChannel": releaseChannel,
-        "targetType": "mf_mgmt"
+        "targetType": "mf_mgmt",
       };
 
-      var url = MediaConfigServiceV2.getV2Url() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
       return $http
         .post(url, payLoad);
     };
@@ -216,10 +230,10 @@
       var payLoad = {
         "hostname": hostName,
         "clusterId": clusterId,
-        ttlInSeconds: 60 * 60
+        ttlInSeconds: 60 * 60,
       };
 
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
       return $http
         .post(url, payLoad);
     };
@@ -252,7 +266,7 @@
     function updateV2Cluster(clusterId, clusterName, releaseChannel) {
       var payLoad = {
         "name": clusterName,
-        "releaseChannel": releaseChannel
+        "releaseChannel": releaseChannel,
       };
 
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
@@ -265,11 +279,6 @@
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke?managementConnectorId=' + connectorId + '&fromClusterId=' + fromCluster + '&toClusterId=' + toCluster;
       return $http
         .post(url);
-    }
-
-    function defuseV2Connector(connectorId) {
-      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregister/invoke?managementConnectorId=' + connectorId;
-      return $http.post(url);
     }
 
     function deleteClusterWithConnector(clusterId) {
@@ -290,6 +299,33 @@
         .post(url, payLoad);
     }
 
+    function getV1Clusters() {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/';
+      return $http
+        .get(url)
+        .then(extractDataFromResponse);
+
+    }
+
+    function getPropertySets() {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets?type=mf.group';
+      return $http
+        .get(url)
+        .then(extractDataFromResponse);
+    }
+
+    function createPropertySet(payLoad) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
+      return $http
+        .post(url, payLoad);
+    }
+
+    function updatePropertySetById(id, payLoad) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + id;
+      return $http
+        .post(url, payLoad);
+    }
+
     function getClustersByConnectorType(type) {
       var clusters = _.chain(clusterCache[type])
         .values() // turn them to an array
@@ -302,12 +338,6 @@
 
     function getCluster(id) {
       return clusterCache['mf_mgmt'][id];
-    }
-
-    function upgradeCluster(id) {
-      var connectorType = 'mf_mgmt';
-      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/provisioning/actions/update/invoke?connectorType=' + connectorType + '&forced=true';
-      return $http.post(url);
     }
 
     var hub = CsdmHubFactory.create();
@@ -326,9 +356,7 @@
       getAll: getAll,
       deleteV2Cluster: deleteV2Cluster,
       updateV2Cluster: updateV2Cluster,
-      defuseV2Connector: defuseV2Connector,
       deleteClusterWithConnector: deleteClusterWithConnector,
-      upgradeCluster: upgradeCluster,
       moveV2Host: moveV2Host,
       getProperties: getProperties,
       setProperties: setProperties,
@@ -336,7 +364,11 @@
       getRunningStateSeverity: getRunningStateSeverity,
       mergeAllAlarms: mergeAllAlarms,
       getMostSevereRunningState: getMostSevereRunningState,
-      buildAggregates: buildAggregates
+      buildAggregates: buildAggregates,
+      getV1Clusters: getV1Clusters,
+      getPropertySets: getPropertySets,
+      createPropertySet: createPropertySet,
+      updatePropertySetById: updatePropertySetById,
     };
   }
 

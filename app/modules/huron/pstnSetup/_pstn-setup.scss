@@ -1,3 +1,5 @@
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+
 .pstn-providers,
 .pstn-service-address,
 .pstn-numbers,
@@ -35,11 +37,18 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  .pstn-carrier-select {
+    border: 1px;
+    border-style: solid;
+    border-color: $color-primary-base;
+  }
 }
 
 .pstn-provider-logo {
-  height: rem-calc(40px);
-  max-width: rem-calc(235px);
+  height: 4rem;
+  width: 100%;
+  max-width: rem-calc(195px);
 }
 
 .pstn-provider-card {
@@ -101,7 +110,7 @@
 
 .reveal-modal.full {
   .pstn-numbers {
-    .modal-body {
+    .modal-body.trials {
       padding: 0;
     }
   }
@@ -287,7 +296,7 @@
   .review-container {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 80%;
     margin-left: auto;
     margin-right: auto;
   }
@@ -319,7 +328,9 @@
 
       img {
         @extend .pstn-provider-logo;
-
+        max-width: rem-calc(235px);
+        min-height: rem-calc(90px);
+        max-height: rem-calc(95px);
         margin: 50px;
       }
     }

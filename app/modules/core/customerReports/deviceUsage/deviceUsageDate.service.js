@@ -24,7 +24,7 @@
     }
 
     return {
-      getDateRangeForLastNTimeUnits: getDateRangeForLastNTimeUnits
+      getDateRangeForLastNTimeUnits: getDateRangeForLastNTimeUnits,
     };
   }
 }());

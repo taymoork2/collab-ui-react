@@ -30,9 +30,9 @@ describe('Spark UC Partner flow', function () {
         utils.sendKeys(partner.customerEmailInput, partner.newSqUCTrial.customerEmail);
 
         // uncheck advanced spark call
-        utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
+        utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);
         utils.click(partner.squaredUCTrialCheckbox);
-        utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
+        utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, false);
 
         utils.click(partner.startTrialButton);
         notifications.assertSuccess(partner.newSqUCTrial.customerName, 'A trial was successfully started');
@@ -61,12 +61,12 @@ describe('Spark UC Partner flow', function () {
         utils.expectIsDisplayed(partner.editTrialForm);
 
         utils.waitClass(partner.messageTrialCheckbox, 'disabled');
-        utils.expectCheckbox(partner.messageTrialCheckbox, true);
+        utils.expectInputCheckbox(partner.messageTrialCheckbox, true);
 
         // enabled advanced spark call
         utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
         utils.click(partner.squaredUCTrialCheckbox);
-        utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
+        utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);
 
         utils.click(partner.saveUpdateButton);
         notifications.assertSuccess(partner.newSqUCTrial.customerName, 'You have successfully edited a trial for');
@@ -85,11 +85,11 @@ describe('Spark UC Partner flow', function () {
         utils.expectIsDisplayed(partner.editTrialForm);
 
         utils.waitClass(partner.messageTrialCheckbox, 'disabled');
-        utils.expectCheckbox(partner.messageTrialCheckbox, true);
+        utils.expectInputCheckbox(partner.messageTrialCheckbox, true);
 
         // verify checkbox is checked and disabled
         utils.waitClass(partner.squaredUCTrialCheckbox, 'disabled');
-        utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
+        utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);
 
         utils.click(partner.saveUpdateButton);
         notifications.assertSuccess(partner.newSqUCTrial.customerName, 'You have successfully edited a trial for');

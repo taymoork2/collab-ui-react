@@ -1,9 +1,9 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
 
 .pagination {
   display: inline-block;
   padding-left: 0;
-  margin: $line-height-computed 0;
+  margin: 20px 0;
 
   .carousel-btn {
     border: 1px solid $gray-dark-1;
@@ -29,7 +29,6 @@
   .carousel-control:hover {
     background-color: $color-primary-base;
     color: $white;
-
   }
 
   .carousel-control[disabled] {

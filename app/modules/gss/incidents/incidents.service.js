@@ -18,7 +18,8 @@
       getComponents: getComponents,
       updateIncident: updateIncident,
       getAffectedComponents: getAffectedComponents,
-      updateIncidentMessage: updateIncidentMessage
+      updateIncidentMessage: updateIncidentMessage,
+      deleteIncidentMessage: deleteIncidentMessage,
     };
 
     return service;
@@ -70,6 +71,11 @@
     function updateIncidentMessage(messageId, message) {
       var url = baseUrl + '/incidents/messages/' + messageId;
       return $http.put(url, message).then(extractData);
+    }
+
+    function deleteIncidentMessage(messageId) {
+      var url = baseUrl + '/incidents/messages/' + messageId;
+      return $http.delete(url).then(extractData);
     }
   }
 }());

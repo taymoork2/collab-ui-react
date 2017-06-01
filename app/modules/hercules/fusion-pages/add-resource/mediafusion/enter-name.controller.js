@@ -5,7 +5,7 @@
     .controller('MediafusionEnterNameController', MediafusionEnterNameController);
 
   /* @ngInject */
-  function MediafusionEnterNameController($stateParams, $translate, FusionClusterService, Notification) {
+  function MediafusionEnterNameController($stateParams, $translate, HybridServicesClusterService, HybridServicesExtrasService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     var clusterId = null;
@@ -15,27 +15,27 @@
     vm.handleKeypress = handleKeypress;
     vm.provisioning = false;
     vm._translation = {
-      help: $translate.instant('hercules.fusion.add-resource.mediafusion.name.help')
+      help: $translate.instant('hercules.fusion.add-resource.mediafusion.name.help'),
     };
     vm.minlength = 1;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {
-        min: vm.minlength
-      })
+        min: vm.minlength,
+      }),
     };
 
     ///////////////
 
     function provisionCluster(data) {
       vm.provisioning = true;
-      return FusionClusterService.preregisterCluster(data.name, 'stable', 'mf_mgmt')
+      return HybridServicesClusterService.preregisterCluster(data.name, 'stable', 'mf_mgmt')
         .then(function (cluster) {
           clusterId = cluster.id;
           return cluster;
         })
         .then(function () {
-          return FusionClusterService.addPreregisteredClusterToAllowList(data.hostname, 3600, clusterId);
+          return HybridServicesExtrasService.addPreregisteredClusterToAllowList(data.hostname, 3600, clusterId);
         })
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');
@@ -66,8 +66,8 @@
           $stateParams.wizard.next({
             mediafusion: {
               name: vm.name,
-              id: clusterId
-            }
+              id: clusterId,
+            },
           });
         })
         .catch(function (error) {

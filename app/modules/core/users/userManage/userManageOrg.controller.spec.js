@@ -10,9 +10,9 @@ describe('UserManageOrgController', function () {
 
     this.$state = {
       modal: {
-        dismiss: jasmine.createSpy('dismiss').and.returnValue(true)
+        dismiss: jasmine.createSpy('dismiss').and.returnValue(true),
       },
-      go: jasmine.createSpy('go')
+      go: jasmine.createSpy('go'),
     };
 
     spyOn(this.Analytics, 'trackAddUsers');
@@ -26,7 +26,7 @@ describe('UserManageOrgController', function () {
       Analytics: this.Analytics,
       UserCsvService: this.UserCsvService,
       OnboardService: this.OnboardService,
-      Orgservice: this.Orgservice
+      Orgservice: this.Orgservice,
     });
     this.$scope.$apply();
   }
@@ -34,7 +34,7 @@ describe('UserManageOrgController', function () {
   function initControllerAndDefaults() {
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
       callback({
-        success: false
+        success: false,
       });
     });
 
@@ -45,7 +45,7 @@ describe('UserManageOrgController', function () {
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
       callback({
         success: true,
-        totalResults: 1
+        totalResults: 1,
       });
     });
 
@@ -68,7 +68,7 @@ describe('UserManageOrgController', function () {
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
       callback({
         success: true,
-        totalResults: 0
+        totalResults: 0,
       });
     });
 
@@ -132,7 +132,7 @@ describe('UserManageOrgController', function () {
 
     this.controller.onNext();
     expect(this.$state.go).toHaveBeenCalledWith('users.convert', {
-      manageUsers: true
+      manageUsers: true,
     });
     expect(this.Analytics.trackAddUsers).not.toHaveBeenCalled();
   });

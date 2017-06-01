@@ -46,11 +46,11 @@
     vm.oneAtATime = true;
     vm.messages = {
       required: $translate.instant('common.invalidRequired'),
-      compareTo: $translate.instant('autoAttendant.holidayScheduleEndTimeCheck')
+      compareTo: $translate.instant('autoAttendant.holidayScheduleEndTimeCheck'),
     };
     vm.messageHours = {
       required: $translate.instant('common.invalidRequired'),
-      compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
+      compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck'),
     };
     vm.monthOptions = [];
     vm.dayOptions = [];
@@ -70,7 +70,15 @@
       _.each(openhour.days, function (day) {
         day.label = moment.weekdays(day.index);
       });
-      vm.openhours.push(angular.copy(openhour));
+      vm.openhours.push(_.cloneDeep(openhour));
+
+      _.forEach(vm.openhours, function (value, index) {
+        if ((_.isUndefined(vm.openhours[index].starttime)) || (_.isUndefined(vm.openhours[index].endtime))) {
+          vm.openhours[index].starttime = '08:00 AM';
+          vm.openhours[index].endtime = '05:00 PM';
+        }
+      });
+
     }
 
     //check each hours form that exist in the DOM for validity
@@ -99,7 +107,7 @@
     //with a single toaster error message, otherwise, return no error found
     function isDayEmpty(index) {
       var atLeastOneDaySet = _.find(vm.openhours[index].days, {
-        'active': true
+        'active': true,
       });
       if (_.isUndefined(atLeastOneDaySet)) {
         AANotificationService.error('autoAttendant.openHoursDaySelect');
@@ -180,8 +188,16 @@
           day: '',
           monthError: false,
           rankError: false,
-          dayError: false
+          dayError: false,
         });
+
+        _.each(vm.holidays, function (holiday) {
+          if ((_.isUndefined(holiday.starttime)) || (_.isUndefined(holiday.endtime))) {
+            holiday.starttime = '08:00 AM';
+            holiday.endtime = '05:00 PM';
+          }
+        });
+
       } else {
         vm.forceCheckHoliday();
       }
@@ -189,7 +205,7 @@
 
     function forceCheckHoliday() {
       var index = _.findLastIndex(vm.holidays, {
-        isOpen: true
+        isOpen: true,
       });
       if (index >= 0) {
         var indexForm = 'holidayForm' + index;
@@ -246,7 +262,7 @@
 
     function forceStartBeforeEndCheck() {
       var index = _.findLastIndex(vm.holidays, {
-        isOpen: true
+        isOpen: true,
       });
       if (index >= 0) {
         var indexForm = 'holidayForm' + index;
@@ -373,7 +389,7 @@
           var type = 'change';
           Analytics.trackEvent(AAMetricNameService.TIME_ZONE, {
             type: type,
-            timezone: vm.ui.timeZone.id
+            timezone: vm.ui.timeZone.id,
           });
         }
 
@@ -422,7 +438,7 @@
               return;
             }
             AANotificationService.success('autoAttendant.successUpdateCe', {
-              name: notifyName
+              name: notifyName,
             });
             vm.isDeleted = false;
             vm.ui.isHolidays = vm.holidays.length > 0;
@@ -439,20 +455,20 @@
               AANotificationService.errorResponse(response, 'autoAttendant.errorDeleteCe', {
                 name: calName,
                 statusText: response.statusText,
-                status: response.status
+                status: response.status,
               });
             } else if (_.isUndefined(vm.aaModel.aaRecord.scheduleId)) {
               //Calendar create failed
               AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
                 name: calName,
                 statusText: response.statusText,
-                status: response.status
+                status: response.status,
               });
             } else {
               AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
                 name: notifyName,
                 statusText: response.statusText,
-                status: response.status
+                status: response.status,
               });
             }
           });
@@ -490,7 +506,7 @@
           AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
             name: ceName,
             statusText: response.statusText,
-            status: response.status
+            status: response.status,
           });
           vm.aaModel.aaRecord.scheduleId = undefined;
           if (isNew) {
@@ -560,7 +576,7 @@
         vm.monthOptions.push({
           index: i,
           number: i + 1,
-          label: moment.months(i)
+          label: moment.months(i),
         });
       });
       vm.rankOptions = AAICalService.getRanks();
@@ -572,7 +588,7 @@
         vm.dayOptions[((index - 1) + 7) % 7] = {
           index: index,
           abbr: value,
-          label: moment.weekdays(index)
+          label: moment.weekdays(index),
         };
       });
 
@@ -584,7 +600,7 @@
 
       vm.timeZone = vm.ui.timeZone;
       vm.timeZoneInfo = $translate.instant('autoAttendant.scheduleModalInfoTimeZone', {
-        timezone: vm.ui.systemTimeZone.label
+        timezone: vm.ui.systemTimeZone.label,
       });
 
       if (!_.isEmpty(sectionToToggle)) {
@@ -597,13 +613,13 @@
         templateUrl: 'modules/huron/features/autoAttendant/schedule/importSchedule.tpl.html',
         type: 'dialog',
         controller: 'AAScheduleImportCtrl',
-        controllerAs: 'import'
+        controllerAs: 'import',
       });
       importModal.result.then(function (allHours) {
         if (allHours) {
           AANotificationService.success('autoAttendant.successImport', {
             holidays: allHours.holidays.length,
-            hours: allHours.hours.length
+            hours: allHours.hours.length,
           });
           allHours.hours.forEach(function (value) {
             _.each(value.days, function (day) {
@@ -627,7 +643,7 @@
           //let Analytics know the property type of 'cancel'
           var type = 'cancel';
           Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
-            type: type
+            type: type,
           });
         });
     }

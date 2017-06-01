@@ -1,4 +1,7 @@
-@import 'styles/toolkit/fonts';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .customer-overview {
   .feature-details {
@@ -11,6 +14,20 @@
 
   .button-container {
     left: -1px;
+  }
+
+  .premium {
+    text-align: center;
+    color: $gray-light-1;
+
+    .premium-customer {
+      font-family: $brand-font-cisco-TT-Light;
+      font-size: vr-adjust(14);
+    }
+
+    .premium-customer-icon {
+      font-size: vr-adjust(24);
+    }
   }
 
   .trial-bar {
@@ -100,8 +117,10 @@
       padding-bottom: 0.75rem;
     }
 
-    h6 {
-      font-size: 0.75rem;
+    .sub-section {
+      .title {
+        font-size: 0.75rem;
+      }
     }
 
     .feature-list li {

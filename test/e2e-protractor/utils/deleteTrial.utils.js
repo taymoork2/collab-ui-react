@@ -58,7 +58,7 @@ exports.deleteOrg = function (orgId, token) {
     url: config.getAdminServiceUrl() + 'organizations/' + orgId,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token
+      Authorization: 'Bearer ' + token,
     },
   };
 

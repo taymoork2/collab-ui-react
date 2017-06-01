@@ -10,7 +10,7 @@
     vm.title = wizardData.title;
 
     $scope.entitylist = [{
-      name: wizardData.account.name
+      name: wizardData.account.name,
     }];
     $scope.telephonyInfo = {};
     vm.isMapped = false;
@@ -33,7 +33,7 @@
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
 
     vm.hasNextStep = function () {
-      return wizardData.function !== 'editServices';
+      return wizardData.function !== 'editServices' || wizardData.account.enableCalService;
     };
 
     vm.next = function () {
@@ -41,17 +41,16 @@
       $stateParams.wizard.next({
         account: {
           directoryNumber: numbers.directoryNumber,
-          externalNumber: numbers.externalNumber
-        }
-      });
+          externalNumber: numbers.externalNumber,
+        },
+      }, wizardData.account.enableCalService ? 'calendar' : 'next');
     };
 
     vm.save = function () {
       vm.isLoading = true;
       var numbers = vm.getSelectedNumbers();
       if (numbers.directoryNumber || numbers.externalNumber) {
-        CsdmDataModelService.getPlacesMap().then(function (list) {
-          var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
+        CsdmDataModelService.reloadPlace(wizardData.account.cisUuid).then(function (place) {
           if (place) {
             CsdmDataModelService.updateCloudberryPlace(place, wizardData.account.entitlements, numbers.directoryNumber, numbers.externalNumber)
               .then(function () {
@@ -82,12 +81,12 @@
         directoryNumber = entity.assignedDn.pattern;
       }
       var externalNumber;
-      if (entity.externalNumber && entity.externalNumber.pattern !== 'None') {
+      if (entity.externalNumber && entity.externalNumber.uuid !== 'none') {
         externalNumber = entity.externalNumber.pattern;
       }
       return {
         directoryNumber: directoryNumber,
-        externalNumber: externalNumber
+        externalNumber: externalNumber,
       };
     };
 
@@ -151,12 +150,12 @@
     }
 
     function toggleShowExtensions() {
-      return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+      return DialPlanService.getDialPlan().then(function (response) {
         var indexOfDidColumn = _.findIndex(vm.addDnGridOptions.columnDefs, {
-          field: 'externalNumber'
+          field: 'externalNumber',
         });
         var indexOfDnColumn = _.findIndex(vm.addDnGridOptions.columnDefs, {
-          field: 'internalExtension'
+          field: 'internalExtension',
         });
         if (response.extensionGenerated === "true") {
           vm.showExtensions = false;
@@ -187,7 +186,7 @@
         // if the externalNumber was changed, find a matching DN and set the internalNumber to match
         if (modifiedFieldName === "externalNumber") {
           var matchingDn = _.find(CommonLineService.getInternalNumberPool(), {
-            pattern: rowEntity.externalNumber.pattern.substr(-dnLength)
+            pattern: rowEntity.externalNumber.pattern.substr(-dnLength),
           });
           if (matchingDn) {
             rowEntity.assignedDn = matchingDn;
@@ -260,7 +259,7 @@
         displayName: $translate.instant('usersPage.nameHeader'),
         sortable: false,
         cellTemplate: nameTemplate,
-        width: '*'
+        width: '*',
       }, {
         field: 'externalNumber',
         displayName: $translate.instant('usersPage.directLineHeader'),
@@ -268,7 +267,7 @@
         cellTemplate: externalExtensionTemplate,
         maxWidth: 220,
         minWidth: 140,
-        width: '*'
+        width: '*',
       }, {
         field: 'internalExtension',
         displayName: $translate.instant('usersPage.extensionHeader'),
@@ -276,8 +275,8 @@
         cellTemplate: internalExtensionTemplate,
         maxWidth: 220,
         minWidth: 140,
-        width: '*'
-      }]
+        width: '*',
+      }],
     };
 
     vm.activateDID();

@@ -2,7 +2,7 @@
 
 describe('component: cbgCountry', function () {
   var $q, $scope, $timeout, $componentCtrl;
-  var ctrl, cbgService, Notification;
+  var ctrl, cbgService, Notification, WindowLocation;
   var preData = getJSONFixture('gemini/common.json');
   var csvFile = 'COUNTRY\r\nAlbania\r\nAlgeria\r\nAmerican Samoa';
 
@@ -13,25 +13,27 @@ describe('component: cbgCountry', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $scope = $timeout = $componentCtrl = ctrl = cbgService = Notification = undefined;
+    $q = $scope = $timeout = $componentCtrl = ctrl = cbgService = Notification = WindowLocation = undefined;
   });
   afterAll(function () {
     preData = csvFile = undefined;
   });
 
-  function dependencies(_$q_, _$timeout_, _cbgService_, _$rootScope_, _Notification_, _$componentController_) {
+  function dependencies(_$q_, _$timeout_, _cbgService_, _$rootScope_, _Notification_, _WindowLocation_, _$componentController_) {
     $q = _$q_;
     $timeout = _$timeout_;
     cbgService = _cbgService_;
     $scope = _$rootScope_.$new();
     Notification = _Notification_;
+    WindowLocation = _WindowLocation_;
     $componentCtrl = _$componentController_;
   }
 
   function initSpies() {
     spyOn(Notification, 'error');
     spyOn(cbgService, 'getCountries').and.returnValue($q.resolve());
-    spyOn(cbgService, 'getDownloadCountryUrl').and.returnValue($q.resolve());
+    spyOn(cbgService, 'getDownloadCountryUrl').and.returnValue('https://atlascca1.qa.webex.com');
+    spyOn(WindowLocation, 'set').and.callFake(function () { });
   }
 
   function initController() {
@@ -42,10 +44,7 @@ describe('component: cbgCountry', function () {
   describe('$onInit', function () {
     function initParams() {
       var mockCountry = preData.getCountries;
-      var mockDownload = preData.common;
-      mockDownload.content.data.body = 'https://atlascca1.qa.webex.com';
       cbgService.getCountries.and.returnValue($q.resolve(mockCountry));
-      cbgService.getDownloadCountryUrl.and.returnValue($q.resolve(mockDownload));
     }
 
     it('should initialization', function () {
@@ -53,7 +52,6 @@ describe('component: cbgCountry', function () {
       ctrl.$onInit();
       $scope.$apply();
       expect(ctrl.options.length).toBe(4);
-      expect(ctrl.downloadUrl).toBe('https://atlascca1.qa.webex.com');
     });
 
     it('should isCsvValid to be true', function () {

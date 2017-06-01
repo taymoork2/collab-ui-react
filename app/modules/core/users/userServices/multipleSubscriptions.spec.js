@@ -23,7 +23,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
   function initController() {
     controller = $controller('MultipleSubscriptionsCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
@@ -77,6 +77,26 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
         expect(controller.showLicenses('', true)).toEqual(true);
       });
     });
+
+    describe('for care trial subscriptions', function () {
+      beforeEach(function () {
+        initController();
+      });
+
+      it('should verify that there is a trial subscription', function () {
+        expect(controller.oneBilling).toEqual(false);
+        expect(controller.showCareLicenses(getLicensesUsage.careK1K2TrialSub)).toEqual(true);
+        expect(controller.showCareLicenses(getLicensesUsage.careK1TrialSub)).toEqual(true);
+        expect(controller.showCareLicenses(getLicensesUsage.careK2TrialSub)).toEqual(true);
+      });
+
+      it('should verify that there is no trial subscription', function () {
+        controller.selectedSubscription = 'xyz';
+        expect(controller.oneBilling).toEqual(false);
+        expect(controller.showCareLicenses(getLicensesUsage.careFakeTrialSub)).toEqual(undefined);
+      });
+    });
+
 
   });
 });

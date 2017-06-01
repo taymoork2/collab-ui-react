@@ -5,12 +5,13 @@
     .module('Gemini')
     .component('cbgNotes', {
       templateUrl: 'modules/gemini/callbackGroup/details/cbgNotes.tpl.html',
-      controller: CbgNotesCtrl
+      controller: CbgNotesCtrl,
     });
   /* @ngInject */
-  function CbgNotesCtrl($state, $stateParams, $translate, cbgService, Notification, PreviousState, gemService) {
+  function CbgNotesCtrl($state, $scope, $stateParams, $translate, cbgService, Notification, PreviousState, gemService) {
     var vm = this;
     var showNotesNum = 5;
+    var noteMaxByte = 2048;
     var customerId = _.get($stateParams, 'obj.customerId', '');
     var ccaGroupId = _.get($stateParams, 'obj.info.ccaGroupId', '');
 
@@ -30,25 +31,28 @@
       var postData = {
         customerID: customerId,
         siteID: ccaGroupId,
-        action: 'add_note',
-        objectName: vm.model.postData
+        action: 'add_notes_cg',
+        objectName: vm.model.postData,
       };
       var notes = _.get(postData, 'objectName');
       vm.loading = true;
-      if (getByteLength(notes) > 2048) {
+      if (gemService.getByteLength(notes) > noteMaxByte) {
+        Notification.error('gemini.cbgs.notes.errorMsg.maxLength', { maxLength: noteMaxByte });
         return;
       }
       cbgService.postNote(postData).then(function (res) {
         var resJson = _.get(res.content, 'data.body');
-        var arr = [];
         vm.loading = false;
         if (resJson.returnCode) {
           Notification.notify(gemService.showError(resJson.returnCode));
           return;
         }
-        arr.push(resJson);
-        vm.notes = arr.concat(vm.notes);
+        vm.allNotes.unshift(resJson);
+        vm.isShowAll = (_.size(vm.allNotes) > showNotesNum);
+        vm.notes = (_.size(vm.allNotes) <= showNotesNum ? vm.allNotes : vm.allNotes.slice(0, showNotesNum));
         vm.model.postData = '';
+
+        $scope.$emit('cbgNotesUpdated', vm.allNotes);
       });
     }
 
@@ -74,22 +78,6 @@
           vm.notes = (_.size(vm.allNotes) <= showNotesNum ? vm.allNotes : vm.allNotes.slice(0, showNotesNum));
           vm.loading = false;
         });
-    }
-
-    function getByteLength(str) {
-      var totalLength = 0;
-      var charCode;
-      for (var i = 0; i < str.length; i++) {
-        charCode = str.charCodeAt(i);
-        if (charCode < 0x007f) {
-          totalLength = totalLength + 1;
-        } else if ((0x0080 <= charCode) && (charCode <= 0x07ff)) {
-          totalLength += 2;
-        } else if ((0x0800 <= charCode) && (charCode <= 0xffff)) {
-          totalLength += 3;
-        }
-      }
-      return totalLength;
     }
   }
 })();

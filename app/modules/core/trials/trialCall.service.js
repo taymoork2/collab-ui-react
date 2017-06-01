@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialCallService', TrialCallService);
+  module.exports = TrialCallService;
 
   /* @ngInject */
   function TrialCallService(Config) {
@@ -12,7 +10,7 @@
       getData: getData,
       reset: reset,
       hasCallDevicesAvailable: hasCallDevicesAvailable,
-      canAddCallDevice: canAddCallDevice
+      canAddCallDevice: canAddCallDevice,
     };
 
     return service;
@@ -37,30 +35,30 @@
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
+            valid: true,
           }, {
             model: 'CISCO_8845',
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
+            valid: true,
           }, {
-            model: 'CISCO_8841',
+            model: 'CISCO_7832',
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
+            valid: true,
           }, {
             model: 'CISCO_7841',
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
-          }]
-        }
+            valid: true,
+          }],
+        },
       };
 
-      _trialData = angular.copy(defaults);
+      _trialData = _.cloneDeep(defaults);
       return _trialData;
     }
 

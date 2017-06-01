@@ -1,9 +1,9 @@
 [{
   "label": "United States",
   "value": "US",
-  "featureToggle": "huron-l10n-user-locale"
+  "featureToggle": "huron-l10n-network-locale"
 }, {
   "label": "Canada",
   "value": "CA",
-  "featureToggle": "huron-l10n-user-locale"
+  "featureToggle": "huron-l10n-network-locale"
 }]

@@ -5,7 +5,7 @@
     .service('ReportsService', ReportsService);
 
   /* @ngInject */
-  function ReportsService($http, $rootScope, Log, Authinfo, UrlConfig) {
+  function ReportsService($http, $q, $rootScope, Log, Authinfo, UrlConfig) {
     var apiUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/';
 
     var callMetricsUrl = 'reports/stats/callUsage';
@@ -27,7 +27,7 @@
       'entitlementCount': entitlementCount,
       'contentSharedCount': contentSharedCount,
       'callsCount': callsUrl,
-      'conversationsCount': conversationsUrl
+      'conversationsCount': conversationsUrl,
     };
 
     return {
@@ -46,7 +46,7 @@
       getPartnerMetrics: getPartnerMetrics,
       healthMonitor: healthMonitor,
       getHealthStatus: getHealthStatus,
-      getOverviewMetrics: getOverviewMetrics
+      getOverviewMetrics: getOverviewMetrics,
     };
 
     ///////////////////////
@@ -82,7 +82,7 @@
     function sendChartResponse(data, status, metricType) {
       var response = {
         'data': data,
-        'status': status
+        'status': status,
       };
       $rootScope.$broadcast(metricType + 'Loaded', response);
     }
@@ -94,7 +94,7 @@
         'spanCount': 1,
         'spanType': 'week',
         'cache': useCache,
-        'isCustomerView': true
+        'isCustomerView': true,
       }, paramOverrides);
 
       _.forEach(customerCharts, function (customerChart) {
@@ -128,18 +128,22 @@
       var metricUrl = buildUrl(metricType, params);
 
       return $http.get(metricUrl)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('Callback for ' + metricType + ' for org=' + Authinfo.getOrgId());
-          sendChartResponse(data, status, metricType);
+          sendChartResponse(data, response.status, metricType);
+          return response;
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          data.status = status;
+          data.status = response.status;
           data.errorMsg = data;
-          sendChartResponse(data, status, metricType);
+          sendChartResponse(data, response.status, metricType);
+          return $q.reject(response);
         });
     }
 
@@ -150,7 +154,7 @@
         'spanCount': 1,
         'spanType': 'week',
         'cache': useCache,
-        'isCustomerView': false
+        'isCustomerView': false,
       };
 
       _.forEach(partnerCharts, function (partnerChart) {
@@ -163,14 +167,14 @@
       getTimeCharts(useCache, charts, {
         intervalType: 'week',
         intervalCount: 2,
-        spanType: 'week'
+        spanType: 'week',
       });
 
       var callCharts = ['oneOnOneCalls', 'groupCalls'];
       getTimeCharts(useCache, callCharts, {
         intervalType: 'month',
         intervalCount: 2,
-        spanType: 'month'
+        spanType: 'month',
       });
     }
 
@@ -178,17 +182,19 @@
       $http.get(healthUrl,
         {
           // statuspage.io doesn't play nice w/ our oauth header, so we unset it specifically here
-          headers: { Authorization: undefined }
+          headers: { Authorization: undefined },
         })
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
+        .catch(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = false;
-          callback(data, status);
+          callback(data, response.status);
         });
     }
 
@@ -200,7 +206,7 @@
       return $http.get(healthUrl,
         {
           // statuspage.io doesn't play nice w/ our oauth header, so we unset it specifically here
-          headers: { Authorization: undefined }
+          headers: { Authorization: undefined },
         })
         .then(function (response) {
           var length = response.data.components.length;

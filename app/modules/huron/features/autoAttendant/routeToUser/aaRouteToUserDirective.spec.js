@@ -8,8 +8,8 @@ describe('Directive: aaRouteToUser', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'aa'
-    }
+      name: 'aa',
+    },
   };
 
   var userListCmiResponse = {
@@ -18,19 +18,19 @@ describe('Directive: aaRouteToUser', function () {
     "startIndex": "1",
     "schemas": [
       "urn:scim:schemas:core:1.0",
-      "urn:scim:schemas:extension:cisco:commonidentity:1.0"
+      "urn:scim:schemas:extension:cisco:commonidentity:1.0",
     ],
     "Resources": [{
       "userName": "dudette@gmail.com",
       "name": {
         "givenName": "some",
-        "familyName": "user"
+        "familyName": "user",
       },
       "entitlements": [
         "ciscouc",
         "squared-call-initiation",
         "spark",
-        "webex-squared"
+        "webex-squared",
       ],
       "id": "47026507-4F83-0B5B-9C1D-8DBA89F2E01C",
       "meta": {
@@ -38,16 +38,16 @@ describe('Directive: aaRouteToUser', function () {
         "lastModified": "2016-01-06T18:06:47.999Z",
         "version": "19382735439",
         "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
-        "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2"
+        "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
       },
       "displayName": "some user",
       "active": true,
       "licenseID": [
-        "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32"
+        "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32",
       ],
-      "avatarSyncEnabled": false
+      "avatarSyncEnabled": false,
     }],
-    "success": true
+    "success": true,
   };
 
   var schedule = 'openHours';

@@ -10,7 +10,7 @@
     var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
-      userUrl: userUrl
+      userUrl: userUrl,
     };
 
     return service;

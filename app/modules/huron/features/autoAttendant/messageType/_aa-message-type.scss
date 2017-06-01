@@ -16,3 +16,22 @@
   @include vr-spacing(mb, 0);
 }
 
+.aa-message-height {
+  height: 8rem;
+}
+
+@media screen and (min-width: 201rem) {
+  .aa-message-width {
+    width: 22.5rem;
+  }
+}
+
+@media screen and (max-width: 200rem) {
+  .aa-message-width {
+    width: 22.5rem;
+  }
+}
+
+.aa-dynamic-button {
+  @include vr-spacing(mt, 0.5);
+}

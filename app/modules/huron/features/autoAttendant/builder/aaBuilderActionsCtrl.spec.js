@@ -2,11 +2,13 @@
 
 describe('Controller: AABuilderActionsCtrl', function () {
   var controller, $controller, optionController;
-  var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
-  var $rootScope, $scope;
+  var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, CustomVariableService;
+  var $rootScope, $scope, $q;
+  var $modal;
+  var modalDefer;
 
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
 
   var testOptions = [{
@@ -15,18 +17,22 @@ describe('Controller: AABuilderActionsCtrl', function () {
     url: 'testUrl',
     hint: 'testHint',
     help: 'testHelp',
-    actions: ['testAction']
+    actions: ['testAction'],
   }];
 
-  var sortedOptions = [{
-    "title": 'autoAttendant.actionPhoneMenu',
-  }, {
-    "title": 'autoAttendant.actionRouteCall',
-  }, {
-    "title": 'autoAttendant.actionSayMessage',
-  }, {
-    "title": 'autoAttendant.phoneMenuDialExt',
-  }];
+  var sortedOptions = [
+    {
+      "title": 'autoAttendant.actionDecision',
+    }, {
+      "title": 'autoAttendant.actionPhoneMenu',
+    }, {
+      "title": 'autoAttendant.actionRouteCall',
+    }, {
+      "title": 'autoAttendant.actionSayMessage',
+    }, {
+      "title": 'autoAttendant.phoneMenuDialExt',
+    },
+  ];
 
   var testOptionsWithPhoneMenu = [{
     title: 'Phone Menu',
@@ -34,7 +40,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     url: 'modules/huron/features/autoAttendant/phoneMenu/aaPhoneMenu.tpl.html',
     hint: 'testHint',
     help: 'testHelp',
-    actions: ['runActionsOnInput']
+    actions: ['runActionsOnInput'],
   }];
 
   var testOptionsWithDialByExt = [{
@@ -44,7 +50,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     hint: 'testHint',
     help: 'testHelp',
     type: 2,
-    actions: ['runActionsOnInput']
+    actions: ['runActionsOnInput'],
   }];
 
   function type(obj) {
@@ -55,14 +61,18 @@ describe('Controller: AABuilderActionsCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$modal_, _AAUiModelService_, _$q_, _AutoAttendantCeMenuModelService_, _AACommonService_, _CustomVariableService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $controller = _$controller_;
+    $q = _$q_;
+    $modal = _$modal_;
+    modalDefer = $q.defer();
 
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAUiModelService = _AAUiModelService_;
     AACommonService = _AACommonService_;
+    CustomVariableService = _CustomVariableService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(AutoAttendantCeMenuModelService, 'deleteCeMenuMap');
@@ -70,10 +80,19 @@ describe('Controller: AABuilderActionsCtrl', function () {
 
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderActionsCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }));
+
+  afterEach(function () {
+    $rootScope = null;
+    $scope = null;
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+    CustomVariableService = null;
+    controller = null;
+  });
 
   describe('setOption for Dial By Extension', function () {
     it('option for Dial By Extension is selected', function () {
@@ -90,7 +109,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
       $scope.index = 0;
 
       var controller = $controller('AABuilderActionsCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller.option.title).toEqual('autoAttendant.phoneMenuDialExt');
@@ -167,6 +186,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
   });
 
   describe('removeAction', function () {
+
     it('remove a particular menu entry from the menu model', function () {
       aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
       aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
@@ -190,6 +210,121 @@ describe('Controller: AABuilderActionsCtrl', function () {
     });
   });
 
+  describe('removeAction variable modal', function () {
+    beforeEach(function () {
+      spyOn($modal, 'open').and.returnValue({
+        result: modalDefer.promise,
+      });
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+      aaUiModel['openHours']['entries'][0].addAction(AutoAttendantCeMenuModelService.newCeActionEntry('callerInput', ''));
+      aaUiModel['openHours']['entries'][0].actions[0].variableName = 'My variable';
+      spyOn(AACommonService, 'setActionStatus');
+    });
+
+    it('should bring up modal when dependent variables are present', function () {
+      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({ 'ce_id': ['1234567'], 'var_name': 'firstvariable' }));
+
+      controller.removeAction(0);
+      modalDefer.resolve();
+      $scope.$apply();
+
+      expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
+      expect($modal.open).toHaveBeenCalled();
+      expect(AACommonService.setActionStatus).toHaveBeenCalled();
+
+    });
+
+    it('should not bring up modal when no dependent variables present', function () {
+      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({}));
+
+      controller.removeAction(0);
+      modalDefer.resolve();
+
+      $scope.$apply();
+
+      expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
+      expect($modal.open).not.toHaveBeenCalled();
+      expect(AACommonService.setActionStatus).toHaveBeenCalled();
+
+    });
+    it('should bring up modal when no dependent variables present but the model has one', function () {
+      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({}));
+      spyOn(AACommonService, 'collectThisCeActionValue').and.returnValue(['My variable', 'My variable']);
+
+      controller.removeAction(0);
+
+      modalDefer.resolve();
+      $scope.$apply();
+
+      expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
+      expect($modal.open).toHaveBeenCalled();
+      expect(AACommonService.setActionStatus).toHaveBeenCalled();
+
+    });
+    it('should bring up modal when no dependent variables present but the model (reject) has one', function () {
+      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.reject({}));
+      spyOn(AACommonService, 'collectThisCeActionValue').and.returnValue(['My variable', 'My variable']);
+
+      controller.removeAction(0);
+
+      modalDefer.resolve();
+      $scope.$apply();
+
+      expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
+      expect($modal.open).toHaveBeenCalled();
+      expect(AACommonService.setActionStatus).toHaveBeenCalled();
+
+    });
+
+    it('should not bring up modal when no dependent variables and noCe variables', function () {
+      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.reject({}));
+      spyOn(AACommonService, 'collectThisCeActionValue').and.returnValue(['no matcher']);
+
+      controller.removeAction(0);
+
+      modalDefer.resolve();
+      $scope.$apply();
+
+      expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
+      expect($modal.open).not.toHaveBeenCalled();
+      expect(AACommonService.setActionStatus).toHaveBeenCalled();
+
+    });
+    it('should not bring up modal when no dependent variables the model hasnt got  one', function () {
+      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({}));
+      spyOn(AACommonService, 'collectThisCeActionValue').and.returnValue(['Should not match']);
+
+      controller.removeAction(0);
+
+      modalDefer.resolve();
+      $scope.$apply();
+
+      expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
+      expect($modal.open).not.toHaveBeenCalled();
+      expect(AACommonService.setActionStatus).toHaveBeenCalled();
+
+    });
+
+    it('should not set text status to true when modal is cancelled', function () {
+      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({ 'ce_id': ['1234567'], 'var_name': 'firstvariable' }));
+
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+      aaUiModel['openHours']['entries'][0].addAction(AutoAttendantCeMenuModelService.newCeActionEntry('callerInput', ''));
+      aaUiModel['openHours']['entries'][0].actions[0].variableName = 'My variable';
+
+      controller.removeAction(0);
+      modalDefer.reject();
+      $scope.$apply();
+
+      expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
+      expect(AACommonService.setActionStatus).not.toHaveBeenCalled();
+    });
+
+
+  });
+
   /**
    * title value is not read from properties file in unit test cases. So it will treat the key provided into vm.options for title
    * as text only. Sorting is based on the key itself and not on values of title.
@@ -203,14 +338,24 @@ describe('Controller: AABuilderActionsCtrl', function () {
   });
 
   describe('test caller Input', function () {
+    it('should not add the Caller Input label', function () {
+      spyOn(AACommonService, 'isCallerInputToggle').and.returnValue(false);
+      // setup the options menu
+      controller = $controller('AABuilderActionsCtrl', {
+        $scope: $scope,
+      });
+
+      expect(controller.options.length).toEqual(5);
+    });
+
     it('should add the Caller Input label', function () {
       spyOn(AACommonService, 'isCallerInputToggle').and.returnValue(true);
       // setup the options menu
       controller = $controller('AABuilderActionsCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
-      expect(controller.options.length).toEqual(5);
+      expect(controller.options.length).toEqual(6);
       // note: only works until an action that starts with an A or a B happens
       expect(controller.options[0].title).toEqual('autoAttendant.actionCallerInput');
 

@@ -9,7 +9,7 @@ require('./_user-add.scss');
   function crServicesPanels() {
     return {
       restrict: 'EA',
-      templateUrl: 'modules/core/users/userAdd/servicesPanels.tpl.html'
+      templateUrl: 'modules/core/users/userAdd/servicesPanels.tpl.html',
     };
   }
 })();

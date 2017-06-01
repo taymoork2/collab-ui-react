@@ -17,6 +17,10 @@
           ng-switch-when = "overview"
           ng-class="careChatSA.animation"></div>
 
+        <div ct-proactive-prompt
+          ng-switch-when = "proactivePrompt"
+          ng-class="careChatSA.animation"></div>
+
         <div ct-customer
           ng-switch-when = "customerInformation"
           ng-class="careChatSA.animation"></div>
@@ -32,6 +36,10 @@
         <div ct-feedback
           ng-switch-when = "feedback"
           ng-class="careChatSA.animation"></div>
+
+        <div ct-feedback
+             ng-switch-when = "feedbackCallback"
+             ng-class="careChatSA.animation"></div>
 
         <div ct-agent-unavailable
           ng-switch-when = "agentUnavailable"

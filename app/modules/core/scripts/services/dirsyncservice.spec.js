@@ -1,10 +1,10 @@
 'use strict';
 
-describe('DirSyncService', function () {
+describe('DirSyncServiceOld', function () {
   beforeEach(angular.mock.module('Core'));
   describe('getDirSyncStatus', function () {
 
-    var $httpBackend, DirSyncService, UrlConfig, Authinfo, Log;
+    var $httpBackend, DirSyncServiceOld, UrlConfig, Authinfo, Log;
 
     beforeEach(function () {
       angular.mock.module(function ($provide) {
@@ -12,15 +12,15 @@ describe('DirSyncService', function () {
           getAdminServiceUrl: function () {
             return '/foo/';
           },
-          getOauth2Url: sinon.stub()
+          getOauth2Url: jasmine.createSpy('Url'),
         };
         Authinfo = {
           getOrgId: function () {
             return 'bar';
-          }
+          },
         };
         Log = {
-          debug: sinon.stub()
+          debug: jasmine.createSpy('debug'),
         };
         $provide.value('Log', Log);
         $provide.value('UrlConfig', UrlConfig);
@@ -28,8 +28,8 @@ describe('DirSyncService', function () {
       });
     });
 
-    beforeEach(inject(function ($injector, _DirSyncService_) {
-      DirSyncService = _DirSyncService_;
+    beforeEach(inject(function ($injector, _DirSyncServiceOld_) {
+      DirSyncServiceOld = _DirSyncServiceOld_;
       $httpBackend = $injector.get('$httpBackend');
       $httpBackend.when('GET', 'l10n/en_US.json').respond({});
     }));
@@ -47,13 +47,13 @@ describe('DirSyncService', function () {
         )
         .respond(500);
 
-      var callback = sinon.stub();
-      DirSyncService.getDirSyncStatus(callback);
+      var callback = jasmine.createSpy('callback');
+      DirSyncServiceOld.getDirSyncStatus(callback);
 
       $httpBackend.flush();
 
-      expect(callback.callCount).toBe(1);
-      expect(callback.args[0][0].success).toBe(false);
+      expect(callback.calls.count()).toBe(1);
+      expect(callback.calls.argsFor(0)[0].success).toBe(false);
     });
 
     it('should set status to true when request succeed', function () {
@@ -63,17 +63,17 @@ describe('DirSyncService', function () {
           '/foo/organization/bar/dirsync/status'
         )
         .respond({
-          serviceMode: 'ENABLED'
+          serviceMode: 'ENABLED',
         });
 
-      var callback = sinon.stub();
-      DirSyncService.getDirSyncStatus(callback);
+      var callback = jasmine.createSpy('callback');
+      DirSyncServiceOld.getDirSyncStatus(callback);
 
       $httpBackend.flush();
 
-      expect(callback.callCount).toBe(1);
-      expect(callback.args[0][0].success).toBe(true);
-      expect(callback.args[0][0].serviceMode).toBe('ENABLED');
+      expect(callback.calls.count()).toBe(1);
+      expect(callback.calls.argsFor(0)[0].success).toBe(true);
+      expect(callback.calls.argsFor(0)[0].serviceMode).toBe('ENABLED');
     });
 
   });

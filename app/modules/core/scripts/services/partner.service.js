@@ -6,8 +6,8 @@
     .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig, UserRoleService) {
-    var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Config, TrialService, UrlConfig, UserRoleService) {
+    var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/sitesProvOrderStatus';
 
     var customerStatus = {
@@ -20,7 +20,7 @@
       NOTE_EXPIRE_TODAY: 0,
       NOTE_NO_LICENSE: 0,
       NOTE_CANCELED: 0,
-      NOTE_NOT_EXPIRED: 99
+      NOTE_NOT_EXPIRED: 99,
     };
 
     var helpers = {
@@ -35,7 +35,7 @@
       calculatePurchaseStatus: _calculatePurchaseStatus,
       calculateTotalLicenses: _calculateTotalLicenses,
       countUniqueServices: _countUniqueServices,
-      isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner
+      isServiceNotLicensed: _isServiceNotLicensed,
     };
 
     var factory = {
@@ -57,7 +57,8 @@
       isLicenseTypeAny: isLicenseTypeAny,
       getTrialMeetingServices: getTrialMeetingServices,
       canAdminTrial: canAdminTrial,
-      helpers: helpers
+      isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner,
+      helpers: helpers,
     };
 
     return factory;
@@ -66,31 +67,31 @@
       var conferenceMapping = {};
       conferenceMapping[Config.offerCodes.CF] = {
         translatedOfferCode: $translate.instant('trials.meeting'),
-        order: 1
+        order: 1,
       };
       conferenceMapping[Config.offerCodes.MC] = {
         translatedOfferCode: $translate.instant('customerPage.MC'),
-        order: 2
+        order: 2,
       };
       conferenceMapping[Config.offerCodes.EE] = {
         translatedOfferCode: $translate.instant('customerPage.EE'),
-        order: 3
+        order: 3,
       };
       conferenceMapping[Config.offerCodes.TC] = {
         translatedOfferCode: $translate.instant('customerPage.TC'),
-        order: 4
+        order: 4,
       };
       conferenceMapping[Config.offerCodes.SC] = {
         translatedOfferCode: $translate.instant('customerPage.SC'),
-        order: 5
+        order: 5,
       };
       conferenceMapping[Config.offerCodes.EC] = {
         translatedOfferCode: $translate.instant('customerPage.EC'),
-        order: 6
+        order: 6,
       };
       conferenceMapping[Config.offerCodes.CMR] = {
         translatedOfferCode: $translate.instant('customerPage.CMR'),
-        order: 7
+        order: 7,
       };
 
       conferenceMapping = _.mapValues(conferenceMapping, function (offer) {
@@ -98,7 +99,7 @@
           name: offer.translatedOfferCode,
           order: offer.order,
           icon: 'icon-circle-group',
-          licenseType: Config.licenseTypes.CONFERENCING
+          licenseType: Config.licenseTypes.CONFERENCING,
         };
       });
       return conferenceMapping;
@@ -108,18 +109,18 @@
       var offerMapping = {};
       offerMapping[Config.offerCodes.SD] = {
         translatedOfferCode: $translate.instant('trials.roomSystem'),
-        order: 6
+        order: 6,
       };
       offerMapping[Config.offerCodes.SB] = {
         translatedOfferCode: $translate.instant('trials.sparkBoardSystem'),
-        order: 7
+        order: 7,
       };
 
       offerMapping = _.mapValues(offerMapping, function (offer) {
         return {
           name: offer.translatedOfferCode,
           order: offer.order,
-          licenseType: Config.licenseTypes.SHARED_DEVICES
+          licenseType: Config.licenseTypes.SHARED_DEVICES,
         };
       });
 
@@ -131,26 +132,26 @@
       licenseMapping[Config.licenseTypes.MESSAGING] = {
         name: $translate.instant('trials.message'),
         icon: 'icon-circle-message',
-        order: 0
+        order: 0,
       };
 
       licenseMapping[Config.licenseTypes.COMMUNICATION] = {
         name: $translate.instant('trials.call'),
         icon: 'icon-circle-call',
-        order: 3
+        order: 3,
       };
 
       licenseMapping[Config.licenseTypes.SHARED_DEVICES] = {
         name: $translate.instant('subscriptions.room'),
         icon: 'icon-circle-telepresence',
         isRoom: true,
-        order: 6
+        order: 6,
       };
 
       licenseMapping[Config.licenseTypes.CARE] = {
-        name: $translate.instant('trials.care'),
+        name: $translate.instant('trials.sparkCare'),
         icon: 'icon-circle-contact-centre',
-        order: 5
+        order: 5,
       };
       return licenseMapping;
     }
@@ -163,7 +164,7 @@
         code: Config.offerCodes.MS,
         qty: 0,
         free: true,
-        order: 20
+        order: 20,
 
       }, {
         licenseType: Config.licenseTypes.CONFERENCING,
@@ -172,7 +173,7 @@
         code: Config.offerCodes.CF,
         qty: 0,
         free: true,
-        order: 21
+        order: 21,
       }, {
         licenseType: Config.licenseTypes.COMMUNICATION,
         name: $translate.instant('trials.call'),
@@ -180,7 +181,7 @@
         code: Config.offerCodes.CO,
         qty: 0,
         free: true,
-        order: 22
+        order: 22,
       }];
       return freeServices;
 
@@ -203,7 +204,7 @@
 
     function _addService(services, service) {
       var existingService = _.find(services, {
-        name: service.name
+        name: service.name,
       });
       if (existingService) {
         existingService.qty = existingService.qty + service.qty;
@@ -227,10 +228,12 @@
       var isTrial = options.isTrial;
       var isShowCMR = options.isShowCMR;
       var isCareEnabled = options.isCareEnabled;
+      var isAdvanceCareEnabled = options.isAdvanceCareEnabled;
 
-      var serviceNotCareOrCareIsShown = (service.licenseType !== Config.licenseTypes.CARE) || isCareEnabled;
+      var serviceNotCareOrCareIsShown = (service.licenseType !== Config.licenseTypes.CARE || isCareEnabled) &&
+        (service.licenseType !== Config.licenseTypes.ADVANCE_CARE || isAdvanceCareEnabled);
       var serviceNotHiddenWebex = ((service.licenseType !== Config.licenseTypes.STORAGE) && (isShowCMR || service.licenseType !== Config.licenseTypes.CMR));
-      //if 'isTrial' it has to be true. Otherwise any falso value is fine
+      //if 'isTrial' it has to be true. Otherwise any false value is fine
       var correctServiceStatus = true;
       if (isTrial !== undefined) {
         correctServiceStatus = (isTrial) ? (service.isTrial === true) : !service.isTrial;
@@ -239,19 +242,21 @@
     }
 
     function getManagedOrgsList(searchText) {
-      return $http.get(managedOrgsUrl, {
+      return $http.get(_.replace(managedOrgsUrl, '%s', Authinfo.getOrgId()), {
         params: {
-          customerName: searchText
-        }
+          customerName: searchText,
+        },
       });
     }
 
     function modifyManagedOrgs(customerOrgId) {
-      return Auth.getAuthorizationUrlList().then(function (response) {
-        if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
+      return $q(function (resolve) {
+        if (_.includes(Authinfo.getManagedOrgs(), customerOrgId)) {
+          resolve();
+        } else {
           var primaryEmail = Authinfo.getPrimaryEmail();
-          Analytics.trackPartnerActions(Analytics.sections.TRIAL.eventNames.PATCH, response.data.orgId, response.data.uuid);
-          return UserRoleService.enableFullAdmin(primaryEmail, customerOrgId);
+          Analytics.trackPartnerActions(Analytics.sections.TRIAL.eventNames.PATCH, Authinfo.getUserOrgId(), Authinfo.getUserId());
+          resolve(UserRoleService.enableFullAdmin(primaryEmail, customerOrgId));
         }
       });
     }
@@ -293,7 +298,7 @@
 
     function getLicense(licenses, offerCode) {
       var offers = _.filter(licenses, {
-        offerName: offerCode
+        offerName: offerCode,
       });
       return (offers.length === 0) ? {} : offers;
     }
@@ -336,7 +341,7 @@
           if (rowData.daysLeft > 0) {
             notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
             notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
-              count: rowData.daysLeft
+              count: rowData.daysLeft,
             }, 'messageformat');
           } else if (rowData.daysLeft === 0) {
             notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
@@ -361,13 +366,13 @@
       rowData.notes = notes;
     }
 
-    function loadRetrievedDataToList(list, isTrialData, isCareEnabled) {
+    function loadRetrievedDataToList(list, options) {
       return _.map(list, function (customer) {
-        return massageDataForCustomer(customer, isTrialData, isCareEnabled);
+        return massageDataForCustomer(customer, options);
       });
     }
 
-    function massageDataForCustomer(customer, isTrialData, isCareEnabled) {
+    function massageDataForCustomer(customer, options) {
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
         trialId: customer.trialId,
@@ -392,6 +397,7 @@
         webexEEConferencing: null,
         webexCMR: null,
         care: null,
+        advanceCare: null,
         daysUsed: 0,
         percentUsed: 0,
         duration: customer.trialPeriod,
@@ -404,16 +410,22 @@
         isSquaredUcOffer: false,
         notes: {},
         isPartner: false,
-        isTrialData: isTrialData
+        isTrialData: _.get(options, 'isTrialData', false),
+        isPremium: false,
       };
 
-      var licensesAndOffersData = parseLicensesAndOffers(customer, { isCareEnabled: isCareEnabled });
+      var licensesAndOffersData = parseLicensesAndOffers(customer, options);
       _.assign(dataObj, licensesAndOffersData);
 
-      dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
+      dataObj.isAllowedToManage = dataObj.isTrialData || customer.isAllowedToManage;
       dataObj.isPartner = _.get(customer, 'isPartner', false);
       dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
       dataObj.licenseList = customer.licenses;
+
+      var premiumLicenses = _.filter(customer.licenses, function (license) {
+        return license.offerName === Config.offerCodes.MGMTPRO;
+      });
+      dataObj.isPremium = _.some(premiumLicenses);
 
       var daysDone = TrialService.calcDaysUsed(customer.startDate);
       dataObj.daysUsed = daysDone;
@@ -421,7 +433,7 @@
 
       var daysLeft = TrialService.calcDaysLeft(customer.startDate, customer.trialPeriod);
       dataObj.daysLeft = daysLeft;
-      if (isTrialData) {
+      if (dataObj.isTrialData) {
         if (daysLeft < 0) {
           dataObj.status = $translate.instant('customerPage.expired');
           dataObj.state = 'EXPIRED';
@@ -431,7 +443,7 @@
       var serviceEntry = {
         status: dataObj.status,
         daysLeft: daysLeft,
-        customerName: dataObj.customerName
+        customerName: dataObj.customerName,
       };
 
       // havent figured out what this is doing yet...
@@ -447,6 +459,7 @@
       dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry);
       dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
       dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry);
+      dataObj.advanceCare = initializeService(customer.licenses, Config.offerCodes.CVC, serviceEntry);
 
       // 12/17/2015 - Timothy Trinh
       // setting conferencing to sparkConferencing for now to preserve how
@@ -455,17 +468,17 @@
 
       dataObj.purchased = _calculatePurchaseStatus(dataObj);
 
-      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled);
+      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, options);
       dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
 
-      dataObj.orderedServices = _getOrderedServices(dataObj, isCareEnabled);
+      dataObj.orderedServices = _getOrderedServices(dataObj, options);
 
       setNotesSortOrder(dataObj);
       return dataObj;
     }
 
     // The information provided by this function will be used in displaying the service icons on the customer list page.
-    function _getOrderedServices(data, isCareEnabled) {
+    function _getOrderedServices(data, options) {
       var servicesToProcess = ['messaging', 'conferencing', 'communications', 'webexEEConferencing',
         'roomSystems', 'sparkBoard', 'care'];
       var servicesManagedByCurrentPartner = [];
@@ -476,7 +489,7 @@
         if (service === 'webexEEConferencing') {
           serviceToAdd = 'webex';
         }
-        if (service !== 'care' || (service === 'care' && isCareEnabled)) {
+        if (service !== 'care' || (service === 'care' && _.get(options, 'isCareEnabled', true))) {
           if (isServiceManagedByCurrentPartner(data[service])) {
             servicesManagedByCurrentPartner.push(serviceToAdd);
           } else {
@@ -495,12 +508,21 @@
 
       var isInCurrentPartnerOrg = serviceObj.partnerOrgId === currentPartnerOrgId;
       var isCurrentPartnerId = serviceObj.partnerEmail === currentPartnerId;
-      var isNotLicensed = serviceObj.volume === undefined && Object.keys(serviceObj).length === 4;
+      var isNotLicensed = _isServiceNotLicensed(serviceObj);
       if (isInCurrentPartnerOrg || isCurrentPartnerId || isNotLicensed) {
         return true;
       }
 
       return false;
+    }
+
+    // Services that are not licensed will not have the usual properties associated with a license. The volume property is a
+    // property associated with a license that we can check for undefined. Also, services that are not licensed will only have
+    // 4 default properties (customerName, daysLeft, sortOrder, and status) in the service object. So, in addition to checking
+    // for the volume property, we'll also check for the number of properties in the service object to be 4.
+    function _isServiceNotLicensed(serviceObj) {
+      var numberOfProperties = Object.keys(serviceObj).length;
+      return serviceObj.volume === undefined && numberOfProperties === 4;
     }
 
     function _calculatePurchaseStatus(customerData) {
@@ -512,10 +534,10 @@
     }
 
 
-    function _calculateTotalLicenses(customerData, isCareEnabled) {
+    function _calculateTotalLicenses(customerData, options) {
       if (customerData.purchased || customerData.isPartner) {
         return _.sumBy(customerData.licenseList, function (license) {
-          if (!helpers.isDisplayableService(license, { isTrial: undefined, isShowCMR: false, isCareEnabled: isCareEnabled })) {
+          if (!helpers.isDisplayableService(license, _.assign({ isTrial: undefined, isShowCMR: false }, options))) {
             return 0;
           } else {
             return license.volume || 0;
@@ -525,7 +547,7 @@
         // device and care licenses can be undefined
         return customerData.licenses +
               (customerData.deviceLicenses || 0) +
-              (isCareEnabled ? (customerData.careLicenses || 0) : 0);
+              (_.get(options, 'isCareEnabled', false) ? (customerData.careLicenses || 0) : 0);
       }
     }
 
@@ -587,19 +609,19 @@
             exportedCustomer.roomSystemsEntitlements = '';
 
             var messagingLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.MESSAGING
+              licenseType: Config.licenseTypes.MESSAGING,
             });
             var conferenceLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.CONFERENCING
+              licenseType: Config.licenseTypes.CONFERENCING,
             });
             var communicationsLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.COMMUNICATION
+              licenseType: Config.licenseTypes.COMMUNICATION,
             });
             var roomSystemsLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.SHARED_DEVICES
+              licenseType: Config.licenseTypes.SHARED_DEVICES,
             });
             var careLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.CARE
+              licenseType: Config.licenseTypes.CARE,
             });
 
             if (messagingLicense && _.isArray(messagingLicense.features)) {
@@ -662,12 +684,14 @@
         deviceLicenses: 0,
         isSquaredUcOffer: false,
         usage: 0,
-        offer: {}
+        offer: {},
       };
       var isCareEnabled = _.get(options, 'isCareEnabled', true);
+      var isAdvanceCareEnabled = _.get(options, 'isAdvanceCareEnabled', true);
       var userServiceMapping = helpers.createLicenseMapping();
       var conferenceServices = [];
       var roomServices = [];
+      var sparkCare = [];
       var trialService;
       var trialServices = [];
 
@@ -689,7 +713,8 @@
         }
         partial.usage = offerInfo.usageCount;
         if (offerInfo.id !== Config.offerTypes.roomSystems &&
-          offerInfo.id !== Config.offerTypes.care) {
+          offerInfo.id !== Config.offerTypes.care &&
+          offerInfo.id !== Config.offerTypes.advanceCare) {
           partial.licenses = offerInfo.licenseCount;
         }
         trialService = null;
@@ -710,7 +735,7 @@
               name: $translate.instant('customerPage.EE'),
               order: 1,
               qty: offerInfo.licenseCount,
-              isWebex: true
+              isWebex: true,
             });
             break;
           case Config.offerTypes.meeting:
@@ -718,7 +743,7 @@
               offerType: offerInfo.id,
               name: $translate.instant('trials.meeting'),
               order: 1,
-              qty: offerInfo.licenseCount
+              qty: offerInfo.licenseCount,
             });
             break;
           case Config.offerTypes.roomSystems:
@@ -739,8 +764,22 @@
             break;
           case Config.offerTypes.care:
             if (isCareEnabled) {
-              trialService = userServiceMapping[Config.licenseTypes.CARE];
-              partial.careLicenses = offerInfo.licenseCount;
+              sparkCare.push({
+                offerTypes: offerInfo.id,
+                name: $translate.instant('trials.care'),
+                order: 1,
+                qty: offerInfo.licenseCount,
+              });
+            }
+            break;
+          case Config.offerTypes.advanceCare:
+            if (isAdvanceCareEnabled) {
+              sparkCare.push({
+                offerTypes: offerInfo.id,
+                name: $translate.instant('trials.advanceCare'),
+                order: 2,
+                qty: offerInfo.licenseCount,
+              });
             }
             break;
         }
@@ -760,6 +799,17 @@
         var licenseQty = conferenceServices[0].qty;
         var hasWebex = _.some(conferenceServices, { isWebex: true });
         trialServices.push({ name: name, sub: conferenceServices, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex });
+      }
+
+      if (sparkCare.length > 0) {
+        var careName = $translate.instant('customerPage.care');
+        var uniqueSparkCare = _.uniqBy(sparkCare, 'order');
+        uniqueSparkCare = _.sortBy(uniqueSparkCare, 'order').map(function (o) {
+          o['icon'] = 'icon-circle-contact-centre';
+          return o;
+        });
+        partial.careLicenses = _.sumBy(uniqueSparkCare, 'qty');
+        trialServices.push({ name: careName, sub: uniqueSparkCare, qty: partial.careLicenses, icon: 'icon-circle-contact-centre', order: 5, isSparkCare: true });
       }
 
       if (roomServices.length > 0) {
@@ -798,6 +848,7 @@
       var service = null;
       var result = null;
       var isCareEnabled = options.isCareEnabled;
+      var isAdvanceCareEnabled = options.isAdvanceCareEnabled;
       var isTrial = options.isTrial;
 
       var meetingHeader = {
@@ -805,7 +856,7 @@
         isMeeting: true,
         name: $translate.instant('customerPage.meeting'),
         icon: 'icon-circle-group',
-        order: 1
+        order: 1,
       };
 
       var roomDevicesHeader = {
@@ -813,7 +864,7 @@
         isRoom: true,
         name: $translate.instant('subscriptions.room'),
         icon: 'icon-circle-telepresence',
-        order: 26
+        order: 26,
       };
 
       var licenseMapping = helpers.createLicenseMapping();
@@ -826,7 +877,7 @@
         if (licenseInfo) {
           helpers.removeFromFreeServices(freeServices, licenseInfo);
           //from paid or free services
-          if (helpers.isDisplayableService(licenseInfo, { isTrial: isTrial, isShowCMR: true, isCareEnabled: isCareEnabled })) { //if conference
+          if (helpers.isDisplayableService(licenseInfo, { isTrial: isTrial, isShowCMR: true, isCareEnabled: isCareEnabled, isAdvanceCareEnabled: isAdvanceCareEnabled })) { //if conference
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
               service = new helpers.LicensedService(licenseInfo, conferenceMapping);
               helpers.addService(meetingServices, service);
@@ -851,14 +902,14 @@
       if (meetingServices.length >= 1) {
         var totalQ = _.reduce(meetingServices, function (prev, curr) {
           return (curr.licenseType !== Config.licenseTypes.CMR) ? {
-            qty: prev.qty + curr.qty
+            qty: prev.qty + curr.qty,
           } : {
-            qty: prev.qty + 0
+            qty: prev.qty + 0,
           };
         });
         _.merge(meetingHeader, {
           qty: totalQ.qty,
-          sub: _.sortBy(meetingServices, 'order')
+          sub: _.sortBy(meetingServices, 'order'),
         });
         paidServices.push(meetingHeader);
       }
@@ -870,7 +921,7 @@
         }, 0);
         _.merge(roomDevicesHeader, {
           qty: totalQ,
-          sub: _.sortBy(roomDevices, 'order')
+          sub: _.sortBy(roomDevices, 'order'),
         });
         paidServices.push(roomDevicesHeader);
       }
@@ -909,11 +960,11 @@
   /* @ngInject */
   function ScimPatchService($resource, Authinfo, UrlConfig) {
     return $resource(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/:userId', {
-      userId: '@userId'
+      userId: '@userId',
     }, {
       'update': {
-        method: 'PATCH'
-      }
+        method: 'PATCH',
+      },
     });
   }
 

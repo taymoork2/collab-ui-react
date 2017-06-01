@@ -63,7 +63,7 @@ describe('Template: partnerProfile', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,
-        orgSettings: {}
+        orgSettings: {},
       });
     });
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
@@ -72,7 +72,7 @@ describe('Template: partnerProfile', function () {
 
   function compileView() {
     $controller('PartnerProfileCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     var template = $templateCache.get('modules/core/partnerProfile/partnerProfile.tpl.html');
     var elem = angular.element(template);

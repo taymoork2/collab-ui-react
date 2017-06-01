@@ -8,14 +8,14 @@ describe('Directive: aaRouteToHg', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'aa'
-    }
+      name: 'aa',
+    },
   };
 
   var huntGroups = [{
     name: 'Olegs Hunt Group',
     numbers: ['987654321'],
-    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
+    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
   }];
 
   var schedule = 'openHours';
@@ -48,7 +48,7 @@ describe('Directive: aaRouteToHg', function () {
     $scope.aaKey = keyIndex;
     $scope.menuId = menuId;
 
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve(huntGroups));
+    spyOn(HuntGroupService, 'getHuntGroupList').and.returnValue($q.resolve(huntGroups));
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     AutoAttendantCeMenuModelService.clearCeMenuMap();

@@ -24,7 +24,7 @@
     this.assignedResources = [];
     this.actionSets = [{
       "name": "regularOpenActions",
-      "actions": []
+      "actions": [],
     }];
     this.scheduleEventTypeMap = {};
   }
@@ -60,7 +60,7 @@
 
       getNewAARecord: function () {
         return new AARecordWithEmptyActionSets();
-      }
+      },
     };
 
     return service;

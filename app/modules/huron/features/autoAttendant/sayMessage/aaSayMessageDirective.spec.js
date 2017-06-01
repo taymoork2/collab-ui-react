@@ -6,7 +6,7 @@ describe('Directive: aaSayMessage', function () {
   var element;
 
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';

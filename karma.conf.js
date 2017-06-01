@@ -9,7 +9,7 @@ var webpackConfig = require('./webpack.config.js')(process.env);
 
 module.exports = function (config) {
   var _config = {
-    preprocessors: {}
+    preprocessors: {},
   };
 
   // 'shimFile' from CLI, so set it up separately from main config
@@ -25,7 +25,7 @@ module.exports = function (config) {
 
     frameworks: [
       'jasmine',
-      'sinon',
+      // for source maps in debug dev tools
       'source-map-support',
     ],
 
@@ -39,7 +39,7 @@ module.exports = function (config) {
     },
     {
       pattern: shimFile,
-      watched: false
+      watched: false,
     }],
 
     exclude: [],
@@ -47,7 +47,7 @@ module.exports = function (config) {
     webpack: webpackConfig,
 
     webpackMiddleware: {
-      stats: 'errors-only'
+      stats: 'errors-only',
     },
 
     coverageReporter: {
@@ -55,19 +55,15 @@ module.exports = function (config) {
       reporters: [{
         type: 'json',
         subdir: 'json',
-        file: shimFileName + '.json'
+        file: shimFileName + '.json',
       }],
     },
 
-    htmlReporter: {
-      outputFile: 'test/unit-test-results.html'
-    },
-
     webpackServer: {
-      noInfo: true // please don't spam the console when running in karma!
+      noInfo: true, // please don't spam the console when running in karma!
     },
 
-    reporters: ['progress', 'coverage', 'html'],
+    reporters: ['progress', 'coverage'],
 
     port: 9876,
 

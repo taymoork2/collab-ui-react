@@ -2,7 +2,7 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService, CallPickupGroupService;
+  var featureCtrl, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, PhoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService, CallPickupGroupService;
   var listOfPIs = getJSONFixture('huron/json/features/callPickup/pickupList.json');
   var emptylistOfPIs = [];
   var getPIListSuccessResp = function (data) {
@@ -11,7 +11,7 @@ describe('Features Controller', function () {
   var getPIListFailureResp = {
     'data': 'Internal Server Error',
     'status': 500,
-    'statusText': 'Internal Server Error'
+    'statusText': 'Internal Server Error',
   };
   var pickupGroups = {
     "pickupGroups": [{
@@ -19,26 +19,26 @@ describe('Features Controller', function () {
       cardName: "blue",
       memberCount: 2,
       filterValue: 'PI',
-      featureName: 'huronFeatureDetails.pi'
+      featureName: 'huronFeatureDetails.pi',
     }, {
       id: "bce45ce1-743a-454b-b1bf-30ca838ee3e5",
       cardName: "check",
       memberCount: 3,
       filterValue: 'PI',
-      featureName: 'huronFeatureDetails.pi'
+      featureName: 'huronFeatureDetails.pi',
     }, {
       id: "1e861505-c281-4086-98c5-2e46b4659065",
       cardName: "demo_1",
       memberCount: 2,
       filterValue: 'PI',
-      featureName: 'huronFeatureDetails.pi'
-    }]
+      featureName: 'huronFeatureDetails.pi',
+    }],
   };
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_, _PagingGroupService_, _CallPickupGroupService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _PhoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_, _PagingGroupService_, _CallPickupGroupService_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $state = _$state_;
@@ -50,7 +50,7 @@ describe('Features Controller', function () {
     CallParkService = _CallParkService_;
     PagingGroupService = _PagingGroupService_;
     CallPickupGroupService = _CallPickupGroupService_;
-    TelephoneNumberService = _TelephoneNumberService_;
+    PhoneNumberService = _PhoneNumberService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAModelService = _AAModelService_;
     Log = _Log_;
@@ -60,7 +60,7 @@ describe('Features Controller', function () {
     //create mock deferred object which will be used to return promises
     getDeferred = $q.defer();
     //Using a Jasmine Spy to return a promise when methods of the PagingGroupService are called
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve([]));
+    spyOn(HuntGroupService, 'getHuntGroupList').and.returnValue($q.resolve([]));
     spyOn(CallParkService, 'getCallParkList').and.returnValue($q.resolve([]));
     spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(getDeferred.promise);
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.resolve());
@@ -79,9 +79,9 @@ describe('Features Controller', function () {
       $timeout: $timeout,
       Authinfo: Authinfo,
       CallPickupGroupService: CallPickupGroupService,
-      TelephoneNumberService: TelephoneNumberService,
+      PhoneNumberService: PhoneNumberService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -112,7 +112,7 @@ describe('Features Controller', function () {
     $timeout.flush();
     expect(Notification.errorResponse).toHaveBeenCalledWith(getPIListFailureResp,
       'huronFeatureDetails.failedToLoad', {
-        featureType: 'huronFeatureDetails.piName'
+        featureType: 'huronFeatureDetails.piName',
       });
   });
   it('should set the pageState to Loading when controller is getting data from back-end', function () {

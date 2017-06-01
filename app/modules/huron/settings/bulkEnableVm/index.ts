@@ -6,9 +6,9 @@ require('./bulkEnableVm.scss');
 
 export default angular
   .module('huron.bulk-enable-vm', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     featureToggleModule,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/scripts/services/userlist.service'),

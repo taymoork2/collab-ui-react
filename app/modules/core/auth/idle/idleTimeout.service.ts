@@ -1,16 +1,20 @@
 import { WindowService } from 'modules/core/window';
+import { StorageKeys } from 'modules/core/storage/storage.keys';
 
 export class IdleTimeoutService {
     //events that set user as active
 
-  private static readonly ACTIVE_TABS = 'ACTIVE_TABS';
   private static readonly DEBOUNCE_INTERVAL = 10000;
   private static readonly IDLE_RESET_EVENTS = ['keydown', 'keyup', 'click', 'mousemove', 'DOMMouseScroll', 'mousewheel', 'mousedown', 'touchstart', 'touchmove', 'scroll', 'focus'];
   private static readonly LOCAL_STORAGE_DEBOUNCE_INTERVAL = 60; //seconds
   private idleSetter;
   private logoutEvent = '';
+  private static readonly LOGIN_EVENT = 'LOGIN';
+  private keepAliveEvent = '';
+  private keepAliveDeregistrer;
+  private isInitialized = false;
 
-  /* @ngInject */
+   /* @ngInject */
   constructor(
     private $document: ng.IDocumentService,
     private $timeout: ng.ITimeoutService,
@@ -18,17 +22,19 @@ export class IdleTimeoutService {
     private $window: ng.IWindowService,
     private Auth,
     private Config,
-    private FeatureToggleService,
     private Log,
+    private LocalStorage,
     private WindowService: WindowService,
   ) {
     this.logoutEvent = 'logout' + this.Config.getEnv();
+    this.keepAliveEvent = this.Config.idleTabKeepAliveEvent;
+
   }
 
   private setTabIdle() {
     if (this.Auth.isLoggedIn()) {
       this.quit();
-      return this.Auth.logout();
+      return this.Auth.logout('loginPage.expired');
     }
   }
 
@@ -38,12 +44,14 @@ export class IdleTimeoutService {
     }, this.Config.idleTabTimeout);
   }
 
+
   private resetTimeout(e) {
     //cancel death clock
-    this.Log.debug('reactivated by: ' + e.type);
+    this.Log.debug('IDLE TIMEOUT SERVICE: reactivated by: ' + e.type);
     this.$timeout.cancel(this.idleSetter);
     this.idleSetter = this.initIdleTimer();
   }
+
 
   private resetAndBroadcast(e) {
     this.resetTimeout(e);
@@ -51,33 +59,36 @@ export class IdleTimeoutService {
   }
 
   private broadcastActiveTab() {
-    this.Log.debug('broadcasting to keep alive');
+    this.Log.debug('IDLE TIMEOUT SERVICE: broadcasting to keep alive');
     //only want to write to LS once 60 secs
-    let lastUpdated = this.$window.localStorage.getItem(IdleTimeoutService.ACTIVE_TABS);
+    let lastUpdated = this.LocalStorage.get(StorageKeys.ACTIVE_TABS);
     if (!lastUpdated || (moment(lastUpdated, moment.ISO_8601).isBefore(moment().subtract(IdleTimeoutService.LOCAL_STORAGE_DEBOUNCE_INTERVAL, 'seconds')))) {
-      this.$window.localStorage.removeItem(IdleTimeoutService.ACTIVE_TABS);
-      this.$window.localStorage.setItem(IdleTimeoutService.ACTIVE_TABS, moment().toISOString());
+      this.LocalStorage.remove(StorageKeys.ACTIVE_TABS);
+      this.LocalStorage.put(StorageKeys.ACTIVE_TABS, moment().toISOString());
     }
   }
 
   private checkActive(event) {
-    if (event.key === IdleTimeoutService.ACTIVE_TABS) {
+    if (event.key === StorageKeys.ACTIVE_TABS) {
       //resetting timeout
-      this.Log.debug(event.newValue + 'updated storage');
+      this.Log.debug('IDLE TIMEOUT SERVICE:' + event.newValue + ' updated storage');
       this.resetTimeout(event);
     }
     if (event.key === this.logoutEvent) {
-      this.Log.debug('got the quit event!');
+      this.Log.debug('IDLE TIMEOUT SERVICE: got the quit event!');
       this.quit();
     }
   }
 
   private quit() {
-    this.Log.debug('quitting');
-    this.$window.localStorage.removeItem(IdleTimeoutService.ACTIVE_TABS);
+    this.Log.debug('IDLE TIMEOUT SERVICE: quitting');
+    this.LocalStorage.remove(StorageKeys.ACTIVE_TABS);
+    this.keepAliveDeregistrer();
     _.forEach(IdleTimeoutService.IDLE_RESET_EVENTS, EventName => {
       angular.element(this.$document).unbind(EventName);
     });
+    this.$window.removeEventListener('storage', this.checkActive);
+    this.isInitialized = false;
   }
 
   /* Logic: start the death clock. When the clock runs out -- log everyone out.
@@ -85,29 +96,35 @@ export class IdleTimeoutService {
   /* They will also modify the LS value which would trigger the reset on other tabs by LS event.
   */
 
+
   public init() {
-    this.Log.debug('Starting Tab Timer');
-
+    this.Log.debug('IDLE TIMEOUT SERVICE: Starting Tab Timer');
     //start the timer
-    this.$rootScope.$on('LOGIN', () => {
+    this.$rootScope.$on(IdleTimeoutService.LOGIN_EVENT, () => {
+      this.LocalStorage.remove(StorageKeys.LOGIN_MESSAGE);
 
-      return this.FeatureToggleService.atlasIdleLogoutGetStatus().then(result => {
-        if (!result) {
-          return;
-        }
-        this.Log.debug('Wiring up events');
+      if (!this.isInitialized) {
+
+        this.Log.debug('IDLE TIMEOUT SERVICE: Wiring up events');
+        /* This is for long running  import and export operations to keep from timing out this event is emitted by:
+        /* csvDownload.service.ts,  the getUserReport() is a recursive function that gets executed every 3 seconds until
+        /* userlist.service.js,  getUserReports() same
+        /* userCsvController processCsvRows() issues a rest API for every 10 users in the CSV file
+        */
+        this.keepAliveDeregistrer  = this.$rootScope.$on(this.Config.idleTabKeepAliveEvent, () => this.resetAndBroadcast({ type: this.Config.idleTabKeepAliveEvent }));
         this.idleSetter = this.initIdleTimer();
         //bind events to reset the timer.
         let throttled = _.throttle(e => {
           this.resetAndBroadcast(e);
         }, IdleTimeoutService.DEBOUNCE_INTERVAL);
-
         _.forEach(IdleTimeoutService.IDLE_RESET_EVENTS, EventName => {
           angular.element(this.$document).bind(EventName, throttled);
         });
         //listen to storage
-        this.WindowService.registerEventListener('storage', e => { this.checkActive(e); });
-      });
+        this.WindowService.registerEventListener('storage', this.checkActive.bind(this));
+      }
+
     });
+
   }
 }

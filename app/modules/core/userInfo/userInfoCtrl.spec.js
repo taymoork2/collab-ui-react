@@ -15,20 +15,20 @@ describe('UserInfoController', function () {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     Userservice = {
-      getUser: sinon.stub()
+      getUser: jasmine.createSpy('getUser'),
     };
     deferred = $q.defer();
     FeedbackService = {
-      getFeedbackUrl: sinon.stub().returns(deferred.promise)
+      getFeedbackUrl: jasmine.createSpy('getFeedbackUrl').and.returnValue(deferred.promise),
     };
     Utils = {
-      getUUID: sinon.stub().returns('awesome uuid')
+      getUUID: jasmine.createSpy('getUUID').and.returnValue('awesome uuid'),
     };
     $window = {
-      open: sinon.stub(),
+      open: jasmine.createSpy('open'),
       navigator: {
-        userAgent: 'some useragent'
-      }
+        userAgent: 'some useragent',
+      },
     };
 
     $controller('UserInfoController', {
@@ -36,29 +36,29 @@ describe('UserInfoController', function () {
       $scope: $scope,
       $window: $window,
       Userservice: Userservice,
-      FeedbackService: FeedbackService
+      FeedbackService: FeedbackService,
     });
   }));
 
   it('fetches url and opens new window', function () {
     $scope.sendFeedback();
 
-    expect(FeedbackService.getFeedbackUrl.callCount).toBe(1);
-    expect(FeedbackService.getFeedbackUrl.args[0][0]).toBe('Atlas_some useragent');
-    expect(FeedbackService.getFeedbackUrl.args[0][1]).toBe('awesome uuid');
+    expect(FeedbackService.getFeedbackUrl.calls.count()).toBe(1);
+    expect(FeedbackService.getFeedbackUrl.calls.argsFor(0)[0]).toBe('Atlas_some useragent');
+    expect(FeedbackService.getFeedbackUrl.calls.argsFor(0)[1]).toBe('awesome uuid');
 
     deferred.resolve({
       data: {
-        url: 'some url'
-      }
+        url: 'some url',
+      },
     });
 
     $rootScope.$apply();
     $rootScope.$apply();
 
-    expect($window.open.callCount).toBe(1);
-    expect($window.open.args[0][0]).toBe('some url');
-    expect($window.open.args[0][1]).toBe('_blank');
+    expect($window.open.calls.count()).toBe(1);
+    expect($window.open.calls.argsFor(0)[0]).toBe('some url');
+    expect($window.open.calls.argsFor(0)[1]).toBe('_blank');
   });
 
 });
@@ -77,7 +77,7 @@ describe('UserInfoController WebEx logout', function () {
     $timeout = _$timeout_;
 
     var Userservice = {
-      getUser: sinon.stub()
+      getUser: jasmine.createSpy('getUser'),
     };
 
     deferredLogout = $q.defer();
@@ -88,7 +88,7 @@ describe('UserInfoController WebEx logout', function () {
       $scope: $scope,
       Userservice: Userservice,
       Auth: Auth,
-      WebExUtilsFact: WebExUtilsFact
+      WebExUtilsFact: WebExUtilsFact,
     });
 
   }));

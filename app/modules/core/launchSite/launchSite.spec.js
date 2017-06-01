@@ -15,7 +15,7 @@ describe('Controller: LaunchSiteCtrl', function () {
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
     $controller('LaunchSiteCtrl', {
-      $scope: scope
+      $scope: scope,
     });
   }));
 

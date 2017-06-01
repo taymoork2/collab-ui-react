@@ -21,7 +21,7 @@ describe('Controller: LineExportCtrl', function () {
     spyOn(LineListService, 'exportCSV').and.returnValue($q.resolve(linesExport));
 
     controller = $controller('LineExportCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $timeout.flush();

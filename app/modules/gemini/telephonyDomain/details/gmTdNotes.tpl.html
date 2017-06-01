@@ -1,0 +1,50 @@
+<cs-sp-container class="side-panel-history">
+  <ul class="small-offset-0">
+    <li class="feature">
+      <span class="feature-name" translate="gemini.cbgs.notes.newNote"></span>
+    </li>
+    </i>
+  </ul>
+  <div class="feature-list">
+    <form name="noteForm" novalidate ng-class="{'error': noteForm.noteContent.$invalid && noteForm.noteContent.$dirty && noteForm.noteContent.$touched}">
+      <div class="cs-input-group medium-12 columns">
+        <textarea name="noteContent" rows="5"
+                  ng-maxlength="2048"
+                  ng-model="$ctrl.newNote"
+                  required
+                  class="form-control optional-row"
+                  placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
+      </div>
+      <div class="pull-left">
+        <div class="cs-input__messages" ng-messages="noteForm.noteContent.$error" role="alert" ng-if='noteForm.noteContent.$touched'>
+          <div class="message" ng-message="required" translate="common.invalidRequired"></div>
+          <div class="message" ng-message="maxlength"
+               translate="gemini.inputLengthError"
+               translate-values="{length: 2048, field: 'note'}"></div>
+        </div>
+      </div>
+      <div class="text-right ui-mt">
+        <button id="addnote" class="btn info" translate="gemini.cbgs.notes.addNote" ng-click="$ctrl.onSave();" ng-disabled="noteForm.$invalid"></button>
+      </div>
+    </form>
+  </div>
+  <div class="ui-mv ui-pt">
+    <div ng-if="!$ctrl.loading" translate="gemini.cbgs.notes.notes"></div>
+    <div class="ui-mt ui-pt" ng-if="!$ctrl.notes.length">
+      <small translate="gemini.cbgs.notes.noNoteMsg"></small>
+    </div>
+  </div>
+  <ul ng-if="!$ctrl.loading" class="history-ul">
+    <li ng-repeat="note in $ctrl.notes">
+      <small>{{note.actionTime}} {{'gemini.cbgs.by' | translate}} {{note.userName}} {{!note.email ? '' : '(' + note.email + ')'}}</small>
+      <h6>{{note.objectName}}</h6>
+    </li>
+    <li><div ng-if="$ctrl.isShowAll"><a href ng-click="$ctrl.onShowAll()" translate="gemini.cbgs.showMore"></a></div></li>
+  </ul>
+  <div ng-if="$ctrl.loading">
+    <i class="icon icon-spinner icon-2x"></i>
+  </div>
+  <cs-sp-buttons>
+    <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
+  </cs-sp-buttons>
+</cs-sp-container>

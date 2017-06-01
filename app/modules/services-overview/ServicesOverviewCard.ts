@@ -2,6 +2,8 @@ export interface ICardButton {
   name: string;
   buttonClass?: string;
   routerState?: string;
+  buttonState?: string;
+  externalLink?: string;
 }
 
 export interface ICardStatus {
@@ -13,6 +15,7 @@ export interface ICardStatus {
 export enum CardType {
   cloud,
   hybrid,
+  cmc,
 }
 
 export interface ICardParams {
@@ -25,6 +28,8 @@ export interface ICardParams {
   name: string;
   template?: string;
   setupMode?: boolean;
+  infoIcon?: string;
+  infoText?: string;
 }
 
 export abstract class ServicesOverviewCard {
@@ -40,6 +45,12 @@ export abstract class ServicesOverviewCard {
   public name: string;
   public status: ICardStatus;
   public setupMode: boolean;
+  public infoIcon: string;
+  public infoText: string;
+
+  public getCardType() {
+    return this.cardType;
+  }
 
   public showStatus() {
     return !this.loading && this.active && !!(this.status && this.status.status);
@@ -59,6 +70,8 @@ export abstract class ServicesOverviewCard {
     name,
     template = 'modules/services-overview/card.tpl.html',
     setupMode = false,
+    infoIcon = '',
+    infoText = '',
   }: ICardParams) {
     this.active = active;
     this.cardClass = cardClass;
@@ -69,5 +82,7 @@ export abstract class ServicesOverviewCard {
     this.name = name;
     this.template = template;
     this.setupMode = setupMode;
+    this.infoIcon = infoIcon;
+    this.infoText = infoText;
   }
 }

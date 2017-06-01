@@ -5,7 +5,7 @@ describe('Directive: aaMediaUpload', function () {
   var AAUiModelService, AutoAttendantCeMenuModelService, FeatureToggleService;
 
   var ui = {
-    openHours: {}
+    openHours: {},
   };
   var uiMenu = {};
   var menuEntry = {};

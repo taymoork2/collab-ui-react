@@ -1,35 +1,38 @@
 'use strict';
 
 describe('Controller: PstnContractInfoCtrl', function () {
-  var controller, $controller, $scope, $state, PstnSetup;
+  var controller, $controller, $scope, $state, PstnModel, FeatureToggleService, $q;
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _PstnSetup_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _PstnModel_, _FeatureToggleService_, _$q_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
-    PstnSetup = _PstnSetup_;
+    PstnModel = _PstnModel_;
+    FeatureToggleService = _FeatureToggleService_;
+    $q = _$q_;
 
-    PstnSetup.setCustomerId(customer.uuid);
-    PstnSetup.setCustomerName(customer.name);
-    PstnSetup.setCustomerEmail(customer.email);
+    PstnModel.setCustomerId(customer.uuid);
+    PstnModel.setCustomerName(customer.name);
+    PstnModel.setCustomerEmail(customer.email);
 
     spyOn($state, 'go');
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
     controller = $controller('PstnContractInfoCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
   }));
 
   it('should init data', function () {
-    expect(controller.companyName).toEqual(PstnSetup.getCustomerName());
-    expect(controller.firstName).toEqual(PstnSetup.getCustomerFirstName());
-    expect(controller.lastName).toEqual(PstnSetup.getCustomerLastName());
-    expect(controller.emailAddress).toEqual(PstnSetup.getCustomerEmail());
+    expect(controller.companyName).toEqual(PstnModel.getCustomerName());
+    expect(controller.firstName).toEqual(PstnModel.getCustomerFirstName());
+    expect(controller.lastName).toEqual(PstnModel.getCustomerLastName());
+    expect(controller.emailAddress).toEqual(PstnModel.getCustomerEmail());
   });
 
   it('should store data and transition to next state on', function () {
@@ -41,10 +44,10 @@ describe('Controller: PstnContractInfoCtrl', function () {
     controller.validateContactInfo();
     $scope.$apply();
 
-    expect(controller.companyName).toEqual(PstnSetup.getCustomerName());
-    expect(controller.firstName).toEqual(PstnSetup.getCustomerFirstName());
-    expect(controller.lastName).toEqual(PstnSetup.getCustomerLastName());
-    expect(controller.emailAddress).toEqual(PstnSetup.getCustomerEmail());
+    expect(controller.companyName).toEqual(PstnModel.getCustomerName());
+    expect(controller.firstName).toEqual(PstnModel.getCustomerFirstName());
+    expect(controller.lastName).toEqual(PstnModel.getCustomerLastName());
+    expect(controller.emailAddress).toEqual(PstnModel.getCustomerEmail());
 
     expect($state.go).toHaveBeenCalledWith('pstnSetup.serviceAddress');
   });
@@ -61,12 +64,12 @@ describe('Controller: PstnContractInfoCtrl', function () {
   });
 
   it('should not show back button if carrier is associated', function () {
-    PstnSetup.setCarrierExists(true);
+    PstnModel.setCarrierExists(true);
     expect(controller.hasBackButton()).toEqual(false);
   });
 
   it('should not show back button if only one carrier', function () {
-    PstnSetup.setSingleCarrierReseller(true);
+    PstnModel.setSingleCarrierReseller(true);
     expect(controller.hasBackButton()).toEqual(false);
   });
 });

@@ -23,7 +23,6 @@ require('ng-csv/build/ng-csv.js');
 
 require('api-check/dist/api-check.js');
 require('angular-formly/dist/formly.js');
-require('collab-ui-ng/dist/collab-ui-ng');
 require('collab-ui-formly/dist/collab-formly.js');
 
 require('angular-ui-grid/ui-grid.js');
@@ -34,9 +33,6 @@ require('moment-range/dist/moment-range.js');
 
 require('jquery-csv/src/jquery.csv.js');
 require('angular-timer/dist/angular-timer.js');
-require('angular-libphonenumber/dist/libphonenumber.full.js');
-require('angular-libphonenumber/dist/angular-libphonenumber.js');
-require('angularjs-toaster/toaster.js');
 require('angularjs-slider/dist/rzslider.min.js');
 require('ng-file-upload/dist/ng-file-upload.js');
 
@@ -57,5 +53,5 @@ require('collab-ui-stickyfill/dist/stickyfill.js');
 require('expose-loader?_!lodash'); // expose current lodash as a global since `pdfmake` is overwriting the previous global to custom 3.1.0
 
 function requireAll(requireContext) {
-  return requireContext.keys().forEach(requireContext);
+  return requireContext.keys().map(requireContext);
 }

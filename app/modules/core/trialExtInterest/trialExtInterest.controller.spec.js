@@ -24,7 +24,7 @@ describe('Controller: TrialExtInterestCtrl', function () {
 
     spyOn(TrialExtInterestService, 'notifyPartnerAdmin').and.returnValue($q.reject());
     spyOn($location, 'search').and.returnValue({
-      eqp: null
+      eqp: null,
     });
     spyOn(Log, 'error');
   }));
@@ -51,7 +51,7 @@ describe('Controller: TrialExtInterestCtrl', function () {
 
     beforeEach(function () {
       $location.search.and.returnValue({
-        eqp: eqpParam
+        eqp: eqpParam,
       });
     });
 

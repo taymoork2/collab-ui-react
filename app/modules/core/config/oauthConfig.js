@@ -1,10 +1,12 @@
 (function () {
   'use strict';
 
+  var hostnameConfig = require('config/hostname.config');
+
   module.exports = angular
     .module('core.oauthconfig', [
       require('modules/core/config/config'),
-      require('modules/core/scripts/services/utils')
+      require('modules/core/scripts/services/utils'),
     ])
     .factory('OAuthConfig', OAuthConfig)
     .name;
@@ -22,6 +24,7 @@
       'cloudMeetings:login',
       'webex-messenger:get_webextoken',
       'cloud-contact-center:admin',
+      'cmc-controller:get_status',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
       'contact-center-context:pod_write',
@@ -32,7 +35,7 @@
       'spark-admin:organizations_read',
       'spark-admin:licenses_read',
       'spark-admin:logs_read',
-      'spark:kms'
+      'spark:kms',
     ];
 
     var oauth2Scope = encodeURIComponent(scopes.join(' '));
@@ -46,7 +49,7 @@
         cfe: {
           id: 'C5469b72a6de8f8f0c5a23e50b073063ea872969fc74bb461d0ea0438feab9c03',
           secret: 'b485aae87723fc2c355547dce67bbe2635ff8052232ad812a689f2f9b9efa048',
-        }
+        },
       },
       oauthUrl: {
         ciRedirectUrl: 'redirect_uri=%s',
@@ -56,7 +59,7 @@
         oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
         oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
         oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s',
-        userInfo: 'user_info=%s'
+        userInfo: 'user_info=%s',
       },
       logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=spark&goto=',
     };
@@ -102,7 +105,7 @@
         oauth2Scope,
         encodeURIComponent(redirectUrl),
         oauthState,
-        getOauthServiceType()
+        getOauthServiceType(),
       ];
 
       if (email) {
@@ -119,7 +122,7 @@
 
     function getOauthAccessCodeUrl(refresh_token) {
       var params = [
-        refresh_token
+        refresh_token,
       ];
       return Utils.sprintf(config.oauthUrl.oauth2AccessCodeUrlPattern, params);
     }
@@ -166,9 +169,9 @@
     function getAdminPortalUrl() {
       var adminPortalUrl = {
         dev: getAbsUrlForDev(),
-        cfe: 'https://cfe-admin.ciscospark.com',
-        integration: 'https://int-admin.ciscospark.com/',
-        prod: 'https://admin.ciscospark.com/'
+        cfe: 'https://' + hostnameConfig.CFE,
+        integration: 'https://' + hostnameConfig.INTEGRATION + '/',
+        prod: 'https://' + hostnameConfig.PRODUCTION + '/',
       };
       var env = Config.isE2E() ? 'dev' : Config.getEnv();
       return adminPortalUrl[env];
@@ -189,7 +192,7 @@
         'dev': config.oauthUrl.oauth2UrlAtlas,
         'cfe': config.oauthUrl.oauth2UrlCfe,
         'integration': config.oauthUrl.oauth2UrlAtlas,
-        'prod': config.oauthUrl.oauth2UrlAtlas
+        'prod': config.oauthUrl.oauth2UrlAtlas,
       };
       return oAuth2Url[Config.getEnv()];
     }

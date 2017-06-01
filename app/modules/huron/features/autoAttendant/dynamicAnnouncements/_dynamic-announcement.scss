@@ -1,0 +1,37 @@
+.aa-insertion-element {
+  background-color: $brand-primary;
+  @include vr-spacing(pt, 0.5);
+  @include vr-spacing(pb, 0.5);
+  border-radius: 3px;
+  border: 1px solid;
+  border-color: $brand-primary;
+
+  .insertion-element {
+    @include vr-spacing(mr, 0.5);
+    @include vr-spacing(ml, 0.5);
+    color: $white;
+    font-weight: bold;
+    font-size: 1rem;
+    &:focus {
+      outline: 0px solid transparent;
+    }
+    &:hover {
+      cursor: pointer;
+      color: $gray-light-2;
+    }
+  }
+
+  .cancel-dynamic {
+    .cancel-dynamic-option {
+      font-size: 1.1rem;
+      color: $white;
+      &:focus {
+        outline: 0px solid transparent;
+      }
+      &:hover {
+        cursor: pointer;
+        color: $gray-light-2;
+      }
+    }
+  }
+}

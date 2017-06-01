@@ -10,7 +10,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
   /* @ngInject */
   function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService,
-    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
+    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
 
     var vm = this;
 
@@ -33,7 +33,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.userList = {
       allUsers: [],
       adminUsers: [],
-      partnerUsers: []
+      partnerUsers: [],
     };
     $scope.tooManyUsers = false;
     $scope.currentUser = null;
@@ -43,22 +43,22 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.userDetailsActive = false;
     $scope.sort = {
       by: 'name',
-      order: 'ascending'
+      order: 'ascending',
     };
     $scope.userName = Authinfo.getUserName();
     $scope.placeholder = {
       name: $translate.instant('usersPage.all'),
       filterValue: '',
-      count: 0
+      count: 0,
     };
     $scope.filters = [{
       name: $translate.instant('usersPage.administrators'),
       filterValue: 'administrators',
-      count: 0
+      count: 0,
     }, {
       name: $translate.instant('usersPage.partners'),
       filterValue: 'partners',
-      count: 0
+      count: 0,
     }];
     $scope.dirsyncEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
@@ -91,31 +91,25 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.getUserPhoto = Userservice.getUserPhoto;
     $scope.firstOfType = firstOfType;
     $scope.isValidThumbnail = Userservice.isValidThumbnail;
-    $scope.isNotDirSyncOrException = false;
 
     $scope.getUserList = getUserList;
     $scope.onManageUsers = onManageUsers;
     $scope.sortDirection = sortDirection;
 
-    vm.useAtlasNewUserExport = false;
-
     ////////////////
     var eventListeners = [];
-    var isOnlineOrg;
 
     function onInit() {
 
       var promises = {
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
         configureGrid: vm.configureGrid(),
-        isOnlineOrg: Auth.isOnlineOrg()
+        isOnlineOrg: Auth.isOnlineOrg(),
       };
 
       $q.all(promises).then(function (results) {
         $scope.isEmailStatusToggled = results.atlasEmailStatus;
-        isOnlineOrg = results.isOnlineOrg;
 
-        checkOrg();
         bind();
         getUserList();
       });
@@ -125,24 +119,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     function onDestroy() {
       while (!_.isEmpty(eventListeners)) {
         _.attempt(eventListeners.pop());
-      }
-    }
-
-    function checkOrg() {
-      // Allow Cisco org to use the Circle Plus button
-      // Otherwise, block the DirSync orgs from using it
-      if (Authinfo.isCisco()) {
-        $scope.isNotDirSyncOrException = true;
-      } else {
-        FeatureToggleService.supportsDirSync()
-          .then(function (enabled) {
-            $scope.isNotDirSyncOrException = !enabled;
-          });
-
-        FeatureToggleService.atlasNewUserExportGetStatus()
-          .then(function (enabled) {
-            vm.useAtlasNewUserExport = enabled;
-          });
       }
     }
 
@@ -210,7 +186,8 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         getAdmins: getAdmins(startIndex),
         getUsers: getUsers(startIndex),
         getPartners: getPartners(),
-        getOrg: getOrg()
+        getOrg: getOrg(),
+        getDirSyncStatus: getDirSyncStatus(),
       };
 
       return $q.all(promises)
@@ -296,15 +273,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
                 // todo - why are we looping through ALL users here, and not just the new ones?
                 _.forEach($scope.userList.allUsers, function (user) {
                   // user status
-                  var userHasSignedUp = _.some(user.userSettings, function (userSetting) {
-                    return userSetting.indexOf('spark.signUpDate') > 0;
-                  });
-                  var index = _.findIndex(user.entitlements, function (ent) {
-                    return ent === 'ciscouc';
-                  });
-                  var hasCiscoUC = index > -1;
-                  var isActiveUser = !_.isEmpty(user.entitlements) &&
-                    (userHasSignedUp || isOnlineOrg || hasCiscoUC);
+                  var isActiveUser = UserOverviewService.getAccountActiveStatus(user);
                   user.userStatus = isActiveUser ? 'active' : 'pending';
 
                   // email status
@@ -328,10 +297,10 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
               if (data.status === 403) {
                 var errors = data.Errors;
                 tooManyUsers = !!errors && _.some(errors, {
-                  'errorCode': '100106'
+                  'errorCode': '100106',
                 });
                 tooManyResults = !!errors && _.some(errors, {
-                  'errorCode': '200045'
+                  'errorCode': '200045',
                 });
               }
 
@@ -402,23 +371,29 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function getOrg() {
-      var deferred = $q.defer();
-      if ($scope.obtainedOrgs) {
-        deferred.resolve();
-      } else {
-        Orgservice.getOrg(function (data, status) {
-          if (data.success) {
-            $scope.org = data;
-            $scope.dirsyncEnabled = !!data.dirsyncEnabled;
-            $scope.obtainedOrgs = true;
-            deferred.resolve();
-          } else {
-            Log.debug('Get existing org failed. Status: ' + status);
-            deferred.reject(data);
-          }
+      return $q(function (resolve, reject) {
+        if ($scope.obtainedOrgs) {
+          resolve();
+        } else {
+          Orgservice.getOrg(function (data, status) {
+            if (data.success) {
+              $scope.org = data;
+              $scope.obtainedOrgs = true;
+              resolve();
+            } else {
+              Log.debug('Get existing org failed. Status: ' + status);
+              reject(data);
+            }
+          }, null, { showDirsyncAttributes: true });
+        }
+      });
+    }
+
+    function getDirSyncStatus() {
+      return DirSyncService.refreshStatus()
+        .finally(function () {
+          $scope.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
         });
-      }
-      return deferred.promise;
     }
 
     function getUserLicenses(user) {
@@ -530,7 +505,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       $state.go('users.delete', {
         deleteUserOrgId: deleteUserOrgId,
         deleteUserUuId: deleteUserUuId,
-        deleteUsername: deleteUsername
+        deleteUsername: deleteUsername,
       });
     }
 
@@ -538,7 +513,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       $state.go('users.deleteSelf', {
         deleteUserOrgId: deleteUserOrgId,
         deleteUserUuId: deleteUserUuId,
-        deleteUsername: deleteUsername
+        deleteUsername: deleteUsername,
       });
     }
 
@@ -557,40 +532,40 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
           displayName: '',
           sortable: false,
           cellTemplate: photoCellTemplate,
-          width: 70
+          width: 70,
         }, {
           field: 'name.givenName',
           id: 'givenName',
           displayName: $translate.instant('usersPage.firstnameHeader'),
-          sortable: true
+          sortable: true,
         }, {
           field: 'name.familyName',
           id: 'familyName',
           displayName: $translate.instant('usersPage.lastnameHeader'),
-          sortable: true
+          sortable: true,
         }, {
           field: 'displayName',
           id: 'displayName',
           displayName: $translate.instant('usersPage.displayNameHeader'),
-          sortable: true
+          sortable: true,
         }, {
           field: 'userName',
           id: 'userName',
           displayName: $translate.instant('usersPage.emailHeader'),
-          sortable: true
+          sortable: true,
         }, {
           field: 'userStatus',
           id: 'userStatus',
           cellFilter: 'userListFilter',
           sortable: false,
           cellTemplate: getTemplate('status.tpl'),
-          displayName: $translate.instant('usersPage.status')
+          displayName: $translate.instant('usersPage.status'),
         }, {
           field: 'action',
           displayName: $translate.instant('usersPage.actionHeader'),
           sortable: false,
-          cellTemplate: getTemplate('actions.tpl')
-        }
+          cellTemplate: getTemplate('actions.tpl'),
+        },
       ];
 
       function onRegisterApi(gridApi) {
@@ -623,7 +598,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         enableHorizontalScrollbar: 0,
         infiniteScrollDown: true,
         onRegisterApi: onRegisterApi,
-        columnDefs: columnDefs
+        columnDefs: columnDefs,
       };
 
       return deferred.promise;
@@ -637,7 +612,8 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       $scope.queryuserslist = $scope.gridData;
       $state.go('user-overview', {
         queryuserslist: $scope.queryuserslist,
-        currentUserId: $scope.currentUser.id
+        currentUserId: $scope.currentUser.id,
+        orgInfo: $scope.org,
       });
     }
 

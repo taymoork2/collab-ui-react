@@ -1,13 +1,8 @@
-@import 'styles/toolkit/colors';
-
-csv-download {
-  display: inline-flex;
-}
+@import '~collab-ui/scss/settings/colors';
 
 .csv-download {
-  display: block;
-  margin-right: 1.5rem;
-  margin-left: 1rem;
+  display: flex;
+  flex: 1 0 auto;
 
   .icon {
     font-size: 1.5rem;
@@ -26,6 +21,7 @@ csv-download {
     .status-message {
       color: $gray-light-1;
       font-size: small;
+      margin-right: 1rem;
     }
   }
 }

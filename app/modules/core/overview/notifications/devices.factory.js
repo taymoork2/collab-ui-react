@@ -19,11 +19,11 @@
           },
           linkText: 'homePage.getStarted',
           name: 'devices',
-          text: text
+          text: text,
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

@@ -1,4 +1,7 @@
 import { IOption } from './../dialing/dialing.service';
+
+const callerIdInputs = ['external'];
+
 class CallerId implements ng.IComponentController {
   private onChangeFn: Function;
   private customCallerIdName: string | null;
@@ -15,6 +18,7 @@ class CallerId implements ng.IComponentController {
   private companyNumberPattern: string;
   private listApiSuccess: boolean = false;
   private firstTime: boolean = true;
+  private callerIdInputs: string[];
   private static readonly BLOCK_CALLERID_TYPE = {
     name: 'Blocked Outbound Caller ID',
     key: 'EXT_CALLER_ID_BLOCKED_CALLER_ID',
@@ -35,32 +39,34 @@ class CallerId implements ng.IComponentController {
     name: 'Custom',
     key: 'EXT_CALLER_ID_CUSTOM',
   };
-
   /* @ngInject */
-  constructor(private $translate: ng.translate.ITranslateService) {
+  constructor(
+    private $translate: ng.translate.ITranslateService,
+  ) {
     this.initCallerId();
   }
 
-  public $onInit(): void {
-
-  }
-
-  public $onChanges(changes) {
-    if (changes.directLine && changes.directLine.previousValue === undefined) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+    const {
+      directLine,
+      companyNumbers,
+      callerIdSelected,
+    } = changes;
+    if (directLine && directLine.previousValue === undefined) {
       if (changes.directLine.currentValue) {
         this.directLineOption = new CallerIdOption(CallerId.DIRECT_LINE_TYPE.name, new CallerIdConfig('', CallerId.DIRECT_LINE_TYPE.name, changes.directLine.currentValue, CallerId.DIRECT_LINE_TYPE.key));
         this.options.push(this.directLineOption);
       }
     }
-    if (changes.companyNumbers && _.isArray(changes.companyNumbers.currentValue)) {
+    if (companyNumbers && _.isArray(companyNumbers.currentValue)) {
       if (!this.listApiSuccess) {
-        this.updateCompanyNumberOptions(changes.companyNumbers.currentValue);
+        this.updateCompanyNumberOptions(companyNumbers.currentValue);
       }
     }
-    if (changes.callerIdSelected && !changes.callerIdSelected.currentValue) {
+    if (callerIdSelected && !callerIdSelected.currentValue) {
       this.callerIdSelected = this.selectType(CallerId.BLOCK_CALLERID_TYPE.key);
     }
-    if (changes.callerIdSelected && _.isString(changes.callerIdSelected.currentValue)) {
+    if (callerIdSelected && _.isString(callerIdSelected.currentValue)) {
       while (this.listApiSuccess && this.firstTime) {
         this.callerIdOptions = this.getOptions();
         this.firstTime = false;
@@ -70,7 +76,7 @@ class CallerId implements ng.IComponentController {
         this.callerIdSelected = this.selectType(changes.callerIdSelected.currentValue);
       }
     }
-    if (changes.directLine && (typeof changes.directLine.previousValue !== 'object' || changes.directLine.previousValue === null)) {
+    if (directLine && (typeof changes.directLine.previousValue !== 'object' || changes.directLine.previousValue === null)) {
       let data = this.changeDirectLine(<string>_.get(changes, 'directLine.currentValue'), this.callerIdSelected);
       this.callerIdOptions = data.options;
       this.callerIdSelected = data.selected;
@@ -109,6 +115,7 @@ class CallerId implements ng.IComponentController {
     // Block Caller ID
     this.blockOption = new CallerIdOption(CallerId.BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', CallerId.BLOCK_CALLERID_TYPE.key));
     this.options.push(this.blockOption);
+    this.callerIdInputs = callerIdInputs;
   }
 
   private updateCompanyNumberOptions(companyNumbers) {
@@ -201,6 +208,11 @@ class CallerId implements ng.IComponentController {
     };
     return _selected;
   }
+
+  public setCallerIdNumber(number: string): void {
+    this.customCallerIdNumber = number;
+    this.onChange();
+  }
 }
 
 export class CallerIdConfig {
@@ -230,7 +242,7 @@ export class CallerIdOption {
 export class CallerIdComponent implements ng.IComponentOptions {
   public controller = CallerId;
   public templateUrl = 'modules/huron/callerId/callerId.html';
-  public bindings = <{ [binding: string]: string }>{
+  public bindings = {
     callerIdOptions: '<',
     callerIdSelected: '<',
     customCallerIdName: '<',

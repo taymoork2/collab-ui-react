@@ -12,8 +12,8 @@ describe('Controller: AADialByExtCtrl', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'AA2'
-    }
+      name: 'AA2',
+    },
   };
   var schedule = 'openHours';
   var index = '0';
@@ -71,7 +71,7 @@ describe('Controller: AADialByExtCtrl', function () {
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
       // setup the options menu
       controller = $controller('AADialByExtCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -94,7 +94,7 @@ describe('Controller: AADialByExtCtrl', function () {
           $scope.menuKeyIndex = '0';
           $scope.menuId = 'menu0';
           controller = $controller('AADialByExtCtrl', {
-            $scope: $scope
+            $scope: $scope,
           });
           $scope.$apply();
         }));
@@ -120,7 +120,7 @@ describe('Controller: AADialByExtCtrl', function () {
         aaUiModel[schedule].entries[0] = menuEntry;
 
         var controller = $controller('AADialByExtCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry).toEqual(aaUiModel[schedule].entries[0]);
@@ -159,7 +159,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
       // setup the options menu
       controller = $controller('AADialByExtCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -238,7 +238,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
       // setup the options menu
       controller = $controller('AADialByExtCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));

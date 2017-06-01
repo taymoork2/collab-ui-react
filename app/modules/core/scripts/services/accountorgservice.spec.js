@@ -1,11 +1,13 @@
 'use strict';
 
+var testModule = require('./accountorgservice');
+
 describe('Service : AccountOrgService', function () {
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(testModule));
 
   var AccountOrgService, $httpBackend;
   var authInfo = {
-    getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7'),
   };
   var appSecurityRegex = /.*\/settings\/clientSecurityPolicy\.*/;
 
@@ -53,7 +55,7 @@ describe('Service : AccountOrgService', function () {
 
       $httpBackend.whenGET(appSecurityRegex).respond(function () {
         var data = {
-          clientSecurityPolicy: true
+          clientSecurityPolicy: true,
         };
         return [200, data];
       });

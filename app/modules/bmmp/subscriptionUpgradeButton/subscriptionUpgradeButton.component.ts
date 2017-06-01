@@ -24,8 +24,8 @@ class SubscriptionUpgradeButton implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const bmmpAttrChange = changes['bmmpAttr'];
-    const currentValue = _.get<IBmmpAttr>(bmmpAttrChange, 'currentValue');
+    const { bmmpAttr } = changes;
+    const currentValue = _.get<IBmmpAttr>(bmmpAttr, 'currentValue');
     if (currentValue && !angular.equals(this.emptyBmmpAttr, currentValue)) {
       this.BmmpService.init();
     }

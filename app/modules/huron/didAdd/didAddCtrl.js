@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($q, $rootScope, $state, $stateParams, $timeout, $translate, Authinfo, DialPlanService, DidAddEmailService, DidService, ExternalNumberPool, LogMetricsService, Notification, PstnSetupService, TelephoneNumberService) {
+  function DidAddCtrl($q, $rootScope, $state, $stateParams, $timeout, $translate, Authinfo, DialPlanService, DidAddEmailService, DidService, ExternalNumberPool, LogMetricsService, Notification, PstnService, PhoneNumberService, TrialService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = !!$stateParams.editMode;
@@ -24,11 +24,13 @@
     vm.addNumbers = true;
     vm.addSuccess = false;
     vm.unsavedTokens = [];
+    vm.regionCode = '';
+    vm.countryCode = '';
 
     vm.tokenfieldid = 'didAddField';
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
-    vm.currentTrial = angular.copy($stateParams.currentTrial);
-    vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
+    vm.currentTrial = _.cloneDeep($stateParams.currentTrial);
+    vm.getExampleNumbers = PhoneNumberService.getExampleNumbers;
 
     vm.tokenoptions = {
       delimiter: [',', ';'],
@@ -36,13 +38,13 @@
       limit: 50,
       tokens: [],
       minLength: 9,
-      beautify: false
+      beautify: false,
     };
     vm.tokenmethods = {
       createtoken: createToken,
       createdtoken: createdToken,
       removedtoken: removedToken,
-      edittoken: editToken
+      edittoken: editToken,
     };
 
     vm.checkForInvalidTokens = checkForInvalidTokens;
@@ -65,8 +67,8 @@
 
     function createToken(e) {
       var tokenNumber = e.attrs.label;
-      e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
-      e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
+      e.attrs.value = PhoneNumberService.getE164Format(tokenNumber);
+      e.attrs.label = PhoneNumberService.getNationalFormat(tokenNumber);
     }
 
     function createdToken(e) {
@@ -118,17 +120,17 @@
       var countryCode = _.get(carrierOrDialPlanInfo, 'countryCode');
       if (country) {
         // check if two-digit alphabetical country identifier is available, i.e. "us"
-        TelephoneNumberService.setRegionCode(country.toLowerCase());
+        vm.regionCode = country.toLowerCase();
       } else if (countryCode) {
-        TelephoneNumberService.setCountryCode(countryCode);
+        vm.countryCode = countryCode;
       } else {
         // if country and countryCode are not available, assume "us"
-        TelephoneNumberService.setRegionCode("us");
+        vm.regionCode = 'us';
       }
     }
 
     function getCarrierInfoFromTerminus() {
-      return PstnSetupService.listResellerCarriers()
+      return PstnService.listResellerCarriers()
         .then(function (resellerCarriers) {
           // this may need revisiting once multiple carriers are supported by a partner/reseller
           if (resellerCarriers.length > 0) {
@@ -141,7 +143,9 @@
       var customerOrgId = _.get($stateParams, 'currentOrg.customerOrgId');
       if (customerOrgId) {
         DialPlanService.getCustomerDialPlanCountryCode(customerOrgId)
-          .then(TelephoneNumberService.setCountryCode)
+          .then(function (countryCode) {
+            vm.countryCode = countryCode;
+          })
           .catch(function () {
             // if customer carrier info could not be obtained from CMI, try getting partner carrier info from Terminus
             return getCarrierInfoFromTerminus(Authinfo.getOrgId()).then(setDidValidationCountry)
@@ -152,7 +156,7 @@
                   Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
                 }
                 setDidValidationCountry({
-                  country: "us"
+                  country: "us",
                 });
               });
           })
@@ -173,7 +177,7 @@
               Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
             }
             setDidValidationCountry({
-              country: "us"
+              country: "us",
             });
           }).then(reinitTokens);
       }
@@ -197,7 +201,7 @@
     }
 
     function validateDID(input) {
-      return TelephoneNumberService.validateDID(input);
+      return PhoneNumberService.validateDID(input, vm.regionCode);
     }
 
     function checkForInvalidTokens() {
@@ -249,7 +253,7 @@
           }).catch(function (response) {
             errors.push({
               pattern: newDid,
-              message: response.status === 409 ? $translate.instant('didManageModal.didAlreadyExist') : Notification.processErrorResponse(response)
+              message: response.status === 409 ? $translate.instant('didManageModal.didAlreadyExist') : Notification.processErrorResponse(response),
             });
           });
           promises.push(addPromise);
@@ -276,20 +280,20 @@
     }
 
     function backtoEditTrial() {
-      $state.go('trialEdit.info', {
-        currentTrial: vm.currentTrial
-      });
+      var route = TrialService.getEditTrialRoute(vm.currentTrial);
+      $state.go(route.path, route.params);
     }
 
     function backtoStartTrial() {
-      $state.go('trialAdd.info');
+      var route = TrialService.getAddTrialRoute();
+      $state.go(route.path, route.params);
     }
 
     function sendEmail() {
       var emailInfo = {
         'email': vm.currentOrg.customerEmail,
         'customerName': vm.currentOrg.customerName,
-        'partnerName': Authinfo.getOrgName()
+        'partnerName': Authinfo.getOrgName(),
       };
       DidAddEmailService.save({}, emailInfo, function () {
         Notification.success('didManageModal.emailSuccessText');

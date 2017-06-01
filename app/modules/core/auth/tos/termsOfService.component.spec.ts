@@ -26,11 +26,11 @@ describe('TermsOfService', () => {
   });
 
   function initDependencySpies() {
-    spyOn(this.Auth, 'logout').and.callFake(angular.noop);
-    spyOn(this.$state, 'go').and.callFake(angular.noop);
+    spyOn(this.Auth, 'logout').and.callFake(_.noop);
+    spyOn(this.$state, 'go').and.callFake(_.noop);
     spyOn(this.$modal, 'open').and.returnValue(true);
-    spyOn(this.TOSService, 'dismissModal').and.callFake(angular.noop);
-    spyOn(this.TOSService, 'acceptTOS').and.returnValue(this.$q.when());
+    spyOn(this.TOSService, 'dismissModal').and.callFake(_.noop);
+    spyOn(this.TOSService, 'acceptTOS').and.returnValue(this.$q.resolve());
     spyOn(this.TOSService, 'hasAcceptedTOS').and.returnValue(false);
     this.$window.frames['tos-frame'] = {
       document: document.implementation.createHTMLDocument('tos-frame'),

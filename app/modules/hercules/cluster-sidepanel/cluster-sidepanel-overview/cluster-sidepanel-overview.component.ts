@@ -1,24 +1,29 @@
-import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
+import { ClusterService } from 'modules/hercules/services/cluster-service';
+import { IExtendedCluster, ConnectorType, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
 
-class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
+export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   private clusterId: string;
 
-  private cluster: IClusterV1;
+  private cluster: IExtendedCluster;
   public hasNodesViewFeatureToggle: boolean;
   public hasResourceGroupFeatureToggle: boolean;
 
-  public clusterType: string;
-  public connectorType: string;
+  public clusterType: ClusterTargetType;
+  public connectorType: ConnectorType;
 
   /* @ngInject */
   constructor(
+    private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
-    private ClusterService,
+    private $translate: ng.translate.ITranslateService,
+    private ClusterService: ClusterService,
   ) {}
 
   public $onInit() {
+    this.$state.current.data.displayName = this.$translate.instant('common.overview');
+    this.$rootScope.$broadcast('displayNameUpdated');
     if (this.clusterId && this.connectorType) {
       this.$scope.$watch(() => {
         return this.ClusterService.getCluster(this.connectorType, this.clusterId);
@@ -34,6 +39,14 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   public isHDSCluster() {
     return this.cluster && this.cluster.targetType === 'hds_app';
+  }
+
+  public isMediaCluster() {
+    return this.cluster && this.cluster.targetType === 'mf_mgmt';
+  }
+
+  public isHybridContextCluster() {
+    return this.cluster && this.cluster.targetType === 'cs_mgmt';
   }
 
   public hasConnectors() {

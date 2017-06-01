@@ -5,13 +5,13 @@
     .module('Core')
     .component('crBmmpBanner', {
       templateUrl: 'modules/core/myCompany/bmmpBanner/bmmpBanner.tpl.html',
-      controller: BmmpBannerCtrl
+      controller: BmmpBannerCtrl,
     });
 
   ////////////////////
 
   /* ngInject */
-  function BmmpBannerCtrl($scope, $translate, Authinfo, UrlConfig) {
+  function BmmpBannerCtrl($scope, $translate, Authinfo, BmmpService) {
     var vm = this;
 
     // undocumented parameters provided by BMMP widget team
@@ -19,13 +19,13 @@
       userId: Authinfo.getUserId(),
       locale: $translate.use(),
       appName: 'atlas',
-      apiBaseUrl: UrlConfig.getBmmpUrl()
+      apiBaseUrl: BmmpService.getBmmpUrl(),
     };
 
     vm.$onInit = onInit;
     vm.canShow = canShow;
     vm._helpers = {
-      initBmmpBanner: initBmmpBanner
+      initBmmpBanner: initBmmpBanner,
     };
 
     ///////////////////////

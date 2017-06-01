@@ -9,7 +9,7 @@
   function AACtrlResourcesService() {
     var service = {
       getCtrlToResourceMap: getCtrlToResourceMap,
-      getCtrlKeys: getCtrlKeys
+      getCtrlKeys: getCtrlKeys,
     };
     var resources = {};
     //generic resource manager for various controller resources using the common service mapping

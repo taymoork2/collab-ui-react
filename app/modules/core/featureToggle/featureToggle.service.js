@@ -4,9 +4,8 @@
   module.exports = FeatureToggleService;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig, Orgservice) {
+  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig) {
     var features = require('./features.config');
-
     var toggles = {};
 
     // returns huron feature toggle value for the given user or user's org
@@ -16,32 +15,28 @@
     var huronCustomerResource;
 
     var orgResource = $resource(UrlConfig.getFeatureUrl() + '/features/rules/:id', {
-      id: '@id'
+      id: '@id',
     },
       {
         get: {
           method: 'GET',
-          cache: true
+          cache: true,
         },
         refresh: {
           method: 'GET',
-          cache: false
-        }
+          cache: false,
+        },
       });
 
     var userResource = $resource(UrlConfig.getFeatureUrl() + '/features/users/:id', {
-      id: '@id'
+      id: '@id',
     },
       {
         get: {
           method: 'GET',
-          cache: true
-        }
+          cache: true,
+        },
       });
-
-    var dirSyncConfigurationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync', {
-      customerId: '@customerId'
-    });
 
     var service = {
       getUrl: getUrl,
@@ -53,8 +48,7 @@
       generateFeatureToggleRule: generateFeatureToggleRule,
       stateSupportsFeature: stateSupportsFeature,
       supports: supports,
-      supportsDirSync: supportsDirSync,
-      features: features
+      features: features,
     };
 
     init();
@@ -103,7 +97,7 @@
       }
       clearCache = clearCache || false;
       var info = {
-        id: id
+        id: id,
       };
       var url = getUrl(isUser);
 
@@ -141,7 +135,7 @@
     function getHuronToggleForUser(userId, feature) {
       return huronUserResource.get({
         userId: userId,
-        featureName: feature
+        featureName: feature,
       }).$promise.then(function (data) {
         toggles[feature] = data.val;
         return data.val;
@@ -154,7 +148,7 @@
     function getHuronToggleForCustomer(customerId, feature) {
       return huronCustomerResource.get({
         customerId: customerId,
-        featureName: feature
+        featureName: feature,
       }).$promise.then(function (data) {
         toggles[feature] = data.val;
         return data.val;
@@ -171,7 +165,7 @@
       var atlasToggle = getFeatures(isUser, id).then(function (features) {
         // find the toggle, then get the val, default to false
         return _.get(_.find(features.developer, {
-          key: feature
+          key: feature,
         }), 'val', false);
       }).catch(function () {
         return false;
@@ -207,11 +201,7 @@
 
     function supports(feature) {
       return $q(function (resolve) {
-        if (feature === features.dirSync) {
-          supportsDirSync().then(function (enabled) {
-            resolve(enabled);
-          });
-        } else if (!_.isUndefined(toggles[feature])) {
+        if (!_.isUndefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
           $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/me', {
@@ -235,25 +225,6 @@
       });
     }
 
-    function supportsDirSync() {
-      return dirSyncConfigurationResource.get({
-        customerId: Authinfo.getOrgId()
-      }).$promise.then(function (response) {
-        return response.serviceMode === 'ENABLED';
-      }).catch(function (response) {
-        Orgservice.getOrgCacheOption(function (data) {
-          if (data.success) {
-            return data.dirsyncEnabled;
-          } else {
-            return $q.reject(response);
-          }
-        }, null,
-          {
-            cache: false
-          });
-      });
-    }
-
     function setFeatureToggles(isUser, listOfFeatureToggleRules) {
       if (isUser) {
         return $q.reject('User level toggles are not changeable in the web app');
@@ -262,7 +233,7 @@
       var usingId = isUser ? undefined : '';
 
       return getUrl(isUser).save({
-        id: usingId
+        id: usingId,
       }, listOfFeatureToggleRules).$promise;
     }
 
@@ -300,26 +271,26 @@
     function setHuronUserResource() {
       huronUserResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
         userId: '@userId',
-        featureName: '@featureName'
+        featureName: '@featureName',
       },
         {
           get: {
             method: 'GET',
-            cache: true
-          }
+            cache: true,
+          },
         });
     }
 
     function setHuronCustomerResource() {
       huronCustomerResource = $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
         customerId: '@customerId',
-        featureName: '@featureName'
+        featureName: '@featureName',
       },
         {
           get: {
             method: 'GET',
-            cache: true
-          }
+            cache: true,
+          },
         });
     }
 

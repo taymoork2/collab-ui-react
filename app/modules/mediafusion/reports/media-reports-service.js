@@ -5,16 +5,35 @@
     .module('Mediafusion')
     .service('MediaReportsService', MediaReportsService);
 
-  function MediaReportsService($http, $translate, Authinfo, Notification, MediaConfigServiceV2, chartColors) {
+  function MediaReportsService($http, $translate, Authinfo, Notification, UrlConfig, chartColors, InsightGraphService) {
     var vm = this;
 
-    vm.urlBase = MediaConfigServiceV2.getAthenaUrl() + '/organizations/' + Authinfo.getOrgId();
+    vm.urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
+    vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
+    vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
+    vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
+    vm.clientTypeTranMap = {
+      'ANDROID': $translate.instant('mediaFusion.metrics.clientType.android'),
+      'BLACKBERRY': $translate.instant('mediaFusion.metrics.clientType.blackberry'),
+      'DESKTOP': $translate.instant('mediaFusion.metrics.clientType.desktop'),
+      'IPAD': $translate.instant('mediaFusion.metrics.clientType.ipad'),
+      'IPHONE': $translate.instant('mediaFusion.metrics.clientType.iphone'),
+      'JABBER': $translate.instant('mediaFusion.metrics.clientType.jabber'),
+      'SIP': $translate.instant('mediaFusion.metrics.clientType.sip'),
+      'SPARK_BOARD': $translate.instant('mediaFusion.metrics.clientType.board'),
+      'TEST': $translate.instant('mediaFusion.metrics.clientType.test'),
+      'TP_ENDPOINT': $translate.instant('mediaFusion.metrics.clientType.tp'),
+      'UC': $translate.instant('mediaFusion.metrics.clientType.uc'),
+      'UNKNOWN': $translate.instant('mediaFusion.metrics.clientType.unknown'),
+      'WINDOWS_MOBILE': $translate.instant('mediaFusion.metrics.clientType.windows'),
+      'Total': $translate.instant('mediaFusion.metrics.clientType.total'),
+    };
 
     function adjustLineGraphData(activeData, returnData, startTime, endTime, graphs) {
       var returnDataArray = [];
       var startDate = {
-        time: startTime
+        time: startTime,
       };
       activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
@@ -23,7 +42,7 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        time: endTime
+        time: endTime,
       };
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
@@ -39,18 +58,18 @@
         balloon: true,
         call_reject: 0,
         active_calls: 0,
-        timestamp: null
+        timestamp: null,
       };
       var startDate = {
         colorOne: chartColors.primaryBase,
         colorTwo: chartColors.attentionBase,
         call_reject: 0,
         active_calls: 0,
-        timestamp: startTime
+        timestamp: startTime,
       };
       activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
-        var tmpItem = angular.copy(graphItem);
+        var tmpItem = _.cloneDeep(graphItem);
         tmpItem.call_reject = activeData[i].call_reject;
         tmpItem.active_calls = activeData[i].active_calls;
         tmpItem.timestamp = activeData[i].timestamp;
@@ -59,11 +78,36 @@
       var endDate = {
         colorOne: chartColors.primaryBase,
         colorTwo: chartColors.attentionBase,
-        timestamp: endTime
+        timestamp: endTime,
       };
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
       return returnData;
+    }
+
+    function addColorForMeetingsCard(response) {
+      _.each(response.data.dataProvider, function (val) {
+        if (val.name === 'ON_PREM') {
+          val.color = '#22D5A3';
+          val.name = vm.onPremisesHeading;
+        } else if (val.name === 'CLOUD') {
+          val.color = '#1FBBCA';
+          val.name = vm.cloudHeading;
+        } else if (val.name === 'HYBRID') {
+          val.color = '#FD713E';
+          val.name = vm.hybridHeading;
+        }
+      });
+      return response;
+    }
+
+    function translateClientTypeData(response) {
+      _.each(response.data.dataProvider, function (val) {
+        if (!_.isUndefined(vm.clientTypeTranMap[val.name])) {
+          val.name = vm.clientTypeTranMap[val.name];
+        }
+      });
+      return response;
     }
 
     function getQuerys(link, cluster, time) {
@@ -105,7 +149,7 @@
 
       var returnData = {
         graphData: [],
-        graphs: []
+        graphs: [],
       };
       return $http.get(vm.urlBase + getQuerys(vm.utilizationUrl, cluster, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
@@ -123,7 +167,7 @@
       vm.callVolumeUrl = '/call_volume';
 
       var returnData = {
-        graphData: []
+        graphData: [],
       };
       return $http.get(vm.urlBase + getQuerys(vm.callVolumeUrl, cluster, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data[0]) && !_.isUndefined(response.data[0].values) && _.isArray(response.data[0].values) && !_.isUndefined(response.data[0])) {
@@ -142,12 +186,13 @@
 
       var returnData = {
         graphData: [],
-        graphs: []
+        graphs: [],
       };
       return $http.get(vm.urlBase + getQuerys(vm.callDistributionUrl, cluster, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
-          return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          return InsightGraphService.getAdjustedInsightData(adjustedData);
         } else {
           return returnData;
         }
@@ -161,7 +206,7 @@
 
       var returnData = {
         graphData: [],
-        graphs: []
+        graphs: [],
       };
       return $http.get(vm.urlBase + getQuerys(vm.clientTypeUrl, vm.allClusters, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
@@ -172,6 +217,44 @@
         }
       }, function (error) {
         return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallClientTypeGraphError'), returnData);
+      });
+    }
+
+    function getNumberOfParticipantData(time) {
+      vm.numberOfParticipantUrl = '/participants_activity_with_insights';
+      var returnData = {
+        graphData: [],
+        graphs: [],
+      };
+      return $http.get(vm.urlBase + getQuerys(vm.numberOfParticipantUrl, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          return InsightGraphService.getAdjustedInsightData(adjustedData);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallClientTypeGraphError'), returnData);
+      });
+    }
+
+    function getMeetingLocationData(time) {
+      vm.meetingLcationUrl = '/meeting_location_trend';
+
+      var returnData = {
+        graphData: [],
+        graphs: [],
+      };
+      return $http.get(vm.urlBase + getQuerys(vm.meetingLcationUrl, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallMeetingLocationGraphError'), returnData);
       });
     }
 
@@ -229,12 +312,44 @@
       var returnData = [];
       return $http.get(vm.urlBase + getQuerys(vm.total_calls, vm.allClusters, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
-          return response;
+          return translateClientTypeData(response);
         } else {
           return returnData;
         }
       }, function (error) {
         return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallTotalNumberOfCallsError'), returnData);
+      });
+    }
+
+    function getMeetingLocationCardData(time) {
+      vm.meetingLocationCardUrl = '/meeting_location_count';
+      var returnData = [];
+      return $http.get(vm.urlBase + getQuerys(vm.meetingLocationCardUrl, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
+          return addColorForMeetingsCard(response);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallTotalNumberOfCallsError'), returnData);
+      });
+    }
+
+    function getOverflowIndicator(time, cluster) {
+      if (cluster === vm.allClusters) {
+        vm.participant_change = '/overflow_participant_change';
+      } else {
+        vm.participant_change = '/redirect_participant_change';
+      }
+      var returnData = [];
+      return $http.get(vm.urlBase + getQuerys(vm.participant_change, cluster, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
+          return response;
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallCallVolumeGraphError'), returnData);
       });
     }
 
@@ -258,7 +373,11 @@
       getClusterAvailabilityTooltip: getClusterAvailabilityTooltip,
       getHostedOnPremisesTooltip: getHostedOnPremisesTooltip,
       getClientTypeData: getClientTypeData,
-      getClientTypeCardData: getClientTypeCardData
+      getClientTypeCardData: getClientTypeCardData,
+      getMeetingLocationData: getMeetingLocationData,
+      getNumberOfParticipantData: getNumberOfParticipantData,
+      getMeetingLocationCardData: getMeetingLocationCardData,
+      getOverflowIndicator: getOverflowIndicator,
     };
 
   }

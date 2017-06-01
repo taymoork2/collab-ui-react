@@ -16,11 +16,11 @@
         isMenuHeader: '@aaMenuHeader',
         fromSubMenu: '@aaFromSubMenu',
         menuKeyIndex: '@aaKeyIndex',
-        fromNewTreatment: '@aaFromNewTreatment'
+        fromNewTreatment: '@aaFromNewTreatment',
       },
       controller: 'AAMessageTypeCtrl',
       controllerAs: 'aaMessageType',
-      templateUrl: 'modules/huron/features/autoAttendant/messageType/aaMessageType.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/messageType/aaMessageType.tpl.html',
     };
   }
 })();

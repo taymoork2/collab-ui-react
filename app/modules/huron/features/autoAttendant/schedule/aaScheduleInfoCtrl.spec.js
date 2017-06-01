@@ -8,26 +8,26 @@ describe('Controller: AAScheduleInfoCtrl', function () {
   var aaModel = {
     aaRecord: {
       scheduleId: '1',
-      callExperienceName: 'AA1'
+      callExperienceName: 'AA1',
     },
     aaRecordUUID: '1111',
-    ceInfos: []
+    ceInfos: [],
   };
   var openhours = {
     hours: [],
-    holidays: []
+    holidays: [],
   };
   var expectedDayGroup = {
     hours: [{
       starttime: '',
-      endtime: ''
+      endtime: '',
     }],
-    label: ''
+    label: '',
   };
   var dtStr = '04/11/2016';
   var defaultRange = getJSONFixture('huron/json/autoAttendant/defaultDays.json');
-  var hours = angular.copy(defaultRange);
-  var hours1 = angular.copy(defaultRange);
+  var hours = _.cloneDeep(defaultRange);
+  var hours1 = _.cloneDeep(defaultRange);
 
   hours.starttime = moment(dtStr).set('hour', '8').set('minute', '00');
   hours.endtime = moment(dtStr).set('hour', '17').set('minute', '00');
@@ -49,12 +49,12 @@ describe('Controller: AAScheduleInfoCtrl', function () {
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AACalendarService, 'readCalendar').and.returnValue($q.resolve());
     spyOn(AAICalService, 'getDefaultRange').and.returnValue(defaultRange);
-    spyOn(AAICalService, 'getHoursRanges').and.returnValue(angular.copy(openhours));
+    spyOn(AAICalService, 'getHoursRanges').and.returnValue(_.cloneDeep(openhours));
     controller = $controller('AAScheduleInfoCtrl as vm', {
       $scope: $scope,
       AACalendarService: AACalendarService,
       AAICalService: AAICalService,
-      AAModelService: AAModelService
+      AAModelService: AAModelService,
     });
     $scope.$apply();
   }));
@@ -101,7 +101,7 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       var endtime = moment(hh).format('hh:mm A');
       expectedDayGroup.hours.push({
         starttime: starttime,
-        endtime: endtime
+        endtime: endtime,
       });
 
       expect(controller.dayGroup[1]).toEqual(expectedDayGroup);
@@ -114,7 +114,7 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       controller.days = [];
       var openhours = {
         hours: [],
-        holidays: []
+        holidays: [],
       };
 
       var hours = defaultRange;
@@ -132,9 +132,9 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       var expectedDayGroup = {
         hours: [{
           starttime: '',
-          endtime: ''
+          endtime: '',
         }],
-        label: ''
+        label: '',
       };
       expectedDayGroup.label = moment().weekday(1).format('dddd') + ' - ' + moment().weekday(3).format('dddd');
       expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm A');
@@ -152,9 +152,9 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       controller.days = [];
       var openhours = {
         hours: [],
-        holidays: []
+        holidays: [],
       };
-      hours = angular.copy(defaultRange);
+      hours = _.cloneDeep(defaultRange);
       for (var i = 0; i <= 6; i++) {
         hours.days[i].active = false;
       }
@@ -173,9 +173,9 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       var expectedDayGroup = {
         hours: [{
           starttime: '',
-          endtime: ''
+          endtime: '',
         }],
-        label: ''
+        label: '',
       };
 
       expectedDayGroup.label = moment().weekday(1).format('dddd');
@@ -198,9 +198,9 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       var expectedDayGroup = {
         hours: [{
           starttime: '',
-          endtime: ''
+          endtime: '',
         }],
-        label: 'Monday'
+        label: 'Monday',
       };
 
       expectedDayGroup.label = moment().weekday(1).format('dddd');
@@ -219,10 +219,10 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       controller.days = [];
       var openhours = {
         hours: [],
-        holidays: []
+        holidays: [],
       };
-      hours = angular.copy(defaultRange);
-      hours1 = angular.copy(defaultRange);
+      hours = _.cloneDeep(defaultRange);
+      hours1 = _.cloneDeep(defaultRange);
       for (var i = 0; i <= 6; i++) {
         hours.days[i].active = false;
         hours1.days[i].active = false;
@@ -248,9 +248,9 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       var expectedDayGroup = {
         hours: [{
           starttime: '',
-          endtime: ''
+          endtime: '',
         }],
-        label: ''
+        label: '',
       };
 
       // Sample Expected value
@@ -265,13 +265,13 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       var endtime = moment(hours1.starttime).format('hh:mm A');
       expectedDayGroup.hours.push({
         starttime: starttime,
-        endtime: endtime
+        endtime: endtime,
       });
       starttime = moment(hours1.endtime).format('hh:mm A');
       endtime = moment(hh).format('hh:mm A');
       expectedDayGroup.hours.push({
         starttime: starttime,
-        endtime: endtime
+        endtime: endtime,
       });
 
       expect(AACalendarService.readCalendar).toHaveBeenCalled();
@@ -287,10 +287,10 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       controller.days = [];
       var openhours = {
         hours: [],
-        holidays: []
+        holidays: [],
       };
-      hours = angular.copy(defaultRange);
-      hours1 = angular.copy(defaultRange);
+      hours = _.cloneDeep(defaultRange);
+      hours1 = _.cloneDeep(defaultRange);
       for (var i = 0; i <= 6; i++) {
         hours.days[i].active = false;
         hours1.days[i].active = false;
@@ -317,9 +317,9 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       var expectedDayGroup = {
         hours: [{
           starttime: '',
-          endtime: ''
+          endtime: '',
         }],
-        label: ''
+        label: '',
       };
 
       // Sample Expected value
@@ -333,7 +333,7 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       var endtime = moment(hh).format('hh:mm A');
       expectedDayGroup.hours.push({
         starttime: starttime,
-        endtime: endtime
+        endtime: endtime,
       });
 
       expect(AACalendarService.readCalendar).toHaveBeenCalled();
@@ -355,8 +355,8 @@ describe('Controller: AAScheduleInfoCtrl', function () {
           name: 'Thanksgiving',
           date: moment(),
           starttime: starttime,
-          endtime: endtime
-        }]
+          endtime: endtime,
+        }],
       };
       AAICalService.getHoursRanges.and.returnValue(openhours);
     });

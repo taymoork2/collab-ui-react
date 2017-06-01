@@ -1,23 +1,18 @@
 export class OverviewGoogleCalendarNotification {
 
-  public createNotification($modal, $state, Orgservice) {
+  public createNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService) {
     return {
       badgeText: 'common.new',
       badgeType: 'success',
       canDismiss: true,
       dismiss: () => {
-        Orgservice.setHybridServiceAcknowledged('google-calendar-service');
+        HybridServicesFlagService.raiseFlag(HybridServicesUtilsService.getAckFlagForHybridServiceId('squared-fusion-gcal'));
       },
       link: () => {
-        $modal.open({
-          controller: 'FirstTimeGoogleSetupController',
-          controllerAs: 'vm',
-          templateUrl: 'modules/hercules/service-settings/calendar-service-setup/first-time-google-setup.html',
-        })
-        .result
-        .then(() => {
-          $state.go('google-calendar-service.settings');
-        });
+        CloudConnectorService.openSetupModal()
+          .then(() => {
+            $state.go('google-calendar-service.settings');
+          });
       },
       linkText: 'homePage.getStarted',
       name: 'calendar',

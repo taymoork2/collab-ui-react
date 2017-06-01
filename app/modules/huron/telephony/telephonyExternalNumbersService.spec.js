@@ -1,12 +1,14 @@
 'use strict';
 
+var testModule = require('./telephonyExternalNumbersService');
+
 describe('Service: ExternalNumberPool', function () {
   var $httpBackend, ExternalNumberPool, HuronConfig;
 
-  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(testModule));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {

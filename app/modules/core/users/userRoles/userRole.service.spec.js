@@ -35,7 +35,7 @@ describe('Service: UserRoleService:', function () {
         var roleChangesSpecsList = [['fake-role-1', 'fake-role-state-1']];
         var convertedList = [{
           roleName: 'fake-role-1',
-          roleState: 'fake-role-state-1'
+          roleState: 'fake-role-state-1',
         }];
 
         UserRoleService.patchUserWithRoleChangeSpecsList('fake-userName', roleChangesSpecsList);
@@ -51,7 +51,7 @@ describe('Service: UserRoleService:', function () {
         expect(UserRoleService._helpers.mkRoleChangePartial).toHaveBeenCalledWith(Config.roles.sales, Config.roleState.active);
         expect(UserRoleService._helpers.patchUserWithRoleChanges).toHaveBeenCalledWith('fake-userName', [{
           roleName: Config.roles.sales,
-          roleState: Config.roleState.active
+          roleState: Config.roleState.active,
         }]);
       });
     });
@@ -62,7 +62,7 @@ describe('Service: UserRoleService:', function () {
         expect(UserRoleService._helpers.mkRoleChangePartial).toHaveBeenCalledWith(Config.roles.sales, Config.roleState.inactive);
         expect(UserRoleService._helpers.patchUserWithRoleChanges).toHaveBeenCalledWith('fake-userName', [{
           roleName: Config.roles.sales,
-          roleState: Config.roleState.inactive
+          roleState: Config.roleState.inactive,
         }]);
       });
     });
@@ -74,7 +74,7 @@ describe('Service: UserRoleService:', function () {
         expect(UserRoleService._helpers.patchUserWithRoleChanges).toHaveBeenCalledWith('fake-userName', [{
           roleName: Config.roles.full_admin,
           roleState: Config.roleState.active,
-          orgId: 'fake-org-id-1'
+          orgId: 'fake-org-id-1',
         }]);
       });
     });
@@ -86,7 +86,7 @@ describe('Service: UserRoleService:', function () {
         expect(UserRoleService._helpers.patchUserWithRoleChanges).toHaveBeenCalledWith('fake-userName', [{
           roleName: Config.roles.full_admin,
           roleState: Config.roleState.inactive,
-          orgId: 'fake-org-id-2'
+          orgId: 'fake-org-id-2',
         }]);
       });
     });
@@ -105,7 +105,7 @@ describe('Service: UserRoleService:', function () {
         expect(UserRoleService._helpers.mkRoleChangePartial('fake-role-1', 'fake-role-state-1'))
           .toEqual({
             roleName: 'fake-role-1',
-            roleState: 'fake-role-state-1'
+            roleState: 'fake-role-state-1',
           });
       });
 
@@ -114,7 +114,7 @@ describe('Service: UserRoleService:', function () {
           .toEqual({
             roleName: 'fake-role-2',
             roleState: 'fake-role-state-2',
-            orgId: 'fake-org-id-2'
+            orgId: 'fake-org-id-2',
           });
       });
     });
@@ -131,17 +131,17 @@ describe('Service: UserRoleService:', function () {
         expect(UserRoleService._helpers.mkRoleChangesList(roleChangeSpecsList)).toEqual([
           {
             roleName: 'fake-role-1',
-            roleState: 'fake-role-state-1'
+            roleState: 'fake-role-state-1',
           },
           {
             roleName: 'fake-role-2',
-            roleState: 'fake-role-state-2'
+            roleState: 'fake-role-state-2',
           },
           {
             roleName: 'fake-role-3',
             roleState: 'fake-role-state-3',
-            orgId: 'fake-org-id-3'
-          }
+            orgId: 'fake-org-id-3',
+          },
         ]);
 
         expect(UserRoleService._helpers.mkRoleChangePartial.calls.count()).toBe(3);
@@ -153,20 +153,20 @@ describe('Service: UserRoleService:', function () {
         var roleChanges = [
           {
             roleName: 'fake-role-1',
-            roleState: 'fake-role-state-1'
+            roleState: 'fake-role-state-1',
           },
           {
             roleName: 'fake-role-3',
             roleState: 'fake-role-state-3',
-            orgId: 'fake-org-id-3'
+            orgId: 'fake-org-id-3',
           },
         ];
 
         expect(UserRoleService._helpers.mkPayload('fake-userName', roleChanges)).toEqual({
           users: [{
             email: 'fake-userName',
-            userRoles: roleChanges
-          }]
+            userRoles: roleChanges,
+          }],
         });
       });
     });
@@ -175,13 +175,13 @@ describe('Service: UserRoleService:', function () {
       it('should convert the list of role change objects to an appropriate payload and call through to "patch()"', function () {
         var roleChanges = [{
           roleName: 'fake-role-1',
-          roleState: 'fake-role-state-1'
+          roleState: 'fake-role-state-1',
         }];
         var convertedPayload = {
           users: [{
             email: 'fake-userName',
-            userRoles: roleChanges
-          }]
+            userRoles: roleChanges,
+          }],
         };
         spyOn(UserRoleService._helpers, 'mkPayload').and.callThrough();
         spyOn(UserRoleService._helpers, 'patch');
@@ -197,7 +197,7 @@ describe('Service: UserRoleService:', function () {
       it('should PATCH an atlas backend url with the payload provided', function () {
         var expectedUrl = 'http://fake-atlas-backend-url/organization/fake-org-id-1/users/roles';
         var fakePayload = {
-          foo: 'bar'
+          foo: 'bar',
         };
 
         spyOn(Authinfo, 'getOrgId').and.returnValue('fake-org-id-1');

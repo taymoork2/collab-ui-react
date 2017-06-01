@@ -1,5 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .overview-page {
   a.monitoring-cell {
@@ -65,7 +66,7 @@
           margin: 0;
         }
 
-        .icon-tools {
+        .icon-settings {
           font-size: 0.875em;
         }
 
@@ -118,7 +119,7 @@
   }
 
   .menu-card {
-    height: 296px;
+    min-height: 296px;
   }
 
   .cta-base {
@@ -174,6 +175,14 @@
         ul {
           margin: 1rem 0;
         }
+
+        .icon-spinner {
+          font-size: .5rem;
+          margin-right: 6px;
+        }
+        .icon-settings {
+          color: $gray-light-1;
+        }
       }
     }
   }
@@ -190,13 +199,17 @@
       overflow-y: hidden;
 
       .notification-style {
-        padding-top: 1.5rem;
-        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        margin-top: 0.75rem;
         border-top: 1px solid $gray-light-2;
         display: flex;
 
         .badge {
-          top: rem-calc(3);
+          top: rem-calc(-1.5);
+        }
+
+        .text {
+          padding-left: .25rem;
         }
 
         .close {
@@ -212,9 +225,9 @@
     }
 
     .notification-spacing {
-      margin-left: 15px;
       font-size: 0.875rem;
       line-height: 1.5rem;
+      margin-right: 0.15rem;
       flex: 1;
     }
 
@@ -236,27 +249,16 @@
   }
 }
 
-#unlicensedUserList {
-  overflow: auto;
-}
-
 @media only screen and (max-width: 1345px) {
   .overview-page {
     .menu-card {
-      height: 316px;
+      min-height: 316px;
     }
   }
 }
 
 @media only screen and (max-width: 1170px) and (min-width: 1025px) {
   .overview-page {
-    .notification-style {
-      display: block;
-
-      span {
-        display: block;
-      }
-    }
 
     .notification-spacing {
       padding-left: 0;
@@ -275,7 +277,7 @@
     }
 
     .menu-card {
-      height: 304px;
+      min-height: 304px;
     }
 
     .fourth {
@@ -289,7 +291,7 @@
 @media only screen and (max-width: 760px) {
   .overview-page {
     .menu-card {
-      height: 300px;
+      min-height: 300px;
     }
   }
 }

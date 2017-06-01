@@ -35,10 +35,22 @@ export class CertService {
     return deferred.promise;
   }
 
+  public uploadCertificate(orgId: string, file: any): ng.IPromise<any> {
+    let deferred = this.$q.defer();
+    this.$http.post(`${this.CertsUrl}/certificates?orgId=${orgId}`, {
+      cert: this.Utils.Base64.encode(file),
+    }).then(deferred.resolve, deferred.reject);
+    return deferred.promise;
+  }
+
   public deleteCert(certId: string): ng.IPromise<any> {
     return this.$http.delete(`${this.CertsUrl}/certificates/${certId}`);
   }
 }
-angular
-  .module('Hercules')
-  .service('CertService', CertService);
+export default angular
+  .module('hercules.cert', [
+    require('modules/core/scripts/services/utils'),
+    require('modules/core/config/urlConfig'),
+  ])
+  .service('CertService', CertService)
+  .name;

@@ -1,5 +1,7 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/layout';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .helpdesklaunch-state {
   @extend %page-background-white;
@@ -9,7 +11,8 @@
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
   .top-bar {
-    .btn--history, .btn--sparkstatus {
+    .btn--history,
+    .btn--sparkstatus {
       border-left: 1px solid $gray-light !important;
     }
 
@@ -52,7 +55,8 @@
   }
 
   .helpdesk-details {
-    h3, .h3 {
+    h3,
+    .h3 {
       color: $gray-dark-4;
       margin-bottom: 1rem;
       word-wrap: break-word;
@@ -600,6 +604,12 @@
     }
   }
 
+  .care-base {
+    header::after {
+      border-top-color: $color-people-base;
+    }
+  }
+
   .cta-base {
     header::after {
       border-top-color: $color-cta-base;
@@ -628,6 +638,20 @@
 
   .cs-donut-text {
     font-size: 4rem;
+  }
+
+  .hybrid-service-section {
+    border-bottom: 1px solid $gray-light-2;
+    margin-top: 1rem;
+    &:last-child {
+      border-bottom: 0;
+    }
+    &:first-child {
+      margin-top: 0;
+    }
+    h5 {
+      margin-bottom: 0.5rem;
+    }
   }
 }
 
@@ -728,7 +752,7 @@
   width: 10rem;
 }
 
-.helpdesk-spark-status-dropdown-menu {
+.helpdesk-app-container .helpdesk-spark-status-dropdown-menu {
   @extend .helpdesk-header-dropdown-menu;
 
   width: 18rem;
@@ -748,11 +772,16 @@
 
 @media only screen and (max-width: 1280px) {
   .helpdesk-details {
-    .details-value-large {
-      margin-top: -1rem;
-      margin-bottom: 0.75rem;
-      width: 100%;
-      display: block;
+    .hybrid-service-section {
+      .details-heading {
+        width: 100%;
+      }
+      .details-value {
+        margin-top: -1rem;
+        margin-bottom: 0.75rem;
+        width: 100%;
+        display: block;
+      }
     }
   }
 }

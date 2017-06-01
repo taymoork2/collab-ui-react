@@ -1,8 +1,6 @@
-/**
- *
- */
-
 'use strict';
+
+var testModule = require('./index').default;
 
 describe('WebExXmlApiFact', function () {
   var WebExXmlApiFact;
@@ -27,7 +25,7 @@ describe('WebExXmlApiFact', function () {
     env.addReporter(new MyReporter());
   **/
 
-  beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(angular.mock.module(testModule));
 
   beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _Auth_, _TokenService_) {
     $rootScope = _$rootScope_;

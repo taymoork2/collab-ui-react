@@ -1,5 +1,5 @@
 import './_spark-reports.scss';
-import { CommonReportService } from '../../partnerReports/commonReportServices/commonReport.service';
+import { ReportPrintService } from '../../partnerReports/commonReportServices/reportPrint.service';
 import { ReportConstants } from '../../partnerReports/commonReportServices/reportConstants.service';
 import {
   IActiveTableBase,
@@ -22,6 +22,7 @@ import { DummySparkDataService } from './dummySparkData.service';
 import {
   IActiveUserWrapper,
   IAvgRoomData,
+  ICharts,
   IConversation,
   IConversationWrapper,
   IEndpointContainer,
@@ -31,36 +32,23 @@ import {
   IMediaData,
   IMetricsData,
   IMetricsLabel,
+  IMinMax,
 } from './sparkReportInterfaces';
 
 import { CardUtils } from 'modules/core/cards';
-
-interface ICharts {
-  active: any | null;
-  rooms: any | null;
-  files: any | null;
-  media: any | null;
-  device: any | null;
-  metrics: any | null;
-}
 
 interface IConversationPopulated {
   files: boolean;
   rooms: boolean;
 }
 
-interface IMinMax {
-  min: number;
-  max: number;
-}
-
-class SparkReportCtrl {
+export class SparkReportCtrl {
   /* @ngInject */
   constructor(
     private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
     private CardUtils: CardUtils,
-    private CommonReportService: CommonReportService,
+    private ReportPrintService: ReportPrintService,
     private SparkGraphService: SparkGraphService,
     private SparkReportService: SparkReportService,
     private SparkLineReportService: SparkLineReportService,
@@ -98,7 +86,7 @@ class SparkReportCtrl {
           text: 'mediaQuality.minTooltip',
         };
         this.qualityLabels = [{
-          class: 'good',
+          class: this.ReportConstants.GOOD,
           click: (): void => {
             if (this.charts.media && this.qualityLabels[0].hidden) {
               this.charts.media.showGraph(this.charts.media.graphs[2]);
@@ -112,7 +100,7 @@ class SparkReportCtrl {
           number: 0,
           text: 'mediaQuality.good',
         }, {
-          class: 'fair',
+          class: this.ReportConstants.FAIR,
           click: (): void => {
             if (this.charts.media && this.qualityLabels[1].hidden) {
               this.charts.media.showGraph(this.charts.media.graphs[1]);
@@ -126,7 +114,7 @@ class SparkReportCtrl {
           number: 0,
           text: 'mediaQuality.fair',
         }, {
-          class: 'poor',
+          class: this.ReportConstants.POOR,
           click: (): void => {
             if (this.charts.media && this.qualityLabels[2].hidden) {
               this.charts.media.showGraph(this.charts.media.graphs[0]);
@@ -167,22 +155,26 @@ class SparkReportCtrl {
   private minMax: IMinMax;
 
   // charts and export controls
-  private charts: ICharts = {
-    active: null,
-    rooms: null,
-    files: null,
-    media: null,
-    device: null,
-    metrics: null,
-  };
-  public exportArrays: ICharts = {
-    active: null,
-    rooms: null,
-    files: null,
-    media: null,
-    device: null,
-    metrics: null,
-  };
+  private charts: ICharts = {};
+  public exportArrays: ICharts = {};
+
+  public exportFullPage(): void {
+    this.ReportPrintService.printCustomerPage(this.currentFilter, this.timeSelected, this.minMax, this.charts, {
+      active: this.activeOptions,
+      rooms: this.avgRoomOptions,
+      files: this.filesSharedOptions,
+      media: this.mediaOptions,
+      device: this.deviceOptions,
+      metrics: this.metricsOptions,
+    }, {
+      active: this.activeDropdown,
+      media: this.mediaDropdown,
+      device: this.deviceDropdown,
+    }, {
+      media: this.qualityLabels,
+      metrics: this.metricsLabels,
+    });
+  }
 
   // report display filter controls
   public readonly ALL: string = this.ReportConstants.ALL;
@@ -257,7 +249,6 @@ class SparkReportCtrl {
     id: 'activeUsers',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
@@ -315,7 +306,7 @@ class SparkReportCtrl {
 
     if (tempActiveUserChart) {
       this.charts.active = tempActiveUserChart;
-      this.exportArrays.active = this.CommonReportService.createExportMenu(this.charts.active);
+      this.exportArrays.active = this.ReportPrintService.createExportMenu(this.charts.active);
       if (this.displayNewReports) {
         this.SparkGraphService.showHideActiveLineGraph(this.charts.active, this.activeDropdown.selected);
       }
@@ -432,7 +423,6 @@ class SparkReportCtrl {
     id: 'avgRooms',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
@@ -447,7 +437,7 @@ class SparkReportCtrl {
 
     if (temprooms) {
       this.charts.rooms = temprooms;
-      this.exportArrays.rooms = this.CommonReportService.createExportMenu(this.charts.rooms);
+      this.exportArrays.rooms = this.ReportPrintService.createExportMenu(this.charts.rooms);
     }
   }
 
@@ -551,7 +541,6 @@ class SparkReportCtrl {
     id: 'filesShared',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
@@ -566,7 +555,7 @@ class SparkReportCtrl {
 
     if (tempfiles) {
       this.charts.files = tempfiles;
-      this.exportArrays.files = this.CommonReportService.createExportMenu(this.charts.files);
+      this.exportArrays.files = this.ReportPrintService.createExportMenu(this.charts.files);
     }
   }
 
@@ -592,7 +581,6 @@ class SparkReportCtrl {
     id: 'mediaQuality',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: 'mediaQuality.packetLossDefinition',
   };
   public mediaDropdown: IReportDropdown = {
@@ -626,7 +614,7 @@ class SparkReportCtrl {
 
     if (tempmedia) {
       this.charts.media = tempmedia;
-      this.exportArrays.media = this.CommonReportService.createExportMenu(this.charts.media);
+      this.exportArrays.media = this.ReportPrintService.createExportMenu(this.charts.media);
     }
   }
 
@@ -743,7 +731,6 @@ class SparkReportCtrl {
     id: 'devices',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
@@ -758,7 +745,7 @@ class SparkReportCtrl {
         }
       } else {
         if (this.currentDeviceGraphs[this.deviceDropdown.selected.value].emptyGraph) {
-          this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports), undefined);
+          this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports));
           this.deviceOptions.state = this.ReportConstants.EMPTY;
         } else {
           this.setDeviceGraph(this.currentDeviceGraphs, this.deviceDropdown.selected);
@@ -770,7 +757,7 @@ class SparkReportCtrl {
     selected: this.ReportConstants.DEFAULT_ENDPOINT,
   };
 
-  private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter: IDropdownBase | undefined): void {
+  private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter?: IDropdownBase): void {
     this.exportArrays.device = null;
     let tempDevicesChart: any;
 
@@ -782,7 +769,7 @@ class SparkReportCtrl {
 
     if (tempDevicesChart) {
       this.charts.device = tempDevicesChart;
-      this.exportArrays.device = this.CommonReportService.createExportMenu(this.charts.device);
+      this.exportArrays.device = this.ReportPrintService.createExportMenu(this.charts.device);
     }
   }
 
@@ -826,7 +813,7 @@ class SparkReportCtrl {
     this.deviceDropdown.selected = this.deviceDropdown.array[0];
     this.deviceDropdown.disabled = true;
     this.deviceOptions.state = this.ReportConstants.REFRESH;
-    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports), undefined);
+    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports));
 
     if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
       if (_.isUndefined(this.deviceWeekData)) {
@@ -893,25 +880,18 @@ class SparkReportCtrl {
     id: 'callMetrics',
     reportType: this.ReportConstants.DONUT,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
   public metricsLabels: Array<IReportLabel> = [{
-    class: undefined,
-    click: undefined,
     hidden: false,
     number: 0,
     text: 'callMetrics.totalCalls',
   }, {
-    class: undefined,
-    click: undefined,
     hidden: false,
     number: 0,
     text: 'callMetrics.callMinutes',
   }, {
-    class: undefined,
-    click: undefined,
     hidden: false,
     number: 0,
     text: 'callMetrics.failureRate',
@@ -922,12 +902,12 @@ class SparkReportCtrl {
     let tempmetrics: any = this.SparkGraphService.setMetricsGraph(data, this.charts.metrics);
     if (tempmetrics) {
       this.charts.metrics = tempmetrics;
-      this.exportArrays.metrics = this.CommonReportService.createExportMenu(this.charts.metrics);
+      this.exportArrays.metrics = this.ReportPrintService.createExportMenu(this.charts.metrics);
       this.metricsOptions.state = this.ReportConstants.SET;
     }
   }
 
-  private setMetrics(data: IMetricsLabel | undefined): void {
+  private setMetrics(data?: IMetricsLabel): void {
     if (data) {
       this.metricsLabels[0].number = data.totalCalls;
       this.metricsLabels[1].number = data.totalAudioDuration;
@@ -957,7 +937,7 @@ class SparkReportCtrl {
 
   private setCallMetricsGraph(): void {
     this.metricsOptions.state = this.ReportConstants.REFRESH;
-    this.setMetrics(undefined);
+    this.setMetrics();
     this.setMetricGraph(this.DummySparkDataService.dummyMetricsData());
 
     if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
@@ -1041,9 +1021,9 @@ class SparkReportCtrl {
     this.setActiveGraph(this.DummySparkDataService.dummyActiveUserData(this.timeSelected, this.displayNewReports));
     this.setAverageGraph(this.DummySparkDataService.dummyAvgRoomData(this.timeSelected));
     this.setFilesGraph(this.DummySparkDataService.dummyFilesSharedData(this.timeSelected));
-    this.setMetrics(undefined);
+    this.setMetrics();
     this.setMetricGraph(this.DummySparkDataService.dummyMetricsData());
-    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports), undefined);
+    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports));
     this.setMediaGraph(this.DummySparkDataService.dummyMediaData(this.timeSelected, this.displayNewReports));
 
     this.CardUtils.resize(0);
@@ -1055,7 +1035,3 @@ class SparkReportCtrl {
     }
   }
 }
-
-angular
-  .module('Core')
-  .controller('SparkReportCtrl', SparkReportCtrl);

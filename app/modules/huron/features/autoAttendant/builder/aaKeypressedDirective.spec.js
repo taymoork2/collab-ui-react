@@ -31,7 +31,7 @@ describe('Directive: aaKeypress', function () {
     var event = {
       type: 'keypress',
       keyCode: left_angle,
-      preventDefault: function () {}
+      preventDefault: function () {},
     };
 
     var errorSpy = jasmine.createSpy('error');

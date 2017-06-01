@@ -5,10 +5,10 @@
     .controller('FirstTimeWizardCtrl', FirstTimeWizardCtrl);
 
   /* @ngInject */
-  function FirstTimeWizardCtrl($q, $scope, $state, $translate, Auth, Authinfo,
-    Config, Log, Orgservice, Userservice) {
+  function FirstTimeWizardCtrl($scope, $state, $translate, Auth, Authinfo,
+    Orgservice) {
     $scope.greeting = $translate.instant('index.greeting', {
-      name: Authinfo.getUserName()
+      name: Authinfo.getUserName(),
     });
 
     $scope.finish = function () {
@@ -17,83 +17,13 @@
       }).then(function () {
         if (Authinfo.isAdmin()) {
           return Auth.getCustomerAccount(Authinfo.getOrgId())
-            .success(function (data, status) {
-              Authinfo.updateAccountInfo(data, status);
+            .then(function (response) {
+              Authinfo.updateAccountInfo(response.data, response.status);
             });
         }
       }).finally(function () {
         $state.go('overview');
       });
     };
-
-    init();
-
-    function init() {
-      /**
-       * Patch the first time admin login with SyncKms role and Care entitlements.
-       */
-      if (adminPatchNeeded()) {
-        Userservice.getUserAsPromise('me')
-         .then(isPatchRequired)
-         .then(patchAdmin)
-         .then(updateAccessToken)
-         .then(function () {
-           Log.info('Admin user patched successfully.');
-         })
-         .catch(onFailure);
-      }
-    }
-
-    function adminPatchNeeded() {
-      return (!Authinfo.isInDelegatedAdministrationOrg() &&
-        Authinfo.getCareServices().length > 0);
-    }
-
-    function isPatchRequired(response) {
-      if (isFailed(response)) {
-        Log.error('Get user failed :', response);
-        return $q.reject();
-      }
-
-      var careAdmin = response.data;
-
-      var hasCareEntitlements = _.filter(careAdmin.entitlements, function (e) {
-        return (e === Config.entitlements.care ||
-          e === Config.entitlements.context);
-      }).length === 2;
-
-      return (!hasCareEntitlements) ? $q.resolve(careAdmin) : $q.reject();
-    }
-
-    function patchAdmin(admin) {
-      var userData = {
-        schemas: Config.scimSchemas,
-        roles: [Config.backend_roles.spark_synckms],
-        entitlements: [Config.entitlements.care, Config.entitlements.context]
-      };
-
-      return Userservice.updateUserProfile(admin.id, userData);
-    }
-
-    function updateAccessToken(response) {
-      if (isFailed(response)) {
-        Log.error('Update user profile failed :', response);
-        return $q.reject();
-      }
-
-      /**
-       * TODO: This is a workaround until we figure out a way to
-       * Revoke/Refresh access token with newly patched entitlements.
-       */
-      return Auth.logout();
-    }
-
-    function isFailed(response) {
-      return (!response || response.status !== 200);
-    }
-
-    function onFailure(data) {
-      Log.error('First time admin patch operation failed.', data);
-    }
   }
 })();

@@ -21,7 +21,7 @@ describe('Controller: SupportCtrl', function () {
 
     currentUser = {
       success: true,
-      roles: ['ciscouc.devops', 'ciscouc.devsupport']
+      roles: ['ciscouc.devops', 'ciscouc.devsupport'],
     };
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
@@ -34,7 +34,7 @@ describe('Controller: SupportCtrl', function () {
       $scope: $scope,
       Authinfo: Authinfo,
       Userservice: Userservice,
-      Config: Config
+      Config: Config,
     });
   }));
 
@@ -43,8 +43,23 @@ describe('Controller: SupportCtrl', function () {
   });
 
   it('should show CdrCallFlowLink for user has devsupport or devops role', function () {
-    $scope.initializeShowCdrCallFlowLink();
+    $scope.initializeShowLinks();
     expect($scope.showCdrCallFlowLink).toEqual(true);
+  });
+
+  it('should show PartnerManagementLink if user has partner management role', function () {
+    var orgRoles = currentUser.roles;
+    currentUser.roles.push('atlas-portal.cisco.partnermgmt');
+    $scope.initializeShowLinks();
+    expect($scope.showPartnerManagementLink).toEqual(true);
+
+    // revert current user to original set of roles
+    currentUser.roles = orgRoles;
+  });
+
+  it('should NOT show PartnerManagementLink if user does NOT have partner management role', function () {
+    $scope.initializeShowLinks();
+    expect($scope.showPartnerManagementLink).toEqual(false);
   });
 
   it('should return cisdoDevRole true for user that has devsupport or devops role', function () {
@@ -65,7 +80,7 @@ describe('Controller: SupportCtrl', function () {
 
       // something is requiring these urls to succeed
       $httpBackend.whenGET('https://ciscospark.statuspage.io/index.json').respond(200, {});
-      $httpBackend.whenGET('https://identity.webex.com/organization/scim/v1/Orgs/null').respond(200, {});
+      $httpBackend.whenGET('https://identity.webex.com/organization/scim/v1/Orgs/null?basicInfo=true').respond(200, {});
 
       expectedUrl = UrlConfig.getCallflowServiceUrl() +
         'callflow/logs' +
@@ -76,7 +91,7 @@ describe('Controller: SupportCtrl', function () {
     it('should change WindowLocation on success', function () {
 
       var result = {
-        resultsUrl: 'http://sample.org'
+        resultsUrl: 'http://sample.org',
       };
 
       $httpBackend.expectGET(expectedUrl).respond(200, result);

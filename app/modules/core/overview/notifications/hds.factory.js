@@ -6,7 +6,7 @@
     .factory('OverviewDataSecurityNotification', OverviewDataSecurityNotification);
 
   /* @ngInject */
-  function OverviewDataSecurityNotification($state, Orgservice) {
+  function OverviewDataSecurityNotification($state, HybridServicesFlagService, HybridServicesUtilsService) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,17 +14,17 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            Orgservice.setHybridServiceAcknowledged('spark-hybrid-datasecurity');
+            HybridServicesFlagService.raiseFlag(HybridServicesUtilsService.getAckFlagForHybridServiceId('spark-hybrid-datasecurity'));
           },
           link: function () {
             $state.go('hds.settings');
           },
           linkText: 'homePage.getStarted',
           name: 'hds',
-          text: 'homePage.setUpHybridDataSecurity'
+          text: 'homePage.setUpHybridDataSecurity',
         };
         return notification;
-      }
+      },
     };
   }
 })();

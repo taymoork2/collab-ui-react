@@ -13,11 +13,11 @@
         menuId: '@aaMenuId',
         index: '=aaIndex',
         fromSubMenu: '@aaFromSubMenu',
-        menuKeyIndex: '@aaKeyIndex'
+        menuKeyIndex: '@aaKeyIndex',
       },
       controller: 'AADialByExtCtrl',
       controllerAs: 'aaDialByExtCtrl',
-      templateUrl: 'modules/huron/features/autoAttendant/dialByExt/aaDialByExt.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/dialByExt/aaDialByExt.tpl.html',
     };
   }
 })();

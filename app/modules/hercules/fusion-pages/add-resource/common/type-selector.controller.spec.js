@@ -1,31 +1,35 @@
 'use strict';
 
 describe('Controller: TypeSelectorController', function () {
-  var $controller, $q, $rootScope, $stateParams, Authinfo, FusionClusterService;
+  var $controller, $q, $rootScope, $stateParams, Authinfo, HybridServicesClusterService;
 
   beforeEach(angular.mock.module('Hercules'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _Authinfo_, _FusionClusterService_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _Authinfo_, _HybridServicesClusterService_) {
     $controller = _$controller_;
     $q = _$q_;
     $rootScope = _$rootScope_;
     $stateParams = {
       wizard: {
-        next: function () {}
-      }
+        next: function () {},
+      },
     };
     Authinfo = _Authinfo_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
 
     spyOn(Authinfo, 'isEntitled');
-    spyOn(FusionClusterService, 'serviceIsSetUp');
+    spyOn(HybridServicesClusterService, 'serviceIsSetUp');
     spyOn($stateParams.wizard, 'next');
+    spyOn(Authinfo, 'isCustomerLaunchedFromPartner');
     Authinfo.isEntitled.and.returnValue(true);
+    Authinfo.isCustomerLaunchedFromPartner.and.returnValue(false);
   }));
 
-  function initController() {
+  function initController(hasPartnerRegistrationFeatureToggle) {
     return $controller('TypeSelectorController', {
       $stateParams: $stateParams,
+      hasCucmSupportFeatureToggle: true,
+      hasPartnerRegistrationFeatureToggle: hasPartnerRegistrationFeatureToggle,
     });
   }
 
@@ -39,6 +43,8 @@ describe('Controller: TypeSelectorController', function () {
       var controller = initController();
       expect(controller.isEntitledTo.expressway).toBe(true);
       expect(controller.isEntitledTo.mediafusion).toBe(true);
+      expect(controller.isEntitledTo.context).toBe(true);
+      expect(controller.isEntitledTo.cucm).toBe(true);
     });
 
     it('should initialize isEntitledTo to false if org is not entitled', function () {
@@ -46,6 +52,8 @@ describe('Controller: TypeSelectorController', function () {
       var controller = initController();
       expect(controller.isEntitledTo.expressway).toBe(false);
       expect(controller.isEntitledTo.mediafusion).toBe(false);
+      expect(controller.isEntitledTo.context).toBe(false);
+      expect(controller.isEntitledTo.cucm).toBe(false);
     });
 
   });
@@ -77,42 +85,61 @@ describe('Controller: TypeSelectorController', function () {
       return $q.resolve(true);
     };
 
-    it('should call FusionClusterService.serviceIsSetUp for each service', function () {
+    it('should call HybridServicesClusterService.serviceIsSetUp for each service', function () {
       initController();
       $rootScope.$apply();
-      expect(FusionClusterService.serviceIsSetUp).toHaveBeenCalledTimes(2);
-      expect(FusionClusterService.serviceIsSetUp).toHaveBeenCalledWith('squared-fusion-mgmt');
-      expect(FusionClusterService.serviceIsSetUp).toHaveBeenCalledWith('squared-fusion-media');
+      expect(HybridServicesClusterService.serviceIsSetUp).toHaveBeenCalledTimes(2);
+      expect(HybridServicesClusterService.serviceIsSetUp).toHaveBeenCalledWith('squared-fusion-mgmt');
+      expect(HybridServicesClusterService.serviceIsSetUp).toHaveBeenCalledWith('squared-fusion-media');
     });
 
-    it('should populate hasSetup based on FusionClusterService.serviceIsSetUp', function () {
-      FusionClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMock);
+    it('should populate hasSetup based on HybridServicesClusterService.serviceIsSetUp', function () {
+      HybridServicesClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMock);
       var controller = initController();
       expect(controller.hasSetup).toBe(undefined);
       $rootScope.$apply();
       expect(controller.hasSetup).toEqual({
         expressway: true,
         mediafusion: false,
+        context: true,
+        cucm: true,
       });
     });
 
     it('should autoselect the first service', function () {
-      FusionClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMockAlwaysTrue);
+      HybridServicesClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMockAlwaysTrue);
       var controller = initController();
       $rootScope.$apply();
-      expect(controller.selectedType).toBe('expressway');
+      // context will be the selected type because services get sorted alphabetically
+      expect(controller.selectedType).toBe('context');
     });
 
     it('should go to the next step if the user had only one service entitled for and it is setup', function () {
       Authinfo.isEntitled.and.callFake(function (entitlement) {
         return entitlement === 'squared-fusion-mgmt';
       });
-      FusionClusterService.serviceIsSetUp.and.callFake(function (serviceId) {
+      HybridServicesClusterService.serviceIsSetUp.and.callFake(function (serviceId) {
         return serviceId === 'squared-fusion-mgmt';
       });
       initController();
       $rootScope.$apply();
       expect($stateParams.wizard.next).toHaveBeenCalled();
+    });
+
+    it('should overwrite hasSetup to false and the help texts for media and context when partner admin', function () {
+      Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
+      HybridServicesClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMockAlwaysTrue);
+      var controller = initController(true);
+      expect(controller.hasSetup).toBe(undefined);
+      $rootScope.$apply();
+      expect(controller.hasSetup).toEqual({
+        expressway: true,
+        mediafusion: false,
+        context: false,
+        cucm: true,
+      });
+      expect(controller._translation.mediafusionHelpText).toEqual('hercules.fusion.add-resource.type.partner-registration-not-supported');
+      expect(controller._translation.contextHelpText).toEqual('hercules.fusion.add-resource.type.partner-registration-not-supported');
     });
   });
 });

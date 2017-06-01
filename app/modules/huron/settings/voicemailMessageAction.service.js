@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('VoicemailMessageAction', VoicemailMessageAction);
+  module.exports = angular
+    .module('huron.voicemail-message-action', [
+      require('modules/core/auth/auth'),
+      require('modules/huron/telephony/cmiServices'),
+    ])
+    .service('VoicemailMessageAction', VoicemailMessageAction)
+    .name;
 
   /* @ngInject */
   function VoicemailMessageAction($q, Authinfo, VoicemailMessageActionService) {
@@ -14,7 +18,7 @@
       get: get,
       update: update,
       getVoicemailActionEnum: getVoicemailActionEnum,
-      isVoicemailToEmailEnabled: isVoicemailToEmailEnabled
+      isVoicemailToEmailEnabled: isVoicemailToEmailEnabled,
     };
 
     return service;
@@ -25,7 +29,7 @@
 
       return VoicemailMessageActionService.query({
         customerId: Authinfo.getOrgId(),
-        userTemplateId: userTemplateId
+        userTemplateId: userTemplateId,
       })
         .$promise
         .then(function (messageActions) {
@@ -43,7 +47,7 @@
       var messageActionId = _messageActionId;
 
       var data = {
-        voicemailAction: getVoicemailActionEnum(voicemailToEmail)
+        voicemailAction: getVoicemailActionEnum(voicemailToEmail),
       };
 
       if (voicemailToEmail) {
@@ -53,7 +57,7 @@
       return VoicemailMessageActionService.update({
         customerId: Authinfo.getOrgId(),
         userTemplateId: userTemplateId,
-        messageActionId: messageActionId
+        messageActionId: messageActionId,
       }, data).$promise;
     }
 

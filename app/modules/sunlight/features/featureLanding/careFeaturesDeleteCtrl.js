@@ -37,7 +37,7 @@
       $timeout(function () {
         $rootScope.$broadcast('CARE_FEATURE_DELETED');
         Notification.success('careChatTpl.deleteSuccessText', {
-          featureName: vm.featureName
+          featureName: vm.featureName,
         });
         reInstantiateMasonry();
       }, 250);
@@ -52,7 +52,7 @@
       Log.warn('Failed to delete template with name: ' + vm.featureName + ' and id:' + vm.featureId);
 
       var error = $translate.instant('careChatTpl.deleteFailedText', {
-        featureName: vm.featureName
+        featureName: vm.featureName,
       });
       Notification.errorWithTrackingId(response, error);
     }

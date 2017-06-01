@@ -6,7 +6,7 @@
     .service('HDSAddResourceCommonService', HDSAddResourceCommonService);
 
   /* @ngInject */
-  function HDSAddResourceCommonService($log, $window, FusionClusterService, Notification, ServiceDescriptor) {
+  function HDSAddResourceCommonService($window, HybridServicesClusterService, HybridServicesExtrasService, Notification, ServiceDescriptor) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -19,9 +19,8 @@
       vm.onlineNodeList = [];
       vm.offlineNodeList = [];
       // returns a promise directly
-      return FusionClusterService.getAll()
+      return HybridServicesClusterService.getAll()
         .then(function (clusters) {
-          $log.info('updateClusterLists clusters', clusters);
           vm.clusters = _.filter(clusters, { targetType: 'hds_app' });
           // vm.clusters already had only hds clusters, let's use the shorthand version
           // if _.map() to extract the name of each cluster
@@ -41,7 +40,6 @@
             }
           });
           // inside a promise, we can just return a value
-          $log.info('updateClusterLists clusterList', clusterList);
           return clusterList;
         });
     }
@@ -67,7 +65,7 @@
       });
       if (vm.clusterDetail == null) {
       //TODO: fix for fusion cluster
-        return FusionClusterService.preregisterCluster(enteredCluster, 'stable', 'hds_app')
+        return HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'hds_app')
           .then(function (resp) {
             vm.selectedClusterId = resp.id;
             return allowListHost(hostName, vm.selectedClusterId);
@@ -82,10 +80,10 @@
     }
 
     function allowListHost(hostName, clusterId) {
-      return FusionClusterService.addPreregisteredClusterToAllowList(hostName, 3600, clusterId);
+      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, 3600, clusterId);
     }
 
-    function redirectPopUpAndClose(hostName, enteredCluster, clusterId, firstTimeSetup) {
+    function redirectPopUpAndClose(hostName, enteredCluster, firstTimeSetup) {
       if (firstTimeSetup) {
         ServiceDescriptor.enableService('spark-hybrid-datasecurity');
       }
@@ -95,7 +93,7 @@
     return {
       addRedirectTargetClicked: addRedirectTargetClicked,
       updateClusterLists: updateClusterLists,
-      redirectPopUpAndClose: redirectPopUpAndClose
+      redirectPopUpAndClose: redirectPopUpAndClose,
     };
 
   }

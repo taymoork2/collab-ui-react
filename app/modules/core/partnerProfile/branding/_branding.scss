@@ -1,5 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/forms';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .branding {
   .radio-input-spacing {
@@ -11,7 +12,7 @@
 
     > input,
     .radio-input-flex {
-      flex: 1;
+      flex: 1 1 auto;
     }
   }
 
@@ -33,6 +34,10 @@
     border: 1px solid $gray-light;
     border-radius: 3px;
     color: $gray-light;
+
+    &:focus {
+      border-color: $brand-primary;
+    }
 
     &.dragover {
       border-color: $brand-primary;
@@ -56,6 +61,8 @@
   .drop-box.form-section {
     width: 413px;
     height: 95px;
+    display: flex;
+    justify-content: center;
   }
 }
 

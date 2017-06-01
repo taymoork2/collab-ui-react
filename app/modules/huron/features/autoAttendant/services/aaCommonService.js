@@ -16,15 +16,18 @@
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
     var aaQueueSettingsStatus = false;
-    var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
-    var decisionToggle = false;
-    var clioToggle = false;
     var routeSIPAddressToggle = false;
+    var dynAnnounceToggle = false;
+    var returnedCallerToggle = false;
     var uniqueId = 0;
+    var restApiToggle = false;
+    var aaRestApiStatus = false;
 
     var invalidList = {};
+    var schedules = ['openHours', 'closedHours', 'Holidays'];
+
     var service = {
       isFormDirty: isFormDirty,
       setSayMessageStatus: setSayMessageStatus,
@@ -32,22 +35,24 @@
       setCallerInputStatus: setCallerInputStatus,
       setDecisionStatus: setDecisionStatus,
       setActionStatus: setActionStatus,
+      setRestApiStatus: setRestApiStatus,
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
-      setDecisionToggle: setDecisionToggle,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
-      setRouteQueueToggle: setRouteQueueToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
-      setClioToggle: setClioToggle,
-      isRouteQueueToggle: isRouteQueueToggle,
+      setRestApiToggle: setRestApiToggle,
+      isRestApiToggle: isRestApiToggle,
+      setDynAnnounceToggle: setDynAnnounceToggle,
+      setReturnedCallerToggle: setReturnedCallerToggle,
+      isDynAnnounceToggle: isDynAnnounceToggle,
       isCallerInputToggle: isCallerInputToggle,
-      isDecisionToggle: isDecisionToggle,
       isMediaUploadToggle: isMediaUploadToggle,
-      isClioToggle: isClioToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
+      isReturnedCallerToggle: isReturnedCallerToggle,
+      collectThisCeActionValue: collectThisCeActionValue,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -59,7 +64,7 @@
       keyActionAvailable: keyActionAvailable,
       DIGITS_DIAL_BY: 2,
       DIGITS_RAW: 3,
-      DIGITS_CHOICE: 4
+      DIGITS_CHOICE: 4,
     };
 
     return service;
@@ -67,11 +72,11 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus || aaDecisionStatus;
+      return aaQueueSettingsStatus || aaRestApiStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus || aaDecisionStatus;
     }
 
     function isValid() {
-      return (!_.size(invalidList));
+      return (_.size(invalidList) === 0);
     }
 
     function getInvalid(which) {
@@ -102,6 +107,7 @@
 
     function resetFormStatus() {
       aaSayMessageForm = false;
+      aaRestApiStatus = false;
       aaPhoneMenuOptions = false;
       aaCallerInputStatus = false;
       aaDecisionStatus = false;
@@ -115,6 +121,10 @@
 
     function setSayMessageStatus(status) {
       aaSayMessageForm = status;
+    }
+
+    function setRestApiStatus(status) {
+      aaRestApiStatus = status;
     }
 
     function setPhoneMenuStatus(status) {
@@ -138,16 +148,11 @@
       aaCENumberStatus = status;
     }
 
-    function setRouteQueueToggle(status) {
-      routeQueueToggle = status;
+    function setDynAnnounceToggle(status) {
+      dynAnnounceToggle = status;
     }
-
     function setQueueSettingsStatus(status) {
       aaQueueSettingsStatus = status;
-    }
-
-    function setClioToggle(status) {
-      clioToggle = status;
     }
 
     function setMediaUploadToggle(status) {
@@ -157,26 +162,29 @@
     function setCallerInputToggle(status) {
       callerInputToggle = status;
     }
-    function setDecisionToggle(status) {
-      decisionToggle = status;
-    }
 
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
     }
 
-    /**
-     * Will check the toggle status for clio enabled upload
-     */
-    function isClioToggle() {
-      return clioToggle;
+    function setReturnedCallerToggle(status) {
+      returnedCallerToggle = status;
     }
 
-    /**
-     * Will check the toggle status for Queue which is set while aaPhoneMenuCtrl
-     */
-    function isRouteQueueToggle() {
-      return routeQueueToggle;
+    function isReturnedCallerToggle() {
+      return returnedCallerToggle;
+    }
+
+    function setRestApiToggle(status) {
+      restApiToggle = status;
+    }
+
+    function isDynAnnounceToggle() {
+      return dynAnnounceToggle;
+    }
+
+    function isRestApiToggle() {
+      return restApiToggle;
     }
 
     function isMediaUploadToggle() {
@@ -185,9 +193,6 @@
 
     function isCallerInputToggle() {
       return callerInputToggle;
-    }
-    function isDecisionToggle() {
-      return decisionToggle;
     }
 
     function isRouteSIPAddressToggle() {
@@ -230,6 +235,43 @@
 
       AutoAttendantCeMenuModelService.updateDefaultActionSet(aaRecord, ui.hasClosedHours);
     }
+    function collectActionValue(entry, varNames, isFindSessionVar, isFindConditionals) {
+      _.forEach(entry, function (value, key) {
+        if (_.isArray(value)) {
+          _.forEach(value, function (nowEntry) {
+            return collectActionValue(nowEntry, varNames, isFindSessionVar, isFindConditionals);
+          });
+        }
+
+        if (isFindSessionVar && key === 'variableName') {
+          if (_.has(entry, 'newVariableValue')) {
+            varNames.push(entry.newVariableValue);
+          } else {
+            varNames.push(value);
+          }
+        }
+        if (isFindConditionals && key === 'if') {
+          varNames.push(_.get(value, 'leftCondition', ''));
+        }
+
+        if (AutoAttendantCeMenuModelService.isCeMenuEntry(value)) {
+          return collectActionValue(value, varNames, isFindSessionVar, isFindConditionals);
+        }
+      });
+      return varNames;
+
+    }
+    function collectThisCeActionValue(ui, isFindSessionVar, isFindConditionals) {
+      var varNames = [];
+      // collect all Var names used in the Ce except for this screen
+
+      _.forEach(schedules, function (schedule) {
+        varNames = collectActionValue(ui[schedule], varNames, isFindSessionVar, isFindConditionals);
+      });
+
+      return varNames;
+
+    }
 
   }
 
@@ -259,4 +301,6 @@
     return keys;
 
   }
+
+
 })();

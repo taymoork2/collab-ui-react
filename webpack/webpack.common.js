@@ -3,7 +3,8 @@ const _ = require('lodash');
 const args = require('yargs').argv;
 const path = require('path');
 const loaders = require('./loaders');
-// const StyleLintPlugin = require('stylelint-webpack-plugin');
+const StyleLintPlugin = require('stylelint-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const host = args.host || '127.0.0.1';
 const port = args.port || '8000';
@@ -14,8 +15,9 @@ function webpackConfig(env) {
 
   config.entry = {
     preload: ['scripts/preload'],
-    app: ['bootstrap'],
+    bootstrap: ['polyfills', 'bootstrap'],
     styles: ['styles/app'],
+    newrelic: ['config/newrelic'],
   };
 
   config.output = {
@@ -25,7 +27,7 @@ function webpackConfig(env) {
     chunkFilename: 'js/[name].js',
   };
 
-  config.devtool = 'eval';
+  config.devtool = env['no-devtool'] ? false : 'eval';
 
   config.module = {
     rules: _.flatten([
@@ -53,6 +55,7 @@ function webpackConfig(env) {
   }
 
   config.plugins = [
+    new webpack.ProgressPlugin(),
     new webpack.ProvidePlugin({
       $: 'jquery',
       _: 'lodash',
@@ -68,16 +71,28 @@ function webpackConfig(env) {
     }),
   ];
 
+  // remove ProgressPlugin if requested via CLI
+  if (env.noprogress) {
+    config.plugins.shift();
+  }
+
+  if (env.analyze) {
+    config.plugins.push(new BundleAnalyzerPlugin());
+  }
+
   // Activate once IntelliJ / WebStorm supports stylelint
-  // if (!env.nolint) {
-  //   config.plugins.push(new StyleLintPlugin({
-  //     configFile: '.stylelintrc.js',
-  //     failOnError: true,
-  //   }));
-  // }
+  if (!env.nolint) {
+    config.plugins.push(new StyleLintPlugin({
+      configFile: '.stylelintrc.js',
+      failOnError: true,
+    }));
+  }
 
   config.resolve = {
-    extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html'],
+    // For npm link - don't resolve path to a local directory outside of node_modules
+    symlinks: false,
+    // Resolve .js before .ts
+    extensions: ['.js', '.ts', '.json', '.css', '.scss', '.html'],
     alias: {
       // App aliases (used by ProvidePlugin)
       clipboard: 'clipboard/dist/clipboard.js',
@@ -94,6 +109,9 @@ function webpackConfig(env) {
     modules: [
       path.resolve('./app'),
       path.resolve('./test'),
+      path.resolve('./thirdparty-shims'),
+      // load external modules from our project dependencies first
+      path.resolve('./node_modules'),
       'node_modules',
     ],
   };

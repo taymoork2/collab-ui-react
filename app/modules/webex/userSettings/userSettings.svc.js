@@ -15,7 +15,7 @@
         serviceType: "MeetingCenter",
         isEntitledOnAtlas: false,
         isEntitledOnWebEx: false,
-        isSiteEnabled: false
+        isSiteEnabled: false,
       }, // meetingCenter
 
       trainingCenter: {
@@ -30,8 +30,8 @@
           id: "handsOnLabAdmin",
           label: "",
           value: false,
-          isSiteEnabled: false
-        }
+          isSiteEnabled: false,
+        },
       }, // trainingCenter
 
       eventCenter: {
@@ -46,8 +46,8 @@
           id: "optimizeBandwidthUsage",
           label: "",
           isSiteEnabled: false,
-          value: false
-        }
+          value: false,
+        },
       }, // eventCenter
 
       supportCenter: {
@@ -56,24 +56,24 @@
         serviceType: "SupportCenter",
         isEntitledOnAtlas: false,
         isEntitledOnWebEx: false,
-        isSiteEnabled: false
+        isSiteEnabled: false,
       }, // supportCenter
 
       pmr: {
         id: "PMR",
         label: "Personal Room",
         isSiteEnabled: false,
-        value: false
+        value: false,
       },
 
       cmr: {
         id: "CMR",
         label: "Collaboration Meeting Rooms",
-        value: false
+        value: false,
       },
 
       otherPrivilegesSection: {
-        label: "Other Privileges"
+        label: "Other Privileges",
       },
 
       videoSettings: {
@@ -89,25 +89,25 @@
             id: "hiDefVideo",
             label: "",
             isSiteEnabled: false,
-            value: false
-          }
-        }
+            value: false,
+          },
+        },
       }, // videoSettings
 
       telephonyPriviledge: {
         label: "",
 
         hybridVoipOnly: {
-          isSiteEnabled: false
+          isSiteEnabled: false,
         },
 
         hybridAudio: {
-          isSiteEnabled: false
+          isSiteEnabled: false,
         },
 
         telephonyType: {
           isWebExAudio: false,
-          isTspAudio: false
+          isTspAudio: false,
         },
 
         callInTeleconf: {
@@ -143,14 +143,14 @@
             id: "teleconfViaGlobalCallIn",
             label: "",
             isSiteEnabled: false,
-            value: false
+            value: false,
           },
           teleCLIAuthEnabled: {
             id: "teleCLIAuthEnabled",
             label: "",
             isSiteEnabled: false,
-            value: false
-          }
+            value: false,
+          },
         }, // callInTeleconf
 
         callBackTeleconf: {
@@ -163,7 +163,7 @@
             id: "globalCallBackTeleconf",
             label: "",
             isSiteEnabled: false,
-            value: false
+            value: false,
           },
         },
 
@@ -171,14 +171,14 @@
           id: "otherTeleconfServices",
           label: "",
           isSiteEnabled: false,
-          value: false
+          value: false,
         },
 
         integratedVoIP: {
           id: "integratedVoIP",
           label: "",
           isSiteEnabled: false,
-          value: false
+          value: false,
         },
 
         viewReady: false,

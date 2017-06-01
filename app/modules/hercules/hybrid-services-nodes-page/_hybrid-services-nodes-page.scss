@@ -1,4 +1,4 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
 
 hybrid-services-nodes-page {
   display: block;
@@ -7,19 +7,32 @@ hybrid-services-nodes-page {
     padding: 2rem 0;
   }
 
+  .node-serial {
+    color: $gray-base;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
   table thead tr {
+    border-top: 0;
     border-bottom: 1px solid transparent;
   }
 
   table tbody tr {
-    border-bottom: 1px solid $gray-light-2;
+    border-bottom: 1px solid $gray-light-3;
+  }
+
+  tr.connector-row-filler {
+    background-color: $gray-light-4;
+    border: 0;
   }
 
   table thead tr th {
     font-size: 16px;
     color: $gray-dark-2;
-    background-color: $gray-light-4;
-    border-right: 1px solid $gray-light-3;
+    background-color: $gray-light-3;
 
     &:last-child {
       border: 0;
@@ -32,9 +45,12 @@ hybrid-services-nodes-page {
     line-height: 1.5rem;
   }
 
-  .hostname {
-    color: $gray-dark-3;
-    background-color: $gray-light-2;
+  .hostname td {
+    border-top: 2px $color-primary-light solid;
+  }
+
+  .nodename {
+    color: $gray-dark-4;
   }
 
   .connector-row {
@@ -48,6 +64,23 @@ hybrid-services-nodes-page {
       td {
         color: #fff;
       }
+    }
+  }
+
+  [cs-dropdown-toggle] {
+    margin-left: 1.5rem;
+    font-size: 14px;
+    padding: 0.3rem;
+  }
+
+  .open [cs-dropdown-menu] {
+    left: auto;
+    right: 0;
+
+    .icon {
+      vertical-align: -2px;
+      margin-left: 3px;
+      color: $gray-base;
     }
   }
 }

@@ -3,8 +3,6 @@ require('./_support.scss');
 (function () {
   'use strict';
 
-  /* global Bloodhound */
-
   angular.module('Squared')
     .controller('SupportCtrl', SupportCtrl);
 
@@ -23,13 +21,15 @@ require('./_support.scss');
     $scope.helpContent = 'Help content is provided';
     $scope.searchInput = 'none';
     $scope.showCdrCallFlowLink = false;
+    $scope.showPartnerManagementLink = false;
     $scope.isCiscoDevRole = isCiscoDevRole;
-    $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
+    $scope.initializeShowLinks = initializeShowLinks;
     $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
     $scope.gridRefresh = false;
     $scope.gotoHelpdesk = gotoHelpdesk;
     $scope.gotoCdrSupport = gotoCdrSupport;
     $scope.gotoEdiscovery = gotoEdiscovery;
+    $scope.gotoPartnerManagement = gotoPartnerManagement;
 
     var vm = this;
     vm.masonryRefreshed = false;
@@ -49,11 +49,25 @@ require('./_support.scss');
       $window.open(url, '_blank');
     }
 
-    function initializeShowCdrCallFlowLink() {
+    function gotoPartnerManagement() {
+      // Don't open new tab for this tool
+      $state.go('partnerManagement.search');
+    }
+
+    function initializeShowLinks() {
       Userservice.getUser('me', function (user, status) {
         if (user.success) {
+          var bReinstate = false;
           if (isCiscoDevRole(user.roles)) {
             $scope.showCdrCallFlowLink = true;
+            bReinstate = true;
+          }
+          if (isPartnerManagementRole(user.roles)) {
+            $scope.showPartnerManagementLink = true;
+            bReinstate = true;
+          }
+
+          if (bReinstate === true) {
             reInstantiateMasonry();
           }
         } else {
@@ -82,6 +96,11 @@ require('./_support.scss');
       return false;
     }
 
+    function isPartnerManagementRole(roleArray) {
+      return Array.isArray(roleArray) &&
+        (roleArray.indexOf('atlas-portal.cisco.partnermgmt') >= 0);
+    }
+
     $scope.showHelpdeskLink = function () {
       return Authinfo.isHelpDeskUser();
     };
@@ -101,13 +120,13 @@ require('./_support.scss');
 
     $scope.tabs = [{
       title: $translate.instant('supportPage.tabs.status'),
-      state: "support.status"
+      state: "support.status",
     }];
 
     if (Authinfo.isInDelegatedAdministrationOrg() && !Authinfo.isHelpDeskAndComplianceUserOnly()) {
       $scope.tabs.push({
         title: $translate.instant('supportPage.tabs.logs'),
-        state: "support.logs"
+        state: "support.logs",
       });
     }
 
@@ -148,6 +167,9 @@ require('./_support.scss');
     };
 
     var getOrg = function () {
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           var settings = data.orgSettings;
@@ -163,7 +185,7 @@ require('./_support.scss');
         } else {
           Log.debug('Get org failed. Status: ' + status);
         }
-      });
+      }, null, params);
     };
 
     //Retrieving logs for user
@@ -192,7 +214,7 @@ require('./_support.scss');
     var init = function () {
       getHealthMetrics();
       getOrg();
-      initializeShowCdrCallFlowLink();
+      initializeShowLinks();
     };
 
     init();
@@ -222,7 +244,7 @@ require('./_support.scss');
       search = $stateParams.search;
     }
     $scope.input = {
-      search: search
+      search: search,
     };
 
     Log.debug('param search string: ' + $scope.input.search);
@@ -275,7 +297,27 @@ require('./_support.scss');
 
     function searchLogs(searchInput) {
       $scope.closeCallInfo();
-      LogService.searchLogs(searchInput, function (data, status) {
+      // request most recent 300 logs (also backend default).  backend has a limit of 1000, so this is somewhat arbitrary.
+      LogService.searchLogs(searchInput, {
+        timeSortOrder: 'descending',
+        limit: 300,
+      }).then(function (data, status) {
+        if (_.isObject(data)) {
+          if (_.has(data, 'data')) {
+            data = data.data;
+          }
+        } else {
+          data = {};
+        }
+        data.success = true;
+        data.status = status;
+        return data;
+      }).catch(function (data, status) {
+        data = _.isObject(data) ? data : {};
+        data.success = false;
+        data.status = status;
+        return data;
+      }).then(function (data) {
         if (data.success) {
           //parse the data
           $scope.userLogs = [];
@@ -319,7 +361,7 @@ require('./_support.scss');
                 callStart: callstart,
                 date: data.metadataList[index].timestamp,
                 userId: data.metadataList[index].userId,
-                orgId: data.metadataList[index].orgId
+                orgId: data.metadataList[index].orgId,
               };
               $scope.userLogs.push(log);
               $scope.logSearchBtnLoad = false;
@@ -337,9 +379,9 @@ require('./_support.scss');
           $('#logs-panel').show();
           $scope.logSearchBtnLoad = false;
           $scope.gridRefresh = false;
-          Log.debug('Failed to retrieve user logs. Status: ' + status);
+          Log.debug('Failed to retrieve user logs. Status: ' + data.status);
           Notification.error('supportPage.errLogQuery', {
-            status: status
+            status: data.status,
           });
         }
       });
@@ -418,7 +460,7 @@ require('./_support.scss');
         message: $translate.instant('supportPage.downloading'),
         close: $translate.instant('common.ok'),
         dismiss: $translate.instant('common.cancel'),
-        btnType: 'primary'
+        btnType: 'primary',
       }).result.then(function () {
         $scope.getCallflowCharts(rowEntity.orgId, rowEntity.userId, rowEntity.locusId, rowEntity.callStart, rowEntity.fullFilename, true);
       });
@@ -447,15 +489,15 @@ require('./_support.scss');
         displayName: $filter('translate')('supportPage.logEmailAddress'),
         sortable: true,
         cellClass: 'email-address',
-        headerCellClass: 'header-email-address'
+        headerCellClass: 'header-email-address',
       }, {
         field: 'locusId',
         displayName: $filter('translate')('supportPage.logLocusId'),
-        sortable: true
+        sortable: true,
       }, {
         field: 'callStart',
         displayName: $filter('translate')('supportPage.logCallStart'),
-        sortable: true
+        sortable: true,
       }, {
         field: 'clientLog',
         displayName: $filter('translate')('supportPage.logAction'),
@@ -463,7 +505,7 @@ require('./_support.scss');
         cellTemplate: clientLogTemplate,
         cellClass: 'client-log',
         headerCellClass: 'header-client-log',
-        maxWidth: 200
+        maxWidth: 200,
       }, {
         field: 'callflowLogs',
         displayName: $filter('translate')('supportPage.callflowLogsAction'),
@@ -471,7 +513,7 @@ require('./_support.scss');
         cellTemplate: callFlowLogsTemplate,
         cellClass: 'call-flow-logs',
         headerCellClass: 'header-call-flow-logs',
-        maxWidth: 200
+        maxWidth: 200,
       }, {
         field: 'callFlow',
         displayName: $filter('translate')('supportPage.callflowAction'),
@@ -479,8 +521,8 @@ require('./_support.scss');
         cellTemplate: callFlowTemplate,
         cellClass: 'call-flow',
         headerCellClass: 'header-call-flow',
-        visible: Authinfo.isCisco()
-      }]
+        visible: Authinfo.isCisco(),
+      }],
     };
   }
 })();

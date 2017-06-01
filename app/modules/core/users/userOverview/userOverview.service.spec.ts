@@ -3,7 +3,7 @@ import testModule from './index';
 describe('Service: UserOverviewService', () => {
 
   beforeEach(function () {
-    this.initModules(testModule, 'WebExApp', 'Sunlight');
+    this.initModules(testModule, 'WebExApp', 'Huron');
     this.injectDependencies(
       '$httpBackend',
       'UserOverviewService',
@@ -13,14 +13,17 @@ describe('Service: UserOverviewService', () => {
       '$rootScope',
       'Config',
       'SunlightConfigService',
+      'ServiceSetup',
     );
 
-    this.pristineUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
+    this.pristineUser = _.cloneDeep(getJSONFixture('core/json/currentUser.json'));
     this.updatedUser = _.cloneDeep(this.pristineUser);
-    this.$rootScope.services = angular.copy(getJSONFixture('squared/json/services.json'));
+    this.$rootScope.services = _.cloneDeep(getJSONFixture('squared/json/services.json'));
     this.isCIEnabledSiteSpy = spyOn(this.WebExUtilsFact, 'isCIEnabledSite').and.returnValue(true);
     this.isOnlineOrgSpy = spyOn(this.Auth, 'isOnlineOrg').and.returnValue(this.$q.resolve(false));
     this.SunlightConfigServiceSpy = spyOn(this.SunlightConfigService, 'getUserInfo').and.returnValue(this.$q.resolve());
+    this.languages = _.cloneDeep(getJSONFixture('huron/json/settings/languages.json'));
+    this.ServiceSetupSpy = spyOn(this.ServiceSetup, 'getAllLanguages').and.returnValue(this.$q.resolve(this.languages));
 
     installPromiseMatchers();
   });
@@ -28,6 +31,19 @@ describe('Service: UserOverviewService', () => {
   afterEach(function () {
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
+  });
+
+  describe('userHasEntitlement', () => {
+
+    it('should return false if user does not have the requested entitlement', function () {
+      expect(this.UserOverviewService.userHasEntitlement(this.updatedUser, 'ciscouc')).toBeFalsy();
+    });
+
+    it('should return true if user has the requested entitlement', function () {
+      this.updatedUser.entitlements.push('ciscouc');
+      expect(this.UserOverviewService.userHasEntitlement(this.updatedUser, 'ciscouc')).toBeTruthy();
+    });
+
   });
 
   describe('getUser()', () => {
@@ -81,9 +97,10 @@ describe('Service: UserOverviewService', () => {
       it('should not initialize trainSiteNames when not supplied', function () {
 
         expect(this.updatedUser.trainSiteName).not.toBeDefined();
+
         let promise = this.UserOverviewService.getUser('userid')
           .then((userData) => {
-            expect(userData.user.trainSiteNames).not.toBeDefined();
+            expect(userData.trainSiteName).toHaveLength(0);
           });
         this.$httpBackend.flush();
 
@@ -122,11 +139,19 @@ describe('Service: UserOverviewService', () => {
 
     });
 
+    describe('getAccountActiveStatus', () => {
+
+      it('should return false if user has no entitlements', function () {
+        expect(this.UserOverviewService.getAccountActiveStatus(this.updatedUser)).toBeFalsy();
+      });
+
+    });
+
     describe('getAccountStatus', () => {
 
       it('should reject getUser if there is an error fetching data', function () {
         // reject call to Auth.IsOnlineOrg()
-        this.isOnlineOrgSpy.and.returnValue(this.$q.reject());
+        this.$httpBackend.expectGET(/.*\/userid.*/g).respond(400);
 
         let promise = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
@@ -175,18 +200,32 @@ describe('Service: UserOverviewService', () => {
         }));
       });
 
-      it('should set pendingStatus false when Auth.isOnlineOrg is true', function () {
-        this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(true));
-        _.remove(this.updatedUser.entitlements, (n) => { return n === 'ciscouc'; });
+      it('should set pendingStatus true regardless of Auth.isOnlineOrg status', function () {
+        _.remove(this.updatedUser.entitlements, (n) => n === 'ciscouc');
         this.updatedUser.userSettings = [];
 
-        let promise = this.UserOverviewService.getUser('userid');
+        this.$httpBackend.whenGET(/.*\/userid.*/g).respond(200, this.updatedUser);
+
+        // test when isOnlineOrg is true
+        this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(true));
+        let promise1 = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
-        expect(promise).toBeResolvedWith(jasmine.objectContaining({
+        expect(promise1).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
-            pendingStatus: false,
+            pendingStatus: true,
           }),
         }));
+
+        // test when isOnlineOrg is false
+        this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(false));
+        let promise2 = this.UserOverviewService.getUser('userid');
+        this.$httpBackend.flush();
+        expect(promise2).toBeResolvedWith(jasmine.objectContaining({
+          user: jasmine.objectContaining({
+            pendingStatus: true,
+          }),
+        }));
+
       });
 
       it('should set pendingStatus false when user has entitlement "ciscouc"', function () {
@@ -230,7 +269,7 @@ describe('Service: UserOverviewService', () => {
 
       it('should set invitations object from Casandra effectiveLicenses', function () {
         this.updatedUser.entitlements = [];
-        this.updatedUser.roles = [this.Config.backend_roles.spark_synckms];
+        this.updatedUser.roles = [this.Config.backend_roles.spark_synckms, this.Config.backend_roles.ciscouc_ces];
         let promise = this.UserOverviewService.getUser('userid')
           .then((userData) => {
             expect(userData.user.entitlements).toHaveLength(0);
@@ -252,5 +291,18 @@ describe('Service: UserOverviewService', () => {
       });
     });
 
+    describe('getUserPreferredLanguage()', () => {
+      it('should get user preferred language from languages list', function () {
+        let languageCode = 'en_US';
+        let languageLabel = 'English (United States)';
+        let promise = this.UserOverviewService.getUserPreferredLanguage(languageCode)
+          .then(userLanguageDetails => {
+            expect(userLanguageDetails).toBeDefined();
+            expect(userLanguageDetails.language.value).toEqual(languageCode);
+            expect(userLanguageDetails.language.label).toEqual(languageLabel);
+          });
+        expect(promise).toBeResolved();
+      });
+    });
   });
 });

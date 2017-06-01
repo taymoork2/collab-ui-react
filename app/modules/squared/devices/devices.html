@@ -1,8 +1,10 @@
 <div class="sq-devices-page">
-  <cs-page-header title="{{::'spacesPage.title' | translate}}"></cs-page-header>
-  <cs-page-sub-header ng-show="sc.existsDevices()">
+  <cs-page-header title-name="{{::'spacesPage.title' | translate}}"></cs-page-header>
+  <cs-page-sub-header ng-hide="sc.filteredView.isInState(sc.filteredView.emptydatasource)">
     <cs-page-sub-header-left>
-      <cs-searchfilter filters="sc.deviceFilter.getFilters()" search-item-fn="sc.setCurrentSearch(searchStr)" set-filter-fn="sc.setCurrentFilter(filter.filterValue)">{}
+      <cs-searchfilter filters="sc.filteredView.getFilters()"
+                       search-item-fn="sc.filteredView.setCurrentSearch(searchStr)"
+                       set-filter-fn="sc.filteredView.setCurrentFilterValue(filter.filterValue)">{}
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
@@ -21,8 +23,8 @@
 
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div class="content-container" >
-    <cs-accordion id="licenseWarning" ng-show="sc.showLicenseWarning">
+  <div class="content-container">
+    <cs-accordion id="licenseWarning" ng-show="sc.licenseError">
       <cs-accordion-group show-caret="true" display-status="warning">
         <cs-accordion-heading>
           <span class="badge badge-custom-warn">{{'spacesPage.licenseWarningTitle' | translate}}</span>
@@ -31,7 +33,7 @@
         <p>{{sc.licenseError}}</p>
       </cs-accordion-group>
     </cs-accordion>
-    <div ng-if="!sc.shouldShowList()">
+    <div ng-if="sc.filteredView.isInState(sc.filteredView.searching)">
       <div class="message-container">
         <div class="empty-devices-content">
           <div class="grid-refresh">
@@ -40,33 +42,25 @@
         </div>
       </div>
     </div>
-    <div ng-if="sc.codesListSubscription.currentError || sc.deviceListSubscription.currentError">
-      <div class="error-spinner">
-        <i class="icon icon-2x icon-spinner" />
+    <div ng-if="sc.filteredView.isInState(sc.filteredView.showresult)" id="roomsListPanel" class="row">
+      <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
+    </div>
+    <div ng-if="sc.filteredView.isInState(sc.filteredView.emptysearchresult)">
+      <div class="none_found">
+        <i class="icon icon-circle-comp-negative"/>
+        <span class="h2" translate="spacesPage.noneFound"></span>
+        <span class="h5" translate="spacesPage.tryAgain"></span>
       </div>
     </div>
-    <div ng-if="sc.shouldShowList()">
-      <div ng-if="sc.existsDevices() && sc.deviceList().length > 0" id="roomsListPanel" class="row">
-        <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
-      </div>
-      <div ng-if="sc.deviceList().length === 0 && sc.existsDevices()">
-        <div class="none_found">
-          <i class="icon icon-circle-comp-negative" />
-          <span class="h5" translate="spacesPage.tryAgain"></span>
-          <span class="h1" translate="spacesPage.noneFound"></span>
-        </div>
-      </div>
-      <div ng-if="!sc.existsDevices()">
-        <div class="none_found">
-          <i class="icon icon-circle-telepresence" />
-          <span class="h5" translate="spacesPage.nothingHere"></span>
-          <span class="h1" translate="spacesPage.noDevices"></span>
-          <button class="btn btn--people btn--large add-button" ng-click="sc.startAddDeviceFlow()">
-            <span translate="spacesPage.addBtn"></span>
-          </button>
-        </div>
+    <div ng-if="sc.filteredView.isInState(sc.filteredView.emptydatasource)">
+      <div class="none_found">
+        <i class="icon icon-circle-telepresence"/>
+        <span class="h2" translate="spacesPage.nothingHere"></span>
+        <span class="h5" translate="spacesPage.noDevices"></span>
+        <button class="btn btn--people btn--large add-button" ng-click="sc.startAddDeviceFlow()">
+          <span translate="spacesPage.addBtn"></span>
+        </button>
       </div>
     </div>
-    <squared-add-device></squared-add-device>
   </div>
 </div>

@@ -15,7 +15,7 @@
           var errors = [];
           for (var i = 0; i < required.length; i++) {
             errors.push($translate.instant('firstTimeWizard.completeRequired', {
-              name: required[i]
+              name: required[i],
             }));
           }
           Notification.notify(errors, 'error');

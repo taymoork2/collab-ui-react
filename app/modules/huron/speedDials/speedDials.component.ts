@@ -1,14 +1,20 @@
 import { SpeedDialService, ISpeedDial } from './speedDial.service';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
-import { HuronCustomerService } from 'modules/huron/customer/customer.service';
+
 interface IValidationMessages {
   required: string;
   pattern: string;
 }
 
+interface ITranslationMessages {
+  placeholderText: string;
+  helpText: string;
+}
+
 const SPEED_DIAL_LIMIT = 125;
 const inputs: string[] = ['external', 'uri', 'custom'];
+
 class SpeedDialCtrl implements ng.IComponentController {
   private ownerId: string;
   private ownerType: string;
@@ -21,11 +27,17 @@ class SpeedDialCtrl implements ng.IComponentController {
   private newNumber: string;
   private labelMessages: IValidationMessages;
   private numberMessages: IValidationMessages;
+  private customTranslations: ITranslationMessages;
   private actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
- // private
-  private callDest: any;
   private callDestInputs: string[];
+  private optionSelected: string = '';
+
+  public ownerName: string = '';
+  public isValid: boolean = false;
+  public extension: string = '';
+  public inputType: any;
+  public callPickupEnabled: boolean = false;
   public form: ng.IFormController;
 
   /* @ngInject */
@@ -35,16 +47,20 @@ class SpeedDialCtrl implements ng.IComponentController {
     private dragularService,
     private Notification: Notification,
     private SpeedDialService: SpeedDialService,
-    private TelephoneNumberService,
-    private $timeout,
-    private HuronCustomerService: HuronCustomerService,
-
+    private $timeout: ng.ITimeoutService,
+    private BlfInternalExtValidation,
+    private Authinfo,
+    private FeatureMemberService,
+    private BlfURIValidation,
   ) {
     this.callDestInputs = inputs;
     this.firstReordering = true;
     this.editing = false;
     this.reordering = false;
-
+    this.SpeedDialService.getUserName(this.ownerId)
+    .then((user) => {
+      this.ownerName = this.FeatureMemberService.getFirstLastName(user);
+    });
     this.SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
       this.speedDialList = data.speedDials;
     }).catch(() => {
@@ -57,6 +73,10 @@ class SpeedDialCtrl implements ng.IComponentController {
     this.numberMessages = {
       required: this.$translate.instant('common.invalidRequired'),
       pattern: this.$translate.instant('common.incorrectFormat'),
+    };
+    this.customTranslations = {
+      placeholderText: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
+      helpText: this.$translate.instant('callDestination.alternateCustomHelpText'),
     };
 
     if (!this.reachSpeedDialLimit()) {
@@ -72,6 +92,34 @@ class SpeedDialCtrl implements ng.IComponentController {
     this.actionList = _.cloneDeep(this.actionListCopy);
   }
 
+  public extensionOwned(number: string): void {
+    this.$timeout(() => {
+      this.extension = number;
+      if (this.form['$ctrl.callDestinationForm']) {
+        this.optionSelected = this.form['$ctrl.callDestinationForm'].CallDestTypeSelect.$viewValue.input;
+      }
+      if (this.optionSelected.toLowerCase() === 'custom') {
+        return this.BlfInternalExtValidation.get({
+          customerId: this.Authinfo.getOrgId(),
+          value: this.extension,
+        }).$promise.then(() => {
+          this.isValid = true;
+        }).catch(() => {
+          this.isValid = false;
+        });
+      } else if (this.optionSelected.toLowerCase() === 'uri') {
+        return this.BlfURIValidation.get({
+          customerId: this.Authinfo.getOrgId(),
+          value: this.extension,
+        }).$promise.then(() => {
+          this.isValid = true;
+        }).catch(() => {
+          this.isValid = false;
+        });
+      }
+    });
+  }
+
   public reachSpeedDialLimit() {
     return this.speedDialList.length >= SPEED_DIAL_LIMIT;
   }
@@ -82,6 +130,7 @@ class SpeedDialCtrl implements ng.IComponentController {
       label: '',
       number: '',
       callDest: undefined,
+      callPickupEnabled: this.callPickupEnabled,
     };
     this.speedDialList.push(sd);
     this.setEdit(sd);
@@ -90,8 +139,11 @@ class SpeedDialCtrl implements ng.IComponentController {
     }, 100);
   }
 
-  public setSpeedDial(model) {
-    this.callDest = model;
+  public setSpeedDial(number): void {
+    this.newNumber = number;
+    this.isValid = false;
+    this.callPickupEnabled = false;
+    this.extensionOwned(this.newNumber);
   }
 
   public save(): void {
@@ -101,18 +153,15 @@ class SpeedDialCtrl implements ng.IComponentController {
       });
       sd.edit = false;
       sd.label = this.newLabel;
-      this.newNumber = this.callDest.phoneNumber;
-      if (this.TelephoneNumberService.validateDID(this.callDest.phoneNumber)) {
-        this.newNumber = this.TelephoneNumberService.getDIDValue(this.callDest.phoneNumber);
-      } else if (this.callDest.phoneNumber.indexOf('@') === -1) {
-        this.newNumber = _.replace(this.callDest.phoneNumber, /-/g, '');
-      }
-      sd.number = this.newNumber.replace(/ /g, '');
+      sd.callPickupEnabled = this.callPickupEnabled;
+      sd.number = _.replace(this.newNumber, / /g, '');
     } else if (this.reordering) {
       this.updateIndex();
       this.copyList = undefined;
     }
+
     this.SpeedDialService.updateSpeedDials(this.ownerType, this.ownerId, this.speedDialList).then(() => {
+      this.isValid = false;
       this.reordering = false;
       this.editing = false;
       this.actionList = _.cloneDeep(this.actionListCopy);
@@ -145,10 +194,11 @@ class SpeedDialCtrl implements ng.IComponentController {
       }
       this.newLabel = '';
       this.newNumber = '';
-      this.callDest = 'undefined';
+      this.callPickupEnabled = false;
+      this.isValid = false;
     } else if (this.reordering) {
       this.speedDialList.length = 0;
-      Array.prototype.push.apply(this.speedDialList, angular.copy(this.copyList));
+      Array.prototype.push.apply(this.speedDialList, _.cloneDeep(this.copyList));
     }
     this.editing = false;
     this.reordering = false;
@@ -158,7 +208,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   public setReorder(): void {
     this.reordering = true;
     this.actionList = [];
-    this.copyList = angular.copy(this.speedDialList);
+    this.copyList = _.cloneDeep(this.speedDialList);
     if (this.firstReordering) {
       this.firstReordering = false;
       this.dragularService('#speedDialsContainer', {
@@ -178,14 +228,12 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.editing = true;
       sd.edit = true;
       this.newLabel = sd.label;
+      this.newNumber = sd.number;
+      this.callPickupEnabled = <boolean>sd.callPickupEnabled;
       if (sd.number) {
-        this.callDest = this.TelephoneNumberService.getDestinationObject(sd.number);
+        this.extensionOwned(sd.number);
       }
     }
-  }
-
-  public getRegionCode() {
-    return this.HuronCustomerService.getVoiceCustomer();
   }
 
   public delete(sd): void {

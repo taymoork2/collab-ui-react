@@ -3,7 +3,7 @@
 describe('CallflowService', function () {
 
   var result = {
-    resultsUrl: 'http://sample.org'
+    resultsUrl: 'http://sample.org',
   };
 
   function init() {

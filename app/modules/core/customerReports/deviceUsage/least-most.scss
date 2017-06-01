@@ -8,13 +8,14 @@
     text-overflow: ellipsis;
   }
   tbody {
-    display:block;
-    height:10rem;
-    overflow:auto;
+    display: block;
+    height: 10rem;
+    overflow: auto;
   }
-  thead, tbody tr {
-    display:table;
-    width:100%;
-    table-layout:fixed;
+  thead,
+  tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
   }
 }

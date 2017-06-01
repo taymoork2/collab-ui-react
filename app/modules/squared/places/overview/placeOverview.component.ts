@@ -1,16 +1,9 @@
 import { IFeature } from '../../../core/components/featureList/featureList.component';
 import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
+import IPlace = csdm.IPlace;
+import ICsdmDataModelService = csdm.ICsdmDataModelService;
 
 interface IDevice {
-}
-
-interface IPlace {
-  devices: {};
-  cisUuid?: string;
-  type?: string;
-  url?: string;
-  entitlements?: Array<any>;
-  displayName?: string;
 }
 
 class PlaceOverview implements ng.IComponentController {
@@ -20,11 +13,16 @@ class PlaceOverview implements ng.IComponentController {
   public showPstn: boolean = false;
   public showATA: boolean = false;
   public csdmHybridCallFeature: boolean = false;
+  private csdmHybridCalendarFeature = false;
+  private hybridCalendarEnabledOnOrg = false;
+  private hybridCallEnabledOnOrg = false;
+  private atlasHerculesGoogleCalendarFeatureToggle = false;
   public generateCodeIsDisabled = true;
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminUserDetails;
+  private showDeviceSettings = false;
 
   /* @ngInject */
   constructor(private $q: ng.IQService,
@@ -33,11 +31,13 @@ class PlaceOverview implements ng.IComponentController {
               private $translate: ng.translate.ITranslateService,
               private Authinfo,
               private CsdmHuronUserDeviceService,
-              private CsdmDataModelService,
+              private CsdmDataModelService: ICsdmDataModelService,
               private FeatureToggleService,
+              private ServiceDescriptor,
               private Notification,
               private Userservice,
-              private WizardFactory) {
+              private WizardFactory,
+              private CsdmUpgradeChannelService) {
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.$stateParams.currentPlace.cisUuid);
     CsdmDataModelService.reloadItem(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
   }
@@ -47,8 +47,9 @@ class PlaceOverview implements ng.IComponentController {
     this.fetchAsyncSettings();
   }
 
-  private displayPlace(newPlace) {
+  private displayPlace(newPlace: IPlace) {
     this.currentPlace = newPlace;
+    this.currentPlace.id = this.currentPlace.cisUuid;
     this.loadServices();
     this.loadActions();
   }
@@ -63,6 +64,10 @@ class PlaceOverview implements ng.IComponentController {
         detail: this.$translate.instant('placesPage.sparkCall'),
         actionAvailable: true,
       };
+    } else if (this.hasEntitlement('squared-fusion-uc')) {
+      //dont add call services, it will be handled by hercules-cloud-extensions
+      this.services = [];
+      return;
     } else {
       service = {
         name: this.$translate.instant('onboardModal.call'),
@@ -77,16 +82,46 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private fetchAsyncSettings() {
-    let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result) => {
-      this.showATA = result;
+    let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then(feature => {
+      this.showATA = feature;
     });
-    let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
+    let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
       this.csdmHybridCallFeature = feature;
     });
+    let placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
+      this.csdmHybridCalendarFeature = feature;
+    });
+    let gcalFeaturePromise = this.FeatureToggleService.atlasHerculesGoogleCalendarGetStatus().then(feature => {
+      this.atlasHerculesGoogleCalendarFeatureToggle = feature;
+    });
+    let anyCalendarEnabledPromise = this.ServiceDescriptor.getServices().then(services => {
+      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter(service => {
+        return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
+      }).some().value();
+      this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter(service => {
+        return service.id === 'squared-fusion-uc';
+      }).some().value();
+    });
 
-    this.$q.all([ataPromise, hybridPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
+    this.$q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, anyCalendarEnabledPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
       this.generateCodeIsDisabled = false;
     });
+
+    if (this.currentPlace.type === 'cloudberry') {
+      this.$q.all([
+        this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus(),
+        this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus(),
+      ])
+        .then(features => {
+          if (features[1]) {
+            this.showDeviceSettings = true;
+          } else if (features[0]) {
+            this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
+              this.showDeviceSettings = channels.length > 1;
+            });
+          }
+        });
+    }
   }
 
   private fetchDetailsForLoggedInUser() {
@@ -120,30 +155,62 @@ class PlaceOverview implements ng.IComponentController {
     }
   }
 
-  public editCloudberryServices(): void {
+  public getCurrentPlace = (): IPlace => {
+    return this.currentPlace;
+  }
+
+  private startStateMap = {
+    'squared-fusion-uc': 'addDeviceFlow.callConnectOptions',
+    'squared-fusion-cal': 'addDeviceFlow.editCalendarService',
+    'squared-fusion-gcal': 'addDeviceFlow.editCalendarService',
+  };
+
+  public editCloudberryServices = (startAtService?): void => {
+
+    let startState = startAtService && this.startStateMap[startAtService] || 'addDeviceFlow.editServices';
     let wizardState = {
       data: {
         function: 'editServices',
         title: 'usersPreview.editServices',
+        csdmHybridCallFeature: this.csdmHybridCallFeature,
+        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
+        hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
+        hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
+        atlasHerculesGoogleCalendarFeatureToggle: this.atlasHerculesGoogleCalendarFeatureToggle,
         account: {
           deviceType: this.currentPlace.type,
           type: 'shared',
           name: this.currentPlace.displayName,
           cisUuid: this.currentPlace.cisUuid,
           entitlements: this.currentPlace.entitlements,
+          externalLinkedAccounts: this.currentPlace.externalLinkedAccounts,
         },
       },
       history: [],
-      currentStateName: 'addDeviceFlow.editServices',
+      currentStateName: startState,
       wizardState: {
         'addDeviceFlow.editServices': {
           nextOptions: {
             sparkCall: 'addDeviceFlow.addLines',
             sparkCallConnect: 'addDeviceFlow.callConnectOptions',
+            sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
           },
         },
-        'addDeviceFlow.addLines': {},
-        'addDeviceFlow.callConnectOptions': {},
+        'addDeviceFlow.addLines': {
+          nextOptions: {
+            calendar: 'addDeviceFlow.editCalendarService',
+          },
+        },
+        'addDeviceFlow.callConnectOptions': {
+          nextOptions: {
+            calendar: 'addDeviceFlow.editCalendarService',
+          },
+        },
+        'addDeviceFlow.editCalendarService': {
+          nextOptions: {
+            calendar: 'addDeviceFlow.editCalendarService',
+          },
+        },
       },
     };
     let wizard = this.WizardFactory.create(wizardState);
@@ -185,12 +252,20 @@ class PlaceOverview implements ng.IComponentController {
     this.$state.go('place-overview.' + feature.state);
   }
 
+  public anyHybridServiceToggle() {
+    return this.csdmHybridCalendarFeature || this.csdmHybridCallFeature;
+  }
+
   public onGenerateOtpFn(): void {
     let wizardState = {
       data: {
         function: 'showCode',
         showATA: this.showATA,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
+        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
+        hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
+        hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
+        atlasHerculesGoogleCalendarFeatureToggle: this.atlasHerculesGoogleCalendarFeatureToggle,
         admin: this.adminUserDetails,
         account: {
           type: 'shared',

@@ -8,6 +8,12 @@ class CustomerReportsHeaderCtrl {
     private MediaServiceActivationV2,
     private WebExApiGatewayService,
   ) {
+    if (Authinfo.isCare()) {
+      this.headerTabs.push({
+        title: $translate.instant('reportsPage.careTab'),
+        state: 'reports.care',
+      });
+    }
     this.$q.all(this.promises).then((features: any): void => {
       if (features.isMfEnabled) {
         if (features.mf) {
@@ -27,20 +33,14 @@ class CustomerReportsHeaderCtrl {
           });
         }
       }
-      if (Authinfo.isCare()) {
-        this.headerTabs.push({
-          title: $translate.instant('reportsPage.careTab'),
-          state: 'reports.care',
-        });
-      }
       this.headerTabs.push({
         title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
         state: 'reports.device-usage',
       });
-      if (features.deviceUsageV2) {
+      if (features.webexMetrics) {
         this.headerTabs.push({
-          title: 'Device Usage V2',
-          state: 'reports.device-usage-v2',
+          title: $translate.instant('reportsPage.webexMetrics.title'),
+          state: 'reports.webex-metrics',
         });
       }
     });
@@ -58,7 +58,7 @@ class CustomerReportsHeaderCtrl {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
     mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
-    deviceUsageV2: this.FeatureToggleService.atlasDeviceUsageReportV2GetStatus(),
+    webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
   };
 
   private checkWebex (): void {

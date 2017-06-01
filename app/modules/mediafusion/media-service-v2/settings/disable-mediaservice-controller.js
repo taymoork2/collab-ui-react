@@ -2,13 +2,13 @@
   'use strict';
 
   /* @ngInject */
-  function DisableMediaServiceController(MediaClusterServiceV2, $modalInstance, $q, $state, MediaServiceActivationV2, Notification) {
+  function DisableMediaServiceController(MediaClusterServiceV2, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptor, ClusterService) {
     var vm = this;
     vm.step = '1';
     vm.checkboxModel = false;
     vm.hadError = false;
     vm.serviceId = "squared-fusion-media";
-    vm.clusters = MediaClusterServiceV2.getClustersByConnectorType('mf_mgmt');
+    vm.clusters = ClusterService.getClustersByConnectorType('mf_mgmt');
     vm.clusterNames = _.map(vm.clusters, 'name');
     vm.clusterIds = _.map(vm.clusters, 'id');
     vm.clusterNames.sort();
@@ -32,9 +32,9 @@
         });
         $modalInstance.close();
         if (!vm.hadError) {
-          MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false);
+          ServiceDescriptor.disableService(vm.serviceId);
           MediaServiceActivationV2.setisMediaServiceEnabled(false);
-          MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
+
           MediaServiceActivationV2.disableOrpheusForMediaFusion();
           MediaServiceActivationV2.deactivateHybridMedia();
           $state.go('overview');

@@ -17,7 +17,7 @@ describe('Controller: WebexOverviewController', function () {
 
     $stateParams.currentCustomer = {
       customerOrgId: '5555-6666',
-      trialId: '12345'
+      trialId: '12345',
     };
 
 
@@ -27,13 +27,13 @@ describe('Controller: WebexOverviewController', function () {
           {
             siteUrl: 'webex.trial.com',
             timeZoneId: 1,
-            provOrderStatus: 'PROVISIONED'
+            provOrderStatus: 'PROVISIONED',
           }, {
             siteUrl: 'webex.nontrialsite.com',
             timeZoneId: 2,
-            provOrderStatus: 'ERROR'
-          }]
-      }
+            provOrderStatus: 'ERROR',
+          }],
+      },
     }));
   }));
 
@@ -41,7 +41,7 @@ describe('Controller: WebexOverviewController', function () {
   function initController() {
     controller = $controller('CustomerWebexOverviewCtrl', {
       $scope: $scope,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
     $scope.$apply();
   }

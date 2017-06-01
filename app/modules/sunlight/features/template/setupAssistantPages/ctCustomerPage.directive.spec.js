@@ -19,78 +19,78 @@ describe('Customer Screen Directive', function () {
     "field1": {
       attributes: [{
         name: 'label',
-        value: 'LABEL'
+        value: 'LABEL',
       }, {
         name: 'hintText',
-        value: 'HINT_TEXT'
+        value: 'HINT_TEXT',
       }, {
         name: 'category',
-        value: 'CATEGORY'
+        value: 'CATEGORY',
       }, {
         name: 'type',
-        value: 'name'
+        value: 'name',
       }, {
         name: 'required',
-        value: 'optional'
-      }]
+        value: 'optional',
+      }],
     },
     "field2": {
       attributes: [{
         name: 'label',
-        value: 'LABEL2'
+        value: 'LABEL2',
       }, {
         name: 'hintText',
-        value: 'HINT_TEXT2'
+        value: 'HINT_TEXT2',
       }, {
         name: 'category',
-        value: 'CATEGORY2'
+        value: 'CATEGORY2',
       }, {
         name: 'type',
-        value: 'name2'
+        value: 'name2',
       }, {
         name: 'required',
-        value: 'required'
-      }]
+        value: 'required',
+      }],
     },
     "ignoreField": {
       attributes: [{
         name: 'label',
-        value: 'I_LABEL'
+        value: 'I_LABEL',
       }, {
         name: 'hintText',
-        value: 'I_HINT_TEXT'
+        value: 'I_HINT_TEXT',
       }, {
         name: 'category',
-        value: 'I_CATEGORY'
+        value: 'I_CATEGORY',
       }, {
         name: 'type',
-        value: 'name'
+        value: 'name',
       }, {
         name: 'required',
-        value: 'optional'
-      }]
-    }
+        value: 'optional',
+      }],
+    },
   };
 
   var fieldsWithCustomLabels = {
     "field1": {
       attributes: [{
         name: 'clabel',
-        value: 'LABEL'
+        value: 'LABEL',
       }, {
         name: 'chintText',
-        value: 'HINT_TEXT'
+        value: 'HINT_TEXT',
       }, {
         name: 'ccategory',
-        value: 'CATEGORY'
+        value: 'CATEGORY',
       }, {
         name: 'ctype',
-        value: 'name'
+        value: 'name',
       }, {
         name: 'crequired',
-        value: 'optional'
-      }]
-    }
+        value: 'optional',
+      }],
+    },
   };
 
   function injectScope() {

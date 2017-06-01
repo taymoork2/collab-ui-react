@@ -1,6 +1,6 @@
 import { OnlineUpgradeService } from './upgrade.service';
 import { Notification } from 'modules/core/notifications';
-import { IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
+import { IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
 
 class OnlineUpgrade {
   public subscriptionId: string;
@@ -18,10 +18,14 @@ class OnlineUpgrade {
   ) {}
 
   public $onInit(): void {
-    this.OnlineUpgradeService.getProductInstanceId(this.Authinfo.getUserId()).then((prodResponse) => {
+    this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: Array<IProdInst>) => {
+      const productInstance = _.find(productInstances, (instance: any) => {
+        return instance.subscriptionId === this.OnlineUpgradeService.getSubscriptionId();
+      });
+
       this.bmmpAttr = {
-        subscriptionId: this.OnlineUpgradeService.getSubscriptionId(),
-        productInstanceId: prodResponse,
+        subscriptionId: productInstance.subscriptionId,
+        productInstanceId: productInstance.productInstanceId,
         changeplanOverride: '',
       };
     });

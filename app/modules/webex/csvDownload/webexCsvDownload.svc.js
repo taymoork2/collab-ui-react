@@ -33,12 +33,12 @@
           // returns string array in the case of CSV file download
           transformResponse: function (data) {
             var resultData = {
-              content: data
+              content: data,
             };
 
             return resultData;
-          } // transformResponse()
-        } // get
+          }, // transformResponse()
+        }, // get
       }); // $resource()
 
       return webexCsvResource.get('').$promise;
@@ -84,7 +84,7 @@
 
     this.getNewBlob = function (newData) {
       var blob = new $window.Blob([newData], {
-        type: 'text/plain'
+        type: 'text/plain',
       });
 
       return blob;

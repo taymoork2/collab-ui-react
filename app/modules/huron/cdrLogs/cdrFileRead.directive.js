@@ -12,9 +12,9 @@
         file: '=',
         fileName: '=',
         fileMaxSizeError: '&',
-        fileTypeError: '&'
+        fileTypeError: '&',
       },
-      link: link
+      link: link,
     };
 
     return directive;

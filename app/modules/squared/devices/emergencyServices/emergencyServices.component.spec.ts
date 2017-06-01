@@ -2,20 +2,29 @@ describe('component: emergencyServices', () => {
   const EMERGENCYNUMBER_SELECT = '.csSelect-container[name="emergencyCallbackNumber"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
 
+  let location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
+
   beforeEach(function() {
     this.initModules('Huron');
     this.injectDependencies('$q', 'EmergencyServicesService', '$httpBackend');
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
+    this.$httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(location.areas);
 
     spyOn(this.EmergencyServicesService, 'getOptions').and
-    .returnValue(this.$q.when(['1', '2']));
+    .returnValue(this.$q.resolve(['1', '2']));
 
     spyOn(this.EmergencyServicesService, 'getCompanyECN').and
-    .returnValue(this.$q.when('1'));
+    .returnValue(this.$q.resolve('1'));
 
     spyOn(this.EmergencyServicesService, 'getImpactedUsers').and
-    .returnValue(this.$q.when([]));
+    .returnValue(this.$q.resolve([]));
 
     spyOn(this.EmergencyServicesService, 'getInitialData').and
     .returnValue({
@@ -33,7 +42,7 @@ describe('component: emergencyServices', () => {
     });
 
     spyOn(this.EmergencyServicesService, 'getAddressForNumber').and
-    .returnValue(this.$q.when({
+    .returnValue(this.$q.resolve({
       e911Address: {
 
       },
@@ -41,11 +50,8 @@ describe('component: emergencyServices', () => {
     }));
 
     this.compileComponent('ucEmergencyServices');
-    spyOn(this.controller, 'validateAddress').and
-    .returnValue(undefined);
-
-    spyOn(this.controller, 'saveAddress').and
-    .returnValue(undefined);
+    spyOn(this.controller, 'validateAddress').and.returnValue(undefined);
+    spyOn(this.controller, 'saveAddress').and.returnValue(undefined);
   });
 
   it('should instantiate emergencyServices', function() {

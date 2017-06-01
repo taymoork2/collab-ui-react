@@ -46,19 +46,19 @@ require('modules/core/reports/amcharts-export.scss');
     vm.timeOptions = [{
       value: 0,
       label: $translate.instant('mediaFusion.metrics.today'),
-      description: $translate.instant('mediaFusion.metrics.today2')
+      description: $translate.instant('mediaFusion.metrics.today2'),
     }, {
       value: 1,
       label: $translate.instant('mediaFusion.metrics.week'),
-      description: $translate.instant('mediaFusion.metrics.week2')
+      description: $translate.instant('mediaFusion.metrics.week2'),
     }, {
       value: 2,
       label: $translate.instant('mediaFusion.metrics.month'),
-      description: $translate.instant('mediaFusion.metrics.month2')
+      description: $translate.instant('mediaFusion.metrics.month2'),
     }, {
       value: 3,
       label: $translate.instant('mediaFusion.metrics.threeMonths'),
-      description: $translate.instant('mediaFusion.metrics.threeMonths2')
+      description: $translate.instant('mediaFusion.metrics.threeMonths2'),
     }];
     vm.timeSelected = vm.timeOptions[0];
     vm.displayDate = displayDate;
@@ -240,7 +240,7 @@ require('modules/core/reports/amcharts-export.scss');
     }
 
     function setAvailabilityGraph(data) {
-      var tempData = angular.copy(data);
+      var tempData = _.cloneDeep(data);
       if (_.isUndefined(data.data[0].isDummy)) {
         var availabilityData = [];
         if (vm.clusterId === vm.allClusters) {

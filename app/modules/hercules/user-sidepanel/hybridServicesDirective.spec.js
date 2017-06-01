@@ -18,16 +18,16 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
 
     Authinfo = {
-      getOrgId: sinon.stub().returns('dead-beef-123'),
-      isEntitled: sinon.stub().returns(true),
-      isFusion: sinon.stub().returns(true),
-      getLicenses: sinon.stub().returns([])
+      getOrgId: jasmine.createSpy('getOrgId').and.returnValue('dead-beef-123'),
+      isEntitled: jasmine.createSpy('isEntitled').and.returnValue(true),
+      isFusion: jasmine.createSpy('isFusion').and.returnValue(true),
+      getLicenses: jasmine.createSpy('getLicenses').and.returnValue([]),
     };
 
-    sinon.stub(ServiceDescriptor, 'services').returns({});
-    sinon.stub(Userservice, 'isInvitePending').returns(false);
-    sinon.stub(CloudConnectorService, 'getService').returns($q.resolve({ setup: false }));
-    sinon.stub(FeatureToggleService, 'supports').returns($q.resolve(false));
+    spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve());
+    spyOn(Userservice, 'isInvitePending').and.returnValue(false);
+    spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ setup: false }));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
   }));
 
@@ -36,24 +36,24 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     expect(vm.isEnabled).toBe(false);
   });
 
-  it('should call ServiceDescriptor.services if the org has no license', function () {
+  it('should call ServiceDescriptor.getServices if the org has no license', function () {
     vm = createController({});
     $rootScope.$digest();
-    expect(ServiceDescriptor.services.called).toBe(true);
+    expect(ServiceDescriptor.getServices).toHaveBeenCalled();
   });
 
-  it('should call ServiceDescriptor.services if the org has a license and the user too', function () {
+  it('should call ServiceDescriptor.getServices if the org has a license and the user too', function () {
     vm = createController({
-      licenseID: ['MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com']
+      licenseID: ['MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com'],
     }, ['MC']);
     $rootScope.$digest();
-    expect(ServiceDescriptor.services.called).toBe(true);
+    expect(ServiceDescriptor.getServices).toHaveBeenCalled();
   });
 
-  it('should NOT call ServiceDescriptor.services if the org has a license and but NOT the user', function () {
+  it('should NOT call ServiceDescriptor.getServices if the org has a license and but NOT the user', function () {
     vm = createController({}, ['MC']);
     $rootScope.$digest();
-    expect(ServiceDescriptor.services.called).toBe(false);
+    expect(ServiceDescriptor.getServices).not.toHaveBeenCalled();
   });
 
   it('should show aggregated status as error when Aware and Connects is entitled and Aware is activated but Connect is error', function () {
@@ -62,18 +62,18 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     var fusionUcNotActivated = {
       "serviceId": "squared-fusion-uc",
       "entitled": true,
-      "state": "notActivated"
+      "state": "notActivated",
     };
 
     vm.extensions = [{
       "id": "squared-fusion-cal",
       "entitled": false,
-      "enabled": true
+      "enabled": true,
     }, {
       "id": "squared-fusion-uc",
       "entitled": true,
       "enabled": true,
-      "status": fusionUcNotActivated
+      "status": fusionUcNotActivated,
     }, {
       "id": "squared-fusion-ec",
       "entitled": true,
@@ -81,8 +81,8 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       "status": {
         "serviceId": "squared-fusion-ec",
         "entitled": true,
-        "state": "error"
-      }
+        "state": "error",
+      },
     }];
     var mostSignificantStatus = vm.getStatus(fusionUcNotActivated);
 
@@ -96,18 +96,18 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     var fusionUcNotActivated = {
       "serviceId": "squared-fusion-uc",
       "entitled": true,
-      "state": "notActivated"
+      "state": "notActivated",
     };
 
     vm.extensions = [{
       "id": "squared-fusion-cal",
       "entitled": false,
-      "enabled": true
+      "enabled": true,
     }, {
       "id": "squared-fusion-uc",
       "entitled": true,
       "enabled": true,
-      "status": fusionUcNotActivated
+      "status": fusionUcNotActivated,
     }, {
       "id": "squared-fusion-ec",
       "entitled": true,
@@ -115,8 +115,8 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       "status": {
         "serviceId": "squared-fusion-ec",
         "entitled": true,
-        "state": "notActivated"
-      }
+        "state": "notActivated",
+      },
     }];
     var mostSignificantStatus = vm.getStatus(fusionUcNotActivated);
 
@@ -130,15 +130,15 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     vm.extensions = [{
       "id": "squared-fusion-cal",
       "entitled": false,
-      "enabled": true
+      "enabled": true,
     }, {
       "id": "squared-fusion-uc",
       "entitled": false,
-      "enabled": true
+      "enabled": true,
     }, {
       "id": "squared-fusion-ec",
       "entitled": false,
-      "enabled": true
+      "enabled": true,
     }];
     var mostSignificantStatus = vm.getStatus(undefined);
 
@@ -148,7 +148,7 @@ describe('Directive Controller: HybridServicesCtrl', function () {
 
   function createController(user, orgLicenses) {
     if (orgLicenses) {
-      Authinfo.getLicenses.returns(orgLicenses);
+      Authinfo.getLicenses.and.returnValue(orgLicenses);
     }
     return $controller('HybridServicesCtrl', {
       $scope: $rootScope.$new(),
@@ -156,9 +156,9 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       Authinfo: Authinfo,
       Config: Config,
       USSService: USSService,
-      ServiceDescriptor: ServiceDescriptor
+      ServiceDescriptor: ServiceDescriptor,
     }, {
-      user: user
+      user: user,
     });
   }
 });

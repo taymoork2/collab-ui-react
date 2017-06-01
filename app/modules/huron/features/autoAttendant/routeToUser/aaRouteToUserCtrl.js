@@ -13,7 +13,7 @@
 
     vm.userSelected = {
       description: '',
-      id: ''
+      id: '',
     };
 
     vm.users = [];
@@ -22,7 +22,7 @@
       order: 'ascending',
       maxCount: 10,
       startAt: 0,
-      fullLoad: 10 // how many to query, a full listing
+      fullLoad: 10, // how many to query, a full listing
     };
 
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -30,7 +30,7 @@
 
     vm.uiMenu = {};
     vm.menuEntry = {
-      entries: []
+      entries: [],
     };
     vm.menuKeyEntry = {};
 
@@ -144,7 +144,7 @@
     function getUserExtension(uuid) {
       return UserServiceVoice.query({
         customerId: Authinfo.getOrgId(),
-        userId: uuid
+        userId: uuid,
       }).$promise.then(
         function (response) {
           // success
@@ -166,7 +166,7 @@
     function getVoicemailProfile(pattern) {
       return LineResource.query({
         customerId: Authinfo.getOrgId(),
-        pattern: pattern
+        pattern: pattern,
       }).$promise.then(
         function (response) {
           // success
@@ -216,7 +216,7 @@
                       if (_.size(vm.users) < vm.sort.fullLoad) {
                         vm.users.push({
                           description: formatName(aUser, extension),
-                          id: aUser.id
+                          id: aUser.id,
                         });
                       }
                     }
@@ -226,7 +226,7 @@
                   if (_.size(vm.users) < vm.sort.fullLoad) {
                     vm.users.push({
                       description: formatName(aUser, extension),
-                      id: aUser.id
+                      id: aUser.id,
                     });
                   }
                 }
@@ -237,7 +237,7 @@
                 // if CMI user call otherwise failed, not immediately clear if user has extension or not, show just the user in the UI
                 vm.users.push({
                   description: formatName(aUser, ''),
-                  id: aUser.id
+                  id: aUser.id,
                 });
               }
 
@@ -330,8 +330,11 @@
 
       if ($scope.fromFallback) {
         var entry;
-        entry = _.get(vm.menuKeyEntry, 'actions[0]', vm.menuEntry.actions[0]);
-
+        if (_.has(vm.menuKeyEntry, 'actions[0]')) {
+          entry = vm.menuKeyEntry.actions[0];
+        } else {
+          entry = vm.menuEntry.actions[0];
+        }
         if (_.get(entry, 'name') === conditional) {
           entry = entry.then;
         }

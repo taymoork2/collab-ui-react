@@ -7,6 +7,11 @@
     color: $gray-dark-2;
   }
 
+  p.no-hybrid-cards-found {
+    margin-left: 8px;
+    margin-top: 10px;
+  }
+
   .icon-spinner {
     display: block;
     margin-left: auto;
@@ -57,6 +62,17 @@
           i {
             position: relative;
             top: 0.2rem;
+          }
+
+          i.info-icon {
+            top: .8rem;
+            right: .5rem;
+            font-size: 1.1rem;
+            position: absolute;
+
+            &.has-tooltip:hover {
+              color: $color-primary-base;
+            }
           }
         }
 
@@ -149,7 +165,6 @@
           }
         }
       }
-
       .cs-card.header-bar.cta-bar header::after {
         border-top-color: $color-cta-base !important;
       }

@@ -17,7 +17,7 @@ describe('CsdmPoller', function () {
     var defer, serviceCallCount = 0;
 
     var scope = {
-      $on: sinon.stub()
+      $on: jasmine.createSpy('on'),
     };
 
     var service = function () {
@@ -28,38 +28,38 @@ describe('CsdmPoller', function () {
     var hub = Hub.create();
     Poller.create(service, hub);
 
-    var callback = sinon.stub();
+    var callback = jasmine.createSpy('callback');
     hub.on('data', callback, {
-      scope: scope
+      scope: scope,
     });
 
     // perform the initial callback
     expect(serviceCallCount).toBe(1);
-    expect(callback.callCount).toBe(0, 'callback');
+    expect(callback.calls.count()).toBe(0, 'callback');
     defer.resolve();
     $rootScope.$digest();
-    expect(callback.callCount).toBe(1, 'callback');
+    expect(callback.calls.count()).toBe(1, 'callback');
 
     // perform the next callback after 5 secs
     $timeout.flush(30500);
     expect(serviceCallCount).toBe(2);
-    expect(callback.callCount).toBe(1, 'callback');
+    expect(callback.calls.count()).toBe(1, 'callback');
     defer.resolve();
     $rootScope.$digest();
-    expect(callback.callCount).toBe(2, 'callback');
+    expect(callback.calls.count()).toBe(2, 'callback');
 
     // trigger next poll, but cancel the subscription midway
     $timeout.flush(30500);
     expect(serviceCallCount).toBe(3);
-    expect(callback.callCount).toBe(2, 'callback');
+    expect(callback.calls.count()).toBe(2, 'callback');
 
-    expect(scope.$on.callCount).toBe(1);
-    expect(scope.$on.args[0][0]).toBe('$destroy');
-    scope.$on.callArg(1);
+    expect(scope.$on.calls.count()).toBe(1);
+    expect(scope.$on.calls.argsFor(0)[0]).toBe('$destroy');
+    scope.$on.calls.argsFor(0)[1](); // execute $destroy callback to cancel
 
     defer.resolve();
     $rootScope.$digest();
-    expect(callback.callCount).toBe(2, 'callback');
+    expect(callback.calls.count()).toBe(2, 'callback');
 
     // should stopp polling since there are no active subscriptions
     $timeout.flush(30500);

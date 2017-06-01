@@ -1,8 +1,8 @@
 'use strict';
 
 describe('controller: CbgRequestCtrl', function () {
-  var $q, $state, $scope, $controller, $stateParams;
-  var ctrl, cbgService, gemService, Notification;
+  var $q, $state, $scope, $controller, $stateParams, $httpBackend;
+  var ctrl, cbgService, gemService, Notification, UrlConfig;
   var preData = getJSONFixture('gemini/common.json');
 
   beforeEach(angular.mock.module('Core'));
@@ -12,13 +12,13 @@ describe('controller: CbgRequestCtrl', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $state = $scope = $controller = $stateParams = ctrl = cbgService = undefined;
+    $q = $state = $httpBackend = UrlConfig = $scope = $controller = $stateParams = ctrl = cbgService = undefined;
   });
   afterAll(function () {
     preData = undefined;
   });
 
-  function dependencies(_$q_, _$state_, $rootScope, _$controller_, _$stateParams_, _Notification_, _gemService_, _cbgService_) {
+  function dependencies(_$q_, _$state_, _UrlConfig_, _$httpBackend_, $rootScope, _$controller_, _$stateParams_, _Notification_, _gemService_, _cbgService_) {
     $q = _$q_;
     $state = _$state_;
     gemService = _gemService_;
@@ -27,6 +27,8 @@ describe('controller: CbgRequestCtrl', function () {
     $controller = _$controller_;
     $stateParams = _$stateParams_;
     Notification = _Notification_;
+    UrlConfig = _UrlConfig_;
+    $httpBackend = _$httpBackend_;
   }
 
   function initSpies() {
@@ -38,9 +40,15 @@ describe('controller: CbgRequestCtrl', function () {
 
   function initController() {
     $stateParams.customerId = 'ff808081552992ec0155299619cb0001';
+
+    var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
+    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+    $httpBackend.flush();
+
     ctrl = $controller('CbgRequestCtrl', {
       $scope: $scope,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
+      $element: angular.element(''),
     });
 
     ctrl.countries = preData.getCountries.content.data;

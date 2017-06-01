@@ -34,14 +34,14 @@
 
     function deleteIncident(incident) {
       $state.go('gss.incidents.delete', {
-        incident: incident
+        incident: incident,
       });
     }
 
     function updateIncident(incident, actionType) {
       $state.go('gss.incidents.update', {
         incident: incident,
-        actionType: actionType
+        actionType: actionType,
       });
     }
 

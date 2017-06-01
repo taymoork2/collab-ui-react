@@ -1,5 +1,6 @@
 import { ReportConstants } from '../commonReportServices/reportConstants.service';
 import {
+  IExportDropdown,
   IExportMenu,
   ITimespan,
   IReportCard,
@@ -20,7 +21,7 @@ class ReportCardCtrl {
   public lowerTooltip: IReportTooltip;
 
   // export menu
-  public exportDropdown: Array<IExportMenu>;
+  public exportDropdown: IExportDropdown;
   public exportMenu: boolean = false;
 
   // Secondary Report Variables
@@ -30,9 +31,9 @@ class ReportCardCtrl {
   public pagingButtons: Array<number> = [1, 2, 3];
   public secondaryReport: boolean = false;
   public totalPages: number = 0;
-  public predicate: IReportSortOption;
   public resizePage: Function;
 
+  private predicate: IReportSortOption;
   private reverse: boolean = false;
 
   /* @ngInject */
@@ -99,7 +100,7 @@ class ReportCardCtrl {
     }
   }
 
-  public goToUsersTab() {
+  public goToUsersTab(): void {
     this.$state.go('users.list');
   }
 
@@ -140,7 +141,7 @@ class ReportCardCtrl {
   }
 
   // Secondary Report Controls
-  private resetReport() {
+  private resetReport(): void {
     if (this.secondaryOptions) {
       this.secondaryReport = false;
       this.currentPage = 1;
@@ -153,13 +154,13 @@ class ReportCardCtrl {
     }
   }
 
-  private resize() {
+  private resize(): void {
     if (this.resizePage) {
       this.resizePage();
     }
   }
 
-  private setBroadcast() {
+  private setBroadcast(): void {
     if (this.secondaryOptions && this.secondaryOptions.broadcast) {
       this.$scope.$on(this.secondaryOptions.broadcast, () => {
         this.resetReport();
@@ -167,7 +168,7 @@ class ReportCardCtrl {
     }
   }
 
-  private setSortOptions() {
+  private setSortOptions(): void {
     if (this.secondaryOptions && this.secondaryOptions.sortOptions) {
       let sortOptions: Array<IReportSortOption> = this.secondaryOptions.sortOptions;
       this.predicate = sortOptions[sortOptions.length - 1];
@@ -175,13 +176,13 @@ class ReportCardCtrl {
     }
   }
 
-  private setTotalPages() {
+  private setTotalPages(): void {
     if (this.secondaryOptions && this.secondaryOptions.table) {
       this.totalPages = Math.ceil(this.secondaryOptions.table.data.length / 5);
     }
   }
 
-  public changePage(selected) {
+  public changePage(selected: number): void {
     if (selected > 1 && selected < this.totalPages) {
       this.pagingButtons[0] = selected - 1;
       this.pagingButtons[1] = selected;
@@ -218,15 +219,15 @@ class ReportCardCtrl {
     return returnArray;
   }
 
-  public isActivePage(selected): boolean {
+  public isActivePage(selected: number): boolean {
     return this.currentPage === Math.ceil((selected + 1) / 5);
   }
 
-  public isCurrentPage(selected): boolean {
+  public isCurrentPage(selected: number): boolean {
     return this.pagingButtons[selected] === this.currentPage;
   }
 
-  public openCloseSecondaryReport() {
+  public openCloseSecondaryReport(): void {
     this.secondaryReport = !this.secondaryReport;
     this.resize();
   }
@@ -247,7 +248,7 @@ class ReportCardCtrl {
     return this.secondaryOptions.state === this.ReportConstants.SET;
   }
 
-  public secondaryReportSort(selected) {
+  public secondaryReportSort(selected: number): void {
     if (this.secondaryOptions) {
       let sortOptions: Array<IReportSortOption> = this.secondaryOptions.sortOptions;
       if (sortOptions && this.predicate === sortOptions[selected]) {
@@ -259,32 +260,31 @@ class ReportCardCtrl {
     }
   }
 
-  public pageBackward() {
+  public pageBackward(): void {
     if (this.currentPage > 1) {
       this.changePage(this.currentPage - 1);
     }
   }
 
-  public pageForward() {
+  public pageForward(): void {
     if (this.currentPage < this.totalPages) {
       this.changePage(this.currentPage + 1);
     }
   }
 }
 
-angular.module('Core')
-  .component('reportCard', {
-    templateUrl: 'modules/core/partnerReports/reportCard/reportCard.tpl.html',
-    controller: ReportCardCtrl,
-    bindings: {
-      dropdown: '<',
-      exportDropdown: '<',
-      options: '<',
-      labels: '<',
-      secondaryOptions: '<',
-      resizePage: '&',
-      show: '<',
-      time: '<',
-      lowerTooltip: '<',
-    },
-  });
+export class ReportCardComponent implements ng.IComponentOptions {
+  public templateUrl = 'modules/core/partnerReports/reportCard/reportCard.tpl.html';
+  public controller = ReportCardCtrl;
+  public bindings = {
+    dropdown: '<',
+    exportDropdown: '<',
+    options: '<',
+    labels: '<',
+    secondaryOptions: '<',
+    resizePage: '&',
+    show: '<',
+    time: '<',
+    lowerTooltip: '<',
+  };
+}

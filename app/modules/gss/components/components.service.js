@@ -14,7 +14,7 @@
       getGroupComponents: getGroupComponents,
       addComponent: addComponent,
       delComponent: delComponent,
-      modifyComponent: modifyComponent
+      modifyComponent: modifyComponent,
     };
 
     return service;

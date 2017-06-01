@@ -5,7 +5,7 @@
     .controller('ExpresswayEnterNameController', ExpresswayEnterNameController);
 
   /* @ngInject */
-  function ExpresswayEnterNameController($q, $stateParams, $translate, FusionClusterService, Notification) {
+  function ExpresswayEnterNameController($q, $stateParams, $translate, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.name = '';
@@ -15,20 +15,20 @@
     vm.provisioning = false;
     vm._translation = {
       help: $translate.instant('hercules.renameAndDeregisterComponent.renameClusterDescription'),
-      placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark')
+      placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark'),
     };
     vm.minlength = 1;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {
-        min: vm.minlength
-      })
+        min: vm.minlength,
+      }),
     };
     vm.releaseChannel = 'stable';
 
     ///////////////
 
-    FusionClusterService.getOrgSettings()
+    FmsOrgSettings.get()
       .then(function (data) {
         vm.releaseChannel = data.expresswayClusterReleaseChannel;
       });
@@ -36,20 +36,20 @@
     function provisionCluster(data) {
       vm.provisioning = true;
       vm.clusterId = null;
-      return FusionClusterService.preregisterCluster(data.name, vm.releaseChannel, 'c_mgmt')
+      return HybridServicesClusterService.preregisterCluster(data.name, vm.releaseChannel, 'c_mgmt')
         .then(function (cluster) {
           vm.clusterId = cluster.id;
           var promises = [];
           if (data.selectedServices.call) {
-            promises.push(FusionClusterService.provisionConnector(vm.clusterId, 'c_ucmc'));
+            promises.push(HybridServicesClusterService.provisionConnector(vm.clusterId, 'c_ucmc'));
           }
           if (data.selectedServices.calendar) {
-            promises.push(FusionClusterService.provisionConnector(vm.clusterId, 'c_cal'));
+            promises.push(HybridServicesClusterService.provisionConnector(vm.clusterId, 'c_cal'));
           }
           return $q.all(promises);
         })
         .then(function () {
-          return FusionClusterService.addPreregisteredClusterToAllowList(data.hostname, 3600, vm.clusterId);
+          return HybridServicesExtrasService.addPreregisteredClusterToAllowList(data.hostname, 3600, vm.clusterId);
         })
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');
@@ -80,8 +80,8 @@
           $stateParams.wizard.next({
             expressway: {
               name: vm.name,
-              clusterId: vm.clusterId
-            }
+              clusterId: vm.clusterId,
+            },
           });
         })
         .catch(function (error) {

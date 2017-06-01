@@ -8,11 +8,12 @@ describe('Directive: setupAssistantPages', function () {
   var pageDirectives = [
     'ct-profile',
     'ct-overview',
+    'ct-proactive-prompt',
     'ct-customer',
     'ct-feedback',
     'ct-agent-unavailable',
     'ct-off-hours',
-    'ct-chat-status-messages'
+    'ct-chat-status-messages',
   ];
 
   afterEach(function () {

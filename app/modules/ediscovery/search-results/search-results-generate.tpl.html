@@ -1,14 +1,14 @@
 <div class="row report-parameters">
   <div class="columns small-11 medium-11 large-9">
-    <h1>{{ediscoverySearchCtrl.searchCriteria.displayName}}</h1>
-    <h6 translate="ediscovery.searchResults.description"></h6>
+    <h4>{{ediscoverySearchCtrl.searchCriteria.displayName}}</h4>
+    <h6 class="results-spacing result-title" translate="ediscovery.searchResults.description"></h6>
     <h6>{{ediscoverySearchCtrl.generateDescription}}</h6>
-    <h6 translate="ediscovery.searchResults.exportFormat"></h6>
+    <h6 class="results-spacing result-title" translate="ediscovery.searchResults.exportFormat"></h6>
     <h6>{{ediscoverySearchCtrl.exportSelected}}</h6>
   </div>
   <div class="columns small-11 medium-11 large-9">
     <div ng-if="ediscoverySearchCtrl.report && !ediscoverySearchCtrl.report.isDone" class="result-section">
-      <h6 translate="ediscovery.search.reportStatus"></h6>
+      <h6 translate="ediscovery.searchResults.reportStatus"></h6>
       <div>
         <div class="progressbar-info">
           <span class="progressbar-label">{{('ediscovery.reportStates.' + ediscoverySearchCtrl.report.state | translate) + '...'}}</span>
@@ -22,13 +22,13 @@
           <i class="icon icon-warning"></i>
         </div>
         <div class="columns small-11 small-collapse failure" ng-if="ediscoverySearchCtrl.report.state === 'FAILED'">
-          <span translate="ediscovery.search.failure"></span>:
+          <span translate="ediscovery.reportsList.failure"></span>:
           <span>{{'ediscovery.reportFailureReasons.' + ediscoverySearchCtrl.report.failureReason | translate}}</span>
           <br>
-          <span translate="ediscovery.search.tryAgain"></span>
+          <span translate="ediscovery.reportsList.tryAgain"></span>
         </div>
         <div class="columns small-11 small-collapse failure" ng-if="ediscoverySearchCtrl.report.timeoutDetected">
-          <span translate="ediscovery.reportTimeout"></span>
+          <span translate="ediscovery.searchResults.reportTimeout"></span>
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@
       <span ng-if="!ediscoverySearchCtrl.cancellingReport"
             ng-click="ediscoverySearchCtrl.cancelReport(ediscoverySearchCtrl.report.id)"
             class="cancel-icon">
-        <i class="icon icon-remove" tooltip-placement="top" cs-tooltip="{{'ediscovery.search.cancelReport' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"></i>
+        <i class="icon icon-remove" tooltip-placement="top" cs-tooltip="{{'ediscovery.reportsList.cancelReport' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"></i>
       </span>
       <span ng-if="ediscoverySearchCtrl.cancellingReport" class="cancel-icon">
         <i class="icon icon-spinner"></i>

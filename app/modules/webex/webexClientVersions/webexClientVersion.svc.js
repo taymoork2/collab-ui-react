@@ -3,7 +3,11 @@
 
   /* eslint no-template-curly-in-string: 0 */
 
-  angular.module('WebExApp').service('WebexClientVersion', WebexClientVersion);
+  module.exports = angular.module('webexapp.webexClientVersion', [
+    require('modules/core/config/urlConfig'),
+  ])
+    .service('WebexClientVersion', WebexClientVersion)
+    .name;
 
   /* @ngInject */
   function WebexClientVersion(
@@ -19,7 +23,7 @@
       'clientVersions': 'clientversions', //get
       'getTemplate': 'partnertemplate/${partnerId}',
       'postTemplate': 'partnertemplate',
-      'putTemplate': 'partnertemplate/${partnerTemplateId}'
+      'putTemplate': 'partnertemplate/${partnerTemplateId}',
     };
 
     this.getVersionJson = function (partnerTemplate, partnerId, version, useLatest) {
@@ -27,7 +31,7 @@
         'partnerTemplateId': partnerTemplate,
         'partnerId': partnerId,
         'clientVersion': version,
-        'useLatest': useLatest
+        'useLatest': useLatest,
       };
     };
 
@@ -73,7 +77,7 @@
        Here we will simply return a list of strings that corresponds to the client versions.
     */
     this.getWbxClientVersions = function () {
-      //http://atlas-integration.wbx2.com/admin/api/v1/partnertemplate/clientversions
+      //http://atlas-intb.ciscospark.com/admin/api/v1/partnertemplate/clientversions
       // var url = this.getTotalUrl('clientVersions');
       // return $http.get(url).then(function (response) {
       //   return response.data.clientVersions;

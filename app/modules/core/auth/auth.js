@@ -3,7 +3,7 @@
 
   module.exports = angular
     .module('core.auth.auth', [
-      'pascalprecht.translate',
+      require('angular-translate'),
       require('angular-ui-router'),
       require('angular-sanitize'),
       require('modules/core/auth/token.service'),
@@ -11,9 +11,9 @@
       require('modules/core/config/urlConfig'),
       require('modules/core/scripts/services/authinfo'),
       require('modules/core/scripts/services/log'),
-      require('modules/core/scripts/services/sessionstorage'),
       require('modules/core/scripts/services/utils'),
       require('modules/core/window').default,
+      require('modules/core/storage').default,
       require('modules/huron/compass').default,
     ])
     .factory('Auth', Auth)
@@ -36,7 +36,7 @@
       verifyOauthState: verifyOauthState,
       getAuthorizationUrl: getAuthorizationUrl,
       getAuthorizationUrlList: getAuthorizationUrlList,
-      isOnlineOrg: isOnlineOrg
+      isOnlineOrg: isOnlineOrg,
     };
 
     var REFRESH_ACCESS_TOKEN_DEBOUNCE_MS = 1000;
@@ -45,7 +45,7 @@
       REFRESH_ACCESS_TOKEN_DEBOUNCE_MS,
       {
         leading: true,
-        trailing: false
+        trailing: false,
       }
     );
 
@@ -63,7 +63,7 @@
         .then(function (res) {
           return $q.all([
             deferredAuth(res),
-            getHuronDomain(res)
+            getHuronDomain(res),
           ]);
         })
         .then(function (responseArray) {
@@ -161,11 +161,11 @@
         .catch(logErrorAndReject('Failed to obtain oauth access token'));
     }
 
-    function logout() {
+    function logout(loginMessage) {
       var redirectUrl = OAuthConfig.getLogoutUrl();
       return service.logoutAndRedirectTo(redirectUrl)
         .finally(function () {
-          return TokenService.triggerGlobalLogout();
+          return TokenService.triggerGlobalLogout(loginMessage);
         });
     }
 
@@ -177,8 +177,8 @@
           var clientTokens = _.filter(response.data.data, {
             client_id: OAuthConfig.getClientId(),
             user_info: {
-              client_session_id: TokenService.getClientSessionId()
-            }
+              client_session_id: TokenService.getClientSessionId(),
+            },
           });
 
           _.each(clientTokens, function (tokenData) {
@@ -244,17 +244,32 @@
       return httpGET(authUrl);
     }
 
+    function allowMessengerService(syncInfo, userRoles) {
+      // both 'orgName' and 'orgID' must exist, and 'wapiOrgStatus' cannot be 'inactive'
+      if (!syncInfo.orgName || !syncInfo.orgID || syncInfo.wapiOrgStatus === 'inactive') {
+        return false;
+      }
+
+      // user is a full admin or a read-only admin
+      if (_.intersection(['Full_Admin', 'Readonly_Admin'], userRoles).length) {
+        return true;
+      }
+
+      // user is not a partner
+      return !_.intersection(['PARTNER_ADMIN', 'PARTNER_READ_ONLY_ADMIN', 'PARTNER_USER'], userRoles).length;
+    }
+
+    // notes:
+    // - currently (2017-05-11), this logic is used to stub in a fake org-level entitlement into the
+    //   logged-in users's auth data
+    // - the primary use-case for this is to allow access to the 'messenger' UI state (see
+    //   'Authinfo.isAllowedState()')
     function injectMessengerService(authData) {
       var url = UrlConfig.getMessengerServiceUrl() + '/orgs/' + authData.orgId + '/cisync/';
       return httpGET(url)
         .then(function (res) {
-          var isMessengerOrg = _.has(res, 'data.orgName') && _.has(res, 'data.orgID');
-          if (isMessengerOrg && res.data.wapiOrgStatus === 'inactive') {
-            isMessengerOrg = false;
-          }
-          var isAdminForMsgr = _.intersection(['Full_Admin', 'Readonly_Admin'], authData.roles).length;
-          var isPartnerAdmin = _.intersection(['PARTNER_ADMIN', 'PARTNER_READ_ONLY_ADMIN', 'PARTNER_USER'], authData.roles).length;
-          if (isMessengerOrg && (isAdminForMsgr || !isPartnerAdmin)) {
+          var syncInfo = _.get(res, 'data', {});
+          if (allowMessengerService(syncInfo, authData.roles)) {
             Log.debug('This Org is migrated from Messenger, add webex-messenger service to Auth data');
             authData.services.push({
               serviceId: 'jabberMessenger',
@@ -263,7 +278,7 @@
               type: 'PAID',
               isBeta: false,
               isConfigurable: false,
-              isIgnored: true
+              isIgnored: true,
             });
           }
           return authData;
@@ -286,7 +301,7 @@
           ciName: service.ciService || service.ciName,
           serviceId: service.sqService || service.serviceId,
           ciService: undefined,
-          sqService: undefined
+          sqService: undefined,
         });
       });
       return authData;
@@ -341,8 +356,8 @@
         data: data,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + token
-        }
+          'Authorization': 'Basic ' + token,
+        },
       });
     }
 

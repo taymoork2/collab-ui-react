@@ -87,7 +87,7 @@ describe('Service: CommonLineService', function () {
   describe('UserAdd DID and DN assignment', function () {
     beforeEach(function () {
       entitylist = [{
-        "name": "Old River Room"
+        "name": "Old River Room",
       }];
     });
 
@@ -115,12 +115,12 @@ describe('Service: CommonLineService', function () {
     var entity;
     beforeEach(function () {
       spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.resolve({
-        steeringDigit: '9'
+        steeringDigit: '9',
       }));
       entity = {
         assignedDn: {
-          pattern: '912'
-        }
+          pattern: '912',
+        },
       };
     });
 

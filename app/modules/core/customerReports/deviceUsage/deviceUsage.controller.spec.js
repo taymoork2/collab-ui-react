@@ -3,7 +3,7 @@
 describe('Controller: DeviceUsageCtrl', function () {
 
   beforeEach(angular.mock.module('Core'));
-  var DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageSplunkMetricsService, DeviceUsageExportService, FeatureToggleService, DeviceUsageModelService;
+  var DeviceUsageService, DeviceUsageGraphService, DeviceUsageSplunkMetricsService, DeviceUsageExportService, DeviceUsageModelService;
   var $controller;
   var controller;
   var splunkService;
@@ -14,15 +14,14 @@ describe('Controller: DeviceUsageCtrl', function () {
   var $modal;
 
   afterEach(function () {
-    DeviceUsageTotalService = DeviceUsageGraphService = DeviceUsageSplunkMetricsService = $controller = controller = splunkService = $scope = $q = $state = DeviceUsageModelService = undefined;
+    DeviceUsageService = DeviceUsageGraphService = DeviceUsageSplunkMetricsService = $controller = controller = splunkService = $scope = $q = $state = DeviceUsageModelService = undefined;
   });
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageGraphService_, _DeviceUsageExportService_, _DeviceUsageSplunkMetricsService_, _FeatureToggleService_, _$controller_, _$state_, _Notification_, _$modal_, _DeviceUsageModelService_) {
-    DeviceUsageTotalService = _DeviceUsageTotalService_;
+  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageService_, _DeviceUsageGraphService_, _DeviceUsageExportService_, _DeviceUsageSplunkMetricsService_, _$controller_, _$state_, _Notification_, _$modal_, _DeviceUsageModelService_) {
+    DeviceUsageService = _DeviceUsageService_;
     DeviceUsageExportService = _DeviceUsageExportService_;
     DeviceUsageGraphService = _DeviceUsageGraphService_;
     DeviceUsageSplunkMetricsService = _DeviceUsageSplunkMetricsService_;
-    FeatureToggleService = _FeatureToggleService_;
     DeviceUsageModelService = _DeviceUsageModelService_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
@@ -31,14 +30,11 @@ describe('Controller: DeviceUsageCtrl', function () {
     Notification = _Notification_;
     $modal = _$modal_;
 
-    sinon.stub(DeviceUsageGraphService, 'makeChart');
-    DeviceUsageGraphService.makeChart.returns(amchartMock());
+    spyOn(DeviceUsageGraphService, 'makeChart');
+    DeviceUsageGraphService.makeChart.and.returnValue(amchartMock());
 
-    sinon.stub(FeatureToggleService, 'atlasDeviceUsageReportV2GetStatus');
-    FeatureToggleService.atlasDeviceUsageReportV2GetStatus.returns(false);
-
-    sinon.stub(DeviceUsageModelService, 'getModelsForRange');
-    DeviceUsageModelService.getModelsForRange.returns($q.resolve([]));
+    spyOn(DeviceUsageModelService, 'getModelsForRange');
+    DeviceUsageModelService.getModelsForRange.and.returnValue($q.resolve([]));
 
   }));
 
@@ -46,27 +42,31 @@ describe('Controller: DeviceUsageCtrl', function () {
 
     beforeEach(function () {
       controller = $controller('DeviceUsageCtrl', {
-        DeviceUsageTotalService: DeviceUsageTotalService,
+        DeviceUsageService: DeviceUsageService,
         DeviceUsageGraphService: DeviceUsageGraphService,
         DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
         DeviceUsageModelService: DeviceUsageModelService,
         $scope: $scope,
-        $state: $state
+        $state: $state,
       });
 
-      splunkService = sinon.stub(DeviceUsageSplunkMetricsService, 'reportOperation');
+      splunkService = spyOn(DeviceUsageSplunkMetricsService, 'reportOperation');
     });
 
 
     it('starts with fetching initial data based on default last 7 days range', function (done) {
-      sinon.stub(DeviceUsageTotalService, 'getDataForRange');
+      spyOn(DeviceUsageService, 'getDataForRange');
+      spyOn(DeviceUsageService, 'extractStats');
+      spyOn(DeviceUsageService, 'resolveDeviceData');
       var deviceData = {
         reportItems: [
-          { totalDuration: 42 }
+          { totalDuration: 42 },
         ],
-        missingDays: false
+        missingDays: false,
       };
-      DeviceUsageTotalService.getDataForRange.returns($q.resolve(deviceData));
+      DeviceUsageService.getDataForRange.and.returnValue($q.resolve(deviceData));
+      DeviceUsageService.extractStats.and.returnValue($q.resolve([]));
+      DeviceUsageService.resolveDeviceData.and.returnValue($q.resolve([]));
 
       expect(controller.waitingForDeviceMetrics).toBe(true);
       controller.init();
@@ -76,12 +76,48 @@ describe('Controller: DeviceUsageCtrl', function () {
 
       expect(controller.noDataForRange).toBeFalsy();
       expect(controller.reportData).toEqual(deviceData.reportItems);
+
+      done();
+    });
+
+    it('adds people count to the least and most used devices', function (done) {
+      var peopleCountData = {
+        '3333': [
+          { accountId: '3333', peopleCountAvg: 33 },
+        ],
+        '1111': [
+          { accountId: '1111', peopleCountAvg: 11 },
+        ],
+        '4444': [
+          { accountId: '4444', peopleCountAvg: 44 },
+        ],
+        '2222': [
+          { accountId: '2222', peopleCountAvg: 22 },
+        ],
+      };
+
+      var leastUsedDevices = [
+        { accountId: '1111' },
+        { accountId: '2222' },
+        { accountId: '3333' },
+        { accountId: '4444' },
+      ];
+
+      var result = controller.addPeopleCount(leastUsedDevices, peopleCountData);
+
+      expect(result).toEqual([
+        { accountId: '1111', peopleCount: 11 },
+        { accountId: '2222', peopleCount: 22 },
+        { accountId: '3333', peopleCount: 33 },
+        { accountId: '4444', peopleCount: 44 },
+      ]);
+
       done();
     });
 
     it('splunk is reported when date range is selected', function () {
       controller.doTimeUpdate();
-      expect(splunkService.callCount).toBe(1);
+      expect(splunkService.calls.count()).toBe(1);
     });
 
     describe('export device usage data', function () {
@@ -94,19 +130,19 @@ describe('Controller: DeviceUsageCtrl', function () {
             then: function (okCallback, cancelCallback) {
               this.okCallback = okCallback;
               this.cancelCallback = cancelCallback;
-            }
+            },
           },
           opened: {
             then: function (okCallback) {
               okCallback();
-            }
+            },
           },
           close: function (item) {
             this.result.okCallback(item);
           },
           dismiss: function (type) {
             this.result.cancelCallback(type);
-          }
+          },
         };
         spyOn($modal, 'open').and.returnValue(fakeModal);
         spyOn(Notification, 'success');
@@ -132,7 +168,7 @@ describe('Controller: DeviceUsageCtrl', function () {
         fakeModal.dismiss(); // used cancels the export
         expect(DeviceUsageExportService.exportData).not.toHaveBeenCalled();
         expect(controller.exporting).toBeFalsy();
-        expect(splunkService.callCount).toBe(0);
+        expect(splunkService.calls.count()).toBe(0);
       });
 
       it('exports status 100 indicates export progress finished', function () {
@@ -142,7 +178,7 @@ describe('Controller: DeviceUsageCtrl', function () {
         controller.exportStatus(100);
         expect(Notification.success).toHaveBeenCalledWith('reportsPage.usageReports.export.deviceUsageListReadyForDownload', 'reportsPage.usageReports.export.exportCompleted');
         expect(controller.exporting).toBeFalsy();
-        expect(splunkService.callCount).toBe(1);
+        expect(splunkService.calls.count()).toBe(1);
       });
 
       it('export cancelled (for some reason) mid-flight closes the dialog and shows a toaster', function () {
@@ -153,7 +189,7 @@ describe('Controller: DeviceUsageCtrl', function () {
         controller.exportStatus(-1);
         expect(Notification.warning).toHaveBeenCalledWith('reportsPage.usageReports.export.deviceUsageExportFailedOrCancelled');
         expect(controller.exporting).toBeFalsy();
-        expect(splunkService.callCount).toBe(0);
+        expect(splunkService.calls.count()).toBe(0);
       });
 
     });

@@ -13,22 +13,24 @@ describe('Controller: ConfirmCertificateDeleteController', function () {
     $q = _$q_;
   }
 
-  modalInstanceMock = {
-    close: sinon.stub()
-  };
+  beforeEach(function () {
+    modalInstanceMock = {
+      close: {},
+    };
+    spyOn(modalInstanceMock, 'close');
+    spyOn(Notification, 'errorWithTrackingId');
+
+  });
 
   function initController() {
     controller = $controller('ConfirmCertificateDeleteController', {
-      CertService: CertService,
-      Notification: Notification,
       cert: {},
-      $modalInstance: modalInstanceMock
+      $modalInstance: modalInstanceMock,
     });
   }
 
   it('should show a notification when certificate cannot be deleted', function () {
     spyOn(CertService, 'deleteCert').and.returnValue($q.reject());
-    spyOn(Notification, 'errorWithTrackingId');
     initController();
     controller.remove();
     $scope.$apply();
@@ -37,8 +39,6 @@ describe('Controller: ConfirmCertificateDeleteController', function () {
 
   it('should call modalInstanse.close if successful', function () {
     spyOn(CertService, 'deleteCert').and.returnValue($q.resolve());
-    spyOn(Notification, 'errorWithTrackingId');
-    spyOn(modalInstanceMock, 'close');
     initController();
     controller.remove();
     $scope.$apply();

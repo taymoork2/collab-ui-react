@@ -1,5 +1,7 @@
 "use strict";
 
+var testModule = require('./index').default;
+
 describe(' sunlightReportService', function () {
   var sunlightReportService, $httpBackend, scope, q;
   var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
@@ -14,12 +16,13 @@ describe(' sunlightReportService', function () {
   var allUserFifteenMinutesStats = dummyStats.reportUsersFifteenMinutesStats;
   var allUserHourlyStats = dummyStats.reportUsersHourlyStats;
   var ciUserStats = dummyStats.ciUserStats;
+  var ciNonCareUserStats = dummyStats.ciNonCareUserStats;
 
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('676a82cd-64e9-4ebd-933c-4dce087a02bd')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('676a82cd-64e9-4ebd-933c-4dce087a02bd'),
   };
 
-  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(testModule));
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
@@ -71,6 +74,10 @@ describe(' sunlightReportService', function () {
       .respond(function () {
         return [200, ciUserStats];
       });
+    $httpBackend.whenGET(/.*filter=id.*/g)
+        .respond(function () {
+          return [200, ciNonCareUserStats];
+        });
   }));
 
   beforeEach(inject(function ($rootScope, $q) {
@@ -84,8 +91,8 @@ describe(' sunlightReportService', function () {
         "viewType": 'fifteen_minutes',
         "mediaType": 'chat',
         "startTime": '1465381084699',
-        "endTime": '1467973084699'
-      }
+        "endTime": '1467973084699',
+      },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
       expect(response.data.data.length).toBe(2);
@@ -100,7 +107,7 @@ describe(' sunlightReportService', function () {
     $httpBackend.flush();
 
     sunlightReportService.getStats('all_user_stats', config).then(function (response) {
-      expect(response.data.data.length).toBe(10);
+      expect(response.data.data.length).toBe(12);
       expect(response.data.metadata.jobName).toBe('user_contact_stats_fifteen_minutes');
     });
     $httpBackend.flush();
@@ -112,8 +119,8 @@ describe(' sunlightReportService', function () {
         "viewType": 'hourly',
         "mediaType": 'chat',
         "startTime": '1465381084699',
-        "endTime": '1467973084699'
-      }
+        "endTime": '1467973084699',
+      },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
       expect(response.data.data.length).toBe(3);
@@ -134,8 +141,8 @@ describe(' sunlightReportService', function () {
         "viewType": 'daily',
         "mediaType": 'chat',
         "startTime": '1465381084699',
-        "endTime": '1467973084699'
-      }
+        "endTime": '1467973084699',
+      },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
       expect(response.data.data.length).toBe(2);
@@ -167,8 +174,8 @@ describe(' sunlightReportService', function () {
         "viewType": 'weekly',
         "mediaType": 'chat',
         "startTime": '1465381084699',
-        "endTime": '1467973084699'
-      }
+        "endTime": '1467973084699',
+      },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
       expect(response.data.data.length).toBe(2);
@@ -200,31 +207,39 @@ describe(' sunlightReportService', function () {
 
   it('should get the aggregated data based on userId', function (onSuccess, onError) {
     sunlightReportService.getAllUsersAggregatedData('all_user_stats', 1, 'chat').then(function (aggregatedData) {
-      expect(aggregatedData.length).toBe(4);
+      expect(aggregatedData.length).toBe(7);
 
       expect(aggregatedData[0].avgCsatScore).toBe('-');
-      expect(aggregatedData[0].contactsHandled).toBe(1);
-      expect(aggregatedData[0].contactsAssigned).toBe(0);
+      expect(aggregatedData[0].tasksHandled).toBe(1);
+      expect(aggregatedData[0].tasksAssigned).toBe(0);
       expect(aggregatedData[0].handleTime).toBe(0);
       expect(aggregatedData[0].displayName).toBe('A GT user5');
 
       expect(aggregatedData[1].avgCsatScore).toBe(3.67);
-      expect(aggregatedData[1].contactsHandled).toBe(3);
-      expect(aggregatedData[1].contactsAssigned).toBe(4);
+      expect(aggregatedData[1].tasksHandled).toBe(3);
+      expect(aggregatedData[1].tasksAssigned).toBe(4);
       expect(aggregatedData[1].handleTime).toBe(27887);
       expect(aggregatedData[1].displayName).toBe('display GT User 4');
 
       expect(aggregatedData[2].avgCsatScore).toBe(4);
-      expect(aggregatedData[2].contactsHandled).toBe(7);
-      expect(aggregatedData[2].contactsAssigned).toBe(10);
+      expect(aggregatedData[2].tasksHandled).toBe(7);
+      expect(aggregatedData[2].tasksAssigned).toBe(10);
       expect(aggregatedData[2].handleTime).toBe(401973);
       expect(aggregatedData[2].displayName).toBe('A GT user5');
 
       expect(aggregatedData[3].avgCsatScore).toBe(4);
-      expect(aggregatedData[3].contactsHandled).toBe(0);
-      expect(aggregatedData[3].contactsAssigned).toBe(0);
+      expect(aggregatedData[3].tasksHandled).toBe(0);
+      expect(aggregatedData[3].tasksAssigned).toBe(0);
       expect(aggregatedData[3].handleTime).toBe(0);
       expect(aggregatedData[3].displayName).toBe('sunlight-user1@outlook.com');
+
+      expect(aggregatedData[4].displayName).toBe('A GT Non Care user');
+
+      expect(aggregatedData[5].displayName).toBe('careReportsPage.deletedUser1');
+      expect(aggregatedData[5].isUserDeleted).toBe(true);
+
+      expect(aggregatedData[6].displayName).toBe('careReportsPage.deletedUser2');
+      expect(aggregatedData[6].isUserDeleted).toBe(true);
 
       onSuccess(aggregatedData);
     }, function () {

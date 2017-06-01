@@ -3,7 +3,7 @@ require('angular-cookies/angular-cookies.js');
 require('angular-sanitize/angular-sanitize.js');
 require('angular-resource/angular-resource.js');
 require('angular-messages/angular-messages.js');
-require('angular-translate/dist/angular-translate.js');
+require('angular-translate/dist/angular-translate.js'); // still required to initialize module before static/messageformat deps
 require('angular-translate-loader-static-files/angular-translate-loader-static-files.js');
 require('messageformat/messageformat.js');
 require('angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.js');
@@ -13,7 +13,6 @@ require('ui-router-extras/release/modular/ct-ui-router-extras.sticky.js');
 require('ui-router-extras/release/modular/ct-ui-router-extras.transition.js');
 require('ui-router-extras/release/modular/ct-ui-router-extras.future.js');
 require('ui-router-extras/release/modular/ct-ui-router-extras.previous.js');
-require('collab-ui-ng/dist/collab-ui-ng');
 require('angularjs-toaster/toaster.js');
 require('angularjs-slider/dist/rzslider.min.js');
 require('oclazyload');

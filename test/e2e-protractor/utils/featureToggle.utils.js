@@ -28,8 +28,8 @@ function getMe() {
     url: config.getScimUrl() + 'me',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    }
+      'Authorization': 'Bearer ' + token,
+    },
   };
 
   return sendRequest(options)
@@ -44,8 +44,8 @@ function fetchFeatureToggles(userUuid) {
     url: config.getFeatureServiceUrl() + 'features/users/' + userUuid + '/developer',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    }
+      'Authorization': 'Bearer ' + token,
+    },
   };
 
   return sendRequest(options)

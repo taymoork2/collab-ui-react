@@ -1,5 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .iframe-container {
   display: inline;
@@ -19,7 +20,6 @@
     @include vr-spacing(m, 0);
 
     min-width: vr-adjust(1200);
-    width: 100%;
 
     .row {
       border-bottom: rem-calc(1) solid $gray-light-3;
@@ -41,28 +41,25 @@
       border-bottom: none;
     }
 
-    .icon-header {
-      @include vr-spacing(pt, 1.5);
-
-      height: vr-adjust(20);
-      line-height: vr-adjust(20);
+    .icon-container {
+      @include vr-spacing(mt, 1.25);
+      @include vr-spacing(ml, 0.75);
+      height: vr-adjust(32);
+      width: vr-adjust(32);
       cursor: pointer;
+      .icon-right-arrow-contained {
+        @include vr-spacing(pl, 0.5);
+        position: relative;
+        top: 0.3rem;
+      }
     }
-
-    .icon-arrow-down {
-      @include vr-spacing(mr, 1);
-
-      font-size: vr-adjust(48);
-      right: vr-adjust(8);
-      width: vr-adjust(20);
-    }
-
-    .icon-right-arrow-contained {
-      @include vr-spacing(pl, 0.75);
+    .icon-container-down {
+      transform: rotate(90deg);
     }
 
     .sub-name {
       @include vr-spacing(m, 1);
+      padding-top: 0;
 
       width: auto;
     }
@@ -80,17 +77,20 @@
 
     .subscription-column,
     .subscription-item,
-    .subscription-header,
     .subscription-upgrade,
     .license-item {
       display: flex;
       flex-wrap: wrap;
     }
 
+    .subscription-header {
+      display: flex;
+    }
+
     .subscription-column {
       @include vr-spacing(p, 0);
-
       border-left: rem-calc(1) solid $gray-light-3;
+      flex-wrap: wrap;
 
       .detail {
         @include vr-spacing(pt, 0.25);
@@ -140,23 +140,16 @@
 
       .subscription-item {
         @include vr-spacing(p, 1.5);
-
-        width: 50%;
+        width: 100%;
+        border-bottom: rem-calc(1) solid $gray-light-3;
       }
 
-      .subscription-item:nth-child(1),
-      .subscription-item:nth-child(2) {
-        @include vr-spacing(pt, 1.5);
-      }
-
-      .subscription-item:nth-child(odd):nth-last-of-type(2),
       .subscription-item:last-of-type {
-        @include vr-spacing(pb, 1.5);
+        border-bottom: none;
       }
 
       .subscription-item.item-with-borders {
-        @include vr-spacing(p, 1.5);
-
+        width: 50%;
         display: block;
         border-right: rem-calc(1) solid $gray-light-3;
         border-bottom: rem-calc(1) solid $gray-light-3;
@@ -173,7 +166,7 @@
       }
 
       .subscription-site {
-        color: $gray-dark-2;
+        color: $color-primary-base;
       }
 
       .hybrid-ul span,
@@ -218,6 +211,18 @@
       .subscription-item:last-of-type .subscription-description {
         @include vr-spacing(mb, 0);
       }
+
+      .subscription-detail {
+        margin-right: 8rem;
+      }
+
+      .license-detail {
+        color: $gray-dark-2;
+      }
+
+      .subscription-advanced-detail {
+        margin-left: 0rem;
+      }
     }
   }
 
@@ -243,11 +248,8 @@
       align-items: center;
 
       .license-quantity {
-        @include vr-spacing(pr, 1);
         @include vr-spacing(pt, 0.5);
         @include vr-spacing(pb, 0.25);
-
-        min-width: 200px;
       }
 
       .subscription-id {
@@ -256,6 +258,10 @@
         top: vr-adjust(60);
         text-align: right;
         width: vr-adjust(500);
+      }
+
+      .upgrade-button {
+        width: vr-adjust(188);
       }
     }
   }

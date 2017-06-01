@@ -15,7 +15,7 @@
         card.icon = 'icon-circle-telepresence';
         card.desc = 'overview.cards.roomSystem.desc';
         card.name = 'overview.cards.roomSystem.title';
-        card.cardClass = 'cs-card header-bar gray';
+        card.cardClass = 'cs-card';
         card.enabled = false;
         card.trial = false;
         card.notEnabledText = 'overview.cards.roomSystem.notEnabledText';
@@ -49,7 +49,7 @@
 
           card.allLicenses = licenses;
           card.trial = _.some(filterLicenses(licenses), {
-            'isTrial': true
+            'isTrial': true,
           });
 
           if (filterLicenses(licenses).length > 0) {
@@ -72,7 +72,7 @@
         };
 
         return card;
-      }
+      },
     };
   }
 })();

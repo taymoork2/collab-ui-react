@@ -13,8 +13,8 @@ describe('Controller: AARouteToQueueCtrl', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'AA2'
-    }
+      name: 'AA2',
+    },
   };
   var modal;
   var queueName = 'Chandan Test Queue';
@@ -96,7 +96,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
     it('should create a condition then action', function () {
 
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller.menuEntry.actions[0].description).toEqual('');
@@ -108,7 +108,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
       aaUiModel[schedule].entries[0].actions[0] = undefined;
 
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller.menuEntry.actions[0].name).toEqual('conditional');
@@ -121,7 +121,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
       aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('route', '');
 
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller.menuEntry.actions[0].name).toEqual('conditional');
@@ -139,10 +139,10 @@ describe('Controller: AARouteToQueueCtrl', function () {
       var moh = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
       saved.musicOnHold.addAction(moh);
       spyOn($modal, 'open').and.returnValue({
-        result: modal.promise
+        result: modal.promise,
       });
       controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
     });
 
@@ -160,7 +160,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
       controller.menuEntry.actions[0] = action;
       $scope.fromRouteCall = true;
       controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
       controller.openQueueTreatmentModal();
@@ -180,12 +180,14 @@ describe('Controller: AARouteToQueueCtrl', function () {
         aaUiModel[schedule].entries[index].actions[0] = action;
         $scope.fromRouteCall = true;
         controller = $controller('AARouteToQueueCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         $scope.$apply();
       });
 
       it('should maintain a master copy of the model if not "saved"', function () {
+        spyOn($scope, '$broadcast').and.callThrough();
+
         controller.openQueueTreatmentModal();
         $scope.$apply();
         expect(controller.menuEntry.actions[0].description).toEqual('');
@@ -193,6 +195,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
         modal.reject();
         $scope.$apply();
         expect(controller.menuEntry.actions[0].description).toEqual('');
+        expect($scope.$broadcast).toHaveBeenCalledWith('Queue_Cancelled');
       });
     });
 
@@ -207,7 +210,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
         action.queueSettings = {};
         aaUiModel[schedule].entries[keyIndex].actions[0] = action;
         controller = $controller('AARouteToQueueCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         $scope.$apply();
         controller.menuKeyEntry.actions = [];
@@ -243,7 +246,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
       $scope.fromRouteCall = true;
 
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller).toBeDefined();
@@ -272,7 +275,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
     it('should populate the ui from the menuEntry', function () {
 
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       controller.hideQueues = false;
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'myId');
@@ -288,7 +291,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
     });
     it('should be able to show the already selected queue', function () {
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       controller.hideQueues = true;
       controller.populateUiModel();
@@ -303,7 +306,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
     it('should be able to create new AA entry from Route Call', function () {
 
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller).toBeDefined();
@@ -321,7 +324,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
     it('should be able to create new AA entry from Route Call', function () {
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       expect(controller).toBeDefined();
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
@@ -338,11 +341,11 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
     it('should be able to change update via saveUIModel', function () {
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       controller.queueSelected = {
         name: "Test Queue",
-        id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
+        id: "c16a6027-caef-4429-b3af-9d61ddc7964b",
       };
 
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
@@ -363,7 +366,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
     it('should be able to create new AA entry', function () {
 
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller).toBeDefined();
@@ -383,7 +386,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
     it('should initialize the options list', function () {
 
       var controller = $controller('AARouteToQueueCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       $scope.$apply();
@@ -399,7 +402,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         var controller = $controller('AARouteToQueueCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         $scope.$apply();
         expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
@@ -416,7 +419,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
       });
       it('should be able to create new AA while hideQueues is false', function () {
         var controller = $controller('AARouteToQueueCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller).toBeDefined();
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'c16a6027-caef-4429-b3af-9d61ddc7964b');
@@ -432,7 +435,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
       it('should be able to show the Queues when hideQueues is true', function () {
         var controller = $controller('AARouteToQueueCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller).toBeDefined();
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'c16a6027-caef-4429-b3af-9d61ddc7964b');
@@ -448,16 +451,16 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
       it('should be able to update queue settings voice via saveUIModel', function () {
         var controller = $controller('AARouteToQueueCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         controller.queueSelected = {
           name: "Test Queue",
-          id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
+          id: "c16a6027-caef-4429-b3af-9d61ddc7964b",
         };
 
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
         action.queueSettings = {
-          voice: ''
+          voice: '',
         };
         controller.menuKeyEntry.actions = [];
         controller.menuKeyEntry.actions[0] = action;

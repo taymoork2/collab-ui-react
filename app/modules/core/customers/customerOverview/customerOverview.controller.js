@@ -8,9 +8,9 @@ require('./_customer-overview.scss');
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService, Userservice) {
-    var vm = this;
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialPstnService, TrialService, Userservice) {
 
+    var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerName = vm.currentCustomer.customerName;
     vm.customerOrgId = vm.currentCustomer.customerOrgId;
@@ -36,9 +36,11 @@ require('./_customer-overview.scss');
     vm.allowCustomerLogos = false;
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
+    vm.countryCode = 'US';
     vm.isDeleting = false;
-    vm.isOrgSetup = false;
+    vm.isOrgSetup = null;
     vm.isUpdateStatusEnabled = true;
+    vm.isProPackEnabled = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -51,27 +53,34 @@ require('./_customer-overview.scss');
     vm._helpers = {
       canUpdateLicensesForSelf: canUpdateLicensesForSelf,
       openCustomerPortal: openCustomerPortal,
-      updateUsers: updateUsers
+      updateUsers: updateUsers,
     };
 
-    vm.featureTrialForPaid = trialForPaid;
-    //vm.featureTrialForPaid = true;
 
     var QTY = _.toUpper($translate.instant('common.quantity'));
     var FREE = _.toUpper($translate.instant('customerPage.free'));
 
-    FeatureToggleService.atlasCareTrialsGetStatus()
-      .then(function (result) {
-        if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
-          vm.showRoomSystems = true;
-        }
-        var isCareEnabled = result;
-        setOffers(isCareEnabled);
-      });
+    vm.loadingCustomerPortal = true;
+
+    $q.all([
+      FeatureToggleService.atlasCareTrialsGetStatus(),
+      FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+      FeatureToggleService.atlasITProPackGetStatus(),
+    ]).then(function (results) {
+      if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
+        vm.showRoomSystems = true;
+      }
+      var isCareEnabled = results[0];
+      var isAdvanceCareEnabled = results[1];
+      vm.isProPackEnabled = results[2];
+
+      setOffers(isCareEnabled, isAdvanceCareEnabled);
+    });
 
 
-    function setOffers(isCareEnabled) {
+    function setOffers(isCareEnabled, isAdvanceCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+        isAdvanceCareEnabled: isAdvanceCareEnabled,
         isTrial: true });
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
       vm.trialServices = _.chain(vm.currentCustomer.offer)
@@ -79,7 +88,7 @@ require('./_customer-overview.scss');
         .map(function (trialService) {
           return _.assign({}, trialService, {
             detail: trialService.qty + ' ' + QTY,
-            actionAvailable: hasSubview(trialService)
+            actionAvailable: hasSubview(trialService),
           });
         })
         .value();
@@ -87,7 +96,7 @@ require('./_customer-overview.scss');
         isTrial: false }), function (service) {
         return _.assign({}, service, {
           detail: service.free ? FREE : service.qty + ' ' + QTY,
-          actionAvailable: hasSubview(service)
+          actionAvailable: hasSubview(service),
         });
       });
     }
@@ -102,28 +111,32 @@ require('./_customer-overview.scss');
       }
     }, 2000, {
       'leading': true,
-      'trailing': false
+      'trailing': false,
     });
 
     function init() {
       initCustomer();
       initTrialActions();
       getLogoSettings();
-      getIsTestOrg();
       getIsSetupDone();
+      getCountryCode();
+      Orgservice.isTestOrg(vm.customerOrgId)
+        .then(function (isTestOrg) {
+          vm.isTest = isTestOrg;
+        });
     }
 
     function initTrialActions() {
       if (PartnerService.canAdminTrial(vm.currentCustomer.licenseList)) {
         vm.trialActions.push({
           actionKey: 'customerPage.edit',
-          actionFunction: openEditTrialModal
+          actionFunction: openEditTrialModal,
         });
       } else {
-        if (vm.featureTrialForPaid && !vm.currentCustomer.trialId) {
+        if (!vm.currentCustomer.trialId && _.get(vm.currentCustomer, 'licenseList.length', 0) > 0) {
           vm.trialActions.push({
             actionKey: 'customerPage.addTrial',
-            actionFunction: openAddTrialModal
+            actionFunction: openAddTrialModal,
           });
         }
       }
@@ -199,11 +212,12 @@ require('./_customer-overview.scss');
       //   'Userservice.updateUsers()'
       // - this call is required in order to patch the partner-admin user as appropriate such that
       //   admin access to webex sites is enabled
+      vm.loadingCustomerPortal = true;
       var liclist = vm.currentCustomer.licenseList;
       var licIds = collectLicenseIdsForWebexSites(liclist);
       var partnerEmail = Authinfo.getPrimaryEmail();
       var emailObj = {
-        'address': partnerEmail
+        'address': partnerEmail,
       };
       var promise = $q.resolve();
       if (vm.isPartnerAdmin) {
@@ -213,33 +227,32 @@ require('./_customer-overview.scss');
         // non-admin users (e.g. sales admins) should not try to update their own licenses, but
         // instead launch the portal immediately
         if (!vm._helpers.canUpdateLicensesForSelf()) {
-          return vm._helpers.openCustomerPortal();
+          return;
         }
 
-        if (licIds.length > 0) {
-          return vm._helpers.updateUsers([emailObj], licIds).then(vm._helpers.openCustomerPortal);
+        if (licIds.length) {
+          return vm._helpers.updateUsers([emailObj], licIds);
         }
 
-        AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
-          var accountsLength = _.get(response, 'data.accounts.length', 0);
-          if (!accountsLength) {
-            return vm._helpers.openCustomerPortal();
-          }
-
+        return AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
           var updateUsersList = [];
-          for (var i = 0; i < accountsLength; i++) {
-            var account = response.data.accounts[i];
-            var lics = account.licenses;
-            var licIds = collectLicenseIdsForWebexSites(lics);
-            updateUsersList.push(vm._helpers.updateUsers([emailObj], licIds));
-          }
-
-          return $q.all(updateUsersList).then(vm._helpers.openCustomerPortal);
+          var accounts = _.get(response, 'data.accounts', []);
+          _.forEach(accounts, function (account) {
+            var accountLicIds = collectLicenseIdsForWebexSites(account.licenses);
+            if (accountLicIds.length) {
+              updateUsersList.push(vm._helpers.updateUsers([emailObj], licIds));
+            }
+          });
+          return $q.all(updateUsersList);
         });
       })
+      .then(vm._helpers.openCustomerPortal)
       .catch(function (response) {
         Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
         return response;
+      })
+      .finally(function () {
+        vm.loadingCustomerPortal = false;
       });
     }
 
@@ -247,32 +260,66 @@ require('./_customer-overview.scss');
       return Authinfo.isAdmin();
     }
 
-    // TODO: 'Userservice.updateUsers' needs to be heavily re-worked, so we shim the logic we need
-    //   to reject as-needed here instead to expedite the fix for ATLAS-1465.
+    // TODO: track analytic behavior and see if this is being used correctly or can be removed
     function updateUsers(userInfoList, licenses) {
       if (!vm._helpers.canUpdateLicensesForSelf()) {
         Notification.error('customerPage.updateLicensesAuthError');
         return $q.reject();
       }
 
-      return Userservice.updateUsers(userInfoList, licenses, null, 'updateUserLicense', _.noop);
+      return Userservice.updateUsers(userInfoList, licenses, null, 'updateUserLicense', _.noop)
+        .catch(function (response) {
+          trackPatchUsersResponse();
+          return $q.reject(response);
+        })
+        .then(function (response) {
+          trackPatchUsersResponse(response);
+          return response;
+        });
+    }
+
+    function trackPatchUsersResponse(response) {
+      var userResponses = _.get(response, 'data.userResponse');
+      var httpResponses = _.map(userResponses, 'httpStatus');
+      var hasError = _.isEmpty(httpResponses) || _.some(httpResponses, function (httpResponse) {
+        return httpResponse >= 400;
+      });
+      var hasSuccess = _.some(httpResponses, function (httpResponse) {
+        return httpResponse >= 200 && httpResponse < 300;
+      });
+      Analytics.trackEvent(Analytics.sections.PARTNER.eventNames.LAUNCH_CUSTOMER_PATCH_USERS, {
+        hasError: hasError,
+        hasSuccess: hasSuccess,
+        partnerUserId: Authinfo.getUserId(),
+        partnerOrgId: Authinfo.getUserOrgId(),
+      });
     }
 
     function openCustomerPortal() {
-      return $window.open($state.href('login_swap', {
+      var openWindow = $window.open($state.href('login_swap', {
         customerOrgId: vm.customerOrgId,
-        customerOrgName: vm.customerName
+        customerOrgName: vm.customerName,
       }));
+
+      if (!openWindow || openWindow.closed || typeof openWindow.closed === 'undefined') {
+        $modal.open({
+          type: 'dialog',
+          templateUrl: 'modules/core/customers/customerOverview/popUpBlocked.tpl.html',
+        });
+      }
+
+      return openWindow;
     }
 
     function openEditTrialModal() {
       //var isAddTrial = options.isAddTrial;
+      TrialPstnService.setCountryCode(vm.countryCode);
       TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
-        var route = TrialService.getEditTrialRoute(vm.featureTrialForPaid, vm.currentCustomer, response);
+        var route = TrialService.getEditTrialRoute(vm.currentCustomer, response);
         $state.go(route.path, route.params).then(function () {
           $state.modal.result.then(function () {
             $state.go('partnercustomers.list', {}, {
-              reload: true
+              reload: true,
             });
           });
         });
@@ -280,11 +327,11 @@ require('./_customer-overview.scss');
     }
 
     function openAddTrialModal() {
-      var route = TrialService.getAddTrialRoute(vm.featureTrialForPaid, vm.currentCustomer);
+      var route = TrialService.getAddTrialRoute(vm.currentCustomer);
       $state.go(route.path, route.params).then(function () {
         $state.modal.result.then(function () {
           $state.go('partnercustomers.list', {}, {
-            reload: true
+            reload: true,
           });
         });
       });
@@ -314,7 +361,7 @@ require('./_customer-overview.scss');
         })
         .catch(function (error) {
           Notification.errorResponse(error, 'customerPage.errGetTrial', {
-            customer: vm.customerName
+            customer: vm.customerName,
           });
           return false;
         });
@@ -327,8 +374,8 @@ require('./_customer-overview.scss');
     }
 
     function hasSubview(service) {
-      var hasWebexOrMultMeeting = (service.hasWebex === true || service.isMeeting);
-      return hasWebexOrMultMeeting || service.isRoom;
+      var hasWebexOrMultMeeting = (service.hasWebex === true || service.isMeeting || service.isSparkCare);
+      return hasWebexOrMultMeeting || service.isRoom || service.isSparkCare;
     }
 
     function goToSubview(service, options) {
@@ -338,6 +385,8 @@ require('./_customer-overview.scss');
         $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
       } else if (service.isRoom) {
         $state.go('customer-overview.sharedDeviceDetail', { sharedDeviceLicenses: service.sub });
+      } else if (service.isSparkCare) {
+        $state.go('customer-overview.careLicenseDetail', { careLicense: service.sub });
       }
     }
 
@@ -354,10 +403,13 @@ require('./_customer-overview.scss');
             .then(function (isPartnerCreator) {
               if (isPartnerCreator) {
                 Notification.errorResponse(error, 'customerPage.isSetupDoneError', {
-                  orgName: vm.customerName
+                  orgName: vm.customerName,
                 });
               }
             });
+        })
+        .finally(function () {
+          vm.loadingCustomerPortal = false;
         });
     }
 
@@ -365,14 +417,21 @@ require('./_customer-overview.scss');
       return vm.customerName === Authinfo.getOrgName();
     }
 
-    function getIsTestOrg() {
+    // Refactor this out.
+    // Preferably call another service for this, or call once and store into universal data object
+    function getCountryCode() {
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
-          vm.isTest = data.isTestOrg;
+          if (data.countryCode) {
+            vm.countryCode = data.countryCode;
+          }
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }
-      }, vm.customerOrgId);
+      }, vm.customerOrgId, params);
     }
 
     function deleteTestOrg() {
@@ -384,19 +443,19 @@ require('./_customer-overview.scss');
             var ctrl = this;
             ctrl.orgName = vm.customerName;
           },
-          controllerAs: 'ctrl'
+          controllerAs: 'ctrl',
         }).result.then(function () {
           // delete the customer
           vm.isDeleting = true;
           Orgservice.deleteOrg(vm.customerOrgId).then(function () {
             $state.go('partnercustomers.list');
             Notification.success('customerPage.deleteOrgSuccess', {
-              orgName: vm.customerName
+              orgName: vm.customerName,
             });
           }).catch(function (error) {
             vm.isDeleting = false;
             Notification.errorResponse(error, 'customerPage.deleteOrgError', {
-              orgName: vm.customerName
+              orgName: vm.customerName,
             });
           });
         });

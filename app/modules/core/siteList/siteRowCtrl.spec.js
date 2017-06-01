@@ -5,10 +5,10 @@ describe('Controller: WebExSiteRowCtrl', function () {
   var controller, $scope, $q, FeatureToggleService, WebExSiteRowService, TokenService;
   var fakeShowGridData = true;
   var fakeGridData = {
-    siteUrl: "abc.webex.com"
+    siteUrl: "abc.webex.com",
   };
   var fakeGridOptions = {
-    data: fakeGridData
+    data: fakeGridData,
   };
 
   var accessToken = "Token ABCDERFGHIJK";
@@ -44,7 +44,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     controller = $controller('WebExSiteRowCtrl', {
       $scope: $scope,
       FeatureToggleService: FeatureToggleService,
-      WebExSiteRowService: WebExSiteRowService
+      WebExSiteRowService: WebExSiteRowService,
     });
 
     $scope.$apply();

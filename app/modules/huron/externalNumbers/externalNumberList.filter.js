@@ -8,7 +8,7 @@
     var nonDigitRegex = /[()-\s]/g;
     var searchFields = [
       'pattern',
-      'label'
+      'label',
     ];
 
     return filter;

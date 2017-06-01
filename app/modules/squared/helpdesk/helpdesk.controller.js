@@ -4,7 +4,7 @@ require('./helpdesk.scss');
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, $window, Authinfo) {
+  function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       $window.document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
@@ -51,7 +51,7 @@ require('./helpdesk.scss');
           vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
           vm.isOrderSearchEnabled = isSearchOrderEnabled;
         },
-        controllerAs: 'searchHelpModalCtrl'
+        controllerAs: 'searchHelpModalCtrl',
       });
       HelpdeskSplunkReporterService.reportOperation(HelpdeskSplunkReporterService.SEARCH_HELP);
     }
@@ -80,7 +80,7 @@ require('./helpdesk.scss');
       deviceSearchFailure: null,
       orgFilter: vm.isCustomerHelpDesk ? {
         id: Authinfo.getOrgId(),
-        displayName: Authinfo.getOrgName()
+        displayName: Authinfo.getOrgName(),
       } : null,
       orgLimit: vm.searchResultsPageSize,
       userLimit: vm.searchResultsPageSize,
@@ -107,7 +107,7 @@ require('./helpdesk.scss');
         if (!vm.isCustomerHelpDesk) {
           this.orgFilter = null;
         }
-      }
+      },
     };
 
     if (vm.isCustomerHelpDesk) {
@@ -442,7 +442,7 @@ require('./helpdesk.scss');
       _.each(deviceSearchResults, function (device) {
         device.organization = {
           id: vm.currentSearch.orgFilter.id,
-          displayName: vm.currentSearch.orgFilter.displayName
+          displayName: vm.currentSearch.orgFilter.displayName,
         };
       });
     }
@@ -521,7 +521,7 @@ require('./helpdesk.scss');
     function stats(searchType, details) {
       return {
         "searchType": searchType,
-        "details": details
+        "details": details,
       };
     }
 

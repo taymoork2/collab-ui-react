@@ -24,8 +24,8 @@ describe('Controller: WizardCtrl', function () {
     controller: 'PlanReviewCtrl as planReview',
     steps: [{
       name: 'init',
-      template: 'modules/core/setupWizard/planReview.tpl.html'
-    }]
+      template: 'modules/core/setupWizard/planReview.tpl.html',
+    }],
   }, {
     name: 'messagingSetup',
     label: 'firstTimeWizard.messageSettings',
@@ -35,8 +35,8 @@ describe('Controller: WizardCtrl', function () {
     controller: 'MessagingSetupCtrl as msgSetup',
     steps: [{
       name: 'setup',
-      template: 'modules/core/setupWizard/messagingSetup.tpl.html'
-    }]
+      template: 'modules/core/setupWizard/messagingSetup.tpl.html',
+    }],
   }, {
     name: 'enterpriseSettings',
     label: 'firstTimeWizard.enterpriseSettings',
@@ -46,20 +46,20 @@ describe('Controller: WizardCtrl', function () {
     controller: 'EnterpriseSettingsCtrl',
     steps: [{
       name: 'enterpriseSipUrl',
-      template: 'modules/core/setupWizard/enterprise.setSipDomain.tpl.html'
+      template: 'modules/core/setupWizard/enterprise.setSipDomain.tpl.html',
     }, {
       name: 'init',
-      template: 'modules/core/setupWizard/enterprise.init.tpl.html'
+      template: 'modules/core/setupWizard/enterprise.init.tpl.html',
     }, {
       name: 'exportMetadata',
-      template: 'modules/core/setupWizard/enterprise.exportMetadata.tpl.html'
+      template: 'modules/core/setupWizard/enterprise.exportMetadata.tpl.html',
     }, {
       name: 'importIdp',
-      template: 'modules/core/setupWizard/enterprise.importIdp.tpl.html'
+      template: 'modules/core/setupWizard/enterprise.importIdp.tpl.html',
     }, {
       name: 'testSSO',
-      template: 'modules/core/setupWizard/enterprise.testSSO.tpl.html'
-    }]
+      template: 'modules/core/setupWizard/enterprise.testSSO.tpl.html',
+    }],
   }, {
     name: 'addUsers',
     label: 'firstTimeWizard.addUsers',
@@ -72,28 +72,28 @@ describe('Controller: WizardCtrl', function () {
       title: 'firstTimeWizard.simple',
       steps: [{
         name: 'init',
-        template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+        template: 'modules/core/setupWizard/addUsers.init.tpl.html',
       }, {
         name: 'manualEntry',
-        template: 'modules/core/setupWizard/addUsers.manualEntry.tpl.html'
-      }]
+        template: 'modules/core/setupWizard/addUsers.manualEntry.tpl.html',
+      }],
     }, {
       name: 'advanced',
       title: 'firstTimeWizard.advanced',
       steps: [{
         name: 'init',
-        template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+        template: 'modules/core/setupWizard/addUsers.init.tpl.html',
       }, {
         name: 'domainEntry',
-        template: 'modules/core/setupWizard/addUsers.domainEntry.tpl.html'
+        template: 'modules/core/setupWizard/addUsers.domainEntry.tpl.html',
       }, {
         name: 'installConnector',
-        template: 'modules/core/setupWizard/addUsers.installConnector.tpl.html'
+        template: 'modules/core/setupWizard/addUsers.installConnector.tpl.html',
       }, {
         name: 'syncStatus',
-        template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html'
-      }]
-    }]
+        template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html',
+      }],
+    }],
   }];
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_,
@@ -117,7 +117,7 @@ describe('Controller: WizardCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(getMyFeatureToggles);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Authinfo, 'getLicenses').and.returnValue([{
-      licenseType: 'COMMUNICATION'
+      licenseType: 'COMMUNICATION',
     }]);
     spyOn(rootScope, '$broadcast').and.callThrough();
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.resolve());
@@ -127,7 +127,7 @@ describe('Controller: WizardCtrl', function () {
       $scope: $scope,
       $translate: $translate,
       $stateParams: $stateParams,
-      $state: $state
+      $state: $state,
     });
 
     $scope.$apply();

@@ -1,12 +1,17 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Hercules')
-    .service('USSService', USSService);
+  module.exports = angular
+    .module('hercules.uss', [
+      require('modules/hercules/services/hybrid-services-i18n.service').default,
+      require('modules/hercules/services/hybrid-services-utils.service').default,
+      require('modules/squared/devices/services/CsdmPoller'),
+    ])
+    .service('USSService', USSService)
+    .name;
 
   /* @ngInject */
-  function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory, $translate, FusionUtils) {
+  function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory, $translate, HybridServicesI18NService) {
     var cachedUserStatusSummary = [];
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
@@ -31,7 +36,7 @@
       getUserPropsSummary: getUserPropsSummary,
       getUserJournal: getUserJournal,
       notifyReadOnlyLaunch: notifyReadOnlyLaunch,
-      getAllStatuses: getAllStatuses
+      getAllStatuses: getAllStatuses,
     };
 
     CsdmPoller.create(fetchStatusesSummary, hub);
@@ -56,14 +61,14 @@
             activated: 0,
             notActivated: 0,
             error: 0,
-            total: 0
+            total: 0,
           };
           _.forEach(['squared-fusion-cal', 'squared-fusion-uc'], function (serviceId) {
             var found = _.find(summary, {
-              serviceId: serviceId
+              serviceId: serviceId,
             });
             if (!found) {
-              var newSummary = angular.copy(emptySummary);
+              var newSummary = _.cloneDeep(emptySummary);
               newSummary.serviceId = serviceId;
               summary.push(newSummary);
             }
@@ -81,7 +86,15 @@
     }
 
     function extractJournalEntries(res) {
-      return res.data.entries || [];
+      var entries = res.data.entries || [];
+      return _.chain(entries)
+        .map(function (entry) {
+          if (entry.entry.payload) {
+            entry.entry.payload.messages = sortAndTweakUserMessages(entry.entry.payload.messages);
+          }
+          return entry;
+        })
+        .value();
     }
 
     function decorateWithStatus(status) {
@@ -213,23 +226,28 @@
       var userStatuses = res.data ? res.data.userStatuses : res;
       return _.chain(userStatuses)
         .map(function (userStatus) {
-          if (_.size(userStatus.messages) > 0) {
-            userStatus.messages = _.chain(userStatus.messages)
-              .sortBy(function (message) {
-                return getMessageSortOrder(message.severity);
-              })
-              .map(function (message) {
-                var translateReplacements = convertToTranslateReplacements(message.replacementValues);
-                message.title = translateWithFallback(message.key + '.title', message.title, translateReplacements);
-                message.description = translateWithFallback(message.key + '.description', message.description, translateReplacements);
-                message.iconClass = getMessageIconClass(message.severity);
-                return message;
-              })
-              .value();
-          }
+          userStatus.messages = sortAndTweakUserMessages(userStatus.messages);
           return userStatus;
         })
         .value();
+    }
+
+    function sortAndTweakUserMessages(messages) {
+      if (_.size(messages) > 0) {
+        return _.chain(messages)
+          .sortBy(function (message) {
+            return getMessageSortOrder(message.severity);
+          })
+          .map(function (message) {
+            var translateReplacements = convertToTranslateReplacements(message.replacementValues);
+            message.title = translateWithFallback(message.key + '.title', message.title, translateReplacements);
+            message.description = translateWithFallback(message.key + '.description', message.description, translateReplacements);
+            message.iconClass = getMessageIconClass(message.severity);
+            return message;
+          })
+          .value();
+      }
+      return messages;
     }
 
     function translateWithFallback(messageKey, fallback, translateReplacements) {
@@ -240,7 +258,7 @@
 
     function convertToTranslateReplacements(messageReplacementValues) {
       return _.reduce(messageReplacementValues, function (translateReplacements, replacementValue) {
-        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? FusionUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
+        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? HybridServicesI18NService.getLocalTimestamp(replacementValue.value) : replacementValue.value;
         return translateReplacements;
       }, {});
     }

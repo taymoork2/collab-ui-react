@@ -19,15 +19,15 @@
               templateUrl: 'modules/huron/pstnSetup/pstnToS/pstnToS.intelepeer.tpl.html',
               controller: 'PstnToSCtrl',
               controllerAs: 'pstnToS',
-              type: 'Large'
+              type: 'Large',
             });
           },
           name: 'pstnToS',
           text: 'pstnSetup.notification.text',
-          linkText: 'pstnSetup.notification.textLink'
+          linkText: 'pstnSetup.notification.textLink',
         };
         return notification;
-      }
+      },
     };
   }
 })();

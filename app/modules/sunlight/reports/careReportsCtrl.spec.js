@@ -8,45 +8,45 @@ describe('Controller: Care Reports Controller', function () {
     label: 'careReportsPage.today',
     description: 'careReportsPage.today2',
     intervalText: 'careReportsPage.todayInterval',
-    categoryAxisTitle: 'careReportsPage.todayCategoryAxis'
+    categoryAxisTitle: 'careReportsPage.todayCategoryAxis',
   }, {
     value: 1,
     label: 'careReportsPage.yesterday',
     description: 'careReportsPage.yesterday2',
     intervalText: 'careReportsPage.yesterdayInterval',
-    categoryAxisTitle: 'careReportsPage.yesterdayCategoryAxis'
+    categoryAxisTitle: 'careReportsPage.yesterdayCategoryAxis',
   }, {
     value: 2,
     label: 'careReportsPage.week',
     description: 'careReportsPage.week2',
     intervalText: 'careReportsPage.weekInterval',
-    categoryAxisTitle: 'careReportsPage.weekCategoryAxis'
+    categoryAxisTitle: 'careReportsPage.weekCategoryAxis',
   }, {
     value: 3,
     label: 'careReportsPage.month',
     description: 'careReportsPage.month2',
     intervalText: 'careReportsPage.monthInterval',
-    categoryAxisTitle: 'careReportsPage.monthCategoryAxis'
+    categoryAxisTitle: 'careReportsPage.monthCategoryAxis',
   }, {
     value: 4,
     label: 'careReportsPage.threeMonths',
     description: 'careReportsPage.threeMonths2',
     intervalText: 'careReportsPage.threeMonthsInterval',
-    categoryAxisTitle: 'careReportsPage.threeMonthsCategoryAxis'
+    categoryAxisTitle: 'careReportsPage.threeMonthsCategoryAxis',
   }];
   var mediaTypeOptions = [{
     name: 'all',
-    label: 'careReportsPage.media_type_all'
+    label: 'careReportsPage.media_type_all',
   }, {
     name: 'chat',
-    label: 'careReportsPage.media_type_chat'
+    label: 'careReportsPage.media_type_chat',
   }, {
     name: 'callback',
-    label: 'careReportsPage.media_type_callback'
+    label: 'careReportsPage.media_type_callback',
   }, {
     name: 'voice',
-    label: 'careReportsPage.media_type_voice'
-  }
+    label: 'careReportsPage.media_type_voice',
+  },
 
   ];
   beforeEach(angular.mock.module('Core'));
@@ -56,7 +56,7 @@ describe('Controller: Care Reports Controller', function () {
   }));
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
-    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org')
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
   };
   beforeEach(
     inject(function ($controller, _$q_, _$translate_, _$timeout_, $rootScope, _CareReportsService_,
@@ -84,7 +84,7 @@ describe('Controller: Care Reports Controller', function () {
         Notification: Notification,
         FeatureToggleService: FeatureToggleService,
         DummyCareReportService: DummyCareReportService,
-        CareReportsService: CareReportsService
+        CareReportsService: CareReportsService,
       });
 
     })
@@ -102,29 +102,6 @@ describe('Controller: Care Reports Controller', function () {
     timeOptions = mediaTypeOptions = spiedAuthinfo = undefined;
   });
 
-  describe('CareReportsController - Care Inbound feature enabled', function () {
-    it('should default to all contact types', function (done) {
-      spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
-      $timeout(function () {
-        expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'all', true]);
-        expect(controller.mediaTypeOptions[3].name).toEqual('voice');
-        done();
-      }, 100);
-      $timeout.flush();
-    });
-  });
-
-  describe('CareReportsController - Inbound disabled', function () {
-    it('should default to chat contact type', function (done) {
-      spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(false));
-      $timeout(function () {
-        expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
-        done();
-      }, 100);
-      $timeout.flush();
-    });
-  });
-
   describe('CareReportsController - Init', function () {
     it('should show five time options', function () {
       expect(controller).toBeDefined();
@@ -132,11 +109,10 @@ describe('Controller: Care Reports Controller', function () {
     });
 
     it('should show two media type options', function () {
-      expect(controller.mediaTypeOptions.length).toEqual(3);
+      expect(controller.mediaTypeOptions.length).toEqual(4);
     });
 
     it('should make calls to data services with correct options', function (done) {
-      spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(false));
       $timeout(function () {
         expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
@@ -159,6 +135,50 @@ describe('Controller: Care Reports Controller', function () {
       }, 1000);
     });
   });
+
+  describe('CareReportsController - Graph title', function () {
+
+    it('should set title for dummydata as empty and todays date for actual data', function () {
+      var title = moment().format('MMM D');
+      $timeout(function () {
+        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toEqual(title);
+        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toEqual(title);
+        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toEqual(title);
+      }, 100);
+    });
+
+    it('should set title for dummydata as empty and Yesterdays date for actual data', function () {
+      controller.timeSelected = timeOptions[1];
+      controller.filtersUpdate();
+      var title = (moment().subtract(1, 'days').format('MMM D'));
+      $timeout(function () {
+        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toEqual(title);
+        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toEqual(title);
+        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toEqual(title);
+      }, 100);
+    });
+
+    it('should set title for dummydata as empty and undefined for actual data when time selected is not today or yesterday', function () {
+      var randomIndex = Math.floor((Math.random() * 3) + 2);
+      controller.timeSelected = timeOptions[randomIndex];
+      controller.filtersUpdate();
+      $timeout(function () {
+        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toBeUndefined();
+      }, 100);
+    });
+  });
+
 
   describe('CareReportsController - Filters Update', function () {
     it('should send options for last week on selection', function () {
@@ -327,7 +347,7 @@ describe('Controller: Care Reports Controller', function () {
 
     var failureResponse = {
       'status': 500,
-      'statusText': 'Intenal Server Error'
+      'statusText': 'Intenal Server Error',
     };
 
     afterAll(function () {
@@ -341,8 +361,8 @@ describe('Controller: Care Reports Controller', function () {
       controller.mediaTypeSelected = mediaTypeOptions[1];
       controller.filtersUpdate().catch(function () {
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Contact Time Measure' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Contacts' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Task Time Measure' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Tasks' });
       }).finally(done());
     });
 
@@ -353,8 +373,8 @@ describe('Controller: Care Reports Controller', function () {
       controller.mediaTypeSelected = mediaTypeOptions[1];
       controller.filtersUpdate().catch(function () {
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Aggregated Contacts' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Contacts' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Aggregated Tasks' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Tasks' });
       }).finally(done());
     });
   });

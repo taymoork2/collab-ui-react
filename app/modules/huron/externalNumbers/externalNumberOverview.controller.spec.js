@@ -19,13 +19,13 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
     $q = _$q_;
 
     $stateParams.currentCustomer = {
-      customerOrgId: '5555-6666'
+      customerOrgId: '5555-6666',
     };
 
     externalNumbers = [{
-      'pattern': '123'
+      'pattern': '123',
     }, {
-      'pattern': '456'
+      'pattern': '456',
     }];
 
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
@@ -37,7 +37,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
     spyOn($state, 'go');
 
     controller = $controller('ExternalNumberOverviewCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
@@ -65,7 +65,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
     ExternalNumberService.getAllNumbers.and.returnValue([]);
     ExternalNumberService.getQuantity.and.returnValue(0);
     controller = $controller('ExternalNumberOverviewCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
     expect(Notification.errorResponse).toHaveBeenCalled();
@@ -77,7 +77,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
     ExternalNumberService.getQuantity.and.returnValue(0);
     delete $stateParams.currentCustomer.customerOrgId;
     controller = $controller('ExternalNumberOverviewCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
     expect(controller.allNumbersCount).toEqual(0);
@@ -90,8 +90,8 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com',
         communications: {
-          isTrial: true
-        }
+          isTrial: true,
+        },
       };
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
@@ -101,7 +101,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: true,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -111,8 +111,8 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com',
         communications: {
-          isTrial: false
-        }
+          isTrial: false,
+        },
       };
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
@@ -122,7 +122,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: false,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -130,7 +130,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
       controller.currentCustomer = {
         customerOrgId: '1234-34534-afdagfg-425345-afaf',
         customerName: 'ControllerTestOrg',
-        customerEmail: 'customer@cisco.com'
+        customerEmail: 'customer@cisco.com',
       };
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
@@ -140,7 +140,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: true,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -151,8 +151,8 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerEmail: 'customer@cisco.com',
         isPartner: true,
         communications: {
-          isTrial: true
-        }
+          isTrial: true,
+        },
       };
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
@@ -162,7 +162,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: false,
-        customerRoomSystemsLicenseIsTrial: false
+        customerRoomSystemsLicenseIsTrial: false,
       });
     });
   });
@@ -170,7 +170,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
   describe('updatePhoneNumberCount', function () {
     it('should query for all number types', function () {
       controller.currentCustomer = {
-        customerOrgId: '1234-5678'
+        customerOrgId: '1234-5678',
       };
       $scope.$apply();
 

@@ -12,11 +12,18 @@
     vm.allNumbersCount = 0;
     vm.isTerminusCustomer = isTerminusCustomer;
     vm.isHuronSupportThinktel = false;
+    vm.callAction = [{
+      actionKey: 'customerPage.addNumbers',
+      actionFunction: isTerminusCustomer,
+    }];
     var ALL = 'all';
 
     //(Paul Clark)This will be used for new "PstnProviders.component.ts"
     FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (result) {
       vm.isHuronSupportThinktel = result;
+    });
+    FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (results) {
+      vm.hPstn = results;
     });
     updatePhoneNumberCount();
 
@@ -49,17 +56,16 @@
     function isTerminusCustomer() {
       ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId).then(function (response) {
         if (response) {
-          return $state.go('pstnSetup', {
+          var state = vm.hPstn ? 'pstnWizard' : 'pstnSetup';
+          return $state.go(state, {
             customerId: vm.currentCustomer.customerOrgId,
             customerName: vm.currentCustomer.customerName,
             customerEmail: vm.currentCustomer.customerEmail,
             customerCommunicationLicenseIsTrial: getCommTrial(vm.currentCustomer, 'communications'),
-            customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems')
+            customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems'),
           });
         } else {
-          return $state.go('didadd', {
-            currentOrg: vm.currentCustomer
-          });
+          return Notification.error('pstnSetup.errors.customerNotFound');
         }
       });
     }

@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('AccountOrgService', AccountOrgService);
+  module.exports = angular.module('core.accountOrgService', [
+    require('modules/core/config/urlConfig'),
+    require('modules/core/scripts/services/authinfo'),
+  ])
+    .service('AccountOrgService', AccountOrgService)
+    .name;
 
   /* @ngInject */
   function AccountOrgService($http, $q, UrlConfig) {
@@ -20,7 +23,7 @@
       deleteOrgSettings: deleteOrgSettings,
       getOrgSettings: getOrgSettings,
       getAppSecurity: getAppSecurity,
-      setAppSecurity: setAppSecurity
+      setAppSecurity: setAppSecurity,
     };
 
     return service;
@@ -78,8 +81,8 @@
         'id': org,
         'settings': [{
           'key': 'orgCloudSipUri',
-          'value': cloudSipUri + '.ciscospark.com'
-        }]
+          'value': cloudSipUri + '.ciscospark.com',
+        }],
       };
 
       return $http.put(url, request);
@@ -91,8 +94,8 @@
         'id': org,
         'settings': [{
           'key': 'dataRetentionPeriodDays',
-          'value': dataRetentionPeriodDays
-        }]
+          'value': dataRetentionPeriodDays,
+        }],
       };
 
       return $http.put(url, request);
@@ -104,8 +107,8 @@
         'id': org,
         'settings': [{
           'key': 'dataRetentionPeriodDays',
-          'value': dataRetentionPeriodDays
-        }]
+          'value': dataRetentionPeriodDays,
+        }],
       };
 
       return $http.patch(url, request);
@@ -143,7 +146,7 @@
       var url = getDeviceSettingsUrl(org) + '/clientSecurityPolicy';
 
       return $http.put(url, {
-        clientSecurityPolicy: appSecurityStatus
+        clientSecurityPolicy: appSecurityStatus,
       });
 
     }

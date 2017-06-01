@@ -10,13 +10,13 @@ export class SipDomainSettingController {
   public isDisabled: boolean = false;
   public isButtonDisabled: boolean = false;
   public isLoading: boolean = false;
+  public isSubdomainLoading = false;
   public isConfirmed: boolean = false;
   public errorMsg: string;
 
   public saving: boolean;
   public toggle: boolean;
   public showSaveButton: boolean;
-  private _inputValue: string = '';
   public currentDisplayName: string;
   public domainSuffix: string;
   public isRoomLicensed: boolean = false;
@@ -32,27 +32,34 @@ export class SipDomainSettingController {
     subdomainUnavailable: this.$translate.instant('firstTimeWizard.subdomainUnavailable'),
   };
 
+  private isCsc: boolean = false;
+  private _inputValue: string = '';
+
   private readonly ACTIVATE_SAVE_BUTTONS: string = 'settings-control-activate-footer';
   private readonly REMOVE_SAVE_BUTTONS: string = 'settings-control-remove-footer';
   private readonly SAVE_BROADCAST: string = 'settings-control-save';
   private readonly CANCEL_BROADCAST: string = 'settings-control-cancel';
   private readonly WIZARD_BROADCAST: string = 'wizard-enterprise-sip-url-event';
+  private readonly WIZARD_EMIT: string = 'wizard-enterprise-sip-save';
   private readonly DISMISS_BROADCAST: string = 'DISMISS_SIP_NOTIFICATION';
   private readonly DISMISS_DISABLE: string = 'wizardNextButtonDisable';
+  private readonly WIZARD_NEXT_LOADING: string = 'wizardNextButtonLoading';
 
   /* @ngInject */
   constructor(
-    private $scope: ng.IScope,
+    private $modal,
     private $rootScope: ng.IRootScopeService,
-    private Notification: Notification,
-    private FeatureToggleService,
-    private Config,
-    private Orgservice,
-    private SparkDomainManagementService,
+    private $scope: ng.IScope,
+    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
-    private $window,
+    private $window: ng.IWindowService,
+    private Config,
+    private FeatureToggleService,
+    private Notification: Notification,
+    private Orgservice,
+    private ServiceDescriptor,
+    private SparkDomainManagementService,
     private UrlConfig,
-    private ModalService,
   ) {
     this.FeatureToggleService.atlasSubdomainUpdateGetStatus().then((status: boolean): void => {
       this.toggle = status;
@@ -62,13 +69,24 @@ export class SipDomainSettingController {
       this.subdomainCount++;
       this.checkRoomLicense();
 
-      if (this.toggle) {
-        let onSaveEventDeregister = this.$rootScope.$on(this.WIZARD_BROADCAST, (): void => {
+      let onSaveEventDeregister = this.$scope.$on(this.WIZARD_BROADCAST, (): void => {
+        if (this.toggle) {
           if (this.inputValue === this.currentDisplayName) {
-            return;
+            this.$rootScope.$emit(this.WIZARD_EMIT);
+          } else if (this.isSSAReserved) {
+            this.$timeout(() => this.updateSubdomain());
           } else {
-            this.saveSubdomain();
+            this.$timeout(() => this.saveSubdomain());
           }
+        } else {
+          this.$timeout(() => this.saveDomain());
+        }
+      });
+      $scope.$on('$destroy', onSaveEventDeregister);
+
+      if (this.toggle) {
+        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec').then((enabled: boolean): void => {
+          this.isCsc = enabled;
         });
 
         let onSettingsSaveEventDeregister = this.$rootScope.$on(this.SAVE_BROADCAST, (): void => {
@@ -79,15 +97,11 @@ export class SipDomainSettingController {
           this.toggleSipForm();
         });
 
-        $scope.$on('$destroy', onSaveEventDeregister);
         $scope.$on('$destroy', onSettingsSaveEventDeregister);
         $scope.$on('$destroy', onSettingsCancelEventDeregister);
         this.loadSubdomains();
       } else {
         this.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessage');
-        let onSaveEventDeregister = $rootScope.$on(this.WIZARD_BROADCAST, this.saveDomain.bind(this));
-        $scope.$on('$destroy', onSaveEventDeregister);
-
         this.loadSipDomain();
         this.checkSSAReservation();
       }
@@ -129,6 +143,7 @@ export class SipDomainSettingController {
 
   public saveDomain() {
     if (this.isUrlAvailable && this.isConfirmed) {
+      this.$scope.$emit(this.WIZARD_NEXT_LOADING, true);
       this.SparkDomainManagementService.addSipDomain(this._validatedValue)
         .then((response) => {
           if (response.data.isDomainReserved) {
@@ -141,7 +156,13 @@ export class SipDomainSettingController {
         })
         .catch((response) => {
           this.Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+        })
+        .finally(() => {
+          this.$scope.$emit(this.WIZARD_NEXT_LOADING, false);
+          this.$rootScope.$emit(this.WIZARD_EMIT);
         });
+    } else {
+      this.$rootScope.$emit(this.WIZARD_EMIT);
     }
   }
 
@@ -160,7 +181,6 @@ export class SipDomainSettingController {
           this.isError = true;
           this.isButtonDisabled = false;
         }
-        this.isLoading = false;
       })
       .catch((response) => {
         if (response.status === 400) {
@@ -169,12 +189,17 @@ export class SipDomainSettingController {
         } else {
           this.Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
-        this.isLoading = false;
         this.isButtonDisabled = false;
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 
   private loadSipDomain() {
+    let params = {
+      basicInfo: true,
+    };
     this.Orgservice.getOrg((data, status) => {
       let displayName = '';
       let sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
@@ -191,10 +216,16 @@ export class SipDomainSettingController {
       }
       this._inputValue = displayName;
       this.currentDisplayName = displayName;
-    }, false, true);
+    }, false, params);
   }
 
   // Used in New Feature
+  public editSubdomain() {
+    if (!this.isCsc) {
+      this.toggleSipForm();
+    }
+  }
+
   public emptyOrUnchangedInput(): boolean {
     return this.inputValue === '' || _.isUndefined(this.inputValue) || _.isNull(this.inputValue) || this.inputValue === this.currentDisplayName;
   }
@@ -222,6 +253,7 @@ export class SipDomainSettingController {
   }
 
   public verifyAvailabilityAndValidity(): void {
+    this.isSubdomainLoading = true;
     this.SparkDomainManagementService.checkDomainAvailability(this.inputValue)
       .then((response) => {
         this.resetErrors();
@@ -242,11 +274,15 @@ export class SipDomainSettingController {
         } else {
           this.errorResponse(response);
         }
+      })
+      .finally(() => {
+        this.isSubdomainLoading = false;
       });
   }
 
   private saveSubdomain(): void {
     this.saving = true;
+    this.$scope.$emit(this.WIZARD_NEXT_LOADING, true);
     this.SparkDomainManagementService.addSipDomain(this.inputValue).then((response: any): void => {
       this.verified = false;
       if (response.data.isDomainReserved) {
@@ -267,17 +303,17 @@ export class SipDomainSettingController {
       } else {
         this.errorResponse(response);
       }
+    }).finally(() => {
+      this.$scope.$emit(this.WIZARD_NEXT_LOADING, false);
+      this.$rootScope.$emit(this.WIZARD_EMIT);
     });
   }
 
   private updateSubdomain(): void {
     this.saving = true;
-    this.ModalService.open({
-      title: this.$translate.instant('firstTimeWizard.setSipDomainTitle'),
-      message: this.$translate.instant('firstTimeWizard.updateSubdomainMessage'),
-      close: this.$translate.instant('common.yes'),
-      dismiss: this.$translate.instant('common.no'),
-      btnType: 'negative',
+    this.$modal.open({
+      templateUrl: 'modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html',
+      type: 'dialog',
     }).result.then((): void => {
       this.saveSubdomain();
     }).catch((): void => {
@@ -288,12 +324,15 @@ export class SipDomainSettingController {
 
   private checkRoomLicense() {
     this.Orgservice.getLicensesUsage().then((response) => {
-      let licenses: any = _.get(response, '[0].licenses');
-      let roomLicensed = _.find(licenses, {
-        offerName: 'SD',
+      this.isRoomLicensed = _.some(response, function (subscription) {
+        let licenses = _.get(subscription, 'licenses');
+        return _.some(licenses, function (license) {
+          return _.get(license, 'offerName') === 'SD' || _.get(license, 'offerName') === 'SB';
+        });
       });
-      this.isRoomLicensed = !_.isUndefined(roomLicensed);
-      this.subdomainCount++;
+      if (this.isRoomLicensed) {
+        this.subdomainCount++;
+      }
     });
   }
 
@@ -321,6 +360,10 @@ export class SipDomainSettingController {
   }
 
   private loadSubdomains() {
+    let params = {
+      basicInfo: true,
+      disableCache: true,
+    };
     this.Orgservice.getOrg((data, status) => {
       let displayName = '';
       let sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
@@ -340,9 +383,7 @@ export class SipDomainSettingController {
       if (this.Config.isE2E()) {
         this.$scope.$emit(this.DISMISS_DISABLE, false);
       }
-    }, false, true);
+    }, false, params);
   }
 
 }
-angular.module('Core')
-  .controller('SipDomainSettingController', SipDomainSettingController);

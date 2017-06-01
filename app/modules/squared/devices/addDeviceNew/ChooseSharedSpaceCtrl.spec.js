@@ -7,20 +7,23 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$stateParams_, _$state_, _$q_, _CsdmDataModelService_) {
+  beforeEach(inject(function (_$controller_, $httpBackend, $rootScope, _$stateParams_, _$state_, _$q_, _CsdmDataModelService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
     $stateParams = _$stateParams_;
     $q = _$q_;
     CsdmDataModelService = _CsdmDataModelService_;
+
+    $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?type=all&query=xy').respond($q.resolve({}));
   }));
 
   function initController() {
+
     controller = $controller('ChooseSharedSpaceCtrl', {
       $scope: $scope,
       $state: $state,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
   }
 
@@ -39,11 +42,11 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
             data: {
               title: title,
               account: {
-                deviceType: deviceType
-              }
-            }
+                deviceType: deviceType,
+              },
+            },
           };
-        }
+        },
       };
       initController();
 
@@ -62,7 +65,7 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
       deviceCisUuid = 'deviceCisUuid';
       deviceType = 'deviceType';
       radioSelect = 'radioSelect';
-      spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({}));
+      spyOn(CsdmDataModelService, 'getSearchPlacesMap').and.returnValue($q.resolve({}));
     });
 
     it('should set the wizardState with correct fields for show activation code modal without personal, without addPlace and without radioSelect', function () {
@@ -71,12 +74,12 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                deviceType: deviceType
-              }
-            }
+                deviceType: deviceType,
+              },
+            },
           };
         },
-        next: function () {}
+        next: function () {},
       };
       initController();
       controller.deviceName = deviceDisplayName;
@@ -100,12 +103,12 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
             data: {
               function: 'addPlace',
               account: {
-                deviceType: deviceType
-              }
-            }
+                deviceType: deviceType,
+              },
+            },
           };
         },
-        next: function () {}
+        next: function () {},
       };
       initController();
       controller.deviceName = deviceDisplayName;
@@ -128,12 +131,12 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                deviceType: deviceType
-              }
-            }
+                deviceType: deviceType,
+              },
+            },
           };
         },
-        next: function () {}
+        next: function () {},
       };
       initController();
       controller.deviceName = deviceDisplayName;
@@ -157,13 +160,13 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                deviceType: deviceType
+                deviceType: deviceType,
               },
-              showPersonal: true
-            }
+              showPersonal: true,
+            },
           };
         },
-        next: function () {}
+        next: function () {},
       };
       initController();
       controller.deviceName = deviceDisplayName;

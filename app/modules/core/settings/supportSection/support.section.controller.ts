@@ -1,6 +1,6 @@
 import { Notification } from 'modules/core/notifications';
 
-export class SupportSettings {
+export class SupportSettingsController {
 
   private customSupport = { enable: false, url: '', text: '' };
   private oldCustomSupport = { enable: false, url: '', text: '' };
@@ -111,6 +111,10 @@ export class SupportSettings {
       });
     });
 
+    let params = {
+      basicInfo: true,
+      disableCache: true,
+    };
     this.Orgservice.getOrg((data, status) => {
       if (data.success) {
         let settings = data.orgSettings;
@@ -148,7 +152,7 @@ export class SupportSettings {
         this.Log.debug('Get existing org failed. Status: ' + status);
       }
 
-    }, this.orgId, true);
+    }, this.orgId, params);
   }
 
   public saveUseCustomSupportUrl() {
@@ -244,6 +248,3 @@ class Partner {
   public displayName: string;
   public name: { givenName: string, familyName: string };
 }
-angular
-  .module('Core')
-  .controller('SupportSettings', SupportSettings);

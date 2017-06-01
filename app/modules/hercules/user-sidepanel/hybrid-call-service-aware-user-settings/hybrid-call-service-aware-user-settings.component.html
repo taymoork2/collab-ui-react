@@ -1,0 +1,120 @@
+<cs-sp-buttons ng-show="$ctrl.showSaveButton()">
+  <button class="btn-primary"
+          ng-click="$ctrl.save()"
+          cs-btn
+          loading="$ctrl.savingPage">
+    <span translate="common.save"></span>
+  </button>
+  <button class="btn-default"
+          ng-click="$ctrl.cancel()"
+          cs-btn
+          loading="$ctrl.savingPage">
+    <span translate="common.cancel"></span>
+  </button>
+</cs-sp-buttons>
+<cs-sp-container>
+    <cs-sp-section class="cloud-extensions">
+      <div class="section-title-row">
+        <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
+        <cs-toggle-switch toggle-id="callServiceAwareEntitledToggle"
+                          ng-model="$ctrl.entitledToggle"
+                          cs-change="$ctrl.changeEntitlement(toggleValue)"
+                          size="small"
+                          ng-if="!$ctrl.loadingPage && !$ctrl.couldNotReadUser">
+        </cs-toggle-switch>
+        <cs-toggle-switch ng-if="!$ctrl.loadingPage && $ctrl.couldNotReadUser"
+                          is-disabled="true"
+                          size="small">
+        </cs-toggle-switch>
+        <span cs-loader
+              class="cloud-extension-label loader-example--small"
+              ng-if="$ctrl.loadingPage"></span>
+      </div>
+      <div>
+      <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' | translate}}</p>
+
+        <div class="row collapse">
+          <div class="columns small-3">
+            <span class="cloud-extension-label">{{::'cloudExtensions.status' | translate}}:</span>
+          </div>
+          <div class="columns small-7 normal-line-height"
+               ng-if="!$ctrl.loadingPage">
+            <span class="cloud-extension-label"
+                  ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware"
+                  ng-class="'status-' + $ctrl.userStatusAware.state"
+                  id="callServiceAwareStatus"
+                  translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.userStatusAware)}}"></span>
+
+            <span class="cloud-extension-label last-state-change-timestamp"
+                  ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware && $ctrl.userStatusAware.lastStateChangeText">
+            {{$ctrl.userStatusAware.lastStateChangeText}}
+            </span>
+
+            <span class="cloud-extension-label status-off"
+                  ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser"
+                  translate="common.off"></span>
+
+            <span class="cloud-extension-label status-off"
+                  ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser"
+                  translate="common.unknown"></span>
+          </div>
+
+          <div class="columns small-7 normal-line-height"
+               ng-if="$ctrl.loadingPage">
+            <span cs-loader class="cloud-extension-label loader-example--small"></span>
+          </div>
+
+          <div class="columns small-2">
+            <span ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware"
+                  class="cloud-extension-label right">
+              <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings.uc-history"
+                 translate="hercules.userHistory.seeHistory"></a>
+            </span>
+          </div>
+        </div>
+
+        <div class="row collapse" ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.homedCluster">
+          <div class="columns small-3">
+            <span class="cloud-extension-label">{{::'cloudExtensions.cluster' | translate}}:</span>
+          </div>
+          <div class="columns small-9">
+            <span class="cloud-extension-label">{{$ctrl.homedCluster.name}}</span>
+          </div>
+        </div>
+
+        <div class="row collapse" ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.homedConnector">
+          <div class="columns small-3">
+            <span class="cloud-extension-label">{{::'hercules.connectors.host_name' | translate}}:</span>
+          </div>
+          <div class="columns small-9">
+            <span class="cloud-extension-label">
+              <a href="https://{{$ctrl.homedConnector.hostname}}" target="_blank">{{$ctrl.homedConnector.hostname}}</a>
+            </span>
+          </div>
+        </div>
+
+        <div class="row collapse" ng-if="$ctrl.directoryUri || ($ctrl.userStatusAware.state === 'error' || $ctrl.userStatusAware.state === 'activated')">
+          <div class="columns small-3">
+            <span class="cloud-extension-label">{{::'cloudExtensions.sipUri' | translate}}:</span>
+          </div>
+          <div class="columns small-9">
+            <span ng-if="$ctrl.directoryUri"
+                  class="cloud-extension-label">{{$ctrl.directoryUri}}</span>
+            <span ng-if="!$ctrl.directoryUri"
+                  class="cloud-extension-label status-error"
+                  translate="common.notFound"></span>
+          </div>
+        </div>
+
+        <div ng-if="$ctrl.domainVerificationError" class="error-message">
+          <i class="icon icon-error"></i>
+          <p class="message">
+            <span translate="hercules.domain-verification.domain-not-verified"></span>
+            <span translate="hercules.domain-verification.navigateToCallSettings"
+                  translate-value-onclick="$ctrl.navigateToCallSettings()" translate-compile></span>
+          </p>
+        </div>
+
+      </div>
+    </cs-sp-section>
+</cs-sp-container>

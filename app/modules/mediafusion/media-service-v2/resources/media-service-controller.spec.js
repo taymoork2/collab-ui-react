@@ -18,16 +18,3 @@ describe('Controller: MediaServiceControllerV2', function () {
   });
 
 });
-
-describe('Controller: MediaAlarmControllerV2', function () {
-
-  beforeEach(angular.mock.module('Mediafusion'));
-
-  var controller;
-  beforeEach(inject(function ($controller) {
-    controller = $controller('MediaAlarmControllerV2', {});
-  }));
-  it('controller should be defined', function () {
-    expect(controller).toBeDefined();
-  });
-});

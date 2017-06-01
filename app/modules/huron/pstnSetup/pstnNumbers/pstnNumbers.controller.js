@@ -14,11 +14,11 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, ValidationService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnModel, PstnService, PhoneNumberService, PstnSetupStatesService, ValidationService, FeatureToggleService) {
     var vm = this;
 
-    vm.provider = PstnSetup.getProvider();
-    vm.orderCart = PstnSetup.getOrders();
+    vm.provider = PstnModel.getProvider();
+    vm.orderCart = PstnModel.getOrders();
 
     var baseModel = {
       addDisabled: true,
@@ -38,26 +38,35 @@
       searchResultsModel: {},
       showAdvancedOrder: false,
       state: '',
-      states: []
+      states: [],
     };
 
     vm.model = {
       pstn: _.clone(baseModel),
-      tollFree: _.clone(baseModel)
+      tollFree: _.clone(baseModel),
     };
 
     vm.orderNumbersTotal = 0;
-    vm.showPortNumbers = !PstnSetup.getIsTrial();
-    vm.showTollFreeNumbers = !PstnSetup.getIsTrial();
-    var BLOCK_ORDER = PstnSetupService.BLOCK_ORDER;
-    var PORT_ORDER = PstnSetupService.PORT_ORDER;
-    var NUMBER_ORDER = PstnSetupService.NUMBER_ORDER;
-    var NUMTYPE_DID = PstnSetupService.NUMTYPE_DID;
-    var NUMTYPE_TOLLFREE = PstnSetupService.NUMTYPE_TOLLFREE;
+    vm.tollFreeTitle = $translate.instant('pstnSetup.tollFreeTitle', {
+      areaCodes: '',
+    });
+    vm.showTollFreeNumbers = false;
+    vm.isTrial = PstnModel.getIsTrial();
+    vm.showPortNumbers = !vm.isTrial;
+    var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
+    var PORT_ORDER = require('modules/huron/pstn').PORT_ORDER;
+    var NUMBER_ORDER = require('modules/huron/pstn').NUMBER_ORDER;
+    var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
+    var NUMTYPE_TOLLFREE = require('modules/huron/pstn').NUMTYPE_TOLLFREE;
     var NXX = 'nxx';
     var NXX_EMPTY = '--';
     var MIN_BLOCK_QUANTITY = 2;
     var MAX_BLOCK_QUANTITY = 100;
+    var MIN_VALID_CODE = 3;
+    var MAX_VALID_CODE = 6;
+    var MAX_DID_QUANTITY = 100;
+    //carrier capabilities
+    var TOLLFREE_ORDERING_CAPABILITY = 'TOLLFREE_ORDERING';
 
     vm.addToCart = addToCart;
     vm.addAdvancedOrder = addAdvancedOrder;
@@ -69,11 +78,15 @@
     vm.getStateInventory = getStateInventory;
     vm.getAreaNxx = getAreaNxx;
     vm.searchCarrierInventory = searchCarrierInventory;
+    vm.searchCarrierTollFreeInventory = searchCarrierTollFreeInventory;
+    vm.getCapabilities = getCapabilities;
     vm.onBlockClick = onBlockClick;
+    vm.resultChange = resultChange;
 
     vm.formatTelephoneNumber = formatTelephoneNumber;
     vm.showOrderQuantity = showOrderQuantity;
     vm.searchResults = [];
+    vm.locationLabel = '';
 
     vm.model.pstn.paginateOptions = {
       currentPage: 0,
@@ -88,7 +101,7 @@
       nextPage: function () {
         vm.model.pstn.searchResultsModel = {};
         this.currentPage++;
-      }
+      },
     };
 
     $scope.$watchCollection(function () {
@@ -110,23 +123,38 @@
       nextPage: function () {
         vm.model.tollFree.searchResultsModel = {};
         this.currentPage++;
-      }
+      },
     };
 
     init();
 
     function init() {
-      PstnSetupStatesService.getStateProvinces().then(function (states) {
+      PstnSetupStatesService.getLocation(PstnModel.getCountryCode()).then(function (location) {
         vm.model.pstn.quantity = null;
-        vm.model.pstn.states = states;
-        if (_.get(PstnSetup.getServiceAddress(), 'state')) {
+        vm.locationLabel = location.type;
+        vm.model.pstn.states = location.areas;
+        if (_.get(PstnModel.getServiceAddress(), 'state')) {
           vm.model.pstn.state = {
-            abbreviation: PstnSetup.getServiceAddress().state,
-            name: _.result(_.find(states, {
-              'abbreviation': PstnSetup.getServiceAddress().state
-            }), 'name')
+            abbreviation: PstnModel.getServiceAddress().state,
+            name: _.result(_.find(vm.model.pstn.states, {
+              'abbreviation': PstnModel.getServiceAddress().state,
+            }), 'name'),
           };
-          getStateInventory();
+        }
+      });
+      getCapabilities();
+      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
+      .then(function (results) {
+        vm.ftHuronFederatedSparkCall = results;
+        if (!results) {
+          $scope.$watchCollection(function () {
+            return vm.model.tollFree.searchResultsModel;
+          }, function (searchResultsModel) {
+            // set disabled in next digest because of cs-btn
+            $timeout(function () {
+              vm.model.tollFree.addDisabled = !_.includes(searchResultsModel, true);
+            });
+          });
         }
       });
     }
@@ -149,7 +177,7 @@
           filter: true,
           onChangeFn: function () {
             vm.model.tollFree.showAdvancedOrder = false;
-          }
+          },
         },
         controller: /* @ngInject */ function ($scope) {
           $scope.$watchCollection(function () {
@@ -158,7 +186,7 @@
             newAreaCodes = newAreaCodes || [];
             $scope.to.options = _.sortBy(newAreaCodes, 'code');
           });
-        }
+        },
       }, {
         type: 'input',
         key: 'tollFree.quantity',
@@ -166,7 +194,7 @@
         className: 'medium-2 columns',
         templateOptions: {
           required: true,
-          label: $translate.instant('pstnSetup.quantity')
+          label: $translate.instant('pstnSetup.quantity'),
         },
         hideExpression: function () {
           return !vm.model.tollFree.block;
@@ -176,15 +204,15 @@
             expression: ValidationService.positiveNumber,
             message: function () {
               return $translate.instant('validation.positiveNumber');
-            }
+            },
           },
           maxValue: {
             expression: ValidationService.maxNumber100,
             message: function () {
               return $translate.instant('validation.maxNumber100');
-            }
-          }
-        }
+            },
+          },
+        },
       }, {
         type: 'button',
         key: 'searchBtn',
@@ -192,14 +220,14 @@
         templateOptions: {
           btnClass: 'btn btn--circle primary',
           spanClass: 'icon icon-search',
-          onClick: searchCarrierTollFreeInventory
+          onClick: searchCarrierTollFreeInventory,
         },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return !scope.model.tollFree.areaCode || !scope.model.tollFree.quantity;
-          }
-        }
-      }]
+          },
+        },
+      }],
     }, {
       className: 'row',
       fieldGroup: [{
@@ -215,19 +243,19 @@
             if (!vm.model.tollFree.block) {
               vm.model.tollFree.quantity = 1;
             }
-          }
-        }
+          },
+        },
       }, {
         className: '',
         noFormControl: true,
-        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>'
-      }]
+        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>',
+      }],
     }];
 
     ////////////////////////
 
     function getStateInventory() {
-      PstnSetupService.getCarrierInventory(PstnSetup.getProviderId(), vm.model.pstn.state.abbreviation)
+      PstnService.getCarrierInventory(PstnModel.getProviderId(), vm.model.pstn.state.abbreviation)
         .then(function (response) {
           vm.model.pstn.areaCodeOptions = _.sortBy(response.areaCodes, 'code');
           vm.model.pstn.areaCode = '';
@@ -246,7 +274,7 @@
 
     function getAreaNxx() {
       vm.model.pstn.searchEnable = true;
-      PstnSetupService.getCarrierInventory(PstnSetup.getProviderId(),
+      PstnService.getCarrierInventory(PstnModel.getProviderId(),
         vm.model.pstn.state.abbreviation, vm.model.pstn.areaCode.code)
         .then(function (response) {
           if (!_.isEmpty(response)) {
@@ -264,14 +292,45 @@
     }
 
     function getTollFreeInventory() {
-      PstnSetupService.getCarrierTollFreeInventory(PstnSetup.getProviderId())
+      PstnService.getCarrierTollFreeInventory(PstnModel.getProviderId())
         .then(function (response) {
           vm.model.tollFree.areaCodeOptions = response.areaCodes;
+          var areaCodes = '';
+          response.areaCodes.map(function (areaCode, index, array) {
+            areaCodes += areaCode.code;
+            if (array.length !== index + 1) {
+              areaCodes += ', ';
+            } else {
+              areaCodes += '.';
+            }
+            return areaCode;
+          });
+          vm.tollFreeTitle = $translate.instant('pstnSetup.tollFreeTitle', {
+            areaCodes: areaCodes,
+          });
           vm.model.tollFree.areaCode = '';
         })
         .catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.errors.tollfree.areacodes');
         });
+    }
+
+    function getCapabilities() {
+      if (!vm.isTrial) {
+        PstnService.getCarrierCapabilities(PstnModel.getProviderId())
+          .then(function (response) {
+            var supportedCapabilities = [];
+            for (var x in response) {
+              supportedCapabilities.push(response[x].capability);
+            }
+            if (supportedCapabilities.indexOf(TOLLFREE_ORDERING_CAPABILITY) !== -1) {
+              vm.showTollFreeNumbers = true;
+            }
+          })
+          .catch(function (response) {
+            Notification.errorResponse(response, 'pstnSetup.errors.capabilities');
+          });
+      }
     }
 
     function onBlockClick() {
@@ -286,6 +345,10 @@
       }
     }
 
+    function resultChange(change) {
+      vm.model.pstn.searchResultsModel = change;
+    }
+
     function isSingleResult() {
       if (!vm.model.pstn.block) {
         return true;
@@ -298,9 +361,9 @@
 
     function getCount() {
       if (!vm.model.pstn.block) {
-        return 1; //1 causes the search to return all pstn's
+        return MAX_DID_QUANTITY;
       }
-      return (vm.model.pstn.quantity ? vm.model.pstn.quantity : 1);
+      return (vm.model.pstn.quantity ? vm.model.pstn.quantity : MAX_DID_QUANTITY);
     }
 
     function getNxxValue() {
@@ -312,13 +375,32 @@
       return null;
     }
 
-    function searchCarrierInventory() {
+    function searchCarrierInventory(areaCode, block, quantity, consecutive) {
+      if (areaCode) {
+        vm.model.pstn.showNoResult = false;
+        areaCode = '' + areaCode;
+        vm.model.pstn.areaCode = {
+          code: areaCode.slice(0, MIN_VALID_CODE),
+        };
+        vm.model.pstn.block = block;
+        vm.model.pstn.quantity = quantity;
+        vm.model.pstn.consecutive = consecutive;
+        if (areaCode.length === MAX_VALID_CODE) {
+          vm.model.pstn.nxx = {
+            code: areaCode.slice(MIN_VALID_CODE, areaCode.length),
+          };
+        } else {
+          vm.model.pstn.nxx = {
+            code: null,
+          };
+        }
+      }
       vm.model.pstn.showAdvancedOrder = false;
       var field = this;
       var params = {
         npa: vm.model.pstn.areaCode.code,
         count: getCount(),
-        sequential: vm.model.pstn.consecutive
+        sequential: vm.model.pstn.consecutive,
       };
       //add optional nxx parameter
       var nxx = getNxxValue();
@@ -332,12 +414,30 @@
       vm.model.pstn.isSingleResult = isSingleResult();
       field.loading = true;
 
-      PstnSetupService.searchCarrierInventory(PstnSetup.getProviderId(), params)
+      PstnService.searchCarrierInventory(PstnModel.getProviderId(), params)
         .then(function (numberRanges) {
           if (numberRanges.length === 0) {
-            vm.model.pstn.showAdvancedOrder = true;
+            if (vm.isTrial) {
+              vm.model.pstn.showNoResult = true;
+            } else {
+              vm.model.pstn.showAdvancedOrder = true;
+            }
+
           } else if (vm.model.pstn.isSingleResult) {
-            vm.model.pstn.searchResults = _.flatten(numberRanges);
+            if (areaCode && areaCode.length > MIN_VALID_CODE) {
+              vm.model.pstn.searchResults = _.flatten(numberRanges).filter(function (number) {
+                return number.includes(areaCode);
+              });
+              if (vm.model.pstn.searchResults.length === 0) {
+                if (vm.isTrial) {
+                  vm.model.pstn.showNoResult = true;
+                } else {
+                  vm.model.pstn.showAdvancedOrder = true;
+                }
+              }
+            } else {
+              vm.model.pstn.searchResults = _.flatten(numberRanges);
+            }
           } else {
             vm.model.pstn.searchResults = numberRanges;
           }
@@ -350,20 +450,34 @@
         });
     }
 
-    function searchCarrierTollFreeInventory() {
+    function searchCarrierTollFreeInventory(areaCode, block, quantity, consecutive) {
       vm.model.tollFree.showAdvancedOrder = false;
       var field = this;
+      if (_.isString(areaCode)) {
+        vm.model.tollFree.block = block;
+        vm.model.tollFree.quantity = quantity;
+        vm.model.tollFree.consecutive = consecutive;
+        if (areaCode) {
+          areaCode = '' + areaCode;
+          vm.model.tollFree.areaCode = {
+            code: areaCode.slice(0, MIN_VALID_CODE),
+          };
+        }
+        vm.model.tollFree.isSingleResult = !block;
+      }
       var params = {
         npa: vm.model.tollFree.areaCode.code,
-        count: vm.model.tollFree.quantity === 1 ? undefined : vm.model.tollFree.quantity
+        count: vm.model.tollFree.quantity === 1 ? undefined : vm.model.tollFree.quantity,
       };
       vm.model.tollFree.searchResults = [];
       vm.model.tollFree.searchResultsModel = {};
       vm.model.tollFree.paginateOptions.currentPage = 0;
-      vm.model.tollFree.isSingleResult = vm.model.tollFree.quantity == 1;
+      if (!_.isString(areaCode)) {
+        vm.model.tollFree.isSingleResult = vm.model.tollFree.quantity == 1;
+      }
       field.loading = true;
 
-      PstnSetupService.searchCarrierTollFreeInventory(PstnSetup.getProviderId(), params)
+      PstnService.searchCarrierTollFreeInventory(PstnModel.getProviderId(), params)
         .then(function (numberRanges) {
           if (numberRanges.length === 0) {
             vm.model.tollFree.showAdvancedOrder = true;
@@ -381,7 +495,22 @@
         });
     }
 
-    function addToCart(orderType, numberType) {
+    function addToCart(orderType, numberType, quantity, searchResultsModel) {
+      if (quantity) {
+        if (numberType === NUMTYPE_DID) {
+          vm.model.pstn.quantity = quantity;
+        } else if (numberType === NUMTYPE_TOLLFREE) {
+          vm.model.tollFree.quantity = quantity;
+        }
+      }
+      if (searchResultsModel) {
+        if (numberType === NUMTYPE_DID) {
+          vm.model.pstn.searchResultsModel = searchResultsModel;
+        } else if (numberType === NUMTYPE_TOLLFREE) {
+          vm.model.tollFree.searchResultsModel = searchResultsModel;
+        }
+      }
+
       switch (orderType) {
         case NUMBER_ORDER:
           addToOrder(numberType);
@@ -415,25 +544,25 @@
           if (searchResultsIndex < model.searchResults.length) {
             var numbers = model.searchResults[searchResultsIndex];
             if (numberType === NUMTYPE_DID) {
-              reservation = PstnSetupService.reserveCarrierInventoryV2(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
+              reservation = PstnService.reserveCarrierInventoryV2(PstnModel.getCustomerId(), PstnModel.getProviderId(), numbers, PstnModel.isCustomerExists());
             } else if (numberType === NUMTYPE_TOLLFREE) {
-              reservation = PstnSetupService.reserveCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
+              reservation = PstnService.reserveCarrierTollFreeInventory(PstnModel.getCustomerId(), PstnModel.getProviderId(), numbers, PstnModel.isCustomerExists());
             }
             var promise = reservation
               .then(function (reservationData) {
                 var order = {
                   data: {
-                    numbers: numbers
+                    numbers: numbers,
                   },
                   numberType: numberType,
                   orderType: NUMBER_ORDER,
-                  reservationId: reservationData.uuid
+                  reservationId: reservationData.uuid,
                 };
                 vm.orderCart.push(order);
                 // return the index to be used in the promise callback
                 return {
                   searchResultsIndex: searchResultsIndex,
-                  searchResultsModelIndex: key
+                  searchResultsModelIndex: key,
                 };
               }).catch(function (response) {
                 Notification.errorResponse(response);
@@ -472,10 +601,10 @@
         data: {
           areaCode: model.areaCode.code,
           length: parseInt(model.quantity, 10),
-          consecutive: model.consecutive
+          consecutive: model.consecutive,
         },
         numberType: numberType,
-        orderType: BLOCK_ORDER
+        orderType: BLOCK_ORDER,
       };
       var nxx = getNxxValue();
       if (nxx !== null) {
@@ -492,11 +621,11 @@
     function removeOrder(order) {
       if (isPortOrder(order) || isAdvancedOrder(order)) {
         removeOrderFromCart(order);
-      } else if (_.get(order, 'orderType') === PstnSetupService.NUMBER_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE) {
-        PstnSetupService.releaseCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, order.reservationId, PstnSetup.isCustomerExists())
+      } else if (_.get(order, 'orderType') === NUMBER_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE) {
+        PstnService.releaseCarrierTollFreeInventory(PstnModel.getCustomerId(), PstnModel.getProviderId(), order.data.numbers, order.reservationId, PstnModel.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
       } else {
-        PstnSetupService.releaseCarrierInventoryV2(PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, PstnSetup.isCustomerExists())
+        PstnService.releaseCarrierInventoryV2(PstnModel.getCustomerId(), order.reservationId, order.data.numbers, PstnModel.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
       }
     }
@@ -523,10 +652,10 @@
 
     function getCommonPattern(telephoneNumber) {
       if (_.isString(telephoneNumber)) {
-        return TelephoneNumberService.getDIDLabel(telephoneNumber);
+        return PhoneNumberService.getNationalFormat(telephoneNumber);
       } else {
-        var firstNumber = TelephoneNumberService.getDIDLabel(_.head(telephoneNumber));
-        var lastNumber = TelephoneNumberService.getDIDLabel(_.last(telephoneNumber));
+        var firstNumber = PhoneNumberService.getNationalFormat(_.head(telephoneNumber));
+        var lastNumber = PhoneNumberService.getNationalFormat(_.last(telephoneNumber));
         if (isConsecutiveArray(telephoneNumber)) {
           return firstNumber + ' - ' + _.last(lastNumber.split('-'));
         } else {
@@ -550,19 +679,19 @@
       limit: 50,
       tokens: [],
       minLength: 9,
-      beautify: false
+      beautify: false,
     };
     vm.tokenmethods = {
       createtoken: createToken,
       createdtoken: createdToken,
       removedtoken: removedToken,
-      edittoken: editToken
+      edittoken: editToken,
     };
 
     function createToken(e) {
       var tokenNumber = e.attrs.label;
-      e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
-      e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
+      e.attrs.value = PhoneNumberService.getE164Format(tokenNumber);
+      e.attrs.label = PhoneNumberService.getNationalFormat(tokenNumber);
     }
 
     function createdToken(e) {
@@ -579,7 +708,7 @@
     }
 
     function isTokenInvalid(value) {
-      return !TelephoneNumberService.validateDID(value) ||
+      return !PhoneNumberService.validateDID(value) ||
         _.includes(DidService.getDidList(), value);
     }
 
@@ -619,13 +748,13 @@
     function addPortNumbersToOrder() {
       var portOrder = {
         data: {},
-        orderType: PORT_ORDER
+        orderType: PORT_ORDER,
       };
       var portNumbersPartition = _.partition(getTokens(), 'invalid');
       var invalidPortNumbers = _.map(portNumbersPartition[0], 'value');
       portOrder.data.numbers = _.map(portNumbersPartition[1], 'value');
       var existingPortOrder = _.find(vm.orderCart, {
-        orderType: PORT_ORDER
+        orderType: PORT_ORDER,
       });
       if (existingPortOrder) {
         var newPortNumbers = _.difference(portOrder.data.numbers, existingPortOrder.data.numbers);
@@ -642,15 +771,15 @@
       if (vm.orderNumbersTotal === 0) {
         Notification.error('pstnSetup.orderNumbersPrompt');
       } else {
-        PstnSetup.setOrders(getOrderNumbers());
+        PstnModel.setOrders(getOrderNumbers());
         $state.go('pstnSetup.review');
       }
     }
 
     function goBack() {
-      if (!PstnSetup.isSiteExists()) {
+      if (!PstnModel.isSiteExists()) {
         $state.go('pstnSetup.serviceAddress');
-      } else if (!PstnSetup.isCustomerExists()) {
+      } else if (!PstnModel.isCustomerExists()) {
         $state.go('pstnSetup.contractInfo');
       } else {
         $state.go('pstnSetup');
@@ -698,7 +827,7 @@
     }
 
     function hasBackButton() {
-      return (!PstnSetup.isCarrierExists() && !PstnSetup.isSingleCarrierReseller()) || !PstnSetup.isCustomerExists() || !PstnSetup.isSiteExists();
+      return (!PstnModel.isCarrierExists() && !PstnModel.isSingleCarrierReseller()) || !PstnModel.isCustomerExists() || !PstnModel.isSiteExists();
     }
 
     function getOrderNumbers() {
@@ -719,15 +848,6 @@
       // set disabled in next digest because of cs-btn
       $timeout(function () {
         vm.model.pstn.addDisabled = !_.includes(searchResultsModel, true);
-      });
-    });
-
-    $scope.$watchCollection(function () {
-      return vm.model.tollFree.searchResultsModel;
-    }, function (searchResultsModel) {
-      // set disabled in next digest because of cs-btn
-      $timeout(function () {
-        vm.model.tollFree.addDisabled = !_.includes(searchResultsModel, true);
       });
     });
 

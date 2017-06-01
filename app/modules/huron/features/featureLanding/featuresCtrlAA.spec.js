@@ -10,7 +10,7 @@ describe('Features Controller', function () {
   var listOfAAs = getJSONFixture('huron/json/autoAttendant/aaList.json');
   var emptyListOfAAs = [];
   var emptyListOfCPs = {
-    callparks: []
+    callparks: [],
   };
   var getAAListSuccessResp = function (data) {
     return data;
@@ -28,14 +28,18 @@ describe('Features Controller', function () {
     'featureName': 'huronHuntGroup.hg',
     'filterValue': 'AA',
     'hasReferences': true,
-    'referenceNames': ['Main AA']
+    'referenceNames': ['Main AA'],
   }, {
     'cardName': 'Third  AA',
     'numbers': ['3333'],
     'id': 'c16a6027-caef-4429-b3af-9d61ddc73333',
     'featureName': 'huronHuntGroup.hg',
-    'filterValue': 'AA'
+    'filterValue': 'AA',
   }];
+  var $event = {
+    preventDefault: function () {},
+    stopImmediatePropagation: function () {},
+  };
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -63,7 +67,7 @@ describe('Features Controller', function () {
     getDeferred = $q.defer();
 
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getDeferred.promise);
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve());
+    spyOn(HuntGroupService, 'getHuntGroupList').and.returnValue($q.resolve());
     spyOn(CallParkService, 'getCallParkList').and.returnValue($q.resolve(emptyListOfCPs.callparks));
     spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(getDeferred.promise);
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.resolve());
@@ -81,7 +85,7 @@ describe('Features Controller', function () {
       Authinfo: Authinfo,
       AutoAttendantCeInfoModelService: AutoAttendantCeInfoModelService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -106,17 +110,17 @@ describe('Features Controller', function () {
     $scope.$apply();
     $timeout.flush();
 
-    featureCtrl.deleteHuronFeature(AAs[0]);
+    featureCtrl.deleteHuronFeature(AAs[0], $event);
     expect($state.go).toHaveBeenCalledWith('huronfeatures.deleteFeature', {
       deleteFeatureName: AAs[0].cardName,
       deleteFeatureId: AAs[0].id,
-      deleteFeatureType: 'AA'
+      deleteFeatureType: 'AA',
     });
   });
   it('should be able to edit an AA function ', function () {
-    featureCtrl.editHuronFeature(AAs[0]);
+    featureCtrl.editHuronFeature(AAs[0], $event);
     expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {
-      aaName: AAs[0].cardName
+      aaName: AAs[0].cardName,
     });
   });
 
@@ -172,12 +176,12 @@ describe('Features Controller', function () {
 
     saveFeature = featureCtrl.listOfFeatures[2];
 
-    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[2]);
+    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[2], $event);
 
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: AAs[0].cardName,
       deleteFeatureId: AAs[0].id,
-      deleteFeatureType: 'AA'
+      deleteFeatureType: 'AA',
     });
 
     expect(featureCtrl.listOfFeatures).not.toContain(saveFeature);
@@ -195,12 +199,12 @@ describe('Features Controller', function () {
 
     saveFeature = featureCtrl.listOfFeatures[1];
 
-    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[1]);
+    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[1], $event);
 
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: AAs[0].cardName,
       deleteFeatureId: AAs[0].id,
-      deleteFeatureType: 'AA'
+      deleteFeatureType: 'AA',
     });
 
     expect(featureCtrl.listOfFeatures[0].hasDepends).toEqual(false);
@@ -219,7 +223,7 @@ describe('Features Controller', function () {
 
     saveFeature = featureCtrl.listOfFeatures[0];
 
-    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[0]);
+    featureCtrl.deleteHuronFeature(featureCtrl.listOfFeatures[0], $event);
 
     expect(Notification.error).toHaveBeenCalledWith('huronFeatureDetails.aaDeleteBlocked', jasmine.any(Object));
 

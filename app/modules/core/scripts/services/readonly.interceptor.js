@@ -6,11 +6,12 @@
       require('modules/core/notifications').default,
       require('modules/core/scripts/services/authinfo'),
       require('modules/core/scripts/services/log'),
+      require('angular-ui-router'),
     ])
     .factory('ReadonlyInterceptor', ReadonlyInterceptor)
     .name;
 
-  /*ngInject*/
+  /* @ngInject */
   function ReadonlyInterceptor($q, $injector, $log) {
 
     var allowedList = [
@@ -29,18 +30,26 @@
       '/meetingsapi/v1/files/',
       '/channels',
       '/api/v1/internals/actions/invalidateUser/invoke',
-      '/releaseChannels'
+      '/releaseChannels',
     ];
 
+    var allowedState = [
+      'helpdesk',
+    ];
+
+    var PERIOD = '.';
+
     return {
-      request: rejectOnNotRead
+      request: rejectOnNotRead,
     };
 
     function rejectOnNotRead(config) {
       // injected manually to get around circular dependency problem with $translateProvider
       var Authinfo = $injector.get('Authinfo');
       var Notification = $injector.get('Notification');
-      if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin() && isWriteOp(config.method) && !isInAllowedList(config.url)) {
+      var $state = $injector.get('$state');
+      var currentState = _.get($state, 'current.name');
+      if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin() && isWriteOp(config.method) && !isInAllowedList(config.url) && !isInAllowedState(currentState)) {
         Notification.notifyReadOnly(config);
         $log.warn('Intercepting request in read-only mode: ', config);
         return $q.reject(config);
@@ -51,6 +60,12 @@
 
     function isWriteOp(method) {
       return (method === 'POST' || method === 'PUT' || method === 'PATCH' || method === 'DELETE');
+    }
+
+    function isInAllowedState(currentState) {
+      return _.some(allowedState, function (state) {
+        return state === currentState || _.startsWith(currentState, state + PERIOD);
+      });
     }
 
     function isInAllowedList(url) {

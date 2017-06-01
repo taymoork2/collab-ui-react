@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const dllDepsConfig = require('./dll-deps.config');
 const commonWebpack = require('./webpack.common');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const plugins = require('./plugins');
 const lsMostRecentFile = require('../utils/lsMostRecentFile');
 const processEnvUtil = require('../utils/processEnvUtil')();
 
@@ -16,18 +16,16 @@ function webpackConfig(env) {
   // base config
   const devWebpack = {
     entry: {
-      app: [hotMiddlewareScript],
+      bootstrap: [hotMiddlewareScript],
       styles: [hotMiddlewareScript],
     },
-    plugins: [
-      new HtmlWebpackPlugin({
-        template: 'index.html',
-        inject: 'body',
+    plugins: plugins.commonsChunkPlugins.concat([
+      plugins.getHtmlWebpackPlugin({
         ngStrictDi: 'ng-strict-di',
         loadAdobeScripts: false,
       }),
       new webpack.HotModuleReplacementPlugin(),
-    ],
+    ]),
   };
 
   // ----------
@@ -57,10 +55,10 @@ function webpackConfig(env) {
   function modifyConfigForWebpackDll(config, dllEntryNames) {
     // replace html plugin with one that includes the html fragment for the dll bundles
     const htmlFrag = mkHtmlFragForDllBundles(dllEntryNames);
-    config.plugins[0] = new HtmlWebpackPlugin({
-      template: 'index.html',
-      inject: 'body',
+
+    config.plugins[0] = plugins.getHtmlWebpackPlugin({
       ngStrictDi: 'ng-strict-di',
+      loadAdobeScripts: false,
       dllBundlesFrag: htmlFrag,
     });
 
@@ -73,7 +71,7 @@ function webpackConfig(env) {
         new webpack.DllReferencePlugin({
           context: commonWebpackConfig.context,
           manifest: getManifest(dllEntryName),
-        }) // eslint-disable-line comma-dangle
+        })
       );
     });
   }

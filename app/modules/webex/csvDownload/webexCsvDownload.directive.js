@@ -55,12 +55,12 @@
         type: '@',
         filedownloadurl: '@',
         filename: '@',
-        downloading: '@'
+        downloading: '@',
       },
       controller: webexCsvDownloadCtrl,
       controllerAs: 'webexCsvDownload',
       bindToController: true,
-      link: link
+      link: link,
     };
 
     return directive;
@@ -118,7 +118,7 @@
           downloadAnchor
             .attr({
               href: url,
-              download: attrs.filename
+              download: attrs.filename,
             })
             .removeAttr('disabled');
         });
@@ -129,7 +129,7 @@
           var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
           scope.webexCsvDownload.downloadCsv = scope.webexCsvDownload.tempFunction || _.noop;
           downloadAnchor.attr({
-            href: ''
+            href: '',
           }).removeAttr('download');
         });
       } // changeAnchorAttrToOriginalState()

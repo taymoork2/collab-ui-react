@@ -1,0 +1,30 @@
+@import '~collab-ui/scss/settings/colors';
+
+.cmc-side-panel-section {
+  .status-error {
+    color: $color-negative-base;
+    margin-left: 2.5rem;
+  }
+}
+.cmc {
+  .user-details {
+    .cmc-invalid {
+      color: $color-negative-base;
+    }
+  }
+  .settings {
+    background: $brand-white;
+  }
+  .status {
+    padding-left: 2rem;
+    padding-top: 2rem;
+    background: $brand-white;
+    .ok {
+      color: green;
+    }
+    .error {
+      color: red;
+    }
+  }
+}
+

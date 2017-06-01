@@ -1,20 +1,46 @@
 <setting-section setting="$ctrl.calendarSectionTexts">
   <div class="sub-section">
-    <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.serviceAccountHeader"></h5>
-    <p class="sub-section__description" translate="hercules.settings.googleCalendar.serviceAccountText"></p>
-    <input cs-input
-            disabled
-            type="text"
-            ng-model="$ctrl.googleServiceAccount"
-            cs-input-help-text="{{$ctrl.localizedGoogleServiceAccountHelpText}}">
+    <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.apiClientAccess"></h5>
+    <p class="sub-section__description" translate="hercules.settings.googleCalendar.description"></p>
+    <button type="button" class="btn" ng-click="$ctrl.openUpdateModal()" translate="hercules.settings.googleCalendar.cta"></button>
   </div>
-  <div class="sub-section">
-    <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.privateKeyHeader"></h5>
-    <p class="sub-section__description" translate="hercules.settings.googleCalendar.privateKeyText"></p>
-            <button
-            ng-disabled="!$ctrl.googleServiceAccount"
-            type="button" class="btn"
-            translate="common.upload"
-            ng-click="$ctrl.uploadGooglePrivateKey()"></button>
+  <div class="sub-section" ng-form="$ctrl.aclAdminAccountForm">
+    <h5 class="sub-section__label" translate="hercules.gcalSetupModal.testAccount.title2"></h5>
+    <!-- component? -->
+    <p>
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.useResources"
+        ng-change="$ctrl.onCheckChange()"
+        id="resources"
+        name="resources"
+        cs-input-label="{{'hercules.gcalSetupModal.testAccount.useResources' | translate}}">
+    </p>
+    <div class="resources-section" ng-show="$ctrl.useResources">
+      <p translate="hercules.gcalSetupModal.testAccount.line2"></p>
+      <p translate="hercules.gcalSetupModal.testAccount.line3"></p>
+      <h5 class="hidden-subtitle" translate="hercules.gcalSetupModal.testAccount.subtitle"></h5>
+      <div class="cs-input-group" ng-class="{'error': aclAdminAccountForm.aclAdminAccount.$touched && aclAdminAccountForm.aclAdminAccount.$invalid}">
+        <input
+          cs-input
+          class="medium-6"
+          type="email"
+          name="aclAdminAccount"
+          ng-required="$ctrl.useResources"
+          ng-model="$ctrl.aclAdminAccount"
+          cs-input-messages="$ctrl.errorMessages.aclAdminAccount">
+      </div>
+      <button
+        cs-ctn
+        type="button"
+        class="btn"
+        ng-click="$ctrl.updateAclAdminAccount()"
+        ng-show="$ctrl.aclAdminAccountForm.aclAdminAccount.$dirty"
+        ng-disabled="$ctrl.aclAdminAccountForm.aclAdminAccount.$invalid"
+        loading="$ctrl.saving"
+        translate="common.save"></button>
+    </div>
+    <!-- /component? -->
   </div>
 </setting-section>

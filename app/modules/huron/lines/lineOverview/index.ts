@@ -10,14 +10,15 @@ import siteService from 'modules/huron/sites';
 import memberService from 'modules/huron/members';
 import notifications from 'modules/core/notifications';
 import autoAnswer from 'modules/huron/autoAnswer';
-
+import voicemailModule from 'modules/huron/voicemail';
+import huronUserService  from 'modules/huron/users';
 export * from 'modules/huron/lines/lineOverview/lineOverview.service';
 
 export default angular
   .module('huron.line-overview', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     directoryNumber,
     callForward,
     simultaneousCalls,
@@ -29,6 +30,8 @@ export default angular
     siteService,
     memberService,
     autoAnswer,
+    huronUserService,
+    voicemailModule,
   ])
   .component('ucLineOverview', new LineOverviewComponent())
   .service('LineOverviewService', LineOverviewService)

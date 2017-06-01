@@ -29,18 +29,18 @@ describe('AddLinesCtrl: Ctrl', function () {
     DialPlanService = _DialPlanService_;
     var current = {
       step: {
-        name: 'fakeStep'
-      }
+        name: 'fakeStep',
+      },
     };
 
     var data = {
       data: {
-        deviceName: "Red River"
-      }
+        deviceName: "Red River",
+      },
     };
 
     $scope.entitylist = [{
-      name: "Red River"
+      name: "Red River",
     }];
 
     $scope.wizard = {};
@@ -51,17 +51,18 @@ describe('AddLinesCtrl: Ctrl', function () {
         return {
           data: {
             account: {
-              name: 'Red River'
-            }
-          }
+              name: 'Red River',
+            },
+          },
         };
-      }
+      },
     };
     $scope.wizardData = data;
 
     function isLastStep() {
       return false;
     }
+
     $scope.wizard.isLastStep = isLastStep;
 
     spyOn($state, 'go');
@@ -84,8 +85,8 @@ describe('AddLinesCtrl: Ctrl', function () {
     spyOn(CommonLineService, 'loadExternalNumberPool').and.returnValue($q.resolve(externalNumbers));
     spyOn(CommonLineService, 'loadPrimarySiteInfo').and.returnValue($q.resolve(sites));
     spyOn(CommonLineService, 'mapDidToDn').and.returnValue($q.resolve(externalNumberPoolMap));
-    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.resolve({
-      extensionGenerated: 'false'
+    spyOn(DialPlanService, 'getDialPlan').and.returnValue($q.resolve({
+      extensionGenerated: 'false',
     }));
 
     spyOn(CommonLineService, 'assignMapUserList').and.returnValue((entitylist));
@@ -98,7 +99,7 @@ describe('AddLinesCtrl: Ctrl', function () {
     controller = $controller('AddLinesCtrl', {
       $scope: $scope,
       $state: $state,
-      CommonLineService: CommonLineService
+      CommonLineService: CommonLineService,
     });
 
   }
@@ -115,7 +116,7 @@ describe('AddLinesCtrl: Ctrl', function () {
         .respond({});
       initController();
       $scope.entitylist = [{
-        name: "Red River"
+        name: "Red River",
       }];
 
       $scope.$apply();
@@ -152,6 +153,57 @@ describe('AddLinesCtrl: Ctrl', function () {
       entitlements = ['something', 'else'];
     });
 
+    describe('has next', function () {
+      describe('with enableCalService', function () {
+        beforeEach(function () {
+          $stateParams.wizard = {
+            state: function () {
+              return {
+                data: {
+                  account: {
+                    cisUuid: deviceCisUuid,
+                    enableCalService: true,
+                  },
+                },
+              };
+            },
+            next: function () {
+            },
+          };
+          spyOn($stateParams.wizard, 'next');
+          initController();
+        });
+        it('should evaluate hasNext to true', function () {
+          expect(controller.hasNextStep()).toBe(true);
+        });
+      });
+      describe('with enableCalService false and it is editServices', function () {
+        beforeEach(function () {
+          $stateParams.wizard = {
+            state: function () {
+              return {
+                data: {
+                  function: "editServices",
+                  account: {
+                    cisUuid: deviceCisUuid,
+                    enableCalService: false,
+                  },
+                },
+              };
+            },
+            next: function () {
+            },
+          };
+          spyOn($stateParams.wizard, 'next');
+          initController();
+        });
+
+        it('should evaluate hasNext to false', function () {
+          expect(controller.hasNextStep()).toBe(false);
+        });
+      });
+    });
+
     describe('next', function () {
       beforeEach(function () {
         $stateParams.wizard = {
@@ -159,19 +211,23 @@ describe('AddLinesCtrl: Ctrl', function () {
             return {
               data: {
                 account: {
-                  cisUuid: deviceCisUuid
-                }
-              }
+                  cisUuid: deviceCisUuid,
+                },
+              },
             };
           },
-          next: function () {}
+          next: function () {
+          },
         };
         spyOn($stateParams.wizard, 'next');
         initController();
       });
 
       it('with only directoryNumber specified should set the wizardState with correct fields for show activation code modal', function () {
-        spyOn(controller, 'getSelectedNumbers').and.returnValue({ directoryNumber: directoryNumber });
+        $scope.entitylist = [{
+          assignedDn: { pattern: directoryNumber },
+          externalNumber: { pattern: 'Ingen', uuid: 'none' },
+        }];
         controller.next();
         $scope.$apply();
         expect($stateParams.wizard.next).toHaveBeenCalled();
@@ -199,17 +255,18 @@ describe('AddLinesCtrl: Ctrl', function () {
               data: {
                 account: {
                   cisUuid: deviceCisUuid,
-                  entitlements: entitlements
-                }
-              }
+                  entitlements: entitlements,
+                },
+              },
             };
           },
           save: function () {
-          }
+          },
         };
         spyOn($stateParams.wizard, 'save');
         initController();
-        $scope.$dismiss = function () {};
+        $scope.$dismiss = function () {
+        };
         spyOn($scope, '$dismiss');
         spyOn(Notification, 'success');
         spyOn(Notification, 'errorResponse');
@@ -219,10 +276,10 @@ describe('AddLinesCtrl: Ctrl', function () {
       it('passes on the selected numbers to CsdmDataModeService', function () {
         spyOn(controller, 'getSelectedNumbers').and.returnValue({
           directoryNumber: directoryNumber,
-          externalNumber: externalNumber
+          externalNumber: externalNumber,
         });
         var place = { cisUuid: deviceCisUuid };
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': place }));
+        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.resolve(place));
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.resolve());
         controller.save();
         $scope.$apply();
@@ -234,21 +291,21 @@ describe('AddLinesCtrl: Ctrl', function () {
       it('display warning when place not found', function () {
         spyOn(controller, 'getSelectedNumbers').and.returnValue({
           directoryNumber: directoryNumber,
-          externalNumber: externalNumber
+          externalNumber: externalNumber,
         });
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': {} }));
+        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.resolve());
         controller.save();
         $scope.$apply();
         expect(Notification.warning).toHaveBeenCalled();
         expect($scope.$dismiss).toHaveBeenCalledTimes(0);
       });
 
-      it('display error when fetching places fails', function () {
+      it('display error when fetching place fails', function () {
         spyOn(controller, 'getSelectedNumbers').and.returnValue({
           directoryNumber: directoryNumber,
-          externalNumber: externalNumber
+          externalNumber: externalNumber,
         });
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.reject());
+        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.reject());
         controller.save();
         $scope.$apply();
         expect(Notification.errorResponse).toHaveBeenCalled();
@@ -258,9 +315,9 @@ describe('AddLinesCtrl: Ctrl', function () {
       it('display error when update fails', function () {
         spyOn(controller, 'getSelectedNumbers').and.returnValue({
           directoryNumber: directoryNumber,
-          externalNumber: externalNumber
+          externalNumber: externalNumber,
         });
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': { cisUuid: deviceCisUuid } }));
+        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.resolve({ cisUuid: deviceCisUuid }));
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.reject());
         controller.save();
         $scope.$apply();

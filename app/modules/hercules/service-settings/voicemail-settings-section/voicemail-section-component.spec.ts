@@ -19,11 +19,13 @@ describe('Component: HybridVoicemailCtrl ', () => {
     spyOn(Notification, 'success');
     let ctrl = $componentController('hybridVoicemailSettings', {
       UCCService: {
-        enableHybridVoicemail: jasmine.createSpy('enableHybridVoicemail').and.returnValue($q.resolve()),
+        enableHybridVoicemail: jasmine.createSpy('enableHybridVoicemail').and.returnValue($q.resolve( { voicemailOrgEnableInfo: { orgVoicemailStatus: 'HYBRID_PARTIAL' } } )),
+        mapStatusToCss: jasmine.createSpy('mapStatusToCss').and.returnValue(''),
       },
     });
     ctrl.toggleVoicemail(false);
     $scope.$apply();
+    expect(ctrl.voicemailStatus).toBe('hercules.settings.voicemail.voicemailStatusHybridPartial');
     expect(Notification.success.calls.count()).toBe(1);
   });
 
@@ -31,11 +33,13 @@ describe('Component: HybridVoicemailCtrl ', () => {
     spyOn(Notification, 'success');
     let ctrl = $componentController('hybridVoicemailSettings', {
       UCCService: {
-        disableHybridVoicemail: jasmine.createSpy('disableHybridVoicemail').and.returnValue($q.resolve()),
+        disableHybridVoicemail: jasmine.createSpy('disableHybridVoicemail').and.returnValue($q.resolve( { voicemailOrgEnableInfo: { orgVoicemailStatus: 'HYBRID_SUCCESS' } } )),
+        mapStatusToCss: jasmine.createSpy('mapStatusToCss').and.returnValue(''),
       },
     });
     ctrl.toggleVoicemail(true);
     $scope.$apply();
+    expect(ctrl.voicemailStatus).toBe('hercules.settings.voicemail.voicemailStatusHybridSuccess');
     expect(Notification.success.calls.count()).toBe(1);
   });
 });

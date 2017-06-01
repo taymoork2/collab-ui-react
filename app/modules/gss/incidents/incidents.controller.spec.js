@@ -6,12 +6,12 @@ describe('controller: IncidentsCtrl', function () {
     resolved: 'resolved',
     nonResolved: 'non-resolved',
     incidentForDelete: {
-      incidentId: 'testIncidentId'
+      incidentId: 'testIncidentId',
     },
     actionType: 'update',
     incidentForUpdate: {
-      incidentId: 'testIncidentId'
-    }
+      incidentId: 'testIncidentId',
+    },
   };
 
   beforeEach(angular.mock.module('GSS'));
@@ -46,7 +46,7 @@ describe('controller: IncidentsCtrl', function () {
     controller = $controller('IncidentsCtrl', {
       $scope: $scope,
       GSSService: GSSService,
-      IncidentsService: IncidentsService
+      IncidentsService: IncidentsService,
     });
 
     $scope.$apply();
@@ -68,7 +68,7 @@ describe('controller: IncidentsCtrl', function () {
     controller.deleteIncident(testData.incidentForDelete);
 
     expect($state.go).toHaveBeenCalledWith('gss.incidents.delete', {
-      incident: testData.incidentForDelete
+      incident: testData.incidentForDelete,
     });
   });
 
@@ -77,7 +77,7 @@ describe('controller: IncidentsCtrl', function () {
 
     expect($state.go).toHaveBeenCalledWith('gss.incidents.update', {
       incident: testData.incidentForUpdate,
-      actionType: testData.actionType
+      actionType: testData.actionType,
     });
   });
 });

@@ -8,21 +8,21 @@ describe('RedirectAddResourceControllerV2', function () {
       then: function (confirmCallback, cancelCallback) {
         this.confirmCallBack = confirmCallback;
         this.cancelCallback = cancelCallback;
-      }
+      },
     },
     close: function (item) {
       this.result.confirmCallBack(item);
     },
     dismiss: function (type) {
       this.result.cancelCallback(type);
-    }
+    },
   };
   beforeEach(inject(function (_Notification_, _$translate_, _$state_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_, _$modal_) {
     $q = _$q_;
     httpBackend = $httpBackend;
     httpBackend.when('GET', /^\w+.*/).respond({});
     redirectTargetPromise = {
-      then: sinon.stub()
+      then: jasmine.createSpy('then'),
     };
     $state = _$state_;
     $stateParams = _$stateParams_;
@@ -30,7 +30,8 @@ describe('RedirectAddResourceControllerV2', function () {
     $translate = _$translate_;
     Notification = _Notification_;
     $modalInstance = {
-      close: sinon.stub()
+      close: jasmine.createSpy('close'),
+      dismiss: jasmine.createSpy('dismiss'),
     };
     $modal = _$modal_;
     yesProceed = true;
@@ -45,7 +46,7 @@ describe('RedirectAddResourceControllerV2', function () {
       $modalInstance: $modalInstance,
       $modal: $modal,
       yesProceed: yesProceed,
-      firstTimeSetup: firstTimeSetup
+      firstTimeSetup: firstTimeSetup,
     });
   }));
   it('controller should be defined', function () {
@@ -76,7 +77,7 @@ describe('RedirectAddResourceControllerV2', function () {
   it('RedirectAddResourceControllerV2 closeSetupModal should close the modal', function () {
     spyOn($state, 'go');
     controller.closeSetupModal(true);
-    expect($modalInstance.close).toHaveBeenCalled();
+    expect($modalInstance.dismiss).toHaveBeenCalled();
   });
   xit('RedirectAddResourceControllerV2 closeSetupModal should close the modal when firstTimeSetup is false', function () {
     spyOn($modalInstance, "close");
@@ -95,12 +96,8 @@ describe('RedirectAddResourceControllerV2', function () {
     controller.back();
     expect(controller.enableRedirectToTarget).toBeFalsy();
   });
-  it('RedirectAddResourceControllerV2 canGoNext should disable the next button when the feild is empty', function () {
-    controller.hosts = [{
-      "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
-      "hostname": "10.196.5.251",
-      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
-    }];
+  it('RedirectAddResourceControllerV2 canGoNext should disable the next button when the field is empty', function () {
+    controller.showDownloadableOption = false;
     controller.canGoNext();
     expect(controller.canGoNext()).toBeFalsy();
   });

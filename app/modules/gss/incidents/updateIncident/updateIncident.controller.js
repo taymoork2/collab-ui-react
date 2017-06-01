@@ -6,7 +6,7 @@
     .controller('UpdateIncidentCtrl', UpdateIncidentCtrl);
 
   /* @ngInject */
-  function UpdateIncidentCtrl($scope, $state, $stateParams, $translate, Authinfo, GSSService, IncidentsService, Notification) {
+  function UpdateIncidentCtrl($scope, $state, $modal, $stateParams, $translate, Authinfo, GSSService, IncidentsService, Notification) {
     var vm = this;
     var update = 'update';
     var resolved = 'resolved';
@@ -33,6 +33,8 @@
     vm.hideAffectedComponent = hideAffectedComponent;
     vm.isValidForMessage = isValidForMessage;
     vm.getLocalizedIncidentStatus = getLocalizedIncidentStatus;
+    vm.isLoadingMessage = true;
+    vm.deleteMessage = deleteMessage;
 
     init();
 
@@ -44,54 +46,54 @@
 
       vm.componentStatuses = [{
         label: $translate.instant('gss.componentStatus.operational'),
-        value: 'operational'
+        value: 'operational',
       }, {
         label: $translate.instant('gss.componentStatus.degradedPerformance'),
-        value: 'degraded_performance'
+        value: 'degraded_performance',
       }, {
         label: $translate.instant('gss.componentStatus.partialOutage'),
-        value: 'partial_outage'
+        value: 'partial_outage',
       }, {
         label: $translate.instant('gss.componentStatus.majorOutage'),
-        value: 'major_outage'
+        value: 'major_outage',
       }, {
         label: $translate.instant('gss.componentStatus.underMaintenance'),
-        value: 'under_maintenance'
+        value: 'under_maintenance',
       }];
 
       vm.impactStatuses = [{
         label: $translate.instant('gss.impactStatus.none'),
-        value: 'none'
+        value: 'none',
       }, {
         label: $translate.instant('gss.impactStatus.minor'),
-        value: 'minor'
+        value: 'minor',
       }, {
         label: $translate.instant('gss.impactStatus.major'),
-        value: 'major'
+        value: 'major',
       }, {
         label: $translate.instant('gss.impactStatus.critical'),
-        value: 'critical'
+        value: 'critical',
       }, {
         label: $translate.instant('gss.impactStatus.maintenance'),
-        value: 'maintenance'
+        value: 'maintenance',
       }];
 
       vm.radios = [{
         label: $translate.instant('gss.incidentStatus.investigating'),
         value: 'investigating',
-        id: 'investigating'
+        id: 'investigating',
       }, {
         label: $translate.instant('gss.incidentStatus.identified'),
         value: 'identified',
-        id: 'identified'
+        id: 'identified',
       }, {
         label: $translate.instant('gss.incidentStatus.monitoring'),
         value: 'monitoring',
-        id: 'monitoring'
+        id: 'monitoring',
       }, {
         label: $translate.instant('gss.incidentStatus.resolved'),
         value: 'resolved',
-        id: 'resolved'
+        id: 'resolved',
       }];
 
       initUI();
@@ -119,7 +121,7 @@
 
       vm.incidentNameForEdit = vm.incidentForUpdate.incidentName;
       vm.impactStatusForEdit = _.find(vm.impactStatuses, {
-        value: vm.incidentForUpdate.impact
+        value: vm.incidentForUpdate.impact,
       });
     }
 
@@ -144,7 +146,7 @@
           vm.impactStatusForEdit.value)
         .then(function () {
           Notification.success('gss.incidentsPage.updateIncidentSucceed', {
-            incidentName: vm.incidentForUpdate.incidentName
+            incidentName: vm.incidentForUpdate.incidentName,
           });
 
           vm.incidentForUpdate.incidentName = vm.incidentNameForEdit;
@@ -152,7 +154,7 @@
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'gss.incidentsPage.updateIncidentFailed', {
-            incidentName: vm.incidentForUpdate.incidentName
+            incidentName: vm.incidentForUpdate.incidentName,
           });
         })
         .finally(function () {
@@ -197,18 +199,18 @@
           status: vm.incidentForUpdate.status,
           message: vm.incidentForUpdate.message,
           email: Authinfo.getUserName(),
-          affectComponents: getAffectedComponents()
+          affectComponents: getAffectedComponents(),
         })
         .then(function () {
           Notification.success('gss.incidentsPage.updateIncidentSucceed', {
-            incidentName: vm.incidentForUpdate.incidentName
+            incidentName: vm.incidentForUpdate.incidentName,
           });
 
           initUI();
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'gss.incidentsPage.updateIncidentFailed', {
-            incidentName: vm.incidentForUpdate.incidentName
+            incidentName: vm.incidentForUpdate.incidentName,
           });
         })
         .finally(function () {
@@ -252,7 +254,7 @@
 
     function getLocalizedIncidentStatus(status) {
       return _.find(vm.radios, {
-        value: status
+        value: status,
       }).label;
     }
 
@@ -266,7 +268,7 @@
       IncidentsService
         .updateIncidentMessage(message.messageId, {
           email: Authinfo.getUserName(),
-          message: message.editMessage
+          message: message.editMessage,
         })
         .then(function (savedMessage) {
           message.message = savedMessage.message;
@@ -307,12 +309,13 @@
         .getIncident(vm.incidentForUpdate.incidentId)
         .then(function (data) {
           vm.incidentForUpdate = data;
+          vm.isLoadingMessage = false;
         });
     }
 
     function findComponentStatus(status) {
       return _.find(vm.componentStatuses, {
-        value: status
+        value: status,
       });
     }
 
@@ -345,7 +348,7 @@
     function generateComponentObj(componentId, componentStatus) {
       return {
         componentId: componentId,
-        status: componentStatus
+        status: componentStatus,
       };
     }
 
@@ -375,6 +378,35 @@
       });
 
       return affectedComponents;
+    }
+
+    function deleteMessage(message) {
+      message.statusName = vm.getLocalizedIncidentStatus(message.status);
+      var delMessage = message;
+
+      $modal.open({
+        type: 'small',
+        templateUrl: 'modules/gss/incidents/message/deleteMessage.tpl.html',
+        controller: function () {
+          var ctrl = this;
+          ctrl.message = delMessage;
+        },
+        controllerAs: 'ctrl',
+      }).result.then(function () {
+        vm.isLoadingMessage = true;
+        IncidentsService
+          .deleteIncidentMessage(message.messageId)
+          .then(function () {
+            _.remove(vm.incidentForUpdate.messages, {
+              messageId: message.messageId,
+            });
+            vm.isLoadingMessage = false;
+            Notification.success('gss.incidentsPage.deleteMessageSucceed');
+          })
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'gss.incidentsPage.deleteMessageFailed');
+          });
+      });
     }
   }
 })();

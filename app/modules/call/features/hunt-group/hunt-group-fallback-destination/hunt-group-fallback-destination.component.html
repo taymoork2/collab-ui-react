@@ -1,0 +1,57 @@
+<div ng-form="$ctrl.fallbackDestDetailForm">
+  <input
+    cs-input
+    type="radio"
+    id="fallback"
+    name="fallbackRadio"
+    ng-model="$ctrl.destinationRule"
+    ng-value="'TYPEFALLBACKRULE_FALLBACK_DESTINATION'"
+    ng-change="$ctrl.setHuntGroupDestinationRule('TYPEFALLBACKRULE_FALLBACK_DESTINATION')"
+    cs-input-label="{{:: 'huronHuntGroup.fallbackLabel'|translate}}"
+    cs-input-help-text="{{:: 'huronHuntGroup.fallbackRule1Hint'|translate}}">
+  <input
+    cs-input
+    type="radio"
+    id="AltFallback"
+    name="altFallbackRadio"
+    ng-model="$ctrl.destinationRule"
+    ng-value="'TYPEFALLBACKRULE_ALTERNATE_DESTINATION'"
+    ng-change="$ctrl.setHuntGroupDestinationRule('TYPEFALLBACKRULE_ALTERNATE_DESTINATION')"
+    cs-input-label="{{::'huronHuntGroup.altFallbackLabel'|translate}}"
+    cs-input-help-text="{{::'huronHuntGroup.fallbackRule2Hint'|translate}}">
+  <input
+    cs-input
+    type="radio"
+    id="automatic"
+    name="automaticRadio"
+    ng-model="$ctrl.destinationRule"
+    ng-value="'TYPEFALLBACKRULE_AUTOMATIC'"
+    ng-change="$ctrl.setHuntGroupDestinationRule('TYPEFALLBACKRULE_AUTOMATIC')"
+    cs-input-label="{{:: 'huronHuntGroup.automatic'|translate}}"
+    cs-input-help-text="{{:: 'huronHuntGroup.fallbackRule3Hint'|translate}}">
+  <div class="sub-section">
+    <h5 class="sub-section__title" translate="huronHuntGroup.fallbackNumber"></h5>
+    <p class="sub-section__description" translate="huronHuntGroup.fallbackNumberHint"></p>
+    <uc-fallback-destination
+      fallback-destination="$ctrl.fallbackDestination"
+      on-change-fn="$ctrl.setHuntGroupFallbackDestination(fallbackDestination)">
+    </uc-fallback-destination>
+  </div>
+  <div ng-if="$ctrl.destinationRule==='TYPEFALLBACKRULE_AUTOMATIC' || $ctrl.destinationRule==='TYPEFALLBACKRULE_ALTERNATE_DESTINATION'" class="sub-section">
+    <h5 class="sub-section__title" translate="huronHuntGroup.altFallbackNumber"></h5>
+    <p class="sub-section__description" translate="huronHuntGroup.altFallbackHint"></p>
+    <uc-fallback-destination
+      fallback-destination="$ctrl.alternateDestination"
+      on-change-fn="$ctrl.setHuntGroupAlternateDestination(fallbackDestination)">
+    </uc-fallback-destination>
+    <div ng-if="$ctrl.destinationRule==='TYPEFALLBACKRULE_AUTOMATIC'">
+     <p class="margin-set" translate="huronHuntGroup.altFalbackTimer"></p>
+       <uc-hunt-group-max-wait-time
+         max-wait-mins="$ctrl.alternateDestination.timer"
+         options="$ctrl.options"
+         is-hunt-group-fallback-timer=true
+         on-change-fn="$ctrl.setTimertMins(minutes)">
+       </uc-hunt-group-max-wait-time>
+    </div>
+  </div>
+</div>

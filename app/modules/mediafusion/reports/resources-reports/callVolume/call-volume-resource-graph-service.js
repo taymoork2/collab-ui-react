@@ -31,7 +31,7 @@
     vm.legendcallRedirectedClusterTitle = $translate.instant('mediaFusion.metrics.legendcallRedirectedCluster');
 
     return {
-      setCallVolumeGraph: setCallVolumeGraph
+      setCallVolumeGraph: setCallVolumeGraph,
     };
 
     function setCallVolumeGraph(data, callVolumeChart, cluster, daterange) {
@@ -102,7 +102,7 @@
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       var chart = AmCharts.makeChart(vm.callVolumediv, chartData);
-      // listen for zoomed event and call "handleZoom" method
+      // listen for zoomed event and call 'handleZoom' method
       chart.addListener('zoomed', handleZoom);
       return chart;
     }
@@ -113,12 +113,12 @@
       vm.zoomedEndTime = event.endDate;
       var selectedTime = {
         startTime: vm.zoomedStartTime,
-        endTime: vm.zoomedEndTime
+        endTime: vm.zoomedEndTime,
       };
 
       if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
+          data: selectedTime,
         });
       }
     }

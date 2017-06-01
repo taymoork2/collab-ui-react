@@ -1,3 +1,5 @@
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+
 class HybridServicesClusterPageCtrl implements ng.IComponentController {
   public tabs: { title: string, state: string }[] = [];
   public localizedTitle: string;
@@ -9,11 +11,11 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
-    let clusterId = changes['clusterId'];
+    const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.init(clusterId.currentValue);
     }
@@ -26,19 +28,27 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
   }
 
   private init(id) {
-    this.FusionClusterService.get(id)
+    this.HybridServicesClusterService.get(id)
       .then(cluster => {
         this.updateName(cluster.name);
-        let route = '';
-        if (cluster.targetType === 'c_mgmt') {
-          route = 'expressway';
-        } else if (cluster.targetType === 'mf_mgmt') {
-          route = 'mediafusion';
-        } else if (cluster.targetType === 'hds_app') {
-          route = 'hds';
+        let route;
+        switch (cluster.targetType) {
+          case 'c_mgmt':
+            route = 'expressway';
+            break;
+          case 'mf_mgmt':
+            route = 'mediafusion';
+            break;
+          case 'hds_app':
+            route = 'hds';
+            break;
+          case 'ucm_mgmt':
+            route = 'cucm';
+            break;
+          default:
+            route = '';
         }
-        // Don't show any tabs if the "Nodes" one is not available
-        // Only the "Settings" tab would be weird
+        // Don't show any tabs if the "Nodes" one is not available. Only the "Settings" tab would be weird
         if (this.hasNodesViewFeatureToggle) {
           this.tabs = [{
             title: this.$translate.instant('common.nodes'),

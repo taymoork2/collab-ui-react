@@ -51,16 +51,23 @@
               </div>
               <div class="sd-spacing-input row">
                 <cs-call-destination
-                    model="$ctrl.callDest"
+                    model="$ctrl.newNumber"
                     size="medium-12"
                     inputs="$ctrl.callDestInputs"
                     id="number{{$index}}"
                     name="number{{$index}}"
                     select-type="select"
-                    custom-number-translations="speedDials.customTranslations"
-                    external-number-region-code-fn="$ctrl.getRegionCode()"
+                    custom-number-translations="$ctrl.customTranslations"
                     on-change-fn="$ctrl.setSpeedDial(model)">
                 </cs-call-destination>
+              </div>
+              <div cr-feature-toggle feature-show="huronBlfPickup" ng-if="$ctrl.isValid">
+                <input
+                  cs-input
+                  type="checkbox"
+                  id="validInput"
+                  ng-model="$ctrl.callPickupEnabled"
+                  cs-input-label="{{$ctrl.ownerName}} {{:: 'speedDials.blfPickup' | translate}} {{$ctrl.extension}}"/>
               </div>
             </div>
           </div>

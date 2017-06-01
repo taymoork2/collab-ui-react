@@ -6,7 +6,7 @@
   /* @ngInject */
   function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config,
     HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
-    TokenService, TrackingId, Utils, TOSService) {
+    StorageKeys, TokenService, TrackingId, Utils, TOSService) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -15,15 +15,11 @@
 
     $rootScope.typeOfExport = {
       USER: 1,
-      CUSTOMER: 2
+      CUSTOMER: 2,
     };
     $window.$state = $state;
     //Enable logging
     $rootScope.debug = false;
-
-    var storedState = 'storedState';
-    var storedParams = 'storedParams';
-    var queryParams = 'queryParams';
 
     TokenService.init();
     TokenService.setAuthorizationHeader();
@@ -36,44 +32,36 @@
       $animate.enabled(false);
     }
 
-    // - DO NOT USE OR EXTEND THIS CODE - this code will be removed before 3/1/2017
-    /* global window */
-    if (Config.isUserAgent('QtCarBrowser') || Config.isUserAgent('SMART-TV')) {
-      window.mixpanel.init('536df13b2664a85b06b0b6cf32721c24');
-      window.mixpanel.track('inside apprun.js');
-    }
-
     $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
 
       if (typeof to.authenticate === 'undefined' || to.authenticate) {
         if (Authinfo.isInitialized()) {
-
-          TOSService.hasAcceptedTOS()
-            .then(function (acceptedTOS) {
-              if (!Authinfo.isAllowedState(to.name)) {
-                e.preventDefault();
-                $state.go('unauthorized');
-              } else if (OnlineUpgradeService.shouldForceUpgrade()) {
-                e.preventDefault();
-                OnlineUpgradeService.openUpgradeModal();
-              } else if (!acceptedTOS) {
-                e.preventDefault();
-                TOSService.openTOSModal();
-              } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
-                e.preventDefault();
-                $state.go('firsttimewizard');
-              }
-            });
+          if (!Authinfo.isAllowedState(to.name)) {
+            e.preventDefault();
+            $state.go('unauthorized');
+          } else {
+            TOSService.hasAcceptedTOS()
+                .then(function (acceptedTOS) {
+                  if (OnlineUpgradeService.shouldForceUpgrade()) {
+                    e.preventDefault();
+                    OnlineUpgradeService.openUpgradeModal();
+                  } else if (!acceptedTOS) {
+                    e.preventDefault();
+                    TOSService.openTOSModal();
+                  } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
+                    e.preventDefault();
+                    $state.go('firsttimewizard');
+                  }
+                });
+          }
         } else {
           e.preventDefault();
-          SessionStorage.put(storedState, to.name);
-          SessionStorage.putObject(storedParams, toParams);
-          SessionStorage.putObject(queryParams, $location.search());
+          SessionStorage.put(StorageKeys.REQUESTED_STATE_NAME, to.name);
+          SessionStorage.putObject(StorageKeys.REQUESTED_STATE_PARAMS, toParams);
+          SessionStorage.putObject(StorageKeys.REQUESTED_QUERY_PARAMS, $location.search());
           HealthService.getHealthStatus()
-            .then(function (status) {
-              if (status === 'online') {
-                $state.go('login');
-              }
+            .then(function () {
+              $state.go('login');
             }).catch(function () {
               $state.go('server-maintenance');
             });

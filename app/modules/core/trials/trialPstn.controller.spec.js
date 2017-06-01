@@ -1,33 +1,34 @@
 'use strict';
 
-/* globals fit */
-
 describe('Controller: TrialPstnCtrl', function () {
-  var controller, trials, $httpBackend, $scope, $q, Analytics, HuronConfig, Orgservice, TrialPstnService, TrialService, PstnSetupService, PstnSetupStatesService, FeatureToggleService;
+  var controller, trials, $httpBackend, $scope, $q, Analytics, HuronConfig, Orgservice, TrialPstnService, TrialService, PstnService, PstnSetupStatesService, FeatureToggleService;
 
   var customerName = 'Wayne Enterprises';
   var customerEmail = 'batman@darknight.com';
 
   var carrier = {
     name: 'IntelePeer',
-    uuid: '23453-235sdfaf-3245a-asdfa4'
+    uuid: '23453-235sdfaf-3245a-asdfa4',
   };
 
-  var states = [{
-    name: 'Texas',
-    abbreviation: 'TX'
-  }];
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   var numberInfo = {
     state: {
       name: 'Texas',
-      abbreviation: 'TX'
+      abbreviation: 'TX',
     },
     areaCode: {
       code: '469',
-      count: 25
+      count: 25,
     },
-    numbers: ["+14696500030", "+14696500102", "+14696500194", "+14696500208", "+14696500220"]
+    numbers: ["+14696500030", "+14696500102", "+14696500194", "+14696500208", "+14696500220"],
   };
 
   var carrierId = '25452345-agag-ava-43523452';
@@ -37,67 +38,67 @@ describe('Controller: TrialPstnCtrl', function () {
   var areaCodeResponse = {
     areaCodes: [{
       code: '469',
-      count: 25
+      count: 25,
     }, {
       code: '817',
-      count: 25
+      count: 25,
     }, {
       code: '123',
-      count: 4
+      count: 4,
     }],
-    count: 85
+    count: 85,
   };
 
   var newAreaCodes = [{
     code: '469',
-    count: 25
+    count: 25,
   }, {
     code: '817',
-    count: 25
+    count: 25,
   }];
 
   var exchangesResponse = {
     exchanges: [
       { code: '731', count: 12 },
       { code: '742', count: 23 },
-      { code: '421', count: 8 }
-    ]
+      { code: '421', count: 8 },
+    ],
   };
 
   var numbersResponse = {
     numbers: [
       "+17077318283", "+17077318284", "+17077318293", "+17077318294", "+17077318295",
-      "+17077318296", "+17077318297", "+17077318298", "+17077318315", "+17077318316"
-    ]
+      "+17077318296", "+17077318297", "+17077318298", "+17077318315", "+17077318316",
+    ],
   };
 
   var contractInfo = {
     companyName: 'Sample Company',
     signeeFirstName: 'Samp',
     signeeLastName: 'Le',
-    email: 'sample@snapple.com'
+    email: 'sample@snapple.com',
   };
 
   afterEach(function () {
-    controller = trials = $httpBackend = $scope = $q = HuronConfig = Orgservice = Analytics = TrialPstnService = TrialService = PstnSetupService = PstnSetupStatesService = FeatureToggleService = undefined;
+    controller = trials = $httpBackend = $scope = $q = HuronConfig = Orgservice = Analytics = TrialPstnService = TrialService = PstnService = PstnSetupStatesService = FeatureToggleService = undefined;
   });
 
   afterAll(function () {
-    customerName = customerEmail = carrier = states = numberInfo = carrierId = stateSearch = areaCodeResponse = newAreaCodes = exchangesResponse = numbersResponse = contractInfo = undefined;
+    customerName = customerEmail = carrier = numberInfo = carrierId = stateSearch = areaCodeResponse = newAreaCodes = exchangesResponse = numbersResponse = contractInfo = undefined;
   });
 
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _Analytics_, _HuronConfig_, _Orgservice_, _TrialPstnService_, _TrialService_, _PstnSetupService_, _PstnSetupStatesService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _Analytics_, _HuronConfig_, _Orgservice_, _TrialPstnService_, _TrialService_, _PstnService_, _PstnSetupStatesService_, _FeatureToggleService_) {
 
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     TrialPstnService = _TrialPstnService_;
     TrialService = _TrialService_;
-    PstnSetupService = _PstnSetupService_;
+    PstnService = _PstnService_;
 
     PstnSetupStatesService = _PstnSetupStatesService_;
     FeatureToggleService = _FeatureToggleService_;
@@ -106,7 +107,7 @@ describe('Controller: TrialPstnCtrl', function () {
     $q = _$q_;
 
     spyOn(TrialService, 'getDeviceTrialsLimit');
-    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Orgservice, 'getOrg');
@@ -117,9 +118,10 @@ describe('Controller: TrialPstnCtrl', function () {
     $scope.trial.details.customerName = customerName;
     $scope.trial.details.customerEmail = customerEmail;
 
-    spyOn(PstnSetupService, 'getResellerV2').and.returnValue($q.resolve());
-    spyOn(PstnSetupService, 'listResellerCarriers');
-    spyOn(PstnSetupService, 'listDefaultCarriers');
+    spyOn(PstnService, 'getResellerV2').and.returnValue($q.resolve());
+    spyOn(PstnService, 'listResellerCarriers');
+    spyOn(PstnService, 'listDefaultCarriers');
+    spyOn(PstnService, 'searchCarrierInventory').and.returnValue($q.resolve());
 
     controller = $controller('TrialPstnCtrl', {
       $scope: $scope,
@@ -137,18 +139,23 @@ describe('Controller: TrialPstnCtrl', function () {
 
   it('should initialize with the company name and email', function () {
     expect(controller.trialData.details.pstnContractInfo.companyName).toEqual(customerName);
-    expect(controller.trialData.details.pstnContractInfo.email).toEqual(customerEmail);
+    expect(controller.trialData.details.pstnContractInfo.emailAddress).toEqual(customerEmail);
+  });
+
+  it('should set the nxx params', function () {
+    controller.searchCarrierInventory('817932');
+    expect(controller.trialData.details.pstnNumberInfo.areaCode.code).toBe('817');
   });
 
   it('should reset NXX value when Area Code changes', function () {
     var areaCode = areaCodeResponse.areaCodes[0];
 
     controller.trialData.details.pstnProvider.uuid = carrierId;
-    controller.trialData.details.pstnNumberInfo.state = states[0];
+    controller.trialData.details.pstnNumberInfo.state = location.areas[0];
 
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/did/count?groupBy=nxx&npa=' + areaCode.code + '&state=' + stateSearch).respond(exchangesResponse);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/numbers/count?numberType=DID&groupBy=nxx&npa=' + areaCode.code + '&state=' + stateSearch).respond(exchangesResponse);
 
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/search?count=10&npa=' + areaCode.code + '&sequential=false' + stateSearch).respond(numbersResponse);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/numbers?numberType=DID&count=10&npa=' + areaCode.code + '&sequential=false' + stateSearch).respond(numbersResponse);
 
     controller.trialData.details.pstnNumberInfo.areaCode = areaCode;
     controller.trialData.details.pstnNumberInfo.nxx = exchangesResponse.exchanges[0];
@@ -174,7 +181,7 @@ describe('Controller: TrialPstnCtrl', function () {
     });
 
     it('should get area codes', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/did/count?state=' + stateSearch).respond(areaCodeResponse);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/numbers/count?numberType=DID&state=' + stateSearch).respond(areaCodeResponse);
       controller.trialData.details.pstnProvider.uuid = carrierId;
       controller.trialData.details.pstnNumberInfo.state.abbreviation = stateSearch;
       controller.getStateInventory();
@@ -198,10 +205,10 @@ describe('Controller: TrialPstnCtrl', function () {
         "country": "US",
         "defaultOffer": true,
         "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
+        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
       }];
-      PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
+      PstnService.listResellerCarriers.and.returnValue($q.reject());
+      PstnService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
@@ -220,10 +227,10 @@ describe('Controller: TrialPstnCtrl', function () {
         "country": "US",
         "defaultOffer": true,
         "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
+        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
       }];
-      PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve(orderCarrierDetails));
+      PstnService.listResellerCarriers.and.returnValue($q.reject());
+      PstnService.listDefaultCarriers.and.returnValue($q.resolve(orderCarrierDetails));
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);
@@ -243,10 +250,10 @@ describe('Controller: TrialPstnCtrl', function () {
         "country": "US",
         "defaultOffer": true,
         "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
+        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
       }];
-      PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
+      PstnService.listResellerCarriers.and.returnValue($q.reject());
+      PstnService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
@@ -258,9 +265,9 @@ describe('Controller: TrialPstnCtrl', function () {
       // add a number
       controller.manualTokenMethods.createdtoken({
         attrs: {
-          value: '9728131449'
+          value: '+19728131449',
         },
-        relatedTarget: '<div></div>'
+        relatedTarget: '<div></div>',
       });
       $scope.$apply();
 
@@ -284,10 +291,10 @@ describe('Controller: TrialPstnCtrl', function () {
         "country": "US",
         "defaultOffer": true,
         "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
+        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
       }];
-      PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
+      PstnService.listResellerCarriers.and.returnValue($q.reject());
+      PstnService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
@@ -300,9 +307,9 @@ describe('Controller: TrialPstnCtrl', function () {
       // add a number
       controller.manualTokenMethods.createdtoken({
         attrs: {
-          value: 'abc1234'
+          value: 'abc1234',
         },
-        relatedTarget: '<div></div>'
+        relatedTarget: '<div></div>',
       });
       $scope.$apply();
 
@@ -326,10 +333,10 @@ describe('Controller: TrialPstnCtrl', function () {
         "country": "US",
         "defaultOffer": true,
         "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
+        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
       }];
-      PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve(orderCarrierDetails));
+      PstnService.listResellerCarriers.and.returnValue($q.reject());
+      PstnService.listDefaultCarriers.and.returnValue($q.resolve(orderCarrierDetails));
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);

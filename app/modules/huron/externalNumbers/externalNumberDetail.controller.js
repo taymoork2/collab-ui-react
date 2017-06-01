@@ -5,9 +5,10 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, DialPlanService, ExternalNumberService, ModalService, Notification, TelephoneNumberService) {
+  function ExternalNumberDetail($stateParams, $translate, DialPlanService, ExternalNumberService, $modal, $scope, Notification, PhoneNumberService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
+    vm.apiImplementation = undefined;
 
     // Initialize arrays from service
     getNumbers();
@@ -18,6 +19,7 @@
     vm.assignedModel = '';
     vm.unassignedModel = '';
     vm.loading = false;
+    vm.countryCode = '';
 
     vm.assignedText = $translate.instant('common.assigned');
     vm.pendingText = $translate.instant('common.pending');
@@ -32,7 +34,7 @@
     vm.refreshAssignedOnDelete = refreshAssignedOnDelete;
     vm.refreshUnassignedOnDelete = refreshUnassignedOnDelete;
 
-    vm.isNumberValid = TelephoneNumberService.validateDID;
+    vm.isNumberValid = PhoneNumberService.validateDID;
 
     init();
 
@@ -40,6 +42,10 @@
       setCountryCode()
         .then(function () {
           listPhoneNumbers();
+          ExternalNumberService.getCarrierInfo(vm.currentCustomer.customerOrgId)
+          .then(function (response) {
+            vm.apiImplementation = _.get(response, 'apiImplementation');
+          });
         });
     }
 
@@ -59,33 +65,27 @@
 
     function setCountryCode() {
       return DialPlanService.getCustomerDialPlanCountryCode(vm.currentCustomer.customerOrgId)
-        .then(TelephoneNumberService.setCountryCode)
+        .then(function (countryCode) {
+          vm.countryCode = countryCode;
+        })
         .catch(function (response) {
           Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
         });
     }
 
     function deleteNumber(number) {
-      ModalService.open({
-        title: $translate.instant('externalNumberPanel.deleteNumber'),
-        message: $translate.instant('externalNumberPanel.deleteConfirmation', {
-          pattern: number.number
-        }) + '<br>' + $translate.instant('externalNumberPanel.deleteWarning'),
-        close: $translate.instant('common.yes'),
-        dismiss: $translate.instant('common.no'),
-        btnType: 'negative'
-      }).result.then(function () {
-        return ExternalNumberService.deleteNumber(vm.currentCustomer.customerOrgId, number)
-          .then(function () {
-            Notification.success('notifications.successDelete', {
-              item: number.number
-            });
-            listPhoneNumbers();
-          }).catch(function (response) {
-            Notification.errorResponse(response, 'notifications.errorDelete', {
-              item: number.number
-            });
-          });
+      var deleteNumberScope = $scope.$new(true);
+      deleteNumberScope.numberInfo = {
+        orgId: vm.currentCustomer.customerOrgId,
+        externalNumber: number.number,
+        apiImplementation: vm.apiImplementation,
+      };
+      deleteNumberScope.refreshFn = listPhoneNumbers;
+
+      $modal.open({
+        scope: deleteNumberScope,
+        template: '<delete-external-number number-info="numberInfo" refresh-fn="refreshFn()" dismiss="$dismiss()"></delete-external-number>',
+        type: 'dialog',
       });
     }
 

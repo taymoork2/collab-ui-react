@@ -6,11 +6,12 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, CryptoJS, Orgservice, TrialService, UserListService) {
+  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UserListService) {
+    var NO_EVENT_NAME = 'eventName not passed';
 
     var token = {
       PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
-      TEST_KEY: '536df13b2664a85b06b0b6cf32721c24'
+      TEST_KEY: '536df13b2664a85b06b0b6cf32721c24',
     };
 
     var isTestOrgPromise = null;
@@ -31,24 +32,45 @@
       SAVE: 'Save',
       ENTER_SCREEN: 'Entered Screen',
       VALIDATION_ERROR: 'Validation Error',
-      RUNTIME_ERROR: 'Runtime Error'
+      RUNTIME_ERROR: 'Runtime Error',
     };
 
     var sections = {
+      EDISCOVERY: {
+        name: 'eDiscovery',
+        eventNames: {
+          INITIAL_SEARCH: 'eDiscovery: Search Button Clicked',
+          GENERATE_REPORT: 'eDiscovery: Generate Report Button Clicked',
+          SEARCH_SECTION: 'eDiscovery: Search Section Viewed',
+          REPORTS_SECTION: 'eDiscovery: Report Viewed',
+          SEARCH_ERROR: 'eDiscovery: Request Failed',
+        },
+        persistentProperties: null,
+      },
       TRIAL: {
         name: 'Trial Flow',
         eventNames: {
           START_SETUP: 'Trial flow: Start Trial Setup',
-          START_TRIAL: 'Trial flow: Start Trial'
+          START_TRIAL: 'Trial flow: Start Trial',
         },
-        persistentProperties: null
+        persistentProperties: null,
+      },
+      PREMIUM: {
+        name: 'Premium IT Pro Pack',
+        eventNames: {
+          BMMP_DISMISSAL: 'BMMP Banner dismissal',
+          LEARN_MORE: 'Learn More option selected',
+          PREMIUM_FILTER: 'Customer Overview Filtering',
+        },
+        persistentProperties: null,
       },
       PARTNER: {
         name: 'Partner',
         eventNames: {
           ASSIGN: 'Partner Admin Assigning',
           REMOVE: 'Partner Admin Removal',
-          PATCH: 'Patch User Call'
+          PATCH: 'Patch User Call',
+          LAUNCH_CUSTOMER_PATCH_USERS: 'Partner: Launch Customer Patch Users',
         },
         persistentProperties: null,
       },
@@ -56,7 +78,7 @@
         name: 'User Onboarding',
         eventNames: {
           CMR_CHECKBOX: 'CMR Checkbox Unselected',
-          CONVERT_USER: 'Convert User Search'
+          CONVERT_USER: 'Convert User Search',
         },
         persistentProperties: null,
       },
@@ -72,24 +94,59 @@
           DIRECTORY_SYNC: 'Add Users: Directory Sync',
           SYNC_REFRESH: 'Add Users: Sync Refresh',
           SYNC_ERROR: 'Add Users: Sync Error',
-          GO_BACK_FIX: 'Add Users: Go Back Fix Errors'
+          GO_BACK_FIX: 'Add Users: Go Back Fix Errors',
         },
         persistentProperties: null,
         uploadMethods: {
           MANUAL: 'manual',
           CSV: 'csv',
-          SYNC: 'sync'
+          SYNC: 'sync',
         },
         manualMethods: {
           '0': 'emailOnly',
-          '1': 'nameAndEmail'
+          '1': 'nameAndEmail',
         },
         saveResults: {
           SUCCESS: 'success',
           USER_ERROR: 'user_error',
-          APP_ERROR: 'app_exeption'
-        }
-      }
+          APP_ERROR: 'app_exception',
+        },
+      },
+      HS_NAVIGATION: {
+        name: 'Navigation inside Hybrid Services pages',
+        eventNames: {
+          VISIT_CLUSTER_LIST: 'Visit Hybrid Cluster List Page',
+          VISIT_SERVICES_OVERVIEW: 'Visit Services Overview Page',
+          VISIT_CONTEXT_LIST: 'Visit Hybrid Context Service Cluster List',
+          VISIT_HDS_LIST: 'Visit Hybrid Data Security Service Cluster List',
+          VISIT_HDS_SETTINGS: 'Visit Hybrid Data Security Service Settings',
+          VISIT_CAL_EXC_LIST: 'Visit Hybrid Calendar (Exchange) Service Cluster List',
+          VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings', // TODO
+          VISIT_CAL_GOOG_SETTINGS: 'Visit Hybrid Calendar (Google) Service Settings',
+          VISIT_CALL_LIST: 'Visit Hybrid Call Service Cluster List',
+          VISIT_CALL_SETTINGS: 'Visit Hybrid Call Service Settings',
+          VISIT_MEDIA_LIST: 'Visit Hybrid Media Service Cluster List',
+          VISIT_MEDIA_SETTINGS: 'Visit Hybrid Media Service Settings',
+        },
+        persistentProperties: null,
+      },
+      CONTEXT: {
+        name: 'Context Service operations',
+        eventNames: {
+          CONTEXT_CREATE_FIELD_SUCCESS: 'Field created',
+          CONTEXT_CREATE_FIELD_FAILURE: 'Field creation failed',
+          CONTEXT_CREATE_FIELDSET_SUCCESS: 'Fieldset created',
+          CONTEXT_CREATE_FIELDSET_FAILURE: 'Fieldset creation failed',
+          CONTEXT_UPDATE_FIELD_SUCCESS: 'Field updated',
+          CONTEXT_UPDATE_FIELD_FAILURE: 'Field update failed',
+          CONTEXT_UPDATE_FIELDSET_SUCCESS: 'Fieldset updated',
+          CONTEXT_UPDATE_FIELDSET_FAILURE: 'Fieldset update failed',
+          CONTEXT_DELETE_FIELD_SUCCESS: 'Field deleted',
+          CONTEXT_DELETE_FIELD_FAILURE: 'Field deletion failed',
+          CONTEXT_DELETE_FIELDSET_SUCCESS: 'Fieldset deleted',
+          CONTEXT_DELETE_FIELDSET_FAILURE: 'Fieldset deletion failed',
+        },
+      },
     };
 
     var service = {
@@ -106,11 +163,14 @@
       sections: sections,
       trackError: trackError,
       trackEvent: trackEvent,
+      trackPremiumEvent: trackPremiumEvent,
+      trackEdiscoverySteps: trackEdiscoverySteps,
       trackPartnerActions: trackPartnerActions,
       trackTrialSteps: trackTrialSteps,
       trackUserOnboarding: trackUserOnboarding,
       trackAddUsers: trackAddUsers,
-      trackCsv: trackCsv
+      trackCsv: trackCsv,
+      trackHSNavigation: trackHSNavigation,
     };
 
     return service;
@@ -147,11 +207,14 @@
      * Determines if it's a Test Org or not.
      */
     function checkIfTestOrg() {
+      var params = {
+        basicInfo: true,
+      };
       if (!isTestOrgPromise) {
         isTestOrgPromise = $q(function (resolve) {
           Orgservice.getOrg(function (response) {
             resolve(_.get(response, 'isTestOrg'));
-          });
+          }, null, params);
         });
       }
       return isTestOrgPromise;
@@ -167,9 +230,9 @@
     function trackEvent(eventName, properties) {
       var prefix = 'cisco_';
       properties = properties || {};
-      //prepending properties with cisco
-      _.each(properties, function (value, key) {
-        if (key.indexOf(prefix) !== 0) {
+      // prepending properties with cisco
+      _.forEach(properties, function (value, key) {
+        if (!_.startsWith(key, prefix)) {
           delete properties[key];
           properties[prefix + key] = value;
         }
@@ -180,11 +243,55 @@
     }
 
     /**
+     * Premium IT Pro Pack Events
+     */
+    function trackPremiumEvent(eventName, location) {
+      if (_.isEmpty(eventName) || !_.isString(eventName)) {
+        return $q.reject(NO_EVENT_NAME);
+      }
+
+      var properties = {
+        date: moment().format(),
+        from: _.get($state, '$current.name'),
+        orgId: Authinfo.getOrgId(),
+        userId: Authinfo.getUserId(),
+        userRole: Authinfo.getRoles(),
+      };
+
+      if (!_.isUndefined(location)) {
+        properties.location = location;
+      }
+
+      return trackEvent(eventName, properties);
+    }
+
+    /**
+      * Ediscovery Events
+      */
+    function trackEdiscoverySteps(eventName, trackingId) {
+      if (!_.isString(eventName) || eventName.length !== 0) {
+        return $q.reject(NO_EVENT_NAME);
+      }
+
+      var properties = {
+        from: _.get($state, '$current.name'),
+        trackingId: trackingId,
+      };
+
+      _getOrgData('EDISCOVERY').then(function (data) {
+        _.extend(properties, data);
+        delete properties.realOrgId;
+      });
+
+      return trackEvent(eventName, properties);
+    }
+
+    /**
      * Trial Events
      */
     function trackTrialSteps(eventName, trialData, additionalPayload) {
       if (!eventName) {
-        return $q.reject('eventName not passed');
+        return $q.reject(NO_EVENT_NAME);
       }
 
       var properties = {
@@ -198,16 +305,11 @@
           properties.servicesArray = _buildTrialServicesArray(trialData.trials);
           properties.duration = _.get(trialData, 'details.licenseDuration');
           properties.licenseQty = _.get(trialData, 'details.licenseCount');
-          /* TODO: add this once we have a clear strategy
-          if (properties.from === 'trialAdd.call' || properties.from === 'trialEdit.call') {
-            properties.devicesArray = _buildTrialDevicesArray(trialData.trials);
-          }*/
         }
         _.extend(properties, additionalPayload);
         return trackEvent(eventName, properties);
       });
     }
-
 
     /**
      * Partner Events
@@ -217,9 +319,9 @@
         return $q.reject('eventName, uuid or orgId not passed');
       }
       var properties = {
-        uuid: _hashSha256(UUID),
-        orgId: _hashSha256(orgId),
-        section: sections.PARTNER.name
+        uuid: UUID,
+        orgId: orgId,
+        section: sections.PARTNER.name,
       };
       return trackEvent(eventName, properties);
     }
@@ -227,7 +329,6 @@
     /**
     * Onboarding. First Time Wizard Events
     */
-
     function trackUserOnboarding(eventName, name, orgId, additionalData) {
       if (!eventName || !name || !orgId) {
         return $q.reject('eventName, uuid or orgId not passed');
@@ -235,13 +336,13 @@
 
       var properties = {
         from: name,
-        orgId: _hashSha256(orgId),
+        orgId: orgId,
         section: sections.USER_ONBOARDING.name,
       };
 
       if (eventName === sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX) {
         if (!additionalData.licenseId) {
-          $q.reject('license id not passed');
+          return $q.reject('license id not passed');
         } else {
           properties.licenseId = additionalData.licenseId;
         }
@@ -255,10 +356,10 @@
     */
     function trackAddUsers(eventName, uploadMethod, additionalPayload) {
       if (!eventName) {
-        return $q.reject('eventName not passed');
+        return $q.reject(NO_EVENT_NAME);
       }
       var properties = {
-        from: _.get($state, '$current.name')
+        from: _.get($state, '$current.name'),
       };
 
       // populate static properties
@@ -281,6 +382,20 @@
       }
     }
 
+    /**
+     * Hybrid Services navigation
+     */
+    function trackHSNavigation(eventName, payload) {
+      if (!eventName) {
+        return $q.reject(NO_EVENT_NAME);
+      }
+
+      var properties = _.extend({
+        userId: Authinfo.getUserId(),
+        orgId: Authinfo.getOrgId(),
+      }, payload);
+      return trackEvent(eventName, properties);
+    }
 
     /**
     * General Error Tracking
@@ -298,10 +413,10 @@
         stack: stack,
         error: error,
         cause: cause,
-        userId: _hashSha256(Authinfo.getUserId()),
-        orgId: _hashSha256(Authinfo.getOrgId()),
+        userId: Authinfo.getUserId(),
+        orgId: Authinfo.getOrgId(),
         domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
-        state: _.get($state, '$current.name')
+        state: _.get($state, '$current.name'),
       });
     }
 
@@ -341,18 +456,21 @@
       sections[sectionName].persistentProperties = {
         licenses: _.map(licenses, 'licenseType'),
         realOrgId: Authinfo.getOrgId(),
-        orgId: _hashSha256(Authinfo.getOrgId()),
+        orgId: Authinfo.getOrgId(),
         domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
-        uuid: _hashSha256(Authinfo.getUserId()),
+        uuid: Authinfo.getUserId(),
         role: Authinfo.getRoles(),
-        section: sections[sectionName].name
+        section: sections[sectionName].name,
+      };
+      var params = {
+        basicInfo: true,
       };
       var promises = {
         listUsers: UserListService.listUsers(0, 1, null, null, _.noop),
-        getOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
+        getOrg: Orgservice.getAdminOrgAsPromise(null, params).catch(function (err) {
           return err;
         }),
-        trialDaysLeft: TrialService.getDaysLeftForCurrentUser()
+        trialDaysLeft: TrialService.getDaysLeftForCurrentUser(),
       };
       return $q.all(promises).then(function (data) {
         sections[sectionName].persistentProperties.userCountPrior = _.get(data.listUsers, 'data.totalResults');
@@ -372,13 +490,6 @@
 
       });
       return isTrial ? 'trial' : 'active';
-    }
-
-    function _hashSha256(id) {
-      if (!id) {
-        return null;
-      }
-      return CryptoJS.SHA256(id).toString(CryptoJS.enc.Base64);
     }
 
     function _getDomainFromEmail(email) {

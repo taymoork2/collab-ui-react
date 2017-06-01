@@ -1,33 +1,33 @@
 export interface IPstnCarrierGet {
-  apiImplementation: String;
-  country: String;
-  countryCode: String;
-  defaultOffer: String;
-  description: String;
-  displayName: String;
-  name: String;
+  apiImplementation: string;
+  country: string;
+  countryCode: string;
+  defaultOffer: string;
+  description: string;
+  displayName: string;
+  name: string;
   offers: Array<any>;
   services: Array<any>;
-  url: String;
-  uuid: String;
-  vendor: String;
-  voiceCarrierRef: String;
+  url: string;
+  uuid: string;
+  vendor: string;
+  voiceCarrierRef: string;
 }
 
 export class PstnCarrierGet implements IPstnCarrierGet {
-  public apiImplementation: String;
-  public country: String;
-  public countryCode: String;
-  public defaultOffer: String;
-  public description: String;
-  public displayName: String;
-  public name: String;
+  public apiImplementation: string;
+  public country: string;
+  public countryCode: string;
+  public defaultOffer: string;
+  public description: string;
+  public displayName: string;
+  public name: string;
   public offers: Array<any>;
   public services: Array<any>;
-  public url: String;
-  public uuid: String;
-  public vendor: String;
-  public voiceCarrierRef: String;
+  public url: string;
+  public uuid: string;
+  public vendor: string;
+  public voiceCarrierRef: string;
 
   public constructor() {
     this.apiImplementation = '';
@@ -47,32 +47,39 @@ export class PstnCarrierGet implements IPstnCarrierGet {
 }
 
 export interface IPstnCarrierStatic {
-  name: String;
-  logoSrc: String;
-  logoAlt: String;
-  docSrc: String;
+  name: string;
+  logoSrc: string;
+  logoAlt: string;
+  docSrc: string;
   features: Array<any>;
 }
 
+export interface IPstnCarrierCapability {
+  capability: string;
+  url: string;
+}
+
 export class PstnCarrier {
-  public apiImplementation: String;
-  public country: String;
-  public countryCode: String;
-  public defaultOffer: String;
-  public description: String;
-  public displayName: String;
-  public name: String;
+  public apiImplementation: string;
+  public country: string;
+  public countryCode: string;
+  public defaultOffer: string;
+  public description: string;
+  public displayName: string;
+  public name: string;
   public offers: Array<any>;
   public services: Array<any>;
-  public url: String;
-  public uuid: String;
-  public vendor: String;
-  public voiceCarrierRef: String;
-  public logoSrc: String;
-  public logoAlt: String;
-  public docSrc: String;
+  public url: string;
+  public uuid: string;
+  public vendor: string;
+  public voiceCarrierRef: string;
+  public logoSrc: string;
+  public logoAlt: string;
+  public docSrc: string;
   public features: Array<any>;
-  public title: String;
+  public title: string;
+  public selected: boolean;
+  private capabilities: Array<IPstnCarrierCapability>;
 
   constructor() {
     this.logoSrc = '';
@@ -82,6 +89,8 @@ export class PstnCarrier {
     this.services = new Array<any>();
     this.features = new Array<any>();
     this.title = '';
+    this.selected = false;
+    this.capabilities = [];
   }
 
   public setPstnCarrierGet(carrier: IPstnCarrierGet): void {
@@ -119,5 +128,26 @@ export class PstnCarrier {
     carrier.features.forEach(feature => {
       this.features.push(feature);
     });
+  }
+
+  public setCapabilities(capablities: Array<IPstnCarrierCapability>): void {
+    if (_.isArray(capablities)) {
+      this.capabilities = capablities;
+    }
+  }
+
+  public getCapabilities(): Array<IPstnCarrierCapability> {
+    return this.capabilities;
+  }
+
+  public getCapability(capability: string): boolean {
+    if (_.isString(capability) && capability.length > 0) {
+      for (let i: number = 0; i < this.capabilities.length; i++) {
+        if (this.capabilities[i].capability === capability) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

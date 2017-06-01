@@ -33,7 +33,7 @@ describe('controller:ComponentsCtrl', function () {
     spyOn(ComponentsService, 'getComponents').and.callThrough();
     spyOn(GSSService, 'getServiceId').and.returnValue($q.resolve({}));
     spyOn($modal, 'open').and.returnValue({
-      result: $q.resolve()
+      result: $q.resolve(),
     });
     spyOn($state, 'go');
   }
@@ -48,7 +48,7 @@ describe('controller:ComponentsCtrl', function () {
   it('deleteComponent should call go', function () {
     controller.delComponent(component);
     expect($state.go).toHaveBeenCalledWith('gss.components.deleteComponent', {
-      component: component
+      component: component,
     });
   });
 });

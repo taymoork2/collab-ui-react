@@ -6,34 +6,45 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDeviceService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDataModelService,
+    CsdmUpgradeChannelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
     var vm = this;
     vm.devices = {};
-    vm.loadedCloudberry = false;
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
-    vm.csdmHuronUserDeviceService = null;
-    vm.showGenerateOtpButton = false;
-    vm.generateCodeIsDisabled = true;
+    vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
+    vm.showDeviceSettings = false;
 
     function init() {
-      fetchATASupport();
+      fetchAsyncSettings();
     }
 
     init();
 
-    function fetchATASupport() {
+    function fetchAsyncSettings() {
       var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
         vm.showATA = result;
       });
       var personalPromise = FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
         vm.showPersonal = result;
-        if (shouldLoadPersonalDevices()) {
-          activate();
-        }
+        activate();
       });
       $q.all([ataPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
         vm.generateCodeIsDisabled = false;
+      });
+
+      $q.all([
+        FeatureToggleService.csdmPlaceUpgradeChannelGetStatus(),
+        FeatureToggleService.csdmPlaceGuiSettingsGetStatus(),
+      ])
+      .then(function (features) {
+        if (features[1]) {
+          vm.showDeviceSettings = true;
+        } else if (features[0]) {
+          CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
+            vm.showDeviceSettings = channels.length > 1;
+          });
+        }
       });
     }
 
@@ -47,7 +58,7 @@
             displayName: data.displayName,
             userName: data.userName,
             cisUuid: data.id,
-            organizationId: data.meta.organizationID
+            organizationId: data.meta.organizationID,
           };
         }
         userDetailsDeferred.resolve();
@@ -65,34 +76,14 @@
       }).length > 0;
     };
 
-    function addLinkOrButtonForActivationCode() {
-      if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded')) {
-        if (vm.csdmHuronUserDeviceService.dataLoaded() && vm.loadedCloudberry) {
-          if (_.size(vm.devices)) {
-            $scope.userOverview.enableAuthCodeLink();
-            vm.showGenerateOtpButton = false;
-          } else {
-            $scope.userOverview.disableAuthCodeLink();
-            vm.showGenerateOtpButton = true;
-          }
-        }
-      }
-    }
-
-    $scope.$watch(function () {
-      if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded') && vm.loadedCloudberry) {
-        return vm.csdmHuronUserDeviceService.dataLoaded();
-      }
-    }, addLinkOrButtonForActivationCode);
-
     vm.showDeviceDetails = function (device) {
       $state.go('user-overview.csdmDevice', {
         currentDevice: device,
-        huronDeviceService: vm.csdmHuronUserDeviceService
+        huronDeviceService: vm.csdmHuronUserDeviceService,
       });
     };
 
-    vm.resetCode = function () {
+    vm.onGenerateOtpFn = function () {
       vm.resettingCode = true;
       var userFirstName;
       if (vm.currentUser.name) {
@@ -123,15 +114,15 @@
             organizationId: vm.currentUser.meta.organizationID,
             type: 'personal',
             deviceType: vm.showPersonal ? undefined : 'huron',
-            isEntitledToHuron: isCurrentUserEntitledToHuron()
+            isEntitledToHuron: isCurrentUserEntitledToHuron(),
           },
           recipient: {
             cisUuid: vm.currentUser.id,
             email: email,
             displayName: vm.currentUser.displayName,
             firstName: userFirstName,
-            organizationId: vm.currentUser.meta.organizationID
-          }
+            organizationId: vm.currentUser.meta.organizationID,
+          },
         },
         history: [],
         currentStateName: vm.isOrgEntitledToHuron() && !isCurrentUserEntitledToHuron()
@@ -139,14 +130,14 @@
           : 'addDeviceFlow.showActivationCode',
         wizardState: {
           'addDeviceFlow.confirmRoomDeviceOnly': {
-            next: 'addDeviceFlow.showActivationCode'
+            next: 'addDeviceFlow.showActivationCode',
           },
-          'addDeviceFlow.showActivationCode': {}
-        }
+          'addDeviceFlow.showActivationCode': {},
+        },
       };
       var wizard = WizardFactory.create(wizardState);
       $state.go(wizard.state().currentStateName, {
-        wizard: wizard
+        wizard: wizard,
       });
     };
 
@@ -157,50 +148,44 @@
     }
 
     function activate() {
-      vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
-      vm.csdmHuronUserDeviceService.fetch().then(function () {
-        _.extend(vm.devices, vm.csdmHuronUserDeviceService.getDeviceList());
-      });
-      CsdmDeviceService.fetchDevicesForUser(vm.currentUser.id).then(function (res) {
-        _.extend(vm.devices, res);
-      }).finally(function () {
-        vm.loadedCloudberry = true;
-      });
+      if (shouldLoadPersonalDevices()) {
+        var type;
+        var shouldLoadCloudberry = vm.showPersonal && vm.isOrgEntitledToRoomSystem();
+        var shouldLoadHuron = isCurrentUserEntitledToHuron();
+        if (shouldLoadCloudberry && shouldLoadHuron) {
+          type = 'all';
+        } else if (shouldLoadCloudberry) {
+          type = 'cloudberry';
+        } else if (shouldLoadHuron) {
+          type = 'huron';
+        }
+        if (type) {
+          vm.loadedDevicesPromise = CsdmDataModelService.reloadDevicesForUser(vm.currentUser.id, type).then(function (devices) {
+            vm.devices = devices;
+          });
+        } else {
+          vm.loadedDevicesPromise = $q.resolve();
+        }
+      } else {
+        vm.loadedDevicesPromise = $q.resolve();
+      }
     }
 
     function shouldLoadPersonalDevices() {
       vm.currentUser = $stateParams.currentUser;
-      return vm.currentUser && (isEntitled(Config.entitlements.huron) || vm.showPersonal);
-    }
-
-    function isEntitled(ent) {
-      if (vm.currentUser && vm.currentUser.entitlements) {
-        for (var i = 0; i < vm.currentUser.entitlements.length; i++) {
-          var svc = vm.currentUser.entitlements[i];
-          if (svc === ent) {
-            return true;
-          }
-        }
-      }
-      return false;
+      return vm.currentUser && (isCurrentUserEntitledToHuron() || vm.showPersonal);
     }
 
     $scope.$on('deviceDeactivated', function () {
-      if (shouldLoadPersonalDevices()) {
-        activate();
-      }
+      activate();
     });
 
     $scope.$on('otpGenerated', function () {
-      if (shouldLoadPersonalDevices()) {
-        activate();
-      }
+      activate();
     });
 
     $scope.$on('entitlementsUpdated', function () {
-      if (shouldLoadPersonalDevices()) {
-        activate();
-      }
+      activate();
     });
   }
 })();

@@ -6,7 +6,7 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils, ClusterService, Userservice, ResourceGroupService, UCCService) {
+  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, Userservice, ResourceGroupService, UCCService) {
     var vm = this;
     var SUPPRESSED_STATE = {
       LOADING: 'loading',
@@ -22,7 +22,7 @@
       vm.userId = $stateParams.id;
       vm.orgId = $stateParams.orgId;
       vm.org = {
-        id: $stateParams.orgId
+        id: $stateParams.orgId,
       };
     }
     vm.resendInviteEmail = resendInviteEmail;
@@ -32,11 +32,13 @@
     vm.messageCard = {};
     vm.meetingCard = {};
     vm.callCard = {};
+    vm.careCard = {};
     vm.hybridServicesCard = {};
     vm.keyPressHandler = keyPressHandler;
     vm.sendCode = sendCode;
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
+    vm.isCare = false;
     vm.openExtendedInformation = openExtendedInformation;
     vm.openHybridServicesModal = openHybridServicesModal;
     vm.supportsExtendedInformation = false;
@@ -45,7 +47,7 @@
     vm.hasEmailProblem = hasEmailProblem;
     vm.clear = clear;
     vm._helpers = {
-      notifyError: notifyError
+      notifyError: notifyError,
     };
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
@@ -60,7 +62,7 @@
       var trimmedUserData = {
         displayName: vm.user.displayName,
         email: vm.user.userName,
-        onlineOrderIds: _.get(vm.user, 'onlineOrderIds', [])
+        onlineOrderIds: _.get(vm.user, 'onlineOrderIds', []),
       };
       HelpdeskService.resendInviteEmail(trimmedUserData)
         .then(function () {
@@ -97,8 +99,8 @@
             },
             data: function () {
               return vm.user;
-            }
-          }
+            },
+          },
         });
       }
     }
@@ -265,7 +267,7 @@
       var TOTAL_ENDPOINTS = 3;
 
       var wrappedEmailEvent = {
-        emailEvent: emailEvent
+        emailEvent: emailEvent,
       };
 
       // notes:
@@ -377,7 +379,9 @@
       vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
       vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
       vm.callCard = HelpdeskCardsUserService.getCallCardForUser(user);
+      vm.careCard = HelpdeskCardsUserService.getCareCardForUser(user);
       vm.hybridServicesCard = HelpdeskCardsUserService.getHybridServicesCardForUser(user);
+      vm.isCare = vm.careCard.entitled;
 
       if (vm.hybridServicesCard.entitled) {
         HelpdeskService.getHybridStatusesForUser(vm.userId, vm.orgId).then(function (statuses) {
@@ -393,7 +397,9 @@
                 break;
               case 'squared-fusion-uc':
                 vm.hybridServicesCard.uc.status = status;
+                vm.hybridServicesCard.uc.showDirectoryUri = false;
                 if (vm.hybridServicesCard.uc.status.state === 'error' || vm.hybridServicesCard.uc.status.state === 'activated') {
+                  vm.hybridServicesCard.uc.showDirectoryUri = true;
                   UCCService.getUserDiscovery(vm.userId, vm.orgId).then(function (userDiscovery) {
                     vm.hybridServicesCard.uc.directoryUri = userDiscovery.directoryURI;
                   });
@@ -404,11 +410,12 @@
                 break;
             }
             if (status.lastStateChange) {
-              status.lastStateChangeText = FusionUtils.getTimeSinceText(status.lastStateChange);
+              status.lastStateChangeText = HybridServicesI18NService.getTimeSinceText(status.lastStateChange);
             }
-            if (status.connectorId) {
-              ClusterService.getConnector(status.connectorId).then(function (connector) {
-                status.homedConnector = connector;
+            if (status.clusterId) {
+              HybridServicesClusterService.get(status.clusterId, vm.orgId).then(function (cluster) {
+                status.homedCluster = cluster;
+                status.homedConnector = _.find(cluster.connectors, { id: status.connectorId });
               });
             }
             if (status.resourceGroupId) {
@@ -437,13 +444,34 @@
       }
 
       if (isAuthorizedForLog()) {
-        HelpdeskLogService.searchForLastPushedLog(vm.userId).then(function (log) {
-          vm.lastPushedLog = log;
+        var searchLimit = vm.isCare ? 300 : 1;
+        var searchOpts = {
+          limit: searchLimit,
+        };
+        HelpdeskLogService.searchLogs(vm.userId, searchOpts).then(function (response) {
+          var metadataList = _.get(response, 'data.metadataList');
+          if (vm.isCare) {
+            vm.lastPushedCareLog = filterLog(metadataList, function (metadata) {
+              return _.get(metadata, 'meta.product') === 'sparkCare';
+            });
+            vm.lastPushedLog = filterLog(metadataList, function (metadata) {
+              return _.get(metadata, 'meta.product') !== 'sparkCare';
+            });
+          } else {
+            vm.lastPushedLog = HelpdeskLogService.cleanLogMetadata(_.head(metadataList));
+          }
         }, _.noop);
       }
 
       vm.cardsAvailable = true;
       angular.element(".helpdesk-details").focus();
+    }
+
+    function filterLog(metadataList, condnFn) {
+      var filteredMetadata = _.find(metadataList, condnFn);
+      if (filteredMetadata) {
+        return HelpdeskLogService.cleanLogMetadata(filteredMetadata);
+      }
     }
 
     function getUserStatusesAsString(vm) {
@@ -482,7 +510,7 @@
     }
 
     function notifyError(response) {
-      Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+      Notification.errorResponse(response, 'helpdesk.unexpectedError');
     }
 
     function openHybridServicesModal() {
@@ -498,12 +526,12 @@
               },
               data: function () {
                 return hsData;
-              }
-            }
+              },
+            },
           });
         })
         .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          Notification.errorResponse(error, 'hercules.genericFailure');
         })
         .finally(function () {
           vm.loadingHSData = false;

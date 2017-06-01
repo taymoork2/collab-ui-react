@@ -13,7 +13,7 @@ describe('CsdmHuronOrgDeviceService', function () {
     Authinfo = _Authinfo_;
     $httpBackend = _$httpBackend_;
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
-    $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/devices/?type=huron&checkDisplayName=false').respond([]);
+    $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/devices/?type=huron&checkDisplayName=false').respond([]);
   }));
 
   afterEach(function () {
@@ -22,10 +22,10 @@ describe('CsdmHuronOrgDeviceService', function () {
   });
 
   it('should return an empty list if no directorynumbers', function (done) {
-    HuronConfig.getCmiUrl = sinon.stub().returns('testHuronUrl');
-    Authinfo.getOrgId = sinon.stub().returns('testOrg');
+    HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
-      cisUuid: 'testUserId'
+      cisUuid: 'testUserId',
     };
 
     $httpBackend
@@ -41,10 +41,10 @@ describe('CsdmHuronOrgDeviceService', function () {
   });
 
   it('should return only extension if no alternates', function (done) {
-    HuronConfig.getCmiUrl = sinon.stub().returns('testHuronUrl');
-    Authinfo.getOrgId = sinon.stub().returns('testOrg');
+    HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
-      cisUuid: 'testUserId'
+      cisUuid: 'testUserId',
     };
 
     $httpBackend
@@ -52,9 +52,9 @@ describe('CsdmHuronOrgDeviceService', function () {
       .respond(200, [{
         directoryNumber: {
           pattern: '1234',
-          uuid: 'testNumberId'
+          uuid: 'testNumberId',
         },
-        dnUsage: 'Primary'
+        dnUsage: 'Primary',
       }]);
 
     $httpBackend
@@ -73,10 +73,10 @@ describe('CsdmHuronOrgDeviceService', function () {
   });
 
   it('should return alternate', function (done) {
-    HuronConfig.getCmiUrl = sinon.stub().returns('testHuronUrl');
-    Authinfo.getOrgId = sinon.stub().returns('testOrg');
+    HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
-      cisUuid: 'testUserId'
+      cisUuid: 'testUserId',
     };
 
     $httpBackend
@@ -84,15 +84,15 @@ describe('CsdmHuronOrgDeviceService', function () {
       .respond(200, [{
         directoryNumber: {
           pattern: '1234',
-          uuid: 'testNumberId'
+          uuid: 'testNumberId',
         },
-        dnUsage: 'Primary'
+        dnUsage: 'Primary',
       }]);
 
     $httpBackend
       .expectGET('testHuronUrl/voice/customers/testOrg/directorynumbers/testNumberId/alternatenumbers?alternatenumbertype=%2BE.164+Number')
       .respond(200, [{
-        numMask: '+47 1234'
+        numMask: '+47 1234',
       }]);
 
     csdmHuronOrgDeviceService.getLinesForDevice(testDevice).then(function (res) {
@@ -107,10 +107,10 @@ describe('CsdmHuronOrgDeviceService', function () {
   });
 
   it('should return multiple results', function (done) {
-    HuronConfig.getCmiUrl = sinon.stub().returns('testHuronUrl');
-    Authinfo.getOrgId = sinon.stub().returns('testOrg');
+    HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
+    Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
-      cisUuid: 'testUserId'
+      cisUuid: 'testUserId',
     };
 
     $httpBackend
@@ -118,27 +118,27 @@ describe('CsdmHuronOrgDeviceService', function () {
       .respond(200, [{
         directoryNumber: {
           pattern: '1234',
-          uuid: 'testNumberId1'
+          uuid: 'testNumberId1',
         },
-        dnUsage: 'Primary'
+        dnUsage: 'Primary',
       }, {
         directoryNumber: {
           pattern: '5678',
-          uuid: 'testNumberId2'
+          uuid: 'testNumberId2',
         },
-        dnUsage: 'Undefined'
+        dnUsage: 'Undefined',
       }]);
 
     $httpBackend
       .whenGET('testHuronUrl/voice/customers/testOrg/directorynumbers/testNumberId1/alternatenumbers?alternatenumbertype=%2BE.164+Number')
       .respond(200, [{
-        numMask: '+47 1234'
+        numMask: '+47 1234',
       }]);
 
     $httpBackend
       .whenGET('testHuronUrl/voice/customers/testOrg/directorynumbers/testNumberId2/alternatenumbers?alternatenumbertype=%2BE.164+Number')
       .respond(200, [{
-        numMask: '+47 5678'
+        numMask: '+47 5678',
       }]);
 
     csdmHuronOrgDeviceService.getLinesForDevice(testDevice).then(function (res) {

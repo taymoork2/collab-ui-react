@@ -5,25 +5,25 @@
     .module('Gemini')
     .component('cbgCountry', {
       bindings: {
-        selected: '='
+        selected: '=',
       },
       controller: cbgCountryCtrl,
-      templateUrl: 'modules/gemini/callbackGroup/cbgCountry.tpl.html'
+      templateUrl: 'modules/gemini/callbackGroup/cbgCountry.tpl.html',
     });
 
   /* @ngInject */
-  function cbgCountryCtrl($scope, $timeout, $translate, Notification, cbgService) {
+  function cbgCountryCtrl($scope, $modal, $window, $timeout, $translate, Notification, cbgService, WindowLocation) {
     var vm = this;
     vm.model = {
       file: null,
       fullFileName: '',
       uploadProgress: 0,
       processProgress: 0,
-      isProcessing: false
+      isProcessing: false,
     };
 
     vm.options = [];
-    vm.allCountries = []; // for compare when import
+    vm.allCountries = {}; // for compare when import
     vm.selectPlaceholder = $translate.instant('gemini.cbgs.request.selectPlaceholder');
 
     vm.$onInit = $onInit;
@@ -32,6 +32,7 @@
     vm.onDelSelected = onDelSelected;
     vm.onFileSizeError = onFileSizeError;
     vm.onFileTypeError = onFileTypeError;
+    vm.onDownloadTemplate = onDownloadTemplate;
 
     function $onInit() {
       vm.selected = vm.selected ? vm.selected : [];
@@ -43,13 +44,13 @@
       });
 
       getCountries();
-      getDownloadUrl();
     }
 
     function getCountries() {
       cbgService.getCountries().then(function (res) {
         _.forEach(res.content.data, function (item) {
-          vm.allCountries[item.countryName] = item;
+          var key = item.countryName.replace(/[()".\-+,\s]/g, '');
+          vm.allCountries[key] = item;
           vm.options.push({ value: item.countryId, label: item.countryName });
           if (vm.selected.length) {
             updateOptions();
@@ -58,9 +59,12 @@
       });
     }
 
-    function getDownloadUrl() {
-      cbgService.getDownloadCountryUrl().then(function (res) {
-        vm.downloadUrl = _.get(res.content, 'data.body');
+    function onDownloadTemplate() {
+      $modal.open({
+        type: 'dialog',
+        templateUrl: 'modules/gemini/telephonyDomain/details/downloadConfirm.html',
+      }).result.then(function () {
+        WindowLocation.set(cbgService.getDownloadCountryUrl());
       });
     }
 
@@ -110,7 +114,7 @@
 
           formateCountries(csvArray);
           if (vm.inValidCountry) {
-            Notification.error('Invalid countryName: ' + vm.inValidCountry); // TODO wording in l10n
+            Notification.error('gemini.cbgs.invalidCountry', { country: vm.inValidCountry });
           } else {
             updateOptions();
             substrFileName();
@@ -125,12 +129,15 @@
       var countries = [];
       vm.inValidCountry = '';
       _.forEach(data, function (item) {
-        var key = _.trim(item[0]);
+        var key = item[0].replace(/[()".\-+/,\s]/g, '');
+        if (key === 'SelectCountryRegion') {
+          return true;
+        }
         if (!vm.allCountries[key]) {
-          vm.inValidCountry = key;
+          vm.inValidCountry = item[0];
           return false;
         }
-        countries.push({ value: vm.allCountries[key].countryId, label: key });
+        countries.push({ value: vm.allCountries[key].countryId, label: vm.allCountries[key].countryName });
       });
 
       vm.selected = countries;

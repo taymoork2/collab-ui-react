@@ -3,7 +3,7 @@
 
   describe('Template: customerList.tpl.html', function () {
     var $scope, $compile, $templateCache, $q, $controller, controller, view;
-    var Authinfo, Orgservice, PartnerService, FeatureToggleService, trialForPaid;
+    var Authinfo, Orgservice, PartnerService, FeatureToggleService;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
 
@@ -31,28 +31,31 @@
       $scope.timeoutVal = 1;
       $rootScope.typeOfExport = {
         USER: 1,
-        CUSTOMER: 2
+        CUSTOMER: 2,
       };
 
-      trialForPaid = false;
-
-
       spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve({
-        data: {}
+        data: {},
       }));
 
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
       spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
         callback({
-          success: true
+          success: true,
         }, 200);
       });
       spyOn(Authinfo, 'isCare').and.returnValue(true);
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
+      spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
+      spyOn(FeatureToggleService, 'atlasITProPackGetStatus').and.returnValue($q.resolve(true));
     }));
 
     describe('Add trial button', function () {
+      beforeEach(function () {
+        spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
+      });
+
       it('should show by default', function () {
         initAndCompile();
         expect(view.find(ADD_BUTTON).length).toEqual(1);
@@ -66,6 +69,10 @@
     });
 
     describe('Customer name Search filter', function () {
+      beforeEach(function () {
+        spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
+      });
+
       it('clicking search box should call filterList', function () {
         initAndCompile();
         spyOn(controller, 'filterList').and.callFake(function () {});
@@ -77,7 +84,6 @@
     function initAndCompile() {
       controller = $controller('CustomerListCtrl', {
         $scope: $scope,
-        trialForPaid: trialForPaid
       });
       $scope.customerList = controller;
       var template = $templateCache.get('modules/core/customers/customerList/customerList.tpl.html');

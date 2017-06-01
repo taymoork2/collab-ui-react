@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2($modal, $state, $translate, Authinfo, FusionClusterService) {
+  function MediaServiceControllerV2($modal, $state, $translate, Authinfo, HybridServicesClusterService) {
 
     var vm = this;
     vm.backState = 'services-overview';
@@ -20,7 +20,7 @@
       }, {
         title: $translate.instant('common.settings'),
         state: 'media-service-v2.settings',
-      }
+      },
     ];
     vm.addResourceModal = {
       resolve: {
@@ -31,10 +31,10 @@
       controller: 'RedirectAddResourceControllerV2',
       controllerAs: 'redirectResource',
       templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
-      modalClass: 'redirect-add-resource'
+      modalClass: 'redirect-add-resource',
     };
 
-    FusionClusterService.serviceIsSetUp('squared-fusion-media')
+    HybridServicesClusterService.serviceIsSetUp('squared-fusion-media')
       .then(function (enabled) {
         if (enabled) {
           vm.addResourceModal.resolve.firstTimeSetup = false;
@@ -54,15 +54,7 @@
 
   }
 
-  /* @ngInject */
-  function MediaAlarmControllerV2($stateParams) {
-    var vm = this;
-    vm.alarm = $stateParams.alarm;
-    vm.host = $stateParams.host;
-  }
-
   angular
     .module('Mediafusion')
-    .controller('MediaServiceControllerV2', MediaServiceControllerV2)
-    .controller('MediaAlarmControllerV2', MediaAlarmControllerV2);
+    .controller('MediaServiceControllerV2', MediaServiceControllerV2);
 }());

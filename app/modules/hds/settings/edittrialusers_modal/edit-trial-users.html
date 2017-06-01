@@ -14,6 +14,7 @@
               on-tag-added="editTrialUsersCtrl.addUser()"
               on-tag-removed="editTrialUsersCtrl.removeUser()"
               placeholder={{editTrialUsersCtrl.localizedAddEmailWatermark}}
+              ng-disabled="editTrialUsersCtrl.dirsyncEnabled === true"
               ng-model="editTrialUsersCtrl.emailTrialUsers"
               type="email"
               allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
@@ -28,8 +29,9 @@
     translate="common.cancel">
   </button>
   <button
-    class="btn btn--primary" 
-    ng-click="editTrialUsersCtrl.saveTrialUsers(); $dismiss();"
+    class="btn btn--primary"
+    ng-disabled="editTrialUsersCtrl.dirsyncEnabled === true"
+    ng-click="editTrialUsersCtrl.saveTrialUsers(); $close();"
     translate="common.save">
   </button>
 </div>

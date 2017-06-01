@@ -1,0 +1,10 @@
+@import '~collab-ui/scss/settings/colors';
+
+.learn-more-disabled {
+  cursor: default;
+  color: $gray-light-2;
+  &:hover {
+    cursor: default;
+    color: $gray-light-2;
+  }
+}

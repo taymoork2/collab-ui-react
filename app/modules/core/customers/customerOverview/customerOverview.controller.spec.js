@@ -1,14 +1,14 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, trialForPaid, TrialService, Userservice, Notification;
+  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, TrialService, Userservice, Notification;
 
   var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _Authinfo_, _BrandService_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_, _Userservice_) {
 
     $scope = $rootScope.$new();
     currentCustomer = {
@@ -16,50 +16,27 @@ describe('Controller: CustomerOverviewCtrl', function () {
       customerOrgId: '123-456',
       licenseList: [{
         licenseId: licenseString,
-        offerName: "MC",
-        licenseType: "CONFERENCING",
-        siteUrl: "t30citest.webex.com"
+        offerName: 'MC',
+        licenseType: 'CONFERENCING',
+        siteUrl: 't30citest.webex.com',
       }, {
-        licenseId: "ST_04b1c66d-9cb7-4280-bd0e-cfdb763fbdc6",
-        offerName: "ST",
-        licenseType: "STORAGE"
-      }]
+        licenseId: 'ST_04b1c66d-9cb7-4280-bd0e-cfdb763fbdc6',
+        offerName: 'ST',
+        licenseType: 'STORAGE',
+      }],
     };
     identityCustomer = {
-      services: ['webex-squared', 'ciscouc']
+      services: ['webex-squared', 'ciscouc'],
     };
 
-    $scope.trialForPaid = trialForPaid;
-    Userservice = {
-      updateUsers: function () {}
-    };
-    Authinfo = {
-      getPrimaryEmail: function () {
-        return "xyz123@gmail.com";
-      },
-      getOrgId: function () {
-        return '1A2B3C4D';
-      },
-      getOrgName: function () {
-        return "xyz123";
-      },
-      isPartnerAdmin: function () {
-        return true;
-      },
-      getUserId: function () {
-        return 'D4C3B2A1';
-      },
-      isCare: function () {
-        return true;
-      }
-    };
-    BrandService = {
-      getSettings: function () {}
-    };
-
+    Authinfo = _Authinfo_;
+    BrandService = _BrandService_;
     FeatureToggleService = _FeatureToggleService_;
+    Notification = _Notification_;
     Orgservice = _Orgservice_;
     PartnerService = _PartnerService_;
+    TrialService = _TrialService_;
+    Userservice = _Userservice_;
 
     $stateParams = _$stateParams_;
     $stateParams.currentCustomer = currentCustomer;
@@ -70,11 +47,16 @@ describe('Controller: CustomerOverviewCtrl', function () {
     $controller = _$controller_;
 
     $state.modal = {
-      result: $q.resolve()
+      result: $q.resolve(),
     };
 
-    TrialService = _TrialService_;
-    Notification = _Notification_;
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('xyz123@gmail.com');
+    spyOn(Authinfo, 'getOrgId').and.returnValue('1A2B3C4D');
+    spyOn(Authinfo, 'getOrgName').and.returnValue('xyz123');
+    spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);
+    spyOn(Authinfo, 'getUserId').and.returnValue('D4C3B2A1');
+    spyOn(Authinfo, 'getUserOrgId').and.returnValue('1A2B3C4D');
+    spyOn(Authinfo, 'isCare').and.returnValue(true);
     spyOn(Notification, 'errorWithTrackingId');
     spyOn($state, 'go').and.returnValue($q.resolve());
     spyOn($state, 'href').and.callThrough();
@@ -88,28 +70,22 @@ describe('Controller: CustomerOverviewCtrl', function () {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
     spyOn(Orgservice, 'isSetupDone').and.returnValue($q.resolve(false));
+    spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.resolve({}));
     spyOn($window, 'confirm').and.returnValue(true);
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-      $q.resolve(true)
-    );
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasITProPackGetStatus').and.returnValue($q.resolve(true));
     spyOn(modal, 'open').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
     initController();
   }));
 
-  function initController(options) {
-    var trialForPaid = _.get(options, 'hasTrialForPaidFT', false);
+  function initController() {
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
       identityCustomer: identityCustomer,
-      Userservice: Userservice,
-      Authinfo: Authinfo,
-      BrandService: BrandService,
-      FeatureToggleService: FeatureToggleService,
-      $modal: modal,
-      trialForPaid: trialForPaid
     });
 
     $scope.$apply();
@@ -132,26 +108,22 @@ describe('Controller: CustomerOverviewCtrl', function () {
     expect($state.go.calls.mostRecent().args[0]).toEqual('partnercustomers.list');
   });
 
-  describe('Trial for Paid  Customer feature toggle Trial Actions', function () {
-    it('should be empty for paid customer without feature toggle', function () {
-      initController({ hasTrialForPaidFT: false });
-      expect(controller.trialActions.length).toBe(0);
-    });
-
-    it('should have \'add\' action for paid customer with feature toggle', function () {
-      initController({ hasTrialForPaidFT: true });
-      expect(controller.trialActions.length).toBe(1);
-      expect(controller.trialActions[0].actionKey).toBe('customerPage.addTrial');
-    });
+  it('should check the customer org id to see if it is a test org', function () {
+    expect(Orgservice.isTestOrg).toHaveBeenCalledWith('123-456');
   });
 
   it('should display correct customer portal launch button via var isOrgSetup', function () {
     // isOrgSetup is false from spyOn in beforeEach
     expect(controller.isOrgSetup).toBe(false);
-
     Orgservice.isSetupDone.and.returnValue($q.resolve(true));
     initController();
     expect(controller.isOrgSetup).toBe(true);
+    Orgservice.isSetupDone.and.returnValue($q.reject());
+    initController();
+    expect(controller.isOrgSetup).toBe(null);
+    Orgservice.isSetupDone.and.returnValue($q.resolve(false));
+    initController();
+    expect(controller.isOrgSetup).toBe(false);
   });
 
   it('should display number of days left', function () {
@@ -186,7 +158,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
       it('should create proper url', function () {
         expect($state.href).toHaveBeenCalledWith('login_swap', {
           customerOrgId: controller.currentCustomer.customerOrgId,
-          customerOrgName: controller.currentCustomer.customerName
+          customerOrgName: controller.currentCustomer.customerName,
         });
       });
 
@@ -227,12 +199,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
     });
   });
 
-  describe('should call isTestOrg successfully', function () {
-    it('should identify as a test org', function () {
-      expect(controller.isTest).toBe(true);
-    });
-  });
-
   describe('should call deleteOrg successfully', function () {
     it('should call deleteTestOrg', function () {
       controller.deleteTestOrg();
@@ -243,6 +209,12 @@ describe('Controller: CustomerOverviewCtrl', function () {
   describe('atlasCareTrialsGetStatus should be called', function () {
     it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
       expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
+    });
+  });
+
+  describe('atlasCareTrialsGetStatus should be called', function () {
+    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
+      expect(FeatureToggleService.atlasCareInboundTrialsGetStatus).toHaveBeenCalled();
     });
   });
 

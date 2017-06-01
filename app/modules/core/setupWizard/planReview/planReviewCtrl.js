@@ -6,41 +6,41 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($translate, Authinfo, Config, FeatureToggleService, TrialService, WebExUtilsFact) {
+  function PlanReviewCtrl($translate, Authinfo, Config, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
-      hasRoomSys: 'has-room-systems'
+      hasRoomSys: 'has-room-systems',
     };
 
     vm.messagingServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.confServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.commServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.careServices = {
       isNewTrial: false,
-      services: Authinfo.getCareServices() || []
+      services: Authinfo.getCareServices() || [],
     };
 
     vm.cmrServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.roomServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.roomSystemsCount = 0;
@@ -52,11 +52,9 @@
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
     vm.getUserServiceRowClass = getUserServiceRowClass;
     vm._helpers = {
-      maxServiceRows: maxServiceRows
+      maxServiceRows: maxServiceRows,
     };
     vm.isCareEnabled = false;
-    vm.isSharedMeetingsEnabled = false;
-    vm.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
 
     //TODO this function has to be removed when atlas-care-trials feature is removed
     vm.getGridColumnClassName = function () {
@@ -64,7 +62,7 @@
     };
 
     vm.isSharedMeetingsLicense = function (service) {
-      return _.lowerCase(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
+      return _.toLower(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
     };
 
     vm.determineLicenseType = function (service) {
@@ -92,14 +90,6 @@
     function init() {
 
       vm.isCareEnabled = Authinfo.isCare();
-
-      if (_.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
-        vm.isSharedMeetingsEnabled = _.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue');
-      } else {
-        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
-          vm.isSharedMeetingsEnabled = smpStatus;
-        });
-      }
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       _.forEach(vm.messagingServices.services, function (service) {
@@ -141,26 +131,34 @@
 
       vm.hasBasicLicenses = function () {
         return _.some(vm.confServices.services, function (service) {
-          return !_.has(service, 'license.siteUrl');
+          return _.get(service, 'license.offerName') === 'CF';
         });
       };
 
       /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-        return _.some(vm.confServices.services, function (service) {
-          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
-            return !_.has(service, 'license.siteUrl');
-          }
-        });
+        if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+          return _.some(vm.confServices.services, function (service) {
+            if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+              return !_.has(service, 'license.siteUrl');
+            }
+          });
+        } else {
+          return vm.hasBasicLicenses();
+        }
       };
 
       /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
-        return _.some(vm.confServices.services, function (service) {
-          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
-            return _.has(service, 'license.siteUrl');
-          }
-        });
+        if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+          return _.some(vm.confServices.services, function (service) {
+            if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+              return _.has(service, 'license.siteUrl');
+            }
+          });
+        } else {
+          return vm.hasAdvancedLicenses();
+        }
       };
 
       vm.commServices.services = Authinfo.getCommunicationServices() || [];

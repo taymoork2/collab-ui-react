@@ -14,14 +14,14 @@ var manageUsersPage = function () {
     back: element(by.buttonText('Back')),
     submit: element(by.buttonText('Submit')),
     done: element(by.buttonText('Done')),
-    finish: element(by.buttonText('Finish'))
+    finish: element(by.buttonText('Finish')),
   };
 
   this.modalDialog = {
     title: element(by.css('.reveal-modal.dialog .modal-content .modal-title')),
     exportButton: element(by.css('.reveal-modal.dialog .modal-content .modal-footer button.btn--primary')),
     exportWarningButton: element(by.css('.reveal-modal.dialog .modal-content .modal-footer button.btn--alert')),
-    cancelButton: element(by.css('.reveal-modal.dialog .modal-content .modal-footer button:not(.btn--primary)'))
+    cancelButton: element(by.css('.reveal-modal.dialog .modal-content .modal-footer button:not(.btn--primary)')),
   };
 
   // add or modify users
@@ -30,8 +30,8 @@ var manageUsersPage = function () {
     radio: {
       orgManual: element(by.css('label[for=org-manual]')),
       orgBulk: element(by.css('label[for=org-bulk]')),
-      orgAdvanced: element(by.css('label[for=org-advanced]'))
-    }
+      orgAdvanced: element(by.css('label[for=org-advanced]')),
+    },
   };
 
   // Manually add or Modify Users
@@ -42,13 +42,13 @@ var manageUsersPage = function () {
 
     radio: {
       emailAddress: element(by.css('label[for="radioEmail"]')),
-      nameAndEmail: element(by.css('label[for="radioNamesAndEmail"]'))
+      nameAndEmail: element(by.css('label[for="radioNamesAndEmail"]')),
     },
 
     emailAddress: {
       addUsersField: element(by.id('usersfield-tokenfield')),
       tokens: element.all(by.css('.tokenfield .token')),
-      invalidTokens: element.all(by.css('.tokenfield .token.invalid'))
+      invalidTokens: element.all(by.css('.tokenfield .token.invalid')),
     },
 
     namesAndEmail: {
@@ -56,8 +56,8 @@ var manageUsersPage = function () {
       lastName: element(by.id('lastName')),
       emailAddress: element(by.id('emailAddress')),
       plusIcon: element(by.css('.plus-icon-active')),
-      tokenField: element(by.id('usersfield'))
-    }
+      tokenField: element(by.id('usersfield')),
+    },
   };
 
   // Bulk Modify Users
@@ -68,7 +68,7 @@ var manageUsersPage = function () {
       exportCsvButton: element(by.css('.user-csv-export .hotspot')),
       exportSpinner: element(by.css('.user-csv-export .icon-spinner')),
       cancelExportButton: element(by.css('.user-csv-export .prompt .cancel-download')),
-      confirmExportCsvButton: element(by.buttonText('Export'))
+      confirmExportCsvButton: element(by.buttonText('Export')),
     },
 
     import: {
@@ -76,8 +76,8 @@ var manageUsersPage = function () {
       removeFileButton: element(by.css('.user-csv-upload .reset-file')),
       importFileName: element(by.css('.user-csv-upload .file-drop-inactive p')),
       addServicesOnlyRadio: element(by.css('label[for=import-add-only]')),
-      addAdnRemoveServicesRadio: element(by.css('label[for=import-add-remove]'))
-    }
+      addAdnRemoveServicesRadio: element(by.css('label[for=import-add-remove]')),
+    },
   };
 
   this.importStatus = {
@@ -88,7 +88,7 @@ var manageUsersPage = function () {
     newUsers: element(by.css('.new-users .total')),
     updatedUsers: element(by.css('.updated-users .total')),
     errorUsers: element(by.css('.error-users .total')),
-    uploadComplete: element(by.css('.user-csv-results .upload-complete .progressbar-label span.progressbar-label:first-child'))
+    uploadComplete: element(by.css('.user-csv-results .upload-complete .progressbar-label span.progressbar-label:first-child')),
   };
 
 };

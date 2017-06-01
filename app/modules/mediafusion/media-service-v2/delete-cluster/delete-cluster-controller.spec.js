@@ -4,8 +4,8 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $q, httpBackend, controller, cluster, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, Notification;
-  beforeEach(inject(function ($httpBackend, _MediaClusterServiceV2_, $controller, _$filter_, _$state_, _$translate_, _Notification_, _$q_) {
+  var $q, httpBackend, controller, cluster, $modalInstance, $filter, HybridServicesClusterService, MediaClusterServiceV2, $state, $translate, Notification;
+  beforeEach(inject(function ($httpBackend, _HybridServicesClusterService_, _MediaClusterServiceV2_, $controller, _$filter_, _$state_, _$translate_, _Notification_, _$q_) {
     cluster = {
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
       "name": "MFA_TEST1",
@@ -13,24 +13,25 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
         "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
         "connectorType": "mf_mgmt",
         "upgradeState": "upgraded",
-        "hostname": "10.196.5.251"
+        "hostname": "10.196.5.251",
       }, {
         "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
         "connectorType": "mf_mgmt",
-        "hostname": "10.196.5.246"
+        "hostname": "10.196.5.246",
       }],
-      "releaseChannel": "DEV"
+      "releaseChannel": "DEV",
     };
     $modalInstance = {
-      close: sinon.stub()
+      close: jasmine.createSpy('close'),
     };
     $filter = _$filter_;
     /*
         MediaClusterServiceV2 = {
-          get: sinon.stub().returns(redirectTargetPromise),
-          getAll: sinon.stub().returns(redirectTargetPromise),
+          get: jasmine.createSpy('get').and.returnValue(redirectTargetPromise),
+          getAll: jasmine.createSpy('getAll').and.returnValue(redirectTargetPromise),
         };
     */
+    HybridServicesClusterService = _HybridServicesClusterService_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     $state = _$state_;
     $translate = _$translate_;
@@ -41,10 +42,10 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     httpBackend.when('POST', /^\w+.*/).respond({});
 
     spyOn(MediaClusterServiceV2, 'get').and.returnValue({
-      then: _.noop
+      then: _.noop,
     });
     spyOn(MediaClusterServiceV2, 'getAll').and.returnValue({
-      then: _.noop
+      then: _.noop,
     });
     controller = $controller('DeleteClusterSettingControllerV2', {
       cluster: cluster,
@@ -54,7 +55,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       $state: $state,
       $translate: $translate,
       Notification: Notification,
-      $q: $q
+      $q: $q,
     });
   }));
 
@@ -67,22 +68,22 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     controller.hosts = [{
       "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
       "hostname": "10.196.5.251",
-      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a",
     }, {
       "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
       "hostname": "10.196.5.246",
-      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075"
+      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075",
     }];
 
     controller.selectPlaceholder = "Select a cluster";
     controller.fillModel = {};
     controller.selectModel = {
       "10.196.5.251": "MFA_TEST2",
-      "10.196.5.246": "MFA_TEST2"
+      "10.196.5.246": "MFA_TEST2",
     };
     controller.clusters = [{
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-      "name": "MFA_TEST2"
+      "name": "MFA_TEST2",
     }];
 
     spyOn(MediaClusterServiceV2, 'moveV2Host').and.callThrough();
@@ -97,22 +98,22 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     controller.hosts = [{
       "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
       "hostname": "10.196.5.251",
-      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a",
     }, {
       "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
       "hostname": "10.196.5.246",
-      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075"
+      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075",
     }];
 
     controller.selectPlaceholder = "Select a cluster";
     controller.fillModel = {};
     controller.selectModel = {
       "10.196.5.251": "MFA_TEST3",
-      "10.196.5.246": "MFA_TEST4"
+      "10.196.5.246": "MFA_TEST4",
     };
     controller.clusters = [{
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-      "name": "MFA_TEST2"
+      "name": "MFA_TEST2",
     }];
 
     spyOn(MediaClusterServiceV2, 'createClusterV2').and.callThrough();
@@ -124,36 +125,34 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     expect(MediaClusterServiceV2.createClusterV2.calls.count()).toEqual(2);
   });
 
-  it('check if the defused of MediaClusterServiceV2 is invoked', function () {
+  it('should invoke HybridServicesClusterService.deregisterEcpNode when a node is being deregistered', function () {
     controller.cluster = cluster;
     controller.hosts = [{
       "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
       "hostname": "10.196.5.251",
-      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a",
     }, {
       "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
       "hostname": "10.196.5.246",
-      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075"
+      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075",
     }];
 
     controller.selectPlaceholder = "Select a cluster";
     controller.fillModel = {};
     controller.selectModel = {
       "10.196.5.251": "MFA_TEST2",
-      "10.196.5.246": "MFA_TEST2"
+      "10.196.5.246": "MFA_TEST2",
     };
     controller.clusters = [{
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-      "name": "MFA_TEST2"
+      "name": "MFA_TEST2",
     }];
 
-    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.callThrough();
-    spyOn(MediaClusterServiceV2, 'deleteV2Cluster').and.callThrough();
+    spyOn(HybridServicesClusterService, 'deregisterEcpNode').and.callThrough();
     controller.deleteCluster();
     httpBackend.flush();
     expect(controller.isMove).toBe(true);
-    expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalled();
-    expect(MediaClusterServiceV2.defuseV2Connector.calls.count()).toEqual(2);
+    expect(HybridServicesClusterService.deregisterEcpNode.calls.count()).toEqual(2);
   });
 
   it('check if the moveV2Host of MediaClusterServiceV2 is not invoked if the target cluster is not selected', function () {
@@ -161,22 +160,22 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     controller.hosts = [{
       "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
       "hostname": "10.196.5.251",
-      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a",
     }, {
       "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
       "hostname": "10.196.5.246",
-      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075"
+      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075",
     }];
 
     controller.selectPlaceholder = "Select a cluster";
     controller.fillModel = {};
     controller.selectModel = {
       "10.196.5.251": "MFA_TEST2",
-      "10.196.5.246": "Select a cluster"
+      "10.196.5.246": "Select a cluster",
     };
     controller.clusters = [{
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-      "name": "MFA_TEST2"
+      "name": "MFA_TEST2",
     }];
 
     spyOn(MediaClusterServiceV2, 'moveV2Host').and.callThrough();
@@ -196,7 +195,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     controller.selectModel = {};
     controller.clusters = [{
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-      "name": "MFA_TEST2"
+      "name": "MFA_TEST2",
     }];
     controller.successCount = 0;
     controller.errorCount = 0;
@@ -223,7 +222,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     controller.unableToMoveNodes = {};
     controller.clusters = [{
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-      "name": "MFA_TEST2"
+      "name": "MFA_TEST2",
     }];
     controller.successCount = 5;
     controller.errorCount = 5;
@@ -237,45 +236,44 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     expect(controller.failedToDelete).toBe(true);
   });
 
-  it('check if the defuseV2Connector of MediaClusterServiceV2 is invoked', function () {
+  it('should invoke HybridServicesClusterService.deregisterEcpNode when a cluster is being deleted', function () {
     controller.cluster = cluster;
     controller.hosts = [{
       "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
       "hostname": "10.196.5.251",
-      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a",
     }, {
       "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
       "hostname": "10.196.5.246",
-      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075"
+      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075",
     }];
 
     controller.selectPlaceholder = "Select a cluster";
     controller.fillModel = {};
     controller.selectModel = {
       "10.196.5.251": "MFA_TEST2",
-      "10.196.5.246": "MFA_TEST2"
+      "10.196.5.246": "MFA_TEST2",
     };
     controller.clusters = [{
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-      "name": "MFA_TEST2"
+      "name": "MFA_TEST2",
     }];
 
-    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.callThrough();
+    spyOn(HybridServicesClusterService, 'deregisterEcpNode').and.callThrough();
     controller.deleteCluster();
     httpBackend.verifyNoOutstandingExpectation();
     expect(controller.isMove).toBe(true);
-    expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalled();
-    expect(MediaClusterServiceV2.defuseV2Connector.calls.count()).toEqual(2);
+    expect(HybridServicesClusterService.deregisterEcpNode.calls.count()).toEqual(2);
   });
   it('DeleteClusterSettingControllerV2 canContinue should enable continue button when the feild is filled', function () {
     controller.hosts = [{
       "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
       "hostname": "10.196.5.251",
-      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a",
     }, {
       "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
       "hostname": "10.196.5.246",
-      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075"
+      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075",
     }];
     controller.canContinue();
     expect(controller.canContinue()).toBeTruthy();

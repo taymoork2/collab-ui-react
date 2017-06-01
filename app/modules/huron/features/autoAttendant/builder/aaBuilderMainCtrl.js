@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($rootScope, $scope, $translate, $state, $stateParams, $q, AAUiModelService,
+  function AABuilderMainCtrl($rootScope, $modalStack, $scope, $translate, $state, $stateParams, $q, AAUiModelService, AAMediaUploadService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
@@ -19,6 +19,7 @@
     vm.aaNameFocus = false;
     vm.canSave = false;
     vm.isAANameDefined = undefined;
+    vm.loading = true;
 
     vm.setAANameFocus = setAANameFocus;
     vm.close = closePanel;
@@ -33,7 +34,6 @@
     vm.templateName = $stateParams.aaTemplate;
     vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
-    vm.setLoadingDone = setLoadingDone;
 
     vm.getSystemTimeZone = getSystemTimeZone;
     vm.getTimeZoneOptions = getTimeZoneOptions;
@@ -46,37 +46,39 @@
       tname: 'Basic',
       actions: [{
         lane: 'openHours',
-        actionset: ['say', 'runActionsOnInput']
-      }]
+        actionset: ['say', 'runActionsOnInput'],
+      }],
     }, {
       tname: 'Custom',
       actions: [{
         lane: 'openHours',
-        actionset: []
-      }]
+        actionset: [],
+      }],
     }, {
       tname: 'BusinessHours',
       actions: [{
         lane: 'openHours',
-        actionset: []
+        actionset: [],
       }, {
         lane: 'closedHours',
-        actionset: []
-      }]
+        actionset: [],
+      }],
     }];
 
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
-      label: $translate.instant('timeZones.America/Los_Angeles')
+      label: $translate.instant('timeZones.America/Los_Angeles'),
     };
+    $scope.$on('$locationChangeStart', function (event) {
+      var top = $modalStack.getTop();
+      if (top) {
+        $modalStack.dismiss(top.key);
+        event.preventDefault();
+      }
+    });
 
-    setLoadingStarted();
 
     /////////////////////
-
-    function setLoadingStarted() {
-      vm.loading = true;
-    }
 
     function setLoadingDone() {
       vm.loading = false;
@@ -86,7 +88,7 @@
     function sendMetrics(metric) {
       if (vm.isAANameDefined && !_.isUndefined(metric)) {
         Analytics.trackEvent(AAMetricNameService.BUILDER_PAGE, {
-          type: metric
+          type: metric,
         });
       }
     }
@@ -134,7 +136,9 @@
     }
 
     function closePanel() {
-      $rootScope.$broadcast('CE Closed');
+
+      AAMediaUploadService.resetResources();
+
       AutoAttendantCeMenuModelService.clearCeMenuMap();
       unAssignAssigned().finally(function () {
         $state.go('huronfeatures');
@@ -192,7 +196,7 @@
     function saveUiModel() {
       if (!_.isUndefined(vm.ui.ceInfo) && !_.isUndefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
         if (!_.isUndefined(vm.ui.builder.ceInfo_name) && (vm.ui.builder.ceInfo_name.length > 0)) {
-          vm.ui.ceInfo.setName(angular.copy(vm.ui.builder.ceInfo_name));
+          vm.ui.ceInfo.setName(_.cloneDeep(vm.ui.builder.ceInfo_name));
         }
         AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
       }
@@ -227,7 +231,7 @@
           function (response) {
             if (_.get(response, 'failedResources.length', false)) {
               AANotificationService.errorResponse(response, 'autoAttendant.errorFailedToAssignNumbers', {
-                phoneNumbers: _.map(response.failedResources, 'id')
+                phoneNumbers: _.map(response.failedResources, 'id'),
               });
             }
             return response;
@@ -248,7 +252,7 @@
         function () {
           // update successfully
           aaRecords[recNum].callExperienceName = aaRecord.callExperienceName;
-          aaRecords[recNum].assignedResources = angular.copy(aaRecord.assignedResources);
+          aaRecords[recNum].assignedResources = _.cloneDeep(aaRecord.assignedResources);
           vm.aaModel.ceInfos[recNum] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[recNum]);
 
           AACommonService.resetFormStatus();
@@ -259,24 +263,26 @@
             var nameChangeEvent = {
               'type': 'AANameChange',
               'scheduleId': scheduleId,
-              'newName': aaRecord.callExperienceName
+              'newName': aaRecord.callExperienceName,
             };
             AADependencyService.notifyAANameChange(nameChangeEvent);
             AATrackChangeService.track('AAName', aaRecord.callExperienceName);
           }
 
           AANotificationService.success('autoAttendant.successUpdateCe', {
-            name: aaRecord.callExperienceName
+            name: aaRecord.callExperienceName,
           });
 
           $rootScope.$broadcast('CE Saved');
+
+          AAMediaUploadService.saveResources();
 
         },
         function (response) {
           AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
             name: aaRecord.callExperienceName,
             statusText: response.statusText,
-            status: response.status
+            status: response.status,
           });
           unAssignAssigned();
         }
@@ -294,7 +300,7 @@
           // create successfully
           var newAaRecord = {};
           newAaRecord.callExperienceName = aaRecord.callExperienceName;
-          newAaRecord.assignedResources = angular.copy(aaRecord.assignedResources);
+          newAaRecord.assignedResources = _.cloneDeep(aaRecord.assignedResources);
           newAaRecord.callExperienceURL = response.callExperienceURL;
           aaRecords.push(newAaRecord);
           vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(response.callExperienceURL);
@@ -305,7 +311,7 @@
           AATrackChangeService.track('AAName', aaRecord.callExperienceName);
 
           AANotificationService.success('autoAttendant.successCreateCe', {
-            name: aaRecord.callExperienceName
+            name: aaRecord.callExperienceName,
           });
 
         },
@@ -313,7 +319,7 @@
           AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
             name: aaRecord.callExperienceName,
             statusText: response.statusText,
-            status: response.status
+            status: response.status,
           });
           unAssignAssigned();
         }
@@ -349,7 +355,7 @@
       if (!AAValidationService.isNameValidationSuccess(vm.ui.builder.ceInfo_name, aaRecordUUID)) {
         deferred.reject({
           statusText: '',
-          status: 'VALIDATION_FAILURE'
+          status: 'VALIDATION_FAILURE',
         });
         return deferred.promise;
       }
@@ -357,7 +363,7 @@
       if (validateCES && !AAValidationService.isValidCES(vm.ui)) {
         deferred.reject({
           statusText: '',
-          status: 'VALIDATION_FAILURE'
+          status: 'VALIDATION_FAILURE',
         });
         return deferred.promise;
       }
@@ -435,19 +441,19 @@
       }
 
       var specifiedTemplate = _.find(vm.templateDefinitions, {
-        tname: vm.templateName
+        tname: vm.templateName,
       });
 
       if (_.isUndefined(specifiedTemplate) || _.isUndefined(specifiedTemplate.tname) || specifiedTemplate.tname.length === 0) {
         AANotificationService.error('autoAttendant.errorInvalidTemplate', {
-          template: vm.templateName
+          template: vm.templateName,
         });
         return;
       }
 
       if (_.isUndefined(specifiedTemplate.actions) || specifiedTemplate.actions.length === 0) {
         AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
-          template: vm.templateName
+          template: vm.templateName,
         });
         return;
       }
@@ -465,7 +471,7 @@
 
         if (_.isUndefined(action.actionset)) {
           AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
-            template: vm.templateName
+            template: vm.templateName,
           });
           return;
         }
@@ -505,7 +511,7 @@
         } else {
 
           var aaRecord = _.find(vm.aaModel.aaRecords, {
-            callExperienceName: aaName
+            callExperienceName: aaName,
           });
 
           if (!_.isUndefined(aaRecord)) {
@@ -521,14 +527,14 @@
                 AANotificationService.errorResponse(response, 'autoAttendant.errorReadCe', {
                   name: aaName,
                   statusText: response.statusText,
-                  status: response.status
+                  status: response.status,
                 });
               }
             );
             return;
           } else {
             AANotificationService.error('autoAttendant.errorReadCe', {
-              name: aaName
+              name: aaName,
             });
           }
         }
@@ -567,7 +573,7 @@
           AANotificationService.errorResponse(error, 'autoAttendant.errorCreateSchedule', {
             name: aaName,
             statusText: error.statusText,
-            status: error.status
+            status: error.status,
           });
           return $q.reject('SAVE_SCHEDULE_FAILURE');
         }
@@ -593,7 +599,7 @@
             AANotificationService.errorResponse(response, 'autoAttendant.errorDeletePredefinedSchedule', {
               name: vm.ui.ceInfo.name,
               statusText: error.statusText,
-              status: error.status
+              status: error.status,
             });
           }
         );
@@ -617,38 +623,42 @@
       }
     });
 
-    //load the feature toggle prior to creating the elements
-    function setUpFeatureToggles() {
-      var featureToggleDefault = false;
+    function setUpFeatureToggles(featureToggleDefault) {
       AACommonService.setMediaUploadToggle(featureToggleDefault);
       AACommonService.setCallerInputToggle(featureToggleDefault);
-      FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput).then(function (result) {
-        AACommonService.setCallerInputToggle(result);
-      });
-      FeatureToggleService.supports(FeatureToggleService.features.huronAADecision).then(function (result) {
-        AACommonService.setDecisionToggle(result);
-      });
-
-      AACommonService.setClioToggle(featureToggleDefault);
-      AACommonService.setRouteQueueToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
-      return function () {
-        FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
-          AACommonService.setMediaUploadToggle(result);
-        });
-        FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
-          AACommonService.setRouteQueueToggle(result);
-        });
-        FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia).then(function (result) {
-          AACommonService.setClioToggle(result);
-        });
-        FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom).then(function (result) {
-          AACommonService.setRouteSIPAddressToggle(result);
-        });
-      }();
+      AACommonService.setDynAnnounceToggle(featureToggleDefault);
+      AACommonService.setRestApiToggle(featureToggleDefault);
+      AACommonService.setReturnedCallerToggle(featureToggleDefault);
+      return checkFeatureToggles();
     }
 
+    function checkFeatureToggles() {
+      return $q.all({
+        hasCallerinput: FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput),
+        hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
+        hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
+        hasRestApi: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApi),
+        hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
+        hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
+      });
+    }
+
+    function assignFeatureToggles(featureToggles) {
+      AACommonService.setCallerInputToggle(featureToggles.hasCallerinput);
+      AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
+      AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
+      AACommonService.setRestApiToggle(featureToggles.hasRestApi);
+      AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
+      AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
+    }
+
+    //load the feature toggle prior to creating the elements
     function activate() {
+      setUpFeatureToggles(false).then(assignFeatureToggles).finally(init);
+    }
+
+    function init() {
       var aaName = $stateParams.aaName;
       AAUiModelService.initUiModel();
       AACommonService.resetFormStatus();
@@ -660,14 +670,15 @@
       vm.ui.aaTemplate = $stateParams.aaTemplate;
 
       // Define vm.ui.builder.ceInfo_name for editing purpose.
-      vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
+      vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().then(setUpFeatureToggles).then(getTimeZoneOptions).then(getSystemTimeZone)
+      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone)
       .finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
+        setLoadingDone();
       });
     }
 

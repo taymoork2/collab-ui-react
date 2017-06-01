@@ -9,24 +9,27 @@ describe('Controller: AACallerInputCtrl', function () {
   var AAUiModelService, AutoAttendantCeMenuModelService;
   var $rootScope, $scope;
 
+  var customVariableService;
+  var customVarJson = getJSONFixture('huron/json/autoAttendant/aaCustomVariables.json');
+
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var inputActions = [{
     "key": "1",
     "value": "",
     "keys": [
-      "0", "1", "4", "5", "6", "7", "8", "9", "#", "*"
+      "0", "1", "4", "5", "6", "7", "8", "9", "#", "*",
     ] }, {
       "key": "2",
       "value": "",
       "keys": [
-        "0", "2", "4", "5", "6", "7", "8", "9", "#", "*"
+        "0", "2", "4", "5", "6", "7", "8", "9", "#", "*",
       ] }, {
         "key": "3",
         "value": "",
         "keys": [
-          "0", "3", "4", "5", "6", "7", "8", "9", "#", "*"
+          "0", "3", "4", "5", "6", "7", "8", "9", "#", "*",
         ] }];
 
   var schedule = 'openHours';
@@ -36,7 +39,7 @@ describe('Controller: AACallerInputCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AALanguageService_, _AACommonService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _CustomVariableService_, _FeatureToggleService_, _AALanguageService_, _AACommonService_) {
 
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -46,35 +49,43 @@ describe('Controller: AACallerInputCtrl', function () {
     menuId = 'menu1';
 
     aaUiModel = {
-      openHours: {}
+      openHours: {},
     };
 
     featureToggleService = _FeatureToggleService_;
     aaLanguageService = _AALanguageService_;
     aaCommonService = _AACommonService_;
+    customVariableService = _CustomVariableService_;
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(featureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(customVariableService, 'listCustomVariables').and.returnValue($q.resolve(customVarJson));
 
-    aaCommonService.resetFormStatus();
 
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+    aaUiModel.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
 
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.menuId = menuId;
 
-    var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    var menuClosed = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
-    aaUiModel['openHours'].addEntryAt(index, menu);
+    aaUiModel['openHours'].addEntryAt(index, menuOpen);
+    aaUiModel['closedHours'].addEntryAt(index, menuClosed);
+    var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+    action.variableName = 'Closed Variable';
+    menuClosed.addAction(action);
 
     controller = $controller('AACallerInputCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
+
 
     $scope.$apply();
 
@@ -96,6 +107,27 @@ describe('Controller: AACallerInputCtrl', function () {
     it('should add runActionsOnInput action object menuEntry', function () {
       // appends a play action onto menuEntry
       expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
+    });
+    it('should set warn to true because of duplicate variable name in session object', function () {
+      controller.nameInput = 'account_no';
+      controller.saveNameInput();
+      expect(controller.isWarn).toEqual(true);
+    });
+    it('should set warn to true because of duplicate variable name in model', function () {
+      controller.nameInput = 'Closed Variable';
+      controller.saveNameInput();
+      expect(controller.isWarn).toEqual(true);
+    });
+    it('should not set warn to true', function () {
+      controller.nameInput = 'Unique name';
+      controller.saveNameInput();
+      expect(controller.isWarn).toEqual(false);
+    });
+    it('should invalid to true', function () {
+      controller.nameInput = undefined;
+      controller.saveNameInput();
+      expect(controller.isWarn).toEqual(false);
+      expect(aaCommonService.isValid()).toEqual(false);
     });
   });
 
@@ -136,7 +168,7 @@ describe('Controller: AACallerInputCtrl', function () {
       // inputActions should hold three elements entering
       var keys = ['0', '1', '2', '4', '5', '6', '7', '8', '9', '#', '*'];
 
-      controller.inputActions = angular.copy(inputActions);
+      controller.inputActions = _.cloneDeep(inputActions);
       controller.deleteKeyAction(0);
       expect(controller.inputActions.length).toEqual(2);
       expect(controller.inputActions[0].keys.join()).toEqual(keys.join());
@@ -147,7 +179,7 @@ describe('Controller: AACallerInputCtrl', function () {
 
   describe('keyChanged', function () {
     it('should change the key for an existing action', function () {
-      controller.inputActions = angular.copy(inputActions);
+      controller.inputActions = _.cloneDeep(inputActions);
       var newKey = '4';
       controller.keyChanged(0, newKey);
       expect(controller.inputActions[0].key).toEqual(newKey);
@@ -160,7 +192,7 @@ describe('Controller: AACallerInputCtrl', function () {
       var whichKey = {};
       whichKey.value = 'X';
 
-      controller.inputActions = angular.copy(inputActions);
+      controller.inputActions = _.cloneDeep(inputActions);
       controller.keyInputChanged(0, whichKey);
       expect(controller.inputActions[0].value).toEqual('X');
       expect(aaCommonService.isFormDirty()).toEqual(true);
@@ -216,15 +248,15 @@ describe('Controller: AACallerInputCtrl', function () {
     it('should find the voice option', function () {
       var voiceOptions = [{
         label: 'label1',
-        value: 'Miss Piggy'
+        value: 'Miss Piggy',
       }, {
         label: 'label2',
-        value: 'Kermit'
+        value: 'Kermit',
       }];
 
       var voiceOption = {
         label: 'label1',
-        value: 'Miss Piggy'
+        value: 'Miss Piggy',
       };
 
       spyOn(aaLanguageService, 'getVoiceOption').and.returnValue(voiceOption);
@@ -237,15 +269,15 @@ describe('Controller: AACallerInputCtrl', function () {
     it('should not find the voice option', function () {
       var voiceOptions = [{
         label: 'label1',
-        value: 'Miss Piggy'
+        value: 'Miss Piggy',
       }, {
         label: 'label2',
-        value: 'Kermit'
+        value: 'Kermit',
       }];
 
       var voiceOption = {
         label: 'label',
-        value: 'Miss Piggy'
+        value: 'Miss Piggy',
       };
 
       spyOn(aaLanguageService, 'getVoiceOption').and.returnValue(voiceOption);

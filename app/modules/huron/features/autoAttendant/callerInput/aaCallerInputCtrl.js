@@ -6,24 +6,29 @@
   .controller('AACallerInputCtrl', AACallerInputCtrl);
 
   /* @ngInject */
-  function AACallerInputCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
+
+  function AACallerInputCtrl($scope, $translate, CustomVariableService, AAModelService, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
 
     var vm = this;
 
+    var myId;
+
+    var sessionVarOptions = [];
+
     var languageOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     var voiceOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     var runActionName = 'runActionsOnInput';
 
     var properties = {
-      LABEL: "label"
+      LABEL: "label",
     };
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     var INPUT_DIGIT_MAX_LENGTH = 20;
@@ -35,9 +40,12 @@
       this.keys = [];
     }
 
+    var ui;
+
     vm.maxLengthOptions = [];
     vm.maxStringLength = INPUT_DIGIT_MAX_DEFAULT;
-    vm.maxVariableLength = 32;
+    vm.maxVariableLength = 16;
+    vm.minVariableLength = 3;
 
     vm.menuEntry = {};
     vm.actionEntry = {};
@@ -56,6 +64,7 @@
     vm.saveVoiceOption = saveVoiceOption;
     vm.saveNameInput = saveNameInput;
 
+
     vm.addKeyAction = addKeyAction;
     vm.deleteKeyAction = deleteKeyAction;
     vm.keyChanged = keyChanged;
@@ -64,9 +73,15 @@
     vm.setMaxStringLength = setMaxStringLength;
 
     vm.nameInput = '';
-    vm.validationMsg = {
-      maxlength: $translate.instant('autoAttendant.callerInputVariableTooLongMsg')
+
+    vm.validationMsgs = {
+      maxlength: $translate.instant('autoAttendant.callerInputVariableTooLongMsg'),
+      minlength: $translate.instant('autoAttendant.callerInputVariableTooShortMsg'),
+      required: $translate.instant('autoAttendant.callerInputVariableRequiredMsg'),
+      pattern: $translate.instant('autoAttendant.invalidCharacter'),
     };
+
+    vm.isWarn = false;
 
     /////////////////////
     // the user has pressed the trash can icon for a key/action pair
@@ -78,6 +93,14 @@
       AACommonService.setCallerInputStatus(true);
 
     }
+
+    $scope.$on(
+      "$destroy",
+      function () {
+        AACommonService.setIsValid(myId, true);
+      }
+    );
+
     // the user has changed the key for an existing action
     function keyChanged(index, whichKey) {
       vm.inputActions[index].key = whichKey;
@@ -134,7 +157,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value
+        "value": vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
@@ -155,8 +178,29 @@
     * say-message keys.
     */
     function saveNameInput() {
+
+      // if invalid (from html, too short or too long nameInput is undefined
+      AACommonService.setIsValid(myId, vm.nameInput);
+
       vm.actionEntry.variableName = vm.nameInput;
+
+      if (!vm.nameInput) {
+        // don't bother with undefined for warnings as other lanes could have invalid inputs also
+        vm.isWarn = false;
+
+        return;
+      }
+      vm.isWarn = !_.isUndefined(sessionVarOptions[vm.nameInput]);
+
+      if (!vm.isWarn) {
+        // args to collect - ui to examine, true for sessionVars, false for conditionals
+        vm.isWarn = AACommonService.collectThisCeActionValue(ui, true, false).filter(function (value) {
+          return _.isEqual(value, vm.nameInput);
+        }).length > 1;
+      }
+
       AACommonService.setCallerInputStatus(true);
+
     }
 
     function createCallerInputAction() {
@@ -192,8 +236,7 @@
       action.maxNumberOfCharacters = 0;
     }
 
-    function setActionEntry() {
-      var ui = AAUiModelService.getUiModel();
+    function setActionEntry(ui) {
       var uiMenu = ui[$scope.schedule];
       vm.menuEntry = uiMenu.entries[$scope.index];
       var action = getAction(vm.menuEntry);
@@ -246,13 +289,38 @@
         selectedAction.keys = getAvailableKeys(selectedAction.key);
       }
     }
+    function getSessionVariables(ceId) {
+      // round up all variables except those of this CallerInput
+      return CustomVariableService.listCustomVariables(ceId)
+        .then(function (data) {
+          _.forEach(data, function (entry) {
+            // if it is our Ce and the custom variable for this CallerInput, ignore.
+            // handle when model is scanned in saveNameInput()
+
+            if (_.isEqual(entry.ce_id, ceId)) {
+              return;
+            }
+            _.forEach(entry.var_name, function (customVar) {
+              sessionVarOptions[customVar] = [];
+              sessionVarOptions[customVar].push(entry.ce_id);
+            });
+          });
+        });
+    }
 
     function activate() {
-      setActionEntry();
-      populateMenu();
+      myId = $scope.schedule + "-" + $scope.index + "-" + AACommonService.getUniqueId();
+
+      ui = AAUiModelService.getUiModel();
+
+      setActionEntry(ui);
+
+      getSessionVariables(AAModelService.getAAModel().aaRecordUUID).finally(function () {
+        populateMenu();
+      });
     }
 
     activate();
-  }
 
+  }
 })();

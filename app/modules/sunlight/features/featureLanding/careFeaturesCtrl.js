@@ -6,14 +6,14 @@
       .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
     var vm = this;
     vm.init = init;
     var pageStates = {
       newFeature: 'NewFeature',
       showFeatures: 'ShowFeatures',
       loading: 'Loading',
-      error: 'Error'
+      error: 'Error',
     };
     var listOfAllFeatures = [];
     var featureToBeDeleted = {};
@@ -24,12 +24,17 @@
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
     vm.placeholder = {
-      name: 'Search'
+      name: 'Search',
     };
     vm.filterText = '';
     vm.template = null;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
     vm.setFilter = setFilter;
+    vm.hasMessage = Authinfo.isMessageEntitled();
+    vm.hasCall = Authinfo.isSquaredUC();
+    vm.tooltip = '';
+    vm.purchaseLink = purchaseLink;
+
     /* LIST OF FEATURES
      *
      *  To add a New Feature (like Voice Templates)
@@ -46,7 +51,7 @@
       isEmpty: false,
       color: 'primary',
       icons: ['icon-message'],
-      data: []
+      data: [],
     }, {
       name: 'Ca',
       getFeature: CareFeatureList.getCallbackTemplates,
@@ -55,39 +60,33 @@
       isEmpty: false,
       color: 'alerts',
       icons: ['icon-phone'],
-      data: []
+      data: [],
+    }, {
+      name: 'ChCa',
+      getFeature: CareFeatureList.getChatPlusCallbackTemplates,
+      formatter: CareFeatureList.formatTemplates,
+      i18n: 'careChatTpl.chatTemplate',
+      isEmpty: false,
+      color: 'cta',
+      icons: ['icon-message', 'icon-phone'],
+      data: [],
     }];
 
     vm.filters = [{
       name: $translate.instant('common.all'),
-      filterValue: 'all'
+      filterValue: 'all',
     }, {
       name: $translate.instant('sunlightDetails.chatMediaType'),
-      filterValue: 'chat'
+      filterValue: 'chat',
     }, {
       name: $translate.instant('sunlightDetails.callbackMediaType'),
-      filterValue: 'callback'
+      filterValue: 'callback',
+    }, {
+      name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
+      filterValue: 'chatPlusCallback',
     }];
 
-    FeatureToggleService.atlasCareChatPlusCallbackTrialsGetStatus().then(function (enabled) {
-      if (enabled) {
-        vm.features.push({
-          name: 'ChCa',
-          getFeature: CareFeatureList.getChatPlusCallbackTemplates,
-          formatter: CareFeatureList.formatTemplates,
-          i18n: 'careChatTpl.chatTemplate',
-          isEmpty: false,
-          color: 'cta',
-          icons: ['icon-message', 'icon-phone'],
-          data: []
-        });
-        vm.filters.push({
-          name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
-          filterValue: 'chatPlusCallback'
-        });
-      }
-      init();
-    });
+    init();
 
     function init() {
       vm.pageState = pageStates.loading;
@@ -107,6 +106,12 @@
           vm.pageState = pageStates.showFeatures;
         }
       });
+
+      if (!vm.hasMessage && !vm.hasCall) {
+        vm.tooltip = $translate.instant('sunlightDetails.licensesMissing.messageAndCall');
+      } else if (!vm.hasMessage) {
+        vm.tooltip = $translate.instant('sunlightDetails.licensesMissing.messageOnly');
+      }
     }
 
     function handleFeaturePromises(promises) {
@@ -142,7 +147,7 @@
       vm.pageState = pageStates.error;
       Log.warn('Could not fetch features for customer with Id:', Authinfo.getOrgId());
       Notification.errorWithTrackingId(response, 'careChatTpl.failedToLoad', {
-        featureText: $filter('translate')(feature.i18n)
+        featureText: $filter('translate')(feature.i18n),
       });
     }
 
@@ -161,7 +166,7 @@
     }
 
     function reInstantiateMasonry() {
-      CardUtils.resize();
+      CardUtils.resize(200);
     }
 
     function showReloadPageIfNeeded() {
@@ -188,7 +193,7 @@
         $state.go('care.setupAssistant', {
           isEditFeature: true,
           template: template,
-          type: template.configuration.mediaType
+          type: template.configuration.mediaType,
         });
       });
     };
@@ -198,7 +203,7 @@
       $state.go('care.Features.DeleteFeature', {
         deleteFeatureName: feature.name,
         deleteFeatureId: feature.templateId,
-        deleteFeatureType: feature.featureType
+        deleteFeatureType: feature.featureType,
       });
     }
 
@@ -210,7 +215,7 @@
       $modal.open({
         templateUrl: 'modules/sunlight/features/featureLanding/newCareFeatureModal.tpl.html',
         controller: 'NewCareFeatureModalCtrl',
-        controllerAs: 'NewCareFeatureModalCtrl'
+        controllerAs: 'NewCareFeatureModalCtrl',
       });
     }
 
@@ -224,6 +229,10 @@
       }
 
     });
+
+    function purchaseLink() {
+      $state.go('my-company.subscriptions');
+    }
   }
 
 })();

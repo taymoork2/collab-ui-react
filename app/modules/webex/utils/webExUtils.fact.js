@@ -1,14 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('WebExApp')
-    .factory('WebExUtilsFact', WebExUtilsFact);
-
   /* @ngInject */
   function WebExUtilsFact(
-    $q,
     $log,
+    $q,
     $rootScope,
     Auth,
     Authinfo,
@@ -35,88 +31,91 @@
     };
 
     obj.isCIEnabledSite = function (siteUrl) {
-      var funcName = "isCIEnabledSite()";
-      var logMsg = "";
+      // var funcName = "isCIEnabledSite()";
+      // var logMsg = "";
 
       var licenses = Authinfo.getLicenses();
-      var result = true;
 
       var confLicenses = _.filter(licenses, {
-        siteUrl: siteUrl,
         licenseType: 'CONFERENCING',
-        isCIUnifiedSite: false
+        siteUrl: siteUrl,
       });
 
+      var cmrLicenses = _.filter(licenses, {
+        licenseType: 'CMR',
+        siteUrl: siteUrl,
+      });
+
+      var confLicensesNotCI = _.filter(licenses, {
+        siteUrl: siteUrl,
+        licenseType: 'CONFERENCING',
+        isCIUnifiedSite: false,
+      });
+
+      var cmrLicensesNotCI = _.filter(licenses, {
+        licenseType: 'CMR',
+        siteUrl: siteUrl,
+        isCIUnifiedSite: false,
+      });
+
+      var webexLicensesLen = confLicenses.length + cmrLicenses.length;
+      var webexLicensesNotCILen = confLicensesNotCI.length + cmrLicensesNotCI.length;
+
       if (
-        (null != confLicenses) &&
-        (0 < confLicenses.length)
+        (0 < webexLicensesNotCILen) &&
+        (webexLicensesNotCILen == webexLicensesLen)
       ) {
 
-        logMsg = funcName + "\n" +
-          "siteUrl=" + siteUrl + "\n" +
-          "confLicenses=" + JSON.stringify(confLicenses);
-        $log.log(logMsg);
-
-        result = false;
+        return false;
       }
 
-      if (result) {
-        var cmrLicenses = _.filter(licenses, {
-          siteUrl: siteUrl,
-          licenseType: 'CMR',
-          isCIUnifiedSite: false
-        });
+      return true;
+    }; // isCIEnabledSite()
 
-        if (
-          (null != cmrLicenses) &&
-          (0 < cmrLicenses.length)
-        ) {
+    obj.getSiteNameAndType = function (siteUrl) {
+      var funcName = "getSiteNameAndType()";
+      var logMsg = "";
 
-          logMsg = funcName + "\n" +
-            "siteUrl=" + siteUrl + "\n" +
-            "cmrLicenses=" + JSON.stringify(cmrLicenses);
-          $log.log(logMsg);
+      var siteUrlParts = siteUrl.split(".");
+      var siteUrlPartsCount = siteUrlParts.length;
+      var isMCOnlineSite = false;
+      var siteName = siteUrlParts[0];
 
-          result = false;
+      if (4 == siteUrlPartsCount) {
+        var siteNameSuffix = siteUrlParts[1];
+
+        if ("my" == _.toLower(siteNameSuffix.slice(0, 2))) {
+          siteName = siteName + '.' + siteNameSuffix;
+          isMCOnlineSite = true;
         }
       }
 
-      return result;
-    }; // isCIEnabledSite()
+      if (isMCOnlineSite) {
+        logMsg = funcName + "\n" +
+          "siteUrl=" + siteUrl + "\n" +
+          "siteUrlParts=" + siteUrlParts + "\n" +
+          "siteUrlPartsCount=" + siteUrlPartsCount + "\n" +
+          "siteName=" + siteName + "\n" +
+          "isMCOnlineSite=" + isMCOnlineSite;
+        $log.log(logMsg);
+      }
+
+      var resultObj = {
+        'siteName': siteName,
+        'isMCOnlineSite': isMCOnlineSite,
+      };
+
+      return resultObj;
+    }; // getSiteNameAndType()
 
     obj.getSiteName = function (siteUrl) {
       // var funcName = "getSiteName()";
       // var logMsg = "";
 
-      var freeSiteSuffixList = [
-        ".my",
-        ".mydmz",
-        ".mybts",
-        ".mydev"
-      ];
+      var siteNameAndTypeObj = obj.getSiteNameAndType(siteUrl);
+      var siteName = siteNameAndTypeObj.siteName;
 
-      var dotIndex = siteUrl.indexOf(".");
-      var siteName = siteUrl.slice(0, dotIndex);
-      var restOfSiteUrl = siteUrl.slice(dotIndex);
-
-      freeSiteSuffixList.forEach(
-        function checkFreeSiteSuffix(freeSiteSuffix) {
-          var tempSuffix = freeSiteSuffix + ".";
-
-          if (restOfSiteUrl.indexOf(tempSuffix) == 0) {
-            siteName = siteName + freeSiteSuffix;
-          }
-        } // checkFreeSiteSuffix()
-      );
-
-      // logMsg = funcName + "\n" +
-      //   "siteUrl=" + siteUrl + "\n" +
-      //   "dotIndex=" + dotIndex + "\n" +
-      //   "restOfSiteUrl=" + restOfSiteUrl + "\n" +
-      //   "siteName=" + siteName;
-      // $log.log(logMsg);
-
-      return siteName;
+      return (siteName);
     }; // getSiteName()
 
     obj.getNewInfoCardObj = function (
@@ -132,17 +131,17 @@
 
         licensesTotal: {
           id: "licensesTotal",
-          count: "---"
+          count: "---",
         },
 
         licensesUsage: {
           id: "licensesUsage",
-          count: "---"
+          count: "---",
         },
 
         licensesAvailable: {
           id: "licensesAvailable",
-          count: "---"
+          count: "---",
         },
 
         iframeLinkObj1: {
@@ -209,7 +208,7 @@
         headerJson: headerJson,
         bodyJson: bodyJson,
         errId: errId,
-        errReason: errReason
+        errReason: errReason,
       };
 
       return result;
@@ -278,7 +277,7 @@
 
       var trainReleaseJson = {
         trainReleaseVersion: null,
-        trainReleaseOrder: null
+        trainReleaseOrder: null,
       };
 
       // var trainReleaseVersion = null;
@@ -308,26 +307,40 @@
     }; // getEnableT30UnifiedAdmin()
 
     obj.getOrgWebexLicenses = function (orgInfo) {
+      var funcName = "getOrgWebexLicenses()";
+      var logMsg = "";
+
       var orgWebexLicenses = [];
 
       if (null != orgInfo) {
-        var customerInfo = _.get(orgInfo, 'data.customers[0]');
-        var custLicenses = customerInfo.licenses;
-        var custSubscriptions = customerInfo.subscriptions;
+        var customerOrderIDs = orgInfo.data.customers;
 
-        if (null != custLicenses) {
-          orgWebexLicenses = orgWebexLicenses.concat(custLicenses);
-        } else if (null != custSubscriptions) {
-          custSubscriptions.forEach(
-            function (custSubscription) {
-              var subscriptionLicenses = custSubscription.licenses;
-
-              if (null != subscriptionLicenses) {
-                orgWebexLicenses = orgWebexLicenses.concat(subscriptionLicenses);
-              }
-            }
-          );
+        if (1 < customerOrderIDs.size) {
+          logMsg = funcName + "\n" +
+            "customerOrderIDs.size=" + customerOrderIDs.size;
+          $log.log(logMsg);
         }
+
+        customerOrderIDs.forEach(
+          function customer(customerOrderID) {
+            var custLicenses = customerOrderID.licenses;
+            var custSubscriptions = customerOrderID.subscriptions;
+
+            if (null != custLicenses) {
+              orgWebexLicenses = orgWebexLicenses.concat(custLicenses);
+            } else if (null != custSubscriptions) {
+              custSubscriptions.forEach(
+                function (custSubscription) {
+                  var subscriptionLicenses = custSubscription.licenses;
+
+                  if (null != subscriptionLicenses) {
+                    orgWebexLicenses = orgWebexLicenses.concat(subscriptionLicenses);
+                  }
+                }
+              );
+            }
+          }
+        );
       }
 
       return orgWebexLicenses;
@@ -422,7 +435,7 @@
       var promise = null;
       var siteUrl = $rootScope.lastSite;
 
-      if (!angular.isDefined(siteUrl)) {
+      if (_.isUndefined(siteUrl)) {
         $log.log('No WebEx site visited.');
         var deferred = $q.defer();
         deferred.resolve('OK');
@@ -437,15 +450,15 @@
           type: 'POST',
           url: logoutUrl,
           data: $.param({
-            ngxsiteurl: siteUrl.toLowerCase()
+            ngxsiteurl: siteUrl.toLowerCase(),
           }),
           xhrFields: {
-            withCredentials: true
+            withCredentials: true,
           },
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          timeout: 250
+          timeout: 250,
         });
 
         promise = $q.resolve(jqpromise); //convert into angularjs promise
@@ -492,4 +505,7 @@
 
     return obj;
   } // webexUtilsFact()
+
+  module.exports = WebExUtilsFact;
+
 })();

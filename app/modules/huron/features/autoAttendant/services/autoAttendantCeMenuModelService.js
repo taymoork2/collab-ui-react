@@ -285,7 +285,7 @@
 
 
   /* @ngInject */
-  function AutoAttendantCeMenuModelService() {
+  function AutoAttendantCeMenuModelService(AAUtilityService, $translate) {
 
     // cannot use aaCommon's defined variables because of circular dependency.
     // aaCommonService shou not have this service, need to refactor it out.
@@ -310,6 +310,7 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
+      isCeMenuEntry: isCeMenuEntry,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -321,7 +322,7 @@
 
       newCeActionEntry: function (name, value) {
         return new Action(name, value);
-      }
+      },
 
     };
 
@@ -366,7 +367,7 @@
       }
       action.description = menuEntry.description;
 
-      if (angular.isDefined(inObject.voice)) {
+      if (!_.isUndefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
       menuEntry.addAction(action);
@@ -381,7 +382,7 @@
     function parsePlayObject(menuEntry, inObject) {
       var action;
       action = new Action('play', decodeUtf8(inObject.url));
-      if (angular.isDefined(inObject.voice)) {
+      if (!_.isUndefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
       action.deleteUrl = inObject.deleteUrl;
@@ -559,6 +560,12 @@
           return;
         }
         menuEntry.addAction(action);
+      } else if (!_.isUndefined(inAction.doREST)) {
+        action = new Action('doREST', '');
+        action.url = inAction.doREST.url;
+        action.method = inAction.doREST.method;
+        action.variableSet = parseResponseBlock(inAction.doREST);
+        menuEntry.addAction(action);
       } else if (inAction.conditional) {
         var exp;
 
@@ -566,8 +573,8 @@
         action.if = {};
         exp = parseLeftRightExpression(inAction.conditional.expression);
 
-        action.if.leftCondition = exp[0];
-        action.if.rightCondition = exp[1];
+        action.if.leftCondition = exp.ifCondition;
+        action.if.rightCondition = exp.isConditions;
 
         if (inAction.conditional.true[0].route) {
           action.then = new Action("route", inAction.conditional.true[0].route.destination);
@@ -603,35 +610,7 @@
       }
     }
     function parseLeftRightExpression(expression) {
-      /* expression looks like: var func=function() {if(this['Original-Caller-Number'] === 'Seattle Phone2' || this['Original-Caller-Number'] === 'Seattle Phone1') {return true;} return false;};"
-       *
-       * grab the stuff btw the brackets
-       */
-
-      var inBrackets = expression.match(/\[([^\]]+)\]/g);
-
-      var pieces = [];
-
-      /* remove brackets and single quotes Only save one bracketed item*/
-      pieces[0] = inBrackets[0].replace(/[[\]']/g, '');
-
-      var btwQuotes = expression.match(/'[^']+'/g);
-
-      if (btwQuotes.length < 2) {
-        return pieces;
-      }
-      pieces[1] = '';
-
-      for (var i = 1; i < btwQuotes.length - 1; i += 2) {
-        pieces[1] += btwQuotes[1] + ",";
-      }
-
-      pieces[1] += btwQuotes[btwQuotes.length - 1];
-
-      pieces[1] = pieces[1].replace(/[[\]']/g, '');
-
-      return pieces;
-
+      return AAUtilityService.pullJSPieces(expression && expression.indexOf(AAUtilityService.CONSTANTS.js.func) === 0 ? expression : decodeURIComponent(expression));
     }
 
 
@@ -691,7 +670,7 @@
     function cesPa(action, inAction) {
       if (action) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
@@ -708,7 +687,7 @@
     function cesFallback(action, inAction) {
       if (action) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
@@ -1026,7 +1005,7 @@
     function addDisconnectAction(actions) {
       actions.push({});
       actions[actions.length - 1]['disconnect'] = {
-        "treatment": "none"
+        "treatment": "none",
       };
     }
 
@@ -1220,43 +1199,60 @@
               }
             } else if (actionName === 'conditional') {
               newActionArray[i][actionName] = createConditional(menuEntry.actions[0]);
+            } else if (actionName === 'doREST') {
+              newActionArray[i][actionName].url = menuEntry.actions[0].url;
+              newActionArray[i][actionName].method = menuEntry.actions[0].method;
+              newActionArray[i][actionName].responseActions = createResponseBlock(menuEntry.actions[0]);
             }
           }
         }
       }
       return newActionArray;
     }
-    function createInListObj(action) {
-      var out;
-      var list;
 
-      // right condition looks like: 'Seattle Phone2, Seattle Phone1'
-
-      var pieces = action.if.rightCondition.split(",");
-
-      if (pieces.length === 0) {
-        return {};
-      }
-
-      pieces = _.compact(pieces);
-
-      // leftCondition looks like: 'Original-Caller-Number'
-
-      list = "this['" + action.if.leftCondition + "'] === '" + pieces[0].trim() + "'";
-
-      if (pieces.length > 1) {
-        for (var i = 1; i < pieces.length - 1; i++) {
-          list = list + " || this['" + action.if.leftCondition + "'] === '" + pieces[i].trim() + "'";
+    function createResponseBlock(action) {
+      var responseActions = [];
+      var newVariable = $translate.instant('autoAttendant.newVariable');
+      _.forEach(action.variableSet, function (variableSet) {
+        var assignVar = {};
+        var assignVarItem = {};
+        if (variableSet.variableName === newVariable) {
+          assignVarItem.variableName = variableSet.newVariableValue;
+        } else {
+          assignVarItem.variableName = variableSet.variableName;
         }
-        list = list + " || this['" + action.if.leftCondition + "'] === '" + pieces[pieces.length - 1].trim() + "'";
-      }
-
-      out = "var func=function() {if(" + list + ") {return true;} return false;};";
-      // out will look like: var func=function() {if(this['Original-Caller-Number'] === 'Seattle Phone2' || this['Original-Caller-Number'] === ' Seattle Phone1') {return true;} return false;};
-
-      return out;
-
+        if (_.startsWith(variableSet.value, '$Response.')) {
+          assignVarItem.value = variableSet.value;
+        } else {
+          assignVarItem.value = '$Response.' + variableSet.value;
+        }
+        assignVar.assignVar = assignVarItem;
+        responseActions.push(assignVar);
+      });
+      return responseActions;
     }
+
+    function parseResponseBlock(inAction) {
+      var variableSet = [];
+      _.forEach(inAction.responseActions, function (responseAction) {
+        var varSetItem = {};
+        varSetItem.value = responseAction.assignVar.value;
+        varSetItem.variableName = responseAction.assignVar.variableName;
+        variableSet.push(varSetItem);
+      });
+      return variableSet;
+    }
+
+    function createInListObj(action) {
+      var js;
+      if (_.isEqual(action.if.leftCondition, 'callerReturned')) {
+        js = AAUtilityService.generateFunction(action.if.leftCondition, action.if.rightCondition);
+      } else {
+        js = AAUtilityService.generateFunction(action.if.leftCondition, AAUtilityService.splitOnCommas(action.if.rightCondition));
+      }
+      return encodeURIComponent(js);
+    }
+
     function createObj(tag, action) {
       var out = {};
       var destObj = {};
@@ -1267,9 +1263,7 @@
         destObj[tag] = action.then.value;
       }
       out[action.then.name] = destObj;
-
       return out;
-
     }
 
     function createFalseObj() {
@@ -1287,6 +1281,8 @@
       /* as of now, all are InList type expressions. callerReturned is not
          implemented yet.
       */
+      out.varsUsed = [];
+      out.varsUsed.push(action.if.leftCondition);
 
       out.expression = createInListObj(action);
 
@@ -1308,7 +1304,6 @@
       out.false.push(createFalseObj());
 
       return out;
-
     }
 
     function updateWelcomeMenu(ceRecord, actionSetName, aaMenu) {
@@ -1374,6 +1369,7 @@
       }
       return newActionArray;
     }
+
     /*
     * Method for route to queue prior to CES def
     */
@@ -1390,7 +1386,7 @@
         var paAction = [];
         var paActionArray = {
           queuePeriodicAnnouncement: queuePeriodicAnnouncement,
-          queuePeriodicAnnouncementInterval: queuePeriodicAnnouncementInterval
+          queuePeriodicAnnouncementInterval: queuePeriodicAnnouncementInterval,
         };
         paAction.push(paActionArray);
         newAction.queuePeriodicAnnouncements = paAction;
@@ -1423,13 +1419,14 @@
             periodicAnnouncementType: 'play',
             periodicAnnouncementDescription: '',
             initialAnnouncementType: 'play',
-            initialAnnouncementDescription: ''
+            initialAnnouncementDescription: '',
           };
         }
         newAction.description = JSON.stringify(action.description);
       }
       return newAction;
     }
+
     /*
      * Set the defaults for Dial by Extension
      */
@@ -1505,6 +1502,7 @@
       }
       return newAction;
     }
+
     /*
      * Read aaMenu and populate mainMenu object
      */
@@ -1536,8 +1534,8 @@
           newOption.actions[0]['runActionsOnInput'] = _menu;
           newOption.actions[0]['runActionsOnInput']['incompleteInputActions'] = [{
             "repeatActionsOnInput": {
-              "level": -1
-            }
+              "level": -1,
+            },
           }];
           createOptionMenu(_menu, menuEntry);
           newOptionArray.push(newOption);
@@ -1558,7 +1556,7 @@
         //deleteUrl has been configured
         //else it will go to a sayList, blank or otherwise
         //which is used later to trigger play or say
-        if (list[0].deleteUrl) {
+        if (_.get(list, '[0].deleteUrl', undefined)) {
           inputAction.prompts.playList = list;
         } else {
           inputAction.prompts.sayList = list;
@@ -1765,5 +1763,9 @@
     function isCeMenu(obj) {
       return (objectType(obj) === 'CeMenu');
     }
+    function isCeMenuEntry(obj) {
+      return (objectType(obj) === 'CeMenuEntry');
+    }
+
   }
 })();

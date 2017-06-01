@@ -19,6 +19,13 @@ describe('Service: Media Reports Service', function () {
   vm.totalcallsdata = vm.totalCallsCardData.totolcalls;
   vm.availabilityCardData = getJSONFixture('mediafusion/json/metrics-graph-report/availabilityCardData.json');
   vm.availabilitydata = vm.availabilityCardData.availability;
+  vm.participantChangedata = {
+    "orgId": "11111111-2222-3333-a444-111111111bac",
+    "dataProvider": [{
+      "name": "participant_change",
+      "value": 2,
+    }],
+  };
 
   vm.allClusters = 'mediaFusion.metrics.allclusters';
   vm.sampleClusters = 'mediaFusion.metrics.sampleclusters';
@@ -26,32 +33,32 @@ describe('Service: Media Reports Service', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   vm.timeFilter = {
-    value: 0
+    value: 0,
   };
 
   vm.Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   vm.error = {
     message: 'error',
     data: {
-      trackingId: "id"
-    }
+      trackingId: "id",
+    },
   };
 
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", vm.Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _MediaReportsService_, _Notification_, _MediaConfigServiceV2_) {
+  beforeEach(inject(function (_$httpBackend_, _MediaReportsService_, _Notification_, _UrlConfig_) {
     vm.$httpBackend = _$httpBackend_;
     vm.MediaReportsService = _MediaReportsService_;
     vm.Notification = _Notification_;
-    vm.MediaConfigServiceV2 = _MediaConfigServiceV2_;
+    vm.UrlConfig = _UrlConfig_;
 
     spyOn(vm.Notification, 'errorWithTrackingId');
 
-    vm.baseUrl = vm.MediaConfigServiceV2.getAthenaUrl() + '/organizations/' + vm.Authinfo.getOrgId();
+    vm.baseUrl = vm.UrlConfig.getAthenaServiceUrl() + '/organizations/' + vm.Authinfo.getOrgId();
     vm.callVolumeUrl = vm.baseUrl + '/call_volume/?relativeTime=4h';
     vm.UtilizationUrl = vm.baseUrl + '/utilization/?relativeTime=4h';
     vm.clusterAvailabilityUrl = vm.baseUrl + '/clusters_availability/?relativeTime=4h';
@@ -59,6 +66,8 @@ describe('Service: Media Reports Service', function () {
     vm.availabilityCard = vm.baseUrl + '/agg_availability/?relativeTime=4h';
     vm.participantDistributionUrl = vm.baseUrl + '/clusters_call_volume_with_insights/?relativeTime=4h';
     vm.clientTypeUrl = vm.baseUrl + '/client_type_trend/?relativeTime=4h';
+    vm.meetingLcationUrl = vm.baseUrl + '/meeting_location_trend/?relativeTime=4h';
+    vm.participant_change = vm.baseUrl + '/overflow_participant_change/?relativeTime=4h';
 
   }));
 
@@ -85,7 +94,7 @@ describe('Service: Media Reports Service', function () {
 
       vm.MediaReportsService.getCallVolumeData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
-          graphData: vm.responsedata
+          graphData: vm.responsedata,
         });
       });
 
@@ -98,7 +107,7 @@ describe('Service: Media Reports Service', function () {
 
       vm.MediaReportsService.getCallVolumeData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
-          graphData: []
+          graphData: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -115,7 +124,7 @@ describe('Service: Media Reports Service', function () {
       vm.MediaReportsService.getUtilizationData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: [],
-          graphs: []
+          graphs: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -132,7 +141,7 @@ describe('Service: Media Reports Service', function () {
       vm.MediaReportsService.getParticipantDistributionData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: [],
-          graphs: []
+          graphs: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -149,7 +158,24 @@ describe('Service: Media Reports Service', function () {
       vm.MediaReportsService.getClientTypeData(vm.timeFilter).then(function (response) {
         expect(response).toEqual({
           graphData: [],
-          graphs: []
+          graphs: [],
+        });
+        expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+      });
+
+      vm.$httpBackend.flush();
+    });
+  });
+
+  describe('Meeting Location Data:', function () {
+    it('should notify an error for Meeting Location Data call failure', function () {
+      vm.$httpBackend.whenGET(vm.meetingLcationUrl).respond(500, vm.error);
+      expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+
+      vm.MediaReportsService.getMeetingLocationData(vm.timeFilter).then(function (response) {
+        expect(response).toEqual({
+          graphData: [],
+          graphs: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -222,6 +248,30 @@ describe('Service: Media Reports Service', function () {
       expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
       vm.MediaReportsService.getClusterAvailabilityData(vm.timeFilter, vm.allClusters).then(function (response) {
+        expect(response).toEqual([]);
+        expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+      });
+
+      vm.$httpBackend.flush();
+    });
+  });
+
+  describe('getOverflowIndicator on the Card', function () {
+    it('should get cluster availability percentage', function () {
+      vm.$httpBackend.whenGET(vm.participant_change).respond(vm.participantChangedata);
+
+      vm.MediaReportsService.getOverflowIndicator(vm.timeFilter, vm.allClusters).then(function (response) {
+        expect(response.data).toEqual(vm.participantChangedata);
+      });
+
+      vm.$httpBackend.flush();
+    });
+
+    it('should notify an error for cluster availability percentage failure', function () {
+      vm.$httpBackend.whenGET(vm.participant_change).respond(500, vm.error);
+      expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+
+      vm.MediaReportsService.getOverflowIndicator(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual([]);
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });

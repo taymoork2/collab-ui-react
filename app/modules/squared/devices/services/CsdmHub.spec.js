@@ -10,29 +10,29 @@ describe('CsdmHubFactory', function () {
   }));
 
   it('should work', function () {
-    var listener = sinon.stub();
-    var listenerAddedListener = sinon.stub();
-    var listenerRemovedListener = sinon.stub();
+    var listener = jasmine.createSpy('listener');
+    var listenerAddedListener = jasmine.createSpy('listenerAddedListener');
+    var listenerRemovedListener = jasmine.createSpy('listenerRemovedListener');
     var scope = {
-      '$on': sinon.stub()
+      '$on': jasmine.createSpy('$on'),
     };
 
     hub.onListener('added', listenerAddedListener);
     hub.onListener('removed', listenerRemovedListener);
 
     hub.on('foo', listener, {
-      scope: scope
+      scope: scope,
     });
-    expect(scope.$on.callCount).toBe(1);
-    expect(listenerAddedListener.callCount).toBe(1);
+    expect(scope.$on.calls.count()).toBe(1);
+    expect(listenerAddedListener.calls.count()).toBe(1);
     expect(hub.count('foo')).toBe(1);
 
     hub.emit('foo', 'bar');
-    expect(listener.callCount).toBe(1);
-    expect(listener.args[0][0]).toBe('bar');
+    expect(listener.calls.count()).toBe(1);
+    expect(listener.calls.argsFor(0)[0]).toBe('bar');
 
-    scope.$on.args[0][1].call();
-    expect(listenerRemovedListener.callCount).toBe(1);
+    scope.$on.calls.argsFor(0)[1].call();
+    expect(listenerRemovedListener.calls.count()).toBe(1);
     expect(hub.count('foo')).toBe(0);
   });
 

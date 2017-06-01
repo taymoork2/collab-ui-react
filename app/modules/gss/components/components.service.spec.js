@@ -16,8 +16,8 @@ describe('Service: ComponentsService', function () {
           'serviceId': 143,
           'componentName': 'Schedule meetings',
           'status': 'degraded_performance',
-          'description': ''
-        }
+          'description': '',
+        },
       },
       {
         'componentId': 981,
@@ -25,16 +25,16 @@ describe('Service: ComponentsService', function () {
         'componentName': 'ComponentGroup test',
         'status': 'under_maintenance',
         'description': '',
-        'position': 2
-      }
+        'position': 2,
+      },
     ],
     newComponent: {
       "componentId": 355,
       "serviceId": 143,
       "componentName": "Start/join meetings",
       "status": "operational",
-      "description": ""
-    }
+      "description": "",
+    },
   };
 
   beforeEach(angular.mock.module('GSS'));
@@ -90,7 +90,7 @@ describe('Service: ComponentsService', function () {
     $httpBackend.expectDELETE(/.*\/components.*/g).respond(200, mockData.components[1]);
 
     ComponentsService.delComponent({
-      componentId: mockData.components[1].componentId
+      componentId: mockData.components[1].componentId,
     }).then(function (res) {
       expect(res).toBeDefined();
     });
@@ -103,7 +103,7 @@ describe('Service: ComponentsService', function () {
 
     ComponentsService.modifyComponent({
       componentId: mockData.components[0].componentId,
-      componentName: 'testComponent'
+      componentName: 'testComponent',
     }).then(function (res) {
       expect(res).toBeDefined();
     });

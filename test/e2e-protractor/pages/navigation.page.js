@@ -126,10 +126,6 @@ var Navigation = function () {
   };
 
   this.clickAutoAttendant = function () {
-    this.clickServicesTab();
-    utils.click(this.callSettings);
-    this.expectCurrentUrl('/hurondetails/settings');
-    utils.click(this.autoAttendantPage);
     this.expectCurrentUrl('/features');
     utils.expectIsDisplayed(autoattendant.newFeatureButton);
   };
@@ -309,7 +305,7 @@ var Navigation = function () {
 
   this.navigateUsingIntegrationBackend = function (url) {
     return browser.get(getUrl(url, {
-      forceIntegration: true
+      forceIntegration: true,
     }));
   };
 

@@ -1,0 +1,53 @@
+{
+  "members": [
+    {
+      "type": "USER_PLACE",
+      "uuid": "56931a6e-018c-44d6-9e0a-4cc572739829",
+      "firstName": null,
+      "lastName": null,
+      "userName": null,
+      "displayName": "office",
+      "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/places/56931a6e-018c-44d6-9e0a-4cc572739829"
+    },
+    {
+      "type": "USER_REAL_USER",
+      "uuid": "229171c9-63d5-4f98-b51f-55aab64b11b9",
+      "firstName": "Sam",
+      "lastName": "Wi",
+      "userName": "samwiforcisco+gbuser1@gmail.com",
+      "displayName": null,
+      "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/users/229171c9-63d5-4f98-b51f-55aab64b11b9"
+    },
+    {
+      "type": "USER_REAL_USER",
+      "uuid": "b7972274-8ac1-4466-a6d1-a448b3b01b34",
+      "firstName": "",
+      "lastName": "",
+      "userName": "samwiforcisco+gbuser2@gmail.com",
+      "displayName": null,
+      "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/users/b7972274-8ac1-4466-a6d1-a448b3b01b34"
+    },
+    {
+      "type": "USER_PLACE",
+      "uuid": "36c636c5-a9e1-495e-96f8-e04f97221880",
+      "firstName": null,
+      "lastName": null,
+      "userName": null,
+      "displayName": "member3",
+      "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/places/36c636c5-a9e1-495e-96f8-e04f97221880"
+    }
+  ],
+  "url": "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/members",
+  "paging": {
+    "next": [
+      "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/members?offset=200&limit=200"
+    ],
+    "prev": [
+      "https://cmi.huron-int.com/api/v2/customers/aa092d22-ec21-4a00-a4a7-c0ec7e0fc85a/members?offset=0&limit=200"
+    ],
+    "limit": 200,
+    "offset": 0,
+    "pages": null,
+    "count": null
+  }
+}

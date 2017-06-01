@@ -21,14 +21,10 @@ describe('Controller: ExpresswayServiceClusterController', function () {
     var calendarCluster = getJSONFixture('hercules/expressway-cluster-with-calendar.json');
     var managementCluster = getJSONFixture('hercules/expressway-clusters-with-management-upgrade.json');
 
-    var changing = sinon.stub();
-    changing.onCall(0).returns(calendarCluster);
-    changing.onCall(1).returns(managementCluster);
-    changing.onCall(2).returns(calendarCluster);
-    changing.returns(managementCluster);
+    var changing = jasmine.createSpy('changing').and.returnValues(calendarCluster, managementCluster, calendarCluster, managementCluster);
 
     clusterServiceMock = {
-      getCluster: changing
+      getCluster: changing,
     };
 
     controller = $componentController('expresswayUpgradeSection', {

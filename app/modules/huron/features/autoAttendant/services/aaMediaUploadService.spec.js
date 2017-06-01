@@ -3,12 +3,10 @@
 describe('Service: AAMediaUploadService', function () {
   var Upload;
   var AAMediaUploadService;
-  var AACommonService;
   var AACtrlResourcesService;
   var Config;
   var $http;
   var $q;
-  var $rootScope;
 
   var validFileByName = 'validFile.wav';
   var invalidFileByName = 'validFile.invalid';
@@ -21,7 +19,7 @@ describe('Service: AAMediaUploadService', function () {
   var variantKeys = '12987-253235-235235-235235';
   var variantsMap = {};
   variantsMap[variantKeys] = {
-    variantUrl: variantUrlPlayback
+    variantUrl: variantUrlPlayback,
   };
   var clioValidRetrieve = {
     variants: variantsMap,
@@ -33,57 +31,55 @@ describe('Service: AAMediaUploadService', function () {
   };
   var clioInvalidRetrieveNoKeys = {
     variants: {
-    }
+    },
   };
   var clioInvalidRetrieveNoVariantKeysMap = {
     variants: {
-      noNestedFields: undefined
-    }
+      noNestedFields: undefined,
+    },
   };
   var clioInvalidRetrieveNoVariantKeys = {
     variants: {
       noNestedFields: {
-      }
-    }
+      },
+    },
   };
   var clioInvalidRetrieveNoVariantUrl = {
     variants: {
       noNestedFields: {
-        notVariantUrlField: 'sampleValue'
-      }
-    }
+        notVariantUrlField: 'sampleValue',
+      },
+    },
   };
   var clioInvalidRetrieveEmptyVariantUrl = {
     variants: {
       noNestedFields: {
-        variantUrl: undefined
-      }
-    }
+        variantUrl: undefined,
+      },
+    },
   };
   var successResultLackingPath = {
     malformed: {
-    }
+    },
   };
   var successResultRecording = {
     data: {
       metadata: {
-        variants: variantsMap
+        variants: variantsMap,
       },
-    }
+    },
   };
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_Upload_, _Config_, _AACommonService_, _AAMediaUploadService_, _AACtrlResourcesService_, _$http_, _$q_, _$rootScope_) {
+  beforeEach(inject(function (_Upload_, _Config_, _AAMediaUploadService_, _AACtrlResourcesService_, _$http_, _$q_) {
     Upload = _Upload_;
     AAMediaUploadService = _AAMediaUploadService_;
-    AACommonService = _AACommonService_;
     AACtrlResourcesService = _AACtrlResourcesService_;
     Config = _Config_;
     $http = _$http_;
     $q = _$q_;
-    $rootScope = _$rootScope_;
   }));
 
   afterEach(function () {
@@ -123,8 +119,8 @@ describe('Service: AAMediaUploadService', function () {
         mediaUploadCtrlN: {
           active: true,
           saved: false,
-          uploads: []
-        }
+          uploads: [],
+        },
       });
       AAMediaUploadService.clearResourcesExcept('value', 0);
       expect(AAMediaUploadService.getResources).not.toHaveBeenCalled();
@@ -164,47 +160,89 @@ describe('Service: AAMediaUploadService', function () {
     });
   });
 
-  describe('broadcasts', function () {
+  describe('AA Save', function () {
     beforeEach(function () {
       spyOn(AAMediaUploadService, 'cleanResourceFieldIndex').and.callFake(function (field, index, key) {
         return key && index && field;
       });
-      spyOn($rootScope, '$broadcast').and.callThrough();
       spyOn(AACtrlResourcesService, 'getCtrlKeys').and.returnValue(['mediaUploadCtrlN']);
     });
 
-    describe('AA Save', function () {
-      beforeEach(function () {
+    it('should delete the field information on aa save if not active', function () {
+      spyOn(AAMediaUploadService, 'getResources').and.returnValue({
+        mediaUploadCtrlN: {
+          active: false,
+          saved: '',
+          uploads: ['value'],
+        },
       });
-
-      it('should delete the field information on aa save if not active', function () {
-        spyOn(AAMediaUploadService, 'getResources').and.returnValue({
-          mediaUploadCtrlN: {
-            active: false,
-            saved: '',
-            uploads: ['value']
-          }
-        });
-        $rootScope.$broadcast('CE Saved');
-        expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('AA Close', function () {
-      beforeEach(function () {
-      });
-
-      it('should delete out the resources on aa close if not saved', function () {
-        spyOn(AAMediaUploadService, 'getResources').and.returnValue({
-          active: '',
-          saved: false,
-          uploads: ['value']
-        });
-        $rootScope.$broadcast('CE Closed');
-        expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
-      });
+      AAMediaUploadService.saveResources();
+      expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
     });
   });
+
+  describe('AA Close', function () {
+    var ceMenuModelService;
+
+    beforeEach(inject(function (_AutoAttendantCeMenuModelService_) {
+      spyOn($http, 'delete');
+
+      ceMenuModelService = _AutoAttendantCeMenuModelService_;
+    }));
+
+    it('should delete out the resources on aa close if not saved', function () {
+
+      var resources = AAMediaUploadService.getResources('someId');
+      var keeper = ceMenuModelService.newCeActionEntry('say massage', '');
+      keeper.deleteUrl = 'keeper';
+      keeper.myUrl = 'keeper URL';
+      var nokeeper = ceMenuModelService.newCeActionEntry('say massage', '');
+      nokeeper.deleteUrl = 'http:should not be here';
+      nokeeper.myUrl = 'deletedURL';
+
+      resources.uploads.push(keeper);
+      resources.uploads.push(nokeeper);
+
+      AAMediaUploadService.resetResources();
+
+      expect($http.delete).toHaveBeenCalledWith('http:should not be here');
+    });
+    it('should delete out the resources on aa save if are marked active as false', function () {
+
+      var resources = AAMediaUploadService.getResources('someId');
+
+      var nokeeper = ceMenuModelService.newCeActionEntry('say massage', '');
+      nokeeper.deleteUrl = 'http:should not be here';
+      nokeeper.myUrl = 'deletedURL';
+
+      resources.active = false;
+
+      resources.uploads.push(nokeeper);
+
+      AAMediaUploadService.saveResources();
+
+      expect($http.delete).toHaveBeenCalledWith('http:should not be here');
+    });
+  });
+  describe('Notify', function () {
+    it('should moved saved to true', function () {
+      var resources = AAMediaUploadService.getResources('someId');
+
+      AAMediaUploadService.notifyAsSaved('someId', true);
+
+      expect(resources.saved).toEqual(true);
+
+    });
+    it('should moved active to true', function () {
+      var resources = AAMediaUploadService.getResources('someId');
+
+      AAMediaUploadService.notifyAsActive('someId', true);
+
+      expect(resources.active).toEqual(true);
+
+    });
+  });
+
 
   describe('getRecordingUrl', function () {
     beforeEach(function () {
@@ -244,10 +282,6 @@ describe('Service: AAMediaUploadService', function () {
   });
 
   describe('retrieve', function () {
-    beforeEach(function () {
-      spyOn(AACommonService, 'isClioToggle').and.returnValue(true);
-    });
-
     describe('production', function () {
       beforeEach(function () {
         spyOn(Config, 'isProd').and.returnValue(true);

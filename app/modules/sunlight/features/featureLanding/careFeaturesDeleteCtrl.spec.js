@@ -6,16 +6,16 @@ describe('Care Feature Delete Ctrl', function () {
   var deferred;
 
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   var successResponse = {
     'status': 200,
-    'statusText': 'OK'
+    'statusText': 'OK',
   };
   var failureResponse = {
     'data': 'Internal Server Error',
     'status': 500,
-    'statusText': 'Internal Server Error'
+    'statusText': 'Internal Server Error',
   };
 
   beforeEach(angular.mock.module('Sunlight'));
@@ -44,7 +44,7 @@ describe('Care Feature Delete Ctrl', function () {
     $stateParams = {
       deleteFeatureId: 123,
       deleteFeatureName: 'Sunlight Dev Template',
-      deleteFeatureType: 'Ch'
+      deleteFeatureType: 'Ch',
     };
 
     controller = $controller('CareFeaturesDeleteCtrl', {
@@ -56,7 +56,7 @@ describe('Care Feature Delete Ctrl', function () {
       Authinfo: Authinfo,
       CareFeatureList: CareFeatureList,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -76,7 +76,7 @@ describe('Care Feature Delete Ctrl', function () {
     $scope.$apply();
     $timeout.flush();
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-      featureName: $stateParams.deleteFeatureName
+      featureName: $stateParams.deleteFeatureName,
     });
   });
 

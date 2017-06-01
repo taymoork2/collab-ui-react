@@ -1,0 +1,11 @@
+<div class="status-row">
+  <span ng-if="$ctrl.name" class="title">{{$ctrl.name}}</span>
+  <span class="status">
+    <cs-statusindicator ng-model="$ctrl.statusClass"></cs-statusindicator>
+    <span ng-if="$ctrl.enabled" translate="globalSettings.dirsync.enabled"></span>
+    <span ng-if="!$ctrl.enabled" translate="globalSettings.dirsync.disabled"></span>
+  </span>
+  <div class="link">
+    <a href="" ng-click="$ctrl.handleClick()">{{$ctrl.linkTitle}}</a>
+  </div>
+</div>

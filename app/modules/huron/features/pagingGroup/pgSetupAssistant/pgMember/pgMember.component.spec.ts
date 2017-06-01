@@ -98,7 +98,7 @@ describe('Component: pgMember', () => {
 
     it('should be able to select and unselect a member', function () {
       this.controller.availableMembers = membersList;
-      let mem1 = angular.copy(this.controller.availableMembers[0]);
+      let mem1 = _.cloneDeep(this.controller.availableMembers[0]);
       //this.getMemberPictureDefer.resolve(fake_picture_path);
       this.getUserDefer.resolve(userResponse);
       this.controller.selectMembers(mem1);
@@ -118,14 +118,14 @@ describe('Component: pgMember', () => {
     });
 
     it('should return empty string if the member is not in selectedMembers', function () {
-      let mem1 = angular.copy(membersList[0]);
+      let mem1 = _.cloneDeep(membersList[0]);
       let memWithPic = {
         member: mem1,
         picturePath: fake_picture_path,
       };
 
       this.controller.selectedMembers.push(memWithPic);
-      let mem2 = angular.copy(membersList[1]);
+      let mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getMembersPictures(mem2)).toEqual('');
     });
 
@@ -135,24 +135,24 @@ describe('Component: pgMember', () => {
     beforeEach(initComponent);
 
     it('Can getDisplayNameInDropdown', function() {
-      let mem5 = angular.copy(membersList[4]);
+      let mem5 = _.cloneDeep(membersList[4]);
       expect(this.controller.getDisplayNameInDropdown(mem5)).toEqual('peter@kickyourbutt.com');
 
-      let mem1 = angular.copy(membersList[0]);
+      let mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getDisplayNameInDropdown(mem1)).toEqual('Chuck Norris (chuck.norris@kickyourbutt.com)');
 
-      let mem2 = angular.copy(membersList[1]);
+      let mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getDisplayNameInDropdown(mem2)).toEqual('Koala Lounge');
     });
 
     it('Can getDisplayNameOnCard', function() {
-      let mem5 = angular.copy(membersList[4]);
+      let mem5 = _.cloneDeep(membersList[4]);
       expect(this.controller.getDisplayNameOnCard(mem5)).toEqual('');
 
-      let mem1 = angular.copy(membersList[0]);
+      let mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getDisplayNameOnCard(mem1)).toEqual('Chuck Norris');
 
-      let mem2 = angular.copy(membersList[1]);
+      let mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getDisplayNameOnCard(mem2)).toEqual('Koala Lounge');
 
       let mem3 = undefined;
@@ -175,12 +175,12 @@ describe('Component: pgMember', () => {
     beforeEach(initComponent);
 
     it('Can USER_REAL_USER type', function () {
-      let mem1 = angular.copy(membersList[0]);
+      let mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getMemberType(mem1)).toEqual('user');
     });
 
     it('Can get USER_PLACE type', function() {
-      let mem2 = angular.copy(membersList[1]);
+      let mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getMemberType(mem2)).toEqual('place');
     });
   });

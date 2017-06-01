@@ -7,7 +7,7 @@
     <div ng-if="squaredUcSetup.showTimezoneAndVoicemail">
       <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswTimeZoneSelection" form="squaredUcSetup.form"></formly-form>
     </div>
-    <div ng-if="squaredUcSetup.showTimezoneAndVoicemail" class="row full service-setup service-setup-regional-settings bottom-margin" cr-feature-toggle feature-show="huron-l10n-user-locale">
+    <div ng-if="squaredUcSetup.showTimezoneAndVoicemail" class="row full service-setup service-setup-regional-settings bottom-margin">
       <label class="control-label" translate="serviceSetupModal.preferredLanguage"></label>
       <p class="description-block" translate="serviceSetupModal.preferredLanguageDescription"></p>
       <div class="medium-4">
@@ -23,8 +23,8 @@
         ></cs-select>
       </div>
     </div>
-    <div class="row service-setup service-setup-regional-settings bottom-margin" cr-feature-toggle feature-show="huron-l10n-network-locale">
-      <label class="control-label" translate="serviceSetupModal.defaultCountry"></label>
+    <div class="row service-setup service-setup-regional-settings bottom-margin" ng-if="squaredUcSetup.supportRegionalSettings()">
+      <label class="control-label" translate="serviceSetupModal.defaultTones"></label>
       <p class="description-block" translate="serviceSetupModal.defaultCountryDescription"></p>
       <div class="medium-4">
         <cs-select
@@ -78,11 +78,12 @@
     <div ng-if="squaredUcSetup.showTimezoneAndVoicemail">
       <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswVoicemailPrefixSelection" form="squaredUcSetup.form"></formly-form>
     </div>
-    <div cr-feature-toggle feature-show="huron-customer-cos">
+    <div>
       <uc-cos-form
         env="ftsw"
         input-model="squaredUcSetup.model.cosRestrictions"
-        on-change-fn="squaredUcSetup.setCustomerCosRestrictions(restrictions)">
+        on-change-fn="squaredUcSetup.setCustomerCosRestrictions(restrictions)"
+        premium-numbers="squaredUcSetup.premiumNumbers">
       </uc-cos-form>
     </div>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswSteeringDigitSelection" form="squaredUcSetup.form"></formly-form>

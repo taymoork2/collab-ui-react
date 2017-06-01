@@ -7,8 +7,8 @@ describe('controller: CreateIncidentCtrl', function () {
       name: 'testIncidentName',
       status: 'testIncidentStatus',
       message: 'testIncidentMessage',
-      email: 'testEmail'
-    }
+      email: 'testEmail',
+    },
   };
 
   beforeEach(angular.mock.module('GSS'));
@@ -42,7 +42,7 @@ describe('controller: CreateIncidentCtrl', function () {
     controller = $controller('CreateIncidentCtrl', {
       $scope: $scope,
       GSSService: GSSService,
-      IncidentsService: IncidentsService
+      IncidentsService: IncidentsService,
     });
 
     $scope.$apply();

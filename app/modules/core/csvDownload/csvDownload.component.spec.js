@@ -24,8 +24,8 @@ describe('csvDownload', function () {
 
   function initDependencySpies() {
     spyOn(this.FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.Analytics, 'trackCsv').and.returnValue(this.$q.when());
-    spyOn(this.$state, 'go').and.callFake(angular.noop);
+    spyOn(this.Analytics, 'trackCsv').and.returnValue(this.$q.resolve());
+    spyOn(this.$state, 'go').and.callFake(_.noop);
   }
 
   function initController() {
@@ -34,7 +34,7 @@ describe('csvDownload', function () {
       $q: this.$q,
       $rootScope: this.$rootScope,
       FeatureToggleService: this.FeatureToggleService,
-      CsvDownloadService: this.CsvDownloadService
+      CsvDownloadService: this.CsvDownloadService,
     });
     this.controller.$onInit();
   }
@@ -91,14 +91,14 @@ describe('csvDownload', function () {
   describe("Component", function () {
 
     beforeEach(function () {
-      this.$httpBackend.when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/csv/organizations/null/users/template').respond({});
+      this.$httpBackend.when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/csv/organizations/null/users/template').respond({});
       this.$window.navigator.msSaveOrOpenBlob = undefined;
     });
 
     it('should replace the element with the appropriate content', function () {
       initComponentWithBindings.apply(this, [{
         type: 'template',
-        filename: 'template.csv'
+        filename: 'template.csv',
       }]);
 
       expect(this.controller.downloading).toBeFalsy();
@@ -112,7 +112,7 @@ describe('csvDownload', function () {
       initComponentWithBindings.apply(this, [{
         type: 'template',
         filename: 'template.csv',
-        icon: 'abc-icon'
+        icon: 'abc-icon',
       }]);
 
       expect(this.view.find('i:first')).toHaveClass('abc-icon');
@@ -122,7 +122,7 @@ describe('csvDownload', function () {
       initComponentWithBindings.apply(this, [{
         type: 'any',
         filename: 'some.csv',
-        noIcon: 'true'
+        noIcon: 'true',
       }]);
 
       expect(this.view.find('i:first')).toHaveClass("icon");
@@ -132,7 +132,7 @@ describe('csvDownload', function () {
     it('should download template by clicking the anchor', function () {
       initComponentWithBindings.apply(this, [{
         type: 'template',
-        filename: 'template.csv'
+        filename: 'template.csv',
       }]);
 
       var downloadAnchor = this.view.find('a');
@@ -160,7 +160,7 @@ describe('csvDownload', function () {
     it('should contain tooltip for download type=user', function () {
       initComponentWithBindings.apply(this, [{
         type: 'user',
-        filename: 'exported_users.csv'
+        filename: 'exported_users.csv',
       }]);
       expect(this.view.find('span:first')).toHaveAttr('tooltip', 'usersPage.csvBtnTitle');
     });
@@ -171,7 +171,7 @@ describe('csvDownload', function () {
     beforeEach(function () {
       this.$window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () { });
 
-      spyOn(this.CsvDownloadService, 'getCsv').and.returnValue(this.$q.when('blob'));
+      spyOn(this.CsvDownloadService, 'getCsv').and.returnValue(this.$q.resolve('blob'));
       spyOn(this.CsvDownloadService, 'openInIE').and.callFake(function () { });
       spyOn(this.CsvDownloadService, 'revokeObjectUrl').and.callFake(function () { });
     });
@@ -179,7 +179,7 @@ describe('csvDownload', function () {
     it('should download template by clicking the anchor', function () {
       initComponentWithBindings.apply(this, [{
         type: 'template',
-        filename: 'template.csv'
+        filename: 'template.csv',
       }]);
 
       var downloadAnchor = this.view.find('a');

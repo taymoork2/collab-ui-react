@@ -83,7 +83,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
     scope.$q.all(promises).then((memberNumbers: Array<IMemberNumber[]>) => {
       let index = 0;
       _.forEach(scope.selectedMembers, function (member: IMember) {
-        member.checkboxes = scope.CallPickupGroupService.createCheckBoxes(member, memberNumbers[index]);
+        member.checkboxes = scope.CallPickupGroupService.createCheckboxesForEdit(member, memberNumbers[index], scope.title);
         index++;
       });
       _.forEach(callPickup.numbers, function (number: any) {
@@ -161,7 +161,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
       if (this.index === this.getLastIndex()) {
         //Change the green arrow button to a blue one
         let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
-        arrowButton.removeClass('saveCallPickup');
+        arrowButton.removeClass('save-call-feature');
         //Hide helpText
         let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
         helpText.removeClass('active');
@@ -177,7 +177,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
     if (this.index === this.getLastIndex()) {
       //Change the blue arrow button to a green one
       let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
-      arrowButton.addClass('saveCallPickup');
+      arrowButton.addClass('save-call-feature');
     }
     if (this.index === this.getLastIndex() + 1) {
       this.saveCallPickup();

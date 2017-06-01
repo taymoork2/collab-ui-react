@@ -22,8 +22,8 @@ describe('TimingInterceptor', function () {
   it('should update config with response timestamp', function () {
     var response = {
       config: {
-        requestTimestamp: new Date().getTime()
-      }
+        requestTimestamp: new Date().getTime(),
+      },
     };
     Interceptor.response(response);
     expect(response.config.responseTimestamp).toBeGreaterThan(now);
@@ -33,50 +33,50 @@ describe('TimingInterceptor', function () {
     var response = {
       config: {
         headers: {},
-        requestTimestamp: now - 15000
-      }
+        requestTimestamp: now - 15000,
+      },
     };
-    Config.isProd = sinon.stub().returns(false);
-    $log.error = sinon.stub();
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(false);
+    $log.error = jasmine.createSpy('error');
 
     Interceptor.response(response);
 
-    expect($log.error.callCount).toBe(1);
+    expect($log.error.calls.count()).toBe(1);
   });
 
   it('should not log in prod', function () {
     var response = {
       config: {
-        requestTimestamp: now - 15000
-      }
+        requestTimestamp: now - 15000,
+      },
     };
-    Config.isProd = sinon.stub().returns(true);
-    $log.error = sinon.stub();
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(true);
+    $log.error = jasmine.createSpy('error');
 
     Interceptor.response(response);
 
-    expect($log.error.callCount).toBe(0);
+    expect($log.error.calls.count()).toBe(0);
   });
 
   it('should not log if thresold not reached', function () {
     var response = {
       config: {
-        requestTimestamp: now
-      }
+        requestTimestamp: now,
+      },
     };
-    Config.isProd = sinon.stub().returns(false);
-    $log.error = sinon.stub();
+    Config.isProd = jasmine.createSpy('isProd').and.returnValue(false);
+    $log.error = jasmine.createSpy('error');
 
     Interceptor.response(response);
 
-    expect($log.error.callCount).toBe(0);
+    expect($log.error.calls.count()).toBe(0);
   });
 
   it('should return rejected promise from responseError', function (done) {
     var response = {
       config: {
-        requestTimestamp: now
-      }
+        requestTimestamp: now,
+      },
     };
     Interceptor.responseError(response).catch(done);
     $rootScope.$digest();

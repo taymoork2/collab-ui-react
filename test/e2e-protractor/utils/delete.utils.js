@@ -16,7 +16,7 @@ exports.deleteUser = function (email, token) {
         url: config.getAdminServiceUrl() + 'user?email=' + encodeURIComponent(email),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer ' + token,
         },
       };
 
@@ -33,8 +33,8 @@ exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {
     url: config.getCmiServiceUrl() + 'common/customers/' + customerUuid + '/users/' + userUuid,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    }
+      'Authorization': 'Bearer ' + token,
+    },
   };
 
   return utils.sendRequest(options).then(function () {
@@ -48,8 +48,8 @@ exports.deleteSquaredUCCustomer = function (customerUuid, token) {
     url: config.getCmiServiceUrl() + 'common/customers/' + customerUuid,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    }
+      'Authorization': 'Bearer ' + token,
+    },
   };
   return utils.sendRequest(options).then(function () {
     return 204;
@@ -65,8 +65,8 @@ exports.deleteAutoAttendant = function (aaUrl, token) {
     url: aaUrl,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    }
+      'Authorization': 'Bearer ' + token,
+    },
   };
 
   return utils.sendRequest(options).then(function () {
@@ -96,8 +96,8 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
     url: cmiUrl,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    }
+      'Authorization': 'Bearer ' + token,
+    },
   };
 
   return utils.sendRequest(options).then(function () {
@@ -162,8 +162,8 @@ exports.deleteRouteToQueue = function () {
        url: config.getAutoAttendantQueueUrl(helper.auth['aa-admin'].org),
        headers: {
          'Content-Type': 'application/json',
-         'Authorization': 'Bearer ' + bearer
-       }
+         'Authorization': 'Bearer ' + bearer,
+       },
      };
 
      return utils.sendRequest(options)
@@ -192,8 +192,8 @@ exports.findAndDeleteTestAA = function () {
       var options = {
         url: config.getAutoAttendantsUrl(helper.auth['aa-admin'].org),
         headers: {
-          Authorization: 'Bearer ' + bearer
-        }
+          Authorization: 'Bearer ' + bearer,
+        },
       };
 
       var defer = protractor.promise.defer();
@@ -204,7 +204,7 @@ exports.findAndDeleteTestAA = function () {
           } else {
             defer.reject({
               error: error,
-              message: body
+              message: body,
             });
           }
         });
@@ -223,8 +223,8 @@ exports.deleteSchedules = function (scheduleUrl, token) {
     url: scheduleUrl,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    }
+      'Authorization': 'Bearer ' + token,
+    },
   };
   return utils.sendRequest(options).then(function () {
     return 200;
@@ -239,8 +239,8 @@ exports.deleteTestSchedule = function (aaUrl, token) {
     method: 'get',
     url: aaUrl,
     headers: {
-      'Authorization': 'Bearer ' + token
-    }
+      'Authorization': 'Bearer ' + token,
+    },
   };
   request(options,
     function (error, response, body) {

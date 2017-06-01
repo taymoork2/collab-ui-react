@@ -74,7 +74,7 @@
     }
 
     function initializeTabs() {
-      var tabs = angular.copy(tabConfig);
+      var tabs = _.cloneDeep(tabConfig);
       return _.chain(tabs)
         .filter(function (tab) {
           // Remove subPages whose parent tab is hideProd or states that aren't allowed
@@ -110,7 +110,7 @@
       return _.filter(tabs, function (tab) {
         return !tab.feature || _.some(features, {
           feature: tab.feature.replace(/^!/, ''),
-          enabled: !/^!/.test(tab.feature)
+          enabled: !/^!/.test(tab.feature),
         });
       });
     }
@@ -127,8 +127,8 @@
             feature: feature,
             enabled: _.some(existingFeatures, {
               feature: feature.feature,
-              enabled: true
-            })
+              enabled: true,
+            }),
           };
         })
         .value();

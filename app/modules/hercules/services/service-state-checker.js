@@ -6,11 +6,10 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($q, $translate, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, FusionUtils, NotificationService, Orgservice, ServiceDescriptor, USSService) {
-    var vm = this;
-    vm.isSipUriAcknowledged = false;
-    vm.hasSipUriDomainConfigured = false;
-    vm.hasVerifiedDomains = false;
+  function ServiceStateChecker($translate, Authinfo, ClusterService, DomainManagementService, FmsOrgSettings, HybridServicesExtrasService, HybridServicesUtilsService, NotificationService, Orgservice, ServiceDescriptor, USSService, Notification) {
+    var isSipUriAcknowledged = false;
+    var hasSipUriDomainConfigured = false;
+    var hasVerifiedDomains = false;
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-mgmt'];
     var servicesWithUserAssignments = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-gcal'];
 
@@ -30,7 +29,7 @@
       if (serviceId !== 'squared-fusion-uc' && serviceId !== 'squared-fusion-ec') {
         return;
       }
-      if (vm.hasVerifiedDomains) {
+      if (hasVerifiedDomains) {
         return;
       }
       DomainManagementService.getVerifiedDomains()
@@ -44,7 +43,7 @@
             );
           } else {
             NotificationService.removeNotification('noDomains');
-            vm.hasVerifiedDomains = true;
+            hasVerifiedDomains = true;
           }
         });
     }
@@ -78,7 +77,7 @@
 
     function setSipUriNotificationAcknowledgedAndRemoveNotification() {
       NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
-      vm.isSipUriAcknowledged = true;
+      isSipUriAcknowledged = true;
     }
 
     function addNotification(notificationId, serviceId, notification) {
@@ -94,23 +93,21 @@
         return;
       }
       var summaryForService = _.find(USSService.getStatusesSummary(), {
-        serviceId: serviceId
+        serviceId: serviceId,
       });
       var noUsersActivatedId = serviceId + ':noUsersActivated';
       var needsUserActivation = summaryForService && summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0;
       if (needsUserActivation) {
         switch (serviceId) {
-          case "squared-fusion-cal":
+          case 'squared-fusion-cal':
             addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
             break;
-          case "squared-fusion-uc":
-            ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
-              if (!error) {
-                if (enabled) {
-                  addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
-                } else {
-                  addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
-                }
+          case 'squared-fusion-uc':
+            ServiceDescriptor.isServiceEnabled('squared-fusion-ec').then(function (enabled) {
+              if (enabled) {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
+              } else {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
               }
             });
             break;
@@ -124,7 +121,7 @@
           // Call Service has two sub-services, need special handling
           var awareStatus = summaryForService;
           var connectStatus = _.find(USSService.getStatusesSummary(), {
-            serviceId: 'squared-fusion-ec'
+            serviceId: 'squared-fusion-ec',
           });
           if ((awareStatus && awareStatus.error > 0) || (connectStatus && connectStatus.error > 0)) {
             var data = [];
@@ -159,27 +156,25 @@
     }
 
     function handleAtlasSipUriDomainEnterpriseNotification(serviceId) {
-      if (!vm.isSipUriAcknowledged) {
-        FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise)
-          .then(function (support) {
-            if (support) {
-              if (vm.hasSipUriDomainConfigured) {
-                return;
-              }
-              Orgservice.getOrg(function (data, status) {
-                if (status === 200) {
-                  if (data && data.orgSettings && data.orgSettings.sipCloudDomain) {
-                    NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
-                    vm.hasSipUriDomainConfigured = true;
-                  } else {
-                    addNotification('sipUriDomainEnterpriseNotConfigured', [serviceId], 'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html');
-                  }
-                }
-              });
-            } else {
+      if (!isSipUriAcknowledged) {
+
+        if (hasSipUriDomainConfigured) {
+          return;
+        }
+        var params = {
+          basicInfo: true,
+        };
+        Orgservice.getOrg(function (data, status) {
+          if (status === 200) {
+            if (data && data.orgSettings && data.orgSettings.sipCloudDomain) {
               NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+              hasSipUriDomainConfigured = true;
+            } else {
+              addNotification('sipUriDomainEnterpriseNotConfigured', [serviceId], 'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html');
             }
-          });
+          }
+        }, null, params);
+
       }
     }
 
@@ -187,50 +182,47 @@
       if (serviceId !== 'squared-fusion-uc') {
         return;
       }
-      ServiceDescriptor.services(function (error, services) {
-        if (!error) {
-          var callServiceConnect = _.find(services || {}, {
-            id: 'squared-fusion-ec'
-          });
-          if (callServiceConnect && callServiceConnect.enabled) {
-            // we need to clear the notification after admin has setup enabled
-            NotificationService.removeNotification('callServiceConnectAvailable');
-            handleAtlasSipUriDomainEnterpriseNotification(serviceId);
-            USSService.getOrg(Authinfo.getOrgId()).then(function (org) {
-              if (!org || !org.sipDomain || org.sipDomain === '') {
-                NotificationService.addNotification(
-                  NotificationService.types.TODO,
-                  'sipDomainNotConfigured',
-                  5,
-                  'modules/hercules/notifications/sip_domain_not_configured.html', [serviceId]);
-              } else {
-                NotificationService.removeNotification('sipDomainNotConfigured');
-              }
-            });
-          } else {
-            NotificationService.removeNotification('sipDomainNotConfigured');
-            if (callServiceConnect && !callServiceConnect.enabled && !callServiceConnect.acknowledged) {
+
+      ServiceDescriptor.getServices().then(function (items) {
+        var callServiceConnect = _.find(items, {
+          id: 'squared-fusion-ec',
+        });
+        if (callServiceConnect && callServiceConnect.enabled) {
+          // we need to clear the notification after admin has setup enabled
+          NotificationService.removeNotification('callServiceConnectAvailable');
+          handleAtlasSipUriDomainEnterpriseNotification(serviceId);
+          USSService.getOrg(Authinfo.getOrgId()).then(function (org) {
+            if (!org || !org.sipDomain || org.sipDomain === '') {
               NotificationService.addNotification(
-                NotificationService.types.NEW,
-                'callServiceConnectAvailable',
+                NotificationService.types.TODO,
+                'sipDomainNotConfigured',
                 5,
-                'modules/hercules/notifications/connect_available.html', [serviceId]);
+                'modules/hercules/notifications/sip_domain_not_configured.html', [serviceId]);
             } else {
-              NotificationService.removeNotification('callServiceConnectAvailable');
+              NotificationService.removeNotification('sipDomainNotConfigured');
             }
+          });
+        } else {
+          NotificationService.removeNotification('sipDomainNotConfigured');
+          if (callServiceConnect && !callServiceConnect.enabled && !callServiceConnect.acknowledged) {
+            NotificationService.addNotification(
+              NotificationService.types.NEW,
+              'callServiceConnectAvailable',
+              5,
+              'modules/hercules/notifications/connect_available.html', [serviceId]);
+          } else {
+            NotificationService.removeNotification('callServiceConnectAvailable');
           }
         }
+      }).catch(function (error) {
+        Notification.errorWithTrackingId(error, 'hercules.error.couldNotGetServices');
       });
     }
 
     function checkUnassignedClusterReleaseChannels() {
-      var defaultReleaseChannelPromise = FusionClusterService.getOrgSettings()
+      FmsOrgSettings.get()
         .then(function (data) {
           return data.expresswayClusterReleaseChannel;
-        });
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-        .then(function (support) {
-          return support ? defaultReleaseChannelPromise : $q.reject();
         })
         .then(function (defaultReleaseChannel) {
           var clusters = ClusterService.getClustersByConnectorType('c_mgmt');
@@ -241,7 +233,7 @@
             _.forEach(anomalies, function (cluster) {
               var serviceIds = _.chain(cluster.provisioning)
                 .map(function (p) {
-                  return FusionUtils.connectorType2ServicesId(p.connectorType);
+                  return HybridServicesUtilsService.connectorType2ServicesId(p.connectorType);
                 })
                 .flatten()
                 .uniq()
@@ -262,22 +254,23 @@
             });
           }
         });
+
     }
 
     // Do not show these alarms as the checkUserStatuses() notifications already covers the fact that your have users in the error state
-    vm.alarmsKeysToIgnore = ['uss.thresholdAlarmTriggered', 'uss.groupThresholdAlarmTriggered'];
-    vm.serviceAlarmPrefix = 'serviceAlarm_';
+    var alarmsKeysToIgnore = ['uss.thresholdAlarmTriggered', 'uss.groupThresholdAlarmTriggered'];
+    var serviceAlarmPrefix = 'serviceAlarm_';
     function checkServiceAlarms(serviceId) {
-      FusionClusterService.getAlarms(serviceId)
+      HybridServicesExtrasService.getAlarms(serviceId)
         .then(function (alarms) {
           var alarmsWeCareAbout = _.filter(alarms, function (alarm) {
-            return !_.includes(vm.alarmsKeysToIgnore, alarm.key);
+            return !_.includes(alarmsKeysToIgnore, alarm.key);
           });
 
           // Find the notifications raised for previous alarms
           var existingServiceAlarmIds = _.chain(NotificationService.getNotifications())
             .filter(function (notification) {
-              return _.startsWith(notification.id, vm.serviceAlarmPrefix);
+              return _.startsWith(notification.id, serviceAlarmPrefix);
             })
             .map(function (notification) {
               return notification.id;
@@ -286,7 +279,7 @@
 
           // Raise notifications for the current alarms
           _.forEach(alarmsWeCareAbout, function (alarm) {
-            var notificationId = vm.serviceAlarmPrefix + alarm.key + '_' + alarm.alarmId;
+            var notificationId = serviceAlarmPrefix + alarm.key + '_' + alarm.alarmId;
             NotificationService.addNotification(
               alarm.severity,
               notificationId,
@@ -310,7 +303,7 @@
     return {
       checkState: checkState,
       checkUserStatuses: checkUserStatuses,
-      setSipUriNotificationAcknowledgedAndRemoveNotification: setSipUriNotificationAcknowledgedAndRemoveNotification
+      setSipUriNotificationAcknowledgedAndRemoveNotification: setSipUriNotificationAcknowledgedAndRemoveNotification,
     };
   }
 }());

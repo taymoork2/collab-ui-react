@@ -2,7 +2,7 @@ describe('component: callerId', () => {
   const CALLERID_SELECT = '.csSelect-container[name="callerIdSelection"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const CALLERIDNAME_INPUT = 'input[name="callerIdName"]';
-  const CALLERIDNUMBER_INPUT = 'input[name="callerIdNumber"]';
+  const CALLERIDNUMBER_INPUT = 'phone-number input';
 
   beforeEach(function() {
     this.initModules('huron.caller-id');
@@ -11,6 +11,7 @@ describe('component: callerId', () => {
     this.$scope.myForm = {
       $dirty: true,
     };
+    this.callDestInputs = ['external'];
     this.$scope.callerIdOptions = [{
       label: 'Custom',
       value: 'EXT_CALLER_ID_CUSTOM',
@@ -36,7 +37,7 @@ describe('component: callerId', () => {
     expect(this.view.find(CALLERIDNAME_INPUT)).not.toExist();
   });
 
-  it('should invoke onChangeFn with internalNumber on option click', function () {
+  it('should invoke onChangeFn with external on option click', function () {
     this.view.find(CALLERID_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
     expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
       this.$scope.callerIdOptions[0],
@@ -51,12 +52,8 @@ describe('component: callerId', () => {
       'Field',
       undefined,
     );
-    this.view.find(CALLERIDNUMBER_INPUT).val('8179325799').change().blur();
-    expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-      this.$scope.callerIdOptions[0],
-      'Field',
-      '8179325799',
-    );
+    this.view.find(CALLERIDNUMBER_INPUT).val('+1 214-932-5799').change().blur();
+    expect(this.$scope.onChangeFn).toHaveBeenCalled();
   });
 
   it('showCustom returns whether its a custom or not', function() {

@@ -31,8 +31,8 @@
       vm.isLoading = true;
       $stateParams.wizard.next({
         account: {
-          type: vm.radioSelect
-        }
+          type: vm.radioSelect,
+        },
       }, vm.radioSelect);
 
     };

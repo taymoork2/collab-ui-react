@@ -1,50 +1,110 @@
-.vis-hidden{
-	visibility: hidden;
+.positive-indicate {
+  color: #22D5A3;
 }
-.no-display{
-	display: none;
+.negetive-indicate {
+  color: #F34743;
 }
-.footer-section{
-	min-height: 40px;
-	font-size: 0.9rem;
+.indicator-icon {
+  font-size: 4rem;
+  padding-top: 15px;
+  margin-left: -25px;
+  position: absolute;
+}
+.vis-hidden {
+  visibility: hidden;
+}
+.no-display {
+  display: none !important;
+}
+.footer-section {
+  min-height: 40px;
+  font-size: 0.9rem;
+  position: relative;
+  .footer-value {
+    color: #5ca4e5;
+  }
+}
+.media-scroll-icon {
+  outline: none !important;
+  cursor: pointer;
+  bottom: 0;
+  padding-left: 12px;
+  font-size: 1.6rem;
+  color: #808080;
+}
+.availabilityDpdnSelector {
+  position: absolute;
+  bottom: 10px;
+  right: 1px;
+  color: #5ca4e5;
+  width: 100%;
+  text-align: center;
+}
+.cardTooltipClass {
+  font-size: 4rem;
+}
 
-	.footer-value{
-	    color: #5ca4e5;
-    }
-}
+.sneak-peek-filter {
+  width: rem-calc(220);
+  margin: 0 auto;
+  cursor: pointer;
 
-.sneak-peek-filter{
-	width: rem-calc(220);
-    margin: 0 auto;
+  .select-toggle,
+  .select-toggle:active,
+  .select-toggle:hover {
+    border: none;
+    color: rgb(92, 164, 229);
+    outline: none;
+    text-align: center;
     cursor: pointer;
-
-	.select-toggle, 
-	.select-toggle:active, 
-	.select-toggle:hover{
-		border: none;
-		color: rgb(92, 164, 229);
-		outline: none;
-		text-align: center;
-		cursor: pointer;
-	}
-	.select-list .open > a:focus, 
-	.select-list .open > a:hover{
-		border: none;
-		color: rgb(92, 164, 229);
-		outline: none;
-		text-align: center;
-		cursor: pointer;
-	}
-	.select-toggle > i.icon{
-		color: rgb(92, 164, 229);
-	}
-	.select-options > .li > a,
-	.select-options > li > a{
-		color: #6A6B6C;
-		line-height:10px;
-		font-size: 0.75rem;
-	}
-	.select-options .select-selected > a{
-		color: #FFFFFF;
-	}
+    background-color: transparent !important;
+  }
+  .select-list .open > a:focus,
+  .select-list .open > a:hover {
+    border: none;
+    color: rgb(92, 164, 229);
+    outline: none;
+    text-align: center;
+    cursor: pointer;
+    background-color: transparent !important;
+  }
+  .select-toggle > i.icon {
+    color: rgb(92, 164, 229);
+  }
+  .select-options > .li > a,
+  .select-options > li > a {
+    color: #6A6B6C;
+    line-height: 10px;
+    font-size: 0.75rem;
+  }
+  .select-options .select-selected > a {
+    color: #FFFFFF;
+  }
+}
+.chartContainer {
+  width: 100%;
+  height: 140px;
+  font-size: 11px;
+}
+.no-data-warning-card {
+  color: #f7c100;
+  padding-right: rem-calc(8);
+}
+.no-data-center-card {
+  position: absolute;
+  z-index: 100;
+  height: 0;
+  left: 0;
+  top: rem-calc(90);
+  width: 100%;
+  .no-data-card {
+    color: $gray-darkest;
+    font-family: $brand-font-cisco-TT-Light;
+    font-size: rem-calc(10);
+    text-align: center;
+    margin: 0;
+  }
+}
+.three-cards {
+  width: 33.3333% !important;
 }

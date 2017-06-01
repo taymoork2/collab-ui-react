@@ -155,7 +155,6 @@
           <p class="form-control-static">{{deviceOverview.currentDevice.serial}}</p>
         </div>
       </div>
-
       <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.timeZone"></label>
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.tzIsLoaded"></div>
@@ -164,7 +163,7 @@
             ng-model="deviceOverview.selectedTimeZone"
             class="timeZoneSelector"
             options="deviceOverview.timeZoneOptions"
-            is-disabled="deviceOverview.updatingTimeZone"
+            is-disabled="deviceOverview.updatingTimeZone || deviceOverview.disableAtaRebootSettings"
             labelfield="label"
             valuefield="id"
             on-change-fn="deviceOverview.saveTimeZoneAndWait()"
@@ -176,10 +175,7 @@
           <div cs-loader class="loader-example--small"></div>
         </div>
       </div>
-      <div class="form-group"
-           cr-feature-toggle
-           feature-show="huron-l10n-network-locale"
-           ng-show="deviceOverview.currentDevice.isHuronDevice">
+      <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.country"></label>
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.countryIsLoaded"></div>
         <div class="col-sm-3" ng-show="deviceOverview.countryIsLoaded">
@@ -188,7 +184,7 @@
             class="countrySelector"
             ng-model="deviceOverview.selectedCountry"
             options="deviceOverview.countryOptions"
-            is-disabled="deviceOverview.updatingCountry"
+            is-disabled="deviceOverview.updatingCountry || deviceOverview.disableAtaRebootSettings"
             labelfield="label"
             valuefield="value"
             filter="false"
@@ -236,20 +232,36 @@
           <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" class="internal-link" translate="spacesPage.remoteAccessKey"></a>
         </div>
       </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.isATA && deviceOverview.t38FeatureToggle">
+        <label class="col-sm-4 control-label" translate="ataSettings.t38Label"></label>
+        <div class="col-sm-8">
+          <cs-toggle-switch is-disabled="deviceOverview.updatingT38Settings || deviceOverview.disableAtaRebootSettings" cs-change="deviceOverview.saveT38Settings()" ng-model="deviceOverview.faxEnabled" toggle-id="faxEnabled" name="faxEnabled" size="small"></cs-toggle-switch>
+          <p class="form-control-static warningFaxes" translate="ataSettings.t38Warning"></p>
+          <div class="col-sm-4 updatingAta" ng-show="deviceOverview.updatingT38Settings">
+            <div cs-loader class="loader-example--small"></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.isATA && deviceOverview.cpcFeatureToggle">
+        <label class="col-sm-4 control-label" translate="ataSettings.cpcLabel"></label>
+        <div class="col-sm-8">
+          <cs-toggle-switch is-disabled="deviceOverview.updatingCpcSettings || deviceOverview.disableAtaRebootSettings" cs-change="deviceOverview.saveCpcSettings()" ng-model="deviceOverview.cpcEnabled" toggle-id="cpcEnabled" name="cpcEnabled" size="small"></cs-toggle-switch>
+          <p class="form-control-static warningFaxes" translate="ataSettings.cpcWarning"></p>
+          <div class="col-sm-4 updatingAta" ng-show="deviceOverview.updatingCpcSettings">
+            <div cs-loader class="loader-example--small"></div>
+          </div>
+        </div>
+      </div>
+
     </cs-sp-section>
     <cs-sp-section ng-show="deviceOverview.showE911">
       <div>
-        <div class="section-title-row">
-          <span class="section-name" translate="spacesPage.emergencyTitle"></span>
-          <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="deviceOverview.hideE911Edit && !deviceOverview.e911NotFound">
-            <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-              <i class="icon icon-three-dots"></i>
-            </button>
-            <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-              <li><a href ng-click="deviceOverview.goToEmergencyServices()" translate="spacesPage.editEmergencyServices"></a></li>
-            </ul>
-          </span>
-        </div>
+        <section-title
+          title-key="spacesPage.emergencyTitle"
+          show-actions="deviceOverview.hideE911Edit && !deviceOverview.e911NotFound"
+          action-list="deviceOverview.actionList"
+          as-button="true">
+        </section-title>
         <div ng-if="deviceOverview.e911NotFound">
           <div class="warning">
             <div class="cs-input__messages">

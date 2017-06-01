@@ -6,54 +6,55 @@
     .factory('AAValidationService', AAValidationService);
 
   /* @ngInject */
-  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AANotificationService, AACommonService, $translate) {
+  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AANotificationService, AACommonService, $translate, AAUtilityService) {
 
     var routeToCalls = [{
       'name': 'goto',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToAATargetMissing',
       errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToAATargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToAATargetMissing'
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToAATargetMissing',
     }, {
       name: 'routeToHuntGroup',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToHGTargetMissing',
       errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToHGTargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToHGTargetMissing'
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToHGTargetMissing',
     }, {
       name: 'routeToUser',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToUserTargetMissing',
       errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToUserTargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToUserTargetMissing'
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToUserTargetMissing',
     }, {
       name: 'routeToVoiceMail',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToVoicemailTargetMissing',
       errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToVoicemailTargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToVoicemailTargetMissing'
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToVoicemailTargetMissing',
     }, {
       name: 'route',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToPhoneNumberTargetMissing',
       errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToPhoneNumberTargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToPhoneNumberTargetMissing'
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToPhoneNumberTargetMissing',
     }, {
       name: 'routeToQueue',
       /* not implemented */
       errRCMsg: '',
       errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToQueueTargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToQueueTargetMissing'
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToQueueTargetMissing',
     }];
 
 
     var runActionInputName = 'runActionsOnInput';
     var errMissingVariableNameMsg = 'autoAttendant.callerInputMenuErrorVariableNameMissing';
     var errCallerInputNoInputValuesEnteredMsg = 'autoAttendant.callerInputMenuErrorNoInputValuesEntered';
-    var errPhoneMenuNoInputValuesEnteredMsg = 'autoAttendant.phoneMenuMenuErrorNoInputValuesEntered';
     var errSubMenuNoInputValuesEnteredMsg = 'autoAttendant.subMenuErrorNoInputValuesEntered';
+    var errMissingIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableMissing';
+    var errUnevenQuotesIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableUnevenQouotes';
     var errMissingIfVariableMsg = 'autoAttendant.conditionalIfEntryVariableMissing';
     var errMissingThenVariableMsg = 'autoAttendant.conditionalThenTargetMissing';
 
 
     var service = {
       isNameValidationSuccess: isNameValidationSuccess,
-      isValidCES: isValidCES
+      isValidCES: isValidCES,
     };
 
     return service;
@@ -135,7 +136,7 @@
       /* got here? error */
 
       msg = _.find(routeToCalls, {
-        name: optionMenu.actions[0].name
+        name: optionMenu.actions[0].name,
       });
 
       /* might be Say Message, not in the routeCalls list */
@@ -167,7 +168,7 @@
           if (noEntriesCeMenu(entry, outErrors, whichLane)) {
             outErrors.push({
               msg: errSubMenuNoInputValuesEnteredMsg,
-              key: entry.key
+              key: entry.key,
             });
           }
 
@@ -185,13 +186,13 @@
             if (_.isUndefined(saveKey)) {
               outErrors.push({
                 msg: routeTo.errPhoneMsg,
-                key: entry.key
+                key: entry.key,
               });
             } else {
               outErrors.push({
                 msg: routeTo.errSubMenuPhoneMsg,
                 key: saveKey,
-                subkey: entry.key
+                subkey: entry.key,
               });
 
             }
@@ -213,24 +214,42 @@
       if (_.get(action, 'name', '') !== 'conditional') {
         return true;
       }
-
-      if (_.isEmpty(action.if.rightCondition)) {
+      if (_.isEmpty(action.if.leftCondition)) {
         validAction = false;
         AANotificationService.error(errMissingIfVariableMsg, {
           schedule: translatedLabel,
-          at: _.indexOf(conditionalMenus, conditionalMenu) + 1
+          at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
+        });
+      } else if (_.isEqual(action.if.leftCondition, 'callerReturned')) {
+        //dropdown default is suitable, but we don't want the other errors
+        //to be set up
+      } else if (_.isEmpty(action.if.rightCondition)) {
+        validAction = false;
+        AANotificationService.error(errMissingIsVariableMsg, {
+          schedule: translatedLabel,
+          at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
+        });
+      } else if (isUnclosedQuotesConditional(action.if.rightCondition)) {
+        validAction = false;
+        AANotificationService.error(errUnevenQuotesIsVariableMsg, {
+          schedule: translatedLabel,
+          at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
         });
       }
       if (!action.then || _.isEmpty(action.then.value)) {
         validAction = false;
         AANotificationService.error(errMissingThenVariableMsg, {
           schedule: translatedLabel,
-          at: _.indexOf(conditionalMenus, conditionalMenu) + 1
+          at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
         });
       }
 
       return validAction;
 
+    }
+
+    function isUnclosedQuotesConditional(rightCondition) {
+      return AAUtilityService.countOccurences(rightCondition, '"') % 2 !== 0;
     }
 
     function checkForValidCallerInputs(callerInputMenu, callerInputMenus, fromLane, translatedLabel) {
@@ -245,7 +264,7 @@
           validAction = false;
           AANotificationService.error(errMissingVariableNameMsg, {
             schedule: translatedLabel,
-            at: _.indexOf(callerInputMenus, callerInputMenu) + 1
+            at: _.indexOf(callerInputMenus, callerInputMenu) + 1,
           });
 
         }
@@ -255,7 +274,7 @@
             validAction = false;
             AANotificationService.error(errCallerInputNoInputValuesEnteredMsg, {
               schedule: translatedLabel,
-              at: _.indexOf(callerInputMenus, callerInputMenu) + 1
+              at: _.indexOf(callerInputMenus, callerInputMenu) + 1,
             });
           }
 
@@ -269,7 +288,7 @@
             validAction = false;
             AANotificationService.error(errCallerInputNoInputValuesEnteredMsg, {
               schedule: translatedLabel,
-              at: _.indexOf(callerInputMenus, callerInputMenu) + 1
+              at: _.indexOf(callerInputMenus, callerInputMenu) + 1,
             });
           }
         }
@@ -294,18 +313,7 @@
       var isValid = true;
 
       if (_.has(optionMenu, 'entries') && (optionMenu.entries.length > 0)) {
-
-        if (noInputsEntered(optionMenu)) {
-          errors.push({
-            msg: errPhoneMenuNoInputValuesEnteredMsg
-          });
-        } else {
-          checkAllKeys(optionMenu, fromLane, errors, 0);
-        }
-      } else {
-        errors.push({
-          msg: errPhoneMenuNoInputValuesEnteredMsg
-        });
+        checkAllKeys(optionMenu, fromLane, errors, 0);
       }
       _.forEach(errors, function (err) {
         isValid = false;
@@ -315,7 +323,7 @@
             key: err.key,
             schedule: translatedLabel,
             at: _.indexOf(menuOptions, optionMenu) + 1,
-            subkey: err.subkey
+            subkey: err.subkey,
           });
 
         } else {
@@ -323,7 +331,7 @@
           AANotificationService.error(err.msg, {
             key: err.key,
             schedule: translatedLabel,
-            at: _.indexOf(menuOptions, optionMenu) + 1
+            at: _.indexOf(menuOptions, optionMenu) + 1,
           });
         }
 
@@ -344,7 +352,7 @@
 
         AANotificationService.error(error, {
           schedule: translatedLabel,
-          at: _.indexOf(routeTosOnly, optionMenu) + 1
+          at: _.indexOf(routeTosOnly, optionMenu) + 1,
         });
       }
 
@@ -388,7 +396,7 @@
          the offending field */
 
       var menuOptions = _.filter(uiCombinedMenu.entries, {
-        'type': 'MENU_OPTION'
+        'type': 'MENU_OPTION',
       });
 
       /* segregate the RouteCall menus so we can determine which
@@ -398,7 +406,7 @@
       var routeTosOnly = _.filter(uiCombinedMenu.entries, function (menu) {
         var actionName = _.get(menu, 'actions[0].name');
         return _.find(routeToCalls, {
-          'name': actionName
+          'name': actionName,
         });
       });
 

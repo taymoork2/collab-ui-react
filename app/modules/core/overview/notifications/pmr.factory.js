@@ -19,16 +19,16 @@
               templateUrl: 'modules/core/setupWizard/enterpriseSettings/enterprise.pmrSetupModal.tpl.html',
               controller: 'EnterpriseSettingsCtrl',
               controllerAs: 'entprCtrl',
-              type: 'small'
+              type: 'small',
             });
           },
           linkText: 'homePage.setUpPMRUrl',
           name: 'pmr',
-          text: 'homePage.setUpPMRDescription'
+          text: 'homePage.setUpPMRDescription',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

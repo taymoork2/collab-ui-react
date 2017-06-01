@@ -1,9 +1,11 @@
 'use strict';
 
-describe('Service: VoicemailMessageAction', function () {
-  var $httpBackend, HuronConfig, Authinfo, VoicemailMessageAction;
+var testModule = require('./voicemailMessageAction.service');
 
-  beforeEach(angular.mock.module('Huron'));
+describe('Service: VoicemailMessageAction', function () {
+  beforeEach(angular.mock.module(testModule));
+
+  var $httpBackend, HuronConfig, Authinfo, VoicemailMessageAction;
 
   beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _Authinfo_, _VoicemailMessageAction_) {
     $httpBackend = _$httpBackend_;
@@ -22,7 +24,7 @@ describe('Service: VoicemailMessageAction', function () {
   describe('get', function () {
     var messageActions = [{
       objectId: '1',
-      voicemailAction: 1
+      voicemailAction: 1,
     }];
 
     it('should get messageAction', function () {
@@ -52,7 +54,7 @@ describe('Service: VoicemailMessageAction', function () {
   describe('update', function () {
     var messageAction = {
       voicemailAction: 3,
-      relayAddress: 'dummy@test.xyz'
+      relayAddress: 'dummy@test.xyz',
     };
 
     it('should update messageAction', function () {

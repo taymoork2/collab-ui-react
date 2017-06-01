@@ -19,23 +19,20 @@ describe('Template: assignDnAndDirectLinesModal', function () {
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return this.$q.when(this.mock.headers);
+        return this.$q.resolve(this.mock.headers);
       } else {
-        return this.$q.when({});
+        return this.$q.resolve({});
       }
     }.bind(this));
 
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
-    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
-    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.Orgservice, 'getUnlicensedUsers');
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.mock.getLicensesUsage));
 
     spyOn(this.$previousState, 'get').and.returnValue({
       state: {
-        name: 'test.state'
-      }
+        name: 'test.state',
+      },
     });
 
     this.$httpBackend
@@ -47,7 +44,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
         "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
         "steeringDigit": "9",
         "timeZone": "America/Los_Angeles",
-        "voicemailPilotNumberGenerated": "false"
+        "voicemailPilotNumberGenerated": "false",
       }]);
   }
 

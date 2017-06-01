@@ -8,7 +8,7 @@
   function personalMeetingRoomManagementService($http, $q, Authinfo, Config, UrlConfig) {
     var adminOrderControllerUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/provisionparameters';
     var service = {
-      addPmrSiteUrl: addPmrSiteUrl
+      addPmrSiteUrl: addPmrSiteUrl,
     };
 
     return service;
@@ -22,7 +22,7 @@
       var paramName = 'PMR';
       var payload = {
         productName: 'WX',
-        List: [paramName, siteUrl]
+        List: [paramName, siteUrl],
       };
 
       return $http.post(adminOrderControllerUrl, payload);

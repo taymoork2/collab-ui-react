@@ -11,7 +11,7 @@
     $scope.result = {
       success: false,
       linkExpired: false,
-      error: false
+      error: false,
     };
 
     var showHide = function (success, expired, error) {

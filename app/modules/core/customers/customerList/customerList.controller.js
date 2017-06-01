@@ -7,15 +7,21 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService) {
+  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window,
+    Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log,
+    Notification, Orgservice, PartnerService, TrialService, uiGridSelectionService, HuronCompassService) {
+    var PREMIUM = 'premium';
+    var STANDARD = 'standard';
+
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
-    vm.activeBadge = false;
     vm.isTestOrg = false;
     vm.searchStr = '';
     vm.timeoutVal = 1000;
     vm.isCareEnabled = false;
+    vm.isAdvanceCareEnabled = false;
+    vm.premiumTooltip = $translate.instant('customerPage.premiumCustomer');
     vm.isOrgSetup = isOrgSetup;
     vm.isPartnerAdminWithCallOrRooms = isPartnerAdminWithCallOrRooms;
     vm.isOwnOrg = isOwnOrg;
@@ -29,7 +35,6 @@ require('./_customer-list.scss');
     vm.isLicenseTypeActive = isLicenseTypeActive;
     vm.isLicenseTypeFree = isLicenseTypeFree;
     vm.isNoLicense = isNoLicense;
-    vm.partnerClicked = partnerClicked;
     vm.isPartnerOrg = isPartnerOrg;
     vm.setTrial = setTrial;
     vm.showCustomerDetails = showCustomerDetails;
@@ -41,14 +46,12 @@ require('./_customer-list.scss');
     vm.getUserCountColumnText = getUserCountColumnText;
     vm.isPastGracePeriod = isPastGracePeriod;
     vm.isPstnSetup = isPstnSetup;
+    vm.exportCsv = exportCsv;
 
     vm.convertStatusToInt = convertStatusToInt;
 
-    vm.exportType = $rootScope.typeOfExport.CUSTOMER;
     vm.activeFilter = 'all';
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
-
-    vm.featureTrialForPaid = trialForPaid;
 
     vm.filter = {
       selected: [],
@@ -57,62 +60,91 @@ require('./_customer-list.scss');
         value: 'messaging',
         label: $translate.instant('customerPage.message'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'conferencing',
         label: $translate.instant('customerPage.meeting'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'webex',
         label: $translate.instant('customerPage.webexOverview'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'communications',
         label: $translate.instant('customerPage.call'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'roomSystems',
         label: $translate.instant('customerPage.roomSystem'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'sparkBoard',
         label: $translate.instant('customerPage.sparkBoard'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'care',
         label: $translate.instant('customerPage.care'),
         isSelected: false,
-        isAccountFilter: false // a non-account filter filters on services instead
+        isAccountFilter: false, // a non-account filter filters on services instead
+        isPremiumFilter: false,
       }, {
         value: 'trial',
         label: $translate.instant('customerPage.trialAccountsFilter', {
-          count: 0
+          count: 0,
         }),
         count: 0,
         isSelected: false,
-        isAccountFilter: true
+        isAccountFilter: true,
+        isPremiumFilter: false,
       }, {
         value: 'active',
         label: $translate.instant('customerPage.activeAccountsFilter', {
-          count: 0
+          count: 0,
         }),
         count: 0,
         isSelected: false,
-        isAccountFilter: true
+        isAccountFilter: true,
+        isPremiumFilter: false,
+      }, {
+        value: PREMIUM,
+        label: $translate.instant('customerPage.premiumAccountsFilter', {
+          count: 0,
+        }),
+        count: 0,
+        isSelected: false,
+        isAccountFilter: false,
+        isPremiumFilter: true,
+        previousState: false,
+      }, {
+        value: STANDARD,
+        label: $translate.instant('customerPage.standardAccountsFilter', {
+          count: 0,
+        }),
+        count: 0,
+        isSelected: false,
+        isAccountFilter: false,
+        isPremiumFilter: true,
       }, {
         value: 'expired',
         label: $translate.instant('customerPage.expiredAccountsFilter', {
-          count: 0
+          count: 0,
         }),
         count: 0,
         isSelected: false,
-        isAccountFilter: true
-      }]
+        isAccountFilter: true,
+        isPremiumFilter: false,
+      }],
     };
     $scope.$watch(function () {
       return vm.filter.selected;
@@ -136,7 +168,7 @@ require('./_customer-list.scss');
       launchCustomerPortal: launchCustomerPortal,
       getLicenseObj: getLicenseObj,
       updateResultCount: updateResultCount,
-      updateServiceForOrg: updateServiceForOrg
+      updateServiceForOrg: updateServiceForOrg,
     };
 
     var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
@@ -159,14 +191,14 @@ require('./_customer-list.scss');
       sort: {
         direction: 'asc',
         priority: 0,
-      }
+      },
     };
     var allServicesField = {
       field: 'uniqueServiceCount',
       displayName: $translate.instant('customerPage.services'),
       width: '25%',
       cellTemplate: compactServiceTemplate,
-      headerCellClass: 'align-center'
+      headerCellClass: 'align-center',
     };
     var accountStatusField = {
       field: 'accountStatus',
@@ -174,29 +206,29 @@ require('./_customer-list.scss');
       width: '16.5%',
       cellTemplate: accountStatusTemplate,
       headerCellClass: 'align-center',
-      sortingAlgorithm: accountStatusSort
+      sortingAlgorithm: accountStatusSort,
     };
     var licenseQuantityField = {
       field: 'totalLicenses',
       displayName: $translate.instant('customerPage.totalLicenses'),
       width: '16.5%',
       cellTemplate: licenseCountTemplate,
-      headerCellClass: 'align-center'
-    };
-  /* AG TODO:  once we have data for total users -- add back
-      var totalUsersField = {
-      field: 'totalUsers',
-      displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
-      width: '16%',
-      cellTemplate: totalUsersTemplate,
       headerCellClass: 'align-center',
-      sortingAlgorithm: userSort
-    };*/
+    };
+    /* AG TODO:  once we have data for total users -- add back
+        var totalUsersField = {
+        field: 'totalUsers',
+        displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
+        width: '16%',
+        cellTemplate: totalUsersTemplate,
+        headerCellClass: 'align-center',
+        sortingAlgorithm: userSort
+      };*/
     var notesField = {
       field: 'notes',
       displayName: $translate.instant('customerPage.notes'),
       cellTemplate: newNoteTemplate,
-      sortingAlgorithm: notesSort
+      sortingAlgorithm: notesSort,
     };
 
     var myOrgDetails = {};
@@ -209,14 +241,14 @@ require('./_customer-list.scss');
       multiSelect: false,
       rowHeight: 56,
       enableRowHeaderSelection: false,
+      enableRowSelection: false,
       enableColumnMenus: false,
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
       onRegisterApi: function (gridApi) {
+
         vm.gridApi = gridApi;
-        vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          vm.showCustomerDetails(row.entity);
-        });
+
         vm.gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
           if (vm.load) {
             vm.currentDataPosition++;
@@ -224,47 +256,49 @@ require('./_customer-list.scss');
             vm.gridApi.infiniteScroll.dataLoaded();
           }
         });
+
         gridApi.grid.registerRowsProcessor(rowFilter, 150);
+
       },
       multiFields: {
         meeting: [{
           columnGroup: 'conferencing',
           columnName: 'conferencing',
           offerCode: 'CF',
-          tooltip: $translate.instant('customerPage.meeting')
+          tooltip: $translate.instant('customerPage.meeting'),
         }, {
           columnGroup: 'webex',
           offerCode: 'EE',
           columnName: 'webexEEConferencing',
-          tooltip: $translate.instant('customerPage.webex')
+          tooltip: $translate.instant('customerPage.webex'),
         }, {
           columnGroup: 'webex',
           offerCode: 'CMR',
           columnName: 'webexCMR',
-          tooltip: $translate.instant('customerPage.webex')
+          tooltip: $translate.instant('customerPage.webex'),
         }, {
           columnGroup: 'webex',
           offerCode: 'MC',
           columnName: 'webexMeetingCenter',
-          tooltip: $translate.instant('customerPage.webex')
+          tooltip: $translate.instant('customerPage.webex'),
         }, {
           columnGroup: 'webex',
           offerCode: 'SC',
           columnName: 'webexSupportCenter',
-          tooltip: $translate.instant('customerPage.webex')
+          tooltip: $translate.instant('customerPage.webex'),
         }, {
           columnGroup: 'webex',
           offerCode: 'TC',
           columnName: 'webexTrainingCenter',
-          tooltip: $translate.instant('customerPage.webex')
+          tooltip: $translate.instant('customerPage.webex'),
         }, {
           columnGroup: 'webex',
           offerCode: 'EC',
           columnName: 'webexEventCenter',
-          tooltip: $translate.instant('customerPage.webex')
-        }]
+          tooltip: $translate.instant('customerPage.webex'),
+        }],
       },
-      columnDefs: vm.gridColumns
+      columnDefs: vm.gridColumns,
     };
 
     init();
@@ -273,23 +307,32 @@ require('./_customer-list.scss');
       setNotesTextOrder();
       initColumns();
 
-      FeatureToggleService.atlasCareTrialsGetStatus().then(function (result) {
-        vm.isCareEnabled = result;
+      $q.all([
+        FeatureToggleService.atlasCareTrialsGetStatus(),
+        FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+        FeatureToggleService.atlasITProPackGetStatus(),
+      ]).then(function (toggles) {
+        vm.isCareEnabled = toggles[0];
+        vm.isAdvanceCareEnabled = toggles[1];
+        vm.isProPackEnabled = toggles[2];
+
+        if (!vm.isProPackEnabled) {
+          _.remove(vm.filter.options, { value: PREMIUM });
+          _.remove(vm.filter.options, { value: STANDARD });
+        }
+
         if (!vm.isCareEnabled) {
           _.remove(vm.filter.options, { value: 'care' });
         }
-      })
-      .finally(function () {
+      }).finally(function () {
         resetLists();
       });
 
-      Orgservice.getOrg(function (data, status) {
-        if (data.success) {
-          vm.isTestOrg = data.isTestOrg;
-        } else {
-          Log.error('Query org info failed. Status: ' + status);
-        }
-      });
+      Orgservice.isTestOrg()
+        .then(function (isTestOrg) {
+          vm.isTestOrg = isTestOrg;
+        });
+
     }
 
     function getSubfields(entry, name) {
@@ -316,7 +359,7 @@ require('./_customer-list.scss');
 
     function isOrgSetup(customer) {
       return _.every(customer.unmodifiedLicenses, {
-        status: 'ACTIVE'
+        status: 'ACTIVE',
       });
     }
 
@@ -417,7 +460,7 @@ require('./_customer-list.scss');
         textSuspended,
         textExpiringToday,
         textExpired,
-        textLicenseInfoNotAvailable
+        textLicenseInfoNotAvailable,
       ];
       textArray.sort();
       _.forEach(textArray, function (text, index) {
@@ -437,7 +480,7 @@ require('./_customer-list.scss');
       if (a.sortOrder !== b.sortOrder) {
         return a.sortOrder - b.sortOrder;
       } else if (a.sortOrder === PartnerService.customerStatus.NOTE_NOT_EXPIRED ||
-                 a.sortOrder === PartnerService.customerStatus.NOTE_EXPIRED) {
+        a.sortOrder === PartnerService.customerStatus.NOTE_EXPIRED) {
         return Math.abs(a.daysLeft) - Math.abs(b.daysLeft);
       } else {
         return 0;
@@ -450,20 +493,34 @@ require('./_customer-list.scss');
 
     function rowFilter(rows) {
       var selectedFilters = {
-        account: _.filter(vm.filter.selected, { isAccountFilter: true }),
-        license: _.filter(vm.filter.selected, { isAccountFilter: false })
+        account: _.filter(vm.filter.selected, {
+          isAccountFilter: true,
+          isPremiumFilter: false,
+        }),
+        license: _.filter(vm.filter.selected, {
+          isAccountFilter: false,
+          isPremiumFilter: false,
+        }),
+        premium: _.filter(vm.filter.selected, {
+          isAccountFilter: false,
+          isPremiumFilter: true,
+        }),
       };
 
       _.forEach(rows, function (row) {
         var isVisibleFlags = {
           byAccountFilter: (!selectedFilters.account.length) ||
-            _.some(selectedFilters.account, function (filter) {
-              return (vm.getAccountStatus(row.entity) === filter.value);
-            }),
+          _.some(selectedFilters.account, function (filter) {
+            return (vm.getAccountStatus(row.entity) === filter.value);
+          }),
           byLicenseFilter: (!selectedFilters.license.length) ||
-            _.some(selectedFilters.license, function (filter) {
-              return vm.isLicenseTypeAny(row.entity, filter.value);
-            })
+          _.some(selectedFilters.license, function (filter) {
+            return vm.isLicenseTypeAny(row.entity, filter.value);
+          }),
+          byPremiumFilter: (!selectedFilters.premium.length) ||
+          _.some(selectedFilters.premium, function (filter) {
+            return isPremiumFilterType(filter.value, row.entity.isPremium);
+          }),
         };
 
         row.visible = _.every(isVisibleFlags);
@@ -473,6 +530,16 @@ require('./_customer-list.scss');
 
       vm._helpers.updateResultCount(visibleRowsData);
       return rows;
+    }
+
+    function isPremiumFilterType(filterValue, isPremium) {
+      if (filterValue === PREMIUM) {
+        return isPremium;
+      } else if (filterValue === STANDARD) {
+        return !isPremium;
+      } else {
+        return false;
+      }
     }
 
     function filterAction(value) {
@@ -498,30 +565,37 @@ require('./_customer-list.scss');
         var accountId = Authinfo.getOrgId();
         var custName = Authinfo.getOrgName();
         var licenses = Authinfo.getLicenses();
+        var params = {
+          basicInfo: true,
+        };
         Orgservice.getAdminOrg(function (data, status) {
           if (status === 200) {
-            var myOrg = PartnerService.loadRetrievedDataToList([data], false, vm.isCareEnabled);
+            var myOrg = PartnerService.loadRetrievedDataToList([data], {
+              isTrialData: false,
+              isCareEnabled: vm.isCareEnabled,
+              isAdvanceCareEnabled: vm.isAdvanceCareEnabled,
+            });
             // Not sure why this is set again, afaik it is the same as myOrg
             //AG 9/27 getAdminOrg returns licenses without offerCodes so services are not populated therefore this is needed
             myOrg[0].customerName = custName;
             myOrg[0].customerOrgId = accountId;
 
             myOrg[0].messaging = vm._helpers.updateServiceForOrg(myOrg[0].messaging, licenses, {
-              licenseType: 'MESSAGING'
+              licenseType: 'MESSAGING',
             });
             myOrg[0].communications = vm._helpers.updateServiceForOrg(myOrg[0].communications, licenses, {
-              licenseType: 'COMMUNICATION'
+              licenseType: 'COMMUNICATION',
             });
             myOrg[0].roomSystems = vm._helpers.updateServiceForOrg(myOrg[0].roomSystems, licenses, {
-              licenseType: 'SHARED_DEVICES'
+              licenseType: 'SHARED_DEVICES',
             });
             myOrg[0].conferencing = vm._helpers.updateServiceForOrg(myOrg[0].conferencing, licenses, {
               licenseType: 'CONFERENCING',
-              offerName: 'CF'
+              offerName: 'CF',
             });
             myOrg[0].webexEEConferencing = vm._helpers.updateServiceForOrg(myOrg[0].webexEEConferencing, licenses, {
               licenseType: 'CONFERENCING',
-              offerName: 'EE'
+              offerName: 'EE',
             });
 
             myOrgDetails = myOrg;
@@ -530,7 +604,7 @@ require('./_customer-list.scss');
             reject('Unable to query for signed-in users org');
             Log.debug('Failed to retrieve partner org information. Status: ' + status);
           }
-        }, accountId);
+        }, accountId, params);
       });
     }
 
@@ -550,10 +624,13 @@ require('./_customer-list.scss');
         .then(function (results) {
           if (results) {
             var orgList = _.get(results, 'managedOrgs.data.organizations', []);
-            var managed = PartnerService.loadRetrievedDataToList(orgList, false,
-              vm.isCareEnabled);
+            var managed = PartnerService.loadRetrievedDataToList(orgList, {
+              isTrialData: false,
+              isCareEnabled: vm.isCareEnabled,
+              isAdvanceCareEnabled: vm.isAdvanceCareEnabled,
+            });
             var indexMyOwnOrg = _.findIndex(managed, {
-              customerOrgId: Authinfo.getOrgId()
+              customerOrgId: Authinfo.getOrgId(),
             });
             // 4/11/2016 admolla
             // TODO: for some reason if I refactor this to not need an array, karma acts up....
@@ -571,8 +648,8 @@ require('./_customer-list.scss');
             Notification.error('partnerHomePage.errGetOrgs');
           }
           // dont use a .finally(..) since this $q.all is returned
-          // (if you .finally(..), the next `then` doesnt get called)
-          onManagedOrgsRefreshed();
+          // (if you .finally(..), the next 'then' doesnt get called)
+          vm.showManagedOrgsRefresh = false;
         })
         .catch(function (response) {
           Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
@@ -597,24 +674,44 @@ require('./_customer-list.scss');
       _.forEach(accountFilters, function (filter) {
         filter.count = statusTypeCounts[filter.value] || 0;
         filter.label = $translate.instant('customerPage.' + filter.value + 'AccountsFilter', {
-          count: filter.count });
+          count: filter.count,
+        });
       });
-    }
 
+      if (vm.isProPackEnabled) {
+        var counts = {};
+        counts[PREMIUM] = _.filter(visibleRowsData, { isPremium: true });
+        counts[STANDARD] = _.filter(visibleRowsData, { isPremium: false });
+        var premiumFilters = _.filter(vm.filter.options, { isPremiumFilter: true });
+
+        _.forEach(premiumFilters, function (filter) {
+          filter.count = _.get(counts, filter.value, []).length;
+          filter.label = $translate.instant('customerPage.' + filter.value + 'AccountsFilter', {
+            count: filter.count,
+          });
+
+          // Analytics should only fire when the filter for premium accounts is changed from unselected to selected
+          if (filter.value === PREMIUM && filter.previousState !== filter.isSelected) {
+            if (filter.previousState === false) {
+              Analytics.trackPremiumEvent(Analytics.sections.PREMIUM.eventNames.PREMIUM_FILTER);
+            }
+            filter.previousState = filter.isSelected;
+          }
+        });
+      }
+    }
 
     function modifyManagedOrgs(customerOrgId) {
       PartnerService.modifyManagedOrgs(customerOrgId);
     }
 
-
     function openAddTrialModal() {
       Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP, $state.current.name, Authinfo.getOrgId());
-      var route = TrialService.getAddTrialRoute(vm.featureTrialForPaid);
+      var route = TrialService.getAddTrialRoute();
       $state.go(route.path, route.params).then(function () {
         $state.modal.result.finally(resetLists);
       });
     }
-
 
     function resetLists() {
       return getManagedOrgsList(vm.searchStr).then(function () {
@@ -628,7 +725,7 @@ require('./_customer-list.scss');
 
       $window.open($state.href('login_swap', {
         customerOrgId: customer.customerOrgId,
-        customerOrgName: customer.customerName
+        customerOrgName: customer.customerName,
       }));
     }
 
@@ -695,12 +792,16 @@ require('./_customer-list.scss');
       }
     }
 
-    function partnerClicked(rowData) {
-      vm.activeBadge = isPartnerOrg(rowData);
-    }
-
     function isPartnerOrg(rowData) {
       return rowData === Authinfo.getOrgId();
+    }
+
+    // export the list as a CSV
+    function exportCsv() {
+      return PartnerService.exportCSV(vm.isCareEnabled)
+        .catch(function (response) {
+          Notification.errorResponse(response, 'errors.csvError');
+        });
     }
 
     function setTrial(trial) {
@@ -717,10 +818,15 @@ require('./_customer-list.scss');
       return isTrial ? 'trial' : 'active';
     }
 
-    function showCustomerDetails(customer) {
+    function showCustomerDetails(customer, gridRow) {
+      if (!_.isUndefined(gridRow)) {
+        uiGridSelectionService.toggleRowSelection(vm.gridApi.grid, gridRow, null, false, true);
+      }
+
       vm.currentTrial = customer;
+      HuronCompassService.setIsCustomer(true);
       $state.go('customer-overview', {
-        currentCustomer: customer
+        currentCustomer: customer,
       });
     }
 
@@ -742,12 +848,10 @@ require('./_customer-list.scss');
               customerName: org.customerName,
               customerEmail: org.customerEmail,
               customerCommunicationLicenseIsTrial: getIsTrial(org, 'communications'),
-              customerRoomSystemsLicenseIsTrial: getIsTrial(org, 'roomSystems')
+              customerRoomSystemsLicenseIsTrial: getIsTrial(org, 'roomSystems'),
             });
           } else {
-            return $state.go('didadd', {
-              currentOrg: org
-            });
+            return Notification.error('pstnSetup.errors.customerNotFound');
           }
         });
     }

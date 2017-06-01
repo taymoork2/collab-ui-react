@@ -1,8 +1,4 @@
-interface IPreferredLanugageOption {
-  featureToggle: string | null;
-  value: string | '';
-  label: string;
-}
+import { IPreferredLanugageOption } from './preferredLanugage.interfaces';
 
 class PreferredLanguage implements ng.IComponentController {
   public hasSparkCall: boolean;
@@ -13,6 +9,7 @@ class PreferredLanguage implements ng.IComponentController {
   public onPrefLanguageChange: boolean = false;
   public onChangeFn: Function;
   public nonePlaceholder: string;
+  public description: string;
 
   private options: IPreferredLanugageOption[] = [];
   private optionSelected: IPreferredLanugageOption;
@@ -31,16 +28,18 @@ class PreferredLanguage implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let preferredLanguageOptionsChange = changes['preferredLanguageOptions'];
-    if (preferredLanguageOptionsChange) {
-      if (preferredLanguageOptionsChange.currentValue && _.isArray(preferredLanguageOptionsChange.currentValue)) {
-        this.options = <IPreferredLanugageOption[]> preferredLanguageOptionsChange.currentValue;
+    const {
+      preferredLanguage,
+      preferredLanguageOptions,
+    } = changes;
+    if (preferredLanguageOptions) {
+      if (preferredLanguageOptions.currentValue && _.isArray(preferredLanguageOptions.currentValue)) {
+        this.options = <IPreferredLanugageOption[]> preferredLanguageOptions.currentValue;
       }
     }
-    let preferredLanguageChange = changes['preferredLanguage'];
-    if (preferredLanguageChange) {
-      if (preferredLanguageChange.currentValue) {
-        this.optionSelected = <IPreferredLanugageOption> preferredLanguageChange.currentValue;
+    if (preferredLanguage) {
+      if (preferredLanguage.currentValue) {
+        this.optionSelected = <IPreferredLanugageOption> preferredLanguage.currentValue;
       } else {
         this.optionSelected = this.noneOption;
       }
@@ -66,5 +65,6 @@ export class PreferredLanguageComponent implements ng.IComponentOptions {
     preferredLanguage: '<',
     preferredLanguageOptions: '<',
     onChangeFn: '&',
+    description: '<',
   };
 }

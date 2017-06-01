@@ -1,7 +1,7 @@
 @import 'modules/core/setupWizard/planReview/plan-container';
 
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
 
 .modal-useradd-dialog {
   width: 900px;
@@ -41,6 +41,38 @@
 .modal-body {
   .modal-spacing {
     padding-bottom: 20px;
+  }
+
+  // TODO: remove 'ballast-r' class after the following is resolved:
+  // - https://wwwin-github.cisco.com/collab-ui/collab-ui-ng/issues/68
+  .ballast-r {
+    padding-right: 6px;
+  }
+
+  .icon-offset-l {
+    margin-left: 3px;
+  }
+
+  .icon-offset-l-6px {
+    margin-left: 6px;
+  }
+
+  .tooltip {
+    font-family: $brand-font-light;
+
+    .c-nub {
+      text-align: center;
+      font-size: 12px;
+    }
+  }
+
+  // TODO: add a property in 'tooltip' directive to allow setting tooltip container with w/o need for '!important'
+  .tooltip[popup-class="long-msg"] {
+    width: 227px !important;
+
+    .c-nub {
+      max-width: 227px;
+    }
   }
 }
 
@@ -432,6 +464,13 @@
   display: block;
 }
 
+.license-entity-disable {
+  font-family: $brand-font-light;
+  font-size: 0.75rem;
+  color: $gray-light-1;
+  display: block;
+}
+
 .license-siteUrl {
   color: $color-primary-base;
   font-family: $brand-font-light;
@@ -443,9 +482,14 @@
   margin-left: 32px;
 }
 
+.product-entity-reposition {
+  margin-left: 16px;
+}
+
 .license-entity-tooltip {
   color: $color-primary-base;
   font-size: 12px;
+  cursor: pointer;
 }
 
 .license-tooltip-html {
@@ -495,6 +539,11 @@
     padding-right: 0px;
     height: calc(100vh - 370px);
     width: 100%;
+
+    .ui-grid-row,
+    .ui-grid-cell {
+      height: rem-calc(60);
+    }
 
     .ngTopPanel {
       width: 100% !important;
@@ -573,6 +622,8 @@
       font-family: Arial;
       font-size: 12px;
       text-align: left;
+      top: rem-calc(-4);
+      position: relative;
     }
   }
 
@@ -649,7 +700,22 @@
 }
 
 .care-information-text {
-  cursor: default;
-  font-size: 12px;
-  width: auto;
+  display: block;
+}
+
+.under-careradio-reposition {
+  @include vr-spacing(mb, 0.8);
+}
+
+.entitle-check-grp {
+  .icon-warning {
+    color: $color-attention-base;
+    @include vr-spacing(mt, 0.4);
+    @include vr-spacing(ml, 0.15);
+  }
+
+  .under-label-caremsg-reposition {
+    @include vr-spacing(mt, -0.75);
+    @include vr-spacing(ml, 2);
+  }
 }

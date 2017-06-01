@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Component: CbgDetails', function () {
-  var $q, $state, $modal, $scope, $window, $componentCtrl;
-  var obj, ctrl, cbgService, gemService, Notification;
+  var $q, $state, $modal, $scope, $stateParams, $window, $componentCtrl, $httpBackend;
+  var obj, ctrl, cbgService, gemService, Notification, UrlConfig;
   var preData = getJSONFixture('gemini/common.json');
 
   beforeEach(angular.mock.module('Core'));
@@ -12,13 +12,13 @@ describe('Component: CbgDetails', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $state = $modal = $scope = $window = $componentCtrl = obj = ctrl = cbgService = gemService = Notification = undefined;
+    $q = $state = $httpBackend = UrlConfig = $modal = $scope = $stateParams = $window = $componentCtrl = obj = ctrl = cbgService = gemService = Notification = undefined;
   });
   afterAll(function () {
     preData = undefined;
   });
 
-  function dependencies(_$q_, _$state_, _$modal_, _$window_, _$rootScope_, _$componentController_, _Notification_, _cbgService_, _gemService_) {
+  function dependencies(_$q_, _$state_, _UrlConfig_, _$httpBackend_, _$modal_, _$window_, _$rootScope_, _$stateParams_, _$componentController_, _Notification_, _cbgService_, _gemService_) {
     $q = _$q_;
     $state = _$state_;
     $modal = _$modal_;
@@ -27,7 +27,10 @@ describe('Component: CbgDetails', function () {
     gemService = _gemService_;
     $scope = _$rootScope_.$new();
     Notification = _Notification_;
+    $stateParams = _$stateParams_;
     $componentCtrl = _$componentController_;
+    UrlConfig = _UrlConfig_;
+    $httpBackend = _$httpBackend_;
   }
 
   function initSpies() {
@@ -41,13 +44,21 @@ describe('Component: CbgDetails', function () {
     spyOn(cbgService, 'getNotes').and.returnValue($q.resolve());
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
     spyOn(cbgService, 'getHistories').and.returnValue($q.resolve());
-    spyOn(gemService, 'getCbgRemedyTicket').and.returnValue($q.resolve());
+    spyOn(gemService, 'getRemedyTicket').and.returnValue($q.resolve());
     spyOn(cbgService, 'getOneCallbackGroup').and.returnValue($q.resolve());
     spyOn(cbgService, 'updateCallbackGroupStatus').and.returnValue($q.resolve());
   }
 
   function initController() {
     $state.current.data = {};
+    $stateParams.info = {
+      groupId: 'ff808081582992dd01589a5b232410bb',
+    };
+
+    var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
+    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+    $httpBackend.flush();
+
     ctrl = $componentCtrl('cbgDetails', { $scope: $scope, $state: $state });
   }
 
@@ -58,13 +69,13 @@ describe('Component: CbgDetails', function () {
         'data': {
           'body': '',
           'returnCode': 0,
-          'trackId': ''
+          'trackId': '',
         },
         'health': {
           'code': 200,
-          'status': 'OK'
-        }
-      }
+          'status': 'OK',
+        },
+      },
     };
     var info = preData.common;
     _.set(info, key, val);
@@ -81,7 +92,7 @@ describe('Component: CbgDetails', function () {
 
       cbgService.getNotes.and.returnValue($q.resolve(obj.Notes));
       cbgService.getHistories.and.returnValue($q.resolve(obj.Histories));
-      gemService.getCbgRemedyTicket.and.returnValue($q.resolve(obj.RemedyTicket));
+      gemService.getRemedyTicket.and.returnValue($q.resolve(obj.RemedyTicket));
       if (catchStatus) {
         cbgService.getOneCallbackGroup.and.returnValue($q.reject({ 'status': 404 }));
       } else {
@@ -89,10 +100,19 @@ describe('Component: CbgDetails', function () {
       }
     }
 
+    it('should call notification.notify when get histories error', function () {
+      initReturnValue();
+      obj.Histories.content.data.returnCode = 1000;
+      ctrl.$onInit();
+      $scope.$apply();
+      expect(Notification.notify).toHaveBeenCalled();
+    });
+
     it('should get all correct data on init when show the details', function () {
       initReturnValue();
       ctrl.$onInit();
       $scope.$apply();
+      $scope.$emit('cbgNotesUpdated', obj.Notes);
       expect(ctrl.model).toBeDefined();
     });
 

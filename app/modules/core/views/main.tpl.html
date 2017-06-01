@@ -1,6 +1,6 @@
 <div class="app-container">
   <div ng-controller="HeaderCtrl as headerCtrl">
-    <cs-header navstyle="{{headerCtrl.navStyle}}" headertitle="{{headerCtrl.headerTitle}}" icon="{{headerCtrl.icon}}" show-read-only>
+    <cs-header navstyle="{{headerCtrl.navStyle}}" headertitle="{{headerCtrl.headerTitle}}" icon="{{headerCtrl.icon}}" show-read-only role="banner">
       <cs-header-left>
         <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="headerCtrl.showOrgName()">
           <div class="top-bar-title" title="{{orgname}}">{{orgname}}</div>
@@ -22,14 +22,7 @@
     <div ng-controller="TabsCtrl as tCtrl">
       <cs-left-nav pages="tCtrl.tabs"  ng-if="tCtrl.showLeftNav()"></cs-left-nav>
     </div>
-    <div class="page-content-wrapper container-fluid">
-      <div class="row full">
-        <div class="medium-12 columns">
-          <cs-header-push-container ng-if="Utils.isAdminPage()" class="license-usage">
-            <cr-leader-board-bucket></cr-leader-board-bucket>
-          </cs-header-push-container>
-        </div>
-      </div>
+    <div class="page-content-wrapper container-fluid" role="main">
       <div class="row full collapse">
         <div class="medium-12 columns content-view" ui-view="">
         </div>

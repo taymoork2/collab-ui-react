@@ -9,7 +9,7 @@
     var service = {
       getOrderStatus: getOrderStatus,
       resendCustomerEmail: resendCustomerEmail,
-      resendPartnerEmail: resendPartnerEmail
+      resendPartnerEmail: resendPartnerEmail,
     };
 
     return service;
@@ -18,14 +18,15 @@
       var orderStatusUrl = UrlConfig.getAdminServiceUrl() + 'orders?enc=' + $window.encodeURIComponent(enc);
 
       $http.get(orderStatusUrl)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('Retrieved order status for enc: ' + enc);
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
-          callback(data, status);
+        .catch(function (response) {
+          callback(response.data, response.status);
         });
     }
 
@@ -33,12 +34,13 @@
       var resendCustomerEmailUrl = UrlConfig.getAdminServiceUrl() + 'orders/' + orderId + '/customerAdminEmail';
 
       $http.post(resendCustomerEmailUrl)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           Log.debug('Resent customer welcome email for orderId: ' + orderId);
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
-          callback(data, status);
+        .catch(function (response) {
+          callback(response.data, response.status);
         });
     }
 
@@ -46,12 +48,13 @@
       var resendPartnerEmailUrl = UrlConfig.getAdminServiceUrl() + 'orders/' + orderId + '/partnerAdminEmail';
 
       $http.post(resendPartnerEmailUrl)
-        .success(function (data, status) {
+        .then(function (response) {
+          var data = response.data;
           Log.debug('Resent partner welcome email for orderId: ' + orderId);
-          callback(data, status);
+          callback(data, response.status);
         })
-        .error(function (data, status) {
-          callback(data, status);
+        .catch(function (response) {
+          callback(response.data, response.status);
         });
     }
   }

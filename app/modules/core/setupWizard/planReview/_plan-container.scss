@@ -1,6 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 %plan-container {
   display: flex;
@@ -275,6 +275,14 @@
     line-height: 24px;
   }
 
+  .item-care-license {
+    color: $gray-dark-2;
+    font-family: $brand-font-light;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 24px;
+  }
+
   .item-mtg {
     color: $color-primary-base;
     font-family: $brand-font-light;
@@ -325,7 +333,7 @@
   }
 
   .sub-line {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid $gray-light-2;
     padding-top: 5px;
     margin-bottom: 20px;
   }

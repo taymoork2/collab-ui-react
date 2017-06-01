@@ -67,7 +67,7 @@
 
     return {
       link: link,
-      restrict: 'A'
+      restrict: 'A',
     };
   }
 

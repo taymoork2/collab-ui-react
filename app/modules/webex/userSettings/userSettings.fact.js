@@ -24,7 +24,7 @@
       resetBtn: false,
       resetBtn2: false,
       saveBtn: false,
-      saveBtn2: false
+      saveBtn2: false,
     };
 
     // set allowSessionMismatch=true to allow User Setting panel 3 to load
@@ -266,7 +266,7 @@
                 trainingCenterApplicable: trainingCenterApplicable,
                 eventCenterApplicable: eventCenterApplicable,
                 supportCenterApplicable: supportCenterApplicable,
-                sessionEnabled: false
+                sessionEnabled: false,
               }; // sessionType
 
               sessionTypes.push(sessionType);
@@ -531,7 +531,7 @@
         return $q.all({
           userInfoXml: userInfoXml,
           siteInfoXml: siteInfoXml,
-          meetingTypesInfoXml: meetingTypesInfoXml
+          meetingTypesInfoXml: meetingTypesInfoXml,
         });
       }, // getUserSettingsInfoXml()
 
@@ -909,7 +909,7 @@
           trainingCenter: "false",
           supportCenter: "false",
           eventCenter: "false",
-          salesCenter: "false"
+          salesCenter: "false",
         };
 
         // go through the session types
@@ -1269,7 +1269,7 @@
           errMsg = $translate.instant(
             "webexUserSettingsAccessErrors.030001", {
               givenName: givenName,
-              familyName: familyName
+              familyName: familyName,
             }
           );
         } else if ("110055" == errId) {
@@ -1295,7 +1295,7 @@
 
           errMsg = $translate.instant(
             "webexUserSettingsAccessErrors.110055", {
-              sessionTypeName: sessionTypeName
+              sessionTypeName: sessionTypeName,
             }
           );
         } else {

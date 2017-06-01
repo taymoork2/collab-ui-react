@@ -4,19 +4,27 @@
   </cs-page-sub-header-left>
   <cs-page-sub-header-right>
     <div class="page-option-buttons">
-      <div ng-if="!cbgsCtrl.exportLoading">
-        <a class="export-users" ng-csv="cbgsCtrl.exportCSV()" filename="{{'gemini.cbgs.csvFilename' | translate}}">
-          <button class="btn--none"><i class="icon icon-download-contain icon-lg"></i></button>
+      <div ng-if="!cbgsCtrl.exportLoading"
+           class="no-animate"
+           tooltip="{{::'gemini.export.exportToCSV' | translate}}"
+           tooltip-placement="top"
+           tooltip-trigger="mouseenter">
+        <a class="export-users" ng-csv="cbgsCtrl.exportCSV()" ng-show="cbgsCtrl.isDownload" filename="{{'gemini.cbgs.csvFilename' | translate}}" quote-strings="true">
+          <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
         </a>
       </div>
-      <div ng-if="cbgsCtrl.exportLoading" class="btn btn-none">
-        <span class="export-lines">
+      <div ng-if="cbgsCtrl.exportLoading"
+           tooltip="{{::'gemini.export.exportInProcess' | translate}}"
+           tooltip-placement="top"
+           tooltip-trigger="mouseenter"
+           class="btn btn-none no-animate">
+        <span class="export-users">
           <i class="icon icon-spinner"></i>
         </span>
       </div>
     </div>
 
-    <button class="btn btn--people" id="request" translate="gemini.cbgs.request.button" ng-click="cbgsCtrl.onRequest()"></button>
+    <button class="btn btn--primary" id="request" translate="gemini.cbgs.request.button" ng-click="cbgsCtrl.onRequest()"></button>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 <div id="cbgListPanel" class="gridStyle col-md-12" ui-grid="cbgsCtrl.gridOptions" gridscrollbar ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-infinite-scroll></div>

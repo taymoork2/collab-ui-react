@@ -6,25 +6,26 @@
     .factory('AAMediaUploadService', AAMediaUploadService);
 
   /* @ngInject */
-  function AAMediaUploadService($window, $http, $rootScope, Authinfo, Upload, AACommonService, AACtrlResourcesService, Config) {
+  function AAMediaUploadService($window, $http, Authinfo, Upload, AACtrlResourcesService, Config) {
+
     var service = {
       upload: upload,
       retrieve: retrieve,
       getRecordingUrl: getRecordingUrl,
       validateFile: validateFile,
-      isClioEnabled: isClioEnabled,
       deleteRecording: deleteRecording,
+      httpDeleteRetry: httpDeleteRetry,
       getResources: getResources,
       notifyAsSaved: notifyAsSaved,
       notifyAsActive: notifyAsActive,
       clearResourcesExcept: clearResourcesExcept,
       cleanResourceFieldIndex: cleanResourceFieldIndex,
+      resetResources: resetResources,
+      saveResources: saveResources,
     };
 
-    var devUploadBaseUrl = 'http://54.183.25.170:8001/api/notify/upload';
-
     var clioProdBase = 'https://clio-manager-a.wbx2.com/clio-manager/api/v1/';
-    var clioIntBase = 'https://clio-manager-integration.wbx2.com/clio-manager/api/v1/';
+    var clioIntBase = 'https://clio-manager-intb.ciscospark.com/clio-manager/api/v1/';
     var clioUploadRecordingUrlSuffix = 'recordings/media';
     var clioDeleteRecordingUrlSuffix = 'recordings/';
     var clioUploadBaseUrlInt = clioIntBase + clioUploadRecordingUrlSuffix;
@@ -33,7 +34,6 @@
     var clioDeleteBaseUrlProd = clioProdBase + clioDeleteRecordingUrlSuffix;
     var uploadBaseUrl = null;
     var deleteBaseUrl = null;
-    var clioEnabled = false;
     var CLIO_APP_TYPE = 'AutoAttendant';
     var ENCRYPTION_POLICY = '{"encryptionPolicy":{"strategy":"SERVER"}}';
     //media upload controllers will map their unique control identifiers
@@ -55,10 +55,10 @@
     //the resources are mapped from a common controller resource service
     var resources = AACtrlResourcesService.getCtrlToResourceMap();
 
-    $rootScope.$on('CE Closed', closeResources);
-    $rootScope.$on('CE Saved', saveResources);
+    setURLForClioFeature();
 
     return service;
+
 
     function upload(file) {
       return uploadByUpload(file);
@@ -66,15 +66,6 @@
 
     function retrieve(result) {
       return retrieveByResult(result);
-    }
-
-    //when the aa builder has been closed, clean up all resources from
-    //saved until the end
-    function closeResources() {
-      _.each(AACtrlResourcesService.getCtrlKeys(), function (key) {
-        cleanResourceFieldIndex('saved', 0, key);
-        delete resources[key];
-      });
     }
 
     //when the aa save is complete, we want to keep the main active
@@ -90,10 +81,11 @@
     //closed focuses on the last saved and save focuses on the active
     function cleanResourceFieldIndex(field, index, key) {
       if (key && field) {
-        if (getResources(key)[field]) {
+        var resource = getResources(key);
+        if (resource[field]) {
           clearResourcesExcept(key, index);
         } else {
-          deleteResources(key);
+          deleteResources(resource);
           delete resources[key];
         }
       }
@@ -108,7 +100,7 @@
     }
 
     function notifyField(unqCtrlId, value, field) {
-      if (unqCtrlId && value && field) {
+      if (unqCtrlId && field) {
         getResources(unqCtrlId)[field] = value;
       }
     }
@@ -122,6 +114,20 @@
         return resources[unqCtrlId];
       }
       return undefined;
+    }
+
+    function resetResources() {
+      /* make sure any uploaded media files are deleted except for zero
+       * the active one.
+       */
+      _.forEach(resources, function (resource, key) {
+        if (resource.uploads.length > 1) {
+          clearResourcesExcept(key, 0);
+        }
+        resource.uploads = [];
+
+      });
+
     }
 
     //clean all resources except for a specific index from the resource array
@@ -139,7 +145,7 @@
     function deleteResources(ctrl) {
       var target = _.get(ctrl, 'uploads', []);
       _.each(target, function (value) {
-        if (_.has(value, 'deleteUrl')) {
+        if (_.has(value, 'deleteUrl') && !_.isEmpty(value.deleteUrl)) {
           httpDeleteRetry(value.deleteUrl, 0);
         }
       });
@@ -203,17 +209,10 @@
         return '';
       }
       var urls = {};
-      if (isClioEnabled()) {
-        if (_.has(successResult, 'data.metadata')) {
-          urls.playback = getRecordingUrl(successResult.data.metadata);
-          urls.deleteUrl = getDeleteUrl(successResult.data.metadata);
-        }
-      } else {
-        if (_.has(successResult, 'data.PlaybackUri')) {
-          var fullUrl = deleteBaseUrl + successResult.data.PlaybackUri;
-          urls.playback = fullUrl;
-          urls.deleteUrl = fullUrl;
-        }
+
+      if (_.has(successResult, 'data.metadata')) {
+        urls.playback = getRecordingUrl(successResult.data.metadata);
+        urls.deleteUrl = getDeleteUrl(successResult.data.metadata);
       }
       return urls;
     }
@@ -232,29 +231,25 @@
     }
 
     function getUploadUrl() {
-      if (isClioEnabled()) {
-        return uploadBaseUrl;
-      } else {
-        return uploadBaseUrl + '?customerId=' + Authinfo.getOrgId();
-      }
+      return uploadBaseUrl;
     }
 
     function uploadByUpload(file) {
       if (file && validateFile(file.name)) {
         var uploadUrl = getUploadUrl();
         var fd = new $window.FormData();
+
         fd.append('file', file);
-        if (isClioEnabled()) {
-          fd.append('appType', CLIO_APP_TYPE);
-          fd.append('policy', ENCRYPTION_POLICY);
-        }
+        fd.append('appType', CLIO_APP_TYPE);
+        fd.append('policy', ENCRYPTION_POLICY);
+
         return Upload.http({
           url: uploadUrl,
           transformRequest: _.identity,
           headers: {
             'Content-Type': undefined,
           },
-          data: fd
+          data: fd,
         });
       } else {
         return undefined;
@@ -269,28 +264,16 @@
       }
     }
 
-    function isClioEnabled() {
-      setURLFromClioFeatureToggle();
-      return clioEnabled;
-    }
-
-    function setURLFromClioFeatureToggle() {
+    function setURLForClioFeature() {
       if (!uploadBaseUrl) {
-        if (AACommonService.isClioToggle()) {
-          if (Config.isProd()) {
-            uploadBaseUrl = clioUploadBaseUrlProd;
-            deleteBaseUrl = clioDeleteBaseUrlProd;
-          } else {
-            uploadBaseUrl = clioUploadBaseUrlInt;
-            deleteBaseUrl = clioDeleteBaseUrlInt;
-          }
-          clioEnabled = true;
+        if (Config.isProd()) {
+          uploadBaseUrl = clioUploadBaseUrlProd;
+          deleteBaseUrl = clioDeleteBaseUrlProd;
         } else {
-          uploadBaseUrl = devUploadBaseUrl;
-          deleteBaseUrl = 'http://';
+          uploadBaseUrl = clioUploadBaseUrlInt;
+          deleteBaseUrl = clioDeleteBaseUrlInt;
         }
       }
     }
   }
-
 })();
