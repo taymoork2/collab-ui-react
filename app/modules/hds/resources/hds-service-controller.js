@@ -38,9 +38,7 @@
       .then(function (enabled) {
         if (!enabled) {
           HDSService.enableHdsEntitlement()
-            .catch(function (error) {
-              Notification.errorWithTrackingId(error, 'HDSServiceController - HDSService.enableHdsEntitlement()');
-            }).finally(function () {
+            .then(function () {
               vm.addResourceModal.resolve.firstTimeSetup = true;
               if (Authinfo.isCustomerLaunchedFromPartner()) {
                 $modal.open({
@@ -50,6 +48,8 @@
                 return;
               }
               $modal.open(vm.addResourceModal);
+            }).catch(function (error) {
+              Notification.errorWithTrackingId(error, 'HDSServiceController - HDSService.enableHdsEntitlement()');
             });
         }
       });
