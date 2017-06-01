@@ -115,7 +115,7 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
       }
 
       if ('' != clientVersion) {
-        // clientVersion = "somethingInvalid";
+        // clientVersion = "T30L10NSP4EP3";
 
         brand.wbxclientversions.forEach(
           function (wbxclientversion) {
