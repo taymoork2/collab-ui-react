@@ -1,7 +1,7 @@
 // This service should obsolete ClusterService during 2017
 import { Notification } from 'modules/core/notifications';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
-import { ICluster, ConnectorType, HybridServiceId, IFMSOrganization, ITimeWindow, ClusterTargetType, IExtendedClusterFusion, StatusIndicatorCSSClass, IExtendedClusterServiceStatus, IConnector, IMoratoria } from 'modules/hercules/hybrid-services.types';
+import { ICluster, ConnectorType, HybridServiceId, IFMSOrganization, ITimeWindow, ClusterTargetType, IExtendedClusterFusion, StatusIndicatorCSSClass, IExtendedClusterServiceStatus, IMoratoria, IHost } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
 
@@ -23,17 +23,6 @@ interface IResourceGroup {
 interface IResourceGroups {
   groups: IResourceGroup[];
   unassigned: IExtendedClusterFusion[];
-}
-
-interface IHost {
-  url: string;
-  serial: string;
-  hostname: string;
-  connectors: IConnector[];
-  maintenanceMode: 'on' | 'off';
-  lastMaintenanceModeEnabledTimestamp: string;
-  platform: 'expressway' | string; // FIXME
-  platformVersion: string;
 }
 
 type HighLevelStatusForService = 'setupNotComplete' | 'outage' | 'impaired' | 'operational';
@@ -328,7 +317,7 @@ export class HybridServicesClusterService {
   public updateHost(serial: string, params: any, orgId?: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/hosts/${serial}`;
     return this.$http.patch(url, params)
-    .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse);
   }
 
   // PRIVATE

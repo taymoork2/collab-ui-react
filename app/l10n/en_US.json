@@ -2069,6 +2069,14 @@
       "urgentUpgrade": "An urgent upgrade is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
     },
+    "connectorUpgrade": {
+      "title": "Connector Upgrade",
+      "text": "You are about to update the following nodes in this cluster:",
+      "XtoY": "{{name}} to {{version}}",
+      "releaseNotes": "Release Notes",
+      "releaseNotesLink": "Open in a new tab",
+      "upgradeNow": "Upgrade Now"
+    },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
       "upgradeScheduleHeader": "Upgrade",
@@ -2115,10 +2123,12 @@
       "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
       "expresswayDataWiped": "{{connectorName}} will be removed from all of your Expressway clusters, and all connectors' local settings will be deleted.",
       "noClustersWillBeDeregistered": "Clusters will not be deregistered from Cisco Collaboration Cloud.",
-      "deactivateServiceConfirmationButton": "Confirm Deactivation",
-      "deactivateServiceConfirmationText": "You are about to deactivate {{serviceName}} from your Cisco Spark organization.",
+      "deactivateServiceConfirmationHeader": "Deactivate {{serviceName}}",
+      "deactivateServiceConfirmationTextGoogleCalendar": "Are you sure? Service-related features will be removed for users.",
+      "deactivateServiceConfirmationText": "Are you sure? {{connectorName}} and related configuration will be removed from your clusters and service-related features will be removed for users.",
       "serviceWasDeactivated": "{{serviceName}} successfully deactivated.",
-      "connectWarning": "You are about to deactivate Hybrid Call Service Connect. Be aware that this action deletes all Cisco Spark remote device configuration and disables the service for all users."
+      "connectWarning": "Are you sure? Remote device configuration will be removed and the service will be disabled for your users.",
+      "deactivateCallServiceConnect": "Deactivate Call Service Connect"
     },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
@@ -2451,6 +2461,7 @@
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Expressway again in the Add Resource dialog.",
         "go-to-expressway": "Go to Expressway",
         "upgrade": "Upgrade available",
+        "upgrading": "Installing upgrade",
         "alarms": "Alarms",
         "maintenance": "Maintenance",
         "pendingMaintenance": "Pending maintenance"
@@ -2634,7 +2645,7 @@
       "goToNode": "Go to node",
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
-      "pendingTooltip": "Maintenance mode has been requested. Please wait until the node is ready.",
+      "pendingTooltip": "Pending since: {{date}}. Maintenance mode has been requested. Please wait until the node is ready.",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
         "message": "<p>The Hybrid Media node will be put in maintenance mode as soon as the call activity ends or a two hour timeout is reached. Please wait for the node to move from \"Pending Maintenance\" to \"Maintenance\" before you proceed.</p><p>No alarm notifications are sent for nodes in maintenance mode.</p>",
@@ -2643,7 +2654,10 @@
       "disableMaintenanceModeModal": {
         "title": "Disable maintenance mode",
         "message": "Are you sure you want to disable maintenance mode for this node?"
-      }
+      },
+      "alertBannerNumber": "{count, plural, =1{Upgrade} other{Upgrades}} available.",
+      "alertBannerTime": "The upgrade will be applied on {{date}}.",
+      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Install now</a>?"
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"
@@ -2655,7 +2669,8 @@
   },
   "cmc": {
     "failures": {
-      "preCheckFailure": "Status check of org failed with: {{msg}}"
+      "preCheckFailure": "Status check of org failed with: {{msg}}",
+      "saveFailure": "Save failed with: {{msg}}"
     },
     "menu": {
       "mobileServices": "Mobile Services",
@@ -2892,6 +2907,7 @@
         "serviceDomainDesc": "Trial Domain: {{trial}}<br/>Production Domain: {{prod}}",
         "serviceUserDesc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial or <a ng-click=\"{{onclick1}}\">view and edit</a> your trial users.",
         "serviceUser0Desc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial.",
+        "serviceUserDirsyncDesc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">View Users</a> for your trial.",
         "serviceProdMoveDesc": "When you are satisfied that the trial was successful, you can move to production. This makes Hybrid Data Security active for all users in your organization. You can't revert to trial mode without deactivating the service and losing user access to data.",
         "serviceTrialModeTitle": "Trial Mode",
         "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
@@ -2909,7 +2925,12 @@
         "succeedDeactivateProductionMode": "Succeeded to Deactivate Production Mode",
         "succeedDeactivateTrialMode": "Succeeded to Deactivate Trial Mode",
         "deavtivateTrialModeDesc": "Deactivating Hybrid Data Security Service moves encryption key management and other security-related features to the cloud. Deactivating impacts user access to existing data.",
-        "hdsModeGetError": "Failed to get HDS mode: "
+        "hdsModeGetError": "Failed to get HDS mode: ",
+        "selectGroupDesc" : "Directory Synchronization is enabled for this organization. Users in the Active Directory group {{defaultGroup}} will be part of the trial.",
+        "selectGroupError": "Directory Synchronization is enabled for this organization, but we can't find a group named {{defaultGroup}} in Active Directory. To start a trial, create this group in AD and perform a synchronization.",
+        "noGroupError": "To start an HDS trial, your organization needs a trial group to add users to. Something's gone wrong, and we can't find one. You can try rerunning the HDS Setup Tool (using your existing ISO configuration file) or contact Cisco Support for help.",
+        "groupSizeLimitExceeded" : "Your trial group {{defaultGroup}} has more than 250 users. To start a trial, remove some users from the group in AD and perform a synchronization.",
+        "groupSizeLimitExceededinTrail" : "Your trial group {{defaultGroup}} has more than 250 users. Your key encryption routing might not work correctly for some users. Please remove some users from the group in AD and perform a synchronization."
       },
       "addTrialUsers": {
         "modalTitle": "Add Users to Trial Mode",
@@ -2955,7 +2976,7 @@
     "browserTabHeaderTitle": "Cisco Spark Activity Reports",
     "heading": "Search Cisco Spark Space Activity",
     "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
-    "searchTip": "Search data by room ID",
+    "searchTip": "Search data by space ID",
     "unableToDownloadFile": "Unable to download file",
     "timeout": "Timeout",
     "dateError": {
@@ -3055,6 +3076,7 @@
       "expired": "Expired"
     },
     "originalConsole": {
+      "subheading": "Find all relevant data for a space.",
       "reportNameNotEmpty": "Report Name can not be empty",
       "reportNamePlaceholder": "Enter report name",
       "startDate": "Start Date",
@@ -4801,7 +4823,10 @@
     "savedT38": "T.38 settings updated",
     "cpcWarning": "Enable analog devices that support auto disconnect based on silence detection",
     "cpcLabel": "Silence Detection",
-    "savedCpc": "Silence Detection successfully updated"
+    "savedCpc": "Silence Detection successfully updated",
+    "confirmRebootHeader": "Change {{settingName}}",
+    "confirmRebootExplanation": "To change {{settingName}}, the device will need to perform a reboot.",
+    "confirmRebootConfirmation": "Are you sure you want to change {{settingName}}?"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -6617,7 +6642,18 @@
     "waitTimeSecondaryLabel": "Minutes",
     "waitTimeDesc": "Maximum amount of time caller will wait before being sent to fallback destination.",
     "fallbackLabel": "Fallback Destination",
+    "fallbackNumber": "Fallback Destination Number",
+    "fallbackNumberHint": "Calls are sent to this number if not answered by any of the members",
     "fallbackDesc": "This is where the call goes if it was not answered by this hunt group.",
+    "fallbackRule": "Fallback Destination Rule",
+    "fallbackRule1Hint": "Always use fallback destination number in all scenarios.",
+    "fallbackRule2Hint": "Always use alternative fallback destination number in all scenarios.",
+    "fallbackRule3Hint": "System automatically will switch between fallback destination during call-no-answer and alternative fallback destination during local network outage.",
+    "altFallbackLabel": "Alternate Fallback Destination",
+    "altFallbackNumber": "Alternate Fallback Destination Number",
+    "altFallbackHint": "Used during local network outages",
+    "altFalbackTimer": "Timer for checking if network is available again",
+    "automatic": "Automatic",
     "methodLabel": "Hunting Method",
     "methodDesc": "Define which member gets the call first.",
     "membersLabel": "Hunt Group Members",

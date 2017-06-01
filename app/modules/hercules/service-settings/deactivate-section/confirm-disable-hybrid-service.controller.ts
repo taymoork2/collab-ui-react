@@ -3,6 +3,7 @@ import { Notification } from 'modules/core/notifications';
 export class ConfirmDisableHybridServiceCtrl {
 
   public localizedServiceName: string = this.$translate.instant(`hercules.hybridServiceNames.${this.serviceId}`);
+  public localizedConnectorName: string = this.$translate.instant(`hercules.connectorNames.${this.serviceId}`);
   public loading: boolean = false;
 
   /* @ngInject */
@@ -12,7 +13,7 @@ export class ConfirmDisableHybridServiceCtrl {
     private CloudConnectorService,
     private Notification: Notification,
     private ServiceDescriptor,
-    private serviceId: string,
+    public serviceId: string,
   ) {}
 
   public confirmDeactivation = () => {

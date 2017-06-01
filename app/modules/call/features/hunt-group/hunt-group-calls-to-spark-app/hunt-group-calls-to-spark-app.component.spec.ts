@@ -9,7 +9,7 @@ describe ('component: ucHuntGroupCallsToSparkApp', () => {
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
 
     this.compileComponent('ucHuntGroupCallsToSparkApp', {
-      callsToSparkApp: true,
+      sendToApp: true,
       onChangeFn: 'onChangeFn()',
     });
   });

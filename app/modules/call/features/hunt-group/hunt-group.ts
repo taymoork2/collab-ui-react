@@ -10,6 +10,12 @@ export enum HuntMethod {
   DA_TOP_DOWN = <any>'DA_TOP_DOWN',
 }
 
+export enum DestinationRule {
+  TYPEFALLBACKRULE_FALLBACK_DESTINATION = <any>'TYPEFALLBACKRULE_FALLBACK_DESTINATION',
+  TYPEFALLBACKRULE_ALTERNATE_DESTINATION = <any>'TYPEFALLBACKRULE_ALTERNATE_DESTINATION',
+  TYPEFALLBACKRULE_AUTOMATIC = <any>'TYPEFALLBACKRULE_AUTOMATIC',
+}
+
 export class HuntGroup {
   public uuid: string | undefined;
   public name: string | undefined;
@@ -17,7 +23,9 @@ export class HuntGroup {
   public maxRingSecs: string | undefined;
   public maxWaitMins: string | undefined;
   public sendToApp: boolean;
+  public destinationRule: DestinationRule | undefined;
   public fallbackDestination: FallbackDestination;
+  public alternateDestination: FallbackDestination;
   public members: Array<CallFeatureMember>;
   public numbers: Array<HuntGroupNumber>;
 
@@ -28,6 +36,9 @@ export class HuntGroup {
     maxRingSecs?: string,
     maxWaitMins?: string,
     sendToApp: boolean,
+    destinationRule?: DestinationRule,
+    fallbackDestination: FallbackDestination,
+    alternateDestination: FallbackDestination,
     members: Array<CallFeatureMember>,
     numbers: Array<HuntGroupNumber>,
   } = {
@@ -37,6 +48,9 @@ export class HuntGroup {
     maxRingSecs: undefined,
     maxWaitMins: undefined,
     sendToApp: true,
+    destinationRule: DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION,
+    fallbackDestination: new FallbackDestination(),
+    alternateDestination: new FallbackDestination(),
     members: [],
     numbers: [],
   }) {
@@ -46,6 +60,9 @@ export class HuntGroup {
     this.maxRingSecs = obj.maxRingSecs;
     this.maxWaitMins = obj.maxWaitMins;
     this.sendToApp = obj.sendToApp;
+    this.destinationRule = obj.destinationRule;
+    this.fallbackDestination = obj.fallbackDestination;
+    this.alternateDestination = obj.alternateDestination;
     this.members = obj.members;
     this.numbers = obj.numbers;
   }

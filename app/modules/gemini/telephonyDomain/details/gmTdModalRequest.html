@@ -20,6 +20,7 @@
             ng-maxlength="60"
             name="customerName"
             ng-model="$ctrl.data.domainName"
+            ng-disabled="$ctrl.data.telephonyDomainId"
             cs-input-messages="$ctrl.messages.customerName"
             cs-input-warning="$ctrl.onWarning()"
             cs-input-warning-message="{{$ctrl.messages.customerName.warning}}"

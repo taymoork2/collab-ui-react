@@ -10,6 +10,7 @@
     var URL = {
       spData: UrlConfig.getGeminiUrl() + 'servicepartner',
       remedyTicket: UrlConfig.getGeminiUrl() + 'remedyTicket/customers/',
+      getCountries: UrlConfig.getGeminiUrl() + 'countries',
     };
     var data = {};
     var service = {
@@ -24,6 +25,8 @@
       getNumberStatus: getNumberStatus,
       getTdStatus: getTdStatus,
     };
+    initCountries();
+
     return service;
 
     function getSpData() {
@@ -85,6 +88,27 @@
       }
 
       return td_status;
+    }
+
+    function initCountries() {
+      var gmCountry = getStorage('gmCountry');
+      if (!gmCountry) {
+        $http.get(URL.getCountries).then(function (res) {
+          var countryName2IdMapping = {};
+          var countryId2NameMapping = {};
+          var countryOptions = [];
+
+          _.forEach(_.get(res, 'data.content.data'), function (item) {
+            var nameKey = item.countryName.replace(/,/g, '#@#');
+            countryName2IdMapping[nameKey] = item.countryId;
+            countryId2NameMapping[item.countryId] = item.countryName;
+            countryOptions.push({ label: item.countryName, value: item.countryId });
+          });
+
+          gmCountry = { countryName2IdMapping: countryName2IdMapping, countryId2NameMapping: countryId2NameMapping, countryOptions: countryOptions };
+          setStorage('gmCountry', gmCountry);
+        });
+      }
     }
 
     function setStorage(key, val) {

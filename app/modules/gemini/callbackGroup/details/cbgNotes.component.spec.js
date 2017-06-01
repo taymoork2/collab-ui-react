@@ -2,7 +2,7 @@
 
 describe('Component: cbgNotes', function () {
   var $q, $state, $scope, $componentCtrl;
-  var ctrl, cbgService, Notification, PreviousState;
+  var ctrl, cbgService, Notification, PreviousState, $httpBackend, UrlConfig;
   var preData = getJSONFixture('gemini/common.json');
 
   beforeEach(angular.mock.module('Core'));
@@ -12,13 +12,13 @@ describe('Component: cbgNotes', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $state = $scope = $componentCtrl = ctrl = cbgService = Notification = PreviousState = undefined;
+    $q = $state = $httpBackend = UrlConfig = $scope = $componentCtrl = ctrl = cbgService = Notification = PreviousState = undefined;
   });
   afterAll(function () {
     preData = undefined;
   });
 
-  function dependencies(_$q_, _$state_, _$rootScope_, _$componentController_, _Notification_, _cbgService_, _PreviousState_) {
+  function dependencies(_$q_, _$state_, _$httpBackend_, _UrlConfig_, _$rootScope_, _$componentController_, _Notification_, _cbgService_, _PreviousState_) {
     $q = _$q_;
     $state = _$state_;
     cbgService = _cbgService_;
@@ -26,6 +26,8 @@ describe('Component: cbgNotes', function () {
     Notification = _Notification_;
     PreviousState = _PreviousState_;
     $componentCtrl = _$componentController_;
+    $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
   }
 
   function initSpies() {
@@ -38,6 +40,10 @@ describe('Component: cbgNotes', function () {
 
   function initController() {
     $state.current.data = {};
+
+    var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
+    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+
     ctrl = $componentCtrl('cbgNotes', { $scope: $scope, $state: $state });
   }
 

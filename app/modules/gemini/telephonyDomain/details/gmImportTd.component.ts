@@ -130,6 +130,8 @@ class GmImportTdCtrl implements ng.IComponentController {
       columnDefs: columnDefs,
       enableRowSelection: true,
       enableColumnMenus: false,
+      enableVerticalScrollbar: false,
+      enableHorizontalScrollbar: false,
       onRegisterApi: (gridApi) => {
         const api = gridApi;
         api.selection.on.rowSelectionChanged(this.$scope, (row) => { this.addOrDelRow(row); });
@@ -174,7 +176,10 @@ class GmImportTdCtrl implements ng.IComponentController {
   }
 
   private getCountries() {
-    this.countryId2NameMapping = this.gemService.getStorage('countryId2NameMapping');
+    const gmCountry = this.gemService.getStorage('gmCountry');
+    if (gmCountry) {
+      this.countryId2NameMapping = gmCountry.countryId2NameMapping;
+    }
   }
 }
 export class GmImportTdComponent implements ng.IComponentOptions {

@@ -7,7 +7,7 @@ describe('Component: gmTdNotes', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$scope', '$state', '$stateParams', '$q', 'Notification', 'TelephonyDomainService', 'PreviousState');
+    this.injectDependencies('$scope', 'UrlConfig', '$httpBackend', '$state', '$stateParams', '$q', 'Notification', 'TelephonyDomainService', 'PreviousState');
     initSpies.apply(this);
     initComponent.apply(this);
   });
@@ -35,6 +35,10 @@ describe('Component: gmTdNotes', () => {
         displayName: '',
       },
     };
+
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
+    this.$httpBackend.flush();
 
     this.compileComponent('gmTdNotes', {});
     this.$scope.$apply();
@@ -105,4 +109,15 @@ describe('Component: gmTdNotes', () => {
     expect(this.controller.allNotes.length).toBe(2);
   });
 
+  it('should show the error when save note and response body is null', function () {
+    let mockData = this.preData.common;
+    mockData.content.data.body = null;
+    mockData.content.data.returnCode = 0;
+    this.TelephonyDomainService.postNotes.and.returnValue(this.$q.resolve(mockData));
+    this.controller.newNote = 'new_note';
+    this.controller.onSave();
+    this.$scope.$apply();
+
+    expect(this.Notification.error).toHaveBeenCalled();
+  });
 });

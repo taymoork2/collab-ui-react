@@ -160,6 +160,7 @@ export class HybridServiceClusterListComponent implements ng.IComponentOptions {
   public bindings = {
     serviceId: '<',
     clusterId: '<',
+    hasNodesViewFeatureToggle: '<',
   };
 }
 
