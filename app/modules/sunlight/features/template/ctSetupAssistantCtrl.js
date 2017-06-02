@@ -234,7 +234,7 @@
           useAgentRealName: false,
         },
         proactivePrompt: {
-          enabled: true,
+          enabled: false,
           fields: {
             promptTime: vm.promptTime.value,
             promptTitle: {
@@ -561,7 +561,7 @@
           useAgentRealName: false,
         },
         proactivePrompt: {
-          enabled: true,
+          enabled: false,
           fields: {
             promptTime: vm.promptTime.value,
             promptTitle: {

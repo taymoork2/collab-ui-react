@@ -10,6 +10,7 @@ import callFeaturesShared from 'modules/call/features/shared';
 import huntGroupCallsToSparkApp from 'modules/call/features/hunt-group/hunt-group-calls-to-spark-app';
 import notifications from 'modules/core/notifications';
 import featureToggle from 'modules/core/featureToggle';
+import huntGroupFallback from 'modules/call/features/hunt-group/hunt-group-fallback-destination';
 
 export * from './hunt-group';
 export * from './hunt-group.service';
@@ -27,6 +28,7 @@ export default angular
     huntGroupCallsToSparkApp,
     notifications,
     featureToggle,
+    huntGroupFallback,
   ])
   .service('HuntGroupService', HuntGroupService)
   .component('ucHuntGroup', new HuntGroupComponent())

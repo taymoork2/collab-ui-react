@@ -46,7 +46,6 @@ class GmtdDetails implements ng.IComponentController {
     this.getNotes();
     this.getHistories();
     this.getRemedyTicket();
-    this.getCountries();
     const deregister = this.$scope.$on('detailWatch', (_event, data) => {
       this.isEdit = data.isEdit;
       this.notes  = data.notes || this.notes;
@@ -125,25 +124,6 @@ class GmtdDetails implements ng.IComponentController {
           this.remedyTicketLoading = false;
         }
       });
-  }
-
-  private getCountries(): void {
-    let countryOptions: any = this.gemService.getStorage('countryOptions') || [];
-    let countryId2NameMapping: any = this.gemService.getStorage('countryId2NameMapping') || {};
-    let countryName2IdMapping: any = this.gemService.getStorage('countryName2IdMapping') || {};
-    if (countryOptions.length === 0) {
-      this.TelephonyDomainService.getCountries().then((res: any) => {
-        _.forEach(_.get(res, 'content.data'), (item: any) => {
-          countryId2NameMapping[item.countryId] = item.countryName;
-          countryName2IdMapping[item.countryName] = item.countryId;
-          countryOptions.push({ label: item.countryName, value: item.countryId });
-        });
-      });
-
-      this.gemService.setStorage('countryId2NameMapping', countryId2NameMapping);
-      this.gemService.setStorage('countryName2IdMapping', countryName2IdMapping);
-      this.gemService.setStorage('countryOptions', countryOptions);
-    }
   }
 
   public onOpenRemedyTicket() {

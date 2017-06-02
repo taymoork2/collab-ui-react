@@ -6,7 +6,7 @@
     .controller('HuronSettingsCtrl', HuronSettingsCtrl);
 
   /* @ngInject */
-  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CallerId, CeService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, Orgservice, PstnModel, PstnService, PstnServiceAddressService, ServiceSetup, PhoneNumberService, TerminusUserDeviceE911Service, ValidationService, VoicemailMessageAction) {
+  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CallerId, CeService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, Orgservice, PstnModel, PstnService, PstnServiceAddressService, ServiceSetup, PhoneNumberService, TerminusService, ValidationService, VoicemailMessageAction) {
     var vm = this;
     vm.loading = true;
 
@@ -1166,7 +1166,7 @@
 
         return ServiceSetup.updateSite(vm.model.site.uuid, site)
           .then(function () {
-            return TerminusUserDeviceE911Service.update({
+            return TerminusService.customerNumberE911V2().update({
               customerId: Authinfo.getOrgId(),
               number: vm.model.serviceNumber.pattern,
             }, { useCustomE911Address: false }).$promise;
@@ -1413,7 +1413,7 @@
     }
 
     function getE911State(pattern) {
-      return TerminusUserDeviceE911Service.get({
+      return TerminusService.customerNumberE911V2().get({
         customerId: Authinfo.getOrgId(),
         number: pattern,
       }).$promise;

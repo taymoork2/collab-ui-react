@@ -233,7 +233,7 @@ describe('Care Setup Assistant Ctrl', function () {
   function setPromptTime(time) {
     var defaultPromptTime = {
       label: 'careChatTpl.promptTimeOption1',
-      value: 60,
+      value: 30,
     };
 
     expect(controller.promptTime).toEqual(defaultPromptTime);
@@ -433,8 +433,8 @@ describe('Care Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(OVERVIEW_PAGE_INDEX, true, true);
     });
 
-    it("should initialize all cards as enabled ", function () {
-      expect(controller.template.configuration.proactivePrompt.enabled).toBe(true);
+    it("should initialize all cards as enabled except proactive prompt ", function () {
+      expect(controller.template.configuration.proactivePrompt.enabled).toBe(false);
       expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);
       expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
@@ -624,12 +624,13 @@ describe('Care Setup Assistant Ctrl', function () {
     beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
       resolveTogglePromise();
+      controller.template.configuration.proactivePrompt.enabled = true;
       controller.currentState = controller.states[PROACTIVE_PROMPT_PAGE_INDEX]; // set proactive prompt view
     });
 
     it("should set default promptTime, promptTitle and promptMessage", function () {
       expect(controller.promptTime.label).toEqual('careChatTpl.promptTimeOption1');
-      expect(controller.promptTime.value).toEqual(60);
+      expect(controller.promptTime.value).toEqual(30);
       expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
         .toEqual(controller.orgName);
       expect(controller.template.configuration.proactivePrompt.fields.promptMessage.message)
@@ -657,7 +658,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('should enable the previous and next button if all the fields are valid', function () {
-      controller.template.configuration.proactivePrompt.fields.promptTime = 60;
+      controller.template.configuration.proactivePrompt.fields.promptTime = 30;
       controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = "Need Help?";
       controller.template.configuration.proactivePrompt.fields.promptMessage.message = "Chat with specialists.";
       checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, true);
@@ -698,7 +699,7 @@ describe('Care Setup Assistant Ctrl', function () {
       var expectedJSON = {
         enabled: false,
         fields: {
-          promptTime: 60,
+          promptTime: 30,
           promptTitle: {
             displayText: controller.orgName,
           },
@@ -715,7 +716,7 @@ describe('Care Setup Assistant Ctrl', function () {
       var existingJSON = {
         enabled: false,
         fields: {
-          promptTime: 60,
+          promptTime: 30,
           promptTitle: {
             displayText: controller.orgName,
           },
@@ -1131,8 +1132,8 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.mediaType).toEqual('chatPlusCallback');
     });
 
-    it('should initialize all cards as enabled ', function () {
-      expect(controller.template.configuration.proactivePrompt.enabled).toBe(true);
+    it('should initialize all cards as enabled except proactive prompt ', function () {
+      expect(controller.template.configuration.proactivePrompt.enabled).toBe(false);
       expect(controller.template.configuration.pages.customerInformationChat.enabled).toBe(true);
       expect(controller.template.configuration.pages.customerInformationCallback.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);

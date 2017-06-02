@@ -2123,10 +2123,12 @@
       "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
       "expresswayDataWiped": "{{connectorName}} will be removed from all of your Expressway clusters, and all connectors' local settings will be deleted.",
       "noClustersWillBeDeregistered": "Clusters will not be deregistered from Cisco Collaboration Cloud.",
-      "deactivateServiceConfirmationButton": "Confirm Deactivation",
-      "deactivateServiceConfirmationText": "You are about to deactivate {{serviceName}} from your Cisco Spark organization.",
+      "deactivateServiceConfirmationHeader": "Deactivate {{serviceName}}",
+      "deactivateServiceConfirmationTextGoogleCalendar": "Are you sure? Service-related features will be removed for users.",
+      "deactivateServiceConfirmationText": "Are you sure? {{connectorName}} and related configuration will be removed from your clusters and service-related features will be removed for users.",
       "serviceWasDeactivated": "{{serviceName}} successfully deactivated.",
-      "connectWarning": "You are about to deactivate Hybrid Call Service Connect. Be aware that this action deletes all Cisco Spark remote device configuration and disables the service for all users."
+      "connectWarning": "Are you sure? Remote device configuration will be removed and the service will be disabled for your users.",
+      "deactivateCallServiceConnect": "Deactivate Call Service Connect"
     },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
@@ -2667,7 +2669,8 @@
   },
   "cmc": {
     "failures": {
-      "preCheckFailure": "Status check of org failed with: {{msg}}"
+      "preCheckFailure": "Status check of org failed with: {{msg}}",
+      "saveFailure": "Save failed with: {{msg}}"
     },
     "menu": {
       "mobileServices": "Mobile Services",
@@ -2904,6 +2907,7 @@
         "serviceDomainDesc": "Trial Domain: {{trial}}<br/>Production Domain: {{prod}}",
         "serviceUserDesc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial or <a ng-click=\"{{onclick1}}\">view and edit</a> your trial users.",
         "serviceUser0Desc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial.",
+        "serviceUserDirsyncDesc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">View Users</a> for your trial.",
         "serviceProdMoveDesc": "When you are satisfied that the trial was successful, you can move to production. This makes Hybrid Data Security active for all users in your organization. You can't revert to trial mode without deactivating the service and losing user access to data.",
         "serviceTrialModeTitle": "Trial Mode",
         "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
@@ -2921,7 +2925,12 @@
         "succeedDeactivateProductionMode": "Succeeded to Deactivate Production Mode",
         "succeedDeactivateTrialMode": "Succeeded to Deactivate Trial Mode",
         "deavtivateTrialModeDesc": "Deactivating Hybrid Data Security Service moves encryption key management and other security-related features to the cloud. Deactivating impacts user access to existing data.",
-        "hdsModeGetError": "Failed to get HDS mode: "
+        "hdsModeGetError": "Failed to get HDS mode: ",
+        "selectGroupDesc" : "Directory Synchronization is enabled for this organization. Users in the Active Directory group {{defaultGroup}} will be part of the trial.",
+        "selectGroupError": "Directory Synchronization is enabled for this organization, but we can't find a group named {{defaultGroup}} in Active Directory. To start a trial, create this group in AD and perform a synchronization.",
+        "noGroupError": "To start an HDS trial, your organization needs a trial group to add users to. Something's gone wrong, and we can't find one. You can try rerunning the HDS Setup Tool (using your existing ISO configuration file) or contact Cisco Support for help.",
+        "groupSizeLimitExceeded" : "Your trial group {{defaultGroup}} has more than 250 users. To start a trial, remove some users from the group in AD and perform a synchronization.",
+        "groupSizeLimitExceededinTrail" : "Your trial group {{defaultGroup}} has more than 250 users. Your key encryption routing might not work correctly for some users. Please remove some users from the group in AD and perform a synchronization."
       },
       "addTrialUsers": {
         "modalTitle": "Add Users to Trial Mode",
@@ -2967,7 +2976,7 @@
     "browserTabHeaderTitle": "Cisco Spark Activity Reports",
     "heading": "Search Cisco Spark Space Activity",
     "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
-    "searchTip": "Search data by room ID",
+    "searchTip": "Search data by space ID",
     "unableToDownloadFile": "Unable to download file",
     "timeout": "Timeout",
     "dateError": {
@@ -3067,6 +3076,7 @@
       "expired": "Expired"
     },
     "originalConsole": {
+      "subheading": "Find all relevant data for a space.",
       "reportNameNotEmpty": "Report Name can not be empty",
       "reportNamePlaceholder": "Enter report name",
       "startDate": "Start Date",
@@ -4805,6 +4815,7 @@
     "manage": "Manage Device Settings",
     "title": "Device Settings",
     "description": "Updating settings will affect the entire analog telephone adapter. You may need to perform testing on the connected analog device after saving your settings.",
+    "rebootDescription": "Updating settings will affect the entire analog telephone adapter and cause the device to reboot after saving. You may need to perform testing on the connected analog device after saving your settings.",
     "input": "Input Audio Level",
     "output": "Output Audio Level",
     "saved": "The settings are saved. You will have to reboot the device for the changes to take effect",
@@ -4813,7 +4824,10 @@
     "savedT38": "T.38 settings updated",
     "cpcWarning": "Enable analog devices that support auto disconnect based on silence detection",
     "cpcLabel": "Silence Detection",
-    "savedCpc": "Silence Detection successfully updated"
+    "savedCpc": "Silence Detection successfully updated",
+    "confirmRebootHeader": "Change {{settingName}}",
+    "confirmRebootExplanation": "To change {{settingName}}, the device will need to perform a reboot.",
+    "confirmRebootConfirmation": "Are you sure you want to change {{settingName}}?"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -5227,7 +5241,8 @@
         "totalCallsDesc": "<b>Cloud Calls</b> : Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.<br> <b>Overflowed to Cloud</b> : Number of calls made within an enterprise but overflowed to a cloud cluster.<br> <b>On-Premises</b>: Number of calls hosted on any of the enterprise clusters.",
         "totalCallsClusterDesc": "<b>Redirected by this Cluster</b> : Number of calls that could not be hosted by this cluster and hence got redirected.<br><b>On-Premises</b> : Number of calls hosted on any of the enterprise clusters.",
         "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
-        "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected."
+        "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected.",
+        "clusterInServiceDesc": "Percentage of clusters that can host calls in the organisation."
       },
       "graphDescription": {
         "utilizationOrgDesc": "Average utilization trend for all clusters in an organization",
@@ -6394,9 +6409,10 @@
     "attributes": "Attributes",
     "windowTitleLabel": "Window Title",
     "promptTimeLabel": "Select time",
-    "promptTimeOption1": "1 minute",
-    "promptTimeOption2": "3 minutes",
-    "promptTimeOption3": "5 minutes",
+    "promptTimeOption1": "30 seconds",
+    "promptTimeOption2": "1 minute",
+    "promptTimeOption3": "3 minutes",
+    "promptTimeOption4": "5 minutes",
     "defaultPromptMessage": "Chat with our solution specialists to help serve you better.",
     "defaultOrgLabel": "Organization",
     "defaultWelcomeText": "Welcome to",
@@ -6628,7 +6644,18 @@
     "waitTimeSecondaryLabel": "Minutes",
     "waitTimeDesc": "Maximum amount of time caller will wait before being sent to fallback destination.",
     "fallbackLabel": "Fallback Destination",
+    "fallbackNumber": "Fallback Destination Number",
+    "fallbackNumberHint": "Calls are sent to this number if not answered by any of the members",
     "fallbackDesc": "This is where the call goes if it was not answered by this hunt group.",
+    "fallbackRule": "Fallback Destination Rule",
+    "fallbackRule1Hint": "Always use fallback destination number in all scenarios.",
+    "fallbackRule2Hint": "Always use alternative fallback destination number in all scenarios.",
+    "fallbackRule3Hint": "System automatically will switch between fallback destination during call-no-answer and alternative fallback destination during local network outage.",
+    "altFallbackLabel": "Alternate Fallback Destination",
+    "altFallbackNumber": "Alternate Fallback Destination Number",
+    "altFallbackHint": "Used during local network outages",
+    "altFalbackTimer": "Timer for checking if network is available again",
+    "automatic": "Automatic",
     "methodLabel": "Hunting Method",
     "methodDesc": "Define which member gets the call first.",
     "membersLabel": "Hunt Group Members",

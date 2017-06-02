@@ -1,4 +1,4 @@
-import { HuntGroup, HuntMethod, HuntGroupNumber, HuntGroupService } from 'modules/call/features/hunt-group';
+import { HuntGroup, HuntMethod, DestinationRule, HuntGroupNumber, HuntGroupService } from 'modules/call/features/hunt-group';
 import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { Notification } from 'modules/core/notifications';
@@ -89,20 +89,33 @@ class HuntGroupCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public setHuntGroupFallbackDestination(fbDestination: FallbackDestination) {
-    this.huntGroup.fallbackDestination = fbDestination;
-    this.form.$setDirty();
-    this.checkForChanges();
-  }
-
   public setHuntGroupMembers(members: Array<CallFeatureMember>): void {
     this.huntGroup.members = members;
     this.form.$setDirty();
     this.checkForChanges();
   }
 
-  public setHuntGroupCallsToSparkApp(): void {
+  public setHuntGroupSendToApp(): void {
     this.huntGroup.sendToApp = !this.huntGroup.sendToApp;
+    this.form.$setDirty();
+    this.checkForChanges();
+  }
+
+  public setHuntGroupDestinationRule(destinationRule: DestinationRule): void {
+    this.huntGroup.destinationRule = destinationRule;
+    this.form.$setDirty();
+    this.checkForChanges();
+
+  }
+
+  public setHuntGroupFallbackDestination(fbDestination: FallbackDestination) {
+    this.huntGroup.fallbackDestination = fbDestination;
+    this.form.$setDirty();
+    this.checkForChanges();
+  }
+
+  public setHuntGroupAlternateDestination(aDestination: FallbackDestination) {
+    this.huntGroup.alternateDestination = aDestination;
     this.form.$setDirty();
     this.checkForChanges();
   }
@@ -146,6 +159,11 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public save(): void {
     this.saveInProcess = true;
+
+    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION) {
+      this.huntGroup.alternateDestination = new FallbackDestination();
+    }
+
     this.HuntGroupService.updateHuntGroup(this.huntGroup.uuid || '', this.huntGroup)
     .then( () => {
       this.Notification.success('huronHuntGroup.successUpdate', { huntGroupName: this.huntGroup.name } );

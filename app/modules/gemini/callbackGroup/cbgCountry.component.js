@@ -12,7 +12,7 @@
     });
 
   /* @ngInject */
-  function cbgCountryCtrl($scope, $modal, $window, $timeout, $translate, Notification, cbgService) {
+  function cbgCountryCtrl($scope, $modal, $window, $timeout, $translate, Notification, cbgService, WindowLocation) {
     var vm = this;
     vm.model = {
       file: null,
@@ -64,7 +64,7 @@
         type: 'dialog',
         templateUrl: 'modules/gemini/telephonyDomain/details/downloadConfirm.html',
       }).result.then(function () {
-        $window.open(cbgService.getDownloadCountryUrl());
+        WindowLocation.set(cbgService.getDownloadCountryUrl());
       });
     }
 

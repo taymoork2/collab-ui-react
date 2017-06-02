@@ -156,20 +156,9 @@ label {
   float: left;
 }
 
-.entitle-btn-grp {
-  width: 300px;
-  display: inline-block;
-}
-
 .entitle-check-grp {
   margin-bottom: 0px;
   margin-top: 0px;
-}
-
-.entitle-btn {
-  padding: 5px 10px;
-  color: #ffffff;
-  background-color: #ffffff;
 }
 
 .dialog-subtitle {
@@ -183,19 +172,8 @@ label {
   position: absolute;
 }
 
-.setting-menu {
-  left: -98px;
-  top: 35px;
-}
-
 .btn-group {
   padding-right: 9px;
-}
-
-.profile-tools-panel {
-  position: relative;
-  float: right;
-  width: 280px;
 }
 
 .profile-logo {
@@ -239,10 +217,6 @@ td a {
   text-align: center;
 }
 
-#geb-wrapper {
-  display: inline-block;
-}
-
 #btncover {
   position: absolute;
   width: 164px;
@@ -260,20 +234,6 @@ td a {
   font-size: 8px;
   z-index: 1;
   text-align: center;
-}
-
-.org-panel {
-  width: 750px;
-}
-
-.tab-panel {
-  width: 160px;
-  float: left;
-  padding: 10px;
-
-  a {
-    cursor: pointer;
-  }
 }
 
 /* Twitter typeahead styling */

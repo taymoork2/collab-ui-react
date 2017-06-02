@@ -45,7 +45,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   private processCallFeatureFallbackDestChanges(fallbackDestinationChanges: ng.IChangesObject): void {
     if (_.isNull(fallbackDestinationChanges.currentValue.number) && _.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
       this.showMember = false;
-      this.showReversionLookup = false;
+      this.showReversionLookup = (this.fallbackDestination.number || this.fallbackDestination.numberUuid) ? false : true;
       this.selectedReversionNumber = '';
     } else {
       if (!_.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {

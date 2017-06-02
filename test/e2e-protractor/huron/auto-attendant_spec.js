@@ -505,7 +505,13 @@ describe('Huron Auto Attendant', function () {
         autoattendant.scrollIntoView(autoattendant.callerInputFirst);
         utils.click(autoattendant.callerInputAddAction);
         autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+        utils.sendKeys(autoattendant.callerInputTextFirst, "Cisco_");
+        utils.wait(autoattendant.saveButton, 120000);
+        utils.expectIsDisabled(autoattendant.saveButton);
+        utils.clear(autoattendant.callerInputTextFirst);
         utils.sendKeys(autoattendant.callerInputTextFirst, "Auto Attendant");
+        utils.wait(autoattendant.saveButton, 120000);
+        utils.expectIsEnabled(autoattendant.saveButton);
         utils.click(autoattendant.saveButton);
         autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
       });

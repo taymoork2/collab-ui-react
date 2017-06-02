@@ -17,6 +17,7 @@ describe('Component: cmcUserDetailsSettings ', () => {
       this.injectDependencies(
         'CmcService',
         '$scope',
+        '$q',
       );
 
       spyOn(this.CmcService, 'getUserData').and.returnValue(<CmcUserData>{
@@ -110,13 +111,35 @@ describe('Component: cmcUserDetailsSettings ', () => {
 
       this.injectDependencies(
         '$componentController',
-        'CmcService');
+        'CmcService',
+        '$q');
 
       this.controller = this.$componentController('cmcUserDetailsSettings', {
         CmcService: this.CmcService,
       }, {
         user: dummyUser(),
       });
+    });
+
+    it('handles error from user save', function(done) {
+      spyOn(this.CmcService, 'setUserData').and.returnValue(
+        this.$q.reject({
+          data: {
+            message: 'ERROR',
+          },
+        }),
+      );
+      spyOn(this.CmcService, 'getUserData').and.returnValue({
+        entitled: false,
+        mobileNumber: '111',
+      });
+      this.controller.$onInit();
+      this.controller.mobileNumber = '222';
+      this.controller.entitled = true;
+      this.controller.save();
+      expect(this.controller.oldCmcUserData.mobileNumber).toEqual('111');
+      expect(this.controller.oldCmcUserData.entitled).toBeFalsy();
+      done();
     });
 
     it('has entitlement and mobile number', function (done) {
@@ -157,7 +180,6 @@ describe('Component: cmcUserDetailsSettings ', () => {
         done();
       });
     });
-
 
   });
 

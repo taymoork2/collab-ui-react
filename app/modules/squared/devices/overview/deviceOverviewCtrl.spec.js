@@ -3,7 +3,7 @@
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, $state, controller, $httpBackend;
   var $q, UrlConfig, CsdmDeviceService, Authinfo, Notification, CsdmDataModelService;
-  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, TerminusUserDeviceE911Service;
+  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, TerminusService;
   var PstnSetupStatesService, CsdmHuronDeviceService, ServiceSetup, DeviceOverviewService;
 
   var location = {
@@ -23,7 +23,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
   function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _Authinfo_,
     _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _CsdmDataModelService_,
-    _PstnSetupStatesService_, _ServiceSetup_, _DeviceOverviewService_, _TerminusUserDeviceE911Service_) {
+    _PstnSetupStatesService_, _ServiceSetup_, _DeviceOverviewService_, _TerminusService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -42,7 +42,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     PstnSetupStatesService = _PstnSetupStatesService_;
     ServiceSetup = _ServiceSetup_;
     DeviceOverviewService = _DeviceOverviewService_;
-    TerminusUserDeviceE911Service = _TerminusUserDeviceE911Service_;
+    TerminusService = _TerminusService_;
   }
 
   function initSpies() {
@@ -59,8 +59,15 @@ describe('Controller: DeviceOverviewCtrl', function () {
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'getTranslatedTimeZones').and.returnValue($q.resolve());
     spyOn(DeviceOverviewService, 'getCountryOptions').and.returnValue($q.resolve());
-    spyOn(TerminusUserDeviceE911Service, 'get').and.returnValue({
-      $promise: $q.reject(),
+
+    spyOn(TerminusService, 'customerNumberE911V2').and.callFake(function () {
+      return {
+        get: function () {
+          return {
+            $promise: $q.reject(),
+          };
+        },
+      };
     });
   }
 

@@ -188,16 +188,26 @@ describe('Controller: AACallerInputCtrl', function () {
   });
 
   describe('keyInputChanged', function () {
-    it('should change the input value for an existing action', function () {
-      var whichKey = {};
-      whichKey.value = 'X';
 
+    var whichKey = {};
+
+    it('should change the input value for an existing action', function () {
+      whichKey.value = 'X';
       controller.inputActions = _.cloneDeep(inputActions);
       controller.keyInputChanged(0, whichKey);
       expect(controller.inputActions[0].value).toEqual('X');
       expect(aaCommonService.isFormDirty()).toEqual(true);
-
     });
+
+    it('should check the validity of input value', function () {
+      whichKey.value = undefined;
+      controller.inputActions = _.cloneDeep(inputActions);
+      controller.keyInputChanged(0, whichKey);
+      expect(controller.inputActions[0].value).toEqual(undefined);
+      expect(aaCommonService.isValid()).toEqual(false);
+      expect(controller.isWarn).toEqual(false);
+    });
+
   });
 
   describe('setType', function () {

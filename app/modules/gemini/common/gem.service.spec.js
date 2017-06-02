@@ -43,6 +43,10 @@ describe('Service: gemService', function () {
     });
 
     it('should return json data in getSpData', function () {
+      var countries = preData.getCountries;
+      var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
+      $httpBackend.expectGET(getCountriesUrl).respond(200, countries);
+
       var servicePartners = preData.common;
       servicePartners.content.data.body = preData.servicePartners;
       $httpBackend.expectGET(/.*\/servicepartner.*/g).respond(200, servicePartners);
@@ -54,6 +58,10 @@ describe('Service: gemService', function () {
     });
 
     it('should return RemedyTicket info in getRemedyTicket', function () {
+      var countries = preData.getCountries;
+      var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
+      $httpBackend.expectGET(getCountriesUrl).respond(200, countries);
+
       var type = 9;
       var remedyTicket = preData.common;
       remedyTicket.content.data = preData.getRemedyTicket;

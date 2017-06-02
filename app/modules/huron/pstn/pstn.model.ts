@@ -6,6 +6,7 @@ export interface IOrder {
   data: any;
 }
 
+
 export class PstnModel {
   private customerId: string;
   private customerName: string;

@@ -20,23 +20,15 @@ export class CmcService {
   ) {
   }
 
-  public setUserData(user: ICmcUser, data: CmcUserData) {
-
+  public setUserData(user: ICmcUser, data: CmcUserData): ng.IPromise<any> {
     let mobileNumberSet: ng.IPromise<any> = this.setMobileNumber(user, data.mobileNumber);
     let entitlementSet: ng.IPromise<any> = this.setEntitlement(user, data.entitled);
-    this.$q.all(
+    return this.$q.all(
       [
         mobileNumberSet,
         entitlementSet,
       ],
-    )
-      .then((res: any) => {
-        this.$log.info('user data set:', res);
-      })
-      .catch((error: any) => {
-        // TODO: Handler error properly
-        this.$log.warn('Error setting user data:', error);
-      });
+    );
   }
 
   public getUserData(user: ICmcUser): CmcUserData {
@@ -132,6 +124,35 @@ export class CmcService {
   }
 
   private setMobileNumber(user: ICmcUser, number: string): IPromise<any>  {
+    return this.checkUniqueMobileNumber(user, number).then((unique) => {
+      if (!unique) {
+        return this.$q.reject({
+          data: {
+            message: `${number} is not unique`,
+          },
+        });
+      } else {
+        let userMobileData = {
+          schemas: this.Config.scimSchemas,
+          phoneNumbers: [
+            {
+              type: 'mobile',
+              value: number,
+            },
+          ],
+        };
+
+        let scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
+        this.$log.info('Updating user', user);
+        this.$log.info('User data', userMobileData);
+        return this.$http({
+          method: 'PATCH',
+          url: scimUrl,
+          data: userMobileData,
+        });
+      }
+    });
+    /*
     let userMobileData = {
       schemas: this.Config.scimSchemas,
       phoneNumbers: [
@@ -150,7 +171,16 @@ export class CmcService {
       url: scimUrl,
       data: userMobileData,
     });
+    */
 
+  }
+
+  private checkUniqueMobileNumber(user: ICmcUser, mobileNbr: string): IPromise<any> {
+    let filter: string = `phoneNumbers[type eq \"mobile\" and value eq \"${mobileNbr}\"]`;
+    let scimUrl: string = this.UrlConfig.getScimUrl(user.meta.organizationID) + '?filter=' + filter;
+    return this.$http.get(scimUrl).then((response: any) => {
+      return response.data.Resources.length === 0;
+    });
   }
 
 }
