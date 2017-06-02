@@ -315,7 +315,7 @@
               $previousState.memo(sidepanelMemo);
             }
 
-            var template = '<cs-sidepanel';
+            var template = '<cs-sidepanel role="complementary"';
             template += options.type ? ' size="' + options.type + '"' : '';
             template += '></cs-sidepanel>';
             $state.sidepanel = $modal.open({
@@ -894,6 +894,9 @@
                 },
               },
             },
+            data: {
+              showMessengerInteropToggle: true,
+            },
           })
           .state('users.add.services.dn', {
             views: {
@@ -1398,29 +1401,79 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
-            controller: 'CallServicePreviewCtrl',
+            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-call-service-aggregated-section>',
             data: {
               displayName: 'Call Service',
             },
-            params: {
-              extensionId: {},
-              extensions: {},
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              userName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.userName;
+              },
             },
           })
-          .state('user-overview.hybrid-services-squared-fusion-uc.uc-history', {
+          .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings', {
+            template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"></hybrid-call-service-aware-user-settings>',
+            data: {
+              displayName: 'Aware',
+            },
+            params: {
+              userId: '',
+              userEmailAddress: '',
+              onEntitlementChange: Function,
+            },
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userId;
+              },
+              userEmailAddress: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userEmailAddress;
+              },
+              onEntitlementChange: /* @ngInject */ function ($stateParams) {
+                return $stateParams.onEntitlementChange;
+              },
+            },
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings.uc-history', {
             template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
             data: {
-              displayName: 'Aware Status History',
+              displayName: 'Status History',
             },
             params: {
               serviceId: {},
             },
           })
-          .state('user-overview.hybrid-services-squared-fusion-uc.ec-history', {
+          .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
+            template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"  voicemail-feature-toggled="$resolve.voicemailFeatureToggled"></hybrid-call-service-connect-user-settings>',
+            data: {
+              displayName: 'Connect',
+            },
+            params: {
+              userId: '',
+              userEmailAddress: '',
+              onEntitlementChange: Function,
+            },
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userId;
+              },
+              userEmailAddress: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userEmailAddress;
+              },
+              onEntitlementChange: /* @ngInject */ function ($stateParams) {
+                return $stateParams.onEntitlementChange;
+              },
+              voicemailFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
+              },
+            },
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings.ec-history', {
             template: '<user-status-history service-id="\'squared-fusion-ec\'"></user-status-history>',
             data: {
-              displayName: 'Connect Status History',
+              displayName: 'Status History',
             },
             params: {
               serviceId: {},
@@ -2025,8 +2078,8 @@
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc', {
-            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
-            controller: 'CallServicePreviewCtrl',
+            templateUrl: 'modules/hercules/user-sidepanel/hybrid-call-service-place-settings/callServicePlaceSettings.template.html',
+            controller: 'CallServicePlaceSettingsCtrl',
             data: {
               displayName: 'Call Service',
             },
@@ -2771,11 +2824,11 @@
           .state('pstnWizard', {
             parent: 'modal',
             params: {
-              customerId: {},
-              customerName: {},
-              customerEmail: {},
-              customerCommunicationLicenseIsTrial: {},
-              customerRoomSystemsLicenseIsTrial: {},
+              customerId: '',
+              customerName: '',
+              customerEmail: '',
+              customerCommunicationLicenseIsTrial: '',
+              customerRoomSystemsLicenseIsTrial: '',
             },
             views: {
               'modal@': {
@@ -3167,7 +3220,7 @@
                 template: '<context-resources-sub-header></context-resources-sub-header>',
               },
               'contextServiceView': {
-                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
                 },
@@ -3177,11 +3230,11 @@
               clusterId: null,
             },
             resolve: {
-              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -3193,11 +3246,6 @@
                 templateUrl: 'modules/context/fields/hybrid-context-fields.html',
                 controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
-              },
-            },
-            resolve: {
-              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
               },
             },
           })
@@ -3263,11 +3311,6 @@
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
-              },
-            },
-            resolve: {
-              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
               },
             },
           })
@@ -3403,7 +3446,7 @@
             url: '/list',
             views: {
               sipDestinationList: {
-                template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
               },
             },
             params: {
@@ -3412,6 +3455,9 @@
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -3499,7 +3545,7 @@
             url: '/hds/resources',
             views: {
               'fullPane': {
-                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
                 },
@@ -3511,6 +3557,9 @@
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -3861,6 +3910,9 @@
               hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
               },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           .state('calendar-service.list', {
@@ -3916,6 +3968,9 @@
               hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
               },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           .state('call-service.list', {
@@ -3948,6 +4003,41 @@
               hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
               },
+            },
+          })
+          .state('imp-service', {
+            templateUrl: 'modules/hercules/service-specific-pages/imp-service-pages/imp-service-container.html',
+            controller: 'ImpServiceContainerController',
+            controllerAs: 'vm',
+            params: {
+              clusterId: null,
+            },
+            parent: 'main',
+          })
+          .state('imp-service.settings', {
+            url: '/services/imp/settings',
+            views: {
+              impServiceView: {
+                controllerAs: 'impServiceSettings',
+                controller: 'ImpServiceSettingsController',
+                templateUrl: 'modules/hercules/service-settings/imp-service-settings.html',
+              },
+            },
+            resolve: {
+              hasHybridImpFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp);
+              },
+            },
+          })
+          .state('imp-service.list', {
+            url: '/services/imp',
+            views: {
+              impServiceView: {
+                templateUrl: 'modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html',
+              },
+            },
+            params: {
+              clusterId: null,
             },
           })
           .state('private-trunk-settings', {
@@ -4131,7 +4221,7 @@
             url: '/mediaserviceV2',
             views: {
               'fullPane': {
-                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
                 },
@@ -4143,6 +4233,9 @@
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })

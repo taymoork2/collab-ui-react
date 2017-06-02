@@ -272,7 +272,7 @@ export class MySubscriptionCtrl {
                   type: this.CARE,
                 });
               }
-            } else {
+            } else if (license.offerName !== this.Config.offerCodes.MGMTPRO) {
               if (license.offerName === this.Config.offerCodes.CF) {
                 offer.class = this.MEETING_CLASS;
               } else {
@@ -319,6 +319,11 @@ export class MySubscriptionCtrl {
         }
       });
 
+      if (_.find(this.subscriptionDetails, 'isOnline')) {
+        // create cookie for Digital River
+        this.DigitalRiverService.getDigitalRiverToken();
+      }
+
       let enterpriseSubs = 1;
       let enterpriseTrials = 1;
       this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((instances) => {
@@ -347,19 +352,22 @@ export class MySubscriptionCtrl {
     subscription.productInstanceId = prodResponse.productInstanceId;
     subscription.name = prodResponse.name;
     const env: string = _.includes(prodResponse.name, 'Spark') ? 'spark' : 'webex';
+    // TODO Remove the changeplanOverride attribute in production once the
+    // e-commerce team is ready.
     this.getChangeSubURL(env).then((urlResponse) => {
-      if (urlResponse) {
+      subscription.changeplanOverride = '';
+      if (this.Config.isProd() && urlResponse) {
         subscription.changeplanOverride = urlResponse;
-
-        if (subscription.internalSubscriptionId && subscription.productInstanceId) {
-          this.bmmpAttr = {
-            subscriptionId: subscription.internalSubscriptionId,
-            productInstanceId: subscription.productInstanceId,
-            changeplanOverride: urlResponse,
-          };
-        }
-        this.broadcastSingleSubscription(subscription, undefined);
       }
+
+      if (subscription.internalSubscriptionId && subscription.productInstanceId) {
+        this.bmmpAttr = {
+          subscriptionId: subscription.internalSubscriptionId,
+          productInstanceId: subscription.productInstanceId,
+          changeplanOverride: subscription.changeplanOverride,
+        };
+      }
+      this.broadcastSingleSubscription(subscription, undefined);
     });
   }
 

@@ -2,14 +2,14 @@
   'use strict';
 
   /* @ngInject */
-  function HostDeregisterControllerV2($translate, $modalInstance, FusionClusterService, Notification, connectorId) {
+  function HostDeregisterControllerV2($translate, $modalInstance, HybridServicesClusterService, Notification, connectorId) {
     var vm = this;
 
     vm.saving = false;
 
     vm.deregister = function () {
       vm.saving = true;
-      FusionClusterService
+      HybridServicesClusterService
         .deregisterEcpNode(connectorId)
         .then(function () {
           $modalInstance.close();

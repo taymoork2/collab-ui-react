@@ -18,6 +18,7 @@ describe('Component: callForward', () => {
       '$scope', '$q',
     );
     this.$scope.userVoicemailEnabled = true;
+    this.$scope.isPrimary = true;
     this.$scope.callForward = new CallForward();
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.$scope.ownerType = 'users';
@@ -29,6 +30,7 @@ describe('Component: callForward', () => {
       userVoicemailEnabled: 'userVoicemailEnabled',
       ownerType: 'ownerType',
       onChangeFn: 'onChangeFn(callForward)',
+      isPrimary: 'isPrimary',
     });
   }
 
@@ -143,6 +145,7 @@ describe('Component: callForward', () => {
     beforeEach(function () {
       //This is User Voicemail or system voicemail setting
       this.$scope.userVoicemailEnabled = true;
+      this.$scope.isPrimary = true;
     });
     beforeEach(initComponent);
     beforeEach(function () {
@@ -166,6 +169,7 @@ describe('Component: callForward', () => {
     beforeEach(function () {
       //This is User Voicemail or system voicemail setting
       this.$scope.userVoicemailEnabled = false;
+      this.$scope.isPrimary = false;
     });
     beforeEach(initComponent);
     beforeEach(function () {

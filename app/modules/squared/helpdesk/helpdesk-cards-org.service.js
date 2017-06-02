@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCardsOrgService($translate, CloudConnectorService, Config, FusionClusterService, HelpdeskHuronService, LicenseService, Notification, UCCService) {
+  function HelpdeskCardsOrgService($translate, CloudConnectorService, Config, HybridServicesClusterService, HelpdeskHuronService, LicenseService, Notification, UCCService) {
 
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
@@ -61,20 +61,20 @@
       if (!hybridServicesCard.entitled) {
         return;
       }
-      FusionClusterService.getAll(org.id).then(function (clusterList) {
+      HybridServicesClusterService.getAll(org.id).then(function (clusterList) {
         _.forEach(hybridServiceIds, function (serviceId) {
           if (LicenseService.orgIsEntitledTo(org, serviceId)) {
-            hybridServicesCard.services.push(FusionClusterService.getStatusForService(serviceId, clusterList));
+            hybridServicesCard.services.push(HybridServicesClusterService.getStatusForService(serviceId, clusterList));
           }
         });
       }).catch(function (response) {
-        Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+        Notification.errorResponse(response, 'helpdesk.unexpectedError');
       });
       if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal')) {
         CloudConnectorService.getService(org.id).then(function (service) {
           hybridServicesCard.services.push(service);
         }).catch(function (response) {
-          Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+          Notification.errorResponse(response, 'helpdesk.unexpectedError');
         });
       }
       if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-ec')) {
@@ -86,7 +86,7 @@
             });
           })
           .catch(function (error) {
-            Notification.errorWithTrackingId(error, 'helpdesk.hybridVoicemail.cannotReadStatus');
+            Notification.errorResponse(error, 'helpdesk.hybridVoicemail.cannotReadStatus');
           });
       }
       return hybridServicesCard;

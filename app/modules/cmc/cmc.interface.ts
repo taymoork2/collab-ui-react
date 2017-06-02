@@ -16,10 +16,23 @@ export interface ICmcIssue {
   message: string;
 }
 
-export interface ICmcOrgStatusResponse {
+export interface ICmcStatusResponse {
   status: string;
+  issues?: ICmcIssue[];
+}
+
+export interface ICmcOrgStatusResponse extends ICmcStatusResponse {
   details?: {
     providers: {mobileProvider: ICmcMobileProvider, ucProvider: ICmcProvider},
   };
-  issues?: ICmcIssue[];
+}
+
+export interface ICmcUserStatusResponse extends ICmcStatusResponse {
+}
+
+export interface ICmcError {
+  message: string;
+  errors?: {
+    description: string;
+  }[];
 }

@@ -3,6 +3,15 @@ import { HybridServicesNodesPageComponent } from './hybrid-services-nodes-page.c
 require('./_hybrid-services-nodes-page.scss');
 
 export default angular
-  .module('Hercules')
+  .module('hercules.nodes-page', [
+    require('collab-ui-ng').default,
+    require('angular-translate'),
+    require('angular-ui-router'),
+    require('modules/hercules/services/hybrid-services-cluster.service').default,
+    require('modules/hercules/services/hybrid-services-cluster-states.service').default,
+    require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/core/modal').default,
+    require('modules/core/notifications').default,
+  ])
   .component('hybridServicesNodesPage', new HybridServicesNodesPageComponent())
   .name;

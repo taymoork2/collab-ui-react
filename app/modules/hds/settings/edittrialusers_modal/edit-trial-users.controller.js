@@ -6,8 +6,9 @@
     .controller('EditTrialUsersController', EditTrialUsersController);
 
   /* @ngInject */
-  function EditTrialUsersController($translate, Authinfo, Userservice, HDSService, MailValidatorService, Notification) {
+  function EditTrialUsersController($translate, Authinfo, Userservice, HDSService, MailValidatorService, Notification, dirsyncEnabled) {
     var vm = this;
+    vm.dirsyncEnabled = dirsyncEnabled;
     vm.emailTrialUsers = [];
     vm.trialUserGroupId = null;
     vm.localizedAddEmailWatermark = $translate.instant('hds.resources.editTrialUsers.emailNotificationsWatermark');

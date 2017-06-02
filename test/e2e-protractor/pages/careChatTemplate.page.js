@@ -24,9 +24,9 @@ var ChatTemplateCreation = function () {
   this.previewMinimizeIcon = element(by.css('.actions .icon-minus'));
   this.previewCloseIcon = element(by.css('.actions .icon-close'));
   this.agentDisplayImage = element(by.css('.profile-image .icon-user-chat'));
-  this.customerInfoToggle = element.all(by.css('.toggle-switch')).first();
+  this.customerInfoToggle = element.all(by.css('.toggle-switch')).get(1);
   this.overviewCard = element.all(by.css('.ct-card-overview'));
-  this.customerInfoEnabledCard = element.all(by.css('.ct-card-border-enabled')).first();
+  this.customerInfoEnabledCard = element.all(by.css('.ct-card-border-enabled')).get(1);
   this.customerInfoDisabledCard = element.all(by.css('.ct-card-border-disabled')).first();
   this.customerInfo_Header_Welcome = element(by.css('.welcomeText'));
   this.customerInfo_Header_Org = element(by.css('.orgText'));
@@ -69,6 +69,10 @@ var ChatTemplateCreation = function () {
   this.templatePreviewTextField = element(by.css('.ct-left-cs-input'));
   this.careNewFeatureModal = element(by.css('.care-new-feature-modal'));
   this.createChatTemplateButton = element.all(by.css('.care-new-feature-modal .feature-icon-container')).first();
+  this.promptTimeDropDown = element(by.css('.proactive-prompt-attributes .prompt-time'));
+  this.selectedPromptTime = element.all(by.css('.proactive-prompt-attributes .prompt-time .dropdown-menu li')).get(1);
+  this.promptTitle = element(by.css('.proactive-prompt-attributes .prompt-title'));
+  this.promptMessage = element(by.css('.proactive-prompt-attributes .prompt-message'));
 };
 
 module.exports = ChatTemplateCreation;

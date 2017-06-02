@@ -98,18 +98,8 @@ class PartnerReportCtrl {
   }
 
   // charts and export tracking
-  private charts: IPartnerCharts = {
-    active: undefined,
-    metrics: undefined,
-    media: undefined,
-    population: undefined,
-  };
-  public exportArrays: IPartnerCharts = {
-    active: undefined,
-    metrics: undefined,
-    media: undefined,
-    population: undefined,
-  };
+  private charts: IPartnerCharts = {};
+  public exportArrays: IPartnerCharts = {};
 
   // Active User Options
   public activeUserReportOptions: IReportCard = {

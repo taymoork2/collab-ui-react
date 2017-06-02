@@ -128,15 +128,12 @@ describe('Service: Report Print Service', () => {
 
   it('should return the export menu', function () {
     this.exportMenu = this.ReportPrintService.createExportMenu({});
-    expect(this.exportMenu.length).toBe(4);
-    _.forEach(this.exportMenu, (exportItem: IExportMenu, index: number): void => {
-      expect(exportItem.id).toEqual(this.ctrlData.exportMenu[index].id);
-      expect(exportItem.label).toEqual(this.ctrlData.exportMenu[index].label);
-      if (index > 0) {
-        expect(exportItem.click).toEqual(jasmine.any(Function));
-      } else {
-        expect(exportItem.click).toBeUndefined();
-      }
+    expect(this.exportMenu.header).toEqual(this.ctrlData.exportMenu.header);
+    expect(this.exportMenu.menu.length).toBe(3);
+    _.forEach(this.exportMenu.menu, (exportItem: IExportMenu, index: number): void => {
+      expect(exportItem.id).toEqual(this.ctrlData.exportMenu.menu[index].id);
+      expect(exportItem.label).toEqual(this.ctrlData.exportMenu.menu[index].label);
+      expect(exportItem.click).toEqual(jasmine.any(Function));
     });
   });
 });

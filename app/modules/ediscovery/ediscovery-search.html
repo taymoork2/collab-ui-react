@@ -1,9 +1,9 @@
 <div class="ediscovery-search">
-  <div ng-class="ediscoverySearchCtrl.roomInfo ? 'advanced-search' : 'basic-search'">
+  <div ng-class="(ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle) ? 'advanced-search' : 'basic-search'">
     <div class="ediscovery-search-bar">
 
       <!-- Updated Search -->
-      <div ng-if="!ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.searchingForRoom">
+      <div ng-if="!ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.searchingForRoom && ediscoverySearchCtrl.ediscoveryToggle">
         <div class="main-heading">
           <h1 translate="ediscovery.heading"></h1>
         </div>
@@ -76,6 +76,7 @@
                 <input class="cs-input" type="text" name="qInput" ng-model="ediscoverySearchCtrl.queryModel" 
                 placeholder="{{'ediscovery.searchParameters.messagesPlaceholder' | translate}}"
                 ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" ng-maxlength="200">
+                <p class="cs-input__help-text search-spacing" translate="{{ediscoverySearchCtrl.messagesHelpText}}"></p>
                 <div class="cs-input__messages" ng-messages="qForm.qInput.$error" role="alert">
                   <div ng-message="maxlength" class="query-error-msg" translate="ediscovery.searchErrors.queryLimit"></div>
                 </div>
@@ -98,6 +99,24 @@
         </div>
       </div>
 
+      <!-- Original Search -->
+      <div ng-if="!ediscoverySearchCtrl.ediscoveryToggle">
+        <div class="main-heading">
+          <h1 translate="ediscovery.heading"></h1>
+          <span translate="ediscovery.originalConsole.subheading"></span>
+        </div>
+        <div class="typeahead-large">
+          <input maxlength="50" spellcheck="false" class="fit" type="search" tabindex="1" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
+          <button type="submit" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
+          <div class="input-description"></div>
+        </div>
+
+        <p class="search-tip" translate="ediscovery.searchTip"></p>
+        <div class="search-error" ng-if="ediscoverySearchCtrl.warning">
+          <span>{{ediscoverySearchCtrl.error}}</span>
+        </div>
+      </div>
+
       <div ng-show="ediscoverySearchCtrl.searchingForRoom">
         <span class="search-spinner">
           <i class="icon icon-spinner"></i>
@@ -106,6 +125,7 @@
     </div>
   </div>
 
-  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo" ng-include="'modules/ediscovery/ediscovery-search-result-adv.html'"></div>
+  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.ediscoveryToggle" ng-include="'modules/ediscovery/ediscovery-search-result.html'"></div>
+  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle" ng-include="'modules/ediscovery/ediscovery-search-result-adv.html'"></div>
 
 </div>

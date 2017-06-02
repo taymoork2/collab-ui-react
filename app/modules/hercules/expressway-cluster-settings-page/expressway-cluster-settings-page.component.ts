@@ -1,4 +1,5 @@
 import { Notification } from 'modules/core/notifications';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface IResourceGroupOptions {
   label: string;
@@ -30,7 +31,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     private $modal,
     private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
     private ResourceGroupService,
   ) {
@@ -68,7 +69,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   }
 
   private refreshClusterData(id) {
-    return this.FusionClusterService.get(id)
+    return this.HybridServicesClusterService.get(id)
       .then((cluster) => {
         this.cluster = cluster;
         return cluster;

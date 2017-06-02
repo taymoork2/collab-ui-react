@@ -48,10 +48,10 @@
       spyOn(Authinfo, 'isCare').and.returnValue(true);
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
+      spyOn(FeatureToggleService, 'atlasITProPackGetStatus').and.returnValue($q.resolve(true));
     }));
 
     describe('Add trial button', function () {
-
       beforeEach(function () {
         spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
       });
@@ -69,7 +69,6 @@
     });
 
     describe('Customer name Search filter', function () {
-
       beforeEach(function () {
         spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
       });

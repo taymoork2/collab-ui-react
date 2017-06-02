@@ -2,6 +2,16 @@
 
 /*eslint-disable */
 
+/* sauce labs notes:
+ * export these envs:
+ * # env vars for use with 'e2e.sh'
+ * SAUCE__MAX_INSTANCES=2
+ * SAUCE__USERNAME=atlas-web-limited
+ * SAUCE__ACCESS_KEY=b99c8bc7-4a28-4d87-8cd8-eba7c688d48c
+ * 
+ * as found in config/env.vars/dev file
+ */
+
 describe('Huron Auto Attendant', function () {
   var remote = require('selenium-webdriver/remote');
 
@@ -36,13 +46,13 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.featureTypeAA);
 
-      utils.wait(autoattendant.basicAA, 12000);
+      utils.wait(autoattendant.basicAA, 120000);
       utils.click(autoattendant.basicAA);
 
-      utils.wait(autoattendant.newAAname, 5000);
+      utils.wait(autoattendant.newAAname, 120000);
       // enter AA name
       utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
-      utils.wait(autoattendant.newAAname, 5000);
+      utils.wait(autoattendant.newAAname, 120000);
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
 
       // assert we see the create successful message
@@ -54,61 +64,13 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
     }, 120000);
-/*
-    it('should add REST API via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
-      // REST API
-      autoattendant.scrollIntoView(autoattendant.addStepLast);
-      utils.click(autoattendant.addStepLast);
-      utils.expectIsDisplayed(autoattendant.newStep);
-      utils.click(autoattendant.newStepMenu);
-
-      // 5th menu option is REST API
-      utils.click(autoattendant.newStepSelectRestApi);
-
-      // stop here as the complete menu has been tested elsewhere
-      utils.expectIsDisplayed(autoattendant.restApi);
-
-    });
-
-    it('should click configureApi hyperlink and a modal is opened with components for rest api url and dynamic feature"' + deleteUtils.testAAName + '"', function () {
-
-      // REST API
-      autoattendant.scrollIntoView(autoattendant.restApi);
-
-      utils.click(autoattendant.configureApi);
-      utils.expectIsDisplayed(autoattendant.configureApiURL);
-      utils.expectIsDisplayed(autoattendant.addDynamicFeature);
-      utils.expectIsDisplayed(autoattendant.sessionVar);
-      utils.expectIsDisplayed(autoattendant.addVariableToSet);
-      utils.expectIsDisplayed(autoattendant.saveBtn);
-      utils.click(autoattendant.saveBtn);
-
-    });
-    it('should add url and it should be visible in REST API new step upon save "' + deleteUtils.testAAName + '"', function () {
-
-      // REST API
-      autoattendant.scrollIntoView(autoattendant.restApi);
-
-      utils.click(autoattendant.configureApi);
-      utils.click(autoattendant.configureApiURL);
-      utils.wait(autoattendant.configureApiURL, 12000);
-      utils.sendKeys(autoattendant.configureApiURL, "This is test URL");
-      utils.click(autoattendant.saveBtn);
-      utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
-    });
-*/
 
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.lanesWrapper);
-      utils.click(autoattendant.addAANumbers, 12000);
+      utils.click(autoattendant.addAANumbers);
 
       // we are going to arbitrarily select the last one
-      utils.click(autoattendant.numberDropDownOptions.last());
-
-      utils.click(autoattendant.addAANumbers, 12000);
-
       utils.click(autoattendant.numberDropDownOptions.last());
 
       // No save and until valid Phone Menu - see AutoAttn 922
@@ -117,10 +79,9 @@ describe('Huron Auto Attendant', function () {
 
     it('should delete a phone number from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
-      utils.wait(autoattendant.numberByNameCloseAll, 12000);
+      utils.wait(autoattendant.numberByNameCloseAll, 120000);
 
       utils.click(autoattendant.numberByNameClose);
-      // utils.click(autoattendant.numberByNameClose);
 
       expect(autoattendant.numberByNameCloseAll.count()).toEqual(0);
 
@@ -128,9 +89,10 @@ describe('Huron Auto Attendant', function () {
 
     }, 120000);
 
+
     it('should add a second phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
-      utils.click(autoattendant.addAANumbers, 12000);
+      utils.click(autoattendant.addAANumbers);
 
       // we are going to arbitrarily select the last one
       utils.click(autoattendant.numberDropDownOptions.last());
@@ -150,7 +112,7 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.playMessageOption);
 
-      utils.wait(autoattendant.sayMediaUploadInput, 12000);
+      utils.wait(autoattendant.sayMediaUploadInput, 120000);
 
       $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
 
@@ -194,10 +156,10 @@ describe('Huron Auto Attendant', function () {
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuSay);
 
-      utils.wait(autoattendant.phoneMenuSay, 12000);
+      utils.wait(autoattendant.phoneMenuSay, 120000);
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuMessageOptions);
-      utils.wait(autoattendant.phoneMenuMessageOptions, 12000);
+      utils.wait(autoattendant.phoneMenuMessageOptions, 120000);
 
       utils.click(autoattendant.phoneMenuMessageOptions);
       utils.click(autoattendant.phoneMenuSayMessageOption);
@@ -227,10 +189,10 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuAction.first());
-      utils.wait(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first(), 5000);
+      utils.wait(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first(), 120000);
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
-      utils.wait(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first(), 5000);
+      utils.wait(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first(), 1200000);
 
       utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
 
@@ -247,31 +209,32 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuAction.last());
 
       utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Say Message')));
-      utils.wait(autoattendant.phoneMenuActionTargetsMessageOption, 12000);
+      utils.wait(autoattendant.phoneMenuActionTargetsMessageOption, 120000);
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuActionTargetsMessageOption);
 
-      utils.click(autoattendant.phoneMenuActionTargetsMessageOption, 12000);
+      utils.click(autoattendant.phoneMenuActionTargetsMessageOption);
 
-      utils.click(autoattendant.phoneMenuActionTargetMessageOptions, 12000);
+      utils.click(autoattendant.phoneMenuActionTargetMessageOptions);
 
-      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), "This is a phone menu say");
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.name('messageInput')), "This is a phone menu say");
 
     }, 120000);
 
     it('should delete one Phone Menu Repeat from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      autoattendant.clearNotifications().then(function () {
+        //Delete one repeatMenu
+        utils.click(autoattendant.trash);
 
-      //Delete one repeatMenu
-      utils.click(autoattendant.trash);
+        // save and assert successful update message
+        utils.expectIsEnabled(autoattendant.saveButton);
 
-      // save and assert successful update message
-      utils.expectIsEnabled(autoattendant.saveButton);
+        utils.click(autoattendant.saveButton);
 
-      utils.click(autoattendant.saveButton);
+        autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
-      utils.expectIsDisabled(autoattendant.saveButton);
+        utils.expectIsDisabled(autoattendant.saveButton);
+      });
 
     }, 120000);
 
@@ -291,16 +254,16 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
       utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Route to Phone Number')));
-      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')));
+      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')));
 
       // a bad external number should not allow save
-      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')), "1111111111");
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')), "1111111111");
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
       // but a good phone number should be able to be saved
-      utils.clear(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')));
-      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')), "4084741234");
+      utils.clear(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')));
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')), "4084741234");
 
       // save and assert successful update message
 
@@ -420,15 +383,15 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuAction.first());
 
       utils.click(autoattendant.phoneMenuActionOptions.first().element(by.linkText('Say Message')));
-      utils.wait(autoattendant.phoneMenuActionTargetsFirstMessageOption, 12000);
+      utils.wait(autoattendant.phoneMenuActionTargetsFirstMessageOption, 120000);
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuActionTargetsFirstMessageOption);
 
-      utils.click(autoattendant.phoneMenuActionTargetsFirstMessageOption, 12000);
+      utils.click(autoattendant.phoneMenuActionTargetsFirstMessageOption);
 
-      utils.click(autoattendant.phoneMenuActionTargetFirstMessageOptions, 12000);
+      utils.click(autoattendant.phoneMenuActionTargetFirstMessageOptions);
 
-      utils.sendKeys(autoattendant.phoneMenuActionTargets.first().element(by.tagName('textarea')), "Updated the second phone menu??");
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.first().element(by.name('messageInput')), "Updated the second phone menu??");
 
     }, 120000);
 
@@ -464,7 +427,7 @@ describe('Huron Auto Attendant', function () {
       // 3rd menu option is Dial By Extension
       utils.click(autoattendant.newStepSelectDialByExt);
 
-      utils.wait(autoattendant.dialByExtension, 12000);
+      utils.wait(autoattendant.dialByExtension, 120000);
 
       autoattendant.scrollIntoView(autoattendant.dialByExtension);
 
@@ -488,36 +451,41 @@ describe('Huron Auto Attendant', function () {
       // and save
       // utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
-      //autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
-      //utils.expectIsDisabled(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
     }, 120000);
 
     it('should add a Dial By Extension Play Message to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
-      autoattendant.scrollIntoView(autoattendant.dialByExtension);
+      autoattendant.clearNotifications().then(function () {
 
-      // media upload
+        var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+        autoattendant.scrollIntoView(autoattendant.dialByExtension);
 
-      utils.click(autoattendant.dialByMessageOptions);
+        // media upload
 
-      utils.click(autoattendant.dialByPlayMessageOption);
+        utils.click(autoattendant.dialByMessageOptions);
 
-      utils.wait(autoattendant.dialByMediaUploadInput, 12000);
+        utils.click(autoattendant.dialByPlayMessageOption);
 
-      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+        utils.wait(autoattendant.dialByMediaUploadInput, 120000);
 
-      // and save
-      utils.wait(autoattendant.saveButton, 12000);
+        $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
 
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+        // and save
+        utils.wait(autoattendant.saveButton, 120000);
 
-      //utils.expectIsDisabled(autoattendant.saveButton);
+        utils.click(autoattendant.saveButton);
 
-      utils.click(autoattendant.dialByMessageOptions);
-      utils.click(autoattendant.dialBySayMessageOption);
+        autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+        // use if you are running sauce labs. does not work running locally
+        // utils.expectIsDisabled(autoattendant.saveButton);
+
+        utils.click(autoattendant.dialByMessageOptions);
+        utils.click(autoattendant.dialBySayMessageOption);
+
+      });
 
     }, 120000);
 
@@ -558,18 +526,18 @@ describe('Huron Auto Attendant', function () {
 
       // 2nd menu option is Decision
       utils.click(autoattendant.newStepDecision);
-      utils.wait(autoattendant.decisionFirst, 12000);
+      utils.wait(autoattendant.decisionFirst, 120000);
       autoattendant.scrollIntoView(autoattendant.decisionFirst);
 
       utils.click(autoattendant.decisionIf);
 
-      utils.wait(autoattendant.decisionIf, 12000);
+      utils.wait(autoattendant.decisionIf, 120000);
 
       utils.click(autoattendant.decisionIfDropDownOptions);
 
       utils.click(autoattendant.decisionIfSession);
 
-      utils.wait(autoattendant.decisionIfSessionVarDropDownOptions, 12000);
+      utils.wait(autoattendant.decisionIfSessionVarDropDownOptions, 120000);
 
       utils.click(autoattendant.decisionIfSessionVarDropDownOptions);
 
@@ -577,11 +545,11 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.decisionThen);
 
-      utils.wait(autoattendant.decisionThen, 12000);
+      utils.wait(autoattendant.decisionThen, 120000);
 
       utils.click(autoattendant.decisionThenDropDownOptions);
 
-      utils.wait(autoattendant.decisionPhoneNumber, 12000);
+      utils.wait(autoattendant.decisionPhoneNumber, 120000);
       utils.sendKeys(autoattendant.decisionPhoneNumber, "2065551234");
 
     }, 120000);
@@ -601,7 +569,7 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.schedule);
 
-      utils.wait(autoattendant.addschedule, 12000);
+      utils.wait(autoattendant.addschedule, 120000);
       utils.click(autoattendant.addschedule);
 
       utils.click(autoattendant.starttime);
@@ -612,15 +580,15 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.day1);
-      utils.wait(autoattendant.toggleHolidays, 12000);
+      utils.wait(autoattendant.toggleHolidays, 120000);
       utils.click(autoattendant.toggleHolidays);
-      utils.wait(autoattendant.addholiday, 12000);
+      utils.wait(autoattendant.addholiday, 120000);
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.date);
       utils.click(autoattendant.selectdate);
-      utils.wait(autoattendant.addholiday, 12000);
+      utils.wait(autoattendant.addholiday, 120000);
       utils.click(autoattendant.addholiday);
       utils.click(autoattendant.recurAnnually);
       utils.click(autoattendant.exactDate);
@@ -653,7 +621,7 @@ describe('Huron Auto Attendant', function () {
     }, 120000);
 
     it('should dismiss schedule modal on browser back button', function () {
-      utils.wait(autoattendant.schedule, 12000);
+      utils.wait(autoattendant.schedule, 120000);
       utils.click(autoattendant.schedule);
       utils.expectIsDisplayed(autoattendant.modalsave);
       browser.driver.navigate().back();
@@ -665,7 +633,7 @@ describe('Huron Auto Attendant', function () {
       
       utils.click(autoattendant.scheduletrash);
 
-      utils.wait(autoattendant.toggleHolidays, 12000);
+      utils.wait(autoattendant.toggleHolidays, 120000);
       utils.click(autoattendant.toggleHolidays);
       utils.click(autoattendant.deleteHoliday.first()); // Thanksgiving created above
       utils.click(autoattendant.deleteHoliday.first()); // Some Holiday created above
@@ -681,6 +649,64 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsNotDisplayed(autoattendant.scheduleInfoOpenHours);
       utils.expectIsNotDisplayed(autoattendant.scheduleInfoClosedHours);
     }, 120000);
+
+    it('should add REST API via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      // REST API
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // 5th menu option is REST API
+      utils.click(autoattendant.newStepSelectRestApi);
+
+      utils.expectIsDisplayed(autoattendant.restApi);
+
+    });
+
+    it('should click configureApi hyperlink and a modal is opened with components for rest api url and "' + deleteUtils.testAAName + '"', function () {
+
+      // REST API
+      autoattendant.scrollIntoView(autoattendant.restApi);
+
+      utils.click(autoattendant.configureApi);
+      utils.expectIsDisplayed(autoattendant.configureApiURL);
+      utils.expectIsDisplayed(autoattendant.sessionVar);
+      utils.expectIsDisplayed(autoattendant.addVariableToSet);
+
+    });
+    it('should add url and it should be visible in REST API new step upon save "' + deleteUtils.testAAName + '"', function () {
+
+      // REST API
+      utils.click(autoattendant.configureApiURL);
+      utils.sendKeys(autoattendant.configureApiURL, "This is test URL");
+
+      utils.click(autoattendant.restResponseDataBlock);
+      utils.sendKeys(autoattendant.restResponseDataBlock, "Test Response Block");
+
+      utils.click(autoattendant.sessionVar);
+      utils.click(autoattendant.newSessionVar);
+      
+      utils.sendKeys(autoattendant.newVariableName, "123");
+
+      utils.click(autoattendant.addVariableToSet);
+
+      utils.expectCount(autoattendant.sessionVarAll, 2);
+  
+      utils.expectIsDisabled(autoattendant.saveBtn);
+
+      utils.click(autoattendant.restApiTrash);
+
+      utils.expectIsEnabled(autoattendant.saveBtn);
+
+      utils.click(autoattendant.saveBtn);
+
+      utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
+      utils.expectTextToBeSet(autoattendant.restApiUrlLabel, "This is test URL");
+
+    });
+
 
     it('should close AA edit and return to landing page', function () {
 
@@ -716,10 +742,12 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.closeEditButton);
 
     }, 120000);
-/*
+
     it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
 
       // click delete X on the AA card for e2e test AA
+      utils.expectIsEnabled(autoattendant.testCardName);
+
       utils.click(autoattendant.testCardDelete);
 
       // confirm dialog with e2e AA test name in it is there, then agree to delete
@@ -729,7 +757,7 @@ describe('Huron Auto Attendant', function () {
       });
 
     }, 120000);
-*/
+
   });
 
 });

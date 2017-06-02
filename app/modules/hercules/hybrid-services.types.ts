@@ -4,11 +4,11 @@ export type ClusterTargetType = 'c_mgmt' | 'mf_mgmt' | 'hds_app' | 'ucm_mgmt' | 
 export type ConnectorAlarmSeverity = 'critical' | 'error' | 'warning' | 'alert';
 export type ConnectorMaintenanceMode = 'on' | 'off' | 'pending';
 export type ConnectorState = 'running' | 'not_installed' | 'disabled' | 'downloading' | 'installing' | 'not_configured' | 'uninstalling' | 'registered' | 'initializing' | 'offline' | 'stopped' | 'not_operational' | 'unknown';
-export type ConnectorType = 'c_mgmt' | 'c_cal' | 'c_ucmc' | 'mf_mgmt' | 'hds_app' | 'cs_mgmt' | 'cs_context' | 'ucm_mgmt' | 'c_serab';
+export type ConnectorType = 'c_mgmt' | 'c_cal' | 'c_ucmc' | 'mf_mgmt' | 'hds_app' | 'cs_mgmt' | 'cs_context' | 'ucm_mgmt' | 'c_serab' | 'c_imp';
 export type ConnectorUpgradeState = 'upgraded' | 'upgrading' | 'pending';
 export type DayOfWeek = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
 export type ExtendedConnectorState = ConnectorState | 'has_warning_alarms' | 'has_error_alarms' | 'not_registered' | 'no_nodes_registered';
-export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability' | 'ept';
+export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability' | 'ept' | 'squared-hybrid-impinterop';
 export type ServiceAlarmSeverity = 'error' | 'warning' | 'critical'; // TODO: check if that's really the only values
 export type ServiceSeverity = 0 | 1 | 2 | 3;
 export type ServiceSeverityLabel = 'ok' | 'unknown' | 'warning' | 'error';
@@ -72,7 +72,10 @@ export interface IExtendedClusterServiceStatus {
 export interface IHost {
   connectors: IConnector[];
   hostname: string;
+  lastMaintenanceModeEnabledTimestamp: string;
   maintenanceMode: ConnectorMaintenanceMode;
+  platform?: 'expressway';
+  platformVersion?: string;
   serial: string;
   url: string;
 }
@@ -150,6 +153,12 @@ export interface IConnectorStatus {
       state: 'ok' | 'error';
       stateDescription: string;
     }[];
+  };
+  users?: {
+    assignedRoomCount: number;
+    assignedUserCount: number;
+    totalFaultyCount: number | null;
+    totalSubscribedCount: number | null;
   };
 }
 

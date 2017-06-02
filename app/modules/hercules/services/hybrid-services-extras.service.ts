@@ -93,6 +93,10 @@ export class HybridServicesExtrasService {
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.extras', [
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/hercules/services/hybrid-services-i18n.service').default,
+    require('modules/core/config/urlConfig'),
+  ])
   .service('HybridServicesExtrasService', HybridServicesExtrasService)
   .name;

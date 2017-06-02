@@ -22,7 +22,7 @@ const NUMBER_FORMAT_DIRECT_LINE: string = 'NUMBER_FORMAT_DIRECT_LINE';
 export class HuntGroupService {
   private huntGroupResource: IHuntGroupResource;
   private huntGroupCopy: HuntGroup;
-  private huntGroupProperties: Array<string> = ['uuid', 'name', 'huntMethod', 'maxRingSecs', 'maxWaitMins', 'numbers', 'members'];
+  private huntGroupProperties: Array<string> = ['uuid', 'name', 'huntMethod', 'maxRingSecs', 'maxWaitMins', 'sendToApp', 'destinationRule', 'numbers', 'fallbackDestination', 'alternateDestination', 'members'];
 
   /* @ngInject */
   constructor(
@@ -68,14 +68,21 @@ export class HuntGroupService {
       }).$promise
       .then( (huntGroupResource) => {
         let huntGroup = new HuntGroup(_.pick<HuntGroup, HuntGroup>(huntGroupResource, this.huntGroupProperties));
-
         // TODO (jlowery): remove when CMI normalizes fallbackDestination payloads across APIs
         huntGroup.fallbackDestination = new FallbackDestination({
-          memberUuid: _.get<string>(huntGroupResource.fallbackDestination, 'userUuid'),
-          name: _.get<string>(huntGroupResource.fallbackDestination, 'userName'),
+          memberUuid: _.get<string>(huntGroupResource.fallbackDestination, 'uuid'),
+          name: _.get<string>(huntGroupResource.fallbackDestination, 'memberName'),
           number: _.get<string>(huntGroupResource.fallbackDestination, 'number'),
           numberUuid: _.get<string>(huntGroupResource.fallbackDestination, 'numberUuid'),
           sendToVoicemail: _.get<boolean>(huntGroupResource.fallbackDestination, 'sendToVoicemail'),
+        });
+        huntGroup.alternateDestination = new FallbackDestination({
+          memberUuid: _.get<string>(huntGroupResource.alternateDestination, 'uuid'),
+          name: _.get<string>(huntGroupResource.alternateDestination, 'memberName'),
+          number: _.get<string>(huntGroupResource.alternateDestination, 'number'),
+          numberUuid: _.get<string>(huntGroupResource.alternateDestination, 'numberUuid'),
+          sendToVoicemail: _.get<boolean>(huntGroupResource.alternateDestination, 'sendToVoicemail'),
+          timer: _.get<number>(huntGroupResource.alternateDestination, 'timer'),
         });
 
         let huntGroupMembers: Array<CallFeatureMember> = this.consolidateMembers(huntGroupResource.members);
@@ -203,10 +210,18 @@ export class HuntGroupService {
       huntMethod: data.huntMethod,
       maxRingSecs: data.maxRingSecs,
       maxWaitMins: data.maxWaitMins,
+      sendToApp: data.sendToApp,
+      destinationRule: data.destinationRule,
       fallbackDestination: {
         number: data.fallbackDestination.number,
         numberUuid: data.fallbackDestination.numberUuid,
         sendToVoicemail: data.fallbackDestination.sendToVoicemail,
+      },
+      alternateDestination: {
+        number: data.alternateDestination.number,
+        numberUuid: data.alternateDestination.numberUuid,
+        sendToVoicemail: data.alternateDestination.sendToVoicemail,
+        timer: data.alternateDestination.timer,
       },
       numbers: _.map(data.numbers, (number) => {
         return {

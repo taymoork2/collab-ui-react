@@ -3,10 +3,13 @@
 
   angular
     .module('Hercules')
-    .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
+    .controller('CallServicePlaceSettingsCtrl', CallServicePlaceSettingsCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, ResourceGroupService, UCCService, HybridServicesI18NService) {
+  function CallServicePlaceSettingsCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, HybridServicesClusterService, UriVerificationService, DomainManagementService, $translate, ResourceGroupService, UCCService, HybridServicesI18NService) {
+
+    $scope.userId = $stateParams.currentUserId;
+
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
     $scope.currentUser = $stateParams.currentUser || $stateParams.getCurrentPlace();
@@ -124,7 +127,7 @@
         });
         refreshUserInUssIfServiceEntitledButNoStatus($scope.callServiceConnect, userIsRefreshed);
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.clusterId) {
-          FusionClusterService.get($scope.callServiceAware.status.clusterId).then(function (cluster) {
+          HybridServicesClusterService.get($scope.callServiceAware.status.clusterId).then(function (cluster) {
             $scope.callServiceAware.homedCluster = cluster;
             $scope.callServiceAware.homedConnector = _.find(cluster.connectors, { id: $scope.callServiceAware.status.connectorId });
           });

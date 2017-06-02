@@ -79,6 +79,8 @@
         fusion_google_cal: 'squared-fusion-gcal',
         fusion_khaos: 'squared-fusion-khaos',
         message: 'squared-room-moderation',
+        imp: 'spark-hybrid-impinterop',
+        cmc: 'cmc',
       },
 
       licenseModel: {
@@ -94,6 +96,7 @@
         message: 'MESSAGE',
         meetings: 'MEETINGS', // to be deprecated; use meeting && webex
         meeting: 'MEETING',
+        management: 'MANAGEMENT',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
         sparkBoard: 'SPARKBOARDS',
@@ -218,6 +221,7 @@
         CDC: 'CDC', // Care Digital Channel
         CVC: 'CVC', // Care Voice Channel
         MSGR: 'MSGR', // WebEx Messenger (as of 2017-05-17, managed externally and not managed by Atlas)
+        MGMTPRO: 'MGMTPRO', // IT Pro Pack
       },
 
       licenseStatus: {
@@ -396,7 +400,7 @@
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
       PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemCbgDetails', 'gmTdDetails', 'gmTdNumbersRequest', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'pstnWizard', 'video', 'settings'],
-      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'pstnWizard', 'video', 'settings'],
+      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'pstnWizard', 'video'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
       User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
@@ -555,6 +559,9 @@
         'cmc',
         'cmc.status',
         'cmc.settings',
+      ],
+      'spark-hybrid-impinterop': [
+        'imp-service',
       ],
     };
 

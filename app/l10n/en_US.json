@@ -283,6 +283,7 @@
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
+    "ciscoSparkJabberInteropTooltip": "Enable messaging interoperability between Cisco Spark and Jabber, including exchange of messages, presence transformation and accessibility to Cisco Spark spaces.",
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
@@ -647,14 +648,16 @@
   "sharedMeetingReports": {
     "title": "SHARED MEETING USAGE",
     "link": "View Report",
-    "hostsSharingLicenses": "{{usage}} hosts using {{volume}} shared licenses",
+    "hostsSharingLicenses": "{{usage}} users",
+    "volumeOfLicenses": "{{volume}} shared meetings licenses",
     "availableSharedLicenses": "Available Shared Licenses: ",
     "sharedMeetingReport": "Shared Meeting Report",
     "sharedMeetingUsage": "Shared Meetings Usage",
-    "sharedMeetingDescription": "This graph shows the number of concurrent meetings per month.",
-    "concurrentMeetingsTitle": "Actual number of concurrent mettings held",
+    "sharedMeetingDescription": "This graph shows the number of peak concurrent meetings per month.",
+    "sharedMeetingNote": "PLEASE NOTE concurrent Spark Meetings are not yet included in this report, but will be added soon.",
+    "concurrentMeetingsTitle": "Actual number of peak concurrent mettings held",
     "concurrentMeetings": "Concurrent Meetings",
-    "maxMeetingsTitle": "Maximum number of concurrent meetings allowed",
+    "maxMeetingsTitle": "Maximum number of peak concurrent meetings allowed",
     "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data.",
     "errorLoadingSharedMeetingDetails": "There was a problem loading the Shared Meeting Report details data.",
     "siteUrlError": "Site URL is undefined.  Cannot retrieve shared meetings report.",
@@ -1182,6 +1185,7 @@
     "nodes": "Nodes",
     "none": "None",
     "notAvailable": "N/A",
+    "notFound": "Not found",
     "notSet": "Not set",
     "off": "Off",
     "offline": "Offline",
@@ -1234,6 +1238,7 @@
     "upload": "Upload",
     "user": "User",
     "users": "Users",
+    "verify": "Verify",
     "voice": "Voice",
     "warning": "Warning",
     "yes": "Yes"
@@ -1456,7 +1461,7 @@
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
-    "voicemailNoDirectNumbersError": "You must have unassigned direct lines to turn on external voicemail access.",
+    "voicemailNoDirectNumbersError": "Warning:  You must have unassigned direct lines to turn on external voicemail access.",
     "timezoneUpdateError": "Failed to update company timezone.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
@@ -1814,7 +1819,7 @@
       "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later.",
       "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
-      "partnersCannotConfigureClusters": "Partner administrators may not set up Hybrid Services or add clusters when viewing customer organizations."
+      "partnersCannotConfigureClusters": "You cannot add this resource. A customer administrator must perform this step."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -1878,9 +1883,17 @@
       "entitlements-dont-exist": "Service licenses for {{userName}} do not exist.",
       "previously-updated": "Could not save licenses. They are allocated somewhere else.",
       "not-updated": "Licenses could not be updated for {{userName}}.",
+      "not-updated-specific": "Licenses could not be updated for {{userName}}. The server returned the following error message: {{error}}.",
+      "readResourceGroupsFailed": "Could not read Resource Groups. Try again later.",
       "readUserStatusFailed": "Unable to read the current user status. Please try again later.",
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
-      "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists."
+      "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists.",
+      "couldNotReadConnectStatus": "Unable to read Call Service Connect organization status. Please contact support if the problem persists.",
+      "notEnabledInOrg": "Not enabled in organization",
+      "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
+      "disableAwareHeader": "Disable Services",
+      "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user."
+
     },
     "placeSidepanel": {
       "hybridCallNotActivated": "We're checking for the user account in Cisco Unified Communications Manager. This can take up to 30 minutes. Check back later for the status.",
@@ -1921,7 +1934,8 @@
       "spark-hybrid-datasecurity": "Hybrid Data Security",
       "squared-fusion-media": "Hybrid Media Service",
       "hybrid-context": "Hybrid Context Service",
-      "ept": "Enterprise Private Trunking"
+      "ept": "Enterprise Private Trunking",
+      "hybrid-imp": "Hybrid IM & Presence"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -1999,6 +2013,7 @@
         "squared-fusion-cal": "Calendar",
         "squared-fusion-gcal": "Calendar",
         "squared-fusion-ec": "Connect",
+        "squared-fusion-ec-and-voicemail": "Connect + Voicemail",
         "squared-fusion-ec-place": "Hybrid Call Service Connect"
       },
       "serviceDescriptions": {
@@ -2054,6 +2069,14 @@
       "urgentUpgrade": "An urgent upgrade is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
     },
+    "connectorUpgrade": {
+      "title": "Connector Upgrade",
+      "text": "You are about to update the following nodes in this cluster:",
+      "XtoY": "{{name}} to {{version}}",
+      "releaseNotes": "Release Notes",
+      "releaseNotesLink": "Open in a new tab",
+      "upgradeNow": "Upgrade Now"
+    },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
       "upgradeScheduleHeader": "Upgrade",
@@ -2100,10 +2123,12 @@
       "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
       "expresswayDataWiped": "{{connectorName}} will be removed from all of your Expressway clusters, and all connectors' local settings will be deleted.",
       "noClustersWillBeDeregistered": "Clusters will not be deregistered from Cisco Collaboration Cloud.",
-      "deactivateServiceConfirmationButton": "Confirm Deactivation",
-      "deactivateServiceConfirmationText": "You are about to deactivate {{serviceName}} from your Cisco Spark organization.",
+      "deactivateServiceConfirmationHeader": "Deactivate {{serviceName}}",
+      "deactivateServiceConfirmationTextGoogleCalendar": "Are you sure? Service-related features will be removed for users.",
+      "deactivateServiceConfirmationText": "Are you sure? {{connectorName}} and related configuration will be removed from your clusters and service-related features will be removed for users.",
       "serviceWasDeactivated": "{{serviceName}} successfully deactivated.",
-      "connectWarning": "You are about to deactivate Hybrid Call Service Connect. Be aware that this action deletes all Cisco Spark remote device configuration and disables the service for all users."
+      "connectWarning": "Are you sure? Remote device configuration will be removed and the service will be disabled for your users.",
+      "deactivateCallServiceConnect": "Deactivate Call Service Connect"
     },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
@@ -2244,7 +2269,6 @@
       "verifySipDestination": {
         "contactCiscoSupport": "Please try again later, or contact your Cisco Support representative if the problem persists.",
         "errorFromServer": "Could not verify SIP destination. The server returned the following error message:",
-        "verify": "Verify and Save",
         "title": "Verify SIP Destination",
         "testResultsHeader": "Test Results",
         "testResults": {
@@ -2437,6 +2461,7 @@
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Expressway again in the Add Resource dialog.",
         "go-to-expressway": "Go to Expressway",
         "upgrade": "Upgrade available",
+        "upgrading": "Installing upgrade",
         "alarms": "Alarms",
         "maintenance": "Maintenance",
         "pendingMaintenance": "Pending maintenance"
@@ -2452,7 +2477,8 @@
           "mediafusion-not-setup": "Media Service not set up",
           "context-description": "Can run Hybrid Context",
           "context-not-setup": "Context not set up",
-          "cucm-description": "Cisco Unified Communications Manager"
+          "cucm-description": "Cisco Unified Communications Manager",
+          "partner-registration-not-supported": "Partner administrators cannot configure these resources"
         },
         "expressway": {
           "services": {
@@ -2619,7 +2645,7 @@
       "goToNode": "Go to node",
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
-      "pendingTooltip": "Maintenance mode has been requested. Please wait until the node is ready.",
+      "pendingTooltip": "Pending since: {{date}}. Maintenance mode has been requested. Please wait until the node is ready.",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
         "message": "<p>The Hybrid Media node will be put in maintenance mode as soon as the call activity ends or a two hour timeout is reached. Please wait for the node to move from \"Pending Maintenance\" to \"Maintenance\" before you proceed.</p><p>No alarm notifications are sent for nodes in maintenance mode.</p>",
@@ -2628,7 +2654,10 @@
       "disableMaintenanceModeModal": {
         "title": "Disable maintenance mode",
         "message": "Are you sure you want to disable maintenance mode for this node?"
-      }
+      },
+      "alertBannerNumber": "{count, plural, =1{Upgrade} other{Upgrades}} available.",
+      "alertBannerTime": "The upgrade will be applied on {{date}}.",
+      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Install now</a>?"
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"
@@ -2640,7 +2669,8 @@
   },
   "cmc": {
     "failures": {
-      "preCheckFailure": "Status check of org failed"
+      "preCheckFailure": "Status check of org failed with: {{msg}}",
+      "saveFailure": "Save failed with: {{msg}}"
     },
     "menu": {
       "mobileServices": "Mobile Services",
@@ -2651,8 +2681,13 @@
       "settings": "Settings",
       "status": "Status"
     },
-    "settings": {
-      "mobileNumber": "Mobile Number"
+    "userSettings": {
+      "mobileNumber": "Mobile Number",
+      "enabled": "Enabled",
+      "status": "Status",
+      "menuStatus": {
+        "error": "Error"
+      }
     },
     "details": {
       "invalidInput": "Always provide valid mobile number when enabling"
@@ -2683,10 +2718,11 @@
       "welcome": "Welcome to the Context Dictionary",
       "unavailable": "Unavailable",
       "dataTypes": {
-        "boolean": "Boolean",
-        "double": "Double",
-        "integer": "Integer",
-        "string": "String"
+        "boolean": "Toggle",
+        "date": "Date Time",
+        "double": "Decimal",
+        "integer": "Number",
+        "string": "Short Text"
       },
       "status": "Status",
       "inUse": "In Use",
@@ -2710,8 +2746,8 @@
         "fieldUpdateFailure": "Unable to update field. Try again or contact customer support.",
         "fieldDeleteSuccess": "Field deleted successfully!",
         "fieldDeleteFailure": "Unable to delete field. Refresh your browser and try again.",
-        "dataType": "Data Type",
-        "dataTypePlaceholder": "Select Data Type",
+        "dataType": "Type",
+        "dataTypePlaceholder": "Select Type",
         "descriptionPlaceholder": "Enter field details",
         "classification": "Data Privacy",
         "searchable": "Searchable",
@@ -2728,7 +2764,6 @@
         "encryptedHelpText": "Is encrypted and contains no personally identifiable information",
         "unencrypted": "Unencrypted",
         "unencryptedHelpText": "Is not encrypted and contains no personally identifiable information",
-        "dateFormat": "MM/dd/yyyy",
         "noneFound": "No fields found",
         "fieldAttributes": "Field Attributes",
         "inUseTooltip": "Field associated with fieldsets.",
@@ -2872,6 +2907,7 @@
         "serviceDomainDesc": "Trial Domain: {{trial}}<br/>Production Domain: {{prod}}",
         "serviceUserDesc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial or <a ng-click=\"{{onclick1}}\">view and edit</a> your trial users.",
         "serviceUser0Desc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial.",
+        "serviceUserDirsyncDesc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">View Users</a> for your trial.",
         "serviceProdMoveDesc": "When you are satisfied that the trial was successful, you can move to production. This makes Hybrid Data Security active for all users in your organization. You can't revert to trial mode without deactivating the service and losing user access to data.",
         "serviceTrialModeTitle": "Trial Mode",
         "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
@@ -2889,7 +2925,12 @@
         "succeedDeactivateProductionMode": "Succeeded to Deactivate Production Mode",
         "succeedDeactivateTrialMode": "Succeeded to Deactivate Trial Mode",
         "deavtivateTrialModeDesc": "Deactivating Hybrid Data Security Service moves encryption key management and other security-related features to the cloud. Deactivating impacts user access to existing data.",
-        "hdsModeGetError": "Failed to get HDS mode: "
+        "hdsModeGetError": "Failed to get HDS mode: ",
+        "selectGroupDesc" : "Directory Synchronization is enabled for this organization. Users in the Active Directory group {{defaultGroup}} will be part of the trial.",
+        "selectGroupError": "Directory Synchronization is enabled for this organization, but we can't find a group named {{defaultGroup}} in Active Directory. To start a trial, create this group in AD and perform a synchronization.",
+        "noGroupError": "To start an HDS trial, your organization needs a trial group to add users to. Something's gone wrong, and we can't find one. You can try rerunning the HDS Setup Tool (using your existing ISO configuration file) or contact Cisco Support for help.",
+        "groupSizeLimitExceeded" : "Your trial group {{defaultGroup}} has more than 250 users. To start a trial, remove some users from the group in AD and perform a synchronization.",
+        "groupSizeLimitExceededinTrail" : "Your trial group {{defaultGroup}} has more than 250 users. Your key encryption routing might not work correctly for some users. Please remove some users from the group in AD and perform a synchronization."
       },
       "addTrialUsers": {
         "modalTitle": "Add Users to Trial Mode",
@@ -2935,7 +2976,7 @@
     "browserTabHeaderTitle": "Cisco Spark Activity Reports",
     "heading": "Search Cisco Spark Space Activity",
     "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
-    "searchTip": "Search data by room ID",
+    "searchTip": "Search data by space ID",
     "unableToDownloadFile": "Unable to download file",
     "timeout": "Timeout",
     "dateError": {
@@ -2974,7 +3015,8 @@
       "searchRoomPlaceholder": "Enter space ID",
       "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
       "messages": "Where <b>Messages</b> contains",
-      "messagesPlaceholder": "e.g. project AND manager",
+      "messagesPlaceholder": "Enter comma separated values",
+      "messagesHelpText": "e.g. project, manager",
       "noMatchesFound": "No Matches Found",
       "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about our IT Pro Package."
     },
@@ -3032,6 +3074,22 @@
       "waitingForDownload": "Downloading, please wait...",
       "expires": "Expires",
       "expired": "Expired"
+    },
+    "originalConsole": {
+      "subheading": "Find all relevant data for a space.",
+      "reportNameNotEmpty": "Report Name can not be empty",
+      "reportNamePlaceholder": "Enter report name",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "reportDateRange": "Date Range",
+      "noRangeSpecified": "No date range specified",
+      "takeMeToReports": "Take Me to Reports",
+      "dateTo": "to",
+      "endDateUntil": "until",
+      "endDateOnward": "onward",
+      "startDatePlaceholder": "Choose a Start Date",
+      "endDatePlaceholder": "Choose an End Date",
+      "generatedAt": "Generated At"
     },
     "tabs": {
       "search": "Search",
@@ -4279,7 +4337,13 @@
     "defaultCountry": "Default Country",
     "defaultCountryDesc": "Specify the country to set the correct dial tone on user devices.",
     "defaultCountryPlaceholder": "Select your country",
-    "pstnCountry": "Choose the country where calling services (including PSTN) will be provisioned."
+    "pstnCountry": "Choose the country where calling services (including PSTN) will be provisioned.",
+    "aria": {
+      "daysLeft": "{count, plural, =1{# day} other{# days}} left in trial",
+      "userTotals": "{{users}} of {{licenses}} licenses used",
+      "daysSinceExp": "Expired {count, plural, =1{# day} other{# days}} ago"
+    }
+
   },
   "trialModal": {
     "addTrial": {
@@ -4478,6 +4542,8 @@
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
+    "premiumAccounts": "Pro Pack Accounts",
+    "premiumCustomer": "Pro Pack Customer",
     "daysRemaining": "{count, plural, =1{# day} other{# days}} remaining",
     "daysLeftToPurchase": "{count, plural, =1{# day} other{# days}} left to purchase",
     "daysLeftToRenew": "{count, plural, =1{# day} other{# days}} left to renew",
@@ -4573,6 +4639,8 @@
     "trialAccountsFilter": "Trial Accounts ({{count}})",
     "activeAccountsFilter": "Purchased Accounts ({{count}})",
     "expiredAccountsFilter": "Expired Accounts ({{count}})",
+    "premiumAccountsFilter": "Pro Pack Accounts ({{count}})",
+    "standardAccountsFilter": "Standard Accounts ({{count}})",
     "orderRequest": "Order Request",
     "subscriptions": "Subscriptions",
     "viewSubscriptionInfo": "View Subscription Info",
@@ -4755,7 +4823,10 @@
     "savedT38": "T.38 settings updated",
     "cpcWarning": "Enable analog devices that support auto disconnect based on silence detection",
     "cpcLabel": "Silence Detection",
-    "savedCpc": "Silence Detection successfully updated"
+    "savedCpc": "Silence Detection successfully updated",
+    "confirmRebootHeader": "Change {{settingName}}",
+    "confirmRebootExplanation": "To change {{settingName}}, the device will need to perform a reboot.",
+    "confirmRebootConfirmation": "Are you sure you want to change {{settingName}}?"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -5169,7 +5240,8 @@
         "totalCallsDesc": "<b>Cloud Calls</b> : Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.<br> <b>Overflowed to Cloud</b> : Number of calls made within an enterprise but overflowed to a cloud cluster.<br> <b>On-Premises</b>: Number of calls hosted on any of the enterprise clusters.",
         "totalCallsClusterDesc": "<b>Redirected by this Cluster</b> : Number of calls that could not be hosted by this cluster and hence got redirected.<br><b>On-Premises</b> : Number of calls hosted on any of the enterprise clusters.",
         "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
-        "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected."
+        "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected.",
+        "clusterInServiceDesc": "Percentage of clusters that can host calls in the organisation."
       },
       "graphDescription": {
         "utilizationOrgDesc": "Average utilization trend for all clusters in an organization",
@@ -6292,6 +6364,8 @@
     "offHours_chat": "Off-Hours",
     "offHours_callback": "Off-Hours",
     "offHours_chatPlusCallback": "Global Off-Hours",
+    "proactivePrompt_chat": "Proactive Prompt",
+    "proactivePrompt_chatPlusCallback": "Proactive Prompt",
     "embedCode": "Embed Code",
     "profileDesc": "Configure how you want the organization and user profile to be represented for your company",
     "overviewDesc_chat": "Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care",
@@ -6304,6 +6378,11 @@
     "callFeedbackDesc": "This screen is used to collect feedback from a customer after the call ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown to a customer during business off-hours",
+    "proactivePromptDesc": "Configure how long to wait until the prompt is shown to the customer as well as what they will see on the prompt when it is shown. The proactive prompt will not pop up during off hours and when no agents are available to assist.",
+    "title": "Title",
+    "promptTimeDesc": "Show Prompt After",
+    "notNowBtn": "Not Now",
+    "chatNowBtn": "Chat Now",
     "offHoursMessage": "Message",
     "offHoursDefaultMessage": "We are currently offline. Please try again during our business hours.",
     "businessHours": "Business Hours",
@@ -6328,6 +6407,11 @@
     "preview": "Preview",
     "attributes": "Attributes",
     "windowTitleLabel": "Window Title",
+    "promptTimeLabel": "Select time",
+    "promptTimeOption1": "1 minute",
+    "promptTimeOption2": "3 minutes",
+    "promptTimeOption3": "5 minutes",
+    "defaultPromptMessage": "Chat with our solution specialists to help serve you better.",
     "defaultOrgLabel": "Organization",
     "defaultWelcomeText": "Welcome to",
     "defaultOrgText": "Cumulus Customer Care",
@@ -6395,6 +6479,12 @@
       "invalidCharacters": "Characters <, > are not allowed."
     },
     "ctOverview": {
+      "proactivePrompt": {
+        "title_chat": "Proactive Prompt",
+        "title_chatPlusCallback": "Proactive Prompt",
+        "desc_chat": "This screen is used to initiate customer interaction using a proactive prompt",
+        "desc_chatPlusCallback": "This screen is used to initiate customer interaction using a proactive prompt"
+      },
       "customerInformation": {
         "title_chat": "Customer Information",
         "title_callback": "Customer Information",
@@ -6487,10 +6577,10 @@
     "huntingMethodMembersTitle": "Hunting Method and Members",
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
-    "numberTitle": "Select Internal Numbers",
-    "numberDesc": "When these numbers are called, this hunt group is activated.",
-    "numberPlaceholder": "Enter Extension",
-    "numberHint": "e.g. 5555",
+    "numberTitle": "Select Pilot Numbers",
+    "numberDesc": "When these numbers are called, this hunt group is will ring.",
+    "numberPlaceholder": "Enter Number or Extension",
+    "numberHint": "e.g. 5555, 333444555, +1333444555",
     "methodTitle": "Select Hunting Method",
     "methodHint": "Define which member gets the call first.",
     "memberHint": "These are the users who pickup the hunt group calls",
@@ -6552,7 +6642,18 @@
     "waitTimeSecondaryLabel": "Minutes",
     "waitTimeDesc": "Maximum amount of time caller will wait before being sent to fallback destination.",
     "fallbackLabel": "Fallback Destination",
+    "fallbackNumber": "Fallback Destination Number",
+    "fallbackNumberHint": "Calls are sent to this number if not answered by any of the members",
     "fallbackDesc": "This is where the call goes if it was not answered by this hunt group.",
+    "fallbackRule": "Fallback Destination Rule",
+    "fallbackRule1Hint": "Always use fallback destination number in all scenarios.",
+    "fallbackRule2Hint": "Always use alternative fallback destination number in all scenarios.",
+    "fallbackRule3Hint": "System automatically will switch between fallback destination during call-no-answer and alternative fallback destination during local network outage.",
+    "altFallbackLabel": "Alternate Fallback Destination",
+    "altFallbackNumber": "Alternate Fallback Destination Number",
+    "altFallbackHint": "Used during local network outages",
+    "altFalbackTimer": "Timer for checking if network is available again",
+    "automatic": "Automatic",
     "methodLabel": "Hunting Method",
     "methodDesc": "Define which member gets the call first.",
     "membersLabel": "Hunt Group Members",
@@ -6571,6 +6672,8 @@
     "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
+    "callsToSparkAppTitle": "Hunt Group calls to Spark App",
+    "callsToSparkAppLabel": "Simultaneously send Hunt Group calls to members’ Spark app",
     "memberFetchFailure": "Unable to get members.",
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select at least one member",
@@ -6742,14 +6845,14 @@
     "retention": {
       "title": "Retention",
       "subsectionLabel": "Spark Message Data",
-      "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system. <br/> There is a 5GB total storage limit.  After limit is reached, older data will be removed first.",
+      "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system. <br/> There is a 5GB total storage limit per user.  After limit is reached, older data will be removed first.",
       "retentionOption": "Past {{number}} months",
       "indefiniteRetentionOption": "Indefinitely",
-      "monthInvalid": "Should be between 1 an 120 months",
+      "monthInvalid": "Must be between 1 and 120 months",
       "defaultRetentionOption": "Default retention time",
       "customRetentionOption": "Custom retention time between 1 and 120 months",
       "customRetentionMonths": "months",
-      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about your IT Pro Package.",
+      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about our IT Pro Package.",
       "modalTitle": "Update Retention Time",
       "modalBody1": "Are you sure you want to update the retention time for Spark Message to a shorter period?",
       "modalBody2": "Any additional data older than the new time period will be deleted.",
@@ -6771,7 +6874,8 @@
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "description": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "proPackInfoCopy": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
+      "description": "Users can only launch the Cisco Spark app on mobile devices protected with lock screens."
     },
     "support": {
       "title": "Support",
@@ -7142,7 +7246,8 @@
       "duplicateName": "Organization name already in use",
       "validationFailure": "Unable to validate",
       "editNameSuccess": "Organization name successfully updated.",
-      "editNameFailure": "Failed to update customer name."
+      "editNameFailure": "Failed to update customer name.",
+      "displayNameError": "Could not get customer display name."
     },
     "care": "Care",
     "hybridVoicemail": {
@@ -7387,6 +7492,14 @@
           "settings": "Settings"
         }
       },
+      "hybridImp": {
+        "title": "Hybrid IM & Presence",
+        "description": "Dummy text to be updated",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
         "description": "Manage your encryption keys and other security services on-premises.",
@@ -7449,8 +7562,9 @@
         "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
         "routingHelp": "The correct routing must be configured on CUCM. See ",
         "select": "Select verified domain",
-        "selectDomain": "Select domain",
-        "selectDomains": "Select domains",
+        "selectDomain": "Select Domain",
+        "singular": " Domain Selected",
+        "plural": " Domains Selected",
         "selectDomainDesc": "Select the verified domains that you want to route over the enterprise trunk. If you do not select any options, calls route as normal URI dialing over the internet. See the documentation for more help",
         "radioSelect1": "I want to use a verified domain for Private Trunking",
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",

@@ -1,5 +1,6 @@
 import { ReportConstants } from '../commonReportServices/reportConstants.service';
 import {
+  IExportDropdown,
   IExportMenu,
   ITimespan,
   IReportCard,
@@ -20,7 +21,7 @@ class ReportCardCtrl {
   public lowerTooltip: IReportTooltip;
 
   // export menu
-  public exportDropdown: Array<IExportMenu>;
+  public exportDropdown: IExportDropdown;
   public exportMenu: boolean = false;
 
   // Secondary Report Variables
@@ -99,7 +100,7 @@ class ReportCardCtrl {
     }
   }
 
-  public goToUsersTab() {
+  public goToUsersTab(): void {
     this.$state.go('users.list');
   }
 

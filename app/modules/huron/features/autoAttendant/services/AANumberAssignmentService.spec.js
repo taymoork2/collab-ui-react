@@ -20,7 +20,7 @@ describe('Service: AANumberAssignmentService', function () {
     uuid: '29d70b54-cf0a-4279-ad75-09116eedb7a7',
   }, {
     number: '+111111111',
-    type: 'externalNumber',
+    type: 'NUMBER_FORMAT_DIRECT_LINE',
     uuid: '09116eedb7a7',
   }];
 
@@ -165,7 +165,7 @@ describe('Service: AANumberAssignmentService', function () {
       expect(failureSpy).not.toHaveBeenCalled();
     });
 
-    it('should correctly set resources for e164 nums and extensions based on CMI call', function () {
+    it('should correctly set resources for e164 nums, extensions and direct line based on CMI call', function () {
 
       var resource = AutoAttendantCeInfoModelService.newResource();
       resource.setType('directoryNumber');

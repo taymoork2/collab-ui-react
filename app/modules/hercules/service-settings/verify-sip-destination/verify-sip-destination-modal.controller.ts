@@ -37,10 +37,6 @@ class VerifySipDestinationModalController {
       .value();
   }
 
-  public hasWarningOrError(): boolean {
-    return _.some(this.result, (step: VerificationStep) => step.severity === 'Warn' || step.severity === 'Error');
-  }
-
   public severityToIcon(severity): string {
     switch (severity) {
       case 'Error':

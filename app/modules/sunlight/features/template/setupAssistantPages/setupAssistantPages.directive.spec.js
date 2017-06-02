@@ -8,6 +8,7 @@ describe('Directive: setupAssistantPages', function () {
   var pageDirectives = [
     'ct-profile',
     'ct-overview',
+    'ct-proactive-prompt',
     'ct-customer',
     'ct-feedback',
     'ct-agent-unavailable',

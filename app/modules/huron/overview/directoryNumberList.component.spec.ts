@@ -124,7 +124,7 @@ describe('Component: directoryNumberList', () => {
       this.compileComponent('directoryNumberList', {
         directoryNumbers: 'directoryNumbers',
         directoryNumberSref: 'test.state',
-        lineThreshold: 5,
+        lineThreshold: '5', // NOTE: Bound as a string (@) but member is a number
       });
     });
 

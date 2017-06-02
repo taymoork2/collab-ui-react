@@ -6,19 +6,19 @@ class CsdmEmailService {
     this.url = HuronConfig.getEmailUrl() + '/email';
   }
 
-  public sendPersonalEmail(cbEmailInfo) {
+  public sendPersonalEmail = (cbEmailInfo) => {
     return this.$http.post(this.url + '/personalactivationcode/device', cbEmailInfo);
   }
 
-  public sendPersonalCloudberryEmail(cbEmailInfo) {
+  public sendPersonalCloudberryEmail = (cbEmailInfo) => {
     return this.$http.post(this.url + '/personalactivationcode/roomdevice', cbEmailInfo);
   }
 
-  public sendCloudberryEmail(cbEmailInfo) {
+  public sendCloudberryEmail = (cbEmailInfo) => {
     return this.$http.post(this.url + '/placeactivationcode/roomdevice', cbEmailInfo);
   }
 
-  public sendHuronEmail(cbEmailInfo) {
+  public sendHuronEmail = (cbEmailInfo) => {
     return this.$http.post(this.url + '/placeactivationcode/deskphone', cbEmailInfo);
   }
 }

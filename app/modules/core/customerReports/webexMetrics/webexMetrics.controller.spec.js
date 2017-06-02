@@ -1,5 +1,6 @@
 'use strict';
 
+//This commit is just for demo needed.
 xdescribe('Controller: WebEx Metrics Ctrl', function () {
   var controller, WebExApiGatewayService, Userservice;
 
@@ -44,7 +45,7 @@ xdescribe('Controller: WebEx Metrics Ctrl', function () {
 
   it('initial state, isIframeLoaded should be false, currentFilter should be CHP Reports', function () {
     expect(controller.isIframeLoaded).toBeFalsy();
-    expect(controller.currentFilter).toBe('webexReportInMashup');
+    expect(controller.currentFilter.type).toBe('webex');
   });
 });
 

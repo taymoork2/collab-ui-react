@@ -1,7 +1,5 @@
 'use strict';
 
-/* globals fit */
-
 describe('Controller: TrialPstnCtrl', function () {
   var controller, trials, $httpBackend, $scope, $q, Analytics, HuronConfig, Orgservice, TrialPstnService, TrialService, PstnService, PstnSetupStatesService, FeatureToggleService;
 

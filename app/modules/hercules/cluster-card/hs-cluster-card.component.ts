@@ -62,7 +62,9 @@ export class ClusterCardController implements ng.IComponentController {
   public hasUpgradeAvailable(cluster: IExtendedClusterFusion): boolean {
     return _.some(cluster.provisioning, (provisioning) => {
       return _.some(cluster.connectors, (connector) => {
-        return provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
+        return provisioning.connectorType === connector.connectorType &&
+               connector.upgradeState === 'upgraded' &&
+               provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
       });
     });
   }

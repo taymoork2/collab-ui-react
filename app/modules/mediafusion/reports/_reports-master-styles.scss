@@ -6,7 +6,7 @@
 @import 'adoption-report/client-type/_client-type-styles';
 @import 'adoption-report/meeting-location/_meeting-location-styles';
 @import 'media-report-card/_media_report_card';
-@import 'media-report-flip-chart-card/_media_report_flip_chart_card';
+@import 'media-report-flip-card/_media-report-flip-styles.scss';
 
 .media-reports {
   @extend %content-subheader;

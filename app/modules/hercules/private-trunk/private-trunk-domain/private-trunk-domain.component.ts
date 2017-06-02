@@ -80,6 +80,7 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
   public setSelected(domainSelected: ng.IChangesObject): void {
     if (!_.isUndefined(domainSelected) && domainSelected.currentValue) {
       this.domainSelected = _.cloneDeep(domainSelected.currentValue);
+      this.selectPlaceHolder = this.domainSelected.length > 1 ? this.domainSelected.length + this.$translate.instant('servicesOverview.cards.privateTrunk.plural') : (this.domainSelected.length === 1 ) ? this.domainSelected.length + this.$translate.instant('servicesOverview.cards.privateTrunk.singular') : this.$translate.instant('servicesOverview.cards.privateTrunk.selectDomain');
     }
   }
 

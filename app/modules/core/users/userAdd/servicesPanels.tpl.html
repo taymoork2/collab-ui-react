@@ -50,32 +50,54 @@
     <div class="row full flex-row row-licenses">
       <!-- MESSAGE SERVICES PANEL -->
       <div id="messaging" class="small-4 columns column-paid">
-        <div class="entitle-check-grp" ng-repeat="msgFeature in messageFeatures">
-          <div ng-if="msgFeature.licenses">
-            <div class="item-mtg-license" translate="onboardModal.message"></div>
-            <div class="ckbx" id="paidMsg" ng-if="checkMessageVisibility(msgFeature.licenses, multipleSubscriptions.selectedSubscription)">
-              <div class="cs-checkbox-group">
-                <input
-                  cs-input
-                  type="checkbox"
-                  ng-model="radioStates.msgRadio"
-                  ng-disabled="disableCheckbox(msgFeature.licenses)"
-                  ng-change="checkLicenseAvailability('MESSAGING', radioStates.msgRadio)"
-                  id="paid-msg"
-                  name="paid-msg"
-                  cs-input-label="{{::'onboardModal.paidCiscoSparkMessaging' | translate}}">
-                <span class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
-              </div>
-            </div>
-            <div ng-if="msgFeature.licenses.length > 1">
-                <div class="onboard-fieldset"
-                  ng-show="multipleSubscriptions.showLicenses(license.billingServiceId, license.isTrial)"
-                  ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
-                  <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model"
-                  label="{{'onboardModal.paidCiscoSparkMessaging' | translate}}"></cs-checkbox>
+        <div class="item-mtg-license" translate="onboardModal.message"></div>
+        <div ng-if="hasAssignableMessageItems()">
+          <div class="entitle-check-grp" ng-repeat="msgFeature in messageFeatures">
+            <div ng-if="msgFeature.licenses">
+              <div class="ckbx" id="paidMsg" ng-if="checkMessageVisibility(msgFeature.licenses, multipleSubscriptions.selectedSubscription)">
+                <div class="cs-checkbox-group">
+                  <input
+                    cs-input
+                    type="checkbox"
+                    ng-model="radioStates.msgRadio"
+                    ng-disabled="disableCheckbox(msgFeature.licenses)"
+                    ng-change="checkLicenseAvailability('MESSAGING', radioStates.msgRadio)"
+                    id="paid-msg"
+                    name="paid-msg"
+                    cs-input-label="{{::'onboardModal.paidCiscoSparkMessaging' | translate}}">
                   <span class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
                 </div>
+              </div>
+              <div ng-if="msgFeature.licenses.length > 1">
+                  <div class="onboard-fieldset"
+                    ng-show="multipleSubscriptions.showLicenses(license.billingServiceId, license.isTrial)"
+                    ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
+                    <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model"
+                    label="{{'onboardModal.paidCiscoSparkMessaging' | translate}}"></cs-checkbox>
+                    <span class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+                  </div>
+              </div>
             </div>
+          </div>
+          <div ng-if="showMessengerInteropToggle()">
+            <div class="pull-left">
+              <input
+                cs-input
+                type="checkbox"
+                ng-model="entitlements.messengerInterop"
+                id="onboard--add-entitlement--messenger-interop"
+                name="onboard--add-entitlement--messenger-interop"
+                cs-input-label="{{::'onboardModal.ciscoSparkJabberInterop' | translate}}">
+            </div>
+            <span class="license-entity-tooltip">
+              <i
+                class="icon icon-info icon-offset-l-6px ballast-r"
+                tooltip="{{::'onboardModal.ciscoSparkJabberInteropTooltip' | translate}}"
+                tooltip-trigger="focus mouseenter"
+                tooltip-class="long-msg"
+                tooltip-placement="top"
+                tooltip-animation="false"></i>
+            </span>
           </div>
         </div>
       </div>
@@ -96,7 +118,7 @@
                 cs-input-label="{{::'firstTimeWizard.meetingsInSpark' | translate}}">
               <span class="license-entity under-label-reposition">{{determineLicenseType(lic)}}
                 <span class="license-entity-tooltip">
-                  <i class="icon icon-info" tooltip-trigger="mouseenter" tooltip-placement="bottom-left" tooltip-animation="false"
+                  <i class="icon icon-info icon-offset-l ballast-r" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
                       tooltip-html-unsafe="{{generateLicenseTooltip(lic)}}">
                   </i>
                 </span>
@@ -119,7 +141,7 @@
                   cs-input-label="WebEx {{cfLic.label}}">
                 <span class="license-entity under-label-reposition">{{determineLicenseType(lic)}}
                   <span class="license-entity-tooltip">
-                    <i class="icon icon-info" tooltip-trigger="mouseenter" tooltip-placement="bottom-left" tooltip-animation="false"
+                    <i class="icon icon-info icon-offset-l ballast-r" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
                        tooltip-html-unsafe="{{generateLicenseTooltip(lic)}}">
                     </i>
                   </span>
@@ -183,7 +205,7 @@
       <div ng-if="isCareEnabled" class="small-4 columns column-paid">
         <span class="item-mtg-license" translate="onboardModal.contactCenter"></span>
         <span class="license-entity-tooltip">
-          <i class="icon icon-info license-entity-tooltip" tooltip-trigger="mouseenter" tooltip-placement="bottom-right" tooltip-animation="false"
+          <i class="icon icon-info icon-offset-l ballast-r" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
           tooltip-html-unsafe="{{careTooltip()}}">
           </i>
         </span>

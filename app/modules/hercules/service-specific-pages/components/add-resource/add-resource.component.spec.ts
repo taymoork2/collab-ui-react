@@ -37,6 +37,7 @@ describe('Component: addHybridResourceButton ', () => {
         features: {},
       },
     });
+    ctrl.allowPartnerRegistration = true;
   }
 
   it ('should launch the provided modal window when the user is a customer admin', () => {

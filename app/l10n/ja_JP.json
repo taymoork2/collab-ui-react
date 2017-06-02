@@ -46,9 +46,9 @@
     "convertUsers": "ユーザーの変換",
     "errorWarningMessages": "警告とエラー",
     "skipErrorsAndFinish": "エラーをスキップして完了する",
-    "newUsers": "{newusers, other{新規ユーザー # 人}}",
-    "updatedUsers": "{updatedusers, other{更新されたユーザー # 人}}",
-    "errors": "{errors, other{エラー # 件}}",
+    "newUsers": "{newusers, plural, other{新規ユーザー # 人}}",
+    "updatedUsers": "{updatedusers, plural, other{更新されたユーザー # 人}}",
+    "errors": "{errors, plural, other{エラー # 件}}",
     "pageTitle": "ユーザー",
     "subTitleAdd": "ユーザーの管理",
     "subTitleEnable": "ユーザーへの権限付与",
@@ -268,7 +268,7 @@
       "retryUsers": "再試行",
       "retrying": "再試行中...",
       "retryingIn": "再試行待ち時間:",
-      "retryingUsers": "{users, other{# ユーザー}}",
+      "retryingUsers": "{users, plural, other{# ユーザー}}",
       "exportUserList": "ユーザー リストをエクスポートします。"
     },
     "advanced": {
@@ -1221,16 +1221,16 @@
   "notifications": {
     "success": "成功通知",
     "error": "エラー通知",
-    "successTotal": "{total, other{成功 # 件}}",
-    "errorTotal": "{total, other{エラー # 件}}",
+    "successTotal": "{total, plural, other{成功 # 件}}",
+    "errorTotal": "{total, plural, other{エラー # 件}}",
     "successDelete": "正常に {{item}} を削除しました。",
     "errorDelete": "{{item}} の削除に失敗しました。",
     "genericError": "予期しないエラーが発生しました。後でもう一度試してください。"
   },
   "time": {
-    "seconds": "{time, other{# 秒}}",
-    "minutes": "{time, other{# 分}}",
-    "hours": "{time, other{# 時間}}"
+    "seconds": "{time, plural, other{# 秒}}",
+    "minutes": "{time, plural, other{# 分}}",
+    "hours": "{time, plural, other{# 時間}}"
   },
   "callDestination": {
     "numberFormat": "番号の形式",
@@ -2330,7 +2330,7 @@
       "heading": "登録"
     },
     "notificationDropdown": {
-      "label": "{number, other{通知 # 件}}"
+      "label": "{number, plural, other{通知 # 件}}"
     },
     "fusion": {
       "types": {
@@ -2352,7 +2352,7 @@
         "context": "コンテキスト",
         "users": "ユーザー",
         "release-channel": "リリース チャネル",
-        "nodes": "{count, other{# ノード}}",
+        "nodes": "{count, plural, other{# ノード}}",
         "nodesBtn": "ノード",
         "settings": "設定",
         "all": "すべて",
@@ -3062,8 +3062,8 @@
     "setSipDomainTitle": "Spark SIP アドレス",
     "saveSipDomainTitle": "Spark SIP アドレスを保存する",
     "editSipDomainTitle": "Spark SIP アドレスを編集する",
-    "setSipDomainCompNames": "{count, other{これらのサブドメイン}}が予約されます:",
-    "setSipDomainAsssignedNames": "{count, other{これらのサブドメイン}}が予約されました",
+    "setSipDomainCompNames": "{count, plural, other{これらのサブドメイン}}が予約されます:",
+    "setSipDomainAsssignedNames": "{count, plural, other{これらのサブドメイン}}が予約されました",
     "setSipDomainCheckAvailability": "利用できるかどうか確認する",
     "setSipDomainPlaceholder": "サブドメインを入力します",
     "setSipDomainErrorMessage": "利用できません。別の名前を試してください。",
@@ -3071,9 +3071,9 @@
     "setSipDomainSuccessMessage": "Spark SIP アドレスは正常に保存されました",
     "setSipDomainConfirmText": "これはワンタイム設定であり、後に変更できないことを承認します。",
     "sparkDomainManagementServiceErrorMessage": "Spark ドメイン管理サービスに到達できませんでした",
-    "currentSubdomainDescription": "あなたの会社の Spark Sip {count, other{アドレス}}には、{count, other{以下のサブドメイン}} Spark Sip {count, other{Addresses}}が使用されています。",
+    "currentSubdomainDescription": "あなたの会社の Spark Sip {count, plural, other{アドレス}}には、{count, plural, other{以下のサブドメイン}} Spark Sip {count, plural, other{Addresses}}が使用されています。",
     "subdomainChangesDescription": "サブドメインの変更が完了するまで最長数時間かかる場合があります。",
-    "subdomainDescription": "あなたの会社を識別するためのサブドメインを選択します。サブドメインは、{count, other{Spark SIP アドレス}} を作成するために使用されます。いったん選択したサブドメイン名は、後からアカウント設定で変更することができます。",
+    "subdomainDescription": "あなたの会社を識別するためのサブドメインを選択します。サブドメインは、{count, plural, other{Spark SIP アドレス}} を作成するために使用されます。いったん選択したサブドメイン名は、後からアカウント設定で変更することができます。",
     "updateSubdomainMessage": "サブドメインの変更が完了するまで最長数時間かかる場合があります。いったん変更が完了すると、ユーザーは以前の Spark SIP アドレスを使用して通話することができなくなります。",
     "subdomainUpdateConfirmation": "この操作は営業時間外に行うことが推奨されます。変更内容を保存しますか?",
     "editCSCPartOne": "組織内の Hybrid Call Service Connect が有効になりました。すべてのユーザーについて Call Service Connect を一時的に無効にしない限り、Spark SIP アドレスのサブドメインを変更することはできません。",
@@ -3896,10 +3896,10 @@
     "editNumbers": "電話番号の編集",
     "pendingNumbersTooltip": "番号は様々な理由により保留になることがあります。処理に時間がかかり申し訳ありません。処理時間が長すぎる場合はプロバイダーにご連絡ください。",
     "listError": "電話番号リストの読み込みに失敗しました。",
-    "allNumbers": "{count, other{番号 # 件}}",
-    "pendingNumbers": "{count, other{保留中の番号 # 件}}",
-    "unassignedNumbers": "{count, other{未割り当ての番号 # 件}}",
-    "searchResults": "{count, other{検索結果 # 件}}",
+    "allNumbers": "{count, plural, other{番号 # 件}}",
+    "pendingNumbers": "{count, plural, other{保留中の番号 # 件}}",
+    "unassignedNumbers": "{count, plural, other{未割り当ての番号 # 件}}",
+    "searchResults": "{count, plural, other{検索結果 # 件}}",
     "findNumber": "番号を探す..."
   },
   "pstnOrderOverview": {
@@ -3917,7 +3917,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "オーダー番号 {{orderId}}",
-    "pendingNumbers": "このオーダーには保留中の番号が {count, other{ # 件}}あります",
+    "pendingNumbers": "このオーダーには保留中の番号が {count, plural, other{ # 件}}あります",
     "searchPlaceholder": "電話番号の検索",
     "waitOnTOSAcceptance": "顧客からのサービス利用規約の承認待ち",
     "orderCreationDate": "日付: {{date}} 作成者: {{createdBy}}",
@@ -3963,7 +3963,7 @@
     "package": "パッケージ",
     "adding": "追加中",
     "numbersTitle": "番号",
-    "numbers": "{count, other{番号 # 件}}",
+    "numbers": "{count, plural, other{番号 # 件}}",
     "newNumbers": "{{count}} 新規",
     "portNumbers": "{{Count}} ポート",
     "thankYou": "ありがとうございます",
@@ -4095,7 +4095,7 @@
     "feature4": "ディレクトリ一覧",
     "feature5": "E911",
     "feature6": "セットアップ費用なし"
-  },  
+  },
   "partnerHomePage": {
     "trialsHeading": "トライアル",
     "onboardingTitle": "オンボーディング",
@@ -4361,9 +4361,9 @@
     "notes": "メモ",
     "active": "アクティブ",
     "free": "無料",
-    "daysRemaining": "あと {count, other{# 日}}",
-    "daysLeftToPurchase": "購入期限まであと {count, other{# 日}}",
-    "daysLeftToRenew": "更新期限まであと {count, other{# 日}}",
+    "daysRemaining": "あと {count, plural, other{# 日}}",
+    "daysLeftToPurchase": "購入期限まであと {count, plural, other{# 日}}",
+    "daysLeftToRenew": "更新期限まであと {count, plural, other{# 日}}",
     "expiringToday": "本日終了します",
     "expired": "有効期限切れ",
     "expiredWithGracePeriod": "有効期限切れ。今すぐ購入",
@@ -4397,7 +4397,7 @@
     "trialTerms": "トライアルの使用条件",
     "trialOverview": "トライアル",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, other{他 # サイト}}",
+    "webexSiteCount": "{count, plural, other{他 # サイト}}",
     "licenses": "ライセンス数",
     "totalQuantity": "合計数",
     "totalLicenses": "総ライセンス数",
@@ -4447,7 +4447,7 @@
     "accountStatus": "アカウント ステータス",
     "totalUsers": "合計ユーザー数",
     "purchased": "購入済み",
-    "domain": "{count, other{ドメイン}}",
+    "domain": "{count, plural, other{ドメイン}}",
     "domains": "ドメイン",
     "quantityWithValue": "数量: {{quantity}}",
     "anotherPartner": "(別のパートナー)",

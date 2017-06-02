@@ -505,6 +505,9 @@
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);
       },
+      isFusionIMP: function () {
+        return isEntitled(Config.entitlements.imp);
+      },
       isFusionMedia: function () {
         return isEntitled(Config.entitlements.mediafusion);
       },
@@ -576,11 +579,9 @@
         // On Login to partner portal, orgid has the partner info
         // On Login to customer portal, need to get the call partner info from services licenses data
         if (this.isPartner()) {
-          return this.getOrgId();
-        } else {
-          //handle case where comm(call) license is not there for org but shared_devices(room systems) is there
-          return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId();
+          this.getOrgId();
         }
+        return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId() || this.getOrgId();
       },
       addEntitlement: function (entitlementObj) {
         var entitlement = _.get(entitlementObj, 'ciName');

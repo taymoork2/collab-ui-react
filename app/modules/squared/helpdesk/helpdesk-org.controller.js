@@ -6,7 +6,7 @@
     .controller('HelpdeskOrgController', HelpdeskOrgController);
 
   /* @ngInject */
-  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, FusionClusterService, LicenseService, Notification, Orgservice, UrlConfig) {
+  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, HybridServicesClusterService, LicenseService, Notification, Orgservice, UrlConfig) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -296,7 +296,7 @@
 
     function openHybridServicesModal() {
       vm.loadingHSData = true;
-      FusionClusterService.getAll(vm.orgId)
+      HybridServicesClusterService.getAll(vm.orgId)
         .then(function (hsData) {
           $modal.open({
             templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
@@ -312,7 +312,7 @@
           });
         })
         .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          Notification.errorResponse(error, 'hercules.genericFailure');
         })
         .finally(function () {
           vm.loadingHSData = false;
@@ -320,7 +320,7 @@
     }
 
     function notifyError(response) {
-      Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+      Notification.errorResponse(response, 'helpdesk.unexpectedError');
     }
   }
 }());

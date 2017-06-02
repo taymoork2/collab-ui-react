@@ -252,7 +252,7 @@ describe('Service: Notification', function () {
 
     it('should notify an error from response string', function () {
       let response = 'some error string';
-      Notification.errorResponse(response, 'Something happened.');
+      Notification.errorResponse(response, 'Something happened'); // no trailing period
       let notifyMessage = 'Something happened. some error string';
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
     });
@@ -307,7 +307,7 @@ describe('Service: Notification', function () {
       let response = createHttpResponseWith({
         status: 0,
       });
-      Notification.errorResponse(response, 'Something happened.');
+      Notification.errorResponse(response, 'Something happened'); // no trailing period
       let notifyMessage = 'Something happened. errors.statusUnknown. TrackingID: Atlas_123';
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
     });

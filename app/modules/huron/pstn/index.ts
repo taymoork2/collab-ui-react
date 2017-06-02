@@ -2,53 +2,14 @@ import pstnContactInfo from './pstnContactInfo';
 import pstnProviders from './pstnProviders';
 import pstnSwivelNumbers from './pstnSwivelNumbers';
 import pstnTermsOfService from './pstnTermsOfService';
-import PstnService from './pstn.service';
-import PstnModel from './pstn.model';
+import pstnService from './pstn.service';
+import pstnModel from './pstn.model';
+import terminusService from './terminus.service';
 
-export {
-  TIMEOUT,
-  SWIVEL,
-  MIN_VALID_CODE,
-  MAX_VALID_CODE,
-  NPA,
-  NXX,
-  MAX_DID_QUANTITY,
-  NUMTYPE_DID,
-  NUMTYPE_TOLLFREE,
-  NXX_EMPTY,
-  TOLLFREE_ORDERING_CAPABILITY,
-  NUMBER_ORDER,
-  PORT_ORDER,
-  BLOCK_ORDER,
-  SWIVEL_ORDER,
-  ORDER,
-  MIN_BLOCK_QUANTITY,
-  MAX_BLOCK_QUANTITY,
-  TOKEN_FIELD_ID,
-  PSTN,
-  GROUP_BY,
-  INTELEPEER,
-  TATA,
-  TELSTRA,
-  WESTUC,
-  UPDATE,
-  DELETE,
-  ADD,
-  AUDIT,
-  CANCELLED,
-  PENDING,
-  PROVISIONED,
-  QUEUED,
-  TYPE_PORT,
-  ADMINTYPE_PARTNER,
-  ADMINTYPE_CUSTOMER,
-} from './pstn.const';
-
-
-export {
-  PstnService,
-  PstnModel,
-};
+export * from './pstn.const';
+export * from './pstn.model';
+export * from './pstn.service';
+export * from './terminus.service';
 
 export default angular
   .module('huron.pstn', [
@@ -56,6 +17,7 @@ export default angular
     pstnProviders,
     pstnSwivelNumbers,
     pstnTermsOfService,
-    PstnService,
-    PstnModel,
+    pstnModel,
+    pstnService,
+    terminusService,
   ]).name;

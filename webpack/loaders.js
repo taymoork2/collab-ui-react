@@ -77,6 +77,9 @@ exports.scss = {
     {
       // uses postcss.config.js for options (needed for ExtractTextPlugin)
       loader: 'postcss-loader',
+      options: {
+        sourceMap: true,
+      },
     },
     {
       loader: 'sass-loader',

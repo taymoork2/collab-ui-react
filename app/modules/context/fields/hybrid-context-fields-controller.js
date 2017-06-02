@@ -9,11 +9,10 @@ require('./_fields-list.scss');
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, hasContextDictionaryEditFeatureToggle, PropertyService, Authinfo) {
+  function HybridContextFieldsCtrl($scope, $rootScope, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, PropertyService, Authinfo) {
     var vm = this;
     var eventListeners = [];
 
-    vm.hasContextDictionaryEditFeatureToggle = hasContextDictionaryEditFeatureToggle;
     vm.load = true;
     vm.fetchFailed = false;
     vm.currentDataPosition = 0;
@@ -98,6 +97,14 @@ require('./_fields-list.scss');
         PII: $translate.instant('context.dictionary.fieldPage.piiEncrypted'),
       };
 
+      var dataTypeApiMap = {
+        boolean: $translate.instant('context.dictionary.dataTypes.boolean'),
+        date: $translate.instant('context.dictionary.dataTypes.date'),
+        double: $translate.instant('context.dictionary.dataTypes.double'),
+        integer: $translate.instant('context.dictionary.dataTypes.integer'),
+        string: $translate.instant('context.dictionary.dataTypes.string'),
+      };
+
       // searchable is a string, so even "false" is truthy. if searchable has a value already, get boolean value
       // default to true if not provided
       if (_.isString(field.searchable)) {
@@ -110,13 +117,13 @@ require('./_fields-list.scss');
       field.searchableUI = searchableMap[field.searchable] || $translate.instant('common.yes');
 
       if (field.dataType) {
-        field.dataTypeUI = _.upperFirst(field.dataType.trim());
+        field.dataTypeUI = dataTypeApiMap[field.dataType.trim()];
       }
 
       field.classificationUI = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
 
       if (field.lastUpdated) {
-        field.lastUpdatedUI = $filter('date')(field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+        field.lastUpdatedUI = moment(field.lastUpdated).format('LL');
       }
 
       var accessibleMap = {
@@ -223,6 +230,7 @@ require('./_fields-list.scss');
         enableRowHeaderSelection: false,
         enableColumnMenus: false,
         enableRowHashing: false,
+        enableSorting: true,
         onRegisterApi: onRegisterApi,
         columnDefs: [{
           field: 'id',

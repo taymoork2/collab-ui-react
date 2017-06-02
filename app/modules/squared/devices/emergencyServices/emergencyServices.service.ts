@@ -4,6 +4,7 @@ import { FeatureMemberService } from 'modules/huron/features/services/featureMem
 import { HuronCompassService } from 'modules/huron/compass/compass.service';
 import { PstnService } from '../../../huron/pstn/pstn.service';
 import { PstnModel } from '../../../huron/pstn/pstn.model';
+import { TerminusService } from 'modules/huron/pstn';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
@@ -23,7 +24,7 @@ export class EmergencyServicesService {
     private PstnSetupStatesService,
     private PstnModel: PstnModel,
     private PstnService: PstnService,
-    private TerminusUserDeviceE911Service,
+    private TerminusService: TerminusService,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
     private HuronCompassService: HuronCompassService,
@@ -99,7 +100,7 @@ export class EmergencyServicesService {
   }
 
   public getAddressForNumber(number: string): ng.IPromise<{e911Address, status}> {
-    return this.TerminusUserDeviceE911Service.get({
+    return this.TerminusService.customerNumberE911V2().get({
       customerId: this.Authinfo.getOrgId(),
       number: number,
     }).$promise.then(response => {
@@ -153,7 +154,7 @@ export class EmergencyServicesService {
         e911Address: address,
       };
     }
-    return this.TerminusUserDeviceE911Service
+    return this.TerminusService.customerNumberE911V2()
       .update({
         customerId: this.Authinfo.getOrgId(),
         number: emergency.emergencyNumber,

@@ -6,7 +6,7 @@
     .controller('AADynamicAnnouncementsModalCtrl', AADynamicAnnouncementsModalCtrl);
 
   /* @ngInject */
-  function AADynamicAnnouncementsModalCtrl($modalInstance, $translate, AASessionVariableService, AAModelService, AACommonService) {
+  function AADynamicAnnouncementsModalCtrl($modalInstance, $translate, AASessionVariableService, AAModelService, AACommonService, variableSelection, readAsSelection/*, aa_schedule, aa_index*/) {
     var vm = this;
 
     vm.selectPlaceholder = $translate.instant('common.select');
@@ -30,11 +30,8 @@
         value: '',
       },
     ];
-    vm.readAsSelection = vm.readAsOptions[3];
-    vm.variableSelection = {
-      label: '',
-      value: '',
-    };
+    vm.readAsSelection = readAsSelection;
+    vm.variableSelection = variableSelection;
     vm.variableOptions = [
       {
         label: $translate.instant('autoAttendant.decisionNumberDialed'),
@@ -59,7 +56,11 @@
     //else the dismiss was called
     function ok() {
       //do something with ng-models
-      $modalInstance.close();
+      var result = {
+        variable: vm.variableSelection,
+        readAs: vm.readAsSelection,
+      };
+      $modalInstance.close(result);
     }
 
     function isSaveEnabled() {
@@ -79,7 +80,8 @@
     }
 
     function populateScope() {
-      //TODO
+/*      $scope.schedule = aa_schedule;
+      $scope.index = aa_index;*/
     }
 
     function setUpVariablesOptions(variableOptionsArray) {

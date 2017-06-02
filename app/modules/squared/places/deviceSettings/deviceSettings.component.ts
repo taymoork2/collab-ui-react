@@ -62,7 +62,7 @@ class DeviceSettings implements ng.IComponentController {
   private fetchAsyncSettings(): void {
     this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(placeUpgradeChannel => {
       if (placeUpgradeChannel) {
-        let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.product); // TODO: Replace with sw version check once implemented
+        let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
         if (firstUnsupportedDevice) {
           this.unsupportedDeviceTypeForUpgradeChannel = firstUnsupportedDevice.product;
         }
@@ -80,7 +80,7 @@ class DeviceSettings implements ng.IComponentController {
 
     this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(placeGuiSettings => {
       if (placeGuiSettings) {
-        let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.product); // TODO: Replace with sw version check once implemented
+        let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
         if (firstUnsupportedDevice) {
           this.unsupportedDeviceTypeForGuiSettings = firstUnsupportedDevice.product;
         }
