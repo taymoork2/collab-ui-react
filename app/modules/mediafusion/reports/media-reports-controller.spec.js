@@ -198,6 +198,7 @@ describe('Controller:MediaReportsController', function () {
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalled();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalled();
       expect(MediaReportsService.getOverflowIndicator).toHaveBeenCalled();
+      expect(controller.clusterUnavailablityFlag).toBeFalsy();
     });
 
     it('setTotalCallsData should invoke getTotalCallsData', function () {

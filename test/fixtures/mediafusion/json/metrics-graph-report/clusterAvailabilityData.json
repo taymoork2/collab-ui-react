@@ -13,7 +13,8 @@
               "color": "#417505",
               "startTime": "2016-08-18T06:50:00Z",
               "endTime": "2016-08-19T06:30:00Z",
-              "task": "Available</br>1 nodes"
+              "task": "Available</br>1 nodes",
+              "availability": "Available",
             }
           ]
         },
