@@ -31,9 +31,10 @@
 
     function getPromptTimeOptions() {
       return [
-        { label: $translate.instant('careChatTpl.promptTimeOption1'), value: 60 },
-        { label: $translate.instant('careChatTpl.promptTimeOption2'), value: 180 },
-        { label: $translate.instant('careChatTpl.promptTimeOption3'), value: 300 },
+        { label: $translate.instant('careChatTpl.promptTimeOption1'), value: 30 },
+        { label: $translate.instant('careChatTpl.promptTimeOption2'), value: 60 },
+        { label: $translate.instant('careChatTpl.promptTimeOption3'), value: 180 },
+        { label: $translate.instant('careChatTpl.promptTimeOption4'), value: 300 },
       ];
     }
 
