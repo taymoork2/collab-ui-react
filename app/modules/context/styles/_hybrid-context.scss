@@ -114,15 +114,17 @@
     cursor: pointer;
   }
 
-  .btn--white {
-    border-radius: 2px;
-    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
-  }
+  .btn--link {
+    font-size: 0.875rem;
 
-  .btn--white:hover {
-    background-color: white;
-    border-radius: 2px;
-    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+    &:hover,
+    &:active,
+    &:focus {
+      color: $color-primary-base;
+      background-color: transparent;
+      border-color: transparent;
+      outline: none;
+    }
   }
 
   .typeahead-search {
@@ -133,7 +135,7 @@
       width: 42rem;
 
       &.active:hover {
-        background: #ebebec;
+        background: $gray-light-3;
       }
     }
 
@@ -157,6 +159,165 @@
       line-height: 24px;
       padding-top: 6px;
       padding-left: 16px;
+    }
+  }
+
+  .options-section {
+    margin-top: 0.875rem;
+    width: 51%;
+
+    .options-spacing-edit {
+      @include vr-spacing(mr, 1);
+    }
+
+    .options-spacing-input {
+      @include vr-spacing(pr, 0.25);
+    }
+
+    .options-label {
+      color: $gray-dark-2;
+
+      @include vr-spacing(pb, 0.25);
+    }
+
+    .option-name-readonly {
+      max-width: 80%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .options-row-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 2.5rem;
+      padding-right: 1.5rem;
+      @include vr-spacing(pv, 0.5);
+    }
+
+    .options-readonly-wrapper {
+      @extend .options-row-wrapper;
+
+      .icon {
+        color: $gray-light-1;
+        font-size: 1rem;
+
+        &:hover {
+          color: $color-primary-base;
+        }
+      }
+
+      .icon-trash:hover {
+        color: $color-negative-base;
+      }
+    }
+
+    .options-edit-wrapper {
+      @extend .options-row-wrapper;
+
+      input {
+        width: 16rem;
+        margin-left: -0.75rem;
+      }
+
+      .option-text-input {
+        display: inline-flex;
+        float: left;
+        max-width: 60%;
+
+        .cs-input-group {
+          margin-bottom: 0;
+        }
+      }
+
+      .btn--small {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 1rem;
+        margin-left: 10px;
+        margin-top: 5px;
+      }
+    }
+
+    .icon-tables {
+      cursor: move;
+      cursor: grab;
+      font-size: 1.5rem;
+    }
+
+    .options-container {
+      margin-left: -1.5625rem;
+      width: 110%;
+      font-size: 0.875rem;
+      overflow: auto;
+
+      .badge {
+        margin-left: 10px;
+      }
+    }
+
+    .options-reorder {
+      cursor: move;
+      cursor: grab;
+    }
+
+    .options-reorder-transit {
+      background-color: $brand-primary;
+      color: $brand-white;
+
+      .options-label,
+      .icon {
+        color: $brand-white;
+      }
+    }
+
+    .options-list-action-buttons {
+      margin-right: -0.5rem;
+    }
+
+    .limit-reach-warning {
+      @include vr-spacing(pl, 0);
+
+      color: $gray-dark-2;
+    }
+
+    .cs-input-radio {
+      margin-left: -1rem;
+    }
+
+    .cs-input__messages {
+      display: block;
+      visibility: hidden;
+    }
+
+    .error .cs-input__messages {
+      visibility: visible;
+    }
+
+    .warning .cs-input__messages {
+      visibility: visible;
+    }
+
+    .error-text {
+      color: $color-alerts-base;
+    }
+
+    .dropdown-menu {
+      left: 20px;
+      right: auto;
+    }
+
+    .dropdown-toggle {
+      font-size: 1.5rem;
+    }
+
+    .add-button {
+      padding-left: 0.2rem;
+    }
+
+    .cancel-button {
+      color: $gray-base;
     }
   }
 }

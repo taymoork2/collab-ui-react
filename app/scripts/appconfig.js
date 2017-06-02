@@ -3316,13 +3316,14 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" dismiss="$dismiss()" class="context-modal"></context-field-modal>',
+                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" dismiss="$dismiss()" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle" class="context-modal"></context-field-modal>',
               },
             },
             params: {
               existingFieldIds: [],
               existingFieldData: {},
               callback: function () {},
+              hasContextExpandedTypesToggle: false,
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
@@ -3333,6 +3334,9 @@
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
+              },
+              hasContextExpandedTypesToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextExpandedTypes);
               },
             },
           })

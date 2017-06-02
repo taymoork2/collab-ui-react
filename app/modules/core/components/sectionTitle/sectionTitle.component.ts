@@ -23,6 +23,7 @@ angular.module('Core')
     controller: SectionTitle,
     bindings: {
       titleKey: '@',
+      titleKeyValues: '@',
       showActions: '<',
       actionList: '<',
       asButton: '<',

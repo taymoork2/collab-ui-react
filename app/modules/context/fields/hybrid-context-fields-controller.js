@@ -118,6 +118,11 @@ require('./_fields-list.scss');
 
       if (field.dataType) {
         field.dataTypeUI = dataTypeApiMap[field.dataType.trim()];
+
+        //for custom type
+        if (field.dataTypeDefinition && field.dataTypeDefinition.type === 'enum') {
+          field.dataTypeUI = $translate.instant('context.dictionary.dataTypes.enumString');
+        }
       }
 
       field.classificationUI = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
