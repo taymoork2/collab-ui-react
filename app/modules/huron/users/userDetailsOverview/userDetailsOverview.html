@@ -1,5 +1,5 @@
 <cs-sp-buttons ng-class="{invisible: !$ctrl.onPrefLanguageChange}">
-  <button cs-btn loading="$ctrl.prefLanguageSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePreferredLanguage()" ng-disabled="$ctrl.prefLanguageSaveInProcess" type="click">
+  <button cs-btn loading="$ctrl.prefLanguageSaveInProcess" class="btn btn--primary" ng-click="$ctrl.openSaveModal()" ng-disabled="$ctrl.prefLanguageSaveInProcess" type="click">
     <span translate="common.save"></span>
   </button>
   <button cs-btn ng-click="$ctrl.onCancelPreferredLanguage()">

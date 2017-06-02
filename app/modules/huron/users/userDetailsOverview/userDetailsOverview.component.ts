@@ -1,6 +1,7 @@
 import { IPreferredLanugageOption } from '../../preferredLanguage/preferredLanugage.interfaces';
 import { UserOverviewService } from '../../../core/users/userOverview/userOverview.service';
 import { Notification } from '../../../core/notifications';
+import { IToolkitModalService } from '../../../core/modal/index';
 
 interface IUserDetailsOverviewFeature {
   selectedLanguageCode?: string | undefined;
@@ -23,6 +24,7 @@ class UserDetailsOverview implements ng.IComponentController {
     private UserOverviewService: UserOverviewService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
+    private ModalService: IToolkitModalService,
   ) { }
 
   public $onInit(): void {
@@ -45,6 +47,18 @@ class UserDetailsOverview implements ng.IComponentController {
   public setPreferredLanguage(preferredLanguage: any): void {
     this.preferredLanguage = preferredLanguage;
     this.checkForChanges();
+  }
+
+  public openSaveModal(): void {
+    this.ModalService.open({
+      title: this.$translate.instant('preferredLanguage.saveModal.title'),
+      message: this.$translate.instant('preferredLanguage.saveModal.message1') + '<br/><br/>'
+        + this.$translate.instant('preferredLanguage.saveModal.message2'),
+      close: this.$translate.instant('common.yes'),
+      dismiss: this.$translate.instant('common.no'),
+    }).result.then(() => {
+      this.savePreferredLanguage();
+    });
   }
 
   public savePreferredLanguage(): void {

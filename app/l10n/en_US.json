@@ -3902,7 +3902,12 @@
     "failedToFetchSiteLanguages": "Failed to fetch languages. Reason:",
     "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:",
     "userModule": "user",
-    "placeModule": "place"
+    "placeModule": "place",
+    "saveModal": {
+      "title": "Save Settings",
+      "message1": "Changing the language will cause all devices for this user to reboot and may take a few minutes.",
+      "message2": "Do you want to save your changes?"
+    }
   },
   "directoryNumberPanel": {
     "title": "Line Configuration",
