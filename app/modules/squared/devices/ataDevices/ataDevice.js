@@ -6,16 +6,24 @@
     .controller('AtaDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, $scope, Notification, $stateParams, device) {
+      function ($modalInstance, $scope, Notification, FeatureToggleService, $stateParams, device) {
         var ata = this;
         var huronDeviceService = $stateParams.huronDeviceService;
 
         ata.device = device;
         ata.isLoading = false;
 
-        $scope.$$postDigest(function () {
-          $scope.$broadcast('rzSliderForceRender');
-        });
+        function init() {
+          FeatureToggleService.csdmAtaRebootGetStatus().then(function (response) {
+            ata.ataRebootWarningToggle = response;
+          });
+
+          $scope.$$postDigest(function () {
+            $scope.$broadcast('rzSliderForceRender');
+          });
+        }
+
+        init();
 
         /*
          * Default variables.

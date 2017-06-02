@@ -12,8 +12,8 @@
 <!-- body -->
 <div
   class="modal-body ataDeviceModal">
-  <p translate="ataSettings.description">
-  </p>
+  <p translate="ataSettings.description" ng-if="!ata.ataRebootWarningToggle"></p>
+  <p translate="ataSettings.rebootDescription" ng-if="ata.ataRebootWarningToggle"></p>
   <br>
 
   <h5 translate="ataSettings.input"></h5>
