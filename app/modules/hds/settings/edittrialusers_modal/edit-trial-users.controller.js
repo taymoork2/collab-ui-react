@@ -18,6 +18,8 @@
     vm.addUser = addUser;
     vm.saveTrialUsers = saveTrialUsers;
     vm.getNumUsersInTagField = getNumUsersInTagField;
+    vm.onTagRemoving = onTagRemoving;
+    vm.onTagAdding = onTagAdding;
     vm.maxTrialUsers = 250;
     var localizedRefreshOtherServices = $translate.instant('hds.resources.addTrialUsers.refreshOtherServices');
     var localizedInvalidUsers = $translate.instant('hds.resources.editTrialUsers.invalidUsers');
@@ -62,6 +64,23 @@
         vm.savingEmail = true;
       }
     }
+
+    function onTagRemoving() {
+      if (vm.dirsyncEnabled === true) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    function onTagAdding() {
+      if (vm.dirsyncEnabled === true) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
 
     function addUser() {
       var emailTrialUsers = _.map(vm.emailTrialUsers, function (data) {
