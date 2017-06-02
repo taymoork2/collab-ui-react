@@ -32,6 +32,7 @@ module.exports = csp({
       'http://127.0.0.1:8000',
       'https://ds2-qlikdemo',
       'https://ds2-win2012-01',
+      'https://10.29.42.18',
     ],
     objectSrc: [
       'http://www.cisco.com', // Terms of Service
