@@ -111,6 +111,9 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
         sendToVoicemail: false,
       });
     }
+    if (this.isAlternate) {
+      fallbackDestination.timer = 5;
+    }
     this.onChangeFn({
       fallbackDestination: fallbackDestination,
     });
