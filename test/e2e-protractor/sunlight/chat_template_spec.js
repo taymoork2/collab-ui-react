@@ -25,6 +25,7 @@ describe('Care admin should be able to', function () {
   });
 
   it('validate proactive prompt page', function () {
+    utils.click(careChatTemplateSetupPage.proactivePromptToggle);
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfProactivePromptPage();
   });

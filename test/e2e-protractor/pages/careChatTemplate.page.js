@@ -24,6 +24,7 @@ var ChatTemplateCreation = function () {
   this.previewMinimizeIcon = element(by.css('.actions .icon-minus'));
   this.previewCloseIcon = element(by.css('.actions .icon-close'));
   this.agentDisplayImage = element(by.css('.profile-image .icon-user-chat'));
+  this.proactivePromptToggle = element.all(by.css('.toggle-switch')).get(0);
   this.customerInfoToggle = element.all(by.css('.toggle-switch')).get(1);
   this.overviewCard = element.all(by.css('.ct-card-overview'));
   this.customerInfoEnabledCard = element.all(by.css('.ct-card-border-enabled')).get(1);
