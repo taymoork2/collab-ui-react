@@ -156,7 +156,6 @@
               } else {
                 if (vm.dirsyncEnabled === true) {
                   setHDSDefaultForAltHDSServersGroup();
-                  getTrialUsersInfo();
                 }
               }
             } else {
