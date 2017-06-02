@@ -166,9 +166,10 @@ class HuntGroupCtrl implements ng.IComponentController {
     }
 
     this.HuntGroupService.updateHuntGroup(this.huntGroup.uuid || '', this.huntGroup)
-    .then( () => {
+    .then((huntGroup: HuntGroup) => {
       this.Notification.success('huronHuntGroup.successUpdate', { huntGroupName: this.huntGroup.name } );
       this.title = this.huntGroup.name || '';
+      this.huntGroup = huntGroup;
     })
     .catch( (response) => {
       this.Notification.errorWithTrackingId(response);
