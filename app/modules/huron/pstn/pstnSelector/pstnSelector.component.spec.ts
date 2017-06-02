@@ -1,11 +1,13 @@
-describe('Component: directoryNumber', () => {
+import pstnSelector from './index';
+
+describe('Component: pstnSelector', () => {
   const SEARCH_INPUT = '[name="search"]';
   const SEARCH_BUTTON = '.btn-primary';
   const ADD_BUTTON = '.btn--people';
   const CHECKBOX = 'cs-checkbox label';
 
   beforeEach(function () {
-    this.initModules('Huron');
+    this.initModules(pstnSelector);
     this.injectDependencies(
       '$scope',
       '$timeout',
@@ -31,7 +33,7 @@ describe('Component: directoryNumber', () => {
   });
 
   function initComponent() {
-    this.compileComponent('pstnSelector', {
+    this.compileComponent('ucPstnSelector', {
       search: 'search(value)',
       addToCart: 'addToCart(searchResultModel)',
       searchResults: 'searchResults',

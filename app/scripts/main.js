@@ -117,7 +117,6 @@
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
     require('modules/huron/pstn').default,
-    require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
     require('modules/huron/lines/deleteExternalNumber').default,
     require('modules/call/features').default,
