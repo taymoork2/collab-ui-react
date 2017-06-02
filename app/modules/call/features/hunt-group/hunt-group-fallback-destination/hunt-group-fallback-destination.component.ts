@@ -43,14 +43,14 @@ class HuntGroupFallbackDestinationCtrl implements ng.IComponentController {
   }
 
   public setHuntGroupAlternateDestination(destination: FallbackDestination): void {
-    this.alternateDestination.number = destination.number;
+    this.alternateDestination = destination;
     this.onChangeAlternateFn({
       alternateDestination: this.alternateDestination,
     });
   }
 
-  public setTimerMins(timer: number): void {
-    this.alternateDestination.timer = timer;
+  public setTimerMins(minutes: number): void {
+    this.alternateDestination.timer = minutes;
     this.onChangeAlternateFn({
       alternateDestination: this.alternateDestination,
     });
@@ -66,7 +66,7 @@ export class HuntGroupFallbackDestinationComponent implements ng.IComponentOptio
     fallbackDestination: '<',
     alternateDestination: '<',
     onChangeDestinationRuleFn: '&',
-    onChangedestinationFn: '&',
+    onChangeDestinationFn: '&',
     onChangeAlternateFn: '&',
   };
 }

@@ -74,7 +74,7 @@
             on-change-fn="$ctrl.setMaxWaitMins(minutes)">
           </uc-hunt-group-max-wait-time>
         </div>
-        <div class="sub-section">
+        <div ng-if="!$ctrl.isHi1487Supported" class="sub-section">
           <h5 class="sub-section__title" translate="huronHuntGroup.fallbackLabel"></h5>
           <p class="sub-section__description" translate="huronHuntGroup.fallbackDesc"></p>
           <uc-fallback-destination

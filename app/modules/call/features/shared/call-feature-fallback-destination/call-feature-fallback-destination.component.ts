@@ -19,6 +19,8 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public directoryNumber: any;
   public hasVoicemail: boolean = false;
   public thumbnailSrc: string | undefined = undefined;
+  public isAlternate: boolean;
+  public index: string = '';
 
   /* @ngInject */
   constructor(
@@ -30,7 +32,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { fallbackDestination, showReversionLookup } = changes;
+    const { fallbackDestination, showReversionLookup, isAlternate } = changes;
     if (fallbackDestination && fallbackDestination.currentValue) {
       this.processCallFeatureFallbackDestChanges(fallbackDestination);
     }
@@ -39,6 +41,11 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
       if (this.fallbackDestForm && showReversionLookup.currentValue) {
         this.fallbackDestForm.$setValidity('', false, this.fallbackDestForm);
       }
+    }
+
+    if (isAlternate && isAlternate.currentValue) {
+      this.isAlternate = isAlternate.currentValue;
+      this.index = (this.isAlternate) ? '1' : '';
     }
   }
 
@@ -129,6 +136,9 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
       memberUuid: this.fallbackDestination.memberUuid,
       sendToVoicemail: this.fallbackDestination.sendToVoicemail,
     });
+    if (this.isAlternate) {
+      fallbackDestination.timer = this.fallbackDestination.timer;
+    }
     this.onChangeFn({
       fallbackDestination: fallbackDestination,
     });
@@ -158,6 +168,7 @@ export class CallFeatureFallbackDestinationComponent implements ng.IComponentOpt
     fallbackDestination: '<',
     showReversionLookup: '<',
     isNew: '<',
+    isAlternate: '<',
     onChangeFn: '&',
   };
 }

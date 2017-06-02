@@ -1,3 +1,4 @@
+import './hunt-group-fallback-destination.component.scss';
 import { HuntGroupFallbackDestinationComponent } from './hunt-group-fallback-destination.component';
 import fallbackDestModule from 'modules/call/features/shared/call-feature-fallback-destination';
 
