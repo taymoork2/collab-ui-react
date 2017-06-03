@@ -22,6 +22,8 @@ module.exports = function BrandingCtrl($state, $modal, $scope, $translate, $time
 
   brand.useLatestWbxVersion = false;
   brand.wbxclientversionselected = '';
+  brand.wbxclientVersionInvalid = false;
+  brand.wbxclientVersionInvalidError = '';
   brand.wbxclientversions = ['testversion1.0', 'testversion2.0'];
   brand.wbxNoClientSelected = true;
   brand.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
