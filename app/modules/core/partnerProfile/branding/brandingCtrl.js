@@ -86,14 +86,11 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
     var funcName = "brand.initWbxClientVersions()";
     var logMsg = "";
 
-    //wbxclientversionselected
-    //brand.wbxclientversions = "";
-    var succ = function (data) {
-      brand.wbxclientversions = data;
-    };
-
     //nothing to do on error.
-    WebexClientVersion.getWbxClientVersions().then(succ);
+    WebexClientVersion.getWbxClientVersions().then(function (data) {
+      brand.wbxclientversions = data;
+    });
+
     //will need to do more stuff here. Init selected version as well.
     //disable drop down ... but maybe not.
 
@@ -104,73 +101,71 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
     //var p = WebexClientVersion.getTemplate(orgId)
 
     p.then(function (json) {
-      var clientVersion = _.get(json, 'data.clientVersion') || '';
-      var useLatest = _.get(json, 'data.useLatest') || false;
-      var updateDb = false;
-      var validClientVersion = false;
+      WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
+        var pid = resp.data.partnerId;
 
-      // clientVersion = 'T30L10NSP4EP3';
-      // updateDb = true;
+        var clientVersion = _.get(json, 'data.clientVersion') || '';
+        var useLatest = _.get(json, 'data.useLatest') || false;
+        var updateDb = false;
+        var validClientVersion = false;
 
-      if (clientVersion == 'latest') {
-        clientVersion = '';
-      }
+        // clientVersion = 'T30L10NSP4EP3';
+        // updateDb = true;
 
-      if ('' == clientVersion) {
-        if (!useLatest) {
-          useLatest = true;
-          updateDb = true;
+        if (clientVersion == 'latest') {
+          clientVersion = '';
         }
-      } else {
-        brand.wbxclientversions.forEach(
-          function (wbxclientversion) {
-            if (
-              (!validClientVersion) &&
-              (wbxclientversion == clientVersion)
-            ) {
 
-              validClientVersion = true;
-            }
+        if ('' == clientVersion) {
+          if (!useLatest) {
+            useLatest = true;
+            updateDb = true;
           }
-        );
+        } else {
+          brand.wbxclientversions.forEach(
+            function (wbxclientversion) {
+              if (
+                (!validClientVersion) &&
+                (wbxclientversion == clientVersion)
+              ) {
 
-        if (!validClientVersion) {
-          logMsg = funcName + "\n" +
-            "ERROR: " + "selected clientversion=" + clientVersion + " is invalid.";
-          $log.log(logMsg);
-
-          brand.wbxclientVersionInvalid = true;
-          brand.wbxclientVersionInvalidError = $translate.instant(
-            'partnerProfile.webExClientVersionInvalid',
-            {
-              clientVersion: clientVersion,
+                validClientVersion = true;
+              }
             }
           );
+
+          if (!validClientVersion) {
+            logMsg = funcName + "\n" +
+              "ERROR: " + "selected clientversion=" + clientVersion + " is invalid.";
+            $log.log(logMsg);
+
+            brand.wbxclientVersionInvalid = true;
+            brand.wbxclientVersionInvalidError = $translate.instant(
+              'partnerProfile.webExClientVersionInvalid',
+              {
+                clientVersion: clientVersion,
+              }
+            );
+          }
         }
-      }
 
-      if (updateDb) {
-        logMsg = funcName + "\n" +
-          "Updating d/b" + "\n" +
-          "clientVersion=" + clientVersion + "\n" +
-          "useLatest=" + useLatest;
-        $log.log(logMsg);
+        if (updateDb) {
+          logMsg = funcName + "\n" +
+            "Updating d/b" + "\n" +
+            "clientVersion=" + clientVersion + "\n" +
+            "useLatest=" + useLatest;
+          $log.log(logMsg);
 
-        /*
-        WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
-          return resp.data.partnerId; //bCtrl is the pid
-        }).then(function (pid) {
           WebexClientVersion.postOrPutTemplate(
             pid,
             clientVersion,
             useLatest
           );
-        });
-        */
-      }
+        }
 
-      brand.wbxclientversionselected = clientVersion;
-      brand.useLatestWbxVersion = useLatest;
+        brand.wbxclientversionselected = clientVersion;
+        brand.useLatestWbxVersion = useLatest;
+      });
     });
   };
 
@@ -218,6 +213,9 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
     Log.info("New version selected is " + versionSelected);
 
     p.then(function () {
+      brand.wbxclientVersionInvalid = false;
+      brand.wbxclientVersionInvalidError = '';
+
       Notification.success('partnerProfile.webexClientVersionUpdated');
     }).catch(function (response) {
       Notification.errorResponse(response, 'partnerProfile.webexClientVersionUpdatedFailed');
