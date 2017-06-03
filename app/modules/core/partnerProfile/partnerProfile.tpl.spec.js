@@ -60,6 +60,7 @@ describe('Template: partnerProfile', function () {
     spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.resolve());
     spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.resolve());
     spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'postOrPutTemplate').and.returnValue($q.resolve());
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,
