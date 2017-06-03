@@ -149,6 +149,7 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
         }
       }
 
+      /*
       if (updateDb) {
         logMsg = funcName + "\n" +
           "Updating d/b" + "\n" +
@@ -166,6 +167,7 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
           );
         });
       }
+      */
 
       brand.wbxclientversionselected = clientVersion;
       brand.useLatestWbxVersion = useLatest;
