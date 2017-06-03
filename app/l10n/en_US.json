@@ -5814,7 +5814,7 @@
     "webexVersionUseLatestTrue": "Latest version of Webex client will be used",
     "webexVersionUseLatestFalse": "Selected version of Webex client will be used",
     "webexVersionUseLatestUpdateFailed": "Could not update",
-    "selectAWbxClientVersion": "Select a Webex client version",
+    "selectAWbxClientVersion": "Select a WebEx client version",
     "WbxClientVersionOnlyOnNewSites": "This setting only applies to sites that are setup from now on. Existing sites are not impacted.",
     "webexClientVersion": "Cisco WebEx Application Version",
     "imageUploadFailedSecurity": "Your image upload has failed.",

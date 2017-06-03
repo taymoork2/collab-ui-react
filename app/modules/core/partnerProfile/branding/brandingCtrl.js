@@ -1,5 +1,5 @@
 /* @ngInject */
-module.exports = function BrandingCtrl($state, $modal, $scope, $translate, $timeout,
+module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate, $timeout,
   Authinfo, Notification, Log, UserListService, WebexClientVersion, BrandService, Orgservice) {
 
   var brand = this;
@@ -25,7 +25,6 @@ module.exports = function BrandingCtrl($state, $modal, $scope, $translate, $time
   brand.wbxclientVersionInvalid = false;
   brand.wbxclientVersionInvalidError = '';
   brand.wbxclientversions = ['testversion1.0', 'testversion2.0'];
-  brand.wbxNoClientSelected = true;
   brand.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
   brand.showClientVersions = true;
 
@@ -53,6 +52,7 @@ module.exports = function BrandingCtrl($state, $modal, $scope, $translate, $time
       disableCache: true,
       basicInfo: true,
     };
+
     Orgservice.getOrg(function (data, status) {
       if (data.success) {
         var settings = data.orgSettings;
@@ -83,6 +83,8 @@ module.exports = function BrandingCtrl($state, $modal, $scope, $translate, $time
 
   // TODO webex team clean bCtrl up and add unit tests
   brand.initWbxClientVersions = function () {
+    var funcName = "brand.initWbxClientVersions()";
+    var logMsg = "";
 
     //wbxclientversionselected
     //brand.wbxclientversions = "";
@@ -102,20 +104,73 @@ module.exports = function BrandingCtrl($state, $modal, $scope, $translate, $time
     //var p = WebexClientVersion.getTemplate(orgId)
 
     p.then(function (json) {
-      var clientVersion = _.get(json, 'data.clientVersion');
-      if (clientVersion === 'latest') {
+      var clientVersion = _.get(json, 'data.clientVersion') || '';
+      var useLatest = _.get(json, 'data.useLatest') || false;
+      var updateDb = false;
+      var validClientVersion = false;
+
+      // clientVersion = 'T30L10NSP4EP3';
+      // updateDb = true;
+
+      if (clientVersion == 'latest') {
         clientVersion = '';
       }
-      if (clientVersion === '') {
-        brand.wbxNoClientSelected = true;
-        brand.wbxclientversionselected = brand.wbxclientversionplaceholder;
+
+      if ('' == clientVersion) {
+        if (!useLatest) {
+          useLatest = true;
+          updateDb = true;
+        }
       } else {
-        brand.wbxNoClientSelected = false;
-        brand.wbxclientversionselected = clientVersion;
+        brand.wbxclientversions.forEach(
+          function (wbxclientversion) {
+            if (
+              (!validClientVersion) &&
+              (wbxclientversion == clientVersion)
+            ) {
+
+              validClientVersion = true;
+            }
+          }
+        );
+
+        if (!validClientVersion) {
+          logMsg = funcName + "\n" +
+            "ERROR: " + "selected clientversion=" + clientVersion + " is invalid.";
+          $log.log(logMsg);
+
+          brand.wbxclientVersionInvalid = true;
+          brand.wbxclientVersionInvalidError = $translate.instant(
+            'partnerProfile.webExClientVersionInvalid',
+            {
+              clientVersion: clientVersion,
+            }
+          );
+        }
       }
 
-      brand.useLatestWbxVersion = _.get(json, 'data.useLatest');
+      if (updateDb) {
+        logMsg = funcName + "\n" +
+          "Updating d/b" + "\n" +
+          "clientVersion=" + clientVersion + "\n" +
+          "useLatest=" + useLatest;
+        $log.log(logMsg);
 
+        /*
+        WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
+          return resp.data.partnerId; //bCtrl is the pid
+        }).then(function (pid) {
+          WebexClientVersion.postOrPutTemplate(
+            pid,
+            clientVersion,
+            useLatest
+          );
+        });
+        */
+      }
+
+      brand.wbxclientversionselected = clientVersion;
+      brand.useLatestWbxVersion = useLatest;
     });
   };
 
@@ -123,18 +178,21 @@ module.exports = function BrandingCtrl($state, $modal, $scope, $translate, $time
 
   function toggleWebexSelectLatestVersionAlways(useLatest) {
     Log.info("webex use latest version toggle");
-    var selected = brand.wbxclientversionselected;
+
     brand.useLatestWbxVersion = useLatest;
-    var alwaysSelectLatest = brand.useLatestWbxVersion;
-    //WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, brand.allowCustomerWbxClientVersions);
+
     var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
       return resp.data.partnerId; //bCtrl is the pid
     }).then(function (pid) {
-      return WebexClientVersion.postOrPutTemplate(pid, selected, brand.useLatestWbxVersion);
+      return WebexClientVersion.postOrPutTemplate(
+        pid,
+        brand.wbxclientversionselected,
+        brand.useLatestWbxVersion
+      );
     });
-    //var p = WebexClientVersion.postOrPutTemplate(orgId, selected, brand.useLatestWbxVersion);
+
     p.then(function () {
-      if (alwaysSelectLatest) {
+      if (useLatest) {
         Notification.success('partnerProfile.webexVersionUseLatestTrue');
       } else {
         Notification.success('partnerProfile.webexVersionUseLatestFalse');
