@@ -55,9 +55,10 @@ describe('Template: branding', function () {
     });
     spyOn(BrandService, 'getLogoUrl').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.resolve(["x", "y"]));
+    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.resolve(["version-1", "version-2"]));
     spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.resolve());
     spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'postOrPutTemplate').and.returnValue($q.resolve());
     spyOn(Authinfo, 'isPartner');
   }
 
