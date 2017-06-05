@@ -21,6 +21,7 @@ describe('Controller: MySubscriptionCtrl', function () {
       '$httpBackend',
       '$rootScope',
       '$scope',
+      '$translate',
       '$window',
       '$q',
       'Authinfo',
@@ -51,6 +52,7 @@ describe('Controller: MySubscriptionCtrl', function () {
       this.controller = this.$controller('MySubscriptionCtrl', {
         $scope: this.$scope,
         $rootScope: this.$rootScope,
+        $translate: this.$translate,
         $window: this.$window,
         Orgservice: this.Orgservice,
         ServiceDescriptor: this.ServiceDescriptor,
@@ -74,6 +76,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.licenseCategory).toEqual(this.data.licensesFormatted);
     expect(this.controller.subscriptionDetails).toEqual(this.data.subscriptionsFormatted);
     expect(this.controller.visibleSubscriptions).toBeTruthy();
+    expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummary'));
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
@@ -94,6 +97,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
     expect(this.controller.visibleSubscriptions).toBeTruthy();
     expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
+    expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummaryOnline'));
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
@@ -108,6 +112,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.licenseCategory).toEqual(this.data.trialLicenseData);
     expect(this.controller.subscriptionDetails).toEqual(this.data.trialSubscriptionData);
     expect(this.controller.visibleSubscriptions).toBeTruthy();
+    expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummary'));
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
@@ -130,6 +135,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.subscriptionDetails).toEqual(this.data.trialSubscriptionData);
     expect(this.controller.visibleSubscriptions).toBeTruthy();
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
+    expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummaryOnline'));
     expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
   });
 
