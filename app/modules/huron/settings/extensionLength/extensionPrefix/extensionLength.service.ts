@@ -14,7 +14,7 @@ export class ExtensionLengthService {
     private Authinfo,
     private HuronConfig,
   ) {
-    this.extensionLengthResource = <IExtensionLengthResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/extentionlengths', {}, {});
+    this.extensionLengthResource = <IExtensionLengthResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/extensionlengths', {}, {});
   }
 
   public saveExtensionLength(length: string, prefix: string): ng.IPromise<IExtensionLength> {
