@@ -5260,7 +5260,7 @@
       },
       "allOff": "All Off",
       "allOn": "All On",
-      "clusterPartiallyInService":"  Cluster Partically in Service"
+      "clusterPartiallyInService":"  Cluster Partially in Service"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
