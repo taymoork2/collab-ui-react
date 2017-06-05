@@ -97,6 +97,8 @@ exports.config = {
     global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
 
+    global.provisionerKeepCustomer = !!args.provisionerKeepCustomer;
+
     var jasmineReporters = require('jasmine-reporters');
     var SpecReporter = require('jasmine-spec-reporter');
 

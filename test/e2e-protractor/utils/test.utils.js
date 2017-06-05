@@ -300,9 +300,9 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
 
-exports.expectAllNotDisplayed = this.expectIsNotDisplayed;
-exports.waitIsNotDisplayed = this.expectIsNotDisplayed;
-exports.waitIsDisplayed = this.expectIsDisplayed;
+exports.expectAllNotDisplayed = exports.expectIsNotDisplayed;
+exports.waitIsNotDisplayed = exports.expectIsNotDisplayed;
+exports.waitIsDisplayed = exports.expectIsDisplayed;
 
 exports.expectTextToBeSet = function (elem, text, timeout) {
   browser.wait(function () {

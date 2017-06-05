@@ -81,6 +81,7 @@ module.exports = {
     partner: true,
     process: true,
     protractor: true,
+    provisionerKeepCustomer: true,
     reports: true,
     require: true,
     roles: true,
