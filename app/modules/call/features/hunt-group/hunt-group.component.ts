@@ -103,9 +103,10 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public setHuntGroupDestinationRule(destinationRule: DestinationRule): void {
     this.huntGroup.destinationRule = destinationRule;
-    this.form.$setDirty();
-    this.checkForChanges();
-
+    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION || !_.isNull(this.huntGroup.alternateDestination.number)) {
+      this.form.$setDirty();
+      this.checkForChanges();
+    }
   }
 
   public setHuntGroupFallbackDestination(fbDestination: FallbackDestination) {
@@ -165,9 +166,10 @@ class HuntGroupCtrl implements ng.IComponentController {
     }
 
     this.HuntGroupService.updateHuntGroup(this.huntGroup.uuid || '', this.huntGroup)
-    .then( () => {
+    .then((huntGroup: HuntGroup) => {
       this.Notification.success('huronHuntGroup.successUpdate', { huntGroupName: this.huntGroup.name } );
       this.title = this.huntGroup.name || '';
+      this.huntGroup = huntGroup;
     })
     .catch( (response) => {
       this.Notification.errorWithTrackingId(response);

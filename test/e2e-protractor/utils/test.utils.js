@@ -472,19 +472,20 @@ exports.sendKeysUpArrow = function (element, howMany) {
 };
 
 exports.fileSendKeys = function (elem, value) {
+  var logMsg = 'Waiting for file input (' + elem.locator() + ') to set value: ' + value;
   this.waitForPresence(elem).then(function () {
-    function retrySendKeys(retries) {
-      log('Send file keys to element: ' + elem.locator() + ' ' + value);
-      var promise = elem.sendKeys(value);
-      if (retries > 0) {
-        promise = promise.then(_.noop, function (e) {
-          log('Retry. Failed to send file keys. Error: ' + ((e && e.message) || e));
-          return retrySendKeys(--retries);
+    // sometimes remote webdriver isn't sending file with remote mapped filesystem
+    // let's brute force retries in the promise control flow and check errors
+    return browser.wait(function () {
+      log(logMsg);
+      return elem.sendKeys(value)
+        .then(function () {
+          return true;
+        }, function (e) {
+          log(e);
+          return false;
         });
-      }
-      return promise;
-    }
-    retrySendKeys(RETRY_COUNT);
+    }, TIMEOUT, logMsg);
   });
 };
 

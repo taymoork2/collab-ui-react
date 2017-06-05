@@ -3,6 +3,7 @@ import {
   IPstnCarrierStatic,
   IPstnCarrierCapability,
   PstnCarrier,
+  PstnCarrierStatic,
 } from './pstnCarrier';
 import { PstnModel } from '../pstn.model';
 import { PstnService } from '../pstn.service';
@@ -117,12 +118,20 @@ export class PstnProvidersService {
 
     //Save the Network info in the 'pstnCarrier' object
     pstnCarrier.setPstnCarrierGet(carrier);
-    //Add static carrier information
-    for (let x: number = 0; x < pstnCarrierStatics.length; x++) {
-      if (pstnCarrierStatics[x].name === carrier.vendor) {
-        //Add the static info to 'pstnCarrier' object
-        pstnCarrier.setPstnCarrierStatic(pstnCarrierStatics[x]);
-        break;
+    // Add static carrier information if match on vendor name and country code
+    let pstnCarrierStatic: IPstnCarrierStatic[] = _(pstnCarrierStatics)
+        .filter((c: IPstnCarrierStatic) =>
+          c.countryCode === carrier.country && c.name ===  carrier.vendor).value();
+    if (pstnCarrierStatic.length > 0) {
+      pstnCarrier.setPstnCarrierStatic(pstnCarrierStatic[0]);
+    } else {
+      // If vendor is present, update default with vendor logo
+      let pstnCarrierVendorMatch: IPstnCarrierStatic[] = _(pstnCarrierStatics)
+        .filter((c: IPstnCarrierStatic) => c.name ===  carrier.vendor).value();
+      if (pstnCarrierVendorMatch.length > 0) {
+        let pstnCarrierStaticContent: IPstnCarrierStatic = new PstnCarrierStatic();
+        pstnCarrierStaticContent.logoSrc = pstnCarrierVendorMatch[0].logoSrc;
+        pstnCarrier.setPstnCarrierStatic(pstnCarrierStaticContent);
       }
     }
     //Get and add carrier capabilities

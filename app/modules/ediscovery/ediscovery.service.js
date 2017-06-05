@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(ReportUtilService, Authinfo, $http, UrlConfig, $window, $timeout, $document, EdiscoveryMockData, $q, $location, CacheFactory) {
+  function EdiscoveryService($document, $http, $location, $modal, $q, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var avalonRoomsUrlCache = CacheFactory.get('avalonRoomsUrlCache');
     if (!avalonRoomsUrlCache) {
@@ -183,6 +183,14 @@
       });
     }
 
+    function openReportModal(_scope) {
+      $modal.open({
+        templateUrl: 'modules/ediscovery/download-report-modal.html',
+        type: 'small',
+        scope: _scope,
+      });
+    }
+
     function downloadReport(report) {
       return $http.get(report.downloadUrl, {
         responseType: 'arraybuffer',
@@ -228,6 +236,7 @@
       patchReport: patchReport,
       deleteReport: deleteReport,
       setEntitledForCompliance: setEntitledForCompliance,
+      openReportModal: openReportModal,
       downloadReport: downloadReport,
     };
   }

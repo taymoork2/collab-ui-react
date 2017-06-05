@@ -260,6 +260,33 @@
 
 .user-entitlements-body {
   padding-left: 10px;
+
+  .user-entitlement__checkbox {
+    float: left;
+  }
+
+  .user-entitlement__tooltip {
+    float: left;
+    margin-left: 6px;
+    font-family: $brand-font-light;
+    font-size: 12px;
+    line-height: 1.25rem;
+    color: $color-primary-base;
+    cursor: pointer;
+
+    .c-nub {
+      text-align: center;
+      font-size: 12px;
+    }
+  }
+
+  .ballast-r {
+    padding-right: 6px;
+  }
+
+  .entitle-save-btn {
+    margin-top: 40px;
+  }
 }
 
 .outer-details-div {
@@ -280,4 +307,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.entitle-check-grp {
+  margin-bottom: 0px;
+  margin-top: 0px;
 }

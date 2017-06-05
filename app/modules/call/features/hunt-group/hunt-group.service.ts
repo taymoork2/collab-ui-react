@@ -76,6 +76,8 @@ export class HuntGroupService {
           numberUuid: _.get<string>(huntGroupResource.fallbackDestination, 'numberUuid'),
           sendToVoicemail: _.get<boolean>(huntGroupResource.fallbackDestination, 'sendToVoicemail'),
         });
+        huntGroup.fallbackDestination.name =  _.isNull(huntGroup.fallbackDestination.name) ? _.get<string>(huntGroupResource.fallbackDestination, 'userName') : huntGroup.fallbackDestination.name;
+
         huntGroup.alternateDestination = new FallbackDestination({
           memberUuid: _.get<string>(huntGroupResource.alternateDestination, 'uuid'),
           name: _.get<string>(huntGroupResource.alternateDestination, 'memberName'),
@@ -84,6 +86,7 @@ export class HuntGroupService {
           sendToVoicemail: _.get<boolean>(huntGroupResource.alternateDestination, 'sendToVoicemail'),
           timer: _.get<number>(huntGroupResource.alternateDestination, 'timer'),
         });
+        huntGroup.alternateDestination.name =  _.isNull(huntGroup.alternateDestination.name) ? _.get<string>(huntGroupResource.alternateDestination, 'userName') : huntGroup.alternateDestination.name;
 
         let huntGroupMembers: Array<CallFeatureMember> = this.consolidateMembers(huntGroupResource.members);
         let promises: Array<ng.IPromise<CallFeatureMember>> = [];

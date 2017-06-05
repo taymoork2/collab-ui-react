@@ -168,7 +168,8 @@
     "careAddUserError": "Failed to add user to Care.",
     "careAddUserRoleError": "Error adding roles to user.",
     "careDeleteCESRoleError": "Error deleting CES role from user",
-    "loadError": "An error while loading the users list."
+    "loadError": "An error while loading the users list.",
+    "ciscoSparkJabberInteropTooltip": "Enable messaging between Cisco Spark and Jabber. Provide access for Jabber users to Cisco Spark spaces. Changes can take up to 24 hours."
   },
   "userManage": {
     "org": {
@@ -283,7 +284,7 @@
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
-    "ciscoSparkJabberInteropTooltip": "Enable messaging interoperability between Cisco Spark and Jabber, including exchange of messages, presence transformation and accessibility to Cisco Spark spaces.",
+    "ciscoSparkJabberInteropTooltip": "Messaging between Cisco Spark and Jabber.",
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
@@ -1893,7 +1894,6 @@
       "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
       "disableAwareHeader": "Disable Services",
       "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user."
-
     },
     "placeSidepanel": {
       "hybridCallNotActivated": "We're checking for the user account in Cisco Unified Communications Manager. This can take up to 30 minutes. Check back later for the status.",
@@ -2830,7 +2830,7 @@
       "grant-registration-success-part-1": "You may now register your Hybrid Data Security Node to the Cisco Collaboration Cloud.",
       "grant-registration-success-part-2": "Node IP Address/FQDN: {{hostname}}",
       "grant-registration-success-part-3": "Cluster: {{clustername}}",
-      "grant-success-information": "Go to your Hybrid Data Security Node within one hour to finish registration.<br>After one hour you will need to start the process again.",
+      "grant-success-information": " <i class='icon icon-warning'></i> Go to your Hybrid Data Security Node within one hour to finish registration.<br>After one hour you will need to start the process again.",
       "title": "Register Hybrid Data Security Node",
       "text1": "Create a new or select an existing Hybrid Data Security Cluster where you want to add the Hybrid Data Security Node.",
       "text3": "Enter the",
@@ -3073,7 +3073,10 @@
       "anotherDownloadInProgress": "Another download is in progress",
       "waitingForDownload": "Downloading, please wait...",
       "expires": "Expires",
-      "expired": "Expired"
+      "expired": "Expired",
+      "modalHeader": "Download {{name}} Report",
+      "modalDescription": "To download this report from the report server, we need to validate the IP address. If you don't know your IP address, contact your administrator.",
+      "modalPlaceholder": "e.g. 192.168.1.1"
     },
     "originalConsole": {
       "subheading": "Find all relevant data for a space.",
@@ -4815,6 +4818,7 @@
     "manage": "Manage Device Settings",
     "title": "Device Settings",
     "description": "Updating settings will affect the entire analog telephone adapter. You may need to perform testing on the connected analog device after saving your settings.",
+    "rebootDescription": "Updating settings will affect the entire analog telephone adapter and cause the device to reboot after saving. You may need to perform testing on the connected analog device after saving your settings.",
     "input": "Input Audio Level",
     "output": "Output Audio Level",
     "saved": "The settings are saved. You will have to reboot the device for the changes to take effect",
@@ -5806,10 +5810,11 @@
     "alwaysProvisionWithLatest": "Provision new WebEx Sites with the latest client version",
     "webexClientVersionUpdated": "Webex client version updated",
     "webexClientVersionUpdatedFailed": "Webex client version update failed",
+    "webExClientVersionInvalid": "Choose another version as {{clientVersion}} is no longer supported.",
     "webexVersionUseLatestTrue": "Latest version of Webex client will be used",
     "webexVersionUseLatestFalse": "Selected version of Webex client will be used",
     "webexVersionUseLatestUpdateFailed": "Could not update",
-    "selectAWbxClientVersion": "Select a Webex client version",
+    "selectAWbxClientVersion": "Select a WebEx client version",
     "WbxClientVersionOnlyOnNewSites": "This setting only applies to sites that are setup from now on. Existing sites are not impacted.",
     "webexClientVersion": "Cisco WebEx Application Version",
     "imageUploadFailedSecurity": "Your image upload has failed.",

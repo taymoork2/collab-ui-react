@@ -8,6 +8,18 @@ describe('Manage Users - CSV File -', function () {
   var CSV_FILE_NAME = 'DELETE_DO_NOT_CHECKIN_onboard_csv_test_file.csv';
   var CSV_FILE_PATH = utils.resolvePath('./../data/' + CSV_FILE_NAME);
   var userList = users.createCsvAndReturnUsers(CSV_FILE_PATH);
+  var originalLogVerbose;
+
+  beforeAll(function () {
+    originalLogVerbose = log.verbose;
+    // TODO: remove verbose logging after monitoring sauce runs through CI job
+    log.verbose = true;
+  });
+
+  afterAll(function () {
+    log.verbose = originalLogVerbose;
+    originalLogVerbose = undefined;
+  });
 
   // Given an email alias, find user and confirm entitlements set
   function confirmUserOnboarded(email) {
