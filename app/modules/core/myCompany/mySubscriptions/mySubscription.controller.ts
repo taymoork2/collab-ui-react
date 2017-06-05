@@ -17,6 +17,7 @@ export class MySubscriptionCtrl {
   public isSharedMeetingsReportsEnabled: boolean;
   public temporarilyOverrideSharedMeetingsReportsFeatureToggle = { default: false, defaultValue: true };
   public bmmpAttr: IBmmpAttr;
+  public licenseSummary: string;
 
   private readonly BASE_CATEGORY: ISubscriptionCategory = {
     offers: [],
@@ -319,6 +320,11 @@ export class MySubscriptionCtrl {
         }
       });
 
+      if (this.subscriptionDetails.length > 1 ||
+         (this.subscriptionDetails.length === 1 && !this.subscriptionDetails[0].isOnline)) {
+        this.licenseSummary = this.$translate.instant('subscriptions.licenseSummary');
+      }
+
       if (_.find(this.subscriptionDetails, 'isOnline')) {
         // create cookie for Digital River
         this.DigitalRiverService.getDigitalRiverToken();
@@ -333,7 +339,13 @@ export class MySubscriptionCtrl {
               this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.enterpriseTrial', { number: enterpriseTrials++ });
               this.hasEnterpriseTrial = true;
             } else {
-              this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
+              let id = _.get(subscription, 'subscriptionId');
+              if (_.isString(id) && id.length >= 4) {
+                id = id.substr(id.length - 4);
+                this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.subscriptionNum', { number: id });
+              } else {
+                this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
+              }
             }
           } else {
             const prodResponse: IProdInst = _.find(instances, ['subscriptionId', subscription.internalSubscriptionId]);
@@ -341,6 +353,9 @@ export class MySubscriptionCtrl {
               this.setBMMPTrial(subscription, prodResponse);
             } else {
               this.setBMMP(subscription, prodResponse);
+            }
+            if (this.subscriptionDetails.length === 1) {
+              this.licenseSummary = this.$translate.instant('subscriptions.licenseSummaryOnline', { name: prodResponse.name });
             }
           }
         });

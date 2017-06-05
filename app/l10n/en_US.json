@@ -6922,6 +6922,7 @@
   },
   "subscriptions": {
     "licenseSummary": "License Summary",
+    "licenseSummaryOnline": "License Summary for {{name}}",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
@@ -6929,6 +6930,7 @@
     "room": "Room Devices",
     "hybrid": "Hybrid Services",
     "subscription": "Subscription ID: ",
+    "subscriptionNum": "Subscription ID xxx{{number}}",
     "numberedName": "Enterprise Subscription {{number}}",
     "enterpriseTrial": "Enterprise Trial {{number}}",
     "usage": "Usage: ",
