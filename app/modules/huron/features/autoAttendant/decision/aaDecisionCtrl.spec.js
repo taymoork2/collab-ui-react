@@ -340,6 +340,93 @@ describe('Controller: AADecisionCtrl', function () {
       expect(c.isWarn).toEqual(false);
 
     });
+
+    it('should add in new variable (added via callerInput)', function () {
+
+      var c;
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      c.ui = {};
+      c.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      c.ui.openHours.addEntryAt(index, menuOpen);
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+      action.variableName = 'my variable one';
+      menuOpen.addAction(action);
+
+      c.refreshVarSelects();
+
+      expect(c.sessionVarOptions.length).toEqual(2);
+      expect(c.sessionVarOptions[1]).toEqual('my variable one');
+
+    });
+    it('should not add in new ifOption when it is already there.', function () {
+
+      var c;
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      c.ui = {};
+      c.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      c.ui.openHours.addEntryAt(index, menuOpen);
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+      action.variableName = 'my variable one';
+      menuOpen.addAction(action);
+
+      c.refreshIfSelects();
+
+      expect(c.ifOptions.length).toEqual(6);
+      expect(c.ifOptions[c.ifOptions.length - 1].value).toMatch('sessionVariable');
+
+    });
+  });
+  describe('No SessionVars  Conditional tests', function () {
+    beforeEach(inject(function () {
+      spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve([]));
+    }));
+
+    it('should add in new variable with session object added (added via callerInput)', function () {
+
+      var c;
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      c.ui = {};
+      c.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      c.ui.openHours.addEntryAt(index, menuOpen);
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+      action.variableName = 'my variable one';
+      menuOpen.addAction(action);
+
+      c.refreshIfSelects();
+
+      expect(c.sessionVarOptions.length).toEqual(1);
+      expect(c.sessionVarOptions[0]).toEqual('my variable one');
+      expect(c.ifOptions.length).toEqual(6);
+      expect(c.ifOptions[c.ifOptions.length - 1].value).toMatch('sessionVariable');
+
+    });
   });
 
   /* No support for queueing */
@@ -397,6 +484,30 @@ describe('Controller: AADecisionCtrl', function () {
       expect(b).toBeDefined();
 
       expect(c.isWarn).toEqual(true);
+
+    });
+  });
+  describe('Variable is deleted', function () {
+    beforeEach(inject(function () {
+      spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve([]));
+      spyOn(aaCommonService, 'collectThisCeActionValue').and.returnValue([]);
+    }));
+
+    it('should delete variable from session array', function () {
+      var c;
+      action.if = {};
+      action.if.leftCondition = 'Some Random custom variable';
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+      c.sessionVarOptions.push('One');
+
+      $rootScope.$broadcast('CE Updated');
+
+      $scope.$apply();
+
+      expect(c.sessionVarOptions.length).toEqual(0);
 
     });
   });

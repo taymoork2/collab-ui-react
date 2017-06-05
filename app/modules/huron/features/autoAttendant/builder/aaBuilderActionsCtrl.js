@@ -6,7 +6,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, $modal, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, CustomVariableService) {
+  function AABuilderActionsCtrl($rootScope, $scope, $translate, $controller, $modal, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, CustomVariableService) {
 
     var vm = this;
     var appendSpecialCharHelp = "<br><br>" + $translate.instant('autoAttendant.sayMessageSpecialChar');
@@ -175,6 +175,7 @@
         checkVarNameDependencies(entryI.actions[0].variableName).then(function (okToDelete) {
           if (okToDelete) {
             deleteMenu(uiMenu, index);
+            $rootScope.$broadcast('CE Updated');
           }
         });
 
