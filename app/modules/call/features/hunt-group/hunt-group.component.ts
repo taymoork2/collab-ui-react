@@ -3,6 +3,9 @@ import { CallFeatureMember } from 'modules/call/features/shared/call-feature-mem
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { Notification } from 'modules/core/notifications';
 
+const ALTERNATE_TIMER_MIN: number = 2;
+const ALTERNATE_TIMER_MAX: number = 60;
+
 class HuntGroupCtrl implements ng.IComponentController {
   private static readonly PAGE_TRANSITION_TIMEOUT: number = 10;
 
@@ -103,7 +106,17 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public setHuntGroupDestinationRule(destinationRule: DestinationRule): void {
     this.huntGroup.destinationRule = destinationRule;
-    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION || !_.isNull(this.huntGroup.alternateDestination.number)) {
+    this.form.$setValidity('', false, this.form);
+
+    if (!_.isNull(this.huntGroup.alternateDestination.number) || !_.isNull(this.huntGroup.alternateDestination.numberUuid)) {
+      this.form.$setValidity('', true, this.form);
+    }
+
+    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_AUTOMATIC) {
+      this.huntGroup.sendToApp = false;
+    }
+
+    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION || !_.isNull(this.huntGroup.alternateDestination.number) ) {
       this.form.$setDirty();
       this.checkForChanges();
     }
@@ -116,9 +129,14 @@ class HuntGroupCtrl implements ng.IComponentController {
   }
 
   public setHuntGroupAlternateDestination(aDestination: FallbackDestination) {
-    this.huntGroup.alternateDestination = aDestination;
-    this.form.$setDirty();
-    this.checkForChanges();
+    if ( aDestination.timer && !_.inRange( aDestination.timer, ALTERNATE_TIMER_MIN, ALTERNATE_TIMER_MAX + 1)) {
+      this.form.$setValidity('', false, this.form);
+    } else {
+      this.huntGroup.alternateDestination = aDestination;
+      this.form.$setValidity('', true, this.form);
+      this.form.$setDirty();
+      this.checkForChanges();
+    }
   }
 
   public cancelModal(): void {

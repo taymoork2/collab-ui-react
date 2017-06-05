@@ -127,6 +127,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
         number: model,
         numberUuid: null,
         sendToVoicemail: false,
+        timer: this.isAlternate ? 5 : null,
       }),
     });
   }
