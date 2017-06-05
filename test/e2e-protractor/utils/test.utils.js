@@ -473,16 +473,20 @@ exports.sendKeysUpArrow = function (element, howMany) {
 
 exports.fileSendKeys = function (elem, value) {
   var logMsg = 'Waiting for file input (' + elem.locator() + ') to set value: ' + value;
+  log(logMsg);
   this.waitForPresence(elem).then(function () {
     // sometimes remote webdriver isn't sending file with remote mapped filesystem
     // let's brute force retries in the promise control flow and check errors
     return browser.wait(function () {
-      log(logMsg);
       return elem.sendKeys(value)
         .then(function () {
           return true;
         }, function (e) {
-          log(e);
+          if (e && e.stack) {
+            log(e.stack);
+          } else {
+            log(e);
+          }
           return false;
         });
     }, TIMEOUT, logMsg);
