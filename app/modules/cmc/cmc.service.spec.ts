@@ -21,7 +21,7 @@ describe('CmcService', () => {
     });
     spyOn(this.CmcService, 'hasCmcService').and.returnValue(true);
     let orgId = '1234';
-    this.CmcService.allowCmcSettings(orgId).then(function(result) {
+    this.CmcService.allowCmcSettings(orgId).then(function (result) {
       expect(result).toBe(true);
       done();
     });

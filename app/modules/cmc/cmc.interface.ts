@@ -36,3 +36,20 @@ export interface ICmcError {
     description: string;
   }[];
 }
+
+export interface ICmcUserStatus {
+  userId: string;
+  state?: string;
+  serviceId?: string;
+  orgId?: string;
+  lastStatusUpdate?: string;
+  lastStateChange?: string;
+  entitled?: string;
+}
+
+export interface ICmcUserStatusInfoResponse {
+  userStatuses: Array<ICmcUserStatus>;
+  paging: {
+    next: string;
+  };
+}
