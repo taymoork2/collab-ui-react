@@ -1,12 +1,13 @@
 import { CmcUserData } from './cmcUserData';
 import { ICmcUser } from './cmcUser.interface';
-import { ICmcOrgStatusResponse } from './cmc.interface';
-import { ICmcUserStatusResponse } from './cmc.interface';
+import { ICmcOrgStatusResponse, ICmcUserStatusResponse } from './cmc.interface';
 import { ICmcIssue } from './cmc.interface';
 export class CmcService {
 
-  private dockerUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
-  private useDocker: boolean = false;
+  //private cmcUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
+  private cmcUrl: string = 'https://cmc-controller.intb1.ciscospark.com/api/v1';
+  private useMock: boolean = true;
+  //
 
   /* @ngInject */
   constructor(
@@ -57,8 +58,8 @@ export class CmcService {
 
   // TODO Adapt to cmc status call
   public preCheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
-    if (this.useDocker) {
-      let url: string = this.dockerUrl + `/organizations/${orgId}/status`;
+    if (!this.useMock) {
+      let url: string = this.cmcUrl + `/organizations/${orgId}/status`;
       return this.$http.get(url).then((response) => {
         return response.data;
       });
@@ -81,7 +82,7 @@ export class CmcService {
       });
     }
 
-    let res = {
+    let res: ICmcUserStatusResponse = {
       status: status,
       issues: issues,
     };

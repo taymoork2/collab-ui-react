@@ -1,6 +1,7 @@
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
 import { IUser } from 'modules/core/auth/user/user';
 import { CmcService } from './../cmc.service';
+
 import { ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcIssue } from './../cmc.interface';
 import { Notification } from 'modules/core/notifications';
 
@@ -24,10 +25,10 @@ class CmcUserDetailsController implements ng.IComponentController {
               private Notification: Notification) {
     this.services = [];
     this.services.push(<IFeature>{
-      name: 'Collaboration Mobile Convergence',
+      name: $translate.instant('cmc.userMenu.mobile'),
       icon: 'icon-circle-mobile',
       actionAvailable: false,
-      detail: '',
+      detail: this.$translate.instant('cmc.userMenu.statusOk'),
       state: 'cmc',
     });
     this.$log.debug('state', this.$state);
@@ -77,12 +78,11 @@ class CmcUserDetailsController implements ng.IComponentController {
         this.$log.debug('precheckUser:', res);
         if (res.status === 'error' && res.issues) {
           this.issues.push(res.issues[ 0 ]);
-          this.services[ 0 ].detail = this.$translate.instant('cmc.userSettings.menuStatus.error');
+          this.services[ 0 ].detail = this.$translate.instant('cmc.userMenu.statusNok');
         }
         return res;
       });
   }
-
 
   private precheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
     return this.CmcService.preCheckOrg(orgId)
@@ -90,7 +90,7 @@ class CmcUserDetailsController implements ng.IComponentController {
         this.$log.debug('precheckOrg', res);
         if (res.status === 'error' && res.issues) {
           this.issues.push(res.issues[ 0 ]);
-          this.services[ 0 ].detail = this.$translate.instant('cmc.userSettings.menuStatus.error');
+          this.services[ 0 ].detail = this.$translate.instant('cmc.userMenu.statusNok');
         }
         return res;
       })
