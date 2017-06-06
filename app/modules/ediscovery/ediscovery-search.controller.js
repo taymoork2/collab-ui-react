@@ -22,6 +22,8 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.advancedSearch = advancedSearch;
     vm.dateErrors = dateErrors;
     vm.validateDate = validateDate;
+    vm.firstEnabledDate = null;
+    vm.lastEnabledDate = moment().format('YYYY-MM-DD');
 
     /* Report Generation Functions */
     vm.searchForRoom = searchForRoom;
@@ -99,6 +101,9 @@ var Spark = require('@ciscospark/spark-core').default;
         vm.itProPackEnabled = toggles[0];
         vm.itProPackPurchased = toggles[1];
         vm.ediscoveryToggle = toggles[2];
+        if (!vm.itProPackPurchased) {
+          vm.firstEnabledDate = moment().subtract(90, 'days').format('YYYY-MM-DD');
+        }
       });
 
       if (report) {
