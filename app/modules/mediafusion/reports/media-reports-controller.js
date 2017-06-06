@@ -744,14 +744,15 @@
     }
 
     function clusterUnavailablityCheck() {
+      vm.clusterUnavailablityFlag = false;
       _.each(vm.availabilityChart.dataProvider, function (cluster) {
-        _.each(cluster.segments, function (segment) {
-          if (segment.availability === "Unavailable") {
+        if (!vm.clusterUnavailablityFlag) {
+          if (cluster.segments[cluster.segments.length - 1].availability === "Unavailable") {
             vm.clusterUnavailablityFlag = true;
           } else {
             vm.clusterUnavailablityFlag = false;
           }
-        });
+        }
       });
     }
 
