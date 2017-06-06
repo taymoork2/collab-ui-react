@@ -13,6 +13,7 @@ describe('SettingsCtrl', function () {
 
 
     spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'csdmDeviceBrandingGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.ProPackService, 'hasProPackPurchasedOrNotEnabled');
   });
