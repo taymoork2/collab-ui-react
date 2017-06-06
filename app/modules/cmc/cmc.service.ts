@@ -6,7 +6,7 @@ export class CmcService {
 
   //private cmcUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
   private cmcUrl: string = 'https://cmc-controller.intb1.ciscospark.com/api/v1';
-  private useMock: boolean = true;
+  private useMock: boolean = false;
   //
 
   /* @ngInject */
