@@ -7,6 +7,7 @@ interface IClusterCache {
   c_mgmt: any;
   c_ucmc: any;
   c_cal: any;
+  c_imp: any;
   mf_mgmt: any;
   hds_app: any;
   cs_mgmt: any;
@@ -24,6 +25,7 @@ export class ClusterService {
     c_mgmt: {},
     c_ucmc: {},
     c_cal: {},
+    c_imp: {},
     mf_mgmt: {},
     hds_app: {},
     cs_mgmt: {},
@@ -61,6 +63,7 @@ export class ClusterService {
           c_mgmt: this.clusterType('c_mgmt', clusters),
           c_ucmc: this.clusterType('c_ucmc', clusters),
           c_cal: this.clusterType('c_cal', clusters),
+          c_imp: this.clusterType('c_imp', clusters),
           mf_mgmt: this.clusterType('mf_mgmt', clusters),
           hds_app: this.clusterType('hds_app', clusters),
           cs_mgmt: this.clusterType('cs_mgmt', clusters),
@@ -72,6 +75,7 @@ export class ClusterService {
           c_mgmt: this.addAggregatedData('c_mgmt', clusters.c_mgmt),
           c_ucmc: this.addAggregatedData('c_ucmc', clusters.c_ucmc),
           c_cal: this.addAggregatedData('c_cal', clusters.c_cal),
+          c_imp: this.addAggregatedData('c_imp', clusters.c_imp),
           mf_mgmt: this.addAggregatedData('mf_mgmt', clusters.mf_mgmt),
           hds_app: this.addAggregatedData('hds_app', clusters.hds_app),
           cs_mgmt: this.addAggregatedData('cs_mgmt', clusters.cs_mgmt),
@@ -84,6 +88,7 @@ export class ClusterService {
           c_mgmt: _.keyBy(clusters.c_mgmt, 'id'),
           c_ucmc: _.keyBy(clusters.c_ucmc, 'id'),
           c_cal: _.keyBy(clusters.c_cal, 'id'),
+          c_imp: _.keyBy(clusters.c_imp, 'id'),
           mf_mgmt: _.keyBy(clusters.mf_mgmt, 'id'),
           hds_app: _.keyBy(clusters.hds_app, 'id'),
           cs_mgmt: _.keyBy(clusters.cs_mgmt, 'id'),
@@ -95,6 +100,7 @@ export class ClusterService {
         this.CsdmCacheUpdater.update(this.clusterCache.c_mgmt, clusters.c_mgmt);
         this.CsdmCacheUpdater.update(this.clusterCache.c_ucmc, clusters.c_ucmc);
         this.CsdmCacheUpdater.update(this.clusterCache.c_cal, clusters.c_cal);
+        this.CsdmCacheUpdater.update(this.clusterCache.c_imp, clusters.c_imp);
         this.CsdmCacheUpdater.update(this.clusterCache.mf_mgmt, clusters.mf_mgmt);
         this.CsdmCacheUpdater.update(this.clusterCache.hds_app, clusters.hds_app);
         this.CsdmCacheUpdater.update(this.clusterCache.cs_mgmt, clusters.cs_mgmt);

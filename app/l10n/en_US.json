@@ -1924,7 +1924,8 @@
       "contact-center-context": "Context Service",
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
-      "squared-fusion-mgmt": "Expressway Management Service"
+      "squared-fusion-mgmt": "Expressway Management Service",
+      "spark-hybrid-impinterop": "IM & Presence"
     },
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
@@ -1935,7 +1936,7 @@
       "squared-fusion-media": "Hybrid Media Service",
       "hybrid-context": "Hybrid Context Service",
       "ept": "Enterprise Private Trunking",
-      "hybrid-imp": "Hybrid IM & Presence"
+      "spark-hybrid-impinterop": "Hybrid IM & Presence"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -1944,7 +1945,8 @@
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
-      "squared-fusion-mgmt": "Management Connector"
+      "squared-fusion-mgmt": "Management Connector",
+      "spark-hybrid-impinterop": "IM & Presence Connector"
     },
     "connectorNameFromConnectorType": {
       "c_cal": "Calendar Connector",
@@ -1955,7 +1957,8 @@
       "cs_mgmt": "Management Connector",
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
-      "c_serab": "Serviceability Connector"
+      "c_serab": "Serviceability Connector",
+      "c_imp": "IM & Presence Connector"
     },
     "shortConnectorNameFromConnectorType": {
       "c_cal": "Calendar",
@@ -1966,7 +1969,8 @@
       "cs_mgmt": "Management",
       "cs_context": "Context",
       "ucm_mgmt": "Management",
-      "c_serab": "Serviceability"
+      "c_serab": "Serviceability",
+      "c_imp": "IM & Presence"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
@@ -1975,12 +1979,14 @@
       "cs_mgmt": "Management Connector",
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
-      "c_serab": "Serviceability Connector"
+      "c_serab": "Serviceability Connector",
+      "c_imp": "IM & Presence"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
       "squared-fusion-cal": "Expressway",
       "squared-fusion-uc": "Expressway",
+      "spark-hybrid-impinterop": "Expressway",
       "squared-fusion-media": "Hybrid Media",
       "spark-hybrid-datasecurity": "Hybrid Data Security",
       "squared-fusion-khaos": "Cisco Unified CM"
@@ -2133,6 +2139,7 @@
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
       "clusters-title-squared-fusion-uc": "Expressway Clusters",
+      "clusters-title-spark-hybrid-impinterop": "Expressway Clusters",
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "clusters-title-contact-center-context": "Context Clusters",
