@@ -284,7 +284,6 @@
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
-    "ciscoSparkJabberInteropTooltip": "Messaging between Cisco Spark and Jabber.",
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
@@ -6284,7 +6283,7 @@
       "sectionDescr": "Control how WebEx Messenger works with Cisco Spark."
     },
     "jabberInteropHeading": "Cisco Spark / Jabber Interop",
-    "jabberInteropTooltip": "Messaging interoperability between Cisco Spark and WebEx Messenger Jabber.",
+    "jabberInteropTooltip": "Messaging between Cisco Spark and Jabber.",
     "jabberInteropUpdateSuccessful": "Jabber Interop updated successfully.",
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
     "authRedirectTooltip": "If enabled, users will login to Common Identity. If disabled, users will login to Messenger.",
