@@ -1351,7 +1351,7 @@
             },
           })
           .state('user-overview.messaging', {
-            templateUrl: 'modules/core/users/userOverview/userPreview.tpl.html',
+            templateUrl: 'modules/core/users/userOverview/messaging-preview/messaging-preview.html',
             controller: 'UserPreviewCtrl',
             data: {
               displayName: 'Message',

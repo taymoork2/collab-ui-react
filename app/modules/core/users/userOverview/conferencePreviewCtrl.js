@@ -1,5 +1,3 @@
-require('./_user-preview.scss');
-
 (function () {
   'use strict';
 
