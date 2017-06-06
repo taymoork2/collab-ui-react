@@ -1732,12 +1732,18 @@
             },
           })
           .state('reports.webex-metrics', {
-            url: '/reports/webexMetrics',
+            url: '/reports/webexMetrics/:siteUrl',
             views: {
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'WebExMetricsCtrl',
                 templateUrl: 'modules/core/customerReports/webexMetrics/webexMetrics.tpl.html',
+              },
+            },
+            params: {
+              siteUrl: {
+                squash: true,
+                value: '',
               },
             },
           })

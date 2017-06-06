@@ -9,15 +9,20 @@ require('./_site-list.scss');
     //TokenService, WebExUtilsFact,
 
   /*@ngInject*/
-  function WebExSiteRowCtrl($scope, $timeout, $sce, TokenService, WebExUtilsFact, WebExSiteRowService) {
+  function WebExSiteRowCtrl($scope, $sce, $state, $timeout, TokenService, WebExUtilsFact, WebExSiteRowService) {
     this.showGridData = false;
 
     WebExSiteRowService.initSiteRows();
     this.gridOptions = WebExSiteRowService.getGridOptions();
 
+    this.linkToReports = function (siteUrl) {
+      $state.go('reports.webex-metrics', { siteUrl: siteUrl });
+    };
+
     this.linkToSiteAdminHomePage = function (siteUrl) {
       linkTOSiteAdminPage.call(this, siteUrl, false);
     };
+
     this.linkToSiteAdminLinkedPage = function (siteUrl) {
       linkTOSiteAdminPage.call(this, siteUrl, true);
     };
