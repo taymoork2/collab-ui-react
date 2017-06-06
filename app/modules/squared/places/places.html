@@ -16,7 +16,7 @@
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="content-container">
-    <div ng-if="sc.filteredView.isInState(sc.filteredView.searching)">
+    <div ng-if="sc.filteredView.isInState(sc.filteredView.searching) || sc.filteredView.isInState(sc.filteredView.initializing)">
       <div class="message-container">
         <div class="empty-devices-content">
           <div class="grid-refresh">

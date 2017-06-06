@@ -63,8 +63,8 @@ describe('Controller: PlacesCtrl', function () {
         expect(controller.filteredView).toBeDefined();
       });
 
-      it('should be in searching org state', function () {
-        expect(controller.filteredView.listState).toEqual(controller.filteredView.searching);
+      it('should be in initializing state', function () {
+        expect(controller.filteredView.listState).toEqual(controller.filteredView.initializing);
       });
     });
 
@@ -188,7 +188,7 @@ describe('Controller: PlacesCtrl', function () {
       });
 
       it('should be in searching state', function () {
-        expect(controller.filteredView.listState).toEqual(controller.filteredView.searching);
+        expect(controller.filteredView.listState).toEqual(controller.filteredView.initializing);
       });
     });
 
