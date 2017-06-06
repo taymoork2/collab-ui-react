@@ -1061,7 +1061,7 @@
                 template: '<div ui-view="editServices"></div>',
               },
               'editServices@editService': {
-                templateUrl: 'modules/core/users/userPreview/editServices.tpl.html',
+                templateUrl: 'modules/core/users/userOverview/editServices.tpl.html',
               },
             },
             params: {
@@ -1351,7 +1351,7 @@
             },
           })
           .state('user-overview.messaging', {
-            templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
+            templateUrl: 'modules/core/users/userOverview/userPreview.tpl.html',
             controller: 'UserPreviewCtrl',
             data: {
               displayName: 'Message',
@@ -1480,7 +1480,7 @@
             },
           })
           .state('user-overview.conferencing', {
-            templateUrl: 'modules/core/users/userPreview/conferencePreview.tpl.html',
+            templateUrl: 'modules/core/users/userOverview/conferencePreview.tpl.html',
             controller: 'ConferencePreviewCtrl',
             controllerAs: 'confPreview',
             data: {
