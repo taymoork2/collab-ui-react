@@ -579,7 +579,7 @@
         // On Login to partner portal, orgid has the partner info
         // On Login to customer portal, need to get the call partner info from services licenses data
         if (this.isPartner()) {
-          this.getOrgId();
+          return this.getOrgId();
         }
         return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId() || this.getOrgId();
       },
