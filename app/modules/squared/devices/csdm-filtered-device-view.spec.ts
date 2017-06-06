@@ -68,7 +68,7 @@ describe('Class: DevicesController', () => {
       });
 
       it('should be in initializing state and then in showresult', () => {
-        expect(test.controller.isInState(test.controller.searching));
+        expect(test.controller.isInState(test.controller.initializing));
 
         test.$timeout.flush(10000);
         test.$rootScope.$digest();
@@ -103,7 +103,7 @@ describe('Class: DevicesController', () => {
 
       describe('before web request has returned', () => {
         it('should be in searching state and then in showresult', () => {
-          expect(test.controller.isInState(test.controller.searching));
+          expect(test.controller.isInState(test.controller.initializing));
 
           test.$timeout.flush(10000);
           test.$rootScope.$digest();
