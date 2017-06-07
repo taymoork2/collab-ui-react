@@ -1,5 +1,5 @@
 import cmcModule from './index';
-import { ICmcUser } from './cmcUser.interface';
+import { ICmcUser } from './cmc.interface';
 
 describe('CmcService', () => {
 

@@ -1,7 +1,5 @@
-import { CmcUserData } from './cmcUserData';
-import { ICmcUser } from './cmcUser.interface';
-import { ICmcOrgStatusResponse, ICmcUserStatusResponse } from './cmc.interface';
-import { ICmcIssue } from './cmc.interface';
+import { ICmcUserData, ICmcOrgStatusResponse, ICmcUserStatusResponse } from './cmc.interface';
+import { ICmcUser, ICmcIssue } from './cmc.interface';
 export class CmcService {
 
   //private cmcUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
@@ -22,7 +20,7 @@ export class CmcService {
   ) {
   }
 
-  public setUserData(user: ICmcUser, data: CmcUserData): ng.IPromise<any> {
+  public setUserData(user: ICmcUser, data: ICmcUserData): ng.IPromise<any> {
     let mobileNumberSet: ng.IPromise<any> = this.setMobileNumber(user, data.mobileNumber);
     let entitlementSet: ng.IPromise<any> = this.setEntitlement(user, data.entitled);
     return this.$q.all(
@@ -33,11 +31,11 @@ export class CmcService {
     );
   }
 
-  public getUserData(user: ICmcUser): CmcUserData {
+  public getUserData(user: ICmcUser): ICmcUserData {
     this.$log.info('Getting data for user=', user);
     let entitled = this.hasCmcEntitlement(user);
     let mobileNumber = this.extractMobileNumber(user);
-    return new CmcUserData(mobileNumber, entitled);
+    return new ICmcUserData(mobileNumber, entitled);
   }
 
   // TODO: Find out when cmc settings should be unavailable...

@@ -1,9 +1,7 @@
-import { CmcUserData } from './../cmcUserData';
 import { CmcService } from './../cmc.service';
-import { ICmcUser } from './../cmcUser.interface';
 import { IUser } from 'modules/core/auth/user/user';
 import { ICmcOrgStatusResponse, ICmcUserStatusResponse } from './../cmc.interface';
-import { ICmcIssue } from './../cmc.interface';
+import { ICmcUserData, ICmcUser, ICmcIssue } from './../cmc.interface';
 import { Notification } from 'modules/core/notifications';
 
 class CmcUserDetailsSettingsController implements ng.IComponentController {
@@ -20,7 +18,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   public issues: ICmcIssue[];  public messages = {
     pattern: 'Invalid Mobile Number',
   };
-  private oldCmcUserData: CmcUserData;
+  private oldCmcUserData: ICmcUserData;
 
   /* @ngInject */
   constructor(private $log: ng.ILogService,
@@ -33,13 +31,13 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   public $onInit() {
     this.$log.debug('$onInit');
     this.extractCmcData();
-    this.oldCmcUserData = new CmcUserData(this.mobileNumber, this.entitled);
+    this.oldCmcUserData = new ICmcUserData(this.mobileNumber, this.entitled);
     this.$log.warn('Current user:', this.user);
     this.validateOrgAndUserContent(this.user);
   }
 
   private extractCmcData() {
-    let persistedCmcData: CmcUserData = this.CmcService.getUserData(this.user);
+    let persistedCmcData: ICmcUserData = this.CmcService.getUserData(this.user);
     this.entitled = persistedCmcData.entitled;
     this.mobileNumber = persistedCmcData.mobileNumber;
   }
@@ -60,7 +58,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   // }
 
   public save(): void {
-    let newData = new CmcUserData(this.mobileNumber, this.entitled);
+    let newData = new ICmcUserData(this.mobileNumber, this.entitled);
     this.$log.warn('trying to set data', newData, ', id=', this.user.id);
     this.CmcService.setUserData(this.user, newData).then(() => {
       this.oldCmcUserData.entitled = this.entitled;

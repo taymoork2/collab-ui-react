@@ -1,5 +1,5 @@
 import cmcUserDetailsSettings from './../index';
-import { CmcUserData } from './../cmcUserData';
+import { ICmcUserData } from './../cmc.interface';
 import { IUser } from 'modules/core/auth/user/user';
 
 describe('Component: cmcUserDetailsSettings ', () => {
@@ -20,7 +20,7 @@ describe('Component: cmcUserDetailsSettings ', () => {
         '$q',
       );
 
-      spyOn(this.CmcService, 'getUserData').and.returnValue(<CmcUserData>{
+      spyOn(this.CmcService, 'getUserData').and.returnValue(<ICmcUserData>{
         entitled: true,
         mobileNumber: '+471234',
       });
