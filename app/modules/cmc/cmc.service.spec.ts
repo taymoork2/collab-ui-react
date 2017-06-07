@@ -10,6 +10,7 @@ describe('CmcService', () => {
       '$scope',
       '$httpBackend',
       'Orgservice',
+      '$q',
     );
   });
 
@@ -30,51 +31,83 @@ describe('CmcService', () => {
     this.$scope.$apply();
   });
 
-  describe('phone number existence', function () {
+  describe('update phone number', function () {
     let user: ICmcUser = <ICmcUser> {
+      userName: 'dummyUser',
+      id: '9999',
       meta: {
         organizationID: '1234',
       },
     };
+
+    beforeEach(function () {
+      spyOn(this.CmcService, 'patchNumber').and.returnValue(this.$q.resolve({ status: 'whatever' }));
+    });
 
     afterEach(function () {
       this.$httpBackend.verifyNoOutstandingExpectation();
       this.$httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('returns null of phone number not found in same org', function () {
+    it('patches user phone number if number is unique', function () {
 
-      let scimNoUserResponse = {
+      let scimNoUser = {
         Resources: [],
       };
-
       this.$httpBackend
         .when('GET', 'https://identity.webex.com/identity/scim/1234/v1/Users?filter=phoneNumbers[type eq "mobile" and value eq "+471234"]')
-        .respond(scimNoUserResponse);
+        .respond(scimNoUser);
 
-      this.CmcService.checkUniqueMobileNumber(user, '+471234').then(function (res) {
-        expect(res).toBeNull();
+      this.CmcService.setMobileNumber(user, '+471234').then( (res) => {
+        expect(res.status).toEqual('whatever');
+        expect(this.CmcService.patchNumber).toHaveBeenCalled();
+      }).catch( () => {
+        fail('dont expect this to be rejected');
       });
 
       this.$httpBackend.flush();
 
     });
 
-    it('returns username that has the phone number', function () {
+    it('patches user phone number if number is users own number', function () {
 
       let scimResponseExistingUser = {
         Resources: [
-          { userName: 'atlas' },
+          { userName: user.userName },
         ],
       };
-
       this.$httpBackend
         .when('GET', 'https://identity.webex.com/identity/scim/1234/v1/Users?filter=phoneNumbers[type eq "mobile" and value eq "+471234"]')
         .respond(scimResponseExistingUser);
 
+      this.CmcService.setMobileNumber(user, '+471234').then( (res) => {
+        expect(res.status).toEqual('whatever');
+        expect(this.CmcService.patchNumber).toHaveBeenCalled();
+      }).catch( () => {
+        fail('dont expect this to be rejected');
+      });
 
-      this.CmcService.checkUniqueMobileNumber(user, '+471234').then(function (res) {
-        expect(res).toEqual('atlas');
+      this.$httpBackend.flush();
+
+    });
+
+    it('throws error is number is not unique', function () {
+
+      let scimResponseExistingUser = {
+        Resources: [
+          { userName: 'someOtherName' },
+        ],
+      };
+      this.$httpBackend
+        .when('GET', 'https://identity.webex.com/identity/scim/1234/v1/Users?filter=phoneNumbers[type eq "mobile" and value eq "+471234"]')
+        .respond(scimResponseExistingUser);
+
+      this.CmcService.setMobileNumber(user, '+471234').then( () => {
+        fail('dont expect this to be rejected');
+      })
+      .catch( (res) => {
+        expect(res.data.message).toEqual('+471234 cmc.failures.alreadyRegisteredForAtLeastOneMoreUser someOtherName');
+        expect(this.CmcService.patchNumber).not.toHaveBeenCalled();
       });
 
       this.$httpBackend.flush();
