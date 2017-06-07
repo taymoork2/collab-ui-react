@@ -1,4 +1,4 @@
-require('./_user-preview.scss');
+require('./_messaging-preview.scss');
 
 (function () {
   'use strict';
