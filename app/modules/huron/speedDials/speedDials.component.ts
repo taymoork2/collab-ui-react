@@ -57,9 +57,8 @@ class SpeedDialCtrl implements ng.IComponentController {
     this.firstReordering = true;
     this.editing = false;
     this.reordering = false;
-    this.SpeedDialService.getUserName(this.ownerId)
-    .then((user) => {
-      this.ownerName = this.FeatureMemberService.getFirstLastName(user);
+    this.FeatureMemberService.getUser(this.ownerId).then((user) => {
+      this.ownerName = this.FeatureMemberService.getFullNameFromUser(user);
     });
     this.SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
       this.speedDialList = data.speedDials;
@@ -247,6 +246,11 @@ class SpeedDialCtrl implements ng.IComponentController {
         this.Notification.error('speedDials.speedDialChangesFailed');
       });
     });
+  }
+
+  public getTooltipText(sd: ISpeedDial): string {
+    let tooltipText = this.$translate.instant('speedDials.blfPickup', { username: this.ownerName, extension: sd.number });
+    return tooltipText;
   }
 
   private updateIndex(): void {

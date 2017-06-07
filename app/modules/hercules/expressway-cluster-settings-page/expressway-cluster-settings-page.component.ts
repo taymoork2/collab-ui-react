@@ -185,6 +185,9 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
       if (service === 'c_ucmc') {
         return this.$translate.instant('hercules.connectorNameFromConnectorType.c_ucmc');
       }
+      if (service === 'c_imp') {
+        return this.$translate.instant('hercules.connectorNameFromConnectorType.c_imp');
+      }
       if (service === 'c_mgmt') {
         return this.$translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
       }
@@ -210,7 +213,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   }
 
   public filterServices(connector) {
-    return connector === 'c_cal' || connector === 'c_ucmc';
+    return connector === 'c_cal' || connector === 'c_ucmc' || connector === 'c_imp';
   }
 
   public getLocalizedServiceName(connector) {

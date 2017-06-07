@@ -32,7 +32,7 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
     }
 
     /* Common for Expressway-based Hybrid Services */
-    if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc') {
+    if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc' || this.serviceId === 'spark-hybrid-impinterop') {
       this.helpLink = 'http://www.cisco.com/go/hybrid-services';
       this.downloadLink = 'https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP';
     }

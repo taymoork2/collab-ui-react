@@ -11,7 +11,7 @@ describe('Template: editServices', function () {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule);
     this.injectDependencies('$httpBackend', '$q', '$previousState', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice', 'UrlConfig');
     initDependencySpies.apply(this);
-    this.compileView('OnboardCtrl', 'modules/core/users/userPreview/editServices.tpl.html');
+    this.compileView('OnboardCtrl', 'modules/core/users/userOverview/editServices.tpl.html');
   }
 
   function initDependencySpies() {

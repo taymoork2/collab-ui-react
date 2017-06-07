@@ -284,7 +284,6 @@
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
-    "ciscoSparkJabberInteropTooltip": "Messaging between Cisco Spark and Jabber.",
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
@@ -647,20 +646,20 @@
     }
   },
   "sharedMeetingReports": {
-    "title": "SHARED MEETING USAGE",
+    "title": "SHARED MEETINGS USAGE",
     "link": "View Report",
     "hostsSharingLicenses": "{{usage}} users",
     "volumeOfLicenses": "{{volume}} shared meetings licenses",
     "availableSharedLicenses": "Available Shared Licenses: ",
-    "sharedMeetingReport": "Shared Meeting Report",
+    "sharedMeetingReport": "Shared Meetings Report",
     "sharedMeetingUsage": "Shared Meetings Usage",
     "sharedMeetingDescription": "This graph shows the number of peak concurrent meetings per month.",
     "sharedMeetingNote": "PLEASE NOTE concurrent Spark Meetings are not yet included in this report, but will be added soon.",
-    "concurrentMeetingsTitle": "Actual number of peak concurrent mettings held",
+    "concurrentMeetingsTitle": "Actual number of peak concurrent meetings held",
     "concurrentMeetings": "Concurrent Meetings",
     "maxMeetingsTitle": "Maximum number of peak concurrent meetings allowed",
-    "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data.",
-    "errorLoadingSharedMeetingDetails": "There was a problem loading the Shared Meeting Report details data.",
+    "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meetings Report data.",
+    "errorLoadingSharedMeetingDetails": "There was a problem loading the Shared Meetings Report details data.",
     "siteUrlError": "Site URL is undefined.  Cannot retrieve shared meetings report.",
     "csvPageError": "Unable to retrieve the detailed report for download.",
     "downloadHref": "Download a <a href=\"{{href}}\" download=\"{{download}}\">detailed report</a> of shared meetings usage.",
@@ -1924,7 +1923,8 @@
       "contact-center-context": "Context Service",
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
-      "squared-fusion-mgmt": "Expressway Management Service"
+      "squared-fusion-mgmt": "Expressway Management Service",
+      "spark-hybrid-impinterop": "IM & Presence"
     },
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
@@ -1935,7 +1935,7 @@
       "squared-fusion-media": "Hybrid Media Service",
       "hybrid-context": "Hybrid Context Service",
       "ept": "Enterprise Private Trunking",
-      "hybrid-imp": "Hybrid IM & Presence"
+      "spark-hybrid-impinterop": "Hybrid IM & Presence"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -1944,7 +1944,8 @@
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
-      "squared-fusion-mgmt": "Management Connector"
+      "squared-fusion-mgmt": "Management Connector",
+      "spark-hybrid-impinterop": "IM & Presence Connector"
     },
     "connectorNameFromConnectorType": {
       "c_cal": "Calendar Connector",
@@ -1955,7 +1956,8 @@
       "cs_mgmt": "Management Connector",
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
-      "c_serab": "Serviceability Connector"
+      "c_serab": "Serviceability Connector",
+      "c_imp": "IM & Presence Connector"
     },
     "shortConnectorNameFromConnectorType": {
       "c_cal": "Calendar",
@@ -1966,7 +1968,8 @@
       "cs_mgmt": "Management",
       "cs_context": "Context",
       "ucm_mgmt": "Management",
-      "c_serab": "Serviceability"
+      "c_serab": "Serviceability",
+      "c_imp": "IM & Presence"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
@@ -1975,12 +1978,14 @@
       "cs_mgmt": "Management Connector",
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
-      "c_serab": "Serviceability Connector"
+      "c_serab": "Serviceability Connector",
+      "c_imp": "IM & Presence"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
       "squared-fusion-cal": "Expressway",
       "squared-fusion-uc": "Expressway",
+      "spark-hybrid-impinterop": "Expressway",
       "squared-fusion-media": "Hybrid Media",
       "spark-hybrid-datasecurity": "Hybrid Data Security",
       "squared-fusion-khaos": "Cisco Unified CM"
@@ -2133,6 +2138,7 @@
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
       "clusters-title-squared-fusion-uc": "Expressway Clusters",
+      "clusters-title-spark-hybrid-impinterop": "Expressway Clusters",
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "clusters-title-contact-center-context": "Context Clusters",
@@ -2334,7 +2340,7 @@
         "selectCalendarType": "Select Calendar type",
         "exchangeInfo": "Microsoft Exchange and Exchange Online (Office 365). Requires Expressway cluster.",
         "serviceInto": "Hybrid Calendar supports Exchange calendars via on-premises Expressway clusters and Google Calendar.",
-        "smallprint": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information click <a href=\"https://example.org/\" target=\"_blank\">here</a>."
+        "smallprint": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information click <a href=\"https://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">here</a>."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -2522,7 +2528,7 @@
         "title": "Create new Resource Group",
         "name": {
           "title": "Resource Group name",
-          "description": "A resource group is a set of Expressway clusters to which you can assign a subset of your users. See the <strong>documentation</strong> for more guidance.",
+          "description": "A resource group is a set of Expressway clusters to which you can assign a subset of your users. See the <a href=\"https://help.webex.com/docs/DOC-16382#concept_8F7AFC2AFB9FC99CFBDF100238170AE2\" target=\"_blank\">documentation</a> for more guidance.",
           "subtitle": "Name",
           "placeholder": "Enter name"
         },
@@ -6284,7 +6290,7 @@
       "sectionDescr": "Control how WebEx Messenger works with Cisco Spark."
     },
     "jabberInteropHeading": "Cisco Spark / Jabber Interop",
-    "jabberInteropTooltip": "Messaging interoperability between Cisco Spark and WebEx Messenger Jabber.",
+    "jabberInteropTooltip": "Messaging between Cisco Spark and Jabber.",
     "jabberInteropUpdateSuccessful": "Jabber Interop updated successfully.",
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
     "authRedirectTooltip": "If enabled, users will login to Common Identity. If disabled, users will login to Messenger.",
