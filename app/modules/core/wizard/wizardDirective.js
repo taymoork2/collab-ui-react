@@ -391,7 +391,7 @@ require('./_wizard.scss');
       }
 
       // enable/disable skip tab button
-      vm.showSkipTabBtn = (vm.isFirstTime() && (vm.current.tab.name === 'addUsers' || vm.current.tab.name === 'careSettings')
+      vm.showSkipTabBtn = (vm.isFirstTime() && (vm.current.tab.name === 'addUsers' || vm.current.tab.name === 'careSettings' || vm.current.tab.name === 'meetingSettings')
         && vm.isFirstStep());
     }
 

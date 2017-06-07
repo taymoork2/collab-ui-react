@@ -1,0 +1,16 @@
+<div class="meeting-settings">
+  <h4 class="element-spacing" translate="firstTimeWizard.keepExistingWebexSites"></h4>
+  <p class="element-spacing" translate="firstTimeWizard.existingWebExTrialSites"></p>
+  <div class="keep-existing-trials element-spacing" ng-repeat="site in meetingCtrl.existingSites">
+    <p class="existing-sites">{{site.name}}.webex.com</p>
+    <input
+      cs-input
+      type="checkbox"
+      id="existing-trial{{$index}}"
+      name="existing-trial{{$index}}"
+      ng-model="site.keepExistingSite"
+      ng-init="meetingCtrl.addOrRemoveExistingWebExSite(site)"
+      ng-change="meetingCtrl.addOrRemoveExistingWebExSite(site)"
+      cs-input-label="{{::'firstTimeWizard.yesKeepSite' | translate}}">
+  </div>
+</div>

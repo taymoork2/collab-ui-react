@@ -66,6 +66,7 @@ require('./_setup-wizard.scss');
       var tabs = getInitTabs();
       initAddUserTab(tabs);
       initEnterpriseSettingsTab(tabs);
+      initMeetingSettingsTab(tabs);
       initCallSettingsTab(tabs);
       initCareTab(tabs);
       initCSB(tabs);
@@ -222,6 +223,50 @@ require('./_setup-wizard.scss');
       }
     }
 
+    function initMeetingSettingsTab(tabs) {
+      var userEmail = Authinfo.getUserName();
+      var trialFlowSteps = [{
+        name: 'migrateTrial',
+        template: 'modules/core/setupWizard/meeting-settings/meeting-migrate-trial.html',
+      },
+      {
+        name: 'siteSetup',
+        template: 'modules/core/setupWizard/meeting-settings/meeting-site-setup.html',
+      },
+      {
+        name: 'licenseDistribution',
+        template: 'modules/core/setupWizard/meeting-settings/meeting-license-distribution.html',
+      },
+      {
+        name: 'summary',
+        template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
+      }];
+      var meetingTab = {
+        name: 'meetingSettings',
+        required: true,
+        label: 'firstTimeWizard.meetingSettings',
+        description: 'firstTimeWizard.setupMeetingService',
+        icon: 'icon-conference',
+        title: 'firstTimeWizard.setupWebexMeetingSites',
+        controller: 'MeetingSettingsCtrl as meetingCtrl',
+        controllerAs: 'meetingCtrl',
+        steps: [{
+          name: 'init',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-init.html',
+        }],
+      };
+
+      if (showMeetingSettingsTab(userEmail)) {
+        if (hasWebexMeetingTrial()) {
+          _.remove(meetingTab.steps, { name: 'init' });
+        } else if (isDirectOrderWithoutTrial()) {
+          _.remove(meetingTab.steps, { name: 'migrateTrial' });
+        }
+        meetingTab.steps = meetingTab.steps.concat(trialFlowSteps);
+        tabs.splice(1, 0, meetingTab);
+      }
+    }
+
     function initEnterpriseSettingsTab(tabs) {
       if (shouldRemoveSSOSteps) {
         var enterpriseSettingTab = _.find(tabs, {
@@ -269,6 +314,27 @@ require('./_setup-wizard.scss');
           });
         }
       }
+    }
+
+    function showMeetingSettingsTab(userEmail) {
+      if (_.isEmpty(userEmail)) {
+        return false;
+      }
+
+      // Currently we are deferentiating trial migration orders for WebEx meeting sites setup by a prefix/suffix of 'ordersimp' in the users email.
+      return _.toLower(userEmail.split('+')[1]) === 'ordersimp@gmail.com' || _.toLower(userEmail.split('+')[0]) === 'ordersimp' || _.toLower(userEmail.split('-')[0]) === 'ordersimp';
+    }
+
+    function hasWebexMeetingTrial() {
+      var conferencingServices = _.filter(Authinfo.getConferenceServices(), { license: { isTrial: true } });
+
+      return _.some(conferencingServices, function (service) {
+        return _.get(service, 'license.offerName') === Config.offerCodes.MC || _.get(service, 'license.offerName') === Config.offerCodes.EE;
+      });
+    }
+
+    function isDirectOrderWithoutTrial() {
+      return !hasWebexMeetingTrial();
     }
 
     function showCallSettings() {
