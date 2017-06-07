@@ -383,13 +383,15 @@ require('./_setup-wizard.scss');
         _.remove(tabs, function (tab) {
           return tab.name === 'messagingSetup' || tab.name === 'addUsers';
         });
-        _.forEach(tabs, function (tab) {
-          if (tab.name === 'enterpriseSettings') {
-            tab.steps = _.reject(tab.steps, function (step) {
-              return step.name === 'init' || step.name === 'exportMetadata' || step.name === 'importIdp' || step.name === 'testSSO';
-            });
-          }
-        });
+        if (isFirstTimeSetup) {
+          _.forEach(tabs, function (tab) {
+            if (tab.name === 'enterpriseSettings') {
+              tab.steps = _.reject(tab.steps, function (step) {
+                return (step.name === 'init') || step.name === 'exportMetadata' || step.name === 'importIdp' || step.name === 'testSSO';
+              });
+            }
+          });
+        }
       }
     }
 
