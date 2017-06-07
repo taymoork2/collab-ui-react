@@ -187,7 +187,7 @@ export class HuronSettingsService {
   private createParallelRequests(data: HuronSettingsData): Array<ng.IPromise<any>> {
     let promises: Array<ng.IPromise<any>> = [];
     if (!_.isEqual(data.internalNumberRanges, this.huronSettingsDataCopy.internalNumberRanges)) {
-      Array.prototype.push.apply(promises, this.updateInternalNumberRanges(data.internalNumberRanges));
+      Array.prototype.push.apply(promises, this.updateInternalNumberRanges(data.internalNumberRanges, this.skipInternalNumberRangeDelete(data, this.huronSettingsDataCopy)));
     }
 
     if (!_.isEqual(data.cosRestrictions, this.huronSettingsDataCopy.cosRestrictions)) {
@@ -289,14 +289,22 @@ export class HuronSettingsService {
       });
   }
 
-  private updateInternalNumberRanges(internalNumberRanges: Array<IExtensionRange>): Array<ng.IPromise<any>> {
+  private skipInternalNumberRangeDelete(data: HuronSettingsData, originalData: HuronSettingsData): boolean {
+    const extensionLength = _.toSafeInteger(_.clone(data.site.extensionLength));
+    const origExtensionLength = _.toSafeInteger(_.clone(originalData.site.extensionLength));
+    return extensionLength < origExtensionLength;
+  }
+
+  private updateInternalNumberRanges(internalNumberRanges: Array<IExtensionRange>, skipDelete: boolean = false): Array<ng.IPromise<any>> {
     let promises: Array<ng.IPromise<any>> = [];
-    // first look for ranges to delete.
-    _.forEach(this.huronSettingsDataCopy.internalNumberRanges, range => {
-      if (!_.find(internalNumberRanges, { beginNumber: range.beginNumber, endNumber: range.endNumber })) {
-        promises.push(this.deleteInternalNumberRange(range));
-      }
-    });
+    if (!skipDelete) {
+      // first look for ranges to delete.
+      _.forEach(this.huronSettingsDataCopy.internalNumberRanges, range => {
+        if (!_.find(internalNumberRanges, { beginNumber: range.beginNumber, endNumber: range.endNumber })) {
+          promises.push(this.deleteInternalNumberRange(range));
+        }
+      });
+    }
 
     // look for ranges to add or update
     _.forEach(internalNumberRanges, range => {
