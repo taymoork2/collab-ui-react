@@ -1,0 +1,168 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+
+  <h4 class="modal-title"
+      translate="hercules.hybridCallServiceTestCallTool.modal.header"></h4>
+</div>
+<div class="modal-body hybrid-call-service-user-test-tool-body verify-sip-destination-modal">
+
+  <span class="spinner-test-tool"
+        ng-if="vm.loading">
+    <i class="icon icon-spinner"></i>
+  </span>
+
+  <div ng-if="!vm.loading && !vm.result">
+    <p class="medium-6">
+      <span translate="hercules.hybridCallServiceTestCallTool.modal.selectOneUser" ng-if="!vm.allowChangingCaller"></span>
+      <span translate="hercules.hybridCallServiceTestCallTool.modal.selectTwoUsers" ng-if="vm.allowChangingCaller"></span>
+      <span translate="hercules.hybridCallServiceTestCallTool.modal.searchForUser"></span>
+    </p>
+
+    <div class="from-and-to-container">
+      <h5 class="from-and-to-texts"
+          translate="hercules.hybridCallServiceTestCallTool.modal.testCallFrom"></h5>
+      <h5 class="from-and-to-texts"
+          translate="hercules.hybridCallServiceTestCallTool.modal.testCallTo"></h5>
+    </div>
+
+    <div class="change-user-container">
+      <div class="change-user-link">
+        <a ng-show="vm.showChangeCaller()"
+           class="edit-user"
+           ng-click="vm.resetCaller()"
+           translate="hercules.hybridCallServiceTestCallTool.modal.changeUser"></a>
+      </div>
+      <div class="change-user-link">
+        <a ng-show="vm.showChangeCallee()"
+           class="edit-user"
+           ng-click="vm.resetCallee()"
+           translate="hercules.hybridCallServiceTestCallTool.modal.changeUser"></a>
+      </div>
+    </div>
+
+    <div class="picture-container">
+      <!-- Caller:  -->
+      <div class="picture-box">
+        <div ng-if="vm.caller.photo">
+          <img ng-src='{{vm.caller.photo}}' class="user-img" alt=""  />
+        </div>
+        <div ng-if="!vm.caller.photo"
+             class="default-user-pic user-img">
+          <i class="icon icon-user silhouette"></i>
+        </div>
+        <h5 ng-if="vm.caller.userId"
+           class="name-field">{{vm.caller.displayName}}</h5>
+        <p ng-if="vm.caller.userId"
+           class="name-field cloud-extensions">
+          <span class="status-line" translate="hercules.hybridCallServiceTestCallTool.modal.hybridCallConnectStatus"></span>
+          <span ng-if="vm.caller.ussStatus"
+                class="status-line"
+                ng-class="'status-' + vm.caller.ussStatus"
+                translate="hercules.activationStatus.{{vm.caller.ussStatus}}">{{vm.caller.ussStatus}}</span></p>
+        <p class="name-field" ng-if="!vm.caller.userId">
+          <input type="text"
+                 class="centered-input"
+                 ng-model="vm.caller.input"
+                 typeahead="user for user in vm.search($viewValue) | limitTo:4"
+                 typeahead-loading="vm.isSearching"
+                 typeahead-template-url="userTemplate.html"
+                 typeahead-on-select="vm.selectCaller($item)"
+                 placeholder="{{'hercules.hybridCallServiceTestCallTool.modal.inputWatermark' | translate}}"
+                 typeahead-wait-ms="500"/></p>
+        <p class="name-field" ng-if="!vm.caller.userId">&nbsp;</p>
+      </div>
+      <!-- Callee:  -->
+      <div class="picture-box">
+        <div ng-if="vm.callee.photo">
+          <img ng-src='{{vm.callee.photo}}' class="user-img" alt=""  />
+        </div>
+        <div ng-if="!vm.callee.photo"
+             class="default-user-pic user-img">
+          <i class="icon icon-user silhouette"></i>
+        </div>
+        <h5 ng-if="vm.callee.userId"
+            class="name-field">{{vm.callee.displayName}}</h5>
+        <p ng-if="vm.callee.userId"
+           class="name-field cloud-extensions">
+          <span class="status-line" translate="hercules.hybridCallServiceTestCallTool.modal.hybridCallConnectStatus"></span>
+          <span ng-if="vm.callee.ussStatus"
+                class="status-line"
+                ng-class="'status-' + vm.callee.ussStatus"
+                translate="hercules.activationStatus.{{vm.callee.ussStatus}}">{{vm.callee.ussStatus}}</span></p>
+        <p class="name-field" ng-if="!vm.callee.userId">
+          <input type="text"
+                 class="centered-input"
+                 ng-model="vm.callee.input"
+                 typeahead="user for user in vm.search($viewValue) | limitTo:4"
+                 typeahead-loading="vm.isSearching"
+                 typeahead-template-url="userTemplate.html"
+                 typeahead-on-select="vm.selectCallee($item)"
+                 placeholder="{{'hercules.hybridCallServiceTestCallTool.modal.inputWatermark' | translate}}"
+                 typeahead-wait-ms="500"/></p>
+        <p class="name-field" ng-if="!vm.callee.userId">&nbsp;</p>
+      </div>
+    </div>
+
+    <div class="warning-container">
+      <!-- Caller:  -->
+      <div class="warning-box cloud-extensions">
+
+      </div>
+
+      <!-- Callee:  -->
+      <div class="warning-box cloud-extensions">
+        <div ng-if="vm.warnAboutPhonesRinging()" class="warning-message">
+          <i class="icon icon-warning"></i>
+          <p class="message"
+                translate="hercules.hybridCallServiceTestCallTool.modal.warnings.warnAboutPhonesRinging"
+                translate-values="{ caller: vm.caller.displayName, callee: vm.callee.displayName }"></p>
+        </div>
+        <div ng-if="vm.callerAndCalleeAreTheSame()" class="error-message">
+          <i class="icon icon-error"></i>
+          <p class="message"
+             translate="hercules.hybridCallServiceTestCallTool.modal.warnings.callerAndCalleeTheSame"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="!vm.loading && vm.result">
+    <div class="sip-verification-modal-section">
+      <h6 translate="hercules.settings.verifySipDestination.testResultsHeader"></h6>
+      <hs-sip-destination-test-results test-result-numbers="{successful: vm.getNumberOfSteps('Info'),
+                                                               issues: vm.getNumberOfSteps('Warn'),
+                                                               failed: vm.getNumberOfSteps('Error')}"></hs-sip-destination-test-results>
+    </div>
+    <hs-test-tool-results-table test-results="vm.result"></hs-test-tool-results-table>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <div ng-if="!vm.result">
+    <button class="btn btn-default"
+            ng-click="$dismiss()"
+            type="button"
+            ng-if="!vm.result"
+            translate="common.cancel"></button>
+    <button class="btn btn--primary"
+            cs-btn
+            loading="vm.loading"
+            type="button"
+            ng-if="!vm.result"
+            ng-disabled="vm.loading || !vm.caller.userId || !vm.callee.userId || vm.callerAndCalleeAreTheSame()"
+            ng-click="vm.startTest(vm.caller.userId, vm.callee.userId)">
+      <span translate="common.test"></span>
+    </button>
+  </div>
+  <button ng-click="$close()"
+          ng-if="vm.result"
+          class="btn btn--primary"
+          translate="common.done"></button>
+</div>
+<script type="text/ng-template" id="userTemplate.html">
+  <a class="search-result">
+    <span ng-bind-html="match.label.displayName | typeaheadHighlight:query" ></span>
+  </a>
+</script>

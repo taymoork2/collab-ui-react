@@ -163,6 +163,7 @@ module.exports = {
   atlasHybridVoicemail: 'atlas-hybrid-voicemail',
   atlasHybridImp: 'atlas-hybrid-imp',
   atlasHybridCallDiagnosticTool: 'atlas-hybrid-call-diagnostic-tool',
+  atlasHybridCallUserTestTool: 'atlas-hybrid-call-user-test-tool',
   gemServicesTab: 'gem-services-tab',
   atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
   avrilVmEnable: 'avril-vm-enable',

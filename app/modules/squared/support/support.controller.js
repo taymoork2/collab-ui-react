@@ -7,7 +7,7 @@ require('./_support.scss');
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($filter, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeedbackService, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
+  function SupportCtrl($filter, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeedbackService, hasAtlasHybridCallUserTestTool, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = ' by Cisco';
@@ -30,6 +30,7 @@ require('./_support.scss');
     $scope.gotoCdrSupport = gotoCdrSupport;
     $scope.gotoEdiscovery = gotoEdiscovery;
     $scope.gotoPartnerManagement = gotoPartnerManagement;
+    $scope.hasAtlasHybridCallUserTestTool = hasAtlasHybridCallUserTestTool;
 
     var vm = this;
     vm.masonryRefreshed = false;
@@ -105,13 +106,17 @@ require('./_support.scss');
       return Authinfo.isHelpDeskUser();
     };
 
+    $scope.showHybridCallUserTestTool = function () {
+      return $scope.hasAtlasHybridCallUserTestTool;
+    };
+
     $scope.showToolsCard = function () {
       // Preliminary hack to fix rendering problem for small width screens.
       // Without it, small screens may initially render card(s) partly on top of each other
       if (!vm.masonryRefreshed) {
         reInstantiateMasonry();
       }
-      return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink() || $scope.showEdiscoveryLink();
+      return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink() || $scope.showEdiscoveryLink() || $scope.showHybridCallUserTestTool();
     };
 
     $scope.showEdiscoveryLink = function () {
@@ -524,5 +529,6 @@ require('./_support.scss');
         visible: Authinfo.isCisco(),
       }],
     };
+
   }
 })();

@@ -32,25 +32,8 @@
       </p>
     </div>
 
-    <div class="sip-verification-modal-section">
-      <h6 translate="common.details"></h6>
-      <table class="table table-striped sip-destination-results-table">
-        <thead>
-        <tr>
-          <td translate="common.step"></td>
-          <td translate="common.details"></td>
-          <td translate="common.result" class="result"></td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="step in vm.result track by $index">
-          <td>{{vm.localizeType(step.type)}}</td>
-          <td>{{step.description}}</td>
-          <td class="result"><i class="icon" ng-class="vm.severityToIcon(step.severity)"></i></td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+    <hs-test-tool-results-table test-results="vm.result"></hs-test-tool-results-table>
+
   </div>
 
 </div>
