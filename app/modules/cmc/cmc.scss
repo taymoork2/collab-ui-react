@@ -13,7 +13,21 @@
     }
   }
   .settings {
-    background: $brand-white;
+    background-color: $brand-white;
+    padding: 2rem;
+    .help-info {
+      margin-bottom: 2rem;
+    }
+    .selector-wrapper {
+      margin-bottom: 1rem;
+      p {
+        width: 60%;
+      }
+      .selector {
+        margin-top: 0.5rem;
+        width: 60%;
+      }
+    }
   }
   .status {
     padding-left: 2rem;
@@ -30,4 +44,3 @@
     color: $gray-dark-4;
   }
 }
-
