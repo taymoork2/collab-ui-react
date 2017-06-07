@@ -25,26 +25,5 @@ verify-sip-destination {
     width: 100%;
     text-align: center;
   }
-
-  .icon-error {
-    color: $color-alerts-base;
-  }
-
-  .icon-warning {
-    color: $color-attention-base;
-  }
-
-  .icon-checkbox {
-    color: $color-cta-base;
-  }
-
-  .sip-destination-results-table {
-
-    th.result,
-    td.result {
-      text-align: center;
-      vertical-align: middle;
-    }
-  }
 }
 

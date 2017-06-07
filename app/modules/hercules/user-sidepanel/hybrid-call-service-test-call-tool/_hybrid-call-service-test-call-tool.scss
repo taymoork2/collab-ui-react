@@ -1,0 +1,122 @@
+@import '~collab-ui/scss/settings/colors';
+
+hybrid-call-service-test-call-tool {
+  display: block;
+}
+
+.hybrid-call-service-user-test-tool-body {
+
+  .picture-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  .from-and-to-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    height: 30px;
+  }
+
+  .warning-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    height: 20px;
+    margin-top: 65px;
+  }
+
+  .warning-box {
+    margin-right: 15px;
+    width: 50%;
+  }
+
+  .change-user-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    height: 20px;
+  }
+
+  .change-user-link {
+    margin-right: 15px;
+    width: 50%;
+    height: 20px;
+    position: relative;
+    text-align: right;
+    background-color: $gray-light-4;
+  }
+
+  .from-and-to-texts {
+    margin: 5px;
+    width: 50%;
+    height: 20px;
+    position: relative;
+  }
+
+  .picture-box {
+    margin-right: 15px;
+    width: 50%;
+    height: 170px;
+    line-height: 170px;
+    position: relative;
+    text-align: center;
+    background-color: $gray-light-4;
+  }
+
+  .name-field {
+    background-color: $gray-light-4;
+    height: 20px;
+  }
+
+  .name-field:last-child {
+    height: 40px;
+  }
+
+  .centered-input {
+    display: block;
+    position: relative;
+    margin: auto;
+  }
+
+  .silhouette {
+    padding-top: 30px;
+    font-size: 8em;
+    display: block;
+  }
+
+  img {
+    height: 140px;
+    width: 140px;
+  }
+
+  .default-user-pic {
+    height: 140px;
+    width: 140px;
+  }
+
+  .spinner-test-tool {
+    font-size: 4rem;
+    text-align: center;
+  }
+
+  a.search-result {
+    text-align: left;
+  }
+
+  a.edit-user {
+    font-size: smaller;
+    padding-right: 5px;
+  }
+
+  .status-line {
+    font-size: smaller;
+  }
+}
+

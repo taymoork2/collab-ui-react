@@ -1446,7 +1446,7 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
-            template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"  voicemail-feature-toggled="$resolve.voicemailFeatureToggled"></hybrid-call-service-connect-user-settings>',
+            template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"  voicemail-feature-toggled="$resolve.voicemailFeatureToggled" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled"></hybrid-call-service-connect-user-settings>',
             data: {
               displayName: 'Connect',
             },
@@ -1467,6 +1467,9 @@
               },
               voicemailFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
+              },
+              userTestToolFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallUserTestTool);
               },
             },
           })
@@ -1796,6 +1799,11 @@
             templateUrl: 'modules/squared/support/support.html',
             controller: 'SupportCtrl',
             parent: 'main',
+            resolve: {
+              hasAtlasHybridCallUserTestTool: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallUserTestTool);
+              },
+            },
           })
           .state('support.status', {
             url: '/status',

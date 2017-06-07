@@ -40,4 +40,24 @@ describe('L2SIP Service', () => {
 
   });
 
+  describe('userTestCall', () => {
+
+    afterEach( () => {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should use the user test tool API with the correct caller and callee userIds', () => {
+
+      const caller = '1234';
+      const callee = '5678';
+
+      $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/l2sip/api/v1/test/users?caller=${caller}&called=${callee}`).respond('200');
+      service.userTestCall(caller, callee);
+      $httpBackend.flush();
+
+    });
+
+  });
+
 });
