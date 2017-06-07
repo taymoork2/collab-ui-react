@@ -24,9 +24,9 @@ export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponent
 
   public $onInit() {
     if (this.cluster && _.size(this.cluster.connectors) === 0) {
-      this.HybridServicesExtrasService.getPreregisteredClusterAllowList()
+      this.HybridServicesExtrasService.getPreregisteredClusterAllowList(this.cluster.id)
         .then(allowList => {
-          this.cluster.allowedRedirectTarget = _.find(allowList, { clusterId: this.cluster.id });
+          this.cluster.allowedRedirectTarget = allowList[0];
         })
         .catch(error => {
           this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');

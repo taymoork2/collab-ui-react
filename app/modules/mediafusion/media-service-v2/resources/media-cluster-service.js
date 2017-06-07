@@ -229,11 +229,9 @@
     var addRedirectTarget = function (hostName, clusterId) {
       var payLoad = {
         "hostname": hostName,
-        "clusterId": clusterId,
-        ttlInSeconds: 60 * 60,
       };
 
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/allowedRegistrationHosts';
       return $http
         .post(url, payLoad);
     };

@@ -132,7 +132,7 @@
     }
 
     function addPreregisteredClusterToAllowList(clusterId) {
-      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(vm.hostname, 3600, clusterId)
+      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(vm.hostname, clusterId)
         .then(function () {
           vm.clusterId = clusterId;
         })

@@ -232,14 +232,12 @@ describe('Controller: AddResourceController', function () {
     });
 
     it('should add the new cluster to the FMS allow-list exactly once, and with the correct clusterId', function () {
-      spyOn(hybridServicesExtrasServiceMock, 'addPreregisteredClusterToAllowList').and.returnValue($q.resolve({
-        id: clusterIdOfNewCluster,
-      }));
+      spyOn(hybridServicesExtrasServiceMock, 'addPreregisteredClusterToAllowList').and.returnValue($q.resolve({}));
       controller.preregisterAndProvisionExpressway(newConnectorType);
       controller.hostname = 'hostnameProvidedByUser';
       $scope.$apply();
       expect(hybridServicesExtrasServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledTimes(1);
-      expect(hybridServicesExtrasServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledWith('hostnameProvidedByUser', 3600, clusterIdOfNewCluster);
+      expect(hybridServicesExtrasServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledWith('hostnameProvidedByUser', clusterIdOfNewCluster);
     });
 
     it('should not show the Resource Group step unless you are feature toggled', function () {

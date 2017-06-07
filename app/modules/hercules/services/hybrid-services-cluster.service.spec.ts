@@ -26,7 +26,6 @@ describe('Service: HybridServicesClusterService', function () {
     $provide.value('Authinfo', Authinfo);
     const UrlConfig = {
       getHerculesUrlV2: jasmine.createSpy('UrlConfig.getHerculesUrlV2').and.returnValue('http://elg.no'),
-      getHerculesUrl: jasmine.createSpy('UrlConfig.getHerculesUrl').and.returnValue('http://ulv.no'),
       getUssUrl: jasmine.createSpy('UrlConfig.getUssUrl').and.returnValue('http://whatever.no/'),
     };
     $provide.value('UrlConfig', UrlConfig);
@@ -394,7 +393,9 @@ describe('Service: HybridServicesClusterService', function () {
       jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
       const org = getJSONFixture('hercules/org-with-resource-groups.json');
       $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond(org);
-      $httpBackend.expectGET('http://ulv.no/organizations/0FF1C3/allowedRedirectTargets').respond(204, '');
+      // The "Oslo Øst & Skinke" cluster has no connectors, so the code will look for ongoing registrations by looking
+      // up the allowedRegistrationHosts for it.
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/allowedRegistrationHosts').respond(204, { items: [] });
     });
 
     afterEach(function () {
