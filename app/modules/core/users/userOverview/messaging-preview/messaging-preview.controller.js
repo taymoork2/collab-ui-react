@@ -1,20 +1,15 @@
-require('./_messaging-preview.scss');
+'use strict';
 
-(function () {
-  'use strict';
+module.exports = MessagingPreviewCtrl;
 
-  angular.module('Core')
-    .controller('UserPreviewCtrl', UserPreviewCtrl);
+/* @ngInject */
+function MessagingPreviewCtrl($scope, $state, $stateParams) {
+  $scope.service = 'ALL';
 
-  /* @ngInject */
-  function UserPreviewCtrl($scope, $state, $stateParams) {
-    $scope.service = 'ALL';
-
-    if ($stateParams.service) {
-      $scope.service = $stateParams.service;
-    }
-    $scope.closePreview = function () {
-      $state.go('users.list');
-    };
+  if ($stateParams.service) {
+    $scope.service = $stateParams.service;
   }
-})();
+  $scope.closePreview = function () {
+    $state.go('users.list');
+  };
+}

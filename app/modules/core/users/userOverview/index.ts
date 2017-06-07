@@ -1,6 +1,7 @@
 import { UserOverviewService } from './userOverview.service';
 let UserOverviewCtrl = require('./userOverviewCtrl');
 
+import messagingPreviewModule from './messaging-preview';
 import featureToggleServiceModule from 'modules/core/featureToggle';
 import notifictionModule from 'modules/core/notifications';
 import sunlightServiceModule from 'modules/sunlight/services';
@@ -16,6 +17,7 @@ export default angular
   .module('core.users.userOverview', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
+    messagingPreviewModule,
     sunlightServiceModule,
     ngResourceModule,
     notifictionModule,
