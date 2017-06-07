@@ -1,0 +1,12 @@
+// TODO: determine better place for these selectors and move them
+[ui-view='editServices'] .modal-title {
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entitle-check-grp {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}

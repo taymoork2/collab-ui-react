@@ -1,7 +1,4 @@
-@import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
-@import '~collab-ui/scss/tools/mixins/text-overflow';
 
 .user-entitlements-body {
   padding-left: 10px;
@@ -28,16 +25,4 @@
   .entitle-save-btn {
     margin-top: 40px;
   }
-}
-
-[ui-view='editServices'] .modal-title {
-  height: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.entitle-check-grp {
-  margin-bottom: 0px;
-  margin-top: 0px;
 }
