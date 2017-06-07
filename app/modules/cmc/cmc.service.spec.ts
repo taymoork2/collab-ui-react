@@ -1,4 +1,5 @@
 import cmcModule from './index';
+import { ICmcUser } from './cmcUser.interface';
 
 describe('CmcService', () => {
 
@@ -7,6 +8,7 @@ describe('CmcService', () => {
     this.injectDependencies(
       'CmcService',
       '$scope',
+      '$httpBackend',
       'Orgservice',
     );
   });
@@ -28,4 +30,55 @@ describe('CmcService', () => {
     this.$scope.$apply();
   });
 
+  describe('phone number existence', function () {
+    let user: ICmcUser = <ICmcUser> {
+      meta: {
+        organizationID: '1234',
+      },
+    };
+
+    afterEach(function () {
+      this.$httpBackend.verifyNoOutstandingExpectation();
+      this.$httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('returns null of phone number not found in same org', function () {
+
+      let scimNoUserResponse = {
+        Resources: [],
+      };
+
+      this.$httpBackend
+        .when('GET', 'https://identity.webex.com/identity/scim/1234/v1/Users?filter=phoneNumbers[type eq "mobile" and value eq "+471234"]')
+        .respond(scimNoUserResponse);
+
+      this.CmcService.checkUniqueMobileNumber(user, '+471234').then(function (res) {
+        expect(res).toBeNull();
+      });
+
+      this.$httpBackend.flush();
+
+    });
+
+    it('returns username that has the phone number', function () {
+
+      let scimResponseExistingUser = {
+        Resources: [
+          { userName: 'atlas' },
+        ],
+      };
+
+      this.$httpBackend
+        .when('GET', 'https://identity.webex.com/identity/scim/1234/v1/Users?filter=phoneNumbers[type eq "mobile" and value eq "+471234"]')
+        .respond(scimResponseExistingUser);
+
+
+      this.CmcService.checkUniqueMobileNumber(user, '+471234').then(function (res) {
+        expect(res).toEqual('atlas');
+      });
+
+      this.$httpBackend.flush();
+
+    });
+  });
 });

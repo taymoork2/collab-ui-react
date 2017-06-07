@@ -2676,7 +2676,8 @@
   "cmc": {
     "failures": {
       "preCheckFailure": "Status check of org failed with: {{msg}}",
-      "saveFailure": "Save failed with: {{msg}}"
+      "saveFailure": "Save failed with: {{msg}}",
+      "alreadyRegisteredForAtLeastOneMoreUser": "is already registered for at least one other user"
     },
     "userMenu": {
       "crossServices": "Cross Services",

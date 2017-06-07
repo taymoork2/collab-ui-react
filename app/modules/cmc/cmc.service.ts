@@ -18,6 +18,7 @@ export class CmcService {
     private UrlConfig,
     private CmcServiceMock,
     private $http: ng.IHttpService,
+    private $translate,
   ) {
   }
 
@@ -125,11 +126,11 @@ export class CmcService {
   }
 
   private setMobileNumber(user: ICmcUser, number: string): IPromise<any>  {
-    return this.checkUniqueMobileNumber(user, number).then((unique) => {
-      if (!unique) {
+    return this.checkUniqueMobileNumber(user, number).then((existingUser) => {
+      if (existingUser) {
         return this.$q.reject({
           data: {
-            message: `${number} is not unique`,
+            message: `${number} ` + this.$translate.instant('cmc.failures.alreadyRegisteredForAtLeastOneMoreUser') + ' ' + existingUser,
           },
         });
       } else {
@@ -153,34 +154,17 @@ export class CmcService {
         });
       }
     });
-    /*
-    let userMobileData = {
-      schemas: this.Config.scimSchemas,
-      phoneNumbers: [
-        {
-          type: 'mobile',
-          value: number,
-        },
-      ],
-    };
-
-    let scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
-    this.$log.info('Updating user', user);
-    this.$log.info('User data', userMobileData);
-    return this.$http({
-      method: 'PATCH',
-      url: scimUrl,
-      data: userMobileData,
-    });
-    */
-
   }
 
-  private checkUniqueMobileNumber(user: ICmcUser, mobileNbr: string): IPromise<any> {
+  private checkUniqueMobileNumber(user: ICmcUser, mobileNbr: string): IPromise<String> {
     let filter: string = `phoneNumbers[type eq \"mobile\" and value eq \"${mobileNbr}\"]`;
     let scimUrl: string = this.UrlConfig.getScimUrl(user.meta.organizationID) + '?filter=' + filter;
     return this.$http.get(scimUrl).then((response: any) => {
-      return response.data.Resources.length === 0;
+      if (response.data.Resources.length > 0) {
+        return response.data.Resources[0].userName;
+      } else {
+        return null;
+      }
     });
   }
 

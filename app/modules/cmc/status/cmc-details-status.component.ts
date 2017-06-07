@@ -15,7 +15,6 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     private Authinfo,
     private CmcService,
     private CmcUserService,
-    private Config,
   ) {
     this.orgId = this.Authinfo.getOrgId();
   }
@@ -37,7 +36,6 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
         this.error = error.data;
       });
 
-    this.CmcUserService.getUsersWithEntitlement(this.Config.entitlements.cmc);
     this.fetchUserStatuses(100).then( () => {
       this.CmcUserService.insertUserDisplayNames(this.userStatuses);
     });
