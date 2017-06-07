@@ -24,6 +24,12 @@ describe('Component: cmcUserDetailsSettings ', () => {
         entitled: true,
         mobileNumber: '+471234',
       });
+      spyOn(this.CmcService, 'preCheckOrg').and.returnValue(this.$q.resolve({
+        status: 'ok',
+      }));
+      spyOn(this.CmcService, 'preCheckUser').and.returnValue(this.$q.resolve({
+        status: 'ok',
+      }));
     });
 
     function initComponent() {
