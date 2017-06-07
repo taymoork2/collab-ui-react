@@ -141,6 +141,7 @@
     vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostType');
     vm.tooltipText = '';
     vm.cardIndicator = 0;
+    vm.clusterUnavailablityFlag = false;
 
     setRefreshInterval();
     getCluster();
@@ -636,6 +637,7 @@
 
     function setAvailabilityGraph(response) {
       vm.availabilityChart = AvailabilityResourceGraphService.setAvailabilityGraph(response, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected, vm.Map);
+      clusterUnavailablityCheck();
     }
 
     function setDummyUtilization() {
@@ -739,6 +741,19 @@
         tooltipFlag = true;
       }
       return tooltipFlag;
+    }
+
+    function clusterUnavailablityCheck() {
+      vm.clusterUnavailablityFlag = false;
+      _.each(vm.availabilityChart.dataProvider, function (cluster) {
+        if (!vm.clusterUnavailablityFlag) {
+          if (cluster.segments[cluster.segments.length - 1].availability === "Unavailable") {
+            vm.clusterUnavailablityFlag = true;
+          } else {
+            vm.clusterUnavailablityFlag = false;
+          }
+        }
+      });
     }
 
   }

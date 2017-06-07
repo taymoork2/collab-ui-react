@@ -12,6 +12,7 @@
             <span tooltip="{{$ctrl.tooltipValue}}" class="cardTooltipClass">{{$ctrl.value}}</span>
             <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername != $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
           </div>
+          <span class="partically-unavailable" ng-class="{'no-display': $ctrl.parentcntrl.clusterUnavailablityFlag===false}"><i class="icon icon-warning"></i><span translate="mediaFusion.metrics.clusterPartiallyInService"></span></span>
           <div class="spinner-position" ng-if="!$ctrl.value && $ctrl.value !== 0">
             <i class='icon icon-spinner icon-2x'></i>
           </div>

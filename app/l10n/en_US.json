@@ -5270,7 +5270,8 @@
         "clientTypeDesc": "Provides usage trend of the various client types that are used in an organization"
       },
       "allOff": "All Off",
-      "allOn": "All On"
+      "allOn": "All On",
+      "clusterPartiallyInService":"  Cluster Partially in Service"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
