@@ -76,7 +76,7 @@ describe('Component: cmcUserDetails ', () => {
       expect(this.controller.orgReady).toBeFalsy();
       expect(this.controller.userReady).toBeTruthy();
       expect(this.controller.issues[0]).toEqual('org not ready');
-      expect(this.controller.services[ 0 ].detail).toBe('cmc.userSettings.menuStatus.error');
+      expect(this.controller.services[ 0 ].detail).toBe('cmc.userMenu.statusNok');
       expect(this.controller.services[ 0 ].actionAvailable).toBeTruthy();
 
       done();
@@ -103,7 +103,7 @@ describe('Component: cmcUserDetails ', () => {
       expect(this.Notification.error).toHaveBeenCalled();
       expect(this.controller.userReady).toBeFalsy();
 
-      expect(this.controller.services[ 0 ].detail).toEqual('');
+      expect(this.controller.services[ 0 ].detail).toEqual('cmc.userMenu.statusOk');
       expect(this.controller.services[ 0 ].actionAvailable).toBeFalsy();
 
       done();
@@ -130,7 +130,7 @@ describe('Component: cmcUserDetails ', () => {
       expect(this.controller.userReady).toBeFalsy();
       expect(this.controller.issues[0]).toEqual('user not ready');
 
-      expect(this.controller.services[ 0 ].detail).toBe('cmc.userSettings.menuStatus.error');
+      expect(this.controller.services[ 0 ].detail).toBe('cmc.userMenu.statusNok');
       expect(this.controller.services[ 0 ].actionAvailable).toBeTruthy();
 
       done();

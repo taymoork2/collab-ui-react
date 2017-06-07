@@ -223,11 +223,12 @@ export class HybridServicesClusterService {
     }
 
     // Service is degraded if one or more clusters have their connectors in one of these states:
-    // if (_.find(statuses, (value) => {
-    //   return (value === 'has_warning_alarms' || value === 'stopped' || value === 'not_operational' || value === 'disabled' || value === 'offline');
-    // })) {
-    //   return 'impaired';
-    // }
+    if (_.find(statuses, (value) => {
+      // TODO: handle alams?
+      return (value === 'stopped' || value === 'not_operational' || value === 'disabled' || value === 'offline');
+    })) {
+      return 'impaired';
+    }
 
     // fallback: if no connectors are running, return at least 'degraded'
     if (!_.includes(statuses, 'running')) {
