@@ -4014,14 +4014,20 @@
               clusterId: null,
             },
             parent: 'main',
+            resolve: {
+              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+            },
           })
           .state('imp-service.settings', {
             url: '/services/imp/settings',
             views: {
               impServiceView: {
-                controllerAs: 'impServiceSettings',
-                controller: 'ImpServiceSettingsController',
-                templateUrl: 'modules/hercules/service-settings/imp-service-settings.html',
+                template: '<imp-settings-page></imp-settings-page>',
               },
             },
             resolve: {
