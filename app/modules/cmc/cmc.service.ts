@@ -1,11 +1,10 @@
-import { ICmcUserData, ICmcOrgStatusResponse, ICmcUserStatusResponse } from './cmc.interface';
-import { ICmcUser, ICmcIssue } from './cmc.interface';
+import { ICmcUserData, ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcUser, ICmcIssue } from './cmc.interface';
+
 export class CmcService {
 
   //private cmcUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
   private cmcUrl: string = 'https://cmc-controller.intb1.ciscospark.com/api/v1';
   private useMock: boolean = false;
-  //
 
   /* @ngInject */
   constructor(
@@ -35,7 +34,10 @@ export class CmcService {
     this.$log.info('Getting data for user=', user);
     let entitled = this.hasCmcEntitlement(user);
     let mobileNumber = this.extractMobileNumber(user);
-    return new ICmcUserData(mobileNumber, entitled);
+    return <ICmcUserData> {
+      mobileNumber: mobileNumber,
+      entitled: entitled,
+    };
   }
 
   // TODO: Find out when cmc settings should be unavailable...

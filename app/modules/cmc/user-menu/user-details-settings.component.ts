@@ -1,7 +1,6 @@
 import { CmcService } from './../cmc.service';
 import { IUser } from 'modules/core/auth/user/user';
-import { ICmcOrgStatusResponse, ICmcUserStatusResponse } from './../cmc.interface';
-import { ICmcUserData, ICmcUser, ICmcIssue } from './../cmc.interface';
+import { ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcUserData, ICmcUser, ICmcIssue } from './../cmc.interface';
 import { Notification } from 'modules/core/notifications';
 
 class CmcUserDetailsSettingsController implements ng.IComponentController {
@@ -31,7 +30,11 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   public $onInit() {
     this.$log.debug('$onInit');
     this.extractCmcData();
-    this.oldCmcUserData = new ICmcUserData(this.mobileNumber, this.entitled);
+    this.oldCmcUserData = <ICmcUserData> {
+      mobileNumber: this.mobileNumber,
+      entitled: this.entitled,
+    };
+
     this.$log.warn('Current user:', this.user);
     this.validateOrgAndUserContent(this.user);
   }
@@ -58,7 +61,10 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   // }
 
   public save(): void {
-    let newData = new ICmcUserData(this.mobileNumber, this.entitled);
+    let newData: ICmcUserData = {
+      mobileNumber: this.mobileNumber,
+      entitled: this.entitled,
+    };
     this.$log.warn('trying to set data', newData, ', id=', this.user.id);
     this.CmcService.setUserData(this.user, newData).then(() => {
       this.oldCmcUserData.entitled = this.entitled;

@@ -23,15 +23,9 @@ export interface ICmcStatusResponse {
   issues?: ICmcIssue[];
 }
 
-export class ICmcUserData {
-  public mobileNumber: string;
-  public entitled: boolean;
-
-  constructor(mobilenumber: string,
-              entitled: boolean) {
-    this.mobileNumber = mobilenumber;
-    this.entitled = entitled;
-  }
+export interface ICmcUserData {
+  mobileNumber: string;
+  entitled: boolean;
 }
 
 export interface ICmcUser extends IUser {
