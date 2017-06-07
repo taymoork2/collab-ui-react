@@ -31,7 +31,8 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.generateReport = generateReport;
     vm.runReport = runReport;
     vm.reportProgress = reportProgress;
-    vm.openReportModal = openReportModal;
+    vm.isOnPrem = isOnPrem;
+    $scope.downloadReportModal = downloadReportModal;
     vm.downloadReport = downloadReport;
     vm.cancelReport = cancelReport;
     vm.keyPressHandler = keyPressHandler;
@@ -77,6 +78,7 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.isReportComplete = false;
     vm.isReportTooBig = false;
     vm.isReportMaxRooms = false;
+    vm.report = null;
 
     vm.generateDescription = null;
     vm.exportOptions = ['JSON'];
@@ -97,10 +99,12 @@ var Spark = require('@ciscospark/spark-core').default;
         ITProPackService.hasITProPackEnabled(),
         ITProPackService.hasITProPackPurchased(),
         FeatureToggleService.atlasEdiscoveryGetStatus(),
+        FeatureToggleService.atlasEdiscoveryIPSettingGetStatus(),
       ]).then(function (toggles) {
         vm.itProPackEnabled = toggles[0];
         vm.itProPackPurchased = toggles[1];
         vm.ediscoveryToggle = toggles[2];
+        vm.ediscoveryIPSettingToggle = toggles[3];
         if (!vm.itProPackPurchased) {
           vm.firstEnabledDate = moment().subtract(90, 'days').format('YYYY-MM-DD');
         }
@@ -446,11 +450,20 @@ var Spark = require('@ciscospark/spark-core').default;
       }
     }
 
-    function openReportModal(report) {
-      EdiscoveryService.openReportModal($scope);
+    function isOnPrem(report) {
       $scope.reportHeader = $translate.instant('ediscovery.reportsList.modalHeader', {
         name: report.displayName,
       });
+      $scope.modalPlaceholder = $translate.instant('ediscovery.reportsList.modalPlaceholder');
+      vm.report = report;
+      var onPrem = vm.ediscoveryIPSettingToggle ? EdiscoveryService.openReportModal($scope) : downloadReport(report);
+      return onPrem;
+    }
+
+    function downloadReportModal() {
+      var downloadUrl = _.get(vm.report, 'downloadUrl');
+      vm.report.downloadUrl = _.replace(downloadUrl, downloadUrl.split('/')[2], $scope.ipAddressModel);
+      downloadReport(vm.report);
     }
 
     function downloadReport(report) {

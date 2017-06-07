@@ -22,6 +22,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue($q.resolve(false));
     spyOn(ITProPackService, 'hasITProPackPurchased').and.returnValue($q.resolve(false));
     spyOn(ITProPackService, 'hasITProPackEnabled').and.returnValue($q.resolve(false));
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
