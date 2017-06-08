@@ -65,7 +65,7 @@ export class CucmClusterNameController {
       })
       .then(() => {
         let hostname = this.$stateParams.wizard.state().data.cucm.hostname;
-        return this.HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostname, 3600, this.clusterId);
+        return this.HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostname, this.clusterId);
       })
       .catch(() => {
         throw this.$translate.instant('hercules.addResourceDialog.cannotCreateCluster');

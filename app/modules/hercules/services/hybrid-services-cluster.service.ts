@@ -3,7 +3,7 @@ import { Notification } from 'modules/core/notifications';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { ICluster, ConnectorType, HybridServiceId, IFMSOrganization, ITimeWindow, ClusterTargetType, IExtendedClusterFusion, StatusIndicatorCSSClass, IExtendedClusterServiceStatus, IMoratoria, IHost } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
-import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
+import { HybridServicesExtrasService, IAllowedRegistrationHost } from 'modules/hercules/services/hybrid-services-extras.service';
 
 interface IOtherServiceStatus {
   serviceId: HybridServiceId;
@@ -274,33 +274,38 @@ export class HybridServicesClusterService {
   }
 
   public setClusterAllowListInfoForExpressway(clusters: ICluster[]): ng.IPromise<any> {
-    const emptyExpresswayClusters = _.chain(clusters)
-      .filter((cluster) => {
-        return cluster.targetType === 'c_mgmt' && _.size(cluster.connectors) === 0;
-      })
-      .map((cluster: any) => {
-        cluster.isEmptyExpresswayCluster = true;
-        return cluster;
-      })
-      .value();
-    if (_.size(emptyExpresswayClusters) === 0) {
-      return this.$q.resolve(clusters);
-    }
-    return this.HybridServicesExtrasService.getPreregisteredClusterAllowList()
-      .then((allowList) => {
-        return _.map(clusters, (cluster: any) => {
-          if (cluster.isEmptyExpresswayCluster) {
-            cluster.allowedRedirectTarget = _.find(allowList, { clusterId: cluster.id });
-            if (cluster.aggregates && !cluster.allowedRedirectTarget) {
-              cluster.aggregates.state = 'registrationTimeout';
-            }
+    return this.$q.all(
+      _.chain(clusters)
+        .map((cluster: any) => {
+          if (cluster.targetType === 'c_mgmt' && _.size(cluster.connectors) === 0) {
+            const extraProperties = { isEmptyExpresswayCluster: true };
+            return _.merge({}, cluster, extraProperties);
+          } else {
+            return cluster;
           }
-          return cluster;
-        });
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
+        })
+        .map((cluster: any) => {
+          if (cluster.isEmptyExpresswayCluster) {
+            return this.HybridServicesExtrasService.getPreregisteredClusterAllowList(cluster.id)
+              .then((allowList: IAllowedRegistrationHost[]) => {
+                const extraProperties = {};
+                extraProperties['allowedRedirectTarget'] = allowList[0];
+                // The `if (cluster.aggregates)` is there to indicate this method is used to 'augment' the cluster array
+                // from hybrid-service-cluster-list#updateClusters(), not from getResourceGroups() in this very file.
+                if (cluster.aggregates && !cluster.allowedRedirectTarget) {
+                  extraProperties['aggregates'] = { state: 'registrationTimeout' };
+                }
+                return _.merge({}, cluster, extraProperties);
+              });
+          } else {
+            return this.$q.resolve(cluster);
+          }
+        })
+        .value(),
+    )
+    .catch((error) => {
+      this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+    });
   }
 
   public setClusterInformation(clusterId: string, data: { name?: string; releaseChannel?: string; }): ng.IPromise<''> {

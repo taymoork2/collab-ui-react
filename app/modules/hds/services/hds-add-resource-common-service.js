@@ -80,7 +80,7 @@
     }
 
     function allowListHost(hostName, clusterId) {
-      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, 3600, clusterId);
+      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, clusterId);
     }
 
     function redirectPopUpAndClose(hostName, enteredCluster, firstTimeSetup) {
