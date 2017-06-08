@@ -1,4 +1,5 @@
 import { ICmcOrgStatusResponse, ICmcUserStatusInfoResponse, ICmcUserStatus } from './../cmc.interface';
+import { Notification } from 'modules/core/notifications';
 
 class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
@@ -16,18 +17,14 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     private CmcService,
     private CmcUserService,
     private $translate,
-    private Notification,
+    private Notification: Notification,
   ) {
     this.orgId = this.Authinfo.getOrgId();
   }
 
   public $onInit() {
-    this.$log.debug('$onInit');
-    this.$log.debug('Authinfo.orgid:', this.Authinfo.getOrgId());
-    this.$log.debug('Authinfo.orgname:', this.Authinfo.getOrgName());
 
     this.initGrid();
-
     this.CmcService.preCheckOrg(this.Authinfo.getOrgId())
       .then((res: ICmcOrgStatusResponse) => {
         this.$log.info('Result from preCheckOrg:', res);
