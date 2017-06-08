@@ -12,7 +12,7 @@ export interface IUserStatus {
 }
 
 export interface IEntitlementNameAndState {
-  entitlementName: 'squaredFusionUC' | 'squaredFusionEC';
+  entitlementName: 'squaredFusionUC' | 'squaredFusionEC' | 'sparkHybridImpInterop';
   entitlementState: 'ACTIVE' | 'INACTIVE';
 }
 

@@ -1360,6 +1360,24 @@
               service: 'MESSAGING',
             },
           })
+          .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
+            template: '<hybrid-imp-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-imp-user-settings>',
+            data: {
+              displayName: 'Hybrid IM & Presence',
+            },
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              userName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.userName;
+              },
+            },
+            params: {
+              extensionId: {},
+              extensions: {},
+            },
+          })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
             templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
             controller: 'CalendarServicePreviewCtrl',
@@ -1541,7 +1559,7 @@
             },
             resolve: {
               data: /* @ngInject */ function ($translate, $state) {
-                $state.get('user-overview.cmc').data.displayName = $translate.instant('cmc.menu.mobileConvergenceService');
+                $state.get('user-overview.cmc').data.displayName = $translate.instant('cmc.userSettings.title');
               },
               user: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'currentUser');
