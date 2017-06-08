@@ -68,20 +68,19 @@ class LineOverview implements ng.IComponentController {
 
   private initLineOverviewData(): void {
     this.showExtensions = true;
-    this.DirectoryNumberOptionsService.getInternalNumberOptions()
-      .then(numbers => {
-        this.internalNumbers = numbers;
-        this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId)
-          .then(lineOverviewData => {
-            this.lineOverviewData = lineOverviewData;
-            this.userVoicemailEnabled = lineOverviewData.voicemailEnabled;
-            this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
-            if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
-              this.lineOverviewData.line.internal = this.internalNumbers[0];
-              this.form.$setDirty();
-            }
-          });
-      });
+    if (!this.numberId) {
+      this.DirectoryNumberOptionsService.getInternalNumberOptions()
+        .then(numbers => {
+          this.internalNumbers = numbers;
+          this.getLineOverviewData();
+        }).catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
+    } else {
+      this.getLineOverviewData();
+      this.DirectoryNumberOptionsService.getInternalNumberOptions()
+        .then(numbers => {
+          this.internalNumbers = numbers;
+        }).catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
+    }
 
     this.LineOverviewService.getEsnPrefix().then(esnPrefix => this.esnPrefix = esnPrefix);
     this.DirectoryNumberOptionsService.getExternalNumberOptions(
@@ -89,6 +88,19 @@ class LineOverview implements ng.IComponentController {
       Availability.UNASSIGNED,  // Only get unassigned numbers
       ExternalNumberType.DID,   // Only get standard PSTN numbers. No toll free.
       ).then(numbers => this.externalNumbers = numbers);
+  }
+
+  public getLineOverviewData(): void {
+    this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId)
+    .then(lineOverviewData => {
+      this.lineOverviewData = lineOverviewData;
+      this.userVoicemailEnabled = lineOverviewData.voicemailEnabled;
+      this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
+      if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
+        this.lineOverviewData.line.internal = this.internalNumbers[0];
+        this.form.$setDirty();
+      }
+    });
   }
 
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
@@ -99,12 +111,14 @@ class LineOverview implements ng.IComponentController {
 
   public refreshInternalNumbers(filter: string): void {
     this.DirectoryNumberOptionsService.getInternalNumberOptions(filter)
-      .then(numbers => this.internalNumbers = numbers);
+      .then(numbers => this.internalNumbers = numbers)
+      .catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
   }
 
   public refreshExternalNumbers(filter: string): void {
     this.DirectoryNumberOptionsService.getExternalNumberOptions(filter)
-      .then(numbers => this.externalNumbers = numbers);
+      .then(numbers => this.externalNumbers = numbers)
+      .catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.externalNumberPoolError'));
   }
 
   public setCallForward(callForward: CallForward): void {
