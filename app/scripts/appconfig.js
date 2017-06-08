@@ -1541,7 +1541,7 @@
             },
             resolve: {
               data: /* @ngInject */ function ($translate, $state) {
-                $state.get('user-overview.cmc').data.displayName = $translate.instant('cmc.menu.mobileConvergenceService');
+                $state.get('user-overview.cmc').data.displayName = $translate.instant('cmc.userSettings.title');
               },
               user: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'currentUser');
