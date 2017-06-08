@@ -3,7 +3,7 @@ import { IUserStatus } from 'modules/hercules/services/hybrid-services-user-side
 
 describe('hybridCallServiceAwareUserSettings', () => {
 
-  let $componentController, $q, $timeout, $scope, ctrl, DomainManagementService, HybridServicesClusterService, HybridServiceUserSidepanelHelperService, ModalService, UCCService, UriVerificationService;
+  let $componentController, $q, $scope, ctrl, DomainManagementService, HybridServicesClusterService, HybridServiceUserSidepanelHelperService, ModalService, UCCService, UriVerificationService;
 
   beforeEach(angular.mock.module('Hercules'));
 
@@ -15,11 +15,10 @@ describe('hybridCallServiceAwareUserSettings', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$q_, $rootScope, _$timeout_, _DomainManagementService_, _HybridServicesClusterService_, _HybridServiceUserSidepanelHelperService_, _ModalService_, _UCCService_, _UriVerificationService_) {
+  function dependencies (_$componentController_, _$q_, $rootScope, _DomainManagementService_, _HybridServicesClusterService_, _HybridServiceUserSidepanelHelperService_, _ModalService_, _UCCService_, _UriVerificationService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = $rootScope;
-    $timeout = _$timeout_;
     DomainManagementService = _DomainManagementService_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     HybridServiceUserSidepanelHelperService = _HybridServiceUserSidepanelHelperService_;
@@ -29,7 +28,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
   }
 
   function cleanup() {
-    $componentController = ctrl = $scope = $timeout = DomainManagementService = HybridServicesClusterService = HybridServiceUserSidepanelHelperService = UCCService = UriVerificationService = undefined;
+    $componentController = ctrl = $scope = DomainManagementService = HybridServicesClusterService = HybridServiceUserSidepanelHelperService = UCCService = UriVerificationService = undefined;
   }
 
   function initSpies() {
@@ -246,8 +245,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
     initController(callbackSpy);
 
     ctrl.saveData();
-    $timeout.flush(2000);
-    $timeout.verifyNoPendingTasks();
+    $scope.$apply();
 
     expect(HybridServiceUserSidepanelHelperService.getDataFromUSS.calls.count()).toBe(2);
     expect(callbackSpy.calls.count()).toBe(1);
