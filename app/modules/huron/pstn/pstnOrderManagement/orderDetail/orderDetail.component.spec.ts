@@ -116,12 +116,14 @@ describe('Component: OrderDetail', () => {
     const ORDER_CREATED = 'span#orderCreated';
     const ORDER_STATUS = 'span#orderStatus';
     const NUMBER_SEARCH_INPUT = 'input#numberSearchInput';
+    const ORDER_TYPE = 'span#orderType';
     beforeEach(initComponent);
     beforeEach(function () {
       this.$translate.instant.and.returnValue('Partner');
       this.compileComponent('ucOrderDetail', {
         currentCustomer: 'currentCustomer',
         currentOrder: 'orders.fulfilledNumberOrder',
+        isCarrierByopstn: 'false',
       });
     });
     it('should have the order status and number', function () {
@@ -135,6 +137,50 @@ describe('Component: OrderDetail', () => {
     });
     it('should have createdBy a Partner by default', function () {
       expect(this.controller.createdBy).toBe('Partner');
+    });
+    it('should have orderType', function () {
+      expect(this.view.find(ORDER_TYPE)).toExist();
+    });
+  });
+  describe('Component: OrderDetail - Swivel Carrier: Numbers ImportDetail', () => {
+    const ORDER_NUMBER = 'h3#orderNumber';
+    const ORDER_DATE = 'h3#orderDate';
+    const ORDER_CREATED = 'span#orderCreated';
+    const IMPORT_CREATED_BY = 'span#importCreatedBy';
+    const ORDER_STATUS = 'span#orderStatus';
+    const NUMBER_SEARCH_INPUT = 'input#numberSearchInput';
+    const ORDER_TYPE = 'span#orderType';
+    beforeEach(initComponent);
+    beforeEach(function () {
+      this.$translate.instant.and.returnValue('Partner');
+      this.compileComponent('ucOrderDetail', {
+        currentCustomer: 'currentCustomer',
+        currentOrder: 'orders.fulfilledNumberOrder',
+        isCarrierByopstn: 'true',
+      });
+    });
+    it('should have order date, import createdBy', function () {
+      expect(this.view.find(ORDER_NUMBER)).not.toExist();
+      expect(this.view.find(ORDER_DATE)).toExist();
+      expect(this.view.find(ORDER_CREATED)).not.toExist();
+      expect(this.view.find(IMPORT_CREATED_BY)).toExist();
+      expect(this.view.find(ORDER_STATUS)).toExist();
+    });
+    it('should have an input search to find the number', function () {
+      expect(this.view.find(NUMBER_SEARCH_INPUT)).toExist();
+      expect(this.view.find(NUMBER_SEARCH_INPUT)).toHaveAttr('placeholder');
+    });
+    it('should have createdBy a Partner by default', function () {
+      expect(this.controller.createdBy).toBe('Partner');
+    });
+    it('should have the order status and number', function () {
+      expect(this.view.find(ORDER_NUMBER)).not.toExist();
+      expect(this.view.find(ORDER_DATE)).toExist();
+      expect(this.view.find(ORDER_CREATED)).not.toExist();
+      expect(this.view.find(ORDER_STATUS)).toExist();
+    });
+    it('should  not have orderType', function () {
+      expect(this.view.find(ORDER_TYPE)).not.toExist();
     });
   });
 });

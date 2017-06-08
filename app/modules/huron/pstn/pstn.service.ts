@@ -104,7 +104,7 @@ export class PstnService {
   }
 
   public listDefaultCarriersV2(): ng.IPromise<Array<any>> {
-    return this.TerminusService.carrierV2().query({
+    return this.TerminusService.carriersV2().query({
       service: PSTN,
       defaultOffer: true,
       country: this.PstnModel.getCountryCode(),
@@ -125,7 +125,7 @@ export class PstnService {
   }
 
   public listCustomerCarriers(customerId): ng.IPromise<Array<any>> {
-    return this.TerminusService.customerCarrier().query({
+    return this.TerminusService.customerCarriers().query({
       customerId: customerId,
     }).$promise.then(this.getCarrierDetails.bind(this));
   }
@@ -608,6 +608,8 @@ export class PstnService {
               let orderDate = new Date(order.created);
               newOrder.sortDate = orderDate.getTime();
               newOrder.created = (orderDate.getMonth() + 1) + '/' + orderDate.getDate() + '/' + orderDate.getFullYear();
+              let utcOrderDate  = orderDate.toUTCString().split(' ');
+              newOrder.formattedDate = utcOrderDate[2] + ' ' + utcOrderDate[1] + ', ' + utcOrderDate[3];
               //update order status and tooltip at number level since we combine same order with different batches
               _.forEach(newOrder.numbers, number => {
                 number.status = newOrder.status;
