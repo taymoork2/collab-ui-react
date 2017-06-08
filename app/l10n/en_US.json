@@ -3453,6 +3453,7 @@
     "sessionVariableInfo": "Enter one or more values here; separate multiple entries with commas. Example: Spanish, French",
     "actionRouteCall": "Route Call",
     "actionRouteCallHint": "Route the call to a destination like a hunt group, auto attendant, or extension.",
+    "routeToPhoneNumberHelp": "To route calls to external numbers, you must configure your company caller ID.",
     "actionDialByExtensionHint": "Prompt the caller for an internal extension and route the call.",
     "actionDialByExtensionHelp": "Enter the message used to prompt the caller for the extension to dial. Select the language and the voice for this phrase.",
     "actionEndCall": "Disconnect",
