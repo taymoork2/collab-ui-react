@@ -10,6 +10,7 @@ export class CmcUserService {
     private Config,
     private UrlConfig,
     private $http: ng.IHttpService,
+    private $translate,
   ) {
   }
 
@@ -23,7 +24,7 @@ export class CmcUserService {
         let cmcUsers: Array<ICmcUserStatus> = results[ 0 ].userStatuses;
         let awareUsers: Array<ICmcUserStatus> = results[ 1 ].userStatuses;
 
-        _.each(cmcUsers, function(cmcUser) {
+        _.each(cmcUsers, (cmcUser) => {
 
           let hasAware = _.find(awareUsers, function(u) {
             return u.userId === cmcUser.userId;
@@ -32,7 +33,7 @@ export class CmcUserService {
           if (hasAware) {
             cmcUser.state = '';
           } else  {
-            cmcUser.state = 'Call Service Aware is not entitled';
+            cmcUser.state = this.$translate.instant('cmc.statusPage.callServiceAwareNotEntitled');
           }
 
         });
