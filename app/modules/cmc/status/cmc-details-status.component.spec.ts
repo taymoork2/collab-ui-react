@@ -70,13 +70,13 @@ describe('Component: cmcDetailsStatus ', () => {
         spyOn(this.Notification, 'error').and.callThrough();
 
         spyOn(this.CmcUserService, 'getUsersWithCmcButMissingAware').and.returnValue(
-          this.$q.reject({ data: { message: 'request failed' } } )
+          this.$q.reject({ data: { message: 'request failed' } } ),
         );
 
         this.controller.fetchUserStatuses(10).then( () => {
           expect(this.Notification.error).toHaveBeenCalledWith(
             'cmc.failures.userStatusFailure',
-            { msg: 'request failed' }
+            { msg: 'request failed' },
           );
           done();
         });
