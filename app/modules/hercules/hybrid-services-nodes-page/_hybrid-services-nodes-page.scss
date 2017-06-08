@@ -65,6 +65,14 @@ hybrid-services-nodes-page {
         color: #fff;
       }
     }
+
+    .badge {
+      vertical-align: middle;
+    }
+
+    .status {
+      padding-right: 5px;
+    }
   }
 
   [cs-dropdown-toggle] {
