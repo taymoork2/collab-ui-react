@@ -114,6 +114,8 @@ class HuntGroupCtrl implements ng.IComponentController {
 
     if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_AUTOMATIC) {
       this.huntGroup.sendToApp = false;
+    } else {
+      this.huntGroup.sendToApp = true;
     }
 
     if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION || !_.isNull(this.huntGroup.alternateDestination.number) ) {
