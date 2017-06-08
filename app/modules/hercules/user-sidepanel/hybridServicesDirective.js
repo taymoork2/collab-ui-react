@@ -24,7 +24,7 @@
       return vm.user;
     };
 
-    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec'];
+    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'spark-hybrid-impinterop'];
     var extensionCallEntitlements = ['squared-fusion-uc', 'squared-fusion-ec'];
     var stopDelayedUpdates = false;
     var delayedUpdateTimer = null;
@@ -39,6 +39,10 @@
     FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(function (supported) {
         vm.atlasHerculesGoogleCalendarFeatureToggle = supported;
+      });
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp)
+      .then(function (supported) {
+        vm.atlasHybridImpFeatureToggle = supported;
       });
 
     vm.allExceptUcFilter = function (item) {
