@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: AutoAttendantCeInfoModelService', function () {
-  var AutoAttendantCeInfoModelService, AutoAttendantCeService, AACeDependenciesService, AAModelService;
+  var AutoAttendantCeInfoModelService, AutoAttendantCeService, AACeDependenciesService, AAModelService, AANumberAssignmentService;
   var $rootScope, $scope, $q, $timeout;
   // require('jasmine-collection-matchers');
 
@@ -34,11 +34,12 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AACeDependenciesService_, _AAModelService_, _$rootScope_, _$q_, _$timeout_) {
+  beforeEach(inject(function (_AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AACeDependenciesService_, _AAModelService_, _$rootScope_, _$q_, _$timeout_, _AANumberAssignmentService_) {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
     AACeDependenciesService = _AACeDependenciesService_;
     AAModelService = _AAModelService_;
+    AANumberAssignmentService = _AANumberAssignmentService_;
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -84,8 +85,9 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
 
   describe('getAllCeInfos', function () {
     it('should return ceInfos from the given callExperienceInfos', function () {
+      var getAllCesInfoDeferred = $q.defer().promise;
       var _ceInfos = AutoAttendantCeInfoModelService.getAllCeInfos(callExperienceInfos);
-      expect(angular.equals(_ceInfos, ceInfos)).toBe(true);
+      expect(angular.equals(_ceInfos, getAllCesInfoDeferred)).toBe(true);
     });
   });
 
@@ -125,15 +127,22 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       'status': 500,
       'statusText': 'Server Error',
     };
-    var aaModel, listCesDeferred, readCeDependsDeferred;
+    var aaModel, listCesDeferred, readCeDependsDeferred, numberAssignmentDeferred, fromCMIDeferred;
 
     beforeEach(inject(function () {
       // setup the promises
       listCesDeferred = $q.defer();
       readCeDependsDeferred = $q.defer();
+      numberAssignmentDeferred = $q.defer();
+      fromCMIDeferred = $q.defer();
+
       spyOn(AutoAttendantCeService, 'listCes').and.returnValue(listCesDeferred.promise);
       spyOn(AACeDependenciesService, 'readCeDependencies').and.returnValue(readCeDependsDeferred.promise);
       spyOn(AAModelService, 'setAAModel');
+
+      spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
+        return fromCMIDeferred.promise;
+      });
 
       // setup aaModel for test
       aaModel = undefined;
@@ -147,6 +156,10 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       expect(aaModel).toBeUndefined();
       expect(AutoAttendantCeService.listCes).toHaveBeenCalled();
       expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
+
+      var fromCMI = [{ 'number': '123456789', 'uuid': '00097a86-45ef-44a7-aa78-6d32a0ca1d3d' }];
+      fromCMIDeferred.resolve(fromCMI);
+      expect(AANumberAssignmentService.getAANumberAssignments).not.toHaveBeenCalled();
 
       // resolve listCes
       listCesDeferred.resolve(callExperienceInfos);
@@ -176,6 +189,9 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       expect(AutoAttendantCeService.listCes).toHaveBeenCalled();
       expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
 
+      fromCMIDeferred.reject(notFoundResponse);
+      expect(AANumberAssignmentService.getAANumberAssignments).not.toHaveBeenCalled();
+
       // reject ceInfos with 404
       listCesDeferred.reject(notFoundResponse);
       $scope.$apply();
@@ -189,6 +205,9 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       expect(aaModel).toBeDefined();
       expect(aaModel.ceInfos.length).toEqual(0);
       expect(aaModel.dependsIds).toEqual({});
+
+      numberAssignmentDeferred.reject(notFoundResponse);
+      $scope.$apply();
     });
 
     it('should set aaModel upon resolve of ceInfos then 404 for depends', function () {
@@ -196,6 +215,10 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       expect(aaModel).toBeUndefined();
       expect(AutoAttendantCeService.listCes).toHaveBeenCalled();
       expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
+      var fromCMI = [{ 'number': '123456789', 'uuid': '00097a86-45ef-44a7-aa78-6d32a0ca1d3d' }];
+
+      fromCMIDeferred.resolve(fromCMI);
+      expect(AANumberAssignmentService.getAANumberAssignments).not.toHaveBeenCalled();
 
       // resolve listCes
       listCesDeferred.resolve(callExperienceInfos);
@@ -243,6 +266,9 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       expect(aaModel).toBeUndefined();
       expect(AutoAttendantCeService.listCes).toHaveBeenCalled();
       expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
+      var fromCMI = [{ 'number': '123456789', 'uuid': '00097a86-45ef-44a7-aa78-6d32a0ca1d3d' }];
+
+      fromCMIDeferred.resolve(fromCMI);
 
       // resolve listCes
       listCesDeferred.resolve(callExperienceInfos);
@@ -265,4 +291,5 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
     });
 
   });
+
 });

@@ -447,7 +447,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       resources.push(resource);
       controller.removeNumber(resources[0]);
       $scope.$apply();
-      $httpBackend.flush();
       expect(AACommonService.isValid()).toBe(false);
       expect(errorSpy).toHaveBeenCalled();
 
@@ -573,9 +572,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       resources.push(resource);
 
       controller.warnOnAssignedNumberDiscrepancies();
-
-      $httpBackend.flush();
-
       $scope.$apply();
 
       expect(errorSpy).toHaveBeenCalled();
@@ -589,9 +585,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.returnValue($q.reject("bad"));
 
       controller.warnOnAssignedNumberDiscrepancies();
-
-      $httpBackend.flush();
-
       $scope.$apply();
 
       expect(errorResponseSpy).toHaveBeenCalled();
@@ -613,7 +606,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     });
 
     it('should substitute new phone number based on uuid', function () {
-      var fromCMI = [{ 'number': '123456789', 'uuid': '00097a86-45ef-44a7-aa78-6d32a0ca1d3d' }];
+      var fromCMI = [{ 'number': '+12068551179', 'uuid': '00097a86-45ef-44a7-aa78-6d32a0ca1d3d' }];
 
       spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
         return $q.resolve(fromCMI);
@@ -623,12 +616,12 @@ describe('Controller: AABuilderNumbersCtrl', function () {
         $scope: $scope,
       });
       $scope.$apply();
-      expect(controller.ui.ceInfo.resources[2].getNumber()).toEqual('123456789');
+      expect(controller.ui.ceInfo.resources[2].getNumber()).toEqual('+12068551179');
 
     });
 
     it('should set the uuid based on phone number', function () {
-      var fromCMI = [{ 'number': '12068551179', 'uuid': '987654321' }];
+      var fromCMI = [{ 'number': '12068551179', 'uuid': '00097a86-45ef-44a7-aa78-6d32a0ca1d3d' }];
 
       spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
         return $q.resolve(fromCMI);
@@ -640,11 +633,11 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       $scope.$apply();
 
-      expect(controller.ui.ceInfo.resources[2].getUUID()).toEqual('987654321');
+      expect(controller.ui.ceInfo.resources[2].getUUID()).toEqual('00097a86-45ef-44a7-aa78-6d32a0ca1d3d');
     });
 
     it('should set the uuid based on phone number with plus', function () {
-      var fromCMI = [{ 'number': '+12068551179', 'uuid': '987654321' }];
+      var fromCMI = [{ 'number': '+12068551179', 'uuid': '00097a86-45ef-44a7-aa78-6d32a0ca1d3d' }];
 
       spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
         return $q.resolve(fromCMI);
@@ -656,11 +649,11 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       $scope.$apply();
 
-      expect(controller.ui.ceInfo.resources[2].getUUID()).toEqual('987654321');
+      expect(controller.ui.ceInfo.resources[2].getUUID()).toEqual('00097a86-45ef-44a7-aa78-6d32a0ca1d3d');
     });
 
     it('should set the uuid when original uuid not found', function () {
-      var fromCMI = [{ 'number': '12068551179', 'uuid': '987654321' }];
+      var fromCMI = [{ 'number': '12068551179', 'uuid': '00097a86-45ef-44a7-aa78-6d32a0ca1d3d' }];
 
       spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
         return $q.resolve(fromCMI);
@@ -672,25 +665,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       $scope.$apply();
 
-      expect(controller.ui.ceInfo.resources[2].getUUID()).toEqual('987654321');
+      expect(controller.ui.ceInfo.resources[2].getUUID()).toEqual('00097a86-45ef-44a7-aa78-6d32a0ca1d3d');
     });
-
-    it('should set the uuid when original uuid is empty', function () {
-      var fromCMI = [{ 'number': '12068551179', 'uuid': '987654321' }];
-
-      spyOn(AANumberAssignmentService, 'getAANumberAssignments').and.callFake(function () {
-        return $q.resolve(fromCMI);
-      });
-
-      controller = control('AABuilderNumbersCtrl', {
-        $scope: $scope,
-      });
-
-      $scope.$apply();
-
-      expect(controller.ui.ceInfo.resources[3].getUUID()).toEqual('987654321');
-    });
-
 
   });
 
