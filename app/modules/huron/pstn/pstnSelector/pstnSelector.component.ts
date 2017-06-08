@@ -163,7 +163,7 @@ class PstnSelectorCtrl implements ng.IComponentController {
 
 export class PstnSelectorComponent implements ng.IComponentOptions {
   public controller = PstnSelectorCtrl;
-  public templateUrl = 'modules/huron/pstnSetup/pstnSelector/pstnSelector.html';
+  public templateUrl = 'modules/huron/pstn/pstnSelector/pstnSelector.html';
   public bindings = {
     search: '&',
     addToCart: '&',
@@ -179,4 +179,12 @@ export class PstnSelectorComponent implements ng.IComponentOptions {
     errorMessage: '@',
     validSearch: '<',
   };
+}
+
+export function StartFromFilter() {
+  return filter;
+
+  function filter(input, startFrom) {
+    return _.slice(input, _.parseInt(startFrom));
+  }
 }
