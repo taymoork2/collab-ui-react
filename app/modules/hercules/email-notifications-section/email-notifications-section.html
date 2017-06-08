@@ -16,12 +16,14 @@
   <div class="sub-section" ng-if="$ctrl.isCalendarService()">
     <h5 class="sub-section__label" translate="hercules.settings.emailUserHeading"></h5>
     <p class="sub-section__description" translate="hercules.settings.emailUserNotification"></p>
-    <cs-toggle-switch ng-model="$ctrl.enableEmailSendingToUser"
-                      ng-click="$ctrl.setEnableEmailSendingToUser()"
-                      toggle-id="toggleEnableEmailSendingToUser"
-                      name="toggleEnableEmailSendingToUser"
-                      size="small">
-    </cs-toggle-switch>
+    <div class="medium-1">
+      <cs-toggle-switch ng-model="$ctrl.enableEmailSendingToUser"
+                        ng-click="$ctrl.setEnableEmailSendingToUser()"
+                        toggle-id="toggleEnableEmailSendingToUser"
+                        name="toggleEnableEmailSendingToUser"
+                        size="small">
+      </cs-toggle-switch>
+    </div>
   </div>
 
   <div class="sub-section" ng-if="$ctrl.isCalendarService()">
