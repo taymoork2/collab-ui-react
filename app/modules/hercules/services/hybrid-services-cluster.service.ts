@@ -354,6 +354,7 @@ export class HybridServicesClusterService {
         const mgmtConnectors = _.filter(cluster.connectors, { connectorType: 'c_mgmt' });
         const ucmcConnectors = _.filter(cluster.connectors, { connectorType: 'c_ucmc' });
         const calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
+        const impConnectors = _.filter(cluster.connectors, { connectorType: 'c_imp' });
         (cluster as IExtendedClusterFusion).servicesStatuses = [{
           serviceId: 'squared-fusion-mgmt',
           state: this.HybridServicesClusterStatesService.getMergedStateSeverity(mgmtConnectors),
@@ -366,6 +367,10 @@ export class HybridServicesClusterService {
           serviceId: 'squared-fusion-cal',
           state: this.HybridServicesClusterStatesService.getMergedStateSeverity(calConnectors),
           total: calConnectors.length,
+        }, {
+          serviceId: 'spark-hybrid-impinterop',
+          state: this.HybridServicesClusterStatesService.getMergedStateSeverity(calConnectors),
+          total: impConnectors.length,
         }];
       } else if (cluster.targetType === 'mf_mgmt') {
         const mediaConnectors = _.filter(cluster.connectors, { connectorType: 'mf_mgmt' });
