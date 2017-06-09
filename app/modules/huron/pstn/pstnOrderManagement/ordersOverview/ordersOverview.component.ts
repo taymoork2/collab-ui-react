@@ -15,30 +15,43 @@ export class OrdersOverviewCtrl implements ng.IComponentController {
   private ordersWithDuplicates: Array<any> = [];
   private PENDING = this.$translate.instant('pstnOrderOverview.inProgress');
   public isPartner: boolean;
+  public isCarrierByopstn: boolean;
   /* @ngInject */
   constructor(
     private PstnService: PstnService,
+    private ExternalNumberService,
+    private FeatureToggleService,
     private $translate: angular.translate.ITranslateService,
   ) {
     this.init();
   }
 
   public init(): void {
-    this.PstnService.getFormattedNumberOrders(this.currentCustomer.customerOrgId).then((response) => {
-      this.ordersWithDuplicates = response;
-      //club all the batches with same OrderId into one Order.
-      //V2 Terminus orders API returns different batches for same order as 2 separate orders with different batchID
-      this.orders = _.cloneDeep(this.condenseOrderBatches());
-      this.loading = false;
-    }, () => {
-      this.loading = false;
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then((result) => {
+      this.ExternalNumberService.getCarrierInfo(this.currentCustomer.customerOrgId).then((carrierInfo) => {
+        this.isCarrierByopstn = (_.get(carrierInfo, 'apiImplementation') === 'SWIVEL' && result) ? true : false;
+        this.PstnService.getFormattedNumberOrders(this.currentCustomer.customerOrgId).then((response) => {
+          this.ordersWithDuplicates = response;
+          //club all the batches with same OrderId into one Order.
+          //V2 Terminus orders API returns different batches for same order as 2 separate orders with different batchID
+          this.orders = _.cloneDeep(this.condenseOrderBatches());
+          this.loading = false;
+        }, () => {
+          this.loading = false;
+        });
+      });
     });
   }
 
   public condenseOrderBatches(): any {
     let finalOrders: Array<any> = [];
+    let orderIndex =  -1;
     _.forEach(this.ordersWithDuplicates, (order) => {
-      let orderIndex = _.findIndex(finalOrders, { carrierOrderId: order.carrierOrderId });
+      if (!this.isCarrierByopstn) {
+        orderIndex = _.findIndex(finalOrders, { carrierOrderId: order.carrierOrderId });
+      } else {
+        orderIndex = _.findIndex(finalOrders, { formattedDate: order.formattedDate });
+      }
       if (orderIndex === -1) {
         finalOrders.push(order);
       } else {

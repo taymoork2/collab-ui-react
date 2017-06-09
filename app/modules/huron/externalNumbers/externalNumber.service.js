@@ -278,7 +278,7 @@
             return null;
           } else {
             _.assign(_terminusDetail, { pstnCarrierId: _pstnCarrierId });
-            return TerminusService.customerCarrier().get({
+            return TerminusService.carrier().get({
               carrierId: _pstnCarrierId,
             }).$promise;
           }
@@ -287,7 +287,7 @@
           return null;
         });
       } else {
-        return TerminusService.customerCarrier().get({
+        return TerminusService.carrier().get({
           carrierId: _pstnCarrierId,
         }).$promise;
       }

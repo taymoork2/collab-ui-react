@@ -2409,6 +2409,7 @@
           .state('customer-overview.ordersOverview', {
             params: {
               currentCustomer: {},
+              isCarrierByopstn: {},
             },
             data: {},
             template: '<uc-orders-overview is-partner="true" current-customer="$resolve.currentCustomer"></uc-orders-overview>',
@@ -2505,7 +2506,7 @@
             },
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customerPstnOrdersOverview').data.displayName = $translate.instant('pstnOrderOverview.orderHistory');
+                $state.get('customerPstnOrdersOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
               },
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/customerPstnOrdersOverview'], done);
@@ -2522,12 +2523,15 @@
             params: {
               currentOrder: {},
               currentCustomer: {},
+              isCarrierByopstn: {},
             },
             data: {},
-            template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder"></uc-order-detail>',
+            template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder" is-carrier-byopstn= "$resolve.isCarrierByopstn"></uc-order-detail>',
             resolve: {
               data: /* @ngInject */ function ($state, $stateParams) {
-                $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.currentOrder.carrierOrderId;
+                $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.vendor === "BYOPSTN" ?
+                                                                                        $stateParams.currentOrder.formattedDate :
+                                                                                        $stateParams.currentOrder.carrierOrderId;
               },
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
@@ -2537,6 +2541,9 @@
               },
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
+              },
+              isCarrierByopstn: /* @ngInject */ function ($stateParams) {
+                return $stateParams.isCarrierByopstn;
               },
             },
           })
@@ -2545,12 +2552,15 @@
             params: {
               currentCustomer: {},
               currentOrder: {},
+              isCarrierByopstn: {},
             },
             data: {},
-            template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder"></uc-order-detail>',
+            template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder", is-carrier-byopstn= "$resolve.isCarrierByopstn"></uc-order-detail>',
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.orderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
+              data: /* @ngInject */ function ($state, $translate, $stateParams) {
+                $state.get('customer-overview.orderDetail').data.displayName = $stateParams.isCarrierByopstn ?
+                                                                                        $stateParams.currentOrder.formattedDate :
+                                                                                        $stateParams.currentOrder.carrierOrderId;
               },
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
@@ -2560,6 +2570,9 @@
               },
               currentOrder: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentOrder;
+              },
+              isCarrierByopstn: /* @ngInject */ function ($stateParams) {
+                return $stateParams.isCarrierByopstn;
               },
             },
           })
