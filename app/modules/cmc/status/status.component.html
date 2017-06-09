@@ -17,16 +17,17 @@
       </div>
       <div class="columns large-6">
         <div ng-if="$ctrl.status.status === 'ok'">
-          <span class="ok">
+         <span>
             <i class="icon icon-circle success"/>
           </span>
           Active
         </div>
         <div ng-if="$ctrl.status.status === 'error'">
-          <div class="error">In error</div>
-          <!--<div ng-repeat="issue in $ctrl.status.issues">-->
-            <!--{{issue.message}} [{{issue.code}}] (mock)-->
-          <!--</div>-->
+          <i class="icon icon-circle error"/>
+          <span>Issues [{{$ctrl.status.issues.length}}]:</span>
+          <div ng-repeat="issue in $ctrl.status.issues">
+            {{issue.message}} [{{issue.code}}] (mock)
+          </div>
         </div>
       </div>
     </div>

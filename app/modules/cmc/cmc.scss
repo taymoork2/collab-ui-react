@@ -35,12 +35,6 @@
     .org-status {
       padding-left: 1rem;
       padding-top: 2rem;
-      .ok {
-        color: green;
-      }
-      .error {
-        color: red;
-      }
       .state-header {
         border: 1px solid $gray-light-3;
         background: $gray-light-4;
@@ -58,6 +52,9 @@
         color: $brand-white;
         .success {
           color: $color-cta-base;
+        }
+        .error {
+          color: $color-negative-base;
         }
         .icon-circle-globe {
           font-size: 2rem;
@@ -87,10 +84,10 @@
         background-color: $brand-white;
         vertical-align: middle;
         .icon.running {
-          color: green;
+          color: $color-cta-base;
         }
         .icon.error {
-          color: red;
+          color: $color-negative-base;
         }
       }
     }
