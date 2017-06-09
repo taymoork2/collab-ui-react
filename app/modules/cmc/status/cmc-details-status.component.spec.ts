@@ -31,11 +31,13 @@ describe('Component: cmcDetailsStatus ', () => {
         spyOn(this.CmcUserService, 'getUsersWithCmcButMissingAware').and.returnValue(
           this.$q.resolve({
             userStatuses: someUsers,
+            paging: {
+            },
           }),
         );
 
         this.controller.fetchUserStatuses(10).then( () => {
-          expect(this.controller.userStatusesSummaryText).toEqual('cmc.statusPage.listingAllActiveUsers');
+          expect(this.controller.userStatusesSummaryText).toEqual('');
           expect(this.controller.userStatuses).toEqual(someUsers);
           done();
         });
