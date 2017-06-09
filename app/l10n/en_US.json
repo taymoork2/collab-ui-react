@@ -4314,6 +4314,13 @@
       "agreeInstructions": "By clicking 'Agree' you have read and agree to comply with the terms and conditions.",
       "agreeInstructionsCanadaThinkTel": "By clicking 'Agree' you have read, understood, accept, and agree to comply with the terms and conditions, including specifically, the limitations to the ThinkTel VoIP 9-1-1 emergency dialing services described in Appendix 1 of the terms and conditions.",
       "viewTos": "View Terms of Service"
+    },
+    "esaDisclaimer": {
+      "title": "Emergency Service Address Disclaimer",
+      "messageMain": "IMPORTANT PLEASE READ: MISCONFIGURATION OR LACK OF ADEQUATE CONFIRGURATION CAN CAUSE EMERGENCY CALLS OR SERVICE DISPATCHES TO NOT BE PROPERLY ROUTED You have chosen to provision users with PSTN numbers from your existing PSTN service provider and hence acknowledge that you are responsible for ensuring phone numbers are mapped to the correct emergency service addresses for those users prior to enabling them for this service. Should this not be in place emergency calls made from Spark users may not be properly routed and Emergency services may be dispatched to the wrong place and / or the dispatch to the proper place may be impaired. You must provision the premises system to properly steer emergency calls to the proper PSTN trunk for the location in which the Spark users are located. If this is not done correctly your emergency call may reach people who cannot help you. You must also coordinate with the carrier to ensure that the carrier and public safety answering point have the correct street address associated with each emergency services number (ESN). If this not done correctly the emergency call may reach the right people but they may send help to the wrong place.",
+      "messageAgree": "By clicking \"Agree\", you have read and agree to comply with the terms and conditions.",
+      "notificationText": "Accept Emergency Service Address disclaimer so phone numbers can be added.",
+      "notificationTextLink": "See Disclaimer"
     }
   },
   "pstnContractInformation": {

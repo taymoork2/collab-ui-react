@@ -3,10 +3,10 @@
 
   angular
     .module('Core')
-    .factory('OverviewPSTNToSNotification', OverviewPSTNToSNotification);
+    .factory('OverviewEsaDisclaimerNotification', OverviewEsaDisclaimerNotification);
 
   /* @ngInject */
-  function OverviewPSTNToSNotification($modal) {
+  function OverviewEsaDisclaimerNotification($modal) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -16,15 +16,12 @@
           dismiss: function () {},
           link: function () {
             $modal.open({
-              templateUrl: 'modules/huron/pstnSetup/pstnToS/pstnToS.intelepeer.tpl.html',
-              controller: 'PstnToSCtrl',
-              controllerAs: 'pstnToS',
-              type: 'Large',
+              template: '<uc-esa-disclaimer on-dismiss="$dismiss()"></uc-esa-disclaimer>',
             });
           },
-          name: 'pstnToS',
-          text: 'pstnSetup.notification.text',
-          linkText: 'pstnSetup.notification.textLink',
+          name: 'pstnEsaDisclaimer',
+          text: 'pstnSetup.esaDisclaimer.notificationText',
+          linkText: 'pstnSetup.esaDisclaimer.notificationTextLink',
         };
         return notification;
       },
