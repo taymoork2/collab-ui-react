@@ -33,6 +33,11 @@
       SessionStorage.remove('logout');
     }
 
+    // Enable Atlas to seamlessly login (when already authenticated through CI) by allowing email parameter
+    if ($stateParams.email) {
+      Auth.redirectToLogin($stateParams.email);
+    }
+
     if ($stateParams.bmmp_env) {
       SessionStorage.put(StorageKeys.BMMP_ENV, _.toLower($stateParams.bmmp_env));
     }

@@ -119,7 +119,7 @@
           })
           .state('login', {
             parent: 'loginLazyLoad',
-            url: '/login?bmmp_env',
+            url: '/login?bmmp_env&email',
             views: {
               'main@': {
                 template: '<login/>',
