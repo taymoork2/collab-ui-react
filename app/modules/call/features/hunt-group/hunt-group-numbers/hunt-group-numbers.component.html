@@ -36,7 +36,7 @@
 <div class="hg-edit-numbers">
   <cs-card-layout>
     <cs-card-number
-      ng-repeat="number in $ctrl.numbers track by number.uuid"
+      ng-repeat="number in $ctrl.numbers track by number.uuid" ng-if="number.type!=='NUMBER_FORMAT_ENTERPRISE_LINE'"
       cs-id="number.uuid"
       cs-title="number.number"
       on-remove-fn="$ctrl.removeNumber(number)">

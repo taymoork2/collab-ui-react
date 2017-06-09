@@ -155,6 +155,9 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     this.fallbackDestForm.$setDirty();
     this.fallbackDestForm.$setValidity('', false, this.fallbackDestForm);
     this.thumbnailSrc = undefined;
+    this.onChangeFn({
+      fallbackDestination: new FallbackDestination(),
+    });
   }
 
   private getPrimaryNumber(member: Member): Line {
