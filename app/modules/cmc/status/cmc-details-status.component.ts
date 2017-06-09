@@ -4,11 +4,12 @@ import { Notification } from 'modules/core/notifications';
 class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
   public orgId;
+  public orgName;
   public status: ICmcOrgStatusResponse;
-  public error: any;
   public userStatuses: Array<ICmcUserStatus>;
   public gridOptions;
   public userStatusesSummaryText: string;
+  private statTemplate;
 
   /* @ngInject */
   constructor(
@@ -18,8 +19,14 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     private CmcUserService,
     private $translate,
     private Notification: Notification,
+    private $templateCache,
   ) {
     this.orgId = this.Authinfo.getOrgId();
+    this.orgName = this.Authinfo.getOrgName();
+
+
+    this.statTemplate = this.$templateCache.get('modules/cmc/status/statColumn.tpl.html');
+
   }
 
   public $onInit() {
@@ -48,10 +55,10 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     return this.CmcUserService.getUsersWithCmcButMissingAware(limit)
       .then( (result: ICmcUserStatusInfoResponse) => {
         this.userStatuses = result.userStatuses;
-        if (result.paging) {
+        if (result.paging.next) {
           this.userStatusesSummaryText = this.$translate.instant('cmc.statusPage.listingFirstActiveUsers', { noOfActiveUsers: this.userStatuses.length });
         } else {
-          this.userStatusesSummaryText = this.$translate.instant('cmc.statusPage.listingAllActiveUsers', { noOfActiveUsers: this.userStatuses.length });
+          this.userStatusesSummaryText = '';
         }
       })
       .catch((error: any) => {
@@ -75,6 +82,8 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
       sortable: true,
       field: 'state',
       displayName: 'Service Status',
+      cellTemplate: this.statTemplate,
+      cellClass: 'ui-grid-cell-contents',
       sort: { direction: 'asc', priority: 0 },
     }, {
       width: '25%',

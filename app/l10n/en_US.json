@@ -2742,9 +2742,10 @@
       }
     },
     "statusPage": {
-      "listingAllActiveUsers": "Listing all {{noOfActiveUsers}} active users",
       "listingFirstActiveUsers": "Listing the first {{noOfActiveUsers}} active users",
-      "callServiceAwareNotEntitled": "Not entitled for Call Aware"
+      "callServiceAwareNotEntitled": "Not entitled for Call Aware",
+      "sparkMobileConvergence": "Spark Mobile Convergence",
+      "serviceStatus": "Service Status"
     }
   },
   "context": {
