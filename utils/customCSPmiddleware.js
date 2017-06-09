@@ -72,6 +72,7 @@ module.exports = csp({
       'http://dpm.demdex.net', // Adobe DTM Omniture
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
       'https://*.clouddrive.com', // CSV download
+      'https://*.amazonaws.com', // MOH Media
       'https://bam.nr-data.net', // New Relic Browser
       'https://10.194.245.72:8443',
     ],

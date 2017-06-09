@@ -4,6 +4,8 @@
   angular.module('Core')
     .directive('crFileRead', fileRead);
 
+  var md5 = require('js-md5');
+
   /* @ngInject */
   function fileRead($window) {
     var directive = {
@@ -11,8 +13,13 @@
       scope: {
         file: '=',
         fileName: '=',
-        fileMaxSizeError: '&',
+        fileSize: '=?',
+        fileChecksum: '=?',
+        fileReadStatus: '&',
+        fileReadSuccess: '&',
+        fileReadFailure: '&',
         fileTypeError: '&',
+        fileMaxSizeError: '&',
         readingStrategy: '@',
       },
       link: link,
@@ -69,11 +76,38 @@
         var name = file.name;
         var type = file.type;
         var size = file.size;
+        reader.onloadstart = onLoadStart;
+        reader.onprogress = progress;
         reader.onload = onLoad;
+        reader.onerror = onError;
         if (scope.readingStrategy === 'dataURL') {
           reader.readAsDataURL(file);
+        } else if (scope.readingStrategy === 'arrayBuffer') {
+          reader.readAsArrayBuffer(file);
         } else {
           reader.readAsText(file);
+        }
+
+        function onLoadStart() {
+          if (_.isFunction(scope.fileReadStatus)) {
+            scope.fileReadStatus({
+              filename: name,
+              filesize: size,
+              percentComplete: 0,
+            });
+            scope.$apply();
+          }
+        }
+
+        function progress(loadEvent) {
+          if (_.isFunction(scope.fileReadStatus)) {
+            scope.fileReadStatus({
+              filename: name,
+              filesize: size,
+              percentComplete: (loadEvent.loaded / loadEvent.total) * 100,
+            });
+            scope.$apply();
+          }
         }
 
         function onLoad(loadEvent) {
@@ -81,7 +115,27 @@
             scope.$apply(function () {
               scope.file = loadEvent.target.result;
               scope.fileName = name;
+              if (!_.isUndefined(attrs.fileSize)) {
+                scope.fileSize = size;
+              }
+              if (!_.isUndefined(attrs.fileChecksum)) {
+                scope.fileChecksum = md5(loadEvent.target.result);
+              }
             });
+            if (_.isFunction(scope.fileReadSuccess)) {
+              scope.fileReadSuccess({
+                file: scope.file,
+                filename: scope.fileName,
+                filesize: scope.fileSize,
+                checksum: scope.fileChecksum,
+              });
+            }
+          }
+        }
+
+        function onError() {
+          if (_.isFunction(scope.fileReadFailure)) {
+            scope.fileReadFailure();
           }
         }
       }
@@ -89,6 +143,7 @@
       function onClick() {
         element.val('');
       }
+
     }
 
   }

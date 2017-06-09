@@ -46,7 +46,7 @@
         <cs-tab>
           <cs-tab-heading translate="pstnSetup.newNumbersTab"></cs-tab-heading>
           <p translate="pstnSetup.newNumbersTabDesc"></p>
-          <pstn-selector
+          <uc-pstn-selector
             search="$ctrl.searchCarrierInventory(value, block, quantity, consecutive)"
             search-results="$ctrl.model.pstn.searchResults"
             show-advanced-order="$ctrl.model.pstn.showAdvancedOrder"
@@ -57,12 +57,12 @@
             simple="{{$ctrl.isTrial}}"
             show-no-result="$ctrl.model.pstn.showNoResult"
           >
-          </pstn-selector>
+          </uc-pstn-selector>
         </cs-tab>
         <cs-tab ng-if="$ctrl.showTollFreeNumbers">
           <cs-tab-heading translate="pstnSetup.newTollFreeTab"></cs-tab-heading>
           <p>{{pstnNumbers.tollFreeTitle}}</p>
-          <pstn-selector
+          <uc-pstn-selector
             search="$ctrl.searchCarrierTollFreeInventory(value, block, quantity, consecutive)"
             search-results="$ctrl.model.tollFree.searchResults"
             show-advanced-order="$ctrl.model.tollFree.showAdvancedOrder"
@@ -73,7 +73,7 @@
             number-type="TOLLFREE"
             valid-search="$ctrl.model.tollFree.areaCodeOptions"
           >
-          </pstn-selector>
+          </uc-pstn-selector>
         </cs-tab>
         <cs-tab ng-if="$ctrl.showPortNumbers">
           <cs-tab-heading translate="pstnSetup.portNumbersTab"></cs-tab-heading>

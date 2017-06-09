@@ -6,7 +6,8 @@
     .controller('HuronSettingsCtrl', HuronSettingsCtrl);
 
   /* @ngInject */
-  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CallerId, CeService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, Orgservice, PstnModel, PstnService, PstnServiceAddressService, ServiceSetup, PhoneNumberService, TerminusService, ValidationService, VoicemailMessageAction) {
+  function HuronSettingsCtrl($q, $scope, $state, $translate, $modal, Authinfo, CallerId, CeService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, Orgservice, PstnModel, PstnService, PstnServiceAddressService, ServiceSetup, PhoneNumberService, TerminusService, ValidationService, VoicemailMessageAction) {
+
     var vm = this;
     vm.loading = true;
 
@@ -123,6 +124,7 @@
     vm.loadMediaOnHold = loadMediaOnHold;
     vm.mediaOnHoldOptions = [];
     vm.isSavingInternalNumberRange = false;
+    vm.mediaMgrModal = mediaMgrModal;
 
     vm.model = {
       site: {
@@ -1709,6 +1711,23 @@
             }
           });
         });
+    }
+
+    function mediaMgrModal() {
+      if (!vm.companyMOHToggle) {
+        return;
+      }
+
+      var modalInstance = $modal.open({
+        scope: $scope,
+        component: 'MediaMgrComponent',
+        template: '<media-mgr close="$close()" dismiss="$dismiss()"></media-mgr>',
+        type: 'full',
+      });
+
+      modalInstance.result.then(function () {
+        // Put anything needed after the modal is finished here
+      });
     }
 
     function loadCompanyInfo() {

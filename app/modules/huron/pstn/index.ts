@@ -1,5 +1,6 @@
 import pstnContactInfo from './pstnContactInfo';
 import pstnProviders from './pstnProviders';
+import pstnSelector from './pstnSelector';
 import pstnSwivelNumbers from './pstnSwivelNumbers';
 import pstnTermsOfService from './pstnTermsOfService';
 import pstnService from './pstn.service';
@@ -15,6 +16,7 @@ export default angular
   .module('huron.pstn', [
     pstnContactInfo,
     pstnProviders,
+    pstnSelector,
     pstnSwivelNumbers,
     pstnTermsOfService,
     pstnModel,

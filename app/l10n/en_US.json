@@ -2705,6 +2705,7 @@
   "cmc": {
     "failures": {
       "preCheckFailure": "Status check of org failed with: {{msg}}",
+      "userStatusFailure": "User Status request failed with: {{msg}}",
       "saveFailure": "Save failed with: {{msg}}",
       "alreadyRegisteredForAtLeastOneMoreUser": "is already registered for at least one other user"
     },
@@ -2739,6 +2740,11 @@
         "title": "Hosted Collaboration Provider",
         "description": "The service provider hosting and maintaining Cisco Hosted Collaboration Solutions (HCS) for your organization. All collaboration Mobile Convergence enabled users within your organization must be configured for HCS with this provider."
       }
+    },
+    "statusPage": {
+      "listingAllActiveUsers": "Listing all {{noOfActiveUsers}} active users",
+      "listingFirstActiveUsers": "Listing the first {{noOfActiveUsers}} active users",
+      "callServiceAwareNotEntitled": "Not entitled for Call Aware"
     }
   },
   "context": {
@@ -8535,5 +8541,19 @@
     "deviceNotSupported": "The {{deviceType}} is not yet able to observe this setting.",
     "guiSettings": "Settings Access In UI",
     "guiSettingsUpdated": "Settings Access In UI updated"
+  },
+  "mediaMgrModal": {
+    "title": "Media Manager",
+    "deletedTitle": "Recently Deleted Media",
+    "deletionPeriod": "Media will be permanently deleted after 30 days",
+    "deleteButton": "Delete All",
+    "searchPlaceholder": "Search Media",
+    "uploadProcessing": "Upload Processing...",
+    "procressingError": "Error processing media file.  Please upload this file again.",
+    "getMediaListError": "An error occurred obtaining the list of media.  Please try again.",
+    "uploadMediaError": "An error occurred uploading media.  Please try again.",
+    "deleteMediaError": "An error occurred deleting media.",
+    "cleanupMediaError": "An error occurred cleaning up a failed media upload.",
+    "unsupportedTypeError": "File type selected for upload is not supported."
   }
 }

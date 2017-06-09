@@ -12,10 +12,12 @@ describe('Component: cmcDetailsStatus ', () => {
         '$componentController',
         '$q',
         '$scope',
-        'CmcUserService');
+        'CmcUserService',
+        'Notification');
 
       this.controller = this.$componentController('cmcDetailsStatus', {
         CmcUserService: this.CmcUserService,
+        Notification: this.Notification,
       }, {
       });
     });
@@ -33,7 +35,7 @@ describe('Component: cmcDetailsStatus ', () => {
         );
 
         this.controller.fetchUserStatuses(10).then( () => {
-          expect(this.controller.userStatusesSummaryText).toEqual('Listing all 10 active users.');
+          expect(this.controller.userStatusesSummaryText).toEqual('cmc.statusPage.listingAllActiveUsers');
           expect(this.controller.userStatuses).toEqual(someUsers);
           done();
         });
@@ -55,7 +57,7 @@ describe('Component: cmcDetailsStatus ', () => {
         );
 
         this.controller.fetchUserStatuses(10).then( () => {
-          expect(this.controller.userStatusesSummaryText).toEqual('Listing the first 10 active users.');
+          expect(this.controller.userStatusesSummaryText).toEqual('cmc.statusPage.listingFirstActiveUsers');
           expect(this.controller.userStatuses).toEqual(someUsers);
           done();
         });
@@ -63,6 +65,24 @@ describe('Component: cmcDetailsStatus ', () => {
 
       });
 
+      it('user statuses request failure gives error notification', function (done) {
+
+        spyOn(this.Notification, 'error').and.callThrough();
+
+        spyOn(this.CmcUserService, 'getUsersWithCmcButMissingAware').and.returnValue(
+          this.$q.reject({ data: { message: 'request failed' } } ),
+        );
+
+        this.controller.fetchUserStatuses(10).then( () => {
+          expect(this.Notification.error).toHaveBeenCalledWith(
+            'cmc.failures.userStatusFailure',
+            { msg: 'request failed' },
+          );
+          done();
+        });
+        this.$scope.$apply();
+
+      });
     });
   });
 

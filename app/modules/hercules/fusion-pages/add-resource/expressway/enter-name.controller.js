@@ -49,7 +49,7 @@
           return $q.all(promises);
         })
         .then(function () {
-          return HybridServicesExtrasService.addPreregisteredClusterToAllowList(data.hostname, 3600, vm.clusterId);
+          return HybridServicesExtrasService.addPreregisteredClusterToAllowList(data.hostname, vm.clusterId);
         })
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');

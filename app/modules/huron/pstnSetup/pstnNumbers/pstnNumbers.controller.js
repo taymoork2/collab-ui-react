@@ -2,16 +2,7 @@
   'use strict';
 
   angular.module('Huron')
-    .filter('startFrom', StartFromFilter)
     .controller('PstnNumbersCtrl', PstnNumbersCtrl);
-
-  function StartFromFilter() {
-    return filter;
-
-    function filter(input, startFrom) {
-      return _.slice(input, _.parseInt(startFrom));
-    }
-  }
 
   /* @ngInject */
   function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnModel, PstnService, PhoneNumberService, PstnSetupStatesService, ValidationService, FeatureToggleService) {

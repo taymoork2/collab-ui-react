@@ -11,6 +11,7 @@ module.exports = {
   atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
   atlasDeviceExport: 'atlas-device-export',
   atlasEdiscovery: 'atlas-ediscovery',
+  atlasEdiscoveryIPSetting: 'atlas-ediscovery-ip-setting',
   atlasEmailStatus: 'atlas-email-status',
   atlasFTSWRemoveUsersSSO: 'atlas-ftsw-remove-users-sso',
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',

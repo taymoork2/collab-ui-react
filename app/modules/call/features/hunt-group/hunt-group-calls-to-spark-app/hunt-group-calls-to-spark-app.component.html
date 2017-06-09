@@ -1,7 +1,10 @@
 <div ng-form="$ctrl.hgCallsToSparkAppForm" class="cs-input-group large-6">
-   <cs-toggle-switch toggle-id="hgCallsToSparkAppToggle"
+   <cs-toggle-switch
+    toggle-id="hgCallsToSparkAppToggle"
+    name="sendToApp"
     ng-model="$ctrl.sendToApp"
     cs-change="$ctrl.onCallsToSparkAppChange()"
+    is-disabled={{$ctrl.isToggleDisabled}}
     size="small">
   </cs-toggle-switch>
 </div>

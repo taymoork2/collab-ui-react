@@ -24,17 +24,19 @@
     </div>
   </div>
   <div ng-if="$ctrl.showButtons" class="saveCancelButtons">
+    <span ng-if="$ctrl.saving" class="resource-group-spinner">
+      <i class="icon icon-spinner"></i>
+    </span>
     <button id="btn-cancel"
-            ng-disabled="saving"
+            ng-disabled="$ctrl.saving"
             translate="common.cancel"
             ng-click="$ctrl.reset()">
     </button>
     <button id="btn-save"
+            ng-disabled="$ctrl.saving"
             class="btn--primary btn-save"
-            cs-btn
-            loading="saving"
-            ng-click="$ctrl.save()">
-      <span translate="common.save"></span>
+            ng-click="$ctrl.save()"
+            translate="common.save">
     </button>
   </div>
   <div ng-if="$ctrl.cannotFindResourceGroup" class="error-message">

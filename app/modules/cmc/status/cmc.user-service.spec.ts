@@ -72,7 +72,7 @@ describe('CmcUserService', () => {
     let expectedResult: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse> {
       userStatuses: [
         { userId: '1', state: '' },
-        { userId: '2', state: 'Call Service Aware is not entitled' },
+        { userId: '2', state: 'cmc.statusPage.callServiceAwareNotEntitled' },
         { userId: '3', state: '' },
       ],
     };

@@ -1,4 +1,5 @@
 import { ICmcOrgStatusResponse, ICmcUserStatusInfoResponse, ICmcUserStatus } from './../cmc.interface';
+import { Notification } from 'modules/core/notifications';
 
 class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
@@ -15,25 +16,27 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     private Authinfo,
     private CmcService,
     private CmcUserService,
+    private $translate,
+    private Notification: Notification,
   ) {
     this.orgId = this.Authinfo.getOrgId();
   }
 
   public $onInit() {
-    this.$log.debug('$onInit');
-    this.$log.debug('Authinfo.orgid:', this.Authinfo.getOrgId());
-    this.$log.debug('Authinfo.orgname:', this.Authinfo.getOrgName());
 
     this.initGrid();
-
     this.CmcService.preCheckOrg(this.Authinfo.getOrgId())
       .then((res: ICmcOrgStatusResponse) => {
         this.$log.info('Result from preCheckOrg:', res);
         this.status = res;
       })
-      .catch((error) => {
+      .catch((error: any) => {
         this.$log.info('Error Result from preCheckOrg:', error);
-        this.error = error.data;
+        let msg: string = 'unknown';
+        if (error.data && error.data.message) {
+          msg = error.data.message;
+        }
+        this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });
       });
 
     this.fetchUserStatuses(100).then( () => {
@@ -46,10 +49,18 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
       .then( (result: ICmcUserStatusInfoResponse) => {
         this.userStatuses = result.userStatuses;
         if (result.paging) {
-          this.userStatusesSummaryText = 'Listing the first ' + this.userStatuses.length + ' active users.';
+          this.userStatusesSummaryText = this.$translate.instant('cmc.statusPage.listingFirstActiveUsers', { noOfActiveUsers: this.userStatuses.length });
         } else {
-          this.userStatusesSummaryText = 'Listing all ' + this.userStatuses.length + ' active users.';
+          this.userStatusesSummaryText = this.$translate.instant('cmc.statusPage.listingAllActiveUsers', { noOfActiveUsers: this.userStatuses.length });
         }
+      })
+      .catch((error: any) => {
+        this.$log.info('Error Result from user status request:', error);
+        let msg: string = 'unknown';
+        if (error.data && error.data.message) {
+          msg = error.data.message;
+        }
+        this.Notification.error('cmc.failures.userStatusFailure', { msg: msg });
       });
   }
 

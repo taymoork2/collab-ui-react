@@ -76,12 +76,12 @@
         <td>{{::connector.service}}</td>
         <td>
           <cs-statusindicator ng-model="connector.status.cssClass"></cs-statusindicator>
-          {{::connector.statusName}}
-          <span class="badge badge--outline warning" ng-if="connector.maintenanceMode === 'on'" translate="hercules.fusion.list.maintenance"></span>
-          <span class="badge badge--outline" ng-if="connector.maintenanceMode === 'pending'" translate="hercules.fusion.list.pendingMaintenance"
+          <span class="status">{{::connector.statusName}}</span>
+          <span class="badge warning" ng-if="connector.maintenanceMode === 'on'" translate="hercules.fusion.list.maintenance"></span>
+          <span class="badge" ng-if="connector.maintenanceMode === 'pending'" translate="hercules.fusion.list.pendingMaintenance"
                 tooltip="{{::node.pendingTooltip}}" tooltip-trigger="mouseenter" tooltip-placement="top"></span>
-          <span class="badge badge--outline info" ng-if="connector.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
-          <span class="badge badge--outline" ng-if="connector.upgradeState !== 'upgraded'" translate="hercules.fusion.list.upgrading"></span>
+          <span class="badge info" ng-if="connector.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
+          <span class="badge" ng-if="connector.upgradeState !== 'upgraded'" translate="hercules.fusion.list.upgrading"></span>
         </td>
         <td>{{::connector.version}}</td>
       </tr>
