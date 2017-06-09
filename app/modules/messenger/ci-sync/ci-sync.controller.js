@@ -315,6 +315,7 @@
         })
         .catch(function (response) {
           Notification.errorResponse(response, translatePrefix + 'errorFailedUpdatingJabberInterop');
+          return $q.reject();
         });
     }
   }
