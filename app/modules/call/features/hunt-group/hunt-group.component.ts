@@ -126,6 +126,9 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public setHuntGroupFallbackDestination(fbDestination: FallbackDestination) {
     this.huntGroup.fallbackDestination = fbDestination;
+    if (_.isNull(_.get(fbDestination, 'number'))) {
+      this.form.$setValidity('', false, this.form);
+    }
     this.form.$setDirty();
     this.checkForChanges();
   }
@@ -256,7 +259,8 @@ class HuntGroupCtrl implements ng.IComponentController {
         return _.get(this.huntGroup, 'members', []).length !== 0;
       },
       4: () => {
-        if (!_.isUndefined(_.get(this.huntGroup, 'fallbackDestination'))) {
+        let fbDestination = _.get(this.huntGroup, 'fallbackDestination');
+        if (!_.isUndefined(fbDestination) && !_.isNull(_.get(fbDestination, 'number')) ) {
           this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'enabled', 'add');
           return true;
         } else {
