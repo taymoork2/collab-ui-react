@@ -739,7 +739,7 @@ export class PstnService {
 
   private setCreatedBy(): string {
     // Need who is creating the order
-    return this.Authinfo.isPartner() ? ADMINTYPE_PARTNER : ADMINTYPE_CUSTOMER;
+    return (this.Authinfo.isCustomerLaunchedFromPartner() || this.Authinfo.isPartner()) ? ADMINTYPE_PARTNER : ADMINTYPE_CUSTOMER;
   }
 
 }

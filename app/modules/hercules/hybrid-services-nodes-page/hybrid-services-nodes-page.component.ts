@@ -22,6 +22,7 @@ interface ISimplifiedNode {
   name: string;
   serial: string;
   pendingTooltip: string;
+  platformVersion?: string;
   maintenanceMode: ConnectorMaintenanceMode;
   connectors: ISimplifiedConnector[];
 }
@@ -305,6 +306,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
             name: node.hostname,
             serial: node.serial,
             pendingTooltip: this.$translate.instant(`hercules.nodesPage.pendingTooltip`, { date: moment(node.lastMaintenanceModeEnabledTimestamp).format('LLL') }),
+            platformVersion: node.platformVersion,
             maintenanceMode: node.maintenanceMode,
             connectors: connectors,
           };
