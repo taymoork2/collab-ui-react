@@ -66,6 +66,7 @@
     require('modules/core/cards').default,
     require('modules/core/customerReports/sparkReports').default,
     require('modules/core/partnerReports/commonReportServices').default,
+    require('modules/core/partnerReports/reportBMMPBanner').default,
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
     require('modules/core/partnerReports/reportSlider').default,
