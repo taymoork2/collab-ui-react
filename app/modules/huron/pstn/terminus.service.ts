@@ -66,12 +66,8 @@ export class TerminusService {
     });
   }
 
-  public customerCarrier(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {
-    return this.$resource(this.HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId', {}, {});
-  }
-
-  public customerCarrierV2(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {
-    return this.$resource(this.HuronConfig.getTerminusV2Url() + '/customers/:customerId/carriers/:carrierId', {}, {});
+  public customerCarriers(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {
+    return this.$resource(this.HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/', {});
   }
 
   public customerCarrierDid(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {
@@ -126,11 +122,11 @@ export class TerminusService {
   }
 
   public carrier(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {
-    return this.$resource(this.HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {}, {});
+    return this.$resource(this.HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {});
   }
 
-  public carrierV2(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {
-    return this.$resource(this.HuronConfig.getTerminusV2Url() + '/carriers/:carrierId', {}, {});
+  public carriersV2(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {
+    return this.$resource(this.HuronConfig.getTerminusV2Url() + '/carriers');
   }
 
   public carrierE911LookupV2(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {

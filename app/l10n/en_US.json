@@ -2671,6 +2671,7 @@
       "connectors": "Connectors",
       "status": "Status",
       "serial": "Serial: {{serial}}",
+      "platformVersion": "Platform Version: {{version}}",
       "version": "Version",
       "noNodes": "No nodes found",
       "loadingError": "Could not load cluster data",
@@ -2742,9 +2743,10 @@
       }
     },
     "statusPage": {
-      "listingAllActiveUsers": "Listing all {{noOfActiveUsers}} active users",
       "listingFirstActiveUsers": "Listing the first {{noOfActiveUsers}} active users",
-      "callServiceAwareNotEntitled": "Not entitled for Call Aware"
+      "callServiceAwareNotEntitled": "Not entitled for Call Aware",
+      "sparkMobileConvergence": "Spark Mobile Convergence",
+      "serviceStatus": "Service Status"
     }
   },
   "context": {
@@ -4164,7 +4166,9 @@
     "tollFreeNumberOrder": "New Toll-Free Numbers",
     "tollFreeNumberAdvanceOrder": "Toll-Free Advance Numbers",
     "searchPlaceholder": "Search Orders",
-    "orderHistory": "Order History"
+    "orderAndImports": "Orders & Imports",
+    "historyAndImports": "History & Imports",
+    "privatePstnTrunk": "Private PSTN Trunk"
   },
   "pstnOrderDetail": {
     "orderNumber": "Order #{{orderId}}",
@@ -4173,6 +4177,7 @@
     "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer",
     "orderCreationDate": "On {{date}} ",
     "createdBy": "by {{createdBy}}",
+    "byopstnCreatedBy": "By {{createdBy}} ",
     "orderCreatedBy": "Partner"
   },
   "serviceAddress": {
@@ -4698,7 +4703,7 @@
     "deleteOrg": "Delete Customer",
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted.",
-    "pstnOrders": "PSTN Orders",
+    "pstnOrders": "PSTN Orders & Imports",
     "addNumbers": "Add Numbers",
     "isSetupDoneError": "Unable to determine if {{orgName}} is setup.",
     "launchCustomerPortalError": "Unable to launch the customer portal.",
@@ -6658,7 +6663,7 @@
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
     "numberTitle": "Select Pilot Numbers",
-    "numberDesc": "When these numbers are called, this hunt group is will ring.",
+    "numberDesc": "When these numbers are called, this hunt group will ring.",
     "numberPlaceholder": "Enter Number or Extension",
     "numberHint": "e.g. 5555, 333444555, +1333444555",
     "methodTitle": "Select Hunting Method",
