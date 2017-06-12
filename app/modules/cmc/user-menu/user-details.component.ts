@@ -13,6 +13,7 @@ class CmcUserDetailsController implements ng.IComponentController {
   private user: IUser;
   public orgReady: boolean = false;
   public userReady: boolean = false;
+  private timeoutStatus: number = -1;
 
   public issues: ICmcIssue[];
 
@@ -97,7 +98,9 @@ class CmcUserDetailsController implements ng.IComponentController {
       .catch((error) => {
         this.$log.debug('error', error);
         let msg: string = 'unknown';
-        if (error.data && error.data.message) {
+        if (error && error.status && error.status === this.timeoutStatus) {
+          msg = 'Request Timeout';
+        } else if (error.data && error.data.message) {
           msg = error.data.message;
         }
         this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });

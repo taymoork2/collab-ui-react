@@ -6,6 +6,8 @@ export class CmcService {
   private cmcUrl: string = 'https://cmc-controller.intb1.ciscospark.com/api/v1';
   private useMock: boolean = false;
 
+  private timeout: number = 5000; // ms
+
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
@@ -16,6 +18,7 @@ export class CmcService {
     private CmcServiceMock,
     private $http: ng.IHttpService,
     private $translate,
+    private $timeout: ng.ITimeoutService,
   ) {
   }
 
@@ -60,13 +63,23 @@ export class CmcService {
   // TODO Adapt to cmc status call
   public preCheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
     if (!this.useMock) {
+      //let deferred: ng.IDeferred<any> = this.$q.defer();
+      //this.requestTimeout(deferred);
       let url: string = this.cmcUrl + `/organizations/${orgId}/status`;
-      return this.$http.get(url).then((response) => {
+      return this.$http.get(url, { timeout: this.requestTimeout() }).then((response) => {
         return response.data;
       });
     } else {
       return this.CmcServiceMock.mockOrgStatus(orgId);
     }
+  }
+
+  private requestTimeout(): ng.IPromise<any> {
+    let deferred: ng.IDeferred<any> = this.$q.defer();
+    this.$timeout(() => {
+      deferred.resolve();
+    }, this.timeout);
+    return deferred.promise;
   }
 
   // TODO Preliminary poor mans user precheck

@@ -6,6 +6,7 @@
     margin-left: 2.5rem;
   }
 }
+
 .cmc {
   .user-details {
     .cmc-invalid {
@@ -29,18 +30,72 @@
       }
     }
   }
-  .status {
-    padding-left: 2rem;
-    padding-top: 2rem;
-    background: $brand-white;
-    .ok {
-      color: green;
+  .status-page {
+    background-color: $brand-white;
+    .org-status {
+      padding-left: 1rem;
+      padding-top: 2rem;
+      .state-header {
+        border: 1px solid $gray-light-3;
+        background: $gray-light-4;
+        .columns {
+          border-right: 1px solid $gray-light-3;
+          padding: 0.75rem;
+          span {
+            font-size: 1rem;
+          }
+        }
+      }
+      .state-body {
+        //padding: 1.25rem;
+        background: $gray-dark-1;
+        color: $brand-white;
+        .success {
+          color: $color-cta-base;
+        }
+        .error {
+          color: $color-negative-base;
+        }
+        .icon-circle-globe {
+          font-size: 2rem;
+          vertical-align: middle;
+        }
+        .columns {
+          padding: 1.25rem;
+          padding-left: 1.25rem;
+          span {
+            font-size: 1rem;
+          }
+        }
+      }
     }
-    .error {
-      color: red;
+    .warning-info {
+      padding: 0rem;
+      border-bottom: 1px solid $gray-light-3;
     }
-  }
-  .control-label {
-    color: $gray-dark-4;
+    .stats {
+      padding: 0.5rem;
+      padding-left: 3rem;
+      padding-bottom: 2rem;
+    }
+    .user-status {
+      padding-left: 2rem;
+      .user-status-grid {
+        background-color: $brand-white;
+        vertical-align: middle;
+        .icon.running {
+          color: $color-cta-base;
+        }
+        .icon.error {
+          color: $color-negative-base;
+        }
+      }
+    }
+    .control-label {
+      color: $gray-dark-4;
+    }
+    .vertical-space {
+      padding: 1.5rem;
+    }
   }
 }

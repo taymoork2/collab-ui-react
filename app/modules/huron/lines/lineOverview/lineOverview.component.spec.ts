@@ -6,7 +6,7 @@ describe('Component: lineOverview', () => {
   const BUTTON_CANCEL = '.button-container button:not(.btn--primary)';
 
   let existingLinePrimary: Line = {
-    uuid: '0000',
+    uuid: '0001',
     internal: '1234',
     external: '+5555551212',
     siteToSite: '71001234',
@@ -16,7 +16,7 @@ describe('Component: lineOverview', () => {
   };
 
   let existingLineNonPrimary: Line = {
-    uuid: '0001',
+    uuid: '0002',
     internal: '6789',
     external: '+5555551313',
     siteToSite: '71006789',
@@ -41,6 +41,7 @@ describe('Component: lineOverview', () => {
       'DirectoryNumberOptionsService',
       'CallerIDService',
       'FeatureToggleService',
+      'Notification',
     );
 
     this.existingLinePrimary = existingLinePrimary;
@@ -67,6 +68,8 @@ describe('Component: lineOverview', () => {
     spyOn(this.LineOverviewService, 'save').and.returnValue(this.saveDefer.promise);
 
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+
+    spyOn(this.Notification, 'errorResponse');
   });
 
   function initComponent() {
@@ -74,7 +77,7 @@ describe('Component: lineOverview', () => {
       ownerType: 'place',
       ownerName: 'ownerName',
       ownerId: 'ownerId',
-      numberId: 'numberId',
+      numberId: '0001',
     });
   }
 
@@ -89,14 +92,14 @@ describe('Component: lineOverview', () => {
     });
 
     it('should initialize all line data', function () {
-      this.getInternalNumberOptionsDefer.resolve(this.internalNumbers);
       this.getLineOverviewDataDefer.resolve(this.lineOverview);
+      this.getInternalNumberOptionsDefer.resolve(this.internalNumbers);
       this.getEsnPrefixDefer.resolve(this.esnPrefix);
       this.getExternalNumberOptionsDefer.resolve(this.externalNumbers);
       this.$scope.$apply();
 
-      expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.get).toHaveBeenCalled();
+      expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
       expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
     });
@@ -157,4 +160,28 @@ describe('Component: lineOverview', () => {
 
   });
 
+  describe('existing line -internal number pool load failure', () => {
+    beforeEach(initComponent);
+    beforeEach(function () {
+      this.$scope.numberId = this.existingLinePrimary.uuid;
+      this.lineOverview = {
+        line: this.existingLinePrimary,
+        callForward: new CallForward(),
+      };
+      this.getLineOverviewDataDefer.resolve(this.lineOverview);
+      this.getInternalNumberOptionsDefer.reject('503');
+      this.getEsnPrefixDefer.resolve(this.esnPrefix);
+      this.getExternalNumberOptionsDefer.resolve(this.externalNumbers);
+      this.$scope.$apply();
+    });
+
+    it('should initialize assigned number and notify failure for internal number pool', function () {
+      expect(this.LineOverviewService.get).toHaveBeenCalled();
+      expect(this.lineOverview.line.internal).toEqual('1234');
+      expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
+      expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
+      expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
+      expect(this.Notification.errorResponse).toHaveBeenCalledWith('503', 'directoryNumberPanel.internalNumberPoolError');
+    });
+  });
 });

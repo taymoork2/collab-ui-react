@@ -1,7 +1,7 @@
 <cs-sp-container class="pstn-order-overview">
   <cs-sp-section>
-    <div class="section-title-row">
-      <span class="section-name" translate="pstnOrderOverview.pstnOrders"></span>
+    <div ng-if="$ctrl.isPartner" class="section-title-row">
+      <span class="section-name" translate="customerPage.pstnOrders"></span>
     </div>
     <div class="filter bottom-pad">
       <input id="orderSearchInput" type="text" class="form-control" ng-model="$ctrl.filter" ng-model-options="{ debounce: 250 }" placeholder="{{::'pstnOrderOverview.searchPlaceholder' | translate}}">
@@ -12,8 +12,11 @@
     </div>
     <ul class="list-group">
       <li id="ordersList" class="feature" ng-repeat="order in filteredOrders = ($ctrl.orders | filter:$ctrl.filter | orderBy:'-sortDate')">  
-        <a ui-sref="{{$ctrl.isPartner ? 'customer-overview.orderDetail({currentOrder: order})' : 'customerPstnOrdersOverview.orderDetail({currentOrder: order, currentCustomer: $ctrl.currentCustomer})'}}">
-          <span id="orderName" class="feature-name" translate="pstnOrderDetail.orderNumber" translate-values="{orderId: order.carrierOrderId}"></span>
+        <a ui-sref="{{$ctrl.isPartner ? 'customer-overview.orderDetail({currentOrder: order, isCarrierByopstn: $ctrl.isCarrierByopstn})' : 'customerPstnOrdersOverview.orderDetail({currentOrder: order, currentCustomer: $ctrl.currentCustomer, isCarrierByopstn: $ctrl.isCarrierByopstn})'}}">
+          <span  ng-switch="$ctrl.isCarrierByopstn" class="feature-name">
+            <span id="orderName" ng-switch-when="false" translate="pstnOrderDetail.orderNumber" translate-values="{orderId: order.carrierOrderId}"></span>
+            <span id="orderDate" ng-switch-when="true">{{order.formattedDate}}</span>
+          </span>
           <span class="feature-status">
             <span id="orderStatus">{{order.status}}</span>
           </span>

@@ -8,7 +8,7 @@
 
       <div ng-if="linesListCtrl.huronCustomerAdminPMPFeatureToggle && !linesListCtrl.gridRefresh">
         <a ui-sref="customerPstnOrdersOverview({currentCustomer: linesListCtrl.currentCustomer, vendor:linesListCtrl.vendor})">
-          <span class="order-history" translate="pstnOrderOverview.orderHistory"></span>
+          <span class="order-history" translate="pstnOrderOverview.historyAndImports"></span>
         </a>
         <span ng-if="!linesListCtrl.isCallTrial || (linesListCtrl.isCallTrial && linesListCtrl.isBYOPSTNCarrier())">
           <button id="addNumbers" class="btn btn--people" ng-click="linesListCtrl.showProviderDetails()" translate="customerPage.addNumbers">

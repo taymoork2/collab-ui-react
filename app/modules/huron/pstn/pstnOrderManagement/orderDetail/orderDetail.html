@@ -1,15 +1,21 @@
 <cs-sp-container class="pstn-order-detail">
   <cs-sp-section>
-    <div class="section-title-row">
-      <h3 id="orderNumber" translate="pstnOrderDetail.orderNumber" translate-values="{orderId: $ctrl.currentOrder.carrierOrderId}"></h3>
+    <div class="section-title-row" ng-switch="$ctrl.isCarrierByopstn" >
+      <h3 ng-switch-when="false" id="orderNumber" translate="pstnOrderDetail.orderNumber" translate-values="{orderId: $ctrl.currentOrder.carrierOrderId}"></h3>
+      <h3 ng-switch-when="true" id="orderDate">{{$ctrl.currentOrder.formattedDate}}</h3>
     </div>
-    <div class="feature-name">
-      <span id="orderCreated" translate="pstnOrderDetail.orderCreationDate" translate-values="{date: $ctrl.currentOrder.created }"></span>
-      <span ng-if="$ctrl.createdBy" id="orderCreatedBy" translate="pstnOrderDetail.createdBy" translate-values="{createdBy: $ctrl.createdBy}"></span>
+    <div class="feature-name" ng-switch="$ctrl.isCarrierByopstn">
+      <span ng-switch-when="false">
+        <span id="orderCreated" translate="pstnOrderDetail.orderCreationDate" translate-values="{date: $ctrl.currentOrder.created }"></span>
+        <span ng-if="$ctrl.createdBy" id="orderCreatedBy" translate="pstnOrderDetail.createdBy" translate-values="{createdBy: $ctrl.createdBy}"></span>
+      </span>
+      <span ng-switch-when="true">
+        <span ng-if="$ctrl.createdBy" id="importCreatedBy" translate="pstnOrderDetail.byopstnCreatedBy" translate-values="{createdBy: $ctrl.createdBy}"></span>
+      </span>
     </div>
     <div>
-      <span id="orderType" class="feature-name">{{$ctrl.currentOrder.type}}</span>
-    </div>
+      <span ng-if="!$ctrl.isCarrierByopstn" id="orderType" class="feature-name">{{$ctrl.currentOrder.type}}</span>
+    <div>
     <div>
       <span id="orderStatus" class="feature-name">{{$ctrl.currentOrder.status}}
       </span>

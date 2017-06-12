@@ -209,13 +209,18 @@ describe('SetupWizardCtrl', function () {
   describe('When there are only shared device licenses', function () {
     beforeEach(function () {
       this.Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue(this.$q.resolve(this.usageOnlySharedDevicesFixture));
-
-      this.initController();
     });
 
-    it('the wizard should have 4 tabs', function () {
+    it('the wizard should have 4 tabs and no SSO setup if FTW', function () {
+      _.set(this.$state, 'current.data.firstTimeSetup', true);
+      this.initController();
       this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
+    });
+    it('the wizard should have 4 tabs and SSO setup if accessed through settings', function () {
+      this.initController();
+      this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
+      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
   });
 

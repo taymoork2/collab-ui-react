@@ -8,6 +8,8 @@ class CmcDetailsSettingsComponentCtrl implements ng.IComponentController {
   public ucProvider = {};
   public mobileProvider = {};
 
+  private timeoutStatus: number = -1;
+
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
@@ -41,7 +43,9 @@ class CmcDetailsSettingsComponentCtrl implements ng.IComponentController {
       .catch((error: any) => {
         this.$log.info('Error Result from preCheckOrg:', error);
         let msg: string = 'unknown';
-        if (error.data && error.data.message) {
+        if (error && error.status && error.status === this.timeoutStatus) {
+          msg = 'Request Timeout';
+        } else if (error.data && error.data.message) {
           msg = error.data.message;
         }
         this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });

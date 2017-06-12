@@ -1,6 +1,7 @@
 import { HuntGroupNumber } from 'modules/call/features/hunt-group';
 import { NumberService, INumber } from 'modules/huron/numbers';
 
+const NUMBER_FORMAT_ENTERPRISE_LINE = 'NUMBER_FORMAT_ENTERPRISE_LINE';
 class HuntGroupNumbersCtrl implements ng.IComponentController {
   public numbers: Array<HuntGroupNumber>;
   public isNew: boolean;
@@ -35,11 +36,12 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
       type: number.type,
       number: number.number,
     }));
+    this.onNumbersChanged(this.numbers);
   }
 
-  public removeNumber(number: HuntGroupNumber): void {
+  public removeNumber(hgnumber: HuntGroupNumber): void {
     _.remove<HuntGroupNumber>(this.numbers, (huntGroupNumber) => {
-      return huntGroupNumber.uuid === number.uuid;
+      return (huntGroupNumber.number === hgnumber.number || (huntGroupNumber.type.toString() === NUMBER_FORMAT_ENTERPRISE_LINE && huntGroupNumber.number.slice(hgnumber.number.length) === hgnumber.number));
     });
     this.onNumbersChanged(this.numbers);
   }
