@@ -27,7 +27,7 @@ export class CmcUserService {
 
         _.each(cmcUsers, (cmcUser) => {
           if (cmcUser.lastStatusUpdate) {
-            cmcUser.lastStatusUpdate = moment(cmcUser.lastStatusUpdate).format('LLLL');
+            cmcUser.lastStatusUpdate = moment(cmcUser.lastStatusUpdate).format('LLLL (UTC)');
           }
           let hasAware = _.find(awareUsers, function(u) {
             return u.userId === cmcUser.userId;
