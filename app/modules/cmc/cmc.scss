@@ -1,17 +1,30 @@
 @import '~collab-ui/scss/settings/colors';
 
-.cmc-side-panel-section {
+.cmc-side-panel-details-section {
+  .icon.error {
+    color: $color-negative-base;
+  }
+  .icon.active {
+    color: $color-cta-base;
+  }
   .status-error {
     color: $color-negative-base;
     margin-left: 2.5rem;
   }
+  .section-name {
+    padding-left: 0px;
+  }
 }
 
 .cmc {
-  .user-details {
-    .cmc-invalid {
-      color: $color-negative-base;
-    }
+  .success {
+    color: $color-cta-base;
+  }
+  .active {
+    color: $color-cta-base;
+  }
+  .error {
+    color: $color-negative-base;
   }
   .settings {
     background-color: $brand-white;
@@ -47,15 +60,8 @@
         }
       }
       .state-body {
-        //padding: 1.25rem;
         background: $gray-dark-1;
         color: $brand-white;
-        .success {
-          color: $color-cta-base;
-        }
-        .error {
-          color: $color-negative-base;
-        }
         .icon-circle-globe {
           font-size: 2rem;
           vertical-align: middle;
