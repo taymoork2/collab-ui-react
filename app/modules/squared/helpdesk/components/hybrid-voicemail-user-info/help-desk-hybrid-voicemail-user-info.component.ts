@@ -44,7 +44,7 @@ class HelpDeskHybridVoicemailUserInfoComponentCtrl implements ng.IComponentContr
         }
       })
       .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'helpdesk.hybridVoicemail.cannotReadStatus');
+        this.Notification.errorResponse(error, 'helpdesk.hybridVoicemail.cannotReadStatus');
       });
   }
 

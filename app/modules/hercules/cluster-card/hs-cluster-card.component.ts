@@ -62,7 +62,9 @@ export class ClusterCardController implements ng.IComponentController {
   public hasUpgradeAvailable(cluster: IExtendedClusterFusion): boolean {
     return _.some(cluster.provisioning, (provisioning) => {
       return _.some(cluster.connectors, (connector) => {
-        return provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
+        return provisioning.connectorType === connector.connectorType &&
+               connector.upgradeState === 'upgraded' &&
+               provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
       });
     });
   }
@@ -118,18 +120,22 @@ export class ClusterCardController implements ng.IComponentController {
   public openService(serviceId: HybridServiceId, clusterId: string): void {
     if (serviceId === 'squared-fusion-uc') {
       this.$state.go('call-service.list', {
+        backState: 'cluster-list',
         clusterId: clusterId,
       });
     } else if (serviceId === 'squared-fusion-cal') {
       this.$state.go('calendar-service.list', {
+        backState: 'cluster-list',
         clusterId: clusterId,
       });
     } else if (serviceId === 'squared-fusion-media') {
       this.$state.go('media-service-v2.list', {
+        backState: 'cluster-list',
         clusterId: clusterId,
       });
     } else if (serviceId === 'spark-hybrid-datasecurity') {
       this.$state.go('hds.list', {
+        backState: 'cluster-list',
         clusterId: clusterId,
       });
     } else if (serviceId === 'contact-center-context') {
@@ -139,6 +145,7 @@ export class ClusterCardController implements ng.IComponentController {
       });
     } else if (serviceId === 'ept') {
       this.$state.go('private-trunk-overview.list', {
+        backState: 'cluster-list',
         clusterId: clusterId,
       });
     }

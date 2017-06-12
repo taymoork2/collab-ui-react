@@ -1,6 +1,197 @@
-//Place holder for tests
+import pstnProviders from './index';
+
 describe('Service: PstnProvidersService', () => {
-  it('should pass fake test', () => {
-    expect(true).toEqual(true);
-  });
+
+  beforeEach( function () {
+    this.initModules(pstnProviders);
+    this.injectDependencies(
+      '$httpBackend',
+      'HuronConfig',
+      '$q',
+      'PstnModel',
+      'PstnService',
+      'PstnProvidersService',
+    );
+
+    let carrierListJSON = {
+      carriers: [{
+        name: 'TATA',
+        logoSrc: 'images/carriers/logo_tata_comm.svg',
+        logoAlt: 'Tata',
+        countryCode: 'US',
+        features: [
+          'intelepeerFeatures.feature1',
+          'intelepeerFeatures.feature2',
+        ],
+      }, {
+        name: 'INTELEPEER',
+        logoSrc: 'images/carriers/logo_intelepeer.svg',
+        logoAlt: 'IntelePeer',
+        countryCode: 'US',
+        docSrc: 'docs/carriers/IntelePeerVoicePackage.pdf',
+        features: [
+          'tataFeatures.feature1',
+          'tataFeatures.feature2',
+        ],
+      }, {
+        name: 'TATA',
+        logoSrc: 'images/carriers/logo_tata_comm.svg',
+        logoAlt: 'Tata',
+        countryCode: 'GB',
+        features: [
+          'tataFeatures.feature1',
+          'tataFeatures.feature2',
+        ],
+      }],
+    };
+    this.carrierListJSON = carrierListJSON;
+
+    let carrierRespSingle = {
+      carriers: [{
+        uuid: '5c898145-e508-46e8-a7fd-3dcfcc21ed40',
+        name: 'TATA',
+        country: 'GB',
+        apiExists: false,
+        vendor: 'TATA',
+        offers: [
+          'offer1',
+          'offer2',
+        ],
+        services: [
+          'service1',
+          'service2',
+        ],
+      }],
+    };
+    this.carrierRespSingle = carrierRespSingle;
+
+    let carrierRespMulti = {
+      carriers: [{
+        uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
+        name: 'INTELEPEER',
+        country: 'US',
+        apiExists: true,
+        vendor: 'INTELEPEER',
+        offers: [
+          'offer1',
+          'offer2',
+        ],
+        services: [
+          'service1',
+          'service2',
+        ],
+      }, {
+        uuid: '5c898145-e508-46e8-a7fd-3dcfcc21ed40',
+        name: 'TATA',
+        apiExists: false,
+        country: 'US',
+        vendor: 'TATA',
+        offers: [
+          'offer1',
+          'offer2',
+        ],
+        services: [
+          'service1',
+          'service2',
+        ],
+      }],
+    };
+    this.carrierRespMulti = carrierRespMulti;
+
+    let carrierRespVendorMatchOnly = {
+      carriers: [{
+        uuid: '5c898145-e508-46e8-a7fd-3dcfcc21ed40',
+        name: 'TATA',
+        country: 'KL',
+        apiExists: false,
+        vendor: 'TATA',
+        offers: [
+          'offer1',
+          'offer2',
+        ],
+        services: [
+          'service1',
+          'service2',
+        ],
+      }],
+    };
+    this.carrierRespVendorMatchOnly = carrierRespVendorMatchOnly;
+
+    let carrierRespNoVendorMatch = {
+      carriers: [{
+        uuid: '5c898145-e508-46e8-a7fd-3dcfcc21ed40',
+        name: 'NOMATCH',
+        country: 'US',
+        apiExists: false,
+        vendor: 'NOMATCH',
+        offers: [
+          'offer1',
+          'offer2',
+        ],
+        services: [
+          'service1',
+          'service2',
+        ],
+      }],
+    };
+    this.carrierRespNoVendorMatch = carrierRespNoVendorMatch;
+
+    spyOn(this.PstnModel, 'isCarrierExists').and.returnValue(false);
+    let expectedUrl = 'modules/huron/pstn/pstnProviders/pstnProviders.json';
+    this.$httpBackend.whenGET(expectedUrl).respond(200, this.carrierListJSON.carriers);
+
+  });
+
+  afterEach(function () {
+    this.$httpBackend.verifyNoOutstandingExpectation();
+    this.$httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should load carrier with vendor match and country code match', function () {
+    spyOn(this.PstnService, 'listResellerCarriersV2').and.returnValue(this.$q.resolve(this.carrierRespSingle.carriers));
+    spyOn(this.PstnService, 'getCarrierCapabilities').and.returnValue(this.$q.resolve([]));
+    this.PstnProvidersService.getCarriers().then(response => {
+      expect(response.length).toBe(1);
+      expect(response[0].name).toEqual('TATA');
+      expect(response[0].country).toEqual('GB');
+      expect(response[0].logoSrc).toEqual('images/carriers/logo_tata_comm.svg');
+    });
+    this.$httpBackend.flush();
+  });
+
+  it('should load carriers with vendor match and country code match', function () {
+    spyOn(this.PstnService, 'listResellerCarriersV2').and.returnValue(this.$q.resolve(this.carrierRespMulti.carriers));
+    spyOn(this.PstnService, 'getCarrierCapabilities').and.returnValue(this.$q.resolve([]));
+    this.PstnProvidersService.getCarriers().then(response => {
+      expect(response.length).toBe(2);
+      expect(response[0].country).toEqual('US');
+      expect(response[0].logoSrc).toContain('logo');
+      expect(response[1].country).toEqual('US');
+      expect(response[1].logoSrc).toContain('logo');
+    });
+    this.$httpBackend.flush();
+  });
+
+  it('should load default carrier with vendor match but no country code match', function () {
+    spyOn(this.PstnService, 'listResellerCarriersV2').and.returnValue(this.$q.resolve(this.carrierRespVendorMatchOnly.carriers));
+    spyOn(this.PstnService, 'getCarrierCapabilities').and.returnValue(this.$q.resolve([]));
+    this.PstnProvidersService.getCarriers().then(response => {
+      expect(response.length).toBe(1);
+      expect(response[0].logoSrc).toEqual('images/carriers/logo_tata_comm.svg');
+    });
+    this.$httpBackend.flush();
+  });
+
+  it('should not load carrier logo with no match for carrier/vendor', function () {
+    spyOn(this.PstnService, 'listResellerCarriersV2').and.returnValue(this.$q.resolve(this.carrierRespNoVendorMatch.carriers));
+    let expectedUrl = 'https://terminus.huron-int.com/api/v2/carriers?country=US&defaultOffer=true&service=PSTN';
+    this.$httpBackend.whenGET(expectedUrl).respond(200, this.carrierRespNoVendorMatch.carriers);
+    spyOn(this.PstnService, 'getCarrierCapabilities').and.returnValue(this.$q.resolve([]));
+    this.PstnProvidersService.getCarriers().then(response => {
+      expect(response.length).toBe(1);
+      expect(response[0].logoSrc).toEqual('');
+    });
+    this.$httpBackend.flush();
+  });
+
 });

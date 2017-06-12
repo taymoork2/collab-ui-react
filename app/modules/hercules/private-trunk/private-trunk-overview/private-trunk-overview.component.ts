@@ -1,8 +1,10 @@
 
 export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
 
+  private backTo: string; // attribute
+
   public back: boolean = true;
-  public backState = 'services-overview';
+  public backState: string;
   public hasPrivateTrunkFeatureToggle: boolean;
   public tabs: [{ 'title': String, 'state': String }];
   public modalOptions: any = {
@@ -17,6 +19,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
+    this.backState = this.backTo || 'services-overview';
     if (!this.hasPrivateTrunkFeatureToggle) {
       this.$state.go(this.backState);
     }

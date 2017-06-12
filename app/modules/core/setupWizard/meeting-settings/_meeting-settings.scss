@@ -1,0 +1,56 @@
+@import '~collab-ui/scss/settings/colors';
+
+.meeting-settings {
+  .site-preview {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .time-zone {
+    font-size: 14px;
+    color: $gray-base;
+  }
+
+  .verified-check {
+    font-size: 24px;
+    color: $color-cta-base;
+  }
+
+  .site-description,
+  .distribute-licenses-heading,
+  .element-spacing {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .delete-site {
+    font-size: 24px;
+  }
+
+  .keep-existing-trials {
+    position: relative;
+  }
+
+  .existing-sites {
+    color: $color-primary-base;
+    position: absolute;
+    left: 152px;
+    bottom: 2px;
+  }
+
+  .count {
+    color: $color-primary-base;
+  }
+
+  .site-heading {
+    font-weight: bolder;
+  }
+
+  .align-license-count {
+    text-align: right;
+  }
+
+  .notice {
+    font-size: 18px;
+  }
+}

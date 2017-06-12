@@ -24,6 +24,12 @@ describe('Care admin should be able to', function () {
     validateContentsOfOverviewPage();
   });
 
+  it('validate proactive prompt page', function () {
+    utils.click(careChatTemplateSetupPage.proactivePromptToggle);
+    utils.click(careChatTemplateSetupPage.setUpRightBtn);
+    validateContentsOfProactivePromptPage();
+  });
+
   it('validate customer info page', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfCustomerInfoPage();
@@ -68,6 +74,7 @@ describe('Care admin should be able to', function () {
   });
 
   it('validate edit save', function () {
+    utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage(careChatTemplateSetupPage.randomChatTemplateName + 'edit template has been updated successfully.', editSummaryMessage);
     validateDismissOfCTSetupWizard();
     validateDisplayEmbedCodeModal();
@@ -164,7 +171,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfOverviewPage() {
-    var OVERVIEW_CARD_COUNT = 4;
+    var OVERVIEW_CARD_COUNT = 5;
     validateOverviewTitleAndDesc('Template Overview', 'Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care');
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
@@ -172,6 +179,18 @@ describe('Care admin should be able to', function () {
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
     utils.expectCount(careChatTemplateSetupPage.overviewCard, OVERVIEW_CARD_COUNT)
+  }
+
+  function validateContentsOfProactivePromptPage() {
+    validateTitleAndDesc('Proactive Prompt', 'Configure how long to wait until the prompt is shown to the customer as well as what they will see on the prompt when it is shown. The proactive prompt will not pop up during off hours and when no agents are available to assist.');
+    utils.click(careChatTemplateSetupPage.promptTimeDropDown);
+    utils.click(careChatTemplateSetupPage.selectedPromptTime);
+    utils.clear(careChatTemplateSetupPage.promptTitle);
+    utils.sendKeys(careChatTemplateSetupPage.promptTitle, careChatTemplateSetupPage.testOrgName);
+    utils.expectValueToBeSet(careChatTemplateSetupPage.promptTitle, careChatTemplateSetupPage.testOrgName);
+    utils.clear(careChatTemplateSetupPage.promptMessage);
+    utils.sendKeys(careChatTemplateSetupPage.promptMessage, 'Chat with our solution specialists to help serve you better.');
+    utils.expectValueToBeSet(careChatTemplateSetupPage.promptMessage, 'Chat with our solution specialists to help serve you better.');
   }
 
   function validateContentsOfCustomerInfoPage() {

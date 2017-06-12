@@ -1,0 +1,12 @@
+<div>
+  <br />
+  <h5 translate="supportPage.cards.tools.hybridCallTestTool.heading"></h5>
+  <p class="content" translate="supportPage.cards.tools.hybridCallTestTool.description"></p>
+  <button ng-click="$ctrl.openTool()"
+          class="btn btn--people btn--medium"
+          ng-disabled="!$ctrl.callServiceConnectIsEnabled"
+          translate="supportPage.cards.tools.hybridCallTestTool.button"></button>
+  <span class="cs-input__help-text"
+     ng-if="!$ctrl.callServiceConnectIsEnabled"
+     translate="supportPage.cards.tools.hybridCallTestTool.notEnabled"></span>
+</div>

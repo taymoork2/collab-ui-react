@@ -313,8 +313,8 @@
         .then(function () {
           Notification.success(translatePrefix + 'jabberInteropUpdateSuccessful');
         })
-        .catch(function () {
-          Notification.error(translatePrefix + 'errorFailedUpdatingJabberInterop');
+        .catch(function (response) {
+          Notification.errorResponse(response, translatePrefix + 'errorFailedUpdatingJabberInterop');
         });
     }
   }

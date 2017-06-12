@@ -1,7 +1,5 @@
 'use strict';
 
-/* global LONG_TIMEOUT */
-
 describe('First Time Wizard', function () {
 
   it('should login as an admin user into the SSO test-org', function () {

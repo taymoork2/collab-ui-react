@@ -1,5 +1,5 @@
 import {
-  IExportMenu,
+  IExportDropdown,
   IFilterObject,
 } from './partnerReportInterfaces';
 
@@ -127,8 +127,9 @@ describe('Controller: Partner Reports', () => {
       expect(this.controller.ENGAGEMENT).toEqual(this.ctrlData.ENGAGEMENT);
       expect(this.controller.QUALITY).toEqual(this.ctrlData.QUALITY);
 
-      _.forEach(this.controller.exportArrays, (array: Array<IExportMenu>): void => {
-        expect(array.length).toBe(4);
+      _.forEach(this.controller.exportArrays, (dropdown: IExportDropdown): void => {
+        expect(dropdown.header).toEqual(this.ctrlData.exportMenu.header);
+        expect(dropdown.menu.length).toBe(3);
       });
 
       expect(this.controller.customerPlaceholder).toEqual('reportsPage.customerSelect');

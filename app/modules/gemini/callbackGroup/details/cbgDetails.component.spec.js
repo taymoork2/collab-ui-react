@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Component: CbgDetails', function () {
-  var $q, $state, $modal, $scope, $stateParams, $window, $componentCtrl;
-  var obj, ctrl, cbgService, gemService, Notification;
+  var $q, $state, $modal, $scope, $stateParams, $window, $componentCtrl, $httpBackend;
+  var obj, ctrl, cbgService, gemService, Notification, UrlConfig;
   var preData = getJSONFixture('gemini/common.json');
 
   beforeEach(angular.mock.module('Core'));
@@ -12,13 +12,13 @@ describe('Component: CbgDetails', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $state = $modal = $scope = $stateParams = $window = $componentCtrl = obj = ctrl = cbgService = gemService = Notification = undefined;
+    $q = $state = $httpBackend = UrlConfig = $modal = $scope = $stateParams = $window = $componentCtrl = obj = ctrl = cbgService = gemService = Notification = undefined;
   });
   afterAll(function () {
     preData = undefined;
   });
 
-  function dependencies(_$q_, _$state_, _$modal_, _$window_, _$rootScope_, _$stateParams_, _$componentController_, _Notification_, _cbgService_, _gemService_) {
+  function dependencies(_$q_, _$state_, _UrlConfig_, _$httpBackend_, _$modal_, _$window_, _$rootScope_, _$stateParams_, _$componentController_, _Notification_, _cbgService_, _gemService_) {
     $q = _$q_;
     $state = _$state_;
     $modal = _$modal_;
@@ -29,6 +29,8 @@ describe('Component: CbgDetails', function () {
     Notification = _Notification_;
     $stateParams = _$stateParams_;
     $componentCtrl = _$componentController_;
+    UrlConfig = _UrlConfig_;
+    $httpBackend = _$httpBackend_;
   }
 
   function initSpies() {
@@ -52,6 +54,11 @@ describe('Component: CbgDetails', function () {
     $stateParams.info = {
       groupId: 'ff808081582992dd01589a5b232410bb',
     };
+
+    var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
+    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+    $httpBackend.flush();
+
     ctrl = $componentCtrl('cbgDetails', { $scope: $scope, $state: $state });
   }
 

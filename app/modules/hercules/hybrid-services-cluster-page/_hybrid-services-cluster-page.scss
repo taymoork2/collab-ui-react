@@ -1,3 +1,9 @@
+@import '~collab-ui/scss/settings/colors';
+
 hybrid-services-cluster-page {
   display: block;
+
+  .page-header {
+    border-bottom: 1px $gray-light-2 solid;
+  }
 }

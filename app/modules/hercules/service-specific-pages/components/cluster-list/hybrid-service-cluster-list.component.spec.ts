@@ -154,6 +154,15 @@ describe('HybridServiceClusterList controller', () => {
       expect(EnterprisePrivateTrunkService.subscribe.calls.count()).toBe(0);
     });
 
+    it('should call ClusterService on init when building the IM&P Service cluster list', () => {
+      ctrl = initController('spark-hybrid-impinterop', '1234');
+      ctrl.$onInit();
+      expect(ClusterService.getClustersByConnectorType.calls.count()).toBe(1);
+      expect(ClusterService.subscribe.calls.count()).toBe(1);
+      expect(EnterprisePrivateTrunkService.getAllResources.calls.count()).toBe(0);
+      expect(EnterprisePrivateTrunkService.subscribe.calls.count()).toBe(0);
+    });
+
     it('should call ClusterService on init when building the Hybrid Data Security cluster list', () => {
       ctrl = initController('spark-hybrid-datasecurity', '1234');
       ctrl.$onInit();
@@ -225,6 +234,16 @@ describe('HybridServiceClusterList controller', () => {
       expect($state.go).toHaveBeenCalledWith('expressway-cluster-sidepanel', {
         clusterId: clusterId,
         connectorType: 'c_ucmc',
+      });
+    });
+
+    it('should automatically open the the Expressway (imp) cluster sidepanel if a clusterId is provided', () => {
+      ctrl = initController('spark-hybrid-impinterop', clusterId);
+      ctrl.$onInit();
+      ctrl.clusterListGridOptions.onRegisterApi(gridApiMock);
+      expect($state.go).toHaveBeenCalledWith('expressway-cluster-sidepanel', {
+        clusterId: clusterId,
+        connectorType: 'c_imp',
       });
     });
 

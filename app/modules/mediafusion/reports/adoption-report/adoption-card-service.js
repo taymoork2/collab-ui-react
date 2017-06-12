@@ -68,11 +68,11 @@
         'value': callsOnPremise,
       }, {
         'name': secondHeading,
-        'color': '#1CA0AE',
+        'color': '#1FBBCA',
         'value': callsOverflow,
       }, {
         'name': vm.cloudCallHeading,
-        'color': '#1FBBCB',
+        'color': '#FD713E',
         'value': cloudCalls,
       }];
       data['dataProvider'] = dataProvider;
@@ -178,6 +178,7 @@
           'name': $translate.instant('mediaFusion.metrics.clientType.desktop'),
           'value': desktopValue,
           'percentage': _.round(desktopPercentage, 2),
+          'color': "#23C1E2",
         });
       }
       if (mobileValue > 0) {
@@ -185,6 +186,7 @@
           'name': $translate.instant('mediaFusion.metrics.mobile'),
           'value': mobileValue,
           'percentage': _.round(mobilePercentage, 2),
+          'color': "#FEB32B",
         });
       }
       if (tpValue > 0) {
@@ -192,6 +194,7 @@
           'name': $translate.instant('mediaFusion.metrics.clientType.tp'),
           'value': tpValue,
           'percentage': _.round(tpPercentage, 2),
+          'color': "#D349D5",
         });
       }
       if (othersValue > 0) {
@@ -199,6 +202,7 @@
           'name': vm.othersHeading,
           'value': othersValue,
           'percentage': _.round(othersPercentage, 2),
+          'color': "#FD416A",
         });
       }
 

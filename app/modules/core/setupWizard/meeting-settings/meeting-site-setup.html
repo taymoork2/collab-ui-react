@@ -1,0 +1,61 @@
+<div class="meeting-settings">
+  <h4 translate="firstTimeWizard.setupYourSites"></h4>
+  <div class="element-spacing">
+    <p ng-if="meetingCtrl.sitesArray.length === 0" translate="firstTimeWizard.meetingSettingsDescription"></p>
+    <p ng-if="meetingCtrl.sitesArray.length === 1" translate="firstTimeWizard.thisWillBeYourWebExSite"></p>
+    <p ng-if="meetingCtrl.sitesArray.length > 1" translate-values="{siteCount: meetingCtrl.sitesArray.length}" translate="firstTimeWizard.theseWillBeYourWebExSites"></p>
+  </div>
+  <div class="row" ng-repeat="site in meetingCtrl.sitesArray">
+    <div class="site-description">
+      <div class="col-lg-1">
+        <i class="icon icon-check verified-check"></i>
+      </div>
+      <div class="col-lg-5">
+        <b><div>{{site.name}}.webex.com</div></b>
+        <div ng-if="site.timeZone" class="time-zone" translate-values="{label: site.timeZone.label}" translate="firstTimeWizard.timeZoneSetTo"></div>
+      </div>
+      <div class="col-lg-1">
+        <i class="icon icon-delete delete-site" ng-click="meetingCtrl.removeSite($index)"></i>
+      </div>
+    </div>
+  </div>
+  <div class="site-preview">
+    <b><div ng-if="meetingCtrl.siteModel.name !== ''">{{meetingCtrl.siteModel.name}}.webex.com</div></b>
+  </div>
+  <div class="element-spacing">
+    <!-- TODO (shrazzac): refactor label elements into one using ng-pluralize -->
+    <label ng-if="meetingCtrl.sitesArray.length > 0">{{::'firstTimeWizard.addAnotherSite' | translate}}</label>
+    <label ng-if="meetingCtrl.sitesArray.length === 0">{{::'firstTimeWizard.siteName' | translate}}</label>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="cs-input-group" ng-class="{'error': meetingCtrl.error.isError}">
+          <input
+            cs-input
+            type="text"
+            id="add-webex-site"
+            name="add-webex-site"
+            cs-input-size="medium-12"
+            placeholder="{{::'firstTimeWizard.enterSiteNamePlaceholder' | translate}}"
+            ng-change="meetingCtrl.clearError()"
+            ng-model="meetingCtrl.siteModel.name">
+          <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="meetingCtrl.error.isError">
+            <div class="message">{{meetingCtrl.error.errorMsg}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <cs-select
+          id="selectTimeZone"
+          name="selectTimeZone"
+          ng-model="meetingCtrl.siteModel.timeZone"
+          options="meetingCtrl.timeZoneOptions"
+          placeholder="meetingCtrl.selectTimeZonePlaceholder"
+          ng-change="meetingCtrl.clearError()">
+        </cs-select>
+      </div>
+      <div class="col-lg-4">
+        <button ng-click="meetingCtrl.onClickValidate()" class="btn--cta" translate="common.validate" ng-disabled="meetingCtrl.disableValidateButton"></button>
+      </div>
+    </div>
+  </div>
+</div>

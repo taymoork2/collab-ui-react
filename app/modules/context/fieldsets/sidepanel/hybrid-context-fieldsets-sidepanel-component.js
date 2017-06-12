@@ -15,7 +15,7 @@ require('./_fieldsets-sidepanel.scss');
     });
 
   /* @ngInject */
-  function ContextFieldsetsSidepanelCtrl(Analytics, ContextFieldsetsService, Notification, ModalService, $filter, $state, $translate) {
+  function ContextFieldsetsSidepanelCtrl(Analytics, ContextFieldsetsService, Notification, ModalService, $state, $translate) {
 
     var vm = this;
     vm.inUse = true;
@@ -38,7 +38,7 @@ require('./_fieldsets-sidepanel.scss');
 
     vm._fixFieldsetData = function () {
       vm.fields = vm.fieldset.fieldDefinitions;
-      vm.lastUpdated = $filter('date')(vm.fieldset.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+      vm.lastUpdated = moment(vm.fieldset.lastUpdated).format('LL');
       if (!_.isEmpty(vm.fieldset.description)) {
         vm.hasDescription = true;
       }

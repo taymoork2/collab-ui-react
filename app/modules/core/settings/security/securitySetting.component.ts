@@ -1,11 +1,12 @@
-import { SettingSection } from '../settingSection';
+import { ProPackSettingSection } from '../proPackSettingSection';
+
 import { SecuritySettingController } from './securitySetting.controller';
 
-export class SecuritySetting extends SettingSection {
+export class SecuritySetting extends ProPackSettingSection {
 
   /* @ngInject */
-  public constructor() {
-    super('security');
+  public constructor(proPackPurchased: boolean) {
+    super('security', proPackPurchased);
     this.subsectionDescription = '';
   }
 }

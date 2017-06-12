@@ -2,6 +2,7 @@ import { Site } from 'modules/huron/sites';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/huron/settings/companyCallerId';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { PstnModel } from 'modules/huron/pstn/pstn.model';
 
 class CompanyCallerId implements ng.IComponentController {
   public site: Site;
@@ -13,15 +14,18 @@ class CompanyCallerId implements ng.IComponentController {
   public onNumberFilter: Function;
   public companyCallerIdEnabled: boolean;
   public filterPlaceholder: string;
+  public countryCode: string;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private PhoneNumberService: PhoneNumberService,
+    private PstnModel: PstnModel,
   ) { }
 
   public $onInit(): void {
     this.filterPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
+    this.countryCode = this.PstnModel.getCountryCode();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {

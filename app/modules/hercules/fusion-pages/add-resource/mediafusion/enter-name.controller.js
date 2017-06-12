@@ -35,7 +35,7 @@
           return cluster;
         })
         .then(function () {
-          return HybridServicesExtrasService.addPreregisteredClusterToAllowList(data.hostname, 3600, clusterId);
+          return HybridServicesExtrasService.addPreregisteredClusterToAllowList(data.hostname, clusterId);
         })
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');

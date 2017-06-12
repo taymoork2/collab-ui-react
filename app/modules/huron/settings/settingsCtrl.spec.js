@@ -7,8 +7,8 @@ describe('Controller: HuronSettingsCtrl', function () {
   var HuronCustomer, HuronCustomerService, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, internalNumberRanges, languages, avrilSites;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
-  var $rootScope, FeatureToggleService, TerminusUserDeviceE911Service, Orgservice;
-
+  var $rootScope, FeatureToggleService, Orgservice;
+  var TerminusService;
   var controller, compile, styleSheet, element, window;
 
   var restrictions = getJSONFixture('huron/json/cos/customerCos.json');
@@ -18,7 +18,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _HuronCustomerService_,
     _PstnService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
-    _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_, _TerminusUserDeviceE911Service_, _Orgservice_) {
+    _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_, _TerminusService_, _Orgservice_) {
 
     $q = _$q_;
     $rootScope = _$rootScope_;
@@ -38,7 +38,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     CallerId = _CallerId_;
     VoicemailMessageAction = _VoicemailMessageAction_;
     FeatureToggleService = _FeatureToggleService_;
-    TerminusUserDeviceE911Service = _TerminusUserDeviceE911Service_;
+    TerminusService = _TerminusService_;
     Orgservice = _Orgservice_;
     window = window || {};
 
@@ -74,13 +74,19 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'setCompanyMediaOnHold').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
     spyOn(PstnService, 'getCustomer').and.returnValue($q.resolve());
+    spyOn(HuronCustomerService, 'updateVoiceCustomer').and.returnValue($q.resolve());
     spyOn(HuronCustomerService, 'getVoiceCustomer').and.returnValue($q.resolve({
       dialPlanDetails: {
         extensionGenerated: 'false',
       },
     }));
-    spyOn(HuronCustomerService, 'updateVoiceCustomer').and.returnValue($q.resolve());
-    spyOn(TerminusUserDeviceE911Service, 'update').and.returnValue($q.resolve());
+
+    spyOn(TerminusService, 'customerNumberE911V2').and.callFake(function () {
+      return {
+        update: function () { return $q.resolve(); },
+      };
+    });
+
     spyOn(Orgservice, 'getOrg').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listSites').and.callFake(function () {
       ServiceSetup.sites = sites;

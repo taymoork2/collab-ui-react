@@ -35,6 +35,7 @@ describe('Controller: SupportCtrl', function () {
       Authinfo: Authinfo,
       Userservice: Userservice,
       Config: Config,
+      hasAtlasHybridCallUserTestTool: false,
     });
   }));
 

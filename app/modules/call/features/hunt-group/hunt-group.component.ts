@@ -1,7 +1,10 @@
-import { HuntGroup, HuntMethod, HuntGroupNumber, HuntGroupService } from 'modules/call/features/hunt-group';
+import { HuntGroup, HuntMethod, DestinationRule, HuntGroupNumber, HuntGroupService } from 'modules/call/features/hunt-group';
 import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { Notification } from 'modules/core/notifications';
+
+const ALTERNATE_TIMER_MIN: number = 2;
+const ALTERNATE_TIMER_MAX: number = 60;
 
 class HuntGroupCtrl implements ng.IComponentController {
   private static readonly PAGE_TRANSITION_TIMEOUT: number = 10;
@@ -22,6 +25,7 @@ class HuntGroupCtrl implements ng.IComponentController {
   public isLoading: boolean = false;
   public saveInProcess: boolean = false;
   public dragAndDropEnabled: boolean;
+  public isHi1487Supported: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -33,6 +37,7 @@ class HuntGroupCtrl implements ng.IComponentController {
     private HuntGroupService: HuntGroupService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
   ) {
     this.huntGroupId = _.get<string>(this.$stateParams.feature, 'id');
     this.title = _.get<string>(this.$stateParams.feature, 'cardName');
@@ -41,7 +46,12 @@ class HuntGroupCtrl implements ng.IComponentController {
   public $onInit(): void {
     if (this.$state.current.name === 'huntgroupedit' && !this.huntGroupId) {
       this.$state.go(this.huronFeaturesUrl);
+    } else {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.hi1487).then(result => {
+        this.isHi1487Supported = result;
+      });
     }
+
     this.isLoading = true;
     this.HuntGroupService.getHuntGroup(this.huntGroupId).then( huntGroup => {
       this.huntGroup = huntGroup;
@@ -82,16 +92,53 @@ class HuntGroupCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public setHuntGroupMembers(members: Array<CallFeatureMember>): void {
+    this.huntGroup.members = members;
+    this.form.$setDirty();
+    this.checkForChanges();
+  }
+
+  public setHuntGroupSendToApp(): void {
+    this.huntGroup.sendToApp = !this.huntGroup.sendToApp;
+    this.form.$setDirty();
+    this.checkForChanges();
+  }
+
+  public setHuntGroupDestinationRule(destinationRule: DestinationRule): void {
+    this.huntGroup.destinationRule = destinationRule;
+    this.form.$setValidity('', false, this.form);
+
+    if (!_.isNull(this.huntGroup.alternateDestination.number) || !_.isNull(this.huntGroup.alternateDestination.numberUuid)) {
+      this.form.$setValidity('', true, this.form);
+    }
+
+    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_AUTOMATIC) {
+      this.huntGroup.sendToApp = false;
+    } else {
+      this.huntGroup.sendToApp = true;
+    }
+
+    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION || !_.isNull(this.huntGroup.alternateDestination.number) ) {
+      this.form.$setDirty();
+      this.checkForChanges();
+    }
+  }
+
   public setHuntGroupFallbackDestination(fbDestination: FallbackDestination) {
     this.huntGroup.fallbackDestination = fbDestination;
     this.form.$setDirty();
     this.checkForChanges();
   }
 
-  public setHuntGroupMembers(members: Array<CallFeatureMember>): void {
-    this.huntGroup.members = members;
-    this.form.$setDirty();
-    this.checkForChanges();
+  public setHuntGroupAlternateDestination(aDestination: FallbackDestination) {
+    if ( aDestination.timer && !_.inRange( aDestination.timer, ALTERNATE_TIMER_MIN, ALTERNATE_TIMER_MAX + 1)) {
+      this.form.$setValidity('', false, this.form);
+    } else {
+      this.huntGroup.alternateDestination = aDestination;
+      this.form.$setValidity('', true, this.form);
+      this.form.$setDirty();
+      this.checkForChanges();
+    }
   }
 
   public cancelModal(): void {
@@ -133,10 +180,16 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public save(): void {
     this.saveInProcess = true;
+
+    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION) {
+      this.huntGroup.alternateDestination = new FallbackDestination();
+    }
+
     this.HuntGroupService.updateHuntGroup(this.huntGroup.uuid || '', this.huntGroup)
-    .then( () => {
+    .then((huntGroup: HuntGroup) => {
       this.Notification.success('huronHuntGroup.successUpdate', { huntGroupName: this.huntGroup.name } );
       this.title = this.huntGroup.name || '';
+      this.huntGroup = huntGroup;
     })
     .catch( (response) => {
       this.Notification.errorWithTrackingId(response);

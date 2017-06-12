@@ -456,20 +456,22 @@ describe('Authinfo:', function () {
       expect(Authinfo.getCustomerAdminEmail()).toEqual(accountData.customers[0].customerAdminEmail);
     });
 
-    it('gets the correct org id based partner.', function () {
-      var Authinfo = setupUser({
-        roles: ['PARTNER_USER'],
-      });
-      Authinfo.updateAccountInfo(accountData);
-      expect(Authinfo.getCallPartnerOrgId()).toEqual(defaultUser.orgId);
-    });
-
     it('gets the correct org id based on customer.', function () {
       var Authinfo = setupUser({
         roles: ['FULL_ADMIN'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getCallPartnerOrgId()).toEqual(accountData.customers[0].licenses[0].partnerOrgId);
+    });
+
+    it('gets the correct org id based partner through the customer portal.', function () {
+      var Authinfo = setupUser({
+        roles: ['FULL_ADMIN'],
+      });
+      //Partners do not have licenses set
+      accountData.customers[0].licenses = [];
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getCallPartnerOrgId()).toEqual(defaultUser.orgId);
     });
   });
 

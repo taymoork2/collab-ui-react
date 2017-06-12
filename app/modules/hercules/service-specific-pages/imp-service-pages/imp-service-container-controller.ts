@@ -24,14 +24,12 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     type: 'small',
   };
 
-  public clusterId: string;
-
   /* @ngInject */
   constructor(
     $modal,
     $scope: ng.IScope,
     $state: ng.ui.IStateService,
-    private $stateParams: ng.ui.IStateParamsService,
+    public clusterId: string,
     Authinfo,
     ClusterService: ClusterService,
     hasPartnerRegistrationFeatureToggle,
@@ -41,9 +39,9 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     ServiceStateChecker,
     USSService,
   ) {
-    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle,  Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
-    this.clusterId = this.$stateParams['clusterId'];
+    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, true, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
   }
+
 }
 
 angular

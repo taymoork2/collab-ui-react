@@ -9,14 +9,12 @@
       <span ng-if="!contextFieldsets.showNew" tooltip-class="context-tooltip" tooltip="{{contextFieldsets.maxLimitReachedTooltip}}" tooltip-placement="left">
         <button class="btn btn--people"
                 ng-disabled="contextFieldsets.fetchFailed || !contextFieldsets.showNew"
-                ng-if="contextFieldsets.hasContextDictionaryEditFeatureToggle"
                 translate="common.new"></button>
       </span>
       <span ng-if="contextFieldsets.showNew">
         <button class="btn btn--people"
                 ng-click="contextFieldsets.createFieldset()"
                 ng-disabled="contextFieldsets.fetchFailed || !contextFieldsets.showNew"
-                ng-if="contextFieldsets.hasContextDictionaryEditFeatureToggle"
                 translate="common.new"></button>
       </span>
     </cs-page-sub-header-right>

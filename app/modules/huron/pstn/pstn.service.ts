@@ -1,40 +1,28 @@
 import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER } from './pstn.const';
 
 import { Notification } from 'modules/core/notifications/notification.service';
-import { PstnModel, IOrder } from './pstn.model';
-import pstnModel from './pstn.model';
+import {
+  PstnModel,
+  IOrder,
+ } from './pstn.model';
+import {
+  TerminusService,
+  INumberOrder,
+} from './terminus.service';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { PhoneNumberType } from 'google-libphonenumber';
+
 
 export class PstnService {
   /* @ngInject */
   constructor(
-    private PstnModel: PstnModel,
-    private Authinfo,
-    private TerminusCustomerV2Service,
-    private TerminusV2ResellerService,
-    private TerminusCustomerService,
-    private TerminusCustomerNumberService,
-    private TerminusCustomerTrialV2Service,
-    private TerminusCarrierService,
     private $q: ng.IQService,
-    private TerminusCarrierV2Service,
-    private TerminusResellerCarrierService,
-    private TerminusResellerCarrierV2Service,
-    private TerminusCustomerCarrierService,
-    private TerminusV2CarrierNumberCountService,
-    private TerminusV2CarrierCapabilitiesService,
-    private TerminusV2CarrierNumberService,
-    private TerminusV2CustomerNumberOrderBlockService,
-    private TerminusV2CustomerNumberReservationService,
-    private TerminusV2ResellerNumberReservationService,
     private $translate: ng.translate.ITranslateService,
-    private TerminusCustomerPortService,
-    private TerminusV2ResellerCarrierNumberReservationService,
-    private TerminusOrderV2Service,
-    private TerminusCustomerCarrierDidService,
+    private PstnModel: PstnModel,
+    private TerminusService: TerminusService,
     private Notification: Notification,
     private PhoneNumberService: PhoneNumberService,
+    private Authinfo,
   ) { }
 
   public createCustomerV2(uuid: string, name: string, firstName: string, lastName: string, email: string, pstnCarrierId: string, trial: boolean): ng.IPromise<any> {
@@ -51,11 +39,11 @@ export class PstnService {
     if (this.PstnModel.isResellerExists()) {
       payload['resellerId'] = this.Authinfo.getCallPartnerOrgId();
     }
-    return this.TerminusCustomerV2Service.save({}, payload).$promise;
+    return this.TerminusService.customerV2().save({}, payload).$promise;
   }
 
   public getResellerV2(): ng.IPromise<any> {
-    return this.TerminusV2ResellerService.get({
+    return this.TerminusService.resellerV2().get({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
     }).$promise;
   }
@@ -68,38 +56,38 @@ export class PstnService {
     if (this.Authinfo.isPartner()) {
       _.extend(payload, { name: this.Authinfo.getOrgName() });
     }
-    return this.TerminusV2ResellerService.save({}, payload).$promise;
+    return this.TerminusService.resellerV2().save({}, payload).$promise;
   }
 
   public updateCustomerCarrier(customerId: string, pstnCarrierId: string): ng.IPromise<any> {
     let payload = {
       pstnCarrierId: pstnCarrierId,
     };
-    return this.TerminusCustomerService.update({
+    return this.TerminusService.customer().update({
       customerId: customerId,
     }, payload).$promise;
   }
 
   public getCustomer(customerId: string): ng.IPromise<any> {
-    return this.TerminusCustomerService.get({
+    return this.TerminusService.customer().get({
       customerId: customerId,
     }).$promise;
   }
 
   public getCustomerV2(customerId: string): ng.IPromise<any> {
-    return this.TerminusCustomerV2Service.get({
+    return this.TerminusService.customerV2().get({
       customerId: customerId,
     }).$promise;
   }
 
   public getCustomerTrialV2(customerId: string): ng.IPromise<any> {
-    return this.TerminusCustomerTrialV2Service.get({
+    return this.TerminusService.customerTrialsV2().get({
       customerId: customerId,
     }).$promise;
   }
 
   public setCustomerTrialV2(customerId: string, fname: string, lname: string, email: string): ng.IPromise<any> {
-    return this.TerminusCustomerTrialV2Service.save({
+    return this.TerminusService.customerTrialsV2().save({
       customerId: customerId,
     }, {
       acceptedFirstName: fname,
@@ -109,14 +97,14 @@ export class PstnService {
   }
 
   public listDefaultCarriers(): ng.IPromise<Array<any>> {
-    return this.TerminusCarrierService.query({
+    return this.TerminusService.carrier().query({
       service: PSTN,
       defaultOffer: true,
     }).$promise.then(this.getCarrierDetails.bind(this));
   }
 
   public listDefaultCarriersV2(): ng.IPromise<Array<any>> {
-    return this.TerminusCarrierV2Service.query({
+    return this.TerminusService.carrierV2().query({
       service: PSTN,
       defaultOffer: true,
       country: this.PstnModel.getCountryCode(),
@@ -124,20 +112,20 @@ export class PstnService {
   }
 
   public listResellerCarriers(): ng.IPromise<Array<any>> {
-    return this.TerminusResellerCarrierService.query({
+    return this.TerminusService.resellerCarrier().query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
     }).$promise.then(this.getCarrierDetails.bind(this));
   }
 
   public listResellerCarriersV2(): ng.IPromise<Array<any>> {
-    return this.TerminusResellerCarrierV2Service.query({
+    return this.TerminusService.resellerCarrierV2().query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
       country: this.PstnModel.getCountryCode(),
     }).$promise.then(this.getCarrierDetails.bind(this));
   }
 
   public listCustomerCarriers(customerId): ng.IPromise<Array<any>> {
-    return this.TerminusCustomerCarrierService.query({
+    return this.TerminusService.customerCarrier().query({
       customerId: customerId,
     }).$promise.then(this.getCarrierDetails.bind(this));
   }
@@ -145,7 +133,7 @@ export class PstnService {
   public getCarrierDetails(carriers): ng.IPromise<any> {
     let promises: any = [];
     _.forEach(carriers, (carrier) => {
-      let promise = this.TerminusCarrierService.get({
+      let promise = this.TerminusService.carrier().get({
         carrierId: carrier.uuid,
       }).$promise;
       promises.push(promise);
@@ -166,18 +154,18 @@ export class PstnService {
     } else {
       config.state = state;
     }
-    return this.TerminusV2CarrierNumberCountService.get(config).$promise;
+    return this.TerminusService.carrierNumbersCountV2().get(config).$promise;
   }
 
   public getCarrierTollFreeInventory(carrierId: string): ng.IPromise<any> {
-    return this.TerminusV2CarrierNumberCountService.get({
+    return this.TerminusService.carrierNumbersCountV2().get({
       carrierId: carrierId,
       numberType: NUMTYPE_TOLLFREE,
     }).$promise;
   }
 
   public getCarrierCapabilities(carrierId: string): ng.IPromise<any> {
-    return this.TerminusV2CarrierCapabilitiesService.query({
+    return this.TerminusService.carrierCapabilitiesV2().query({
       carrierId: carrierId,
     }).$promise;
   }
@@ -186,7 +174,7 @@ export class PstnService {
     let paramObj = params || {};
     paramObj.carrierId = carrierId;
     paramObj.numberType = NUMTYPE_DID;
-    return this.TerminusV2CarrierNumberService.get(paramObj).$promise
+    return this.TerminusService.carrierNumberV2().get(paramObj).$promise
         .then(response => _.get(response, 'numbers', []));
   }
 
@@ -194,7 +182,7 @@ export class PstnService {
     let paramObj = params || {};
     paramObj.carrierId = carrierId;
     paramObj.numberType = NUMTYPE_TOLLFREE;
-    return this.TerminusV2CarrierNumberService.get(paramObj).$promise
+    return this.TerminusService.carrierNumberV2().get(paramObj).$promise
         .then(response => _.get(response, 'numbers', []));
   }
 
@@ -205,7 +193,7 @@ export class PstnService {
 
     if (isCustomerExists) {
         // If a customer exists, reserve with the customer
-      return this.TerminusV2CustomerNumberReservationService.save({
+      return this.TerminusService.customerNumberReservationV2().save({
         customerId: customerId,
       }, {
         numberType: NUMTYPE_DID,
@@ -216,7 +204,7 @@ export class PstnService {
       }).$promise;
     } else {
         // Otherwise reserve with carrier
-      return this.TerminusV2ResellerCarrierNumberReservationService.save({
+      return this.TerminusService.resellerCarrierNumbersReservationV2().save({
         resellerId: this.Authinfo.getCallPartnerOrgId(),
         carrierId: carrierId,
       }, {
@@ -235,7 +223,7 @@ export class PstnService {
     }
     if (isCustomerExists) {
         // If a customer exists, release with the customer
-      return this.TerminusV2CustomerNumberReservationService.delete({
+      return this.TerminusService.customerNumberReservationV2().delete({
         customerId: customerId,
         reservationId: reservationId,
       }, {
@@ -243,7 +231,7 @@ export class PstnService {
       }).$promise;
     } else {
         // Otherwise release with carrier
-      return this.TerminusV2ResellerNumberReservationService.delete({
+      return this.TerminusService.resellerCarrierNumbersReservationV2().delete({
         resellerId: this.Authinfo.getCallPartnerOrgId(),
         reservationId: reservationId,
       }, {
@@ -258,15 +246,15 @@ export class PstnService {
     }
     if (isCustomerExists) {
         // If a customer exists, release with the customer
-      return this.TerminusV2CustomerNumberReservationService.delete({
+      return this.TerminusService.customerNumberReservationV2().delete({
         customerId: customerId,
         reservationId: reservationId,
       }, {
         numbers: numbers,
       }).$promise;
     } else {
-        // Otherwise release with carrier
-      return this.TerminusV2ResellerNumberReservationService.delete({
+        // Otherwise release with carrier resellerNumberReservationV2
+      return this.TerminusService.resellerNumberReservationV2().delete({
         resellerId: this.Authinfo.getCallPartnerOrgId(),
         reservationId: reservationId,
       }, {
@@ -282,7 +270,7 @@ export class PstnService {
 
     if (isCustomerExists) {
         // If a customer exists, reserve with the customer
-      return this.TerminusV2CustomerNumberReservationService.save({
+      return this.TerminusService.customerNumberReservationV2().save({
         customerId: customerId,
       }, {
         numberType: NUMTYPE_TOLLFREE,
@@ -293,7 +281,7 @@ export class PstnService {
       }).$promise;
     } else {
         // Otherwise reserve with carrier
-      return this.TerminusV2ResellerCarrierNumberReservationService.save({
+      return this.TerminusService.resellerCarrierNumbersReservationV2().save({
         resellerId: this.Authinfo.getCallPartnerOrgId(),
         carrierId: carrierId,
       }, {
@@ -332,7 +320,7 @@ export class PstnService {
       payload['nxx'] = nxx;
     }
 
-    return this.TerminusV2CustomerNumberOrderBlockService.save({
+    return this.TerminusService.customerNumbersOrderBlockV2().save({
       customerId: customerId,
     }, payload).$promise;
   }
@@ -345,7 +333,7 @@ export class PstnService {
       createdBy: this.setCreatedBy(),
     };
 
-    return this.TerminusV2CustomerNumberOrderBlockService.save({
+    return this.TerminusService.customerNumbersOrderBlockV2().save({
       customerId: customerId,
     }, payload).$promise;
   }
@@ -375,7 +363,7 @@ export class PstnService {
       }
     });
     if (payload.pstn.numbers.length > 0) {
-      let pstnPromise = this.TerminusCustomerCarrierDidService.save({
+      let pstnPromise = this.TerminusService.customerCarrierDid().save({
           customerId: customerId,
           carrierId: carrierId,
           type: ORDER,
@@ -389,7 +377,7 @@ export class PstnService {
     let promises: any = [];
     _.forEach(newNumberOrders, order => {
       if (order.numberType === NUMTYPE_DID) {
-        let didOrderPromise = this.TerminusOrderV2Service.save({
+        let didOrderPromise = this.TerminusService.customerNumbersOrderV2().save({
             customerId: customerId,
           }, {
             reservationIds: [_.get(order, 'reservationId', '')],
@@ -398,7 +386,7 @@ export class PstnService {
           }).$promise;
         promises.push(didOrderPromise);
       } else if (order.numberType === NUMTYPE_TOLLFREE) {
-        let tollFreeOrderPromise = this.TerminusOrderV2Service.save({
+        let tollFreeOrderPromise = this.TerminusService.customerNumbersOrderV2().save({
           customerId: customerId,
         }, {
           reservationIds: [_.get(order, 'reservationId', '')],
@@ -434,14 +422,14 @@ export class PstnService {
     };
 
     if (numbers.length > 0) {
-      let pstnPromise = this.TerminusOrderV2Service.save({
+      let pstnPromise = this.TerminusService.customerNumbersOrderV2().save({
           customerId: customerId,
       }, didPayload).$promise;
       promises.push(pstnPromise);
     }
 
     if (tfnNumbers.length > 0) {
-      let tollFreePromise = this.TerminusOrderV2Service.save({
+      let tollFreePromise = this.TerminusService.customerNumbersOrderV2().save({
           customerId: customerId,
       }, tfnPayload).$promise;
       promises.push(tollFreePromise);
@@ -470,12 +458,12 @@ export class PstnService {
     };
 
     if (numbers.length > 0) {
-      promises.push(this.TerminusCustomerPortService.save({
+      promises.push(this.TerminusService.customerPortV2().save({
         customerId: customerId,
       }, didPayload).$promise);
     }
     if (tfnNumbers.length > 0) {
-      promises.push(this.TerminusCustomerPortService.save({
+      promises.push(this.TerminusService.customerPortV2().save({
         customerId: customerId,
       }, tfnPayload).$promise);
     }
@@ -531,7 +519,7 @@ export class PstnService {
   }
 
   public queryPendingOrders(customerId: string, orderType: string): ng.IPromise<any> {
-    return this.TerminusOrderV2Service.query({
+    return this.TerminusService.customerNumbersOrderV2().query({
       customerId: customerId,
       type: orderType,
       status: PENDING,
@@ -539,16 +527,16 @@ export class PstnService {
   }
 
   public getOrder(customerId: string, orderId: string): ng.IPromise<any> {
-    return this.TerminusOrderV2Service.get({
+    return this.TerminusService.customerNumbersOrderV2().get({
       customerId: customerId,
       orderId: orderId,
     }).$promise;
   }
 
   public getFormattedNumberOrders(customerId: string): ng.IPromise<any> {
-    return this.TerminusOrderV2Service.query({
+    return this.TerminusService.customerNumbersOrderV2().query({
       customerId: customerId,
-    }).$promise.then(orders => {
+    }).$promise.then((orders) => {
       let promises: any = [];
         // Lookup each order and add the numbers to original response
       _.forEach(orders, order => {
@@ -567,7 +555,7 @@ export class PstnService {
     })
       .then(response => {
         return _.chain(response)
-          .map(order => {
+          .map((order: INumberOrder) => {
             if (order.operation !== UPDATE && order.operation !== DELETE && order.operation !== ADD && order.operation !== AUDIT) {
               let newOrder: any = {
                 carrierOrderId: _.get(order, 'carrierOrderId'),
@@ -724,7 +712,7 @@ export class PstnService {
   }
 
   public deleteNumber(customerId: string, number: string): ng.IPromise<any> {
-    return this.TerminusCustomerNumberService.delete({
+    return this.TerminusService.customerNumberV2().delete({
       customerId: customerId,
       number: number,
     }).$promise;
@@ -756,6 +744,9 @@ export class PstnService {
 
 }
 
+import pstnModelName from './pstn.model';
+import terminusServiceName from './terminus.service';
+
 export default angular
   .module('huron.pstn.pstn-service', [
     require('angular-resource'),
@@ -765,7 +756,8 @@ export default angular
     require('modules/huron/pstnSetup/terminusServices'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/phoneNumber').default,
-    pstnModel,
+    pstnModelName,
+    terminusServiceName,
   ])
   .service('PstnService', PstnService)
   .name;

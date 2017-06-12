@@ -11,6 +11,7 @@ require('./_customer-list.scss');
     Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log,
     Notification, Orgservice, PartnerService, TrialService, uiGridSelectionService, HuronCompassService) {
     var PREMIUM = 'premium';
+    var STANDARD = 'standard';
 
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
@@ -125,6 +126,15 @@ require('./_customer-list.scss');
         isAccountFilter: false,
         isPremiumFilter: true,
         previousState: false,
+      }, {
+        value: STANDARD,
+        label: $translate.instant('customerPage.standardAccountsFilter', {
+          count: 0,
+        }),
+        count: 0,
+        isSelected: false,
+        isAccountFilter: false,
+        isPremiumFilter: true,
       }, {
         value: 'expired',
         label: $translate.instant('customerPage.expiredAccountsFilter', {
@@ -308,6 +318,7 @@ require('./_customer-list.scss');
 
         if (!vm.isProPackEnabled) {
           _.remove(vm.filter.options, { value: PREMIUM });
+          _.remove(vm.filter.options, { value: STANDARD });
         }
 
         if (!vm.isCareEnabled) {
@@ -491,7 +502,6 @@ require('./_customer-list.scss');
           isPremiumFilter: false,
         }),
         premium: _.filter(vm.filter.selected, {
-          value: PREMIUM,
           isAccountFilter: false,
           isPremiumFilter: true,
         }),
@@ -509,7 +519,7 @@ require('./_customer-list.scss');
           }),
           byPremiumFilter: (!selectedFilters.premium.length) ||
           _.some(selectedFilters.premium, function (filter) {
-            return filter.value === PREMIUM ? row.entity.isPremium : false;
+            return isPremiumFilterType(filter.value, row.entity.isPremium);
           }),
         };
 
@@ -520,6 +530,16 @@ require('./_customer-list.scss');
 
       vm._helpers.updateResultCount(visibleRowsData);
       return rows;
+    }
+
+    function isPremiumFilterType(filterValue, isPremium) {
+      if (filterValue === PREMIUM) {
+        return isPremium;
+      } else if (filterValue === STANDARD) {
+        return !isPremium;
+      } else {
+        return false;
+      }
     }
 
     function filterAction(value) {
@@ -650,23 +670,25 @@ require('./_customer-list.scss');
       });
 
       if (vm.isProPackEnabled) {
-        var premiumCount = _.filter(visibleRowsData, { isPremium: true });
-        var premiumFilter = _.filter(vm.filter.options, { isPremiumFilter: true })[0];
+        var counts = {};
+        counts[PREMIUM] = _.filter(visibleRowsData, { isPremium: true });
+        counts[STANDARD] = _.filter(visibleRowsData, { isPremium: false });
+        var premiumFilters = _.filter(vm.filter.options, { isPremiumFilter: true });
 
-        if (premiumFilter) {
-          premiumFilter.count = premiumCount.length;
-          premiumFilter.label = $translate.instant('customerPage.' + premiumFilter.value + 'AccountsFilter', {
-            count: premiumFilter.count,
+        _.forEach(premiumFilters, function (filter) {
+          filter.count = _.get(counts, filter.value, []).length;
+          filter.label = $translate.instant('customerPage.' + filter.value + 'AccountsFilter', {
+            count: filter.count,
           });
 
-          // Analytics should only fire when the state is changed from unselected to selected
-          if (premiumFilter.previousState !== premiumFilter.isSelected) {
-            if (premiumFilter.previousState === false) {
+          // Analytics should only fire when the filter for premium accounts is changed from unselected to selected
+          if (filter.value === PREMIUM && filter.previousState !== filter.isSelected) {
+            if (filter.previousState === false) {
               Analytics.trackPremiumEvent(Analytics.sections.PREMIUM.eventNames.PREMIUM_FILTER);
             }
-            premiumFilter.previousState = premiumFilter.isSelected;
+            filter.previousState = filter.isSelected;
           }
-        }
+        });
       }
     }
 

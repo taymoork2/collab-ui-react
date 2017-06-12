@@ -38,9 +38,17 @@ export class DigitalRiverService {
     return this.$http.jsonp(_.get(DIGITAL_RIVER_URL, env) + 'remoteLogout?callback=JSON_CALLBACK');
   }
 
+  public getDigitalRiverToken(): ng.IPromise<string> {
+    return this.$http.get<string>(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/users/authtoken')
+      .then((response) => {
+        if (response.data) {
+          return this.setDRCookie(response.data);
+        }
+      });
+  }
+
   private getDigitalRiverUrl(path: string, env: string): ng.IPromise<string> {
     return this.getDigitalRiverToken()
-      .then((response) => this.setDRCookie(response))
       .then((response) => {
         const queryParams = env === WEBEX_ENVIRONMENT ? 'ThemeID=4777108300&DRL=' : 'DRL=';
         return _.get(DIGITAL_RIVER_URL, env) + path + queryParams + encodeURIComponent(response);
@@ -50,10 +58,5 @@ export class DigitalRiverService {
   private setDRCookie(authToken: string) {
     this.$document.prop('cookie', DIGITAL_RIVER_COOKIE + '=' + authToken + ';domain=ciscospark.com;secure');
     return authToken;
-  }
-
-  private getDigitalRiverToken(): ng.IPromise<string> {
-    return this.$http.get<string>(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/users/authtoken')
-      .then((response) => response.data);
   }
 }

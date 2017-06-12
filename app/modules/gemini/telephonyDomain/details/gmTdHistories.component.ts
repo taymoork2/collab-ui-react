@@ -67,7 +67,7 @@ class GmTdHistories implements ng.IComponentController {
 
         let data: any[] = _.get(res, 'content.data.body', []);
 
-        data = _.filter(data, (item: any) : boolean => {
+        data = _.filter(data, (item: any): boolean => {
           return item.action !== GmTdHistories.HISTORY_ACTION;
         });
 

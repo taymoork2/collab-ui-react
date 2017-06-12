@@ -7,7 +7,7 @@ describe('Component: gmTdSites', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$state', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService', 'PreviousState', '$modal');
+    this.injectDependencies('$q', '$state', 'UrlConfig', '$httpBackend', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService', 'PreviousState', '$modal');
     initSpies.apply(this);
     initComponent.apply(this);
   });
@@ -58,6 +58,10 @@ describe('Component: gmTdSites', () => {
         webDomainId: 20096,
       }],
     };
+
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
+    this.$httpBackend.flush();
 
     this.$state.current.data = {};
     this.compileComponent('gmTdSites', {});

@@ -79,14 +79,25 @@
               </div>
             </div>
           </div>
-          <div ng-if="hasAssignableMessageOrgEntitlement()">
-            <input
-              cs-input
-              type="checkbox"
-              ng-model="entitlements.messengerInterop"
-              id="onboard--add-entitlement--messenger-interop"
-              name="onboard--add-entitlement--messenger-interop"
-              cs-input-label="{{::'onboardModal.ciscoSparkJabberInterop' | translate}}">
+          <div ng-if="showMessengerInteropToggle()">
+            <div class="pull-left">
+              <input
+                cs-input
+                type="checkbox"
+                ng-model="entitlements.messengerInterop"
+                id="onboard--add-entitlement--messenger-interop"
+                name="onboard--add-entitlement--messenger-interop"
+                cs-input-label="{{::'onboardModal.ciscoSparkJabberInterop' | translate}}">
+            </div>
+            <span class="license-entity-tooltip">
+              <i
+                class="icon icon-info icon-offset-l-6px"
+                tooltip="{{::'usersPage.ciscoSparkJabberInteropTooltip' | translate}}"
+                tooltip-trigger="focus mouseenter"
+                tooltip-class="long-msg"
+                tooltip-placement="top"
+                tooltip-animation="false"></i>
+            </span>
           </div>
         </div>
       </div>
@@ -107,7 +118,7 @@
                 cs-input-label="{{::'firstTimeWizard.meetingsInSpark' | translate}}">
               <span class="license-entity under-label-reposition">{{determineLicenseType(lic)}}
                 <span class="license-entity-tooltip">
-                  <i class="icon icon-info" tooltip-trigger="mouseenter" tooltip-placement="bottom-left" tooltip-animation="false"
+                  <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
                       tooltip-html-unsafe="{{generateLicenseTooltip(lic)}}">
                   </i>
                 </span>
@@ -130,7 +141,7 @@
                   cs-input-label="WebEx {{cfLic.label}}">
                 <span class="license-entity under-label-reposition">{{determineLicenseType(lic)}}
                   <span class="license-entity-tooltip">
-                    <i class="icon icon-info" tooltip-trigger="mouseenter" tooltip-placement="bottom-left" tooltip-animation="false"
+                    <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
                        tooltip-html-unsafe="{{generateLicenseTooltip(lic)}}">
                     </i>
                   </span>
@@ -194,7 +205,7 @@
       <div ng-if="isCareEnabled" class="small-4 columns column-paid">
         <span class="item-mtg-license" translate="onboardModal.contactCenter"></span>
         <span class="license-entity-tooltip">
-          <i class="icon icon-info license-entity-tooltip" tooltip-trigger="mouseenter" tooltip-placement="bottom-right" tooltip-animation="false"
+          <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
           tooltip-html-unsafe="{{careTooltip()}}">
           </i>
         </span>

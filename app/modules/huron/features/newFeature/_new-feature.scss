@@ -1,6 +1,7 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/settings/typography';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import 'app/modules/huron/features/featureLanding/_feature-landing';
 
 .huron-new-feature-modal {
   // The modal body.
@@ -131,53 +132,53 @@
 }
 
 .feature-icon-color-AA {
-  color: $color-primary;
+  color: $toolkit-primary;
 }
 
 .feature-icon-color-HG {
-  color: $color-alerts;
+  color: $toolkit-alerts;
 }
 
 .feature-icon-color-CP {
-  color: $color-cta;
+  color: $toolkit-cta;
 }
 
 .feature-icon-color-PG {
-  color: $color-people;
+  color: $toolkit-people;
 }
 
 .feature-icon-color-PI {
-  color: $color-attention-base;
+  color: $toolkit-attention;
 }
 
 .feature-label-container-AA {
   @include vr-spacing(pt, 2);
 
-  color: $color-primary;
+  color: $toolkit-primary;
 }
 
 .feature-label-container-HG {
   @include vr-spacing(pt, 2);
 
-  color: $color-alerts;
+  color: $toolkit-alerts;
 }
 
 .feature-label-container-CP {
   @include vr-spacing(pt, 2);
 
-  color: $color-cta;
+  color: $toolkit-cta;
 }
 
 .feature-label-container-PG {
   @include vr-spacing(pt, 2);
 
-  color: $color-people;
+  color: $toolkit-people;
 }
 
 .feature-label-container-PI {
   @include vr-spacing(pt, 2);
 
-  color: $color-attention-base;
+  color: $toolkit-attention;
 }
 
 .feature-description-container {

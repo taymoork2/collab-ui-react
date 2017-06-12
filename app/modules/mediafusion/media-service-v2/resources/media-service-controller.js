@@ -2,10 +2,10 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2($modal, $state, $translate, Authinfo, HybridServicesClusterService) {
+  function MediaServiceControllerV2($modal, $state, $stateParams, $translate, Authinfo, HybridServicesClusterService) {
 
     var vm = this;
-    vm.backState = 'services-overview';
+    vm.backState = $stateParams.backTo || 'services-overview';
 
     // Added for cs-page-header
     vm.pageTitle = $translate.instant('mediaFusion.page_title');

@@ -4,7 +4,7 @@ require('./ediscovery.scss');
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService, Notification, ReportUtilService, uiGridConstants) {
+  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, Notification, ReportUtilService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -14,12 +14,19 @@ require('./ediscovery.scss');
     vm.concat = false;
     vm.moreReports = false;
 
+    $scope.isOnPrem = isOnPrem;
     $scope.downloadReport = downloadReport;
-    $scope.downloadingReportId = undefined;
+    $scope.downloadReportModal = downloadReportModal;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
     $scope.viewReport = viewReport;
+
+    $scope.reportHeader = '';
+    $scope.ipAddressModel = null;
+    $scope.ediscoveryIPSettingToggle = false;
+    $scope.report = null;
+    $scope.downloadingReportId = undefined;
     $scope.oldOffset = 0;
     $scope.offset = 0;
     $scope.limit = 10;
@@ -28,6 +35,10 @@ require('./ediscovery.scss');
     var avalonPoller = $interval(pollAvalonReport, 5000);
     var avalonPollerCancelled = false;
     var avalonRefreshPoller = null;
+
+    FeatureToggleService.atlasEdiscoveryIPSettingGetStatus().then(function (result) {
+      $scope.ediscoveryIPSettingToggle = result;
+    });
 
     function cancelAvalonPoller() {
       $interval.cancel(avalonPoller);
@@ -42,6 +53,22 @@ require('./ediscovery.scss');
     vm.reports = [];
 
     pollAvalonReport();
+
+    function isOnPrem(report) {
+      $scope.reportHeader = $translate.instant('ediscovery.reportsList.modalHeader', {
+        name: report.displayName,
+      });
+      $scope.modalPlaceholder = $translate.instant('ediscovery.reportsList.modalPlaceholder');
+      $scope.report = report;
+      var onPrem = $scope.ediscoveryIPSettingToggle ? EdiscoveryService.openReportModal($scope) : downloadReport(report);
+      return onPrem;
+    }
+
+    function downloadReportModal() {
+      var downloadUrl = _.get($scope.report, 'downloadUrl');
+      $scope.report.downloadUrl = _.replace(downloadUrl, downloadUrl.split('/')[2], $scope.ipAddressModel);
+      downloadReport($scope.report);
+    }
 
     function downloadReport(report) {
       $scope.downloadingReportId = report.id;

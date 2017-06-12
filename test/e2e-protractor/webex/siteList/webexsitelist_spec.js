@@ -112,30 +112,35 @@ describe('WebEx Sitelist: ' + webExCommon.BTS1.siteUrl + ": ", function () {
 xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ": ", function () {
   var setup = false;
 
-  beforeAll(function () {
-    var promise = webEx.setup(
-      1,
-      'wbx-siteCsvTestAdmin',
-      webExCommon.devDmzInfo.testAdminUsername,
-      webExCommon.devDmzInfo.testAdminPassword,
-      webExCommon.devDmzInfo.siteUrl
-    );
+  // WARNING:
+  // - beforeAll() and afterAll() are run even in xdescribe() suites (https://github.com/jasmine/jasmine/pull/1225)
+  // - we comment them out here to stop them from running
+  // - do not uncomment them unless re-enabling this suite
 
-    promise.then(
-      function success(ticket) {
-        setup = (null !== ticket);
-        //If this doesn't happen, then login is not successful.
-      },
+  // beforeAll(function () {
+  //   var promise = webEx.setup(
+  //     1,
+  //     'wbx-siteCsvTestAdmin',
+  //     webExCommon.devDmzInfo.testAdminUsername,
+  //     webExCommon.devDmzInfo.testAdminPassword,
+  //     webExCommon.devDmzInfo.siteUrl
+  //   );
 
-      function error() {
-        setup = false;
-      }
-    );
-  }); // beforeAll()
+  //   promise.then(
+  //     function success(ticket) {
+  //       setup = (null !== ticket);
+  //       //If this doesn't happen, then login is not successful.
+  //     },
 
-  afterAll(function () {
-    navigation.logout();
-  }); //afterAll
+  //     function error() {
+  //       setup = false;
+  //     }
+  //   );
+  // }); // beforeAll()
+
+  // afterAll(function () {
+  //   navigation.logout();
+  // }); //afterAll
 
   it('should detect checking services spinner and then WebEx CSV operation icon', function () {
     if (setup) {

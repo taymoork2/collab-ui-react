@@ -21,7 +21,7 @@ class RoutingPrefixCtrl implements ng.IComponentController {
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     const { routingPrefix } = changes;
     if (routingPrefix) {
-      if (_.isNull(routingPrefix.currentValue)) {
+      if (!routingPrefix.currentValue || _.isNull(routingPrefix.currentValue)) {
         this.prefixRadio = 'none';
       } else {
         this.prefixRadio = 'reserve';

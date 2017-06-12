@@ -20,6 +20,7 @@ class CallForwardCtrl implements ng.IComponentController {
   public forwardExternalCallsDifferently: boolean = false;
   public forwardOptions: string[] = [];
   public userVoicemailEnabled: boolean;
+  public isPrimary: boolean;
   public ownerType: string;
   public callForward: CallForward;
   public onChangeFn: Function;
@@ -113,7 +114,7 @@ class CallForwardCtrl implements ng.IComponentController {
   }
 
   public showVoicemail(): boolean {
-    return this.ownerType !== 'place' && this.userVoicemailEnabled ;
+    return this.ownerType !== 'place' && this.userVoicemailEnabled && this.isPrimary;
   }
 
   public onCallFwdAllChange(destination: any): void {
@@ -222,6 +223,7 @@ export class CallForwardComponent implements ng.IComponentOptions {
     userVoicemailEnabled: '<',
     ownerType: '<',
     callForward: '<',
+    isPrimary: '<',
     onChangeFn: '&',
   };
 }

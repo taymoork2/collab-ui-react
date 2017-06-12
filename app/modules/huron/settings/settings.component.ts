@@ -4,9 +4,10 @@ import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { CompanyNumber } from 'modules/huron/settings/companyCallerId';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { EmergencyCallbackNumber } from 'modules/huron/sites';
-import { PstnService } from '../pstn/pstn.service';
-import { PstnModel } from '../pstn/pstn.model';
-import { PstnCarrier } from '../pstn/pstnProviders/pstnCarrier';
+import { PstnService } from 'modules/huron/pstn/pstn.service';
+import { PstnModel } from 'modules/huron/pstn/pstn.model';
+import { PstnCarrier } from 'modules/huron/pstn/pstnProviders/pstnCarrier';
+import { IAvrilFeatures } from 'modules/huron/avril';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
 
@@ -36,6 +37,8 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public callDateTimeFormat: boolean = true;
   public showDialPlanChangedDialog: boolean = false;
   public showVoiceMailDisableDialog: boolean = false;
+  public supportsAvrilVoicemail: boolean = false;
+  public supportsAvrilVoicemailMailbox: boolean = false;
 
   public huronSettingsData: HuronSettingsData;
 
@@ -54,6 +57,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private Authinfo,
     private Config,
     private Orgservice,
+    private FeatureToggleService,
   ) { }
 
   public $onInit(): void {
@@ -84,6 +88,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
       }
     });
 
+    this.loadFeatureToggles();
     this.$q.resolve(this.initSettingsComponent()).finally( () => this.loading = false);
 
     if (this.ftsw) {
@@ -106,6 +111,16 @@ class HuronSettingsCtrl implements ng.IComponentController {
     .then(() => {
       return this.HuronSettingsService.get(this.siteId).then(huronSettingsData => this.huronSettingsData = huronSettingsData);
     });
+  }
+
+  private loadFeatureToggles(): ng.IPromise<any> {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmEnable)
+      .then(result => this.supportsAvrilVoicemail = result);
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmMailboxEnable)
+      .then(result => this.supportsAvrilVoicemailMailbox = result);
+
+    return this.$q.resolve();
   }
 
   // This is the hook to call save from ftsw.
@@ -184,6 +199,13 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onDecreaseExtensionLength(extensionLength: string): void {
+    this.huronSettingsData.internalNumberRanges = [];
+    this.huronSettingsData.site.extensionLength = extensionLength;
+    this.setShowDialPlanChangedDialogFlag();
+    this.checkForChanges();
+  }
+
   public onExtensionLengthSaved(): void {
     this.$onInit();
   }
@@ -236,6 +258,20 @@ class HuronSettingsCtrl implements ng.IComponentController {
     }
     this.huronSettingsData.site.voicemailPilotNumber = voicemailPilotNumber;
     this.huronSettingsData.site.voicemailPilotNumberGenerated = voicemailPilotNumberGenerated;
+    this.setShowVoiceMailDisableDialogFlag();
+    this.checkForChanges();
+  }
+
+  public onCompanyVoicemailAvrilChanged(voicemailPilotNumber: string, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean, features: IAvrilFeatures) {
+    _.set(this.huronSettingsData.customer, 'hasVoicemailService', companyVoicemailEnabled);
+    if (!companyVoicemailEnabled) {
+      this.huronSettingsData.site.disableVoicemail = true;
+    } else {
+      delete this.huronSettingsData.site['disableVoicemail'];
+    }
+    this.huronSettingsData.site.voicemailPilotNumber = voicemailPilotNumber;
+    this.huronSettingsData.site.voicemailPilotNumberGenerated = voicemailPilotNumberGenerated;
+    this.huronSettingsData.avrilFeatures = features;
     this.setShowVoiceMailDisableDialogFlag();
     this.checkForChanges();
   }

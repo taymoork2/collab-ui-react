@@ -4,10 +4,10 @@ describe('Controller: EdiscoverySearchController', function () {
   beforeEach(angular.mock.module('Ediscovery'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, ITProPackService, Notification, TrialService;
+  var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, ITProPackService, Notification, TrialService;
   var promise, result, startDate, endDate;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _ITProPackService_, _Notification_, _TrialService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _ITProPackService_, _Notification_, _TrialService_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -15,11 +15,14 @@ describe('Controller: EdiscoverySearchController', function () {
     Analytics = _Analytics_;
     EdiscoveryService = _EdiscoveryService_;
     EdiscoveryNotificationService = _EdiscoveryNotificationService_;
+    FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
     TrialService = _TrialService_;
     ITProPackService = _ITProPackService_;
 
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve());
+    spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue($q.resolve(false));
     spyOn(ITProPackService, 'hasITProPackPurchased').and.returnValue($q.resolve(false));
     spyOn(ITProPackService, 'hasITProPackEnabled').and.returnValue($q.resolve(false));
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
@@ -34,6 +37,7 @@ describe('Controller: EdiscoverySearchController', function () {
       Analytics: Analytics,
       EdiscoveryService: EdiscoveryService,
       EdiscoveryNotificationService: EdiscoveryNotificationService,
+      FeatureToggleService: FeatureToggleService,
       Notification: Notification,
       ITProPackService: ITProPackService,
     });
@@ -113,6 +117,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
   describe('Create report', function () {
     beforeEach(function () {
+      FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue($q.resolve(true));
       var deferredRunReportResult = $q.defer();
 
       promise = $q.resolve({
@@ -177,6 +182,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
   describe('Create report with error', function () {
     beforeEach(function () {
+      FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue($q.resolve(true));
       ediscoverySearchController.searchCriteria.roomId = 'whatever';
       ediscoverySearchController.searchCriteria.endDate = moment().format();
       ediscoverySearchController.searchCriteria.startDate = moment().subtract(1, 'day').format();

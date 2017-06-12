@@ -54,7 +54,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridCallCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
-      new ServicesOverviewHybridContextCard(this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridContextCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService, this.HybridServicesClusterStatesService),
       new ServicesOverviewImpCard(this.Authinfo, this.HybridServicesClusterStatesService),
     ];
@@ -68,13 +68,6 @@ export class ServicesOverviewCtrl {
         if (supports) {
           this.getPMRStatus();
         }
-      });
-
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.contactCenterContext)
-      .then(supports => {
-        // Invoke the event handler passing in true if feature toggle is enabled AND the user is Entitled to view this card.
-        // When this feature flag is removed, move the entitlement check to hybridContextCard's constructor
-        this.forwardEvent('hybridContextToggleEventHandler', supports && Authinfo.isContactCenterContext());
       });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)

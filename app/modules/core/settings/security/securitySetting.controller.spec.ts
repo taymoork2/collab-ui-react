@@ -7,24 +7,26 @@ describe('Controller: SecuritySettingController', () => {
 
   let controller: SecuritySettingController;
   let $scope, $controller, $q;
-  let AccountOrgService, Authinfo;
+  let AccountOrgService, Authinfo, ITProPackService;
 
   beforeEach(angular.mock.module(testModule));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _AccountOrgService_, _Authinfo_) {
+  function dependencies($rootScope, _$controller_, _$q_, _AccountOrgService_, _Authinfo_, _ITProPackService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     AccountOrgService = _AccountOrgService_;
     Authinfo = _Authinfo_;
+    ITProPackService = _ITProPackService_;
   }
 
   function initSpies() {
     spyOn(AccountOrgService, 'getAppSecurity');
     spyOn(AccountOrgService, 'setAppSecurity');
+    spyOn(ITProPackService, 'hasITProPackPurchasedOrNotEnabled').and.returnValue($q.resolve(false));
   }
 
   function initController() {

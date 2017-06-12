@@ -10,6 +10,11 @@ export interface IDropdownBase {
 }
 
 // export menu
+export interface IExportDropdown {
+  header: IExportMenu;
+  menu: Array<IExportMenu>;
+}
+
 export interface IExportMenu {
   id: string;
   label: string;

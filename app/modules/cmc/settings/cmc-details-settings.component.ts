@@ -1,5 +1,6 @@
 
 import { ICmcOrgStatusResponse } from './../cmc.interface';
+import { Notification } from 'modules/core/notifications';
 
 class CmcDetailsSettingsComponentCtrl implements ng.IComponentController {
 
@@ -12,6 +13,7 @@ class CmcDetailsSettingsComponentCtrl implements ng.IComponentController {
     private $log: ng.ILogService,
     private Authinfo,
     private CmcService,
+    private Notification: Notification,
   ) {
     this.orgId = this.Authinfo.getOrgId();
   }
@@ -36,8 +38,13 @@ class CmcDetailsSettingsComponentCtrl implements ng.IComponentController {
           };
         }
       })
-      .catch((res: ICmcOrgStatusResponse) => {
-        this.$log.info('Error Result from preCheckOrg:', res);
+      .catch((error: any) => {
+        this.$log.info('Error Result from preCheckOrg:', error);
+        let msg: string = 'unknown';
+        if (error.data && error.data.message) {
+          msg = error.data.message;
+        }
+        this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });
       });
   }
 }

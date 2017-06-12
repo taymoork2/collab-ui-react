@@ -1,8 +1,8 @@
-<div class="status">
+<div class="status cmc-user-list">
 
   <div ng-if="$ctrl.status.status === 'ok'">
     <div class="ok">
-      CMC status is OK !
+      CMC status for organization is OK !
     </div>
   </div>
 
@@ -13,13 +13,13 @@
     </div>
   </div>
 
-  <div ng-if="!$ctrl.status.status">
+  <div ng-if="$ctrl.error">
     <div class="error">ERROR: CMC status check not performed because:</div>
-    <div ng-repeat="error in $ctrl.status.errors">
-      {{error.description}} (mock)
-    </div>
+    <div>{{$ctrl.error.message}}</div>
   </div>
 
+  <div>
+    {{$ctrl.userStatusesSummaryText}}
+    <div class="gridStyle col-md-12" ui-grid="$ctrl.gridOptions"></div>
+  </div>
 </div>
-
-

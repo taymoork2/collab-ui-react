@@ -1,4 +1,4 @@
-<cs-card class="cluster-card medium header-bar {{'card-' + $ctrl.cluster.targetType}}">
+<cs-card class="cluster-card medium">
   <article>
     <header ng-class="{'one-liner': !$ctrl.hasNodesViewFeatureToggle}">
       <h4>{{::$ctrl.cluster.name}}</h4>
@@ -10,7 +10,7 @@
           <span translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></span>
           <span class="badge alert" ng-if="$ctrl.hasAlarms($ctrl.cluster)" translate="hercules.fusion.list.alarms"></span>
           <span class="badge warning" ng-if="$ctrl.isInMaintenance($ctrl.cluster)" translate="hercules.fusion.list.maintenance"></span>
-          <span ng-show="false" class="badge info" ng-if="$ctrl.hasUpgradeAvailable($ctrl.cluster)" translate="hercules.fusion.list.upgrade"></span>
+          <span class="badge info" ng-if="$ctrl.hasUpgradeAvailable($ctrl.cluster)" translate="hercules.fusion.list.upgrade"></span>
         </a>
       </div>
     </header>

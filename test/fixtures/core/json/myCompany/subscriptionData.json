@@ -453,7 +453,7 @@
     "isTrial": false,
     "isOnline": false,
     "viewAll": false,
-    "name": "subscriptions.numberedName",
+    "name": "subscriptions.subscriptionNum",
     "numSubscriptions": 1
   }],
   "servicesResponse": [{

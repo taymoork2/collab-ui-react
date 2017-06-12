@@ -30,13 +30,21 @@ class ExtensionRangeCtrl implements ng.IComponentController {
     };
   }
 
-  public $onInit(): void {
-    if (this.firstTimeSetup) {
-      this.numberRanges = [{
-        beginNumber: this.DEFAULT_START_RANGE,
-        endNumber: this.DEFAULT_END_RANGE,
-      }];
-      this.onExtensionRangeChange();
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+    const { numberRanges } = changes;
+
+    if (numberRanges && numberRanges.currentValue) {
+      if (numberRanges.currentValue.length < 1) {
+        if (this.firstTimeSetup) {
+          this.numberRanges = [{
+            beginNumber: this.DEFAULT_START_RANGE,
+            endNumber: this.DEFAULT_END_RANGE,
+          }];
+          this.onExtensionRangeChange();
+        } else {
+          this.addExtensionRange();
+        }
+      }
     }
   }
 
@@ -85,7 +93,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
   }
 
   public isDisabled(numberRange: IExtensionRange): boolean {
-    return !this.firstTimeSetup && !_.isEmpty(numberRange.uuid);
+    return !_.isEmpty(numberRange.uuid);
   }
 
 }
