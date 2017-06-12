@@ -4157,7 +4157,6 @@
   },
   "pstnOrderOverview": {
     "cancelled": "Cancelled",
-    "pstnOrders": "PSTN Orders",
     "successful": "Successful",
     "inProgress": "In Progress",
     "advanceOrder": "Advance Numbers",
