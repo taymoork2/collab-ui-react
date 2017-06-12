@@ -11,6 +11,7 @@ describe('Component: upgradeModal', () => {
     productInstanceId: productInstanceId,
     subscriptionId: subscriptionId,
     name: productName,
+    autoBilling: true,
   }];
 
   beforeEach(function () {

@@ -11,6 +11,7 @@ export interface ISubscription {
   subscriptionId?: string;
   upgradeTrialUrl?: string;
   viewAll: boolean;
+  endDate: string;
 }
 
 export interface ISubscriptionCategory {

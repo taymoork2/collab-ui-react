@@ -134,7 +134,7 @@
           authData.customerType = _.get(authData.customerAccounts, '[0].customerType', '');
           authData.customerId = _.get(authData.customerAccounts, '[0].customerId');
           authData.commerceRelation = _.get(authData.customerAccounts, '[0].commerceRelation', '');
-          authData.subscriptions = _.get(authData.customerAccounts, '[0].subscriptions', []);
+          authData.subscriptions = _.flattenDeep(_.map(authData.customerAccounts, 'subscriptions'));
           authData.customerAdminEmail = _.get(authData.customerAccounts, '[0].customerAdminEmail');
 
           for (var x = 0; x < authData.customerAccounts.length; x++) {

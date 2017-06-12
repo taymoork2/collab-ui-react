@@ -170,6 +170,7 @@
           var trial = '';
 
           var result = [];
+          var subscriptions = Authinfo.getSubscriptions();
           _.forEach(usageLicenses, function (usageLicense) {
             var licenses = _.filter(usageLicense.licenses, function (license) {
               var match = _.find(statusLicenses, {
@@ -179,11 +180,15 @@
               return !(_.isUndefined(match) || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
             });
 
+            var matchSub = _.find(subscriptions, {
+              'subscriptionId': usageLicense.internalSubscriptionId,
+            });
             var subscription = {
-              "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
-              "internalSubscriptionId": usageLicense.internalSubscriptionId ?
+              subscriptionId: usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
+              internalSubscriptionId: usageLicense.internalSubscriptionId ?
                 usageLicense.internalSubscriptionId : trial,
-              "licenses": licenses,
+              licenses: licenses,
+              endDate: _.get(matchSub, 'endDate', ''),
             };
             result.push(subscription);
           });
