@@ -48,6 +48,7 @@ export class CmcService {
     // based on org entitlements ?
     let deferred = this.$q.defer();
     this.Orgservice.getOrg((data, success) => {
+      this.$log.debug('data', data);
       if (success) {
         if (data.success) {
           deferred.resolve(this.hasCmcService(data.services));
