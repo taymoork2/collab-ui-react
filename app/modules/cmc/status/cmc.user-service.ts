@@ -1,4 +1,5 @@
 import { ICmcUserStatusInfoResponse, ICmcUserStatus } from './../cmc.interface';
+import * as moment from 'moment';
 
 export class CmcUserService {
 
@@ -25,7 +26,9 @@ export class CmcUserService {
         let awareUsers: Array<ICmcUserStatus> = results[ 1 ].userStatuses;
 
         _.each(cmcUsers, (cmcUser) => {
-
+          if (cmcUser.lastStatusUpdate) {
+            cmcUser.lastStatusUpdate = moment(cmcUser.lastStatusUpdate).format('LLLL (UTC)');
+          }
           let hasAware = _.find(awareUsers, function(u) {
             return u.userId === cmcUser.userId;
           });
