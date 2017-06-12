@@ -2713,17 +2713,17 @@
     "userMenu": {
       "crossServices": "Cross Services",
       "mobile": "Mobile",
-      "statusOk": "Spark Mobile Convergence",
+      "statusOk": "Mobile Convergence",
       "statusNok": "Error"
     },
     "userSettings": {
-      "title": "Spark Mobile Convergence",
+      "title": "Mobile Convergence",
       "mobileNumber": "Mobile Number",
       "enabled": "Enabled",
       "status": "Status"
     },
     "detailsPage": {
-      "title": "Cmc",
+      "title": "Mobile",
       "settings": "Settings",
       "status": "Status"
     },
@@ -2731,7 +2731,7 @@
       "invalidInput": "Always provide valid mobile number when enabling"
     },
     "settingsPage": {
-      "title": "Spark Mobile Convergence",
+      "title": "Mobile Convergence",
       "description": "Current data is read only, for configuration please contact your Cisco specialist.",
       "mobileProvider": {
         "title": "Mobile Operator",
@@ -2745,8 +2745,11 @@
     "statusPage": {
       "listingFirstActiveUsers": "Listing the first {{noOfActiveUsers}} active users",
       "callServiceAwareNotEntitled": "Not entitled for Call Aware",
-      "sparkMobileConvergence": "Spark Mobile Convergence",
-      "serviceStatus": "Service Status"
+      "sparkMobileConvergence": "Mobile Convergence",
+      "serviceStatus": "Service Status",
+      "status": {
+        "active": "Active"
+      }
     }
   },
   "context": {
@@ -7703,7 +7706,7 @@
       },
       "cmc": {
         "title": "Mobile",
-        "description": "Spark Mobile Convergense is set up by your Cisco Professional. Please contact your Cisco Professional for changes.",
+        "description": "Mobile Convergence is a service which allows you to call any mobile phone from any Cisco device. The service is set up by your Cisco Professional. Please contact your Cisco Professional for changes.",
         "buttons": {
           "settings": "Settings",
           "status": "Status"
