@@ -6,7 +6,7 @@
     .service('HDSAddResourceCommonService', HDSAddResourceCommonService);
 
   /* @ngInject */
-  function HDSAddResourceCommonService($window, FusionClusterService, HybridServicesExtrasService, Notification, ServiceDescriptor) {
+  function HDSAddResourceCommonService($window, HybridServicesClusterService, HybridServicesExtrasService, Notification, ServiceDescriptor) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -19,7 +19,7 @@
       vm.onlineNodeList = [];
       vm.offlineNodeList = [];
       // returns a promise directly
-      return FusionClusterService.getAll()
+      return HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, { targetType: 'hds_app' });
           // vm.clusters already had only hds clusters, let's use the shorthand version
@@ -65,7 +65,7 @@
       });
       if (vm.clusterDetail == null) {
       //TODO: fix for fusion cluster
-        return FusionClusterService.preregisterCluster(enteredCluster, 'stable', 'hds_app')
+        return HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'hds_app')
           .then(function (resp) {
             vm.selectedClusterId = resp.id;
             return allowListHost(hostName, vm.selectedClusterId);
@@ -80,7 +80,7 @@
     }
 
     function allowListHost(hostName, clusterId) {
-      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, 3600, clusterId);
+      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, clusterId);
     }
 
     function redirectPopUpAndClose(hostName, enteredCluster, firstTimeSetup) {

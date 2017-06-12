@@ -1,5 +1,5 @@
 import './sharedMeetings-reports.scss';
-import { IExportMenu } from '../../../partnerReports/partnerReportInterfaces';
+import { IExportMenu, IExportDropdown } from '../../../partnerReports/partnerReportInterfaces';
 import { ReportPrintService } from '../../../partnerReports/commonReportServices/reportPrint.service';
 import { ReportConstants } from '../../../partnerReports/commonReportServices/reportConstants.service';
 import { SharedMeetingsReportService } from './sharedMeetingsReport.service';
@@ -57,7 +57,7 @@ class SharedMeetingsReportCtrl {
   public timeSelected: ISharedMeetingTimeFilter = this.timeFilter[0];
 
   // Export Menu Controls
-  public exportDropdown: Array<IExportMenu>;
+  public exportDropdown: IExportDropdown;
   public exportMenu: boolean = false;
 
   public dropdownSelect(menuItem: IExportMenu): void {

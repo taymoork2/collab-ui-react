@@ -10,6 +10,7 @@ class ExtensionLengthCtrl implements ng.IComponentController {
   public huronSettingsData: HuronSettingsData;
   public extensionsAssigned: boolean;
   public extensionLengthSavedFn: Function;
+  public decreaseExtensionLengthFn: Function;
   public onChangeFn: Function;
   public extensionLengthOptions: string[] = [];
   public showHelpText: boolean = false;
@@ -61,7 +62,16 @@ class ExtensionLengthCtrl implements ng.IComponentController {
             });
         }
       } else {
-        this.onChange();
+        this.openDeleteNumberRangesWarningDialog()
+          .then(() => {
+            this.decreaseExtensionLengthFn({
+              extensionLength: this.extensionLength,
+            });
+          })
+          .catch(() => {
+            this.resetExtensionLength();
+            this.onChange();
+          });
       }
     } else {
       this.onChange();
@@ -126,6 +136,16 @@ class ExtensionLengthCtrl implements ng.IComponentController {
     }).result;
   }
 
+  private openDeleteNumberRangesWarningDialog(): any {
+    return this.ModalService.open({
+      title: this.$translate.instant('common.warning'),
+      message: this.$translate.instant('serviceSetupModal.extensionLengthDecreaseWarning'),
+      close: this.$translate.instant('common.continue'),
+      dismiss: this.$translate.instant('common.cancel'),
+      btnType: 'negative',
+    }).result;
+  }
+
   private openIncreaseExtLengthIncreaseDialog(): any {
     return this.ModalService.open({
       title: this.$translate.instant('common.warning'),
@@ -151,6 +171,7 @@ export class ExtensionLengthComponent implements ng.IComponentOptions {
     huronSettingsData: '<',
     extensionsAssigned: '<',
     extensionLengthSavedFn: '&',
+    decreaseExtensionLengthFn: '&',
     onChangeFn: '&',
   };
 }

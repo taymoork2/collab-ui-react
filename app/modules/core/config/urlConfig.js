@@ -230,7 +230,18 @@
       integration: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
-
+    WebexMetricsUrl: {
+      dev: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
+      cfe: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
+      integration: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
+      prod: '',
+    },
+    SparkMetricsUrl: {
+      dev: 'https://ds2-win2012-01/',
+      cfe: 'https://ds2-win2012-01/',
+      integration: 'https://ds2-win2012-01/',
+      prod: '',
+    },
     // urls same for all environments
 
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
@@ -247,11 +258,6 @@
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
-    MeetingUsageUrl: 'https://ds2-qlikdemo.cisco.com/single/?appid=226f935e-50eb-4d67-8a22-4f3ea9a4f499&sheet=FyVmGa',
-    JoinMeetingTimeUrl: 'https://10.140.50.27/single/?appid=0983ec7e-fc3d-4a1e-b4ea-116b239ce3f1&sheet=461c49d5-3bbc-4fec-b06b-96a762a44f1d',
-    WebexReportInMashupUrl: 'https://ds2-qlikdemo.cisco.com/extensions/webex-report-allsite/webex-report-allsite.html',
-    WebexReportInQlikAppUrl: 'http://10.194.245.72:8080/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/singlesitereport/basic_webex_report_vSiteId/599/jacao/ds2-win2012-01',
-    SparkReportInMashupUrl: 'https://ds2-qlikdemo.cisco.com/extensions/spark_mashup/spark_mashup.html',
   };
 
   module.exports = angular

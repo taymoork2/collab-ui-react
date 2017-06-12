@@ -6,7 +6,7 @@
     .controller('HDSSettingsController', HDSSettingsController);
 
   /* @ngInject */
-  function HDSSettingsController($modal, $q, $state, $translate, Analytics, Authinfo, Orgservice, HDSService, FusionClusterService, Notification) {
+  function HDSSettingsController($modal, $q, $state, $translate, Analytics, Authinfo, Orgservice, HDSService, HybridServicesClusterService, Notification) {
     var vm = this;
     vm.lock = false;
     vm.PRE_TRIAL = 'pre_trial';    // service status Trial/Production mode
@@ -26,6 +26,11 @@
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
     vm.deactivateTrialMode = deactivateTrialMode;
     vm.deactivateProductionMode = deactivateProductionMode;
+    vm.dirsyncEnabled = false;
+    vm.groupAssigned = groupAssigned;
+    vm.setHDSDefaultForAltHDSServersGroup = setHDSDefaultForAltHDSServersGroup;
+    vm.defaultHDSGroupName = 'HdsTrialGroup';
+    vm.defaultHDSGroup = null;
     var localizedHdsModeError = $translate.instant('hds.resources.settings.hdsModeGetError');
     var trialKmsServer = '';
     var trialKmsServerMachineUUID = '';
@@ -89,7 +94,7 @@
     }
 
     function getResourceInfo() {
-      FusionClusterService.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.numResourceNodes = _.reduce(clusters, function (total, cluster) {
             if (cluster.targetType === 'hds_app') {
@@ -111,6 +116,7 @@
           vm.orgSettings = data.orgSettings;
           vm.altHdsServers = data.orgSettings.altHdsServers;
           vm.prodDomain = vm.orgSettings.kmsServer;
+          vm.dirsyncEnabled = data.dirsyncEnabled;
           if (typeof vm.altHdsServers === 'undefined' || vm.altHdsServers.length === 1) {
             // prod info
             if (typeof vm.prodDomain === 'undefined') {
@@ -145,7 +151,13 @@
                   trialSecurityService = server.securityService;
                 }
               });
-              getTrialUsersInfo();
+              if (vm.groupAssigned()) {
+                getTrialUsersInfo();
+              } else {
+                if (vm.dirsyncEnabled === true) {
+                  setHDSDefaultForAltHDSServersGroup();
+                }
+              }
             } else {
               vm.model.serviceMode = vm.NA_MODE;
             }
@@ -156,6 +168,35 @@
           Notification.error(localizedHdsModeError + status);
         }
       }, null, params);
+    }
+
+    function setHDSDefaultForAltHDSServersGroup() {
+      //For dirsync orgs retrieve default HDS group info by name
+      HDSService.queryGroup(Authinfo.getOrgId(), vm.defaultHDSGroupName)
+                  .then(function (group) {
+                    vm.defaultHDSGroup = group.Resources[0];
+                    vm.trialUserGroupId = vm.defaultHDSGroup.id;
+                    //Assign group id to each server
+                    _.forEach(vm.altHdsServers, function (server) {
+                      server.groupId = vm.defaultHDSGroup.id;
+                    });
+                    var altHdsServersJson = {
+                      'altHdsServers': vm.altHdsServers,
+                    };
+                    HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), altHdsServersJson)
+                          .then(function () {
+                            vm.model.serviceMode = vm.PRE_TRIAL;
+                            getTrialUsersInfo();
+                          }).catch(function (error) {
+                            Notification.errorWithTrackingId(error, localizedHdsModeError);
+                          });
+                  }).catch(function (error) {
+                    Notification.error(localizedHdsModeError + error.statusText);
+                  });
+    }
+
+    function groupAssigned() {
+      return (_.isString(vm.trialUserGroupId) && vm.trialUserGroupId.length > 0);
     }
 
     function recoverPreTrial() {
@@ -239,6 +280,9 @@
         controllerAs: 'editTrialUsersCtrl',
         templateUrl: 'modules/hds/settings/edittrialusers_modal/edit-trial-users.html',
         type: 'small',
+        resolve: {
+          dirsyncEnabled: vm.dirsyncEnabled,
+        },
       })
         .result.then(function () {
           setTimeout(function () {
@@ -348,7 +392,17 @@
           type: 'dialog',
         })
           .result.then(function () {
-            cleanTrialUserGroup()
+            if (vm.dirsyncEnabled === true) {
+              manageHdsServersInfo(vm.trialUserGroupId)
+                .then(function () {
+                  Notification.success('hds.resources.settings.succeedDeactivateProductionMode');
+                }).catch(function (error) {
+                  Notification.errorWithTrackingId(error, localizedHdsModeError);
+                }).finally(function () {
+                  vm.lock = false;
+                });
+            } else {
+              cleanTrialUserGroup()
               .then(function () {
                 createTrialUserGroup()
                   .then(function (newGroupID) {
@@ -367,6 +421,7 @@
                 Notification.errorWithTrackingId(error, localizedHdsModeError);
                 vm.lock = false;
               });
+            }
           }).catch(function () {
             // user clicked Cancle Button, no need for a notification.
             vm.lock = false;

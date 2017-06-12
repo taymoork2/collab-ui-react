@@ -10,6 +10,7 @@ import routingPrefixModule from 'modules/huron/settings/routingPrefix';
 import timeZoneModule from 'modules/huron/settings/timeZone';
 import outboundDialDigitModule from 'modules/huron/settings/outboundDialDigit';
 import companyVoicemailModule from 'modules/huron/settings/companyVoicemail';
+import companyVoicemailAvrilModule from 'modules/huron/settings/companyVoicemailAvril';
 import dialingModule from 'modules/huron/settings/dialing';
 import timeFormatModule from 'modules/huron/settings/timeFormat';
 import dateFormatModule from 'modules/huron/settings/dateFormat';
@@ -20,6 +21,7 @@ import emergencyServiceNumberModule from 'modules/huron/settings/emergencyServic
 import emergencyServiceAddressModule from 'modules/huron/settings/emergencyServiceAddress';
 import externalTransferModule from 'modules/huron/settings/externalCallTransfer';
 import phoneNumberModule from 'modules/huron/phoneNumber';
+import featureToggleServiceModule from 'modules/core/featureToggle';
 
 export default angular
   .module('huron.settings', [
@@ -40,6 +42,7 @@ export default angular
     timeZoneModule,
     outboundDialDigitModule,
     companyVoicemailModule,
+    companyVoicemailAvrilModule,
     dialingModule,
     timeFormatModule,
     dateFormatModule,
@@ -51,6 +54,7 @@ export default angular
     externalTransferModule,
     phoneNumberModule,
     huronSettingsServiceModule,
+    featureToggleServiceModule,
   ])
   .component('ucSettings', new HuronSettingsComponent())
   .name;

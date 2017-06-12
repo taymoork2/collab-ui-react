@@ -73,12 +73,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.resolve({}));
     spyOn($window, 'confirm').and.returnValue(true);
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-      $q.resolve(true)
-    );
-    spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue(
-      $q.resolve(true)
-    );
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasITProPackGetStatus').and.returnValue($q.resolve(true));
     spyOn(modal, 'open').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 

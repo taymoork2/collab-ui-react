@@ -1,0 +1,53 @@
+<cs-sp-section class="cloud-extensions">
+  <div class="section-title-row">
+    <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
+  </div>
+  <div ng-if="!resourceGroup.cannotFindResouceGroup">
+    <p class="extension-description" translate="hercules.resourceGroups.setDescription"></p>
+
+    <cs-select ng-if="!$ctrl.loading"
+               ng-model="$ctrl.selectedResourceGroup"
+               options="$ctrl.options"
+               on-change-fn="$ctrl.selectedResourceGroupChanged()">
+    </cs-select>
+
+    <div ng-if="$ctrl.loading"
+         cs-loader
+         class="loader-example--small"></div>
+
+    <div class="warning-message" ng-if="$ctrl.showGroupIsEmptyWarning">
+      <i class="icon icon-warning"></i>
+      <p class="message"
+         translate="hercules.resourceGroups.groupIsEmptyWarning"
+         translate-values="{ConnectorName: $ctrl.localizedConnectorName}">
+      </p>
+    </div>
+  </div>
+  <div ng-if="$ctrl.showButtons" class="saveCancelButtons">
+    <span ng-if="$ctrl.saving" class="resource-group-spinner">
+      <i class="icon icon-spinner"></i>
+    </span>
+    <button id="btn-cancel"
+            ng-disabled="$ctrl.saving"
+            translate="common.cancel"
+            ng-click="$ctrl.reset()">
+    </button>
+    <button id="btn-save"
+            ng-disabled="$ctrl.saving"
+            class="btn--primary btn-save"
+            ng-click="$ctrl.save()"
+            translate="common.save">
+    </button>
+  </div>
+  <div ng-if="$ctrl.cannotFindResourceGroup" class="error-message">
+    <i class="icon icon-error"></i>
+    <p class="message"
+       translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
+    <form>
+      <button class="btn" type="submit" ng-click="$ctrl.setResourceGroupOnUser('')">
+        <span translate="common.remove"></span>
+      </button>
+    </form>
+  </div>
+
+</cs-sp-section>

@@ -7,13 +7,13 @@
     require('modules/huron/telephony/telephonyExternalNumbersService'),
     require('modules/huron/pstn/pstn.service').default,
     require('modules/huron/phoneNumber').default,
-    require('modules/huron/pstnSetup/terminusServices'),
+    require('modules/huron/pstn/terminus.service').default,
   ])
   .factory('ExternalNumberService', ExternalNumberService)
   .name;
 
   /* @ngInject */
-  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnService, PhoneNumberService, TerminusCarrierService) {
+  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnService, PhoneNumberService, TerminusService) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
@@ -278,7 +278,7 @@
             return null;
           } else {
             _.assign(_terminusDetail, { pstnCarrierId: _pstnCarrierId });
-            return TerminusCarrierService.get({
+            return TerminusService.carrier().get({
               carrierId: _pstnCarrierId,
             }).$promise;
           }
@@ -287,7 +287,7 @@
           return null;
         });
       } else {
-        return TerminusCarrierService.get({
+        return TerminusService.carrier().get({
           carrierId: _pstnCarrierId,
         }).$promise;
       }

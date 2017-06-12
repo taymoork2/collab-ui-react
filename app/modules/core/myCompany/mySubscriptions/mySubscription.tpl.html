@@ -31,7 +31,7 @@
               widget-location="navigation-bar">
             </bmmp-subscription-upgrade-button>
           </div>
-          <div class="subscription-id" ng-if="subscription.viewAll">
+         <div class="subscription-id" ng-if="subscription.viewAll">
             <span class="h6" translate="subscriptions.subscription"></span>
             <span class="h6">{{::subscription.subscriptionId}}</span>
           </div>
@@ -43,10 +43,10 @@
       <article>
         <section>
           <div class="row">
-            <h3 class="column medium-2 sub-name" translate="subscriptions.licenseSummary"></h3>
-            <div class="column medium-5 sub-id" ng-if="mcpSub.subscriptionDetails.length === 1 && (!mcpSub.subscriptionDetails[0].isTrial || mcpSub.subscriptionDetails[0].isOnline) && mcpSub.subscriptionDetails[0].subscriptionId">
-              <span class="h6" translate="subscriptions.subscription"></span>
-              <span class="h6">{{::mcpSub.subscriptionDetails[0].subscriptionId}}</span>
+            <span class="column medium-2 sub-name" ng-class="mcpSub.subscriptionDetails.length === 1 && mcpSub.subscriptionDetails[0].isOnline ? 'h5' : 'h3'">{{::mcpSub.licenseSummary}}</span>
+            <div class="column medium-5 sub-name" ng-if="mcpSub.subscriptionDetails.length === 1 && (!mcpSub.subscriptionDetails[0].isTrial || mcpSub.subscriptionDetails[0].isOnline) && mcpSub.subscriptionDetails[0].subscriptionId">
+              <span class="h5" translate="subscriptions.subscription"></span>
+              <span class="h5">{{::mcpSub.subscriptionDetails[0].subscriptionId}}</span>
             </div>
           </div>
           <div class="row" ng-repeat="licenseCategory in mcpSub.licenseCategory" ng-show="mcpSub.showCategory(licenseCategory)">
@@ -95,10 +95,11 @@
                     </div>
                   </div>
                   <div class="subscription-description subscription-detail" ng-if="mcpSub.isSharedMeetingsLicense(offer) && mcpSub.isSharedMeetingsReportsEnabled">
-                    <div class="h5 license-detail" ng-class="{'warning': offer.usage > offer.volume}" translate="sharedMeetingReports.hostsSharingLicenses" translate-values="{usage: offer.usage, volume: offer.volume}"></div>
-                    <div>
-                      <span class="h6" translate="sharedMeetingReports.title"></span>
-                      <a class="name h6 link" ng-click="mcpSub.launchSharedMeetingsLicenseUsageReport(offer.siteUrl)" translate="sharedMeetingReports.link"></a>
+                    <div class="h5 license-detail" ng-class="{'warning': offer.usage > offer.volume}" translate="sharedMeetingReports.hostsSharingLicenses" translate-values="{usage: offer.usage}"></div>
+                    <div class="h5 license-detail" ng-class="{'warning': offer.usage > offer.volume}" translate="sharedMeetingReports.volumeOfLicenses" translate-values="{volume: offer.volume}">
+                    </div>
+                    <span class="h6" translate="sharedMeetingReports.title"></span>
+                    <a class="name h6 link" ng-click="mcpSub.launchSharedMeetingsLicenseUsageReport(offer.siteUrl)" translate="sharedMeetingReports.link"></a>
                     </div>
                   </div>
                   <div class="subscription-description subscription-detail" ng-if="mcpSub.isSharedMeetingsLicense(offer) && mcpSub.isSharedMeetingsReportsEnabled">

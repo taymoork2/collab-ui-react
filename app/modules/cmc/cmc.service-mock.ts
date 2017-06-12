@@ -11,17 +11,18 @@ export class CmcServiceMock {
   ) {
   }
 
-  public mockStatus(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
+  public mockOrgStatus(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
     this.$log.debug('orgId', orgId);
     let errorMock = {
-      message: 'Invalid OrgId',
-      errors: [
-        {
-          description: 'The orgid is not found',
-        },
-      ],
-      trackingId: 'CMC_e7a4c176-0ffa-4de0-9534-88d9ccfc7c71',
-    };
+      data : {
+        message: 'Invalid OrgId',
+        errors: [
+          {
+            description: 'The orgid is not found',
+          },
+        ],
+        trackingId: 'CMC_e7a4c176-0ffa-4de0-9534-88d9ccfc7c71',
+      }};
 
     let okMock: ICmcOrgStatusResponse = {
       status: 'ok',
@@ -74,7 +75,7 @@ export class CmcServiceMock {
       issues: [
         {
           code: 2003,
-          message: 'Call Service Aware is not provisioned.',
+          message: 'Call Service Aware is not provisioned for this org.',
         },
       ],
     };

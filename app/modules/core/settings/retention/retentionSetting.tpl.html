@@ -44,18 +44,19 @@
           ng-disabled="!vm.proPackPurchased"
           ng-change="vm.resetSelectedRetention()"
           cs-input-label="{{:: 'globalSettings.retention.customRetentionOption'| translate}}">
-        <div class="cs-input-group cs-input-input medium-6 cs-input--nested-1">
+        <div class="cs-input-group cs-input-input medium-10 cs-input--nested-1">
           <input type="number" cs-input ng-model="vm.selectedRetentionMonths"
-              id="retention--settings-retentionMonths" name="retentionSettingsRetentionMonths2"
+              id="retention--settings-retentionMonths" name="retentionSettingsRetentionMonths"
               ng-disabled="vm.selectedRetentionType!=vm.RETENTION_TYPES.CUSTOM_MONTH || !vm.proPackPurchased"
               ng-required="vm.proPackPurchased && vm.selectedRetentionType==vm.RETENTION_TYPES.CUSTOM_MONTH"
-              cs-input-group-size="medium-8"
+              cs-input-group-size="medium-10"
+              cs-input-size="medium-3"
               max="120"
               ng-max="120"
               ng-min="1"
               cs-input-messages="vm.validationMessages.month"
               ng-change="vm.updateRetention()"
-              ng-model-options="{updateOn: 'default blur', debounce: { default: 2000, blur: 0 } }"
+              ng-model-options="{updateOn: 'default blur', debounce: { default: 1000, blur: 0 } }"
               cs-input-secondary-label="{{::'globalSettings.retention.customRetentionMonths' | translate}}">
         </div>
         </form>

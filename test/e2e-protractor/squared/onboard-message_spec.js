@@ -1,6 +1,6 @@
 'use strict';
 
-/* global LONG_TIMEOUT manageUsersPage */
+/* global manageUsersPage */
 
 describe('Onboard users with Message Service', function () {
   var token;

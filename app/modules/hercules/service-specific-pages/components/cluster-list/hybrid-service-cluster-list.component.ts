@@ -3,6 +3,7 @@ import { ConnectorType, HybridServiceId, ICluster, IConnector, ConnectorMaintena
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: any;
@@ -30,7 +31,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private ClusterService: ClusterService,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
   ) {
@@ -100,8 +101,8 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     if (this.connectorType === undefined) {
       return;
     }
-    if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc') {
-      this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
+    if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc' || this.serviceId === 'spark-hybrid-impinterop') {
+      this.HybridServicesClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
         .then((clusters) => {
           this.clusterList = this.calculateMaintenanceModeLabel(clusters);
         })
@@ -122,6 +123,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       ept: 'private-trunk-sidepanel',
       'squared-fusion-cal': 'expressway-cluster-sidepanel',
       'squared-fusion-uc': 'expressway-cluster-sidepanel',
+      'spark-hybrid-impinterop': 'expressway-cluster-sidepanel',
       'squared-fusion-media': 'media-cluster-details',
       'spark-hybrid-datasecurity': 'hds-cluster-details',
       'contact-center-context': 'context-cluster-sidepanel',
@@ -159,6 +161,7 @@ export class HybridServiceClusterListComponent implements ng.IComponentOptions {
   public bindings = {
     serviceId: '<',
     clusterId: '<',
+    hasNodesViewFeatureToggle: '<',
   };
 }
 

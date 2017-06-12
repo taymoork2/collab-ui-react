@@ -19,6 +19,8 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public directoryNumber: any;
   public hasVoicemail: boolean = false;
   public thumbnailSrc: string | undefined = undefined;
+  public isAlternate: boolean;
+  public index: string = '';
 
   /* @ngInject */
   constructor(
@@ -30,7 +32,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { fallbackDestination, showReversionLookup } = changes;
+    const { fallbackDestination, showReversionLookup, isAlternate } = changes;
     if (fallbackDestination && fallbackDestination.currentValue) {
       this.processCallFeatureFallbackDestChanges(fallbackDestination);
     }
@@ -40,12 +42,17 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
         this.fallbackDestForm.$setValidity('', false, this.fallbackDestForm);
       }
     }
+
+    if (isAlternate && isAlternate.currentValue) {
+      this.isAlternate = isAlternate.currentValue;
+      this.index = (this.isAlternate) ? '1' : '';
+    }
   }
 
   private processCallFeatureFallbackDestChanges(fallbackDestinationChanges: ng.IChangesObject): void {
     if (_.isNull(fallbackDestinationChanges.currentValue.number) && _.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
       this.showMember = false;
-      this.showReversionLookup = false;
+      this.showReversionLookup = (this.fallbackDestination.number || this.fallbackDestination.numberUuid) ? false : true;
       this.selectedReversionNumber = '';
     } else {
       if (!_.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
@@ -104,6 +111,9 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
         sendToVoicemail: false,
       });
     }
+    if (this.isAlternate) {
+      fallbackDestination.timer = 5;
+    }
     this.onChangeFn({
       fallbackDestination: fallbackDestination,
     });
@@ -117,6 +127,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
         number: model,
         numberUuid: null,
         sendToVoicemail: false,
+        timer: this.isAlternate ? 5 : null,
       }),
     });
   }
@@ -129,6 +140,9 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
       memberUuid: this.fallbackDestination.memberUuid,
       sendToVoicemail: this.fallbackDestination.sendToVoicemail,
     });
+    if (this.isAlternate) {
+      fallbackDestination.timer = this.fallbackDestination.timer;
+    }
     this.onChangeFn({
       fallbackDestination: fallbackDestination,
     });
@@ -141,6 +155,9 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     this.fallbackDestForm.$setDirty();
     this.fallbackDestForm.$setValidity('', false, this.fallbackDestForm);
     this.thumbnailSrc = undefined;
+    this.onChangeFn({
+      fallbackDestination: new FallbackDestination(),
+    });
   }
 
   private getPrimaryNumber(member: Member): Line {
@@ -158,6 +175,7 @@ export class CallFeatureFallbackDestinationComponent implements ng.IComponentOpt
     fallbackDestination: '<',
     showReversionLookup: '<',
     isNew: '<',
+    isAlternate: '<',
     onChangeFn: '&',
   };
 }

@@ -2,6 +2,7 @@ import { Notification } from 'modules/core/notifications';
 
 class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
   private $: any;
+  private static readonly MAX_IMPORT: number = 300;
 
   public file: string;
   public onImported: any;
@@ -52,6 +53,15 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
 
         if (!_.isArray(lines) || lines.length <= 1) {
           this.Notification.error('gemini.tds.numbers.import.resultMsg.noItemFound');
+          this.setProgress(100);
+          this.isParsing = false;
+          return;
+        }
+
+        // the `lines` value contains the header
+        if (lines.length > GmTdImportNumbersFromCsvCtrl.MAX_IMPORT + 1) {
+          this.Notification.error('gemini.tds.numbers.import.resultMsg.exceedMax',
+            { max: GmTdImportNumbersFromCsvCtrl.MAX_IMPORT });
           this.setProgress(100);
           this.isParsing = false;
           return;

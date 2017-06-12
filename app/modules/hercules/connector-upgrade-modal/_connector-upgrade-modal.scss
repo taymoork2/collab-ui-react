@@ -1,0 +1,7 @@
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.connector-upgrade-modal {
+  .spacing {
+    @include vr-spacing(mt, 1);
+  }
+}

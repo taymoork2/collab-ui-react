@@ -23,6 +23,7 @@ describe('Controller: SupportCtrl', function () {
       $scope: $scope,
       Authinfo: Authinfo,
       Userservice: Userservice,
+      hasAtlasHybridCallUserTestTool: false,
     });
   }));
 
@@ -60,6 +61,7 @@ describe('Controller: SupportCtrl', function () {
         $scope: $scope,
         Authinfo: Authinfo,
         Userservice: Userservice,
+        hasAtlasHybridCallUserTestTool: false,
       });
 
       $scope.$digest();
@@ -80,6 +82,7 @@ describe('Controller: SupportCtrl', function () {
         $scope: $scope,
         Authinfo: Authinfo,
         Userservice: Userservice,
+        hasAtlasHybridCallUserTestTool: false,
       });
 
       $scope.$digest();
@@ -117,6 +120,7 @@ describe('Controller: SupportCtrl', function () {
         $scope: $scope,
         Authinfo: Authinfo,
         Userservice: Userservice,
+        hasAtlasHybridCallUserTestTool: false,
       });
 
       $scope.gotoCdrSupport = spyOn($scope, 'gotoCdrSupport');
@@ -139,6 +143,7 @@ describe('Controller: SupportCtrl', function () {
         $scope: $scope,
         Authinfo: Authinfo,
         Userservice: Userservice,
+        hasAtlasHybridCallUserTestTool: false,
       });
 
       $scope.gotoCdrSupport = spyOn($scope, 'gotoCdrSupport');

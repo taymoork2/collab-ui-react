@@ -4,12 +4,13 @@
       <span class='report-section-header' translate="{{::$ctrl.options.headerTitle}}"></span>
       <i ng-if="$ctrl.isPopover()" class='icon icon-information' tooltip="{{::$ctrl.getPopoverText()}}" tooltip-trigger="mouseenter" tooltip-placement="bottom" tooltip-animation="true"></i>
       <div ng-if="$ctrl.exportDropdown" class="grid-filter dropdown pull-right">
-        <a ng-click="$ctrl.toggleExportMenu()">
+        <a href ng-click="$ctrl.toggleExportMenu()">
           <i class='icon icon-three-dots export-dots'></i>
         </a>
         <ul class="dropdown-menu dropdown-primary" ng-class="{'export-visible': $ctrl.exportMenu}">
-          <li ng-repeat="object in $ctrl.exportDropdown" class="export-item">
-            <a id="{{object.id}}" ng-click="$ctrl.dropdownSelect(object)">
+          <li class="export-item"><a id="{{$ctrl.exportDropdown.header.id}}" translate="{{$ctrl.exportDropdown.header.label}}"></a></li>
+          <li ng-repeat="object in $ctrl.exportDropdown.menu" class="export-item" ng-click="$ctrl.dropdownSelect(object)">
+            <a id="{{object.id}}">
               <span translate="{{object.label}}"></span>
             </a>
           </li>
@@ -65,7 +66,7 @@
           <p ng-if="!$ctrl.secondaryIsEmpty() && !$ctrl.secondaryIsError()">{{$ctrl.getDescription($ctrl.secondaryOptions.description, $ctrl.secondaryOptions.alternateTranslations)}}</p>
           <p ng-if="$ctrl.secondaryIsEmpty()">
             {{$ctrl.getDescription($ctrl.secondaryOptions.emptyDescription, $ctrl.secondaryOptions.alternateTranslations)}}
-            <a ng-click="$ctrl.goToUsersTab()" translate='activeUsers.usersTab'></a>
+            <a href ng-click="$ctrl.goToUsersTab()" translate='activeUsers.usersTab'></a>
           </p>
           <p ng-if="$ctrl.secondaryIsError()">
             <i class="icon icon-warning no-data-warning"></i>
@@ -93,7 +94,7 @@
           </div>
         </div>
         <div class="box-match">
-          <a ng-click="$ctrl.openCloseSecondaryReport()">
+          <a href ng-click="$ctrl.openCloseSecondaryReport()">
             <span ng-if="!$ctrl.secondaryReport" translate="{{::$ctrl.options.id}}.show"></span>
             <span ng-if="$ctrl.secondaryReport" translate="{{::$ctrl.options.id}}.hide"></span>
           </a>

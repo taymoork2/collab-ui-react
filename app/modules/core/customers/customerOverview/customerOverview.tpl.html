@@ -14,6 +14,10 @@
         <button class="btn btn--primary" ng-click="customerOverview.saveLogoSettings()" type="submit" translate="common.save"></button>
         <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
       </cs-sp-buttons>
+      <div class="premium" ng-if="customerOverview.currentCustomer.isPremium && customerOverview.isProPackEnabled">
+        <i class="icon icon-certified premium-customer-icon"></i>
+        <div class="premium-customer" translate="customerPage.premiumCustomer"></div>
+      </div>
       <button cs-btn loading="customerOverview.loadingCustomerPortal" id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people"
         ng-disabled="!customerOverview.currentCustomer.isAllowedToManage && !customerOverview.isPartnerAdmin"
         ng-click="customerOverview.launchCustomerPortal()">

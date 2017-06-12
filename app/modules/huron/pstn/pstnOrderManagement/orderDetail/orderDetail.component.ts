@@ -84,5 +84,6 @@ export class OrderDetailComponent implements ng.IComponentOptions {
   public bindings = {
     currentOrder: '<',
     currentCustomer: '<',
+    isCarrierByopstn: '<',
   };
 }

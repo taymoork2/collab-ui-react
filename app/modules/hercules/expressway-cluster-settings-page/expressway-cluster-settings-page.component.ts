@@ -1,4 +1,5 @@
 import { Notification } from 'modules/core/notifications';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface IResourceGroupOptions {
   label: string;
@@ -30,7 +31,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     private $modal,
     private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
     private ResourceGroupService,
   ) {
@@ -68,7 +69,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   }
 
   private refreshClusterData(id) {
-    return this.FusionClusterService.get(id)
+    return this.HybridServicesClusterService.get(id)
       .then((cluster) => {
         this.cluster = cluster;
         return cluster;
@@ -184,6 +185,9 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
       if (service === 'c_ucmc') {
         return this.$translate.instant('hercules.connectorNameFromConnectorType.c_ucmc');
       }
+      if (service === 'c_imp') {
+        return this.$translate.instant('hercules.connectorNameFromConnectorType.c_imp');
+      }
       if (service === 'c_mgmt') {
         return this.$translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
       }
@@ -209,7 +213,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   }
 
   public filterServices(connector) {
-    return connector === 'c_cal' || connector === 'c_ucmc';
+    return connector === 'c_cal' || connector === 'c_ucmc' || connector === 'c_imp';
   }
 
   public getLocalizedServiceName(connector) {

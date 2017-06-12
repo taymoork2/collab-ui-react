@@ -1,0 +1,362 @@
+[
+  {
+    "category": "Bangalore Integration",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#417505",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Available"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#417505",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Available"
+      }
+    ]
+  },
+  {
+    "category": "CME_DEV",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      }
+    ]
+  },
+  {
+    "category": "Clemens_Test_Cluster",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      }
+    ]
+  },
+  {
+    "category": "Dans_Test_Cluster",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#417505",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Available"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#417505",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Available"
+      }
+    ]
+  },
+  {
+    "category": "Krishna-Test",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      }
+    ]
+  },
+  {
+    "category": "MFA_Integration",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#417505",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Available"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#417505",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Available"
+      }
+    ]
+  },
+  {
+    "category": "PATLURI_ECP_DMZ_PHASE2",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      }
+    ]
+  },
+  {
+    "category": "Seattle_Alpha",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#417505",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Available"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#417505",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Available"
+      }
+    ]
+  },
+  {
+    "category": "cme-integration",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#417505",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "2 node(s)",
+        "availability": "Available"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#417505",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "2 node(s)",
+        "availability": "Available"
+      }
+    ]
+  },
+  {
+    "category": "sj-mf-dev-test-eshak",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      }
+    ]
+  },
+  {
+    "category": "surest_Test",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#D03D35",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Unavailable"
+      }
+    ]
+  },
+  {
+    "category": "umesh_test_latest",
+    "segments": [
+      {
+        "start": 5,
+        "duration": 310,
+        "color": "#417505",
+        "startTime": "2017-06-06T06:48:59.361Z",
+        "endTime": "2017-06-06T11:58:54.229Z",
+        "nodes": "1 node(s)",
+        "availability": "Available"
+      },
+      {
+        "duration": 20,
+        "color": "#F1F1F1",
+        "startTime": "2017-06-06T11:58:54.229Z",
+        "endTime": "2017-06-06T12:18:58.277Z",
+        "nodes": "",
+        "availability": "No data available"
+      },
+      {
+        "duration": 1100,
+        "color": "#417505",
+        "startTime": "2017-06-06T12:18:58.277Z",
+        "endTime": "2017-06-07T06:38:54.452Z",
+        "nodes": "1 node(s)",
+        "availability": "Available"
+      }
+    ]
+  }
+]

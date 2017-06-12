@@ -20,7 +20,7 @@ describe('Controller: HelpdeskOrderController', function () {
     spyOn(HelpdeskService, 'getOrg').and.returnValue($.when(getJSONFixture('core/json/orders/orgResponse.json')));
     spyOn(HelpdeskService, 'editAdminEmail').and.returnValue($.when({}));
     spyOn(HelpdeskService, 'resendAdminEmail').and.returnValue($.when({}));
-    spyOn(Notification, 'errorWithTrackingId');
+    spyOn(Notification, 'errorResponse');
   }));
 
   describe('Order Controller Initialization with 1-tier order', function () {
@@ -55,7 +55,7 @@ describe('Controller: HelpdeskOrderController', function () {
       $scope.$apply();
       expect(orderController.customerEmailSent).toBe(new Date(1476222213.459667 * 1000).toUTCString());
     });
-    it('call Notification.errorWithTrackingId and supply the response data when promise is rejected', function () {
+    it('call Notification.errorResponse and supply the response data when promise is rejected', function () {
       $scope.$apply();
       var rejectData = {
         data: {
@@ -73,8 +73,8 @@ describe('Controller: HelpdeskOrderController', function () {
       });
 
       $scope.$apply();
-      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
-      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
+      expect(Notification.errorResponse).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
     });
   });
 

@@ -6,21 +6,21 @@ describe('HelpdeskCardsService', function () {
   var HelpdeskCardsOrgService;
   var LicenseService;
   var HelpdeskHuronService;
-  var FusionClusterService;
+  var HybridServicesClusterService;
   var $scope, q;
   var CloudConnectorService;
   var UCCService;
 
-  beforeEach(inject(function (_HelpdeskCardsOrgService_, _$q_, _LicenseService_, _$rootScope_, _HelpdeskHuronService_, _FusionClusterService_, _CloudConnectorService_, _UCCService_) {
+  beforeEach(inject(function (_HelpdeskCardsOrgService_, _$q_, _LicenseService_, _$rootScope_, _HelpdeskHuronService_, _HybridServicesClusterService_, _CloudConnectorService_, _UCCService_) {
     HelpdeskCardsOrgService = _HelpdeskCardsOrgService_;
     LicenseService = _LicenseService_;
     HelpdeskHuronService = _HelpdeskHuronService_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     $scope = _$rootScope_.$new();
     q = _$q_;
     CloudConnectorService = _CloudConnectorService_;
     UCCService = _UCCService_;
-    spyOn(FusionClusterService, 'getAll').and.returnValue(q.resolve(getJSONFixture('hercules/fusion-cluster-service-test-clusters.json')));
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue(q.resolve(getJSONFixture('hercules/fusion-cluster-service-test-clusters.json')));
   }));
 
   describe('Org Cards', function () {
@@ -64,7 +64,7 @@ describe('HelpdeskCardsService', function () {
     });
 
     afterEach(function () {
-      HelpdeskCardsOrgService = LicenseService = HelpdeskHuronService = FusionClusterService = $scope = q = CloudConnectorService = UCCService = undefined;
+      HelpdeskCardsOrgService = LicenseService = HelpdeskHuronService = HybridServicesClusterService = $scope = q = CloudConnectorService = UCCService = undefined;
     });
 
     it('should return correct message card for org', function () {

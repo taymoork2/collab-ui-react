@@ -25,28 +25,12 @@
     </table>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="hostDetailsCtrl.showAction()">
+  <cs-sp-section ng-if="hostDetailsCtrl.actions.length > 0">
     <div class="section-title-row section-name" translate="hercules.connectors.actions"></div>
     <ul>
-      <li ng-if="hostDetailsCtrl.showGoToHostAction()">
-        <a target="_blank" ng-href="https://{{hostDetailsCtrl.host.hostname}}/">
-          <span translate="hercules.connectors.goToHost"></span>
-        </a>
-      </li>
-      <li ng-if="hostDetailsCtrl.showHybridMediaAction()">
-        <a ng-click="hostDetailsCtrl.showReassignHostDialog()">
-          <span translate="hercules.connectors.moveNode"></span>
-        </a>
-      </li>
-      <li ng-if="hostDetailsCtrl.showHybridMediaAction() || hostDetailsCtrl.showHdsAction()">
-        <a ng-click="hostDetailsCtrl.showDeregisterHostDialog()">
-          <span translate="hercules.connectors.deregisterNode"></span>
-        </a>
-      </li>
-      <li ng-if="hostDetailsCtrl.showDeleteNodeAction()">
-        <a ng-click="hostDetailsCtrl.deleteExpressway()">
-          <span translate="hercules.connectors.removeNode"></span>
-        </a>
+      <li ng-repeat="action in hostDetailsCtrl.actions">
+        <a ng-if="action.href" target="_blank" ng-href="{{action.href}}">{{::action.textKey | translate }}</a>
+        <a ng-if="action.click" ng-click="action.click()">{{::action.textKey | translate }}</a>
       </li>
     </ul>
   </cs-sp-section>

@@ -1,6 +1,7 @@
 import { ConnectorType, ICluster, IResourceGroup, IReleaseChannelsResponse } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
-interface IOption {
+export interface IResourceGroupOptionPair {
   label: string;
   value: string;
 }
@@ -12,7 +13,7 @@ export class ResourceGroupService {
     private $http: ng.IHttpService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private UrlConfig,
   ) {
     this.extractDataFromResponse = this.extractDataFromResponse.bind(this);
@@ -83,10 +84,10 @@ export class ResourceGroupService {
       .then(this.extractDataFromResponse);
   }
 
-  public getAllAsOptions(orgId): ng.IPromise<IOption[]> {
-    return this.getAll(orgId)
+  public getAllAsOptions(orgId?): ng.IPromise<IResourceGroupOptionPair[]> {
+    return this.getAll(orgId || this.Authinfo.getOrgId())
       .then(groups => {
-        const options: IOption[] = _.map(groups, (group) => {
+        const options: IResourceGroupOptionPair[] = _.map(groups, (group) => {
           return {
             label: group.name + (group.releaseChannel ? ' (' + this.$translate.instant('hercules.fusion.add-resource-group.release-channel.' + group.releaseChannel) + ')' : ''),
             value: group.id,
@@ -97,13 +98,13 @@ export class ResourceGroupService {
   }
 
   public resourceGroupHasEligibleCluster(resourceGroupId: string, connectorType: ConnectorType): ng.IPromise<boolean> {
-    return this.FusionClusterService.getAll()
+    return this.HybridServicesClusterService.getAll()
       .then(clusters => {
         let clustersInGroup: ICluster[];
         if (resourceGroupId !== '') {
-          clustersInGroup = this.FusionClusterService.getClustersForResourceGroup(resourceGroupId, clusters);
+          clustersInGroup = this.HybridServicesClusterService.getClustersForResourceGroup(resourceGroupId, clusters);
         } else {
-          clustersInGroup = this.FusionClusterService.getUnassignedClusters(clusters);
+          clustersInGroup = this.HybridServicesClusterService.getUnassignedClusters(clusters);
         }
 
         // No clusters in group: obviously not going to work

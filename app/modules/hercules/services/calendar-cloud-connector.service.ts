@@ -124,7 +124,7 @@ export class CloudConnectorService {
     return this.$http.get(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${this.serviceId}`)
       .then(this.extractDataFromResponse)
       .then((service: IService) => {
-        // Align this with the FusionClusterService.getServiceStatus() to make the UI handling simpler
+        // Align this with the HybridServicesClusterService.getServiceStatus() to make the UI handling simpler
         service.serviceId = this.serviceId;
         service.setup = service.provisioned;
         service.statusCss = this.getStatusCss(service);

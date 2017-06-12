@@ -5,5 +5,5 @@
     id="sparkClientSecurityEnabled"
     ng-model="secCtrl.isSparkClientSecurityEnabled"
     cs-input-label="{{'globalSettings.security.description'|translate}}"
-    ng-disabled="!secCtrl.isSparkClientSecurityLoaded">
+    ng-disabled="!secCtrl.isSparkClientSecurityLoaded || !secCtrl.isProPackPurchased">
 </div>

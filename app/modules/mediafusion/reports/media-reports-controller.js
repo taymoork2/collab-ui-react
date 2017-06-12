@@ -140,6 +140,8 @@
     vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
     vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostType');
     vm.tooltipText = '';
+    vm.cardIndicator = 0;
+    vm.clusterUnavailablityFlag = false;
 
     setRefreshInterval();
     getCluster();
@@ -354,6 +356,17 @@
         vm.onpremShort = (vm.onprem == vm.noData) ? vm.noData : abbreviateNumber(vm.onprem);
         vm.onpremTooltip = checkForTooltip(vm.onpremShort) ? vm.onprem : '';
         vm.cloudOverflowTooltip = checkForTooltip(vm.second_card_value) ? vm.cloudOverflow : '';
+        setOverflowIndicator();
+      });
+    }
+
+    function setOverflowIndicator() {
+      MediaReportsService.getOverflowIndicator(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (response == vm.ABORT) {
+          return undefined;
+        } else {
+          vm.cardIndicator = response.data.dataProvider[0].value;
+        }
       });
     }
 
@@ -624,6 +637,7 @@
 
     function setAvailabilityGraph(response) {
       vm.availabilityChart = AvailabilityResourceGraphService.setAvailabilityGraph(response, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected, vm.Map);
+      clusterUnavailablityCheck();
     }
 
     function setDummyUtilization() {
@@ -727,6 +741,19 @@
         tooltipFlag = true;
       }
       return tooltipFlag;
+    }
+
+    function clusterUnavailablityCheck() {
+      vm.clusterUnavailablityFlag = false;
+      _.each(vm.availabilityChart.dataProvider, function (cluster) {
+        if (!vm.clusterUnavailablityFlag) {
+          if (cluster.segments[cluster.segments.length - 1].availability === "Unavailable") {
+            vm.clusterUnavailablityFlag = true;
+          } else {
+            vm.clusterUnavailablityFlag = false;
+          }
+        }
+      });
     }
 
   }

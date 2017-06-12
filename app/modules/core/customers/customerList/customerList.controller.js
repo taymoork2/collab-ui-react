@@ -10,6 +10,9 @@ require('./_customer-list.scss');
   function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window,
     Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log,
     Notification, Orgservice, PartnerService, TrialService, uiGridSelectionService, HuronCompassService) {
+    var PREMIUM = 'premium';
+    var STANDARD = 'standard';
+
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -18,6 +21,7 @@ require('./_customer-list.scss');
     vm.timeoutVal = 1000;
     vm.isCareEnabled = false;
     vm.isAdvanceCareEnabled = false;
+    vm.premiumTooltip = $translate.instant('customerPage.premiumCustomer');
     vm.isOrgSetup = isOrgSetup;
     vm.isPartnerAdminWithCallOrRooms = isPartnerAdminWithCallOrRooms;
     vm.isOwnOrg = isOwnOrg;
@@ -57,36 +61,43 @@ require('./_customer-list.scss');
         label: $translate.instant('customerPage.message'),
         isSelected: false,
         isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'conferencing',
         label: $translate.instant('customerPage.meeting'),
         isSelected: false,
         isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'webex',
         label: $translate.instant('customerPage.webexOverview'),
         isSelected: false,
         isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'communications',
         label: $translate.instant('customerPage.call'),
         isSelected: false,
         isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'roomSystems',
         label: $translate.instant('customerPage.roomSystem'),
         isSelected: false,
         isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'sparkBoard',
         label: $translate.instant('customerPage.sparkBoard'),
         isSelected: false,
         isAccountFilter: false,
+        isPremiumFilter: false,
       }, {
         value: 'care',
         label: $translate.instant('customerPage.care'),
         isSelected: false,
         isAccountFilter: false, // a non-account filter filters on services instead
+        isPremiumFilter: false,
       }, {
         value: 'trial',
         label: $translate.instant('customerPage.trialAccountsFilter', {
@@ -95,6 +106,7 @@ require('./_customer-list.scss');
         count: 0,
         isSelected: false,
         isAccountFilter: true,
+        isPremiumFilter: false,
       }, {
         value: 'active',
         label: $translate.instant('customerPage.activeAccountsFilter', {
@@ -103,6 +115,26 @@ require('./_customer-list.scss');
         count: 0,
         isSelected: false,
         isAccountFilter: true,
+        isPremiumFilter: false,
+      }, {
+        value: PREMIUM,
+        label: $translate.instant('customerPage.premiumAccountsFilter', {
+          count: 0,
+        }),
+        count: 0,
+        isSelected: false,
+        isAccountFilter: false,
+        isPremiumFilter: true,
+        previousState: false,
+      }, {
+        value: STANDARD,
+        label: $translate.instant('customerPage.standardAccountsFilter', {
+          count: 0,
+        }),
+        count: 0,
+        isSelected: false,
+        isAccountFilter: false,
+        isPremiumFilter: true,
       }, {
         value: 'expired',
         label: $translate.instant('customerPage.expiredAccountsFilter', {
@@ -111,6 +143,7 @@ require('./_customer-list.scss');
         count: 0,
         isSelected: false,
         isAccountFilter: true,
+        isPremiumFilter: false,
       }],
     };
     $scope.$watch(function () {
@@ -277,9 +310,16 @@ require('./_customer-list.scss');
       $q.all([
         FeatureToggleService.atlasCareTrialsGetStatus(),
         FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+        FeatureToggleService.atlasITProPackGetStatus(),
       ]).then(function (toggles) {
         vm.isCareEnabled = toggles[0];
         vm.isAdvanceCareEnabled = toggles[1];
+        vm.isProPackEnabled = toggles[2];
+
+        if (!vm.isProPackEnabled) {
+          _.remove(vm.filter.options, { value: PREMIUM });
+          _.remove(vm.filter.options, { value: STANDARD });
+        }
 
         if (!vm.isCareEnabled) {
           _.remove(vm.filter.options, { value: 'care' });
@@ -453,8 +493,18 @@ require('./_customer-list.scss');
 
     function rowFilter(rows) {
       var selectedFilters = {
-        account: _.filter(vm.filter.selected, { isAccountFilter: true }),
-        license: _.filter(vm.filter.selected, { isAccountFilter: false }),
+        account: _.filter(vm.filter.selected, {
+          isAccountFilter: true,
+          isPremiumFilter: false,
+        }),
+        license: _.filter(vm.filter.selected, {
+          isAccountFilter: false,
+          isPremiumFilter: false,
+        }),
+        premium: _.filter(vm.filter.selected, {
+          isAccountFilter: false,
+          isPremiumFilter: true,
+        }),
       };
 
       _.forEach(rows, function (row) {
@@ -467,6 +517,10 @@ require('./_customer-list.scss');
           _.some(selectedFilters.license, function (filter) {
             return vm.isLicenseTypeAny(row.entity, filter.value);
           }),
+          byPremiumFilter: (!selectedFilters.premium.length) ||
+          _.some(selectedFilters.premium, function (filter) {
+            return isPremiumFilterType(filter.value, row.entity.isPremium);
+          }),
         };
 
         row.visible = _.every(isVisibleFlags);
@@ -476,6 +530,16 @@ require('./_customer-list.scss');
 
       vm._helpers.updateResultCount(visibleRowsData);
       return rows;
+    }
+
+    function isPremiumFilterType(filterValue, isPremium) {
+      if (filterValue === PREMIUM) {
+        return isPremium;
+      } else if (filterValue === STANDARD) {
+        return !isPremium;
+      } else {
+        return false;
+      }
     }
 
     function filterAction(value) {
@@ -583,7 +647,7 @@ require('./_customer-list.scss');
             Notification.error('partnerHomePage.errGetOrgs');
           }
           // dont use a .finally(..) since this $q.all is returned
-          // (if you .finally(..), the next `then` doesnt get called)
+          // (if you .finally(..), the next 'then' doesnt get called)
           vm.showManagedOrgsRefresh = false;
         })
         .catch(function (response) {
@@ -604,13 +668,33 @@ require('./_customer-list.scss');
           count: filter.count,
         });
       });
-    }
 
+      if (vm.isProPackEnabled) {
+        var counts = {};
+        counts[PREMIUM] = _.filter(visibleRowsData, { isPremium: true });
+        counts[STANDARD] = _.filter(visibleRowsData, { isPremium: false });
+        var premiumFilters = _.filter(vm.filter.options, { isPremiumFilter: true });
+
+        _.forEach(premiumFilters, function (filter) {
+          filter.count = _.get(counts, filter.value, []).length;
+          filter.label = $translate.instant('customerPage.' + filter.value + 'AccountsFilter', {
+            count: filter.count,
+          });
+
+          // Analytics should only fire when the filter for premium accounts is changed from unselected to selected
+          if (filter.value === PREMIUM && filter.previousState !== filter.isSelected) {
+            if (filter.previousState === false) {
+              Analytics.trackPremiumEvent(Analytics.sections.PREMIUM.eventNames.PREMIUM_FILTER);
+            }
+            filter.previousState = filter.isSelected;
+          }
+        });
+      }
+    }
 
     function modifyManagedOrgs(customerOrgId) {
       PartnerService.modifyManagedOrgs(customerOrgId);
     }
-
 
     function openAddTrialModal() {
       Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP, $state.current.name, Authinfo.getOrgId());
@@ -619,7 +703,6 @@ require('./_customer-list.scss');
         $state.modal.result.finally(resetLists);
       });
     }
-
 
     function resetLists() {
       return getManagedOrgsList(vm.searchStr).then(function () {

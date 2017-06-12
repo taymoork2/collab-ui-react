@@ -4078,7 +4078,7 @@
     "feature2": "Calling To/From the U.S. 50 States",
     "feature3": "No Fees for Number Porting/Transfer",
     "feature4": "Caller ID Name Delivery and Registration",
-    "feature5": "E999"
+    "feature5": "E911"
   },
   "thinktelFeatures": {
     "feature1": "1 Telephone Number per User",
@@ -4093,7 +4093,7 @@
     "feature2": "1 DID telephone number (new or ported)",
     "feature3": "Caller ID",
     "feature4": "Directory listing",
-    "feature5": "E999",
+    "feature5": "E911",
     "feature6": "No set-up fees"
   },
   "partnerHomePage": {

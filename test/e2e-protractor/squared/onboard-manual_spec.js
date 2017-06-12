@@ -1,7 +1,6 @@
 'use strict';
 
 /* global inviteusers manageUsersPage */
-/* global LONG_TIMEOUT */
 
 describe('Onboard users through Manual Invite', function () {
   var token;

@@ -2,10 +2,10 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2($modal, $state, $translate, Authinfo, FusionClusterService) {
+  function MediaServiceControllerV2($modal, $state, $stateParams, $translate, Authinfo, HybridServicesClusterService) {
 
     var vm = this;
-    vm.backState = 'services-overview';
+    vm.backState = $stateParams.backTo || 'services-overview';
 
     // Added for cs-page-header
     vm.pageTitle = $translate.instant('mediaFusion.page_title');
@@ -34,7 +34,7 @@
       modalClass: 'redirect-add-resource',
     };
 
-    FusionClusterService.serviceIsSetUp('squared-fusion-media')
+    HybridServicesClusterService.serviceIsSetUp('squared-fusion-media')
       .then(function (enabled) {
         if (enabled) {
           vm.addResourceModal.resolve.firstTimeSetup = false;

@@ -6,8 +6,9 @@
     .controller('EditTrialUsersController', EditTrialUsersController);
 
   /* @ngInject */
-  function EditTrialUsersController($translate, Authinfo, Userservice, HDSService, MailValidatorService, Notification) {
+  function EditTrialUsersController($translate, Authinfo, Userservice, HDSService, MailValidatorService, Notification, dirsyncEnabled) {
     var vm = this;
+    vm.dirsyncEnabled = dirsyncEnabled;
     vm.emailTrialUsers = [];
     vm.trialUserGroupId = null;
     vm.localizedAddEmailWatermark = $translate.instant('hds.resources.editTrialUsers.emailNotificationsWatermark');
@@ -17,6 +18,8 @@
     vm.addUser = addUser;
     vm.saveTrialUsers = saveTrialUsers;
     vm.getNumUsersInTagField = getNumUsersInTagField;
+    vm.onTagRemoving = onTagRemoving;
+    vm.onTagAdding = onTagAdding;
     vm.maxTrialUsers = 250;
     var localizedRefreshOtherServices = $translate.instant('hds.resources.addTrialUsers.refreshOtherServices');
     var localizedInvalidUsers = $translate.instant('hds.resources.editTrialUsers.invalidUsers');
@@ -61,6 +64,23 @@
         vm.savingEmail = true;
       }
     }
+
+    function onTagRemoving() {
+      if (vm.dirsyncEnabled === true) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    function onTagAdding() {
+      if (vm.dirsyncEnabled === true) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
 
     function addUser() {
       var emailTrialUsers = _.map(vm.emailTrialUsers, function (data) {

@@ -32,6 +32,7 @@ module.exports = csp({
       'http://127.0.0.1:8000',
       'https://ds2-qlikdemo',
       'https://ds2-win2012-01',
+      'https://10.29.42.18',
     ],
     objectSrc: [
       'http://www.cisco.com', // Terms of Service
@@ -71,6 +72,7 @@ module.exports = csp({
       'http://dpm.demdex.net', // Adobe DTM Omniture
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
       'https://*.clouddrive.com', // CSV download
+      'https://*.amazonaws.com', // MOH Media
       'https://bam.nr-data.net', // New Relic Browser
       'https://10.194.245.72:8443',
     ],

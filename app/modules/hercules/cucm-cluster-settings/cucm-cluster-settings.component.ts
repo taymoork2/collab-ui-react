@@ -1,3 +1,5 @@
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+
 class CucmClusterSettingsPageCtrl implements ng.IComponentController {
 
   public cluster: any;
@@ -5,7 +7,7 @@ class CucmClusterSettingsPageCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $rootScope: ng.IRootScopeService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
@@ -16,7 +18,7 @@ class CucmClusterSettingsPageCtrl implements ng.IComponentController {
   }
 
   private loadCluster(clusterId) {
-    return this.FusionClusterService.get(clusterId)
+    return this.HybridServicesClusterService.get(clusterId)
       .then((cluster) => {
         this.cluster = cluster;
       });

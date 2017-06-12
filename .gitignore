@@ -27,8 +27,9 @@ stats.json
 .history
 .vscode
 .history
-yarn.lock
 .tern-project
+package-lock.json
+yarn.lock
 
 build
 coverage

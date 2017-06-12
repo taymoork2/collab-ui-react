@@ -38,7 +38,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
               private ActivationCodeEmailService,
               private $translate,
               private Notification,
-              private CsdmEmailService,
+              private CsdmEmailService: CsdmEmailService,
               private USSService) {
     super($q, $stateParams);
 

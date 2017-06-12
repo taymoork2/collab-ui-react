@@ -7,14 +7,14 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $filter, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService, $httpBackend;
+  var controller, $filter, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, HybridServicesClusterService, SunlightReportService, $httpBackend;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
   var isCustomerLaunchedFromPartner = true;
 
   afterEach(function () {
-    controller = $filter = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = $httpBackend = undefined;
+    controller = $filter = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = HybridServicesClusterService = SunlightReportService = $httpBackend = undefined;
   });
 
   afterAll(function () {
@@ -209,7 +209,7 @@ describe('Controller: OverviewCtrl', function () {
     }).head();
   }
 
-  function defaultWireUpFunc(_$rootScope_, _$filter_, $controller, _$httpBackend_, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_, _SunlightReportService_) {
+  function defaultWireUpFunc(_$rootScope_, _$filter_, $controller, _$httpBackend_, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _HybridServicesClusterService_, _SunlightReportService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -221,7 +221,7 @@ describe('Controller: OverviewCtrl', function () {
     Log = _Log_;
     OverviewNotificationFactory = _OverviewNotificationFactory_;
     TrialService = _TrialService_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     SunlightReportService = _SunlightReportService_;
     $httpBackend = _$httpBackend_;
     $filter = _$filter_;
@@ -229,8 +229,8 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(SunlightReportService, 'getOverviewData');
     SunlightReportService.getOverviewData.and.returnValue({});
 
-    spyOn(FusionClusterService, 'getAll');
-    FusionClusterService.getAll.and.returnValue($q.resolve());
+    spyOn(HybridServicesClusterService, 'getAll');
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve());
 
     HybridServicesFlagService = {
       readFlags: function () {

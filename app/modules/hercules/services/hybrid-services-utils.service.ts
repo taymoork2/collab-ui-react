@@ -6,6 +6,7 @@ export class HybridServicesUtilsService {
     'c_mgmt',
     'c_cal',
     'c_ucmc',
+    'c_imp',
     'mf_mgmt',
     'hds_app',
     'cs_mgmt',
@@ -19,6 +20,7 @@ export class HybridServicesUtilsService {
     'squared-fusion-gcal',
     'squared-fusion-uc',
     'squared-fusion-ec',
+    'spark-hybrid-impinterop',
     'ept',
     'squared-fusion-media',
     'spark-hybrid-datasecurity',
@@ -37,6 +39,8 @@ export class HybridServicesUtilsService {
         return ['squared-fusion-cal'];
       case 'c_ucmc':
         return ['squared-fusion-uc', 'squared-fusion-ec'];
+      case 'c_imp':
+        return ['spark-hybrid-impinterop'];
       case 'c_mgmt':
         return ['squared-fusion-mgmt'];
       case 'mf_mgmt':
@@ -59,6 +63,8 @@ export class HybridServicesUtilsService {
         return 'c_ucmc';
       case 'squared-fusion-mgmt':
         return 'c_mgmt';
+      case 'spark-hybrid-impinterop':
+        return 'c_imp';
       case 'squared-fusion-media':
         return 'mf_mgmt';
       case 'spark-hybrid-datasecurity':

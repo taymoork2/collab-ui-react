@@ -1,3 +1,4 @@
+import './hunt-group-max-wait-time.component.scss';
 import { HuntGroupMaxWaitTimeComponent } from './hunt-group-max-wait-time.component';
 
 export default angular

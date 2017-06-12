@@ -1,7 +1,5 @@
 'use strict';
 
-/* global LONG_TIMEOUT, deleteTrialUtils */
-
 describe('Spark Care Partner flow', function () {
 
   describe('Add/Edit Partner Trial', function () {

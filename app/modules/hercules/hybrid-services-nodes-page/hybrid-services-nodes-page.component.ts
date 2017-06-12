@@ -3,6 +3,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface ISimplifiedConnector {
   alarms: IConnectorAlarm[];
@@ -13,12 +14,15 @@ interface ISimplifiedConnector {
   service: string;
   status: IMergedStateSeverity;
   statusName: string;
+  upgradeState: string;
   version: string;
 }
 
 interface ISimplifiedNode {
   name: string;
   serial: string;
+  pendingTooltip: string;
+  platformVersion?: string;
   maintenanceMode: ConnectorMaintenanceMode;
   connectors: ISimplifiedConnector[];
 }
@@ -33,6 +37,9 @@ interface IData {
 class HybridServicesNodesPageCtrl implements ng.IComponentController {
   private REFRESH_INTERVAL = 30 * 1000;
   private refreshTimeout: ng.IPromise<void> | null = null;
+  private clusterCache: ICluster;
+  public connectorTypesWithUpgrade: ConnectorType[] = [];
+  public nextUpgradeStartTime = '';
   public data: IData;
   public gridOptions = {};
   public loading = true; // first load
@@ -46,7 +53,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
-    private FusionClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private ModalService,
@@ -61,6 +68,10 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.loadCluster(clusterId.currentValue);
+      this.HybridServicesClusterService.get(clusterId.currentValue)
+        .then((info) => {
+          this.nextUpgradeStartTime = moment(info.upgradeSchedule.nextUpgradeWindow.startTime).format('LLL');
+        });
     }
   }
 
@@ -109,7 +120,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     })
     .result
     .then(() => {
-      return this.FusionClusterService.updateHost(node.serial, {
+      return this.HybridServicesClusterService.updateHost(node.serial, {
         maintenanceMode: 'on',
       })
       .then(response => {
@@ -131,7 +142,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     })
     .result
     .then(() => {
-      return this.FusionClusterService.updateHost(node.serial, {
+      return this.HybridServicesClusterService.updateHost(node.serial, {
         maintenanceMode: 'off',
       })
       .then(() => {
@@ -182,6 +193,12 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     });
   }
 
+  public $onDestroy(): void {
+    if (this.refreshTimeout) {
+      this.$timeout.cancel(this.refreshTimeout);
+    }
+  }
+
   private loadCluster(id) {
     if (this.refreshTimeout) {
       this.$timeout.cancel(this.refreshTimeout);
@@ -189,15 +206,14 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     if (!this.loading) {
       this.refreshing = true;
     }
-    let clusterCache: ICluster;
-    return this.FusionClusterService.get(id)
+    return this.HybridServicesClusterService.get(id)
       .then((cluster: ICluster) => {
-        clusterCache = cluster;
+        this.clusterCache = cluster;
         return this.getSerials(cluster);
       })
       .then(this.fetchNodes)
       .then((nodes: IHost[]) => {
-        this.data = this.processData(clusterCache, nodes);
+        this.data = this.processData(this.clusterCache, nodes);
         return this.data;
       })
       .catch(response => {
@@ -221,12 +237,43 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
 
   private fetchNodes(serials: string[]) {
     const promises = _.map(serials, (serial) => {
-      return this.FusionClusterService.getHost(serial);
+      return this.HybridServicesClusterService.getHost(serial);
     });
     return this.$q.all(promises);
   }
 
+  public openUpgradeModal(): void {
+    this.$modal.open({
+      templateUrl: 'modules/hercules/connector-upgrade-modal/connector-upgrade-modal.html',
+      type: 'small',
+      controller: 'ConnectorUpgradeController',
+      controllerAs: 'ConnectorUpgradeCtrl',
+      resolve: {
+        connectorTypes: () => this.connectorTypesWithUpgrade,
+        cluster: () => this.clusterCache,
+      },
+    })
+    .result
+    .then(() => {
+      this.loadCluster(this.data.id);
+    });
+  }
+
   private processData(cluster: ICluster, nodes: IHost[]): IData {
+    this.connectorTypesWithUpgrade = _.chain(cluster.provisioning)
+      .filter((provisioning) => {
+        return _.some(cluster.connectors, (connector) => {
+          // The code checks if the connector:
+          // has the right type
+          // is not currently upgrading
+          // version is different from the available version
+          return provisioning.connectorType === connector.connectorType &&
+                connector.upgradeState === 'upgraded' &&
+                provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
+        });
+      })
+      .map((provisioning) => provisioning.connectorType)
+      .value();
     const result: IData = {
       id: cluster.id,
       name: cluster.name,
@@ -239,16 +286,16 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
             .filter({ hostSerial: node.serial })
             .map(connector => {
               const mergedStatus = this.HybridServicesClusterStatesService.getMergedStateSeverity([connector]);
-              const provisioning = _.find(cluster.provisioning, { connectorType: connector.connectorType });
               const simplifiedConnector: ISimplifiedConnector = {
                 alarms: connector.alarms,
                 connectorType: connector.connectorType,
-                hasUpgradeAvailable: (provisioning && provisioning.availableVersion) ? provisioning.availableVersion !== connector.runningVersion : false,
+                hasUpgradeAvailable: _.includes(this.connectorTypesWithUpgrade, connector.connectorType),
                 id: connector.id,
                 maintenanceMode: this.getMaintenanceModeForConnector(connector),
                 service: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),
                 status: mergedStatus,
                 statusName: this.$translate.instant(`hercules.status.${mergedStatus.name}`),
+                upgradeState: connector.upgradeState,
                 version: connector.runningVersion,
               };
               return simplifiedConnector;
@@ -258,6 +305,8 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
           return <ISimplifiedNode>{
             name: node.hostname,
             serial: node.serial,
+            pendingTooltip: this.$translate.instant(`hercules.nodesPage.pendingTooltip`, { date: moment(node.lastMaintenanceModeEnabledTimestamp).format('LLL') }),
+            platformVersion: node.platformVersion,
             maintenanceMode: node.maintenanceMode,
             connectors: connectors,
           };

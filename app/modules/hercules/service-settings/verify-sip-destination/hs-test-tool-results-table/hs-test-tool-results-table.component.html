@@ -1,0 +1,20 @@
+<div class="sip-verification-modal-section">
+  <h6 translate="common.details"></h6>
+  <table class="table table-striped sip-destination-results-table">
+    <thead>
+      <tr>
+        <td translate="common.step"></td>
+        <td translate="common.details"></td>
+        <td translate="common.result" class="result"></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="step in $ctrl.testResults track by $index">
+        <td>{{$ctrl.localizeType(step.type)}}</td>
+        <td ng-if="step.description.length < 500 || step.description.length === undefined">{{step.description}}</td>
+        <td ng-if="step.description.length >= 500">(Description removed, because it exceeds 500 characters)</td>
+        <td class="result"><i class="icon" ng-class="$ctrl.severityToIcon(step.severity)"></i></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

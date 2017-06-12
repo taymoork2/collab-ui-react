@@ -1,9 +1,13 @@
 import testModule from '../index';
 
 describe('Component: gmTdHeader', () => {
+  beforeAll(function () {
+    this.preData = getJSONFixture('gemini/common.json');
+  });
+
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', '$window', 'Notification', 'gemService', 'TelephonyDomainService');
+    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', '$window', 'Notification', 'gemService', 'TelephonyDomainService');
     this.mockData = {
       content: {
         data: [{
@@ -32,6 +36,10 @@ describe('Component: gmTdHeader', () => {
     } else {
       this.gemService.setStorage('remedyTicket', { status: 'Canceled', ticketUrl: '' });
     }
+
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
+    this.$httpBackend.flush();
 
     this.compileComponent('gmTdHeader',  { showRemedyTicket: true,
       tdBaseInfo: `{ customerId: 'ff808081527ccb3f0153116a3531041e', ccaDomainId: '8a607bdb5b1280d3015b1353f92800cd' }`,

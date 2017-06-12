@@ -125,7 +125,17 @@
           }
         }]
       }
-    },   {
+    }, {
+      "conditional": {
+        "expression": "var%20func%20%3D%20function%20()%20%7Bvar%20checks%20%3D%20%5B%5D%3B%20checks.push('12069998765')%3B%20return%20checks.indexOf(this%5B'Original-Caller-Number'%5D)%20!%3D%3D%20-1%20%7D%3B",
+        "true":[{
+          "goto":{ 
+            "ceid":"goto ceid"
+          }
+        }]
+      }
+    },  
+      {
         "runActionsOnInput": {
           "description": "{\"uploadFile\":\"testFile.wav\"}",
           "inputType": 4,

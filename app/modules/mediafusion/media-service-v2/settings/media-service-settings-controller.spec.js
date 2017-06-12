@@ -1,11 +1,11 @@
 'use strict';
 
 describe('Controller: MediaServiceSettingsControllerV2', function () {
-  var controller, FusionClusterService, MediaClusterServiceV2, Notification, Analytics, $q, httpBackend, Orgservice, clusters;
+  var controller, HybridServicesClusterService, MediaClusterServiceV2, Notification, Analytics, $q, httpBackend, Orgservice, clusters;
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  beforeEach(inject(function ($controller, $httpBackend, $stateParams, _FusionClusterService_, _MediaClusterServiceV2_, _Notification_, _$q_, _Analytics_, _Orgservice_) {
+  beforeEach(inject(function ($controller, $httpBackend, $stateParams, _HybridServicesClusterService_, _MediaClusterServiceV2_, _Notification_, _$q_, _Analytics_, _Orgservice_) {
     clusters = [{
       'id': 'a050fcc7-9ade-4790-a06d-cca596910421',
       'name': 'MFA_TEST1',
@@ -22,7 +22,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
       'releaseChannel': 'DEV',
       'targetType': 'mf_mgmt',
     }];
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     Orgservice = _Orgservice_;
     Notification = _Notification_;
@@ -32,7 +32,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     httpBackend.when('GET', /^\w+.*/).respond({});
     controller = $controller('MediaServiceSettingsControllerV2', {
       $stateParams: $stateParams,
-      FusionClusterService: FusionClusterService,
+      HybridServicesClusterService: HybridServicesClusterService,
       MediaClusterServiceV2: MediaClusterServiceV2,
       Orgservice: Orgservice,
       Notification: Notification,
@@ -82,7 +82,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   });
 
   it('check if createPropertySetAndAssignClusters creates propertysets and assigns clusters', function () {
-    spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusters));
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(clusters));
     spyOn(MediaClusterServiceV2, 'createPropertySet').and.returnValue($q.resolve({
       'data': {
         id: '1234',
@@ -91,7 +91,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.resolve({}));
     controller.createPropertySetAndAssignClusters();
     httpBackend.verifyNoOutstandingExpectation();
-    expect(FusionClusterService.getAll).toHaveBeenCalled();
+    expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
     expect(MediaClusterServiceV2.createPropertySet).toHaveBeenCalled();
     expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
     expect(controller.clusters.length).toBe(1);
@@ -100,7 +100,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
 
   it('check if createPropertySetAndAssignClusters creates propertysets and assigns clusters has errors we get notification', function () {
     spyOn(Notification, 'errorWithTrackingId');
-    spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusters));
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(clusters));
     spyOn(MediaClusterServiceV2, 'createPropertySet').and.returnValue($q.resolve({
       'data': {
         id: '1234',
@@ -109,7 +109,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.reject());
     controller.createPropertySetAndAssignClusters();
     httpBackend.verifyNoOutstandingExpectation();
-    expect(FusionClusterService.getAll).toHaveBeenCalled();
+    expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
     expect(MediaClusterServiceV2.createPropertySet).toHaveBeenCalled();
     expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
     expect(controller.clusters.length).toBe(1);

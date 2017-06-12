@@ -281,7 +281,7 @@
               return org.displayName;
             }
           }
-          return $q.reject(result);
+          return $q.reject($translate.instant('helpdesk.org.displayNameError'));
         });
     }
 

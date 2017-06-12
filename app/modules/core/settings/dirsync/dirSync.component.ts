@@ -1,6 +1,6 @@
 
 class DirSyncController implements ng.IComponentController {
-  private readonly ENABLE_DIR_SYNC_URL = 'https://help.webex.com/docs/DOC-13037';
+  private readonly ENABLE_DIR_SYNC_URL = 'https://www.cisco.com/go/hybrid-services-directory';
 
   public enabled: boolean;
   private onDisableDirsync: Function;
