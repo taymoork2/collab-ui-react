@@ -1,7 +1,7 @@
 import esaDisclaimerModule from './index';
 import { ESA_DISCLAIMER_ACCEPT } from '../pstn.const';
 
-describe('Component: esaDisclaimer', () => {
+describe('Component: esaDisclaimerComponent', () => {
   const ORG_ID = '222-555-6543';
   const USER_ID = '333-444-5678';
 
