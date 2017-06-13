@@ -24,6 +24,18 @@
       return vm.user;
     };
 
+    // The old behavior when updating entitlements from a child sidepanel like Call Aware or Calendar was to update $scope.currentUser.entitlements
+    // which would trigger a refresh in this view automatically. It's not longer working following the rewrite to TS / components, so this view has
+    // stale data. Forcing the 2-way binding to happen fake a new init of the controller fixes the issue. Waiting a proper rewrite…
+    $scope.$watch(function () {
+      return vm.getUser();
+    }, function (user) {
+      // init-like controller
+      vm.user.entitlements = user.entitlements;
+      vm.extensions = getExtensions();
+      checkEntitlements(enforceLicenseCheck);
+    }, true);
+
     var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'spark-hybrid-impinterop'];
     var extensionCallEntitlements = ['squared-fusion-uc', 'squared-fusion-ec'];
     var stopDelayedUpdates = false;
