@@ -66,6 +66,9 @@ describe('MediaServiceActivationV2', function () {
     $httpBackend.when('POST', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/12345/services/spark').respond({
       statusCode: 200,
     });
+    $httpBackend.when('GET', 'https://identity.webex.com/organization/scim/v1/Orgs/12345?disableCache=true').respond({
+      statusCode: 200,
+    });
     $httpBackend.when('PATCH', /^\w+.*/).respond({});
     $httpBackend.when('PUT', /^\w+.*/).respond({});
     spyOn(ServiceDescriptor, 'enableService').and.returnValue($q.resolve({}));
@@ -176,6 +179,17 @@ describe('MediaServiceActivationV2', function () {
       statusCode: 204,
     });
     Service.deactivateHybridMedia();
+    expect($httpBackend.flush).not.toThrow();
+  });
+  it('disableMFOrgSettingsForDevOps should be called successfully', function () {
+    $httpBackend.when('POST', 'https://identity.webex.com/organization/scim/v1/Orgs/12345?disableCache=true').respond({
+      statusCode: 204,
+    });
+    $httpBackend.when('GET', 'https://identity.webex.com/organization/scim/v1/Orgs/12345?disableCache=true').respond({
+      statusCode: 200,
+    });
+    $httpBackend.when('PATCH', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/12345/settings').respond({});
+    Service.disableMFOrgSettingsForDevOps();
     expect($httpBackend.flush).not.toThrow();
   });
 });

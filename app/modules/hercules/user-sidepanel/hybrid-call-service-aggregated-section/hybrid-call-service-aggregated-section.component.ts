@@ -22,6 +22,7 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
 
   /* @ngInject */
   constructor(
+    private $rootScope: ng.IRootScopeService,
     private FeatureToggleService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
@@ -88,6 +89,7 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
     if (this.callServiceAware && this.callServiceAware.resourceGroupId) {
       this.resourceGroupId = this.callServiceAware.resourceGroupId;
     }
+    this.$rootScope.$broadcast('entitlementsUpdated');
   }
 
 }
