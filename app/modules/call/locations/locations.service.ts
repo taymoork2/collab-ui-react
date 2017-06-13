@@ -6,21 +6,23 @@ interface ILocationsResource extends ng.resource.IResourceClass<ng.resource.IRes
 
 export class LocationsService {
   private locationsService: ILocationsResource;
-  public locations: Location[] = [{
+  public locations: ILocation[] = [{
     uuid: '123',
     name: 'Home Office',
     routingPrefix: '8100',
+    defaultLocation: true,
     userCount: 10,
     placeCount: 3,
-    isDefault: true,
+    url: 'http://something/123',
   },
   {
     uuid: '456',
     name: 'Desk Phone',
     routingPrefix: '8100',
+    defaultLocation: false,
     userCount: 10,
     placeCount: 3,
-    isDefault: false,
+    url: 'http://something/456',
   }];
   /* @ngInject */
   constructor(private $q: ng.IQService,

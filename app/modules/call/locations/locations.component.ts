@@ -94,9 +94,9 @@ class CallLocationsCtrl implements ng.IComponentController {
       this.pageState = STATE_LOADING;
       this.$onInit();
       this.locations.forEach((location) => {
-        location.isDefault = false;
+        location.defaultLocation = false;
       });
-      location.isDefault = true;
+      location.defaultLocation = true;
     });
   }
 
