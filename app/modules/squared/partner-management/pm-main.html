@@ -1,6 +1,5 @@
-<div id="helpdeskPageTop" class="helpdesk-app-container"
-	ng-controller="PartnerManagementController as vm">
-  <cs-header navstyle="" headertitle="{{::'partnerManagement.navHeaderTitle' | translate}}" icon="icon-cisco-logo">
+<div id="helpdeskPageTop" class="helpdesk-app-container" ng-controller="PartnerManagementController as vm">
+  <cs-header navstyle="" headertitle="{{vm.getHeader()}}" icon="icon-cisco-logo">
     <cs-header-left>
     </cs-header-left>
     <cs-header-right>

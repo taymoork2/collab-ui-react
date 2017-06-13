@@ -1,235 +1,181 @@
 'use strict';
 
-/* eslint-disable */
-
 describe('PartnerManagementController:', function () {
-  beforeEach(angular.mock.module(
-    require('./index').default
-  ));
+  beforeEach(function () {
+    this.initModules(require('./index').default);
+    this.injectDependencies('$controller', '$scope', '$state', '$q', 'FeatureToggleService', 'ITProPackService', 'Notification', 'PartnerManagementService');
 
-  var $controller;
-  var $q
-  var $scope;
-  var svc;
-  var $state;
-  var vm;
-  var Notification;
+    this.jsonData = getJSONFixture('squared/json/partnerManagement.json');
 
-  // TODO: switch this over to using `this.*()` methods for dependency injection
-  afterEach(function () {
-    $controller = $q = $scope = svc = $state = vm = Notification = undefined;
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.Notification, 'errorWithTrackingId');
+    spyOn(this.$state, 'go');
+    spyOn(this.PartnerManagementService, 'getOrgDetails').and.returnValue(this.$q.when({
+      status: 200,
+      data: _.cloneDeep(this.jsonData.orgDetails),
+    }));
+
+    this.initController = function () {
+      this.controller = this.$controller('PartnerManagementController', {
+        $scope: this.$scope,
+        $state: this.$state,
+        PartnerManagementService: this.PartnerManagementService,
+        FeatureToggleService: this.FeatureToggleService,
+      });
+      this.$scope.$apply();
+    };
   });
 
-  beforeEach(inject (function (_$controller_, _$q_, _$rootScope_, _$state_,
-    _Notification_, _PartnerManagementService_) {
-    $controller = _$controller_;
-    $q = _$q_;
-    $scope = _$rootScope_.$new();
-    $state = _$state_;
-
-    Notification = _Notification_;
-    svc = _PartnerManagementService_;
-  }));
-
-  function initController() {
-    vm = $controller('PartnerManagementController', {
-      $scope: $scope,
-      $state: $state,
-      PartnerManagementService: svc,
-    });
-  }
-
-  function makeFormData() {
-    return {
-      email: 'test@cisco.com',
-      confirmEmail: 'test@cisco.com',
-      name: 'Test Company',
-      confirmName: 'Test Company',
-      partnerType: 'DISTI',
-      lifeCyclePartner: false,
-    };
-  }
-
-  function makeOrgDetails() {
-    return {
-      orgId: '123',
-      numOfSubscription: 1,
-      numOfManagedOrg: 2,
-      numOfUsers: 3,
-      overMaxUserQuerySize: true,
-      createdDate: '2015-06-05T20:31:08.925Z',
-      claimedDomains: [
-        'adomain.na', 'cdomain.na', 'bdomain.na',
-      ],
-      fullAdmins: [
-        {
-          firstName: 'Abe',
-          lastName: 'Adams',
-          displayName: 'Abe Adams',
-          primaryEmail: 'abe@cisco.na'
-        },
-        {
-          lastName: 'Collaboration',
-          displayName: 'Collab',
-          primaryEmail: 'collab@cisco.na'
-        },
-        {
-          firstName: 'Charlie',
-          lastName: 'Charms',
-          displayName: 'Charlie Charms',
-          primaryEmail: 'charlie@cisco.na'
-        },
-        {
-          firstName: 'Betty',
-          lastName: 'Burns',
-          displayName: 'Betty Burns',
-          primaryEmail: 'betty@cisco.na'
-        },
-      ]
-    };
-  }
-
-  function getOrgDetailsString() {
-    return '[{"label":"partnerManagement.orgDetails.createDate","value":""},' +
-      '{"label":"partnerManagement.orgDetails.activeSubs","value":0},{"label":' +
-      '"partnerManagement.orgDetails.managedCusts","value":2},{"label":' +
-      '"partnerManagement.orgDetails.domains","value":"adomain.na, bdomain.na, cdomain.na"},' +
-      '{"label":"partnerManagement.orgDetails.users","value":3},{"label":' +
-      '"partnerManagement.orgDetails.admins","value":"Abe Adams, Betty Burns, Charlie Charms, Collab"},' +
-      '{"label":"partnerManagement.orgDetails.orgId","value":"123"}]';
-  }
-
   describe('wizard steps,', function () {
-    beforeEach( function() {
-      initController();
-      spyOn($state, 'go');
-      spyOn(svc, 'getOrgDetails').and.returnValue($q.when({
-        status: 200,
-        data: makeOrgDetails(),
-      }));
-    });
-
     it('should clear data when startOver is called', function () {
-      var d = _.clone(vm.data);
-      vm.data = makeFormData();
-      expect(JSON.stringify(d) === JSON.stringify(vm.data)).toBe(false);
-      vm.startOver();
-      expect(JSON.stringify(d) === JSON.stringify(vm.data)).toBe(true);
+      this.initController();
+      var d = _.clone(this.controller.data);
+      this.controller.data = _.cloneDeep(this.jsonData.formData);
+      expect(JSON.stringify(d) === JSON.stringify(this.controller.data)).toBe(false);
+      this.controller.startOver();
+      expect(JSON.stringify(d) === JSON.stringify(this.controller.data)).toBe(true);
       // Until we have a real solution to GC issues...
       d = undefined;
     });
 
     // SEARCH API
-    describe('search API', function() {
+    describe('search API', function () {
+      beforeEach(function () {
+        this.initController();
+        this.createReturnObject = function (orgMatchBy) {
+          return {
+            status: 200,
+            data: {
+              orgMatchBy: orgMatchBy,
+              organizations: [{
+                orgId: '123',
+                displayName: 'test name',
+              }],
+            },
+          };
+        };
+      });
+
       it('should go to orgExists when search returns EMAIL_ADDRESS', function () {
-        spyOn(svc, 'search').and.returnValue($q.when({
-          status: 200,
-          data: { orgMatchBy: 'EMAIL_ADDRESS',
-                  organizations: [{ orgId: '123', displayName: 'test name', }] },
-        }));
-        vm.search();
-        $scope.$apply();
-        expect($state.go).toHaveBeenCalledWith('partnerManagement.orgExists');
-        vm.data.orgDetails[0].value = ''; // blank out date due to locale issues
-        expect(JSON.stringify(vm.data.orgDetails)).toEqual(getOrgDetailsString());
+        spyOn(this.PartnerManagementService, 'search').and.returnValue(this.$q.when(this.createReturnObject(this.jsonData.orgMatchBy.emailAddress)));
+        this.controller.search();
+        this.$scope.$apply();
+        expect(this.$state.go).toHaveBeenCalledWith('partnerManagement.orgExists');
+        this.controller.data.orgDetails[0].value = ''; // blank out date due to locale issues
+        expect(JSON.stringify(this.controller.data.orgDetails)).toEqual(JSON.stringify(this.jsonData.orgDetailsList));
       });
 
       it('should go to orgClaimed when search returns DOMAIN_CLAIMED', function () {
-        spyOn(svc, 'search').and.returnValue($q.when({
-          status: 200,
-          data: { orgMatchBy: 'DOMAIN_CLAIMED',
-                  organizations: [{ orgId: '123', displayName: 'test name', }] },
-        }));
-        vm.search();
-        $scope.$apply();
-        expect($state.go).toHaveBeenCalledWith('partnerManagement.orgClaimed');
+        spyOn(this.PartnerManagementService, 'search').and.returnValue(this.$q.when(this.createReturnObject(this.jsonData.orgMatchBy.domainClaimed)));
+        this.controller.search();
+        this.$scope.$apply();
+        expect(this.$state.go).toHaveBeenCalledWith('partnerManagement.orgClaimed');
       });
 
       it('should go to searchResults when search returns DOMAIN', function () {
-        spyOn(svc, 'search').and.returnValue($q.when({
-          status: 200,
-          data: { orgMatchBy: 'DOMAIN',
-                  organizations: [{ orgId: '123', displayName: 'test name', }] },
-        }));
-        vm.search();
-        $scope.$apply();
-        expect($state.go).toHaveBeenCalledWith('partnerManagement.searchResults');
+        spyOn(this.PartnerManagementService, 'search').and.returnValue(this.$q.when(this.createReturnObject(this.jsonData.orgMatchBy.domain)));
+        this.controller.search();
+        this.$scope.$apply();
+        expect(this.$state.go).toHaveBeenCalledWith('partnerManagement.searchResults');
       });
 
       it('should go to create when search returns NO_MATCH', function () {
-        spyOn(svc, 'search').and.returnValue($q.when({
-          status: 200,
-          data: { orgMatchBy: 'NO_MATCH',
-                  organizations: [{ orgId: '123', displayName: 'test name', }] },
-        }));
-        vm.search();
-        $scope.$apply();
-        expect($state.go).toHaveBeenCalledWith('partnerManagement.create');
+        spyOn(this.PartnerManagementService, 'search').and.returnValue(this.$q.when(this.createReturnObject(this.jsonData.orgMatchBy.noMatch)));
+        this.controller.search();
+        this.$scope.$apply();
+        expect(this.$state.go).toHaveBeenCalledWith('partnerManagement.create');
       });
 
       describe('(error cases)', function () {
-        beforeEach( function () {
-          spyOn(Notification, 'errorWithTrackingId');
-        });
-
         it('should show error on invalid orgMatchBy value', function () {
-          spyOn(svc, 'search').and.returnValue($q.when({
+          spyOn(this.PartnerManagementService, 'search').and.returnValue(this.$q.when({
             status: 200,
-            data: { orgMatchBy: 'INVALID',
-                    organizations: [{ orgId: '123', displayName: 'test name', }] },
+            data: {
+              orgMatchBy: 'INVALID',
+              organizations: [{
+                orgId: '123',
+                displayName: 'test name',
+              }],
+            },
           }));
-          vm.search();
-          $scope.$apply();
-          expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+          this.controller.search();
+          this.$scope.$apply();
+          expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
         });
 
         it('should show error when search does not return 200', function () {
-          spyOn(svc, 'search').and.returnValue($q.reject({ status: 400, }));
-          vm.search();
-          $scope.$apply();
-          expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+          spyOn(this.PartnerManagementService, 'search').and.returnValue(this.$q.reject({ status: 400 }));
+          this.controller.search();
+          this.$scope.$apply();
+          expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
         });
       });
     });
 
     // CREATE API
     describe('create API', function () {
-      beforeEach( function () {
-        vm.data = makeFormData();
-        $scope.$$childHead = {
-          createForm: { name: { $validate: function () { return true; }, }}
+      beforeEach(function () {
+        this.initController();
+        this.controller.data = _.cloneDeep(this.jsonData.formData);
+        this.$scope.$$childHead = {
+          createForm: {
+            name: {
+              $validate: function () { return true; },
+            },
+          },
         };
       });
 
       it('should show got to createSuccess on successful resp', function () {
-        spyOn(svc, 'create').and.returnValue($q.when({ status: 200, }));
-        vm.create();
-        $scope.$apply();
-        expect($state.go).toHaveBeenCalledWith('partnerManagement.createSuccess');
+        spyOn(this.PartnerManagementService, 'create').and.returnValue(this.$q.when({ status: 200 }));
+        this.controller.create();
+        this.$scope.$apply();
+        expect(this.$state.go).toHaveBeenCalledWith('partnerManagement.createSuccess');
       });
 
       describe('(error cases)', function () {
-        beforeEach( function () {
-          spyOn(Notification, 'errorWithTrackingId');
-        });
-
         it('should invalidate form on duplicate name', function () {
-          spyOn(svc, 'create').and.returnValue($q.reject({ status: 409,
-            data: { message: 'Organization ' + vm.data.name +
-              ' already exists in CI' }}));
-          vm.createForm = {name: {$validate: _.noop}};
-          vm.create();
-          $scope.$apply();
-          expect(vm.duplicateName).toBe(vm.data.name);
+          spyOn(this.PartnerManagementService, 'create').and.returnValue(this.$q.reject({
+            status: 409,
+            data: {
+              message: 'Organization ' + this.controller.data.name + ' already exists in CI',
+            },
+          }));
+          this.controller.createForm = { name: { $validate: _.noop } };
+          this.controller.create();
+          this.$scope.$apply();
+          expect(this.controller.duplicateName).toBe(this.controller.data.name);
         });
 
-        it ('should show error when create fails', function () {
-          spyOn(svc, 'create').and.returnValue($q.reject({ status: 504, }));
-          vm.create();
-          $scope.$apply();
-          expect(Notification.errorWithTrackingId).toHaveBeenCalled();
-        })
+        it('should show error when create fails', function () {
+          spyOn(this.PartnerManagementService, 'create').and.returnValue(this.$q.reject({ status: 504 }));
+          this.controller.create();
+          this.$scope.$apply();
+          expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
+        });
       });
-    })
+    });
+
+    // Name Change
+    describe('2017 Name Change Toggling - getHeader', function () {
+      it('should return base name when toggles are false', function () {
+        this.initController();
+        expect(this.controller.getHeader()).toEqual('partnerManagement.navHeaderTitle');
+      });
+
+      it('should return new name when atlas2017NameChangeGetStatus is true and atlasITProPackGetStatus is false', function () {
+        this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+        this.initController();
+        expect(this.controller.getHeader()).toEqual('partnerManagement.navHeaderTitleNew');
+      });
+
+      it('should return new Pro name when atlas2017NameChangeGetStatus and hasITProPackPurchased is true', function () {
+        this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+        this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+        this.initController();
+        expect(this.controller.getHeader()).toEqual('partnerManagement.navHeaderTitlePro');
+      });
+    });
   });
 });

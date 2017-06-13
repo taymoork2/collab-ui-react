@@ -6,7 +6,7 @@
     .controller('HDSRedirectAddResourceController', HDSRedirectAddResourceController);
 
   /* @ngInject */
-  function HDSRedirectAddResourceController($modal, $modalInstance, $state, $translate, $window, HDSAddResourceCommonService, Notification, firstTimeSetup) {
+  function HDSRedirectAddResourceController($modal, $modalInstance, $q, $state, $translate, $window, FeatureToggleService, firstTimeSetup, HDSAddResourceCommonService, ITProPackService, Notification) {
     var vm = this;
     vm.clusterList = [];
     var states = {
@@ -30,6 +30,17 @@
     }
     vm.canGoNext = canGoNext;
     vm.currentState = vm.states.INIT;
+    vm.getAppTitle = getAppTitle;
+
+    vm.nameChangeEnabled = undefined;
+    var proPackEnabled = undefined;
+    $q.all({
+      proPackEnabled: ITProPackService.hasITProPackPurchased(),
+      nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+    }).then(function (toggles) {
+      proPackEnabled = toggles.proPackEnabled;
+      vm.nameChangeEnabled = toggles.nameChangeEnabled;
+    });
 
     HDSAddResourceCommonService.updateClusterLists().then(function (clusterList) {
       vm.clusterList = clusterList;
@@ -38,13 +49,16 @@
       Notification.errorWithTrackingId(error, 'hds.genericError');
     });
 
+    function getAppTitle() {
+      return proPackEnabled ? $translate.instant('loginPage.titlePro') : $translate.instant('loginPage.titleNew');
+    }
+
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
       $modalInstance.dismiss();
       HDSAddResourceCommonService.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
         HDSAddResourceCommonService.redirectPopUpAndClose(hostName, enteredCluster, vm.firstTimeSetup);
       });
     }
-
 
     function closeSetupModal(isCloseOk) {
       if (isCloseOk) {

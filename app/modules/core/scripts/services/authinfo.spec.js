@@ -475,6 +475,23 @@ describe('Authinfo:', function () {
     });
   });
 
+  it('isPremium should return false when there are no premium licenses', function () {
+    var Authinfo = setupUser();
+    var accountData = {};
+    _.set(accountData, 'customers[0].licenses', []);
+    expect(Authinfo.isPremium()).toBeFalsy();
+  });
+
+  it('isPremium should return true when there is a premium license', function () {
+    var Authinfo = setupUser();
+    var accountData = {};
+    _.set(accountData, 'customers[0].licenses', [{
+      offerName: 'MGMTPRO',
+    }]);
+    Authinfo.updateAccountInfo(accountData);
+    expect(Authinfo.isPremium()).toBeTruthy();
+  });
+
   function setupConfig(override) {
     override = override || {};
     var Config = injector.get('Config');

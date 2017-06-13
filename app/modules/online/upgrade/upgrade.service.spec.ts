@@ -10,15 +10,18 @@ describe('Service: OnlineUpgradeService', () => {
     this.injectDependencies(
       '$httpBackend',
       '$modal',
+      '$q',
       'Authinfo',
       'OnlineUpgradeService',
       'UrlConfig',
+      'FeatureToggleService',
     );
 
     spyOn(this.Authinfo, 'isOnline');
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue([]);
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     spyOn(this.$modal, 'open').and.callThrough();
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
   });
 
   afterEach(function () {

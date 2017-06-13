@@ -12,16 +12,23 @@
     });
 
   /* @ngInject */
-  function expresswayUpgradeSectionCtrl($modal, $scope, $timeout, $translate, ClusterService, HybridServicesUtilsService) {
+  function expresswayUpgradeSectionCtrl($modal, $scope, $timeout, $translate, ClusterService, HybridServicesUtilsService, FeatureToggleService) {
     var vm = this;
     var promise = null;
     vm.clusterId = '';
     vm.connectorType = '';
     vm.cluster = {};
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
-    vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.servicesId = HybridServicesUtilsService.connectorType2ServicesId(vm.connectorType);
+
+    FeatureToggleService.atlas2017NameChangeGetStatus().then(function (toggle) {
+      if (toggle) {
+        vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloudNew');
+      } else {
+        vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
+      }
+    });
 
     vm.showUpgradeDialog = showUpgradeDialog;
     vm.$onInit = $onInit;

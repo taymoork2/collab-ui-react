@@ -19,6 +19,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     type: 'dialog',
   };
 
+  public nameChangeEnabled: boolean = false;
   public serviceId: string;
   public showRenameSection: boolean;
   public clusterName: string;
@@ -37,9 +38,14 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
     private PrivateTrunkService: PrivateTrunkService,
+    private FeatureToggleService,
   ) { }
 
   public $onInit() {
+    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
+      this.nameChangeEnabled = toggle;
+    });
+
     this.clusterType = this.$translate.instant(`hercules.clusterTypeFromServiceId.${this.serviceId}`);
     if (this.serviceId === 'ept') {
       this.clusterSection = {

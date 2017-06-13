@@ -10,9 +10,10 @@
       <div class="sso-container copy-spacing">
         <i class="icon icon-circle-upload"></i>
         <h3 translate="ssoModal.importMetadataTitle"></h3>
-        <p translate="ssoModal.importMetadataDesc"></p>
+        <p ng-if="!nameChangeEnabled" translate="ssoModal.importMetadataDesc"></p>
+        <p ng-if="nameChangeEnabled" translate="ssoModal.importMetadataDescNew"></p>
         <input
-          id="fileToUploadBtnHolder" 
+          id="fileToUploadBtnHolder"
           cr-file-read
           type="file"
           accept="text/xml"
@@ -24,7 +25,7 @@
       </div>
     </div>
     <div id="signingMetaDiv" class="signingMetaDiv copy-spacing">
-      <h4 translate='ssoModal.signingMetadataTitle'></h4> 
+      <h4 translate='ssoModal.signingMetadataTitle'></h4>
       <cs-radiolist class="SSOSelfSigned" ng-model="options.SSOSelfSigned" options="SSOSelfSignedOptions"></cs-radiolist>
     </div>
   </div>
@@ -40,7 +41,7 @@
       </div>
     </div>
     <div id="signingMetaDiv" class="signingMetaDiv copy-spacing">
-      <h4 translate='ssoModal.signingMetadataTitle'></h4> 
+      <h4 translate='ssoModal.signingMetadataTitle'></h4>
       <cs-radiolist class="SSOSelfSigned" ng-model="options.SSOSelfSigned" options="SSOSelfSignedOptions"></cs-radiolist>
     </div>
   </div>

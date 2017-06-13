@@ -1,58 +1,65 @@
 'use strict';
 
 describe('Controller: ExpresswayServiceClusterController', function () {
+  beforeEach(function () {
+    this.initModules('Hercules', 'Squared');
+    this.injectDependencies(
+      '$componentController',
+      '$scope',
+      '$q',
+      'ClusterService',
+      'FeatureToggleService'
+    );
 
-  var controller, $componentController, $scope, clusterServiceMock;
-
-  beforeEach(angular.mock.module('Squared'));
-  beforeEach(angular.mock.module('Hercules'));
-  beforeEach(inject(dependencies));
-  beforeEach(initController);
-
-
-  function dependencies($rootScope, _$componentController_) {
-    $scope = $rootScope.$new();
-    $componentController = _$componentController_;
-  }
-
-  function initController() {
-
-    jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
     var calendarCluster = getJSONFixture('hercules/expressway-cluster-with-calendar.json');
     var managementCluster = getJSONFixture('hercules/expressway-clusters-with-management-upgrade.json');
 
-    var changing = jasmine.createSpy('changing').and.returnValues(calendarCluster, managementCluster, calendarCluster, managementCluster);
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ClusterService, 'getCluster').and.returnValues(_.cloneDeep(calendarCluster), _.cloneDeep(managementCluster), _.cloneDeep(calendarCluster), _.cloneDeep(managementCluster));
 
-    clusterServiceMock = {
-      getCluster: changing,
+    this.initController = function () {
+      this.controller = this.$componentController('expresswayUpgradeSection', {
+        $scope: this.$scope,
+        ClusterService: this.ClusterService,
+      }, {
+        clusterId: '12345678-abcd',
+        connectorType: 'c_mgmt',
+      });
+      this.controller.$onInit();
+      this.$scope.$apply();
     };
-
-    controller = $componentController('expresswayUpgradeSection', {
-      $scope: $scope,
-      ClusterService: clusterServiceMock,
-    }, {
-      clusterId: '12345678-abcd',
-      connectorType: 'c_mgmt',
-    });
-    controller.$onInit();
-    $scope.$apply();
-  }
+  });
 
   it('should find tvasset-ex.rd.cisco.com to be the upgrading management connector hostname', function () {
-    expect(controller.managementUpgradeDetails.upgradingHostname).toBe('tvasset-ex.rd.cisco.com');
+    this.initController();
+    expect(this.controller.managementUpgradeDetails.upgradingHostname).toBe('tvasset-ex.rd.cisco.com');
   });
 
   it('should not have calendar connector upgrade details, because calendar connector is not upgrading', function () {
-    expect(controller.upgradeDetails).toBe(undefined);
+    this.initController();
+    expect(this.controller.upgradeDetails).toBe(undefined);
   });
 
   it('should *not* show an upgrade warning for a healthy cluster', function () {
-    expect(controller.softwareUpgrade.showUpgradeWarning()).toBe(false);
+    this.initController();
+    expect(this.controller.softwareUpgrade.showUpgradeWarning()).toBe(false);
   });
 
   it('should show an upgrade warning when there is a management connector upgrade available, and there are offline hosts', function () {
-    controller.softwareUpgrade.hasManagementUpgradeWarning = true;
-    expect(controller.softwareUpgrade.showUpgradeWarning()).toBe(true);
+    this.initController();
+    this.controller.softwareUpgrade.hasManagementUpgradeWarning = true;
+    expect(this.controller.softwareUpgrade.showUpgradeWarning()).toBe(true);
   });
 
+  // 2017 name change
+  it('should set localizedCCCName to base name depending on atlas2017NameChangeGetStatus', function () {
+    this.initController();
+    expect(this.controller.localizedCCCName).toEqual('common.ciscoCollaborationCloud');
+  });
+
+  it('should set localizedCCCName to new name depending on atlas2017NameChangeGetStatus', function () {
+    this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+    this.initController();
+    expect(this.controller.localizedCCCName).toEqual('common.ciscoCollaborationCloudNew');
+  });
 });

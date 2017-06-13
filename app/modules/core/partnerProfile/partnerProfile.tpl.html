@@ -101,7 +101,8 @@
                           placeholder="{{troubleText | translate}}" ng-model="supportText">
                 </textarea>
                 <h6 translate="partnerProfile.matchingTix"></h6>
-                <p class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
+                <p ng-if="!nameChangeEnabled" class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
+                <p ng-if="nameChangeEnabled" class="body-small form-section" translate="partnerProfile.matchingDescrNew" translate-values="{appTitle: getAppTitle()}"></p>
               </div>
             </label>
           </div>

@@ -14,6 +14,7 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
   public certTitle: string;
   public certDesc: string;
   public isCustomCertificateEnabled: boolean;
+  public nameChangeEnabled: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -21,9 +22,7 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
    private $translate: ng.translate.ITranslateService,
    private PrivateTrunkCertificateService: PrivateTrunkCertificateService,
    private FeatureToggleService,
-   ) {
-
-  }
+   ) {  }
 
   public $onInit(): void {
     this.$scope.$watch(() => this.file,
@@ -49,8 +48,15 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
     ];
 
     this.certTitle = (!this.isFirstTimeSetup) ?  this.$translate.instant('servicesOverview.cards.privateTrunk.certificateTitleSettings') : this.$translate.instant('servicesOverview.cards.privateTrunk.certificateTitle');
-    this.certDesc = (!this.isFirstTimeSetup) ?  this.$translate.instant('servicesOverview.cards.privateTrunk.certificateDescSettings') : this.$translate.instant('servicesOverview.cards.privateTrunk.certificateDescription');
 
+    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
+      this.nameChangeEnabled = toggle;
+      if (this.nameChangeEnabled) {
+        this.certDesc = (!this.isFirstTimeSetup) ?  this.$translate.instant('servicesOverview.cards.privateTrunk.certificateDescSettings') : this.$translate.instant('servicesOverview.cards.privateTrunk.certificateDescriptionNew');
+      } else {
+        this.certDesc = (!this.isFirstTimeSetup) ?  this.$translate.instant('servicesOverview.cards.privateTrunk.certificateDescSettings') : this.$translate.instant('servicesOverview.cards.privateTrunk.certificateDescription');
+      }
+    });
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
