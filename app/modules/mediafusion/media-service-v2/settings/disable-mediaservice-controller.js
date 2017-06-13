@@ -37,6 +37,7 @@
 
           MediaServiceActivationV2.disableOrpheusForMediaFusion();
           MediaServiceActivationV2.deactivateHybridMedia();
+          MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
           $state.go('overview');
           Notification.success('mediaFusion.deactivate.success');
         } else {
