@@ -87,15 +87,18 @@ require('./_user-roles.scss');
       $scope.showComplianceRole = !!enabled;
     });
     FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function () {
+      //Keep Global Level feature togggle
       $scope.enableRolesAndSecurityOption = true;
-      if ($state.current.name == 'user-overview.userProfile') {
-        $scope.showUserDetailSection = true;
-        $scope.showSecuritySection = false;
-        $scope.showRolesSection = false;
-      } else if ($state.current.name == 'user-overview.rolesAndSecurity') {
-        $scope.showUserDetailSection = false;
-        $scope.showSecuritySection = true;
-        $scope.showRolesSection = true;
+      if ($scope.enableRolesAndSecurityOption) {
+        if ($state.current.name == 'user-overview.userProfile') {
+          $scope.showUserDetailSection = true;
+          $scope.showSecuritySection = false;
+          $scope.showRolesSection = false;
+        } else if ($state.current.name == 'user-overview.rolesAndSecurity') {
+          $scope.showUserDetailSection = false;
+          $scope.showSecuritySection = true;
+          $scope.showRolesSection = true;
+        }
       }
     });
     initView();

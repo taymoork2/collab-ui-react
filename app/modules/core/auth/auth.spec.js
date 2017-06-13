@@ -12,7 +12,6 @@ describe('Auth Service', function () {
   });
 
   beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _LocalStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
-    debugger;
     $q = _$q_;
     Auth = _Auth_;
     $state = _$state_;
