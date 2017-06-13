@@ -102,13 +102,20 @@
       if (vm.messageOption.value === vm.messageOptions[actionType.SAY].value) {
         action.description = '';
         if (action.name === vm.messageOptions[actionType.PLAY].action) {
-          if (isDynamicToggle) {
+          if (isDynamicToggle()) {
             action.name = "dynamic";
             vm.dynamicValues = [];
+            vm.menuEntry.dynamicList = [{
+              say: {
+                value: '',
+                voice: '',
+              },
+              isDynamic: false,
+              htmlModel: '',
+            }];
           } else {
             action.name = vm.messageOptions[actionType.SAY].action;
           }
-          AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
         }
       }
 
@@ -134,13 +141,18 @@
       var dynamicList = range.endContainer.ownerDocument.activeElement;
       if (dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex}}')) {
         vm.menuEntry.dynamicList = createDynamicList(dynamicList);
-        if (_.isEmpty(vm.menuEntry.dynamicList)) {
-          AACommonService.setSayMessageStatus(false);
-          AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
-        } else {
-          AACommonService.setSayMessageStatus(true);
-          AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
+        if (_.isEmpty(finalList)) {
+          finalList.push({
+            say: {
+              value: '',
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          });
+          vm.menuEntry.dynamicList = finalList;
         }
+        AACommonService.setSayMessageStatus(true);
       }
     }
 
@@ -155,6 +167,7 @@
             say: {
               value: '',
               voice: '',
+              as: '',
             },
             isDynamic: true,
             htmlModel: encodeURIComponent('<br>'),
