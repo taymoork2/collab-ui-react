@@ -7,14 +7,6 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
   var AACommonService;
   var AAModelService;
   var AASessionVariableService;
-  var variableSelection = {
-    label: "testVar",
-    value: "testVal",
-  };
-  var readAsSelection = {
-    label: "testRead",
-    value: "testReadValue",
-  };
   var customVarJson = getJSONFixture('huron/json/autoAttendant/aaCustomVariables.json');
   var aaModel = {
     aaRecord: {
@@ -34,6 +26,11 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss'),
+  };
+
+  var selection = {
+    label: '',
+    value: '',
   };
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -58,8 +55,8 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
         controller = $controller('AADynamicAnnouncementsModalCtrl', {
           $scope: $scope,
           $modalInstance: modalFake,
-          variableSelection: variableSelection,
-          readAsSelection: readAsSelection,
+          variableSelection: selection,
+          readAsSelection: selection,
         });
         $scope.$apply();
       });
@@ -79,8 +76,8 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
         controller = $controller('AADynamicAnnouncementsModalCtrl', {
           $scope: $scope,
           $modalInstance: modalFake,
-          variableSelection: variableSelection,
-          readAsSelection: readAsSelection,
+          variableSelection: selection,
+          readAsSelection: selection,
         });
         $scope.$apply();
       });
@@ -98,8 +95,8 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
         controller = $controller('AADynamicAnnouncementsModalCtrl', {
           $scope: $scope,
           $modalInstance: modalFake,
-          variableSelection: variableSelection,
-          readAsSelection: readAsSelection,
+          variableSelection: selection,
+          readAsSelection: selection,
         });
         $scope.$apply();
       });
@@ -111,23 +108,13 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
     });
 
     describe('isSaveEnabled', function () {
-      readAsSelection = {
-        label: "",
-        value: "",
-      };
-
-      variableSelection = {
-        label: "",
-        value: "",
-      };
-
       beforeEach(function () {
         spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.reject());
         controller = $controller('AADynamicAnnouncementsModalCtrl', {
           $scope: $scope,
           $modalInstance: modalFake,
-          variableSelection: variableSelection,
-          readAsSelection: readAsSelection,
+          variableSelection: selection,
+          readAsSelection: selection,
         });
         $scope.$apply();
       });

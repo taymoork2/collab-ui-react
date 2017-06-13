@@ -46,7 +46,7 @@
       tname: 'Basic',
       actions: [{
         lane: 'openHours',
-        actionset: ['say', 'runActionsOnInput'],
+        actionset: ['play', 'runActionsOnInput'],
       }],
     }, {
       tname: 'Custom',

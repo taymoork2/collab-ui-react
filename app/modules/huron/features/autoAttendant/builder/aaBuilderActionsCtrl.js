@@ -20,7 +20,7 @@
       help: $translate.instant('autoAttendant.sayMessageHelp') + appendSpecialCharHelp,
       metric: 'Say-Message-Title',
       showHelpLink: true,
-      actions: ['play', 'say'],
+      actions: ['play', 'say', 'dynamic'],
     }, {
       title: $translate.instant('autoAttendant.actionPhoneMenu'),
       controller: 'AAPhoneMenuCtrl as aaPhoneMenu',

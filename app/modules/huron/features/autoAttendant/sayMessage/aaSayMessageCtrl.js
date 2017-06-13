@@ -11,11 +11,11 @@
     var vm = this;
 
     var properties = {
-      NAME: ["play", "say"],
-      REPEAT_NAME: "repeatActionsOnInput",
-      LABEL: "label",
-      VALUE: "value",
-      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT",
+      NAME: ['play', 'say', 'dynamic'],
+      REPEAT_NAME: 'repeatActionsOnInput',
+      LABEL: 'label',
+      VALUE: 'value',
+      HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT',
     };
 
     var sayMessageType = {
@@ -39,6 +39,7 @@
     var actionType = {
       PLAY: 0,
       SAY: 1,
+      DYNAMIC: 2,
     };
 
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -66,6 +67,7 @@
     vm.updateVoiceOption = updateVoiceOption;
 
     vm.isMediaUploadToggle = false;
+    vm.isDynAnnounceToggle = false;
 
     /////////////////////
 
@@ -103,7 +105,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value,
+        'value': vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
@@ -199,7 +201,8 @@
 
     function createMenuEntry() {
       var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      var type = vm.isMediaUploadToggle ? actionType.PLAY : actionType.SAY;
+      var type = vm.isDynAnnounceToggle ? actionType.DYNAMIC : actionType.SAY;
+      type = vm.isMediaUploadToggle ? actionType.PLAY : type;
       menuEntry.addAction(createSayAction(type));
       return menuEntry;
     }
@@ -269,7 +272,8 @@
               if (keyAction) {
                 vm.actionEntry = keyAction;
               } else {
-                vm.actionEntry = (vm.isMediaUploadToggle ? createSayAction(actionType.PLAY) : createSayAction(actionType.SAY));
+                vm.actionEntry = (vm.isDynAnnounceToggle ? createSayAction(actionType.DYNAMIC) : createSayAction(actionType.SAY));
+                vm.actionEntry = (vm.isMediaUploadToggle ? createSayAction(actionType.PLAY) : vm.actionEntry);
                 vm.menuEntry.entries[$scope.menuKeyIndex].actions[0] = vm.actionEntry;
               }
             } else {
@@ -294,7 +298,8 @@
             vm.menuEntry = uiMenu.entries[$scope.index];
             var sayAction = getSayAction(vm.menuEntry);
             if (!sayAction) {
-              sayAction = (vm.isMediaUploadToggle ? createSayAction(actionType.PLAY) : createSayAction(actionType.SAY));
+              sayAction = (vm.isDynAnnounceToggle ? createSayAction(actionType.DYNAMIC) : createSayAction(actionType.SAY));
+              sayAction = (vm.isMediaUploadToggle ? createSayAction(actionType.PLAY) : sayAction);
               vm.menuEntry.addAction(sayAction);
             }
             vm.actionEntry = sayAction;
@@ -341,6 +346,7 @@
       //not for phone menu, dial by ext, or submenu at this point
       //and is also feature toggled
       vm.isMediaUploadToggle = AACommonService.isMediaUploadToggle();
+      vm.isDynAnnounceToggle = AACommonService.isDynAnnounceToggle();
       setActionEntry();
       populateVoice();
       if (vm.sayMessageType === sayMessageType.MENUKEY) {

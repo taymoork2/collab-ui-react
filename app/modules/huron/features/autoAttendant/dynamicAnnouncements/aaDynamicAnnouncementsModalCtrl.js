@@ -30,8 +30,14 @@
         value: '',
       },
     ];
-    vm.readAsSelection = readAsSelection;
-    vm.variableSelection = variableSelection;
+    vm.readAsSelection = {
+      label: '',
+      value: '',
+    };
+    vm.variableSelection = {
+      label: '',
+      value: '',
+    };
     vm.variableOptions = [
       {
         label: $translate.instant('autoAttendant.decisionNumberDialed'),
@@ -76,12 +82,22 @@
     }
 
     function activate() {
+      vm.readAsSelection = _.find(vm.readAsOptions, { 'value': readAsSelection });
+      vm.variableSelection = _.find(vm.variableOptions, { 'value': variableSelection });
+      if (_.isUndefined(vm.readAsSelection)) {
+        vm.readAsSelection = vm.readAsOptions[3];
+      }
+      if (_.isUndefined(vm.variableSelection)) {
+        vm.variableSelection = {
+          label: '',
+          value: '',
+        };
+      }
       populateUiModel();
     }
 
     function populateScope() {
-/*      $scope.schedule = aa_schedule;
-      $scope.index = aa_index;*/
+      //TODO
     }
 
     function setUpVariablesOptions(variableOptionsArray) {

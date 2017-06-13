@@ -63,6 +63,7 @@ describe('Controller: DisableMediaServiceController', function () {
     spyOn(MediaServiceActivationV2, 'setisMediaServiceEnabled');
     spyOn(MediaServiceActivationV2, 'disableOrpheusForMediaFusion');
     spyOn(MediaServiceActivationV2, 'deactivateHybridMedia');
+    spyOn(MediaServiceActivationV2, 'disableMFOrgSettingsForDevOps');
     spyOn(Notification, 'success');
     controller.clusterIds = ['cluster1', 'cluster2'];
     controller.deactivate();
@@ -73,6 +74,7 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(MediaServiceActivationV2.setisMediaServiceEnabled).toHaveBeenCalled();
     expect(MediaServiceActivationV2.disableOrpheusForMediaFusion).toHaveBeenCalled();
     expect(MediaServiceActivationV2.deactivateHybridMedia).toHaveBeenCalled();
+    expect(MediaServiceActivationV2.disableMFOrgSettingsForDevOps).toHaveBeenCalled();
     expect(Notification.success).toHaveBeenCalled();
     expect(modalInstance.close).toHaveBeenCalled();
   });
