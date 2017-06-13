@@ -200,7 +200,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         expect(c.actionEntry.value).toEqual('');
 
-        expect(c.actionEntry.name).toEqual('dynamic');
+        expect(c.actionEntry.name).toEqual('say');
 
       });
       it('should be able blank out old play action when record saved with save action', function () {
@@ -270,7 +270,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         expect(c.actionEntry.value).toEqual('');
 
-        expect(c.actionEntry.name).toEqual('dynamic');
+        expect(c.actionEntry.name).toEqual('say');
 
         c.actionEntry.value = 'My old Say Message';
 
@@ -292,7 +292,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         expect(c.actionEntry.value).toEqual('');
 
-        expect(c.actionEntry.name).toEqual('dynamic');
+        expect(c.actionEntry.name).toEqual('say');
 
       });
 
