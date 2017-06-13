@@ -1,5 +1,6 @@
 import { HuronCustomerService, Link } from 'modules/huron/customer';
 import { HuronUserService, UserV1, Voicemail } from 'modules/huron/users';
+import { CustomerSettings } from 'modules/huron/settings/services';
 
 interface IUserCommon {
   uuid: string;
@@ -22,10 +23,10 @@ interface IDirectoryNumberUsersResource extends ng.resource.IResourceClass<ng.re
 
 const VOICEMAIL = 'VOICEMAIL';
 const AVRIL = 'AVRIL';
+
 export const VOICEMAIL_CHANGE = 'VOICEMAIL_CHANGE';
 
 export class HuronVoicemailService {
-  private isAvrilCustomer: boolean = false;
   private userCommonResource: IUserCommonResource;
   private directoryNumbersUsersResource: IDirectoryNumberUsersResource;
 
@@ -45,9 +46,9 @@ export class HuronVoicemailService {
 
   public isEnabledForCustomer(): ng.IPromise<boolean> {
     let isEnabled = false;
-    return this.HuronCustomerService.getCustomer().then(customer => {
+    return this.HuronCustomerService.getCustomer().then((customer: CustomerSettings) => {
       _.forEach(_.get<Array<Link>>(customer, 'links'), link => {
-        if (link.rel === _.toLower(VOICEMAIL)) {
+        if (link.rel === _.toLower(VOICEMAIL) || this.isFeatureEnabledAvril() && link.rel === _.toLower(AVRIL)) {
           isEnabled = true;
         }
       });
@@ -56,7 +57,7 @@ export class HuronVoicemailService {
   }
 
   public isEnabledForUser(services: Array<string>): boolean {
-    return _.includes(services, VOICEMAIL);
+    return _.includes(services, VOICEMAIL) || _.includes(services, AVRIL);
   }
 
   /**
@@ -77,7 +78,7 @@ export class HuronVoicemailService {
         customerId: this.Authinfo.getOrgId(),
         userId: uuid,
       }).$promise.then(user => {
-        return _.indexOf(_.get(user, 'services', []), 'VOICEMAIL') !== -1;
+        return _.indexOf(_.get(user, 'services', []), VOICEMAIL) !== -1 || _.indexOf(_.get(user, 'services', []), AVRIL) !== -1;
       });
     });
   }
@@ -87,6 +88,10 @@ export class HuronVoicemailService {
       this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmEnable),
       this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmMailboxEnable),
     ]).then(results => results[0] || results[1]);
+  }
+
+  public isFeatureEnabledAvrilOnly(): ng.IPromise<boolean> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmMailboxEnable);
   }
 
   public update(userId: string, voicemail: boolean, services: Array<string>): ng.IPromise<Array<string>> {
@@ -106,28 +111,26 @@ export class HuronVoicemailService {
     });
 
     if (voicemail) {
-      if (user.services) {
-        if (!this.isEnabledForUser(services)) {
-          user.services.push(VOICEMAIL);
-        }
-      }
       return this.HuronUserService.getUserV2Numbers(userId).then((data) => {
         _.set(user, 'voicemail.dtmfAccessId', _.get(data[0], 'siteToSite'));
-        return this.isFeatureEnabledAvril().then(data => {
-          if (data && !_.includes(services, AVRIL)) {
-            user.services.push(AVRIL);
+        return this.isFeatureEnabledAvrilOnly()
+        .then((data: boolean) => {
+          if (!data && !_.isUndefined(user.services) && !_.includes(services, VOICEMAIL)) {
+            user.services.push(VOICEMAIL);
           }
-          return this.HuronUserService.updateUserV1(userId, user).then(() => {
-            return user.services;
+          return this.isFeatureEnabledAvril().then((data: boolean) => {
+            if (data && !_.isUndefined(user.services) && !_.includes(services, AVRIL)) {
+              user.services.push(AVRIL);
+            }
+            return this.HuronUserService.updateUserV1(userId, user).then(() => {
+              return user.services;
+            });
           });
         });
       });
     } else {
       if (this.isEnabledForUser(services)) {
         _.pull(user.services, VOICEMAIL);
-      }
-      if (this.isAvrilCustomer && _.includes(services, AVRIL)) {
-        _.pull(user.services, AVRIL);
       }
       return this.isFeatureEnabledAvril().then(data => {
         if (data && _.includes(services, AVRIL)) {
