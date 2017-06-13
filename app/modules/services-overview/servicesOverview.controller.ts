@@ -41,6 +41,8 @@ export class ServicesOverviewCtrl {
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private ITProPackService: ITProPackService,
+    private HDSService,
+    private Notification,
   ) {
     this.cards = [
       new ServicesOverviewMessageCard(this.Authinfo),
@@ -53,7 +55,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridCalendarCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
-      new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService, this.HDSService, this.$state, this.Notification),
       new ServicesOverviewHybridContextCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService, this.HybridServicesClusterStatesService),
       new ServicesOverviewImpCard(this.Authinfo, this.HybridServicesClusterStatesService),

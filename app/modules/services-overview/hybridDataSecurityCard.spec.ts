@@ -3,27 +3,32 @@ import { HybridServicesClusterStatesService } from 'modules/hercules/services/hy
 
 describe('ServicesOverviewHybridDataSecurityCard', () => {
 
-  let Authinfo, Config, HybridServicesClusterStatesService: HybridServicesClusterStatesService;
+  let Authinfo, Config, HybridServicesClusterStatesService: HybridServicesClusterStatesService, HDSService, $state, Notification, $q;
   let card: ServicesOverviewHybridDataSecurityCard;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('HDS'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_Authinfo_, _Config_, _HybridServicesClusterStatesService_) {
+  function dependencies(_Authinfo_, _Config_, _HybridServicesClusterStatesService_, _HDSService_, _$state_, _Notification_, _$q_) {
     Authinfo = _Authinfo_;
     Config = _Config_;
     HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
+    HDSService = _HDSService_;
+    $state = _$state_;
+    $q = _$q_;
   }
 
   function initSpies() {
     spyOn(Authinfo, 'isFusionHDS').and.returnValue(false);
     spyOn(Authinfo, 'getRoles').and.returnValue([]);
+    spyOn(HDSService, 'enableHdsEntitlement').and.returnValue($q.resolve());
   }
 
   it('should have sane defaults', () => {
-    card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config,  HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config,  HybridServicesClusterStatesService, HDSService, $state, Notification);
     expect(card.active).toBe(false);
     expect(card.display).toBe(false);
     expect(card.loading).toBe(true);
@@ -32,27 +37,27 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
   describe('Determining if the card gets displayed', () => {
     it('should stay hidden if the user is missing the entitlement', () => {
       Authinfo.isFusionHDS.and.returnValue(true);
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       expect(card.display).toBe(false);
     });
 
     it('should stay hidden if the user is missing one of the acceptable role', () => {
       Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       expect(card.display).toBe(false);
     });
 
     it('should be displayed if we have roles + entitlement', () => {
       Authinfo.isFusionHDS.and.returnValue(true);
       Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       expect(card.display).toBe(true);
     });
 
     it('should be displayed if we have roles + atlasHybridDataSecurityFT even without entitlements', () => {
       Authinfo.isFusionHDS.and.returnValue(false);
       Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       card.hybridDataSecurityFeatureToggleEventHandler(true);
       expect(card.display).toBe(true);
     });
@@ -60,7 +65,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     it('should be displayed if we have roles + entitlements even if atlasHybridDataSecurityFT is off', () => {
       Authinfo.isFusionHDS.and.returnValue(true);
       Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       card.hybridDataSecurityFeatureToggleEventHandler(false);
       expect(card.display).toBe(true);
     });
@@ -68,7 +73,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     it('should NOT be displayed if we have roles but both entitlements and atlasHybridDataSecurityFT are off', () => {
       Authinfo.isFusionHDS.and.returnValue(false);
       Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       card.hybridDataSecurityFeatureToggleEventHandler(false);
       expect(card.display).toBe(false);
     });
@@ -76,39 +81,39 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     it('should not be displayed if we don\'t have roles regardless of the feature toggle status', () => {
       Authinfo.isFusionHDS.and.returnValue(false);
       Authinfo.getRoles.and.returnValue([]);
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       card.hybridDataSecurityFeatureToggleEventHandler(true);
       expect(card.display).toBe(false);
     });
   });
   describe('Determining if the card is active', () => {
     it('should stay not active if services statuses do not say it is setup', () => {
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       card.hybridStatusEventHandler([{ serviceId: 'spark-hybrid-datasecurity', setup: false, status: 'yolo' }]);
       expect(card.active).toBe(false);
     });
 
     it('should be active if services statuses say it is setup', () => {
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       card.hybridStatusEventHandler([{ serviceId: 'spark-hybrid-datasecurity', setup: true, status: 'yolo' }]);
       expect(card.active).toBe(true);
     });
   });
   describe('Determining if the card is loading', () => {
     it('should stop loading once all three handlers are called', () => {
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       card.hybridStatusEventHandler([]);
       card.hybridDataSecurityFeatureToggleEventHandler(false);
       card.itProPackEventHandler({});
       expect(card.loading).toBe(false);
     });
     it('should countinue loading if only hybridStatusEventHandler is called', () => {
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       card.hybridStatusEventHandler([]);
       expect(card.loading).toBe(true);
     });
     it('should countinue loading if only two handlers are called', () => {
-      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+      card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
       card.hybridDataSecurityFeatureToggleEventHandler(false);
       card.itProPackEventHandler({});
       expect(card.loading).toBe(true);
@@ -117,7 +122,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
   describe('Determining correct configuration for IT ProPack Purchased', () => {
     describe ('ITProPack feature toggle is not enabled', function () {
       beforeEach(function() {
-        card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+        card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
         card.itProPackEventHandler({ hasITProPackEnabled: false, hasITProPackPurchased: false });
       });
 
@@ -133,7 +138,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     });
     describe ('ITProPack feature toggle is enabled and ProPack has been purchased', function () {
       beforeEach(function() {
-        card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+        card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
         card.itProPackEventHandler({ hasITProPackEnabled: true, hasITProPackPurchased: true });
       });
       it('if services are set up we should see a card with 2 buttons without tooltip text', () => {
@@ -150,7 +155,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     });
     describe ('ITPropack feature toggle is enabled and Propack has NOT been purchased', function () {
       beforeEach(function() {
-        card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+        card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService, HDSService, $state, Notification);
         card.itProPackEventHandler({ hasITProPackEnabled: true, hasITProPackPurchased: false });
       });
       it('if services are set up we should see an inactive card with \'learn more \' button and a tooltip text', () => {

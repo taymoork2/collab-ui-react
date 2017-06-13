@@ -1,6 +1,7 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { HDSService } from 'modules/hds/services/hds.service';
 
 export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
@@ -68,6 +69,9 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     private Authinfo,
     private Config,
     HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    HDSService: HDSService,
+    private $state,
+    Notification,
   ) {
     super({
       active: false,
@@ -85,5 +89,14 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     this.display = this.checkRoles() && this.Authinfo.isFusionHDS();
     this.hasITProPackPurchased = false;
     this.hasITProPackEnabled = false;
+    this.$state = $state;
+    this.setupButton.onClick = function () {
+      HDSService.enableHdsEntitlement()
+        .then(function () {
+          $state.go('hds.list');
+        }).catch(function (error) {
+          Notification.errorWithTrackingId(error, 'error setting HDS service entitlements');
+        });
+    };
   }
 }
