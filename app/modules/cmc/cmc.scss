@@ -45,6 +45,13 @@
   }
   .status-page {
     background-color: $brand-white;
+    .sub-header {
+      float: right;
+      margin: 1.5rem;
+    }
+    .search-filter {
+      margin: 0.5rem 2rem;
+    }
     .org-status {
       padding-left: 1rem;
       padding-top: 2rem;

@@ -33,24 +33,13 @@
 
   </div>
 
-  <h4 style="float: right; margin: 1.5rem 1.5rem;">User Status Report</h4>
+  <h4 class="sub-header" translate="cmc.statusPage.subHeading"></h4>
   <hr/>
-  <div style="margin: 0.5rem 2rem;">
+  <div class="search-filter">
     <cs-searchfilter filters="$ctrl.filters" search-item-fn="$ctrl.filterList(searchStr)">
     </cs-searchfilter>
   </div>
 
-  <!--
-  <div class="stats">
-    <div class="vertical-space" />
-    <div>
-      User Status
-    </div>
-    <div>
-      <span>Activated: {{$ctrl.userStatuses.length}}</span>
-    </div>
-  </div>
-  -->
   <div class="user-status">
     <div>
       {{$ctrl.userStatusesSummaryText}}
