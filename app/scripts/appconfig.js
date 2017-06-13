@@ -1544,11 +1544,27 @@
           .state('user-overview.userProfile', {
             templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
             controller: 'UserRolesCtrl',
-            data: {
-              displayName: 'Roles',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate, FeatureToggleService) {
+                if (FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity)) {
+                  $state.get('user-overview.userProfile').data.displayName = $translate.instant('usersPreview.userDetails');
+                } else {
+                  $state.get('user-overview.userProfile').data.displayName = $translate.instant('rolesPanel.roles');
+                }
+              },
             },
           })
-
+          .state('user-overview.rolesAndSecurity', {
+            templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
+            controller: 'UserRolesCtrl',
+            data: {
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.rolesAndSecurity').data.displayName = $translate.instant('usersPreview.rolesAndSecurity');
+              },
+            },
+          })
           .state('user-overview.cmc', {
             template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
             params: {

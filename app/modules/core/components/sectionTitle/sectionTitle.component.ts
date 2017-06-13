@@ -7,9 +7,11 @@ class SectionTitle implements ng.IComponentController {
   private showActions: boolean;
   private actionList: IActionItem[];
   private asButton: boolean;
+  private asArrow: boolean;
 
   public $onInit(): void {
     this.asButton = (_.isString(this.asButton) ? (this.asButton.toLowerCase() !== 'false') : !!this.asButton);
+    this.asArrow =  (_.isString(this.asArrow) ? (this.asArrow.toLowerCase() !== 'false') : !!this.asArrow);
   }
 
   public shouldShowActions(): boolean {
@@ -27,5 +29,6 @@ angular.module('Core')
       showActions: '<',
       actionList: '<',
       asButton: '<',
+      asArrow: '<',
     },
   });

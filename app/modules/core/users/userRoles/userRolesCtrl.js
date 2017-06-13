@@ -3,11 +3,11 @@ require('./_user-roles.scss');
 (function () {
   'use strict';
 
-  angular.module('Squared')
-    .controller('UserRolesCtrl', UserRolesCtrl);
+  angular.module('Core')
+  .controller('UserRolesCtrl', UserRolesCtrl);
 
   /* @ngInject */
-  function UserRolesCtrl($q, $scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, FeatureToggleService, EdiscoveryService) {
+  function UserRolesCtrl($q, $scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, FeatureToggleService, EdiscoveryService, $state, Auth) {
     var COMPLIANCE = 'compliance';
 
     $scope.currentUser = $stateParams.currentUser;
@@ -22,9 +22,11 @@ require('./_user-roles.scss');
     FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerManagement).then(function (result) {
       $scope.showPartnerManagementRole = result;
     });
+
     $scope.showOrderAdminRole = false;
     $scope.showComplianceRole = false;
     $scope.updateRoles = updateRoles;
+    $scope.resetAccess = resetAccess;
     $scope.clearCheckboxes = clearCheckboxes;
     $scope.supportCheckboxes = supportCheckboxes;
     $scope.partialCheckboxes = partialCheckboxes;
@@ -33,6 +35,10 @@ require('./_user-roles.scss');
     $scope.partnerManagementOnCheckedHandler = partnerManagementOnCheckedHandler;
     $scope.resetFormData = resetFormData;
     $scope.enableReadonlyAdminOption = false;
+    $scope.enableRolesAndSecurityOption = false;
+    $scope.showUserDetailSection = true;
+    $scope.showSecuritySection = false;
+    $scope.showRolesSection = true;
     $scope.rolesObj = {
       adminRadioValue: 0,
     };
@@ -80,7 +86,18 @@ require('./_user-roles.scss');
     FeatureToggleService.supports(FeatureToggleService.features.atlasComplianceRole).then(function (enabled) {
       $scope.showComplianceRole = !!enabled;
     });
-
+    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function () {
+      $scope.enableRolesAndSecurityOption = true;
+      if ($state.current.name == 'user-overview.userProfile') {
+        $scope.showUserDetailSection = true;
+        $scope.showSecuritySection = false;
+        $scope.showRolesSection = false;
+      } else if ($state.current.name == 'user-overview.rolesAndSecurity') {
+        $scope.showUserDetailSection = false;
+        $scope.showSecuritySection = true;
+        $scope.showRolesSection = true;
+      }
+    });
     initView();
 
     ///////////////////////////
@@ -183,8 +200,12 @@ require('./_user-roles.scss');
       if (_.has($scope, 'rolesEdit.form')) {
         _.attempt($scope.rolesEdit.form.$setPristine);
         _.attempt($scope.rolesEdit.form.$setUntouched);
-        _.attempt($scope.rolesEdit.form.displayName.$setValidity('notblank', true));
-        _.attempt($scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', true));
+        if ($scope.showUserDetailSection) {
+          _.attempt($scope.rolesEdit.form.displayName.$setValidity('notblank', true));
+        }
+        if ($scope.showRolesSection) {
+          _.attempt($scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', true));
+        }
       }
     }
 
@@ -349,12 +370,14 @@ require('./_user-roles.scss');
     }
 
     function patchUserRoles() {
-      var roles = rolesFromScope();
-      if (!_.isEqual(roles, $scope.initialRoles)) {
-        return Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles)
-          .then(function (response) {
-            $scope.currentUser.roles = response.data.userResponse[0].roles;
-          });
+      if ($scope.showRolesSection) {
+        var roles = rolesFromScope();
+        if (!_.isEqual(roles, $scope.initialRoles)) {
+          return Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles)
+            .then(function (response) {
+              $scope.currentUser.roles = response.data.userResponse[0].roles;
+            });
+        }
       }
     }
 
@@ -370,37 +393,38 @@ require('./_user-roles.scss');
           attributes: [],
         },
       };
-
-      if ($scope.formUserData.name) {
-        if ($scope.formUserData.name.givenName) {
-          userData.name['givenName'] = $scope.formUserData.name.givenName;
-        } else {
-          userData.meta.attributes.push('name.givenName');
+      if ($scope.showUserDetailSection) {
+        if ($scope.formUserData.name) {
+          if ($scope.formUserData.name.givenName) {
+            userData.name['givenName'] = $scope.formUserData.name.givenName;
+          } else {
+            userData.meta.attributes.push('name.givenName');
+          }
+          if ($scope.formUserData.name.familyName) {
+            userData.name['familyName'] = $scope.formUserData.name.familyName;
+          } else {
+            userData.meta.attributes.push('name.familyName');
+          }
         }
-        if ($scope.formUserData.name.familyName) {
-          userData.name['familyName'] = $scope.formUserData.name.familyName;
+
+        if ($scope.formUserData.displayName) {
+          userData.displayName = $scope.formUserData.displayName;
         } else {
-          userData.meta.attributes.push('name.familyName');
+          userData.meta.attributes.push('displayName');
         }
-      }
 
-      if ($scope.formUserData.displayName) {
-        userData.displayName = $scope.formUserData.displayName;
-      } else {
-        userData.meta.attributes.push('displayName');
-      }
+        // check if user profile data changed.
+        var useDataChanged = (
+          !_.isEqual($scope.formUserData.name, $scope.currentUser.name) ||
+          !_.isEqual($scope.formUserData.displayName, $scope.currentUser.displayName)
+        );
 
-      // check if user profile data changed.
-      var useDataChanged = (
-        !_.isEqual($scope.formUserData.name, $scope.currentUser.name) ||
-        !_.isEqual($scope.formUserData.displayName, $scope.currentUser.displayName)
-      );
-
-      if (!$scope.dirsyncEnabled && useDataChanged) {
-        return Userservice.updateUserProfile($scope.currentUser.id, userData)
-          .then(function (response) {
-            $scope.currentUser = response.data;
-          });
+        if (!$scope.dirsyncEnabled && useDataChanged) {
+          return Userservice.updateUserProfile($scope.currentUser.id, userData)
+            .then(function (response) {
+              $scope.currentUser = response.data;
+            });
+        }
       }
     }
 
@@ -483,6 +507,21 @@ require('./_user-roles.scss');
       } else {
         return true;
       }
+    }
+
+    function resetAccess() {
+      $scope.resettingAccess = true;
+      var userName = $scope.currentUser.userName;
+      Auth.revokeUserAuthTokens(userName)
+        .then(function () {
+          Notification.success('usersPreview.resetAccessSuccess', { 'name': userName });
+        })
+        .catch(function errorHandler(response) {
+          Notification.errorResponse(response, 'usersPreview.resetAccessFailure', { 'name': userName });
+        })
+        .finally(function () {
+          $scope.resettingAccess = false;
+        });
     }
   }
 })();

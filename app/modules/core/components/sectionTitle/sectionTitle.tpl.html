@@ -12,7 +12,10 @@
       </ul>
     </span>
     <span ng-if="$ctrl.asButton">
-      <a class="as-button" ng-click="$ctrl.actionList[0].actionFunction()" translate="{{$ctrl.actionList[0].actionKey}}"></a>
+      <a ng-if="!$ctrl.asArrow" class="as-button" ng-click="$ctrl.actionList[0].actionFunction()" translate="{{$ctrl.actionList[0].actionKey}}"></a>
+      <a ng-if="$ctrl.asArrow" class="as-button" ng-click="$ctrl.actionList[1].actionFunction()">
+        <i class="icon icon-arrow-next"></i>
+      </a>
     </span>
   </span>
 </div>

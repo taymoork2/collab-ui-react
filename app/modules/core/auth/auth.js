@@ -20,7 +20,8 @@
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $translate, Authinfo, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation, HuronCompassService) {
+  function Auth($http, $injector, $q, $sanitize, $translate, Authinfo, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation, HuronCompassService, $window) {
+
     var service = {
       logout: logout,
       logoutAndRedirectTo: logoutAndRedirectTo,
@@ -36,6 +37,7 @@
       getAuthorizationUrl: getAuthorizationUrl,
       getAuthorizationUrlList: getAuthorizationUrlList,
       isOnlineOrg: isOnlineOrg,
+      revokeUserAuthTokens: revokeUserAuthTokens,
     };
 
     var REFRESH_ACCESS_TOKEN_DEBOUNCE_MS = 1000;
@@ -199,6 +201,11 @@
       var revokeUrl = OAuthConfig.getOauthDeleteRefreshTokenUrl() + $sanitize(tokenId);
       return $http.delete(revokeUrl)
         .catch(logErrorAndReject('Failed to delete the oAuth token'));
+    }
+
+    function revokeUserAuthTokens(userName) {
+      var revokeUrl = OAuthConfig.getOAuthRevokeUserTokenUrl() + $window.encodeURIComponent(userName);
+      return $http.delete(revokeUrl);
     }
 
     function isLoggedIn() {

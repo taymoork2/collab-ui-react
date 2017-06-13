@@ -12,6 +12,7 @@ describe('Auth Service', function () {
   });
 
   beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _LocalStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+    debugger;
     $q = _$q_;
     Auth = _Auth_;
     $state = _$state_;
@@ -818,7 +819,28 @@ describe('Auth Service', function () {
       expect(result.services.length).toBe(0);
     });
   });
+  describe('Revoke Access Token', function () {
+    beforeEach(function () {
+      OAuthConfig.getOAuthRevokeUserTokenUrl = jasmine.createSpy('getOAuthRevokeUserTokenUrl').and.returnValue('http://localhost/idb/oauth2/v1/tokens?username=');
 
+    });
+
+    it('revoke user token should be forbiden', function () {
+      $httpBackend
+        .expectDELETE('http://localhost/idb/oauth2/v1/tokens?username=fakeuser%40example.com')
+        .respond(403, {});
+      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com');
+      expect(promise).toBeRejected();
+    });
+
+    it('revoke user token should be success', function () {
+      $httpBackend
+        .expectDELETE('http://localhost/idb/oauth2/v1/tokens?username=fakeuser%40example.com')
+        .respond(204, {});
+      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com');
+      expect(promise).toBeResolved();
+    });
+  });
   // helpers
 
   function stubCredentials() {

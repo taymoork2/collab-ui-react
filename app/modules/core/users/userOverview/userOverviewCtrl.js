@@ -34,7 +34,7 @@
     vm.clickUserDetailsService = clickUserDetailsService;
     vm.actionList = [];
     vm.hasSparkCall = false;
-
+    vm.enableRolesAndSecurityOption = false;
     var msgState = {
       name: $translate.instant('onboardModal.message'),
       icon: 'icon-circle-message',
@@ -76,6 +76,9 @@
       currentUserId: '',
       hasSparkCall: false,
     };
+    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function () {
+      vm.enableRolesAndSecurityOption = true;
+    });
     init();
 
     /////////////////////////////
@@ -126,6 +129,11 @@
         action.actionFunction = goToEditService;
       }
       vm.actionList.push(action);
+      var editRoleAndSecurityAction = {
+        actionKey: 'common.edit',
+        actionFunction: clickRolesAndSecurity,
+      };
+      vm.actionList.push(editRoleAndSecurityAction);
       return $q.resolve();
     }
 
@@ -142,6 +150,10 @@
 
     function clickService(feature) {
       $state.go('user-overview.' + feature.state);
+    }
+
+    function clickRolesAndSecurity() {
+      $state.go('user-overview.rolesAndSecurity');
     }
 
     function clickUserDetailsService(feature) {
