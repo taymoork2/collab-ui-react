@@ -7,9 +7,12 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   public orgName;
   public status: ICmcOrgStatusResponse;
   public userStatuses: Array<ICmcUserStatus>;
+  public fetchedUserStatuses: Array<ICmcUserStatus>;
   public gridOptions;
   public userStatusesSummaryText: string;
   private statTemplate;
+  public filters: any[];
+  private searchStr: string;
 
   /* @ngInject */
   constructor(
@@ -20,6 +23,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     private $translate,
     private Notification: Notification,
     private $templateCache,
+    private $filter: ng.IFilterService,
   ) {
     this.orgId = this.Authinfo.getOrgId();
     this.orgName = this.Authinfo.getOrgName();
@@ -27,6 +31,19 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
     this.statTemplate = this.$templateCache.get('modules/cmc/status/statColumn.tpl.html');
 
+    // TODO Add this and also  errors when CMC provides more info
+    // this.filters = [{
+    //   name: 'Activated',
+    //   filterValue: 'activated',
+    //   count: 0,
+    // } ];
+  }
+
+  public filterList(searchStr: string) {
+    this.$log.debug('searchStr', searchStr );
+    this.searchStr = searchStr;
+    this.$log.debug('user statuses', this.fetchedUserStatuses);
+    this.userStatuses = this.$filter('filter')(this.fetchedUserStatuses, { displayName: this.searchStr });
   }
 
   public $onInit() {
@@ -55,6 +72,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     return this.CmcUserService.getUsersWithCmcButMissingAware(limit)
       .then( (result: ICmcUserStatusInfoResponse) => {
         this.userStatuses = result.userStatuses;
+        this.fetchedUserStatuses = result.userStatuses;
         if (result.paging.next) {
           this.userStatusesSummaryText = this.$translate.instant('cmc.statusPage.listingFirstActiveUsers', { noOfActiveUsers: this.userStatuses.length });
         } else {

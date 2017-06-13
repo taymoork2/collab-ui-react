@@ -49,6 +49,8 @@ export interface ICmcUserStatus {
   lastStatusUpdate?: string;
   lastStateChange?: string;
   entitled?: string;
+  displayName?: string;
+  userName?: string;
 }
 
 export interface ICmcUserStatusInfoResponse {

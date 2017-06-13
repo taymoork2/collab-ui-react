@@ -62,7 +62,7 @@ export class CmcUserService {
     let urlBase: string = this.UrlConfig.getAdminServiceUrl();
     let url: string = urlBase + 'organization/' + this.Authinfo.getOrgId() + '/reports/devices?accountIds=' + ids.join();
     return this.$http.get(url).then( (result: any) => {
-      _.each(result.data, function (resolvedUser) {
+      _.each(result.data, (resolvedUser) => {
         let res: any = _.find(userData, { userId: resolvedUser.id });
         if (res) {
           res.displayName = resolvedUser.displayName;
