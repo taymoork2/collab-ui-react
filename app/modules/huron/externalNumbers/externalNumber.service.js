@@ -271,7 +271,7 @@
       var _pstnCarrierId = _terminusDetail.pstnCarrierId;
 
       if (_.isUndefined(_pstnCarrierId) || _pstnCarrierId === null) {
-        PstnService.getCustomerV2(customerId)
+        return PstnService.getCustomerV2(customerId)
         .then(function (response) {
           _pstnCarrierId = _.get(response, 'pstnCarrierId');
           if (_.isUndefined(_pstnCarrierId) || _pstnCarrierId === null) {
