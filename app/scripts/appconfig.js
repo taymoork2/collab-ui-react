@@ -3033,6 +3033,30 @@
               }),
             },
           })
+          .state('calllocations', {
+            url: '/services/call-locations',
+            parent: 'hurondetails',
+            template: '<call-locations></call-locations>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/locations'));
+                }, 'call-locations');
+              }),
+            },
+          })
+          .state('callLocation', {
+            url: '/services/call-locations/add',
+            parent: 'hurondetails',
+            template: '<call-location></call-location>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/locations/location/index'));
+                }, 'add-call-location');
+              }),
+            },
+          })
           .state('huronrecords', {
             parent: 'modal',
             views: {

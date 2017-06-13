@@ -470,6 +470,8 @@
         'externalNumberDelete',
         'pstnSetup',
         'pstnWizard',
+        'calllocations',
+        'callLocation',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',

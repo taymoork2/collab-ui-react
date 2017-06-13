@@ -10,6 +10,7 @@
 
     var vm = this;
     var appendSpecialCharHelp = "<br><br>" + $translate.instant('autoAttendant.sayMessageSpecialChar');
+    var appendRouteToPhoneNumberHelp = "<br><br>" + $translate.instant('autoAttendant.routeToPhoneNumberHelp');
 
     vm.options = [{
       title: $translate.instant('autoAttendant.actionSayMessage'),
@@ -25,7 +26,7 @@
       controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
       url: 'modules/huron/features/autoAttendant/phoneMenu/aaPhoneMenu.tpl.html',
       hint: $translate.instant('autoAttendant.actionPhoneMenuHint'),
-      help: $translate.instant('autoAttendant.phoneMenuHelp') + appendSpecialCharHelp,
+      help: $translate.instant('autoAttendant.phoneMenuHelp') + appendSpecialCharHelp + appendRouteToPhoneNumberHelp,
       metric: 'Phone-Menu-Title',
       showHelpLink: true,
       actions: ['runActionsOnInput'],

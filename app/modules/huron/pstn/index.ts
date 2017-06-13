@@ -6,6 +6,7 @@ import pstnTermsOfService from './pstnTermsOfService';
 import pstnService from './pstn.service';
 import pstnModel from './pstn.model';
 import terminusService from './terminus.service';
+import esaDisclaimer from './esaDisclaimer';
 
 export * from './pstn.const';
 export * from './pstn.model';
@@ -22,4 +23,5 @@ export default angular
     pstnModel,
     pstnService,
     terminusService,
+    esaDisclaimer,
   ]).name;

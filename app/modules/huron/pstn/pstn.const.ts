@@ -40,3 +40,8 @@ export const TYPE_PORT: string = 'PORT';
 
 export const ADMINTYPE_PARTNER: string = 'PARTNER';
 export const ADMINTYPE_CUSTOMER: string = 'CUSTOMER';
+
+export const BYOPSTN: string = 'BYOPSTN';
+export const PSTN_CARRIER_ID: string = 'pstnCarrierId';
+export const E911_SIGNEE: string = 'e911Signee';
+export const ESA_DISCLAIMER_ACCEPT = 'esa-disclaimer-accept-event';

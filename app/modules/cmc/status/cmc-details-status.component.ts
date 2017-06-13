@@ -73,7 +73,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
   private initGrid() {
     let columnDefs = [{
-      width: '25%',
+      width: '35%',
       sortable: true,
       field: 'displayName',
       displayName: 'User Name',
@@ -86,12 +86,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
       cellClass: 'ui-grid-cell-contents',
       sort: { direction: 'asc', priority: 0 },
     }, {
-      width: '25%',
-      sortable: false,
-      field: 'userId',
-      displayName: 'Id',
-    }, {
-      width: '20%',
+      width: '35%',
       sortable: true,
       field: 'lastStatusUpdate',
       displayName: 'Last Updated',

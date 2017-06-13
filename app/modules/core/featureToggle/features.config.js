@@ -203,4 +203,5 @@ module.exports = {
   csdmAtaCpc: "csdm-ata-cpc",
   hi1487: "h-i1487",
   csdmAtaReboot: "csdm-ata-reboot",
+  hI1484: "h-i1484",
 };

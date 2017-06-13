@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <p class="h3 modal-title" translate="locations.deleteTitle"></p>
+</div>
+<div class="modal-body">
+  <div class="feature-delete-modal">
+    <p ng-if="$ctrl.canDelete()" translate="locations.deleteDesc"  translate-values="{locationName : $ctrl.name}"></p>
+    <p ng-if="!$ctrl.canDelete()" translate="locations.cannotDeleteDesc"></p>
+  </div>
+</div>
+<div ng-if="$ctrl.canDelete()" class="modal-footer">
+  <button class="btn" id="cancelDeleteLocation" ng-click="$ctrl.dismiss()" translate="common.cancel"></button>
+  <button class="btn btn--negative" id="confirmDeleteLocation" cs-btn loading="$ctrl.saveInProcess" type="button" ng-click="$ctrl.deleteLocation()">
+    <span translate="locations.deleteButton"></span>
+  </button>
+</div>
+<div ng-if="!$ctrl.canDelete()" class="modal-footer">
+  <button class="btn btn--primary" id="cancelDeleteLocation" ng-click="$ctrl.dismiss()" translate="common.ok"></button>
+</div>

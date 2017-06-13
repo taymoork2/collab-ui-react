@@ -42,6 +42,11 @@ require('./_setup-wizard.scss');
           $scope.sparkCallTenDigitExtEnabled = sparkCallTenDigitExt;
         });
 
+      var hI1484Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+        .then(function (ishI1484) {
+          $scope.ishI1484 = ishI1484;
+        });
+
       var adminOrgUsagePromise = Orgservice.getAdminOrgUsage()
         .then(function (subscriptions) {
           var licenseTypes = Utils.getDeepKeyValues(subscriptions, 'licenseType');
@@ -59,6 +64,7 @@ require('./_setup-wizard.scss');
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
         tenDigitExtPromise,
+        hI1484Promise,
       ]);
     }
 
@@ -282,8 +288,19 @@ require('./_setup-wizard.scss');
     }
 
     function initCallSettingsTab(tabs) {
+      var initialStep = {
+        name: 'setup',
+        template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
+      };
       if (showCallSettings()) {
         if ($scope.sparkCallTenDigitExtEnabled) {
+          var steps = [{
+            name: 'init',
+            template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
+          }];
+          if ($scope.ishI1484) {
+            steps.splice(0, 0, initialStep);
+          }
           tabs.splice(1, 0, {
             name: 'serviceSetup',
             required: true,
@@ -292,12 +309,16 @@ require('./_setup-wizard.scss');
             icon: 'icon-calls',
             title: 'firstTimeWizard.unifiedCommunication',
             controllerAs: '$ctrl',
-            steps: [{
-              name: 'init',
-              template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
-            }],
+            steps: steps,
           });
         } else {
+          steps = [{
+            name: 'init',
+            template: 'modules/core/setupWizard/callSettings/serviceSetup.tpl.html',
+          }];
+          if ($scope.ishI1484) {
+            steps.splice(0, 0, initialStep);
+          }
           tabs.splice(1, 0, {
             name: 'serviceSetup',
             required: true,
@@ -307,10 +328,7 @@ require('./_setup-wizard.scss');
             title: 'firstTimeWizard.unifiedCommunication',
             controller: 'ServiceSetupCtrl as squaredUcSetup',
             controllerAs: 'squaredUcSetup',
-            steps: [{
-              name: 'init',
-              template: 'modules/core/setupWizard/callSettings/serviceSetup.tpl.html',
-            }],
+            steps: steps,
           });
         }
       }

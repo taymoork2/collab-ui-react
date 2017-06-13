@@ -11,7 +11,7 @@
       createNotification: function createNotification() {
         var notification = {
           badgeText: 'common.alert',
-          badgeType: 'error',
+          badgeType: 'alert',
           canDismiss: true,
           dismiss: function () {},
           link: function () {

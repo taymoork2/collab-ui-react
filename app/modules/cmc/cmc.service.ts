@@ -48,11 +48,17 @@ export class CmcService {
     // based on org entitlements ?
     let deferred = this.$q.defer();
     this.Orgservice.getOrg((data, success) => {
+      this.$log.debug('data', data);
       if (success) {
-        deferred.resolve(this.hasCmcService(data.services));
-        this.$log.debug('org data:', data);
+        if (data.success) {
+          deferred.resolve(this.hasCmcService(data.services));
+          this.$log.debug('org data:', data);
+        } else {
+          deferred.reject(data);
+        }
       } else {
         deferred.resolve(false);
+        this.$log.debug('data', data);
       }
     }, orgId, {
       basicInfo: true,

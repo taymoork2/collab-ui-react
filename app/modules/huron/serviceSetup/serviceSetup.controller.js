@@ -10,7 +10,7 @@
     HuronCustomer, ValidationService, HuronCustomerService, PhoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
     PstnService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2,
-    CustomerDialPlanServiceV2, HuronCompassService) {
+    CustomerDialPlanServiceV2, HuronCompassService, SettingSetupInitService) {
     var vm = this;
     vm.isTimezoneAndVoicemail = function () {
       return Authinfo.getLicenses().filter(function (license) {
@@ -52,6 +52,7 @@
     vm.setCustomerCosRestrictions = setCustomerCosRestrictions;
     vm.processing = true;
     vm.externalNumberPool = [];
+    vm.isMultiSelected = isMultiSelected;
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
     vm.defaultCountryPlaceholder = $translate.instant('serviceSetupModal.defaultCountryPlaceholder');
     vm.preferredLanguagePlaceholder = $translate.instant('serviceSetupModal.preferredLanguagePlaceholder');
@@ -146,6 +147,14 @@
     FeatureToggleService.supports(FeatureToggleService.features.hRegionalTones).then(function (result) {
       vm.ftHRegionalTones = result;
     });
+
+    FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(function (result) {
+      vm.ishI1484 = result;
+    });
+
+    function isMultiSelected() {
+      return SettingSetupInitService.getSelected() === 2;
+    }
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -1690,10 +1699,37 @@
       }
     });
 
-    $scope.$watch(function () {
-      return _.get(vm, 'form.$invalid', true);
-    }, function (invalid) {
-      $scope.$emit('wizardNextButtonDisable', !!invalid);
+    var watcher, watcher1, watcher2;
+    function destroyWatchers(delteWatcher) {
+      if (watcher1) {
+        watcher1();
+      } else if (watcher2) {
+        watcher2();
+      }
+      if (delteWatcher && watcher) {
+        watcher();
+      }
+    }
+    $scope.$on('$destroy', function () {
+      destroyWatchers(true);
+    });
+    watcher = $scope.$watch('wizard.current.step', function (value) {
+      destroyWatchers(false);
+      if ($scope.wizard.current.tab.name === 'serviceSetup') {
+        if (value != undefined && value.name === 'init') {
+          watcher1 = $scope.$watch(function () {
+            return _.get(vm, 'form.$invalid', true);
+          }, function (invalid) {
+            $scope.$emit('wizardNextButtonDisable', !!invalid);
+          });
+        } else if (value != undefined && value.name === 'setup') {
+          watcher2 = $scope.$watch(function () {
+            return SettingSetupInitService.getSelected();
+          }, function (value) {
+            $scope.$emit('wizardNextButtonDisable', !value);
+          });
+        }
+      }
     });
   }
 })();

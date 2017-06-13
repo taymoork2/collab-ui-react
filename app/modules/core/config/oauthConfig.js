@@ -36,6 +36,9 @@
       'spark-admin:licenses_read',
       'spark-admin:logs_read',
       'spark:kms',
+      // to onboard bot account
+      'spark:applications_write',
+      'spark:applications_read',
     ];
 
     var oauth2Scope = encodeURIComponent(scopes.join(' '));

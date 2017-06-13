@@ -4,6 +4,9 @@
 
 <form name="squaredUcSetup.form" novalidate  ng-if="!squaredUcSetup.processing">
   <div class="container-fluid service-setup-container">
+    <div ng-if="squaredUcSetup.ishI1484">
+      <input type="text" cs-input ng-model="squaredUcSetup.locationName" required cs-input-label="{{'locations.locationName' | translate}}">
+    </div>
     <div ng-if="squaredUcSetup.showTimezoneAndVoicemail">
       <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswTimeZoneSelection" form="squaredUcSetup.form"></formly-form>
     </div>
@@ -72,6 +75,11 @@
           ng-disabled="squaredUcSetup.model.dialingHabit === squaredUcSetup.NATIONAL">
       </div>
       <p class="row full columns warning terminus-warning indent-area-code" ng-if="!squaredUcSetup.isTerminusCustomer"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.localDialing' | translate}}</p>
+    </div>
+    <div class="service-setup" ng-if="squaredUcSetup.ishI1484 && squaredUcSetup.isMultiSelected()">
+      <label translate="serviceSetupModal.routingPrefix.title"></label>
+      <p translate="serviceSetupModal.routingPrefix.reserveDesc"></p>
+      <input type="text" cs-input ng-model="squaredUcSetup.routingPrefix" placeholder="{{'serviceSetupModal.routingPrefix.placeholder' | translate}}" required cs-input-help-text="{{'serviceSetupModal.routingPrefix.exampleHelpText' | translate}}">
     </div>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswExtensionLengthSelection" form="squaredUcSetup.form"></formly-form>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswExtensionRangeSelection" form="squaredUcSetup.form"></formly-form>

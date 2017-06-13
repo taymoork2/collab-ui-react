@@ -22,6 +22,8 @@ import emergencyServiceAddressModule from 'modules/huron/settings/emergencyServi
 import externalTransferModule from 'modules/huron/settings/externalCallTransfer';
 import phoneNumberModule from 'modules/huron/phoneNumber';
 import featureToggleServiceModule from 'modules/core/featureToggle';
+import { SettingSetupInitComponent } from 'modules/huron/settings/init/settingSetupInit.component';
+import { SettingSetupInitService } from 'modules/huron/settings/init/settingSetupInitService';
 
 export default angular
   .module('huron.settings', [
@@ -57,4 +59,6 @@ export default angular
     featureToggleServiceModule,
   ])
   .component('ucSettings', new HuronSettingsComponent())
+  .component('ucSettingsInit', new SettingSetupInitComponent())
+  .service('SettingSetupInitService', SettingSetupInitService)
   .name;

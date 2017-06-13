@@ -70,6 +70,14 @@ class CmcUserDetailsController implements ng.IComponentController {
                 });
             });
         }
+      }).catch((error) => {
+        this.$log.debug('error', error);
+        let msg: string = 'unknown';
+        if (error.Errors && error.Errors.length > 0) {
+          msg = error.Errors[0].description;
+        }
+        this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });
+        this.services[ 0 ].actionAvailable = false;
       });
   }
 

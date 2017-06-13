@@ -93,6 +93,7 @@ export class CompanyCallerIdComponent implements ng.IComponentOptions {
   public controller = CompanyCallerId;
   public templateUrl = 'modules/huron/settings/companyCallerId/companyCallerId.html';
   public bindings = {
+    isLocation: '<',
     site: '<',
     customerName: '<',
     companyCallerId: '<',
