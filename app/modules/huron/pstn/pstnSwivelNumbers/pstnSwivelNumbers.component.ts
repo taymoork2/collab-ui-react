@@ -31,6 +31,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   public tokenmethods: TokenMethods;
   public acknowledge: boolean;
   public invalidCount: number = 0;
+  private i387FeatureToggle: boolean;
 
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
@@ -57,6 +58,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
       .then((supported) => {
         let numberOfTokens = supported ? maxNumberOfByopTokens : maxNumberOfTokens;
         _.set(this.tokenoptions, tokenfieldlimit, numberOfTokens);
+        this.i387FeatureToggle = supported;
       });
   }
 

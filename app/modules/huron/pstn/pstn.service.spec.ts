@@ -8,6 +8,7 @@ describe('Service: PstnService', function () {
   suite.carrierId = '4f5f5bf7-0034-4ade-8b1c-db63777f062c';
   suite.orderId = '29c63c1f-83b0-42b9-98ee-85624e4c7409';
   suite.reservationId = '061762cc-0f01-42aa-802c-97c293189476';
+  suite.userId = 'bc847524-4f88-11e7-b114-b2f933d5fe66';
 
   let customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   let customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
@@ -101,6 +102,10 @@ describe('Service: PstnService', function () {
     createdBy: 'PARTNER',
   };
 
+  let e911SigneePayload = {
+    e911Signee: suite.userId,
+  };
+
   let swivelOrderV2TfnPayload: any = {
     numbers: onlyTollFreeNumbers,
     numberType: 'TOLLFREE',
@@ -127,6 +132,7 @@ describe('Service: PstnService', function () {
       'PhoneNumberService',
      );
     spyOn(this.Authinfo, 'getCallPartnerOrgId').and.returnValue(suite.partnerId);
+    spyOn(this.Authinfo, 'getUserId').and.returnValue(suite.userId);
     spyOn(this.Authinfo, 'isPartner');
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve());
   });
@@ -357,6 +363,13 @@ describe('Service: PstnService', function () {
       expect(swivelOrderData.numbers.length).toEqual(2);
       expect(swivelOrderData.numbers.sort()).toEqual(onlyPstnNumbers.sort());
     });
+    this.$httpBackend.flush();
+  });
+
+  it('should update the e911Signee', function () {
+    this.$httpBackend.expectPUT(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId, e911SigneePayload).respond(200);
+
+    this.PstnService.updateCustomerE911Signee(suite.customerId);
     this.$httpBackend.flush();
   });
 

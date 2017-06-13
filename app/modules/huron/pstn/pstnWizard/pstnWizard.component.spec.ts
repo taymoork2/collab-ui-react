@@ -27,6 +27,7 @@ describe('Component: PstnWizardComponent', () => {
       'PstnWizardService',
       'PstnServiceAddressService',
       'HuronCountryService',
+      'FeatureToggleService',
     );
   });
 
@@ -37,17 +38,28 @@ describe('Component: PstnWizardComponent', () => {
     spyOn(this.HuronCountryService, 'getCountryList');
     spyOn(this.PstnWizardService, 'init');
     spyOn(this.PstnWizardService, 'initSites');
+    spyOn(this.PstnWizardService, 'isSwivel');
+    spyOn(this.FeatureToggleService, 'supports');
+    spyOn(this.PstnModel, 'isEsaSigned');
+    spyOn(this.PstnModel, 'isCustomerExists');
+    spyOn(this.PstnModel, 'setNumbers');
+    spyOn(this.PstnModel, 'setOrders');
+    spyOn(this.PstnWizardService, 'setSwivelOrder');
+    spyOn(this.PstnWizardService, 'finalizeImport');
     this.PstnWizardService.init.and.returnValue(this.$q.resolve());
     this.PstnWizardService.initSites.and.returnValue(this.$q.resolve());
     this.PstnService.listResellerCarriersV2.and.returnValue(this.$q.reject());
     this.PstnService.listDefaultCarriersV2.and.returnValue(this.$q.resolve(swivelCarrierDetails));
     this.PstnService.getCarrierCapabilities.and.returnValue(this.$q.resolve([]));
     this.HuronCountryService.getCountryList.and.returnValue(this.$q.resolve([]));
-    this.compileComponent('ucPstnPaidWizard', {});
   }
 
   describe('init', () => {
     beforeEach(initComponent);
+    beforeEach(function() {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(false));
+      this.compileComponent('ucPstnPaidWizard', {});
+    });
 
     afterEach(function () {
       this.$httpBackend.verifyNoOutstandingExpectation();
@@ -59,18 +71,94 @@ describe('Component: PstnWizardComponent', () => {
       expect(this.controller.step).toBe(1);
     });
 
-    it('nextStep and previousStep should increment and decrement the step by one and check if its disabled', function () {
-      this.controller.nextStep();
-      expect(this.controller.step).toBe(2);
-      this.controller.nextStep();
-      expect(this.controller.step).toBe(3);
-      expect(this.controller.nextDisabled()).toBe(true);
+  });
 
-      spyOn(this.PstnWizardService, 'isSwivel');
-      this.PstnWizardService.isSwivel.and.returnValue(false);
+  describe('I387 ByoPSTN feature toggle set', () => {
+    beforeEach(initComponent);
+    beforeEach(function() {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
+      this.PstnWizardService.isSwivel.and.returnValue(true);
+      this.compileComponent('ucPstnPaidWizard', {});
+    });
+
+    afterEach(function () {
+      this.$httpBackend.verifyNoOutstandingExpectation();
+      this.$httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should make i387FeatureToggle as true', function () {
+      expect(this.controller.i387FeatureToggle).toBe(true);
+    });
+
+    it('should go to the step 8 if the toggle is enabled', function () {
+      this.controller.goToSwivelNumbers();
+      expect(this.controller.step).toBe(8);
+    });
+
+    it('should go to the step 9 if the toggle is enabled and esa is signed', function () {
+      this.PstnModel.isEsaSigned.and.returnValue(true);
+      this.controller.goToSwivelNumbers();
+      expect(this.controller.step).toBe(9);
+    });
+
+    it('should go to the step 1 if the toggle is enabled and previousStep is called from step 8', function () {
+      this.controller.step = 8;
       this.controller.previousStep();
-      expect(this.controller.step).toBe(2);
+      expect(this.controller.step).toBe(1);
+    });
+
+    it('should hide back button on step 8 if customer exists', function () {
+      this.controller.step = 8;
+      this.PstnModel.isCustomerExists.and.returnValue(true);
+      expect(this.controller.hideBackBtn()).toBe(true);
+    });
+
+    it('should hide back button on step 9 if esa is signed', function () {
+      this.controller.step = 9;
+      this.PstnModel.isEsaSigned.and.returnValue(true);
+      expect(this.controller.hideBackBtn()).toBe(true);
+    });
+
+    it('should set swivel orders on step 9 if next button is clicked', function () {
+      this.controller.step = 9;
+      this.controller.invalidSwivelCount = 0;
+      this.controller.swivelNumbers = ['+12342342343'];
+      this.controller.nextStep();
+      expect(this.PstnModel.setNumbers).toHaveBeenCalled();
+      expect(this.PstnWizardService.setSwivelOrder).toHaveBeenCalled();
+      expect(this.PstnModel.setOrders).toHaveBeenCalled();
+    });
+
+    it('should call finalizeImport on step 10 if next button is clicked', function () {
+      this.controller.step = 10;
+      this.PstnWizardService.finalizeImport.and.returnValue(this.$q.resolve());
+      this.controller.nextStep();
+      expect(this.PstnWizardService.finalizeImport).toHaveBeenCalled();
     });
 
   });
+
+  describe('I387 ByoPSTN feature toggle NOT set', () => {
+    beforeEach(initComponent);
+    beforeEach(function() {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(false));
+      this.PstnWizardService.isSwivel.and.returnValue(true);
+      this.compileComponent('ucPstnPaidWizard', {});
+    });
+
+    afterEach(function () {
+      this.$httpBackend.verifyNoOutstandingExpectation();
+      this.$httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should make i387FeatureToggle as false if feature toggle is not set', function () {
+      expect(this.controller.i387FeatureToggle).toBe(false);
+    });
+
+    it('should go to the step 5 if the toggle is not enabled', function () {
+      this.controller.goToSwivelNumbers();
+      expect(this.controller.step).toBe(5);
+    });
+  });
+
 });

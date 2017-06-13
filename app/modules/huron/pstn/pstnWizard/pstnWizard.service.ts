@@ -17,6 +17,10 @@ export class PstnWizardService {
     5: string;
     6: string;
     7: string;
+    8: string;
+    9: string;
+    10: string;
+    11: string;
   };
   private tokenfieldId = TOKEN_FIELD_ID;
   private PORTING_NUMBERS: string;
@@ -49,6 +53,10 @@ export class PstnWizardService {
       5: $translate.instant('pstnSetup.setupNumbers'),
       6: $translate.instant('pstnSetup.setupService'),
       7: $translate.instant('pstnSetup.setupService'),
+      8: $translate.instant('pstnSetup.setupService'),
+      9: $translate.instant('pstnSetup.setupService'),
+      10: $translate.instant('pstnSetup.setupService'),
+      11: $translate.instant('pstnSetup.setupPstn'),
     };
   }
 
@@ -65,8 +73,11 @@ export class PstnWizardService {
         this.PstnModel.setCountryCode(data.countryCode);
       }
       this.PstnService.getCustomerV2(this.PstnModel.getCustomerId())
-      .then(() => {
+      .then((response) => {
         this.PstnModel.setCustomerExists(true);
+        if (response.e911Signee) {
+          this.PstnModel.setEsaSigned(true);
+        }
         deferred.resolve(true);
       }, () => deferred.resolve(true));
     }, this.PstnModel.getCustomerId(), params);
@@ -152,6 +163,18 @@ export class PstnWizardService {
     }
   }
 
+  private logESAAcceptance(): ng.IPromise<any> {
+    if (!this.PstnModel.isEsaSigned()) {
+      return this.PstnService.updateCustomerE911Signee(this.PstnModel.getCustomerId())
+        .catch(response => {
+          this.Notification.errorResponse(response, 'pstnSetup.esaSignatureFailed');
+          return this.$q.reject(response);
+        });
+    } else {
+      return this.$q.resolve(true);
+    }
+  }
+
   private getEnterprisePrivateTrunkingFeatureToggle(): ng.IPromise<any> {
     return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
       .then((supported) => {
@@ -215,13 +238,30 @@ export class PstnWizardService {
     });
   }
 
+  private importNumbers(): ng.IPromise<any> {
+    let swivelNumbers: Array<string> = <Array<string>>_.get(this, 'swivelOrders[0].data.numbers', []);
+    if (swivelNumbers.length > 0) {
+      return this.PstnService.orderNumbersV2Swivel(this.PstnModel.getCustomerId(), swivelNumbers)
+        .catch(response => {
+          this.Notification.errorResponse(response, 'pstnSetup.orderNumbersError');
+          return this.$q.reject(response);
+        });
+    } else {
+      return this.$q.resolve(true);
+    }
+  }
+
   public setSwivelOrder(order: Array<string>): Array<IOrder> {
-    let swivelOrder = [{
-      data: { numbers: order },
-      numberType: NUMTYPE_DID,
-      orderType: SWIVEL_ORDER,
-    }];
-    this.swivelOrders = swivelOrder;
+    if (order.length > 0) {
+      let swivelOrder = [{
+        data: { numbers: order },
+        numberType: NUMTYPE_DID,
+        orderType: SWIVEL_ORDER,
+      }];
+      this.swivelOrders = swivelOrder;
+    } else {
+      this.swivelOrders = [];
+    }
     return this.swivelOrders;
   }
 
@@ -260,6 +300,18 @@ export class PstnWizardService {
       .then(this.createSite.bind(this))
       .then(this.getEnterprisePrivateTrunkingFeatureToggle.bind(this))
       .then(this.createNumbers.bind(this));
+  }
+
+  public finalizeImport(): ng.IPromise<any> {
+    let promise = this.$q.resolve(true);
+    if (!this.PstnModel.isCustomerExists()) {
+      promise = this.createCustomerV2();
+    } else if (!this.PstnModel.isCarrierExists()) {
+      promise = this.updateCustomerCarrier();
+    }
+    return promise
+      .then(this.logESAAcceptance.bind(this))
+      .then(this.importNumbers.bind(this));
   }
 
   public initOrders(): {totalNewAdvancedOrder: number, totalPortNumbers: number} {

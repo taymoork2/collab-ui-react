@@ -268,7 +268,7 @@
 
     function getCarrierInfo(customerId) {
       var _terminusDetail = _.find(terminusDetails, { customerId: customerId });
-      var _pstnCarrierId = _terminusDetail.pstnCarrierId;
+      var _pstnCarrierId = _.get(_terminusDetail, 'pstnCarrierId');
 
       if (_.isUndefined(_pstnCarrierId) || _pstnCarrierId === null) {
         return PstnService.getCustomerV2(customerId)
