@@ -2,9 +2,10 @@
   <h3 class="modal-title" translate="onlineUpgradeModal.title"></h3>
 </div>
 <div class="modal-body">
-  <span translate="onlineUpgradeModal.body"></span>
-  <span ng-if="$ctrl.showCancelButton"
-    translate="onlineUpgradeModal.cancelBody"></span>
+  <span ng-if="!$ctrl.nameChangeEnabled" translate="onlineUpgradeModal.body"></span>
+  <span ng-if="$ctrl.nameChangeEnabled" translate="onlineUpgradeModal.bodyNew"></span>
+  <span ng-if="$ctrl.showCancelButton && !$ctrl.nameChangeEnabled" translate="onlineUpgradeModal.cancelBody"></span>
+  <span ng-if="$ctrl.showCancelButton && $ctrl.nameChangeEnabled" translate="onlineUpgradeModal.cancelBodyNew"></span>
 </div>
 <div class="modal-footer online-upgrade-modal">
   <button

@@ -17,6 +17,7 @@ export default angular
     require('modules/core/config/urlConfig'),
     notifications,
     require('modules/core/scripts/services/authinfo'),
+    require('modules/core/featureToggle').default,
   ])
   .component('onlineUpgradeModal', new OnlineUpgradeComponent())
   .service('OnlineUpgradeService', OnlineUpgradeService)

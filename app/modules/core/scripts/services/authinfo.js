@@ -560,6 +560,11 @@
       isInDelegatedAdministrationOrg: function () {
         return authData.isInDelegatedAdministrationOrg;
       },
+      isPremium: function () {
+        return _.some(authData.licenses, function (license) {
+          return license.offerName === Config.offerCodes.MGMTPRO;
+        });
+      },
       getLicenseIsTrial: function (licenseType, entitlement) {
         var isTrial = _.chain(authData.licenses)
           .reduce(function (isTrial, license) {

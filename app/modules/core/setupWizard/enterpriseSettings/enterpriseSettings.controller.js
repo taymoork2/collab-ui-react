@@ -73,16 +73,19 @@
       },
     }];
 
-    init();
-
     function init() {
-      FeatureToggleService.atlasSubdomainUpdateGetStatus().then(function (status) {
-        vm.sipUpdateToggle = status;
+      $q.all({
+        sipUpdateToggle: FeatureToggleService.atlasSubdomainUpdateGetStatus(),
+        nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+      }).then(function (toggles) {
+        vm.sipUpdateToggle = toggles.sipUpdateToggle;
+        $scope.nameChangeEnabled = toggles.nameChangeEnabled;
       });
 
       setPMRSiteUrlFromSipDomain();
       updateSSO();
     }
+    init();
 
     // Personal Meeting Room Controller code
 

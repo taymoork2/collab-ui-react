@@ -1,85 +1,72 @@
-describe('ClusterDeregisterController', () => {
+describe('ClusterDeregisterController', function () {
+  beforeEach(function () {
+    this.initModules('Hercules');
+    this.injectDependencies('$controller', '$q', '$scope', 'PrivateTrunkService', 'HybridServicesClusterService', 'FeatureToggleService');
 
-  let $controller, $scope, $q, PrivateTrunkService, HybridServicesClusterService;
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.PrivateTrunkService, 'removePrivateTrunkResource').and.returnValue(this.$q.resolve({}));
+    spyOn(this.HybridServicesClusterService, 'deregisterCluster').and.returnValue(this.$q.resolve({}));
+    this.mockModal = { close: jasmine.createSpy('close') };
+    this.baseToggle = {
+      id: '123',
+      targetType: 'ept',
+    };
 
-  const modalInstanceMock = {
-    close: jasmine.createSpy('close'),
-  };
-
-  beforeEach(angular.mock.module('Hercules'));
-  beforeEach(inject(dependencies));
-  beforeEach(initSpies);
-
-  function dependencies (_$controller_, $rootScope, _$q_, _PrivateTrunkService_, _HybridServicesClusterService_): void {
-    $controller = _$controller_;
-    $scope = $rootScope.$new();
-    $q = _$q_;
-    PrivateTrunkService = _PrivateTrunkService_;
-    HybridServicesClusterService = _HybridServicesClusterService_;
-  }
-
-  function initController(cluster: any): void {
-    return $controller('ClusterDeregisterController', {
-      $modalInstance: modalInstanceMock,
-      cluster: cluster,
-    });
-  }
-
-  function initSpies() {
-    spyOn(PrivateTrunkService, 'removePrivateTrunkResource').and.returnValue($q.resolve({}));
-    spyOn(HybridServicesClusterService, 'deregisterCluster').and.returnValue($q.resolve({}));
-  }
-
-  describe('Enterprise Private Trunking', () => {
-
-    it('should call the correct backend when deleting a private trunk', () => {
-
-      const trunkResource = {
-        id: '123',
-        targetType: 'ept',
-      };
-
-      let controller: any = initController(trunkResource);
-      controller.deregister();
-      $scope.$apply();
-      expect(PrivateTrunkService.removePrivateTrunkResource).toHaveBeenCalled();
-      expect(HybridServicesClusterService.deregisterCluster).not.toHaveBeenCalled();
-    });
-
+    this.initController = (cluster: any): void => {
+      this.controller = this.$controller('ClusterDeregisterController', {
+        $modalInstance: this.mockModal,
+        cluster: cluster,
+      });
+      this.$scope.$apply();
+    };
   });
 
-  describe('Hybrid Services', () => {
+  describe('Enterprise Private Trunking', function () {
+    it('should call the correct backend when deleting a private trunk', function () {
+      this.initController(this.baseToggle);
+      this.controller.deregister();
+      this.$scope.$apply();
+      expect(this.PrivateTrunkService.removePrivateTrunkResource).toHaveBeenCalled();
+      expect(this.HybridServicesClusterService.deregisterCluster).not.toHaveBeenCalled();
+      expect(this.mockModal.close).toHaveBeenCalled();
+    });
+  });
 
-    it('should call the correct backend when deleting a hybrid media node', () => {
-
-      const trunkResource = {
+  describe('Hybrid Services', function () {
+    it('should call the correct backend when deleting a hybrid media node', function () {
+      this.initController({
         id: '456',
         targetType: 'mf_mgmt',
-      };
-
-      let controller: any = initController(trunkResource);
-      controller.deregister();
-      $scope.$apply();
-      expect(PrivateTrunkService.removePrivateTrunkResource).not.toHaveBeenCalled();
-      expect(HybridServicesClusterService.deregisterCluster).toHaveBeenCalled();
+      });
+      this.controller.deregister();
+      this.$scope.$apply();
+      expect(this.PrivateTrunkService.removePrivateTrunkResource).not.toHaveBeenCalled();
+      expect(this.HybridServicesClusterService.deregisterCluster).toHaveBeenCalled();
+      expect(this.mockModal.close).toHaveBeenCalled();
     });
 
-    it('should call the correct backend when deleting a hybrid data security node', () => {
-
-      const trunkResource = {
+    it('should call the correct backend when deleting a hybrid data security node', function () {
+      this.initController({
         id: '789',
         targetType: 'hds_app',
-      };
-
-      let controller: any = initController(trunkResource);
-      controller.deregister();
-      $scope.$apply();
-      expect(PrivateTrunkService.removePrivateTrunkResource).not.toHaveBeenCalled();
-      expect(HybridServicesClusterService.deregisterCluster).toHaveBeenCalled();
+      });
+      this.controller.deregister();
+      this.$scope.$apply();
+      expect(this.PrivateTrunkService.removePrivateTrunkResource).not.toHaveBeenCalled();
+      expect(this.HybridServicesClusterService.deregisterCluster).toHaveBeenCalled();
+      expect(this.mockModal.close).toHaveBeenCalled();
     });
-
-
   });
 
+  // 2017 name change
+  describe('atlas2017NameChangeGetStatus - ', function () {
+    it ('nameChangeEnabled should match what atlas2017NameChangeGetStatus returns', function () {
+      this.initController(this.baseToggle);
+      expect(this.controller.nameChangeEnabled).toBeFalsy();
 
+      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+      this.initController(this.baseToggle);
+      expect(this.controller.nameChangeEnabled).toBeTruthy();
+    });
+  });
 });

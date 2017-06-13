@@ -1,3 +1,7 @@
+import featureToggleModule from 'modules/core/featureToggle';
+import itProPackModule from 'modules/core/itProPack';
+import notificationModule from 'modules/core/notifications';
+
 require('./partner-management.scss');
 
 let PartnerManagementController = require('./partner-management.controller');
@@ -7,8 +11,10 @@ let validateUnusedDirective = require('./validate-unused.directive');
 
 export default angular
   .module('squared.partner-management', [
+    featureToggleModule,
+    itProPackModule,
+    notificationModule,
     require('modules/core/config/urlConfig'),
-    require('modules/core/notifications').default,
     require('angular-translate'),
     require('angular-ui-router'),
     require('angular-sanitize'),

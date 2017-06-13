@@ -6,7 +6,7 @@
     .controller('ResourceGroupSettingsController', ResourceGroupSettingsController);
 
   /* @ngInject */
-  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $translate, $state, HybridServicesClusterService, $modal) {
+  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $translate, $state, HybridServicesClusterService, $modal, FeatureToggleService) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.clusters = {
@@ -26,6 +26,11 @@
     vm.openAssignClustersModal = openAssignClustersModal;
     vm.handleKeypress = handleKeypress;
     vm.manageUsers = manageUsers;
+    vm.nameChangeEnabled = undefined;
+
+    FeatureToggleService.atlas2017NameChangeGetStatus().then(function (toggle) {
+      vm.nameChangeEnabled = toggle;
+    });
 
     loadResourceGroup($stateParams.id);
     determineIfRemoveAllowed();

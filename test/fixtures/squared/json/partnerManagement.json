@@ -1,0 +1,67 @@
+{
+  "orgMatchBy": {
+    "domain": "DOMAIN",
+    "domainClaimed": "DOMAIN_CLAIMED",
+    "emailAddress": "EMAIL_ADDRESS",
+    "noMatch": "NO_MATCH"
+  },
+  "formData": {
+    "email": "test@cisco.com",
+    "confirmEmail": "test@cisco.com",
+    "name": "Test Company",
+    "confirmName": "Test Company",
+    "partnerType": "DISTI",
+    "lifeCyclePartner": false
+  },
+  "orgDetails": {
+    "orgId": "123",
+    "numOfSubscription": 1,
+    "numOfManagedOrg": 2,
+    "numOfUsers": 3,
+    "overMaxUserQuerySize": true,
+    "createdDate": "2015-06-05T20:31:08.925Z",
+    "claimedDomains": ["adomain.na", "cdomain.na", "bdomain.na"],
+    "fullAdmins": [{
+      "firstName": "Abe",
+      "lastName": "Adams",
+      "displayName": "Abe Adams",
+      "primaryEmail": "abe@cisco.na"
+    }, {
+      "lastName": "Collaboration",
+      "displayName": "Collab",
+      "primaryEmail": "collab@cisco.na"
+    }, {
+      "firstName": "Charlie",
+      "lastName": "Charms",
+      "displayName": "Charlie Charms",
+      "primaryEmail": "charlie@cisco.na"
+    }, {
+      "firstName": "Betty",
+      "lastName": "Burns",
+      "displayName": "Betty Burns",
+      "primaryEmail": "betty@cisco.na"
+    }]
+  },
+  "orgDetailsList": [{
+    "label": "partnerManagement.orgDetails.createDate",
+    "value": ""
+  }, {
+    "label":"partnerManagement.orgDetails.activeSubs",
+    "value":0
+  }, {
+    "label": "partnerManagement.orgDetails.managedCusts",
+    "value":2
+  }, {
+    "label": "partnerManagement.orgDetails.domains",
+    "value":"adomain.na, bdomain.na, cdomain.na"
+  }, {
+    "label":"partnerManagement.orgDetails.users",
+    "value":3
+  }, {
+    "label": "partnerManagement.orgDetails.admins",
+    "value":"Abe Adams, Betty Burns, Charlie Charms, Collab"
+  }, {
+    "label":"partnerManagement.orgDetails.orgId",
+    "value":"123"
+  }]
+}
