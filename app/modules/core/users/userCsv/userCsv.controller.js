@@ -9,7 +9,7 @@ require('./_user-csv.scss');
 
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
-    Analytics, Authinfo, Config, CsvDownloadService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
+    Analytics, Authinfo, Config, CsvDownloadService, HuronCustomer, LogMetricsService, NAME_DELIMITER, OnboardService,
     Notification, ServiceDescriptor, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
     // variables
     var vm = this;
@@ -669,6 +669,10 @@ require('./_user-csv.scss');
           // Report required field is missing
           processingError = true;
           addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.csvRequiredEmail'));
+        } else if (!OnboardService.validateEmail(id)) {
+          // Report email field is invalid
+          processingError = true;
+          addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.invalidEmailAddress'));
         } else if (_.includes(uniqueEmails, id)) {
           // Report a duplicate email
           processingError = true;

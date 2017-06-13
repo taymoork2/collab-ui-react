@@ -238,6 +238,7 @@ describe('userCsv.controller', function () {
         oneColumnValidUser: 'User ID/Email (Required),\njohndoe@example.com,',
         oneColumnInvalidUser: 'First Name,\nJohn,',
         twoValidUsers: generateUsersCsv(2),
+        oneInvalidEmailUser: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,@example.com,5001,,true,true,true,true,true,true',
         twoInvalidUsers: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false',
         twoValidUsersWithSpaces: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n , , ,johndoe@example.com, , ,true,true,true,true\n , , ,janedoe@example.com, ,  ,f,f,f,f',
         threeUsersOneDuplicateEmail: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nFirst0,Last0,First0 Last0,firstlast0@example.com,5001,,true,true,true,true\nFirst1,Last1,First1 Last1,firstlast1@example.com,5002,,true,true,true,true\nFirst2,Last2,First2 Last2,firstlast0@example.com,5002,,true,true,true,true',
@@ -451,6 +452,23 @@ describe('userCsv.controller', function () {
         expect(this.controller.model.numNewUsers).toEqual(0);
         expect(this.controller.model.numExistingUsers).toEqual(0);
         expect(this.controller.model.userErrorArray.length).toEqual(2);
+      });
+
+      it('should report error users when invalid email address', function () {
+        this.controller.model.file = this.mockCsvData.oneInvalidEmailUser;
+        this.$scope.$apply();
+        this.$timeout.flush();
+
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(1);
+        expect(this.controller.model.numNewUsers).toEqual(0);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(1);
       });
 
       it('should report error for duplicate emails', function () {
