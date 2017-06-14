@@ -315,8 +315,9 @@ var UsersPage = function () {
         return randomAddress;
       })
       .value();
-    utils.writeFile(path, fileText);
-    return userList;
+    return utils.writeFile(path, fileText).then(function () {
+      return userList;
+    });
   };
 };
 

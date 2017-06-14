@@ -50,6 +50,7 @@ module.exports = {
     enterpriseResource: true,
     expect: true,
     exports: true,
+    fail: true,
     getJSONFixture: true,
     gssDashboard: true,
     gssComponent: true,
