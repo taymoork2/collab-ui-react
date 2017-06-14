@@ -1,7 +1,6 @@
 import { CallLocationsComponent } from './locations.component';
 import notifications from 'modules/core/notifications';
 
-export * from './locations.component';
 import { LocationsService } from 'modules/call/locations/locations.service';
 import { CopyLocationComponent } from 'modules/call/locations/modals/copy/copyLocation.component';
 import { DeleteLocationComponent } from 'modules/call/locations/modals/delete/deleteLocation.component';

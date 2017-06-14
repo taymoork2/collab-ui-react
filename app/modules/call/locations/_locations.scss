@@ -3,8 +3,8 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~collab-ui/scss/tools/mixins/vendor-prefixes';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
-@import './modals/copy/_copy-location';
-@import './location/location';
+@import './modals/copy/copy-location';
+@import './wizard/locations-wizard';
 
 .locations-content {
   padding-bottom: rem-calc(16);
