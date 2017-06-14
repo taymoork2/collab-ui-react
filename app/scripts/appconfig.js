@@ -1541,29 +1541,29 @@
               service: 'CONTACTCENTER',
             },
           })
-          .state('user-overview.userProfile', {
+          .state('user-overview.user-profile', {
             templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
             controller: 'UserRolesCtrl',
             resolve: {
               data: /* @ngInject */ function ($state, $translate, FeatureToggleService) {
                 FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
                   if (enabled) {
-                    $state.get('user-overview.userProfile').data.displayName = $translate.instant('usersPreview.userDetails');
+                    $state.get('user-overview.user-profile').data.displayName = $translate.instant('usersPreview.userDetails');
                   } else {
-                    $state.get('user-overview.userProfile').data.displayName = $translate.instant('rolesPanel.roles');
+                    $state.get('user-overview.user-profile').data.displayName = $translate.instant('rolesPanel.roles');
                   }
                 });
               },
             },
           })
-          .state('user-overview.rolesAndSecurity', {
+          .state('user-overview.roles-and-security', {
             templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
             controller: 'UserRolesCtrl',
             data: {
             },
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
-                $state.get('user-overview.rolesAndSecurity').data.displayName = $translate.instant('usersPreview.rolesAndSecurity');
+                $state.get('user-overview.roles-and-security').data.displayName = $translate.instant('usersPreview.rolesAndSecurity');
               },
             },
           })

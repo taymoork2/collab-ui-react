@@ -153,7 +153,7 @@
     }
 
     function clickRolesAndSecurity() {
-      $state.go('user-overview.rolesAndSecurity');
+      $state.go('user-overview.roles-and-security');
     }
 
     function clickUserDetailsService(feature) {

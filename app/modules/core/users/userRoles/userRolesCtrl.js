@@ -87,11 +87,11 @@ require('./_user-roles.scss');
     FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
       $scope.enableRolesAndSecurityOption = enabled;
       if ($scope.enableRolesAndSecurityOption) {
-        if ($state.current.name == 'user-overview.userProfile') {
+        if ($state.current.name == 'user-overview.user-profile') {
           $scope.showUserDetailSection = true;
           $scope.showSecuritySection = false;
           $scope.showRolesSection = false;
-        } else if ($state.current.name == 'user-overview.rolesAndSecurity') {
+        } else if ($state.current.name == 'user-overview.roles-and-security') {
           $scope.showUserDetailSection = false;
           $scope.showSecuritySection = true;
           $scope.showRolesSection = true;
@@ -393,38 +393,39 @@ require('./_user-roles.scss');
           attributes: [],
         },
       };
-      if ($scope.showUserDetailSection) {
-        if ($scope.formUserData.name) {
-          if ($scope.formUserData.name.givenName) {
-            userData.name['givenName'] = $scope.formUserData.name.givenName;
-          } else {
-            userData.meta.attributes.push('name.givenName');
-          }
-          if ($scope.formUserData.name.familyName) {
-            userData.name['familyName'] = $scope.formUserData.name.familyName;
-          } else {
-            userData.meta.attributes.push('name.familyName');
-          }
-        }
-
-        if ($scope.formUserData.displayName) {
-          userData.displayName = $scope.formUserData.displayName;
+      if (!$scope.showUserDetailSection) {
+        return;
+      }
+      if ($scope.formUserData.name) {
+        if ($scope.formUserData.name.givenName) {
+          userData.name['givenName'] = $scope.formUserData.name.givenName;
         } else {
-          userData.meta.attributes.push('displayName');
+          userData.meta.attributes.push('name.givenName');
         }
-
-        // check if user profile data changed.
-        var useDataChanged = (
-          !_.isEqual($scope.formUserData.name, $scope.currentUser.name) ||
-          !_.isEqual($scope.formUserData.displayName, $scope.currentUser.displayName)
-        );
-
-        if (!$scope.dirsyncEnabled && useDataChanged) {
-          return Userservice.updateUserProfile($scope.currentUser.id, userData)
-            .then(function (response) {
-              $scope.currentUser = response.data;
-            });
+        if ($scope.formUserData.name.familyName) {
+          userData.name['familyName'] = $scope.formUserData.name.familyName;
+        } else {
+          userData.meta.attributes.push('name.familyName');
         }
+      }
+
+      if ($scope.formUserData.displayName) {
+        userData.displayName = $scope.formUserData.displayName;
+      } else {
+        userData.meta.attributes.push('displayName');
+      }
+
+      // check if user profile data changed.
+      var useDataChanged = (
+        !_.isEqual($scope.formUserData.name, $scope.currentUser.name) ||
+        !_.isEqual($scope.formUserData.displayName, $scope.currentUser.displayName)
+      );
+
+      if (!$scope.dirsyncEnabled && useDataChanged) {
+        return Userservice.updateUserProfile($scope.currentUser.id, userData)
+          .then(function (response) {
+            $scope.currentUser = response.data;
+          });
       }
     }
 

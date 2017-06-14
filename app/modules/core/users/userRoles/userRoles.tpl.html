@@ -8,36 +8,37 @@
       <div id="rolesDetailsPanel">
         <div class="edit-panel">
           <form name="rolesObj.form" role="form">
-            <div class="form-group" ng-if="showUserDetailSection">
-              <label for="firstNameInput" translate="rolesPanel.firstName"></label>
-              <input id="firstNameInput" type="text" class="form-control" name="firstName" ng-disabled="dirsyncEnabled" ng-model="formUserData.name.givenName" ng-change="checkAdminDisplayName()">
-            </div>
-            <div class="form-group" ng-if="showUserDetailSection">
-              <label for="lastNameInput" translate="rolesPanel.lastName"></label>
-              <input id="lastNameInput" type="text" class="form-control" name="lastName" ng-disabled="dirsyncEnabled" ng-model="formUserData.name.familyName" ng-change="checkAdminDisplayName()">
-            </div>
-            <div class="form-group" ng-if="showUserDetailSection">
-              <input cs-input
-                type="text"
-                id="displayNameInput" name="displayName"
-                ng-disabled="dirsyncEnabled"
-                ng-model="formUserData.displayName"
-                cs-input-label='{{::"usersPage.displayNameHeader" | translate}}'
-                ng-change="checkAdminDisplayName()"
-                cs-input-size="medium-12"
-                cs-input-messages="messages.displayName">
-            </div>
+            <div ng-if="showUserDetailSection">
+              <div class="form-group">
+                <label for="firstNameInput" translate="rolesPanel.firstName"></label>
+                <input id="firstNameInput" type="text" class="form-control" name="firstName" ng-disabled="dirsyncEnabled" ng-model="formUserData.name.givenName" ng-change="checkAdminDisplayName()">
+              </div>
+              <div class="form-group">
+                <label for="lastNameInput" translate="rolesPanel.lastName"></label>
+                <input id="lastNameInput" type="text" class="form-control" name="lastName" ng-disabled="dirsyncEnabled" ng-model="formUserData.name.familyName" ng-change="checkAdminDisplayName()">
+              </div>
+              <div class="form-group">
+                <input cs-input
+                  type="text"
+                  id="displayNameInput" name="displayName"
+                  ng-disabled="dirsyncEnabled"
+                  ng-model="formUserData.displayName"
+                  cs-input-label='{{::"usersPage.displayNameHeader" | translate}}'
+                  ng-change="checkAdminDisplayName()"
+                  cs-input-size="medium-12"
+                  cs-input-messages="messages.displayName">
+              </div>
 
-            <div class="form-group" ng-if="showUserDetailSection">
-              <label for="customerEmailInput" translate="rolesPanel.emailAddress"></label>
-              <input id="customerEmailInput" type="email" class="form-control" name="customerEmail" ng-model="currentUser.userName" disabled="true">
-            </div>
+              <div class="form-group">
+                <label for="customerEmailInput" translate="rolesPanel.emailAddress"></label>
+                <input id="customerEmailInput" type="email" class="form-control" name="customerEmail" ng-model="currentUser.userName" disabled="true">
+              </div>
 
-            <div class="form-group" ng-if="showUserDetailSection">
-              <label for="sipAddressesInput" translate="usersPage.sipDomain"></label>
-              <input id="sipAddressesInput" type="text" class="form-control" name="sipAddresses" value="{{sipAddr}}" disabled="true">
+              <div class="form-group">
+                <label for="sipAddressesInput" translate="usersPage.sipDomain"></label>
+                <input id="sipAddressesInput" type="text" class="form-control" name="sipAddresses" value="{{sipAddr}}" disabled="true">
+              </div>
             </div>
-
             <div class="admin-roles-panel" ng-if="showRolesSection">
               <p><span class="edit-title" translate="rolesPanel.administratorRoles"></span></p>
 
