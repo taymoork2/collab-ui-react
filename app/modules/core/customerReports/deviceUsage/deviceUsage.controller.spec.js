@@ -94,8 +94,8 @@ describe('Controller: DeviceUsageCtrl', function () {
         missingDays: false,
       };
       DeviceUsageService.getDataForRange.and.returnValue($q.resolve(deviceData));
-      DeviceUsageService.extractStats.and.returnValue($q.reject( {
-        timedout: true
+      DeviceUsageService.extractStats.and.returnValue($q.reject({
+        timedout: true,
       }));
       DeviceUsageService.resolveDeviceData.and.returnValue($q.resolve([]));
 

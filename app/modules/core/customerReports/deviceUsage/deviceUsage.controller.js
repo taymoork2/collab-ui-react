@@ -243,14 +243,14 @@ require('modules/core/reports/amcharts-export.scss');
         } else {
           vm.waitForLeast = false;
         }
-      }).catch( function(error) {
+      }).catch(function (error) {
         if (error.timedout) {
           clearDisplayedStats();
           vm.waitForLeast = false;
           vm.waitForMost = false;
           vm.waitingForDeviceMetrics = false;
-          var error = $translate.instant('reportsPage.usageReports.timeoutWhenFetchingMetrics');
-          Notification.error(error);
+          var msg = $translate.instant('reportsPage.usageReports.timeoutWhenFetchingMetrics');
+          Notification.error(msg);
         }
       });
     }
