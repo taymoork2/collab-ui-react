@@ -1,7 +1,10 @@
 .aa-insertion-element {
   background-color: $brand-primary;
-  @include vr-spacing(pt, 0.5);
-  @include vr-spacing(pb, 0.5);
+  @include vr-spacing(ml, 0.5);
+  @include vr-spacing(mr, 0.5);
+  @include vr-spacing(mb, 0.5);
+  white-space: normal;
+  display: inline-block;
   border-radius: 3px;
   border: 1px solid;
   border-color: $brand-primary;

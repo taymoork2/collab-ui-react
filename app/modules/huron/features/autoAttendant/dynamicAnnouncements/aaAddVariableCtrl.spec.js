@@ -71,11 +71,13 @@ describe('Controller: AAAddVariableCtrl', function () {
           'scope': function () {
             return true;
           },
+          'focus': function () {},
         };
         var rangeGetter = function () {
           return "testRange";
         };
         spyOn(angular, 'element').and.returnValue(dynamicElement);
+        spyOn(dynamicElement, 'focus');
         spyOn(dynamicElement, 'scope').and.returnValue(scopeElement);
         spyOn(scopeElement, 'insertElement');
         spyOn($window, 'getSelection').and.returnValue({
@@ -114,6 +116,7 @@ describe('Controller: AAAddVariableCtrl', function () {
         modal.resolve(result);
         $scope.$apply();
         expect(dynamicElement.scope).toHaveBeenCalled();
+        expect(dynamicElement.focus).toHaveBeenCalled();
         expect(scopeElement.insertElement).toHaveBeenCalledWith('test', "testRange");
       });
 
@@ -123,6 +126,7 @@ describe('Controller: AAAddVariableCtrl', function () {
         modal.reject();
         $scope.$apply();
         expect(dynamicElement.scope).not.toHaveBeenCalled();
+        expect(dynamicElement.focus).toHaveBeenCalled();
         expect(scopeElement.insertElement).not.toHaveBeenCalled();
       });
     });

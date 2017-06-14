@@ -30,6 +30,7 @@
 
     function dynamicAdd(id, dynamicElement) {
       if (id && dynamicElement) {
+        angular.element(CONSTANTS.idSelectorPrefix.concat(id)).focus();
         var range = getRange();
         openDynamicAnnouncements()
           .result
