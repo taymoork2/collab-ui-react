@@ -194,6 +194,10 @@
         service = (licenseInfo.offerName) ? mapping[licenseInfo.offerName] : mapping[Config.offerCodes.CF];
       } else {
         service = mapping[licenseInfo.licenseType] || mapping[licenseInfo.offerName];
+        if (!service) {
+          // TODO: remove after identifying unhandled offers
+          throw new Error('Unable to map licenseType: ' + licenseInfo.licenseType + ', offerName: ' + licenseInfo.offerName);
+        }
         service.licenseType = licenseInfo.licenseType;
       }
 
