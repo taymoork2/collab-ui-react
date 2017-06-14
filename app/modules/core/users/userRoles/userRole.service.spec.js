@@ -1,12 +1,17 @@
 'use strict';
 
+var coreModule = angular.module("Core", [
+  require('modules/core/auth/auth'),
+  require('modules/core/featureToggle').default,
+  require('modules/core/notifications').default]);
+
+var testModule = require('./index').default;
+
 describe('Service: UserRoleService:', function () {
   var $http, Authinfo, Config, UrlConfig, UserRoleService;
 
-  beforeEach(angular.mock.module('core.authinfo'));
-  beforeEach(angular.mock.module('core.config'));
-  beforeEach(angular.mock.module('core.urlconfig'));
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(coreModule));
+  beforeEach(angular.mock.module(testModule));
 
   beforeEach(inject(function (_$http_, _Authinfo_, _Config_, _UrlConfig_) {
     $http = _$http_;

@@ -5,8 +5,6 @@ var testModule = require('./oauthConfig');
 describe('OAuthConfig', function () {
   var OAuthConfig, $location;
   beforeEach(angular.mock.module(testModule));
-  //beforeEach(angular.mock.module('Core'));
-  //beforeEach(angular.module('fakeRootElement', []).value('$rootElement', angular.element('<div></div>')));
 
   beforeEach(inject(function (_$location_, _OAuthConfig_) {
     OAuthConfig = _OAuthConfig_;

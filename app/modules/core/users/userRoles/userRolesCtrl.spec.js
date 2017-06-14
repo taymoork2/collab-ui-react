@@ -1,31 +1,52 @@
 'use strict';
 
+var coreModule = angular.module("Core", [
+  require('modules/core/auth/auth'),
+  require('modules/core/featureToggle').default,
+  require('modules/core/notifications').default]);
+
+var testModule = require('./index').default;
+
 describe('Controller: UserRolesCtrl', function () {
-  var controller, $q, $scope, $rootScope, $stateParams, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Notification, EdiscoveryService;
+  var controller, $q, $scope, $state, $rootScope, $stateParams, $translate, Auth, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Log, Notification, SessionStorage, EdiscoveryService;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('Squared'));
-  beforeEach(angular.mock.module('Ediscovery'));
+  beforeEach(angular.mock.module(coreModule));
+  beforeEach(angular.mock.module(testModule));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _Config_, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_, _Userservice_, _FeatureToggleService_, _Notification_, _EdiscoveryService_) {
+  beforeEach(inject(function (_$rootScope_, _$q_, _$state_, _$translate_, _Config_, _$stateParams_, _$controller_, _Auth_, _Authinfo_, _FeatureToggleService_, _Log_, _Orgservice_, _Notification_, _SessionStorage_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
+    $state = _$state_;
+    $stateParams = _$stateParams_;
+
+    $stateParams.currentUser = currentUser;
+    $translate = _$translate_;
     Config = _Config_;
     Orgservice = _Orgservice_;
-    Userservice = _Userservice_;
     $controller = _$controller_;
+    Auth = _Auth_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
+    Log = _Log_;
     Notification = _Notification_;
-    EdiscoveryService = _EdiscoveryService_;
-    $stateParams = _$stateParams_;
-    $stateParams.currentUser = currentUser;
+    SessionStorage = _SessionStorage_;
+
+    Userservice = {
+      patchUserRoles: function () {},
+      updateUserProfile: function () {},
+    };
+
+    spyOn(Userservice, 'patchUserRoles').and.callFake(function () {
+      return $q.resolve({ data: { userResponse: [currentUser] } });
+    });
+
+    spyOn(Userservice, 'updateUserProfile').and.callFake(function () {
+      return $q.resolve({ data: currentUser });
+    });
 
     spyOn(Authinfo, 'getOrgId').and.returnValue('we23f24-4f3f4f-cc7af705-6583-32r3r23r');
     spyOn(Authinfo, 'getUserId').and.returnValue('cc7af705-6583-4f58-b0b6-ea75df64da7e');
@@ -37,32 +58,63 @@ describe('Controller: UserRolesCtrl', function () {
         return true;
       },
     });
+    //spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(Auth, 'revokeUserAuthTokens').and.callFake(function () {
+      return $q.resolve();
+    });;
 
-    spyOn(Userservice, 'patchUserRoles').and.callFake(function () {
-      return $q.resolve({ data: { userResponse: [currentUser] } });
-    });
-
-    spyOn(Userservice, 'updateUserProfile').and.callFake(function () {
-      return $q.resolve({ data: currentUser });
-    });
+    EdiscoveryService = {
+      setEntitledForCompliance: function () {},
+    };
   }));
+//$q, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, EdiscoveryService,
+//FeatureToggleService, Log, Notification, Orgservice, SessionStorage, Userservice) {
 
   function initController() {
     controller = $controller('UserRolesCtrl', {
+      $q: $q,
+      $rootScope: $rootScope,
       $scope: $scope,
+      $state: $state,
+      $stateParams: $stateParams,
+      $translate: $translate,
+      Auth: Auth,
+      Authinfo: Authinfo,
+      Config: Config,
+      EdiscoveryService: EdiscoveryService,
+      FeatureToggleService: FeatureToggleService,
+      Log: Log,
+      Notification: Notification,
+      Orgservice: Orgservice,
+      SessionStorage: SessionStorage,
+      Userservice: Userservice,
     });
 
     $scope.$apply();
     $scope.rolesEdit = {
       form: {
+        $setPristine: function () {},
+        $setUntouched: function () {},
         displayName: {
-          $setValidity: jasmine.createSpy('$setValidity'),
+          $setValidity: function () {},
         },
         partialAdmin: {
-          $setValidity: jasmine.createSpy('$setValidity'),
+          $setValidity: function () {},
         },
       },
     };
+    spyOn($scope.rolesEdit.form, '$setPristine').and.callFake(function () {
+
+    });
+    spyOn($scope.rolesEdit.form, '$setUntouched').and.callFake(function () {
+
+    });
+    spyOn($scope.rolesEdit.form.displayName, '$setValidity').and.callFake(function () {
+
+    });
+    spyOn($scope.rolesEdit.form.partialAdmin, '$setValidity').and.callFake(function () {
+
+    });
   }
 
   describe('UserRolesCtrl Initialization: ', function () {
@@ -564,6 +616,18 @@ describe('Controller: UserRolesCtrl', function () {
 
         expect(Userservice.patchUserRoles).toHaveBeenCalled();
         expect(Userservice.patchUserRoles.calls.argsFor(0)[2]).toEqual(expectedRoles);
+      });
+    });
+    describe('Reset Access', function () {
+      beforeEach(function () {
+        $stateParams.currentUser = careUserJSONFixture.fakeUser3;
+        initController();
+      });
+
+      it('revoke token', function () {
+        expect(controller).toBeDefined();
+        $scope.resetAccess();
+        expect(Auth.revokeUserAuthTokens).toHaveBeenCalled();
       });
     });
   });

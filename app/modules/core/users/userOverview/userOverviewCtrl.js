@@ -76,8 +76,8 @@
       currentUserId: '',
       hasSparkCall: false,
     };
-    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function () {
-      vm.enableRolesAndSecurityOption = true;
+    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
+      vm.enableRolesAndSecurityOption = enabled;
     });
     init();
 

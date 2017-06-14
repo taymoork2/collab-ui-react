@@ -1546,11 +1546,13 @@
             controller: 'UserRolesCtrl',
             resolve: {
               data: /* @ngInject */ function ($state, $translate, FeatureToggleService) {
-                if (FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity)) {
-                  $state.get('user-overview.userProfile').data.displayName = $translate.instant('usersPreview.userDetails');
-                } else {
-                  $state.get('user-overview.userProfile').data.displayName = $translate.instant('rolesPanel.roles');
-                }
+                FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
+                  if (enabled) {
+                    $state.get('user-overview.userProfile').data.displayName = $translate.instant('usersPreview.userDetails');
+                  } else {
+                    $state.get('user-overview.userProfile').data.displayName = $translate.instant('rolesPanel.roles');
+                  }
+                });
               },
             },
           })

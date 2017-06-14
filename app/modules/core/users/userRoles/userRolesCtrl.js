@@ -3,13 +3,11 @@ require('./_user-roles.scss');
 (function () {
   'use strict';
 
-  angular.module('Core')
-  .controller('UserRolesCtrl', UserRolesCtrl);
+  module.exports = UserRolesCtrl;
 
   /* @ngInject */
-  function UserRolesCtrl($q, $scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, FeatureToggleService, EdiscoveryService, $state, Auth) {
+  function UserRolesCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, EdiscoveryService, FeatureToggleService, Log, Notification, Orgservice, SessionStorage, Userservice) {
     var COMPLIANCE = 'compliance';
-
     $scope.currentUser = $stateParams.currentUser;
     $scope.sipAddr = '';
     $scope.dirsyncEnabled = false;
@@ -76,7 +74,7 @@ require('./_user-roles.scss');
     };
 
     $scope.checkAdminDisplayName = checkAdminDisplayName;
-
+    $scope.resetAccess = resetAccess;
     $scope.updatingUser = false;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function () {
@@ -86,9 +84,8 @@ require('./_user-roles.scss');
     FeatureToggleService.supports(FeatureToggleService.features.atlasComplianceRole).then(function (enabled) {
       $scope.showComplianceRole = !!enabled;
     });
-    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function () {
-      //Keep Global Level feature togggle
-      $scope.enableRolesAndSecurityOption = true;
+    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
+      $scope.enableRolesAndSecurityOption = enabled;
       if ($scope.enableRolesAndSecurityOption) {
         if ($state.current.name == 'user-overview.userProfile') {
           $scope.showUserDetailSection = true;
@@ -201,13 +198,13 @@ require('./_user-roles.scss');
       setFormValuesToMatchRoles();
       setFormUserData();
       if (_.has($scope, 'rolesEdit.form')) {
-        _.attempt($scope.rolesEdit.form.$setPristine);
-        _.attempt($scope.rolesEdit.form.$setUntouched);
+        $scope.rolesEdit.form.$setPristine();
+        $scope.rolesEdit.form.$setUntouched();
         if ($scope.showUserDetailSection) {
-          _.attempt($scope.rolesEdit.form.displayName.$setValidity('notblank', true));
+          $scope.rolesEdit.form.displayName.$setValidity('notblank', true);
         }
         if ($scope.showRolesSection) {
-          _.attempt($scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', true));
+          $scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', true);
         }
       }
     }
@@ -517,10 +514,10 @@ require('./_user-roles.scss');
       var userName = $scope.currentUser.userName;
       Auth.revokeUserAuthTokens(userName)
         .then(function () {
-          Notification.success('usersPreview.resetAccessSuccess', { 'name': userName });
+          Notification.success('usersPreview.resetAccessSuccess', { name: userName });
         })
         .catch(function errorHandler(response) {
-          Notification.errorResponse(response, 'usersPreview.resetAccessFailure', { 'name': userName });
+          Notification.errorResponse(response, 'usersPreview.resetAccessFailure', { name: userName });
         })
         .finally(function () {
           $scope.resettingAccess = false;
