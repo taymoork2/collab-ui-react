@@ -739,7 +739,7 @@
       var customerOrgName = vm.isEditTrial() ? vm.currentTrial.customerName : vm.details.customerName;
 
       sendToAnalytics(Analytics.eventNames.YES);
-      $window.open($state.href('login_swap', {
+      $window.open($state.href('login', {
         customerOrgId: customerOrgId,
         customerOrgName: customerOrgName,
       }));

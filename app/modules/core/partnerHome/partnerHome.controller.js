@@ -107,7 +107,7 @@ require('./_partner-landing-trials.scss');
     }
 
     function launchCustomerPortal(trial) {
-      $window.open($state.href('login_swap', {
+      $window.open($state.href('login', {
         customerOrgId: trial.customerOrgId,
         customerOrgName: trial.customerName,
       }));

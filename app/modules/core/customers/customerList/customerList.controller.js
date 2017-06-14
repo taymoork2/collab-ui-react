@@ -710,7 +710,7 @@ require('./_customer-list.scss');
     function launchCustomerPortal(trial) {
       var customer = trial;
 
-      $window.open($state.href('login_swap', {
+      $window.open($state.href('login', {
         customerOrgId: customer.customerOrgId,
         customerOrgName: customer.customerName,
       }));

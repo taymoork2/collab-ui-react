@@ -119,7 +119,7 @@
           })
           .state('login', {
             parent: 'loginLazyLoad',
-            url: '/login?bmmp_env&email',
+            url: '/login?bmmp_env&email&customerOrgId&customerOrgName',
             views: {
               'main@': {
                 template: '<login/>',
@@ -2218,16 +2218,6 @@
             controller: 'PartnerReportCtrl',
             controllerAs: 'nav',
           })
-          .state('login_swap', {
-            parent: 'loginLazyLoad',
-            url: '/login/:customerOrgId/:customerOrgName',
-            views: {
-              'main@': {
-                template: '<login/>',
-              },
-            },
-            authenticate: false,
-          })
           .state('launch_partner_org', {
             parent: 'loginLazyLoad',
             url: '/login/:partnerOrgId/:partnerOrgName/:launchPartner',
@@ -2347,6 +2337,7 @@
             params: {
               filter: null,
             },
+            authenticate: true,
           })
           .state('customer-overview', {
             parent: 'sidepanel',

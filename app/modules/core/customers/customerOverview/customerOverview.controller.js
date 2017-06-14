@@ -295,7 +295,7 @@ require('./_customer-overview.scss');
     }
 
     function openCustomerPortal() {
-      var openWindow = $window.open($state.href('login_swap', {
+      var openWindow = $window.open($state.href('login', {
         customerOrgId: vm.customerOrgId,
         customerOrgName: vm.customerName,
       }));

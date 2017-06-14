@@ -155,7 +155,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
       });
 
       it('should create proper url', function () {
-        expect($state.href).toHaveBeenCalledWith('login_swap', {
+        expect($state.href).toHaveBeenCalledWith('login', {
           customerOrgId: controller.currentCustomer.customerOrgId,
           customerOrgName: controller.currentCustomer.customerName,
         });

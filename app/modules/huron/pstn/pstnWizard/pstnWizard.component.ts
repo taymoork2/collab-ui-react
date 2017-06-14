@@ -364,7 +364,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public launchCustomerPortal(): void {
-    this.$window.open(this.$state.href('login_swap', {
+    this.$window.open(this.$state.href('login', {
       customerOrgId: this.PstnModel.getCustomerId(),
       customerOrgName: this.PstnModel.getCustomerName(),
     }));
