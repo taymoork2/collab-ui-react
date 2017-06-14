@@ -2107,7 +2107,7 @@
       "upgradeNow": "Upgrade Now"
     },
     "expresswayClusterSettings": {
-      "pageTitle": "{{clusterName}} settings",
+      "pageTitle": "{{clusterName}}",
       "upgradeScheduleHeader": "Upgrade",
       "upgradeScheduleSubHeader": "Upgrade Schedule",
       "resourceGroupsHeader": "Resource Group",
