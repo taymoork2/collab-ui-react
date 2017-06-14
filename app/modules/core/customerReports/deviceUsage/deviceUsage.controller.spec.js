@@ -80,6 +80,40 @@ describe('Controller: DeviceUsageCtrl', function () {
       done();
     });
 
+    it('extractStats timeout show show notification and show blank results', function (done) {
+      spyOn(DeviceUsageService, 'getDataForRange');
+      spyOn(DeviceUsageService, 'extractStats');
+      spyOn(DeviceUsageService, 'resolveDeviceData');
+
+      spyOn(Notification, 'error');
+
+      var deviceData = {
+        reportItems: [
+          { totalDuration: 42 },
+        ],
+        missingDays: false,
+      };
+      DeviceUsageService.getDataForRange.and.returnValue($q.resolve(deviceData));
+      DeviceUsageService.extractStats.and.returnValue($q.reject( {
+        timedout: true
+      }));
+      DeviceUsageService.resolveDeviceData.and.returnValue($q.resolve([]));
+
+      expect(controller.waitingForDeviceMetrics).toBe(true);
+      controller.init();
+      expect(controller.timeSelected.value).toBe(0);
+      $scope.$apply();
+      expect(Notification.error).toHaveBeenCalled();
+      expect(controller.waitingForDeviceMetrics).toBe(false);
+      expect(controller.waitForLeast).toBe(false);
+      expect(controller.waitForMost).toBe(false);
+      expect(controller.totalDuration).toEqual("-");
+      expect(controller.noOfDevices).toEqual("-");
+      expect(controller.noOfCalls).toEqual("-");
+
+      done();
+    });
+
     it('adds people count to the least and most used devices', function (done) {
       var peopleCountData = {
         '3333': [
