@@ -2,9 +2,13 @@ import { IHuronService, IEmergencyAddress, IEmergency, IState, IEmergencyService
 import { MemberService } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/services/featureMember.service';
 import { HuronCompassService } from 'modules/huron/compass/compass.service';
-import { PstnService } from '../../../huron/pstn/pstn.service';
-import { PstnModel } from '../../../huron/pstn/pstn.model';
-import { TerminusService } from 'modules/huron/pstn';
+import {
+  PstnService,
+  PstnModel,
+  TerminusService,
+  PstnAreaService,
+  IAreaData,
+} from 'modules/huron/pstn';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
@@ -21,7 +25,7 @@ export class EmergencyServicesService {
     private ServiceSetup,
     private Authinfo,
     private PstnServiceAddressService,
-    private PstnSetupStatesService,
+    private PstnAreaService: PstnAreaService,
     private PstnModel: PstnModel,
     private PstnService: PstnService,
     private TerminusService: TerminusService,
@@ -29,9 +33,9 @@ export class EmergencyServicesService {
     private FeatureMemberService: FeatureMemberService,
     private HuronCompassService: HuronCompassService,
   ) {
-    this.PstnSetupStatesService.getLocation(this.HuronCompassService.getCountryCode()).then((location) => {
-      this.zipLabel = location.zip;
-      this.locationLabel = location.type;
+    this.PstnAreaService.getCountryAreas(this.HuronCompassService.getCountryCode()).then((location: IAreaData) => {
+      this.zipLabel = location.zipName;
+      this.locationLabel = location.typeName;
       this.stateOptions = location.areas;
     });
   }

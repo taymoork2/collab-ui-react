@@ -12,7 +12,7 @@ describe('Controller: TrialPstnCtrl', function () {
       'HuronConfig',
       'Orgservice',
       'PstnService',
-      'PstnSetupStatesService',
+      'PstnAreaService',
       'TrialPstnService',
       'TrialService'
     );
@@ -26,7 +26,8 @@ describe('Controller: TrialPstnCtrl', function () {
     };
 
     this.location = {
-      type: 'State',
+      zipName: 'Zip Code',
+      typeName: 'State',
       areas: [{
         name: 'Texas',
         abbreviation: 'TX',
@@ -94,7 +95,7 @@ describe('Controller: TrialPstnCtrl', function () {
     };
 
     spyOn(this.TrialService, 'getDeviceTrialsLimit');
-    spyOn(this.PstnSetupStatesService, 'getLocation').and.returnValue(this.$q.resolve(this.location));
+    spyOn(this.PstnAreaService, 'getCountryAreas').and.returnValue(this.$q.resolve(this.location));
 
     spyOn(this.FeatureToggleService, 'huronSupportThinktelGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'huronFederatedSparkCallGetStatus').and.returnValue(this.$q.resolve(true));

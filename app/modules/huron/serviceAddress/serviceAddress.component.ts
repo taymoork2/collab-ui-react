@@ -1,3 +1,8 @@
+import {
+  PstnAreaService,
+  IAreaData,
+} from 'modules/huron/pstn';
+
 class ServiceAddressCtrl implements ng.IComponentController {
   public stateOptions;
   public countryOptions;
@@ -8,13 +13,16 @@ class ServiceAddressCtrl implements ng.IComponentController {
   public address;
 
   /* @ngInject */
-  constructor(private PstnSetupStatesService, private HuronCountryService) { }
+  constructor(
+    private PstnAreaService: PstnAreaService,
+    private HuronCountryService,
+  ) { }
 
   public $onInit() {
     this.locationModel = undefined;
-    this.PstnSetupStatesService.getLocation(this.countryCode).then(location => {
-      this.zipLabel = location.zip;
-      this.stateLabel = location.type;
+    this.PstnAreaService.getCountryAreas(this.countryCode).then( (location: IAreaData) => {
+      this.zipLabel = location.zipName;
+      this.stateLabel = location.typeName;
       if (this.address.state) {
         this.locationModel = location.areas.filter(state => state.abbreviation === this.address.state)[0];
       }

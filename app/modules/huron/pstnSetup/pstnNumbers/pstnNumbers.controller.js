@@ -5,7 +5,7 @@
     .controller('PstnNumbersCtrl', PstnNumbersCtrl);
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnModel, PstnService, PhoneNumberService, PstnSetupStatesService, ValidationService, FeatureToggleService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnModel, PstnService, PhoneNumberService, PstnAreaService, ValidationService, FeatureToggleService) {
     var vm = this;
 
     vm.provider = PstnModel.getProvider();
@@ -120,9 +120,9 @@
     init();
 
     function init() {
-      PstnSetupStatesService.getLocation(PstnModel.getCountryCode()).then(function (location) {
+      PstnAreaService.getCountryAreas(PstnModel.getCountryCode()).then(function (location) {
         vm.model.pstn.quantity = null;
-        vm.locationLabel = location.type;
+        vm.locationLabel = location.typeName;
         vm.model.pstn.states = location.areas;
         if (_.get(PstnModel.getServiceAddress(), 'state')) {
           vm.model.pstn.state = {

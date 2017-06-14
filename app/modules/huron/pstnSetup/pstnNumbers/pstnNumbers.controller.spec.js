@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PstnNumbersCtrl', function () {
-  var controller, $compile, $scope, $state, $q, $translate, PstnService, PstnModel, Notification, PstnSetupStatesService, FeatureToggleService;
+  var controller, $compile, $scope, $state, $q, $translate, PstnService, PstnModel, Notification, PstnAreaService, FeatureToggleService;
   var element;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
@@ -76,7 +76,8 @@ describe('Controller: PstnNumbersCtrl', function () {
   };
 
   var location = {
-    type: 'State',
+    zipName: 'Zip Code',
+    typeName: 'State',
     areas: [{
       name: 'Texas',
       abbreviation: 'TX',
@@ -115,7 +116,7 @@ describe('Controller: PstnNumbersCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
 
-  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnService_, _PstnModel_, _Notification_, _PstnSetupStatesService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnService_, _PstnModel_, _Notification_, _PstnAreaService_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $compile = _$compile_;
     $state = _$state_;
@@ -124,7 +125,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnService = _PstnService_;
     PstnModel = _PstnModel_;
     Notification = _Notification_;
-    PstnSetupStatesService = _PstnSetupStatesService_;
+    PstnAreaService = _PstnAreaService_;
     FeatureToggleService = _FeatureToggleService_;
 
     PstnModel.setCustomerId(customer.uuid);
@@ -139,7 +140,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     spyOn(PstnModel, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
-    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
+    spyOn(PstnAreaService, 'getCountryAreas').and.returnValue($q.resolve(location));
     spyOn($translate, 'instant').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
@@ -156,7 +157,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnService = undefined;
     PstnModel = undefined;
     Notification = undefined;
-    PstnSetupStatesService = undefined;
+    PstnAreaService = undefined;
     FeatureToggleService = undefined;
   });
 

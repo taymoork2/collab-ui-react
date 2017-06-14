@@ -1,4 +1,8 @@
 import { HuronSettingsComponent } from './settings.component';
+import { SettingSetupInitComponent } from 'modules/huron/settings/init/settingSetupInit.component';
+import { SettingSetupInitService } from 'modules/huron/settings/init/settingSetupInitService';
+
+//module dependancy names
 import huronSettingsServiceModule from 'modules/huron/settings/services';
 import numberServiceModule from 'modules/huron/numbers';
 import dialPlanServiceModule from 'modules/huron/dialPlans';
@@ -22,8 +26,7 @@ import emergencyServiceAddressModule from 'modules/huron/settings/emergencyServi
 import externalTransferModule from 'modules/huron/settings/externalCallTransfer';
 import phoneNumberModule from 'modules/huron/phoneNumber';
 import featureToggleServiceModule from 'modules/core/featureToggle';
-import { SettingSetupInitComponent } from 'modules/huron/settings/init/settingSetupInit.component';
-import { SettingSetupInitService } from 'modules/huron/settings/init/settingSetupInitService';
+import pstnAreaService from 'modules/huron/pstn/pstnAreaService';
 
 export default angular
   .module('huron.settings', [
@@ -32,7 +35,6 @@ export default angular
     require('angular-translate'),
     require('modules/huron/pstn/pstn.service').default,
     require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.service'),
-    require('modules/huron/pstnSetup/pstnSetupStates.service'),
     require('modules/huron/settings/voicemailMessageAction.service'),
     numberServiceModule,
     dialPlanServiceModule,
@@ -57,6 +59,7 @@ export default angular
     phoneNumberModule,
     huronSettingsServiceModule,
     featureToggleServiceModule,
+    pstnAreaService,
   ])
   .component('ucSettings', new HuronSettingsComponent())
   .component('ucSettingsInit', new SettingSetupInitComponent())

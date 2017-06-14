@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnModel, PstnService, PhoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService, $q) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnModel, PstnService, PhoneNumberService, TrialPstnService, PstnAreaService, FeatureToggleService, $q) {
     var vm = this;
 
     var NXX = 'nxx';
@@ -126,7 +126,7 @@
         }
       });
 
-      PstnSetupStatesService.getLocation(vm.trialData.details.countryCode).then(loadLocations);
+      PstnAreaService.getCountryAreas(vm.trialData.details.countryCode).then(loadLocations);
 
       Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
       if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
@@ -151,7 +151,7 @@
     }
 
     function loadLocations(location) {
-      vm.location = location.type;
+      vm.location = location.typeName;
       vm.pstn.stateOptions = location.areas;
     }
     function changePstnProviderImplementation() {
