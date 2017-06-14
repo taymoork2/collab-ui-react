@@ -78,18 +78,6 @@ describe('Controller: LineListCtrl', function () {
       expect($scope.canShowExternalNumberDelete($scope.gridData[3])).toBeTruthy();
     });
 
-    it('should not show Actions column if feature toggle is off', function () {
-      FeatureToggleService.supports.and.returnValue($q.resolve(false));
-      var controllerToggleOff = $controller('LinesListCtrl', {
-        $scope: $scope,
-      });
-
-      $scope.$apply();
-      $timeout.flush();
-
-      expect(controllerToggleOff.gridOptions.columnDefs.length).toBe(3);
-      expect(_.some(controllerToggleOff.gridOptions.columnDefs, function (col) { return col.name === 'actions'; })).toBeFalsy();
-    });
   });
 
   describe('filter', function () {

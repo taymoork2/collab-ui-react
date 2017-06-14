@@ -407,7 +407,7 @@ export class HuronSettingsService {
 
   private updateVoiceMailSettings(customerData: CustomerSettings, siteData: ISite, voicemailToEmailData: IVoicemailToEmail, avrilFeatures: IAvrilFeatures): ng.IPromise<any> {
     if (customerData.hasVoicemailService) {
-      if (this.supportsAvrilVoicemail && !this.supportsAvrilVoicemailMailbox) { // update Unity and Avril if needed
+      if (!this.supportsAvrilVoicemailMailbox) { // Do not update Unity if Avril only
         let promises: Array<ng.IPromise<any>> = [];
         return this.getVoicemailUserTemplate()
           .then(userTemplate => {

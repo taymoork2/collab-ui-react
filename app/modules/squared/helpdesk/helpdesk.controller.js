@@ -4,7 +4,7 @@ require('./helpdesk.scss');
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
+  function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService, FeatureToggleService) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       $window.document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
@@ -38,6 +38,14 @@ require('./helpdesk.scss');
       var search = args.message;
       setCurrentSearch(search);
       HelpdeskSplunkReporterService.reportOperation(HelpdeskSplunkReporterService.SEARCH_HISTORY);
+    });
+
+    FeatureToggleService.atlas2017NameChangeGetStatus().then(function (toggle) {
+      if (toggle) {
+        vm.pageHeader = $translate.instant('helpdesk.navHeaderTitleNew');
+      } else {
+        vm.pageHeader = $translate.instant('helpdesk.navHeaderTitle');
+      }
     });
 
     function showSearchHelp() {

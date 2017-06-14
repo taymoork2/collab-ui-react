@@ -1,112 +1,106 @@
 import testModule from './index';
 import { SupportSettingsController } from './support.section.controller';
 
-describe('Controller: PartnerProfileCtrl', () => {
-  let $scope, $controller, controller, $q;
-  let Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion;
+describe('Controller: PartnerProfileCtrl', function () {
+  beforeEach(function () {
+    this.initModules(testModule);
+    this.injectDependencies(
+      '$controller',
+      '$rootScope',
+      '$scope',
+      '$q',
+      'Authinfo',
+      'BrandService',
+      'Orgservice',
+      'Notification',
+      'UserListService',
+      'WebexClientVersion',
+      'FeatureToggleService',
+      'ITProPackService',
+    );
 
-  beforeEach(angular.mock.module(testModule));
-  beforeEach(inject(dependencies));
-  beforeEach(initSpies);
-  beforeEach(initController);
+    spyOn(this.Notification, 'success');
+    spyOn(this.Notification, 'error');
+    spyOn(this.Notification, 'errorResponse');
+    spyOn(this.Orgservice, 'setOrgSettings').and.returnValue(this.$q.resolve());
+    spyOn(this.UserListService, 'listPartners');
+    spyOn(this.Orgservice, 'getOrg');
+    spyOn(this.BrandService, 'getLogoUrl').and.returnValue(this.$q.resolve('logoUrl'));
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.WebexClientVersion, 'getWbxClientVersions').and.returnValue(this.$q.resolve());
+    spyOn(this.WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue(this.$q.resolve());
+    spyOn(this.WebexClientVersion, 'getTemplate').and.returnValue(this.$q.resolve());
 
-  function dependencies($rootScope, _$controller_, _$q_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_) {
-    $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $q = _$q_;
-    Notification = _Notification_;
-    Orgservice = _Orgservice_;
-    UserListService = _UserListService_;
-    BrandService = _BrandService_;
-    FeatureToggleService = _FeatureToggleService_;
-    WebexClientVersion = _WebexClientVersion_;
-  }
+    this.initController = (): void => {
+      this.controller = this.$controller(SupportSettingsController, {
+        $scope: this.$scope,
+      });
+      this.$scope.$apply();
+    };
+    this.initController();
+  });
 
-  function initSpies() {
-    spyOn(Notification, 'success');
-    spyOn(Notification, 'error');
-    spyOn(Notification, 'errorResponse');
-    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve());
-    spyOn(UserListService, 'listPartners');
-    spyOn(Orgservice, 'getOrg');
-    spyOn(BrandService, 'getLogoUrl').and.returnValue($q.resolve('logoUrl'));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
-    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.resolve());
-    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.resolve());
-    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.resolve());
-  }
-
-  function initController() {
-    controller = $controller(SupportSettingsController, {
-      $scope: $scope,
-    });
-    $scope.$apply();
-  }
-
-  describe('validation()', () => {
-
-    describe('showCustomHelpSiteSaveButton', () => {
-
-      describe('checkBox enabled and url set', () => {
-        beforeEach(() => {
-          controller.customHelpSite.enable = true;
-          controller.customHelpSite.url = 'initialUrl';
+  describe('validation()', function () {
+    describe('showCustomHelpSiteSaveButton', function () {
+      describe('checkBox enabled and url set', function () {
+        beforeEach(function () {
+          this.controller.customHelpSite.enable = true;
+          this.controller.customHelpSite.url = 'initialUrl';
         });
 
-        it('should not show save button if it was enabled with the same url', () => {
-          controller.oldCustomHelpSite.enable = true;
-          controller.oldCustomHelpSite.url = 'initialUrl';
-          expect(controller.showCustomHelpSiteSaveButton).toBeFalsy();
+        it('should not show save button if it was enabled with the same url', function () {
+          this.controller.oldCustomHelpSite.enable = true;
+          this.controller.oldCustomHelpSite.url = 'initialUrl';
+          expect(this.controller.showCustomHelpSiteSaveButton).toBeFalsy();
         });
 
-        it('should show save button if it was enabled with a different url', () => {
-          controller.oldCustomHelpSite.enable = true;
-          controller.oldCustomHelpSite.url = 'oldDifferentUrl';
-          expect(controller.showCustomHelpSiteSaveButton).toBeTruthy();
+        it('should show save button if it was enabled with a different url', function () {
+          this.controller.oldCustomHelpSite.enable = true;
+          this.controller.oldCustomHelpSite.url = 'oldDifferentUrl';
+          expect(this.controller.showCustomHelpSiteSaveButton).toBeTruthy();
         });
 
-        it('should show save button if it was disabled', () => {
-          controller.oldCustomHelpSite.enable = false;
-          expect(controller.showCustomHelpSiteSaveButton).toBeTruthy();
+        it('should show save button if it was disabled', function () {
+          this.controller.oldCustomHelpSite.enable = false;
+          expect(this.controller.showCustomHelpSiteSaveButton).toBeTruthy();
         });
 
-        it('should show not save button if it was disabled but has no url now', () => {
-          controller.oldCustomHelpSite.enable = false;
-          controller.customHelpSite.url = '';
-          expect(controller.showCustomHelpSiteSaveButton).toBeFalsy();
+        it('should show not save button if it was disabled but has no url now', function () {
+          this.controller.oldCustomHelpSite.enable = false;
+          this.controller.customHelpSite.url = '';
+          expect(this.controller.showCustomHelpSiteSaveButton).toBeFalsy();
         });
       });
 
-      describe('checkBox disabled', () => {
+      describe('checkBox disabled', function () {
+        it('should not show save button if it was disabled', function () {
+          this.controller.customHelpSite.enable = false;
+          this.controller.oldCustomHelpSite.enable = false;
 
-        it('should not show save button if it was disabled', () => {
-          controller.customHelpSite.enable = false;
-          controller.oldCustomHelpSite.enable = false;
-
-          expect(controller.showCustomHelpSiteSaveButton).toBeFalsy();
+          expect(this.controller.showCustomHelpSiteSaveButton).toBeFalsy();
         });
 
-        it('should show save button if it was enabled', () => {
-          controller.customHelpSite.enable = false;
-          controller.oldCustomHelpSite.enable = true;
-          expect(controller.showCustomHelpSiteSaveButton).toBeTruthy();
+        it('should show save button if it was enabled', function () {
+          this.controller.customHelpSite.enable = false;
+          this.controller.oldCustomHelpSite.enable = true;
+          expect(this.controller.showCustomHelpSiteSaveButton).toBeTruthy();
         });
       });
     });
 
-    describe('saving org settings data', () => {
-
-      it('saves data via Orgservice', () => {
-        controller.useCustomSupportUrl = controller.problemSiteInfo.cisco;
-        controller.useCustomHelpSite = controller.helpSiteInfo.cisco;
-        controller.useCustomSupportUrl = controller.problemSiteInfo.ext;
-        controller.customSupport.url = 'supportUrl';
-        controller.customSupport.text = 'this is support text';
-        controller.allowReadOnlyAccess = false;
-        controller.useCustomHelpSite = controller.helpSiteInfo.ext;
-        controller.customHelpSite.url = 'helpUrl';
-        controller.saveUseCustomHelpSite();
-        controller.saveUseCustomSupportUrl();
+    describe('saving org settings data', function () {
+      it('saves data via Orgservice', function () {
+        this.controller.useCustomSupportUrl = this.controller.problemSiteInfo.cisco;
+        this.controller.useCustomHelpSite = this.controller.helpSiteInfo.cisco;
+        this.controller.useCustomSupportUrl = this.controller.problemSiteInfo.ext;
+        this.controller.customSupport.url = 'supportUrl';
+        this.controller.customSupport.text = 'this is support text';
+        this.controller.allowReadOnlyAccess = false;
+        this.controller.useCustomHelpSite = this.controller.helpSiteInfo.ext;
+        this.controller.customHelpSite.url = 'helpUrl';
+        this.controller.saveUseCustomHelpSite();
+        this.controller.saveUseCustomSupportUrl();
         let expectedOrgSettingsPart1 = {
           reportingSiteUrl: 'supportUrl',
           reportingSiteDesc: 'this is support text',
@@ -126,81 +120,87 @@ describe('Controller: PartnerProfileCtrl', () => {
           // allowCrashLogUpload: false
         };
 
-        expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettingsPart1);
-        expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettingsPart2);
+        expect(this.Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettingsPart1);
+        expect(this.Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettingsPart2);
       });
-
     });
 
-    describe('should save successfully', () => {
-      afterEach(() => {
-        saveAndNotifySuccess();
+    describe('should save successfully', function () {
+      afterEach(function () {
+        this.controller.saveUseCustomHelpSite();
+        this.controller.saveUseCustomSupportUrl();
+        expect(this.controller.savingProgress).toEqual(true);
+        this.$scope.$apply();
+        expect(this.controller.savingProgress).toEqual(false);
+        expect(this.Notification.success).toHaveBeenCalledWith('partnerProfile.processing');
       });
 
-      it('with default cisco options', () => {
-        controller.useCustomSupportUrl = controller.problemSiteInfo.cisco;
-        controller.useCustomHelpSite = controller.helpSiteInfo.cisco;
+      it('with default cisco options', function () {
+        this.controller.useCustomSupportUrl = this.controller.problemSiteInfo.cisco;
+        this.controller.useCustomHelpSite = this.controller.helpSiteInfo.cisco;
       });
 
-      it('with custom problem site', () => {
-        controller.useCustomSupportUrl = controller.problemSiteInfo.ext;
-        controller.supportUrl = 'supportUrl';
+      it('with custom problem site', function () {
+        this.controller.useCustomSupportUrl = this.controller.problemSiteInfo.ext;
+        this.controller.supportUrl = 'supportUrl';
       });
 
-      it('with custom help site', () => {
-        controller.useCustomHelpSite = controller.helpSiteInfo.ext;
-        controller.helpUrl = 'helpUrl';
+      it('with custom help site', function () {
+        this.controller.useCustomHelpSite = this.controller.helpSiteInfo.ext;
+        this.controller.helpUrl = 'helpUrl';
       });
-
-      function saveAndNotifySuccess() {
-        controller.saveUseCustomHelpSite();
-        controller.saveUseCustomSupportUrl();
-        expect(controller.savingProgress).toEqual(true);
-        $scope.$apply();
-        expect(controller.savingProgress).toEqual(false);
-        expect(Notification.success).toHaveBeenCalledWith('partnerProfile.processing');
-      }
     });
 
-    describe('should notify error response', () => {
-      beforeEach(initSpyFailure);
+    describe('should notify error response', function () {
+      beforeEach(function () {
+        this.Orgservice.setOrgSettings.and.returnValue(this.$q.reject({}));
+      });
 
-      it('when update fails', saveAndNotifyErrorResponse);
-
-      function initSpyFailure() {
-        Orgservice.setOrgSettings.and.returnValue($q.reject({}));
-      }
-
-      function saveAndNotifyErrorResponse() {
-        controller.saveUseCustomHelpSite();
-        controller.saveUseCustomSupportUrl();
-        expect(controller.savingProgress).toEqual(true);
-        $scope.$apply();
-        expect(controller.savingProgress).toEqual(false);
-        expect(Notification.errorResponse).toHaveBeenCalled();
-      }
+      it('when update fails', function () {
+        this.controller.saveUseCustomHelpSite();
+        this.controller.saveUseCustomSupportUrl();
+        expect(this.controller.savingProgress).toEqual(true);
+        this.$scope.$apply();
+        expect(this.controller.savingProgress).toEqual(false);
+        expect(this.Notification.errorResponse).toHaveBeenCalled();
+      });
     });
 
-    describe('should notify validation error', () => {
-      afterEach(saveAndNotifyError);
-
-      it('when picking a custom problem site without a value', () => {
-        controller.useCustomSupportUrl = controller.problemSiteInfo.ext;
-        controller.customSupport.url = '';
+    describe('should notify validation error', function () {
+      afterEach(function () {
+        this.controller.saveUseCustomHelpSite();
+        this.controller.saveUseCustomSupportUrl();
+        this.$scope.$apply();
+        expect(this.Notification.error).toHaveBeenCalledWith('partnerProfile.orgSettingsError');
       });
 
-      it('when picking a custom help site without a value', () => {
-        controller.useCustomHelpSite = controller.helpSiteInfo.ext;
-        controller.customHelpSite.url = '';
+      it('when picking a custom problem site without a value', function () {
+        this.controller.useCustomSupportUrl = this.controller.problemSiteInfo.ext;
+        this.controller.customSupport.url = '';
       });
 
-      function saveAndNotifyError() {
-        controller.saveUseCustomHelpSite();
-        controller.saveUseCustomSupportUrl();
-        $scope.$apply();
-        expect(Notification.error).toHaveBeenCalledWith('partnerProfile.orgSettingsError');
-      }
+      it('when picking a custom help site without a value', function () {
+        this.controller.useCustomHelpSite = this.controller.helpSiteInfo.ext;
+        this.controller.customHelpSite.url = '';
+      });
+    });
+
+    describe('2017 name update', function () {
+      it('nameChangeEnabled should depend on atlas2017NameChangeGetStatus', function () {
+        expect(this.controller.nameChangeEnabled).toBeFalsy();
+
+        this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+        this.initController();
+        expect(this.controller.nameChangeEnabled).toBeTruthy();
+      });
+
+      it('getAppTitle should depend on hasITProPackPurchased', function () {
+        expect(this.controller.getAppTitle()).toEqual('loginPage.titleNew');
+
+        this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+        this.initController();
+        expect(this.controller.getAppTitle()).toEqual('loginPage.titlePro');
+      });
     });
   });
-
 });

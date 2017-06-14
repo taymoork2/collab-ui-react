@@ -9,7 +9,8 @@
   </div>
   <div ng-if="!$ctrl.loading" class="modal-step">
     <h4 class="section__title" translate="hercules.gcalSecondSetupModal.title"></h4>
-    <p translate="hercules.gcalSecondSetupModal.line1"></p>
+    <p ng-if="!$ctrl.nameChangeEnabled" translate="hercules.gcalSecondSetupModal.line1"></p>
+    <p ng-if="$ctrl.nameChangeEnabled" translate="hercules.gcalSecondSetupModal.line1New"></p>
     <ol>
       <li translate="hercules.gcalSetupModal.authorization.item1"></li>
       <li translate="hercules.gcalSetupModal.authorization.item2"></li>

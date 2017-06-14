@@ -1,6 +1,8 @@
 import { Notification } from 'modules/core/notifications';
 
 export class SupportSettingsController {
+  private proPackEnabled: boolean = false;
+  public nameChangeEnabled: boolean = false;
 
   private customSupport = { enable: false, url: '', text: '' };
   private oldCustomSupport = { enable: false, url: '', text: '' };
@@ -79,12 +81,23 @@ export class SupportSettingsController {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private $q: ng.IQService,
     private Authinfo,
-    private Orgservice,
-    private Notification: Notification,
-    private UserListService,
+    private FeatureToggleService,
+    private ITProPackService,
     private Log,
+    private Notification: Notification,
+    private Orgservice,
+    private UserListService,
   ) {
+    this.$q.all({
+      proPackEnabled: this.ITProPackService.hasITProPackPurchased(),
+      nameChangeEnabled: this.FeatureToggleService.atlas2017NameChangeGetStatus(),
+    }).then((toggles: any): void => {
+      this.proPackEnabled = toggles.proPackEnabled;
+      this.nameChangeEnabled = toggles.nameChangeEnabled;
+    });
+
     this.orgId = Authinfo.getOrgId();
     this.initTexts();
     this.initOrgInfo();
@@ -202,6 +215,10 @@ export class SupportSettingsController {
     } else {
       this.Notification.error('partnerProfile.orgSettingsError');
     }
+  }
+
+  public getAppTitle(): string {
+    return this.proPackEnabled ? this.$translate.instant('loginPage.titlePro') : this.$translate.instant('loginPage.titleNew');
   }
 
   private resetCustomHelpSiteForm() {

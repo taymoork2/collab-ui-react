@@ -1,7 +1,7 @@
 import testModule from './index';
 import { SipDomainSettingController } from './sipDomainSetting.controller';
 
-describe('Controller: EnterpriseSettingsCtrl', function () {
+describe('Controller: SipDomainSettingController', function () {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$controller', '$modal', '$rootScope', '$scope', '$timeout', '$translate', '$q', '$window', 'Config',

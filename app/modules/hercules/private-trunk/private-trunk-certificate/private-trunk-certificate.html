@@ -1,7 +1,16 @@
 <div ng-form="privateTrunkCertificateForm" class="private-trunk">
   <h5 ng-if="!$ctrl.isFirstTimeSetup" class="cert-top-margin" translate="servicesOverview.cards.privateTrunk.certificateTitle"></h5>
   <h4 ng-if="$ctrl.isFirstTimeSetup" translate="servicesOverview.cards.privateTrunk.certificateTitle"></h4>
-  <span class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.certDesc" translate-values="{href: 'https://help.webex.com/docs/DOC-4302'}"></span>
+  <span ng-if="!$ctrl.nameChangeEnabled"
+    class="span-font-size"
+    ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}"
+    translate="servicesOverview.cards.privateTrunk.certDesc"
+    translate-values="{href: 'https://help.webex.com/docs/DOC-4302'}"></span>
+  <span ng-if="$ctrl.nameChangeEnabled"
+    class="span-font-size"
+    ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}"
+    translate="servicesOverview.cards.privateTrunk.certDescNew"
+    translate-values="{href: 'https://help.webex.com/docs/DOC-4302'}"></span>
   <span ng-if="$ctrl.isCustomCertificateEnabled" class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.upload"></span>
   <span class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.click" translate-values="{href: 'http://www.cisco.com/go/private-trunking'}"></span>
   <div ng-if="$ctrl.isCustomCertificateEnabled">
@@ -83,7 +92,8 @@
       <div class="box multibox-margin">
           <div ng-class="{'box-disabled': $ctrl.isCustomEnabled()}">
             <i class="icon icon-certified icon-lg cert-icon" ng-class="{'cert-color': !$ctrl.isCustomEnabled()}" ></i>
-            <span class="span-filename" translate="servicesOverview.cards.privateTrunk.certificateDefaultList"></span>
+            <span ng-if="!$ctrl.nameChangeEnabled" class="span-filename" translate="servicesOverview.cards.privateTrunk.certificateDefaultList"></span>
+            <span ng-if="$ctrl.nameChangeEnabled" class="span-filename" translate="servicesOverview.cards.privateTrunk.certificateDefaultListNew"></span>
             <a class="close-icon-align body-small float-right-view" href="https://help.webex.com/docs/DOC-4302" target="_blank" translate="servicesOverview.cards.privateTrunk.view"></a>
           </div>
       </div>

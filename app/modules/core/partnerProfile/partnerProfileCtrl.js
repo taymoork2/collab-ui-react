@@ -7,7 +7,7 @@ require('./_partnerProfile.scss');
     .controller('PartnerProfileCtrl', PartnerProfileCtrl);
 
   /* @ngInject */
-  function PartnerProfileCtrl($scope, Authinfo, Notification, UserListService, Orgservice, Log, $window, Utils, FeedbackService, $translate) {
+  function PartnerProfileCtrl($q, $scope, $translate, $window, Authinfo, FeatureToggleService, FeedbackService, ITProPackService, Log, Notification, Orgservice, UserListService, Utils) {
     var orgId = Authinfo.getOrgId();
 
     // toggles api calls, show/hides divs based on customer or partner profile
@@ -201,5 +201,19 @@ require('./_partnerProfile.scss');
         $scope.partnerProfileForm.$setDirty();
       }
     }
+
+    var proPackEnabled = undefined;
+    $scope.nameChangeEnabled = undefined;
+    $q.all({
+      proPackEnabled: ITProPackService.hasITProPackPurchased(),
+      nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+    }).then(function (toggles) {
+      proPackEnabled = toggles.proPackEnabled;
+      $scope.nameChangeEnabled = toggles.nameChangeEnabled;
+    });
+
+    $scope.getAppTitle = function () {
+      return proPackEnabled ? $translate.instant('loginPage.titlePro') : $translate.instant('loginPage.titleNew');
+    };
   }
 })();

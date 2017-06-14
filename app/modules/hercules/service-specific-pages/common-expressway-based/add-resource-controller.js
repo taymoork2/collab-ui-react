@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, $modal, $state, ResourceGroupService) {
+  function AddResourceController($modal, $modalInstance, $q, $state, $translate, $window, connectorType, FeatureToggleService, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, ITProPackService, Notification, ResourceGroupService, serviceId) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -48,7 +48,22 @@
       required: $translate.instant('common.invalidRequired'),
     };
     vm.clustername = '';
-    vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptext');
+
+    vm.nameChangeEnabled = false;
+    $q.all({
+      nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+      proPackEnabled: ITProPackService.hasITProPackPurchased(),
+    }).then(function (toggles) {
+      vm.nameChangeEnabled = toggles.nameChangeEnabled;
+      if (vm.nameChangeEnabled) {
+        vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptextNew', {
+          appTitle: toggles.proPackEnabled ? $translate.instant('loginPage.titlePro') : $translate.instant('loginPage.titleNew'),
+        });
+      } else {
+        vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptext');
+      }
+    });
+
     vm.localizedClusternameWatermark = $translate.instant('hercules.addResourceDialog.clusternameWatermark');
 
     vm.selectedCluster = '';
@@ -90,7 +105,7 @@
 
     function warning() {
       if (_.some(vm.connectors, function (connector) {
-        vm.warningMessage = $translate.instant('hercules.addResourceDialog.hostnameRegistered');
+        vm.warningMessage = vm.nameChangeEnabled ? $translate.instant('hercules.addResourceDialog.hostnameRegisteredNew') : $translate.instant('hercules.addResourceDialog.hostnameRegistered');
         return connector.toLowerCase() === vm.hostname.toLowerCase();
       })
         ) {

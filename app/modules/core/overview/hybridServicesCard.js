@@ -15,7 +15,6 @@
         card.template = 'modules/core/overview/hybridServicesCard.tpl.html';
         card.icon = 'icon-circle-data';
         card.enabled = false;
-        card.notEnabledText = 'overview.cards.hybrid.notEnabledText';
         card.notEnabledAction = 'https://www.cisco.com/go/hybrid-services';
         card.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
         card.serviceList = [];
@@ -23,7 +22,14 @@
         function init() {
           $q.all({
             hasGoogleCalendarFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar),
+            nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
           }).then(function (featureToggles) {
+            if (featureToggles.nameChangeEnabled) {
+              card.notEnabledText = 'overview.cards.hybrid.notEnabledTextNew';
+            } else {
+              card.notEnabledText = 'overview.cards.hybrid.notEnabledText';
+            }
+
             return $q.all({
               clusterList: HybridServicesClusterService.getAll(),
               gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) && featureToggles.hasGoogleCalendarFeatureToggle ? CloudConnectorService.getService() : $q.resolve({}),

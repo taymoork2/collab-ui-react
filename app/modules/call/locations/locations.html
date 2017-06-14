@@ -30,7 +30,7 @@
           <cs-card ng-repeat="location in $ctrl.locations" class="small overview-card primary">
             <article>
               <header>
-                <i class="icon icon-star" ng-if="location.isDefault"></i>
+                <i class="icon icon-star" ng-if="location.defaultLocation"></i>
                 <div class="header-with-right-icon">
                   <p class="h4 ellipsis" title="{{location.name}}"> {{location.name}} </p>
                   <span cs-dropdown class="actions-menu dropdown pull-right">
@@ -38,10 +38,10 @@
                     <i class="icon icon-three-dots"></i>
                    </button>
                    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-                    <li ng-if="!location.isDefault" ng-click="$ctrl.makeDefaultLocation(location)"><a>{{'locations.makeDefault' | translate}}</a></li>
+                    <li ng-if="!location.defaultLocation" ng-click="$ctrl.makeDefaultLocation(location)"><a>{{'locations.makeDefault' | translate}}</a></li>
                     <li ng-click="$ctrl.editLocation(location)"><a>{{'common.edit' | translate}}</a></li>
                     <li><a ng-click="$ctrl.copyLocation(location)">{{'locations.copyLocation' | translate}}</a></li>
-                    <li ng-if="!location.isDefault" ng-click="$ctrl.deleteLocation(location)"><a>{{'common.delete' | translate}}</a></li>
+                    <li ng-if="!location.defaultLocation" ng-click="$ctrl.deleteLocation(location)"><a>{{'common.delete' | translate}}</a></li>
                   </ul>
                   </span>
                 </div>

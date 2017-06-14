@@ -6,7 +6,7 @@
     </cs-page-sub-header-left>
     <cs-page-sub-header-right ng-if="Utils.isAdminPage()">
 
-      <div ng-if="linesListCtrl.huronCustomerAdminPMPFeatureToggle && !linesListCtrl.gridRefresh">
+      <div ng-if="!linesListCtrl.gridRefresh">
         <a ui-sref="customerPstnOrdersOverview({currentCustomer: linesListCtrl.currentCustomer, vendor:linesListCtrl.vendor})">
           <span class="order-history" translate="pstnOrderOverview.historyAndImports"></span>
         </a>

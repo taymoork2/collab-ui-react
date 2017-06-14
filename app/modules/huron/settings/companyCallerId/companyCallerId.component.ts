@@ -68,9 +68,9 @@ class CompanyCallerId implements ng.IComponentController {
 
   public onCompanyCallerIdNumberChanged(value): void {
     if (_.isObject(value)) {
-      this.companyCallerId.pattern = _.get<string>(value, 'value');
+      this.companyCallerId.pattern = this.PhoneNumberService.getE164Format(_.get<string>(value, 'value'));
     } else {
-      this.companyCallerId.pattern = value;
+      this.companyCallerId.pattern = this.PhoneNumberService.getE164Format(value);
     }
     this.onChange(this.companyCallerId);
   }

@@ -37,7 +37,6 @@
     vm.currentCustomer = {
       customerOrgId: Authinfo.getOrgId(),
     };
-    vm.huronCustomerAdminPMPFeatureToggle = false;
 
     // Defines Grid Filter "All"
     vm.placeholder = {
@@ -207,6 +206,14 @@
         sortCellFiltered: true,
         cellClass: 'assignedToColumn',
         headerCellClass: 'assignedToHeader',
+      }, {
+        field: 'actions',
+        displayName: $translate.instant('linesPage.actionHeader'),
+        enableSorting: false,
+        cellTemplate: getTemplate('_actionsTpl'),
+        width: '20%',
+        cellClass: 'actionsColumn',
+        headerCellClass: 'actionsHeader',
       }],
     };
 
@@ -230,25 +237,6 @@
     function getTemplate(name) {
       return $templateCache.get('modules/huron/lines/templates/' + name + '.html');
     }
-
-    FeatureToggleService.supports(FeatureToggleService.features.huronCustomerAdminPMP)
-      .then(function (supported) {
-        vm.huronCustomerAdminPMPFeatureToggle = supported;
-
-        if (supported) {
-          vm.gridOptions.columnDefs.push(
-            {
-              field: 'actions',
-              displayName: $translate.instant('linesPage.actionHeader'),
-              enableSorting: false,
-              cellTemplate: getTemplate('_actionsTpl'),
-              width: '20%',
-              cellClass: 'actionsColumn',
-              headerCellClass: 'actionsHeader',
-            }
-          );
-        }
-      });
 
     FeatureToggleService.supports(FeatureToggleService.features.huronPstn)
       .then(function (supported) {
