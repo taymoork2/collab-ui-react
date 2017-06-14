@@ -126,8 +126,9 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public setHuntGroupFallbackDestination(fbDestination: FallbackDestination) {
     this.huntGroup.fallbackDestination = fbDestination;
-    if (_.isNull(_.get(fbDestination, 'number'))) {
-      this.form.$setValidity('', false, this.form);
+    this.form.$setValidity('', false, this.form);
+    if (!_.isNull(_.get(fbDestination, 'number') )) {
+      this.form.$setValidity('', true, this.form);
     }
     this.form.$setDirty();
     this.checkForChanges();
