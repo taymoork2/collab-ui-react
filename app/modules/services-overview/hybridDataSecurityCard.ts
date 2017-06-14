@@ -91,8 +91,14 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     this.hasITProPackEnabled = false;
     this.$state = $state;
     this.setupButton.onClick = function () {
+      let hdsEntitlementObj = {
+        ciName: Config.entitlements.hds,
+      };
       HDSService.enableHdsEntitlement()
         .then(function () {
+          if (!Authinfo.isEntitled(Config.entitlements.hds)) {
+            Authinfo.addEntitlement(hdsEntitlementObj);
+          }
           $state.go('hds.list');
         }).catch(function (error) {
           Notification.errorWithTrackingId(error, 'error setting HDS service entitlements');
