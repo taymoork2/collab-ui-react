@@ -1,201 +1,192 @@
 'use strict';
 
 describe('Controller: TrialPstnCtrl', function () {
-  var controller, trials, $httpBackend, $scope, $q, Analytics, HuronConfig, Orgservice, TrialPstnService, TrialService, PstnService, PstnSetupStatesService, FeatureToggleService;
+  beforeEach(function () {
+    this.initModules('Core', 'Hercules', 'core.trial');
+    this.injectDependencies('$controller',
+      '$httpBackend',
+      '$q',
+      '$rootScope',
+      'Analytics',
+      'FeatureToggleService',
+      'HuronConfig',
+      'Orgservice',
+      'PstnService',
+      'PstnSetupStatesService',
+      'TrialPstnService',
+      'TrialService'
+    );
 
-  var customerName = 'Wayne Enterprises';
-  var customerEmail = 'batman@darknight.com';
+    this.customerName = 'Wayne Enterprises';
+    this.customerEmail = 'batman@darknight.com';
 
-  var carrier = {
-    name: 'IntelePeer',
-    uuid: '23453-235sdfaf-3245a-asdfa4',
-  };
+    this.carrier = {
+      name: 'IntelePeer',
+      uuid: '23453-235sdfaf-3245a-asdfa4',
+    };
 
-  var location = {
-    type: 'State',
-    areas: [{
-      name: 'Texas',
-      abbreviation: 'TX',
-    }],
-  };
+    this.location = {
+      type: 'State',
+      areas: [{
+        name: 'Texas',
+        abbreviation: 'TX',
+      }],
+    };
 
-  var numberInfo = {
-    state: {
-      name: 'Texas',
-      abbreviation: 'TX',
-    },
-    areaCode: {
-      code: '469',
-      count: 25,
-    },
-    numbers: ["+14696500030", "+14696500102", "+14696500194", "+14696500208", "+14696500220"],
-  };
+    this.numberInfo = {
+      state: {
+        name: 'Texas',
+        abbreviation: 'TX',
+      },
+      areaCode: {
+        code: '469',
+        count: 25,
+      },
+      numbers: ["+14696500030", "+14696500102", "+14696500194", "+14696500208", "+14696500220"],
+    };
 
-  var carrierId = '25452345-agag-ava-43523452';
+    this.carrierId = '25452345-agag-ava-43523452';
 
-  var stateSearch = 'TX';
+    this.stateSearch = 'TX';
 
-  var areaCodeResponse = {
-    areaCodes: [{
+    this.areaCodeResponse = {
+      areaCodes: [{
+        code: '469',
+        count: 25,
+      }, {
+        code: '817',
+        count: 25,
+      }, {
+        code: '123',
+        count: 4,
+      }],
+      count: 85,
+    };
+
+    this.newAreaCodes = [{
       code: '469',
       count: 25,
     }, {
       code: '817',
       count: 25,
-    }, {
-      code: '123',
-      count: 4,
-    }],
-    count: 85,
-  };
+    }];
 
-  var newAreaCodes = [{
-    code: '469',
-    count: 25,
-  }, {
-    code: '817',
-    count: 25,
-  }];
+    this.exchangesResponse = {
+      exchanges: [
+        { code: '731', count: 12 },
+        { code: '742', count: 23 },
+        { code: '421', count: 8 },
+      ],
+    };
 
-  var exchangesResponse = {
-    exchanges: [
-      { code: '731', count: 12 },
-      { code: '742', count: 23 },
-      { code: '421', count: 8 },
-    ],
-  };
+    this.numbersResponse = {
+      numbers: [
+        "+17077318283", "+17077318284", "+17077318293", "+17077318294", "+17077318295",
+        "+17077318296", "+17077318297", "+17077318298", "+17077318315", "+17077318316",
+      ],
+    };
 
-  var numbersResponse = {
-    numbers: [
-      "+17077318283", "+17077318284", "+17077318293", "+17077318294", "+17077318295",
-      "+17077318296", "+17077318297", "+17077318298", "+17077318315", "+17077318316",
-    ],
-  };
+    this.contractInfo = {
+      companyName: 'Sample Company',
+      signeeFirstName: 'Samp',
+      signeeLastName: 'Le',
+      email: 'sample@snapple.com',
+    };
 
-  var contractInfo = {
-    companyName: 'Sample Company',
-    signeeFirstName: 'Samp',
-    signeeLastName: 'Le',
-    email: 'sample@snapple.com',
-  };
+    spyOn(this.TrialService, 'getDeviceTrialsLimit');
+    spyOn(this.PstnSetupStatesService, 'getLocation').and.returnValue(this.$q.resolve(this.location));
 
-  afterEach(function () {
-    controller = trials = $httpBackend = $scope = $q = HuronConfig = Orgservice = Analytics = TrialPstnService = TrialService = PstnService = PstnSetupStatesService = FeatureToggleService = undefined;
-  });
-
-  afterAll(function () {
-    customerName = customerEmail = carrier = numberInfo = carrierId = stateSearch = areaCodeResponse = newAreaCodes = exchangesResponse = numbersResponse = contractInfo = undefined;
-  });
-
-  beforeEach(angular.mock.module('core.trial'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Core'));
-
-  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _Analytics_, _HuronConfig_, _Orgservice_, _TrialPstnService_, _TrialService_, _PstnService_, _PstnSetupStatesService_, _FeatureToggleService_) {
-
-    $scope = $rootScope.$new();
-    $httpBackend = _$httpBackend_;
-    HuronConfig = _HuronConfig_;
-    TrialPstnService = _TrialPstnService_;
-    TrialService = _TrialService_;
-    PstnService = _PstnService_;
-
-    PstnSetupStatesService = _PstnSetupStatesService_;
-    FeatureToggleService = _FeatureToggleService_;
-    Orgservice = _Orgservice_;
-    Analytics = _Analytics_;
-    $q = _$q_;
-
-    spyOn(TrialService, 'getDeviceTrialsLimit');
-    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
-
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(Orgservice, 'getOrg');
-    spyOn(Analytics, 'trackTrialSteps');
+    spyOn(this.FeatureToggleService, 'huronSupportThinktelGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'huronFederatedSparkCallGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.Orgservice, 'getOrg');
+    spyOn(this.Analytics, 'trackTrialSteps');
 
     //Test initialize
-    $scope.trial = TrialService.getData();
-    $scope.trial.details.customerName = customerName;
-    $scope.trial.details.customerEmail = customerEmail;
+    this.$scope = this.$rootScope.$new();
+    this.$scope.trial = this.TrialService.getData();
+    this.$scope.trial.details.customerName = this.customerName;
+    this.$scope.trial.details.customerEmail = this.customerEmail;
 
-    spyOn(PstnService, 'getResellerV2').and.returnValue($q.resolve());
-    spyOn(PstnService, 'listResellerCarriers');
-    spyOn(PstnService, 'listDefaultCarriers');
-    spyOn(PstnService, 'searchCarrierInventory').and.returnValue($q.resolve());
+    spyOn(this.PstnService, 'getResellerV2').and.returnValue(this.$q.resolve());
+    spyOn(this.PstnService, 'listResellerCarriers').and.returnValue(this.$q.resolve([]));
+    spyOn(this.PstnService, 'listDefaultCarriers').and.returnValue(this.$q.resolve([]));
+    spyOn(this.PstnService, 'searchCarrierInventory').and.returnValue(this.$q.resolve());
 
-    controller = $controller('TrialPstnCtrl', {
-      $scope: $scope,
-      TrialPstnService: TrialPstnService,
-    });
 
-    trials = TrialPstnService.getData();
+    this.initController = function () {
+      this.controller = this.$controller('TrialPstnCtrl', {
+        $scope: this.$scope,
+        TrialPstnService: this.TrialPstnService,
+      });
+      this.trials = this.TrialPstnService.getData();
+      this.$scope.$apply();
+    };
 
-    $scope.$apply();
-  }));
+    this.initController();
+
+  });
 
   it('should be created successfully', function () {
-    expect(controller).toBeDefined();
+    expect(this.controller).toBeDefined();
   });
 
   it('should initialize with the company name and email', function () {
-    expect(controller.trialData.details.pstnContractInfo.companyName).toEqual(customerName);
-    expect(controller.trialData.details.pstnContractInfo.emailAddress).toEqual(customerEmail);
+    expect(this.controller.trialData.details.pstnContractInfo.companyName).toEqual(this.customerName);
+    expect(this.controller.trialData.details.pstnContractInfo.emailAddress).toEqual(this.customerEmail);
   });
 
   it('should set the nxx params', function () {
-    controller.searchCarrierInventory('817932');
-    expect(controller.trialData.details.pstnNumberInfo.areaCode.code).toBe('817');
+    this.controller.searchCarrierInventory('817932');
+    expect(this.controller.trialData.details.pstnNumberInfo.areaCode.code).toBe('817');
   });
 
   it('should reset NXX value when Area Code changes', function () {
-    var areaCode = areaCodeResponse.areaCodes[0];
+    var areaCode = this.areaCodeResponse.areaCodes[0];
 
-    controller.trialData.details.pstnProvider.uuid = carrierId;
-    controller.trialData.details.pstnNumberInfo.state = location.areas[0];
+    this.controller.trialData.details.pstnProvider.uuid = this.carrierId;
+    this.controller.trialData.details.pstnNumberInfo.state = this.location.areas[0];
 
-    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/numbers/count?numberType=DID&groupBy=nxx&npa=' + areaCode.code + '&state=' + stateSearch).respond(exchangesResponse);
+    this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + this.carrierId + '/numbers/count?numberType=DID&groupBy=nxx&npa=' + areaCode.code + '&state=' + this.stateSearch).respond(this.exchangesResponse);
 
-    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/numbers?numberType=DID&count=10&npa=' + areaCode.code + '&sequential=false' + stateSearch).respond(numbersResponse);
+    this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + this.carrierId + '/numbers?numberType=DID&count=10&npa=' + areaCode.code + '&sequential=false' + this.stateSearch).respond(this.numbersResponse);
 
-    controller.trialData.details.pstnNumberInfo.areaCode = areaCode;
-    controller.trialData.details.pstnNumberInfo.nxx = exchangesResponse.exchanges[0];
-    controller.onAreaCodeChange();
-    expect(controller.trialData.details.pstnNumberInfo.nxx).toEqual(null);
+    this.controller.trialData.details.pstnNumberInfo.areaCode = areaCode;
+    this.controller.trialData.details.pstnNumberInfo.nxx = this.exchangesResponse.exchanges[0];
+    this.controller.onAreaCodeChange();
+    expect(this.controller.trialData.details.pstnNumberInfo.nxx).toEqual(null);
   });
 
   describe('Enter info to the controller and expect the same out of the service', function () {
 
     it('should set the carrier', function () {
-      controller.trialData.details.pstnProvider = carrier;
-      expect(trials.details.pstnProvider).toBe(carrier);
+      this.controller.trialData.details.pstnProvider = this.carrier;
+      expect(this.trials.details.pstnProvider).toBe(this.carrier);
     });
 
     it('should set the legal contact information', function () {
-      controller.trialData.details.pstnContractInfo = contractInfo;
-      expect(trials.details.pstnContractInfo).toBe(contractInfo);
+      this.controller.trialData.details.pstnContractInfo = this.contractInfo;
+      expect(this.trials.details.pstnContractInfo).toBe(this.contractInfo);
     });
 
     it('should set number data', function () {
-      controller.trialData.details.pstnNumberInfo = numberInfo;
-      expect(trials.details.pstnNumberInfo).toBe(numberInfo);
+      this.controller.trialData.details.pstnNumberInfo = this.numberInfo;
+      expect(this.trials.details.pstnNumberInfo).toBe(this.numberInfo);
     });
 
     it('should get area codes', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/numbers/count?numberType=DID&state=' + stateSearch).respond(areaCodeResponse);
-      controller.trialData.details.pstnProvider.uuid = carrierId;
-      controller.trialData.details.pstnNumberInfo.state.abbreviation = stateSearch;
-      controller.getStateInventory();
+      this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + this.carrierId + '/numbers/count?numberType=DID&state=' + this.stateSearch).respond(this.areaCodeResponse);
+      this.controller.trialData.details.pstnProvider.uuid = this.carrierId;
+      this.controller.trialData.details.pstnNumberInfo.state.abbreviation = this.stateSearch;
+      this.controller.getStateInventory();
 
-      $httpBackend.flush();
+      this.$httpBackend.flush();
 
-      expect(controller.pstn.areaCodeOptions).toEqual(newAreaCodes);
+      expect(this.controller.pstn.areaCodeOptions).toEqual(this.newAreaCodes);
     });
   });
 
   describe('Adding phone numbers', function () {
     it('should not show number ordering', function () {
-      $scope.to = {};
-      $scope.to.options = [];
 
       var swivelCarrierDetails = [{
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
@@ -207,17 +198,38 @@ describe('Controller: TrialPstnCtrl', function () {
         "vendor": "INTELEPEER",
         "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
       }];
-      PstnService.listResellerCarriers.and.returnValue($q.reject());
-      PstnService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
-      controller._getCarriers($scope);
-      $scope.$apply();
-      expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
-      expect(controller.providerImplementation).toEqual(swivelCarrierDetails[0].apiImplementation);
+      this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
+      this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(swivelCarrierDetails));
+      this.controller.getCarriers();
+      this.$scope.$apply();
+      expect(this.controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
+      expect(this.controller.providerImplementation).toEqual(swivelCarrierDetails[0].apiImplementation);
+    });
+
+    it('should have the same result with toggles off on controller init', function () {
+
+      var swivelCarrierDetails = [{
+        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        "name": "INTELEPEER-SWIVEL",
+        "apiImplementation": "SWIVEL",
+        "countryCode": "+1",
+        "country": "US",
+        "defaultOffer": true,
+        "vendor": "INTELEPEER",
+        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+      }];
+      this.FeatureToggleService.huronSupportThinktelGetStatus.and.returnValue(this.$q.resolve(false));
+      this.FeatureToggleService.huronFederatedSparkCallGetStatus.and.returnValue(this.$q.resolve(false));
+
+      this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
+      this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(swivelCarrierDetails));
+
+      this.initController();
+      expect(this.controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
+      expect(this.controller.providerImplementation).toEqual(swivelCarrierDetails[0].apiImplementation);
     });
 
     it('should show number ordering', function () {
-      $scope.to = {};
-      $scope.to.options = [];
 
       var orderCarrierDetails = [{
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
@@ -229,18 +241,15 @@ describe('Controller: TrialPstnCtrl', function () {
         "vendor": "INTELEPEER",
         "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
       }];
-      PstnService.listResellerCarriers.and.returnValue($q.reject());
-      PstnService.listDefaultCarriers.and.returnValue($q.resolve(orderCarrierDetails));
-      controller._getCarriers($scope);
-      $scope.$apply();
-      expect(controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);
-      expect(controller.providerImplementation).toEqual(orderCarrierDetails[0].apiImplementation);
+      this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
+      this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(orderCarrierDetails));
+      this.controller.getCarriers();
+      this.$scope.$apply();
+      expect(this.controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);
+      expect(this.controller.providerImplementation).toEqual(orderCarrierDetails[0].apiImplementation);
     });
 
     it('should disable next button when required data missing for SWIVEL', function () {
-
-      $scope.to = {};
-      $scope.to.options = [];
 
       var swivelCarrierDetails = [{
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
@@ -252,36 +261,33 @@ describe('Controller: TrialPstnCtrl', function () {
         "vendor": "INTELEPEER",
         "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
       }];
-      PstnService.listResellerCarriers.and.returnValue($q.reject());
-      PstnService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
-      controller._getCarriers($scope);
-      $scope.$apply();
-      expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
-      expect(controller.invalidCount).toEqual(0);
-      expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
-      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
-      expect(controller.disableNextButton()).toBeTruthy();
+      this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
+      this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(swivelCarrierDetails));
+      this.controller.getCarriers();
+      this.$scope.$apply();
+      expect(this.controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
+      expect(this.controller.invalidCount).toEqual(0);
+      expect(this.controller.trialData.details.swivelNumbers).toHaveLength(0);
+      expect(this.controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(this.controller.disableNextButton()).toBeTruthy();
 
       // add a number
-      controller.manualTokenMethods.createdtoken({
+      this.controller.manualTokenMethods.createdtoken({
         attrs: {
           value: '+19728131449',
         },
         relatedTarget: '<div></div>',
       });
-      $scope.$apply();
+      this.$scope.$apply();
 
-      expect(controller.invalidCount).toEqual(0);
-      expect(controller.trialData.details.swivelNumbers).toHaveLength(1);
-      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
-      expect(controller.disableNextButton()).toBeFalsy();
+      expect(this.controller.invalidCount).toEqual(0);
+      expect(this.controller.trialData.details.swivelNumbers).toHaveLength(1);
+      expect(this.controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(this.controller.disableNextButton()).toBeFalsy();
 
     });
 
     it('should disable next button when any invalid numbers', function () {
-
-      $scope.to = {};
-      $scope.to.options = [];
 
       var swivelCarrierDetails = [{
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
@@ -293,37 +299,34 @@ describe('Controller: TrialPstnCtrl', function () {
         "vendor": "INTELEPEER",
         "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
       }];
-      PstnService.listResellerCarriers.and.returnValue($q.reject());
-      PstnService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
-      controller._getCarriers($scope);
-      $scope.$apply();
-      expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
-      expect(controller.providerImplementation).toEqual(swivelCarrierDetails[0].apiImplementation);
-      expect(controller.invalidCount).toEqual(0);
-      expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
-      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
-      expect(controller.disableNextButton()).toBeTruthy();
+      this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
+      this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(swivelCarrierDetails));
+      this.controller.getCarriers();
+      this.$scope.$apply();
+      expect(this.controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
+      expect(this.controller.providerImplementation).toEqual(swivelCarrierDetails[0].apiImplementation);
+      expect(this.controller.invalidCount).toEqual(0);
+      expect(this.controller.trialData.details.swivelNumbers).toHaveLength(0);
+      expect(this.controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(this.controller.disableNextButton()).toBeTruthy();
 
       // add a number
-      controller.manualTokenMethods.createdtoken({
+      this.controller.manualTokenMethods.createdtoken({
         attrs: {
           value: 'abc1234',
         },
         relatedTarget: '<div></div>',
       });
-      $scope.$apply();
+      this.$scope.$apply();
 
-      expect(controller.invalidCount).toEqual(1);
-      expect(controller.trialData.details.swivelNumbers).toHaveLength(1);
-      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
-      expect(controller.disableNextButton()).toBeTruthy();
+      expect(this.controller.invalidCount).toEqual(1);
+      expect(this.controller.trialData.details.swivelNumbers).toHaveLength(1);
+      expect(this.controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(this.controller.disableNextButton()).toBeTruthy();
 
     });
 
     it('should disable next button when required data missing for PSTN', function () {
-
-      $scope.to = {};
-      $scope.to.options = [];
 
       var orderCarrierDetails = [{
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
@@ -335,31 +338,31 @@ describe('Controller: TrialPstnCtrl', function () {
         "vendor": "INTELEPEER",
         "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
       }];
-      PstnService.listResellerCarriers.and.returnValue($q.reject());
-      PstnService.listDefaultCarriers.and.returnValue($q.resolve(orderCarrierDetails));
-      controller._getCarriers($scope);
-      $scope.$apply();
-      expect(controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);
-      expect(controller.providerImplementation).toEqual('INTELEPEER');
+      this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
+      this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(orderCarrierDetails));
+      this.controller.getCarriers();
+      this.$scope.$apply();
+      expect(this.controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);
+      expect(this.controller.providerImplementation).toEqual('INTELEPEER');
 
-      expect(controller.invalidCount).toEqual(0);
-      expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
-      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
-      expect(controller.disableNextButton()).toBeTruthy();
+      expect(this.controller.invalidCount).toEqual(0);
+      expect(this.controller.trialData.details.swivelNumbers).toHaveLength(0);
+      expect(this.controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(this.controller.disableNextButton()).toBeTruthy();
 
       // add contact info
-      controller.trialData.details.pstnContractInfo = contractInfo;
-      expect(controller.disableNextButton()).toBeTruthy();
+      this.controller.trialData.details.pstnContractInfo = this.contractInfo;
+      expect(this.controller.disableNextButton()).toBeTruthy();
 
       // add a number
-      controller.trialData.details.pstnNumberInfo = numberInfo;
-      $scope.$apply();
+      this.controller.trialData.details.pstnNumberInfo = this.numberInfo;
+      this.$scope.$apply();
 
-      expect(controller.invalidCount).toEqual(0);
-      expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
-      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(_.size(numberInfo.numbers));
+      expect(this.controller.invalidCount).toEqual(0);
+      expect(this.controller.trialData.details.swivelNumbers).toHaveLength(0);
+      expect(this.controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(_.size(this.numberInfo.numbers));
 
-      expect(controller.disableNextButton()).toBeFalsy();
+      expect(this.controller.disableNextButton()).toBeFalsy();
 
     });
   });
