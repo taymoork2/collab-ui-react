@@ -1,5 +1,9 @@
 cluster-sidepanel-overview {
   display: block;
+
+  .cs-input__help-text {
+    margin-top: 3px;
+  }
 }
 .tooltip[popup-class="cluster-name"] .c-nub {
   font-size: small;
