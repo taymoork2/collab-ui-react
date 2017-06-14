@@ -134,7 +134,7 @@ describe('LicenseService', function () {
       "status": "ACTIVE",
       "volume": 10,
       "isTrial": false,
-      "usage": 5,
+      "usage": 50,
     }, {
       "offerCode": "MS",
       "type": "MESSAGING",
@@ -142,7 +142,7 @@ describe('LicenseService', function () {
       "status": "ACTIVE",
       "volume": 20,
       "isTrial": false,
-      "usage": 10,
+      "usage": 50,
     }, {
       "offerCode": "MS",
       "type": "MESSAGING",
@@ -158,7 +158,7 @@ describe('LicenseService', function () {
       "status": "ACTIVE",
       "volume": 1000,
       "isTrial": false,
-      "usage": 50,
+      "usage": 200,
       "capacity": 25,
       "siteUrl": "mock.webex.com",
     }, {
@@ -168,7 +168,7 @@ describe('LicenseService', function () {
       "status": "ACTIVE",
       "volume": 1000,
       "isTrial": false,
-      "usage": 150,
+      "usage": 200,
       "capacity": 25,
       "siteUrl": "mock.webex.com",
     }, {
@@ -248,8 +248,8 @@ describe('LicenseService', function () {
     expect(aggregated.length).toEqual(1);
     var aggregate = aggregated[0];
     expect(aggregate.totalVolume).toEqual(130);
-    expect(aggregate.totalUsage).toEqual(65);
-    expect(aggregate.usagePercentage).toEqual(50);
+    expect(aggregate.totalUsage).toEqual(50);
+    expect(aggregate.usagePercentage).toEqual(38);
     expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.MS');
     expect(aggregate.isTrial).toBeFalsy();
     expect(aggregate.licenses.length).toEqual(3);
@@ -286,8 +286,8 @@ describe('LicenseService', function () {
       key: 'TC#25#mock.webex.com',
     });
     expect(aggregate.totalVolume).toEqual(1250);
-    expect(aggregate.totalUsage).toEqual(500);
-    expect(aggregate.usagePercentage).toEqual(40);
+    expect(aggregate.totalUsage).toEqual(250);
+    expect(aggregate.usagePercentage).toEqual(20);
     expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.TC');
     expect(aggregate.isTrial).toBeFalsy();
     expect(aggregate.licenses.length).toEqual(2);
