@@ -32,6 +32,9 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     expect(card.active).toBe(false);
     expect(card.display).toBe(false);
     expect(card.loading).toBe(true);
+    expect(card.getButtons().length).toBe(1);
+    expect(card.getButtons()[0].name).toBe('servicesOverview.genericButtons.setup');
+    expect(card.getButtons()[0].onClick).toBeDefined();
   });
 
   describe('Determining if the card gets displayed', () => {
