@@ -102,26 +102,6 @@ npm ls --depth=1
 
 # -----
 # Phase 3: Build
-function do_webpack {
-    # - webpack loaders have caused segfaults frequently enough to warrant simply retrying the command
-    #   until it succeeds
-    # - as this script is run by a jenkins builder, the potential infinite loop is mitigated by the
-    #   absolute timeout set for the job (currently 30 min.)
-    local webpack_exit_code
-    export npm_lifecycle_event="build"
-    while true; do
-        time nice -10 webpack --bail --profile --env.nolint --env.noprogress --devtool source-map
-        webpack_exit_code=$?
-        if [ "$webpack_exit_code" -ne 132 ] && \
-            [ "$webpack_exit_code" -ne 137 ] && \
-            [ "$webpack_exit_code" -ne 139 ] && \
-            [ "$webpack_exit_code" -ne 255 ]; then
-            break
-        fi
-    done
-    return "$webpack_exit_code"
-}
-
 set -e
 
 # notes:
@@ -133,7 +113,7 @@ set -e
     set +e
     # - 'typings' seems to be required for webpack to succeed
     npm run typings
-    time do_webpack
+    time nice -10 npm run build -- --env.nolint --env.noprogress --devtool source-map
     echo $? > ./.cache/webpack_exit_code
     set -e
 ) &
