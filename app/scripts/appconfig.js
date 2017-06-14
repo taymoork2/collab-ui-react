@@ -3048,11 +3048,11 @@
           .state('callLocation', {
             url: '/services/call-locations/add',
             parent: 'hurondetails',
-            template: '<call-location></call-location>',
+            template: '<uc-call-locations-wizard></uc-call-locations-wizard>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call/locations/location/index'));
+                  done(require('modules/call/locations/wizard/index'));
                 }, 'add-call-location');
               }),
             },

@@ -1,22 +1,33 @@
-import { PstnModel } from 'modules/huron/pstn/pstn.model';
-import { PstnService } from 'modules/huron/pstn/pstn.service';
-import { PstnCarrier } from 'modules/huron/pstn/pstnProviders/pstnCarrier';
+import { LocationDetail } from '../location';
+import { LocationsService } from '../locations.service';
+
+import {
+  PstnModel,
+  PstnService,
+  PstnCarrier,
+} from 'modules/huron/pstn';
+
 import { HuronSettingsOptionsService } from 'modules/huron/settings/services';
 import { IOption } from 'modules/huron/dialing';
 import { CompanyNumber } from 'modules/huron/settings/companyCallerId';
-import { LocationService } from 'modules/call/locations/location/location.service';
 import { Notification } from 'modules/core/notifications';
-import { LocationsService } from 'modules/call/locations/locations.service';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
-class LocationController implements ng.IComponentController {
+
+
+export class LocationsWizardComponent {
+  public controller = LocationsWizardController;
+  public templateUrl = 'modules/call/locations/wizard/locationsWizard.html';
+  public bindings = {};
+}
+
+class LocationsWizardController implements ng.IComponentController {
   public addressFound: boolean;
   public form: ng.IFormController;
   public siteId: string;
   public index: number = 0;
   public animation: string;
   public name: string;
-  public huronSettingsData: any;
   public settingsOptions = { companyVoicemailOptions: {} };
   public showRegionAndVoicemail: boolean;
   public isTerminusCustomer: boolean;
@@ -30,6 +41,11 @@ class LocationController implements ng.IComponentController {
   public validationMessages = {
     required: this.$translate.instant('common.invalidRequired'),
   };
+
+  public huronSettingsData: LocationDetail;
+  public defaultCountry: string = 'US'; //TODO: KPC What is this for?
+  public voicemailToEmail: boolean = false;  //TODO: KPC What is this for?
+
   private lastIndex = 6;
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
@@ -44,7 +60,6 @@ class LocationController implements ng.IComponentController {
               private PstnService: PstnService,
               private $q: ng.IQService,
               private HuronSettingsOptionsService: HuronSettingsOptionsService,
-              private LocationService: LocationService,
               private LocationsService: LocationsService,
               private PstnServiceAddressService,
               private Notification: Notification) {
@@ -52,7 +67,6 @@ class LocationController implements ng.IComponentController {
   }
 
   public $onInit(): void {
-
     this.showRegionAndVoicemail = this.Authinfo.getLicenses().filter(license => {
       return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
     }).length > 0;
@@ -87,7 +101,7 @@ class LocationController implements ng.IComponentController {
   private initSettingsComponent(): ng.IPromise<any> {
     return this.HuronSettingsOptionsService.getOptions().then(options => this.settingsOptions = options)
     .then( () => {
-      this.huronSettingsData = this.LocationService.get();
+      this.huronSettingsData = new LocationDetail();
     });
   }
 
@@ -108,7 +122,7 @@ class LocationController implements ng.IComponentController {
   }
 
   public onDefaultCountryChanged(defaultCountry: string): void {
-    this.huronSettingsData.country = defaultCountry;
+    this.defaultCountry = defaultCountry;
   }
 
   public onRoutingPrefixChanged(routingPrefix: string): void {
@@ -117,21 +131,20 @@ class LocationController implements ng.IComponentController {
   }
 
   public onSteeringDigitChanged(steeringDigit: string): void {
-    this.huronSettingsData.steeringDigit = steeringDigit;
+    this.huronSettingsData.steeringDigit = Number(steeringDigit);
     this.setShowDialPlanChangedDialogFlag();
   }
 
   public onRegionCodeChanged(regionCode: string, useSimplifiedNationalDialing: boolean): void {
-    _.set(this.huronSettingsData.regionCodeDialing, 'regionCode', regionCode);
-    _.set(this.huronSettingsData.regionCodeDialing, 'simplifiedNationalDialing', useSimplifiedNationalDialing);
+    this.huronSettingsData.regionCodeDialing.regionCode = regionCode;
+    this.huronSettingsData.regionCodeDialing.simplifiedNationalDialing = useSimplifiedNationalDialing;
     this.setShowDialPlanChangedDialogFlag();
   }
 
   private setShowDialPlanChangedDialogFlag(): void {
     //let originalConfig = this.HuronSettingsService.getOriginalConfig();
     let originalConfig;
-    if (this.huronSettingsData.extensionLength !== originalConfig.extensionLength
-      || this.huronSettingsData.steeringDigit !== originalConfig.steeringDigit
+    if (this.huronSettingsData.steeringDigit !== originalConfig.steeringDigit
       || this.huronSettingsData.routingPrefix !== originalConfig.routingPrefix
       || this.huronSettingsData.regionCodeDialing !== originalConfig.regionCodeDialing) {
       this.showDialPlanChangedDialog = true;
@@ -140,32 +153,23 @@ class LocationController implements ng.IComponentController {
     }
   }
 
-  public onCompanyVoicemailChanged(voicemailPilotNumber: string, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean): void {
-    _.set(this.huronSettingsData.customer, 'hasVoicemailService', companyVoicemailEnabled);
-    if (!companyVoicemailEnabled) {
-      this.huronSettingsData.disableVoicemail = true;
+  public onCompanyVoicemailChanged(number: string, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean): void {
+    this.showVoiceMailDisableDialog = companyVoicemailEnabled;
+    if (this.showVoiceMailDisableDialog) {
+      this.huronSettingsData.voicemailPilotNumber.number = number;
+      this.huronSettingsData.voicemailPilotNumber.voicemailPilotNumberGenerated = voicemailPilotNumberGenerated;
     } else {
-      delete this.huronSettingsData['disableVoicemail'];
-    }
-    this.huronSettingsData.voicemailPilotNumber = voicemailPilotNumber;
-    this.huronSettingsData.voicemailPilotNumberGenerated = voicemailPilotNumberGenerated;
-    this.setShowVoiceMailDisableDialogFlag();
-  }
-
-  private setShowVoiceMailDisableDialogFlag(): void {
-    if (!this.huronSettingsData.customer.hasVoicemailService) {
-      this.showVoiceMailDisableDialog = true;
-    } else {
-      this.showVoiceMailDisableDialog = false;
+      this.huronSettingsData.voicemailPilotNumber.number = '';
+      this.huronSettingsData.voicemailPilotNumber.voicemailPilotNumberGenerated = false;
     }
   }
 
   public onVoicemailToEmailChanged(voicemailToEmail: boolean) {
-    _.set(this.huronSettingsData.voicemailToEmailSettings, 'voicemailToEmail', voicemailToEmail);
+    this.voicemailToEmail = voicemailToEmail;
   }
 
-  public onCompanyCallerIdChanged(companyCallerId: CompanyNumber): void {
-    this.huronSettingsData.companyCallerId = companyCallerId;
+  public onCompanyCallerIdChanged(companyNumber: CompanyNumber): void {
+    this.huronSettingsData.callerIdNumber = companyNumber.name;
   }
 
   public onCompanyVoicemailFilter(filter: string): ng.IPromise<Array<IOption>> {
@@ -271,12 +275,4 @@ class LocationController implements ng.IComponentController {
       type: 'dialog',
     });
   }
-}
-
-export class LocationComponent {
-  public controller = LocationController;
-  public templateUrl = 'modules/call/locations/location/location.html';
-  public bindings = {
-
-  };
 }
