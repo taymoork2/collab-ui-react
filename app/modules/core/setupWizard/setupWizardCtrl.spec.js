@@ -213,6 +213,10 @@ describe('SetupWizardCtrl', function () {
 
     it('the wizard should have 4 tabs and no SSO setup if FTW', function () {
       _.set(this.$state, 'current.data.firstTimeSetup', true);
+      this.enabledFeatureToggles = [
+        this.FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
+      ];
+
       this.initController();
       this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
