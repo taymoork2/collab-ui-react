@@ -5,6 +5,7 @@ import { Notification } from 'modules/core/notifications';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/huron/settings/companyCallerId';
 import { AvrilService, IAvrilSite, AvrilSite, IAvrilFeatures, AvrilFeatures } from 'modules/huron/avril';
 import { TerminusService } from 'modules/huron/pstn';
+import { ExtensionLengthService } from './extensionLength.service';
 
 export class HuronSettingsData {
   public customer: CustomerSettings;
@@ -74,6 +75,7 @@ export class HuronSettingsService {
     private VoicemailMessageAction,
     private FeatureToggleService,
     private TerminusService: TerminusService,
+    private ExtensionLengthService: ExtensionLengthService,
   ) {
     //Avril and Unity Support
     this.FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable)
@@ -182,6 +184,23 @@ export class HuronSettingsService {
           .then(() => this.get(data.site.uuid || ''));
       }
     }
+  }
+
+  public saveExtensionLengthIncrease(newExtensionLength: string, extensionPrefix: string): ng.IPromise<any> {
+    return this.ExtensionLengthService.saveExtensionLength(newExtensionLength, extensionPrefix)
+      .then(() => {
+        if (this.huronSettingsDataCopy.customer.hasVoicemailService || !this.supportsAvrilVoicemailMailbox) {
+          return this.getVoicemailUserTemplate()
+            .then(userTemplate => {
+              // using the huronSettingsDataCopy object here because no other changes
+              // will be allowed when extension length is increased, so the data copy value will be
+              // correct.  Doing this allows us to not pass the routingPrefix around in components
+              // that don't care about it.
+              let postalCode = this.deriveVoicemailPostalCode(this.huronSettingsDataCopy.site.routingPrefix || '', newExtensionLength);
+              return this.updateVoicemailPostalCode(userTemplate.objectId, postalCode);
+            });
+        }
+      });
   }
 
   private createParallelRequests(data: HuronSettingsData): Array<ng.IPromise<any>> {
@@ -423,12 +442,6 @@ export class HuronSettingsService {
             if (!_.isEqual(this.huronSettingsDataCopy.site.timeZone, siteData.timeZone)
               || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)) {
               promises.push(this.updateVoicemailTimeZone(userTemplate.objectId, siteData.timeZone));
-            }
-            if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
-              || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
-              || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)
-              || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)) {
-              promises.push(this.updateAvrilSite(siteData, avrilFeatures));
             }
             if (promises.length > 0) {
               return this.$q.all(promises)
