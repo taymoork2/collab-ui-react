@@ -238,7 +238,7 @@
           fields: {
             promptTime: vm.promptTime.value,
             promptTitle: {
-              displayText: vm.orgName,
+              displayText: vm.orgName.slice(0, 50),
             },
             promptMessage: {
               message: $translate.instant('careChatTpl.defaultPromptMessage'),
@@ -565,7 +565,7 @@
           fields: {
             promptTime: vm.promptTime.value,
             promptTitle: {
-              displayText: vm.orgName,
+              displayText: vm.orgName.slice(0, 50),
             },
             promptMessage: {
               message: $translate.instant('careChatTpl.defaultPromptMessage'),
@@ -935,7 +935,7 @@
         fields: {
           promptTime: vm.promptTime.value,
           promptTitle: {
-            displayText: vm.orgName,
+            displayText: vm.orgName.slice(0, 50),
           },
           promptMessage: {
             message: $translate.instant('careChatTpl.defaultPromptMessage'),
