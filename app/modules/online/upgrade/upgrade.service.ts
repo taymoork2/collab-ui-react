@@ -11,6 +11,7 @@ export interface IProdInst {
   productInstanceId: string;
   subscriptionId: string;
   name: string;
+  autoBilling: boolean;
 }
 
 interface ISubscriptionResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
@@ -93,11 +94,13 @@ export class OnlineUpgradeService {
       productInstanceId: '',
       subscriptionId: '',
       name: '',
+      autoBilling: true,
     };
     if (productInstance) {
       prodInst.productInstanceId = productInstance.productInstanceId;
       prodInst.subscriptionId = productInstance.subscriptionInfo.subscriptionId;
       prodInst.name = productInstance.description;
+      prodInst.autoBilling = productInstance.autoBilling;
     }
 
     return prodInst;

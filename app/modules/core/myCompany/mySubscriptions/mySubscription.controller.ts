@@ -3,6 +3,7 @@ import { Notification } from 'modules/core/notifications';
 import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
 import { SharedMeetingsReportService } from './sharedMeetings/sharedMeetingsReport.service';
 import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from './subscriptionsInterfaces';
+import * as moment from 'moment';
 
 export class MySubscriptionCtrl {
   public hybridServices: Array<any> = [];
@@ -18,6 +19,9 @@ export class MySubscriptionCtrl {
   public temporarilyOverrideSharedMeetingsReportsFeatureToggle = { default: false, defaultValue: true };
   public bmmpAttr: IBmmpAttr;
   public licenseSummary: string;
+  public subExpiration: string;
+  public oneOnlineSub: boolean = false;
+  public showSingleSub: boolean = false;
 
   private readonly BASE_CATEGORY: ISubscriptionCategory = {
     offers: [],
@@ -215,6 +219,7 @@ export class MySubscriptionCtrl {
           isOnline: false,
           viewAll: false,
           numSubscriptions: subscriptions.length,
+          endDate: '',
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
@@ -224,6 +229,9 @@ export class MySubscriptionCtrl {
           if (subscription.internalSubscriptionId !== 'Trial') {
             newSubscription.isOnline = true;
           }
+        }
+        if (subscription.endDate) {
+          newSubscription.endDate = this.$translate.instant('subscriptions.endDate', { date: moment(subscription.endDate).format('MMM DD, YYYY') });
         }
 
         _.forEach(subscription.licenses, (license: any, licenseIndex: number): void => {
@@ -323,6 +331,8 @@ export class MySubscriptionCtrl {
       if (this.subscriptionDetails.length > 1 ||
          (this.subscriptionDetails.length === 1 && !this.subscriptionDetails[0].isOnline)) {
         this.licenseSummary = this.$translate.instant('subscriptions.licenseSummary');
+      } else if (this.subscriptionDetails.length === 1 && this.subscriptionDetails[0].isOnline) {
+        this.oneOnlineSub = true;
       }
 
       if (_.find(this.subscriptionDetails, 'isOnline')) {
@@ -349,6 +359,9 @@ export class MySubscriptionCtrl {
             }
           } else {
             const prodResponse: IProdInst = _.find(instances, ['subscriptionId', subscription.internalSubscriptionId]);
+            if (prodResponse.autoBilling) {
+              this.subscriptionDetails[index].endDate = '';
+            }
             if (subscription.isTrial) {
               this.setBMMPTrial(subscription, prodResponse);
             } else {
@@ -359,6 +372,10 @@ export class MySubscriptionCtrl {
             }
           }
         });
+        if (this.subscriptionDetails.length === 1 && (!this.subscriptionDetails[0].isTrial ||
+            this.subscriptionDetails[0].isOnline) && this.subscriptionDetails[0].subscriptionId) {
+          this.showSingleSub = true;
+        }
       });
     });
   }

@@ -60,7 +60,8 @@
     "isOnline": false,
     "viewAll": false,
     "name": "subscriptions.enterpriseTrial",
-    "numSubscriptions": 1
+    "numSubscriptions": 1,
+    "endDate": ""
   }],
   "subscriptionsResponse": [{
     "licenses": [{
@@ -454,7 +455,8 @@
     "isOnline": false,
     "viewAll": false,
     "name": "subscriptions.subscriptionNum",
-    "numSubscriptions": 1
+    "numSubscriptions": 1,
+    "endDate": ""
   }],
   "servicesResponse": [{
     "id": "squared-fusion-mgmt",
