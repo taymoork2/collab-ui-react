@@ -1,3 +1,4 @@
+import ILogService = angular.ILogService;
 class CustomerReportsHeaderCtrl {
   /* @ngInject */
   constructor(
@@ -7,6 +8,7 @@ class CustomerReportsHeaderCtrl {
     private FeatureToggleService,
     private MediaServiceActivationV2,
     private WebExApiGatewayService,
+    private ITProPackService,
   ) {
     if (Authinfo.isCare()) {
       this.headerTabs.push({
@@ -58,7 +60,7 @@ class CustomerReportsHeaderCtrl {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
     mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
-    webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
+    webexMetrics: this.ITProPackService.hasITProPackEnabled(),
   };
 
   private checkWebex (): void {

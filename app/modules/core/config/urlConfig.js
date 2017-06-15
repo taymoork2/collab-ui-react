@@ -230,16 +230,52 @@
       integration: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
-    WebexMetricsUrl: {
-      dev: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
-      cfe: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
-      integration: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
+    WebExReportQBSforBaseUrl: {
+      dev: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
+      cfe: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
+      integration: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
       prod: '',
     },
-    SparkMetricsUrl: {
-      dev: 'https://ds2-win2012-01/',
-      cfe: 'https://ds2-win2012-01/',
-      integration: 'https://ds2-win2012-01/',
+    SparkReportQBSforBaseUrl: {
+      dev: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_spark_v1',
+      cfe: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_spark_v1',
+      integration: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_spark_v1',
+      prod: '',
+    },
+    WebExReportQBSforPremiumUrl: {
+      dev: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/premium_webex_v1',
+      cfe: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/premium_webex_v1',
+      integration: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/premium_webex_v1',
+      prod: '',
+    },
+    SparkReportQBSforPremiumUrl: {
+      dev: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/premium_spark_v1',
+      cfe: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/premium_spark_v1',
+      integration: 'https://10.224.166.46:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/premium_spark_v1',
+      prod: '',
+    },
+    WebExReportAppforBaseUrl: {
+      dev: 'https://10.29.42.18/custportal/extensions/webex-report-basic/webex-report-basic.html',
+      cfe: 'https://10.29.42.18/custportal/extensions/webex-report-basic/webex-report-basic.html',
+      integration: 'https://10.29.42.18/custportal/extensions/webex-report-basic/webex-report-basic.html',
+      prod: '',
+    },
+    SparkReportAppforBaseUrl: {
+      dev: 'https://qlik-loader/custportal/extensions/spark-report-basic/spark-report-basic.html',
+      cfe: 'https://qlik-loader/custportal/extensions/spark-report-basic/spark-report-basic.html',
+      integration: 'https://qlik-loader/custportal/extensions/spark-report-basic/spark-report-basic.html',
+      prod: '',
+    },
+    WebExReportAppforPremiumUrl: {
+      dev: 'https://qlik-loader/custportal/extensions/webex-report-premium/webex-report-premium.html',
+      cfe: 'https://qlik-loader/custportal/extensions/webex-report-premium/webex-report-premium.html',
+      integration: 'https://qlik-loader/custportal/extensions/webex-report-premium/webex-report-premium.html',
+      prod: '',
+    },
+    SparkReportAppforPremiumUrl: {
+      dev: 'https://qlik-loader/custportal/extensions/spark-report-premium/spark-report-premium.html',
+      cfe: 'https://qlik-loader/custportal/extensions/spark-report-premium/spark-report-premium.html',
+      integration: 'https://qlik-loader/custportal/extensions/spark-report-premium/spark-report-premium.html',
       prod: '',
     },
     // urls same for all environments
