@@ -1,7 +1,5 @@
 'use strict';
 
-var featureToggle = require('../utils/featureToggle.utils');
-
 /* global LONG_TIMEOUT */
 
 describe('Partner flow', function () {
@@ -125,22 +123,10 @@ describe('Partner flow', function () {
       utils.waitForText(wizard.mainviewTitle, 'Plan Review');
       utils.click(wizard.beginBtn);
       utils.click(wizard.saveBtn);
-
       utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');
-      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
-        // click "Save" instead of "Next" because there are no SSO steps
-        // goes to last tab because there is no Add Users
-        utils.click(wizard.saveBtn);
-      } else {
-        // TODO: remove when feature toggle is removed
-        utils.click(wizard.nextBtn);
-        utils.click(wizard.nextBtn);
-
-        utils.waitForText(wizard.mainviewTitle, 'Add Users');
-        utils.expectIsDisplayed(wizard.skipBtn);
-        utils.click(wizard.nextBtn);
-        utils.click(wizard.saveBtn);
-      }
+      // click "Save" instead of "Next" because there are no SSO steps
+      // goes to last tab because there is no Add Users
+      utils.click(wizard.saveBtn);
       notifications.clearNotifications();
 
       utils.waitForText(wizard.mainviewTitle, 'Get Started');

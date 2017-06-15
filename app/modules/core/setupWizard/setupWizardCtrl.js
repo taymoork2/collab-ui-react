@@ -6,7 +6,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils, DirSyncService) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveAddUserTab = false;
     var shouldRemoveSSOSteps = false;
@@ -23,20 +23,10 @@ require('./_setup-wizard.scss');
     }
 
     function initToggles() {
-      var atlasFTSWRemoveUsersSSOPromise = FeatureToggleService.supports(FeatureToggleService.features.atlasFTSWRemoveUsersSSO)
-        .then(function (atlasFTSWRemoveUsersSSO) {
-          if (atlasFTSWRemoveUsersSSO) {
-            shouldRemoveAddUserTab = true;
-            if (isFirstTimeSetup) {
-              shouldRemoveSSOSteps = true;
-            }
-          } else {
-            return DirSyncService.refreshStatus().then(function () {
-              $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
-            });
-          }
-        });
-
+      shouldRemoveAddUserTab = true;
+      if (isFirstTimeSetup) {
+        shouldRemoveSSOSteps = true;
+      }
       var tenDigitExtPromise = FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
         .then(function (sparkCallTenDigitExt) {
           $scope.sparkCallTenDigitExtEnabled = sparkCallTenDigitExt;
@@ -60,7 +50,6 @@ require('./_setup-wizard.scss');
         });
 
       return $q.all([
-        atlasFTSWRemoveUsersSSOPromise,
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
         tenDigitExtPromise,

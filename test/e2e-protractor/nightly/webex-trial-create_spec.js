@@ -1,7 +1,5 @@
 'use strict';
 
-var featureToggle = require('../utils/featureToggle.utils');
-
 /* global LONG_TIMEOUT */
 
 describe('WebEx Trial Creation', function () {
@@ -85,27 +83,12 @@ describe('WebEx Trial Creation', function () {
       utils.waitForText(wizard.sipURLExample, 'These subdomains will be reserved for you:');
       utils.sendKeys(wizard.sipDomain, partner.newTrial.sipDomain + protractor.Key.ENTER);
       utils.click(wizard.saveCheckbox);
-
-      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
-        // click "Save" instead of "Next" because there are no SSO steps
-        // goes to last tab because there is no Add Users
-        utils.click(wizard.saveBtn);
-        notifications.assertSuccess('The Spark SIP Address has been successfully saved');
-      } else {
-        // TODO remove when feature toggle is removed
-        utils.click(wizard.nextBtn);
-        notifications.assertSuccess('The Spark SIP Address has been successfully saved');
-
-        utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');
-        utils.click(wizard.nextBtn);
-
-        utils.waitForText(wizard.mainviewTitle, 'Add Users');
-        utils.click(wizard.skipBtn);
-      }
-
+      // click "Save" instead of "Next" because there are no SSO steps
+      // goes to last tab because there is no Add Users
+      utils.click(wizard.saveBtn);
+      notifications.assertSuccess('The Spark SIP Address has been successfully saved');
       utils.waitForText(wizard.mainviewTitle, 'Get Started');
       utils.click(wizard.finishBtn);
-
       navigation.expectDriverCurrentUrl('overview');
       utils.waitIsDisplayed(navigation.tabs);
     }, LONG_TIMEOUT);
