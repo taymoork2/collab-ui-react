@@ -189,7 +189,7 @@ export class HuronSettingsService {
   public saveExtensionLengthIncrease(newExtensionLength: string, extensionPrefix: string): ng.IPromise<any> {
     return this.ExtensionLengthService.saveExtensionLength(newExtensionLength, extensionPrefix)
       .then(() => {
-        if (this.huronSettingsDataCopy.customer.hasVoicemailService || !this.supportsAvrilVoicemailMailbox) {
+        if (this.huronSettingsDataCopy.customer.hasVoicemailService && !this.supportsAvrilVoicemailMailbox) {
           return this.getVoicemailUserTemplate()
             .then(userTemplate => {
               // using the huronSettingsDataCopy object here because no other changes
