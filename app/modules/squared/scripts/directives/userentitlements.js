@@ -14,9 +14,9 @@
     var services = Authinfo.getServices();
     var entitlementsCopy = _.clone($scope.entitlements);
 
-    if ($scope.service && $scope.hasAccount) {
+    if ($scope.licenseType && $scope.hasAccount) {
       services = services.filter(function (service) {
-        return service.isConfigurable && service.licenseType === $scope.service;
+        return service.isConfigurable && service.licenseType === $scope.licenseType;
       });
     }
 
@@ -181,7 +181,7 @@
         currentUser: '=',
         entitlements: '=',
         queryuserslist: '=',
-        service: '=',
+        licenseType: '<',
       },
       templateUrl: 'modules/squared/scripts/directives/views/userentitlements.html',
     };

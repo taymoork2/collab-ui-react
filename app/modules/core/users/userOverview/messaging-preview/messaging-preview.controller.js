@@ -12,8 +12,8 @@ function MessagingPreviewCtrl($scope, $state, $stateParams) {
   init();
 
   function init() {
-    if ($stateParams.service) {
-      $ctrl.licenseType = $stateParams.service;
+    if ($stateParams.licenseType) {
+      $ctrl.licenseType = $stateParams.licenseType;
     }
 
     $scope.$on('entitlementsUpdated', $ctrl.resetButtons);

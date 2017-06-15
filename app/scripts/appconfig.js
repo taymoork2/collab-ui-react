@@ -1358,7 +1358,7 @@
               displayName: 'Message',
             },
             params: {
-              service: 'MESSAGING',
+              licenseType: 'MESSAGING',
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
