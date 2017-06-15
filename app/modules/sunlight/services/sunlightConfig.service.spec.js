@@ -7,7 +7,7 @@
 var testModule = require('./index').default;
 
 describe(' sunlightConfigService', function () {
-  var sunlightConfigService, $httpBackend, sunlightUserConfigUrl, sunlightCSOnboardUrl,
+  var sunlightConfigService, $httpBackend, sunlightUserConfigUrl, sunlightCSOnboardUrl, sunlightBotAppOnboardUrl,
     sunlightChatConfigUrl, sunlightChatTemplateUrl, chatConfig, userData, userId, orgId, csConnString, templateId;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -35,6 +35,7 @@ describe(' sunlightConfigService', function () {
     sunlightChatTemplateUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/template';
     sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
     sunlightCSOnboardUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/csonboard';
+    sunlightBotAppOnboardUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/apponboard';
   }));
 
   it('should get Chat Config for a give orgId', function () {
@@ -181,6 +182,13 @@ describe(' sunlightConfigService', function () {
 
   it('should call config cs onboard api, when onBoardCare is called', function () {
     $httpBackend.whenPUT(sunlightCSOnboardUrl).respond(200, {});
+    sunlightConfigService.onBoardCare().then(function (response) {
+      expect(response.status).toBe(200);
+    });
+  });
+
+  it('should call config app onboard api, when onBoardCare is called', function () {
+    $httpBackend.whenPUT(sunlightBotAppOnboardUrl).respond(200, {});
     sunlightConfigService.onBoardCare().then(function (response) {
       expect(response.status).toBe(200);
     });
