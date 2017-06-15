@@ -1,3 +1,5 @@
+import { BYO_PSTN } from '../pstn.const';
+import { PRIVATE_PSTN_TRUNK } from '../pstn.const';
 export interface IPstnCarrierGet {
   apiImplementation: string;
   country: string;
@@ -132,7 +134,9 @@ export class PstnCarrier {
     this.vendor = carrier.vendor;
     this.voiceCarrierRef = carrier.voiceCarrierRef;
 
-    if (_.isString(this.displayName) && this.displayName.length > 0) {
+    if (_.isString(this.name) && this.name ===  BYO_PSTN) {
+      this.title = PRIVATE_PSTN_TRUNK;
+    } else if (_.isString(this.displayName) && this.displayName.length > 0) {
       this.title = this.displayName;
     } else if (_.isString(this.name) && this.name.length > 0) {
       this.title = this.name;
