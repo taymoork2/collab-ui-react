@@ -156,7 +156,6 @@ describe('Manage Users - CSV File -', function () {
       utils.expectTextToBeSet(manageUsersPage.importStatus.progressFileName, CSV_FILE_NAME);
 
       // import complete.  check our results
-      utils.waitForPresence(manageUsersPage.importStatus.uploadComplete);
       utils.expectTextToBeSet(manageUsersPage.importStatus.uploadComplete, 'Completed ' + CSV_FILE_NAME + ' at');
 
       utils.expectTextToBeSet(manageUsersPage.importStatus.newUsers, '' + userList.length);

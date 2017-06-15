@@ -305,14 +305,16 @@ exports.waitIsNotDisplayed = exports.expectIsNotDisplayed;
 exports.waitIsDisplayed = exports.expectIsDisplayed;
 
 exports.expectTextToBeSet = function (elem, text, timeout) {
-  browser.wait(function () {
-    return elem.getText().then(function (result) {
-      log('Waiting for element (' + elem.locator() + ').getText() to contain "' + text + '" currently "' + result + '"');
-      return result !== undefined && result !== null && result.indexOf(text) > -1;
-    }, function () {
-      return false;
-    });
-  }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
+  return exports.wait(elem, timeout).then(function () {
+    return browser.wait(function () {
+      return elem.getText().then(function (result) {
+        log('Waiting for element (' + elem.locator() + ').getText() to contain "' + text + '" currently "' + result + '"');
+        return result !== undefined && result !== null && result.indexOf(text) > -1;
+      }, function () {
+        return false;
+      });
+    }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
+  });
 };
 
 exports.waitForAttribute = function (elem, attr, value) {
