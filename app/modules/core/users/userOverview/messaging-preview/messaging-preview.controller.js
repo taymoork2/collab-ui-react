@@ -4,34 +4,34 @@ module.exports = MessagingPreviewCtrl;
 
 /* @ngInject */
 function MessagingPreviewCtrl($scope, $state, $stateParams) {
-  var $ctrl = this;
-  $ctrl.resetButtons = resetButtons;
-  $ctrl.save = save;
-  $ctrl.cancel = cancel;
+  var vm = this;
+  vm.resetButtons = resetButtons;
+  vm.save = save;
+  vm.cancel = cancel;
 
   init();
 
   function init() {
     if ($stateParams.licenseType) {
-      $ctrl.licenseType = $stateParams.licenseType;
+      vm.licenseType = $stateParams.licenseType;
     }
 
-    $scope.$on('entitlementsUpdated', $ctrl.resetButtons);
+    $scope.$on('entitlementsUpdated', vm.resetButtons);
   }
 
   function resetButtons() {
-    $ctrl.isLoading = false;
-    $ctrl.form.$setPristine();
-    $ctrl.form.$setUntouched();
+    vm.isLoading = false;
+    vm.form.$setPristine();
+    vm.form.$setUntouched();
   }
 
   function save() {
-    $ctrl.isLoading = true;
+    vm.isLoading = true;
     $scope.$broadcast('save');
   }
 
   function cancel() {
-    $ctrl.resetButtons();
+    vm.resetButtons();
     $scope.$broadcast('cancel');
   }
 }
