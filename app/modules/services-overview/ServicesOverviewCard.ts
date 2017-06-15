@@ -4,7 +4,7 @@ export interface ICardButton {
   routerState?: string;
   buttonState?: string;
   externalLink?: string;
-  onClick?: any;
+  onClick?: () => void;
 }
 
 export interface ICardStatus {

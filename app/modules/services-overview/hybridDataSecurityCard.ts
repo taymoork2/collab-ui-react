@@ -66,12 +66,12 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
 
   /* @ngInject */
   public constructor(
+    private $state,
     private Authinfo,
     private Config,
+    private Notification,
+    private HDSService: HDSService,
     HybridServicesClusterStatesService: HybridServicesClusterStatesService,
-    HDSService: HDSService,
-    private $state,
-    Notification,
   ) {
     super({
       active: false,
@@ -90,6 +90,8 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     this.hasITProPackPurchased = false;
     this.hasITProPackEnabled = false;
     this.$state = $state;
+    this.Notification = Notification;
+    this.HDSService = HDSService;
     this.setupButton.onClick = function () {
       let hdsEntitlementObj = {
         ciName: Config.entitlements.hds,
