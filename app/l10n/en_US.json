@@ -7290,8 +7290,6 @@
     "resend": "Resend Invite",
     "resendSuccess": "Invitation resent successfully.",
     "sendCode": "Send Code",
-    "more": "More",
-    "less": "Less",
     "usage": "{{usage}} of {{volume}} in use",
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
