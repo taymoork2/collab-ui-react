@@ -363,6 +363,7 @@
         $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
         $translateProvider.preferredLanguage(languagesProvider.getPreferredLanguage());
         $translateProvider.fallbackLanguage(languagesProvider.getFallbackLanguage());
+        $translateProvider.useMissingTranslationHandler('missingTranslationHandler');
 
         $httpProvider.interceptors.push('TrackingIdInterceptor');
         $httpProvider.interceptors.push('ResponseInterceptor');

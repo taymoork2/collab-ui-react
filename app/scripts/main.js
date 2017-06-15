@@ -18,6 +18,7 @@
     require('modules/core/l10n').default,
     'core.localize',
     'core.logmetricsservice',
+    require('modules/core/scripts/services/missing-translation-handler.factory').default,
     'core.meeting-settings',
     require('modules/core/notifications').default,
     require('modules/core/users/userAdd/onboard.module'),
