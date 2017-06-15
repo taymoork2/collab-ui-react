@@ -689,6 +689,23 @@ describe('Care Setup Assistant Ctrl', function () {
     });
   });
 
+  describe('Proactive Prompt Page (when Org Name is > 50 characters', function () {
+    var LongOrgId = Array(52).join("a");
+    var spiedAuthinfos = {
+      getOrgId: jasmine.createSpy('getOrgId').and.returnValue(OrgId),
+      getOrgName: jasmine.createSpy('getOrgName').and.returnValue(LongOrgId),
+    };
+    beforeEach(angular.mock.module(function ($provide) {
+      $provide.value("Authinfo", spiedAuthinfos);
+    }));
+    beforeEach(inject(intializeCtrl()));
+
+    it("should set default promptTitle to Org Name (up-to first 50 characters only)", function () {
+      expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
+        .toEqual(controller.orgName.slice(0, 50));
+    });
+  });
+
   describe('Proactive Prompt Data for existing templates', function () {
     beforeEach(inject(intializeCtrl(existingTemplateData, true)));
     beforeEach(function () {
