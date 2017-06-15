@@ -4,6 +4,7 @@ import lineService from 'modules/huron/lines/services';
 import directoryNumber from 'modules/huron/directoryNumber';
 import callForward from 'modules/huron/callForward';
 import simultaneousCalls from 'modules/huron/simultaneousCalls';
+import lineLabel from 'modules/huron/lineLabel';
 import callerId from 'modules/huron/callerId';
 import sharedLine from 'modules/huron/sharedLine';
 import siteService from 'modules/huron/sites';
@@ -19,6 +20,7 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
+    lineLabel,
     directoryNumber,
     callForward,
     simultaneousCalls,
