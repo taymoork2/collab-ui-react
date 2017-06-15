@@ -13,6 +13,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   private statTemplate;
   public filters: any[];
   private searchStr: string;
+  private nextUrl: string;
 
   /* @ngInject */
   constructor(
@@ -24,6 +25,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     private Notification: Notification,
     private $templateCache,
     private $filter: ng.IFilterService,
+    private $scope: ng.IScope,
   ) {
     this.orgId = this.Authinfo.getOrgId();
     this.orgName = this.Authinfo.getOrgName();
@@ -74,6 +76,8 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
         this.userStatuses = result.userStatuses;
         this.fetchedUserStatuses = result.userStatuses;
         if (result.paging.next) {
+          this.nextUrl = result.paging.next;
+          this.$log.debug('nextUrl', this.nextUrl);
           this.userStatusesSummaryText = this.$translate.instant('cmc.statusPage.listingFirstActiveUsers', { noOfActiveUsers: this.userStatuses.length });
         } else {
           this.userStatusesSummaryText = '';
@@ -113,6 +117,9 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     this.gridOptions = {
       rowHeight: 37,
       data: '$ctrl.userStatuses',
+      onRegisterApi: (gridApi) => {
+        this.onRegisterApi(gridApi);
+      },
       multiSelect: false,
       columnDefs: columnDefs,
       enableColumnMenus: false,
@@ -121,6 +128,17 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
       enableHorizontalScrollbar: 0,
       enableVerticalScrollbar: 2,
     };
+  }
+
+  // This is base for paging
+  private onRegisterApi(gridApi): void {
+    gridApi.infiniteScroll.on.needLoadMoreData(this.$scope, () => {
+      this.$log.debug('needLoadMoreData');
+    });
+    gridApi.infiniteScroll.on.needLoadMoreDataTop(this.$scope, () => {
+      this.$log.debug('needLoadMoreDataTop');
+    });
+    this.$log.debug('gridApi', gridApi);
   }
 }
 
