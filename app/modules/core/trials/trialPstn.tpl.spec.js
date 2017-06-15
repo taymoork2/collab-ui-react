@@ -39,7 +39,9 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     PstnService = _PstnService_;
 
     spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'huronSupportThinktelGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'huronFederatedSparkCallGetStatus').and.returnValue($q.resolve(true));
+
     spyOn(Analytics, 'trackTrialSteps');
     spyOn(PstnService, 'getResellerV2').and.returnValue($q.resolve());
   }

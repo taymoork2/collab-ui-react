@@ -12,7 +12,7 @@
   },
   "scripts": {
     "analyze": "npm run build -- --env.analyze",
-    "build": "npm run clean && webpack --bail --progress --profile",
+    "build": "npm run clean && node --max-old-space-size=2048 ./node_modules/.bin/webpack --bail --profile",
     "clean-install": "npm cache clean && rimraf node_modules && npm install",
     "clean-test": "rimraf ./test/results ./test/coverage && npm test",
     "clean": "rimraf dist dist-source-map build",

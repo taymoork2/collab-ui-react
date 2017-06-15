@@ -622,6 +622,7 @@
       "nameNotFoundFor": "Name not found for",
       "nameNotResolvedFor": "Name not resolved for",
       "timeoutWhenTryingToResolveNameFor": "Timeout when trying to resolve name for",
+      "timeoutWhenFetchingMetrics": "Timeout when trying to get metrics for selected models",
       "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
         "all": "All",
@@ -2106,7 +2107,7 @@
       "upgradeNow": "Upgrade Now"
     },
     "expresswayClusterSettings": {
-      "pageTitle": "{{clusterName}} settings",
+      "pageTitle": "{{clusterName}}",
       "upgradeScheduleHeader": "Upgrade",
       "upgradeScheduleSubHeader": "Upgrade Schedule",
       "resourceGroupsHeader": "Resource Group",
@@ -2701,7 +2702,8 @@
       "version": "Version",
       "noNodes": "No nodes found",
       "loadingError": "Could not load cluster data",
-      "viewList": "View list",
+      "viewList": "Open nodes list",
+      "viewListDescription": "Open nodes list to review alarms and install upgrades",
       "enableMaintenanceMode": "Enable maintenance mode",
       "disableMaintenanceMode": "Disable maintenance mode",
       "goToNode": "Go to node",

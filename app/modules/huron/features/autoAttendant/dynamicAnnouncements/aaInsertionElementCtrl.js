@@ -6,12 +6,12 @@
     .controller('AAInsertionElementCtrl', AAInsertionElementCtrl);
 
   /* @ngInject */
-  function AAInsertionElementCtrl($scope, $modal, $translate, AAUiModelService, AACommonService) {
+  function AAInsertionElementCtrl($scope, $modal, $translate, AAUiModelService, AACommonService, AADynaAnnounceService) {
 
     var vm = this;
 
     var ui;
-    var uiMenu;
+
     vm.mainClickFn = mainClickFn;
     vm.variableOptions = [
       {
@@ -31,15 +31,14 @@
         value: 'Original-Caller-Area-Code',
       },
     ];
-    //vm.closeClickFn = closeClickFn;
+    vm.closeClickFn = closeClickFn;
 
     /////////////////////
 
     function mainClickFn() {
 
-      populateUiModel();
-
       var id = $scope.elementId;
+      populateUiModel(id);
       var dynaList = vm.menuEntry.dynamicList;
       _.forEach(dynaList, function (node) {
         var html = decodeURIComponent(node.htmlModel);
@@ -51,7 +50,7 @@
               vm.readAs = result.readAs.value;
               node.say.value = result.variable.value;
               node.say.as = vm.readAs;
-              var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + '"></aa-insertion-element>';
+              var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '"></aa-insertion-element>';
               node.htmlModel = encodeURIComponent(ele);
               AACommonService.setSayMessageStatus(true);
             }
@@ -78,12 +77,55 @@
       });
     }
 
-    //function closeClickFn() {}
+    function closeClickFn() {
+      var range = AADynaAnnounceService.getRange();
+      range.endContainer.parentElement.parentElement.parentElement.remove();
 
-    function populateUiModel() {
+      var id = $scope.elementId;
+      populateUiModel(id);
+      var dynaList = vm.menuEntry.dynamicList;
+      _.forEach(dynaList, function (node) {
+        var html = decodeURIComponent(node.htmlModel);
+        if (html.search(id) >= 0) {
+          vm.elementText = '';
+          vm.readAs = '';
+          node.say = {
+            value: '',
+            voice: '',
+          };
+          node.isDynamic = false;
+          node.htmlModel = '';
+          AACommonService.setSayMessageStatus(true);
+        }
+      });
+    }
+
+    function populateUiModel(elementId) {
+      var found = false;
       ui = AAUiModelService.getUiModel();
-      uiMenu = ui[$scope.schedule];
-      vm.menuEntry = uiMenu.entries[$scope.index];
+      //checking the menuEntry which contains dynamic element corresponding to elementId
+      _.some(ui, function (uiMenu) {
+        var menuEntries = uiMenu.entries;
+        _.some(menuEntries, function (menuEntry) {
+          if (menuEntry.dynamicList) {
+            var dynaList = menuEntry.dynamicList;
+            _.some(dynaList, function (node) {
+              var html = decodeURIComponent(node.htmlModel);
+              if (html.search(elementId) >= 0) {
+                vm.menuEntry = menuEntry;
+                found = true;
+                return found;
+              }
+            });
+            if (found) {
+              return true;
+            }
+          }
+        });
+        if (found) {
+          return true;
+        }
+      });
     }
 
     function setUp() {

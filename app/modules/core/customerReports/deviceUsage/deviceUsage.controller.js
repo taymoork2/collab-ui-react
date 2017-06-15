@@ -211,13 +211,13 @@ require('modules/core/reports/amcharts-export.scss');
     }
 
     function fillInStats(data, start, end, models) {
+      vm.mostUsedDevices = [];
+      vm.leastUsedDevices = [];
       DeviceUsageService.extractStats(data, start, end, models).then(function (stats) {
         vm.totalDuration = secondsTohhmmss(stats.totalDuration);
         vm.noOfCalls = stats.noOfCalls;
         vm.noOfDevices = stats.noOfDevices;
         vm.waitingForDeviceMetrics = false;
-        vm.mostUsedDevices = [];
-        vm.leastUsedDevices = [];
         vm.peopleCount = stats.peopleCount;
 
         vm.peopleCount = _.groupBy(vm.peopleCount, function (pc) {
@@ -242,6 +242,15 @@ require('modules/core/reports/amcharts-export.scss');
             });
         } else {
           vm.waitForLeast = false;
+        }
+      }).catch(function (error) {
+        if (error.timedout) {
+          clearDisplayedStats();
+          vm.waitForLeast = false;
+          vm.waitForMost = false;
+          vm.waitingForDeviceMetrics = false;
+          var msg = $translate.instant('reportsPage.usageReports.timeoutWhenFetchingMetrics');
+          Notification.error(msg);
         }
       });
     }

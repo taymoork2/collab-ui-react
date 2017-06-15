@@ -4,7 +4,7 @@ import { BulkEnableVmError, UsersInfo } from './bulkEnableVm';
 const MAXUSERS = 200;
 const LIMIT = 4;
 const AVRIL = 'AVRIL';
-
+const VOICEMAIL = 'VOICEMAIL';
 export class BulkEnableVmCtrl implements ng.IComponentController {
   public processProgress: number;
   public totalUsersCount: number;
@@ -17,6 +17,7 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
   public allUsersEnabled: boolean;
   public scope: Object;
   public avrilVmEnable: boolean;
+  public avrilOnlyEnable: boolean;
   /* @ngInject */
   constructor(
     private BulkEnableVmService: BulkEnableVmService,
@@ -38,9 +39,10 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
     this.allUsersEnabled = false;
     this.enableVoicemailForCustomer();
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmEnable).then((result) => {
-      this.avrilVmEnable = result;
-    });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmEnable).then(result => this.avrilVmEnable = result);
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmMailboxEnable)
+      .then(result => this.avrilOnlyEnable = result);
 
     this.scope = this;
   }
@@ -98,7 +100,7 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
       for (let i = 0; i < Users.length; i++) {
         let voicemailEnabled = false;
         for (let linkIndex = 0; linkIndex < Users[i].links.length; linkIndex++) {
-          if (Users[i].links[linkIndex].rel === 'voicemail') {
+          if (Users[i].links[linkIndex].rel === VOICEMAIL || Users[i].links[linkIndex].rel === AVRIL) {
             voicemailEnabled = true;
           }
         }
@@ -135,13 +137,18 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
       let userServices = new Array<string>();
       /* find the service list */
       return this.BulkEnableVmService.getUserServicesRetry(userId)
-        .then(services => {
+        .then((services: string[]) => {
           userServices = _.cloneDeep(services);
-          if (userServices.indexOf('VOICEMAIL') < 0) {
-            userServices.push('VOICEMAIL');
-            if (this.avrilVmEnable) {
-              userServices.push(AVRIL);
-            }
+          let isVoicemail = false;
+          if (!this.avrilOnlyEnable && userServices.indexOf(VOICEMAIL) < 0) {
+            userServices.push(VOICEMAIL);
+            isVoicemail = true;
+          }
+          if (this.avrilVmEnable || this.avrilOnlyEnable) {
+            userServices.push(AVRIL);
+            isVoicemail = true;
+          }
+          if (isVoicemail) {
             return this.BulkEnableVmService.getUserSitetoSiteNumberRetry(userId);
           }
           return this.$q.resolve('');

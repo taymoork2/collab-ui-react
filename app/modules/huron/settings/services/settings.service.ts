@@ -54,9 +54,9 @@ export class HuronSettingsService {
   private huronSettingsDataCopy: HuronSettingsData;
   private errors: Array<any> = [];
   private VOICE_ONLY = 'VOICE_ONLY';
-  private DEMO_STANDARD = 'DEMO_STANDARD';
-  private VOICE_VOICEMAIL = 'VOICE_VOICEMAIL';
-  private VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL';
+  private DEMO_STANDARD = 'DEMO_STANDARD'; // Unity only
+  private VOICE_VOICEMAIL = 'VOICE_VOICEMAIL'; // Avril Only
+  private VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL'; // Unity and Avril
   private supportsAvrilVoicemail: boolean = false;
   private supportsAvrilVoicemailMailbox: boolean = false;
 
@@ -75,10 +75,10 @@ export class HuronSettingsService {
     private FeatureToggleService,
     private TerminusService: TerminusService,
   ) {
-
+    //Avril and Unity Support
     this.FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable)
       .then(result => this.supportsAvrilVoicemail = result);
-
+    //Avril only, Should have supportsAvrilVoicemail = false
     this.FeatureToggleService.supports(FeatureToggleService.features.avrilVmMailboxEnable)
       .then(result => this.supportsAvrilVoicemailMailbox = result);
   }
@@ -91,18 +91,18 @@ export class HuronSettingsService {
         .then(site => {
           huronSettingsData.site = site;
           return this.getCustomer()
-            .then(customer => {
+            .then((customer: CustomerSettings) => {
               huronSettingsData.customer = customer;
-              if (_.get<boolean>(customer, 'hasVoicemailService') && !this.supportsAvrilVoicemail) {
+              if (_.get<boolean>(customer, 'hasVoicemailService') && !this.supportsAvrilVoicemailMailbox) {
                 return this.getVoicemailUserTemplate()
-                  .then(userTemplate => this.getVoicemailToEmail(userTemplate.objectId))
+                  .then(userTemplate => this.getVoicemailToEmail(_.get(userTemplate, 'objectId', '')))
                   .then(voicemailToEmailSettings => {
                     huronSettingsData.voicemailToEmailSettings = {
                       messageActionId: voicemailToEmailSettings.messageActionId,
                       voicemailToEmail: voicemailToEmailSettings.voicemailToEmail,
                     };
                   });
-              } else if (_.get<boolean>(customer, 'hasVoicemailService') && this.supportsAvrilVoicemail) {
+              } else if (_.get<boolean>(customer, 'hasVoicemailService') && this.supportsAvrilVoicemailMailbox) {
                 return this.getAvrilSite(site)
                   .then(avrilSite => {
                     huronSettingsData.avrilFeatures = avrilSite.features;
@@ -390,7 +390,7 @@ export class HuronSettingsService {
     if (customerData.hasVoicemailService) {
       if (this.supportsAvrilVoicemail && !this.supportsAvrilVoicemailMailbox) {
         _.set(customer, 'servicePackage', this.VOICE_VOICEMAIL_AVRIL);
-      } else if (this.supportsAvrilVoicemail && this.supportsAvrilVoicemailMailbox) {
+      } else if (!this.supportsAvrilVoicemail && this.supportsAvrilVoicemailMailbox) {
         _.set(customer, 'servicePackage', this.VOICE_VOICEMAIL);
       } else {
         _.set(customer, 'servicePackage', this.DEMO_STANDARD);
@@ -437,7 +437,7 @@ export class HuronSettingsService {
               return this.$q.resolve();
             }
           });
-      } else if (this.supportsAvrilVoicemail) { // only update Avril if needed
+      } else if (this.supportsAvrilVoicemailMailbox) { // only update Avril if needed
         if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
           || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
           || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)

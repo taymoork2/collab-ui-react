@@ -12,6 +12,7 @@ export * from './pstn.const';
 export * from './pstn.model';
 export * from './pstn.service';
 export * from './terminus.service';
+export * from './pstnProviders';
 
 export default angular
   .module('huron.pstn', [

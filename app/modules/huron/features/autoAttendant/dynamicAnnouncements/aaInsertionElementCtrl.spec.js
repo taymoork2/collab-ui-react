@@ -34,7 +34,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
     ui[schedule] = uiMenu;
     menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
-    var ele = '<aa-insertion-element element-text="testValue" read-as="testReadValue" element-id="1011" aa-schedule="openHours" aa-index="testIndex"></aa-insertion-element>';
+    var ele = '<aa-insertion-element element-text="testValue" read-as="testReadValue" element-id="1011"></aa-insertion-element>';
     menuEntry.dynamicList = [{
       say: {
         value: 'testValue',

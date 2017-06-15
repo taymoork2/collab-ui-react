@@ -201,6 +201,7 @@ describe('crUserCsvResults Component', () => {
       expect(this.view.find('.stat.error-users .total').text()).toEqual('4');
       expect(this.view.find('.upload-errors')).toHaveLength(1);
       expect(this.view.find('.table-body .row')).toHaveLength(4);
+      expect(this.view.find('.csv-download .stat')).not.toHaveClass('ng-hide');
 
     });
 

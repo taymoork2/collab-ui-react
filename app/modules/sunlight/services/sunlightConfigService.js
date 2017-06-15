@@ -21,6 +21,7 @@
       onBoardCare: onBoardCare,
       updateChatConfig: updateChatConfig,
       aaOnboard: aaOnboard,
+      onboardCareBot: onboardCareBot,
     };
 
     return service;
@@ -68,6 +69,11 @@
     function aaOnboard() {
       var onboardPayload = {};
       return $http.post(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/aaonboard', onboardPayload);
+    }
+
+    function onboardCareBot() {
+      var onboardPayload = {};
+      return $http.post(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/apponboard', onboardPayload);
     }
   }
 

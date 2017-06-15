@@ -42,7 +42,18 @@ exports.resolvePath = function (filePath) {
 };
 
 exports.writeFile = function (file, text) {
-  return fs.writeFileSync(file, text);
+  return protractor.promise.controlFlow().execute(function () {
+    var defer = protractor.promise.defer();
+    fs.writeFile(file, text, function (err) {
+      if (err) {
+        console.log('error in writeFile: ', err);
+        defer.reject(err);
+      } else {
+        defer.fulfill();
+      }
+    });
+    return defer.promise;
+  });
 };
 
 exports.deleteFile = function (file) {

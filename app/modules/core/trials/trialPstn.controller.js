@@ -35,14 +35,19 @@
     vm.checkForInvalidTokens = checkForInvalidTokens;
     vm.skip = skip;
     vm.disableNextButton = disableNextButton;
-    vm._getCarriers = _getCarriers;
+    vm.getCarriers = getCarriers;
     vm.onProviderChange = onProviderChange;
     vm.onProviderReady = onProviderReady;
     vm.addToCart = addToCart;
     vm.removeOrder = removeOrder;
     vm.maxSelection = pstnTokenLimit;
     vm.manualTokenChange = manualTokenChange;
+    vm.changePstnProviderImplementation = changePstnProviderImplementation;
     vm.location = '';
+    vm.errorMessages = {
+      email: $translate.instant('common.invalidEmail'),
+      required: $translate.instant('common.required'),
+    };
     vm.paginateOptions = {
       currentPage: 0,
       pageSize: pageSize,
@@ -100,73 +105,7 @@
       editedtoken: editedToken,
       removedtoken: removedToken,
     };
-
-    vm.pstnProviderField = [{
-      model: vm.trialData.details,
-      key: 'pstnProvider',
-      type: 'select',
-      className: 'medium-8',
-      templateOptions: {
-        labelfield: 'name',
-        required: true,
-        label: $translate.instant('trialModal.pstn.provider'),
-        options: [],
-        onChangeFn: function () {
-          vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
-          resetNumbers();
-          vm.providerSelected = true;
-        },
-      },
-      controller: /* @ngInject */ function ($scope) {
-        _getCarriers($scope);
-      },
-    }];
-
-    vm.contractInfoFields = [{
-      model: vm.trialData.details.pstnContractInfo,
-      key: 'companyName',
-      type: 'cs-input',
-      className: 'medium-12',
-      templateOptions: {
-        required: true,
-        labelfield: 'label',
-        label: $translate.instant('trialModal.pstn.company'),
-        type: 'text',
-      },
-    }, {
-      model: vm.trialData.details.pstnContractInfo,
-      key: 'firstName',
-      type: 'cs-input',
-      className: 'medium-12',
-      templateOptions: {
-        required: true,
-        labelfield: 'label',
-        label: $translate.instant('trialModal.pstn.firstName'),
-        type: 'text',
-      },
-    }, {
-      model: vm.trialData.details.pstnContractInfo,
-      key: 'lastName',
-      type: 'cs-input',
-      className: 'medium-12',
-      templateOptions: {
-        required: true,
-        labelfield: 'label',
-        label: $translate.instant('trialModal.pstn.lastName'),
-        type: 'text',
-      },
-    }, {
-      model: vm.trialData.details.pstnContractInfo,
-      key: 'emailAddress',
-      type: 'cs-input',
-      className: 'medium-12',
-      templateOptions: {
-        required: true,
-        labelfield: 'label',
-        label: $translate.instant('trialModal.pstn.email'),
-        type: 'email',
-      },
-    }];
+    vm.pstnProviderList = [];
 
     init();
 
@@ -174,14 +113,17 @@
       _setupResellers();
 
       SELECT = $translate.instant('common.select');
-      FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel)
-      .then(function (results) {
-        vm.ftHuronSupportThinktel = results;
-      });
+      var promises = {
+        huronSupportThinktel: FeatureToggleService.huronSupportThinktelGetStatus(),
+        huronFederatedSparkCall: FeatureToggleService.huronFederatedSparkCallGetStatus(),
+      };
 
-      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
-      .then(function (results) {
-        vm.ftHuronFederatedSparkCall = results;
+      $q.all(promises).then(function (results) {
+        vm.ftHuronSupportThinktel = results.huronSupportThinktel;
+        vm.ftHuronFederatedSparkCall = results.huronFederatedSparkCall;
+        if (!(vm.ftHuronSupportThinktel || vm.ftHuronFederatedSparkCall)) {
+          getCarriers();
+        }
       });
 
       PstnSetupStatesService.getLocation(vm.trialData.details.countryCode).then(loadLocations);
@@ -211,6 +153,11 @@
     function loadLocations(location) {
       vm.location = location.type;
       vm.pstn.stateOptions = location.areas;
+    }
+    function changePstnProviderImplementation() {
+      vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
+      resetNumbers();
+      vm.providerSelected = true;
     }
 
     function onProviderChange(reset) {
@@ -508,36 +455,36 @@
       return vm.invalidCount <= 0;
     }
 
-    function _listCarriers(localScope) {
+    function _listCarriers() {
       PstnService.listResellerCarriers().then(function (carriers) {
         if (_.isArray(carriers) && carriers.length > 0) {
-          _showCarriers(carriers, localScope);
+          _showCarriers(carriers);
         } else {
           PstnService.listDefaultCarriers().then(function (carriers) {
-            _showCarriers(carriers, localScope);
+            _showCarriers(carriers);
           });
         }
       }).catch(function () {
         PstnService.listDefaultCarriers().then(function (carriers) {
-          _showCarriers(carriers, localScope);
+          _showCarriers(carriers);
         });
       });
     }
 
-    function _getCarriers(localScope) {
+    function getCarriers() {
       if (!vm.trialData.reseller) {
         $timeout(function () {
           if (vm.carrierCnt < MAX_CARRIER_CNT) {
             vm.carrierCnt++;
-            _getCarriers(localScope);
+            getCarriers();
           }
         }, 100);
       } else {
-        _listCarriers(localScope);
+        _listCarriers();
       }
     }
 
-    function _showCarriers(carriers, localScope) {
+    function _showCarriers(carriers) {
       _.forEach(carriers, function (carrier) {
         carrier.displayName = (carrier.displayName || carrier.name);
         if (_.get(carrier, 'offers', []).length > 0) {
@@ -545,11 +492,11 @@
         } else if (_.get(carrier, 'offers', []).length === 0) {
           carrier.name = carrier.vendor + '-' + carrier.displayName;
         }
-        localScope.to.options.push(carrier);
+        vm.pstnProviderList.push(carrier);
       });
-      if (localScope.to.options.length === 1) {
-        vm.trialData.details.pstnProvider = localScope.to.options[0];
-        vm.providerImplementation = localScope.to.options[0].apiImplementation;
+      if (vm.pstnProviderList.length === 1) {
+        vm.trialData.details.pstnProvider = vm.pstnProviderList[0];
+        vm.providerImplementation = vm.pstnProviderList[0].apiImplementation;
       }
     }
 
