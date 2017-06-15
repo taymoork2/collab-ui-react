@@ -68,6 +68,15 @@ export class PstnService {
     }, payload).$promise;
   }
 
+  public updateCustomerE911Signee(customerId: string): ng.IPromise<any> {
+    let payload = {
+      e911Signee: this.Authinfo.getUserId(),
+    };
+    return this.TerminusService.customer().update({
+      customerId: customerId,
+    }, payload).$promise;
+  }
+
   public getCustomer(customerId: string): ng.IPromise<any> {
     return this.TerminusService.customer().get({
       customerId: customerId,

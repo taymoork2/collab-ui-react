@@ -25,6 +25,7 @@ export class PstnModel {
   private singleCarrierReseller: boolean;
   private isTrial: boolean;
   private countryCode: string;
+  private esaSigned: boolean;
 
   public constructor() {
     this.clear();
@@ -48,6 +49,7 @@ export class PstnModel {
     this.singleCarrierReseller = false;
     this.isTrial = true;
     this.countryCode = 'US';
+    this.esaSigned = false;
   }
 
   public clearProviderSpecificData(): void {
@@ -115,6 +117,14 @@ export class PstnModel {
 
   public isCustomerExists(): boolean {
     return this.customerExists;
+  }
+
+  public isEsaSigned(): boolean {
+    return this.esaSigned;
+  }
+
+  public setEsaSigned(_esaSigned: boolean): void {
+    this.esaSigned = _esaSigned;
   }
 
   public setResellerExists(_resellerExists: boolean): void {

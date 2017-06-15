@@ -66,6 +66,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public dismiss: Function;
 
   private did: DirectInwardDialing = new DirectInwardDialing();
+  private i387FeatureToggle: boolean;
 
   /* @ngInject */
   constructor(private PstnModel: PstnModel,
@@ -78,6 +79,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private $translate: ng.translate.ITranslateService,
               private PstnWizardService: PstnWizardService,
               private PhoneNumberService: PhoneNumberService,
+              private FeatureToggleService,
               ) {
     this.contact = this.PstnWizardService.getContact();
     this.address = _.cloneDeep(PstnModel.getServiceAddress());
@@ -95,6 +97,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.PstnWizardService.init().then(() => this.enableCarriers = true);
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then((enabled) => {
+      this.i387FeatureToggle = enabled;
+    });
   }
 
   public getCapabilities(): void {
@@ -167,7 +172,15 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public goToSwivelNumbers(): void {
-    this.step = 5;
+    if (this.i387FeatureToggle) {
+      if (this.PstnModel.isEsaSigned()) {
+        this.step = 9;
+      } else {
+        this.step = 8;
+      }
+    } else {
+      this.step = 5;
+    }
   }
 
   public isSwivel(): boolean {
@@ -205,13 +218,16 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public previousStep(): void {
     // pre check
-    if (this.isSwivel() && this.step === 5) {
+    if (!this.i387FeatureToggle && this.isSwivel() && this.step === 5) {
+      this.step = 1;
+    } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 8) {
       this.step = 1;
     } else if (!this.isSwivel() && this.step === 6) {
       this.step -= 1;
     }
-    this.step -= 1;
-
+    if (this.step > 1) {
+      this.step -= 1;
+    }
     //post check
     if (this.step === 1) {
       this.showButtons = false;
@@ -259,6 +275,29 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 7:
         this.dismissModal();
         return;
+      case 8:
+        break;
+      case 9:
+        if (this.invalidSwivelCount) {
+          this.Notification.error('pstnSetup.invalidNumberPrompt');
+          return;
+        } else {
+            //set numbers for if they go back
+          this.PstnModel.setNumbers(this.swivelNumbers);
+          let swivelOrder = this.PstnWizardService.setSwivelOrder(this.swivelNumbers);
+          this.PstnModel.setOrders(swivelOrder);
+        }
+        break;
+      case 10:
+        this.placeOrderLoad = true;
+        this.PstnWizardService.finalizeImport().then(() => {
+          this.step = 11;
+          this.placeOrderLoad = false;
+        });
+        return;
+      case 11:
+        this.dismissModal();
+        return;
     }
     this.step += 1;
   }
@@ -283,6 +322,12 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 5:
         return this.PstnModel.isCustomerExists();
       case 7:
+        return true;
+      case 8:
+        return this.PstnModel.isCustomerExists();
+      case 9:
+        return this.PstnModel.isEsaSigned();
+      case 11:
         return true;
     }
     return false;
