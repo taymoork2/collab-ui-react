@@ -23,11 +23,6 @@
         return HuronCompassService.getBaseDomain();
       },
 
-      // TODO: Remove this when CMIv2 URl is ready.
-      getMockHgUrl: function () {
-        return 'https://mock-hg.de-ams.thunderhead.io/api/v2';
-      },
-
       getCmiUrl: function () {
         return 'https://cmi.' + this.getBaseDomain() + '/api/v1';
       },
@@ -56,14 +51,6 @@
         return 'https://terminus.' + this.getBaseDomain() + '/api/v2';
       },
 
-      getOcelotUrl: function () {
-        return 'https://hermes.' + this.getBaseDomain() + '/api/v1';
-      },
-
-      getMinervaUrl: function () {
-        return 'https://minerva.' + this.getBaseDomain() + '/api/v1';
-      },
-
       getMmsUrl: function () {
         return 'https://mms.' + this.getBaseDomain() + '/api/v1';
       },
@@ -76,6 +63,10 @@
         } else {
           return this.avrilUrl.prod;
         }
+      },
+
+      getToggleUrl: function () {
+        return 'https://toggle.' + this.getBaseDomain() + '/toggle/api/v3';
       },
     };
     return config;
