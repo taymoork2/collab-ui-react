@@ -1,3 +1,4 @@
+// TODO: revisit this (re-implement as component for consistency)
 (function () {
   'use strict';
 
@@ -10,11 +11,8 @@
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.entitlements = Utils.getSqEntitlements($scope.currentUser);
 
-    //TODO: In the hasAccount case, come up with a better UX for a license category
-    //that has no configurable entitlements, intead of an empty pane with a disabled
-    //save button.
-
     var services = Authinfo.getServices();
+    var entitlementsCopy = _.clone($scope.entitlements);
 
     if ($scope.service && $scope.hasAccount) {
       services = services.filter(function (service) {
@@ -23,8 +21,6 @@
     }
 
     $scope.entitlementsKeys = _.map(services, 'serviceId').sort().reverse();
-
-    $scope.saveDisabled = true;
 
     $scope.isServiceAllowed = function (service) {
       return Authinfo.isServiceAllowed(service);
@@ -43,7 +39,25 @@
       return key !== reference;
     };
 
-    var getUserEntitlementList = function () {
+    $scope.$on('save', function () {
+      changeEntitlement($scope.currentUser);
+    });
+
+    $scope.$on('cancel', resetEntitlementsCopy);
+
+    function resetEntitlementsCopy() {
+      var watchedEntitlements = $scope.entitlements;
+      // iterate over each item in watched collection, and copy item by item from backup copy
+      _.forEach(watchedEntitlements, function (key, entitlementName) {
+        watchedEntitlements[entitlementName] = entitlementsCopy[entitlementName];
+      });
+    }
+
+    function updateEntitlementsCopy() {
+      entitlementsCopy = $scope.entitlements;
+    }
+
+    function getUserEntitlementList() {
       // Build entitlements array from configurable entitlements filtered above
       return _.chain(services)
         .filter(function (service) {
@@ -57,11 +71,11 @@
           };
         })
         .value();
-    };
+    }
 
     $scope.hasUserEntitlements = !!$scope.entitlementsKeys.length;
 
-    var watchCheckboxes = function () {
+    function watchCheckboxes() {
       $timeout(function () {});
       var flag = false;
       $scope.$watchCollection('entitlements', function (newEntitlements, oldEntitlements) {
@@ -70,6 +84,8 @@
           return;
         }
         var changedKey = Utils.changedKey(newEntitlements, oldEntitlements);
+
+        // 'webExSquared' entitlement transitioning to false, set all other entitlements to false
         if (changedKey === 'webExSquared' && !newEntitlements.webExSquared && Utils.areEntitlementsActive($scope.entitlements)) {
           for (var key in $scope.entitlements) {
             if (key !== 'webExSquared' && key !== 'jabberMessenger') {
@@ -77,17 +93,16 @@
               flag = true;
             }
           }
-          $scope.saveDisabled = false;
+
+          // 'webExSquared' was false, whatever changed is transitioning to true, whatever changes is NOT 'webExSquared', at least one entitlement is true
         } else if (!$scope.entitlements.webExSquared && !oldEntitlements[changedKey] && changedKey !== 'webExSquared' && Utils.areEntitlementsActive($scope.entitlements)) {
+          // - tag-along 'webExSquared' transition to true
           if (changedKey !== 'jabberMessenger') {
             $scope.entitlements.webExSquared = true;
           }
-          $scope.saveDisabled = false;
-        } else if (newEntitlements !== oldEntitlements) {
-          $scope.saveDisabled = false;
         }
       });
-    };
+    }
 
     /**
      * TODO: All entitlements are currently sent in the PATCH request in all cases,
@@ -98,9 +113,8 @@
      * current behavior of sending all entitlements, even when their values
      * didn't change.
      */
-    $scope.changeEntitlement = function (user) {
+    function changeEntitlement(user) {
       Log.debug('Entitling user.', user);
-      $scope.btn_saveLoad = true;
       Userservice.updateUsers([{
         'address': user.userName,
         'name': user.name,
@@ -116,8 +130,6 @@
             } else {
               angular.element('.icon-' + user.id).html($translate.instant('usersPage.inactive'));
             }
-            // successful update, reset 'Save' button state
-            $scope.saveDisabled = true;
             Notification.success(resultMsg);
           } else {
             if (userStatus === 404) {
@@ -132,7 +144,6 @@
             }
             Notification.error(resultMsg);
           }
-          $scope.btn_saveLoad = false;
 
           var updatedUser = _.find($scope.queryuserslist, {
             id: $scope.currentUser.id,
@@ -148,16 +159,16 @@
               }
             }
           }
+          updateEntitlementsCopy();
           $rootScope.$broadcast('entitlementsUpdated');
         } else {
           Log.error('Failed updating user with entitlements.');
           Log.error(data);
           resultMsg = 'Failed to update ' + user.userName + '\'s entitlements.';
           Notification.error(resultMsg);
-          $scope.btn_saveLoad = false;
         }
       });
-    };
+    }
 
     watchCheckboxes();
   }

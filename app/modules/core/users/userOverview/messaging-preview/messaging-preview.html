@@ -1,7 +1,14 @@
-<cs-sp-container>
-  <cs-sp-section>
-   <div class="section-title-row">
-      <div user-entitlements current-user="userOverview.currentUser" entitlements="userOverview.entitlements" queryuserslist="userOverview.queryuserslist" service="service"></div>
-    </div>
-  </cs-sp-section>
-</cs-sp-container>
+<form name="$ctrl.form" novalidate role="form" class="side-panel-form">
+  <cs-sp-buttons ng-show="$ctrl.form.$dirty">
+    <button cs-btn class="btn--primary" ng-click="$ctrl.save()" loading="$ctrl.isLoading">{{:: 'common.save' | translate }}</button>
+    <button translate="common.cancel" ng-click="$ctrl.cancel()" ng-disabled="$ctrl.isLoading"></button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <div class="section-title-row"
+      user-entitlements
+      current-user="userOverview.currentUser"
+      entitlements="userOverview.entitlements"
+      queryuserslist="userOverview.queryuserslist"
+      service="$ctrl.licenseType"></div>
+  </cs-sp-container>
+</form>

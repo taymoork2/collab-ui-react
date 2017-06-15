@@ -1353,6 +1353,7 @@
           .state('user-overview.messaging', {
             templateUrl: 'modules/core/users/userOverview/messaging-preview/messaging-preview.html',
             controller: 'MessagingPreviewCtrl',
+            controllerAs: '$ctrl',
             data: {
               displayName: 'Message',
             },

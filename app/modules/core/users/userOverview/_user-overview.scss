@@ -37,3 +37,7 @@
 .user-pending .side-panel-container {
   height: calc(100vh - 140px - 60px - #{$side-panel-padding});
 }
+
+.side-panel-form {
+  margin-top: 0;
+}
