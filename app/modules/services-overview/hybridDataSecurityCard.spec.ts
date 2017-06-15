@@ -3,7 +3,7 @@ import { HybridServicesClusterStatesService } from 'modules/hercules/services/hy
 
 describe('ServicesOverviewHybridDataSecurityCard', () => {
 
-  let Authinfo, Config, HybridServicesClusterStatesService: HybridServicesClusterStatesService, HDSService, $state, Notification, $q;
+  let $q, $state, Authinfo, Config, HDSService, HybridServicesClusterStatesService: HybridServicesClusterStatesService, Notification;
   let card: ServicesOverviewHybridDataSecurityCard;
 
   beforeEach(angular.mock.module('Core'));
@@ -12,13 +12,13 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_Authinfo_, _Config_, _HybridServicesClusterStatesService_, _HDSService_, _$state_, _Notification_, _$q_) {
+  function dependencies(_$q_, _$state_, _Authinfo_, _Config_, _HDSService_, _HybridServicesClusterStatesService_, _Notification_) {
+    $q = _$q_;
+    $state = _$state_;
     Authinfo = _Authinfo_;
     Config = _Config_;
-    HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
     HDSService = _HDSService_;
-    $state = _$state_;
-    $q = _$q_;
+    HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
   }
 
   function initSpies() {
