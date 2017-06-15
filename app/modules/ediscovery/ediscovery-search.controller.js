@@ -17,6 +17,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     /* Search Page Functions */
     vm.showHover = showHover;
+    vm.getProPackTooltip = getProPackTooltip;
     vm.searchByLimit = searchByLimit;
     vm.searchByParameters = searchByParameters;
     vm.advancedSearch = advancedSearch;
@@ -220,6 +221,10 @@ var Spark = require('@ciscospark/spark-core').default;
     /* Search Page Functions */
     function showHover() {
       return vm.itProPackEnabled && !vm.itProPackPurchased;
+    }
+
+    function getProPackTooltip() {
+      return (showHover()) ? $translate.instant('ediscovery.searchParameters.dateRangeTooltip') : '';
     }
 
     function searchByLimit() {

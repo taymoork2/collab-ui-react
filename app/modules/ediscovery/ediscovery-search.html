@@ -47,12 +47,20 @@
           </div>
           <div class="row">
             <div class="col-md-5 search-box">
-              <cs-datepicker required ng-model="ediscoverySearchCtrl.searchCriteria.startDate" first-enabled-date="{{ediscoverySearchCtrl.firstEnabledDate}}" last-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"  view-format="YYYY-MM-DD">
+              <cs-datepicker required ng-model="ediscoverySearchCtrl.searchCriteria.startDate"
+              first-enabled-date="{{ediscoverySearchCtrl.firstEnabledDate}}"
+              last-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
+              disabled-tooltip-text="{{ediscoverySearchCtrl.getProPackTooltip()}}"
+              view-format="YYYY-MM-DD">
               </cs-datepicker>
             </div>
             <span class="col-md-2" translate="common.to"></span>
             <div class="col-md-5 search-box">
-            <cs-datepicker required  ng-model="ediscoverySearchCtrl.searchCriteria.endDate" first-enabled-date="{{ediscoverySearchCtrl.firstEnabledDate}}" last-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}" view-format="YYYY-MM-DD">
+            <cs-datepicker required  ng-model="ediscoverySearchCtrl.searchCriteria.endDate"
+              first-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
+              last-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
+              disabled-tooltip-text="{{ediscoverySearchCtrl.getProPackTooltip()}}"
+              view-format="YYYY-MM-DD">
             </cs-datepicker>
             </div>
           </div>
