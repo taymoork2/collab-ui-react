@@ -3052,8 +3052,8 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "Cisco Spark Activity Reports",
-    "heading": "Search Cisco Spark Space Activity",
+    "browserTabHeaderTitle": "eDiscovery Search and Extraction",
+    "heading": "Search Compliance Data",
     "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
     "searchTip": "Search data by space ID",
     "unableToDownloadFile": "Unable to download file",
