@@ -51,10 +51,10 @@ describe('Manage Users - CSV File -', function () {
   it('should select bulk upload/modify users', function () {
     utils.click(navigation.usersTab);
     utils.click(manageUsersPage.buttons.manageUsers);
-    utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+    utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
     utils.click(manageUsersPage.select.radio.orgBulk);
     utils.click(manageUsersPage.buttons.next);
-    utils.expectTextToBeSet(manageUsersPage.bulk.title, 'Bulk Add or Modify Users');
+    utils.waitForText(manageUsersPage.bulk.title, 'Bulk Add or Modify Users');
   });
 
   // todo - this is failing in SauceLabs due to Chrome requesting a location to download the files
@@ -78,7 +78,7 @@ describe('Manage Users - CSV File -', function () {
       utils.click(manageUsersPage.bulk.export.exportCsvButton);
 
       utils.waitForModal().then(function () {
-        utils.expectTextToBeSet(manageUsersPage.modalDialog.title, 'Export User Attributes');
+        utils.waitForText(manageUsersPage.modalDialog.title, 'Export User Attributes');
         utils.click(manageUsersPage.modalDialog.cancelButton);
 
         utils.expectIsNotDisplayed(manageUsersPage.bulk.export.exportSpinner);
@@ -101,7 +101,7 @@ describe('Manage Users - CSV File -', function () {
       }
 
       utils.waitForModal().then(function () {
-        utils.expectTextToBeSet(manageUsersPage.modalDialog.title, 'Export User Attributes');
+        utils.waitForText(manageUsersPage.modalDialog.title, 'Export User Attributes');
         utils.click(manageUsersPage.modalDialog.exportButton);
 
         // note: we MAY get another warning dialog about over 10000 users. If so,
@@ -126,7 +126,7 @@ describe('Manage Users - CSV File -', function () {
 
       utils.fileSendKeys(manageUsersPage.bulk.import.uploadInput, CSV_FILE_PATH);
 
-      utils.expectTextToBeSet(manageUsersPage.bulk.import.importFileName, CSV_FILE_NAME);
+      utils.waitForText(manageUsersPage.bulk.import.importFileName, CSV_FILE_NAME);
       utils.expectIsDisplayed(manageUsersPage.bulk.import.removeFileButton);
       utils.expectIsDisplayed(manageUsersPage.bulk.import.addServicesOnlyRadio);
       utils.expectIsDisplayed(manageUsersPage.bulk.import.addAdnRemoveServicesRadio);
@@ -142,7 +142,7 @@ describe('Manage Users - CSV File -', function () {
 
       utils.fileSendKeys(manageUsersPage.bulk.import.uploadInput, CSV_FILE_PATH);
 
-      utils.expectTextToBeSet(manageUsersPage.bulk.import.importFileName, CSV_FILE_NAME);
+      utils.waitForText(manageUsersPage.bulk.import.importFileName, CSV_FILE_NAME);
       utils.expectIsDisplayed(manageUsersPage.bulk.import.removeFileButton);
       utils.expectIsDisplayed(manageUsersPage.bulk.import.addServicesOnlyRadio);
       utils.expectIsDisplayed(manageUsersPage.bulk.import.addAdnRemoveServicesRadio);
@@ -153,14 +153,14 @@ describe('Manage Users - CSV File -', function () {
 
       // status screen should now be displayed
       utils.expectIsDisplayed(manageUsersPage.importStatus.statusDisplay);
-      utils.expectTextToBeSet(manageUsersPage.importStatus.progressFileName, CSV_FILE_NAME);
+      utils.waitForText(manageUsersPage.importStatus.progressFileName, CSV_FILE_NAME);
 
       // import complete.  check our results
-      utils.expectTextToBeSet(manageUsersPage.importStatus.uploadComplete, 'Completed ' + CSV_FILE_NAME + ' at');
+      utils.waitForText(manageUsersPage.importStatus.uploadComplete, 'Completed ' + CSV_FILE_NAME + ' at');
 
-      utils.expectTextToBeSet(manageUsersPage.importStatus.newUsers, '' + userList.length);
-      utils.expectTextToBeSet(manageUsersPage.importStatus.updatedUsers, '0');
-      utils.expectTextToBeSet(manageUsersPage.importStatus.errorUsers, '0');
+      utils.waitForText(manageUsersPage.importStatus.newUsers, '' + userList.length);
+      utils.waitForText(manageUsersPage.importStatus.updatedUsers, '0');
+      utils.waitForText(manageUsersPage.importStatus.errorUsers, '0');
 
       utils.click(manageUsersPage.buttons.done);
     });

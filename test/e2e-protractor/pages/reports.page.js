@@ -124,7 +124,7 @@ var ReportsPage = function () {
         utils.expectIsPresent(element);
         utils.expectIsPresent(element.element(by.css('.metrics-numeral')));
         utils.expectIsPresent(element.element(by.css('.metrics-text')));
-        utils.expectTextToBeSet(element.element(by.css('.metrics-text')), text[index]);
+        utils.waitForText(element.element(by.css('.metrics-text')), text[index]);
       }
     });
   };

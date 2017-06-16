@@ -34,7 +34,7 @@ describe('Customer Reports', function () {
       // Total Rooms
       utils.expectIsDisplayed(reports.totalRoomsHeader);
       utils.expectIsDisplayed(reports.totalRoomsDescription);
-      utils.expectTextToBeSet(reports.totalRoomsDescription, lowerTime[0]);
+      utils.waitForText(reports.totalRoomsDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.totalRoomsGraph);
 
       // Active Users
@@ -51,13 +51,13 @@ describe('Customer Reports', function () {
       // Files Shared
       utils.expectIsDisplayed(reports.filesSharedHeader);
       utils.expectIsDisplayed(reports.filesSharedDescription);
-      utils.expectTextToBeSet(reports.filesSharedDescription, lowerTime[0]);
+      utils.waitForText(reports.filesSharedDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.filesSharedDiv);
 
       // Registered Endpoints
       utils.expectIsDisplayed(reports.endpointsHeader);
       utils.expectIsDisplayed(reports.customerEndpointsDescription);
-      utils.expectTextToBeSet(reports.customerEndpointsDescription, lowerTime[0]);
+      utils.waitForText(reports.customerEndpointsDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.endpointFilter);
       utils.expectIsDisplayed(reports.endpointsDiv);
 
@@ -132,7 +132,7 @@ describe('Customer Reports', function () {
       // Total Rooms
       utils.expectIsDisplayed(reports.totalRoomsHeader);
       utils.expectIsDisplayed(reports.totalRoomsDescription);
-      utils.expectTextToBeSet(reports.totalRoomsDescription, lowerTime[1]);
+      utils.waitForText(reports.totalRoomsDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.totalRoomsGraph);
 
       // Active Users
@@ -149,13 +149,13 @@ describe('Customer Reports', function () {
       // Files Shared
       utils.expectIsDisplayed(reports.filesSharedHeader);
       utils.expectIsDisplayed(reports.filesSharedDescription);
-      utils.expectTextToBeSet(reports.filesSharedDescription, lowerTime[1]);
+      utils.waitForText(reports.filesSharedDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.filesSharedDiv);
 
       // Registered Endpoints
       utils.expectIsDisplayed(reports.endpointsHeader);
       utils.expectIsDisplayed(reports.customerEndpointsDescription);
-      utils.expectTextToBeSet(reports.customerEndpointsDescription, lowerTime[1]);
+      utils.waitForText(reports.customerEndpointsDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.endpointFilter);
       utils.expectIsDisplayed(reports.endpointsDiv);
 

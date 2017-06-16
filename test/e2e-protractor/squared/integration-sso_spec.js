@@ -10,7 +10,7 @@ describe('First Time Wizard', function () {
 
     it('should navigate to the SSO Settings page from overview page sso card', function () {
       utils.click(ssowizard.viewSsoSettings);
-      utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Single Sign-On');
+      utils.waitForText(wizard.mainviewSubtitle, 'Single Sign-On');
       utils.click(wizard.radiobuttons.last());
       utils.click(wizard.beginBtn);
     });
@@ -26,13 +26,13 @@ describe('First Time Wizard', function () {
     it('should upload the Federation MetaData', function () {
       utils.click(wizard.nextBtn);
       utils.click(wizard.radiobuttons.last());
-      utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Import IdP Metadata');
+      utils.waitForText(wizard.mainviewSubtitle, 'Import IdP Metadata');
       ssowizard.uploadMetaData();
     });
 
     it('should test the SSO connection', function () {
       utils.click(wizard.nextBtn);
-      utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Test SSO Setup');
+      utils.waitForText(wizard.mainviewSubtitle, 'Test SSO Setup');
       utils.click(ssowizard.testSsoConnectionBtn);
       utils.switchToNewWindow()
         .then(loginActiveDirectoryFederationService)

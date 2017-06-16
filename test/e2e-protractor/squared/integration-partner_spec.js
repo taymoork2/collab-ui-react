@@ -127,11 +127,11 @@ describe('Partner flow', function () {
     }, LONG_TIMEOUT);
 
     it('should navigate first time wizard', function () {
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
+      utils.waitForText(wizard.mainviewTitle, 'Plan Review');
       utils.click(wizard.beginBtn);
       utils.click(wizard.saveBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
+      utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');
       if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
         // click "Save" instead of "Next" because there are no SSO steps
         // goes to last tab because there is no Add Users
@@ -141,14 +141,14 @@ describe('Partner flow', function () {
         utils.click(wizard.nextBtn);
         utils.click(wizard.nextBtn);
 
-        utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+        utils.waitForText(wizard.mainviewTitle, 'Add Users');
         utils.expectIsDisplayed(wizard.skipBtn);
         utils.click(wizard.nextBtn);
         utils.click(wizard.saveBtn);
       }
       notifications.clearNotifications();
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
+      utils.waitForText(wizard.mainviewTitle, 'Get Started');
       utils.click(wizard.finishBtn);
 
       navigation.expectDriverCurrentUrl('overview');

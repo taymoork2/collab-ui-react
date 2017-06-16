@@ -40,7 +40,7 @@ describe('Care Reports', function () {
       // Task Incoming
       utils.expectIsDisplayed(reports.taskIncomingHeader);
       utils.expectIsDisplayed(reports.taskIncomingDescription);
-      utils.expectTextToBeSet(reports.taskIncomingDescription, lowerTime[0]);
+      utils.waitForText(reports.taskIncomingDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.taskIncomingGraph);
     });
 
@@ -50,7 +50,7 @@ describe('Care Reports', function () {
 
       utils.expectIsDisplayed(reports.taskAggregateHeader);
       utils.expectIsDisplayed(reports.taskAggregateDescription);
-      utils.expectTextToBeSet(reports.taskAggregateDescription, lowerTime[0]);
+      utils.waitForText(reports.taskAggregateDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.taskAggregateGraph);
     });
 
@@ -68,7 +68,7 @@ describe('Care Reports', function () {
 
       utils.expectIsDisplayed(reports.averageCsatHeader);
       utils.expectIsDisplayed(reports.averageCsatDescription);
-      utils.expectTextToBeSet(reports.averageCsatDescription, lowerTime[0]);
+      utils.waitForText(reports.averageCsatDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.averageCsatGraph);
     });
 
@@ -79,7 +79,7 @@ describe('Care Reports', function () {
 
       utils.expectIsDisplayed(reports.taskTimeHeader);
       utils.expectIsDisplayed(reports.taskTimeDescription);
-      utils.expectTextToBeSet(reports.taskTimeDescription, lowerTime[1]);
+      utils.waitForText(reports.taskTimeDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.taskTimeGraph);
     });
   });

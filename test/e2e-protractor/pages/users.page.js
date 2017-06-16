@@ -247,7 +247,7 @@ var UsersPage = function () {
   this.createUser = function (userName) {
     utils.click(navigation.usersTab);
     utils.click(manageUsersPage.buttons.manageUsers);
-    utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+    utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
     utils.click(manageUsersPage.select.radio.orgManual);
     utils.click(manageUsersPage.buttons.next);
 

@@ -38,10 +38,10 @@ describe('Manage Users - Manual -', function () {
     it('should select manually add/modify users', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsersPage.buttons.manageUsers);
-      utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+      utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
       utils.click(manageUsersPage.select.radio.orgManual);
       utils.click(manageUsersPage.buttons.next);
-      utils.expectTextToBeSet(manageUsersPage.select.title, 'Manually Add or Modify Users');
+      utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
     });
 
     it('should clear all users when Clear button pressed', function () {
@@ -110,7 +110,7 @@ describe('Manage Users - Manual -', function () {
 
     it('should setup services for users (Message On)', function () {
 
-      utils.expectTextToBeSet(manageUsersPage.select.title, 'Add Services for Users');
+      utils.waitForText(manageUsersPage.select.title, 'Add Services for Users');
 
       // Need a license for valid HS services
       utils.click(manageUsersPage.manual.paidMsgCheckbox);
@@ -118,9 +118,9 @@ describe('Manage Users - Manual -', function () {
       utils.click(manageUsersPage.buttons.save);
 
       // make sure users were added as expected
-      utils.expectTextToBeSet(manageUsersPage.importStatus.newUsers, '' + allUsers.length);
-      utils.expectTextToBeSet(manageUsersPage.importStatus.updatedUsers, '0');
-      utils.expectTextToBeSet(manageUsersPage.importStatus.errorUsers, '0');
+      utils.waitForText(manageUsersPage.importStatus.newUsers, '' + allUsers.length);
+      utils.waitForText(manageUsersPage.importStatus.updatedUsers, '0');
+      utils.waitForText(manageUsersPage.importStatus.errorUsers, '0');
 
       utils.click(manageUsersPage.buttons.finish);
     });

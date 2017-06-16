@@ -77,14 +77,14 @@ describe('WebEx Trial Creation', function () {
     }, LONG_TIMEOUT);
 
     it('should navigate first time wizard', function () {
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
+      utils.waitForText(wizard.mainviewTitle, 'Plan Review');
       utils.click(wizard.beginBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Message Settings');
+      utils.waitForText(wizard.mainviewTitle, 'Message Settings');
       utils.click(wizard.saveBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
-      utils.expectTextToBeSet(wizard.sipURLExample, 'These subdomains will be reserved for you:');
+      utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');
+      utils.waitForText(wizard.sipURLExample, 'These subdomains will be reserved for you:');
       utils.sendKeys(wizard.sipDomain, partner.newTrial.sipDomain + protractor.Key.ENTER);
       utils.click(wizard.saveCheckbox);
 
@@ -98,14 +98,14 @@ describe('WebEx Trial Creation', function () {
         utils.click(wizard.nextBtn);
         notifications.assertSuccess('The Spark SIP Address has been successfully saved');
 
-        utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
+        utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');
         utils.click(wizard.nextBtn);
 
-        utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+        utils.waitForText(wizard.mainviewTitle, 'Add Users');
         utils.click(wizard.skipBtn);
       }
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
+      utils.waitForText(wizard.mainviewTitle, 'Get Started');
       utils.click(wizard.finishBtn);
 
       navigation.expectDriverCurrentUrl('overview');
@@ -115,10 +115,10 @@ describe('WebEx Trial Creation', function () {
     it('should open trial via services tab', function () {
       navigation.clickServicesTab();
       utils.click(partner.getMeetingLink(partner.newTrial.sipDomain));
-      utils.expectTextToBeSet(partner.pageHeaderTitle, 'WebEx Sites');
+      utils.waitForText(partner.pageHeaderTitle, 'WebEx Sites');
 
       utils.click(partner.getTrialConfigBtn(partner.newTrial.webexSiteURL));
-      utils.expectTextToBeSet(partner.pageHeaderTitle, 'Configure WebEx Site');
+      utils.waitForText(partner.pageHeaderTitle, 'Configure WebEx Site');
     });
 
     it('should close browser window', function () {

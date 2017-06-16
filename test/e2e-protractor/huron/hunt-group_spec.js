@@ -40,7 +40,7 @@ xdescribe('Admin should be able to', function () {
 
     //Get an extension range
     navigation.clickCommunicationWizard();
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Call Settings');
+    utils.waitForText(wizard.mainviewTitle, 'Call Settings');
     utils.click(servicesetup.addNumberRange);
     utils.sendKeys(servicesetup.newBeginRange, huntGroup.beginNumber);
     utils.sendKeys(servicesetup.newEndRange, huntGroup.endNumber);
@@ -51,7 +51,7 @@ xdescribe('Admin should be able to', function () {
   afterAll(function () {
     navigation.clickUsers();
     navigation.clickCommunicationWizard();
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Call Settings');
+    utils.waitForText(wizard.mainviewTitle, 'Call Settings');
     notifications.clearNotifications();
     servicesetup.deleteNumberRange(huntGroup.beginNumber);
     notifications.assertSuccess('Successfully deleted');
@@ -73,30 +73,30 @@ xdescribe('Admin should be able to', function () {
   it('go to huntgroup create page', function () {
     utils.expectIsDisplayed(huntGroup.huntGroupBtn);
     utils.click(huntGroup.huntGroupBtn);
-    utils.expectTextToBeSet(huntGroup.huntGroupCreateTitle, 'Create Hunt Group');
+    utils.waitForText(huntGroup.huntGroupCreateTitle, 'Create Hunt Group');
   });
 
   it('set the name of the hunt group', function () {
-    utils.expectTextToBeSet(huntGroup.hint, 'This hunt group name will also be the name callers see on their device (i.e. alerting name)');
+    utils.waitForText(huntGroup.hint, 'This hunt group name will also be the name callers see on their device (i.e. alerting name)');
     utils.sendKeys(huntGroup.typeAheadInput, huntGroup.randomHGName);
     utils.click(huntGroup.rightBtn);
   });
 
   it('select pilot numbers of hunt groups', function () {
-    utils.expectTextToBeSet(huntGroup.description, 'When this number is called, this hunt group is activated');
+    utils.waitForText(huntGroup.description, 'When this number is called, this hunt group is activated');
     utils.sendKeys(huntGroup.pilotTypeAheadInput, huntGroup.pilotNumber);
-    utils.expectTextToBeSet(huntGroup.dropdownItem, huntGroup.pilotNumber);
+    utils.waitForText(huntGroup.dropdownItem, huntGroup.pilotNumber);
     utils.click(huntGroup.dropdownItem);
     utils.expectIsDisplayed(huntGroup.addedPilotNumber);
     utils.sendKeys(huntGroup.pilotTypeAheadInput, huntGroup.pilotNumber);
-    utils.expectTextToBeSet(huntGroup.dropdownItem, huntGroup.pilotNumber);
+    utils.waitForText(huntGroup.dropdownItem, huntGroup.pilotNumber);
     utils.click(huntGroup.dropdownItem);
     utils.expectIsDisplayed(huntGroup.addedPilotNumber);
   });
 
   it('select pilot numbers and delete a selected pilot number', function () {
     utils.sendKeys(huntGroup.pilotTypeAheadInput, huntGroup.pilotNumber);
-    utils.expectTextToBeSet(huntGroup.dropdownItem, huntGroup.pilotNumber);
+    utils.waitForText(huntGroup.dropdownItem, huntGroup.pilotNumber);
     utils.click(huntGroup.dropdownItem);
     utils.expectIsDisplayed(huntGroup.addedPilotNumber);
     utils.click(huntGroup.addedPilotNumberCloseBtn);
@@ -104,22 +104,22 @@ xdescribe('Admin should be able to', function () {
 
   it('go to the hunting method section', function () {
     utils.click(huntGroup.rightBtn);
-    utils.expectTextToBeSet(huntGroup.hgmethodsTitle, 'Select Hunting Method');
+    utils.waitForText(huntGroup.hgmethodsTitle, 'Select Hunting Method');
     utils.click(huntGroup.huntMethod);
     utils.click(huntGroup.huntMethod);
   });
 
   it('go to the hunt members section', function () {
-    utils.expectTextToBeSet(huntGroup.description, 'These are the users who pickup the hunt group calls');
+    utils.waitForText(huntGroup.description, 'These are the users who pickup the hunt group calls');
     utils.sendKeys(huntGroup.typeAheadInput, huntGroup.member1Search);
-    utils.expectTextToBeSet(huntGroup.memberDropdownItemName, huntGroup.member1Search);
+    utils.waitForText(huntGroup.memberDropdownItemName, huntGroup.member1Search);
     utils.click(huntGroup.memberDropdownItem);
     utils.expectIsDisplayed(huntGroup.saAddedMember);
   });
 
   it('add and expand a memeber', function () {
     utils.sendKeys(huntGroup.typeAheadInput, huntGroup.member2Search);
-    utils.expectTextToBeSet(huntGroup.memberDropdownItemName, huntGroup.member2Search);
+    utils.waitForText(huntGroup.memberDropdownItemName, huntGroup.member2Search);
     utils.click(huntGroup.memberDropdownItem);
     utils.expectIsDisplayed(huntGroup.saAddedMember);
     utils.click(huntGroup.saAddedMemberChevronBtn);
@@ -132,7 +132,7 @@ xdescribe('Admin should be able to', function () {
 
   it('go to the fallback destination section', function () {
     utils.click(huntGroup.rightBtn);
-    utils.expectTextToBeSet(huntGroup.description, 'This is where the call goes if it was not answered by this hunt group');
+    utils.waitForText(huntGroup.description, 'This is where the call goes if it was not answered by this hunt group');
   });
 
   it('the form should be disabled', function () {
@@ -145,7 +145,7 @@ xdescribe('Admin should be able to', function () {
 
   it('enable the create hunt group button', function () {
     utils.sendKeys(huntGroup.typeAheadInput, huntGroup.member2Search);
-    utils.expectTextToBeSet(huntGroup.memberDropdownItemName, huntGroup.member2Search);
+    utils.waitForText(huntGroup.memberDropdownItemName, huntGroup.member2Search);
     utils.click(huntGroup.memberDropdownItem);
   });
 
@@ -179,7 +179,7 @@ xdescribe('Admin should be able to', function () {
 
   it('add a fallback member again', function () {
     utils.sendKeys(huntGroup.typeAheadInput, huntGroup.member2Search);
-    utils.expectTextToBeSet(huntGroup.memberDropdownItemName, huntGroup.member2Search);
+    utils.waitForText(huntGroup.memberDropdownItemName, huntGroup.member2Search);
     utils.click(huntGroup.memberDropdownItem);
   });
 
@@ -206,7 +206,7 @@ xdescribe('Admin should be able to', function () {
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, huntGroup.randomHGName);
     utils.expectIsDisplayed(huronFeatures.huntGroups);
-    utils.expectTextToBeSet(huronFeatures.selectedHuntGroup, huntGroup.randomHGName);
+    utils.waitForText(huronFeatures.selectedHuntGroup, huntGroup.randomHGName);
   });
 
   it('see the edit button when clicked on menu button of a selected hunt group', function () {
@@ -325,7 +325,7 @@ xdescribe('Admin should be able to', function () {
 
   it('see the cancel/save bar when any changes are there on edit page', function () {
     utils.expectIsDisplayed(huntGroup.cancelSaveBar);
-    utils.expectTextToBeSet(huntGroup.cancelSaveBar, 'Do you want to save your changes?');
+    utils.waitForText(huntGroup.cancelSaveBar, 'Do you want to save your changes?');
   });
 
   it('search a member', function () {
@@ -373,7 +373,7 @@ xdescribe('Admin should be able to', function () {
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, huntGroup.randomHGName);
     utils.expectIsDisplayed(huronFeatures.huntGroups);
-    utils.expectTextToBeSet(huronFeatures.selectedHuntGroup, huntGroup.randomHGName);
+    utils.waitForText(huronFeatures.selectedHuntGroup, huntGroup.randomHGName);
   });
 
   it('see the delete button when clicked on menu button of a selected hunt group', function () {

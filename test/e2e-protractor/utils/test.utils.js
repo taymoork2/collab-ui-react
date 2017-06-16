@@ -304,7 +304,7 @@ exports.expectAllNotDisplayed = exports.expectIsNotDisplayed;
 exports.waitIsNotDisplayed = exports.expectIsNotDisplayed;
 exports.waitIsDisplayed = exports.expectIsDisplayed;
 
-exports.expectTextToBeSet = function (elem, text, timeout) {
+exports.waitForText = function (elem, text, timeout) {
   return exports.wait(elem, timeout).then(function () {
     return browser.wait(function () {
       return elem.getText().then(function (result) {

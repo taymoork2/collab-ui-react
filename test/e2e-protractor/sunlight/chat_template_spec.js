@@ -92,7 +92,7 @@ describe('Care admin should be able to', function () {
     validateDisplayNewFeatureModal();
     utils.click(careChatTemplateSetupPage.createChatTemplateButton);
     utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this template");
+    utils.waitForText(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this template");
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
     utils.sendKeys(careChatTemplateSetupPage.ctNameInput, careChatTemplateSetupPage.randomChatTemplateName);
   }
@@ -106,10 +106,10 @@ describe('Care admin should be able to', function () {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.waitForText(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName);
     utils.click(careChatTemplateSetupPage.editChatTemplateBtnOnCard);
     utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this template");
+    utils.waitForText(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this template");
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
     utils.sendKeys(careChatTemplateSetupPage.ctNameInput, templateNameSuffix);
 
@@ -138,21 +138,21 @@ describe('Care admin should be able to', function () {
   }
 
   function validateTitleAndDesc(expectedTitle, expectedDesc) {
-    utils.expectTextToBeSet(careChatTemplateSetupPage.setUpTitle, expectedTitle);
+    utils.waitForText(careChatTemplateSetupPage.setUpTitle, expectedTitle);
     validateDesc(expectedDesc)
   }
 
   function validateDesc(expectedDesc) {
-    utils.expectTextToBeSet(careChatTemplateSetupPage.setUpDesc, expectedDesc);
+    utils.waitForText(careChatTemplateSetupPage.setUpDesc, expectedDesc);
   }
 
   function validateOverviewTitleAndDesc(expectedTitle, expectedDesc) {
-    utils.expectTextToBeSet(careChatTemplateSetupPage.overviewCardTitle, expectedTitle);
+    utils.waitForText(careChatTemplateSetupPage.overviewCardTitle, expectedTitle);
     validateOverviewDesc(expectedDesc)
   }
 
   function validateOverviewDesc(expectedDesc) {
-    utils.expectTextToBeSet(careChatTemplateSetupPage.overviewCardDesc, expectedDesc);
+    utils.waitForText(careChatTemplateSetupPage.overviewCardDesc, expectedDesc);
   }
 
 
@@ -162,9 +162,9 @@ describe('Care admin should be able to', function () {
     utils.click(careChatTemplateSetupPage.agentProfile);
     utils.expectIsDisplayed(careChatTemplateSetupPage.agentDisplayImage);
     utils.click(careChatTemplateSetupPage.agentNameRadio);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.agentNamePreview, 'Agent');
+    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent');
     utils.click(careChatTemplateSetupPage.agentAliasRadio);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.agentNamePreview, 'Alias');
+    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Alias');
     utils.expectIsDisplayed(careChatTemplateSetupPage.agentPreviewIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewMinimizeIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewCloseIcon);
@@ -216,10 +216,10 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
 
     utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Welcome Msq");
-    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_Header_Welcome, "Custom Welcome Msq");
+    utils.waitForText(careChatTemplateSetupPage.customerInfo_Header_Welcome, "Custom Welcome Msq");
 
     utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "OrgName1");
-    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_Header_Org, "OrgName1");
+    utils.waitForText(careChatTemplateSetupPage.customerInfo_Header_Org, "OrgName1");
   }
 
   function validateField1Change() {
@@ -230,7 +230,7 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
 
     utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Label");
-    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
+    utils.waitForText(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
 
     utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom HintText");
 
@@ -247,7 +247,7 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
 
     utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Label");
-    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
+    utils.waitForText(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
 
     utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom HintText");
 
@@ -264,10 +264,10 @@ describe('Care admin should be able to', function () {
   function validateContentsOfAgentUnavailablePage() {
     validateTitleAndDesc('Agent Unavailable', 'This screen is shown to a customer when no agent is available to assist');
     utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, "Sorry, we are unavailable at the moment. Please try again later.");
-    utils.expectTextToBeSet(careChatTemplateSetupPage.agentUnavailableMessage, "Sorry, we are unavailable at the moment. Please try again later.");
+    utils.waitForText(careChatTemplateSetupPage.agentUnavailableMessage, "Sorry, we are unavailable at the moment. Please try again later.");
     utils.sendKeys(careChatTemplateSetupPage.agentUnavailableMessageField, careChatTemplateSetupPage.randomChatTemplateName);
     utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, careChatTemplateSetupPage.randomChatTemplateName);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.agentUnavailableMessage, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.waitForText(careChatTemplateSetupPage.agentUnavailableMessage, careChatTemplateSetupPage.randomChatTemplateName);
   }
 
   function validateContentsOfOffHoursPage() {
@@ -297,7 +297,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfSummaryPage(successMessage, expectedMessage) {
-    utils.expectTextToBeSet(careChatTemplateSetupPage.summaryDesc, expectedMessage);
+    utils.waitForText(careChatTemplateSetupPage.summaryDesc, expectedMessage);
     utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
     notifications.assertSuccess(successMessage);
   }
@@ -306,7 +306,7 @@ describe('Care admin should be able to', function () {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName + templateNameSuffix);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName + templateNameSuffix);
+    utils.waitForText(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName + templateNameSuffix);
     utils.expectIsDisplayed(careChatTemplateSetupPage.downloadEmbedCodeOnCard);
     utils.click(careChatTemplateSetupPage.downloadEmbedCodeOnCard);
     validateDisplayEmbedCodeModal();
@@ -316,7 +316,7 @@ describe('Care admin should be able to', function () {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, templateName);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.chatTemplateName, templateName);
+    utils.waitForText(careChatTemplateSetupPage.chatTemplateName, templateName);
     utils.click(careChatTemplateSetupPage.deleteEmbedCodeBtnOnCard);
     utils.click(careChatTemplateSetupPage.deleteChatTemplateonModal);
     notifications.assertSuccess(templateName + ' template has been deleted successfully.');

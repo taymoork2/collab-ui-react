@@ -11,7 +11,7 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
 
   it('should open communication wizard', function () {
     navigation.clickCommunicationWizard();
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Call Settings');
+    utils.waitForText(wizard.mainviewTitle, 'Call Settings');
     utils.expectIsDisplayed(servicesetup.timeZone);
     utils.expectIsDisplayed(servicesetup.steeringDigit);
     utils.expectIsDisplayed(servicesetup.globalMOH);

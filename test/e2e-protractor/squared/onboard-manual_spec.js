@@ -17,10 +17,10 @@ describe('Onboard users through Manual Invite', function () {
   it('should select manually add/modify users', function () {
     utils.click(navigation.usersTab);
     utils.click(manageUsersPage.buttons.manageUsers);
-    utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+    utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
     utils.click(manageUsersPage.select.radio.orgManual);
     utils.click(manageUsersPage.buttons.next);
-    utils.expectTextToBeSet(manageUsersPage.select.title, 'Manually Add or Modify Users');
+    utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
   });
 
   it('should Manually Invite multiple users by email address (Message On).', function () {

@@ -86,11 +86,11 @@ describe('Squared Add User Flow', function () {
         // Users can't be added from the FTSW
         return;
       }
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
+      utils.waitForText(wizard.mainviewTitle, 'Plan Review');
       utils.click(wizard.beginBtn);
       utils.click(wizard.saveBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
+      utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');
       utils.click(wizard.nextBtn);
       utils.click(wizard.nextBtn);
     });
@@ -101,7 +101,7 @@ describe('Squared Add User Flow', function () {
         // Users can't be added from the FTSW
         return;
       }
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+      utils.waitForText(wizard.mainviewTitle, 'Add Users');
       utils.click(inviteusers.manualUpload);
       utils.click(wizard.nextBtn);
 
@@ -119,7 +119,7 @@ describe('Squared Add User Flow', function () {
       }
       notifications.clearNotifications();
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
+      utils.waitForText(wizard.mainviewTitle, 'Get Started');
       utils.click(wizard.finishBtn);
 
       navigation.expectDriverCurrentUrl('overview');
@@ -182,10 +182,10 @@ describe('Squared Add User Flow', function () {
     it('should open the Manage Users->Manually add users modal', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsersPage.buttons.manageUsers);
-      utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+      utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
       utils.click(manageUsersPage.select.radio.orgManual);
       utils.click(manageUsersPage.buttons.next);
-      utils.expectTextToBeSet(manageUsersPage.select.title, 'Manually Add or Modify Users');
+      utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
     });
 
     it('should add users successfully', function () {
