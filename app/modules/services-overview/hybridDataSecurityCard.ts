@@ -94,7 +94,11 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     this.HDSService = HDSService;
     this.setupButton.onClick = function () {
       let hdsEntitlementObj = {
+        serviceId: 'sparkHybridDataSecurity',
+        displayName: 'Hybrid Data Security',
         ciName: Config.entitlements.hds,
+        isConfigurable: false,
+        type: 'FREE_WITH_LICENSE',
       };
       HDSService.enableHdsEntitlement()
         .then(function () {
