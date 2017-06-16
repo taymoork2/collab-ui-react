@@ -121,7 +121,7 @@
   };
 
   /* @ngInject */
-  function AutoAttendantCeInfoModelService($q, AutoAttendantCeService, AACeDependenciesService, AAModelService) {
+  function AutoAttendantCeInfoModelService($q, AutoAttendantCeService, AACeDependenciesService, AAModelService, AANumberAssignmentService, Authinfo) {
 
     var service = {
       getAllCeInfos: getAllCeInfos,
@@ -144,17 +144,65 @@
 
     /////////////////////
 
-    function getAllCeInfos(aaResourceRecords) {
+    function getAllCeInfos(aaModel) {
+      var aaResourceRecords = aaModel.aaRecords;
       var ceInfos = [];
+      var ceInfoPromises = [];
       if (_.isArray(aaResourceRecords)) {
         for (var i = 0; i < aaResourceRecords.length; i++) {
-          ceInfos[i] = getCeInfo(aaResourceRecords[i]);
+          if (!_.isUndefined(aaResourceRecords[i].assignedResources[0])) {
+            ceInfoPromises.push(setupResourcesFromCmi(aaResourceRecords[i]));
+          }
         }
       }
-      return ceInfos;
+      return $q.all(ceInfoPromises).then(function () {
+        if (_.isArray(aaResourceRecords)) {
+          for (var i = 0; i < aaResourceRecords.length; i++) {
+            ceInfos[i] = getCeInfo(aaResourceRecords[i]);
+          }
+        }
+        aaModel.ceInfos = ceInfos;
+      });
     }
 
-    // New get method for Huron Features Page
+    function findUUIDFromCmiUsingNumber(fromCMI, resource) {
+      var cmiNumber = _.find(fromCMI, function (thisCMI) {
+        return (_.trimStart(thisCMI.number, '+') === _.trimStart(resource.number, '+'));
+      });
+
+      if (cmiNumber) {
+        resource.uuid = cmiNumber.uuid;
+      }
+    }
+
+    function setupResourcesFromCmi(resources) {
+      var deferred = $q.defer();
+      var cmiNumber;
+      var uuid = extractUUID(resources.callExperienceURL);
+      AANumberAssignmentService.getAANumberAssignments(Authinfo.getOrgId(), uuid).then(function (fromCMI) {
+
+        if (fromCMI && fromCMI.length !== 0) {
+          _.forEach(resources.assignedResources, function (resource) {
+            if (resource.uuid) {
+              cmiNumber = _.find(fromCMI, { 'uuid': resource.uuid });
+              if (cmiNumber) {
+                resource.number = (cmiNumber.number);
+              } else {
+                findUUIDFromCmiUsingNumber(fromCMI, resource);
+              }
+            } else {
+              findUUIDFromCmiUsingNumber(fromCMI, resource);
+            }
+          });
+        }
+        deferred.resolve();
+      }, function (response) {
+        deferred.reject(response);
+      });
+      return deferred.promise;
+    }
+
+// New get method for Huron Features Page
     function getCeInfosList() {
       var aaModel = {};
       aaModel.ceInfos = [];
@@ -162,22 +210,28 @@
       return AutoAttendantCeService.listCes().then(function (aaRecords) {
         if (_.isArray(aaRecords)) {
           aaModel.aaRecords = aaRecords;
-
-          aaModel.ceInfos = getAllCeInfos(aaModel.aaRecords);
+          return getAllCeInfos(aaModel).then(function () {
+            return AACeDependenciesService.readCeDependencies().then(function (depends) {
+              aaModel.dependsIds = depends.dependencies;
+              return aaModel;
+            }, function (response) {
+              aaModel.dependsIds = {};
+              if (response.status === 404) {
+              // there are no CEs or no dependencies between CEs; this is OK
+                return aaModel;
+              }
+              return $q.reject(response);
+            });
+          });
         }
-        return AACeDependenciesService.readCeDependencies();
+        return aaModel; // should not happen but avoids undefined errors if it happens
       }, function (response) {
         // init the model and move the chain the forward
         aaModel = AAModelService.newAAModel();
         aaModel.ceInfos = [];
-        return $q.reject(response);
-      }).then(function (depends) {
-        aaModel.dependsIds = depends.dependencies;
-        return aaModel;
-      }, function (response) {
         aaModel.dependsIds = {};
         if (response.status === 404) {
-          // there are no CEs or no dependencies between CEs; this is OK
+        // there are no CEs; this is OK
           return aaModel;
         }
         return $q.reject(response);

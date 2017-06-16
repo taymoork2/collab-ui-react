@@ -518,6 +518,10 @@
             AutoAttendantCeService.readCe(aaRecord.callExperienceURL).then(
               function (data) {
                 vm.aaModel.aaRecord = data;
+
+                // make sure assigned numbers are from CMI, CES might be out of date.
+                vm.aaModel.aaRecord.assignedResources = _.cloneDeep(aaRecord.assignedResources);
+
                 vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(aaRecord.callExperienceURL);
                 vm.populateUiModel();
                 vm.isAANameDefined = true;
@@ -672,7 +676,7 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone)
+      getTimeZoneOptions().then(getSystemTimeZone())
       .finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
