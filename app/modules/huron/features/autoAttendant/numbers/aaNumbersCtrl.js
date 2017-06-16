@@ -41,41 +41,6 @@
 
     /////////////////////
 
-    function findUUIDFromCmiUsingNumber(fromCMI, resource) {
-
-      var cmiNumber = _.find(fromCMI, function (thisCMI) {
-        return (_.trimStart(thisCMI.number, '+') === _.trimStart(resource.getNumber(), '+'));
-      });
-
-      if (cmiNumber) {
-        resource.setUUID(cmiNumber.uuid);
-      }
-    }
-
-    function setupResourcesFromCmi(resources) {
-      var cmiNumber;
-
-      return AANumberAssignmentService.getAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID).then(function (fromCMI) {
-
-        if (!fromCMI || fromCMI.length === 0) {
-          /* no assigned resources */
-          return;
-        }
-        _.forEach(resources, function (resource) {
-          if (resource.getUUID()) {
-            cmiNumber = _.find(fromCMI, { 'uuid': resource.getUUID() });
-            if (cmiNumber) {
-              resource.setNumber(cmiNumber.number);
-            } else {
-              findUUIDFromCmiUsingNumber(fromCMI, resource);
-            }
-          } else {
-            findUUIDFromCmiUsingNumber(fromCMI, resource);
-          }
-        });
-      });
-    }
-
     // Add Number, top-level method called by UI
     function addNumber(phoneNum) {
       var number = phoneNum.value;
@@ -398,9 +363,7 @@
       vm.ui = AAUiModelService.getUiModel();
       vm.aaModel.possibleNumberDiscrepancy = false;
 
-      setupResourcesFromCmi(vm.ui.ceInfo.getResources()).then(function () {
-        warnOnAssignedNumberDiscrepancies();
-      });
+      warnOnAssignedNumberDiscrepancies();
     }
 
     activate();
