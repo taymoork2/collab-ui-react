@@ -136,6 +136,27 @@ describe('Component: PstnWizardComponent', () => {
       expect(this.PstnWizardService.finalizeImport).toHaveBeenCalled();
     });
 
+    it('should see the Skip button on step 8', function () {
+      this.controller.step = 8;
+      expect(this.controller.showSkipBtn()).toBe(true);
+    });
+    it('should see the Skip button on step 9', function () {
+      this.controller.step = 9;
+      this.PstnModel.isEsaSigned.and.returnValue(false);
+      expect(this.controller.showSkipBtn()).toBe(true);
+    });
+    it('should go to review if Skip button is clicked on step 8', function () {
+      this.controller.step = 8;
+      this.PstnModel.isEsaSigned.and.returnValue(false);
+      this.controller.goToReview();
+      expect(this.controller.step).toBe(10);
+    });
+    it('should go to review if Skip button is clicked on step 9', function () {
+      this.controller.step = 9;
+      this.PstnModel.isEsaSigned.and.returnValue(false);
+      this.controller.goToReview();
+      expect(this.controller.step).toBe(10);
+    });
   });
 
   describe('I387 ByoPSTN feature toggle NOT set', () => {
