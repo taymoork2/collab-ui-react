@@ -15,13 +15,14 @@
   }
 
   /* @ngInject */
-  function TrialWebexService($http, Config, UrlConfig, WebexOrderStatusResource, Notification) {
+  function TrialWebexService($http, $q, Config, UrlConfig, WebexOrderStatusResource, Notification) {
     var _trialData;
     var service = {
       getData: getData,
       reset: reset,
       validateSiteUrl: validateSiteUrl,
       getTrialStatus: getTrialStatus,
+      provisionWebexSites: provisionWebexSites,
     };
 
     return service;
@@ -84,6 +85,15 @@
       }).catch(function (response) {
         Notification.errorResponse(response, 'trialModal.meeting.validationHttpError');
       });
+    }
+
+    function provisionWebexSites(payload, subscriptionId) {
+      if (!payload || !_.isString(subscriptionId)) {
+        return $q.reject('Invalid parameters passed to provision WebEx sites');
+      }
+      var webexProvisioningUrl = UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision';
+
+      return $http.post(webexProvisioningUrl, payload);
     }
 
     function getTrialStatus(trialId) {

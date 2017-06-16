@@ -3295,6 +3295,8 @@
     "setupWebexMeetingSites": "Set up WebEx Meeting Sites",
     "setupYourSites": "Set up your sites",
     "webexSites": "Do you have any existing WebEx sites?",
+    "webexProvisioningError": "An error occured with the webex provisioning service.",
+    "webexProvisioningSuccess": "Your Webex sites are being provisioned.",
     "yesKeepSite": "Yes, keep this site",
     "addAnotherSite": "Add another site",
     "meetingSettings": "Meeting Settings",

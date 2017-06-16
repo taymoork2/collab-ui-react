@@ -289,6 +289,13 @@ require('./_wizard.scss');
           } else {
             nextStepSuccessful();
           }
+        } else if (getTab().name === 'meetingSettings') {
+          if (getStep().name === 'summary') {
+            $rootScope.$broadcast('wizard-meeting-settings-setup-save-event');
+            nextStepSuccessful();
+          } else {
+            nextStepSuccessful();
+          }
         } else {
           nextStepSuccessful();
         }

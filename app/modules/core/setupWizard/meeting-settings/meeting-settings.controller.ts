@@ -1,10 +1,11 @@
 import './_meeting-settings.scss';
-import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites } from './meeting-settings.interface';
+import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexSiteDetail, IWebexLicencesPayload } from './meeting-settings.interface';
 
 export class MeetingSettingsCtrl {
   public siteModel: IWebExSite = {
     name: '',
     timeZone: '',
+    centerType: 'MC',
     licenseCount: 0,
   };
 
@@ -21,12 +22,17 @@ export class MeetingSettingsCtrl {
   public selectTimeZonePlaceholder = this.$translate.instant('firstTimeWizard.selectTimeZonePlaceholder');
   public timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
   public sitesArray: IWebExSite[] = [];
+  public actingSubscriptionId = '';
 
   /* @ngInject */
   constructor(
+    public $scope,
     private $translate: ng.translate.ITranslateService,
+    private $rootScope: ng.IRootScopeService,
     private Authinfo,
     private Config,
+    private Notification,
+    private Orgservice,
     private TrialTimeZoneService,
     private TrialWebexService,
   ) {
@@ -35,6 +41,12 @@ export class MeetingSettingsCtrl {
 
   private init(): void {
     this.findExistingWebexTrialSites();
+    this.Orgservice.getLicensesUsage().then((subscriptions) => {
+      this.actingSubscriptionId = subscriptions[0].internalSubscriptionId;
+    });
+    this.$rootScope.$on('wizard-meeting-settings-setup-save-event', (): void => {
+      this.provisionWebexSites();
+    });
   }
 
   public onInputChange() {
@@ -89,6 +101,10 @@ export class MeetingSettingsCtrl {
     return licensesRemaining;
   }
 
+  public enableOrDisableNext() {
+    _.set(this.$scope.wizard, 'isNextDisabled', this.sumOfWebExLicensesAssigned() !== this.licensesPurchased);
+  }
+
   public addOrRemoveExistingWebExSite(site) {
     if (site.keepExistingSite) {
       this.sitesArray.push(site);
@@ -111,6 +127,7 @@ export class MeetingSettingsCtrl {
         this.existingSites.push({
           name: trial.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
           licenseCount: 0,
+          centerType: 'MC',
           keepExistingSite: true,
         });
       }
@@ -135,6 +152,56 @@ export class MeetingSettingsCtrl {
   private clearInputs(): void {
     this.siteModel.name = '';
     this.siteModel.timeZone = '';
+  }
+
+  private constructWebexLicensesPayload() {
+    const webexSiteDetailsList: IWebexSiteDetail[] = [];
+    _.forEach(this.sitesArray, (site) => {
+      const webexSiteDetail: IWebexSiteDetail = {
+        siteUrl: site.name + this.Config.siteDomainUrl.webexUrl,
+        timezone: _.get<string>(site, 'timeZone.timeZoneId'),
+        centerType: site.centerType,
+        quantity: _.get<number>(site, 'licenseCount'),
+      };
+
+      webexSiteDetailsList.push(webexSiteDetail);
+    });
+
+    const webexLicensesPayload: IWebexLicencesPayload = {
+      provisionOrder: true,
+      serviceOrderUUID: null,
+      webexProvisioningParams: {
+        webexSiteDetailsList: webexSiteDetailsList,
+        audioPartnerName: 'somepartner@gmail.com',
+      },
+    };
+
+    return webexLicensesPayload;
+  }
+
+  private getActingSubscriptionId(): string {
+    return this.actingSubscriptionId;
+  }
+
+  private provisionWebexSites(): void {
+    const webexLicenses: IWebexLicencesPayload = this.constructWebexLicensesPayload();
+    const subscriptionId: string = this.getActingSubscriptionId();
+
+    this.TrialWebexService.provisionWebexSites(webexLicenses, subscriptionId)
+      .then(() => {
+        this.handleWebexProvisioningSuccess();
+      })
+      .catch((response) => {
+        this.handleWebexProvisioningError(response);
+      });
+  }
+
+  private handleWebexProvisioningSuccess() {
+    this.Notification.success('firstTimeWizard.webexProvisioningSuccess');
+  }
+
+  private handleWebexProvisioningError(response) {
+    this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
   }
 
 }
