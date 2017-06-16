@@ -65,4 +65,14 @@
         "westucFeatures.feature5",
         "westucFeatures.feature6"        
     ]
+}, {
+    "name": "BYOPSTN",
+    "countryCode": "US",
+    "docSrc": "",
+    "features": [
+        "byopstnFeatures.feature1",
+        "byopstnFeatures.feature2",
+        "byopstnFeatures.feature3",
+        "byopstnFeatures.feature4"
+    ]
 }]

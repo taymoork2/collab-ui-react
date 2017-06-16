@@ -42,6 +42,8 @@ export const ADMINTYPE_PARTNER: string = 'PARTNER';
 export const ADMINTYPE_CUSTOMER: string = 'CUSTOMER';
 
 export const BYOPSTN: string = 'BYOPSTN';
+export const BYO_PSTN: string = 'BYO-PSTN';
 export const PSTN_CARRIER_ID: string = 'pstnCarrierId';
 export const E911_SIGNEE: string = 'e911Signee';
 export const ESA_DISCLAIMER_ACCEPT = 'esa-disclaimer-accept-event';
+export const PRIVATE_PSTN_TRUNK = 'Private PSTN Trunk';
