@@ -6,7 +6,7 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $state, $stateParams, $translate, Authinfo, HybridServicesClusterService, HDSService, Notification) {
+  function HDSServiceController($modal, $state, $stateParams, $translate, Authinfo, HybridServicesClusterService) {
 
     var vm = this;
     vm.backState = $stateParams.backTo || 'services-overview';
@@ -36,20 +36,15 @@
     HybridServicesClusterService.serviceIsSetUp('spark-hybrid-datasecurity')
       .then(function (enabled) {
         if (!enabled) {
-          HDSService.enableHdsEntitlement()
-            .then(function () {
-              vm.addResourceModal.resolve.firstTimeSetup = true;
-              if (Authinfo.isCustomerLaunchedFromPartner()) {
-                $modal.open({
-                  templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
-                  type: 'dialog',
-                });
-                return;
-              }
-              $modal.open(vm.addResourceModal);
-            }).catch(function (error) {
-              Notification.errorWithTrackingId(error, 'HDSServiceController - HDSService.enableHdsEntitlement()');
+          vm.addResourceModal.resolve.firstTimeSetup = true;
+          if (Authinfo.isCustomerLaunchedFromPartner()) {
+            $modal.open({
+              templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+              type: 'dialog',
             });
+            return;
+          }
+          $modal.open(vm.addResourceModal);
         }
       });
 
