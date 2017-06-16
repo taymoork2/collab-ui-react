@@ -574,7 +574,7 @@
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "conversationError": "There was an error while loading room and file data.",
-    "webex": "WebEx Reports",
+    "webex": "WebEx Classic",
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports",
     "downloadOptions": "Download Options",
@@ -640,7 +640,9 @@
       }
     },
     "webexMetrics": {
-      "title": "WebEx Metrics",
+      "title": "WebEx",
+      "metrics": "Metrics",
+      "search": "Search",
       "meetingUsage": "Meeting Usage",
       "joinMeetingTime": "Join Meeting Time",
       "webexReportInMashup": "CHP Reports",

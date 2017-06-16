@@ -1,24 +1,37 @@
 'use strict';
 
-//This commit is just for demo needed.
-xdescribe('HealthService', function () {
+describe('Service: QlikService', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var $httpBackend, QlikService;
+  var $httpBackend, QlikService, UrlConfig;
 
-  var regex = /.*\/siteUrl\.*/;
+  var regex = /.*\/report\.*/;
+
+  var testData = {
+    postParam: {
+      'siteUrl': 'go.webex.com',
+      'email': 'qvadmin@cisco.com',
+      'org_id': 'TEST-QV-3',
+    },
+    appSucessResult: {
+      "appUrl": "https://qlik-loader/custportal/sense/app/7799d0da-e138-4e21-a9ad-0a5f2cee053a/?QlikTicket=acOEkuE_YU4WFUQL",
+      "ticket": "acOEkuE_YU4WFUQL",
+    },
+    qlikMashupUrl: 'qlik-loader',
+  };
 
   afterEach(function () {
-    $httpBackend = QlikService = undefined;
+    $httpBackend = QlikService = UrlConfig = undefined;
   });
 
   afterAll(function () {
     regex = undefined;
   });
 
-  beforeEach(inject(function (_$httpBackend_, _QlikService_) {
+  beforeEach(inject(function (_$httpBackend_, _QlikService_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
     QlikService = _QlikService_;
+    UrlConfig = _UrlConfig_;
   }));
 
   afterEach(function () {
@@ -28,27 +41,67 @@ xdescribe('HealthService', function () {
 
   describe('WebEx Metrics Status for server', function () {
     beforeEach(installPromiseMatchers);
-
-    it('should return qlik url with ticket if site is available', function () {
-      $httpBackend.expect('GET', regex).respond({
-        data: 'https://ds2-win2012-01/?ticket=abctest',
+    beforeEach(function () {
+      $httpBackend.expectPOST(regex, testData.postParam).respond({
+        data: testData.appSucessResult,
       });
-
-      var siteUrl = 'TimTrinhTrialInt150.WebEx.com';
-      var promise = QlikService.getMetricsLink('webex', siteUrl);
-
-      $httpBackend.flush();
-      expect(promise.$$state.value).toContain('ds2-win2012');
     });
 
-    it('should return an error if site or token is unavailable', function () {
-      $httpBackend.expect('GET', regex).respond(404);
-
-      var siteUrl = 'TimTrinhTrialInt150.WebEx.com';
-      var promise = QlikService.getWebExMetricsLink(siteUrl);
+    it('should return appId and ticket if call Webex base API', function () {
+      var promise = QlikService.getWebExReportQBSforBaseUrl(testData.postParam);
 
       $httpBackend.flush();
-      expect(promise).toBeRejected();
+      var res = promise.$$state.value;
+      expect(Object.keys(res.data)).toContain('ticket');
+    });
+
+    it('should return appId and ticket if call Webex premium API', function () {
+      var promise = QlikService.getWebExReportQBSforPremiumUrl(testData.postParam);
+
+      $httpBackend.flush();
+      var res = promise.$$state.value;
+      expect(Object.keys(res.data)).toContain('ticket');
+    });
+
+    it('should return appId and ticket if call Spark base API', function () {
+      var promise = QlikService.getSparkReportQBSforBaseUrl(testData.postParam);
+
+      $httpBackend.flush();
+      var res = promise.$$state.value;
+      expect(Object.keys(res.data)).toContain('ticket');
+    });
+
+    it('should return appId and ticket if call Spark premium API', function () {
+      var promise = QlikService.getSparkReportQBSforPremiumUrl(testData.postParam);
+
+      $httpBackend.flush();
+      var res = promise.$$state.value;
+      expect(Object.keys(res.data)).toContain('ticket');
+    });
+
+  });
+
+  describe('WebEx/Spark report Qlik mashup address', function () {
+    beforeEach(function () {
+      spyOn(UrlConfig, 'getWebExReportAppforBaseUrl');
+      spyOn(UrlConfig, 'getWebExReportAppforPremiumUrl');
+      spyOn(UrlConfig, 'getSparkReportAppforBaseUrl');
+      spyOn(UrlConfig, 'getSparkReportAppforPremiumUrl');
+    });
+    it('should return Qlik mashup address if error code not exist', function () {
+      UrlConfig.getWebExReportAppforBaseUrl.and.returnValue(testData.qlikMashupUrl);
+      UrlConfig.getWebExReportAppforPremiumUrl.and.returnValue(testData.qlikMashupUrl);
+      UrlConfig.getSparkReportAppforBaseUrl.and.returnValue(testData.qlikMashupUrl);
+      UrlConfig.getSparkReportAppforPremiumUrl.and.returnValue(testData.qlikMashupUrl);
+      var appUrls = [
+        QlikService.getWebExReportAppforBaseUrl(),
+        QlikService.getWebExReportAppforPremiumUrl(),
+        QlikService.getSparkReportAppforBaseUrl(),
+        QlikService.getSparkReportAppforPremiumUrl(),
+      ];
+      _.each(appUrls, function (appUrl) {
+        expect(appUrl).toEqual('qlik-loader');
+      });
     });
   });
 
