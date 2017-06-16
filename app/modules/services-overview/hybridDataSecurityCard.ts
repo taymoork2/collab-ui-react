@@ -69,9 +69,9 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     private $state,
     private Authinfo,
     private Config,
-    private Notification,
     private HDSService: HDSService,
     HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    private Notification,
   ) {
     super({
       active: false,
