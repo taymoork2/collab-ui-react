@@ -43,7 +43,7 @@
       value: Config.dateFormat.MDY_H,
     };
     var DEFAULT_MOH = {
-      label: 'System Default',
+      label: 'Generic Media',
       value: '1',
     };
     var DEFAULT_SD = '9';
