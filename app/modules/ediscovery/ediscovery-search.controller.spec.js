@@ -21,6 +21,7 @@ describe('Controller: EdiscoverySearchController', function () {
     ProPackService = _ProPackService_;
 
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve());
+    spyOn(Analytics, 'trackEdiscoverySteps').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue($q.resolve(false));
     spyOn(ProPackService, 'hasProPackPurchased').and.returnValue($q.resolve(false));

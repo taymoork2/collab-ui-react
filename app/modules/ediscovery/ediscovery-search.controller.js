@@ -254,6 +254,12 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.unencryptedRoomIds = null;
       vm.emailSelected = _.eq(vm.searchByOptions[0], vm.searchBySelected);
       vm.roomIdSelected = _.eq(vm.searchByOptions[1], vm.searchBySelected);
+      Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.INITIAL_SEARCH, {
+        trackingId: 'N/A',
+        emailSelected: vm.emailSelected && vm.searchModel,
+        spaceSelected: vm.roomIdSelected && vm.searchModel,
+        searchedWithKeyword: vm.queryModel,
+      });
       spark.mercury.connect()
         .then(function () {
           return spark.encryption.kms.createUnboundKeys({
@@ -296,14 +302,18 @@ var Spark = require('@ciscospark/spark-core').default;
                   vm.isReportMaxRooms = true;
                   vm.isReport = false;
                 }
-                Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.INITIAL_SEARCH);
               }
             })
             .catch(function (err) {
               vm.error = $translate.instant('ediscovery.searchErrors.requestFailed', {
                 trackingId: err.data.trackingId,
               });
-              Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.SEARCH_ERROR, err.data.trackingId);
+              Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.SEARCH_ERROR, {
+                trackingId: err.data.trackingId,
+                emailSelected: vm.emailSelected && vm.searchModel,
+                spaceSelected: vm.roomIdSelected && vm.searchModel,
+                searchedWithKeyword: vm.queryModel,
+              });
               resetSearchPageToInitialState();
             })
             .finally(function () {
@@ -317,6 +327,7 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.isReport = false;
       vm.isReportGenerating = true;
       disableAvalonPolling();
+      Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.GENERATE_REPORT, {});
       vm.report = {
         displayName: vm.searchCriteria.displayName,
         state: 'INIT',
@@ -343,7 +354,6 @@ var Spark = require('@ciscospark/spark-core').default;
               startDate: formatDate('api', getStartDate()),
               endDate: formatDate('api', getEndDate(), true),
             };
-            Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.GENERATE_REPORT);
             generateReport(reportParams);
           } else {
             runReport(res.runUrl, res.url);
