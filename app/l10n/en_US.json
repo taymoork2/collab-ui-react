@@ -2801,7 +2801,8 @@
         "date": "Date Time",
         "double": "Decimal",
         "integer": "Number",
-        "string": "Short Text"
+        "string": "Short Text",
+        "enumString": "Single Select"
       },
       "status": "Status",
       "inUse": "In Use",
@@ -2850,7 +2851,18 @@
         "deleteField": "Delete Field",
         "deleteConfirmationText": "Are you sure you want to delete this field?",
         "limitReached": "Maximum fields reached.",
-        "fieldLimitReadFailed": "Unable to retrieve fields limit. Refresh your browser to try again"
+        "fieldLimitReadFailed": "Unable to retrieve fields limit. Refresh your browser to try again",
+        "enumOptionPlaceholder": "Add Option",
+        "enumOptionsReorder": "Reorder",
+        "enumOptionsSetDefault": "Set default",
+        "enumOptionsRemoveDefault": "Remove default",
+        "enumOptionsAdd": "Add",
+        "deleteOptionConfirmationHeader": "Delete Option",
+        "deleteOptionConfirmation": "Are you sure you want to delete this option?",
+        "optionUniqueError": "This option already exists. Add a different option.",
+        "optionsNumberErrorMessage": "Add two or more options.",
+        "optionRequired": "This field is required.",
+        "options": "Options ({{count}})"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
