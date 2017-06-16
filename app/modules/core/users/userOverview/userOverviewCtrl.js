@@ -33,6 +33,10 @@
     vm.clickService = clickService;
     vm.clickUserDetailsService = clickUserDetailsService;
     vm.actionList = [];
+    vm.clickRolesAndSecurityAction = {
+      actionKey: 'common.edit',
+      actionFunction: clickRolesAndSecurity,
+    };
     vm.hasSparkCall = false;
     vm.enableRolesAndSecurityOption = false;
     var msgState = {
@@ -129,11 +133,6 @@
         action.actionFunction = goToEditService;
       }
       vm.actionList.push(action);
-      var editRoleAndSecurityAction = {
-        actionKey: 'common.edit',
-        actionFunction: clickRolesAndSecurity,
-      };
-      vm.actionList.push(editRoleAndSecurityAction);
       return $q.resolve();
     }
 
@@ -156,8 +155,8 @@
       $state.go('user-overview.roles-and-security');
     }
 
-    function clickUserDetailsService(feature) {
-      $state.go('user-overview.' + feature.state, { preferredLanguageDetails: preferredLanguageDetails });
+    function clickUserDetailsService() {
+      $state.go('user-overview.user-profile', { 'preferredLanguageDetails': preferredLanguageDetails });
     }
 
     function getDisplayableServices(serviceName) {

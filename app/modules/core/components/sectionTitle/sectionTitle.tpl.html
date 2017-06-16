@@ -12,8 +12,8 @@
       </ul>
     </span>
     <span ng-if="$ctrl.asButton">
-      <a ng-if="!$ctrl.asArrow" class="as-button" ng-click="$ctrl.actionList[0].actionFunction()" translate="{{$ctrl.actionList[0].actionKey}}"></a>
-      <a ng-if="$ctrl.asArrow" class="as-button" ng-click="$ctrl.actionList[1].actionFunction()">
+      <a ng-if="!$ctrl.shouldShowArrow()" class="as-button" ng-click="$ctrl.actionList[0].actionFunction()" translate="{{$ctrl.actionList[0].actionKey}}"></a>
+      <a ng-if="$ctrl.shouldShowArrow()" class="as-button" ng-click="$ctrl.action.actionFunction()">
         <i class="icon icon-arrow-next"></i>
       </a>
     </span>

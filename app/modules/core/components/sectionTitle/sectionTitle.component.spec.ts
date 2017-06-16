@@ -171,4 +171,27 @@ describe('Component: sectionTitle', () => {
       expect(this.view).toContainElement(actionSelector);
     });
   });
+
+  describe('with an action', () => {
+    beforeEach(function () {
+      this.actionSpy = jasmine.createSpy('actionFunction');
+      this.$scope.defaultAction = {
+        actionKey: 'action.key',
+        actionFunction: this.actionSpy,
+      };
+      this.compileComponent('sectionTitle', {
+        titleKey: 'custom.key',
+        action: 'defaultAction',
+        asButton: 'true',
+      });
+    });
+
+    it('should have a section title', function () {
+      expect(this.view.find('.section-title-row .section-name')).toHaveText('custom.key');
+    });
+
+    it('should have an arrow icon', function () {
+      expect(this.view).toContainElement('.icon-arrow-next');
+    });
+  });
 });

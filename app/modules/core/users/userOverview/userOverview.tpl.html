@@ -17,9 +17,8 @@
   <cs-sp-section ng-if="userOverview.enableRolesAndSecurityOption">
     <section-title
       title-key="usersPreview.rolesAndSecurity"
-      action-list="userOverview.actionList"
-      as-button="true"
-      as-arrow="true">
+      action="userOverview.clickRolesAndSecurityAction"
+      as-button="true">
     </section-title>
   </cs-sp-section>
   <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
