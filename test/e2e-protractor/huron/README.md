@@ -1,0 +1,58 @@
+# Huron Functional Testing Guide
+## General Info
+* Our test partner in integration is **Huron UI TestPartner**
+* Credentials are huron.ui.test.partner@gmail.com / Cisco@1234!
+## Rules
+* The test partner in integration is ONLY to be used for developing and running the functional tests.  **Do Not use this partner to create customers for manual testing for other slice development, BEMS cases, etc.  We have another partner for such uses and we reserve the right to obliterate any unrecognized customers from this partner without warning.**
+* With the above rule in mind, not deleting a customer while iterating on development of functional tests is acceptable as long as the customer is deleted as soon as you are done with it.
+* All tests are written in ES6 syntax.
+* Protractor elements are abstracted into page elements.
+* Use test utils in your expect statements, don't reinvent the wheel.
+## Running Tests
+* Locally
+  * To run the tests locally in development, you must start Atlas locally via `npm start`, then from another terminal window execute the protractor tests.
+* Running a Single .spec File
+  * To run a single test you can pass the --specs parameter:
+`npm run protractor-babel -- --specs <path to spec file>`
+```
+npm run protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
+```
+* Via Sauce Labs
+  * TBD
+## Developing Tests
+Listed below are some guidelines and best practices we need to follow when writing our tests.
+* The outer `describe()` function should be formatted with 'Huron Functional: `<test name>`'
+```
+describe(‘Huron Functional: call-settings’, () => {…});
+```
+* The outer `describe()` function will implement a `beforeAll()` function that uses the provisioner to create the customer for the test and an `afterAll()` function that cleans up the customer via the provisioner when the test is done.
+* The customer name will have the test name as part of its’ name.  Example:
+```
+customerName = `${os.userInfo().username}_call-settings`;
+```
+* The customer email will have the aforementioned customer name embedded in it.  Example:
+```
+`huron.ui.test.partner+${customerName}@gmail.com`
+```
+## Hints and Tips
+We use [Jasmine 2](https://jasmine.github.io/) as our BDD test framework.  Listed below are some tips for test development:
+* To disable a test, prepend with an `x`:
+```
+xit('should not run', () => {...});
+```
+* To disable an entire suite, prepend with an `x`:
+```
+xdescribe('should not run', () => {...});
+```
+* To force a test to be the only one run, prepend with an `f`:
+```
+fit('only I will run', () => {...});
+```
+* The same applies to a suite, prepend with an `f`:
+```
+fdescribe('only I will run', () => {...});
+```
+* To not have the provisioner delete your customer when done, use the `--provisionserKeepCustomer` flag when running protractor:
+```
+npm run protractor-babel -- --provisionerKeepCustomer --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
+```
