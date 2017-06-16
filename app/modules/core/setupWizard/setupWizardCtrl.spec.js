@@ -159,8 +159,8 @@ describe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have 6 tabs', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 5 tabs', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
@@ -171,8 +171,8 @@ describe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have the 7 steps', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
+    it('the wizard should have the 6 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
     });
 
     it('careSettings should have a single substep', function () {
