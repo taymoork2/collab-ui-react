@@ -87,11 +87,11 @@ require('./_user-roles.scss');
     FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
       $scope.enableRolesAndSecurityOption = enabled;
       if ($scope.enableRolesAndSecurityOption) {
-        if ($state.current.name == 'user-overview.user-profile') {
+        if ($state.current.name === 'user-overview.user-profile') {
           $scope.showUserDetailSection = true;
           $scope.showSecuritySection = false;
           $scope.showRolesSection = false;
-        } else if ($state.current.name == 'user-overview.roles-and-security') {
+        } else if ($state.current.name === 'user-overview.roles-and-security') {
           $scope.showUserDetailSection = false;
           $scope.showSecuritySection = true;
           $scope.showRolesSection = true;
@@ -472,6 +472,9 @@ require('./_user-roles.scss');
     function checkAdminDisplayName() {
       // If the user is an admin user,
       // the first name, last name and display name cannot be all blank.
+      if (!$scope.showUserDetailSection) {
+        return;
+      }
       if ($scope.rolesObj.adminRadioValue !== 0) {
         var firstName = _.get($scope.formUserData, 'name.givenName', null);
         var lastName = _.get($scope.formUserData, 'name.familyName', null);
@@ -481,7 +484,9 @@ require('./_user-roles.scss');
       } else {
         $scope.rolesEdit.form.displayName.$setValidity('notblank', true);
       }
-      $scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', getPartialAdminValidity());
+      if ($scope.showRolesSection) {
+        $scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', getPartialAdminValidity());
+      }
     }
 
     function orderadminOnCheckedHandler() {

@@ -32,11 +32,8 @@
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
     vm.clickUserDetailsService = clickUserDetailsService;
+    vm.clickRolesAndSecurity = clickRolesAndSecurity;
     vm.actionList = [];
-    vm.clickRolesAndSecurityAction = {
-      actionKey: 'common.edit',
-      actionFunction: clickRolesAndSecurity,
-    };
     vm.hasSparkCall = false;
     vm.enableRolesAndSecurityOption = false;
     var msgState = {
@@ -155,8 +152,8 @@
       $state.go('user-overview.roles-and-security');
     }
 
-    function clickUserDetailsService() {
-      $state.go('user-overview.user-profile', { 'preferredLanguageDetails': preferredLanguageDetails });
+    function clickUserDetailsService(feature) {
+      $state.go('user-overview.' + feature.state, { 'preferredLanguageDetails': preferredLanguageDetails });
     }
 
     function getDisplayableServices(serviceName) {

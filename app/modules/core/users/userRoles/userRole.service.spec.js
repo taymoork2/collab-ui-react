@@ -1,17 +1,12 @@
 'use strict';
 
-var coreModule = angular.module("Core", [
-  require('modules/core/auth/auth'),
-  require('modules/core/featureToggle').default,
-  require('modules/core/notifications').default]);
-
-var testModule = require('./index').default;
+//TODO Change module name to "core.user.userRoles"
+//DO NOT use export KTEST__MODULAR=true, this module is not self-contrained
 
 describe('Service: UserRoleService:', function () {
   var $http, Authinfo, Config, UrlConfig, UserRoleService;
 
-  beforeEach(angular.mock.module(coreModule));
-  beforeEach(angular.mock.module(testModule));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_$http_, _Authinfo_, _Config_, _UrlConfig_) {
     $http = _$http_;

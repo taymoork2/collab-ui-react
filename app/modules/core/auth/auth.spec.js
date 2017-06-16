@@ -820,13 +820,13 @@ describe('Auth Service', function () {
   });
   describe('Revoke Access Token', function () {
     beforeEach(function () {
-      OAuthConfig.getOAuthRevokeUserTokenUrl = jasmine.createSpy('getOAuthRevokeUserTokenUrl').and.returnValue('http://localhost/idb/oauth2/v1/tokens?username=');
+      OAuthConfig.getOAuthRevokeUserTokenUrl = jasmine.createSpy('getOAuthRevokeUserTokenUrl').and.returnValue('http://www.example.com/idb/oauth2/v1/tokens?username=');
 
     });
 
-    it('revoke user token should be forbiden', function () {
+    it('revoke user token should be forbidden', function () {
       $httpBackend
-        .expectDELETE('http://localhost/idb/oauth2/v1/tokens?username=fakeuser%40example.com')
+        .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com')
         .respond(403, {});
       var promise = Auth.revokeUserAuthTokens('fakeuser@example.com');
       expect(promise).toBeRejected();
@@ -834,7 +834,7 @@ describe('Auth Service', function () {
 
     it('revoke user token should be success', function () {
       $httpBackend
-        .expectDELETE('http://localhost/idb/oauth2/v1/tokens?username=fakeuser%40example.com')
+        .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com')
         .respond(204, {});
       var promise = Auth.revokeUserAuthTokens('fakeuser@example.com');
       expect(promise).toBeResolved();

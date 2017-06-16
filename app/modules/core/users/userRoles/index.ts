@@ -1,3 +1,5 @@
+//TODO Change module name to "core.user.userRoles"
+
 let UserRoleService = require('./userRole.service');
 let UserRolesCtrl = require('./userRolesCtrl');
 

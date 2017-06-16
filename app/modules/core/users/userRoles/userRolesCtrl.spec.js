@@ -1,11 +1,7 @@
 'use strict';
 
-var coreModule = angular.module("Core", [
-  require('modules/core/auth/auth'),
-  require('modules/core/featureToggle').default,
-  require('modules/core/notifications').default]);
-
-var testModule = require('./index').default;
+//TODO Change module name to "core.user.userRoles"
+//DO NOT use export KTEST__MODULAR=true, this module is not self-contrained
 
 describe('Controller: UserRolesCtrl', function () {
   var controller, $q, $scope, $state, $rootScope, $stateParams, $translate, Auth, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Log, Notification, SessionStorage, EdiscoveryService;
@@ -13,10 +9,9 @@ describe('Controller: UserRolesCtrl', function () {
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
 
-  beforeEach(angular.mock.module(coreModule));
-  beforeEach(angular.mock.module(testModule));
+  beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _$state_, _$translate_, _Config_, _$stateParams_, _$controller_, _Auth_, _Authinfo_, _FeatureToggleService_, _Log_, _Orgservice_, _Notification_, _SessionStorage_) {
+  beforeEach(inject(function (_$rootScope_, _$q_, _$state_, _$translate_, _Config_, _$stateParams_, _$controller_, _Auth_, _Authinfo_, _FeatureToggleService_, _Log_, _Notification_, _SessionStorage_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -26,7 +21,6 @@ describe('Controller: UserRolesCtrl', function () {
     $stateParams.currentUser = currentUser;
     $translate = _$translate_;
     Config = _Config_;
-    Orgservice = _Orgservice_;
     $controller = _$controller_;
     Auth = _Auth_;
     Authinfo = _Authinfo_;
@@ -36,8 +30,8 @@ describe('Controller: UserRolesCtrl', function () {
     SessionStorage = _SessionStorage_;
 
     Userservice = {
-      patchUserRoles: function () {},
-      updateUserProfile: function () {},
+      patchUserRoles: _.noop,
+      updateUserProfile: _.noop,
     };
 
     spyOn(Userservice, 'patchUserRoles').and.callFake(function () {
@@ -50,6 +44,10 @@ describe('Controller: UserRolesCtrl', function () {
 
     spyOn(Authinfo, 'getOrgId').and.returnValue('we23f24-4f3f4f-cc7af705-6583-32r3r23r');
     spyOn(Authinfo, 'getUserId').and.returnValue('cc7af705-6583-4f58-b0b6-ea75df64da7e');
+
+    Orgservice = {
+      getOrgCacheOption: _.noop,
+    }
     spyOn(Orgservice, 'getOrgCacheOption').and.callFake(function (callback) {
       callback({});
     });
@@ -58,13 +56,12 @@ describe('Controller: UserRolesCtrl', function () {
         return true;
       },
     });
-    //spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Auth, 'revokeUserAuthTokens').and.callFake(function () {
       return $q.resolve();
     });;
 
     EdiscoveryService = {
-      setEntitledForCompliance: function () {},
+      setEntitledForCompliance: _.noop,
     };
   }));
 //$q, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, EdiscoveryService,
@@ -93,28 +90,20 @@ describe('Controller: UserRolesCtrl', function () {
     $scope.$apply();
     $scope.rolesEdit = {
       form: {
-        $setPristine: function () {},
-        $setUntouched: function () {},
+        $setPristine: _.noop,
+        $setUntouched: _.noop,
         displayName: {
-          $setValidity: function () {},
+          $setValidity: _.noop,
         },
         partialAdmin: {
-          $setValidity: function () {},
+          $setValidity: _.noop,
         },
       },
     };
-    spyOn($scope.rolesEdit.form, '$setPristine').and.callFake(function () {
-
-    });
-    spyOn($scope.rolesEdit.form, '$setUntouched').and.callFake(function () {
-
-    });
-    spyOn($scope.rolesEdit.form.displayName, '$setValidity').and.callFake(function () {
-
-    });
-    spyOn($scope.rolesEdit.form.partialAdmin, '$setValidity').and.callFake(function () {
-
-    });
+    spyOn($scope.rolesEdit.form, '$setPristine').and.callFake(_.noop);
+    spyOn($scope.rolesEdit.form, '$setUntouched').and.callFake(_.noop);
+    spyOn($scope.rolesEdit.form.displayName, '$setValidity').and.callFake(_.noop);
+    spyOn($scope.rolesEdit.form.partialAdmin, '$setValidity').and.callFake(_.noop);
   }
 
   describe('UserRolesCtrl Initialization: ', function () {

@@ -175,14 +175,9 @@ describe('Component: sectionTitle', () => {
   describe('with an action', () => {
     beforeEach(function () {
       this.actionSpy = jasmine.createSpy('actionFunction');
-      this.$scope.defaultAction = {
-        actionKey: 'action.key',
-        actionFunction: this.actionSpy,
-      };
       this.compileComponent('sectionTitle', {
         titleKey: 'custom.key',
-        action: 'defaultAction',
-        asButton: 'true',
+        onActionClick: 'actionSpy',
       });
     });
 
