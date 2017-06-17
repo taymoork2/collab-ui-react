@@ -78,10 +78,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       this.$scope.$apply();
     });
 
-    it('pagetitle should be Reports', function () {
-      expect(this.controller.pageTitle).toEqual('reportsPage.pageTitle');
-    });
-
     it('should only display spark and care reports tab', function () {
       expect(this.controller.headerTabs).toEqual([headerTabs[0], headerTabs[1], headerTabs[4]]);
     });

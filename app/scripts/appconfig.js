@@ -1704,7 +1704,6 @@
               settingPageIframeUrl: null,
             },
           })
-
           .state('reports', {
             templateUrl: 'modules/core/customerReports/customerReportsHeader.tpl.html',
             controller: 'CustomerReportsHeaderCtrl',

@@ -13,13 +13,13 @@
   <h5 translate="partnerProfile.supportSetup"></h5>
   <!-- partner problem reporting site form -->
   <input type="checkbox" id="customSupportUrlBox" ng-model="ctrl.useCustomSupportUrl">
-  <label for="customSupportUrlBox" translate="globalSettings.support.problemReportsToCustomUrl"/>
+  <label for="customSupportUrlBox" translate="globalSettings.support.problemReportsToCustomUrl"></label>
   <div class="radio-input-flex">
     <input type="text" id="partnerSupportUrl" class="form-control"
-           placeholder="{{ctrl.placeHolder.troubleUrl | translate}}"
+           placeholder="{{::ctrl.placeHolder.troubleUrl}}"
            ng-model="ctrl.customSupport.url" ng-disabled="!ctrl.useCustomSupportUrl">
                 <textarea rows="7" id="partnerSupportText" class="form-control optional-row"
-                          placeholder="{{ctrl.placeHolder.troubleText | translate}}" ng-model="ctrl.customSupport.text"
+                          placeholder="{{::ctrl.placeHolder.troubleText}}" ng-model="ctrl.customSupport.text"
                           ng-disabled="!ctrl.useCustomSupportUrl">
                 </textarea>
     <h6 translate="partnerProfile.matchingTix"></h6>
@@ -27,7 +27,7 @@
     <p ng-if="ctrl.nameChangeEnabled" class="body-small form-section" translate="partnerProfile.matchingDescrNew" translate-values="{appTitle: ctrl.getAppTitle()}"></p>
     <button cs-btn class="btn btn--primary" ng-if="ctrl.showCustomSupportUrlSaveButton"
             ng-click="ctrl.saveUseCustomSupportUrl()"
-            loading="ctrl.savingProgress">{{"common.save" | translate}}
+            loading="ctrl.savingProgress">{{::"common.save" | translate}}
     </button>
   </div>
 </div>
@@ -42,11 +42,11 @@
   <div class="cs-input-group cs-input-radio" id="helpPartnerPanel">
 
     <input type="text" id="partnerHelpUrl" name="testForm" class="form-control"
-           placeholder="{{ctrl.placeHolder.helpUrlText | translate}}" ng-model="ctrl.customHelpSite.url"
+           placeholder="{{::ctrl.placeHolder.helpUrlText}}" ng-model="ctrl.customHelpSite.url"
            ng-disabled="!ctrl.useCustomHelpSite">
 
   </div>
   <button cs-btn class="btn btn--primary" ng-if="ctrl.showCustomHelpSiteSaveButton" ng-click="ctrl.saveUseCustomHelpSite()"
-          loading="ctrl.savingProgress">{{"common.save" | translate}}
+          loading="ctrl.savingProgress">{{::"common.save" | translate}}
   </button>
 </div>

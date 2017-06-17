@@ -2,7 +2,6 @@ import ILogService = angular.ILogService;
 class CustomerReportsHeaderCtrl {
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
     private $q: ng.IQService,
     private Authinfo,
     private FeatureToggleService,
@@ -12,7 +11,7 @@ class CustomerReportsHeaderCtrl {
   ) {
     if (Authinfo.isCare()) {
       this.headerTabs.push({
-        title: $translate.instant('reportsPage.careTab'),
+        title: 'reportsPage.careTab',
         state: 'reports.care',
       });
     }
@@ -20,28 +19,28 @@ class CustomerReportsHeaderCtrl {
       if (features.isMfEnabled) {
         if (features.mf) {
           this.headerTabs.push({
-            title: $translate.instant('mediaFusion.report.title'),
+            title: 'mediaFusion.report.title',
             state: 'reports.media',
           });
         } else if (features.mfMilestoneTwo) {
           this.headerTabs.push({
-            title: $translate.instant('mediaFusion.report.title'),
+            title: 'mediaFusion.report.title',
             state: 'reports.mediaservice',
           });
         } else {
           this.headerTabs.push({
-            title: $translate.instant('mediaFusion.report.title'),
+            title: 'mediaFusion.report.title',
             state: 'reports.metrics',
           });
         }
       }
       this.headerTabs.push({
-        title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
+        title: 'reportsPage.usageReports.usageReportTitle',
         state: 'reports.device-usage',
       });
       if (features.webexMetrics) {
         this.headerTabs.push({
-          title: $translate.instant('reportsPage.webexMetrics.title'),
+          title: 'reportsPage.webexMetrics.title',
           state: 'reports.webex-metrics',
         });
       }
@@ -49,9 +48,8 @@ class CustomerReportsHeaderCtrl {
     this.checkWebex();
   }
 
-  public pageTitle = this.$translate.instant('reportsPage.pageTitle');
   public headerTabs = [{
-    title: this.$translate.instant('reportsPage.sparkReports'),
+    title: 'reportsPage.sparkReports',
     state: 'reports.spark',
   }];
 
@@ -71,7 +69,7 @@ class CustomerReportsHeaderCtrl {
         if (result.isAdminReportEnabled && result.isIframeSupported) {
           if (!this.webex) {
             this.headerTabs.push({
-              title: this.$translate.instant('reportsPage.webex'),
+              title: 'reportsPage.webex',
               state: 'reports.webex',
             });
             this.webex = true;

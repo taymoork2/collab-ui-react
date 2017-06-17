@@ -20,7 +20,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.$on('$destroy', onDestroy);
 
     //Initialize data variables
-    $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.allowLoadMoreData = false;
     $scope.page = 1;
     $scope.status = null;

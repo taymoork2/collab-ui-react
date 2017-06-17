@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $state, $scope, $translate, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
@@ -18,7 +18,6 @@ require('./_overview.scss');
     var PSTN_CARRIER_ID = require('modules/huron/pstn/pstn.const').PSTN_CARRIER_ID;
     var E911_SIGNEE = require('modules/huron/pstn/pstn.const').E911_SIGNEE;
 
-    vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;

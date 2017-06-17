@@ -4,10 +4,10 @@ import { Notification } from 'modules/core/notifications';
 export class CallServiceContainerController extends ExpresswayContainerController {
 
   public tabs: any = [{
-    title: this.$translate.instant('common.resources'),
+    title: 'common.resources',
     state: 'call-service.list',
   }, {
-    title: this.$translate.instant('common.settings'),
+    title: 'common.settings',
     state: 'call-service.settings',
   }];
 
@@ -36,7 +36,6 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
     hasPartnerRegistrationFeatureToggle,
     hasNodesViewFeatureToggle,
     Notification: Notification,
-    private $translate: ng.translate.ITranslateService,
     ServiceDescriptor,
     ServiceStateChecker,
     USSService,
