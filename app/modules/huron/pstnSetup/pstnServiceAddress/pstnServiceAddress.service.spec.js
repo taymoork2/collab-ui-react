@@ -56,7 +56,6 @@ describe('Service: PstnServiceAddressService', function () {
   });
 
   it('should lookup an address through terminus using V2 API', function () {
-
     $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/e911/lookup').respond({
       addresses: [terminusAddress],
     });
@@ -71,18 +70,18 @@ describe('Service: PstnServiceAddressService', function () {
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites/' + siteId).respond(customerSite);
     PstnServiceAddressService.listCustomerSites(customerId).then(function (response) {
       expect(response).toEqual([jasmine.objectContaining({
-        "uuid": "29c63c1f-83b0-42b9-98ee-85624e4c9234",
-        "name": "Test Customer Site",
-        "serviceAddress": {
-          "serviceName": "",
-          "serviceStreetNumber": "123",
-          "serviceStreetDirection": "",
-          "serviceStreetName": "My Street",
-          "serviceStreetSuffix": "Drive",
-          "serviceAddressSub": "Apt 100",
-          "serviceCity": "Richardson",
-          "serviceState": "TX",
-          "serviceZip": "75082",
+        uuid: '29c63c1f-83b0-42b9-98ee-85624e4c9234',
+        name: 'Test Customer Site',
+        serviceAddress: {
+          serviceName: '',
+          serviceStreetNumber: '123',
+          serviceStreetDirection: '',
+          serviceStreetName: 'My Street',
+          serviceStreetSuffix: 'Drive',
+          serviceAddressSub: 'Apt 100',
+          serviceCity: 'Richardson',
+          serviceState: 'TX',
+          serviceZip: '75082',
         },
       })]);
     });
@@ -173,5 +172,4 @@ describe('Service: PstnServiceAddressService', function () {
       serviceAddress.serviceStreetName = 'My Street Drive';
     });
   });
-
 });

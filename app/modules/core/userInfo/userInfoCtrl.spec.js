@@ -60,7 +60,6 @@ describe('UserInfoController', function () {
     expect($window.open.calls.argsFor(0)[0]).toBe('some url');
     expect($window.open.calls.argsFor(0)[1]).toBe('_blank');
   });
-
 });
 
 describe('UserInfoController WebEx logout', function () {
@@ -81,8 +80,8 @@ describe('UserInfoController WebEx logout', function () {
     };
 
     deferredLogout = $q.defer();
-    spyOn(WebExUtilsFact, "logoutSite").and.returnValue(deferredLogout.promise);
-    spyOn(Auth, "logout");
+    spyOn(WebExUtilsFact, 'logoutSite').and.returnValue(deferredLogout.promise);
+    spyOn(Auth, 'logout');
 
     $controller('UserInfoController', {
       $scope: $scope,
@@ -90,17 +89,16 @@ describe('UserInfoController WebEx logout', function () {
       Auth: Auth,
       WebExUtilsFact: WebExUtilsFact,
     });
-
   }));
 
-  it("should continue logout if WebEx logout does not resolve", function () {
+  it('should continue logout if WebEx logout does not resolve', function () {
     $scope.logout();
     $timeout.flush(); //trigger $timeout
     expect(WebExUtilsFact.logoutSite).toHaveBeenCalled();
     expect(Auth.logout).toHaveBeenCalled();
   });
 
-  it("should continue if WebEx logout resolves with success", function () {
+  it('should continue if WebEx logout resolves with success', function () {
     deferredLogout.resolve('OK');
     $scope.logout();
     $rootScope.$apply();
@@ -108,7 +106,7 @@ describe('UserInfoController WebEx logout', function () {
     expect(Auth.logout).toHaveBeenCalled();
   });
 
-  it("should continue if WebEx logout resolves with error", function () {
+  it('should continue if WebEx logout resolves with error', function () {
     deferredLogout.reject('ERROR');
     $scope.logout();
     $rootScope.$apply();

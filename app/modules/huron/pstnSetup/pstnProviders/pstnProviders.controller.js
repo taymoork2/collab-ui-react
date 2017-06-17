@@ -26,7 +26,7 @@
     ////////////////////////
 
     function goToNumbers() {
-      if (PstnModel.getProvider().apiImplementation === "SWIVEL") {
+      if (PstnModel.getProvider().apiImplementation === 'SWIVEL') {
         goToSwivelNumbers();
       } else {
         goToOrderNumbers();

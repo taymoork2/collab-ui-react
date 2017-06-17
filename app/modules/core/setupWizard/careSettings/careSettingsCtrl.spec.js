@@ -12,7 +12,7 @@ describe('Controller: Care Settings', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
     inject(function ($controller, _$q_, _$rootScope_, _$httpBackend_, _Notification_, _$interval_, Authinfo, UrlConfig, _SunlightConfigService_) {
@@ -101,7 +101,6 @@ describe('Controller: Care Settings', function () {
       expect(controller.state).toBe(controller.IN_PROGRESS);
       expect($scope.wizard.isNextDisabled).toBe(true);
     });
-
   });
 
   describe('CareSettings - Setup Care - Success', function () {
@@ -211,7 +210,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
   };
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
     inject(function ($controller, _$httpBackend_, _$interval_, $q, _$rootScope_, _Notification_, _SunlightConfigService_, UrlConfig) {
@@ -369,5 +368,4 @@ describe('Care Settings - when org has K2 entitlement', function () {
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
   });
-
 });

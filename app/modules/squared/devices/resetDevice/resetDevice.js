@@ -14,7 +14,7 @@
           return CsdmHuronDeviceService.resetDevice(device.url)
             .then(function () {
               $modalInstance.close();
-              Notification.success("deviceOverviewPage.deviceRebootingDetails", null, "deviceOverviewPage.deviceRebooting");
+              Notification.success('deviceOverviewPage.deviceRebootingDetails', null, 'deviceOverviewPage.deviceRebooting');
             })
             .catch(function (response) {
               Notification.errorResponse(response);

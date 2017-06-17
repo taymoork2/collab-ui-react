@@ -24,10 +24,10 @@ var ActivatePage = function () {
 
   this.getTestBody = function getTestBody(email) {
     return {
-      'email': email || utils.randomTestGmail(),
-      'pushId': utils.randomId(),
-      'deviceName': utils.randomId(),
-      'deviceId': utils.randomId(),
+      email: email || utils.randomTestGmail(),
+      pushId: utils.randomId(),
+      deviceName: utils.randomId(),
+      deviceId: utils.randomId(),
     };
   }
 
@@ -39,9 +39,9 @@ var ActivatePage = function () {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       auth: {
-        'user': config.oauthClientRegistration.id,
-        'pass': config.oauthClientRegistration.secret,
-        'sendImmediately': true,
+        user: config.oauthClientRegistration.id,
+        pass: config.oauthClientRegistration.secret,
+        sendImmediately: true,
       },
       body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope,
     };
@@ -58,7 +58,7 @@ var ActivatePage = function () {
       headers: {
         'User-Agent': obj.deviceUA,
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + obj.token,
+        'Authorization': 'Bearer ' + obj.token,
       },
       body: JSON.stringify(obj.body),
     };

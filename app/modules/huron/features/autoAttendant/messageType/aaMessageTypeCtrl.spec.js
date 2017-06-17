@@ -52,7 +52,6 @@ describe('Controller: AAMessageTypeCtrl', function () {
     });
 
     describe('activate', function () {
-
       it('should be able to create new AA entry', function () {
         var c;
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
@@ -86,7 +85,6 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         expect(c).toBeDefined();
         expect(c.messageInput).toEqual('Hello World');
-
       });
 
 
@@ -108,7 +106,6 @@ describe('Controller: AAMessageTypeCtrl', function () {
         c.saveUiModel();
 
         expect(c.actionEntry.value).toEqual('Hello World');
-
       });
       it('should not set value to messageInput when action is upload', function () {
         var c;
@@ -123,14 +120,13 @@ describe('Controller: AAMessageTypeCtrl', function () {
           $scope: $scope,
         });
 
-        c.messageOption.value = "uploadFile";
+        c.messageOption.value = 'uploadFile';
 
         c.messageInput = 'Hello World';
 
         c.saveUiModel();
 
         expect(c.actionEntry.value).toEqual('value for say message');
-
       });
 
       it('should be able to save and set Message Options', function () {
@@ -154,7 +150,6 @@ describe('Controller: AAMessageTypeCtrl', function () {
         c.setMessageOptions();
 
         expect(c.actionEntry.value).toEqual('value for say message');
-
       });
       it('should be able to switch say action to play action', function () {
         var c;
@@ -177,7 +172,6 @@ describe('Controller: AAMessageTypeCtrl', function () {
         expect(c.actionEntry.value).toEqual('');
 
         expect(c.actionEntry.name).toEqual('play');
-
       });
 
       it('should be able to switch play action to dynamic action', function () {
@@ -201,7 +195,6 @@ describe('Controller: AAMessageTypeCtrl', function () {
         expect(c.actionEntry.value).toEqual('');
 
         expect(c.actionEntry.name).toEqual('say');
-
       });
       it('should be able blank out old play action when record saved with save action', function () {
         var c;
@@ -247,7 +240,6 @@ describe('Controller: AAMessageTypeCtrl', function () {
         expect(c.actionEntry.value).toEqual('');
 
         expect(c.actionEntry.name).toEqual('play');
-
       });
       it('should be able blank out old say/dynamic action when record saved with Play action', function () {
         var c;
@@ -293,15 +285,13 @@ describe('Controller: AAMessageTypeCtrl', function () {
         expect(c.actionEntry.value).toEqual('');
 
         expect(c.actionEntry.name).toEqual('say');
-
       });
-
     });
     it('should be able to create new AA entry creating a say action for Menu Header', function () {
       var c;
       var action;
 
-      $scope.isMenuHeader = "true";
+      $scope.isMenuHeader = 'true';
 
       menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
@@ -310,10 +300,10 @@ describe('Controller: AAMessageTypeCtrl', function () {
       menuEntry.actions.push(action);
 
       aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-      aaUiModel.openHours.type = "MENU_OPTION_ANNOUNCEMENT";
+      aaUiModel.openHours.type = 'MENU_OPTION_ANNOUNCEMENT';
 
       aaUiModel.openHours.headers[0] = menuEntry;
-      aaUiModel.openHours.headers[0].type = "MENU_OPTION_ANNOUNCEMENT";
+      aaUiModel.openHours.headers[0].type = 'MENU_OPTION_ANNOUNCEMENT';
 
       spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(aaUiModel.openHours);
 
@@ -329,7 +319,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
       var c;
       var action;
 
-      $scope.menuId = "001";
+      $scope.menuId = '001';
       $scope.menuKeyIndex = '0';
 
       menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
@@ -364,10 +354,10 @@ describe('Controller: AAMessageTypeCtrl', function () {
       menuEntry.actions.push(action);
 
       aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-      aaUiModel.openHours.type = "MENU_OPTION_ANNOUNCEMENT";
+      aaUiModel.openHours.type = 'MENU_OPTION_ANNOUNCEMENT';
 
       aaUiModel.openHours.headers[0] = menuEntry;
-      aaUiModel.openHours.headers[0].type = "MENU_OPTION_ANNOUNCEMENT";
+      aaUiModel.openHours.headers[0].type = 'MENU_OPTION_ANNOUNCEMENT';
 
       spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(aaUiModel.openHours);
 
@@ -377,7 +367,6 @@ describe('Controller: AAMessageTypeCtrl', function () {
       });
 
       expect(c.actionEntry.name).toEqual('say');
-
     });
 
     it('should be able to create new AA action entry Queue type', function () {
@@ -385,9 +374,9 @@ describe('Controller: AAMessageTypeCtrl', function () {
       var action;
       var moh;
 
-      $scope.menuId = "001";
+      $scope.menuId = '001';
       $scope.menuKeyIndex = '0';
-      $scope.type = "moh";
+      $scope.type = 'moh';
       menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
       action = (AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'value for say message'));
@@ -414,7 +403,5 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
       expect(c.actionEntry.name).toEqual('play');
     });
-
   });
-
 });

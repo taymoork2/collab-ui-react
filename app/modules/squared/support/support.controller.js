@@ -125,13 +125,13 @@ require('./_support.scss');
 
     $scope.tabs = [{
       title: 'supportPage.tabs.status',
-      state: "support.status",
+      state: 'support.status',
     }];
 
     if (Authinfo.isInDelegatedAdministrationOrg() && !Authinfo.isHelpDeskAndComplianceUserOnly()) {
       $scope.tabs.push({
         title: 'supportPage.tabs.logs',
-        state: "support.logs",
+        state: 'support.logs',
       });
     }
 
@@ -529,6 +529,5 @@ require('./_support.scss');
         visible: Authinfo.isCisco(),
       }],
     };
-
   }
 })();

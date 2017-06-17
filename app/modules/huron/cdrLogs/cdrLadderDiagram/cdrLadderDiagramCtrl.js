@@ -18,8 +18,8 @@
     vm.imported = $stateParams.imported;
     var logstashPath = $stateParams.logstashPath;
 
-    vm.diagramXML = "";
-    vm.diagramHTML = "";
+    vm.diagramXML = '';
+    vm.diagramHTML = '';
     vm.downloadReady = false;
     vm.isFilterCollapsed = true;
     vm.isDownloadCollapsed = true;
@@ -81,9 +81,9 @@
           if ((message.id === SIP_MESSAGE) && rawMsg && (rawMsg.indexOf(LOCUS) > 0)) {
             if (_.isNull(locusId)) {
               startIndex = rawMsg.indexOf(LOCUS);
-              endIndex = rawMsg.indexOf("Content-Length");
-              locusId = rawMsg.substring(startIndex + 7, endIndex).replace("\\n", "").replace("\\r", "");
-              endIndex = locusId.indexOf("Content-Type");
+              endIndex = rawMsg.indexOf('Content-Length');
+              locusId = rawMsg.substring(startIndex + 7, endIndex).replace('\\n', '').replace('\\r', '');
+              endIndex = locusId.indexOf('Content-Type');
               if (endIndex > 0) {
                 locusId = locusId.substring(0, endIndex);
               }
@@ -91,7 +91,6 @@
             }
             end = event['@timestamp'];
           }
-
         }
       });
 
@@ -144,7 +143,7 @@
 
       msgPayload = JSON.parse(value.msg.payload);
       if (!_.isUndefined(msgPayload.path)) {
-        msgType = "path:" + msgPayload.path;
+        msgType = 'path:' + msgPayload.path;
       } else {
         msgType = value.msg.type;
       }
@@ -154,14 +153,14 @@
       });
       if (!_.isUndefined(event)) {
         addEventData({
-          "type": "ProtocolEvents",
-          "sourceIp": event.eventSource.hostname,
-          "destinationIp": remoteAlias,
-          "timeStamp": value.time,
-          "msgType": msgType,
-          "remoteAlias": remoteAlias,
-          "localAlias": event.eventSource.hostname,
-          "callflowTransition": true,
+          type: 'ProtocolEvents',
+          sourceIp: event.eventSource.hostname,
+          destinationIp: remoteAlias,
+          timeStamp: value.time,
+          msgType: msgType,
+          remoteAlias: remoteAlias,
+          localAlias: event.eventSource.hostname,
+          callflowTransition: true,
         });
       }
 
@@ -170,26 +169,26 @@
       });
       if (!_.isUndefined(event)) {
         addEventData({
-          "type": "ProtocolEvents",
-          "sourceIp": remoteAlias,
-          "destinationIp": event.eventSource.hostname,
-          "timeStamp": value.time,
-          "msgType": msgType,
-          "remoteAlias": event.eventSource.hostname,
-          "localAlias": remoteAlias,
-          "callflowTransition": true,
+          type: 'ProtocolEvents',
+          sourceIp: remoteAlias,
+          destinationIp: event.eventSource.hostname,
+          timeStamp: value.time,
+          msgType: msgType,
+          remoteAlias: event.eventSource.hostname,
+          localAlias: remoteAlias,
+          callflowTransition: true,
         });
       }
 
       sparkEvent = {
-        "type": "SparkEvent",
-        "sourceIp": sourceIp,
-        "destinationIp": destinationIp,
-        "timeStamp": value.time,
-        "msgType": msgType,
-        "remoteAlias": remoteAlias,
-        "localAlias": localAlias,
-        "callflowTransition": false,
+        type: 'SparkEvent',
+        sourceIp: sourceIp,
+        destinationIp: destinationIp,
+        timeStamp: value.time,
+        msgType: msgType,
+        remoteAlias: remoteAlias,
+        localAlias: localAlias,
+        callflowTransition: false,
       };
       addEventData(sparkEvent);
     }
@@ -198,27 +197,27 @@
       if ((event.sourceIp !== null && !Config.isDevHostName(event.sourceIp)) &&
         (event.destinationIp !== null && !Config.isDevHostName(event.destinationIp))) {
         vm.events.push({
-          "type": event.type,
-          "@timestamp": event.localAlias,
-          "eventSource": {
-            "serviceID": "",
-            "serviceInstanceID": "0",
-            "customerID": "none",
-            "hostname": event.localAlias,
+          'type': event.type,
+          '@timestamp': event.localAlias,
+          'eventSource': {
+            serviceID: '',
+            serviceInstanceID: '0',
+            customerID: 'none',
+            hostname: event.localAlias,
           },
-          "dataParam": {
-            "remoteName": event.remoteAlias,
-            "direction": "out",
-            "msgType": event.msgType,
-            "remoteAlias": event.remoteAlias,
-            "localAlias": event.localAlias,
-            "localIPAddress": event.sourceIp,
-            "remotePAddress": event.destinationIp,
-            "callflowTransition": event.callflowTransition,
+          'dataParam': {
+            remoteName: event.remoteAlias,
+            direction: 'out',
+            msgType: event.msgType,
+            remoteAlias: event.remoteAlias,
+            localAlias: event.localAlias,
+            localIPAddress: event.sourceIp,
+            remotePAddress: event.destinationIp,
+            callflowTransition: event.callflowTransition,
           },
         });
 
-        if ((event.type === "SparkEvent") && (!_.includes(vm.sparkHostNames, event.localAlias))) {
+        if ((event.type === 'SparkEvent') && (!_.includes(vm.sparkHostNames, event.localAlias))) {
           vm.sparkHostNames.push(event.localAlias);
         }
       }
@@ -233,7 +232,7 @@
 
     function extractXmlDiagramInfo() {
       var htmlString = vm.diagramHTML.toString();
-      vm.diagramXML = $sce.trustAsHtml(htmlString.substring(htmlString.indexOf("<?xml"), htmlString.indexOf("</svg>") + 6));
+      vm.diagramXML = $sce.trustAsHtml(htmlString.substring(htmlString.indexOf('<?xml'), htmlString.indexOf('</svg>') + 6));
     }
 
     function generateDownloads() {
@@ -593,7 +592,6 @@
         vm.SessionIDPairsFilterOptions.push(tempObj);
         tempObj = {};
       });
-
     }
 
     function SessionIDPairsFilter() {

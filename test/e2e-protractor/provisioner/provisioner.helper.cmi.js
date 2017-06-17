@@ -5,7 +5,7 @@ export function createCmiCustomer(token, customer) {
     method: 'POST',
     uri: `${config.getCmiServiceUrl()}common/customers`,
     headers: {
-      'Authorization': `Bearer  ${token}`,
+      Authorization: `Bearer  ${token}`,
     },
     body: customer,
     json: true,
@@ -18,7 +18,7 @@ export function createCmiSite(token, customerId, site) {
     method: 'POST',
     uri: `${config.getCmiServiceUrl()}voice/customers/${customerId}/sites`,
     headers: {
-      'Authorization': `Bearer  ${token}`,
+      Authorization: `Bearer  ${token}`,
     },
     body: site,
     json: true,
@@ -31,7 +31,7 @@ export function createNumberRange(token, customerId, numberRange) {
     method: 'POST',
     uri: `${config.getCmiServiceUrl()}voice/customers/${customerId}/internalnumberranges`,
     headers: {
-      'Authorization': `Bearer  ${token}`,
+      Authorization: `Bearer  ${token}`,
     },
     body: numberRange,
     json: true,

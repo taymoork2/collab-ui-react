@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AARouteToHGCtrl($scope, $translate, HuntGroupService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
-
     var vm = this;
     var conditional = 'conditional';
 
@@ -54,12 +53,11 @@
       vm.hgSelected.id = action.getValue();
 
       vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
-        'id': vm.hgSelected.id,
+        id: vm.hgSelected.id,
       }), 'description', '');
     }
 
     function saveUiModel() {
-
       AACommonService.setPhoneMenuStatus(true);
       var entry, action;
 
@@ -78,7 +76,6 @@
     }
 
     function getHuntGroups() {
-
       return HuntGroupService.getHuntGroupList().then(function (hgPool) {
         _.each(hgPool, function (aHuntGroup) {
           vm.huntGroups.push({
@@ -87,11 +84,9 @@
           });
         });
       });
-
     }
 
     function checkForRouteToHG(action) {
-
       // make sure action is HG not External Number, User, etc
       if (!(action.getName() === rtHG)) {
         action.setName(rtHG);
@@ -101,7 +96,6 @@
     }
 
     function activate() {
-
       var ui = AAUiModelService.getUiModel();
 
       if ($scope.fromDecision) {
@@ -114,7 +108,6 @@
         if (!conditionalAction || conditionalAction.getName() !== conditional) {
           conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
           vm.menuEntry.actions[0] = conditionalAction;
-
         }
         if (!$scope.fromFallback) {
           if (!conditionalAction.then) {
@@ -125,7 +118,6 @@
           }
         }
       } else {
-
         if ($scope.fromRouteCall) {
           vm.uiMenu = ui[$scope.schedule];
           vm.menuEntry = vm.uiMenu.entries[$scope.index];
@@ -172,10 +164,8 @@
         vm.huntGroups.sort(AACommonService.sortByProperty('description'));
         populateUiModel();
       });
-
     }
 
     activate();
-
   }
 })();

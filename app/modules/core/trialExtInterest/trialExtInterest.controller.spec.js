@@ -35,7 +35,6 @@ describe('Controller: TrialExtInterestCtrl', function () {
   }
 
   describe('Without an encrypted query param', function () {
-
     beforeEach(initController);
 
     it('should initialize properly', function () {
@@ -48,7 +47,6 @@ describe('Controller: TrialExtInterestCtrl', function () {
   });
 
   describe('With an encrypted query param', function () {
-
     beforeEach(function () {
       $location.search.and.returnValue({
         eqp: eqpParam,
@@ -77,5 +75,4 @@ describe('Controller: TrialExtInterestCtrl', function () {
       });
     });
   });
-
 });

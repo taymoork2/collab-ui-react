@@ -24,7 +24,7 @@ require('./_cdr-logs.scss');
     var dateLogstashFormat = 'YYYY.MM.DD';
     var dateLogstashNodaysFormat = 'YYYY.MM.*';
 
-    var filetype = "text/json, application/json";
+    var filetype = 'text/json, application/json';
     var errorStatus = [16, 19, 393216, 0, 17, 1, 21];
     var today = moment().format(dateFormat);
     vm.logstashPath = '';
@@ -40,14 +40,14 @@ require('./_cdr-logs.scss');
     vm.dataState = null;
     vm.selectedCDR = null;
     vm.model = {
-      'callingPartyNumber': '',
-      'calledPartyNumber': '',
-      'searchUpload': vm.SEARCH,
-      'startTime': moment().format(timeFormat),
-      'endTime': moment().format(timeFormat),
-      'startDate': moment().subtract(1, 'days').format(dateFormat),
-      'endDate': moment().format(dateFormat),
-      'hitSize': 50,
+      callingPartyNumber: '',
+      calledPartyNumber: '',
+      searchUpload: vm.SEARCH,
+      startTime: moment().format(timeFormat),
+      endTime: moment().format(timeFormat),
+      startDate: moment().subtract(1, 'days').format(dateFormat),
+      endDate: moment().format(dateFormat),
+      hitSize: 50,
     };
     vm.updateLogstashPath = updateLogstashPath;
 
@@ -55,10 +55,10 @@ require('./_cdr-logs.scss');
     $scope.cdr = {
       model: {},
     };
-    $scope.$watch("cdr.model.endDate", function () {
+    $scope.$watch('cdr.model.endDate', function () {
       vm.validations.endDate();
     });
-    $scope.$watch("cdr.model.startDate", function () {
+    $scope.$watch('cdr.model.startDate', function () {
       vm.validations.startDate();
     });
 
@@ -121,12 +121,12 @@ require('./_cdr-logs.scss');
 
     vm.reset = function () {
       vm.selectedCDR = null;
-      vm.model.callingUser = "";
-      vm.model.calledUser = "";
-      vm.model.callingPartyNumber = "";
-      vm.model.calledPartyNumber = "";
-      vm.model.callingPartyDevice = "";
-      vm.model.calledPartyDevice = "";
+      vm.model.callingUser = '';
+      vm.model.calledUser = '';
+      vm.model.callingPartyNumber = '';
+      vm.model.calledPartyNumber = '';
+      vm.model.callingPartyDevice = '';
+      vm.model.calledPartyDevice = '';
       vm.model.startTime = moment().format(timeFormat);
       vm.model.endTime = moment().format(timeFormat);
       vm.model.startDate = moment().subtract(1, 'days').format(dateFormat);
@@ -136,20 +136,20 @@ require('./_cdr-logs.scss');
     };
 
     function updateLogstashPath() {
-      vm.logstashPath = "";
+      vm.logstashPath = '';
       var startDate = moment(vm.model.startDate);
       var diffDays = moment(vm.model.endDate).diff(moment(vm.model.startDate), 'days');
       var diffMonths = moment(vm.model.endDate).diff(moment(vm.model.startDate), 'months');
 
       if (diffDays < MAX_LIMIT) {
         for (var i = 0; i <= diffDays; i++) {
-          vm.logstashPath += ((i > 0) ? "," : "") + "logstash-" + startDate.format(dateLogstashFormat);
+          vm.logstashPath += ((i > 0) ? ',' : '') + 'logstash-' + startDate.format(dateLogstashFormat);
           startDate.add(1, 'days');
         }
       } else {
         if (diffMonths < MAX_LIMIT) {
           for (i = 0; i <= diffMonths; i++) {
-            vm.logstashPath += ((i > 0) ? "," : "") + "logstash-" + startDate.format(dateLogstashNodaysFormat);
+            vm.logstashPath += ((i > 0) ? ',' : '') + 'logstash-' + startDate.format(dateLogstashNodaysFormat);
             startDate.add(1, 'months');
           }
         } else {
@@ -165,38 +165,38 @@ require('./_cdr-logs.scss');
     vm.validations = {
       callingNumber: function () {
         var isValid = true;
-        if (vm.model.calledPartyNumber !== "") {
+        if (vm.model.calledPartyNumber !== '') {
           isValid = !(vm.model.callingPartyNumber === vm.model.calledPartyNumber);
         }
-        vm.searchAndUploadForm.callingPartyNumber.$setValidity("invalid", isValid);
+        vm.searchAndUploadForm.callingPartyNumber.$setValidity('invalid', isValid);
         if (isValid) {
-          vm.searchAndUploadForm.calledPartyNumber.$setValidity("invalid", isValid);
+          vm.searchAndUploadForm.calledPartyNumber.$setValidity('invalid', isValid);
         }
       },
       calledNumber: function () {
         var isValid = true;
-        if (vm.model.callingPartyNumber !== "") {
+        if (vm.model.callingPartyNumber !== '') {
           isValid = !(vm.model.callingPartyNumber === vm.model.calledPartyNumber);
         }
-        vm.searchAndUploadForm.calledPartyNumber.$setValidity("invalid", isValid);
+        vm.searchAndUploadForm.calledPartyNumber.$setValidity('invalid', isValid);
         if (isValid) {
-          vm.searchAndUploadForm.callingPartyNumber.$setValidity("invalid", isValid);
+          vm.searchAndUploadForm.callingPartyNumber.$setValidity('invalid', isValid);
         }
       },
       startDate: function () {
         var isValid = !!(moment(vm.model.endDate).format() >= moment(vm.model.startDate).format());
-        vm.searchAndUploadForm.startDate.$setValidity("invalidRange", isValid);
+        vm.searchAndUploadForm.startDate.$setValidity('invalidRange', isValid);
         isValid = !!(moment(today).format() >= moment(vm.model.startDate).format());
-        vm.searchAndUploadForm.startDate.$setValidity("invalidDate", isValid);
+        vm.searchAndUploadForm.startDate.$setValidity('invalidDate', isValid);
         if (isValid) {
           updateLogstashPath();
         }
       },
       endDate: function () {
         var isValid = !!(moment(vm.model.endDate).format() >= moment(vm.model.startDate).format());
-        vm.searchAndUploadForm.endDate.$setValidity("invalidRange", isValid);
+        vm.searchAndUploadForm.endDate.$setValidity('invalidRange', isValid);
         isValid = !!(moment(today).format() >= moment(vm.model.endDate).format());
-        vm.searchAndUploadForm.endDate.$setValidity("invalidDate", isValid);
+        vm.searchAndUploadForm.endDate.$setValidity('invalidDate', isValid);
         if (isValid) {
           updateLogstashPath();
         }
@@ -232,7 +232,7 @@ require('./_cdr-logs.scss');
               Notification.error('cdrLogs.jsonTypeError');
             });
           },
-          fileSuffix: "json",
+          fileSuffix: 'json',
         },
         hideExpression: 'expression.hideUpload',
       }, {
@@ -277,7 +277,7 @@ require('./_cdr-logs.scss');
       var x = 0;
       _.forEach(cdrArray, function (cdr) {
         _.forEach(cdr, function (item) {
-          item.name = "call0CDR" + x;
+          item.name = 'call0CDR' + x;
           x++;
         });
       });
@@ -324,13 +324,13 @@ require('./_cdr-logs.scss');
           numberOfCdrs++;
         }
       }
-      header = $translate.instant("cdrLogs.cdrAccordionHeader", {
+      header = $translate.instant('cdrLogs.cdrAccordionHeader', {
         firstTimestamp: firstTimestamp,
         numberOfCdrs: numberOfCdrs,
         totalDuration: totalDuration,
       });
       if (sparkCall) {
-        header += ' ' + $translate.instant("cdrLogs.sparkCall");
+        header += ' ' + $translate.instant('cdrLogs.sparkCall');
       }
       return header;
     }

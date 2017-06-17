@@ -122,7 +122,6 @@
 
   /* @ngInject */
   function AutoAttendantCeInfoModelService($q, AutoAttendantCeService, AACeDependenciesService, AAModelService, AANumberAssignmentService, Authinfo) {
-
     var service = {
       getAllCeInfos: getAllCeInfos,
       getCeInfosList: getCeInfosList,
@@ -180,11 +179,10 @@
       var cmiNumber;
       var uuid = extractUUID(resources.callExperienceURL);
       AANumberAssignmentService.getAANumberAssignments(Authinfo.getOrgId(), uuid).then(function (fromCMI) {
-
         if (fromCMI && fromCMI.length !== 0) {
           _.forEach(resources.assignedResources, function (resource) {
             if (resource.uuid) {
-              cmiNumber = _.find(fromCMI, { 'uuid': resource.uuid });
+              cmiNumber = _.find(fromCMI, { uuid: resource.uuid });
               if (cmiNumber) {
                 resource.number = (cmiNumber.number);
               } else {
@@ -302,12 +300,11 @@
     }
 
     function extractUUID(ceURL) {
-      var uuidPos = ceURL.lastIndexOf("/");
+      var uuidPos = ceURL.lastIndexOf('/');
       if (uuidPos === -1) {
         return '';
       }
       return ceURL.substr(uuidPos + 1);
     }
-
   }
 })();

@@ -5,7 +5,6 @@
 'use strict';
 
 xdescribe('Admin should be able to', function () {
-
   it('login as an account admin and goto Huron Features Page', function () {
     login.login('huron-int1', '#/hurondetails/features');
   });

@@ -23,26 +23,26 @@ describe('OAuthConfig', function () {
 
   var whenCalling = function (fn, arg1, arg2) {
     var hosts = {
-      'dev': devHost,
-      'cfe': cfeHost,
-      'integration': intHost,
-      'prod': prodHost,
+      dev: devHost,
+      cfe: cfeHost,
+      integration: intHost,
+      prod: prodHost,
     };
     return {
       expectUrlToBe: function (obj) {
         _.each(obj, function (expected, env) {
           var host = hosts[env];
           if (!host) {
-            throw new Error("Unknown environment " + env);
+            throw new Error('Unknown environment ' + env);
           }
           if (!OAuthConfig[fn]) {
-            throw new Error("Unknown method " + fn);
+            throw new Error('Unknown method ' + fn);
           }
           $location.host.and.returnValue(host);
           var actual = OAuthConfig[fn](arg1, arg2);
 
           if (expected !== actual) {
-            throw new Error("Expected " + fn + " in " + env + " to be '" + expected + "' but it was '" + actual + "'");
+            throw new Error('Expected ' + fn + ' in ' + env + " to be '" + expected + "' but it was '" + actual + "'");
           }
         });
       },

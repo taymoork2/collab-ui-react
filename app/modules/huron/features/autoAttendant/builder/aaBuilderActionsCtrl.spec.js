@@ -22,15 +22,15 @@ describe('Controller: AABuilderActionsCtrl', function () {
 
   var sortedOptions = [
     {
-      "title": 'autoAttendant.actionDecision',
+      title: 'autoAttendant.actionDecision',
     }, {
-      "title": 'autoAttendant.actionPhoneMenu',
+      title: 'autoAttendant.actionPhoneMenu',
     }, {
-      "title": 'autoAttendant.actionRouteCall',
+      title: 'autoAttendant.actionRouteCall',
     }, {
-      "title": 'autoAttendant.actionSayMessage',
+      title: 'autoAttendant.actionSayMessage',
     }, {
-      "title": 'autoAttendant.phoneMenuDialExt',
+      title: 'autoAttendant.phoneMenuDialExt',
     },
   ];
 
@@ -96,7 +96,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
 
   describe('setOption for Dial By Extension', function () {
     it('option for Dial By Extension is selected', function () {
-
       aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
 
       aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
@@ -113,7 +112,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
       });
 
       expect(controller.option.title).toEqual('autoAttendant.phoneMenuDialExt');
-
     });
   });
 
@@ -186,7 +184,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
   });
 
   describe('removeAction', function () {
-
     it('remove a particular menu entry from the menu model', function () {
       aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
       aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
@@ -223,7 +220,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     });
 
     it('should bring up modal when dependent variables are present', function () {
-      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({ 'ce_id': ['1234567'], 'var_name': 'firstvariable' }));
+      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({ ce_id: ['1234567'], var_name: 'firstvariable' }));
 
       controller.removeAction(0);
       modalDefer.resolve();
@@ -232,7 +229,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
       expect($modal.open).toHaveBeenCalled();
       expect(AACommonService.setActionStatus).toHaveBeenCalled();
-
     });
 
     it('should not bring up modal when no dependent variables present', function () {
@@ -246,7 +242,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
       expect($modal.open).not.toHaveBeenCalled();
       expect(AACommonService.setActionStatus).toHaveBeenCalled();
-
     });
     it('should bring up modal when no dependent variables present but the model has one', function () {
       spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({}));
@@ -260,7 +255,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
       expect($modal.open).toHaveBeenCalled();
       expect(AACommonService.setActionStatus).toHaveBeenCalled();
-
     });
     it('should bring up modal when no dependent variables present but the model (reject) has one', function () {
       spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.reject({}));
@@ -274,7 +268,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
       expect($modal.open).toHaveBeenCalled();
       expect(AACommonService.setActionStatus).toHaveBeenCalled();
-
     });
 
     it('should not bring up modal when no dependent variables and noCe variables', function () {
@@ -289,7 +282,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
       expect($modal.open).not.toHaveBeenCalled();
       expect(AACommonService.setActionStatus).toHaveBeenCalled();
-
     });
     it('should not bring up modal when no dependent variables the model hasnt got  one', function () {
       spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({}));
@@ -303,11 +295,10 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
       expect($modal.open).not.toHaveBeenCalled();
       expect(AACommonService.setActionStatus).toHaveBeenCalled();
-
     });
 
     it('should not set text status to true when modal is cancelled', function () {
-      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({ 'ce_id': ['1234567'], 'var_name': 'firstvariable' }));
+      spyOn(CustomVariableService, 'getVariableDependencies').and.returnValue($q.resolve({ ce_id: ['1234567'], var_name: 'firstvariable' }));
 
       aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
       aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
@@ -321,8 +312,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(CustomVariableService.getVariableDependencies).toHaveBeenCalled();
       expect(AACommonService.setActionStatus).not.toHaveBeenCalled();
     });
-
-
   });
 
   /**
@@ -358,9 +347,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(controller.options.length).toEqual(6);
       // note: only works until an action that starts with an A or a B happens
       expect(controller.options[0].title).toEqual('autoAttendant.actionCallerInput');
-
     });
-
   });
-
 });

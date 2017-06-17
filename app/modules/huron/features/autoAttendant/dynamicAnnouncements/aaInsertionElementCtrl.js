@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AAInsertionElementCtrl($scope, $modal, $translate, AAUiModelService, AACommonService, AADynaAnnounceService) {
-
     var vm = this;
 
     var ui;
@@ -36,7 +35,6 @@
     /////////////////////
 
     function mainClickFn() {
-
       var id = $scope.elementId;
       populateUiModel(id);
       var dynaList = vm.menuEntry.dynamicList;
@@ -129,7 +127,7 @@
     }
 
     function setUp() {
-      var variableOption = _.find(vm.variableOptions, { 'value': $scope.textValue });
+      var variableOption = _.find(vm.variableOptions, { value: $scope.textValue });
       vm.elementText = variableOption ? variableOption.label : $scope.textValue;
       vm.readAs = $scope.readAs;
       vm.elementId = $scope.elementId;
@@ -140,6 +138,5 @@
     }
 
     activate();
-
   }
 })();

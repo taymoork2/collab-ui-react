@@ -3,7 +3,6 @@
 var testModule = require('./index').default;
 
 describe('Controller: UserOverviewCtrl', function () {
-
   function init() {
     this.initModules(testModule, 'WebExApp', 'Sunlight', 'Huron');
     this.injectDependencies('$controller', '$q', '$scope', 'Authinfo', 'Config', 'FeatureToggleService',
@@ -95,7 +94,6 @@ describe('Controller: UserOverviewCtrl', function () {
   ////////////////////
 
   describe('init', function () {
-
     it('should not set features list by default', function () {
       initController.apply(this);
       expect(this.controller.features).toBeUndefined();
@@ -131,7 +129,6 @@ describe('Controller: UserOverviewCtrl', function () {
       msgState = _.find(this.controller.services, { state: 'messaging' });
       expect(msgState.actionAvailable).toBe(true);
     });
-
   });
 
   describe('Reload User on events', function () {
@@ -164,7 +161,6 @@ describe('Controller: UserOverviewCtrl', function () {
       this.$scope.$broadcast('USER_LIST_UPDATED');
       this.$scope.$digest();
       expect(this.controller.subTitleCard).toBe(' AddressLine1');
-
     });
   });
 
@@ -241,11 +237,9 @@ describe('Controller: UserOverviewCtrl', function () {
       this.$scope.$digest();
       expect(this.controller.currentUser.licenseID.length).toEqual(1);
     });
-
   });
 
   describe('AuthCodeLink', function () {
-
     beforeEach(function () {
       initController.apply(this);
     });
@@ -259,7 +253,6 @@ describe('Controller: UserOverviewCtrl', function () {
       this.controller.disableAuthCodeLink();
       expect(this.controller.showGenerateOtpLink).toBeFalsy();
     });
-
   });
 
   describe('resendInvitation', function () {

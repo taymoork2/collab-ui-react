@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function MediaServiceControllerV2($modal, $state, $stateParams, Authinfo, HybridServicesClusterService) {
-
     var vm = this;
     vm.backState = $stateParams.backTo || 'services-overview';
 
@@ -46,7 +45,6 @@
             });
         }
       });
-
   }
 
   angular

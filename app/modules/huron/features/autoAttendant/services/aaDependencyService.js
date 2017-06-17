@@ -43,6 +43,5 @@
       deferred.resolve(event);
       return deferred.promise;
     }
-
   }
 })();

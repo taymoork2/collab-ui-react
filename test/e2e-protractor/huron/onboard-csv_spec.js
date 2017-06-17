@@ -45,11 +45,9 @@ describe('Onboard Users using uploading CSV File', function () {
     utils.expectIsDisplayed(telephony.directoryNumbers);
     utils.expectCount(telephony.directoryNumbers, 1);
     utils.click(users.closeSidePanel);
-
   });
 
   afterAll(function () {
     utils.deleteUser(user);
   });
-
 });

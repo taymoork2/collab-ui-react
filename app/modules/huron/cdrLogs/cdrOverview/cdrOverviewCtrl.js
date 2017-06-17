@@ -15,9 +15,9 @@ require('./_cdr-overview.scss');
 
     var cdrData = formatCdr($stateParams.cdrData);
     vm.searchPlaceholder = $translate.instant('cdrLogs.searchPlaceholder');
-    vm.searchField = "";
+    vm.searchField = '';
     vm.cdrTable = [];
-    vm.filename = "cdr.json";
+    vm.filename = 'cdr.json';
     vm.jsonUrl = undefined;
     vm.jsonBlob = undefined;
 
@@ -28,23 +28,23 @@ require('./_cdr-overview.scss');
     _.forEach(cdrData, function (value, key) {
       if (key.toLowerCase() !== '$$hashkey') {
         vm.cdr.push({
-          'key': key,
-          'value': value,
+          key: key,
+          value: value,
         });
       }
     });
 
     vm.tableOptions = {
       cursorcolor: chartColors.gray,
-      cursorborder: "0px",
-      cursorwidth: "7px",
+      cursorborder: '0px',
+      cursorwidth: '7px',
       railpadding: {
         top: 0,
         right: 3,
         left: 0,
         bottom: 0,
       },
-      autohidemode: "leave",
+      autohidemode: 'leave',
     };
 
     vm.openLadderDiagram = function () {
@@ -77,7 +77,7 @@ require('./_cdr-overview.scss');
       delete newCdr['message'];
       delete newCdr['name'];
       for (var key in cdrRawJson) {
-        if (["dataParam", "eventSource", "tags", "message"].indexOf(key) < 0) {
+        if (['dataParam', 'eventSource', 'tags', 'message'].indexOf(key) < 0) {
           newCdr[key] = cdrRawJson[key];
         }
       }

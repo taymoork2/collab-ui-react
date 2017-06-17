@@ -209,7 +209,7 @@
     var updateEntitlement = function (entitled) {
       $scope.savingEntitlements = true;
       var user = [{
-        'address': $scope.currentUser.userName,
+        address: $scope.currentUser.userName,
       }];
       var entitlement = [{
         entitlementName: $scope.entitlementNames[$scope.extension.id],
@@ -259,7 +259,6 @@
           if (userStatus !== 200) {
             Notification.notify([entitleResult.msg], entitleResult.type);
           }
-
         } else {
           entitleResult = {
             msg: $translate.instant('hercules.userSidepanel.not-updated', {

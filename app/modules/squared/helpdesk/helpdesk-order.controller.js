@@ -56,7 +56,7 @@
       //Getting the customer info from order payload or update clientContent
       var emailUpdates = _.get(orderObj, 'clientContent.adminEmailUpdates');
       var customerEmailUpdates = _.filter(emailUpdates, function (data) {
-        return data.orderEmailType === "CUSTOMER_ADMIN";
+        return data.orderEmailType === 'CUSTOMER_ADMIN';
       });
       if (customerEmailUpdates.length > 0) {
         customerEmailUpdates = _.last(customerEmailUpdates);
@@ -68,7 +68,7 @@
 
       //Getting the partner info from order payload or update clientContent
       var partnerEmailUpdates = _.filter(emailUpdates, function (data) {
-        return data.orderEmailType === "PARTNER_ADMIN";
+        return data.orderEmailType === 'PARTNER_ADMIN';
       });
       if (partnerEmailUpdates.length > 0) {
         partnerEmailUpdates = _.last(partnerEmailUpdates);
@@ -155,7 +155,7 @@
 
     function getEmailSentTime(emails) {
       var mailStat = _.filter(emails, function (data) {
-        return data.event === "delivered";
+        return data.event === 'delivered';
       });
       if (mailStat) {
         mailStat = _.first(mailStat);

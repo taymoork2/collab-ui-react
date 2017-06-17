@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function BillingCtrl($scope, $filter, Notification, Log, PageParam, $stateParams, BillingService) {
-
     var enc;
     $scope.orderDetails = [];
 
@@ -97,6 +96,5 @@
         cellTemplate: actionsTemplate,
       }],
     };
-
   }
 })();

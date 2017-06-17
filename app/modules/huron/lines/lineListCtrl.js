@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
-
     var vm = this;
 
     vm.currentDataPosition = 0;
@@ -74,7 +73,6 @@
       }
 
       vm.timer = $timeout(function () {
-
         // Require at least three characters based on user experience with
         // existing Users Page where CI requires three char before
         // making backend request to update data
@@ -128,7 +126,6 @@
       // Get "unassigned" internal and external lines
       LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, $scope.gridData)
         .then(function (response) {
-
           $timeout(function () {
             vm.load = true;
           });
@@ -249,8 +246,8 @@
         customerId: Authinfo.getOrgId(),
         customerName: Authinfo.getOrgName(),
         customerEmail: Authinfo.getCustomerAdminEmail(),
-        customerCommunicationLicenseIsTrial: Authinfo.getLicenseIsTrial("COMMUNICATION", 'ciscouc'),
-        customerRoomSystemsLicenseIsTrial: Authinfo.getLicenseIsTrial("SHARED_DEVICES", false),
+        customerCommunicationLicenseIsTrial: Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc'),
+        customerRoomSystemsLicenseIsTrial: Authinfo.getLicenseIsTrial('SHARED_DEVICES', false),
       });
     }
 

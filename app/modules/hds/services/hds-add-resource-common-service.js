@@ -95,6 +95,5 @@
       updateClusterLists: updateClusterLists,
       redirectPopUpAndClose: redirectPopUpAndClose,
     };
-
   }
 }());

@@ -3,9 +3,7 @@
 
   /* @ngInject */
   function HelpdeskSplunkReporterService(LogMetricsService) {
-
     function reportStats(searchString, res, startTime, orgId) {
-
       var endTime = moment();
       var results = [];
       var errors = [];
@@ -13,14 +11,14 @@
       _.each(res, function (result) {
         var details = result.details;
         if (_.isArray(details)) {
-          results.push(result.searchType + " returned " + result.details.length + " results.");
+          results.push(result.searchType + ' returned ' + result.details.length + ' results.');
         } else {
-          errors.push(result.searchType + " returned errors:" + result.details);
+          errors.push(result.searchType + ' returned errors:' + result.details);
         }
       });
 
       var json = {
-        operation: "search",
+        operation: 'search',
         searchTime: getTotalSearchTimeInMs(startTime, endTime),
         searchString: searchString,
         withinOrg: orgId != null,
@@ -66,16 +64,16 @@
     return {
       reportStats: reportStats,
       reportOperation: reportOperation,
-      USER_SEARCH: "User search",
-      DEVICE_SEARCH: "Device search",
-      DEVICE_SEARCH_HURON: "Huron device search",
-      DEVICE_SEARCH_HURON_NUMBER: "Huron device number search",
-      DEVICE_SEARCH_CLOUDBERRY: "Cloudberry device search",
-      ORG_SEARCH: "Org search",
-      ORDER_SEARCH: "Order search",
-      SEARCH_HISTORY: "searchHistory",
-      SEARCH_HELP: "searchHelp",
-      SPARK_STATUS: "sparkStatus",
+      USER_SEARCH: 'User search',
+      DEVICE_SEARCH: 'Device search',
+      DEVICE_SEARCH_HURON: 'Huron device search',
+      DEVICE_SEARCH_HURON_NUMBER: 'Huron device number search',
+      DEVICE_SEARCH_CLOUDBERRY: 'Cloudberry device search',
+      ORG_SEARCH: 'Org search',
+      ORDER_SEARCH: 'Order search',
+      SEARCH_HISTORY: 'searchHistory',
+      SEARCH_HELP: 'searchHelp',
+      SPARK_STATUS: 'sparkStatus',
     };
   }
 

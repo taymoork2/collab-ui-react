@@ -34,7 +34,6 @@ describe('Manage Users - Manual -', function () {
   });
 
   describe('Standard Org', function () {
-
     it('should select manually add/modify users', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsersPage.buttons.manageUsers);
@@ -45,7 +44,6 @@ describe('Manage Users - Manual -', function () {
     });
 
     it('should clear all users when Clear button pressed', function () {
-
       utils.click(manageUsersPage.manual.radio.emailAddress);
 
       utils.expectIsNotDisplayed(manageUsersPage.manual.emailAddress.tokens);
@@ -62,11 +60,9 @@ describe('Manage Users - Manual -', function () {
       utils.click(manageUsersPage.manual.clearButton);
 
       utils.expectIsNotDisplayed(manageUsersPage.manual.emailAddress.tokens);
-
     });
 
     it('should display an error if more then 25 users are being added', function () {
-
       utils.click(manageUsersPage.manual.radio.emailAddress);
       utils.expectIsNotDisplayed(manageUsersPage.manual.errorOverMaxUsers);
 
@@ -84,18 +80,15 @@ describe('Manage Users - Manual -', function () {
     });
 
     it('should add users by email address', function () {
-
       // Enter test email into edit box
       utils.click(manageUsersPage.manual.radio.emailAddress);
       _.forEach(usersEmailOnly, function (user) {
         utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, user.email + ', ');
       });
       utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, protractor.Key.ENTER);
-
     });
 
     it('should Manually Invite multiple users by name and email address', function () {
-
       // Enter test email into edit box
       utils.click(manageUsersPage.manual.radio.nameAndEmail);
       _.forEach(usersNamesAndEmail, function (user) {
@@ -109,7 +102,6 @@ describe('Manage Users - Manual -', function () {
     });
 
     it('should setup services for users (Message On)', function () {
-
       utils.waitForText(manageUsersPage.select.title, 'Add Services for Users');
 
       // Need a license for valid HS services
@@ -143,6 +135,5 @@ describe('Manage Users - Manual -', function () {
         deleteUtils.deleteUser(user.email, token);
       });
     });
-
   });
 });

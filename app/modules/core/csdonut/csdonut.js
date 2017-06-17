@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function csDonut() {
-
     return {
       restrict: 'EA',
       scope: {
@@ -21,7 +20,6 @@
       },
 
       controller: ['$scope', function controller($scope) {
-
         //Unique donut id
         $scope.donutId = 'csDonut_' + (Math.floor(Math.random() * 100)).toString();
         //Settings defaults
@@ -106,7 +104,6 @@
         };
 
         $scope.getColour = function getColour(colourIndex) {
-
           // Use the user defined colours if the developer has defined them, and the current index
           // is available.
           if ($scope.colours && $scope.colours.length > colourIndex) {
@@ -115,7 +112,6 @@
 
           // ...Otherwise we'll fallback to using the D3 category 20 colours.
           return colour(colourIndex);
-
         };
 
         $scope.getTranslate = function getTranslate() {
@@ -135,11 +131,8 @@
         };
 
         $scope.clean = function clean(dataset) {
-
           return dataset.map(function map(value) {
-
             if ($scope.property) {
-
               if (isNaN(Number(value[$scope.property]))) {
                 value[$scope.property] = 0;
               } else {
@@ -147,7 +140,6 @@
               }
 
               return value;
-
             }
 
             if (isNaN(Number(value))) {
@@ -155,13 +147,10 @@
             }
 
             return Number(value);
-
           });
-
         };
 
         $scope.tweenArc = function tweenArc(a) {
-
           var arc = d3.svg.arc().innerRadius($scope.getRadius() - 100).outerRadius($scope.getRadius() - 20),
             i = d3.interpolate(this._current, a);
 
@@ -170,12 +159,10 @@
           return function donutTween(t) {
             return arc(i(t));
           };
-
         };
       }],
 
       link: function link(scope, element) {
-
         var radius, pie, arc, svg, path, text;
         scope.computeDataset(scope.value, scope.max, scope.unlimited, scope.hideusage, scope.ssize);
         scope.computeTextProperties(scope.text.content, scope.unlimited, scope.hideusage, scope.tsize);
@@ -223,17 +210,14 @@
           if (scope.strokeWidth) {
             path.attr('stroke-width', scope.strokeWidth);
           }
-
         };
 
         scope.tweenArc = function tweenArc(arcModel) {
-
           var i = d3.interpolate(this._current, arcModel);
           this._current = i(0);
           return function (t) {
             return arc(i(t));
           };
-
         };
 
         //Listen for changes in the directive attributes

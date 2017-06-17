@@ -29,9 +29,9 @@ require('modules/core/reports/amcharts-export.scss');
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
 
-    vm.totalDuration = "-";
-    vm.noOfCalls = "-";
-    vm.noOfDevices = "-";
+    vm.totalDuration = '-';
+    vm.noOfCalls = '-';
+    vm.noOfDevices = '-';
 
     vm.waitForLeast = true;
     vm.waitForMost = true;
@@ -51,9 +51,9 @@ require('modules/core/reports/amcharts-export.scss');
     }
 
     function clearDisplayedStats() {
-      vm.totalDuration = "-";
-      vm.noOfCalls = "-";
-      vm.noOfDevices = "-";
+      vm.totalDuration = '-';
+      vm.noOfCalls = '-';
+      vm.noOfDevices = '-';
       vm.leastUsedDevices = [];
       vm.mostUsedDevices = [];
     }
@@ -82,7 +82,7 @@ require('modules/core/reports/amcharts-export.scss');
           loadLast3Months(dateRange, models);
           break;
         default:
-          $log.warn("Unknown time period selected");
+          $log.warn('Unknown time period selected');
           dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
           loadLastWeek(dateRange, models);
       }
@@ -274,11 +274,11 @@ require('modules/core/reports/amcharts-export.scss');
         .then(function (deviceInfo) {
           _.each(stats, function (device, index) {
             target.push({
-              "name": deviceInfo[index].displayName,
-              "info": deviceInfo[index].info,
-              "peopleCount": device.peopleCount,
-              "duration": secondsTohhmmss(device.callDuration),
-              "calls": device.callCount });
+              name: deviceInfo[index].displayName,
+              info: deviceInfo[index].info,
+              peopleCount: device.peopleCount,
+              duration: secondsTohhmmss(device.callDuration),
+              calls: device.callCount });
           });
         });
     }
@@ -323,7 +323,7 @@ require('modules/core/reports/amcharts-export.scss');
 
     vm.startDeviceUsageExport = function () {
       $modal.open({
-        templateUrl: "modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export.html",
+        templateUrl: 'modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export.html',
         type: 'dialog',
       }).result.then(function () {
         vm.openExportProgressTracker();
@@ -381,5 +381,4 @@ require('modules/core/reports/amcharts-export.scss');
       getDataForSelectedRange(vm.timeSelected.value, models);
     }
   }
-
 })();

@@ -212,7 +212,6 @@ describe('Authinfo:', function () {
       Authinfo.updateAccountInfo(accountData);
       result = Authinfo.getMessageServices({ assignableOnly: true });
       expect(result.length).toBe(1);
-
     });
   });
 
@@ -380,12 +379,12 @@ describe('Authinfo:', function () {
 
   describe('customer with CONFERENCING license', function () {
     var accountData = {
-      "customers": [{
-        "customerId": "1",
-        "customerName": "Atlas_Test_1",
-        "licenses": [{
-          "licenseType": "CONFERENCING",
-          "siteUrl": "whatever",
+      customers: [{
+        customerId: '1',
+        customerName: 'Atlas_Test_1',
+        licenses: [{
+          licenseType: 'CONFERENCING',
+          siteUrl: 'whatever',
         }],
       }],
     };
@@ -395,7 +394,7 @@ describe('Authinfo:', function () {
         roles: ['Full_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
-      expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
+      expect(Authinfo.getRoles()).toEqual(['Full_Admin', 'Site_Admin']);
     });
 
     it('is patched with Site_Admin role if customer has read only admin role.', function () {
@@ -403,18 +402,18 @@ describe('Authinfo:', function () {
         roles: ['Readonly_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
-      expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
+      expect(Authinfo.getRoles()).toEqual(['Readonly_Admin', 'Site_Admin']);
     });
   });
 
   describe('customer with CONFERENCING and linkedSiteUrl', function () {
     var accountData = {
-      "customers": [{
-        "customerId": "1",
-        "customerName": "Atlas_Test_2",
-        "licenses": [{
-          "licenseType": "CONFERENCING",
-          "linkedSiteUrl": "www.abc.com",
+      customers: [{
+        customerId: '1',
+        customerName: 'Atlas_Test_2',
+        licenses: [{
+          licenseType: 'CONFERENCING',
+          linkedSiteUrl: 'www.abc.com',
         }],
       }],
     };
@@ -433,7 +432,7 @@ describe('Authinfo:', function () {
         roles: ['Full_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
-      expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
+      expect(Authinfo.getRoles()).toEqual(['Full_Admin', 'Site_Admin']);
     });
 
     it('is patched with Site_Admin role if customer has read only admin role.', function () {
@@ -441,12 +440,11 @@ describe('Authinfo:', function () {
         roles: ['Readonly_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
-      expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
+      expect(Authinfo.getRoles()).toEqual(['Readonly_Admin', 'Site_Admin']);
     });
   });
 
   describe('customer with communication license', function () {
-
     var accountData = getJSONFixture('core/json/authInfo/customer_comm_License.json');
 
     it('gets the correct partner Id and customer admin Email.', function () {

@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function HDSServiceController($modal, $state, $stateParams, Authinfo, HybridServicesClusterService) {
-
     var vm = this;
     vm.backState = $stateParams.backTo || 'services-overview';
     vm.pageTitle = 'hds.resources.page_title';
@@ -47,6 +46,5 @@
           $modal.open(vm.addResourceModal);
         }
       });
-
   }
 }());

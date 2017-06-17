@@ -43,7 +43,7 @@ describe('Controller: TrialPstnCtrl', function () {
         code: '469',
         count: 25,
       },
-      numbers: ["+14696500030", "+14696500102", "+14696500194", "+14696500208", "+14696500220"],
+      numbers: ['+14696500030', '+14696500102', '+14696500194', '+14696500208', '+14696500220'],
     };
 
     this.carrierId = '25452345-agag-ava-43523452';
@@ -82,8 +82,8 @@ describe('Controller: TrialPstnCtrl', function () {
 
     this.numbersResponse = {
       numbers: [
-        "+17077318283", "+17077318284", "+17077318293", "+17077318294", "+17077318295",
-        "+17077318296", "+17077318297", "+17077318298", "+17077318315", "+17077318316",
+        '+17077318283', '+17077318284', '+17077318293', '+17077318294', '+17077318295',
+        '+17077318296', '+17077318297', '+17077318298', '+17077318315', '+17077318316',
       ],
     };
 
@@ -124,7 +124,6 @@ describe('Controller: TrialPstnCtrl', function () {
     };
 
     this.initController();
-
   });
 
   it('should be created successfully', function () {
@@ -158,7 +157,6 @@ describe('Controller: TrialPstnCtrl', function () {
   });
 
   describe('Enter info to the controller and expect the same out of the service', function () {
-
     it('should set the carrier', function () {
       this.controller.trialData.details.pstnProvider = this.carrier;
       expect(this.trials.details.pstnProvider).toBe(this.carrier);
@@ -188,16 +186,15 @@ describe('Controller: TrialPstnCtrl', function () {
 
   describe('Adding phone numbers', function () {
     it('should not show number ordering', function () {
-
       var swivelCarrierDetails = [{
-        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
-        "name": "INTELEPEER-SWIVEL",
-        "apiImplementation": "SWIVEL",
-        "countryCode": "+1",
-        "country": "US",
-        "defaultOffer": true,
-        "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
+        name: 'INTELEPEER-SWIVEL',
+        apiImplementation: 'SWIVEL',
+        countryCode: '+1',
+        country: 'US',
+        defaultOffer: true,
+        vendor: 'INTELEPEER',
+        url: 'https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c',
       }];
       this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
       this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(swivelCarrierDetails));
@@ -208,16 +205,15 @@ describe('Controller: TrialPstnCtrl', function () {
     });
 
     it('should have the same result with toggles off on controller init', function () {
-
       var swivelCarrierDetails = [{
-        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
-        "name": "INTELEPEER-SWIVEL",
-        "apiImplementation": "SWIVEL",
-        "countryCode": "+1",
-        "country": "US",
-        "defaultOffer": true,
-        "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
+        name: 'INTELEPEER-SWIVEL',
+        apiImplementation: 'SWIVEL',
+        countryCode: '+1',
+        country: 'US',
+        defaultOffer: true,
+        vendor: 'INTELEPEER',
+        url: 'https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c',
       }];
       this.FeatureToggleService.huronSupportThinktelGetStatus.and.returnValue(this.$q.resolve(false));
       this.FeatureToggleService.huronFederatedSparkCallGetStatus.and.returnValue(this.$q.resolve(false));
@@ -231,16 +227,15 @@ describe('Controller: TrialPstnCtrl', function () {
     });
 
     it('should show number ordering', function () {
-
       var orderCarrierDetails = [{
-        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
-        "name": "INTELEPEER",
-        "apiImplementation": "INTELEPEER",
-        "countryCode": "+1",
-        "country": "US",
-        "defaultOffer": true,
-        "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
+        name: 'INTELEPEER',
+        apiImplementation: 'INTELEPEER',
+        countryCode: '+1',
+        country: 'US',
+        defaultOffer: true,
+        vendor: 'INTELEPEER',
+        url: 'https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c',
       }];
       this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
       this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(orderCarrierDetails));
@@ -251,16 +246,15 @@ describe('Controller: TrialPstnCtrl', function () {
     });
 
     it('should disable next button when required data missing for SWIVEL', function () {
-
       var swivelCarrierDetails = [{
-        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
-        "name": "INTELEPEER-SWIVEL",
-        "apiImplementation": "SWIVEL",
-        "countryCode": "+1",
-        "country": "US",
-        "defaultOffer": true,
-        "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
+        name: 'INTELEPEER-SWIVEL',
+        apiImplementation: 'SWIVEL',
+        countryCode: '+1',
+        country: 'US',
+        defaultOffer: true,
+        vendor: 'INTELEPEER',
+        url: 'https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c',
       }];
       this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
       this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(swivelCarrierDetails));
@@ -285,20 +279,18 @@ describe('Controller: TrialPstnCtrl', function () {
       expect(this.controller.trialData.details.swivelNumbers).toHaveLength(1);
       expect(this.controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
       expect(this.controller.disableNextButton()).toBeFalsy();
-
     });
 
     it('should disable next button when any invalid numbers', function () {
-
       var swivelCarrierDetails = [{
-        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
-        "name": "INTELEPEER-SWIVEL",
-        "apiImplementation": "SWIVEL",
-        "countryCode": "+1",
-        "country": "US",
-        "defaultOffer": true,
-        "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
+        name: 'INTELEPEER-SWIVEL',
+        apiImplementation: 'SWIVEL',
+        countryCode: '+1',
+        country: 'US',
+        defaultOffer: true,
+        vendor: 'INTELEPEER',
+        url: 'https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c',
       }];
       this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
       this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(swivelCarrierDetails));
@@ -324,20 +316,18 @@ describe('Controller: TrialPstnCtrl', function () {
       expect(this.controller.trialData.details.swivelNumbers).toHaveLength(1);
       expect(this.controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
       expect(this.controller.disableNextButton()).toBeTruthy();
-
     });
 
     it('should disable next button when required data missing for PSTN', function () {
-
       var orderCarrierDetails = [{
-        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
-        "name": "INTELEPEER",
-        "apiImplementation": "INTELEPEER",
-        "countryCode": "+1",
-        "country": "US",
-        "defaultOffer": true,
-        "vendor": "INTELEPEER",
-        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
+        name: 'INTELEPEER',
+        apiImplementation: 'INTELEPEER',
+        countryCode: '+1',
+        country: 'US',
+        defaultOffer: true,
+        vendor: 'INTELEPEER',
+        url: 'https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c',
       }];
       this.PstnService.listResellerCarriers.and.returnValue(this.$q.reject());
       this.PstnService.listDefaultCarriers.and.returnValue(this.$q.resolve(orderCarrierDetails));
@@ -364,7 +354,6 @@ describe('Controller: TrialPstnCtrl', function () {
       expect(this.controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(_.size(this.numberInfo.numbers));
 
       expect(this.controller.disableNextButton()).toBeFalsy();
-
     });
   });
 });

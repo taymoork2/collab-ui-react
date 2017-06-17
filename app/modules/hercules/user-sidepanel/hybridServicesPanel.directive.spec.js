@@ -212,5 +212,4 @@ describe('Directive Controller: hybridServicesPanelCtrl', function () {
     expect(vm.services.callServiceConnect.entitled).toBeFalsy();
     expect(vm.entitlements.length).toBe(0);
   });
-
 });

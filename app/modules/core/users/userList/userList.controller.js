@@ -11,7 +11,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
   /* @ngInject */
   function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
-
     var vm = this;
 
     vm.$onInit = onInit;
@@ -99,7 +98,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     var eventListeners = [];
 
     function onInit() {
-
       var promises = {
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
         configureGrid: vm.configureGrid(),
@@ -112,7 +110,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         bind();
         getUserList();
       });
-
     }
 
     function onDestroy() {
@@ -154,7 +151,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
           getUserList();
         }
       });
-
     }
 
     function getTemplate(name) {
@@ -286,7 +282,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
                   }
                 });
                 $scope.setFilter($scope.activeFilter);
-
               } else {
                 Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $scope.searchStr);
               }
@@ -296,10 +291,10 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
               if (data.status === 403) {
                 var errors = data.Errors;
                 tooManyUsers = !!errors && _.some(errors, {
-                  'errorCode': '100106',
+                  errorCode: '100106',
                 });
                 tooManyResults = !!errors && _.some(errors, {
-                  'errorCode': '200045',
+                  errorCode: '200045',
                 });
               }
 
@@ -517,7 +512,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function configureGrid() {
-
       var deferred = $q.defer();
 
       var photoCellTemplate = '<img ng-if="grid.appScope.isValidThumbnail(row.entity)" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
@@ -644,12 +638,11 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function onManageUsers() {
-
       $state.go('users.manage.picker');
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?
-    if ($state.current.name === "users.list") {
+    if ($state.current.name === 'users.list') {
       LogMetricsService.logMetrics('In users list page', LogMetricsService.getEventType('customerUsersListPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
     }
   }

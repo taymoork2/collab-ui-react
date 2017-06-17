@@ -24,16 +24,16 @@ describe('Controller: SoftwareUpgradeController', function () {
 
   function initController() {
     cluster = {
-      "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-      "name": "CAL_TEST1",
-      "releaseChannel": "DEV",
+      id: 'a050fcc7-9ade-4790-a06d-cca596910421',
+      name: 'CAL_TEST1',
+      releaseChannel: 'DEV',
     };
 
     controller = $controller('SoftwareUpgradeController', {
       $modalInstance: modalInstance,
       servicesId: ['squared-fusion-cal'],
-      connectorType: "c_cal",
-      availableVersion: "1",
+      connectorType: 'c_cal',
+      availableVersion: '1',
       cluster: cluster,
     });
     $scope.$apply();
@@ -73,5 +73,4 @@ describe('Controller: SoftwareUpgradeController', function () {
     expect(HybridServicesExtrasService.getReleaseNotes).toHaveBeenCalled();
     expect(controller.releaseNotesUrl).toBe('http://example.com/release/notes/version/1');
   });
-
 });

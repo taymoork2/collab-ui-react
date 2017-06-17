@@ -207,9 +207,9 @@
     function resendAdminEmail(orderUUID, toCustomer) {
       var url;
       if (toCustomer) {
-        url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendcustomeradminemail/invoke";
+        url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendcustomeradminemail/invoke';
       } else {
-        url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendpartneradminemail/invoke";
+        url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendpartneradminemail/invoke';
       }
       return $http.post(url).then(extractData);
     }
@@ -230,9 +230,9 @@
       };
 
       if (toCustomer) {
-        url = urlBase + "helpdesk/orders/" + orderUUID + "/customerAdminEmail";
+        url = urlBase + 'helpdesk/orders/' + orderUUID + '/customerAdminEmail';
       } else {
-        url = urlBase + "helpdesk/orders/" + orderUUID + "/partnerAdminEmail";
+        url = urlBase + 'helpdesk/orders/' + orderUUID + '/partnerAdminEmail';
       }
       return $http.post(url, payload).then(extractData);
     }
@@ -405,7 +405,6 @@
             }, _.noop);
           });
         }
-
       }
     }
 

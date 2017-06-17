@@ -66,11 +66,11 @@ describe('Care admin should be able to', function () {
     validateDismissOfCTSetupWizard();
     validateDisplayEmbedCodeModal();
     validateDismissOfEmbedCodeModal();
-    validateFeaturesPage("");
+    validateFeaturesPage('');
   });
 
   it('edit chat template', function () {
-    editTemplate("edit");
+    editTemplate('edit');
   });
 
   it('validate edit save', function () {
@@ -79,11 +79,11 @@ describe('Care admin should be able to', function () {
     validateDismissOfCTSetupWizard();
     validateDisplayEmbedCodeModal();
     validateDismissOfEmbedCodeModal();
-    validateFeaturesPage("edit");
+    validateFeaturesPage('edit');
   });
 
   it('delete a chat template', function () {
-    deleteTemplate(careChatTemplateSetupPage.randomChatTemplateName + "edit");
+    deleteTemplate(careChatTemplateSetupPage.randomChatTemplateName + 'edit');
   });
 
   function createTemplate() {
@@ -92,7 +92,7 @@ describe('Care admin should be able to', function () {
     validateDisplayNewFeatureModal();
     utils.click(careChatTemplateSetupPage.createChatTemplateButton);
     utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
-    utils.waitForText(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this template");
+    utils.waitForText(careChatTemplateSetupPage.nameHint, 'Enter a name for you to identify this template');
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
     utils.sendKeys(careChatTemplateSetupPage.ctNameInput, careChatTemplateSetupPage.randomChatTemplateName);
   }
@@ -109,7 +109,7 @@ describe('Care admin should be able to', function () {
     utils.waitForText(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName);
     utils.click(careChatTemplateSetupPage.editChatTemplateBtnOnCard);
     utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
-    utils.waitForText(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this template");
+    utils.waitForText(careChatTemplateSetupPage.nameHint, 'Enter a name for you to identify this template');
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
     utils.sendKeys(careChatTemplateSetupPage.ctNameInput, templateNameSuffix);
 
@@ -215,11 +215,11 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
 
-    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Welcome Msq");
-    utils.waitForText(careChatTemplateSetupPage.customerInfo_Header_Welcome, "Custom Welcome Msq");
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, 'Custom Welcome Msq');
+    utils.waitForText(careChatTemplateSetupPage.customerInfo_Header_Welcome, 'Custom Welcome Msq');
 
-    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "OrgName1");
-    utils.waitForText(careChatTemplateSetupPage.customerInfo_Header_Org, "OrgName1");
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, 'OrgName1');
+    utils.waitForText(careChatTemplateSetupPage.customerInfo_Header_Org, 'OrgName1');
   }
 
   function validateField1Change() {
@@ -229,10 +229,10 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
 
-    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Label");
-    utils.waitForText(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, 'Custom Label');
+    utils.waitForText(careChatTemplateSetupPage.customerInfo_screen_field1Label, 'Custom Label');
 
-    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom HintText");
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, 'Custom HintText');
 
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional1);
     utils.click(careChatTemplateSetupPage.customerInfo_attCard_redioOptional);
@@ -246,10 +246,10 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
 
-    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Label");
-    utils.waitForText(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, 'Custom Label');
+    utils.waitForText(careChatTemplateSetupPage.customerInfo_screen_field1Label, 'Custom Label');
 
-    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom HintText");
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, 'Custom HintText');
 
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional2);
     utils.click(careChatTemplateSetupPage.customerInfo_attCard_redioOptional);
@@ -263,8 +263,8 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfAgentUnavailablePage() {
     validateTitleAndDesc('Agent Unavailable', 'This screen is shown to a customer when no agent is available to assist');
-    utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, "Sorry, we are unavailable at the moment. Please try again later.");
-    utils.waitForText(careChatTemplateSetupPage.agentUnavailableMessage, "Sorry, we are unavailable at the moment. Please try again later.");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, 'Sorry, we are unavailable at the moment. Please try again later.');
+    utils.waitForText(careChatTemplateSetupPage.agentUnavailableMessage, 'Sorry, we are unavailable at the moment. Please try again later.');
     utils.sendKeys(careChatTemplateSetupPage.agentUnavailableMessageField, careChatTemplateSetupPage.randomChatTemplateName);
     utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, careChatTemplateSetupPage.randomChatTemplateName);
     utils.waitForText(careChatTemplateSetupPage.agentUnavailableMessage, careChatTemplateSetupPage.randomChatTemplateName);
@@ -293,7 +293,6 @@ describe('Care admin should be able to', function () {
     validateTitleAndDesc('Status Messages', 'Configure status messages which your customer sees during the chat');
     validateChatStatusMessagesDefaultPage();
     validateChatStatusMessagesChange();
-
   }
 
   function validateContentsOfSummaryPage(successMessage, expectedMessage) {
@@ -327,9 +326,9 @@ describe('Care admin should be able to', function () {
   }
 
   function validateChatStatusMessagesDefaultPage() {
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0), "Waiting for an Agent...");
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), "Chatting with an Agent");
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2), "Agent has left the chat");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0), 'Waiting for an Agent...');
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), 'Chatting with an Agent');
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2), 'Agent has left the chat');
   }
 
   function validateChatStatusMessagesChange() {
@@ -337,5 +336,4 @@ describe('Care admin should be able to', function () {
       utils.expectIsEnabled(careChatTemplateSetupPage.chatStatusMessages.get(i));
     });
   }
-
 });

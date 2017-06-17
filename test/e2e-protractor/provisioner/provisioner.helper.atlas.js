@@ -5,7 +5,7 @@ export function createAtlasCustomer(token, orgId, atlasTrial) {
     method: 'POST',
     uri: `${config.getAdminServiceUrl()}organization/${orgId}/trials`,
     headers: {
-      'Authorization': `Bearer  ${token}`,
+      Authorization: `Bearer  ${token}`,
     },
     body: atlasTrial,
     json: true,
@@ -18,7 +18,7 @@ export function deleteAtlasCustomer(token, customerId) {
     method: 'DELETE',
     uri: `${config.getAdminServiceUrl()}organizations/${customerId}`,
     headers: {
-      'Authorization': `Bearer  ${token}`,
+      Authorization: `Bearer  ${token}`,
     },
     json: true,
   };
@@ -33,7 +33,7 @@ export function findAtlasCustomer(token, orgId, customerName) {
       customerName: customerName,
     },
     headers: {
-      'Authorization': `Bearer  ${token}`,
+      Authorization: `Bearer  ${token}`,
     },
     json: true,
   };
@@ -45,7 +45,7 @@ export function getAtlasOrg(token, orgId) {
     method: 'GET',
     uri: `${config.getAdminServiceUrl()}organizations/${orgId}`,
     headers: {
-      'Authorization': `Bearer  ${token}`,
+      Authorization: `Bearer  ${token}`,
     },
     json: true,
   };

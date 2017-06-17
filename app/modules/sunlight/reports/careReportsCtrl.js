@@ -13,9 +13,9 @@
     vm.dataStatus = REFRESH;
     vm.tableDataStatus = EMPTY;
     vm.snapshotDataStatus = REFRESH;
-    vm.taskIncomingDescription = "";
-    vm.taskTimeDescription = "";
-    vm.averageCsatDescription = "";
+    vm.taskIncomingDescription = '';
+    vm.taskTimeDescription = '';
+    vm.averageCsatDescription = '';
 
     vm.tableData = [];
     vm.tableDataPromise = undefined;
@@ -140,7 +140,7 @@
     };
 
     function collapseDrilldownReports() {
-      $log.info("Sending Broadcast to reset...");
+      $log.info('Sending Broadcast to reset...');
       $scope.$broadcast(DrillDownReportProps.broadcastReset, {});
     }
 

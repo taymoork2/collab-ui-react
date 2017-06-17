@@ -58,7 +58,5 @@ require('./_user-manage.scss');
           break;
       }
     }
-
   }
-
 })();

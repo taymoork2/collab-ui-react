@@ -18,9 +18,8 @@ describe('Service: Care Reports Service', function () {
   describe('Task Incoming graph services', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
-        'dataProvider': {},
+        dataProvider: {},
       });
-
     });
 
     it('should have created a graph when showTaskIncomingDummy is called', function () {

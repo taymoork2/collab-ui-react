@@ -86,5 +86,4 @@ describe('Service: CsdmCacheUpdaterSpec', function () {
     expect(a.foo == aRef).toBeTruthy();
     expect(a.bar).toBeFalsy();
   });
-
 });

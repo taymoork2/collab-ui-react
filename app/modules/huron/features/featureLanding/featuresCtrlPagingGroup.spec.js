@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Features Controller', function () {
-
   var featureCtrl, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, PhoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService, CallPickupGroupService;
   var listOfPGs = getJSONFixture('huron/json/features/pagingGroup/pgList.json');
   var emptyListOfPGs = [];
@@ -9,25 +8,25 @@ describe('Features Controller', function () {
     return data;
   };
   var getPGListFailureResp = {
-    'data': 'Internal Server Error',
-    'status': 500,
-    'statusText': 'Internal Server Error',
+    data: 'Internal Server Error',
+    status: 500,
+    statusText: 'Internal Server Error',
   };
   var pagingGroups = {
-    "paginggroups": [{
-      "id": "bbcd1234-abcd-abcd-abcddef123456",
-      "cardName": "Test1",
-      "pgNumber": "5010",
-      "memberCount": 2,
-      "featureName": "huronFeatureDetails.pg",
-      "filterValue": "PG",
+    paginggroups: [{
+      id: 'bbcd1234-abcd-abcd-abcddef123456',
+      cardName: 'Test1',
+      pgNumber: '5010',
+      memberCount: 2,
+      featureName: 'huronFeatureDetails.pg',
+      filterValue: 'PG',
     }, {
-      "id": "abcd1234-abcd-abcd-abcddef123456",
-      "cardName": "Test2",
-      "pgNumber": "5011",
-      "memberCount": 3,
-      "featureName": "huronFeatureDetails.pg",
-      "filterValue": "PG",
+      id: 'abcd1234-abcd-abcd-abcddef123456',
+      cardName: 'Test2',
+      pgNumber: '5011',
+      memberCount: 3,
+      featureName: 'huronFeatureDetails.pg',
+      filterValue: 'PG',
     }],
   };
 
@@ -85,7 +84,6 @@ describe('Features Controller', function () {
       Log: Log,
       Notification: Notification,
     });
-
   }));
 
   //TODO: re-enable after feature toggles are removed

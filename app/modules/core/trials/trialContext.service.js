@@ -64,7 +64,6 @@
           _logMetric(response, 'Failed to enable Context Service', 'contextServiceEnabled');
           return $q.reject(response);
         });
-
     }
 
     function removeService(orgId) {

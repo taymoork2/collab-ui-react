@@ -58,7 +58,7 @@
     function getLogo() {
       return BrandService.getLogoUrl(Authinfo.getOrgId()).then(function (logoUrl) {
         return $http.get(logoUrl, {
-          responseType: "arraybuffer",
+          responseType: 'arraybuffer',
         });
       });
     }
@@ -72,11 +72,11 @@
     function generateCodeSnippet(templateId) {
       var appName = UrlConfig.getSunlightBubbleUrl();
       var orgId = Authinfo.getOrgId();
-      return "<script>\n" +
-        "  (function(document, script) {\n" +
-        "  var bubbleScript = document.createElement(script);\n" +
-        "  e = document.getElementsByTagName(script)[0];\n" +
-        "  bubbleScript.async = true;\n" +
+      return '<script>\n' +
+        '  (function(document, script) {\n' +
+        '  var bubbleScript = document.createElement(script);\n' +
+        '  e = document.getElementsByTagName(script)[0];\n' +
+        '  bubbleScript.async = true;\n' +
         "  bubbleScript.CiscoAppId =  'cisco-chat-bubble-app';\n" +
         "  bubbleScript.DC = '" + appName.split('https://bubble.')[1] + "';\n" +
         "  bubbleScript.orgId = '" + orgId + "';\n" +
@@ -84,9 +84,9 @@
         "  bubbleScript.src = '" + appName + "/bubble.js';\n" +
         "  bubbleScript.type = 'text/javascript';\n" +
         "  bubbleScript.setAttribute('charset', 'utf-8');\n" +
-        "  e.parentNode.insertBefore(bubbleScript, e);\n" +
+        '  e.parentNode.insertBefore(bubbleScript, e);\n' +
         "  })(document, 'script');\n" +
-        "</script>";
+        '</script>';
     }
 
     function labelForTime(time) {
@@ -148,8 +148,8 @@
         })
         .map(function (zone) {
           return {
-            'label': labelForTimezone(zone),
-            'value': zone,
+            label: labelForTimezone(zone),
+            value: zone,
           };
         })
         .sort(function (a, b) {
@@ -236,10 +236,10 @@
       return {
         required: $translate.instant('common.invalidRequired'),
         minlength: $translate.instant('common.invalidMinLength', {
-          'min': minLength,
+          min: minLength,
         }),
         maxlength: $translate.instant('common.invalidMaxLength', {
-          'max': maxLength,
+          max: maxLength,
         }),
         invalidInput: $translate.instant('careChatTpl.ctValidation.invalidCharacters'),
       };

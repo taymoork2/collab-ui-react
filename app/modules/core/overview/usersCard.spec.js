@@ -1,5 +1,4 @@
 describe('OverviewUsersCard', function () {
-
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies('$rootScope', '$q', 'OverviewUsersCard', 'Orgservice');

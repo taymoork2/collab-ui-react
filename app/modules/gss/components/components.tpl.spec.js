@@ -57,5 +57,4 @@ describe('components:showComponents', function () {
       expect(icon).not.toBe(null);
     };
   }
-
 });

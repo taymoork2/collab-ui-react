@@ -21,7 +21,6 @@
 
   /* @ngInject */
   function Auth($http, $injector, $q, $sanitize, $translate, Authinfo, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation, HuronCompassService) {
-
     var service = {
       logout: logout,
       logoutAndRedirectTo: logoutAndRedirectTo,

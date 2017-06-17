@@ -10,7 +10,6 @@ describe('LicenseService', function () {
   }));
 
   describe('Fetching data from helpdesk backend', function () {
-
     var $httpBackend, urlBase;
     beforeEach(inject(function (UrlConfig, _$httpBackend_) {
       urlBase = UrlConfig.getAdminServiceUrl();
@@ -19,18 +18,18 @@ describe('LicenseService', function () {
 
     it('should get backend data from helpdesk/licences/<orgId>', function () {
       var licensesMock = [{
-        "type": "MESSAGING",
-        "name": "Messaging",
-        "status": "ACTIVE",
-        "volume": 100,
-        "isTrial": false,
+        type: 'MESSAGING',
+        name: 'Messaging',
+        status: 'ACTIVE',
+        volume: 100,
+        isTrial: false,
       }, {
-        "type": "CONFERENCING",
-        "name": "Conferencing",
-        "status": "ACTIVE",
-        "volume": 99,
-        "isTrial": true,
-        "trialExpiresInDays": 49,
+        type: 'CONFERENCING',
+        name: 'Conferencing',
+        status: 'ACTIVE',
+        volume: 99,
+        isTrial: true,
+        trialExpiresInDays: 49,
       }];
 
       $httpBackend
@@ -42,7 +41,6 @@ describe('LicenseService', function () {
         expect(res[0].volume).toBe(100);
         expect(res[1].volume).toBe(99);
       });
-
     });
 
     afterEach(function () {
@@ -50,7 +48,6 @@ describe('LicenseService', function () {
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
     });
-
   });
 
   it('Should return the expected result when userIsEntitledTo', function () {
@@ -128,119 +125,119 @@ describe('LicenseService', function () {
 
   it('Should aggregatedLicenses correctly', function () {
     var licenses = [{
-      "offerCode": "MS",
-      "type": "MESSAGING",
-      "name": "Messaging",
-      "status": "ACTIVE",
-      "volume": 10,
-      "isTrial": false,
-      "usage": 50,
+      offerCode: 'MS',
+      type: 'MESSAGING',
+      name: 'Messaging',
+      status: 'ACTIVE',
+      volume: 10,
+      isTrial: false,
+      usage: 50,
     }, {
-      "offerCode": "MS",
-      "type": "MESSAGING",
-      "name": "Messaging",
-      "status": "ACTIVE",
-      "volume": 20,
-      "isTrial": false,
-      "usage": 50,
+      offerCode: 'MS',
+      type: 'MESSAGING',
+      name: 'Messaging',
+      status: 'ACTIVE',
+      volume: 20,
+      isTrial: false,
+      usage: 50,
     }, {
-      "offerCode": "MS",
-      "type": "MESSAGING",
-      "name": "Messaging",
-      "status": "SUSPENDED",
-      "volume": 100,
-      "isTrial": false,
-      "usage": 50,
+      offerCode: 'MS',
+      type: 'MESSAGING',
+      name: 'Messaging',
+      status: 'SUSPENDED',
+      volume: 100,
+      isTrial: false,
+      usage: 50,
     }, {
-      "offerCode": "MC",
-      "type": "CONFERENCING",
-      "name": "Meeting Center",
-      "status": "ACTIVE",
-      "volume": 1000,
-      "isTrial": false,
-      "usage": 200,
-      "capacity": 25,
-      "siteUrl": "mock.webex.com",
+      offerCode: 'MC',
+      type: 'CONFERENCING',
+      name: 'Meeting Center',
+      status: 'ACTIVE',
+      volume: 1000,
+      isTrial: false,
+      usage: 200,
+      capacity: 25,
+      siteUrl: 'mock.webex.com',
     }, {
-      "offerCode": "MC",
-      "type": "CONFERENCING",
-      "name": "Meeting Center",
-      "status": "ACTIVE",
-      "volume": 1000,
-      "isTrial": false,
-      "usage": 200,
-      "capacity": 25,
-      "siteUrl": "mock.webex.com",
+      offerCode: 'MC',
+      type: 'CONFERENCING',
+      name: 'Meeting Center',
+      status: 'ACTIVE',
+      volume: 1000,
+      isTrial: false,
+      usage: 200,
+      capacity: 25,
+      siteUrl: 'mock.webex.com',
     }, {
-      "offerCode": "MC",
-      "type": "CONFERENCING",
-      "name": "Meeting Center",
-      "status": "ACTIVE",
-      "volume": 300,
-      "isTrial": false,
-      "usage": 15,
-      "capacity": 200,
-      "siteUrl": "ladidadi.webex.com",
+      offerCode: 'MC',
+      type: 'CONFERENCING',
+      name: 'Meeting Center',
+      status: 'ACTIVE',
+      volume: 300,
+      isTrial: false,
+      usage: 15,
+      capacity: 200,
+      siteUrl: 'ladidadi.webex.com',
     }, {
-      "offerCode": "TC",
-      "type": "CONFERENCING",
-      "name": "Training Center",
-      "status": "ACTIVE",
-      "volume": 250,
-      "isTrial": false,
-      "usage": 250,
-      "capacity": 25,
-      "siteUrl": "mock.webex.com",
+      offerCode: 'TC',
+      type: 'CONFERENCING',
+      name: 'Training Center',
+      status: 'ACTIVE',
+      volume: 250,
+      isTrial: false,
+      usage: 250,
+      capacity: 25,
+      siteUrl: 'mock.webex.com',
     }, {
-      "offerCode": "TC",
-      "type": "CONFERENCING",
-      "name": "Training Center",
-      "status": "PENDING",
-      "volume": 1000,
-      "isTrial": false,
-      "usage": 250,
-      "capacity": 25,
-      "siteUrl": "mock.webex.com",
+      offerCode: 'TC',
+      type: 'CONFERENCING',
+      name: 'Training Center',
+      status: 'PENDING',
+      volume: 1000,
+      isTrial: false,
+      usage: 250,
+      capacity: 25,
+      siteUrl: 'mock.webex.com',
     }, {
-      "offerCode": "CMR",
-      "type": "CONFERENCING",
-      "name": "CMR",
-      "status": "ACTIVE",
-      "volume": 250,
-      "isTrial": false,
-      "usage": 250,
-      "capacity": 25,
-      "siteUrl": "mock.webex.com",
+      offerCode: 'CMR',
+      type: 'CONFERENCING',
+      name: 'CMR',
+      status: 'ACTIVE',
+      volume: 250,
+      isTrial: false,
+      usage: 250,
+      capacity: 25,
+      siteUrl: 'mock.webex.com',
     }, {
-      "offerCode": "CF",
-      "type": "CONFERENCING",
-      "name": "Conferencing",
-      "status": "ACTIVE",
-      "volume": 100,
-      "isTrial": true,
-      "trialExpiresInDays": 49,
+      offerCode: 'CF',
+      type: 'CONFERENCING',
+      name: 'Conferencing',
+      status: 'ACTIVE',
+      volume: 100,
+      isTrial: true,
+      trialExpiresInDays: 49,
     }, {
-      "offerCode": "CF",
-      "type": "CONFERENCING",
-      "name": "Conferencing",
-      "status": "EXPIRED",
-      "volume": 500,
-      "isTrial": true,
-      "trialExpiresInDays": 0,
+      offerCode: 'CF',
+      type: 'CONFERENCING',
+      name: 'Conferencing',
+      status: 'EXPIRED',
+      volume: 500,
+      isTrial: true,
+      trialExpiresInDays: 0,
     }, {
-      "offerCode": "CO",
-      "type": "COMMUNICATION",
-      "name": "Communication",
-      "status": "ACTIVE",
-      "volume": 1000,
-      "isTrial": true,
-      "trialExpiresInDays": 100,
+      offerCode: 'CO',
+      type: 'COMMUNICATION',
+      name: 'Communication',
+      status: 'ACTIVE',
+      volume: 1000,
+      isTrial: true,
+      trialExpiresInDays: 100,
     }, {
-      "type": "SHARED_DEVICES",
-      "name": "Shared Devices",
-      "status": "ACTIVE",
-      "volume": 50,
-      "isTrial": false,
+      type: 'SHARED_DEVICES',
+      name: 'Shared Devices',
+      status: 'ACTIVE',
+      volume: 50,
+      isTrial: false,
     }];
 
     // MESSAGING
@@ -313,7 +310,5 @@ describe('LicenseService', function () {
     expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.CF');
     expect(aggregate.isTrial).toBeTruthy();
     expect(aggregate.licenses.length).toEqual(2);
-
   });
-
 });

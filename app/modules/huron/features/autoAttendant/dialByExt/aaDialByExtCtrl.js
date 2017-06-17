@@ -54,7 +54,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value,
+        value: vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
@@ -73,13 +73,11 @@
       // isMediaUpload not in use? No messageType directive used. Save here.
 
       if (!isMediaUploadToggle()) {
-
         vm.messageInput = action.getValue();
 
         if (vm.isTextOnly) {
           return;
         }
-
       }
 
       if (isMediaUploadToggle() && vm.isTextOnly) {
@@ -91,11 +89,9 @@
       vm.languageOption = AALanguageService.getLanguageOption(vm.menuEntry.getVoice());
       vm.voiceBackup = vm.voiceOption;
       setVoiceOptions();
-
     }
 
     function saveUiModel() {
-
       // if mediaUpload toggled messageInput is handled in the directive..
       if (!isMediaUploadToggle() || vm.isTextOnly) {
         vm.menuEntry.actions[0].setValue(vm.messageInput);
@@ -107,7 +103,6 @@
       }
 
       AACommonService.setDialByExtensionStatus(true);
-
     }
 
     function setActionMinMax(action) {
@@ -130,7 +125,6 @@
         setActionMinMax(action);
 
         vm.menuEntry.addAction(action);
-
       } else {
         // Should not happen, but make sure action is runActionsOnInput not AA, User, extNum, etc
         if (!(vm.menuEntry.actions[0].getName() === runActionName)) {
@@ -157,7 +151,6 @@
           vm.menuEntry.addAction(action);
         }
         setPhoneMenuMinMaxEntry();
-
       } else {
         var uiModel = AAUiModelService.getUiModel();
         var uiCombinedMenu = uiModel[$scope.schedule];
@@ -166,10 +159,8 @@
       }
 
       populateUiModel();
-
     }
 
     activate();
-
   }
 })();

@@ -249,7 +249,7 @@
           customerInformation: {
             enabled: true,
             fields: {
-              'welcomeHeader': {
+              welcomeHeader: {
                 attributes: [{
                   name: 'header',
                   value: $translate.instant('careChatTpl.defaultWelcomeText'),
@@ -258,7 +258,7 @@
                   value: vm.orgName,
                 }],
               },
-              'field1': {
+              field1: {
                 attributes: [{
                   name: 'required',
                   value: 'required',
@@ -278,7 +278,7 @@
                 }],
               },
 
-              'field2': {
+              field2: {
                 attributes: [{
                   name: 'required',
                   value: 'required',
@@ -298,7 +298,7 @@
                 }],
               },
 
-              'field3': {
+              field3: {
                 attributes: [{
                   name: 'required',
                   value: 'optional',
@@ -318,7 +318,7 @@
                 }],
               },
 
-              'field4': {
+              field4: {
                 attributes: [{
                   name: 'required',
                   value: 'optional',
@@ -413,7 +413,7 @@
           customerInformation: {
             enabled: true,
             fields: {
-              'welcomeHeader': {
+              welcomeHeader: {
                 attributes: [{
                   name: 'header',
                   value: $translate.instant('careChatTpl.defaultWelcomeText'),
@@ -422,7 +422,7 @@
                   value: vm.orgName,
                 }],
               },
-              'field1': {
+              field1: {
                 attributes: [{
                   name: 'required',
                   value: 'required',
@@ -442,7 +442,7 @@
                 }],
               },
 
-              'field2': {
+              field2: {
                 attributes: [{
                   name: 'required',
                   value: 'required',
@@ -461,7 +461,7 @@
                   categoryOptions: '',
                 }],
               },
-              'field3': {
+              field3: {
                 attributes: [{
                   name: 'required',
                   value: 'optional',
@@ -480,7 +480,7 @@
                   categoryOptions: '',
                 }],
               },
-              'field4': {
+              field4: {
                 attributes: [{
                   name: 'required',
                   value: 'optional',
@@ -542,7 +542,7 @@
             enabled: true,
             fields: {
               callbackConfirmationMessage: {
-                displayText: "Your callback request has been received.",
+                displayText: 'Your callback request has been received.',
               },
             },
           },
@@ -576,7 +576,7 @@
           customerInformationChat: {
             enabled: true,
             fields: {
-              'welcomeHeader': {
+              welcomeHeader: {
                 attributes: [{
                   name: 'header',
                   value: $translate.instant('careChatTpl.defaultWelcomeText'),
@@ -585,7 +585,7 @@
                   value: vm.orgName,
                 }],
               },
-              'field1': {
+              field1: {
                 attributes: [{
                   name: 'required',
                   value: 'required',
@@ -605,7 +605,7 @@
                 }],
               },
 
-              'field2': {
+              field2: {
                 attributes: [{
                   name: 'required',
                   value: 'required',
@@ -625,7 +625,7 @@
                 }],
               },
 
-              'field3': {
+              field3: {
                 attributes: [{
                   name: 'required',
                   value: 'optional',
@@ -644,7 +644,7 @@
                   categoryOptions: '',
                 }],
               },
-              'field4': {
+              field4: {
                 attributes: [{
                   name: 'required',
                   value: 'optional',
@@ -668,7 +668,7 @@
           customerInformationCallback: {
             enabled: true,
             fields: {
-              'welcomeHeader': {
+              welcomeHeader: {
                 attributes: [{
                   name: 'header',
                   value: $translate.instant('careChatTpl.defaultWelcomeText'),
@@ -677,7 +677,7 @@
                   value: vm.orgName,
                 }],
               },
-              'field1': {
+              field1: {
                 attributes: [{
                   name: 'required',
                   value: 'required',
@@ -696,7 +696,7 @@
                   categoryOptions: '',
                 }],
               },
-              'field2': {
+              field2: {
                 attributes: [{
                   name: 'required',
                   value: 'required',
@@ -715,7 +715,7 @@
                   categoryOptions: '',
                 }],
               },
-              'field3': {
+              field3: {
                 attributes: [{
                   name: 'required',
                   value: 'optional',
@@ -734,7 +734,7 @@
                   categoryOptions: '',
                 }],
               },
-              'field4': {
+              field4: {
                 attributes: [{
                   name: 'required',
                   value: 'optional',
@@ -795,7 +795,7 @@
             enabled: true,
             fields: {
               callbackConfirmationMessage: {
-                displayText: "Your callback request has been received.",
+                displayText: 'Your callback request has been received.',
               },
             },
           },
@@ -925,7 +925,6 @@
         };
       if ((vm.selectedMediaType === vm.mediaTypes.chatPlusCallback || vm.selectedMediaType === vm.mediaTypes.callback) && vm.template.configuration.pages.feedbackCallback === undefined) {
         vm.template.configuration.pages.feedbackCallback = _.cloneDeep(defaultFeedback);
-
       }
     }
 
@@ -1048,7 +1047,6 @@
       && isValidField(getFeedbackModel().fields.comment.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
       && vm.isInputValid(getFeedbackModel().fields.feedbackQuery.displayText)
       && vm.isInputValid(getFeedbackModel().fields.comment.displayText)));
-
     }
 
     function isProactivePromptPageValid() {
@@ -1075,11 +1073,11 @@
     vm.isTypeDuplicate = false;
 
     var nonHeaderFieldNames = _.filter(_.keys(getCustomerInformationFormFields()),
-        function (name) { return (name !== "welcomeHeader"); });
+        function (name) { return (name !== 'welcomeHeader'); });
 
     function getConfiguredTypes() {
       var typesConfigured = _.map(nonHeaderFieldNames, function (fieldName) {
-        return (vm.getAttributeParam("value", "type", fieldName)).id;
+        return (vm.getAttributeParam('value', 'type', fieldName)).id;
       });
       return typesConfigured;
     }
@@ -1160,7 +1158,6 @@
           }
         }
       }
-
     }
 
     function getCategoryOptions() {
@@ -1568,7 +1565,7 @@
     }
 
     function getFeedbackDesc() {
-      if (vm.currentState === "feedbackCallback") {
+      if (vm.currentState === 'feedbackCallback') {
         return $translate.instant('careChatTpl.callFeedbackDesc');
       } else {
         return $translate.instant('careChatTpl.feedbackDesc');
@@ -1582,7 +1579,6 @@
         return $translate.instant('careChatTpl.createTitle_' + vm.selectedMediaType);
       }
     }
-
   }
 
   /**

@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function BytesFilter() {
-
     return function (bytes, precision) {
       if (bytes === 0) {
         return '0';
@@ -21,7 +20,6 @@
 
       return (val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val) + ' ' + units[number];
     };
-
   }
 
   angular.module('Ediscovery')

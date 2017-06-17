@@ -23,9 +23,9 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
     };
 
     externalNumbers = [{
-      'pattern': '123',
+      pattern: '123',
     }, {
-      'pattern': '456',
+      pattern: '456',
     }];
 
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());

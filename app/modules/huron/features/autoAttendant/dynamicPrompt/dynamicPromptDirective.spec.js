@@ -31,7 +31,6 @@ describe('Directive: dynamicPromptDirective', function () {
   }));
 
   describe('basic', function () {
-
     it('should set up the basic dynamic prompt without ngModel and fail', function () {
       $scope = $rootScope.$new();
       $scope.mock = {};

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Voicemail', function () {
-
   var user = utils.randomTestGmail();
 
   beforeAll(function () {
@@ -75,5 +74,4 @@ describe('Voicemail', function () {
   afterAll(function () {
     utils.deleteUser(user);
   });
-
 });

@@ -8,7 +8,6 @@
 
   /* @ngInject */
   function AARouteToQueueCtrl($rootScope, $scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService) {
-
     var vm = this;
     var conditional = 'conditional';
 
@@ -146,7 +145,7 @@
           saveUiModel();
         }
         vm.queueSelected.description = _.result(_.find(vm.queues, {
-          'id': vm.queueSelected.id,
+          id: vm.queueSelected.id,
         }), 'description', '');
       } catch (e) {
         AANotificationService.error('No valid queue configured to display Call Queue option.');
@@ -204,7 +203,7 @@
       if (!_.has(queueSettings, 'periodicAnnouncement')) {
         createAction(queueSettings, 'periodicAnnouncement', 'play');
         var periodicAnnouncement = _.get(queueSettings, 'periodicAnnouncement.actions[0]');
-        periodicAnnouncement.setDescription("");
+        periodicAnnouncement.setDescription('');
         periodicAnnouncement.interval = periodicTime;
       }
       if (!_.has(queueSettings, 'fallback')) {
@@ -224,7 +223,6 @@
     }
 
     function checkForRouteToQueue(action) {
-
       // make sure action is route To Q not External Number, User, etc
       if (!(action.getName() === rtQueue)) {
         action.setName(rtQueue);
@@ -234,7 +232,6 @@
     }
 
     function activate() {
-
       var ui = AAUiModelService.getUiModel();
 
       if ($scope.fromDecision) {
@@ -261,9 +258,7 @@
         }
 
         activateQueueSettings(vm.menuEntry);
-
       } else {
-
         if ($scope.fromRouteCall) {
           vm.uiMenu = ui[$scope.schedule];
           vm.menuEntry = vm.uiMenu.entries[$scope.index];
@@ -280,7 +275,6 @@
           }
 
           activateQueueSettings(vm.menuEntry);
-
         } else {
           vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
           if ($scope.keyIndex < vm.menuEntry.entries.length) {

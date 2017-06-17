@@ -80,7 +80,6 @@ describe('Template: planReview', function () {
   });
 
   describe('Plan Review', function () {
-
     it('should have Care service info populated', function () {
       expect(controller).toBeDefined();
       expect(controller.isCareEnabled).toEqual(true);

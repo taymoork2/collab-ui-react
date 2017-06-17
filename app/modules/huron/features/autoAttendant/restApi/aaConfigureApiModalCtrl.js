@@ -118,7 +118,7 @@
 
     function activate() {
       ui = AAUiModelService.getUiModel();
-      apiConfig = 'apiConfig' + aa_schedule + "-" + aa_index + "-" + AACommonService.getUniqueId();
+      apiConfig = 'apiConfig' + aa_schedule + '-' + aa_index + '-' + AACommonService.getUniqueId();
       var uiMenu = ui[aa_schedule];
 
       ui = AAUiModelService.getUiModel();

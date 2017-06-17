@@ -28,7 +28,7 @@ xdescribe('iFrameResizable directive', function () {
   }));
 
   it('should contain iFrameresizeable', function () {
-    expect(element.html()).toContain("i-frame-resizable");
+    expect(element.html()).toContain('i-frame-resizable');
   });
 
   it('should define the initializeWindowSize function', inject(function ($rootScope) {

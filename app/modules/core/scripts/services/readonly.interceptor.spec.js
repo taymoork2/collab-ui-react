@@ -1,7 +1,6 @@
 'use strict';
 
 describe('ReadonlyInterceptor', function () {
-
   beforeEach(function () {
     this.initModules(require('./readonly.interceptor'));
     this.injectDependencies(
@@ -20,7 +19,6 @@ describe('ReadonlyInterceptor', function () {
   });
 
   describe('read-only mode', function () {
-
     it('intercepts POST operations and creates a read-only notification', function () {
       this.ReadonlyInterceptor.request({
         data: 'x',
@@ -129,11 +127,9 @@ describe('ReadonlyInterceptor', function () {
       expect(this.$q.reject.calls.count()).toBe(1);
       expect(this.Notification.notifyReadOnly.calls.count()).toBe(1);
     });
-
   });
 
   describe('while not in read-only mode', function () {
-
     it('does not manipulate requests', function () {
       this.Authinfo.isReadOnlyAdmin.and.returnValue(false);
       var config = {

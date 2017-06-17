@@ -28,7 +28,6 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     spyOn(Userservice, 'isInvitePending').and.returnValue(false);
     spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ setup: false }));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
-
   }));
 
   it('should start with isEnabled as false', function () {
@@ -60,28 +59,28 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     vm = createController({}, ['MC']);
 
     var fusionUcNotActivated = {
-      "serviceId": "squared-fusion-uc",
-      "entitled": true,
-      "state": "notActivated",
+      serviceId: 'squared-fusion-uc',
+      entitled: true,
+      state: 'notActivated',
     };
 
     vm.extensions = [{
-      "id": "squared-fusion-cal",
-      "entitled": false,
-      "enabled": true,
+      id: 'squared-fusion-cal',
+      entitled: false,
+      enabled: true,
     }, {
-      "id": "squared-fusion-uc",
-      "entitled": true,
-      "enabled": true,
-      "status": fusionUcNotActivated,
+      id: 'squared-fusion-uc',
+      entitled: true,
+      enabled: true,
+      status: fusionUcNotActivated,
     }, {
-      "id": "squared-fusion-ec",
-      "entitled": true,
-      "enabled": true,
-      "status": {
-        "serviceId": "squared-fusion-ec",
-        "entitled": true,
-        "state": "error",
+      id: 'squared-fusion-ec',
+      entitled: true,
+      enabled: true,
+      status: {
+        serviceId: 'squared-fusion-ec',
+        entitled: true,
+        state: 'error',
       },
     }];
     var mostSignificantStatus = vm.getStatus(fusionUcNotActivated);
@@ -94,28 +93,28 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     vm = createController({}, ['MC']);
 
     var fusionUcNotActivated = {
-      "serviceId": "squared-fusion-uc",
-      "entitled": true,
-      "state": "notActivated",
+      serviceId: 'squared-fusion-uc',
+      entitled: true,
+      state: 'notActivated',
     };
 
     vm.extensions = [{
-      "id": "squared-fusion-cal",
-      "entitled": false,
-      "enabled": true,
+      id: 'squared-fusion-cal',
+      entitled: false,
+      enabled: true,
     }, {
-      "id": "squared-fusion-uc",
-      "entitled": true,
-      "enabled": true,
-      "status": fusionUcNotActivated,
+      id: 'squared-fusion-uc',
+      entitled: true,
+      enabled: true,
+      status: fusionUcNotActivated,
     }, {
-      "id": "squared-fusion-ec",
-      "entitled": true,
-      "enabled": true,
-      "status": {
-        "serviceId": "squared-fusion-ec",
-        "entitled": true,
-        "state": "notActivated",
+      id: 'squared-fusion-ec',
+      entitled: true,
+      enabled: true,
+      status: {
+        serviceId: 'squared-fusion-ec',
+        entitled: true,
+        state: 'notActivated',
       },
     }];
     var mostSignificantStatus = vm.getStatus(fusionUcNotActivated);
@@ -128,17 +127,17 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     vm = createController({}, ['MC']);
 
     vm.extensions = [{
-      "id": "squared-fusion-cal",
-      "entitled": false,
-      "enabled": true,
+      id: 'squared-fusion-cal',
+      entitled: false,
+      enabled: true,
     }, {
-      "id": "squared-fusion-uc",
-      "entitled": false,
-      "enabled": true,
+      id: 'squared-fusion-uc',
+      entitled: false,
+      enabled: true,
     }, {
-      "id": "squared-fusion-ec",
-      "entitled": false,
-      "enabled": true,
+      id: 'squared-fusion-ec',
+      entitled: false,
+      enabled: true,
     }];
     var mostSignificantStatus = vm.getStatus(undefined);
 

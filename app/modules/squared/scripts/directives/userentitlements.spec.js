@@ -44,7 +44,5 @@
     it('should get the display name from services array', function () {
       expect($scope.getServiceName('messengerInterop')).toEqual('Messenger interop');
     });
-
   });
-
 })();

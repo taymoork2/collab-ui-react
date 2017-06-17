@@ -184,7 +184,6 @@
         order: 22,
       }];
       return freeServices;
-
     }
 
     function _LicensedService(licenseInfo, mapping) {
@@ -203,7 +202,6 @@
 
       _.assign(this, service);
       this.qty = licenseInfo.volume || 0;
-
     }
 
     function _addService(services, service) {
@@ -590,7 +588,6 @@
         setServiceSortOrder(result);
         return result;
       }
-
     }
 
     function exportCSV(isCareEnabled) {
@@ -845,7 +842,6 @@
     }
 
     function getFreeOrActiveServices(customer, options) {
-
       var paidServices = [];
       var meetingServices = [];
       var roomDevices = [];
@@ -966,10 +962,9 @@
     return $resource(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/:userId', {
       userId: '@userId',
     }, {
-      'update': {
+      update: {
         method: 'PATCH',
       },
     });
   }
-
 })();

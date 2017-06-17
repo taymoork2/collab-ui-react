@@ -5,7 +5,6 @@ var featureToggle = require('../utils/featureToggle.utils');
 /* global LONG_TIMEOUT */
 
 describe('WebEx Trial Creation', function () {
-
   var WEBEX_SITE_ACTIVATION_TIMEOUT = 50 * 60000;
 
   it('should login', function () {
@@ -68,7 +67,6 @@ describe('WebEx Trial Creation', function () {
       utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
-
         // backend services are slow to check userauthinfo/accounts
         utils.wait(wizard.wizard, LONG_TIMEOUT);
         utils.waitIsDisplayed(wizard.leftNav);

@@ -570,11 +570,11 @@
     // These states are not allowed in specific views
     // (i.e. devices are not allowed in partner)
     config.restrictedStates = {
-      'customer': [
+      customer: [
         'partneroverview',
         'partnerreports',
       ],
-      'partner': [
+      partner: [
         'calendar-service',
         'call-service',
         'cluster-list',
@@ -601,5 +601,4 @@
 
     return config;
   }
-
 }());

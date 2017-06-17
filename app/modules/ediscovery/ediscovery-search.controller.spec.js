@@ -27,7 +27,6 @@ describe('Controller: EdiscoverySearchController', function () {
     spyOn(ITProPackService, 'hasITProPackEnabled').and.returnValue($q.resolve(false));
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
     spyOn(TrialService, 'getDaysLeftForCurrentUser');
-
   }));
 
   function initController() {
@@ -71,7 +70,6 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(ediscoverySearchController.encryptedEmails).toBeNull();
       expect(ediscoverySearchController.unencryptedRoomIds).toBeNull();
     });
-
   });
 
   describe('Date Validation', function () {
@@ -150,7 +148,6 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(EdiscoveryService.createReport).toHaveBeenCalled();
       expect(EdiscoveryService.generateReport.calls.count()).toBe(1);
     });
-
   });
 
   describe('Create report with error', function () {
@@ -216,7 +213,6 @@ describe('Controller: EdiscoverySearchController', function () {
   });
 
   describe('entering controller with stateParams', function () {
-
     beforeEach(inject(function (_$translate_, _EdiscoveryService_, _$q_, _$rootScope_, _$controller_) {
       $scope = _$rootScope_.$new();
       $controller = _$controller_;
@@ -278,7 +274,5 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(ediscoverySearchController.report.displayName).toEqual('whatever');
       expect(ediscoverySearchController.currentReportId).toBe('4567');
     });
-
   });
-
 });

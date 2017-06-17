@@ -74,8 +74,8 @@ describe('AddResourceControllerClusterViewV2', function () {
   it('AddResourceControllerClusterViewV2 canGoNext should enable the next button when the feild is filled', function () {
     this.controller.firstTimeSetup = true;
     this.controller.yesProceed = true;
-    this.controller.hostName = "sampleHost";
-    this.controller.selectedCluster = "sampleCluster";
+    this.controller.hostName = 'sampleHost';
+    this.controller.selectedCluster = 'sampleCluster';
     this.controller.canGoNext();
     expect(this.controller.canGoNext()).toBeTruthy();
   });

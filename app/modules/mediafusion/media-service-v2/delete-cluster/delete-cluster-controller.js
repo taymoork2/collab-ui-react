@@ -34,7 +34,7 @@
 
     MediaClusterServiceV2.getAll()
       .then(function (clusters) {
-        vm.clusters = _.filter(clusters, { 'targetType': 'mf_mgmt' });
+        vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
         _.each(vm.clusters, function (clust) {
           if (cluster.id != clust.id) {
             vm.options.push(clust.name);
@@ -111,14 +111,14 @@
         var hostname = vm.hosts[i].hostname;
         var toClusterName = vm.selectModel[hostname];
         var toCluster = $filter('filter')(vm.clusters, {
-          'name': toClusterName,
+          name: toClusterName,
         }, true)[0];
 
         if (!_.includes(clusterListNames, toClusterName)) {
           if (!_.isUndefined(toCluster)) {
             var deferred = $q.defer();
             loopPromises.push(deferred.promise.catch(recoverPromise));
-            var response = { 'data': toCluster };
+            var response = { data: toCluster };
             deferred.resolve(response);
           } else {
             var promise = MediaClusterServiceV2.createClusterV2(toClusterName, 'stable');
@@ -140,7 +140,7 @@
       });
 
       host = $filter('filter')(vm.hosts, {
-        'hostname': hostname,
+        hostname: hostname,
       }, true)[0];
 
       if (_.isUndefined(toCluster)) {
@@ -190,7 +190,7 @@
           });
           Notification.success(vm.success);
           $modalInstance.close();
-          $state.go("media-service-v2.list");
+          $state.go('media-service-v2.list');
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.deleteGroup.errorMessage', {
             groupName: vm.cluster.name,
@@ -224,5 +224,4 @@
   angular
     .module('Mediafusion')
     .controller('DeleteClusterSettingControllerV2', DeleteClusterSettingControllerV2);
-
 }());

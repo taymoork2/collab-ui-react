@@ -90,9 +90,9 @@
     function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
         $modal.open({
-          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
           controller: 'HelpdeskExtendedInfoDialogController as modal',
-          modalId: "HelpdeskExtendedInfoDialog",
+          modalId: 'HelpdeskExtendedInfoDialog',
           resolve: {
             title: function () {
               return 'helpdesk.userDetails';
@@ -464,7 +464,7 @@
       }
 
       vm.cardsAvailable = true;
-      angular.element(".helpdesk-details").focus();
+      angular.element('.helpdesk-details').focus();
     }
 
     function filterLog(metadataList, condnFn) {
@@ -538,5 +538,4 @@
         });
     }
   }
-
 }());

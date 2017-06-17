@@ -1,7 +1,6 @@
 'use strict'
 
 var GSSServicePage = function () {
-
   this.serviceNameText = 'new service';
   this.serviceNameEditText = 'edit service';
   this.serviceDescText = 'new service description'
@@ -30,7 +29,6 @@ var GSSServicePage = function () {
     utils.click(this.tabLink);
     navigation.expectCurrentUrl('/gss/services');
   }
-
 }
 
 module.exports = GSSServicePage;

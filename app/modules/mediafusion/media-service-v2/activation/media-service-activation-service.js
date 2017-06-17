@@ -117,7 +117,7 @@
           var index = mediaAgentOrgIdsArray.indexOf(orgId);
           mediaAgentOrgIdsArray.splice(index, 1);
 
-          index = mediaAgentOrgIdsArray.indexOf("squared");
+          index = mediaAgentOrgIdsArray.indexOf('squared');
           mediaAgentOrgIdsArray.splice(index, 1);
 
           if (mediaAgentOrgIdsArray.length > 0) {
@@ -152,8 +152,8 @@
 
     var enableCallServiceEntitlement = function () {
       var payload = {
-        "selfSubscribe": true,
-        "roles": ["Spark_CallService"],
+        selfSubscribe: true,
+        roles: ['Spark_CallService'],
       };
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/spark';
       return $http.post(url, payload);

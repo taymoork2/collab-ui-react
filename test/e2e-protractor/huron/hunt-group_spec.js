@@ -5,7 +5,6 @@
 'use strict';
 
 xdescribe('Admin should be able to', function () {
-
   beforeAll(function () {
     //TODO: Move the provisioning logic to API calls instead of using UI
     //create 2 Huron users
@@ -45,7 +44,6 @@ xdescribe('Admin should be able to', function () {
     utils.sendKeys(servicesetup.newBeginRange, huntGroup.beginNumber);
     utils.sendKeys(servicesetup.newEndRange, huntGroup.endNumber);
     utils.click(huntGroup.hgwizardCloseBtn);
-
   }, 300000);
 
   afterAll(function () {
@@ -359,7 +357,6 @@ xdescribe('Admin should be able to', function () {
     utils.expectIsDisplayed(huntGroup.cancelSaveBar);
     utils.click(huntGroup.saveBtn);
     notifications.assertSuccess('\'' + huntGroup.randomHGName + '\' hunt group has been updated successfully');
-
   });
 
   it('click on the back button of hunt group edit page', function () {
@@ -420,5 +417,4 @@ xdescribe('Admin should be able to', function () {
     utils.sendKeys(utils.searchField, huntGroup.randomHGName);
     utils.expectIsNotDisplayed(huronFeatures.huntGroups);
   });
-
 });

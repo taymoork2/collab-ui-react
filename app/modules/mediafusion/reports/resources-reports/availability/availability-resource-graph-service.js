@@ -4,7 +4,6 @@
   angular.module('Mediafusion').service('AvailabilityResourceGraphService', AvailabilityResourceGraphService);
   /* @ngInject */
   function AvailabilityResourceGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
-
     var vm = this;
     vm.availabilitydiv = 'availabilitydiv';
     vm.exportDiv = 'availability-div';
@@ -27,8 +26,8 @@
     vm.unavailableTitle = $translate.instant('mediaFusion.metrics.unavailableTitle');
     vm.partialTitle = $translate.instant('mediaFusion.metrics.partialTitle');
 
-    vm.availabilityLegendCluster = [{ 'title': vm.availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': vm.unavailableTitle, 'color': chartColors.negativeDarker }];
-    vm.availabilityLegendAllcluster = [{ 'title': vm.availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': vm.unavailableTitle, 'color': chartColors.negativeDarker }, { 'title': vm.partialTitle, 'color': chartColors.attentionBase }];
+    vm.availabilityLegendCluster = [{ title: vm.availableTitle, color: chartColors.metricDarkGreen }, { title: vm.unavailableTitle, color: chartColors.negativeDarker }];
+    vm.availabilityLegendAllcluster = [{ title: vm.availableTitle, color: chartColors.metricDarkGreen }, { title: vm.unavailableTitle, color: chartColors.negativeDarker }, { title: vm.partialTitle, color: chartColors.attentionBase }];
 
     return {
       setAvailabilityGraph: setAvailabilityGraph,
@@ -115,8 +114,8 @@
       catAxes.gridAlpha = 0.3;
       if (!isDummy) {
         catAxes.listeners = [{
-          'event': 'clickItem',
-          'method': function (event) {
+          event: 'clickItem',
+          method: function (event) {
             $rootScope.$broadcast('clusterClickEvent', {
               data: event.serialDataItem.category,
             });
@@ -127,18 +126,18 @@
       var columnNames = {};
       if (cluster === vm.allClusters) {
         columnNames = {
-          'startTime': vm.startTime,
-          'endTime': vm.endTime,
-          'nodes': vm.nodes,
-          'availability': vm.availabilityStatus,
-          'category': vm.clusterTitle,
+          startTime: vm.startTime,
+          endTime: vm.endTime,
+          nodes: vm.nodes,
+          availability: vm.availabilityStatus,
+          category: vm.clusterTitle,
         };
       } else {
         columnNames = {
-          'availability': vm.availabilityOfHost,
-          'startTime': vm.startTime,
-          'endTime': vm.endTime,
-          'category': vm.node,
+          availability: vm.availabilityOfHost,
+          startTime: vm.startTime,
+          endTime: vm.endTime,
+          category: vm.node,
         };
       }
       cluster = _.replace(cluster, /\s/g, '_');
@@ -152,8 +151,8 @@
       chartData.graph.showHandOnHover = (selectedCluster === vm.allClusters);
       if (!isDummy) {
         chartData.listeners = [{
-          'event': 'clickGraphItem',
-          'method': function (event) {
+          event: 'clickGraphItem',
+          method: function (event) {
             $rootScope.$broadcast('clusterClickEvent', {
               data: event.item.category,
             });

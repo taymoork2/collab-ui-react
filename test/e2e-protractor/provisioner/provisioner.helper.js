@@ -19,7 +19,7 @@ export function flipFtswFlag(token, orgId) {
     method: 'PATCH',
     uri: `${config.getAdminServiceUrl()}organizations/${orgId}/setup`,
     headers: {
-      'Authorization': `Bearer  ${token}`,
+      Authorization: `Bearer  ${token}`,
     },
     json: true,
   };

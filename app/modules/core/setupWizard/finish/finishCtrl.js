@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function WizardFinishCtrl($scope, $q, $translate, Notification) {
-
     $scope.initNext = function () {
       var deferred = $q.defer();
       if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {

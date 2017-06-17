@@ -29,7 +29,6 @@ describe('Manage Users - CSV File -', function () {
 
   // Given an email alias, find user and confirm entitlements set
   function confirmUserOnboarded(email) {
-
     utils.searchAndClick(email);
     utils.expectIsDisplayed(users.servicesPanel);
 
@@ -59,9 +58,7 @@ describe('Manage Users - CSV File -', function () {
 
   // todo - this is failing in SauceLabs due to Chrome requesting a location to download the files
   xdescribe('Export CSV', function () {
-
     it('should download CSV Template', function () {
-
       utils.expectIsDisplayed(manageUsersPage.bulk.export.downloadTemplateButton);
       utils.click(manageUsersPage.bulk.export.downloadTemplateButton);
       utils.expectIsDisplayed(manageUsersPage.bulk.export.exportSpinner);
@@ -69,11 +66,9 @@ describe('Manage Users - CSV File -', function () {
       utils.waitForModal().then(function () {
         notifications.assertSuccess('Your template list has been compiled and your download has started.');
       });
-
     });
 
     it('should NOT export Users to CSV file when export canceled', function () {
-
       utils.expectIsDisplayed(manageUsersPage.bulk.export.exportCsvButton);
       utils.click(manageUsersPage.bulk.export.exportCsvButton);
 
@@ -87,7 +82,6 @@ describe('Manage Users - CSV File -', function () {
     });
 
     it('should export Users to CSV file when export selected', function () {
-
       utils.expectIsDisplayed(manageUsersPage.bulk.export.exportCsvButton);
       utils.click(manageUsersPage.bulk.export.exportCsvButton);
 
@@ -117,13 +111,10 @@ describe('Manage Users - CSV File -', function () {
           });
       });
     }, 60000 * 4);
-
   });
 
   describe('Import CSV', function () {
-
     it('should cancel file to upload', function () {
-
       utils.fileSendKeys(manageUsersPage.bulk.import.uploadInput, CSV_FILE_PATH);
 
       utils.waitForText(manageUsersPage.bulk.import.importFileName, CSV_FILE_NAME);
@@ -135,11 +126,9 @@ describe('Manage Users - CSV File -', function () {
       utils.expectIsNotDisplayed(manageUsersPage.bulk.import.removeFileButton);
       utils.expectIsNotDisplayed(manageUsersPage.bulk.import.addServicesOnlyRadio);
       utils.expectIsNotDisplayed(manageUsersPage.bulk.import.addAdnRemoveServicesRadio);
-
     });
 
     it('should set file to upload and import CSV', function () {
-
       utils.fileSendKeys(manageUsersPage.bulk.import.uploadInput, CSV_FILE_PATH);
 
       utils.waitForText(manageUsersPage.bulk.import.importFileName, CSV_FILE_NAME);
@@ -184,6 +173,5 @@ describe('Manage Users - CSV File -', function () {
       });
     }, 60000 * 4);
   });
-
 });
 

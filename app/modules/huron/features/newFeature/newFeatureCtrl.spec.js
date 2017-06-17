@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: FeatureCtrl', function () {
-
   var controller, $scope, $modal, $state, $filter, $timeout, Authinfo, HuntGroupService, CallParkService, Log, Notification;
 
   var fakeModal = {
@@ -50,15 +49,15 @@ describe('Controller: FeatureCtrl', function () {
     spyOn($modal, 'open').and.returnValue(fakeModal);
   }));
 
-  it("FeatureCtrl.feature is set by NewFeatureCtrl when input provided from Modal dialog.", function () {
+  it('FeatureCtrl.feature is set by NewFeatureCtrl when input provided from Modal dialog.', function () {
     controller.openModal();
-    fakeModal.close("AA");
-    expect(controller.feature).toEqual("AA");
+    fakeModal.close('AA');
+    expect(controller.feature).toEqual('AA');
   });
 
-  it("FeatureCtrl.feature is set empty by NewFeatureCtrl when Modal dialog dismissed.", function () {
+  it('FeatureCtrl.feature is set empty by NewFeatureCtrl when Modal dialog dismissed.', function () {
     controller.openModal();
     fakeModal.dismiss('cancel');
-    expect(controller.feature).toEqual("");
+    expect(controller.feature).toEqual('');
   });
 });

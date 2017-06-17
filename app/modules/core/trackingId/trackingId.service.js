@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function TrackingId($http, Utils) {
-
     var service = {
       increment: increment,
       clear: clear,
@@ -81,6 +80,5 @@
       $http.defaults.headers.common[TRACKING_ID] = trackingId;
       return trackingId;
     }
-
   }
 })();

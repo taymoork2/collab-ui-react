@@ -6,7 +6,6 @@
     .factory('AACommonService', AACommonService);
 
   function AACommonService(AutoAttendantCeMenuModelService) {
-
     var aaSayMessageForm = false;
     var aaPhoneMenuOptions = false;
     var aaCallerInputStatus = false;
@@ -265,7 +264,6 @@
         }
       });
       return varNames;
-
     }
     function collectThisCeActionValue(ui, isFindSessionVar, isFindConditionals) {
       var varNames = [];
@@ -276,9 +274,7 @@
       });
 
       return varNames;
-
     }
-
   }
 
   /**
@@ -301,12 +297,8 @@
       if (inputAction.key !== selectedKey) {
         _.pull(keys, inputAction.key);
       }
-
     });
 
     return keys;
-
   }
-
-
 })();

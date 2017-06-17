@@ -9,7 +9,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _Authinfo_, _BrandService_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_, _Userservice_) {
-
     $scope = $rootScope.$new();
     currentCustomer = {
       customerEmail: 'testuser@gmail.com',
@@ -217,5 +216,4 @@ describe('Controller: CustomerOverviewCtrl', function () {
       expect(FeatureToggleService.atlasCareInboundTrialsGetStatus).toHaveBeenCalled();
     });
   });
-
 });

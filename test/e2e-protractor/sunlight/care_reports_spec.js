@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Care Reports', function () {
-
   it('should login', function () {
     login.login('contactcenter-admin');
   });
@@ -18,7 +17,6 @@ describe('Care Reports', function () {
       utils.expectIsPresent(reports.mediaTypeAllFilter);
       utils.expectIsPresent(reports.mediaTypeChatFilter);
       utils.expectIsPresent(reports.mediaTypeCallbackFilter);
-
     });
 
     it('should verify report type buttons', function () {

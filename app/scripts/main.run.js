@@ -49,6 +49,5 @@
         max: scope.options.templateOptions.max,
       });
     }
-
   }
 }());

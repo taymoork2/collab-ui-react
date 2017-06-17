@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Customer Reports', function () {
-
   it('should login', function () {
     login.login('pbr-admin');
   });
@@ -171,6 +170,5 @@ describe('Customer Reports', function () {
       utils.expectIsDisplayed(reports.callMetricsGraph);
       reports.metricsDataPresent(false);
     });
-
   });
 });

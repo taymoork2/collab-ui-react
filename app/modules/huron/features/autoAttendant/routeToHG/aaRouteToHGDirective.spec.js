@@ -54,13 +54,12 @@ describe('Directive: aaRouteToHg', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
-
   }));
 
   it('replaces the element with the appropriate content', function () {
     element = $compile("<aa-route-to-hg aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-route-to-hg>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("aaRouteToHG");
+    expect(element.html()).toContain('aaRouteToHG');
   });
 });

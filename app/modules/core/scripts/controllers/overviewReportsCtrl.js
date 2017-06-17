@@ -74,8 +74,8 @@
 
         dummyChartVals.push({
           data: [{
-            'date': currentDate.toISOString(),
-            'count': 0,
+            date: currentDate.toISOString(),
+            count: 0,
           }],
         });
       }
@@ -118,12 +118,12 @@
       chartObject.balloon.fillAlpha = 0.8;
       chartObject.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
       chartObject.chartCursor = {
-        'enabled': showCursor,
-        'valueLineEnabled': true,
-        'valueLineBalloonEnabled': true,
-        'cursorColor': chartColors.grayDarkThree,
-        'valueBalloonsEnabled': false,
-        'cursorPosition': 'mouse',
+        enabled: showCursor,
+        valueLineEnabled: true,
+        valueLineBalloonEnabled: true,
+        cursorColor: chartColors.grayDarkThree,
+        valueBalloonsEnabled: false,
+        cursorPosition: 'mouse',
       };
 
       return AmCharts.makeChart(entId, chartObject);
@@ -152,7 +152,7 @@
 
       for (var date2 in dateMap) {
         var chartSection = {
-          'date': date2,
+          date: date2,
         };
         var currentDateObj = dateMap[date2];
         for (var obj2 in currentDateObj) {
@@ -214,7 +214,6 @@
       } else {
         errorMessage(entTitle, response);
         $scope.entCount = 0;
-
       }
       if ($scope.entCount === 0) {
         $scope.entitlementStatus = NO_DATA;

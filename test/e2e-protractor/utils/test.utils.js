@@ -111,9 +111,9 @@ exports.getToken = function () {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     auth: {
-      'user': config.oauthClientRegistration.id,
-      'pass': config.oauthClientRegistration.secret,
-      'sendImmediately': true,
+      user: config.oauthClientRegistration.id,
+      pass: config.oauthClientRegistration.secret,
+      sendImmediately: true,
     },
     body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope,
   };
@@ -172,7 +172,6 @@ exports.waitForPresence = function (elem, timeout) {
     return EC.presenceOf(elem)().thenCatch(function () {
       // handle a possible stale element
       return false;
-
     });
   }
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
@@ -242,7 +241,7 @@ exports.expectIsDisplayed = function (elem, timeout) {
 
 exports.expectIsReadOnly = function (elem) {
   this.wait(elem).then(function () {
-    expect(elem.getAttribute("readonly")).toBeTruthy();
+    expect(elem.getAttribute('readonly')).toBeTruthy();
   });
 };
 
@@ -277,7 +276,6 @@ exports.expectIsNotPresent = function (elem) {
 };
 
 exports.expectIsNotDisplayed = function (elem, timeout) {
-
   if (elem instanceof protractor.ElementArrayFinder) {
     return browser.wait(function () {
       log('Waiting for element array not to be displayed: ' + elem.locator());
@@ -672,9 +670,9 @@ exports.formatPhoneNumbers = function (value) {
   value = value.replace(/[^0-9]/g, '');
   var vLength = value.length;
   if (vLength === 10) {
-    value = value.replace(/(\d{3})(\d{3})(\d{4})/, "1 ($1) $2-$3");
+    value = value.replace(/(\d{3})(\d{3})(\d{4})/, '1 ($1) $2-$3');
   } else if (vLength === 11) {
-    value = value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4");
+    value = value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4');
   }
   return value;
 };
@@ -750,7 +748,6 @@ exports.getUserWithDn = function (name) {
   this.click(users.addUsersField);
   this.sendKeys(users.addUsersField, name + protractor.Key.ENTER);
   this.click(users.nextButton);
-
 };
 exports.loginToOnboardUsers = function (loginName, userName) {
   login.login(loginName, '#/users');
@@ -816,7 +813,6 @@ exports.quickDeleteUser = function (bFirst, name) {
     log('user is not preset');
     return false;
   });
-
 };
 
 exports.waitUntilElemIsPresent = function (elem, timeout) {

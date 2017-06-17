@@ -388,7 +388,6 @@
                 Notification.error('ssoModal.disableFailed', {
                   status: status,
                 });
-
               }
             });
           }
@@ -541,7 +540,6 @@
           });
         }
       });
-
     };
 
     $scope.downloadHostedSp = function () {

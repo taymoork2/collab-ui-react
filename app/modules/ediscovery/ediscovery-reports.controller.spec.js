@@ -19,14 +19,14 @@ describe('Controller: EdiscoveryReportsController', function () {
 
     var promise = $q.resolve({
       reports: {
-        displayName: "test",
-        url: "whatever",
-        id: "12345678",
+        displayName: 'test',
+        url: 'whatever',
+        id: '12345678',
       },
       paging: {
         count: 20,
         limit: 10,
-        next: "n.a",
+        next: 'n.a',
         offset: 0,
       },
     });
@@ -38,7 +38,7 @@ describe('Controller: EdiscoveryReportsController', function () {
     spyOn(TrialService, 'getDaysLeftForCurrentUser');
 
     EdiscoveryService.getReports.and.returnValue(promise);
-    Authinfo.getOrgId.and.returnValue("ce8d17f8-1734-4a54-8510-fae65acc505e");
+    Authinfo.getOrgId.and.returnValue('ce8d17f8-1734-4a54-8510-fae65acc505e');
 
 
     controller = $controller('EdiscoveryReportsController', {
@@ -46,7 +46,6 @@ describe('Controller: EdiscoveryReportsController', function () {
       $scope: $scope,
       EdiscoveryService: EdiscoveryService,
     });
-
   }));
 
   afterEach(function () {
@@ -58,14 +57,11 @@ describe('Controller: EdiscoveryReportsController', function () {
   });
 
   describe('Initially', function () {
-
     it('gets reports', function () {
       expect(controller.readingReports).toBeTruthy();
       $scope.$apply();
       expect(EdiscoveryService.getReports.calls.count()).toBe(1);
       expect(controller.readingReports).toBeFalsy();
     });
-
   });
-
 });

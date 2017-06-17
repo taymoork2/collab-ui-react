@@ -12,7 +12,6 @@
 
     /* @ngInject */
     function ExternalNumberPool($q, ExternalNumberPoolService) {
-
       var ALL_EXTERNAL_NUMBER_TYPES = 'atlasUiAllExternalNumberTypes';
       var ASSIGNED_AND_UNASSIGNED_NUMBERS = 'atlasUiAssignedAndUnassignedNumbers';
       var NO_PATTERN_MATCHING = 'atlasUiNoPatternMatching';
@@ -42,7 +41,7 @@
 
       function create(_customerId, pattern) {
         var externalNumber = {
-          'pattern': pattern,
+          pattern: pattern,
         };
 
         return ExternalNumberPoolService.save({

@@ -55,7 +55,7 @@
             CsdmDataModelService.updateCloudberryPlace(place, wizardData.account.entitlements, numbers.directoryNumber, numbers.externalNumber)
               .then(function () {
                 $scope.$dismiss();
-                Notification.success("addDeviceWizard.assignPhoneNumber.linesSaved");
+                Notification.success('addDeviceWizard.assignPhoneNumber.linesSaved');
               }, function (error) {
                 vm.isLoading = false;
                 Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
@@ -157,7 +157,7 @@
         var indexOfDnColumn = _.findIndex(vm.addDnGridOptions.columnDefs, {
           field: 'internalExtension',
         });
-        if (response.extensionGenerated === "true") {
+        if (response.extensionGenerated === 'true') {
           vm.showExtensions = false;
           vm.addDnGridOptions.columnDefs[indexOfDidColumn].visible = false;
           vm.addDnGridOptions.columnDefs[indexOfDnColumn].displayName = $translate.instant('usersPage.directLineHeader');
@@ -175,7 +175,7 @@
       if (vm.showExtensions === false) {
         var dnLength = rowEntity.assignedDn.pattern.length;
         // if the internalNumber was changed, find a matching DID and set the externalNumber to match
-        if (modifiedFieldName === "internalNumber") {
+        if (modifiedFieldName === 'internalNumber') {
           var matchingDid = _.find(CommonLineService.getExternalNumberPool(), function (extNum) {
             return extNum.pattern.substr(-dnLength) === rowEntity.assignedDn.pattern;
           });
@@ -184,7 +184,7 @@
           }
         }
         // if the externalNumber was changed, find a matching DN and set the internalNumber to match
-        if (modifiedFieldName === "externalNumber") {
+        if (modifiedFieldName === 'externalNumber') {
           var matchingDn = _.find(CommonLineService.getInternalNumberPool(), {
             pattern: rowEntity.externalNumber.pattern.substr(-dnLength),
           });

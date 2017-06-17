@@ -2,7 +2,7 @@
  * Created by shailesi on 20/08/15.
  */
 
-"use strict";
+'use strict';
 
 var testModule = require('./index').default;
 
@@ -14,12 +14,12 @@ describe(' sunlightConfigService', function () {
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
   };
   var errorData = {
-    'errorType': 'Internal Server Error',
+    errorType: 'Internal Server Error',
   };
 
   beforeEach(angular.mock.module(testModule));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
 
   beforeEach(inject(function (_SunlightConfigService_, _$httpBackend_, UrlConfig) {
@@ -46,7 +46,6 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should get userInfo for a given userId', function () {
-
     $httpBackend.whenGET(sunlightUserConfigUrl + '/' + userId).respond(200, userData);
 
     sunlightConfigService.getUserInfo(userId).then(function (response) {
@@ -54,7 +53,6 @@ describe(' sunlightConfigService', function () {
       expect(response.data.userId).toBe(userId);
     });
     $httpBackend.flush();
-
   });
 
   it('should fail to get userInfo for a given userId when there is an http error', function () {
@@ -64,7 +62,6 @@ describe(' sunlightConfigService', function () {
       expect(response.status).toBe(500);
     });
     $httpBackend.flush();
-
   });
 
   it('should fail to get userInfo when userId is not defined', function () {
@@ -135,7 +132,7 @@ describe(' sunlightConfigService', function () {
 
   it('should update chat template in sunlight config service', function () {
     var chatTemplate = _.cloneDeep(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
-    $httpBackend.whenPUT(sunlightChatTemplateUrl + "/" + templateId).respond(200, {});
+    $httpBackend.whenPUT(sunlightChatTemplateUrl + '/' + templateId).respond(200, {});
     sunlightConfigService.editChatTemplate(chatTemplate, templateId).then(function (response) {
       expect(response.status).toBe(200);
     });
@@ -144,7 +141,7 @@ describe(' sunlightConfigService', function () {
 
   it('should fail to edit chat template in sunlight config service when there is a service error', function () {
     var chatTemplate = _.cloneDeep(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
-    $httpBackend.whenPUT(sunlightChatTemplateUrl + "/" + templateId).respond(500, errorData);
+    $httpBackend.whenPUT(sunlightChatTemplateUrl + '/' + templateId).respond(500, errorData);
     sunlightConfigService.editChatTemplate(chatTemplate, templateId).then(function (response) {
       expect(response.data).toEqual(errorData);
       expect(response.status).toBe(500);
@@ -153,14 +150,12 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should delete user for a given userId', function () {
-
     $httpBackend.whenDELETE(sunlightUserConfigUrl + '/' + userId).respond(200);
 
     sunlightConfigService.deleteUser(userId).then(function () {}, function (response) {
       expect(response.status).toBe(200);
     });
     $httpBackend.flush();
-
   });
 
   it('should fail to delete user for a given userId when there is an http error', function () {
@@ -171,7 +166,6 @@ describe(' sunlightConfigService', function () {
       expect(response.status).toBe(500);
     });
     $httpBackend.flush();
-
   });
 
   it('should delete user in sunlight config service when there is a delete call', function () {

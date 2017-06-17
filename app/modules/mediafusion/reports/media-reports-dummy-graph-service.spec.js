@@ -57,7 +57,6 @@ describe('Service: Media Reports Dummy Graph', function () {
       expect(respomseForLastWeek[0].colorTwo).toBe(vm.chartColors.grayLightTwo);
       expect(responseForLastMonth[0].colorTwo).toBe(vm.chartColors.grayLightTwo);
       expect(responseForLastThreeMonth[0].colorTwo).toBe(vm.chartColors.grayLightTwo);
-
     });
 
     it('MediaReportsDummyGraphService should return the expected responses for dummyLineChartData', function () {
@@ -74,7 +73,6 @@ describe('Service: Media Reports Dummy Graph', function () {
       expect(respomseForLastWeek[0].balloon).toBeFalsy();
       expect(responseForLastMonth[0].balloon).toBeFalsy();
       expect(responseForLastThreeMonth[0].balloon).toBeFalsy();
-
     });
   });
 });

@@ -16,8 +16,8 @@
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
     deviceOverview.countryIsLoaded = false;
-    deviceOverview.country = "";
-    deviceOverview.selectedCountry = "";
+    deviceOverview.country = '';
+    deviceOverview.selectedCountry = '';
     deviceOverview.hideE911Edit = true;
     deviceOverview.faxEnabled = false;
     deviceOverview.t38FeatureToggle = false;
@@ -49,7 +49,6 @@
     init();
 
     function displayDevice(device) {
-
       var lastDevice = deviceOverview.currentDevice;
       deviceOverview.currentDevice = device;
 
@@ -61,7 +60,7 @@
 
       if (!deviceOverview.huronPollInterval) {
         deviceOverview.huronPollInterval = $interval(pollLines, 30000);
-        $scope.$on("$destroy", function () {
+        $scope.$on('$destroy', function () {
           $interval.cancel(deviceOverview.huronPollInterval);
         });
       }
@@ -465,7 +464,6 @@
           .catch(function (response) {
             Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
           });
-
       } else {
         deviceOverview.isAddingTag = false;
         deviceOverview.newTag = undefined;

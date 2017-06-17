@@ -11,5 +11,4 @@
     vm.featureName = $stateParams.detailsFeatureName;
     vm.dependsNames = $stateParams.detailsDependsList;
   }
-
 })();

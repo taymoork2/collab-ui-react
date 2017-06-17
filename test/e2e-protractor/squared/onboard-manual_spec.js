@@ -24,7 +24,6 @@ describe('Onboard users through Manual Invite', function () {
   });
 
   it('should Manually Invite multiple users by email address (Message On).', function () {
-
     // Enter test email into edit box
     utils.click(manageUsersPage.manual.radio.emailAddress);
     utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, userList[0] + ', ' + userList[1]);

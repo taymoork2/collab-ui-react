@@ -1,13 +1,11 @@
 'use strict';
 
 describe('First Time Wizard', function () {
-
   it('should login as an admin user into the SSO test-org', function () {
     login.loginThroughGui(helper.auth['sso-e2e-test-org-mailsac'].user, helper.auth['sso-e2e-test-org-mailsac'].pass, '#/overview');
   });
 
   describe('should complete custom sso provider flow', function () {
-
     it('should navigate to the SSO Settings page from overview page sso card', function () {
       utils.click(ssowizard.viewSsoSettings);
       utils.waitForText(wizard.mainviewSubtitle, 'Single Sign-On');
@@ -57,7 +55,6 @@ describe('First Time Wizard', function () {
         utils.click(wizard.saveBtn);
       }
     });
-
   });
 
   it('should close the first time wizard and log out', function () {
@@ -65,5 +62,4 @@ describe('First Time Wizard', function () {
     utils.expectIsNotDisplayed(wizard.wizard);
     navigation.logout();
   });
-
 });

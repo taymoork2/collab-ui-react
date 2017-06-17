@@ -40,8 +40,8 @@
     var availabilityStatus = $translate.instant('mediaFusion.metrics.availabilityStatus');
     var availabilityOfHost = $translate.instant('mediaFusion.metrics.availabilityOfHost');
     var clusterTitle = $translate.instant('mediaFusion.metrics.clusterTitle');
-    var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.negativeDarker }];
-    var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.negativeDarker }, { 'title': partialTitle, 'color': chartColors.attentionBase }];
+    var availabilityLegendCluster = [{ title: availableTitle, color: chartColors.metricDarkGreen }, { title: unavailableTitle, color: chartColors.negativeDarker }];
+    var availabilityLegendAllcluster = [{ title: availableTitle, color: chartColors.metricDarkGreen }, { title: unavailableTitle, color: chartColors.negativeDarker }, { title: partialTitle, color: chartColors.attentionBase }];
 
     return {
       setUtilizationGraph: setUtilizationGraph,
@@ -51,24 +51,24 @@
 
     function getBaseExportForGraph(fields, fileName, columnNames) {
       baseVariables['export'] = {
-        'enabled': true,
-        'exportFields': fields,
-        'columnNames': columnNames,
-        'fileName': fileName,
-        'libs': {
-          'autoLoad': false,
+        enabled: true,
+        exportFields: fields,
+        columnNames: columnNames,
+        fileName: fileName,
+        libs: {
+          autoLoad: false,
         },
-        'menu': [{
-          'class': 'export-main',
-          'label': $translate.instant('reportsPage.downloadOptions'),
-          'menu': [{
-            'label': $translate.instant('reportsPage.saveAs'),
-            'title': $translate.instant('reportsPage.saveAs'),
-            'class': 'export-list',
-            'menu': ['PNG', 'JPG'],
+        menu: [{
+          class: 'export-main',
+          label: $translate.instant('reportsPage.downloadOptions'),
+          menu: [{
+            label: $translate.instant('reportsPage.saveAs'),
+            title: $translate.instant('reportsPage.saveAs'),
+            class: 'export-list',
+            menu: ['PNG', 'JPG'],
           }, {
-            'label': $translate.instant('reportsPage.pdf'),
-            'title': $translate.instant('reportsPage.pdf'),
+            label: $translate.instant('reportsPage.pdf'),
+            title: $translate.instant('reportsPage.pdf'),
             click: function () {
               this.capture({}, function () {
                 this.toPDF({}, function (data) {
@@ -77,10 +77,10 @@
               });
             },
           }, {
-            'class': 'export-list',
-            'label': $translate.instant('reportsPage.export'),
-            'title': $translate.instant('reportsPage.export'),
-            'menu': ['CSV', 'XLSX'],
+            class: 'export-list',
+            label: $translate.instant('reportsPage.export'),
+            title: $translate.instant('reportsPage.export'),
+            menu: ['CSV', 'XLSX'],
           }],
         }],
       };
@@ -120,15 +120,15 @@
       var columnNames = {};
       if (cluster === allClusters) {
         columnNames = {
-          'active_calls': callLocalTitle,
-          'call_reject': callRejectTitle,
-          'timestamp': timeStamp,
+          active_calls: callLocalTitle,
+          call_reject: callRejectTitle,
+          timestamp: timeStamp,
         };
       } else {
         columnNames = {
-          'active_calls': callLocalTitle,
-          'call_reject': callRedirectedClusterTitle,
-          'timestamp': timeStamp,
+          active_calls: callLocalTitle,
+          call_reject: callRedirectedClusterTitle,
+          timestamp: timeStamp,
         };
       }
       cluster = _.replace(cluster, /\s/g, '_');
@@ -255,7 +255,7 @@
       }
 
       var columnNames = {
-        'time': timeStamp,
+        time: timeStamp,
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
@@ -283,7 +283,6 @@
     }
 
     function setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange) {
-
       var isDummy = false;
       if (data === null || data === 'undefined' || data.length === 0) {
         return undefined;
@@ -336,7 +335,6 @@
         utilizationChart.validateData();
         return utilizationChart;
       }
-
     }
 
     function createValueAxis(data) {
@@ -374,18 +372,18 @@
       var columnNames = {};
       if (cluster === allClusters) {
         columnNames = {
-          'startTime': startTime,
-          'endTime': endTime,
-          'nodes': nodes,
-          'availability': availabilityStatus,
-          'category': clusterTitle,
+          startTime: startTime,
+          endTime: endTime,
+          nodes: nodes,
+          availability: availabilityStatus,
+          category: clusterTitle,
         };
       } else {
         columnNames = {
-          'availability': availabilityOfHost,
-          'startTime': startTime,
-          'endTime': endTime,
-          'category': node,
+          availability: availabilityOfHost,
+          startTime: startTime,
+          endTime: endTime,
+          category: node,
         };
       }
       cluster = _.replace(cluster, /\s/g, '_');

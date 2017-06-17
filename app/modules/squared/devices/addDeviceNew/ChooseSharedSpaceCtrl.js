@@ -60,7 +60,6 @@
     }
 
     vm.getRooms = function (searchStr, maxResCount) {
-
       vm.deviceName = undefined;
       vm.place = undefined;
 
@@ -83,12 +82,12 @@
     };
 
     vm.existing = function () {
-      vm.radioSelect = "existing";
+      vm.radioSelect = 'existing';
       vm.toggle();
     };
 
     vm.create = function () {
-      vm.radioSelect = "create";
+      vm.radioSelect = 'create';
       vm.toggle();
     };
 
@@ -103,10 +102,10 @@
     vm.message = {
       required: $translate.instant('common.invalidRequired'),
       min: $translate.instant('common.invalidMinLength', {
-        'min': minlength,
+        min: minlength,
       }),
       max: $translate.instant('common.invalidMaxLength', {
-        'max': maxlength,
+        max: maxlength,
       }),
     };
 

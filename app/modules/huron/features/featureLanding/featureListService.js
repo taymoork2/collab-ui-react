@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function HuronFeaturesListService() {
-
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
@@ -68,13 +67,11 @@
           });
           formattedList[refCardIndex].referenceNames.push(formattedList[cardToUpdateIndex].cardName);
           formattedList[refCardIndex].hasReferences = true;
-
         });
 
         formattedList[cardToUpdateIndex].dependsNames.sort(function (a, b) {
           return a.localeCompare(b);
         });
-
       });
       return orderByCardName(formattedList);
     }

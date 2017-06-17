@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function InitialSetupCtrl($scope, $location) {
-
     var allNavs = ['accountreview', 'adduser'];
 
     $scope.showNav = function (thisNav) {
@@ -27,6 +26,5 @@
         }
       }
     });
-
   }
 })();

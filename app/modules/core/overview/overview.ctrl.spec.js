@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: OverviewCtrl', function () {
-
   // load the controller's module
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
@@ -63,7 +62,6 @@ describe('Controller: OverviewCtrl', function () {
   describe('Callcard with healthStatus Event', function () {
     beforeEach(inject(defaultWireUpFunc));
     it('should update its status', function () {
-
       var callCard = getCard('overview.cards.call.title');
 
       callCard.healthStatusUpdatedHandler({
@@ -190,7 +188,6 @@ describe('Controller: OverviewCtrl', function () {
       $rootScope.$broadcast(PSTN_ESA_DISCLAIMER_ACCEPT);
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
     });
-
   });
 
   describe('Notifications - notificationComparator', function () {
@@ -217,7 +214,6 @@ describe('Controller: OverviewCtrl', function () {
         { badgeText: 'common.new' },
       ]);
     });
-
   });
 
   function getCard(filter) {
@@ -293,7 +289,7 @@ describe('Controller: OverviewCtrl', function () {
       },
       getCustomerTrialV2: function () {
         return $q.resolve({
-          acceptedDate: "today",
+          acceptedDate: 'today',
         });
       },
       getCarrierDetails: function () {

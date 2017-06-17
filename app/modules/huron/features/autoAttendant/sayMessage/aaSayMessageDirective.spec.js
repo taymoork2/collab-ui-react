@@ -45,6 +45,6 @@ describe('Directive: aaSayMessage', function () {
     element = $compile("<aa-say-message aa-schedule='openHours' aa-index='0'></aa-say-message>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("aa-message-textarea");
+    expect(element.html()).toContain('aa-message-textarea');
   });
 });

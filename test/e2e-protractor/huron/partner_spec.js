@@ -8,7 +8,6 @@ describe('Spark UC Partner flow', function () {
   var accessToken;
 
   describe('Add Partner Trial', function () {
-
     it('should login', function () {
       login.login('huron-e2e-partner', '#/partner/customers').then(function (token) {
         accessToken = token;
@@ -163,5 +162,4 @@ describe('Spark UC Partner flow', function () {
     deleteTrialUtils.deleteOrg(orgId, accessToken);
     deleteUtils.deleteSquaredUCCustomer(orgId, accessToken);
   });
-
 });

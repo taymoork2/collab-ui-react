@@ -17,7 +17,6 @@
     SessionStorage,
     TokenService
   ) {
-
     var _self = this;
     var x2js = new X2JS();
 
@@ -31,7 +30,7 @@
 
       $http({
         url: xmlApiUrl,
-        method: "POST",
+        method: 'POST',
         data: xmlRequest,
         headers: {
           'Content-Type': 'application/x-www-rform-urlencoded',
@@ -107,17 +106,17 @@
       }, // getEnableT30UnifiedAdminInfo()
 
       updateUserSettings: function (xmlApiAccessInfo, userSettings) {
-        var funcName = "updateUserSettings()";
-        var logMsg = "";
+        var funcName = 'updateUserSettings()';
+        var logMsg = '';
 
-        logMsg = funcName + ": " + "\n" +
-          "userSettings=" + JSON.stringify(userSettings);
+        logMsg = funcName + ': ' + '\n' +
+          'userSettings=' + JSON.stringify(userSettings);
         $log.log(logMsg);
 
         var xmlRequest = $interpolate(WebExXmlApiConstsSvc.updateUserSettings_1)(xmlApiAccessInfo);
 
-        logMsg = funcName + ": " + "\n" +
-          "xmlRequest #1 =\n" + xmlRequest;
+        logMsg = funcName + ': ' + '\n' +
+          'xmlRequest #1 =\n' + xmlRequest;
         // $log.log(logMsg);
 
         for (var i = 0; i < userSettings.meetingTypes.length; i++) {
@@ -126,14 +125,14 @@
           xmlRequest += $interpolate(WebExXmlApiConstsSvc.updateUserSettings_2)(tmpMeetingTypesObj);
         }
 
-        logMsg = funcName + ": " + "\n" +
-          "xmlRequest #2 =\n" + xmlRequest;
+        logMsg = funcName + ': ' + '\n' +
+          'xmlRequest #2 =\n' + xmlRequest;
         // $log.log(logMsg);
 
         xmlRequest += $interpolate(WebExXmlApiConstsSvc.updateUserSettings_3)(userSettings);
 
-        logMsg = funcName + ": " + "\n" +
-          "xmlRequest #3 =\n" + xmlRequest;
+        logMsg = funcName + ': ' + '\n' +
+          'xmlRequest #3 =\n' + xmlRequest;
         $log.log(logMsg);
 
         return $q(
@@ -149,98 +148,98 @@
       }, // updateUserSettings()
 
       updateUserSettings2: function (xmlApiAccessInfo) {
-        var funcName = "updateUserSettings2()";
-        var logMsg = "";
+        var funcName = 'updateUserSettings2()';
+        var logMsg = '';
 
-        logMsg = funcName + ": " + "\n" +
-          "xmlApiAccessInfo=\n" + JSON.stringify(xmlApiAccessInfo);
+        logMsg = funcName + ': ' + '\n' +
+          'xmlApiAccessInfo=\n' + JSON.stringify(xmlApiAccessInfo);
         $log.log(logMsg);
 
         var updateUserSettings2XmlMsg =
-          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" +
-          "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" + "\n" +
-          "    xmlns:serv=\"http://www.webex.com/schemas/2002/06/service\">" + "\n" +
-          "    <header>" + "\n" +
-          "        <securityContext>" + "\n" +
-          "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
-          "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
-          "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
-          "        </securityContext>" + "\n" +
-          "    </header>" + "\n" +
-          "    <body>" + "\n" +
-          "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.SetUser\">" + "\n" +
-          "            <webExId>{{webexUserId}}</webExId>" + "\n";
+          '<?xml version="1.0" encoding="UTF-8"?>' + '\n' +
+          '<serv:message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' + '\n' +
+          '    xmlns:serv="http://www.webex.com/schemas/2002/06/service">' + '\n' +
+          '    <header>' + '\n' +
+          '        <securityContext>' + '\n' +
+          '            <siteName>{{webexSiteName}}</siteName>' + '\n' +
+          '            <webExID>{{webexAdminID}}</webExID>' + '\n' +
+          '            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>' + '\n' +
+          '        </securityContext>' + '\n' +
+          '    </header>' + '\n' +
+          '    <body>' + '\n' +
+          '        <bodyContent xsi:type="java:com.webex.service.binding.user.SetUser">' + '\n' +
+          '            <webExId>{{webexUserId}}</webExId>' + '\n';
 
         // Start of use:privilege
         updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-          "            <use:privilege>" + "\n";
+          '            <use:privilege>' + '\n';
 
         if (xmlApiAccessInfo.tollSiteEnabled) {
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-            "                <use:teleConfCallIn>{{toll}}</use:teleConfCallIn>" + "\n";
+            '                <use:teleConfCallIn>{{toll}}</use:teleConfCallIn>' + '\n';
         }
 
         if (xmlApiAccessInfo.tollFreeSiteEnabled) {
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-            "                <use:teleConfTollFreeCallIn>{{tollFree}}</use:teleConfTollFreeCallIn>" + "\n";
+            '                <use:teleConfTollFreeCallIn>{{tollFree}}</use:teleConfTollFreeCallIn>' + '\n';
         }
 
         if (xmlApiAccessInfo.teleconfViaGlobalCallInSiteEnabled) {
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-            "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallIn}}</use:teleConfCallInInternational>" + "\n";
+            '                <use:teleConfCallInInternational>{{teleconfViaGlobalCallIn}}</use:teleConfCallInInternational>' + '\n';
         }
 
         if (xmlApiAccessInfo.teleCLIAuthEnabledSiteEnabled) {
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-            "                <use:teleCLIAuthEnabled>{{teleCLIAuthEnabled}}</use:teleCLIAuthEnabled>" + "\n";
+            '                <use:teleCLIAuthEnabled>{{teleCLIAuthEnabled}}</use:teleCLIAuthEnabled>' + '\n';
         }
 
         if (xmlApiAccessInfo.callBackTeleconfSiteEnabled) {
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-            "                <use:teleConfCallOut>{{callBackTeleconf}}</use:teleConfCallOut>" + "\n";
+            '                <use:teleConfCallOut>{{callBackTeleconf}}</use:teleConfCallOut>' + '\n';
 
           if (xmlApiAccessInfo.globalCallBackTeleconfSiteEnabled) {
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-              "                <use:teleConfCallOutInternational>{{globalCallBackTeleconf}}</use:teleConfCallOutInternational>" + "\n";
+              '                <use:teleConfCallOutInternational>{{globalCallBackTeleconf}}</use:teleConfCallOutInternational>' + '\n';
           }
         }
 
         if (xmlApiAccessInfo.otherTelephonySiteEnabled) {
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-            "                <use:otherTelephony>{{otherTelephony}}</use:otherTelephony>" + "\n";
+            '                <use:otherTelephony>{{otherTelephony}}</use:otherTelephony>' + '\n';
         }
 
         if (xmlApiAccessInfo.integratedVoIPSiteEnabled) {
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-            "                <use:voiceOverIp>{{integratedVoIP}}</use:voiceOverIp>" + "\n";
+            '                <use:voiceOverIp>{{integratedVoIP}}</use:voiceOverIp>' + '\n';
         }
 
         if (xmlApiAccessInfo.isEnablePMRSiteEnabled) {
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-            "                <use:isEnablePMR>{{isEnablePMR}}</use:isEnablePMR>" + "\n";
+            '                <use:isEnablePMR>{{isEnablePMR}}</use:isEnablePMR>' + '\n';
         }
 
         if (xmlApiAccessInfo.hiQualVideoSitenEnabled) {
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-            "                <use:HQvideo>{{hiQualVideo}}</use:HQvideo>" + "\n";
+            '                <use:HQvideo>{{hiQualVideo}}</use:HQvideo>' + '\n';
 
           if (xmlApiAccessInfo.hiDefVideoSiteEnabled) {
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-              "                <use:HDvideo>{{hiDefVideo}}</use:HDvideo>" + "\n";
+              '                <use:HDvideo>{{hiDefVideo}}</use:HDvideo>' + '\n';
           }
         }
 
         updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-          "            </use:privilege>" + "\n";
+          '            </use:privilege>' + '\n';
         // End of use:privilege
 
         updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-          "        </bodyContent>" + "\n" +
-          "    </body>" + "\n" +
-          "</serv:message>" + "\n";
+          '        </bodyContent>' + '\n' +
+          '    </body>' + '\n' +
+          '</serv:message>' + '\n';
 
-        logMsg = funcName + ": " + "\n" +
-          "updateUserSettings2XmlMsg =\n" + updateUserSettings2XmlMsg;
+        logMsg = funcName + ': ' + '\n' +
+          'updateUserSettings2XmlMsg =\n' + updateUserSettings2XmlMsg;
         $log.log(logMsg);
 
         var xmlRequest = $interpolate(updateUserSettings2XmlMsg)(xmlApiAccessInfo);
@@ -269,23 +268,22 @@
         wbxSiteUrl,
         wbxSiteName
       ) {
-
-        var funcName = "getSessionTicket()";
-        var logMsg = "";
+        var funcName = 'getSessionTicket()';
+        var logMsg = '';
 
         var ticketObj = null;
         var deferred = $q.defer();
         var _this = this;
 
         if ($rootScope.sessionTickets) {
-          logMsg = funcName + ": " + "wbxSiteUrl" + wbxSiteUrl + "\n" +
-            "Found session tickets in $rootScope";
+          logMsg = funcName + ': ' + 'wbxSiteUrl' + wbxSiteUrl + '\n' +
+            'Found session tickets in $rootScope';
           // $log.log(logMsg);
         } else {
           var storedSessionTicketsJson = LocalStorage.get('sessionTickets');
           if (storedSessionTicketsJson !== null) {
-            logMsg = funcName + ": " + "wbxSiteUrl" + wbxSiteUrl + "\n" +
-              "Found session tickets in Storage";
+            logMsg = funcName + ': ' + 'wbxSiteUrl' + wbxSiteUrl + '\n' +
+              'Found session tickets in Storage';
             // $log.log(logMsg);
 
             $rootScope.sessionTickets = JSON.parse(storedSessionTicketsJson);
@@ -300,15 +298,15 @@
             var d = new Date();
             var currentTime = d.getTime();
 
-            logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
-              "Verify cached session ticket" + "\n" +
-              "currentTime= " + currentTime + "\n" +
-              "ticketExpireTime= " + ticketExpireTime;
+            logMsg = funcName + ': ' + 'wbxSiteUrl=' + wbxSiteUrl + '\n' +
+              'Verify cached session ticket' + '\n' +
+              'currentTime= ' + currentTime + '\n' +
+              'ticketExpireTime= ' + ticketExpireTime;
             // $log.log(logMsg);
 
             if (currentTime < ticketExpireTime) {
-              logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
-                "Returning cached session ticket";
+              logMsg = funcName + ': ' + 'wbxSiteUrl=' + wbxSiteUrl + '\n' +
+                'Returning cached session ticket';
               $log.log(logMsg);
 
               return $q.resolve(ticketObj.sessionTik);
@@ -316,28 +314,28 @@
           }
         }
 
-        logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
-          "Create a new session ticket";
+        logMsg = funcName + ': ' + 'wbxSiteUrl=' + wbxSiteUrl + '\n' +
+          'Create a new session ticket';
         $log.log(logMsg);
 
         _this.validateToken().then(function () {
-          $log.log("Token validated.");
+          $log.log('Token validated.');
           _this.getNewSessionTicket(wbxSiteName, wbxSiteUrl).then(
             function getNewSessionTicketSuccess() {
-              var funcName = "getNewSessionTicketSuccess()";
+              var funcName = 'getNewSessionTicketSuccess()';
 
               if ($rootScope.sessionTickets) {
                 ticketObj = $rootScope.sessionTickets[wbxSiteName];
 
                 if (ticketObj && ticketObj.sessionTik) {
-                  logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
-                    "Return new session ticket";
+                  logMsg = funcName + ': ' + 'wbxSiteUrl=' + wbxSiteUrl + '\n' +
+                    'Return new session ticket';
                   $log.log(logMsg);
 
                   deferred.resolve(ticketObj.sessionTik);
                 } else {
-                  logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
-                    "Return an invalid ticket";
+                  logMsg = funcName + ': ' + 'wbxSiteUrl=' + wbxSiteUrl + '\n' +
+                    'Return an invalid ticket';
                   $log.log(logMsg);
 
                   deferred.reject('Invalid ticket');
@@ -346,16 +344,16 @@
             },
 
             function getNewSessionTicketError(reason) {
-              var funcName = "getNewSessionTicketError()";
+              var funcName = 'getNewSessionTicketError()';
 
-              logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
-                "ERROR - Failed to create a new session ticket";
+              logMsg = funcName + ': ' + 'wbxSiteUrl=' + wbxSiteUrl + '\n' +
+                'ERROR - Failed to create a new session ticket';
               $log.log(logMsg);
 
               deferred.reject(reason);
             });
         }).catch(function () {
-          $log.log("Token validation failed");
+          $log.log('Token validation failed');
           Auth.redirectToLogin();
         });
 
@@ -363,12 +361,12 @@
       }, //getSessionTicket()
 
       getNewSessionTicket: function (wbxSiteName, wbxSiteUrl) {
-        var funcName = "getNewSessionTicket()";
-        var logMsg = "";
+        var funcName = 'getNewSessionTicket()';
+        var logMsg = '';
 
         var _this = this;
         var defer = $q.defer();
-        var xmlApiUrl = "https://" + wbxSiteUrl + "/WBXService/XMLService";
+        var xmlApiUrl = 'https://' + wbxSiteUrl + '/WBXService/XMLService';
         var primaryEmail = Authinfo.getPrimaryEmail();
 
         var xmlApiAccessInfo = {
@@ -380,18 +378,18 @@
 
         this.getSessionTicketInfo(xmlApiAccessInfo).then(
           function getSessionTicketInfoSuccess(result) {
-            var funcName = "getSessionTicketInfoSuccess()";
+            var funcName = 'getSessionTicketInfoSuccess()';
 
-            logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
-              "result=" + result;
+            logMsg = funcName + ': ' + 'wbxSiteUrl=' + wbxSiteUrl + '\n' +
+              'result=' + result;
             // $log.log(logMsg);
 
-            var JsonData = _this.xml2JsonConvert("Authentication Data", result, "<serv:header", "</serv:message>");
-            logMsg = funcName + ".success()" + ": " + "\n" + "JsonData=" + JSON.stringify(JsonData);
+            var JsonData = _this.xml2JsonConvert('Authentication Data', result, '<serv:header', '</serv:message>');
+            logMsg = funcName + '.success()' + ': ' + '\n' + 'JsonData=' + JSON.stringify(JsonData);
             // $log.log(logMsg);
             result = JsonData.body.serv_header.serv_response.serv_result;
-            if (result != "SUCCESS") {
-              logMsg = funcName + ".error()" + ": " + "\n" + "JsonData=" + JSON.stringify(JsonData) + " , result=" + result;
+            if (result != 'SUCCESS') {
+              logMsg = funcName + '.error()' + ': ' + '\n' + 'JsonData=' + JSON.stringify(JsonData) + ' , result=' + result;
               // $log.log(logMsg);
 
               var exceptionId = JsonData.body.serv_header.serv_response.serv_exceptionID;
@@ -413,12 +411,12 @@
                 }
                 $rootScope.sessionTickets[wbxSiteName] = ticket;
                 LocalStorage.put('sessionTickets', JSON.stringify($rootScope.sessionTickets));
-                logMsg = funcName + ".success()" + ": " + "\n" + "Generated a new ticket for site=" + wbxSiteName;
+                logMsg = funcName + '.success()' + ': ' + '\n' + 'Generated a new ticket for site=' + wbxSiteName;
                 $log.log(logMsg);
                 defer.resolve(ticket.sessionTik);
               } else {
                 // while  "sessionTicket" is undefined.
-                logMsg = funcName + ".success()" + ": " + "\n" + " But failed to generate a new ticket for site=" + wbxSiteName;
+                logMsg = funcName + '.success()' + ': ' + '\n' + ' But failed to generate a new ticket for site=' + wbxSiteName;
                 $log.log(logMsg);
 
                 defer.reject('Failed to generate a new Ticket');
@@ -427,16 +425,16 @@
           }, //getSessionTicketInfoSuccess();
 
           function getSessionTicketInfoError(reason) {
-            var funcName = "getSessionTicketInfoError()";
+            var funcName = 'getSessionTicketInfoError()';
 
-            logMsg = funcName + ".error()" + ": " + "\n" + "reason= " + reason;
+            logMsg = funcName + '.error()' + ': ' + '\n' + 'reason= ' + reason;
             $log.log(logMsg);
 
-            var exceptionId = "";
+            var exceptionId = '';
 
             defer.reject(exceptionId);
           }); //getSessionTicketInfoError
-        logMsg = funcName + " Exiting";
+        logMsg = funcName + ' Exiting';
         $log.log(logMsg);
         return defer.promise;
       }, // getNewSessionTicket()
@@ -460,39 +458,37 @@
         startOfBodyStr,
         endOfBodyStr
       ) {
+        var funcName = 'xml2JsonConvert()';
+        var logMsg = '';
 
-        var funcName = "xml2JsonConvert()";
-        var logMsg = "";
-
-        logMsg = funcName + ": " + commentText + "\n" +
-          "startOfBodyStr=" + startOfBodyStr + "\n" +
-          "endOfBodyStr=" + endOfBodyStr + "\n" +
-          "xmlData=" + "\n" + xmlData;
+        logMsg = funcName + ': ' + commentText + '\n' +
+          'startOfBodyStr=' + startOfBodyStr + '\n' +
+          'endOfBodyStr=' + endOfBodyStr + '\n' +
+          'xmlData=' + '\n' + xmlData;
         // $log.log(logMsg);
 
         var startOfBodyIndex = (null == startOfBodyStr) ? -1 : xmlData.indexOf(startOfBodyStr);
         var endOfBodyIndex = (null == endOfBodyStr) ? -1 : xmlData.indexOf(endOfBodyStr);
 
-        logMsg = funcName + ": " + commentText + "\n" +
-          "startOfBodyIndex=" + startOfBodyIndex + "\n" +
-          "endOfBodyIndex=" + endOfBodyIndex;
+        logMsg = funcName + ': ' + commentText + '\n' +
+          'startOfBodyIndex=' + startOfBodyIndex + '\n' +
+          'endOfBodyIndex=' + endOfBodyIndex;
         // $log.log(logMsg);
 
-        var bodySliceXml = "";
+        var bodySliceXml = '';
         if (
           (0 <= startOfBodyIndex) &&
           (0 <= endOfBodyIndex) &&
           (startOfBodyIndex <= endOfBodyIndex)
         ) {
-
           bodySliceXml = (startOfBodyIndex < endOfBodyIndex) ? xmlData.slice(startOfBodyIndex, endOfBodyIndex) : xmlData.slice(startOfBodyIndex);
         } else {
-          logMsg = funcName + ": " + commentText + "; " + "ERROR!" + "\n" +
-            "startOfBodyStr=" + startOfBodyStr + "\n" +
-            "startOfBodyIndex=" + startOfBodyIndex + "\n" +
-            "endOfBodyStr=" + endOfBodyStr + "\n" +
-            "endOfBodyIndex=" + endOfBodyIndex + "\n" +
-            "xmlData=" + "\n" + xmlData;
+          logMsg = funcName + ': ' + commentText + '; ' + 'ERROR!' + '\n' +
+            'startOfBodyStr=' + startOfBodyStr + '\n' +
+            'startOfBodyIndex=' + startOfBodyIndex + '\n' +
+            'endOfBodyStr=' + endOfBodyStr + '\n' +
+            'endOfBodyIndex=' + endOfBodyIndex + '\n' +
+            'xmlData=' + '\n' + xmlData;
           $log.log(logMsg);
         }
 
@@ -500,20 +496,20 @@
           bodySliceXml = _.replace(bodySliceXml, replaceSet.replaceThis, replaceSet.withThis);
         });
 
-        logMsg = funcName + ": " + commentText + "\n" +
-          "bodySliceXml=" + "\n" + bodySliceXml;
+        logMsg = funcName + ': ' + commentText + '\n' +
+          'bodySliceXml=' + '\n' + bodySliceXml;
         // $log.log(logMsg);
 
-        var fullBodyXml = "<body>" + bodySliceXml + "</body>";
+        var fullBodyXml = '<body>' + bodySliceXml + '</body>';
 
-        logMsg = funcName + ": " + commentText + "\n" +
-          "fullBodyXml=" + "\n" + fullBodyXml;
+        logMsg = funcName + ': ' + commentText + '\n' +
+          'fullBodyXml=' + '\n' + fullBodyXml;
         // $log.log(logMsg);
 
         var fullBodyJson = x2js.xml_str2json(fullBodyXml);
 
-        logMsg = funcName + ": " + commentText + "\n" +
-          "fullBodyJson=\n" + JSON.stringify(fullBodyJson);
+        logMsg = funcName + ': ' + commentText + '\n' +
+          'fullBodyJson=\n' + JSON.stringify(fullBodyJson);
         // $log.log(logMsg);
 
         return fullBodyJson;
@@ -530,7 +526,7 @@
 
       tokeninfo: function () {
         var orgId = this.getOrgId();
-        var url = "https://identity.webex.com/identity/scim/" + orgId + "/v1/Users/me";
+        var url = 'https://identity.webex.com/identity/scim/' + orgId + '/v1/Users/me';
         return $http.get(url);
       },
 
@@ -539,15 +535,15 @@
         var token = TokenService.getAccessToken();
         if (!_.isEmpty(token)) {
           this.tokeninfo(token).then(function () {
-            $log.log("AccessToken valid.");
+            $log.log('AccessToken valid.');
             defer.resolve(); //continue
           }).catch(function () {
-            $log.log("AccessToken not valid.");
+            $log.log('AccessToken not valid.');
             defer.reject();
             Auth.redirectToLogin();
           });
         } else {
-          $log.log("No AccessToken.");
+          $log.log('No AccessToken.');
           defer.reject();
           Auth.redirectToLogin();
         }

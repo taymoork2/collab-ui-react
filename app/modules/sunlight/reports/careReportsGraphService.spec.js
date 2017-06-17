@@ -43,6 +43,5 @@ describe('Service: Care Reports Graph Service', function () {
       var serialGraph = CareReportsGraphService.buildChartConfig('dummyData', legend, graph, chartCursor, 'dummyField', categoryAxis, valueAxis, exportMenu, titles);
       expect(serialGraph).toEqual(responseData.getBaseSerialGraph);
     });
-
   });
 });

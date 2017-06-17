@@ -123,5 +123,4 @@ describe('Template: partnerProfile', function () {
       expect(label).toHaveAttr('for', id);
     };
   }
-
 });

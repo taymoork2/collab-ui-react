@@ -20,7 +20,6 @@ describe('Directive: aaKeypress', function () {
     $scope = $rootScope.$new();
 
     Notification = _Notification_;
-
   }));
 
   it('indicate an error when left angle bracket is used', function () {
@@ -70,7 +69,5 @@ describe('Directive: aaKeypress', function () {
     expect(event.preventDefault).not.toHaveBeenCalled();
 
     expect(errorSpy).not.toHaveBeenCalled();
-
   });
-
 });

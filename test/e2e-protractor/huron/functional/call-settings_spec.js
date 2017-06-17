@@ -114,5 +114,4 @@ describe('Huron Functional: call-settings', () => {
       });
     });
   });
-
 });

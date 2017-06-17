@@ -84,13 +84,11 @@ var Navigation = function () {
     this.clickServicesTab();
     utils.click(this.mediaServiceMgmtTab);
     this.expectCurrentUrl('/mediaservice');
-
   };
 
   this.clickMediaServiceSettingsTab = function () {
     utils.click(this.serviceSettings);
     this.expectCurrentUrl('/mediaservice/settings');
-
   };
 
   this.clickHome = function () {

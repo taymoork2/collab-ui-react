@@ -86,7 +86,6 @@
     }
 
     function canGoNext() {
-
       if (vm.fromClusters && !vm.yesProceed) {
         return true;
       } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {

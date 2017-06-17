@@ -40,6 +40,5 @@ describe('Utils', function () {
       // xxxxxxx-xxxx-7xxx-xxxx-xxxxxxxxxxxx
       uuid = 'df358550-0258-71e6-8d22-5e5517507c66';
     });
-
   });
 });

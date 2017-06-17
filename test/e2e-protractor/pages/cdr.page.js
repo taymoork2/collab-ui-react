@@ -1,7 +1,6 @@
 'use strict';
 
 var CdrPage = function () {
-
   this.pageTitle = element(by.css('.title-heading'));
 
   this.searchRadio = element(by.id('searchRadio'));

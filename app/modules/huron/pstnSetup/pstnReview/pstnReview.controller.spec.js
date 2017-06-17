@@ -95,7 +95,6 @@ describe('Controller: PstnReviewCtrl', function () {
     describe('when customer exists without a carrier', function () {
       beforeEach(function () {
         PstnModel.setCarrierExists(false);
-
       });
       it('should update customer and then place orders and transition to nextSteps', function () {
         controller.placeOrder();

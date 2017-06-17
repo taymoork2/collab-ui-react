@@ -10,14 +10,11 @@ describe('Huron Auto Attendant', function () {
     browser.setFileDetector(new remote.FileDetector());
 
     login.login('aa-admin', '#/hurondetails/features');
-
   }, 120000);
 
   describe('Create and Delete AA', function () {
-
     // TEST CASES
     it('should navigate to AA landing page', function () {
-
       // First ensure the test AA and queue is deleted (in case last test run failed for example)
       var flow = browser.controlFlow();
       flow.execute(deleteUtils.deleteRouteToQueue);
@@ -28,7 +25,6 @@ describe('Huron Auto Attendant', function () {
     }, 120000);
 
     it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
       // click new feature
       utils.click(autoattendant.newFeatureButton);
 
@@ -52,7 +48,6 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.addAANumbers);
       utils.scrollIntoView(autoattendant.sayMessage);
       utils.expectIsDisplayed(autoattendant.sayMessage);
-
     }, 60000);
 
     /*
@@ -60,7 +55,6 @@ describe('Huron Auto Attendant', function () {
      * when opened from New Step -> Route Call -> Queue Call
      */
     it('should display Language and Voice options in Queue Settings opened from New Step', function () {
-
       utils.scrollIntoView(autoattendant.addStepFirst);
       //Click on the + icon to open New Step
       utils.click(autoattendant.addStepFirst);
@@ -90,12 +84,11 @@ describe('Huron Auto Attendant', function () {
     });
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
       utils.scrollIntoView(autoattendant.phoneMenuSay);
       //Add Phone Menu Say Message
       utils.click(autoattendant.phoneMenuSay);
       utils.click(autoattendant.phonesayMessageInput);
-      utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
+      utils.sendKeys(autoattendant.phonesayMessageInput, 'Press a key at the menu');
       utils.expectIsEnabled(autoattendant.saveButton);
 
       // language and voice
@@ -104,11 +97,9 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phonelanguageDropDownOptions);
       utils.click(autoattendant.phonesayMessageVoice);
       utils.click(autoattendant.phonesayMessageVoiceOptions);
-
     });
 
     it('should add Phone Menu route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
       // Main menu key 0 - route to queue
       utils.click(autoattendant.phoneMenuKeys.first());
       utils.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
@@ -119,7 +110,6 @@ describe('Huron Auto Attendant', function () {
 
       // it is for selecting the queue for route to queue option
       utils.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
-
     });
     it('should click queue setting hyperlink and set and play periodic message and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       // it is for selecting the queue for route to queue option
@@ -131,7 +121,7 @@ describe('Huron Auto Attendant', function () {
 
       // select say message
       utils.click(autoattendant.periodicMessageTypeSelect);
-      utils.sendKeys(autoattendant.periodicMessageTypeSelect, "Welcome to Queue Settings Periodic Message");
+      utils.sendKeys(autoattendant.periodicMessageTypeSelect, 'Welcome to Queue Settings Periodic Message');
 
       //select media upload
       utils.click(autoattendant.periodicSayMessageOption);
@@ -170,7 +160,6 @@ describe('Huron Auto Attendant', function () {
     });
 
     it('should add another route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
         // Main menu key 1 - route to queue
       utils.scrollIntoView(autoattendant.repeatPlus);
 
@@ -185,7 +174,6 @@ describe('Huron Auto Attendant', function () {
 
       // it is for selecting the queue for route to queue option
       utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.routeToQueue)).first());
-
     });
 
     it('should click queue setting hyperlink of route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
@@ -198,7 +186,6 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.okQueueTreatment);
       utils.click(autoattendant.saveButton);
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
     });
 
     it('should save AA and return to landing page', function () {
@@ -212,7 +199,6 @@ describe('Huron Auto Attendant', function () {
         // Delete the queue
       var flow = browser.controlFlow();
       flow.execute(deleteUtils.deleteRouteToQueue);
-
     });
 
     it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {

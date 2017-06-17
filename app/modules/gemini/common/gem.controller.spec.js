@@ -18,7 +18,7 @@ describe('controller: GemCtrl', function () {
   }
 
   function initController() {
-    controller = $controller("GemCtrl", {
+    controller = $controller('GemCtrl', {
       $scope: {},
     });
   }

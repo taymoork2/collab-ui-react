@@ -28,7 +28,6 @@
     return directive;
 
     function link(scope, element, attrs) {
-
       element.on('change', onChange);
       element.on('click', onClick);
 
@@ -143,9 +142,6 @@
       function onClick() {
         element.val('');
       }
-
     }
-
   }
-
 })();

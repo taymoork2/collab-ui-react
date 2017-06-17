@@ -89,5 +89,4 @@ describe('TimingInterceptor', function () {
     });
     $rootScope.$digest();
   });
-
 });

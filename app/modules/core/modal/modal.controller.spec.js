@@ -3,7 +3,6 @@
 var testModule = require('./index').default;
 
 describe('Controller: ModalCtrl', function () {
-
   function init() {
     var _this = this;
 
@@ -18,13 +17,13 @@ describe('Controller: ModalCtrl', function () {
     };
 
     this.initModules(testModule, function ($provide) {
-      $provide.value("title", _this.data.title);
-      $provide.value("message", _this.data.message);
-      $provide.value("close", _this.data.close);
-      $provide.value("dismiss", _this.data.dismiss);
-      $provide.value("btnType", _this.data.btnType);
-      $provide.value("hideTitle", _this.data.hideTitle);
-      $provide.value("hideDismiss", _this.data.hideDismiss);
+      $provide.value('title', _this.data.title);
+      $provide.value('message', _this.data.message);
+      $provide.value('close', _this.data.close);
+      $provide.value('dismiss', _this.data.dismiss);
+      $provide.value('btnType', _this.data.btnType);
+      $provide.value('hideTitle', _this.data.hideTitle);
+      $provide.value('hideDismiss', _this.data.hideDismiss);
     });
     this.injectDependencies(
       '$rootScope',
@@ -56,5 +55,4 @@ describe('Controller: ModalCtrl', function () {
     expect(this.controller.hideTitle).toEqual(this.data.hideTitle);
     expect(this.controller.hideDismiss).toEqual(this.data.hideDismiss);
   });
-
 });

@@ -11,40 +11,40 @@ describe('Controller: PstnNumbersCtrl', function () {
   var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
   var NUMTYPE_TOLLFREE = require('modules/huron/pstn').NUMTYPE_TOLLFREE;
   var singleOrder = {
-    "data": {
-      "numbers": "+12145551000",
+    data: {
+      numbers: '+12145551000',
     },
-    "numberType": "DID",
-    "orderType": "NUMBER_ORDER",
+    numberType: 'DID',
+    orderType: 'NUMBER_ORDER',
   };
   var consecutiveOrder = {
-    "data": {
-      "numbers": [
-        "+12145551000",
-        "+12145551001",
+    data: {
+      numbers: [
+        '+12145551000',
+        '+12145551001',
       ],
     },
-    "numberType": "DID",
-    "orderType": "NUMBER_ORDER",
+    numberType: 'DID',
+    orderType: 'NUMBER_ORDER',
   };
   var nonconsecutiveOrder = {
-    "data": {
-      "numbers": [
-        "+12145551234",
-        "+12145551678",
+    data: {
+      numbers: [
+        '+12145551234',
+        '+12145551678',
       ],
     },
-    "numberType": "DID",
-    "orderType": "NUMBER_ORDER",
+    numberType: 'DID',
+    orderType: 'NUMBER_ORDER',
   };
   var portOrder = {
-    "data": {
-      "numbers": [
-        "+12145557001",
-        "+12145557002",
+    data: {
+      numbers: [
+        '+12145557001',
+        '+12145557002',
       ],
     },
-    "orderType": "PORT_ORDER",
+    orderType: 'PORT_ORDER',
   };
   var advancedOrder = {
     data: {
@@ -52,8 +52,8 @@ describe('Controller: PstnNumbersCtrl', function () {
       length: 2,
       consecutive: false,
     },
-    numberType: "DID",
-    orderType: "BLOCK_ORDER",
+    numberType: 'DID',
+    orderType: 'BLOCK_ORDER',
   };
   var advancedNxxOrder = {
     data: {
@@ -62,8 +62,8 @@ describe('Controller: PstnNumbersCtrl', function () {
       nxx: 201,
       consecutive: false,
     },
-    numberType: "DID",
-    orderType: "BLOCK_ORDER",
+    numberType: 'DID',
+    orderType: 'BLOCK_ORDER',
   };
   var advancedTollFreeOrder = {
     data: {
@@ -71,8 +71,8 @@ describe('Controller: PstnNumbersCtrl', function () {
       length: 3,
       consecutive: false,
     },
-    numberType: "TOLLFREE",
-    orderType: "BLOCK_ORDER",
+    numberType: 'TOLLFREE',
+    orderType: 'BLOCK_ORDER',
   };
 
   var location = {
@@ -103,7 +103,7 @@ describe('Controller: PstnNumbersCtrl', function () {
   };
 
   var capabilityWithTollFree = [
-    { capability: "TOLLFREE_ORDERING" },
+    { capability: 'TOLLFREE_ORDERING' },
   ];
 
   afterEach(function () {
@@ -373,5 +373,4 @@ describe('Controller: PstnNumbersCtrl', function () {
       });
     });
   });
-
 });

@@ -56,6 +56,6 @@ describe('Directive: aaRouteToExtNum', function () {
     element = $compile("<aa-route-to-ext-num aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-route-to-ext-num>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("aaRouteToExtNum");
+    expect(element.html()).toContain('aaRouteToExtNum');
   });
 });

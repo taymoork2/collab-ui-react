@@ -9,7 +9,7 @@ describe('Controller: Care Local Settings', function () {
   };
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
     inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
@@ -92,7 +92,7 @@ describe('Controller: Care Local Settings', function () {
       .respond(200, {
         csOnboardingStatus: controller.status.SUCCESS,
         appOnboardStatus: controller.status.SUCCESS,
-        orgName: "",
+        orgName: '',
       });
       $httpBackend.flush();
       expect(sunlightConfigService.updateChatConfig).toHaveBeenCalled();
@@ -103,7 +103,7 @@ describe('Controller: Care Local Settings', function () {
       .respond(200, {
         csOnboardingStatus: controller.status.SUCCESS,
         appOnboardStatus: controller.status.SUCCESS,
-        orgName: "fake org name",
+        orgName: 'fake org name',
       });
       $httpBackend.flush();
       expect(sunlightConfigService.updateChatConfig).not.toHaveBeenCalled();
@@ -194,7 +194,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
   };
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
     inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
@@ -347,7 +347,7 @@ describe('Care Settings - Routing Toggling', function () {
   };
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
       inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
@@ -378,7 +378,7 @@ describe('Care Settings - Routing Toggling', function () {
       deferred.resolve('fake update response');
       return deferred.promise;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
     $httpBackend.flush();
     expect(controller).toBeDefined();
     expect(controller.selectedRouting).toBe(controller.RoutingType.PICK);
@@ -390,7 +390,7 @@ describe('Care Settings - Routing Toggling', function () {
       deferred.resolve('fake update response');
       return deferred.promise;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "push" });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'push' });
     $httpBackend.flush();
     expect(controller).toBeDefined();
     expect(controller.selectedRouting).toBe(controller.RoutingType.PUSH);
@@ -405,7 +405,7 @@ describe('Care Settings - Routing Toggling', function () {
     spyOn(Notification, 'success').and.callFake(function () {
       return true;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
     $httpBackend.flush();
     controller.isProcessing = true;
     controller.updateRoutingType();
@@ -424,7 +424,7 @@ describe('Care Settings - Routing Toggling', function () {
     spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
       return true;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
     $httpBackend.flush();
     controller.updateRoutingType();
     $scope.$apply();
@@ -437,7 +437,7 @@ describe('Care Settings - Routing Toggling', function () {
       deferred.resolve('fake update response');
       return deferred.promise;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
     $httpBackend.flush();
     controller.savedRoutingType = controller.RoutingType.PUSH;
     controller.cancelEdit();

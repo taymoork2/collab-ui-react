@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Features Controller', function () {
-
   var featureCtrl, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, PhoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService, CallPickupGroupService;
   var listOfPIs = getJSONFixture('huron/json/features/callPickup/pickupList.json');
   var emptylistOfPIs = [];
@@ -9,26 +8,26 @@ describe('Features Controller', function () {
     return data;
   };
   var getPIListFailureResp = {
-    'data': 'Internal Server Error',
-    'status': 500,
-    'statusText': 'Internal Server Error',
+    data: 'Internal Server Error',
+    status: 500,
+    statusText: 'Internal Server Error',
   };
   var pickupGroups = {
-    "pickupGroups": [{
-      id: "6ebcf83f-6594-419d-85a0-4c98b5f97995",
-      cardName: "blue",
+    pickupGroups: [{
+      id: '6ebcf83f-6594-419d-85a0-4c98b5f97995',
+      cardName: 'blue',
       memberCount: 2,
       filterValue: 'PI',
       featureName: 'huronFeatureDetails.pi',
     }, {
-      id: "bce45ce1-743a-454b-b1bf-30ca838ee3e5",
-      cardName: "check",
+      id: 'bce45ce1-743a-454b-b1bf-30ca838ee3e5',
+      cardName: 'check',
       memberCount: 3,
       filterValue: 'PI',
       featureName: 'huronFeatureDetails.pi',
     }, {
-      id: "1e861505-c281-4086-98c5-2e46b4659065",
-      cardName: "demo_1",
+      id: '1e861505-c281-4086-98c5-2e46b4659065',
+      cardName: 'demo_1',
       memberCount: 2,
       filterValue: 'PI',
       featureName: 'huronFeatureDetails.pi',
@@ -83,7 +82,6 @@ describe('Features Controller', function () {
       Log: Log,
       Notification: Notification,
     });
-
   }));
 
   //TODO: re-enable after feature toggles are removed

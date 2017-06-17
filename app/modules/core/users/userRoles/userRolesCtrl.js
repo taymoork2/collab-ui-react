@@ -215,115 +215,115 @@ require('./_user-roles.scss');
               Config.roles[roleName] !== Config.roles.spark_synckms &&
               Config.roles[roleName] !== Config.roles.compliance_user) {
               roles.push({
-                'roleName': Config.roles[roleName],
-                'roleState': Config.roleState.inactive,
+                roleName: Config.roles[roleName],
+                roleState: Config.roleState.inactive,
               });
             }
           }
           break;
         case 1: // Full admin
           roles.push({
-            'roleName': Config.roles.full_admin,
-            'roleState': Config.roleState.active,
+            roleName: Config.roles.full_admin,
+            roleState: Config.roleState.active,
           });
           roles.push({
-            'roleName': Config.roles.readonly_admin,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.readonly_admin,
+            roleState: Config.roleState.inactive,
           });
           roles.push({
-            'roleName': Config.roles.sales,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.sales,
+            roleState: Config.roleState.inactive,
           });
           roles.push({
-            'roleName': Config.roles.billing,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.billing,
+            roleState: Config.roleState.inactive,
           });
           roles.push({
-            'roleName': Config.roles.support,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.support,
+            roleState: Config.roleState.inactive,
           });
           roles.push({
-            'roleName': Config.roles.reports,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.reports,
+            roleState: Config.roleState.inactive,
           });
           break;
         case 2: // Some admin roles
           roles.push({
-            'roleName': Config.roles.full_admin,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.full_admin,
+            roleState: Config.roleState.inactive,
           });
           roles.push({
-            'roleName': Config.roles.readonly_admin,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.readonly_admin,
+            roleState: Config.roleState.inactive,
           });
           roles.push({
-            'roleName': Config.roles.sales,
-            'roleState': checkPartialRoles($scope.rolesObj.salesAdminValue),
+            roleName: Config.roles.sales,
+            roleState: checkPartialRoles($scope.rolesObj.salesAdminValue),
           });
           roles.push({
-            'roleName': Config.roles.billing,
-            'roleState': checkPartialRoles($scope.rolesObj.billingAdminValue),
+            roleName: Config.roles.billing,
+            roleState: checkPartialRoles($scope.rolesObj.billingAdminValue),
           });
           roles.push({
-            'roleName': Config.roles.support,
-            'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue),
+            roleName: Config.roles.support,
+            roleState: checkPartialRoles($scope.rolesObj.supportAdminValue),
           });
           roles.push({
-            'roleName': Config.roles.reports,
-            'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue),
+            roleName: Config.roles.reports,
+            roleState: checkPartialRoles($scope.rolesObj.supportAdminValue),
           });
           break;
         case 3: // Readonly admin
           roles.push({
-            'roleName': Config.roles.full_admin,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.full_admin,
+            roleState: Config.roleState.inactive,
           });
           roles.push({
-            'roleName': Config.roles.readonly_admin,
-            'roleState': Config.roleState.active,
+            roleName: Config.roles.readonly_admin,
+            roleState: Config.roleState.active,
           });
           roles.push({
-            'roleName': Config.roles.sales,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.sales,
+            roleState: Config.roleState.inactive,
           });
           roles.push({
-            'roleName': Config.roles.billing,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.billing,
+            roleState: Config.roleState.inactive,
           });
           roles.push({
-            'roleName': Config.roles.support,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.support,
+            roleState: Config.roleState.inactive,
           });
           roles.push({
-            'roleName': Config.roles.reports,
-            'roleState': Config.roleState.inactive,
+            roleName: Config.roles.reports,
+            roleState: Config.roleState.inactive,
           });
           break;
       }
 
       // Help Desk
       roles.push({
-        'roleName': Config.roles.helpdesk,
-        'roleState': ($scope.rolesObj.helpdeskValue ? Config.roleState.active : Config.roleState.inactive),
+        roleName: Config.roles.helpdesk,
+        roleState: ($scope.rolesObj.helpdeskValue ? Config.roleState.active : Config.roleState.inactive),
       });
 
       // Order Admin role for applicable users
       if ($scope.showOrderAdminRole) {
         roles.push({
-          'roleName': Config.roles.orderadmin,
-          'roleState': ($scope.rolesObj.orderAdminValue ? Config.roleState.active : Config.roleState.inactive),
+          roleName: Config.roles.orderadmin,
+          roleState: ($scope.rolesObj.orderAdminValue ? Config.roleState.active : Config.roleState.inactive),
         });
       }
 
       // Partner Management
       roles.push({
-        'roleName': Config.roles.partner_management,
-        'roleState': ($scope.rolesObj.partnerManagementValue ? Config.roleState.active : Config.roleState.inactive),
+        roleName: Config.roles.partner_management,
+        roleState: ($scope.rolesObj.partnerManagementValue ? Config.roleState.active : Config.roleState.inactive),
       });
 
       roles.push({
-        'roleName': Config.roles.spark_synckms,
-        'roleState': (hasRole(Config.backend_roles.spark_synckms) ? Config.roleState.active : Config.roleState.inactive),
+        roleName: Config.roles.spark_synckms,
+        roleState: (hasRole(Config.backend_roles.spark_synckms) ? Config.roleState.active : Config.roleState.inactive),
       });
 
       return roles;
@@ -364,10 +364,10 @@ require('./_user-roles.scss');
       // Guidance from CI team is to not specify any property containing an empty string
       // value. Instead, add the property to meta.attribute to have its value be deleted.
       var userData = {
-        'schemas': Config.scimSchemas,
-        'name': {},
-        'meta': {
-          'attributes': [],
+        schemas: Config.scimSchemas,
+        name: {},
+        meta: {
+          attributes: [],
         },
       };
 

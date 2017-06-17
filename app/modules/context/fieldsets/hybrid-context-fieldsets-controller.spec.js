@@ -1,7 +1,6 @@
 'use strict';
 
 describe('HybridContextFieldsetsCtrl', function () {
-
   var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
 
   var MOCK_ORG_ID = 'mocked-org-id';
@@ -82,52 +81,52 @@ describe('HybridContextFieldsetsCtrl', function () {
   describe('get fieldset list options', function () {
     it('should set the gridOptions data correctly when fieldset list is resolved', function () {
       ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa custom fieldset with some long description description description description description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aaa custom fieldset with some long description description description description description',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
           'AAA_TEST_FIELD4',
         ],
-        'publiclyAccessibleUI': false,
-        'fieldDefinitions': [
+        publiclyAccessibleUI: false,
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD4',
-            'lastUpdated': '2017-02-02T21:22:35.106Z',
+            id: 'AAA_TEST_FIELD4',
+            lastUpdated: '2017-02-02T21:22:35.106Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-        'id': 'aaa_custom_fieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+        id: 'aaa_custom_fieldset',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       }, {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aa2 custom fieldset with some long description description description description description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aa2 custom fieldset with some long description description description description description',
+        fields: [
           'AAA_TEST_FIELD2',
           'Agent_ID',
         ],
-        'publiclyAccessibleUI': false,
-        'fieldDefinitions': [
+        publiclyAccessibleUI: false,
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD2',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD2',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/aa2_custom_fieldset',
-        'id': 'aa2_custom_fieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/aa2_custom_fieldset',
+        id: 'aa2_custom_fieldset',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       }]));
       controller = initController();
       $scope.$apply();
@@ -148,23 +147,22 @@ describe('HybridContextFieldsetsCtrl', function () {
   });
 
   describe('process fieldsets', function () {
-
     it('should process fieldset data when data returned and publiclyAccessible', function () {
       ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa custom fieldset with some long description description description description description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aaa custom fieldset with some long description description description description description',
+        fields: [
           'AAA_TEST_FIELD',
         ],
-        'publiclyAccessible': true,
-        'fieldDefinitions': [
+        publiclyAccessible: true,
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-        'id': 'aaa_custom_fieldset',
+        refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+        id: 'aaa_custom_fieldset',
       }]));
       controller = initController();
       $scope.$apply();
@@ -178,20 +176,20 @@ describe('HybridContextFieldsetsCtrl', function () {
 
     it('should process fieldset data when data returned is missing lastUpdate', function () {
       ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa custom fieldset with some long description description description description description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aaa custom fieldset with some long description description description description description',
+        fields: [
           'AAA_TEST_FIELD',
         ],
-        'publiclyAccessible': false,
-        'fieldDefinitions': [
+        publiclyAccessible: false,
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-        'id': 'aaa_custom_fieldset',
+        refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+        id: 'aaa_custom_fieldset',
       }]));
       controller = initController();
       $scope.$apply();
@@ -205,41 +203,41 @@ describe('HybridContextFieldsetsCtrl', function () {
 
     it('should process fieldset data when data returned has multiple fields', function () {
       ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa custom fieldset with some long description description description description description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aaa custom fieldset with some long description description description description description',
+        fields: [
           'AAA_TEST_FIELD1',
           'AAA_TEST_FIELD2',
           'AAA_TEST_FIELD3',
           'AAA_TEST_FIELD4',
           'AAA_TEST_FIELD5',
         ],
-        'publiclyAccessibleUI': false,
-        'fieldDefinitions': [
+        publiclyAccessibleUI: false,
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD1',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD1',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD2',
-            'lastUpdated': '2017-02-03T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD2',
+            lastUpdated: '2017-02-03T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD3',
-            'lastUpdated': '2017-02-04T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD3',
+            lastUpdated: '2017-02-04T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD4',
-            'lastUpdated': '2017-02-05T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD4',
+            lastUpdated: '2017-02-05T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD5',
-            'lastUpdated': '2017-02-06T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD5',
+            lastUpdated: '2017-02-06T17:12:33.167Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-        'id': 'aaa_custom_fieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+        id: 'aaa_custom_fieldset',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       }]));
       controller = initController();
       $scope.$apply();
@@ -251,12 +249,12 @@ describe('HybridContextFieldsetsCtrl', function () {
 
     it('should process fieldset data when data returned is missing field definition', function () {
       ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa custom fieldset with some long description description description description description',
-        'publiclyAccessibleUI': false,
-        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-        'id': 'aaa_custom_fieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aaa custom fieldset with some long description description description description description',
+        publiclyAccessibleUI: false,
+        refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+        id: 'aaa_custom_fieldset',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       }]));
       controller = initController();
       $scope.$apply();
@@ -265,7 +263,6 @@ describe('HybridContextFieldsetsCtrl', function () {
       expect(controller.fieldsetsList.allFieldsets[0].numOfFields).toBe(0);
       expect(controller.fieldsetsList.allFieldsets[0].lastUpdated).not.toBeNull();
     });
-
   });
 
   describe('filterListBySearchStr', function () {
@@ -275,139 +272,139 @@ describe('HybridContextFieldsetsCtrl', function () {
       $scope.$apply();
 
       var fieldsetList = [{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': '4 fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: '4 fields in this fieldset',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
           'AAA_TEST_FIELD4',
           'AAA_TEST_FIELD5',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD4',
-            'lastUpdated': '2017-02-02T21:22:35.106Z',
+            id: 'AAA_TEST_FIELD4',
+            lastUpdated: '2017-02-02T21:22:35.106Z',
           },
           {
-            'id': 'AAA_TEST_FIELD5',
-            'lastUpdated': '2017-02-02T21:22:35.106Z',
+            id: 'AAA_TEST_FIELD5',
+            lastUpdated: '2017-02-02T21:22:35.106Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
-        'id': 'strMatchInLastUpdated',
-        'lastUpdatedUI': '2017-02-15T19:37:36.998Z',
-        'numOfFields': '4',
+        refUrl: '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
+        id: 'strMatchInLastUpdated',
+        lastUpdatedUI: '2017-02-15T19:37:36.998Z',
+        numOfFields: '4',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': '2 fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: '2 fields in this fieldset',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/fieldset5',
-        'id': 'fieldset5',
-        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
-        'numOfFields': '2',
+        refUrl: '/dictionary/fieldset/v1/id/fieldset5',
+        id: 'fieldset5',
+        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        numOfFields: '2',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': '2 fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: '2 fields in this fieldset',
+        fields: [
           'AAA_TEST_FIELD5',
           'Agent_ID',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD5',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD5',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/notThisfieldset',
-        'id': 'notThisfieldset',
-        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
-        'numOfFields': '2',
+        refUrl: '/dictionary/fieldset/v1/id/notThisfieldset',
+        id: 'notThisfieldset',
+        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        numOfFields: '2',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'number 5 in description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'number 5 in description',
+        fields: [
           'Agent_ID',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/strMatchInDescription',
-        'id': 'strMatchInDescription',
-        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
-        'numOfFields': '1',
+        refUrl: '/dictionary/fieldset/v1/id/strMatchInDescription',
+        id: 'strMatchInDescription',
+        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        numOfFields: '1',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'lots of fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'lots of fields in this fieldset',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
           'AAA_TEST_FIELD2',
           'Agent_ID2',
           'AAA_TEST_FIELD3',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD2',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD2',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD3',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD3',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
           {
-            'id': 'Agent_ID2',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID2',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/strMatchViaNumFields',
-        'id': 'strMatchViaNumFields',
-        'lastUpdatedUI': '2017-02-12T19:37:36.998Z',
-        'numOfFields': '5',
+        refUrl: '/dictionary/fieldset/v1/id/strMatchViaNumFields',
+        id: 'strMatchViaNumFields',
+        lastUpdatedUI: '2017-02-12T19:37:36.998Z',
+        numOfFields: '5',
       }];
 
       controller.filterBySearchStr(fieldsetList, '5')
@@ -428,102 +425,102 @@ describe('HybridContextFieldsetsCtrl', function () {
       $scope.$apply();
 
       var fieldsetList = [{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': '4 fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: '4 fields in this fieldset',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
           'AAA_TEST_FIELD4',
           'AAA_TEST_FIELD5',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD4',
-            'lastUpdated': '2017-02-02T21:22:35.106Z',
+            id: 'AAA_TEST_FIELD4',
+            lastUpdated: '2017-02-02T21:22:35.106Z',
           },
           {
-            'id': 'AAA_TEST_FIELD5',
-            'lastUpdated': '2017-02-02T21:22:35.106Z',
+            id: 'AAA_TEST_FIELD5',
+            lastUpdated: '2017-02-02T21:22:35.106Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/First',
-        'id': 'First',
-        'lastUpdatedUI': '2017-02-15T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/First',
+        id: 'First',
+        lastUpdatedUI: '2017-02-15T19:37:36.998Z',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'fiRsT 2 fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'fiRsT 2 fields in this fieldset',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/strMatchInDescription',
-        'id': 'strMatchInDescription',
-        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/strMatchInDescription',
+        id: 'strMatchInDescription',
+        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': '2 fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: '2 fields in this fieldset',
+        fields: [
           'FIRST',
           'Agent_ID',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'FIRST',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'FIRST',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/notThisfieldset',
-        'id': 'notThisfieldset',
-        'lastUpdatedUI': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/notThisfieldset',
+        id: 'notThisfieldset',
+        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'number 5 in description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'number 5 in description',
+        fields: [
           'Agent_ID',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
-        'id': 'strMatchInLastUpdated',
-        'lastUpdatedUI': 'first in date',
+        refUrl: '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
+        id: 'strMatchInLastUpdated',
+        lastUpdatedUI: 'first in date',
       },
       {
-        'otherKey1': 'First',
-        'otherKey2': 'first',
-        'otherKey3': 'anyOtherFirst',
+        otherKey1: 'First',
+        otherKey2: 'first',
+        otherKey3: 'anyOtherFirst',
       }];
 
       controller.filterBySearchStr(fieldsetList, 'first')
@@ -543,107 +540,107 @@ describe('HybridContextFieldsetsCtrl', function () {
       $scope.$apply();
 
       var fieldsetList = [{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': '4 fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: '4 fields in this fieldset',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
           'AAA_TEST_FIELD4',
           'AAA_TEST_FIELD5',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD4',
-            'lastUpdated': '2017-02-02T21:22:35.106Z',
+            id: 'AAA_TEST_FIELD4',
+            lastUpdated: '2017-02-02T21:22:35.106Z',
           },
           {
-            'id': 'AAA_TEST_FIELD5',
-            'lastUpdated': '2017-02-02T21:22:35.106Z',
+            id: 'AAA_TEST_FIELD5',
+            lastUpdated: '2017-02-02T21:22:35.106Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/AAA_TEST_FIELDSET',
-        'id': 'AAA_TEST_FIELDSET',
-        'lastUpdated': '2017-02-15T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/AAA_TEST_FIELDSET',
+        id: 'AAA_TEST_FIELDSET',
+        lastUpdated: '2017-02-15T19:37:36.998Z',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'TeSt 2 fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'TeSt 2 fields in this fieldset',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/AAA.TEST.FIELDSET',
-        'id': 'AAA.TEST.FIELDSET',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/AAA.TEST.FIELDSET',
+        id: 'AAA.TEST.FIELDSET',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'Aaa_Test fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'Aaa_Test fieldset',
+        fields: [
           'aaa.test',
           'Agent_ID',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'aaa.test',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'aaa.test',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/strMatchInDescription',
-        'id': 'strMatchInDescription',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/strMatchInDescription',
+        id: 'strMatchInDescription',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa test',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aaa test',
+        fields: [
           'aaa_test',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'aaa_test',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'aaa_test',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/shouldNotMatch',
-        'id': 'shouldNotMatch',
-        'lastUpdated': 'first in date',
+        refUrl: '/dictionary/fieldset/v1/id/shouldNotMatch',
+        id: 'shouldNotMatch',
+        lastUpdated: 'first in date',
       },
       {
-        'otherKey1': 'aaa-test',
-        'otherKey2': 'aaa_test',
-        'otherKey3': 'anyOtherFirst',
-        'id': 'SearchStrInOtherFields',
+        otherKey1: 'aaa-test',
+        otherKey2: 'aaa_test',
+        otherKey3: 'anyOtherFirst',
+        id: 'SearchStrInOtherFields',
       }, {
-        'orgId': '',
-        'publiclyAccessibleUI': 'AAA_TEST',
-        'id': 'SearchStringInPubliclyAccessible',
+        orgId: '',
+        publiclyAccessibleUI: 'AAA_TEST',
+        id: 'SearchStringInPubliclyAccessible',
       }];
       controller.filterBySearchStr(fieldsetList, 'aaa_test')
         .then(function (filteredList) {
@@ -662,48 +659,48 @@ describe('HybridContextFieldsetsCtrl', function () {
       $scope.$apply();
 
       var fieldsetList = [{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': '4 fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: '4 fields in this fieldset',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/aaa_test_fieldset',
-        'id': 'aaa_test_fieldset',
-        'lastUpdated': '2017-02-15T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/aaa_test_fieldset',
+        id: 'aaa_test_fieldset',
+        lastUpdated: '2017-02-15T19:37:36.998Z',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': '2 fields in this fieldset',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: '2 fields in this fieldset',
+        fields: [
           'AAA_TEST_FIELD',
           'AAA_TEST_FIELD4',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD4',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'AAA_TEST_FIELD4',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/anotherFieldset',
-        'id': 'anotherFieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/anotherFieldset',
+        id: 'anotherFieldset',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       }];
       controller.filterBySearchStr(fieldsetList, '')
         .then(function (filteredList) {
@@ -719,52 +716,52 @@ describe('HybridContextFieldsetsCtrl', function () {
   describe('filterList tests', function () {
     it('should test filterList function with valid string', function () {
       ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa custom fieldset with some long description description description description description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aaa custom fieldset with some long description description description description description',
+        fields: [
           'AAA_TEST_FIELD',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-        'id': 'aaa_custom_fieldset',
+        refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+        id: 'aaa_custom_fieldset',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'bbb custom fieldset with some description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'bbb custom fieldset with some description',
+        fields: [
           'BBB_TEST_FIELD',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'BBB_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'BBB_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/bbb_custom_fieldset',
-        'id': 'bbb_custom_fieldset',
+        refUrl: '/dictionary/fieldset/v1/id/bbb_custom_fieldset',
+        id: 'bbb_custom_fieldset',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'bbb custom fieldset with some description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'bbb custom fieldset with some description',
+        fields: [
           'CCC_TEST_FIELD',
         ],
-        'publiclyAccessibleUI': 'false',
-        'fieldDefinitions': [
+        publiclyAccessibleUI: 'false',
+        fieldDefinitions: [
           {
-            'id': 'BBB_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'BBB_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
-        'id': 'ccc_custom_fieldset',
+        refUrl: '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
+        id: 'ccc_custom_fieldset',
       }]));
       controller = initController();
       $scope.$apply();
@@ -784,52 +781,52 @@ describe('HybridContextFieldsetsCtrl', function () {
 
       beforeEach(function () {
         ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([{
-          'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-          'description': 'aaa custom fieldset with some long description description description description description',
-          'fields': [
+          orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+          description: 'aaa custom fieldset with some long description description description description description',
+          fields: [
             'AAA_TEST_FIELD',
           ],
-          'publiclyAccessibleUI': 'false',
-          'fieldDefinitions': [
+          publiclyAccessibleUI: 'false',
+          fieldDefinitions: [
             {
-              'id': 'AAA_TEST_FIELD',
-              'lastUpdated': '2017-02-02T17:12:33.167Z',
+              id: 'AAA_TEST_FIELD',
+              lastUpdated: '2017-02-02T17:12:33.167Z',
             },
           ],
-          'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-          'id': 'aaa_custom_fieldset',
+          refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+          id: 'aaa_custom_fieldset',
         },
         {
-          'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-          'description': 'bbb custom fieldset with some description',
-          'fields': [
+          orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+          description: 'bbb custom fieldset with some description',
+          fields: [
             'BBB_TEST_FIELD',
           ],
-          'publiclyAccessibleUI': 'false',
-          'fieldDefinitions': [
+          publiclyAccessibleUI: 'false',
+          fieldDefinitions: [
             {
-              'id': 'BBB_TEST_FIELD',
-              'lastUpdated': '2017-02-02T17:12:33.167Z',
+              id: 'BBB_TEST_FIELD',
+              lastUpdated: '2017-02-02T17:12:33.167Z',
             },
           ],
-          'refUrl': '/dictionary/fieldset/v1/id/bbb_custom_fieldset',
-          'id': 'bbb_custom_fieldset',
+          refUrl: '/dictionary/fieldset/v1/id/bbb_custom_fieldset',
+          id: 'bbb_custom_fieldset',
         },
         {
-          'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-          'description': 'bbb custom fieldset with some description',
-          'fields': [
+          orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+          description: 'bbb custom fieldset with some description',
+          fields: [
             'CCC_TEST_FIELD',
           ],
-          'publiclyAccessibleUI': 'false',
-          'fieldDefinitions': [
+          publiclyAccessibleUI: 'false',
+          fieldDefinitions: [
             {
-              'id': 'BBB_TEST_FIELD',
-              'lastUpdated': '2017-02-02T17:12:33.167Z',
+              id: 'BBB_TEST_FIELD',
+              lastUpdated: '2017-02-02T17:12:33.167Z',
             },
           ],
-          'refUrl': '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
-          'id': 'ccc_custom_fieldset',
+          refUrl: '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
+          id: 'ccc_custom_fieldset',
         }]));
         controller = initController();
       });
@@ -855,7 +852,6 @@ describe('HybridContextFieldsetsCtrl', function () {
   });
 
   describe('fieldset edit feature', function () {
-
     beforeEach(function () {
       this.injectDependencies(
         '$q',

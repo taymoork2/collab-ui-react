@@ -58,43 +58,43 @@
         duration = 2260;
       }
       data = [{
-        'isDummy': true,
-        'orgId': '2c3c9f9e-73d9-4460-a668-047162ff1bac',
-        'period': period,
-        'clusterCategories': [{
-          'category': vm.clusterNodeHeading,
-          'segments': [{
-            'start': 1,
-            'duration': duration,
-            'color': color,
-            'startTime': start,
-            'endTime': end,
+        isDummy: true,
+        orgId: '2c3c9f9e-73d9-4460-a668-047162ff1bac',
+        period: period,
+        clusterCategories: [{
+          category: vm.clusterNodeHeading,
+          segments: [{
+            start: 1,
+            duration: duration,
+            color: color,
+            startTime: start,
+            endTime: end,
           }],
         }, {
-          'category': vm.clusterNodeHeading,
-          'segments': [{
-            'start': 1,
-            'duration': duration,
-            'color': color,
-            'startTime': start,
-            'endTime': end,
+          category: vm.clusterNodeHeading,
+          segments: [{
+            start: 1,
+            duration: duration,
+            color: color,
+            startTime: start,
+            endTime: end,
           }],
         }, {
-          'category': vm.clusterNodeHeading,
-          'segments': [{
-            'start': 1,
-            'duration': duration,
-            'color': color,
-            'startTime': start,
-            'endTime': end,
+          category: vm.clusterNodeHeading,
+          segments: [{
+            start: 1,
+            duration: duration,
+            color: color,
+            startTime: start,
+            endTime: end,
           }],
         }],
-        'startTime': start,
-        'endTime': end,
+        startTime: start,
+        endTime: end,
       }];
       var returnData;
       returnData = {
-        'data': data,
+        data: data,
       };
       return returnData;
     }

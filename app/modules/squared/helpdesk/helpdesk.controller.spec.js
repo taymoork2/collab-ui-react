@@ -283,8 +283,8 @@ describe('Controller: HelpdeskController', function () {
 
   describe('backend http error', function () {
     it('400 gives badUserSearchInput message', function () {
-      this.HelpdeskService.searchUsers.and.returnValue(this.$q.reject({ 'status': 400 }));
-      this.HelpdeskService.searchOrgs.and.returnValue(this.$q.reject({ 'status': 400 }));
+      this.HelpdeskService.searchUsers.and.returnValue(this.$q.reject({ status: 400 }));
+      this.HelpdeskService.searchOrgs.and.returnValue(this.$q.reject({ status: 400 }));
       this.initController();
 
       this.controller.searchString = this.validSearchString;
@@ -299,8 +299,8 @@ describe('Controller: HelpdeskController', function () {
     });
 
     it('error codes other that 400 gives unexpectedError message', function () {
-      this.HelpdeskService.searchUsers.and.returnValue(this.$q.reject({ 'status': 401 }));
-      this.HelpdeskService.searchOrgs.and.returnValue(this.$q.reject({ 'status': 401 }));
+      this.HelpdeskService.searchUsers.and.returnValue(this.$q.reject({ status: 401 }));
+      this.HelpdeskService.searchOrgs.and.returnValue(this.$q.reject({ status: 401 }));
       this.initController();
 
       this.controller.searchString = this.validSearchString;
@@ -313,7 +313,6 @@ describe('Controller: HelpdeskController', function () {
       expect(this.controller.searchingForOrgs).toBeFalsy();
       this.expectToShowOnlyUserAndOrgsResult();
     });
-
   });
 
   // Name Changes

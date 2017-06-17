@@ -406,7 +406,7 @@
         vm.invalidCount++;
       }
       vm.trialData.details.swivelNumbers.push(e.attrs.value);
-      setPlaceholderText("");
+      setPlaceholderText('');
     }
 
     function manualRemovedToken(e) {
@@ -417,7 +417,7 @@
       $timeout(reinitTokens);
 
       //If this is the last token, put back placeholder text.
-      var tokenElement = $("div", ".did-input").children(".token");
+      var tokenElement = $('div', '.did-input').children('.token');
       if (tokenElement.length === 0) {
         setPlaceholderText(vm.tokenplaceholder);
       }
@@ -538,6 +538,5 @@
         resetNumbers();
       }
     }
-
   }
 })();

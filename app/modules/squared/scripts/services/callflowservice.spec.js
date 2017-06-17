@@ -1,7 +1,6 @@
 'use strict';
 
 describe('CallflowService', function () {
-
   var result = {
     resultsUrl: 'http://sample.org',
   };
@@ -26,7 +25,6 @@ describe('CallflowService', function () {
   });
 
   it('should make correct call when isGetCallLogs is false', function () {
-
     var expectedUrl = this.UrlConfig.getCallflowServiceUrl() +
       'callflow/tool/run' +
       '?orgId=aa&userId=bb' +
@@ -47,11 +45,9 @@ describe('CallflowService', function () {
     this.$httpBackend.flush();
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
-
   });
 
   it('should make correct call when isGetCallLogs is true', function () {
-
     var expectedUrl = this.UrlConfig.getCallflowServiceUrl() +
       'callflow/logs' +
       '?orgId=aa&userId=bb' +
@@ -72,11 +68,9 @@ describe('CallflowService', function () {
     this.$httpBackend.flush();
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
-
   });
 
   it('should make correct call when locus is "-NA-"', function () {
-
     var expectedUrl = this.UrlConfig.getCallflowServiceUrl() +
       'callflow/logs' +
       '?orgId=aa&userId=bb' +
@@ -96,11 +90,9 @@ describe('CallflowService', function () {
     this.$httpBackend.flush();
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
-
   });
 
   it('should make correct call when callStart is "-NA-"', function () {
-
     var expectedUrl = this.UrlConfig.getCallflowServiceUrl() +
       'callflow/logs' +
       '?orgId=aa&userId=bb' +
@@ -120,11 +112,9 @@ describe('CallflowService', function () {
     this.$httpBackend.flush();
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
-
   });
 
   it('should reject promise on HTTP error', function () {
-
     var expectedUrl = this.UrlConfig.getCallflowServiceUrl() +
       'callflow/logs' +
       '?orgId=aa&userId=bb' +
@@ -150,7 +140,5 @@ describe('CallflowService', function () {
     this.$httpBackend.flush();
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
-
   });
-
 });

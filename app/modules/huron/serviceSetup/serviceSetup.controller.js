@@ -110,8 +110,8 @@
 
     if (!vm.showTimezoneAndVoicemail) {
       vm.model.site.preferredLanguage = {
-        label: "English (United States)",
-        value: "en_US",
+        label: 'English (United States)',
+        value: 'en_US',
       };
     }
 
@@ -160,7 +160,7 @@
       greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
         // we only validate this if beginNumber is valid or populated
-        if (_.isUndefined(scope.model.beginNumber) || scope.model.beginNumber === "") {
+        if (_.isUndefined(scope.model.beginNumber) || scope.model.beginNumber === '') {
           return true;
         } else {
           return value >= scope.model.beginNumber;
@@ -168,7 +168,7 @@
       },
       lessThan: function (viewValue, modelValue, scope) {
         // we only validate this if endNumber is valid or populated
-        if (_.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
+        if (_.isUndefined(scope.model.endNumber) || scope.model.endNumber === '') {
           // trigger validation on endNumber field
           if (_.has(scope, 'fields[2].formControl')) {
             scope.fields[2].formControl.$validate();
@@ -382,8 +382,8 @@
                 expression: vm.validations.lessThan,
                 message: function ($viewValue, $modelValue, scope) {
                   return $translate.instant('serviceSetupModal.lessThan', {
-                    'beginNumber': $viewValue,
-                    'endNumber': scope.model.endNumber,
+                    beginNumber: $viewValue,
+                    endNumber: scope.model.endNumber,
                   });
                 },
               },
@@ -437,8 +437,8 @@
                 expression: vm.validations.greaterThan,
                 message: function ($viewValue, $modelValue, scope) {
                   return $translate.instant('serviceSetupModal.greaterThan', {
-                    'beginNumber': scope.model.beginNumber,
-                    'endNumber': $viewValue,
+                    beginNumber: scope.model.beginNumber,
+                    endNumber: $viewValue,
                   });
                 },
               },
@@ -514,7 +514,6 @@
                   if (!_.isUndefined(vm.model.numberRanges[0].uuid)) {
                     $scope.to.btnClass = 'btn-sm btn-link hide-delete';
                   }
-
                 }
               });
             },
@@ -524,7 +523,7 @@
       expressionProperties: {
         'templateOptions.description': function () {
           return $translate.instant('serviceSetupModal.internalNumberRangeDescription', {
-            'length': vm.model.site.extensionLength,
+            length: vm.model.site.extensionLength,
           });
         },
       },
@@ -569,9 +568,9 @@
         label: $translate.instant('serviceSetupModal.voicemailPrefixTitle'),
         description: $translate.instant('serviceSetupModal.voicemailPrefixDesc',
           {
-            'number': vm.model.voicemailPrefix.value,
-            'extensionLength0': vm.model.previousLength === '5' ? '0000' : '000',
-            'extensionLength9': vm.model.previousLength === '5' ? '9999' : '999',
+            number: vm.model.voicemailPrefix.value,
+            extensionLength0: vm.model.previousLength === '5' ? '0000' : '000',
+            extensionLength9: vm.model.previousLength === '5' ? '9999' : '999',
           }),
         warnMsg: $translate.instant('serviceSetupModal.warning.siteSteering'),
         errorMsg: $translate.instant('serviceSetupModal.error.siteSteering'),
@@ -689,7 +688,6 @@
             return externalNumber.pattern === _.get(vm, 'model.site.emergencyCallBackNumber.pattern');
           });
           if (vm.model.site.voicemailPilotNumber !== vm.generatedVoicemailNumber) {
-
             // add the existing voicemailPilotNumber back into the list of options
             if (vm.model.site.voicemailPilotNumber && !_.find($scope.to.options, function (externalNumber) {
               return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
@@ -1063,8 +1061,8 @@
             }
             //delete the range from display list
             var index1 = _.findIndex(vm.model.displayNumberRanges, {
-              'beginNumber': internalNumberRange.beginNumber,
-              'endNumber': internalNumberRange.endNumber,
+              beginNumber: internalNumberRange.beginNumber,
+              endNumber: internalNumberRange.endNumber,
             });
             if (index1 !== -1) {
               vm.model.displayNumberRanges.splice(index1, 1);
@@ -1088,8 +1086,8 @@
       } else {
         //delete the range from display list
         var index = _.findIndex(vm.model.displayNumberRanges, {
-          'beginNumber': internalNumberRange.beginNumber,
-          'endNumber': internalNumberRange.endNumber,
+          beginNumber: internalNumberRange.beginNumber,
+          endNumber: internalNumberRange.endNumber,
         });
         if (index !== -1) {
           vm.model.displayNumberRanges.splice(index, 1);
@@ -1097,13 +1095,12 @@
 
         // delete the range from DB list too if there
         var index1 = _.findIndex(vm.model.numberRanges, {
-          'beginNumber': internalNumberRange.beginNumber,
-          'endNumber': internalNumberRange.endNumber,
+          beginNumber: internalNumberRange.beginNumber,
+          endNumber: internalNumberRange.endNumber,
         });
         if (index1 !== -1) {
           vm.model.numberRanges.splice(index1, 1);
         }
-
       }
     }
 
@@ -1113,10 +1110,10 @@
           // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
           response.dialPlanDetails = {
-            extensionGenerated: "false",
-            steeringDigitRequired: "true",
-            supportSiteCode: "true",
-            supportSiteSteeringDigit: "true",
+            extensionGenerated: 'false',
+            steeringDigitRequired: 'true',
+            supportSiteCode: 'true',
+            supportSiteSteeringDigit: 'true',
           };
         }
 
@@ -1279,7 +1276,6 @@
                      currentSite.extensionLength, currentSite.voicemailPilotNumber, currentSite);
                   }
                 });
-
               }
             })
           .then(function () {
@@ -1674,9 +1670,9 @@
         if ($scope.to) {
           $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc',
             {
-              'number': vm.model.voicemailPrefix.value,
-              'extensionLength0': extensionLength0,
-              'extensionLength9': extensionLength9,
+              number: vm.model.voicemailPrefix.value,
+              extensionLength0: extensionLength0,
+              extensionLength9: extensionLength9,
             });
           $scope.to.options = values;
         }

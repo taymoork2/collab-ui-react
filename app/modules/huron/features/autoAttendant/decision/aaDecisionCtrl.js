@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
-
     var vm = this;
 
     var actionName = 'conditional';
@@ -89,7 +88,6 @@
     });
 
     function addLocalAndQueriedSessionVars() {
-
       // reset the displayed SessionVars to the original queried items
 
       vm.sessionVarOptions = fromQuery;
@@ -99,7 +97,6 @@
       vm.sessionVarOptions = _.concat(vm.sessionVarOptions, AACommonService.collectThisCeActionValue(vm.ui, true, false));
 
       vm.sessionVarOptions = _.uniq(vm.sessionVarOptions).sort();
-
     }
     function refreshIfSelects() {
       // If a caller input var was entered AND the decision screen is already on screen we
@@ -107,7 +104,7 @@
 
       addLocalAndQueriedSessionVars();
 
-      if (_.find(vm.ifOptions, { 'value': 'sessionVariable' })) {
+      if (_.find(vm.ifOptions, { value: 'sessionVariable' })) {
         return; // already there nothing to do
       }
       if (vm.sessionVarOptions.length > 0) {
@@ -116,19 +113,17 @@
     }
 
     function refreshVarSelects() {
-
       // reload the session variables.
       // params true === collect session variables
       addLocalAndQueriedSessionVars();
 
       // resets possibly warning messages
       setLeft();
-
     }
 
     function update(which) {
       AACommonService.setDecisionStatus(true);
-      var option = _.find(vm.ifOptions, { 'value': which });
+      var option = _.find(vm.ifOptions, { value: which });
       if (_.isEqual(option.value, 'callerReturned')) {
         vm.actionEntry.if.rightCondition = option.buffer.value;
       } else {
@@ -163,7 +158,7 @@
     }
 
     function setRight() {
-      var option = _.find(vm.ifOptions, { 'value': vm.ifOption.value });
+      var option = _.find(vm.ifOptions, { value: vm.ifOption.value });
       if (_.isEqual(option.value, 'callerReturned')) {
         vm.actionEntry.if.rightCondition = option.buffer.value;
       } else {
@@ -205,10 +200,9 @@
 
     function populateMenu() {
       if (vm.actionEntry.if.leftCondition) {
-
-        vm.ifOption = _.find(vm.ifOptions, { 'value': vm.actionEntry.if.leftCondition });
+        vm.ifOption = _.find(vm.ifOptions, { value: vm.actionEntry.if.leftCondition });
         if (!vm.ifOption) {
-          vm.ifOption = _.find(vm.ifOptions, { 'value': 'sessionVariable' });
+          vm.ifOption = _.find(vm.ifOptions, { value: 'sessionVariable' });
           if (!vm.ifOption) {
             addSessionObject();
             vm.ifOption = vm.ifOptions[vm.ifOptions.length - 1];
@@ -217,13 +211,13 @@
           vm.sessionVarOption = vm.actionEntry.if.leftCondition;
         }
         if (vm.ifOption.value === 'callerReturned') {
-          vm.ifOption.buffer = _.find(vm.callerReturnedOptions, { 'value': vm.actionEntry.if.rightCondition });
+          vm.ifOption.buffer = _.find(vm.callerReturnedOptions, { value: vm.actionEntry.if.rightCondition });
         } else {
           vm.ifOption.buffer = vm.actionEntry.if.rightCondition;
         }
       }
       if (_.has(vm.actionEntry, 'then.name')) {
-        vm.thenOption = _.find(vm.thenOptions, { 'value': vm.actionEntry.then.name });
+        vm.thenOption = _.find(vm.thenOptions, { value: vm.actionEntry.then.name });
       }
     }
     /* No support for Queues as of this story US260317
@@ -299,8 +293,6 @@
     }
 
     function activate() {
-
-
       setReturnedCallerBasedOnToggle();
       setActionEntry();
       sortAndSetActionType();
@@ -313,7 +305,6 @@
       }
 
       populateMenu();
-
     }
 
     function getSessionVariables() {
@@ -327,7 +318,6 @@
     }
 
     function init() {
-
       getSessionVariables().finally(function () {
         /* no support for Queues as of this story.
          * if (AACommonService.isRouteQueueToggle()) {
@@ -341,7 +331,5 @@
     }
 
     init();
-
   }
-
 })();

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('HybridContextContainerController', function () {
-
   beforeEach(angular.mock.module('Context'));
 
   var controller, $controller;

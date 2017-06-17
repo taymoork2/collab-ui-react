@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AADynaAnnounceService($window) {
-
     var service = {
       getRange: getRange,
     };
@@ -27,6 +26,5 @@
         }
       }
     }
-
   }
 })();

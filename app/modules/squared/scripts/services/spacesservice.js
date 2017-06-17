@@ -37,7 +37,7 @@
 
     function addDevice(newDeviceName, callback) {
       var deviceData = {
-        'name': newDeviceName,
+        name: newDeviceName,
       };
 
       if (deviceData.name.length > 0) {
@@ -61,7 +61,6 @@
     }
 
     function deleteDevice(deviceUuid, callback) {
-
       if ((deviceUuid !== null) && (deviceUuid.length > 0)) {
         var deleteUrl = deviceUrl + '/' + deviceUuid;
         $http.delete(deleteUrl)
@@ -84,7 +83,6 @@
     }
 
     function getDeviceStatus(deviceUuid, i, callback) {
-
       if ((deviceUuid !== null) && (deviceUuid.length > 0)) {
         var getStatusUrl = deviceUrl + '/' + deviceUuid + '/status';
         $http.get(getStatusUrl)

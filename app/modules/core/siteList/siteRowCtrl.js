@@ -10,7 +10,6 @@ require('./_site-list.scss');
 
   /*@ngInject*/
   function WebExSiteRowCtrl($scope, $timeout, $sce, TokenService, WebExUtilsFact, WebExSiteRowService) {
-
     this.showGridData = false;
 
     WebExSiteRowService.initSiteRows();

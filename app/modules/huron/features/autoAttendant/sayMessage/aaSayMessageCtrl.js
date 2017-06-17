@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
-
     var vm = this;
 
     var properties = {
@@ -105,7 +104,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        'value': vm.voiceBackup.value,
+        value: vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
@@ -116,7 +115,6 @@
     }
 
     function populateVoice() {
-
       vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 
       vm.voiceOption = AALanguageService.getVoiceOption(vm.actionEntry.getVoice());
@@ -259,7 +257,6 @@
 
                 headerEntry.setVoice(mainMenuSayHeader.getVoice());
                 vm.actionEntry.setVoice(mainMenuSayHeader.getVoice());
-
               }
             }
             return;
@@ -356,6 +353,5 @@
     }
 
     activate();
-
   }
 })();

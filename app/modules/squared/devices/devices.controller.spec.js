@@ -160,7 +160,6 @@ describe('Controller: DevicesCtrl', function () {
   });
 
   describe('Feature toggle loading', function () {
-
     it('should resolve toggle loading', function () {
       controller = $controller('DevicesCtrl', {
         $scope: $scope,
@@ -195,7 +194,6 @@ describe('Controller: DevicesCtrl', function () {
     }));
 
     beforeEach(function () {
-
       fakeModal = {
         result: {
           then: function (okCallback, cancelCallback) {
@@ -219,7 +217,6 @@ describe('Controller: DevicesCtrl', function () {
       spyOn(Notification, 'success');
       spyOn(Notification, 'warning');
       spyOn(DeviceExportService, 'exportDevices');
-
     });
 
     it('starts export and shows progress dialog after acknowledged in initial dialog', function () {
@@ -258,7 +255,5 @@ describe('Controller: DevicesCtrl', function () {
       expect(Notification.warning).toHaveBeenCalledWith('spacesPage.export.deviceExportFailedOrCancelled');
       expect(controller.exporting).toBeFalsy();
     });
-
   });
-
 });

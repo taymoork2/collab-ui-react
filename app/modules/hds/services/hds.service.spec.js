@@ -80,5 +80,4 @@ describe('Service: HDSService', function () {
     HDSService.refreshEncryptionServerForTrialUsers('gid');
     $httpBackend.flush();
   });
-
 });

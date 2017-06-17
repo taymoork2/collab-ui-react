@@ -37,9 +37,9 @@ describe(
           $sce = _$sce_;
 
           $stateParams = {
-            'siteUrl': paramsSiteUrl,
-            'webexPageId': paramsWebexPageId,
-            'settingPageIframeUrl': paramsSettingPageIframeUrl,
+            siteUrl: paramsSiteUrl,
+            webexPageId: paramsWebexPageId,
+            settingPageIframeUrl: paramsSettingPageIframeUrl,
           };
 
           spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(authPrimaryEmail);

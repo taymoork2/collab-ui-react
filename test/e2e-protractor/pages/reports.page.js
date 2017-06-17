@@ -162,7 +162,7 @@ var ReportsPage = function () {
   };
 
   this.clickTab = function (tabName) {
-    utils.click(element(by.id(tabName.toLowerCase() + "Tab")));
+    utils.click(element(by.id(tabName.toLowerCase() + 'Tab')));
   };
 
   this.confirmCustomerInTable = function (customer, table, bool) {

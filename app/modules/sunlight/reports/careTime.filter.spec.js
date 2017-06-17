@@ -9,7 +9,7 @@ describe('Filter: careTime', function () {
     expect($filter('careTime')).not.toBeNull();
     var careTime = $filter('careTime');
     expect(careTime(0)).toEqual('-');
-    expect(careTime("hello")).toEqual('-');
+    expect(careTime('hello')).toEqual('-');
     expect(careTime(14890801)).toEqual('4h 8m 10s');
   }));
 });

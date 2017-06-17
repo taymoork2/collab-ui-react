@@ -42,5 +42,4 @@ describe('Directive: aaAddVariable', function () {
     $rootScope.$digest();
     expect(element.html()).toContain('<button');
   });
-
 });

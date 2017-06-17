@@ -773,12 +773,12 @@
               OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_SUBSCRIPTIONS);
             },
             views: {
-              'tabContent': {
+              tabContent: {
                 controllerAs: 'mcpSub',
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html',
               },
-              'headerRight': {
+              headerRight: {
                 controllerAs: 'subscriptionHeader',
                 controller: 'SubscriptionHeaderCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html',
@@ -791,7 +791,7 @@
               OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_INFO);
             },
             views: {
-              'tabContent': {
+              tabContent: {
                 controllerAs: 'mcpInfo',
                 controller: 'MyCompanyPageInfoCtrl',
                 templateUrl: 'modules/core/myCompany/myCompanyPageInfo.tpl.html',
@@ -804,7 +804,7 @@
               OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_ORDER_HISTORY);
             },
             views: {
-              'tabContent': {
+              tabContent: {
                 template: '<my-company-orders></my-company-orders>',
               },
             },
@@ -1579,10 +1579,10 @@
           .state('cmc', {
             parent: 'cmc-base',
             views: {
-              'header': {
+              header: {
                 template: '<cmc-details-header></cmc-details-header>',
               },
-              'main': {
+              main: {
                 template: '<div ui-view></div>',
               },
             },
@@ -1714,7 +1714,7 @@
           .state('reports.spark', {
             url: '/reports',
             views: {
-              'tabContent': {
+              tabContent: {
                 controllerAs: 'nav',
                 controller: 'SparkReportCtrl',
                 templateUrl: 'modules/core/customerReports/sparkReports/sparkReports.tpl.html',
@@ -1724,7 +1724,7 @@
           .state('reports.metrics', {
             url: '/reports/metrics',
             views: {
-              'tabContent': {
+              tabContent: {
                 controllerAs: 'nav',
                 controller: 'MediaServiceMetricsContoller',
                 templateUrl: 'modules/mediafusion/metrics-graph-report/mediaServiceMetricsReports.tpl.html',
@@ -1734,7 +1734,7 @@
           .state('reports.webex-metrics', {
             url: '/reports/webexMetrics',
             views: {
-              'tabContent': {
+              tabContent: {
                 controllerAs: 'nav',
                 controller: 'WebExMetricsCtrl',
                 templateUrl: 'modules/core/customerReports/webexMetrics/webexMetrics.tpl.html',
@@ -1744,7 +1744,7 @@
           .state('reports.media', {
             url: '/reports/media',
             views: {
-              'tabContent': {
+              tabContent: {
                 controllerAs: 'nav',
                 controller: 'MediaReportsController',
                 templateUrl: 'modules/mediafusion/reports/media-reports.html',
@@ -1754,7 +1754,7 @@
           .state('reports.mediaservice', {
             url: '/reports/mediaservice',
             views: {
-              'tabContent': {
+              tabContent: {
                 controllerAs: 'nav',
                 controller: 'MediaReportsController',
                 templateUrl: 'modules/mediafusion/reports/media-reports-phase-two.html',
@@ -1764,7 +1764,7 @@
           .state('reports.care', {
             url: '/reports/care',
             views: {
-              'tabContent': {
+              tabContent: {
                 controllerAs: 'nav',
                 controller: 'CareReportsController',
                 templateUrl: 'modules/sunlight/reports/careReports.tpl.html',
@@ -1774,7 +1774,7 @@
           .state('reports.device-usage', {
             url: '/reports/device/usage',
             views: {
-              'tabContent': {
+              tabContent: {
                 controllerAs: 'deviceUsage',
                 controller: 'DeviceUsageCtrl',
                 templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
@@ -1784,7 +1784,7 @@
           .state('reports.webex', {
             url: '/reports/webex',
             views: {
-              'tabContent': {
+              tabContent: {
                 controllerAs: 'nav',
                 controller: 'WebexReportsCtrl',
                 templateUrl: 'modules/core/customerReports/webexReports/webexReports.tpl.html',
@@ -1827,7 +1827,7 @@
           .state('support.status', {
             url: '/status',
             views: {
-              'supportPane': {
+              supportPane: {
                 templateUrl: 'modules/squared/support/support-status.html',
                 controller: 'SupportCtrl',
                 controllerAs: 'support',
@@ -1838,7 +1838,7 @@
             url: '/logs?search',
 
             views: {
-              'supportPane': {
+              supportPane: {
                 templateUrl: 'modules/squared/support/support-logs.html',
                 controller: 'SupportCtrl',
               },
@@ -1847,7 +1847,7 @@
           .state('support.billing', {
             url: '/billing?enc',
             views: {
-              'supportPane': {
+              supportPane: {
                 templateUrl: 'modules/squared/support/support-billing.html',
                 controller: 'BillingCtrl',
               },
@@ -2249,7 +2249,7 @@
           })
           .state('gem.servicesPartner', {
             url: '/services/spList',
-            templateUrl: "modules/gemini/common/servicePartner.tpl.html",
+            templateUrl: 'modules/gemini/common/servicePartner.tpl.html',
             controller: 'servicePartnerCtrl',
             controllerAs: 'gsls',
           })
@@ -2530,7 +2530,7 @@
             template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder" is-carrier-byopstn= "$resolve.isCarrierByopstn"></uc-order-detail>',
             resolve: {
               data: /* @ngInject */ function ($state, $stateParams) {
-                $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.vendor === "BYOPSTN" ?
+                $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.vendor === 'BYOPSTN' ?
                                                                                         $stateParams.currentOrder.formattedDate :
                                                                                         $stateParams.currentOrder.carrierOrderId;
               },
@@ -2972,10 +2972,10 @@
           .state('hurondetails', {
             parent: 'hurondetailsBase',
             views: {
-              'header': {
+              header: {
                 template: '<uc-huron-details-header></uc-huron-details-header>',
               },
-              'main': {
+              main: {
                 template: '<div ui-view autoscroll="true"></div>',
               },
             },
@@ -3280,10 +3280,10 @@
             url: '/services/context',
             parent: 'context',
             views: {
-              'subHeader': {
+              subHeader: {
                 template: '<context-resources-sub-header></context-resources-sub-header>',
               },
-              'contextServiceView': {
+              contextServiceView: {
                 template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
@@ -3306,7 +3306,7 @@
             url: '/services/context/fields',
             parent: 'context',
             views: {
-              'contextServiceView': {
+              contextServiceView: {
                 templateUrl: 'modules/context/fields/hybrid-context-fields.html',
                 controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
@@ -3375,7 +3375,7 @@
             url: '/services/context/fieldsets',
             parent: 'context',
             views: {
-              'contextServiceView': {
+              contextServiceView: {
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
@@ -3620,7 +3620,7 @@
           .state('hds.list', {
             url: '/hds/resources',
             views: {
-              'fullPane': {
+              fullPane: {
                 template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
@@ -3639,7 +3639,7 @@
           .state('hds.settings', {
             url: '/hds/settings',
             views: {
-              'fullPane': {
+              fullPane: {
                 controller: 'HDSSettingsController',
                 controllerAs: 'hdsSettings',
                 templateUrl: 'modules/hds/settings/hds-settings.html',
@@ -4299,7 +4299,7 @@
           .state('media-service-v2.list', {
             url: '/mediaserviceV2',
             views: {
-              'fullPane': {
+              fullPane: {
                 template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
@@ -4318,7 +4318,7 @@
           .state('media-service-v2.settings', {
             url: '/mediaserviceV2/settings',
             views: {
-              'fullPane': {
+              fullPane: {
                 controllerAs: 'mediaServiceSettings',
                 controller: 'MediaServiceSettingsControllerV2',
                 templateUrl: 'modules/mediafusion/media-service-v2/settings/media-service-settings.html',
@@ -4430,12 +4430,12 @@
             url: '/services/careDetails',
             parent: 'care.DetailsBase',
             views: {
-              'header': {
+              header: {
                 templateUrl: 'modules/sunlight/details/detailsHeader.tpl.html',
                 controller: 'DetailsHeaderCtrl',
                 controllerAs: 'header',
               },
-              'main': {
+              main: {
                 template: '<div ui-view></div>',
               },
             },

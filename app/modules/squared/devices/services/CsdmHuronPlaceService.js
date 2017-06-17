@@ -3,7 +3,6 @@
 
   /* @ngInject  */
   function CsdmHuronPlaceService($http, CsdmConverter, HuronConfig) {
-
     var cmiOtpUri = HuronConfig.getCmiUrl() + '/identity/machines/otp';
 
     function createOtp(machineUuid) {
@@ -27,5 +26,4 @@
   angular
     .module('Squared')
     .service('CsdmHuronPlaceService', CsdmHuronPlaceService);
-
 })();

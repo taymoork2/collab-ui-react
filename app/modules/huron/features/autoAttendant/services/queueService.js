@@ -8,7 +8,7 @@
         customerId: '@customerId',
         queueId: '@queueId',
       }, {
-        'update': {
+        update: {
           method: 'PUT',
           isArray: false,
         },

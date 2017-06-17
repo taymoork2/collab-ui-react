@@ -1,7 +1,6 @@
 'use strict';
 
 describe('UserListCtrl: Ctrl', function () {
-
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
     this.injectDependencies('$rootScope', '$state', '$controller', '$q', '$httpBackend', 'Userservice', 'UserListService',
@@ -101,7 +100,6 @@ describe('UserListCtrl: Ctrl', function () {
 
     this.controller.$onInit();
     this.$scope.$apply();
-
   }
 
   beforeEach(init);
@@ -197,7 +195,6 @@ describe('UserListCtrl: Ctrl', function () {
   });
 
   describe('resendInvitation', function () {
-
     beforeEach(function () {
       initController.apply(this);
 
@@ -206,7 +203,7 @@ describe('UserListCtrl: Ctrl', function () {
       this.uuid = '11229988';
       this.userStatus = 'pending';
       this.dirsyncEnabled = true;
-      this.entitlements = ["squared-call-initiation", "spark", "webex-squared"];
+      this.entitlements = ['squared-call-initiation', 'spark', 'webex-squared'];
     });
 
     it('should call resendInvitation successfully', function () {
@@ -219,9 +216,9 @@ describe('UserListCtrl: Ctrl', function () {
   describe('When Telstra CSB is true and customerType is APP_DIRECT', function () {
     beforeEach(function () {
       this.telstraUser = {
-        "id": "111",
-        "userName": "telstraUser",
-        "licenseID": undefined,
+        id: '111',
+        userName: 'telstraUser',
+        licenseID: undefined,
       };
       initController.apply(this);
     });
@@ -248,11 +245,11 @@ describe('UserListCtrl: Ctrl', function () {
       this.UserListService.listUsers.calls.reset();
 
       var sortColumns = [{
-        'colDef': {
-          'id': 'displayName',
+        colDef: {
+          id: 'displayName',
         },
-        'sort': {
-          'direction': 'asc',
+        sort: {
+          direction: 'asc',
         },
       }];
 
@@ -263,7 +260,6 @@ describe('UserListCtrl: Ctrl', function () {
   });
 
   describe('canShowActionsMenu', function () {
-
     beforeEach(function () {
       initController.apply(this);
       spyOn(this.$scope, 'canShowResendInvite').and.returnValue(true);
@@ -301,7 +297,6 @@ describe('UserListCtrl: Ctrl', function () {
       this.$scope.canShowResendInvite.and.returnValue(false);
       expect(this.$scope.canShowActionsMenu(this.user)).toBeTruthy();
     });
-
   });
 
   describe('canShowUserDelete', function () {
@@ -338,7 +333,6 @@ describe('UserListCtrl: Ctrl', function () {
   });
 
   describe('canShowResendInvite', function () {
-
     beforeEach(function () {
       initController.apply(this);
       spyOn(this.Userservice, 'isHuronUser').and.returnValue(false);
@@ -384,7 +378,5 @@ describe('UserListCtrl: Ctrl', function () {
       this.user.userStatus = 'batman';
       expect(this.$scope.canShowResendInvite(this.user)).toBeFalsy();
     });
-
   });
-
 });

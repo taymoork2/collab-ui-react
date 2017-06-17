@@ -14,7 +14,6 @@
       },
       transclude: true,
       controller: function ($scope) {
-
         $scope.clicker = function () {
           if ($scope.value);
         };

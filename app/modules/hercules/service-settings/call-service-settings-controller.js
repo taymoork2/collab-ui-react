@@ -155,7 +155,5 @@
     vm.onDestinationClear = function () {
       vm.org.sipDomain = '';
     };
-
-
   }
 }());

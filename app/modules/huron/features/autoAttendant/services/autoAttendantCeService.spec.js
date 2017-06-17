@@ -18,7 +18,7 @@ describe('Service: AutoAttendantCeService', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
   beforeEach(inject(function (_AutoAttendantCeService_, _$httpBackend_, _HuronConfig_) {
@@ -199,7 +199,6 @@ describe('Service: AutoAttendantCeService', function () {
       expect(successSpy).not.toHaveBeenCalled();
       expect(failureSpy).toHaveBeenCalled();
     });
-
   });
 
   describe('deleteCe', function () {
@@ -251,5 +250,4 @@ describe('Service: AutoAttendantCeService', function () {
       expect(failureSpy).toHaveBeenCalled();
     });
   });
-
 });

@@ -15,7 +15,6 @@ describe('Service: CsdmPlacesService', function () {
     $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
-
   }));
 
   afterEach(function () {
@@ -30,8 +29,8 @@ describe('Service: CsdmPlacesService', function () {
       var promiseExecuted;
       CsdmPlaceService.getPlacesList().then(function (placeList) {
         expect(_.keys(placeList).length).toBe(5);
-        expect(placeList["https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-Place1WithHuronDevice-71898e423bec"].type).toBe('huron');
-        expect(placeList["https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec"].type).toBe('cloudberry');
+        expect(placeList['https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-Place1WithHuronDevice-71898e423bec'].type).toBe('huron');
+        expect(placeList['https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec'].type).toBe('cloudberry');
         promiseExecuted = true;
       });
 

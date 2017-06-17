@@ -23,19 +23,19 @@
     vm.webexSelected = null;
     vm.metricsOptions = [
       {
-        'id': '0',
-        'label': $translate.instant('reportsPage.webexMetrics.metrics'),
-        'selected': true,
-        'filterType': vm.metrics,
+        id: '0',
+        label: $translate.instant('reportsPage.webexMetrics.metrics'),
+        selected: true,
+        filterType: vm.metrics,
         toggle: function () {
           resetIframe(vm.metrics);
         },
       },
       {
-        'id': '1',
-        'label': $translate.instant('reportsPage.webexMetrics.search'),
-        'selected': false,
-        'filterType': vm.search,
+        id: '1',
+        label: $translate.instant('reportsPage.webexMetrics.search'),
+        selected: false,
+        filterType: vm.search,
         toggle: function () {
           resetIframe(vm.search);
         },
@@ -156,17 +156,17 @@
       }
 
       var userInfo = {
-        'org_id': Authinfo.getOrgId(),
-        'siteUrl': vm.webexSelected,
-        'email': Authinfo.getPrimaryEmail(),
+        org_id: Authinfo.getOrgId(),
+        siteUrl: vm.webexSelected,
+        email: Authinfo.getPrimaryEmail(),
       };
 
       //TODO: remove it before QBS API finished. just for 23-5-2017 demo
       vm.webexSelected = 'go.webex.com';
       userInfo = {
-        'org_id': 'TEST-QV-3',
-        'siteUrl': vm.webexSelected,
-        'email': 'qvadmin@cisco.com',
+        org_id: 'TEST-QV-3',
+        siteUrl: vm.webexSelected,
+        email: 'qvadmin@cisco.com',
       };
 
       QlikService['getWebExReportQBSfor' + vm.reportView + 'Url'](userInfo).then(function (urlWithTicket) {

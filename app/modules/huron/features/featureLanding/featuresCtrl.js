@@ -9,7 +9,6 @@ require('./_feature-landing.scss');
 
   /* @ngInject */
   function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, CallPickupGroupService, AutoAttendantCeInfoModelService, Notification, Log, CardUtils) {
-
     var vm = this;
     vm.searchData = searchData;
     vm.setFilter = setFilter;
@@ -28,7 +27,7 @@ require('./_feature-landing.scss');
     vm.noFeatures = false;
     vm.loading = true;
     vm.placeholder = {
-      'name': 'Search',
+      name: 'Search',
     };
     vm.filters = [{
       name: $translate.instant('common.all'),
@@ -183,7 +182,6 @@ require('./_feature-landing.scss');
     }
 
     function handleFailures(response, feature) {
-
       Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
       Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
         featureType: $filter('translate')(feature.i18n),
@@ -195,7 +193,6 @@ require('./_feature-landing.scss');
     }
 
     function handleFeatureData(data, feature) {
-
       if (feature.name === 'AA') {
         vm.aaModel = data;
       }
@@ -244,7 +241,7 @@ require('./_feature-landing.scss');
       $event.stopImmediatePropagation();
       if (feature.hasDepends) {
         Notification.error('huronFeatureDetails.aaDeleteBlocked', {
-          aaNames: feature.dependsNames.join(", "),
+          aaNames: feature.dependsNames.join(', '),
         });
         return;
       }
@@ -277,7 +274,6 @@ require('./_feature-landing.scss');
     }
 
     function showNewFeaturePageIfNeeded() {
-
       if (vm.pageState !== 'showFeatures' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
       } else {
@@ -316,12 +312,11 @@ require('./_feature-landing.scss');
 
       featureToBeDeleted = {};
       if (listOfAllFeatures.length === 0) {
-        vm.pageState = "NewFeature";
+        vm.pageState = 'NewFeature';
       }
       if (vm.filterText) {
         searchData(vm.filterText);
       }
-
     });
 
     function openModal() {
@@ -339,6 +334,5 @@ require('./_feature-landing.scss');
         vm.feature = '';
       });
     }
-
   }
 })();

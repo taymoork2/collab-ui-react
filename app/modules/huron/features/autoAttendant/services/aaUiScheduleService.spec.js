@@ -6,8 +6,8 @@ describe('Service: AAUiScheduleService', function () {
 
   function getRange8To5() {
     var calendar = AAICalService.createCalendar();
-    var _starttime = "08:00 AM";
-    var _endtime = "05:00 PM";
+    var _starttime = '08:00 AM';
+    var _endtime = '05:00 PM';
     var defaultRange = [{
       days: [{
         abbr: 'SU',
@@ -48,7 +48,7 @@ describe('Service: AAUiScheduleService', function () {
   }
 
   var createCalendarSuccess = {
-    "scheduleUrl": "https://ces.huron-int.com/api/v1/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/schedules/b8e9b7f9-dcd2-4203-90c4-d392caca3afc",
+    scheduleUrl: 'https://ces.huron-int.com/api/v1/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/schedules/b8e9b7f9-dcd2-4203-90c4-d392caca3afc',
   };
   var scheduleIdSuccess = 'b8e9b7f9-dcd2-4203-90c4-d392caca3afc';
 
@@ -70,7 +70,6 @@ describe('Service: AAUiScheduleService', function () {
   }));
 
   describe('create8To5Schedule', function () {
-
     beforeEach(inject(function () {
       // setup the promises
       createCalendarDefer = $q.defer();
@@ -99,7 +98,6 @@ describe('Service: AAUiScheduleService', function () {
       $scope.$apply();
 
       expect(scheduleId).toEqual(scheduleIdSuccess);
-
     });
 
     it('should should return failure gracefully with a status', function () {

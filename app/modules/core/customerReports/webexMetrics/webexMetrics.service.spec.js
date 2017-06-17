@@ -9,13 +9,13 @@ describe('Service: QlikService', function () {
 
   var testData = {
     postParam: {
-      'siteUrl': 'go.webex.com',
-      'email': 'qvadmin@cisco.com',
-      'org_id': 'TEST-QV-3',
+      siteUrl: 'go.webex.com',
+      email: 'qvadmin@cisco.com',
+      org_id: 'TEST-QV-3',
     },
     appSucessResult: {
-      "appUrl": "https://qlik-loader/custportal/sense/app/7799d0da-e138-4e21-a9ad-0a5f2cee053a/?QlikTicket=acOEkuE_YU4WFUQL",
-      "ticket": "acOEkuE_YU4WFUQL",
+      appUrl: 'https://qlik-loader/custportal/sense/app/7799d0da-e138-4e21-a9ad-0a5f2cee053a/?QlikTicket=acOEkuE_YU4WFUQL',
+      ticket: 'acOEkuE_YU4WFUQL',
     },
     qlikMashupUrl: 'qlik-loader',
   };
@@ -78,7 +78,6 @@ describe('Service: QlikService', function () {
       var res = promise.$$state.value;
       expect(Object.keys(res.data)).toContain('ticket');
     });
-
   });
 
   describe('WebEx/Spark report Qlik mashup address', function () {
@@ -104,5 +103,4 @@ describe('Service: QlikService', function () {
       });
     });
   });
-
 });

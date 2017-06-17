@@ -65,5 +65,4 @@ describe('CsdmPoller', function () {
     $timeout.flush(30500);
     expect(serviceCallCount).toBe(3);
   });
-
 });

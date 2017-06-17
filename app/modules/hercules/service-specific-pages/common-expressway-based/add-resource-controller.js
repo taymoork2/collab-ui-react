@@ -177,7 +177,6 @@
             provisionedConnectors: _.map(cluster.provisioning, 'connectorType'),
             connectorsHostname: cluster.connectors,
           });
-
         }
       });
       return allExpressways;
@@ -311,7 +310,7 @@
 
     vm.completeAddResourceModal = function () {
       $modalInstance.close();
-      $window.open("https://" + encodeURIComponent(vm.hostname) + "/fusionregistration");
+      $window.open('https://' + encodeURIComponent(vm.hostname) + '/fusionregistration');
     };
 
     vm.back = function () {
@@ -346,6 +345,5 @@
         vm.gettingResourceGroupInput = false;
       }
     };
-
   }
 }());

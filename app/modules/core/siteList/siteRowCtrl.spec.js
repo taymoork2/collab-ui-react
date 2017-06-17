@@ -1,17 +1,16 @@
 'use strict';
 
 describe('Controller: WebExSiteRowCtrl', function () {
-
   var controller, $scope, $q, FeatureToggleService, WebExSiteRowService, TokenService;
   var fakeShowGridData = true;
   var fakeGridData = {
-    siteUrl: "abc.webex.com",
+    siteUrl: 'abc.webex.com',
   };
   var fakeGridOptions = {
     data: fakeGridData,
   };
 
-  var accessToken = "Token ABCDERFGHIJK";
+  var accessToken = 'Token ABCDERFGHIJK';
 
   afterEach(function () {
     controller = $scope = $q = FeatureToggleService = WebExSiteRowService = TokenService = undefined;
@@ -54,16 +53,16 @@ describe('Controller: WebExSiteRowCtrl', function () {
     expect(controller).toBeDefined();
     expect(controller.showGridData).toBe(true);
     expect(controller.gridOptions).not.toEqual(null);
-    expect(controller.gridOptions.data.siteUrl).toEqual("abc.webex.com");
+    expect(controller.gridOptions.data.siteUrl).toEqual('abc.webex.com');
   });
 
-  it("can correctly initialize cross luach to SiteAdmin home page", function () {
+  it('can correctly initialize cross luach to SiteAdmin home page', function () {
     controller.linkToSiteAdminHomePage('abc.webex.com');
     expect(controller.siteAdminUrl).toBe('https://abc.webex.com/wbxadmin/default.do?siteurl=abc');
     expect(controller.accessToken).toBe(accessToken);
   });
 
-  it("can correctly initialize cross luach to SiteAdmin linked page", function () {
+  it('can correctly initialize cross luach to SiteAdmin linked page', function () {
     controller.linkToSiteAdminLinkedPage('abc.webex.com');
     var expectRsult = [];
     expectRsult.push('https://abc.webex.com/wbxadmin/default.do?siteurl=abc');

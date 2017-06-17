@@ -243,7 +243,6 @@ describe('Controller: TrialDeviceController', function () {
   });
 
   describe('input quantity default setting', function () {
-
     it('should change the quantity to 0 when disabled', function () {
       var device = {
         model: 'CISCO_SX10',
@@ -285,11 +284,9 @@ describe('Controller: TrialDeviceController', function () {
       this.controller.setQuantityInputDefault(device, 1);
       expect(device.quantity).toBe(3);
     });
-
   });
 
   describe('total device quantity calculation', function () {
-
     it('should calculate total quantity 0 when nothing is enabled', function () {
       var total = this.controller.getTotalQuantity();
       expect(total).toBe(0);
@@ -307,7 +304,6 @@ describe('Controller: TrialDeviceController', function () {
 
       var total = this.controller.getTotalQuantity();
       expect(total).toBe(5);
-
     });
     it('should calculate total quantity correcty when not 0 but trail is not enabled', function () {
       // default data has quality 3 of CISCO_8865 and 2 of CISCO_SX10
@@ -321,7 +317,6 @@ describe('Controller: TrialDeviceController', function () {
 
       var total = this.controller.getTotalQuantity();
       expect(total).toBe(3);
-
     });
   });
 

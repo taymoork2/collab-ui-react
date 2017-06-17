@@ -82,15 +82,15 @@ describe('Controller: AAAddVariableCtrl', function () {
     describe('with values ', function () {
       beforeEach(function () {
         scopeElement = {
-          'insertElement': function (string) {
+          insertElement: function (string) {
             return string;
           },
         };
         dynamicElement = {
-          'scope': function () {
+          scope: function () {
             return true;
           },
-          'focus': function () {},
+          focus: function () {},
         };
         var rangeGetter = function () {
           return 'testRange';

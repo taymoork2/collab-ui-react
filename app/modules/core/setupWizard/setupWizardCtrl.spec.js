@@ -1,7 +1,6 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
-
   beforeEach(function () {
     this.initModules('Core');
 
@@ -152,7 +151,6 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have 5 tabs', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
-
   });
 
   describe('When Authinfo.isCSB is disabled', function () {
@@ -164,7 +162,6 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have 6 tabs', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
-
   });
 
   describe('When Authinfo.isCare is enabled and addUsers too', function () {

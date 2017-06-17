@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function ReportUtilService() {
-
     var timeoutInSeconds = 180;
 
     function setTimeoutInSeconds(s) {
@@ -38,7 +37,6 @@
         var e = moment(this.report.expiryTime);
         return e.fromNow();
       };
-
     }
 
     function tweakReport(report) {
@@ -50,7 +48,7 @@
         }
         report.isDone = reportUtil.isDone();
         report.canBeCancelled = reportUtil.reportInProgress();
-        report.canBeDownloaded = report.state === "COMPLETED" && reportUtil.hasNotExpired();
+        report.canBeDownloaded = report.state === 'COMPLETED' && reportUtil.hasNotExpired();
         report.hasExpired = reportUtil.hasExpired();
         report.expiresIn = reportUtil.expiresIn();
       }

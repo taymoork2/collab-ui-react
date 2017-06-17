@@ -271,7 +271,6 @@ var UsersPage = function () {
   };
 
   this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
-
     utils.clickUser(alias);
     utils.expectIsDisplayed(users.servicesPanel);
 

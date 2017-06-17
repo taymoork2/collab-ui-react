@@ -106,7 +106,6 @@
     } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
       Auth.redirectToLogin(null, queryParams.sso);
     }
-
   }
 
   module.exports = LoginCtrl;

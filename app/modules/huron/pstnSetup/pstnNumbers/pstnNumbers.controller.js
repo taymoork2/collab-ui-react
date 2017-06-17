@@ -128,7 +128,7 @@
           vm.model.pstn.state = {
             abbreviation: PstnModel.getServiceAddress().state,
             name: _.result(_.find(vm.model.pstn.states, {
-              'abbreviation': PstnModel.getServiceAddress().state,
+              abbreviation: PstnModel.getServiceAddress().state,
             }), 'name'),
           };
         }
@@ -413,7 +413,6 @@
             } else {
               vm.model.pstn.showAdvancedOrder = true;
             }
-
           } else if (vm.model.pstn.isSingleResult) {
             if (areaCode && areaCode.length > MIN_VALID_CODE) {
               vm.model.pstn.searchResults = _.flatten(numberRanges).filter(function (number) {

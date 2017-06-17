@@ -36,7 +36,6 @@ describe('Controller: PlacesCtrl', function () {
   }
 
   function initController() {
-
     controller = $controller('PlacesCtrl', {
       $scope: $scope,
       $state: $state,
@@ -46,7 +45,6 @@ describe('Controller: PlacesCtrl', function () {
   }
 
   describe('bigOrg', function () {
-
     beforeEach(function () {
       spyOn(CsdmDataModelService, 'isBigOrg').and.returnValue($q.resolve(true));
 
@@ -57,7 +55,6 @@ describe('Controller: PlacesCtrl', function () {
     beforeEach(initController);
 
     describe('init', function () {
-
       it('should init controller', function () {
         expect(controller).toBeDefined();
         expect(controller.filteredView).toBeDefined();
@@ -69,13 +66,11 @@ describe('Controller: PlacesCtrl', function () {
     });
 
     describe('initialized', function () {
-
       beforeEach(function () {
         $scope.$apply();
       });
 
       describe('listState', function () {
-
         it('should be in searchonly state', function () {
           expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
         });
@@ -86,17 +81,15 @@ describe('Controller: PlacesCtrl', function () {
         });
 
         describe('searched with short string', function () {
-
           it('should not search', function () {
             expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
-            controller.filteredView.setCurrentSearch("a");
+            controller.filteredView.setCurrentSearch('a');
             $timeout.flush(10000);
             expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
           });
         });
 
         describe('searched with long string', function () {
-
           var searchPart1 = accounts[Object.keys(accounts)[1]].displayName.substr(0, 3);
           var searchPart2 = accounts[Object.keys(accounts)[1]].displayName.substr(3, 2);
 
@@ -113,14 +106,12 @@ describe('Controller: PlacesCtrl', function () {
             });
 
             it('should search', function () {
-
               $timeout.flush(10000);
               expect(controller.filteredView.listState).toEqual(controller.filteredView.searching);
             });
           });
 
           describe('with places', function () {
-
             beforeEach(function () {
               spyOn(CsdmDataModelService, 'getSearchPlacesMap').and.returnValue($q.resolve(accounts));
               $scope.$apply();
@@ -128,13 +119,12 @@ describe('Controller: PlacesCtrl', function () {
             });
 
             describe('listState', function () {
-
               it('should be in showresult state', function () {
                 expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
               });
 
               it('should be in emptysearchresult state if next search is client-side with no matches', function () {
-                controller.filteredView.setCurrentSearch(searchPart1 + "sdfdsfds");
+                controller.filteredView.setCurrentSearch(searchPart1 + 'sdfdsfds');
                 $timeout.flush(10000);
                 expect(controller.filteredView.listState).toEqual(controller.filteredView.emptysearchresult);
               });
@@ -181,7 +171,6 @@ describe('Controller: PlacesCtrl', function () {
     beforeEach(initController);
 
     describe('init', function () {
-
       it('should init controller', function () {
         expect(controller).toBeDefined();
         expect(controller.filteredView).toBeDefined();
@@ -193,7 +182,6 @@ describe('Controller: PlacesCtrl', function () {
     });
 
     describe('initialized with places', function () {
-
       beforeEach(function () {
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve(accounts));
         $scope.$apply();
@@ -201,13 +189,12 @@ describe('Controller: PlacesCtrl', function () {
       });
 
       describe('listState', function () {
-
         it('should be in showresult state', function () {
           expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
         });
 
         it('should be in emptysearchresult state if search with no matches', function () {
-          controller.filteredView.setCurrentSearch("aasdfefsdfdsf");
+          controller.filteredView.setCurrentSearch('aasdfefsdfdsf');
           $timeout.flush(10000);
           expect(controller.filteredView.listState).toEqual(controller.filteredView.emptysearchresult);
         });

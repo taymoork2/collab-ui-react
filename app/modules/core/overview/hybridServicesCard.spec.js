@@ -39,7 +39,6 @@ describe('OverviewHybridServicesCard', function () {
     expect(card.serviceList[1].setup).toBe(false);
     expect(card.serviceList[2].setup).toBe(false);
     expect(card.serviceList[3].setup).toBe(false);
-
   });
 
   it('should show the card when services are set up', function () {

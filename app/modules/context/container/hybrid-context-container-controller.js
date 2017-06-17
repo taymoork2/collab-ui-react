@@ -26,6 +26,5 @@ require('../resources/_resources.scss');
         state: 'context-fieldsets',
       },
     ];
-
   }
 }());

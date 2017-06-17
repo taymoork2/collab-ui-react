@@ -1,7 +1,6 @@
 'use strict';
 
 var DirSyncWizardPage = function () {
-
   this.btnDirSync = element(by.id('btnDirSync'));
   this.ssoModalHeader = element(by.id('ssoModalHeader'));
 

@@ -137,15 +137,13 @@ describe('Controller: WizardCtrl', function () {
     it('should be created successfully', function () {
       expect(controller).toBeDefined();
     });
-
   });
 
   describe('loadoverview', function () {
     it('should call state go', function () {
       controller.loadOverview();
       $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith("overview");
+      expect($state.go).toHaveBeenCalledWith('overview');
     });
-
   });
 });

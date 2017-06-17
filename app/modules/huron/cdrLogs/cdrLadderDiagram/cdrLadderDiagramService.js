@@ -9,27 +9,27 @@
     var callflowDiagramUrl = UrlConfig.getAdminServiceUrl() + 'callflow/ladderdiagram';
     var getActivitiesUrl = UrlConfig.getAdminServiceUrl() + 'callflow/activities';
     var TIMEOUT_IN_MILI = 15000;
-    var TRANSITION_ARROW = "-[#009933]>";
+    var TRANSITION_ARROW = '-[#009933]>';
     var SME_NODE = 'SME';
-    var serviceName = "Diagnostics Server";
-    var retryError = "ElasticSearch GET request failed for reason: Observable onError";
-    var skinParam = "skinparam backgroundColor #EEEBDC \n" +
-      "  skinparam sequence { \n" +
-      "  ArrowColor DeepSkyBlue  \n" +
-      "  ActorBorderColor DeepSkyBlue \n" +
-      "  LifeLineBorderColor blue \n" +
-      "  LifeLineBackgroundColor #A9DCDF \n" +
-      "  ParticipantBorderColor DeepSkyBlue \n" +
-      "  ParticipantBackgroundColor DodgerBlue \n" +
-      "  ParticipantFontName Impact \n" +
-      "  ParticipantFontSize 17 \n" +
-      "  ParticipantFontColor #A9DCDF \n" +
-      "  ActorBackgroundColor aqua \n" +
-      "  ActorFontColor DeepSkyBlue \n" +
-      "  ActorFontSize 17 \n" +
-      "  ActorFontName Aapex \n" +
-      "} \n" +
-      "actor \"Start Point\" \n";
+    var serviceName = 'Diagnostics Server';
+    var retryError = 'ElasticSearch GET request failed for reason: Observable onError';
+    var skinParam = 'skinparam backgroundColor #EEEBDC \n' +
+      '  skinparam sequence { \n' +
+      '  ArrowColor DeepSkyBlue  \n' +
+      '  ActorBorderColor DeepSkyBlue \n' +
+      '  LifeLineBorderColor blue \n' +
+      '  LifeLineBackgroundColor #A9DCDF \n' +
+      '  ParticipantBorderColor DeepSkyBlue \n' +
+      '  ParticipantBackgroundColor DodgerBlue \n' +
+      '  ParticipantFontName Impact \n' +
+      '  ParticipantFontSize 17 \n' +
+      '  ParticipantFontColor #A9DCDF \n' +
+      '  ActorBackgroundColor aqua \n' +
+      '  ActorFontColor DeepSkyBlue \n' +
+      '  ActorFontSize 17 \n' +
+      '  ActorFontName Aapex \n' +
+      '} \n' +
+      'actor "Start Point" \n';
 
     var svc = this;
     svc.events = null;
@@ -51,11 +51,11 @@
             remote = getRemoteAlias(events[i]);
             note = getNote(events[i]);
 
-            if (source === null || source === "") {
+            if (source === null || source === '') {
               source = SME_NODE;
             }
 
-            if (remote === null || remote === "") {
+            if (remote === null || remote === '') {
               remote = SME_NODE;
             }
 
@@ -133,10 +133,10 @@
     }
 
     svc.query = function (esQuery, logstashPath) {
-      var cdrUrl = UrlConfig.getCdrUrl() + logstashPath + "/_search?pretty";
+      var cdrUrl = UrlConfig.getCdrUrl() + logstashPath + '/_search?pretty';
       var defer = $q.defer();
       $http({
-        method: "POST",
+        method: 'POST',
         url: cdrUrl,
         data: esQuery,
         timeout: TIMEOUT_IN_MILI,
@@ -146,7 +146,7 @@
         // if this specific error is received, retry once; error caused by hystrix connection timeout
         if (response.status === 500 && response.data === retryError) {
           $http({
-            method: "POST",
+            method: 'POST',
             url: cdrUrl,
             data: esQuery,
             timeout: TIMEOUT_IN_MILI,
@@ -154,14 +154,14 @@
             defer.resolve(secondaryResponse.data);
           }).catch(function (secondaryResponse) {
             defer.reject({
-              'response': secondaryResponse.data,
-              'status': secondaryResponse.status,
+              response: secondaryResponse.data,
+              status: secondaryResponse.status,
             });
           });
         } else {
           defer.reject({
-            'response': response.data,
-            'status': response.status,
+            response: response.data,
+            status: response.status,
           });
         }
       });
@@ -171,10 +171,10 @@
     function proxyDiagnosticService(message) {
       var defer = $q.defer();
       $http({
-        method: "POST",
+        method: 'POST',
         url: callflowDiagramUrl,
         data: {
-          "data": message,
+          data: message,
         },
         headers: {
           'Content-Type': 'application/json',
@@ -187,8 +187,8 @@
         .catch(function (response) {
           Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
           defer.reject({
-            'response': response.data,
-            'status': response.status,
+            response: response.data,
+            status: response.status,
           });
         });
       return defer.promise;
@@ -203,8 +203,8 @@
     svc.getActivities = function (locusid, start, end) {
       var defer = $q.defer();
       $http({
-        method: "GET",
-        url: getActivitiesUrl + "?id=lid." + locusid + "&start=" + start + "&end=" + end,
+        method: 'GET',
+        url: getActivitiesUrl + '?id=lid.' + locusid + '&start=' + start + '&end=' + end,
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -216,8 +216,8 @@
         .catch(function (response) {
           Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
           defer.reject({
-            'response': response.data,
-            'status': response.status,
+            response: response.data,
+            status: response.status,
           });
         });
       return defer.promise;
@@ -225,5 +225,4 @@
 
     return svc;
   }
-
 })();

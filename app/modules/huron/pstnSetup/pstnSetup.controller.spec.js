@@ -98,5 +98,4 @@ describe('Controller: PstnSetupCtrl', function () {
     expect(PstnService.createResellerV2).toHaveBeenCalled();
     expect(Notification.errorResponse).toHaveBeenCalled();
   });
-
 });

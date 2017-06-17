@@ -51,27 +51,27 @@ describe('Controller: AASubmenuCtrl', function () {
   }
 
   var sortedOptions = [{
-    "label": 'autoAttendant.actionSayMessage',
+    label: 'autoAttendant.actionSayMessage',
   }, {
-    "label": 'autoAttendant.phoneMenuDialExt',
+    label: 'autoAttendant.phoneMenuDialExt',
   }, {
-    "label": 'autoAttendant.phoneMenuGoBack',
+    label: 'autoAttendant.phoneMenuGoBack',
   }, {
-    "label": 'autoAttendant.phoneMenuRepeatMenu',
+    label: 'autoAttendant.phoneMenuRepeatMenu',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteAA',
+    label: 'autoAttendant.phoneMenuRouteAA',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteHunt',
+    label: 'autoAttendant.phoneMenuRouteHunt',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteQueue',
+    label: 'autoAttendant.phoneMenuRouteQueue',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteToExtNum',
+    label: 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteToSipEndpoint',
+    label: 'autoAttendant.phoneMenuRouteToSipEndpoint',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteUser',
+    label: 'autoAttendant.phoneMenuRouteUser',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteVM',
+    label: 'autoAttendant.phoneMenuRouteVM',
   }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -99,7 +99,6 @@ describe('Controller: AASubmenuCtrl', function () {
       $scope: $scope,
     });
     $scope.$apply();
-
   }));
 
   afterEach(function () {
@@ -164,9 +163,9 @@ describe('Controller: AASubmenuCtrl', function () {
       var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var phoneMenu = {
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -183,9 +182,9 @@ describe('Controller: AASubmenuCtrl', function () {
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2MenuEntry(ceMenu.entries[1]);
       var phoneMenu = {
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -205,11 +204,11 @@ describe('Controller: AASubmenuCtrl', function () {
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2MenuEntry(ceMenu.entries[0]);
       expectEntry2.actions[0].level = -1;
-      expectEntry2.key = "3";
+      expectEntry2.key = '3';
       var phoneMenu = {
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -230,9 +229,9 @@ describe('Controller: AASubmenuCtrl', function () {
       var phoneMenuEntry = raw2MenuEntry(ceMenuWithSay.entries[0]);
       var expectEntry = raw2MenuEntry(ceMenuWithRouteToUser.entries[0]);
       var phoneMenu = {
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
       };
       phoneMenu.entries.push(phoneMenuEntry);
       controller.menuEntry = phoneMenu;
@@ -240,7 +239,6 @@ describe('Controller: AASubmenuCtrl', function () {
       controller.keyActionChanged(0, data.selectedActionsRouteUser[0].action);
       expect(angular.equals(expectEntry, controller.menuEntry.entries[0])).toEqual(true);
     });
-
   });
 
   describe('addButtonZero', function () {
@@ -263,19 +261,19 @@ describe('Controller: AASubmenuCtrl', function () {
 
     it('should read and populate submenu', function () {
       var expectedActions = [];
-      data.selectedActionsGoBack[0].key = "*";
+      data.selectedActionsGoBack[0].key = '*';
       data.selectedActionsGoBack[0].keys = ['3', '4', '5', '6', '7', '8', '9', '#', '*'];
       expectedActions.push(data.selectedActionsGoBack[0]);
 
-      data.selectedActionsRepeatMenu[0].key = "0";
+      data.selectedActionsRepeatMenu[0].key = '0';
       data.selectedActionsRepeatMenu[0].keys = ['0', '3', '4', '5', '6', '7', '8', '9', '#'];
       expectedActions.push(data.selectedActionsRepeatMenu[0]);
 
-      data.selectedActionsRouteUser[0].key = "1";
+      data.selectedActionsRouteUser[0].key = '1';
       data.selectedActionsRouteUser[0].keys = ['1', '3', '4', '5', '6', '7', '8', '9', '#'];
       expectedActions.push(data.selectedActionsRouteUser[0]);
 
-      data.selectedActionsDialExt[0].key = "2";
+      data.selectedActionsDialExt[0].key = '2';
       data.selectedActionsDialExt[0].keys = ['2', '3', '4', '5', '6', '7', '8', '9', '#'];
       expectedActions.push(data.selectedActionsDialExt[0]);
 

@@ -86,5 +86,4 @@ describe('Huron Call Routing', function () {
       notifications.assertSuccess('deleted successfully');
     });
   });
-
 });

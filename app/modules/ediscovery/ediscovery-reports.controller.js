@@ -6,7 +6,7 @@ require('./ediscovery.scss');
   /* @ngInject */
   function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, Notification, ReportUtilService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
-      $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
+      $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
     var vm = this;
 
@@ -87,7 +87,7 @@ require('./ediscovery.scss');
       }
       $scope.reportsBeingCancelled[id] = true;
       EdiscoveryService.patchReport(id, {
-        state: "ABORTED",
+        state: 'ABORTED',
       }).then(function () {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
           Notification.success('ediscovery.searchResults.reportCancelled');
@@ -148,31 +148,31 @@ require('./ediscovery.scss');
       },
       columnDefs: [{
         field: 'displayName',
-        displayName: $translate.instant("ediscovery.reportsList.name"),
+        displayName: $translate.instant('ediscovery.reportsList.name'),
         sortable: true,
         cellTemplate: 'modules/ediscovery/cell-template-name.html',
         width: '*',
       }, {
         field: 'createdTime',
-        displayName: $translate.instant("ediscovery.reportsList.dateGenerated"),
+        displayName: $translate.instant('ediscovery.reportsList.dateGenerated'),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
         width: '*',
       }, {
         field: 'size',
-        displayName: $translate.instant("ediscovery.reportsList.size"),
+        displayName: $translate.instant('ediscovery.reportsList.size'),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-size.html',
         width: '110',
       }, {
         field: 'state',
-        displayName: $translate.instant("ediscovery.reportsList.status"),
+        displayName: $translate.instant('ediscovery.reportsList.status'),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-state.html',
         width: '*',
       }, {
         field: 'actions',
-        displayName: $translate.instant("ediscovery.reportsList.actions"),
+        displayName: $translate.instant('ediscovery.reportsList.actions'),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-action.html',
         width: '160',

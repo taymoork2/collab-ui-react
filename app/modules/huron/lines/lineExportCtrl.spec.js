@@ -36,7 +36,6 @@ describe('Controller: LineExportCtrl', function () {
       expect(controller.exportBusy).toBe(false);
       expect(controller.exportCSV).toBeDefined();
     });
-
   });
 
   describe('exportCSV', function () {
@@ -46,7 +45,6 @@ describe('Controller: LineExportCtrl', function () {
         .then(function (response) {
           expect(response.length).toBe(linesExport.length);
         });
-
     });
 
     it('should notify if promise rejected', function () {
@@ -56,7 +54,5 @@ describe('Controller: LineExportCtrl', function () {
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
     });
-
   });
-
 });

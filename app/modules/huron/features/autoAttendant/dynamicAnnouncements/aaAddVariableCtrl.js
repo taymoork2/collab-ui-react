@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AAAddVariableCtrl($scope, $modal, AADynaAnnounceService, AAUiModelService, AACommonService) {
-
     var vm = this;
 
     var CONSTANTS = {};
@@ -40,10 +39,10 @@
           .then(function (result) {
             vm.variableSelection = result.variable;
             vm.readAsSelection = result.readAs;
-            var elementHtml = dynamicElement.replace("DynamicText", vm.variableSelection.value);
-            elementHtml = elementHtml.replace("ReadAs", vm.readAsSelection.value);
+            var elementHtml = dynamicElement.replace('DynamicText', vm.variableSelection.value);
+            elementHtml = elementHtml.replace('ReadAs', vm.readAsSelection.value);
             var myId = id + Date.now();
-            elementHtml = elementHtml.replace("Id", myId);
+            elementHtml = elementHtml.replace('Id', myId);
             dispatchElementInsertion(id, elementHtml, range);
           }, function () {
             cancelledDynamicModal();
@@ -57,7 +56,7 @@
     function modalClosed() {
       var dynamicList = range.endContainer.ownerDocument.activeElement;
       finalList = [];
-      if (dynamicList.className.includes("dynamic-prompt")) {
+      if (dynamicList.className.includes('dynamic-prompt')) {
         vm.menuEntry.dynamicList = createDynamicList(dynamicList);
         AACommonService.setSayMessageStatus(true);
       }
@@ -82,10 +81,10 @@
           opt = {
             say: {
               value: node.nodeValue,
-              voice: "",
+              voice: '',
             },
             isDynamic: false,
-            htmlModel: "",
+            htmlModel: '',
           };
         } else if (node.nodeName === 'SPAN' || node.nodeName === 'AA-INSERTION-ELEMENT') {
           var attributes;
@@ -98,7 +97,7 @@
           opt = {
             say: {
               value: attributes[0].value,
-              voice: "",
+              voice: '',
               as: attributes[1].value,
             },
             isDynamic: true,
@@ -156,6 +155,5 @@
     }
 
     activate();
-
   }
 })();

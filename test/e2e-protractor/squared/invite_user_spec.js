@@ -35,7 +35,6 @@ describe('Squared Add User Flow', function () {
 
   // TODO remove suite when atlasFTSWRemoveUsersSSO feature toggle is removed
   describe('Add users through first-time setup wizard', function () {
-
     var appWindow;
 
     it('should login as partner', function () {
@@ -77,7 +76,6 @@ describe('Squared Add User Flow', function () {
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);
       });
-
     });
 
     // TODO remove spec when atlasFTSWRemoveUsersSSO feature toggle is removed
@@ -164,9 +162,7 @@ describe('Squared Add User Flow', function () {
       });
 
       navigation.logout();
-
     });
-
   });
 
   ////////////////////////////
@@ -216,8 +212,5 @@ describe('Squared Add User Flow', function () {
       deleteUtils.deleteUser(inviteEmail, token);
       deleteUtils.deleteUser(inviteEmail2, token);
     });
-
-
   });
-
 });

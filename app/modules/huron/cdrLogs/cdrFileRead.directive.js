@@ -73,7 +73,5 @@
         scope.fileName = undefined;
       });
     }
-
   }
-
 })();

@@ -52,7 +52,6 @@ describe('HelpdeskHttpRequestCancellerSpec', function () {
 
     expect(promise2.cancelled).toBeTruthy();
     expect(promise2.timedout).toBeFalsy();
-
   });
 
   it('timers time out adds a truthy timedout attribute on the promise', function () {
@@ -104,7 +103,6 @@ describe('HelpdeskHttpRequestCancellerSpec', function () {
     // "normal" request do not clear the list of registered requests.
     // Not a problem as long as a new search clears them anyway
     expect(HelpdeskHttpRequestCanceller.nrOfRegisteredRequests()).toBe(2);
-
   });
 
   //  it('cancelAll when no registered requests should resolved at once', function () {
@@ -122,5 +120,4 @@ describe('HelpdeskHttpRequestCancellerSpec', function () {
   //    expect(result).toBe(0);
   //
   //  });
-
 });

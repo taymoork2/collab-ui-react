@@ -66,7 +66,7 @@
         var displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
           capacity: l.capacity,
         });
-        var key = l.offerCode + '#' + (l.capacity || 0) + (l.siteUrl ? "#" + l.siteUrl : '');
+        var key = l.offerCode + '#' + (l.capacity || 0) + (l.siteUrl ? '#' + l.siteUrl : '');
         var aggregate = _.find(aggregatedLics, {
           key: key,
         });

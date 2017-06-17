@@ -13,7 +13,6 @@
 
   /* @ngInject */
   function LogMetricsService($http, Authinfo, Log, Config, UrlConfig) {
-
     function LogMetricEvent(eventAction, eventType, status, elapsedTime, units, data) {
       this.logStatus = status;
       this.eventAction = eventAction;
@@ -79,7 +78,7 @@
         careVoiceEnabled: 'CAREVOICEENABLED',
         careVoiceDisabled: 'CAREVOICEDISABLED',
         dirSyncDisabled: 'DIRSYNCDISABLED',
-        connectorDeregistered: "CONNECTORDEREGISTERED",
+        connectorDeregistered: 'CONNECTORDEREGISTERED',
       },
 
       getEventAction: function (eAction) {
@@ -119,43 +118,43 @@
 
         switch (state.name) {
           case 'trial.info':
-            msg = "In trial page";
+            msg = 'In trial page';
             eType = this.getEventType('trialPage');
             break;
           case 'trial.addNumbers':
-            msg = "In trial DID page";
+            msg = 'In trial DID page';
             eType = this.getEventType('trialDidPage');
             break;
           case 'overview':
-            msg = "In customer overview page";
+            msg = 'In customer overview page';
             eType = this.getEventType('customerOverviewPage');
             break;
           case 'devices':
             if (Authinfo.isCustomerAdmin()) {
-              msg = "In customer devices page";
+              msg = 'In customer devices page';
               eType = this.getEventType('customerDevicesPage');
             } else {
               stateFound = false;
             }
             break;
           case 'reports':
-            msg = "In customer reports page";
+            msg = 'In customer reports page';
             eType = this.getEventType('customerReportsPage');
             break;
           case 'support':
-            msg = "In customer support page";
+            msg = 'In customer support page';
             eType = this.getEventType('customerSupportPage');
             break;
           case 'profile':
             if (Authinfo.isCustomerAdmin()) {
-              msg = "In customer account page";
+              msg = 'In customer account page';
               eType = this.getEventType('customerAccountPage');
             } else {
               stateFound = false;
             }
             break;
           case 'users.add':
-            msg = "In invite users page";
+            msg = 'In invite users page';
             eType = this.getEventType('customerInviteUsersPage');
             break;
           case 'reports.care':

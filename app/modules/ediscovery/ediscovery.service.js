@@ -155,10 +155,10 @@
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
       var ed = (endDate !== null) ? moment.utc(endDate).add(1, 'days').toISOString() : null;
       return $http.post(runUrl, {
-        "roomId": roomId,
-        "responseUrl": responseUrl,
-        "startDate": sd,
-        "endDate": ed,
+        roomId: roomId,
+        responseUrl: responseUrl,
+        startDate: sd,
+        endDate: ed,
       });
     }
 
@@ -210,9 +210,9 @@
           var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
           var downloadLink = angular.element(downloadContainer.children()[0]);
           downloadLink.attr({
-            'href': $window.URL.createObjectURL(file),
-            'download': fileName,
-            'target': '_blank',
+            href: $window.URL.createObjectURL(file),
+            download: fileName,
+            target: '_blank',
           });
           $document.find('body').append(downloadContainer);
           $timeout(function () {

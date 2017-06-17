@@ -26,26 +26,26 @@ describe('UrlConfigSpec', function () {
 
   var whenCalling = function (fn, arg) {
     var hosts = {
-      'dev': devHost,
-      'cfe': cfeHost,
-      'integration': intHost,
-      'prod': prodHost,
+      dev: devHost,
+      cfe: cfeHost,
+      integration: intHost,
+      prod: prodHost,
     };
     return {
       expectUrlToBe: function (obj) {
         _.each(obj, function (expected, env) {
           var host = hosts[env];
           if (!host) {
-            throw new Error("Unknown environment " + env);
+            throw new Error('Unknown environment ' + env);
           }
           if (!UrlConfig[fn]) {
-            throw new Error("Unknown method " + fn);
+            throw new Error('Unknown method ' + fn);
           }
           $location.host.and.returnValue(host);
           var actual = UrlConfig[fn](arg);
 
           if (expected != actual) {
-            throw new Error("Expected " + fn + " in " + env + " to be '" + expected + "' but it was '" + actual + "'");
+            throw new Error('Expected ' + fn + ' in ' + env + " to be '" + expected + "' but it was '" + actual + "'");
           }
         });
       },
@@ -424,5 +424,4 @@ describe('UrlConfigSpec', function () {
       prod: 'https://web.ciscospark.com/',
     });
   });
-
 });

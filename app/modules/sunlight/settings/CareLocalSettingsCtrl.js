@@ -28,8 +28,8 @@
     vm.errorCount = 0;
 
     vm.RoutingType = {
-      PICK: "pick",
-      PUSH: "push",
+      PICK: 'pick',
+      PUSH: 'push',
     };
 
     vm.routingTypes = [
@@ -55,7 +55,7 @@
     $scope.$on('$locationChangeStart', function (event, next) {
       if ($scope.routingSelector.$dirty) {
         event.preventDefault();
-        var message = "sunlightDetails.settings.saveModal.BodyMsg2";
+        var message = 'sunlightDetails.settings.saveModal.BodyMsg2';
         vm.openSaveModal(message).result.then(function () {
           vm.updateRoutingType();
           gotoSelectedPage(next);
@@ -72,7 +72,7 @@
     }
 
     vm.openModal = function () {
-      var message = "sunlightDetails.settings.saveModal.BodyMsg1";
+      var message = 'sunlightDetails.settings.saveModal.BodyMsg1';
       vm.openSaveModal(message).result.then(vm.updateRoutingType);
     };
 
@@ -247,7 +247,7 @@
           default:
             vm.state = vm.NOT_ONBOARDED;
         }
-        if (result.data.orgName === "" || !(_.get(result, 'data.orgName'))) {
+        if (result.data.orgName === '' || !(_.get(result, 'data.orgName'))) {
           result.data.orgName = Authinfo.getOrgName();
           SunlightConfigService.updateChatConfig(result.data).then(function (result) {
             Log.debug('Successfully updated org config with org name', result);
@@ -264,5 +264,4 @@
     }
     init();
   }
-
 })();

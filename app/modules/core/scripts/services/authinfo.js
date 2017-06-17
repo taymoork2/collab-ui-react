@@ -138,7 +138,6 @@
           authData.customerAdminEmail = _.get(authData.customerAccounts, '[0].customerAdminEmail');
 
           for (var x = 0; x < authData.customerAccounts.length; x++) {
-
             var customerAccount = authData.customerAccounts[x];
             var customerAccountLicenses = [];
 
@@ -367,7 +366,7 @@
         }
 
         // allow the support state in the special case where the user is exclusively Help Desk AND a Compliance User
-        if (parentState === "support" && this.isHelpDeskAndComplianceUserOnly()) {
+        if (parentState === 'support' && this.isHelpDeskAndComplianceUserOnly()) {
           return true;
         }
 

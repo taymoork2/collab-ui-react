@@ -12,7 +12,6 @@
     .name;
 
   function OAuthConfig(Utils, Config) {
-
     var scopes = [
       'webexsquare:admin',
       'webexsquare:billing',
@@ -141,10 +140,10 @@
 
     function getClientId() {
       var clientId = {
-        'cfe': config.oauthClientRegistration.cfe.id,
-        'dev': config.oauthClientRegistration.atlas.id,
-        'prod': config.oauthClientRegistration.atlas.id,
-        'integration': config.oauthClientRegistration.atlas.id,
+        cfe: config.oauthClientRegistration.cfe.id,
+        dev: config.oauthClientRegistration.atlas.id,
+        prod: config.oauthClientRegistration.atlas.id,
+        integration: config.oauthClientRegistration.atlas.id,
       };
       return clientId[Config.getEnv()];
     }
@@ -182,20 +181,20 @@
 
     function getClientSecret() {
       var clientSecret = {
-        'cfe': config.oauthClientRegistration.cfe.secret,
-        'dev': config.oauthClientRegistration.atlas.secret,
-        'prod': config.oauthClientRegistration.atlas.secret,
-        'integration': config.oauthClientRegistration.atlas.secret,
+        cfe: config.oauthClientRegistration.cfe.secret,
+        dev: config.oauthClientRegistration.atlas.secret,
+        prod: config.oauthClientRegistration.atlas.secret,
+        integration: config.oauthClientRegistration.atlas.secret,
       };
       return clientSecret[Config.getEnv()];
     }
 
     function getOauth2Url() {
       var oAuth2Url = {
-        'dev': config.oauthUrl.oauth2UrlAtlas,
-        'cfe': config.oauthUrl.oauth2UrlCfe,
-        'integration': config.oauthUrl.oauth2UrlAtlas,
-        'prod': config.oauthUrl.oauth2UrlAtlas,
+        dev: config.oauthUrl.oauth2UrlAtlas,
+        cfe: config.oauthUrl.oauth2UrlCfe,
+        integration: config.oauthUrl.oauth2UrlAtlas,
+        prod: config.oauthUrl.oauth2UrlAtlas,
       };
       return oAuth2Url[Config.getEnv()];
     }
@@ -203,7 +202,5 @@
     function getOauthServiceType() {
       return 'spark';
     }
-
   }
-
 }());

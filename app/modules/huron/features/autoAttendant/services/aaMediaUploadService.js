@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AAMediaUploadService($window, $http, Authinfo, Upload, AACtrlResourcesService, Config) {
-
     var service = {
       upload: upload,
       retrieve: retrieve,
@@ -125,9 +124,7 @@
           clearResourcesExcept(key, 0);
         }
         resource.uploads = [];
-
       });
-
     }
 
     //clean all resources except for a specific index from the resource array

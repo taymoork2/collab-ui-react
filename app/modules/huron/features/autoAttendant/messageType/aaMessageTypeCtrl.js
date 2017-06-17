@@ -6,17 +6,16 @@
 
   /* @ngInject */
   function AAMessageTypeCtrl($scope, $translate, AADynaAnnounceService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService/*, $window*/) {
-
     var vm = this;
     var conditional = 'conditional';
 
     var finalList = [];
     var properties = {
-      NAME: ["play", "say", "runActionsOnInput", "dynamic"],
-      REPEAT_NAME: "repeatActionsOnInput",
-      LABEL: "label",
-      VALUE: "value",
-      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT",
+      NAME: ['play', 'say', 'runActionsOnInput', 'dynamic'],
+      REPEAT_NAME: 'repeatActionsOnInput',
+      LABEL: 'label',
+      VALUE: 'value',
+      HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT',
     };
 
     var messageType = {
@@ -47,13 +46,13 @@
     };
 
     vm.messageOptions = [{
-      "label": $translate.instant('autoAttendant.uploadedFile'),
-      "value": "uploadFile",
-      "action": "play",
+      label: $translate.instant('autoAttendant.uploadedFile'),
+      value: 'uploadFile',
+      action: 'play',
     }, {
-      "label": $translate.instant('autoAttendant.actionSayMessage'),
-      "value": "sayMessage",
-      "action": "say",
+      label: $translate.instant('autoAttendant.actionSayMessage'),
+      value: 'sayMessage',
+      action: 'say',
     }];
 
     vm.messageType = messageType.ACTION;
@@ -103,7 +102,7 @@
         action.description = '';
         if (action.name === vm.messageOptions[actionType.PLAY].action) {
           if (isDynamicToggle()) {
-            action.name = "dynamic";
+            action.name = 'dynamic';
             vm.dynamicValues = [];
             vm.menuEntry.dynamicList = [{
               say: {
@@ -120,7 +119,7 @@
       }
 
       if (vm.messageOption.value === vm.messageOptions[actionType.PLAY].value) {
-        if (action.name === vm.messageOptions[actionType.SAY].action || action.name === "dynamic") {
+        if (action.name === vm.messageOptions[actionType.SAY].action || action.name === 'dynamic') {
           action.name = vm.messageOptions[actionType.PLAY].action;
         }
       }
@@ -192,7 +191,7 @@
           opt = {
             say: {
               value: attributes[0].value,
-              voice: "",
+              voice: '',
               as: attributes[1].value,
             },
             isDynamic: true,
@@ -273,8 +272,8 @@
       var sourceMenu;
       var queueAction;
 
-      holdActionDesc = "";
-      holdActionValue = "";
+      holdActionDesc = '';
+      holdActionValue = '';
 
       switch (vm.messageType) {
         case messageType.MENUHEADER:
@@ -304,11 +303,9 @@
                   vm.actionEntry = keyAction;
                 }
               }
-
             }
 
             break;
-
           }
         case messageType.ACTION:
           {
@@ -354,7 +351,5 @@
     }
 
     activate();
-
   }
-
 })();

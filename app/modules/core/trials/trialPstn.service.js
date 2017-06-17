@@ -73,7 +73,7 @@
     function createPstnEntityV2(customerOrgId, customerName) {
       return checkForPstnSetup(customerOrgId)
         .catch(function () {
-          if (_trialData.details.pstnProvider.apiImplementation === "SWIVEL") {
+          if (_trialData.details.pstnProvider.apiImplementation === 'SWIVEL') {
             _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
             _trialData.details.pstnContractInfo.companyName = customerName;
             return createPstnCustomerV2(customerOrgId)
@@ -95,7 +95,7 @@
     }
 
     function reserveNumbersWithCustomerV2(customerOrgId) {
-      if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
+      if (_trialData.details.pstnProvider.apiImplementation !== 'SWIVEL') {
         if (_.isString(_trialData.details.pstnNumberInfo.numbers[0])) {
           return PstnService.reserveCarrierInventoryV2(
             customerOrgId,
@@ -182,7 +182,7 @@
     }
 
     function createCustomerSite(customerOrgId) {
-      if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
+      if (_trialData.details.pstnProvider.apiImplementation !== 'SWIVEL') {
         var address = {
           streetAddress: _trialData.details.emergAddr.streetAddress,
           unit: _trialData.details.emergAddr.unit,
@@ -228,6 +228,5 @@
       }
       return carrier.getCapability(capability);
     }
-
   }
 })();

@@ -450,7 +450,6 @@ describe('Controller: DeviceOverviewCtrl', function () {
       $scope.$apply();
       expect(controller.addTag).toHaveBeenCalled();
     });
-
   });
 });
 
@@ -488,17 +487,16 @@ describe('Huron Device', function () {
   }
 
   newTimeZone = {
-    "id": "America/Anchorage",
-    "label": "America/Anchorage",
+    id: 'America/Anchorage',
+    label: 'America/Anchorage',
   };
 
   newCountry = {
-    "label": "Canada",
-    "value": "CA",
+    label: 'Canada',
+    value: 'CA',
   };
 
   function CsdmHuronDeviceService(q) {
-
     function setTimezoneForDevice() {
       return q.resolve(true);
     }
@@ -556,7 +554,6 @@ describe('Huron Device', function () {
     spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.resolve(true));
     spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.resolve(true));
     spyOn($stateParams.huronDeviceService, 'setSettingsForAta').and.returnValue($q.resolve(true));
-
   }
 
   function initController() {

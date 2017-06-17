@@ -21,13 +21,13 @@
     var contentSharedCount = 'reports/counts/contentShared';
 
     var urls = {
-      'callUsage': callMetricsUrl,
-      'activeUserCount': activeUsersUrl,
-      'averageCallCount': averageCallCount,
-      'entitlementCount': entitlementCount,
-      'contentSharedCount': contentSharedCount,
-      'callsCount': callsUrl,
-      'conversationsCount': conversationsUrl,
+      callUsage: callMetricsUrl,
+      activeUserCount: activeUsersUrl,
+      averageCallCount: averageCallCount,
+      entitlementCount: entitlementCount,
+      contentSharedCount: contentSharedCount,
+      callsCount: callsUrl,
+      conversationsCount: conversationsUrl,
     };
 
     return {
@@ -81,20 +81,20 @@
 
     function sendChartResponse(data, status, metricType) {
       var response = {
-        'data': data,
-        'status': status,
+        data: data,
+        status: status,
       };
       $rootScope.$broadcast(metricType + 'Loaded', response);
     }
 
     function getTimeCharts(useCache, customerCharts, paramOverrides) {
       var params = _.assign({
-        'intervalCount': 1,
-        'intervalType': 'month',
-        'spanCount': 1,
-        'spanType': 'week',
-        'cache': useCache,
-        'isCustomerView': true,
+        intervalCount: 1,
+        intervalType: 'month',
+        spanCount: 1,
+        spanType: 'week',
+        cache: useCache,
+        isCustomerView: true,
       }, paramOverrides);
 
       _.forEach(customerCharts, function (customerChart) {
@@ -149,12 +149,12 @@
 
     function getPartnerMetrics(useCache, orgId, partnerCharts) {
       var params = {
-        'intervalCount': 1,
-        'intervalType': 'month',
-        'spanCount': 1,
-        'spanType': 'week',
-        'cache': useCache,
-        'isCustomerView': false,
+        intervalCount: 1,
+        intervalType: 'month',
+        spanCount: 1,
+        spanType: 'week',
+        cache: useCache,
+        isCustomerView: false,
       };
 
       _.forEach(partnerCharts, function (partnerChart) {

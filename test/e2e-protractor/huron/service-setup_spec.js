@@ -40,5 +40,4 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
     servicesetup.deleteNumberRange(pattern);
     notifications.assertSuccess('Successfully deleted');
   });
-
 });

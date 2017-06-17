@@ -1,7 +1,6 @@
 'use strict';
 
 describe('ServiceStatusSummaryService', function () {
-
   // load the service's module
   beforeEach(angular.mock.module('Hercules'));
 
@@ -12,68 +11,67 @@ describe('ServiceStatusSummaryService', function () {
   }));
 
   it("cluster state is 'running' when all hosts has service state 'running'", function () {
-    var clusterMockData = createAClusterMockWithGivenStates("running", "running");
-    var aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated).toEqual("running");
+    var clusterMockData = createAClusterMockWithGivenStates('running', 'running');
+    var aggregated = Service.clusterAggregatedStatus('c_cal', clusterMockData);
+    expect(aggregated).toEqual('running');
   });
 
   it("cluster state is 'alarm' if one or several hosts has service alarm", function () {
     var clusterMockData = {
       id: 0,
       services: [{
-        service_type: "c_cal",
+        service_type: 'c_cal',
         connectors: [{
-          state: "running",
+          state: 'running',
         }, {
           alarms: [{
-            alarm: "isRaised",
+            alarm: 'isRaised',
           }],
-          state: "downloading",
+          state: 'downloading',
         }, {
-          state: "disabled",
+          state: 'disabled',
         }],
       }],
     };
-    var aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated).toEqual("alarm");
+    var aggregated = Service.clusterAggregatedStatus('c_cal', clusterMockData);
+    expect(aggregated).toEqual('alarm');
   });
 
   it('disabled higher pri than notconfigured', function () {
-    var clusterMockData = createAClusterMockWithGivenStates("not_configured", "disabled");
-    var aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated).toEqual("disabled");
-    clusterMockData = createAClusterMockWithGivenStates("disabled", "not_configured");
-    aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated).toEqual("disabled");
+    var clusterMockData = createAClusterMockWithGivenStates('not_configured', 'disabled');
+    var aggregated = Service.clusterAggregatedStatus('c_cal', clusterMockData);
+    expect(aggregated).toEqual('disabled');
+    clusterMockData = createAClusterMockWithGivenStates('disabled', 'not_configured');
+    aggregated = Service.clusterAggregatedStatus('c_cal', clusterMockData);
+    expect(aggregated).toEqual('disabled');
   });
 
   it('other aggregated status is based on a certain priority list', function () {
-    var clusterMockData = createAClusterMockWithGivenStates("not_configured", "disabled");
-    var aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated).toEqual("disabled");
-    clusterMockData = createAClusterMockWithGivenStates("installing", "not_configured");
-    aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated).toEqual("not_configured");
-    clusterMockData = createAClusterMockWithGivenStates("stopped", "installing");
-    aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated).toEqual("installing");
-    clusterMockData = createAClusterMockWithGivenStates("offline", "stopped");
-    aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated).toEqual("stopped");
-    clusterMockData = createAClusterMockWithGivenStates("not_installed", "offline");
-    aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated).toEqual("offline");
-    clusterMockData = createAClusterMockWithGivenStates("not_installed", "running");
-    aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated).toEqual("not_installed");
-
+    var clusterMockData = createAClusterMockWithGivenStates('not_configured', 'disabled');
+    var aggregated = Service.clusterAggregatedStatus('c_cal', clusterMockData);
+    expect(aggregated).toEqual('disabled');
+    clusterMockData = createAClusterMockWithGivenStates('installing', 'not_configured');
+    aggregated = Service.clusterAggregatedStatus('c_cal', clusterMockData);
+    expect(aggregated).toEqual('not_configured');
+    clusterMockData = createAClusterMockWithGivenStates('stopped', 'installing');
+    aggregated = Service.clusterAggregatedStatus('c_cal', clusterMockData);
+    expect(aggregated).toEqual('installing');
+    clusterMockData = createAClusterMockWithGivenStates('offline', 'stopped');
+    aggregated = Service.clusterAggregatedStatus('c_cal', clusterMockData);
+    expect(aggregated).toEqual('stopped');
+    clusterMockData = createAClusterMockWithGivenStates('not_installed', 'offline');
+    aggregated = Service.clusterAggregatedStatus('c_cal', clusterMockData);
+    expect(aggregated).toEqual('offline');
+    clusterMockData = createAClusterMockWithGivenStates('not_installed', 'running');
+    aggregated = Service.clusterAggregatedStatus('c_cal', clusterMockData);
+    expect(aggregated).toEqual('not_installed');
   });
 
   it('service not installed', function () {
-    var clusterMockData = createCompleteClustersMockData("cluster1", ["c_mgmt", "c_cal"], ["host1.cisco.com"]);
-    var notInstalled = Service.serviceNotInstalled("c_cal", clusterMockData);
+    var clusterMockData = createCompleteClustersMockData('cluster1', ['c_mgmt', 'c_cal'], ['host1.cisco.com']);
+    var notInstalled = Service.serviceNotInstalled('c_cal', clusterMockData);
     expect(notInstalled).toBe(false);
-    notInstalled = Service.serviceNotInstalled("c_ucmc", clusterMockData);
+    notInstalled = Service.serviceNotInstalled('c_ucmc', clusterMockData);
     expect(notInstalled).toBe(true);
   });
 
@@ -82,45 +80,45 @@ describe('ServiceStatusSummaryService', function () {
       id: 0,
       provisioning_data: {
         not_approved_packages: [{
-          release_note: "no release note for this test data",
+          release_note: 'no release note for this test data',
           service: {
-            display_name: "calendar connector",
-            service_type: "c_cal",
+            display_name: 'calendar connector',
+            service_type: 'c_cal',
           },
-          tlp_url: "whatever_url",
-          version: "1.2.3.4",
+          tlp_url: 'whatever_url',
+          version: '1.2.3.4',
         }],
       },
       services: [{
-        service_type: "c_cal",
+        service_type: 'c_cal',
         connectors: [{
-          state: "running",
+          state: 'running',
         }, {
           alarms: [{
-            alarm: "isRaised",
+            alarm: 'isRaised',
           }],
-          state: "downloading",
+          state: 'downloading',
         }, {
-          state: "disabled",
+          state: 'disabled',
         }],
       }, {
-        service_type: "c_ucmc",
+        service_type: 'c_ucmc',
         connectors: [{
-          state: "running",
+          state: 'running',
         }, {
           alarms: [{
-            alarm: "isRaised",
+            alarm: 'isRaised',
           }],
-          state: "downloading",
+          state: 'downloading',
         }, {
-          state: "disabled",
+          state: 'disabled',
         }],
       }],
     };
 
-    var software = Service.softwareUpgradeAvailable("c_cal", clusterMockData);
+    var software = Service.softwareUpgradeAvailable('c_cal', clusterMockData);
     expect(software).toBe(true);
-    software = Service.softwareUpgradeAvailable("c_ucmc", clusterMockData);
+    software = Service.softwareUpgradeAvailable('c_ucmc', clusterMockData);
     expect(software).toBe(false);
   });
 
@@ -128,119 +126,119 @@ describe('ServiceStatusSummaryService', function () {
     var clusterMockData = {
       id: 0,
       services: [{
-        service_type: "c_cal",
+        service_type: 'c_cal',
         connectors: [{
-          state: "running",
+          state: 'running',
         }, {
           alarms: [{
-            alarm: "isRaised",
+            alarm: 'isRaised',
           }],
-          state: "downloading",
+          state: 'downloading',
         }, {
-          state: "disabled",
+          state: 'disabled',
         }],
       }],
     };
 
-    var software = Service.softwareUpgradeAvailable("c_cal", clusterMockData);
+    var software = Service.softwareUpgradeAvailable('c_cal', clusterMockData);
     expect(software).toBe(false);
-    software = Service.softwareUpgradeAvailable("c_ucmc", clusterMockData);
+    software = Service.softwareUpgradeAvailable('c_ucmc', clusterMockData);
     expect(software).toBe(false);
   });
 
   //********************************************************************
   // Testing this specs own internal cluster data creator functions
   //********************************************************************
-  it("cluster mock data is generated correctly", function () {
+  it('cluster mock data is generated correctly', function () {
     var expected = {
       id: 0,
       services: [{
-        service_type: "c_cal",
+        service_type: 'c_cal',
         connectors: [{
-          state: "a",
+          state: 'a',
         }, {
-          state: "b",
+          state: 'b',
         }, {
-          state: "c",
+          state: 'c',
         }],
       }],
     };
 
-    var generated = createAClusterMockWithGivenStates("a", "b", "c");
+    var generated = createAClusterMockWithGivenStates('a', 'b', 'c');
     expect(JSON.stringify(expected) === JSON.stringify(generated)).toBe(true);
   });
 
   it('complete cluster api mock data is created correctly', function () {
     var expected = [{
-      "id": "9876-cluster1",
-      "cluster_type": "c_mgmt",
-      "name": "cluster1",
-      "services": [{
-        "service_type": "c_mgmt",
-        "enabled": true,
-        "display_name": "Management Connector",
-        "connectors": [{
-          "host": {
-            "host_name": "host1.cisco.com",
-            "serial": "9999-host1.cisco.com",
+      id: '9876-cluster1',
+      cluster_type: 'c_mgmt',
+      name: 'cluster1',
+      services: [{
+        service_type: 'c_mgmt',
+        enabled: true,
+        display_name: 'Management Connector',
+        connectors: [{
+          host: {
+            host_name: 'host1.cisco.com',
+            serial: '9999-host1.cisco.com',
           },
-          "state": "running",
+          state: 'running',
         }],
       }, {
-        "service_type": "c_cal",
-        "enabled": true,
-        "display_name": "Calendar Connector",
-        "connectors": [{
-          "host": {
-            "host_name": "host1.cisco.com",
-            "serial": "9999-host1.cisco.com",
+        service_type: 'c_cal',
+        enabled: true,
+        display_name: 'Calendar Connector',
+        connectors: [{
+          host: {
+            host_name: 'host1.cisco.com',
+            serial: '9999-host1.cisco.com',
           },
-          "state": "running",
+          state: 'running',
         }],
       }],
     }, {
-      "id": "9876-cluster2",
-      "cluster_type": "c_mgmt",
-      "name": "cluster2",
-      "services": [{
-        "service_type": "c_mgmt",
-        "enabled": true,
-        "display_name": "Management Connector",
-        "connectors": [{
-          "host": {
-            "host_name": "host2.cisco.com",
-            "serial": "9999-host2.cisco.com",
+      id: '9876-cluster2',
+      cluster_type: 'c_mgmt',
+      name: 'cluster2',
+      services: [{
+        service_type: 'c_mgmt',
+        enabled: true,
+        display_name: 'Management Connector',
+        connectors: [{
+          host: {
+            host_name: 'host2.cisco.com',
+            serial: '9999-host2.cisco.com',
           },
-          "state": "running",
+          state: 'running',
         }, {
-          "host": {
-            "host_name": "host3.cisco.com",
-            "serial": "9999-host3.cisco.com",
+          host: {
+            host_name: 'host3.cisco.com',
+            serial: '9999-host3.cisco.com',
           },
-          "state": "running",
+          state: 'running',
         }],
       }, {
-        "service_type": "c_cal",
-        "enabled": true,
-        "display_name": "Calendar Connector",
-        "connectors": [{
-          "host": {
-            "host_name": "host2.cisco.com",
-            "serial": "9999-host2.cisco.com",
+        service_type: 'c_cal',
+        enabled: true,
+        display_name: 'Calendar Connector',
+        connectors: [{
+          host: {
+            host_name: 'host2.cisco.com',
+            serial: '9999-host2.cisco.com',
           },
-          "state": "running",
+          state: 'running',
         }, {
-          "host": {
-            "host_name": "host3.cisco.com",
-            "serial": "9999-host3.cisco.com",
+          host: {
+            host_name: 'host3.cisco.com',
+            serial: '9999-host3.cisco.com',
           },
-          "state": "running",
+          state: 'running',
         }],
       }],
     }];
 
-    var cluster1 = createCompleteClustersMockData("cluster1", ["c_mgmt", "c_cal"], ["host1.cisco.com"]);
-    var cluster2 = createCompleteClustersMockData("cluster2", ["c_mgmt", "c_cal"], ["host2.cisco.com", "host3.cisco.com"]);
+    var cluster1 = createCompleteClustersMockData('cluster1', ['c_mgmt', 'c_cal'], ['host1.cisco.com']);
+    var cluster2 = createCompleteClustersMockData('cluster2', ['c_mgmt', 'c_cal'], ['host2.cisco.com', 'host3.cisco.com']);
 
     var clusters = [cluster1, cluster2];
 
@@ -258,32 +256,31 @@ describe('ServiceStatusSummaryService', function () {
     return {
       id: 0,
       services: [{
-        service_type: "c_cal",
+        service_type: 'c_cal',
         connectors: connectorsArray,
       }],
     };
   };
 
   var createCompleteClustersMockData = function (clusterName, serviceTypes, hostNames) {
-
     var connectors = [];
     _.each(hostNames, function (host) {
       connectors.push({
         host: {
           host_name: host,
-          serial: "9999-" + host,
+          serial: '9999-' + host,
         },
-        state: "running",
+        state: 'running',
       });
     });
 
     var displayName = function (serviceType) {
-      if (serviceType == "c_mgmt") {
-        return "Management Connector";
-      } else if (serviceType == "c_cal") {
-        return "Calendar Connector";
+      if (serviceType == 'c_mgmt') {
+        return 'Management Connector';
+      } else if (serviceType == 'c_cal') {
+        return 'Calendar Connector';
       } else {
-        return "Unknown connector name";
+        return 'Unknown connector name';
       }
     };
 
@@ -298,11 +295,10 @@ describe('ServiceStatusSummaryService', function () {
     });
 
     return {
-      id: "9876-" + clusterName,
-      cluster_type: "c_mgmt",
+      id: '9876-' + clusterName,
+      cluster_type: 'c_mgmt',
       name: clusterName,
       services: services,
     };
   };
-
 });

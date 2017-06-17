@@ -12,18 +12,18 @@ describe('Service: TelephonyInfoService', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   var customer = {
-    "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
-    "name": "Atlas_Test_JP650",
-    "servicePackage": "DEMO_STANDARD",
-    "links": [{
-      "rel": "common",
-      "href": "/api/v1/common/customers/84562afa-2f35-474f-ba0f-2def42864e12",
+    uuid: '84562afa-2f35-474f-ba0f-2def42864e12',
+    name: 'Atlas_Test_JP650',
+    servicePackage: 'DEMO_STANDARD',
+    links: [{
+      rel: 'common',
+      href: '/api/v1/common/customers/84562afa-2f35-474f-ba0f-2def42864e12',
     }, {
-      "rel": "voicemail",
-      "href": "/api/v1/voicemail/customers/84562afa-2f35-474f-ba0f-2def42864e12",
+      rel: 'voicemail',
+      href: '/api/v1/voicemail/customers/84562afa-2f35-474f-ba0f-2def42864e12',
     }, {
-      "rel": "voice",
-      "href": "/api/v1/voice/customers/84562afa-2f35-474f-ba0f-2def42864e12",
+      rel: 'voice',
+      href: '/api/v1/voice/customers/84562afa-2f35-474f-ba0f-2def42864e12',
     }],
   };
 
@@ -45,8 +45,8 @@ describe('Service: TelephonyInfoService', function () {
     externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     getExternalNumberPool = externalNumbers.slice(0);
     getExternalNumberPool.unshift({
-      "uuid": "none",
-      "pattern": "directoryNumberPanel.none",
+      uuid: 'none',
+      pattern: 'directoryNumberPanel.none',
     });
     cosRestrictions = getJSONFixture('huron/json/telephonyInfo/userCosRestrictions.json');
 
@@ -128,7 +128,6 @@ describe('Service: TelephonyInfoService', function () {
   });
 
   describe('loadInternalNumberPool', function () {
-
     it('should return internal number pool', function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern').respond(internalNumbers);
       TelephonyInfoService.loadInternalNumberPool().then(function (response) {
@@ -152,11 +151,9 @@ describe('Service: TelephonyInfoService', function () {
       });
       $httpBackend.flush();
     });
-
   });
 
   describe('loadExternalNumberPool', function () {
-
     it('should query for unassigned PSTN numbers and return external number pool when no parameters provided', function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(externalNumbers);
       TelephonyInfoService.loadExternalNumberPool().then(function (response) {
@@ -196,7 +193,6 @@ describe('Service: TelephonyInfoService', function () {
       });
       $httpBackend.flush();
     });
-
   });
 
   describe('getInternationalDialing function', function () {

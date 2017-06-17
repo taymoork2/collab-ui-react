@@ -41,12 +41,11 @@ require('./_partner-landing-trials.scss');
         .then(function (isTestOrg) {
           $scope.isTestOrg = isTestOrg;
         });
-
     }
 
     function ariaTrialLabel(trial) {
       var label = trial.customerName + ', ' +
-        $translate.instant('partnerHomePage.aria.daysLeft', { count: trial.daysLeft }, "messageformat") + ', ' +
+        $translate.instant('partnerHomePage.aria.daysLeft', { count: trial.daysLeft }, 'messageformat') + ', ' +
         $translate.instant('partnerHomePage.aria.userTotals', { users: trial.usage, licenses: trial.licenses });
       return label;
     }
@@ -92,10 +91,10 @@ require('./_partner-landing-trials.scss');
         })
         .then(function (trialsList) {
           $scope.activeList = _.filter(trialsList, {
-            state: "ACTIVE",
+            state: 'ACTIVE',
           });
           $scope.expiredList = _.filter(trialsList, {
-            state: "EXPIRED",
+            state: 'EXPIRED',
           });
           $scope.showExpired = $scope.expiredList.length > 0;
           Log.debug('active trial records found:' + $scope.activeList.length);

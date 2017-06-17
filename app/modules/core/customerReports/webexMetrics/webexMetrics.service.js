@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function QlikService($http, $q, UrlConfig) {
-
     var service = {
       getWebExReportQBSforBaseUrl: getWebExReportQBSforBaseUrl,
       getWebExReportQBSforPremiumUrl: getWebExReportQBSforPremiumUrl,

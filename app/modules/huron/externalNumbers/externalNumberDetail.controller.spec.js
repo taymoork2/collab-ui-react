@@ -24,9 +24,9 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     };
 
     externalNumbers = [{
-      'number': '123',
+      number: '123',
     }, {
-      'number': '456',
+      number: '456',
     }];
 
     modalDefer = $q.defer();
@@ -83,9 +83,9 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
 
   it('should refresh list of assigned phone numbers', function () {
     var newNumbers = externalNumbers.concat([{
-      'number': '789',
+      number: '789',
     }, {
-      'number': '000',
+      number: '000',
     }]);
     ExternalNumberService.getAssignedNumbersV2.and.returnValue($q.resolve(newNumbers));
     controller.listPhoneNumbers();

@@ -18,12 +18,12 @@ describe('Service: Webex Trial Service', function () {
     spyOn(this.WebexOrderStatusResource, 'get').and.callFake(function (data) {
       var orderStatus = data.trialId === 'trial-ready' ? 'PROVISIONED' : 'PROVISIONING';
       var status = {
-        'siteUrl': 'trial-acmecorp.webex.com',
-        'timeZoneId': 4,
-        'provOrderStatus': orderStatus,
+        siteUrl: 'trial-acmecorp.webex.com',
+        timeZoneId: 4,
+        provOrderStatus: orderStatus,
       };
       return {
-        '$promise': this.$q.resolve(status),
+        $promise: this.$q.resolve(status),
       };
     }.bind(this));
   });

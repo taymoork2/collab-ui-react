@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: AADependencyService', function () {
-
   var $q, $rootScope, AACalendarService, AADependencyService, AANotificationService;
   var updateCalendarNameDeferred;
 
@@ -43,7 +42,6 @@ describe('Service: AADependencyService', function () {
   });
 
   describe('notifyScheduleDependent', function () {
-
     beforeEach(function () {
       updateCalendarNameDeferred = $q.defer();
       spyOn(AACalendarService, 'updateCalendarName').and.returnValue(updateCalendarNameDeferred.promise);
@@ -122,5 +120,4 @@ describe('Service: AADependencyService', function () {
       expect(notifyResponse).toBe(event);
     });
   });
-
 });

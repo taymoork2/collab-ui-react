@@ -16,7 +16,7 @@ describe('Service: AutoAttendantCeService', function () {
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
   beforeEach(inject(function (_QueueHelperService_, _$httpBackend_, _HuronConfig_) {
@@ -69,5 +69,4 @@ describe('Service: AutoAttendantCeService', function () {
       expect(failureSpy).toHaveBeenCalled();
     });
   });
-
 });

@@ -116,8 +116,8 @@
     function changeEntitlement(user) {
       Log.debug('Entitling user.', user);
       Userservice.updateUsers([{
-        'address': user.userName,
-        'name': user.name,
+        address: user.userName,
+        name: user.name,
       }], null, getUserEntitlementList(), 'changeEntitlement', function (data) {
         var resultMsg;
         if (data.success) {

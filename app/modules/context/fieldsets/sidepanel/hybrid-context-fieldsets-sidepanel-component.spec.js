@@ -1,64 +1,62 @@
 'use strict';
 
 describe('Component: Fieldset SidePanel', function () {
-
   var customFieldset = {
-    'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-    'description': 'aaa custom fieldset with some description',
-    'fields': [
+    orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+    description: 'aaa custom fieldset with some description',
+    fields: [
       'AAA_TEST_FIELD',
       'Agent_ID',
       'AAA_TEST_FIELD4',
     ],
-    'publiclyAccessible': false,
-    'fieldDefinitions': [
+    publiclyAccessible: false,
+    fieldDefinitions: [
       {
-        'id': 'AAA_TEST_FIELD',
-        'lastUpdated': '2017-02-02T17:12:33.167Z',
+        id: 'AAA_TEST_FIELD',
+        lastUpdated: '2017-02-02T17:12:33.167Z',
       },
       {
-        'id': 'AAA_TEST_FIELD4',
-        'lastUpdated': '2017-02-02T21:22:35.106Z',
+        id: 'AAA_TEST_FIELD4',
+        lastUpdated: '2017-02-02T21:22:35.106Z',
       },
       {
-        'id': 'Agent_ID',
-        'lastUpdated': '2017-01-23T16:48:50.021Z',
+        id: 'Agent_ID',
+        lastUpdated: '2017-01-23T16:48:50.021Z',
       },
     ],
-    'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-    'id': 'aaa_custom_fieldset',
-    'lastUpdated': '2017-02-10T19:37:36.998Z',
+    refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+    id: 'aaa_custom_fieldset',
+    lastUpdated: '2017-02-10T19:37:36.998Z',
   };
 
   var ciscoFieldsetWithNoDescription = {
-    'orgId': 'ignored', // don't care
-    'fields': [
+    orgId: 'ignored', // don't care
+    fields: [
       'AAA_TEST_FIELD',
       'Agent_ID',
       'AAA_TEST_FIELD4',
     ],
-    'publiclyAccessible': true,
-    'fieldDefinitions': [
+    publiclyAccessible: true,
+    fieldDefinitions: [
       {
-        'id': 'AAA_TEST_FIELD',
-        'lastUpdated': '2017-02-02T17:12:33.167Z',
+        id: 'AAA_TEST_FIELD',
+        lastUpdated: '2017-02-02T17:12:33.167Z',
       },
       {
-        'id': 'AAA_TEST_FIELD4',
-        'lastUpdated': '2017-02-02T21:22:35.106Z',
+        id: 'AAA_TEST_FIELD4',
+        lastUpdated: '2017-02-02T21:22:35.106Z',
       },
       {
-        'id': 'Agent_ID',
-        'lastUpdated': '2017-01-23T16:48:50.021Z',
+        id: 'Agent_ID',
+        lastUpdated: '2017-01-23T16:48:50.021Z',
       },
     ],
-    'refUrl': '/dictionary/fieldset/v1/id/aaa_cisco_fieldset',
-    'id': 'aaa_cisco_fieldset',
-    'lastUpdated': '2017-02-10T19:37:36.998Z',
+    refUrl: '/dictionary/fieldset/v1/id/aaa_cisco_fieldset',
+    id: 'aaa_cisco_fieldset',
+    lastUpdated: '2017-02-10T19:37:36.998Z',
   };
 
   describe('controller tests', function () {
-
     var $componentCtrl, $q, $rootScope, $state, Analytics, ContextFieldsetsService, ctrl, ModalService, Notification;
     // spies
     var deleteSpy, getInUseSpy, modalSpy;
@@ -111,7 +109,6 @@ describe('Component: Fieldset SidePanel', function () {
     }
 
     describe('initController', function () {
-
       beforeEach(inject(dependencies));
       beforeEach(initSpies);
 
@@ -160,7 +157,6 @@ describe('Component: Fieldset SidePanel', function () {
     });
 
     describe('isEditable', function () {
-
       it('should return false if publicly accessible', function () {
         ctrl.publiclyAccessible = true;
         ctrl.inUse = false;
@@ -181,7 +177,6 @@ describe('Component: Fieldset SidePanel', function () {
     });
 
     describe('openDeleteConfirmDialog', function () {
-
       beforeEach(inject(dependencies));
       beforeEach(initSpies);
       beforeEach(function () {
@@ -234,7 +229,6 @@ describe('Component: Fieldset SidePanel', function () {
    * in the UI.
    */
   describe('fieldset-edit feature is present', function () {
-
     beforeEach(function () {
       this.initModules('Core', 'Context');
       this.injectDependencies(

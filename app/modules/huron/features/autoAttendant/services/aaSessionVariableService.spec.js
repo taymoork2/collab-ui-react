@@ -17,13 +17,12 @@ describe('Service: AASessionVariableService', function () {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     q = $q;
-
   }));
 
   describe('getSessionVariables', function () {
     var notFoundResponse = {
-      'status': 404,
-      'statusText': 'Not Found',
+      status: 404,
+      statusText: 'Not Found',
     };
     var sessionVarOptions, deferred;
 
@@ -65,6 +64,5 @@ describe('Service: AASessionVariableService', function () {
       expect(sessionVarOptions.length).toEqual(0);
       expect(sessionVarOptions).toEqual([]);
     });
-
   });
 });

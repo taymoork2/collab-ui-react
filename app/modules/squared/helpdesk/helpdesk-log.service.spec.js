@@ -93,5 +93,4 @@ describe('Service: HelpdeskLogService', function () {
     });
     scope.$apply();
   });
-
 });

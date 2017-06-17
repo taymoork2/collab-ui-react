@@ -4,7 +4,6 @@ var userCsvServiceModule = require('./userCsv.service');
 var csvDownloadModule = require('modules/core/csvDownload').default;
 
 describe('userCsv.controller', function () {
-
   beforeEach(init);
 
   ///////////////////////////////
@@ -84,7 +83,6 @@ describe('userCsv.controller', function () {
   }
 
   function initMocks() {
-
     this.bulkOnboardUsersResponseMock = function (statusCode, additionalCodes) {
       var _this = this;
       var statusCodes = additionalCodes || [];
@@ -189,7 +187,6 @@ describe('userCsv.controller', function () {
       });
       return this.$q.resolve(response);
     }
-
   }
 
   function initController() {
@@ -232,7 +229,6 @@ describe('userCsv.controller', function () {
   //////////////////////////////
 
   describe('Bulk Users CSV', function () {
-
     beforeEach(function () {
       this.mockCsvData = {
         oneColumnValidUser: 'User ID/Email (Required),\njohndoe@example.com,',
@@ -608,7 +604,6 @@ describe('userCsv.controller', function () {
         expect(this.controller.model.numNewUsers).toEqual(2);
         expect(this.controller.model.numExistingUsers).toEqual(0);
         expect(this.controller.model.userErrorArray.length).toEqual(0);
-
       });
     });
 
@@ -707,7 +702,6 @@ describe('userCsv.controller', function () {
   });
 
   describe('Process CSV with Hybrid Service Resource Groups', function () {
-
     beforeEach(function () {
       var _this = this;
       this.FeatureToggleService.supports.and.callFake(function () {
@@ -721,7 +715,6 @@ describe('userCsv.controller', function () {
     });
 
     function initMocks() {
-
       this.setCsv = function (users, csvHeader) {
         var header = csvHeader || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service Resource Group', 'Hybrid Call Service Resource Group', 'Calendar Service', 'Call Service Aware'];
         var csv = [header];
@@ -745,7 +738,6 @@ describe('userCsv.controller', function () {
         this.$timeout.flush();
         return updatedUserProps;
       };
-
     }
 
     it('should not update USS when no resource group changes', function () {
@@ -908,7 +900,6 @@ describe('userCsv.controller', function () {
   });
 
   describe('Process CSV with new Hybrid Calendar Service entitlements', function () {
-
     beforeEach(function () {
       this.headers = getJSONFixture('core/json/users/headersForHybridServicesNew.json');
 
@@ -917,7 +908,6 @@ describe('userCsv.controller', function () {
     });
 
     function initMocks() {
-
       this.setCsv = function (users, header) {
         var csv = [header || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service (Exchange)', 'Hybrid Calendar Service (Google)']];
         csv.push(users);
@@ -925,7 +915,6 @@ describe('userCsv.controller', function () {
         this.$scope.$apply();
         this.$timeout.flush();
       };
-
     }
 
     xit('should add an error if both calendar entitlements (Exchange and Google) are set', function () {
