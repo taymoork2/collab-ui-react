@@ -10,7 +10,7 @@ import { ExtensionLengthService } from './extensionLength.service';
 export class HuronSettingsData {
   public customer: CustomerSettings;
   public site: ISite;
-  public internalNumberRanges: Array<IExtensionRange>;
+  public internalNumberRanges: IExtensionRange[];
   public cosRestrictions: any;
   public companyCallerId: CompanyNumber;
   public voicemailToEmailSettings: IVoicemailToEmail;
@@ -25,7 +25,7 @@ export class CustomerSettings extends Customer {
     uuid: string,
     name: string,
     servicePackage: string,
-    links: Array<Link>,
+    links: Link[],
     hasVoicemailService: boolean,
     hasVoiceService: boolean,
   }) {
@@ -53,7 +53,7 @@ export interface IVoicemailToEmail {
 
 export class HuronSettingsService {
   private huronSettingsDataCopy: HuronSettingsData;
-  private errors: Array<any> = [];
+  private errors: any[] = [];
   private VOICE_ONLY = 'VOICE_ONLY';
   private DEMO_STANDARD = 'DEMO_STANDARD'; // Unity only
   private VOICE_VOICEMAIL = 'VOICE_VOICEMAIL'; // Avril Only
@@ -86,7 +86,7 @@ export class HuronSettingsService {
   }
 
   public get(siteId: string): ng.IPromise<HuronSettingsData> {
-    let huronSettingsData = new HuronSettingsData();
+    const huronSettingsData = new HuronSettingsData();
     this.errors = [];
     return this.$q.all({
       customerAndSite: this.getSite(siteId)
@@ -196,15 +196,15 @@ export class HuronSettingsService {
               // will be allowed when extension length is increased, so the data copy value will be
               // correct.  Doing this allows us to not pass the routingPrefix around in components
               // that don't care about it.
-              let postalCode = this.deriveVoicemailPostalCode(this.huronSettingsDataCopy.site.routingPrefix || '', newExtensionLength);
+              const postalCode = this.deriveVoicemailPostalCode(this.huronSettingsDataCopy.site.routingPrefix || '', newExtensionLength);
               return this.updateVoicemailPostalCode(userTemplate.objectId, postalCode);
             });
         }
       });
   }
 
-  private createParallelRequests(data: HuronSettingsData): Array<ng.IPromise<any>> {
-    let promises: Array<ng.IPromise<any>> = [];
+  private createParallelRequests(data: HuronSettingsData): ng.IPromise<any>[] {
+    const promises: ng.IPromise<any>[] = [];
     if (!_.isEqual(data.internalNumberRanges, this.huronSettingsDataCopy.internalNumberRanges)) {
       Array.prototype.push.apply(promises, this.updateInternalNumberRanges(data.internalNumberRanges, this.skipInternalNumberRangeDelete(data, this.huronSettingsDataCopy)));
     }
@@ -275,7 +275,7 @@ export class HuronSettingsService {
       });
   }
 
-  private getInternalNumberRanges(): ng.IPromise<Array<IExtensionRange>> {
+  private getInternalNumberRanges(): ng.IPromise<IExtensionRange[]> {
     return this.ServiceSetup.listInternalNumberRanges().then(ranges => {
       return _.map<any, IExtensionRange>(ranges, range => {
         return {
@@ -314,8 +314,8 @@ export class HuronSettingsService {
     return extensionLength < origExtensionLength;
   }
 
-  private updateInternalNumberRanges(internalNumberRanges: Array<IExtensionRange>, skipDelete: boolean = false): Array<ng.IPromise<any>> {
-    let promises: Array<ng.IPromise<any>> = [];
+  private updateInternalNumberRanges(internalNumberRanges: IExtensionRange[], skipDelete: boolean = false): ng.IPromise<any>[] {
+    const promises: ng.IPromise<any>[] = [];
     if (!skipDelete) {
       // first look for ranges to delete.
       _.forEach(this.huronSettingsDataCopy.internalNumberRanges, range => {
@@ -366,7 +366,7 @@ export class HuronSettingsService {
 
   private getCompanyCallerId(): ng.IPromise<CompanyNumber> {
     return this.CallerId.listCompanyNumbers().then(companyNumbers => {
-      let companyCallerId = _.find<CompanyNumber>(companyNumbers, companyNumber => {
+      const companyCallerId = _.find<CompanyNumber>(companyNumbers, companyNumber => {
         return companyNumber.externalCallerIdType === ExternalCallerIdType.COMPANY_CALLER_ID_TYPE
           || (companyNumber.externalCallerIdType === ExternalCallerIdType.COMPANY_NUMBER_TYPE);
       });
@@ -405,7 +405,7 @@ export class HuronSettingsService {
   }
 
   private saveCustomerServicePackage(customerData: CustomerSettings, siteData: ISite): ng.IPromise<void> {
-    let customer = {};
+    const customer = {};
     if (customerData.hasVoicemailService) {
       if (this.supportsAvrilVoicemail && !this.supportsAvrilVoicemailMailbox) {
         _.set(customer, 'servicePackage', this.VOICE_VOICEMAIL_AVRIL);
@@ -427,7 +427,7 @@ export class HuronSettingsService {
   private updateVoiceMailSettings(customerData: CustomerSettings, siteData: ISite, voicemailToEmailData: IVoicemailToEmail, avrilFeatures: IAvrilFeatures): ng.IPromise<any> {
     if (customerData.hasVoicemailService) {
       if (!this.supportsAvrilVoicemailMailbox) { // Do not update Unity if Avril only
-        let promises: Array<ng.IPromise<any>> = [];
+        const promises: ng.IPromise<any>[] = [];
         return this.getVoicemailUserTemplate()
           .then(userTemplate => {
             if (!_.isEqual(this.huronSettingsDataCopy.voicemailToEmailSettings, voicemailToEmailData)) {
@@ -436,7 +436,7 @@ export class HuronSettingsService {
             if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
               || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
               || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)) {
-              let postalCode = this.deriveVoicemailPostalCode(siteData.routingPrefix || '', siteData.extensionLength);
+              const postalCode = this.deriveVoicemailPostalCode(siteData.routingPrefix || '', siteData.extensionLength);
               promises.push(this.updateVoicemailPostalCode(userTemplate.objectId, postalCode));
             }
             if (!_.isEqual(this.huronSettingsDataCopy.site.timeZone, siteData.timeZone)
@@ -516,8 +516,8 @@ export class HuronSettingsService {
   }
 
   private deriveVoicemailPostalCode(routingPrefix: string, extensionLength: string): string {
-    let steeringDigit = _.isUndefined(routingPrefix) ? '' : routingPrefix.charAt(0);
-    let siteCode = _.isUndefined(routingPrefix) ? '' : routingPrefix.substr(1);
+    const steeringDigit = _.isUndefined(routingPrefix) ? '' : routingPrefix.charAt(0);
+    const siteCode = _.isUndefined(routingPrefix) ? '' : routingPrefix.substr(1);
     return [steeringDigit, siteCode, extensionLength].join('-');
   }
 

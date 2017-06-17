@@ -62,7 +62,7 @@ class CustomerReportsHeaderCtrl {
   };
 
   private checkWebex (): void {
-    let webexSiteUrls = this.getUniqueWebexSiteUrls(); // strip off any duplicate webexSiteUrl to prevent unnecessary XML API calls
+    const webexSiteUrls = this.getUniqueWebexSiteUrls(); // strip off any duplicate webexSiteUrl to prevent unnecessary XML API calls
 
     webexSiteUrls.forEach((url: string): void => {
       this.WebExApiGatewayService.siteFunctions(url).then((result: any): void => {
@@ -80,8 +80,8 @@ class CustomerReportsHeaderCtrl {
   }
 
   private getUniqueWebexSiteUrls() {
-    let conferenceServices: Array<any> = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
-    let webexSiteUrls: Array<any> = [];
+    const conferenceServices: any[] = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+    const webexSiteUrls: any[] = [];
 
     conferenceServices.forEach((conferenceService: any): void => {
       webexSiteUrls.push(conferenceService.license.siteUrl);

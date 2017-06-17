@@ -22,7 +22,7 @@ export class HuronUserService {
     private HuronConfig,
   ) {
 
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
@@ -47,7 +47,7 @@ export class HuronUserService {
     }).$promise;
   }
 
-  public getUserServices(userId: string): ng.IPromise<Array<string>> {
+  public getUserServices(userId: string): ng.IPromise<string[]> {
     return this.getUserV1(userId).then(user => {
       return _.get(user, 'services', []);
     });
@@ -68,13 +68,13 @@ export class HuronUserService {
     }).$promise;
   }
 
-  public getUserV2Numbers(userId: string): ng.IPromise<Array<UserNumber>> {
+  public getUserV2Numbers(userId: string): ng.IPromise<UserNumber[]> {
     return this.getUserV2(userId).then(user => {
       return _.get(user, 'numbers', []);
     });
   }
 
-  public getRemoteDestinations(userId: string): ng.IPromise<Array<any>> {
+  public getRemoteDestinations(userId: string): ng.IPromise<any[]> {
     return this.remoteDestinationResource.query({
       customerId: this.Authinfo.getOrgId(),
       userId: userId,

@@ -12,7 +12,7 @@ describe('Component: CallFeatureMembers', () => {
   const SEARCH_MEMBER_INPUT = 'input#callfeaturemembersearch';
   const DROPDOWN_OPTIONS = '.search-add ul li';
 
-  let typeaheadResults = getJSONFixture('huron/json/features/callFeatureMembers/typeaheadMemberResponse.json');
+  const typeaheadResults = getJSONFixture('huron/json/features/callFeatureMembers/typeaheadMemberResponse.json');
 
   beforeEach(function () {
     this.initModules(callFeatureMembersModule);

@@ -8,7 +8,7 @@ interface IPickupGroupResource extends ng.resource.IResourceClass<ng.resource.IR
 export class CallPickupGroupService {
   private pickupGroupResource: IPickupGroupResource;
   private callPickupCopy: IPickupGroup;
-  private callPickupProperties: Array<string> = ['name', 'notificationTimer', 'playSound', 'displayCallingPartyId', 'displayCalledPartyId'];
+  private callPickupProperties: string[] = ['name', 'notificationTimer', 'playSound', 'displayCallingPartyId', 'displayCalledPartyId'];
  /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
@@ -28,15 +28,15 @@ export class CallPickupGroupService {
   }
 
   public areAllLinesInPickupGroup(member: Member): ng.IPromise<boolean> {
-    let scope = this;
-    let promises: Array<ng.IPromise<string>> = [];
+    const scope = this;
+    const promises: ng.IPromise<string>[] = [];
     let disabled = true;
     return scope.getMemberNumbers(member.uuid)
     .then(
       (data: IMemberNumber[]) => {
         disabled = true;
         _.forEach(data, function(memberNumber) {
-          let promise = scope.isLineInPickupGroup(memberNumber.internal);
+          const promise = scope.isLineInPickupGroup(memberNumber.internal);
           promises.push(promise);
           promise.then((line: string) => {
             if (line === '') {
@@ -103,15 +103,15 @@ export class CallPickupGroupService {
       number: directoryNumber,
       wide: true,
     }).$promise.then(response => {
-      let number = _.get(response, 'numbers');
-      let pickupFeatures = <IPickupGroupResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers/:internalPoolId',
+      const number = _.get(response, 'numbers');
+      const pickupFeatures = <IPickupGroupResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers/:internalPoolId',
                            { wide: true });
       return pickupFeatures.get({
         customerId: this.Authinfo.getOrgId(),
         internalPoolId: number[0].uuid,
       }).$promise.then(response => {
-        let features: any = _.get(response, 'features');
-        let pickupName = _.find(features, function(feature: any) { return feature.type === 'CALL_FEATURE_PICKUP_GROUP'; });
+        const features: any = _.get(response, 'features');
+        const pickupName = _.find(features, function(feature: any) { return feature.type === 'CALL_FEATURE_PICKUP_GROUP'; });
         if (pickupName) {
           return pickupName.name;
         } else {
@@ -122,9 +122,9 @@ export class CallPickupGroupService {
   }
 
   public createCheckboxes(member: IMember, memberNumbers: IMemberNumber[]): ng.IPromise<any> {
-    let scope = this;
+    const scope = this;
     let autoSelect = true;
-    let linesInPickupGroupPromises: Array<ng.IPromise<string>> = [];
+    const linesInPickupGroupPromises: ng.IPromise<string>[] = [];
     _.forEach(memberNumbers, function (number) {
       linesInPickupGroupPromises.push(scope.isLineInPickupGroup(number.internal));
     });
@@ -139,7 +139,7 @@ export class CallPickupGroupService {
           value = false;
         } else {
           if (autoSelect) {
-            let saveNumber = {
+            const saveNumber = {
               uuid: number.uuid,
               internalNumber: number.internal,
             };
@@ -162,7 +162,7 @@ export class CallPickupGroupService {
   }
 
   public createCheckboxesForEdit(member: IMember, memberNumbers: IMemberNumber[], pickupName: string): ICardMemberCheckbox[] {
-    let scope = this;
+    const scope = this;
     _.forEach(memberNumbers, function (number, index) {
       scope.isLineInPickupGroup(number.internal)
       .then((pickupGroupName: string) => {

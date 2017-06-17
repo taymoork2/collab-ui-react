@@ -19,6 +19,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     Config = _Config_;
     HDSService = _HDSService_;
     HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
+    Notification = _Notification_;
   }
 
   function initSpies() {

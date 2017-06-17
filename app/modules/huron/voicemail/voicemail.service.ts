@@ -7,7 +7,7 @@ interface IUserCommon {
   firstName: string;
   lastName: string;
   userName: string;
-  services: Array<string>;
+  services: string[];
 }
 
 interface IDnUsers {
@@ -47,7 +47,7 @@ export class HuronVoicemailService {
   public isEnabledForCustomer(): ng.IPromise<boolean> {
     let isEnabled = false;
     return this.HuronCustomerService.getCustomer().then((customer: CustomerSettings) => {
-      _.forEach(_.get<Array<Link>>(customer, 'links'), link => {
+      _.forEach(_.get<Link[]>(customer, 'links'), link => {
         if (link.rel === _.toLower(VOICEMAIL) || this.isFeatureEnabledAvril() && link.rel === _.toLower(AVRIL)) {
           isEnabled = true;
         }
@@ -56,7 +56,7 @@ export class HuronVoicemailService {
     });
   }
 
-  public isEnabledForUser(services: Array<string>): boolean {
+  public isEnabledForUser(services: string[]): boolean {
     return _.includes(services, VOICEMAIL) || _.includes(services, AVRIL);
   }
 
@@ -71,7 +71,7 @@ export class HuronVoicemailService {
       customerId: this.Authinfo.getOrgId(),
       directoryNumberId: numberUuid,
     }).$promise.then(users => {
-      let user = _.find(users, { dnUsage: 'Primary' });
+      const user = _.find(users, { dnUsage: 'Primary' });
       return _.get(user, 'user.uuid', '');
     }).then(uuid => {
       return this.userCommonResource.get({
@@ -94,13 +94,13 @@ export class HuronVoicemailService {
     return this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmMailboxEnable);
   }
 
-  public update(userId: string, voicemail: boolean, services: Array<string>): ng.IPromise<Array<string>> {
+  public update(userId: string, voicemail: boolean, services: string[]): ng.IPromise<string[]> {
 
-    let vm = new Voicemail({
+    const vm = new Voicemail({
       dtmfAccessId: undefined,
     });
 
-    let user = new UserV1({
+    const user = new UserV1({
       uuid: undefined,
       firstName: undefined,
       lastName: undefined,

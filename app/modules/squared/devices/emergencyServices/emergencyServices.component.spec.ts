@@ -4,7 +4,7 @@ describe('component: emergencyServices', () => {
   const EMERGENCYNUMBER_SELECT = '.csSelect-container[name="emergencyCallbackNumber"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
 
-  let location = {
+  const location = {
     type: 'State',
     areas: [{
       name: 'Texas',

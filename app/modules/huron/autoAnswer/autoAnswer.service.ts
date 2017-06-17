@@ -41,7 +41,7 @@ export class AutoAnswerService {
     private HuronConfig,
     private DeviceService,
   ) {
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
@@ -59,14 +59,14 @@ export class AutoAnswerService {
       typeId: _typeId,
       numberId: _numberId,
     }).$promise.then(data => {
-      let autoAnswer = new AutoAnswer();
+      const autoAnswer = new AutoAnswer();
       autoAnswer.ownerType = _type as string;
 
-      let phoneList: Array<IAutoAnswerPhone> = _.get(data, AutoAnswerConst.PHONES, []);
+      const phoneList: IAutoAnswerPhone[] = _.get(data, AutoAnswerConst.PHONES, []);
       autoAnswer.phones = _.map(_.filter(phoneList, (phone) => { return phone.autoAnswer.supported === true ; }), (supportedPhone) => {
         let label = _.first(this.DeviceService.getTags(this.DeviceService.decodeHuronTags(supportedPhone.description))) as string;
         if (!label || label === '') {
-          let macAddress: string = this.convertNameToMacAddress(supportedPhone.name);
+          const macAddress: string = this.convertNameToMacAddress(supportedPhone.name);
           label = supportedPhone.model + ' (' + macAddress + ')';
         }
         return new AutoAnswerPhone({
@@ -78,7 +78,7 @@ export class AutoAnswerService {
           mode: supportedPhone.autoAnswer.enabled === true ? supportedPhone.autoAnswer.mode : undefined });
       });
 
-      let member = _.get(data, AutoAnswerConst.MEMBER);
+      const member = _.get(data, AutoAnswerConst.MEMBER);
       if (!_.isUndefined(member) && !_.isNull(member)) {
         autoAnswer.member = new AutoAnswerMember(member);
       }
@@ -86,9 +86,9 @@ export class AutoAnswerService {
     });
   }
 
-  public createUpdateAutoAnswerPayload(origPhoneData: Array<AutoAnswerPhone>, currPhoneData: Array<AutoAnswerPhone>): ISetAutoAnswer | undefined {
-    let currEnabledPhone: AutoAnswerPhone = _.find(currPhoneData, AutoAnswerConst.ENABLED);
-    let origEnabledPhone: AutoAnswerPhone = _.find(origPhoneData, AutoAnswerConst.ENABLED);
+  public createUpdateAutoAnswerPayload(origPhoneData: AutoAnswerPhone[], currPhoneData: AutoAnswerPhone[]): ISetAutoAnswer | undefined {
+    const currEnabledPhone: AutoAnswerPhone = _.find(currPhoneData, AutoAnswerConst.ENABLED);
+    const origEnabledPhone: AutoAnswerPhone = _.find(origPhoneData, AutoAnswerConst.ENABLED);
     let updateAutoAnswerData: ISetAutoAnswer | undefined ;
 
     if (currEnabledPhone) {
@@ -100,8 +100,8 @@ export class AutoAnswerService {
     return updateAutoAnswerData;
   }
 
-  public setAutoAnswer(_phones: Array<AutoAnswerPhone>, _phoneId: string | undefined, _enabled: boolean, mode: string | undefined): void {
-    let prevEnabledPhone: AutoAnswerPhone = _.find(_phones, AutoAnswerConst.ENABLED);
+  public setAutoAnswer(_phones: AutoAnswerPhone[], _phoneId: string | undefined, _enabled: boolean, mode: string | undefined): void {
+    const prevEnabledPhone: AutoAnswerPhone = _.find(_phones, AutoAnswerConst.ENABLED);
     if (prevEnabledPhone) {
       if (prevEnabledPhone.uuid === _phoneId) {
         if (!_enabled) {
@@ -111,7 +111,7 @@ export class AutoAnswerService {
           prevEnabledPhone.mode = mode;
         }
       } else {
-        let phone: AutoAnswerPhone = _.find(_phones, { uuid: _phoneId });
+        const phone: AutoAnswerPhone = _.find(_phones, { uuid: _phoneId });
         if (phone) {
           phone.enabled = _enabled;
           phone.mode = mode;
@@ -120,7 +120,7 @@ export class AutoAnswerService {
         }
       }
     } else {
-      let phone: AutoAnswerPhone = _.find(_phones, { uuid: _phoneId });
+      const phone: AutoAnswerPhone = _.find(_phones, { uuid: _phoneId });
       if (phone) {
         phone.enabled = _enabled;
         phone.mode = mode;

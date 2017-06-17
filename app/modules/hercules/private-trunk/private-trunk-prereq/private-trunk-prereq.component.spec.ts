@@ -8,7 +8,7 @@ describe('Component: PrivateTrunkPrereq component', function () {
   const BUTTON_CLOSE = 'button.btn.btn-primary';
   const UL_DOMAINLIST = 'ul.domain-list li';
 
-  let verifiedDomain: Array<string> = [ 'verified1.ept.org', 'verified2.ept.org' ];
+  const verifiedDomain: string[] = [ 'verified1.ept.org', 'verified2.ept.org' ];
 
   beforeEach(function() {
     this.initModules(privateTrunkPrereqModule);

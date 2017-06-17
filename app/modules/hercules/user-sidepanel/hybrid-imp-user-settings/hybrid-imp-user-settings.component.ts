@@ -65,7 +65,7 @@ class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
   public saveData() {
     this.savingPage = true;
 
-    let entitlements: IEntitlementNameAndState[] = [{
+    const entitlements: IEntitlementNameAndState[] = [{
       entitlementName: 'sparkHybridImpInterop',
       entitlementState: this.newEntitlementValue === true ? 'ACTIVE' : 'INACTIVE',
     }];

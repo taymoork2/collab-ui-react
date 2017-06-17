@@ -54,7 +54,7 @@ describe('Component: gmTdHistories', () => {
         this.TelephonyDomainService.getHistories.and.returnValue(this.$q.resolve(this.mockData));
       }
     } else {
-      let histories: any[] = [];
+      const histories: any[] = [];
       for (let i = 0; i < 10; i++) {
         histories.push({
           objectName: 'title',

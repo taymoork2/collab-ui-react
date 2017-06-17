@@ -6,9 +6,9 @@ import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from 
 import * as moment from 'moment';
 
 export class MySubscriptionCtrl {
-  public hybridServices: Array<any> = [];
-  public licenseCategory: Array<ISubscriptionCategory> = [];
-  public subscriptionDetails: Array<ISubscription> = [];
+  public hybridServices: any[] = [];
+  public licenseCategory: ISubscriptionCategory[] = [];
+  public subscriptionDetails: ISubscription[] = [];
   public visibleSubscriptions: boolean = false;
   public hasEnterpriseTrial: boolean = false;
   public trialUrlFailed: boolean = false;
@@ -63,7 +63,7 @@ export class MySubscriptionCtrl {
     private UrlConfig,
   ) {
     _.forEach(this.SUBSCRIPTION_TYPES, (_value, key: string): void => {
-      let category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
+      const category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
       category.label = $translate.instant('subscriptions.' + key);
 
       this.licenseCategory.push(category);
@@ -175,7 +175,7 @@ export class MySubscriptionCtrl {
 
   // combines licenses for the license view
   private addSubscription(index: number, item: IOfferData, siteIndex?: number): void {
-    let offers: Array<IOfferData>;
+    let offers: IOfferData[];
     let exists: boolean = false;
 
     if (_.isNumber(siteIndex)) {
@@ -200,7 +200,7 @@ export class MySubscriptionCtrl {
   }
 
   private sortSubscription(index: number, siteIndex: number): void {
-    const offers: Array<IOfferData> = _.get(this.licenseCategory, `[${index}].offerWrapper[${siteIndex}].offers`, []);
+    const offers: IOfferData[] = _.get(this.licenseCategory, `[${index}].offerWrapper[${siteIndex}].offers`, []);
     this.licenseCategory[index].offerWrapper[siteIndex].offers = _.sortBy(offers, (element: IOfferData): number => {
       const rank = {
         CDC: 1,
@@ -211,9 +211,9 @@ export class MySubscriptionCtrl {
   }
 
   private subscriptionRetrieval(): void {
-    this.Orgservice.getLicensesUsage(false).then((subscriptions: Array<any>): void => {
+    this.Orgservice.getLicensesUsage(false).then((subscriptions: any[]): void => {
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
-        let newSubscription: ISubscription = {
+        const newSubscription: ISubscription = {
           licenses: [],
           isTrial: false,
           isOnline: false,
@@ -236,7 +236,7 @@ export class MySubscriptionCtrl {
 
         _.forEach(subscription.licenses, (license: any, licenseIndex: number): void => {
           if (license.offerName in this.Config.offerCodes) {
-            let offer: IOfferData = {
+            const offer: IOfferData = {
               licenseId: license.licenseId,
               licenseType: license.licenseType,
               licenseModel: _.get(license, 'licenseModel', ''),
@@ -268,7 +268,7 @@ export class MySubscriptionCtrl {
               this.addSubscription(this.SUBSCRIPTION_TYPES.room, _.cloneDeep(offer));
             } else if (license.offerName === this.Config.offerCodes.CDC || license.offerName === this.Config.offerCodes.CVC) {
               offer.class = this.CARE_CLASS;
-              let existingIndex = _.findIndex(this.licenseCategory[this.SUBSCRIPTION_TYPES.care].offerWrapper, (sub: IOfferWrapper): boolean => {
+              const existingIndex = _.findIndex(this.licenseCategory[this.SUBSCRIPTION_TYPES.care].offerWrapper, (sub: IOfferWrapper): boolean => {
                 return sub.type === this.CARE;
               });
 
@@ -288,7 +288,7 @@ export class MySubscriptionCtrl {
                 offer.class = this.WEBEX_CLASS;
               }
 
-              let existingSite: number = _.findIndex(this.licenseCategory[this.SUBSCRIPTION_TYPES.meeting].offerWrapper, (sub: IOfferWrapper): boolean => {
+              const existingSite: number = _.findIndex(this.licenseCategory[this.SUBSCRIPTION_TYPES.meeting].offerWrapper, (sub: IOfferWrapper): boolean => {
                 return sub.siteUrl === offer.siteUrl;
               });
 
@@ -316,7 +316,7 @@ export class MySubscriptionCtrl {
             newSubscription.quantity = newSubscription.licenses[0].volume;
           }
           // sort licenses into display order/order for determining subscription name
-          let licenseTypes: Array<any> = _.toArray(this.Config.offerCodes);
+          const licenseTypes: any[] = _.toArray(this.Config.offerCodes);
           newSubscription.licenses.sort((a, b) => {
             return licenseTypes.indexOf(a.offerName) - licenseTypes.indexOf(b.offerName);
           });

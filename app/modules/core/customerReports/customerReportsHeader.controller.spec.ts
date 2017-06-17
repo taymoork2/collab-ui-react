@@ -57,9 +57,9 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(false));
       spyOn(this.ITProPackService, 'hasITProPackEnabled').and.returnValue(this.$q.resolve(false));
 
-      let WebExApiGatewayService: any = {
+      const WebExApiGatewayService: any = {
         siteFunctions: (url: string): any => {
-          let defer = this.$q.defer();
+          const defer = this.$q.defer();
           defer.resolve({
             siteUrl: url,
           });
@@ -91,9 +91,9 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
       spyOn(this.ITProPackService, 'hasITProPackEnabled').and.returnValue(this.$q.resolve(true));
 
-      let WebExApiGatewayService = {
+      const WebExApiGatewayService = {
         siteFunctions: (url: string): any => {
-          let defer = this.$q.defer();
+          const defer = this.$q.defer();
           defer.resolve({
             siteUrl: url,
             isAdminReportEnabled: true,

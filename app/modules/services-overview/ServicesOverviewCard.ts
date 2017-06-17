@@ -57,7 +57,7 @@ export abstract class ServicesOverviewCard {
     return !this.loading && this.active && !!(this.status && this.status.status);
   }
 
-  public abstract getButtons(): Array<ICardButton>;
+  public abstract getButtons(): ICardButton[];
 
   public abstract getShowMoreButton(): ICardButton | undefined;
 

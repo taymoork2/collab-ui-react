@@ -150,7 +150,7 @@ describe('Component: sectionTitle', () => {
     });
 
     it('should have a dropdown action', function () {
-      let actionSelector = 'ul.dropdown-menu li a';
+      const actionSelector = 'ul.dropdown-menu li a';
       expect(this.view).toContainElement(actionSelector);
       expect(this.view.find(actionSelector)).toContainText('action.key');
       this.view.find(actionSelector).click();
@@ -158,7 +158,7 @@ describe('Component: sectionTitle', () => {
     });
 
     it('should hide the actions if showActions is false', function () {
-      let actionSelector = 'ul.dropdown-menu li a';
+      const actionSelector = 'ul.dropdown-menu li a';
       // this.$scope.showActions is undefined
       expect(this.view).toContainElement(actionSelector);
 

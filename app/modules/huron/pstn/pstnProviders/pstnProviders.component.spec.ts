@@ -2,7 +2,7 @@ import pstnProviders from './index';
 import { PstnCarrier } from './pstnCarrier';
 
 describe('Component: PstnProvidersComponent', () => {
-  let pstnCarriers: Array<PstnCarrier>;
+  let pstnCarriers: PstnCarrier[];
 
   beforeEach( function () {
     this.initModules(pstnProviders);

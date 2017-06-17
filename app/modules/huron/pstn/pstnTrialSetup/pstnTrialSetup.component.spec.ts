@@ -44,7 +44,7 @@ describe('Component: PstnTrialSetupComponent', () => {
     });
 
     describe('Enter info to the controller and expect the same out of the service', function () {
-      let address = {
+      const address = {
         streetAddress: '1234 First St',
         unit: '4321',
         city: 'Dallas',
@@ -65,8 +65,8 @@ describe('Component: PstnTrialSetupComponent', () => {
     });
 
     describe('Carrier Selection', function () {
-      let pstnCarrier: PstnCarrier = new PstnCarrier();
-      let pstnCarriers: Array<PstnCarrier> = [pstnCarrier];
+      const pstnCarrier: PstnCarrier = new PstnCarrier();
+      const pstnCarriers: PstnCarrier[] = [pstnCarrier];
 
       it('should select one swivel carrier if the carriers array is of length 1', function () {
         pstnCarrier.name = 'Test Carrier 1';

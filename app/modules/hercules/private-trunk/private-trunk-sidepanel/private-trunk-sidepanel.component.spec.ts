@@ -50,7 +50,7 @@ describe('Component: PrivateTrunkSidepanelComponent ', () => {
       spyOn(EnterprisePrivateTrunkService, 'getTrunkFromCmi').and.returnValue($q.resolve({}));
     }
 
-    let trunkId = '1234';
+    const trunkId = '1234';
 
     function initController() {
       ctrl = $componentController('privateTrunkSidepanel', {

@@ -22,23 +22,23 @@ describe('Service: CertService', () => {
   });
 
   it('getCerts should call the right backend', () => {
-    let CertsUrl = UrlConfig.getCertsUrl() + 'certificate/api/v1';
-    let orgId = '0FF1C3';
+    const CertsUrl = UrlConfig.getCertsUrl() + 'certificate/api/v1';
+    const orgId = '0FF1C3';
     $httpBackend.expectGET(`${CertsUrl}/certificates?expand=decoded&orgId=0FF1C3`).respond([]);
     CertService.getCerts(orgId);
     $httpBackend.flush();
   });
 
   it('deleteCert should call the right backend', () => {
-    let CertsUrl = UrlConfig.getCertsUrl() + 'certificate/api/v1';
-    let certId = '0-1-2-3-4-5';
+    const CertsUrl = UrlConfig.getCertsUrl() + 'certificate/api/v1';
+    const certId = '0-1-2-3-4-5';
     $httpBackend.expectDELETE(`${CertsUrl}/certificates/0-1-2-3-4-5`).respond([]);
     CertService.deleteCert(certId);
     $httpBackend.flush();
   });
   it('uploadCert should call the right backend', () => {
-    let file = '0-1-2-3-4-5';
-    let orgId = '0FF1C3';
+    const file = '0-1-2-3-4-5';
+    const orgId = '0FF1C3';
     CertService.uploadCert(orgId, file);
     expect(CertService.uploadCert).toHaveBeenCalledWith(orgId, file);
   });

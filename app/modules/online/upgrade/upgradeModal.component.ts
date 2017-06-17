@@ -24,7 +24,7 @@ class OnlineUpgrade {
       this.nameChangeEnabled = toggle;
     });
 
-    this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: Array<IProdInst>) => {
+    this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: IProdInst[]) => {
       const productInstance = _.find(productInstances, (instance: any) => {
         return instance.subscriptionId === this.OnlineUpgradeService.getSubscriptionId();
       });

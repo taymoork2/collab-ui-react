@@ -44,7 +44,7 @@ export class DirectoryNumberOptionsService {
   }
 
   public getExternalNumberOptions(pattern?: string | Pattern, assignment?: Availability, externalNumberType?: ExternalNumberType): ng.IPromise<string[]> {
-    let queries = {
+    const queries = {
       customerId: this.Authinfo.getOrgId(),
       directorynumber: assignment || Availability.UNASSIGNED,
       externalnumbertype: externalNumberType || ExternalNumberType.DID,

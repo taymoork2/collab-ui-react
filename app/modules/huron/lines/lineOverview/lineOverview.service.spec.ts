@@ -101,8 +101,8 @@ describe('Service: LineOverviewService', () => {
       }),
     ];
 
-    let autoAnswerRead = getJSONFixture('huron/json/autoAnswer/autoAnswer.json');
-    let autoAnswerData: AutoAnswer = new AutoAnswer();
+    const autoAnswerRead = getJSONFixture('huron/json/autoAnswer/autoAnswer.json');
+    const autoAnswerData: AutoAnswer = new AutoAnswer();
     _.forEach(_.get(autoAnswerRead, AutoAnswerConst.PHONES, []), (phone: AutoAnswerPhone) => {
       autoAnswerData.phones.push(
         new AutoAnswerPhone({
@@ -265,7 +265,7 @@ describe('Service: LineOverviewService', () => {
       });
 
       it('should only update autoAnswer when only autoAnswer is changed', function () {
-        let promise = this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
+        const promise = this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
         promise.then(() => {
           this.lineOverview.autoAnswer.phones[0].mode = AutoAnswerConst.HEADSET;
           this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001', this.lineOverview, []);
@@ -296,11 +296,11 @@ describe('Service: LineOverviewService', () => {
     });
 
     it('save should call PUT after changing extension', function () {
-      let promise = this.LineOverviewService.get(LineConsumerType.USERS, '12345', '0000001');
+      const promise = this.LineOverviewService.get(LineConsumerType.USERS, '12345', '0000001');
       promise.then((_lineOverviewData) => {
         _lineOverviewData.line.internal = '55555';
         _lineOverviewData.voicemailEnabled = true;
-        let promise2 = this.LineOverviewService.save(LineConsumerType.USERS, '12345', '0000001', _lineOverviewData, []);
+        const promise2 = this.LineOverviewService.save(LineConsumerType.USERS, '12345', '0000001', _lineOverviewData, []);
         promise2.then(() => {
           expect(this.HuronVoicemailService.update).toHaveBeenCalled();
         });
@@ -323,7 +323,7 @@ describe('Service: LineOverviewService', () => {
       this.LineOverviewService.get(LineConsumerType.PLACES, '12345');
       this.$rootScope.$digest();
 
-      let lineOverviewNewLine = new LineOverviewData();
+      const lineOverviewNewLine = new LineOverviewData();
       lineOverviewNewLine.line = this.newLine;
       lineOverviewNewLine.callForward = this.callForward;
       lineOverviewNewLine.line.internal = '12345';
@@ -349,7 +349,7 @@ describe('Service: LineOverviewService', () => {
       this.LineOverviewService.get(LineConsumerType.PLACES, '12345');
       this.$rootScope.$digest();
 
-      let lineOverviewNewLine = new LineOverviewData();
+      const lineOverviewNewLine = new LineOverviewData();
       lineOverviewNewLine.line = this.newLine;
       lineOverviewNewLine.callForward = this.callForward;
       lineOverviewNewLine.line.internal = '12345';

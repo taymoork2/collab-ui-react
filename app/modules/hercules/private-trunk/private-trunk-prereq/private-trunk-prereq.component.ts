@@ -6,10 +6,10 @@ interface ITranslationMessages {
   helpText: string;
 }
 export class PrivateTrunkPrereqCtrl implements ng.IComponentController {
-  public domains: Array<IDomain>;
+  public domains: IDomain[];
   public hasVerifiedDomain: boolean = false;
-  public connectivityHelpMessages: Array<ITranslationMessages>;
-  public fullServiceHelpMessages: Array<ITranslationMessages>;
+  public connectivityHelpMessages: ITranslationMessages[];
+  public fullServiceHelpMessages: ITranslationMessages[];
 
   private nameChangeEnabled: boolean = false;
 

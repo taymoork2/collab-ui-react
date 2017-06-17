@@ -2,7 +2,7 @@ import pstnWizard from './index';
 
 describe('Component: PstnWizardComponent', () => {
 
-  let swivelCarrierDetails = [{
+  const swivelCarrierDetails = [{
     uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
     name: 'INTELEPEER-SWIVEL',
     apiImplementation: 'SWIVEL',

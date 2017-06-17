@@ -106,12 +106,12 @@ class SnrCtrl implements ng.IComponentController {
       snr = new SingleNumberReach();
     }
     this.SnrService.saveSnr(this.ownerId, this.snrId, snr).then(() => {
-      let msg = (isDelete) ? this.$translate.instant('singleNumberReachPanel.removeSuccess') : this.$translate.instant('singleNumberReachPanel.success');
+      const msg = (isDelete) ? this.$translate.instant('singleNumberReachPanel.removeSuccess') : this.$translate.instant('singleNumberReachPanel.success');
       this.Notification.notify([msg], 'success');
       this.$scope.$emit('SNR_CHANGE', this.snrEnabled);
       this.init();
     }).catch(() => {
-      let msg = this.$translate.instant('singleNumberReachPanel.error');
+      const msg = this.$translate.instant('singleNumberReachPanel.error');
       this.Notification.notify([msg], 'error');
     });
   }

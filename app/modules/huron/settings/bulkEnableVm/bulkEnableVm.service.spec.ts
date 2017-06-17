@@ -23,7 +23,7 @@ describe('Service: BulkEnableVmService', () => {
   });
 
   it('can get SparkCallUserCount', function() {
-    let userlistServiceUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) +
+    const userlistServiceUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) +
     '?filter=active%20eq%20true%20and%20entitlements%20eq%20%22ciscouc%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=1000';
 
     this.$httpBackend.expectGET(userlistServiceUrl).respond(200, { totalResults: '20' });
@@ -37,8 +37,8 @@ describe('Service: BulkEnableVmService', () => {
   });
 
   it('can get user services', function() {
-    let voiceService = ['VOICE'];
-    let voiceServiceResponse = { services: voiceService };
+    const voiceService = ['VOICE'];
+    const voiceServiceResponse = { services: voiceService };
 
     this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/common/customers/' + this.Authinfo.getOrgId() + '/users/12345').
     respond(200, voiceServiceResponse);
@@ -52,9 +52,9 @@ describe('Service: BulkEnableVmService', () => {
   });
 
   it('can get user siteToSite number', function() {
-    let siteToSiteNumber = '9724567893';
-    let userNumbers = [{ siteToSite: siteToSiteNumber }];
-    let v2UserGetResp = { numbers: userNumbers };
+    const siteToSiteNumber = '9724567893';
+    const userNumbers = [{ siteToSite: siteToSiteNumber }];
+    const v2UserGetResp = { numbers: userNumbers };
 
     this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/12345')
     .respond(200, v2UserGetResp);

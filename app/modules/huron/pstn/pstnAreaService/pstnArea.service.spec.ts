@@ -8,7 +8,7 @@ import {
   CCODE_US,
 } from './index';
 
-let areas: IArea[] = [{
+const areas: IArea[] = [{
   name: 'Alabama',
   abbreviation: 'AL',
 }, {

@@ -23,7 +23,7 @@ describe('CmcUserService', () => {
 
   it('should use uss to find users with cmc entitlement', function () {
 
-    let userStatusInfoResponse: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse>{
+    const userStatusInfoResponse: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse>{
       userStatuses: [
         { userId: '1', state: 'a' },
         { userId: '2', state: 'b' },
@@ -31,7 +31,7 @@ describe('CmcUserService', () => {
       ],
     };
 
-    let orgId = this.Authinfo.getOrgId();
+    const orgId = this.Authinfo.getOrgId();
     this.$httpBackend
       .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?limit=100&entitled=true&serviceId=cmc')
       .respond(userStatusInfoResponse);
@@ -45,9 +45,9 @@ describe('CmcUserService', () => {
 
   it('should list cmc users containing call aware status', function () {
 
-    let orgId = this.Authinfo.getOrgId();
+    const orgId = this.Authinfo.getOrgId();
 
-    let usersWithCmcResponse: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse>{
+    const usersWithCmcResponse: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse>{
       userStatuses: [
         { userId: '1', state: 'a' },
         { userId: '2', state: 'b' },
@@ -58,7 +58,7 @@ describe('CmcUserService', () => {
       .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?limit=100&entitled=true&serviceId=cmc')
       .respond(usersWithCmcResponse);
 
-    let userWithAwareResponse = <ICmcUserStatusInfoResponse>{
+    const userWithAwareResponse = <ICmcUserStatusInfoResponse>{
       userStatuses: [
         { userId: '1', state: 'a' },
         { userId: '3', state: 'c' },
@@ -69,7 +69,7 @@ describe('CmcUserService', () => {
       .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?limit=100&entitled=true&serviceId=squared-fusion-uc')
       .respond(userWithAwareResponse);
 
-    let expectedResult: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse> {
+    const expectedResult: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse> {
       userStatuses: [
         { userId: '1', state: '' },
         { userId: '2', state: 'cmc.statusPage.callServiceAwareNotEntitled' },
@@ -85,9 +85,9 @@ describe('CmcUserService', () => {
 
   it('should insert display name to user statuses', function () {
 
-    let orgId = this.Authinfo.getOrgId();
+    const orgId = this.Authinfo.getOrgId();
 
-    let nameResolvedUsers = [
+    const nameResolvedUsers = [
       { id: '1', displayName: 'helge' },
       { id: '3', displayName: 'anders' },
     ];
@@ -96,13 +96,13 @@ describe('CmcUserService', () => {
       .when('GET', this.UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/reports/devices?accountIds=1,2,3')
       .respond(nameResolvedUsers);
 
-    let userStatuses: Array<ICmcUserStatus> = <Array<ICmcUserStatus>> [
+    const userStatuses: ICmcUserStatus[] = <ICmcUserStatus[]> [
       { userId: '1', state: 'a' },
       { userId: '2', state: 'b' },
       { userId: '3', state: 'c' },
     ];
 
-    let expectedResult: Array<ICmcUserStatus> = <Array<ICmcUserStatus>> [
+    const expectedResult: ICmcUserStatus[] = <ICmcUserStatus[]> [
       { userId: '1', state: 'a', displayName: 'helge' },
       { userId: '2', state: 'b' },
       { userId: '3', state: 'c', displayName: 'anders' },

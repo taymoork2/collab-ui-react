@@ -16,16 +16,16 @@ export class LineOverviewData {
   public companyNumbers: any;
   public autoAnswer: AutoAnswer;
   public voicemailEnabled: boolean;
-  public services: Array<string>;
+  public services: string[];
 }
 
 export class LineOverviewService {
 
-  private numberProperties: Array<string> = ['uuid', 'primary', 'shared', 'internal', 'external', 'siteToSite', 'incomingCallMaximum'];
-  private callForwardAllProperties: Array<string> = ['destination', 'voicemailEnabled'];
-  private callForwardBusyProperties: Array<string> = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled', 'ringDurationTimer'];
+  private numberProperties: string[] = ['uuid', 'primary', 'shared', 'internal', 'external', 'siteToSite', 'incomingCallMaximum'];
+  private callForwardAllProperties: string[] = ['destination', 'voicemailEnabled'];
+  private callForwardBusyProperties: string[] = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled', 'ringDurationTimer'];
   private lineOverviewDataCopy: LineOverviewData;
-  private errors: Array<any> = [];
+  private errors: any[] = [];
 
   /* @ngInject */
   constructor(
@@ -43,9 +43,9 @@ export class LineOverviewService {
   ) {}
 
   public get(consumerType: LineConsumerType, ownerId: string, numberId: string = ''): ng.IPromise<LineOverviewData> {
-    let lineOverviewData = new LineOverviewData();
+    const lineOverviewData = new LineOverviewData();
     this.errors = [];
-    let promises: Array<ng.IPromise<any>> = [];
+    const promises: ng.IPromise<any>[] = [];
     promises.push(this.getLine(consumerType, ownerId, numberId));
     promises.push(this.getCallForward(consumerType, ownerId, numberId));
     promises.push(this.getSharedLines(consumerType, ownerId, numberId));
@@ -88,7 +88,7 @@ export class LineOverviewService {
 
   private createSharedLineMembers(consumerType: LineConsumerType, ownerId: string, lineOverviewData: LineOverviewData, newSharedLineMembers: Member[]) {
     if (newSharedLineMembers.length > 0) {
-      let promises: Array<ng.IPromise<any>> = [];
+      const promises: ng.IPromise<any>[] = [];
       _.forEach(newSharedLineMembers, (sharedLineMember) => {
         promises.push(this.createSharedLine(consumerType, ownerId, lineOverviewData.line.uuid, sharedLineMember));
       });
@@ -97,7 +97,7 @@ export class LineOverviewService {
   }
 
   public save(consumerType: LineConsumerType, ownerId: string, numberId: string = '', data: LineOverviewData, newSharedLineMembers: Member[]) {
-    let lineOverviewData = new LineOverviewData();
+    const lineOverviewData = new LineOverviewData();
     if (!data.line.uuid) {
       return this.createLine(consumerType, ownerId, data.line)
         .then((line) => lineOverviewData.line = line)
@@ -109,7 +109,7 @@ export class LineOverviewService {
         .then(() => this.rejectAndNotifyPossibleErrors())
         .then(() => this.get(consumerType, ownerId, lineOverviewData.line.uuid));
     } else { // update
-      let promises: Array<ng.IPromise<any>> = [];
+      const promises: ng.IPromise<any>[] = [];
       let isLineUpdated: boolean = false;
       if (!_.isEqual(data.line, _.get(this, 'lineOverviewDataCopy.line'))) {
         promises.push(this.updateLine(consumerType, ownerId, numberId, data.line));
@@ -131,9 +131,9 @@ export class LineOverviewService {
       if (!_.isEqual(data.sharedLines, this.lineOverviewDataCopy.sharedLines)) {
         // check if we need to update phone lists for any of the shared line members
         _.forEach(this.lineOverviewDataCopy.sharedLines, (sharedLine) => {
-          let phoneList: Array<SharedLinePhone> = _.get(_.find(data.sharedLines, { uuid: sharedLine.uuid }), 'phones', []);
+          const phoneList: SharedLinePhone[] = _.get(_.find(data.sharedLines, { uuid: sharedLine.uuid }), 'phones', []);
           if (phoneList.length > 0 && !_.isEqual(phoneList, sharedLine.phones)) {
-            let updatedPhoneList: Array<SharedLinePhoneListItem> = _.filter(phoneList, 'assigned');
+            const updatedPhoneList: SharedLinePhoneListItem[] = _.filter(phoneList, 'assigned');
             promises.push(this.updateSharedLinePhoneList(consumerType, ownerId, numberId, sharedLine.uuid, updatedPhoneList));
           }
         });
@@ -141,7 +141,7 @@ export class LineOverviewService {
 
       // update auto answer members
       if (!_.isEqual(data.autoAnswer, this.lineOverviewDataCopy.autoAnswer)) {
-        let updateData = this.AutoAnswerService.createUpdateAutoAnswerPayload(this.lineOverviewDataCopy.autoAnswer.phones, data.autoAnswer.phones);
+        const updateData = this.AutoAnswerService.createUpdateAutoAnswerPayload(this.lineOverviewDataCopy.autoAnswer.phones, data.autoAnswer.phones);
         if (!_.isUndefined(updateData) && !_.isNull(updateData)) {
           promises.push(this.AutoAnswerService.updateAutoAnswer(consumerType, ownerId, numberId, updateData!));
         }
@@ -176,7 +176,7 @@ export class LineOverviewService {
 
   private createLine(consumerType: LineConsumerType, ownerId: string, data: Line): ng.IPromise<Line> {
     return this.LineService.createLine(consumerType, ownerId, data).then(location => {
-      let newUuid = _.last(location.split('/'));
+      const newUuid = _.last(location.split('/'));
       return this.LineService.getLine(consumerType, ownerId, newUuid)
         .then(line => {
           return new Line(_.pick<Line, Line>(line, this.numberProperties));
@@ -200,7 +200,7 @@ export class LineOverviewService {
     } else {
       return this.CallForwardService.getCallForward(consumerType, ownerId, numberId)
         .then(callForwardRes => {
-          let callForward = new CallForward();
+          const callForward = new CallForward();
           if (callForwardRes.callForwardAll) {
             callForward.callForwardAll = new CallForwardAll(_.pick<CallForwardAll, CallForwardAll>(callForwardRes.callForwardAll, this.callForwardAllProperties));
           }
@@ -227,13 +227,13 @@ export class LineOverviewService {
     } else {
       return this.SharedLineService.getSharedLineList(consumerType, ownerId, numberId)
         .then(sharedLines => {
-          let promises: Array<ng.IPromise<any>> = [];
+          const promises: ng.IPromise<any>[] = [];
           _.forEach(sharedLines, (sharedLine) => {
             promises.push(this.SharedLineService.getSharedLinePhoneList(consumerType, ownerId, numberId, sharedLine.uuid));
           });
           return this.$q.all(promises).then(data => {
             _.map(sharedLines, (sharedLine, index) => {
-              return sharedLine.phones = <Array<SharedLinePhone>>data[index];
+              return sharedLine.phones = <SharedLinePhone[]>data[index];
             });
             return sharedLines;
           });
@@ -281,7 +281,7 @@ export class LineOverviewService {
       });
   }
 
-  private updateSharedLinePhoneList(consumerType: LineConsumerType, ownerId: string, numberId: string, sharedLineId: string, data: Array<SharedLinePhoneListItem>) {
+  private updateSharedLinePhoneList(consumerType: LineConsumerType, ownerId: string, numberId: string, sharedLineId: string, data: SharedLinePhoneListItem[]) {
     return this.SharedLineService.updateSharedLinePhoneList(consumerType, ownerId, numberId, sharedLineId, data)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateSharedLinePhoneError'));

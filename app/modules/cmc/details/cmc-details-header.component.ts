@@ -4,7 +4,7 @@ interface IHeaderTab {
 }
 
 class CmcDetailsHeaderComponentCtrl implements ng.IComponentController {
-  public tabs: Array<IHeaderTab> = [];
+  public tabs: IHeaderTab[] = [];
   public title: string = 'cmc.detailsPage.title';
   public back: boolean = true;
   public backState: string = 'services-overview';

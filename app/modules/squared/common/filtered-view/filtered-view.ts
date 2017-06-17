@@ -53,7 +53,7 @@ export class FilteredView<T> {
         dataSource.getAll().then((dataMap) => {
           this.fetchedDataMap = dataMap;
 
-          let listState = _.isEmpty(this.fetchedDataMap) ? FilteredViewState.emptydatasource : FilteredViewState.showresult;
+          const listState = _.isEmpty(this.fetchedDataMap) ? FilteredViewState.emptydatasource : FilteredViewState.showresult;
 
           this.applyFilter(isSearchOnly, listState);
         });
@@ -94,14 +94,14 @@ export class FilteredView<T> {
 
   public setCurrentSearch(searchString: string): IPromise<T[]> {
 
-    let deferredRes = this.$q.defer();
+    const deferredRes = this.$q.defer();
 
     this.isSearchOnly.then((isSearchOnly) => {
       if (isSearchOnly) {
 
         if (searchString && searchString.length > 2) {
 
-          let doServerSideSearch = !this.currentSearchString
+          const doServerSideSearch = !this.currentSearchString
             || this.currentSearchString.length <= 2
             || this.currentServerSearchString == null || this.currentServerSearchString.length <= 2
             || !_.startsWith(searchString.toLowerCase(), this.currentServerSearchString.toLowerCase());
@@ -180,7 +180,7 @@ export class FilteredView<T> {
       if (this.filteredViewList.length > 0) {
         this.listState = FilteredViewState.showresult;
       } else if (!this.isInState(FilteredViewState.initializing)) {
-        if (!isSearchOnly && _.isEmpty(this.fetchedDataMap)) {
+        if (!isSearchOnly && _.isEmpty(this.fetchedDataMap)) {
           this.listState = FilteredViewState.emptydatasource;
         } else {
           this.listState = FilteredViewState.emptysearchresult;

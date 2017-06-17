@@ -53,7 +53,7 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
 
   private logError(userName: string, status: number, errorText: string, trackingID: string): void {
     if (status !== 404) {
-      let error = new BulkEnableVmError(userName, status, errorText, trackingID);
+      const error = new BulkEnableVmError(userName, status, errorText, trackingID);
       this.userErrorArray.push(error);
       this.UserCsvService.setCsvStat({
         userErrorArray: [{
@@ -96,7 +96,7 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
         this.processProgress = 100;
         return;
       }
-      let UsersArray: UsersInfo[] = [];
+      const UsersArray: UsersInfo[] = [];
       for (let i = 0; i < Users.length; i++) {
         let voicemailEnabled = false;
         for (let linkIndex = 0; linkIndex < Users[i].links.length; linkIndex++) {
@@ -104,7 +104,7 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
             voicemailEnabled = true;
           }
         }
-        let userInfo = new UsersInfo(Users[i].uuid, Users[i].userName, voicemailEnabled);
+        const userInfo = new UsersInfo(Users[i].uuid, Users[i].userName, voicemailEnabled);
         UsersArray.push(userInfo);
       }
       this.enableVoicemail(UsersArray).then(() => {
@@ -155,11 +155,11 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
         })
         .then(siteToSiteNumber => {
           if (siteToSiteNumber != null) {
-            let voicemail = new Voicemail(siteToSiteNumber);
-            let voicemailPayload = new VoiceMailPayload(userServices, voicemail);
+            const voicemail = new Voicemail(siteToSiteNumber);
+            const voicemailPayload = new VoiceMailPayload(userServices, voicemail);
             return this.BulkEnableVmService.enableUserVmRetry(userId, voicemailPayload);
           }
-          let error = new BulkEnableVmError(userName, 0 , 'No Site to Site Number', null);
+          const error = new BulkEnableVmError(userName, 0 , 'No Site to Site Number', null);
           return this.$q.reject(error);
         })
         .then(() => {
@@ -188,7 +188,7 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
       return this.$q.resolve();
     }
     let i: number;
-    let promises: ng.IPromise<any>[] = [];
+    const promises: ng.IPromise<any>[] = [];
     for (i = 0; i < Users.length; i++) {
       promises.push(this.enableVoicemailForOneUser(Users[i].uuid, Users[i].userName, Users[i].voicemailEnabled));
       this.offset++;

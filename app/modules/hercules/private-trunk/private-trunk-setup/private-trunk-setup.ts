@@ -20,10 +20,10 @@ export class Destination {
 }
 
 export class PrivateTrunkResource {
-  public destinations: Array<Destination>;
+  public destinations: Destination[];
   public hybridDestination: Destination;
   constructor(obj: {
-    destinations: Array<Destination>,
+    destinations: Destination[],
     hybridDestination: Destination,
   } = {
     destinations: [],

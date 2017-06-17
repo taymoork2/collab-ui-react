@@ -4,7 +4,7 @@ describe('EnterprisePrivateTrunkService ', () => {
 
   let $httpBackend, $scope, EnterprisePrivateTrunkService: EnterprisePrivateTrunkService, CsdmPoller;
 
-  let fmsResponse = {
+  const fmsResponse = {
     resources: [
       {
         id: 'efc7ebfb-b7a4-42f2-a143-1c056741a03c',
@@ -24,7 +24,7 @@ describe('EnterprisePrivateTrunkService ', () => {
     ],
   };
 
-  let cmiResponse = {
+  const cmiResponse = {
     resources: [
       {
         name: 'CTG Alpha New York-E',
@@ -91,7 +91,7 @@ describe('EnterprisePrivateTrunkService ', () => {
   it('should sort the returned trunks by name', () => {
     EnterprisePrivateTrunkService.fetch();
     $httpBackend.flush();
-    let trunks: any = EnterprisePrivateTrunkService.getAllResources();
+    const trunks: any = EnterprisePrivateTrunkService.getAllResources();
 
     expect(trunks[0].name).toBe('ACE Beta Lysaker');
     expect(trunks[1].name).toBe('ACE Beta Seattle');
@@ -102,7 +102,7 @@ describe('EnterprisePrivateTrunkService ', () => {
   it('should merge statuses from FMS into each trunk in the list, an fall back to "unknown" if none is found', () => {
     EnterprisePrivateTrunkService.fetch();
     $httpBackend.flush();
-    let trunks: any = EnterprisePrivateTrunkService.getAllResources();
+    const trunks: any = EnterprisePrivateTrunkService.getAllResources();
 
     expect(trunks[0].serviceStatus).toBe('unknown');
     expect(trunks[1].serviceStatus).toBe('operational');

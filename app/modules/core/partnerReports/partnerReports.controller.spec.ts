@@ -33,7 +33,7 @@ describe('Controller: Partner Reports', () => {
     this.callOptions = _.cloneDeep(this.ctrlData.callOptions);
     this.reportFilter = _.cloneDeep(this.ctrlData.reportFilter);
 
-    let Authinfo = {
+    const Authinfo = {
       getOrgId: jasmine.createSpy('getOrgId').and.returnValue(this.customerData.customerOptions[3].value),
       getOrgName: jasmine.createSpy('getOrgName').and.returnValue(this.customerData.customerOptions[3].label),
     };

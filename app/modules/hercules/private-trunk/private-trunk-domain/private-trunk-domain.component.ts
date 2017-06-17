@@ -7,9 +7,9 @@ export enum DomainRadioType {
 }
 
 export class PrivateTrunkDomainCtrl implements ng.IComponentController {
-  public domainOptions: Array<IOption>;
-  public domains: Array<string>;
-  public domainSelected: Array<IOption>;
+  public domainOptions: IOption[];
+  public domains: string[];
+  public domainSelected: IOption[];
   public domainOptionRadio: DomainRadioType;
   public selectPlaceHolder: string;
   public onChangeFn: Function;
@@ -67,7 +67,7 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
   }
 
   public isDomainSelected(domain: string): boolean {
-    let temp = _.find(this.domainSelected, (selected) => {
+    const temp = _.find(this.domainSelected, (selected) => {
       return (selected.value === domain) ? true : false ;
     });
     return (temp !== undefined);
@@ -100,7 +100,7 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
     }
   }
 
-  public change(domainSelected: Array<IOption>): void {
+  public change(domainSelected: IOption[]): void {
     this.onChangeFn({
       isDomain: (this.domainOptionRadio === DomainRadioType.DOMAIN),
       domainSelected: domainSelected,

@@ -1,7 +1,7 @@
 class HuntGroupMaxWaitTimeCtrl implements ng.IComponentController {
   public maxWaitMins: string;
   public onChangeFn: Function;
-  public options: Array<number> = [1, 2, 3];
+  public options: number[] = [1, 2, 3];
   public isHuntGroupFallbackTimer: boolean;
   public isError: boolean;
   public errorMsg: string;

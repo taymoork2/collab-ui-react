@@ -4,7 +4,7 @@ class PreferredLanguageCtrl implements ng.IComponentController {
   public preferredLanguage: string;
   public selected: IOption;
   public onChangeFn: Function;
-  public preferredLanguageOptions: Array<IOption>;
+  public preferredLanguageOptions: IOption[];
   public preferredLanguagePlaceholder: string;
 
   /* @ngInject */

@@ -13,7 +13,7 @@ describe('Service: PstnProvidersService', () => {
       'PstnProvidersService',
     );
 
-    let carrierListJSON = {
+    const carrierListJSON = {
       carriers: [{
         name: 'TATA',
         logoSrc: 'images/carriers/logo_tata_comm.svg',
@@ -46,7 +46,7 @@ describe('Service: PstnProvidersService', () => {
     };
     this.carrierListJSON = carrierListJSON;
 
-    let carrierRespSingle = {
+    const carrierRespSingle = {
       carriers: [{
         uuid: '5c898145-e508-46e8-a7fd-3dcfcc21ed40',
         name: 'TATA',
@@ -65,7 +65,7 @@ describe('Service: PstnProvidersService', () => {
     };
     this.carrierRespSingle = carrierRespSingle;
 
-    let carrierRespMulti = {
+    const carrierRespMulti = {
       carriers: [{
         uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
         name: 'INTELEPEER',
@@ -98,7 +98,7 @@ describe('Service: PstnProvidersService', () => {
     };
     this.carrierRespMulti = carrierRespMulti;
 
-    let carrierRespVendorMatchOnly = {
+    const carrierRespVendorMatchOnly = {
       carriers: [{
         uuid: '5c898145-e508-46e8-a7fd-3dcfcc21ed40',
         name: 'TATA',
@@ -117,7 +117,7 @@ describe('Service: PstnProvidersService', () => {
     };
     this.carrierRespVendorMatchOnly = carrierRespVendorMatchOnly;
 
-    let carrierRespNoVendorMatch = {
+    const carrierRespNoVendorMatch = {
       carriers: [{
         uuid: '5c898145-e508-46e8-a7fd-3dcfcc21ed40',
         name: 'NOMATCH',
@@ -137,7 +137,7 @@ describe('Service: PstnProvidersService', () => {
     this.carrierRespNoVendorMatch = carrierRespNoVendorMatch;
 
     spyOn(this.PstnModel, 'isCarrierExists').and.returnValue(false);
-    let expectedUrl = 'modules/huron/pstn/pstnProviders/pstnProviders.json';
+    const expectedUrl = 'modules/huron/pstn/pstnProviders/pstnProviders.json';
     this.$httpBackend.whenGET(expectedUrl).respond(200, this.carrierListJSON.carriers);
 
   });
@@ -184,7 +184,7 @@ describe('Service: PstnProvidersService', () => {
 
   it('should not load carrier logo with no match for carrier/vendor', function () {
     spyOn(this.PstnService, 'listResellerCarriersV2').and.returnValue(this.$q.resolve(this.carrierRespNoVendorMatch.carriers));
-    let expectedUrl = 'https://terminus.huron-int.com/api/v2/carriers?country=US&defaultOffer=true&service=PSTN';
+    const expectedUrl = 'https://terminus.huron-int.com/api/v2/carriers?country=US&defaultOffer=true&service=PSTN';
     this.$httpBackend.whenGET(expectedUrl).respond(200, this.carrierRespNoVendorMatch.carriers);
     spyOn(this.PstnService, 'getCarrierCapabilities').and.returnValue(this.$q.resolve([]));
     this.PstnProvidersService.getCarriers().then(response => {

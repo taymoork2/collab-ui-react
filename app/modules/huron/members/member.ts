@@ -13,7 +13,7 @@ export class Member {
   public lastName?: string | undefined;
   public userName?: string | undefined;
   public displayName?: string | undefined;
-  public numbers: Array<Line>;
+  public numbers: Line[];
 
   constructor(obj: {
     uuid: string,
@@ -22,7 +22,7 @@ export class Member {
     lastName?: string | undefined,
     userName?: string | undefined,
     displayName?: string | undefined,
-    numbers: Array<Line>,
+    numbers: Line[],
   }) {
     this.uuid = obj.uuid;
     this.type = obj.type;

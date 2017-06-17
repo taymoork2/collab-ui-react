@@ -13,7 +13,7 @@ export class CucmEndController {
   }
 
   public next() {
-    let hostname = this.$stateParams.wizard.state().data.cucm.hostname;
+    const hostname = this.$stateParams.wizard.state().data.cucm.hostname;
     this.$window.open('https://' + encodeURIComponent(hostname) + '/ccmadmin/fusionRegistration.do');
   }
 }

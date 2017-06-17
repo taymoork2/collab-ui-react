@@ -23,7 +23,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     buttonClass: 'btn btn--primary',
   };
 
-  private buttons: Array<ICardButton> = [{
+  private buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.hybridDataSecurity.buttons.resources',
     routerState: 'hds.list',
     buttonClass: 'btn-link',
@@ -33,7 +33,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.treatAsPurchased()) {
       return (this.active) ? this.buttons : [this.setupButton];
     } else {
@@ -93,7 +93,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     this.Notification = Notification;
     this.HDSService = HDSService;
     this.setupButton.onClick = function () {
-      let hdsEntitlementObj = {
+      const hdsEntitlementObj = {
         serviceId: 'sparkHybridDataSecurity',
         displayName: 'Hybrid Data Security',
         ciName: Config.entitlements.hds,

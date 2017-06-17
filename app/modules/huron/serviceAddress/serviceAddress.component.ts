@@ -36,7 +36,7 @@ class ServiceAddressCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
-    let { address } = changes;
+    const { address } = changes;
     if (address && (address.currentValue['state'] === '' || address.currentValue['state'] === undefined)) {
       this.locationModel = undefined;
     }
@@ -68,7 +68,7 @@ export class HRServiceAddressComponent implements ng.IComponentOptions {
 }
 
 export function isolateForm() {
-  let directive = {
+  const directive = {
     restrict: 'A',
     require: '^form',
     link: isolateFormLink,
@@ -77,17 +77,17 @@ export function isolateForm() {
   return directive;
 
   function isolateFormLink(scope, elm, attrs, formCtrl) {
-    let parentFormCtrl = scope.$eval(attrs.isolateForm) || formCtrl.$$parentForm || scope.form;
+    const parentFormCtrl = scope.$eval(attrs.isolateForm) || formCtrl.$$parentForm || scope.form;
 
     if (!formCtrl || !parentFormCtrl) {
       return;
     }
 
-    let formCtlCopy = _.cloneDeep(formCtrl);
+    const formCtlCopy = _.cloneDeep(formCtrl);
     parentFormCtrl.$removeControl(formCtrl);
 
     // ripped this from an example
-    let isolatedFormCtrl = {
+    const isolatedFormCtrl = {
       $setValidity: function (validationToken, isValid, control) {
         formCtlCopy.$setValidity(validationToken, isValid, control);
         parentFormCtrl.$setValidity(validationToken, true, formCtrl);

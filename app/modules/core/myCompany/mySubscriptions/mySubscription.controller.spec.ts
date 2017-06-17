@@ -145,7 +145,7 @@ describe('Controller: MySubscriptionCtrl', function () {
   });
 
   describe('Tests for Named User Licenses : ', function () {
-    let dataWithNamedUserLicense = { offers: [{ licenseModel: 'hosts' }] };
+    const dataWithNamedUserLicense = { offers: [{ licenseModel: 'hosts' }] };
     beforeEach(function () {
       spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
       this.startController();
@@ -156,13 +156,13 @@ describe('Controller: MySubscriptionCtrl', function () {
     });
 
     it('The determineLicenseType() function should return licenseType Named User License string', function () {
-      let result = this.controller.determineLicenseType(dataWithNamedUserLicense.offers[0]);
+      const result = this.controller.determineLicenseType(dataWithNamedUserLicense.offers[0]);
       expect(result).toEqual('firstTimeWizard.namedLicenses');
     });
   });
 
   describe('Tests for Shared Meeting Licenses : ', function () {
-    let dataWithSharedMeetingsLicense = { offers: [{ licenseModel: 'Cloud Shared Meeting' }] };
+    const dataWithSharedMeetingsLicense = { offers: [{ licenseModel: 'Cloud Shared Meeting' }] };
     beforeEach(function () {
       spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
       this.startController();
@@ -173,7 +173,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     });
 
     it('The determineLicenseType() function should return licenseType Shared Meeting License string', function () {
-      let result = this.controller.determineLicenseType(dataWithSharedMeetingsLicense.offers[0]);
+      const result = this.controller.determineLicenseType(dataWithSharedMeetingsLicense.offers[0]);
       expect(result).toEqual('firstTimeWizard.sharedLicenses');
     });
   });

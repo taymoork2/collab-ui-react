@@ -78,7 +78,7 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when Voicemail option is selected', function() {
-      let callForward = new CallForward();
+      const callForward = new CallForward();
       callForward.callForwardAll.voicemailEnabled = true;
 
       expect(this.view).toContainElement(CALL_FWD_VOICEMAIL);
@@ -106,7 +106,7 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when Voicemail checkbox is selected', function() {
-      let callForward = new CallForward();
+      const callForward = new CallForward();
       expect(this.view.find(CALL_FWD_BUSY_VOICEMAIL)).not.toBeChecked();
       callForward.callForwardBusy.internalVoicemailEnabled = true;
       callForward.callForwardBusy.externalVoicemailEnabled = true;
@@ -132,7 +132,7 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when Busy External Voicemail checkbox is enabled', function() {
-      let callForward = new CallForward();
+      const callForward = new CallForward();
       callForward.callForwardBusy.externalVoicemailEnabled = true;
       this.view.find(CALL_FWD_BUSY_EXT_CHECK).click();
       this.view.find(CALL_FWD_EXTERNAL_VOICEMAIL).click();
@@ -158,7 +158,7 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when value is typed in call forward all combo box', function() {
-      let callForward = new CallForward();
+      const callForward = new CallForward();
       callForward.callForwardAll.destination = '+19725551212';
       this.view.find(CALL_FWD_PHONE_NUMBER).val('+19725551212').change().blur();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
@@ -177,7 +177,7 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when value is typed in call forward busy combo box', function() {
-      let callForward = new CallForward();
+      const callForward = new CallForward();
       callForward.callForwardBusy.internalDestination = '+19725551212';
       callForward.callForwardBusy.externalDestination = '+19725551212';
       this.view.find(CALL_FWD_PHONE_NUMBER).val('+19725551212').change().blur();
@@ -200,7 +200,7 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when CFNA timer value is changed', function() {
-      let callForward = new CallForward();
+      const callForward = new CallForward();
       callForward.callForwardBusy.internalVoicemailEnabled = true;
       callForward.callForwardBusy.externalVoicemailEnabled = true;
       this.view.find(CALL_FWD_BUSY_VOICEMAIL).click();

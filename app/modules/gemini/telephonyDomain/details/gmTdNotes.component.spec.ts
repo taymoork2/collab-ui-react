@@ -76,7 +76,7 @@ describe('Component: gmTdNotes', () => {
   });
 
   it('should notify in message for non 0 error returnCode', function() {
-    let mockData = this.preData.common;
+    const mockData = this.preData.common;
     mockData.content.data.body = [
       {
         objectName: 'new_note',
@@ -93,7 +93,7 @@ describe('Component: gmTdNotes', () => {
   });
 
   it('should save new note successfully', function() {
-    let mockData = this.preData.common;
+    const mockData = this.preData.common;
     mockData.content.data.body = [
       {
         objectName: 'new_note',
@@ -110,7 +110,7 @@ describe('Component: gmTdNotes', () => {
   });
 
   it('should show the error when save note and response body is null', function () {
-    let mockData = this.preData.common;
+    const mockData = this.preData.common;
     mockData.content.data.body = null;
     mockData.content.data.returnCode = 0;
     this.TelephonyDomainService.postNotes.and.returnValue(this.$q.resolve(mockData));

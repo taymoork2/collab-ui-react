@@ -88,7 +88,7 @@ class UserCsvExportController implements ng.IComponentController {
             type: 'dialog',
             templateUrl: 'modules/core/users/userCsv/userCsvExportConfirm10K.tpl.html',
             controller: function () {
-              let modalCtrl = this;
+              const modalCtrl = this;
               modalCtrl.maxUsers = CsvDownloadService.USER_EXPORT_THRESHOLD;
             },
             controllerAs: 'ctrl',

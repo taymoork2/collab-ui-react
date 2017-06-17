@@ -50,7 +50,7 @@ class EditCalendarService implements ng.IComponentController {
   private showExchangeService = false;
 
   public $onInit(): void {
-    let state = this.$stateParams.wizard.state();
+    const state = this.$stateParams.wizard.state();
     this.wizardData = state.data;
     this.resourceGroup.init();
     this.title = this.wizardData.title;
@@ -63,13 +63,13 @@ class EditCalendarService implements ng.IComponentController {
   constructor(private CsdmDataModelService: ICsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService, private USSService, private Notification) {
     ServiceDescriptor.getServices()
       .then((services) => {
-        let enabledServices: Array<{ id: string }> = ServiceDescriptor.filterEnabledServices(services);
-        let calendarExchange = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionCal));
-        let googleCal = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionGCal));
+        const enabledServices: { id: string }[] = ServiceDescriptor.filterEnabledServices(services);
+        const calendarExchange = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionCal));
+        const googleCal = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionGCal));
         this.showGCalService = !!googleCal && this.wizardData.atlasHerculesGoogleCalendarFeatureToggle;
         this.showExchangeService = !!calendarExchange;
 
-        let existingCalLinks: IExternalLinkedAccount = _.head(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
+        const existingCalLinks: IExternalLinkedAccount = _.head(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
           return linkedAccount && (linkedAccount.providerID === EditCalendarService.fusionCal || linkedAccount.providerID === EditCalendarService.fusionGCal);
         }));
 
@@ -122,7 +122,7 @@ class EditCalendarService implements ng.IComponentController {
         if (this.wizardData.account.cisUuid && this.initialCalService) {
           this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
             if (props.resourceGroups && props.resourceGroups[this.initialCalService]) {
-              let selectedGroup = _.find(this.resourceGroup.options, (group) => {
+              const selectedGroup = _.find(this.resourceGroup.options, (group) => {
                 return group.value === props.resourceGroups[this.initialCalService];
               });
               if (selectedGroup) {
@@ -180,12 +180,12 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   private getExtLinkedAccount(): IExternalLinkedAccount[] {
-    let newExtLink = {
+    const newExtLink = {
       providerID: this.calService,
       accountGUID: this.emailOfMailbox,
       status: 'unconfirmed-email',
     };
-    let links: IExternalLinkedAccount[] = [];
+    const links: IExternalLinkedAccount[] = [];
 
     _.map(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
       return linkedAccount && (linkedAccount.providerID === this.calService);
@@ -200,8 +200,8 @@ class EditCalendarService implements ng.IComponentController {
 
   public save() {
     this.isLoading = true;
-    let directoryNumber = this.wizardData.account.directoryNumber || null;
-    let externalNumber = this.wizardData.account.externalNumber || null;
+    const directoryNumber = this.wizardData.account.directoryNumber || null;
+    const externalNumber = this.wizardData.account.externalNumber || null;
 
     this.CsdmDataModelService.reloadPlace(this.wizardData.account.cisUuid).then((place) => {
       if (place) {
@@ -213,7 +213,7 @@ class EditCalendarService implements ng.IComponentController {
           this.getExtLinkedAccount(),
         )
           .then(() => {
-            let props = this.getUssProps();
+            const props = this.getUssProps();
             if (props) {
               this.USSService.updateUserProps(props).then(() => {
                 this.dismiss();
@@ -241,10 +241,10 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   private getUssProps(): {} | null {
-    let props = this.wizardData.account.ussProps || null;
+    const props = this.wizardData.account.ussProps || null;
     if (this.resourceGroup.selected) {
-      let resourceGroups = (props && props.resourceGroups) || {};
-      let isExistingPlaceOrNonEmptyRGroup = this.wizardData.account.cisUuid || this.resourceGroup.selected.value;
+      const resourceGroups = (props && props.resourceGroups) || {};
+      const isExistingPlaceOrNonEmptyRGroup = this.wizardData.account.cisUuid || this.resourceGroup.selected.value;
       if (isExistingPlaceOrNonEmptyRGroup) {
         _.merge(resourceGroups, { 'squared-fusion-cal': this.resourceGroup.selected.value });
       }

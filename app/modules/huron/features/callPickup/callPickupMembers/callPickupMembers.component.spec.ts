@@ -2,12 +2,12 @@ import { Member } from 'modules/huron/members';
 
 describe('Component: callPickupMembers', () => {
   const MEMBER_INPUT = 'input#memberInput';
-  let membersList = getJSONFixture('huron/json/features/callPickup/membersList.json');
-  let fake_picture_path = 'https://abcde/12345';
-  let checkboxesList = getJSONFixture('huron/json/features/callPickup/checkboxesList.json');
-  let numbersObject = getJSONFixture('huron/json/features/callPickup/numbersList.json');
-  let numbersArray = _.result(numbersObject, 'numbers');
-  let model = { disabled: true, userName: 'johndoe@gmail.com', uuid: '1000' };
+  const membersList = getJSONFixture('huron/json/features/callPickup/membersList.json');
+  const fake_picture_path = 'https://abcde/12345';
+  const checkboxesList = getJSONFixture('huron/json/features/callPickup/checkboxesList.json');
+  const numbersObject = getJSONFixture('huron/json/features/callPickup/numbersList.json');
+  const numbersArray = _.result(numbersObject, 'numbers');
+  const model = { disabled: true, userName: 'johndoe@gmail.com', uuid: '1000' };
 
   beforeEach(function () {
     this.initModules('huron.call-pickup.members');
@@ -74,9 +74,9 @@ describe('Component: callPickupMembers', () => {
 
     it('should fetch a list of members', function () {
       // Slice 1-4 because suggested members are only the first 3
-      let suggestedMembersCount = 3;
-      let mockMembersList = membersList.slice(1, 4);
-      let linesTaken = true;
+      const suggestedMembersCount = 3;
+      const mockMembersList = membersList.slice(1, 4);
+      const linesTaken = true;
       this.view.find(MEMBER_INPUT).val('doe').change();
       this.controller.fetchMembers('doe').then(function (mockMembersList) {
         for (let i = 0; i < mockMembersList.length; i++) {
@@ -157,7 +157,7 @@ describe('Component: callPickupMembers', () => {
       this.isLineInPickupGroupDefer.resolve('');
       this.areAllLinesInPickupGroupDefer.resolve(false);
       this.controller.selectedMembers.push(memberData);
-      let mem2 = _.cloneDeep(membersList[1]);
+      const mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getMembersPictures(mem2)).toEqual('');
     });
   });
@@ -210,7 +210,7 @@ describe('Component: callPickupMembers', () => {
     });
 
     it('should update number for a member based on checkbox selection', function() {
-      let saveNumber = {
+      const saveNumber = {
         internalNumber: '3252',
         uuid: '92bc097b-9099-4420-b609-659f5e3659b4',
       };
@@ -228,7 +228,7 @@ describe('Component: callPickupMembers', () => {
     });
 
     it('should not update number if its already present in save numbers', function() {
-      let saveNumber = {
+      const saveNumber = {
         internalNumber: '3252',
         uuid: '92bc097b-9099-4420-b609-659f5e3659b4',
       };
@@ -241,34 +241,34 @@ describe('Component: callPickupMembers', () => {
     beforeEach(initComponent);
 
     it('Can getDisplayName', function() {
-      let mem5 = _.cloneDeep(membersList[4]);
+      const mem5 = _.cloneDeep(membersList[4]);
       expect(this.controller.getDisplayName(mem5)).toEqual('peter@test.com');
 
-      let mem1 = _.cloneDeep(membersList[0]);
+      const mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getDisplayName(mem1)).toEqual('Chuck Norris (chuck.norris@test.com)');
 
-      let mem2 = _.cloneDeep(membersList[1]);
+      const mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getDisplayName(mem2)).toEqual('Koala Lounge 1');
 
-      let mem4 = _.cloneDeep(membersList[5]);
+      const mem4 = _.cloneDeep(membersList[5]);
       expect(this.controller.getDisplayName(mem4)).toEqual('');
 
     });
 
     it('Can getDisplayNameOnCard', function() {
-      let mem5 = _.cloneDeep(membersList[4]);
+      const mem5 = _.cloneDeep(membersList[4]);
       expect(this.controller.getDisplayNameOnCard(mem5)).toEqual('');
 
-      let mem1 = _.cloneDeep(membersList[0]);
+      const mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getDisplayNameOnCard(mem1)).toEqual('Chuck Norris');
 
-      let mem2 = _.cloneDeep(membersList[1]);
+      const mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getDisplayNameOnCard(mem2)).toEqual('Koala Lounge 1');
 
-      let mem3 = undefined;
+      const mem3 = undefined;
       expect(this.controller.getDisplayNameOnCard(mem3)).toEqual('');
 
-      let mem = new Member({
+      const mem = new Member({
         uuid: '0005',
         type: 'USER_PLACE',
         firstName: 'TOM',
@@ -285,12 +285,12 @@ describe('Component: callPickupMembers', () => {
     beforeEach(initComponent);
 
     it('Can USER_REAL_USER type', function () {
-      let mem1 = _.cloneDeep(membersList[0]);
+      const mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getMemberType(mem1)).toEqual('user');
     });
 
     it('Can get USER_PLACE type', function() {
-      let mem2 = _.cloneDeep(membersList[1]);
+      const mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getMemberType(mem2)).toEqual('place');
     });
   });
@@ -299,10 +299,10 @@ describe('Component: callPickupMembers', () => {
     beforeEach(initComponent);
 
     it('get active member disabled test', function () {
-      let element = '<li ng-repeat="match in matches track by $index" id="typeahead-2335-4881-option-0" class="ng-scope active"></li>';
+      const element = '<li ng-repeat="match in matches track by $index" id="typeahead-2335-4881-option-0" class="ng-scope active"></li>';
       this.compileTemplate(element);
 
-      let scope = function() {
+      const scope = function() {
         return {
           scope: function() {
             return {
@@ -325,19 +325,19 @@ describe('Component: callPickupMembers', () => {
     });
 
     it('displayModalLinesTaken test', function () {
-      let ENTER_KEY = 13;
+      const ENTER_KEY = 13;
 
       this.getNumbersDefer.resolve(numbersArray);
       this.isLineInPickupGroupDefer.resolve('helpdesk');
 
       spyOn(this.controller, 'isActiveMemberDisabled').and.returnValue(true);
 
-      let member = { userName: 'johndoe@gmail.com', uuid: '1000' };
+      const member = { userName: 'johndoe@gmail.com', uuid: '1000' };
       spyOn(this.controller, 'getActiveMember').and.returnValue(member);
 
-      let evt = $.Event('keydown', { keyCode: ENTER_KEY });
-      let spyStopPropagation = spyOn(evt, 'stopPropagation');
-      let spyModal = spyOn(this.$modal, 'open');
+      const evt = $.Event('keydown', { keyCode: ENTER_KEY });
+      const spyStopPropagation = spyOn(evt, 'stopPropagation');
+      const spyModal = spyOn(this.$modal, 'open');
 
       this.controller.displayModalLinesTaken(evt);
       this.$scope.$digest();

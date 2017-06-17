@@ -15,13 +15,13 @@ export class CallParkRangeLengthValidator implements ng.IDirective {
         return true;
       }
 
-      let rangeType: RangeType = _.get<RangeType>(scope, '$ctrl.rangeType');
+      const rangeType: RangeType = _.get<RangeType>(scope, '$ctrl.rangeType');
       if (rangeType !== RangeType.RANGE) {
         return true;
       }
-      let startRange: number = _.toSafeInteger(_.get(scope, '$ctrl.startRange'));
-      let endRange: number = _.toSafeInteger(modelValue);
-      let difference: number = _.subtract(endRange, startRange);
+      const startRange: number = _.toSafeInteger(_.get(scope, '$ctrl.startRange'));
+      const endRange: number = _.toSafeInteger(modelValue);
+      const difference: number = _.subtract(endRange, startRange);
       return (difference < 10 && difference >= 1);
     };
   }

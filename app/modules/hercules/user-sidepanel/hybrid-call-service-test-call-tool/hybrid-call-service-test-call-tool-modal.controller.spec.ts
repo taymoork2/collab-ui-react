@@ -63,7 +63,7 @@ describe('HybridCallServiceTestToolModalController', () => {
 
   it ('should automatically get the caller from Common Identity and USS if you provide an incoming userId', () => {
 
-    let ctrl = initController('1234');
+    const ctrl = initController('1234');
     $scope.$apply();
 
     expect(ctrl.caller).toEqual({
@@ -80,7 +80,7 @@ describe('HybridCallServiceTestToolModalController', () => {
 
   it ('should not get any user data if you do not provide an incoming userId', () => {
 
-    let ctrl = initController(undefined);
+    const ctrl = initController(undefined);
     $scope.$apply();
 
     expect(ctrl.caller).toEqual({
@@ -93,7 +93,7 @@ describe('HybridCallServiceTestToolModalController', () => {
 
   it ('should use UserListService when searching, and return s promise containing all results', (done) => {
 
-    let ctrl = initController(undefined);
+    const ctrl = initController(undefined);
     ctrl.search('cristiano')
       .then((result) => {
         expect(result).toEqual([{
@@ -113,7 +113,7 @@ describe('HybridCallServiceTestToolModalController', () => {
 
   it ('should use L2SipService when starting the test', () => {
 
-    let ctrl = initController(undefined);
+    const ctrl = initController(undefined);
     ctrl.startTest('123', '456');
     $scope.$apply();
 
@@ -122,9 +122,9 @@ describe('HybridCallServiceTestToolModalController', () => {
 
   it ('should handle users with no picture', () => {
 
-    let ctrl = initController(undefined);
+    const ctrl = initController(undefined);
     $scope.$apply();
-    let updatedUser = ctrl.setUser({
+    const updatedUser = ctrl.setUser({
       id: '123',
       displayName: 'Rooney',
     });

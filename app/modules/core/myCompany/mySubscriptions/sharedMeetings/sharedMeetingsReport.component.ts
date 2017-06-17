@@ -44,7 +44,7 @@ class SharedMeetingsReportCtrl {
   public csvError: boolean = false;
 
   // Timefilter controls
-  public timeFilter: Array<ISharedMeetingTimeFilter> = [{
+  public timeFilter: ISharedMeetingTimeFilter[] = [{
     label: this.$translate.instant('reportsPage.sixMonths'),
     value: this.SIX_MONTHS,
   }, {
@@ -103,8 +103,8 @@ class SharedMeetingsReportCtrl {
     this.setDummyData();
     this.SharedMeetingsReportService.getMaxConcurrentMeetingsData(this.siteUrl, this.getMonth(0), this.getMonth(this.timeSelected.value))
       .then((response: any): void => {
-        let data: any = _.get(response, 'data', undefined);
-        let sharedMeetingData: Array<ISharedMeetingData> = this.compileSharedMeetingData(data);
+        const data: any = _.get(response, 'data', undefined);
+        const sharedMeetingData: ISharedMeetingData[] = this.compileSharedMeetingData(data);
 
         this.state = this.ReportConstants.EMPTY;
         if (sharedMeetingData.length > 0) {
@@ -122,16 +122,16 @@ class SharedMeetingsReportCtrl {
       });
   }
 
-  private compileSharedMeetingData(data: any): Array<ISharedMeetingData> {
-    let max: number = _.get(data, 'BucketLengthInMins', 0);
-    let meetingArray: Array<IMeetingData> = _.get(data, 'MaxConcurrentMeetings', []);
+  private compileSharedMeetingData(data: any): ISharedMeetingData[] {
+    const max: number = _.get(data, 'BucketLengthInMins', 0);
+    const meetingArray: IMeetingData[] = _.get(data, 'MaxConcurrentMeetings', []);
     let emptyArray: boolean = true;
-    let returnArray: Array<ISharedMeetingData> = this.getBaseGraph(max);
+    const returnArray: ISharedMeetingData[] = this.getBaseGraph(max);
 
     _.forEach(meetingArray, (item: any): void => {
-      let date: string = _.get(item, 'TimeBucketStart', '');
-      let modifiedDate: string = moment(date.substring(0, 4) + '-' + date.substring(4, 6)).format(this.DATE_FORMAT);
-      let meetings: number = _.get(item, 'NumOfMtgs', 0);
+      const date: string = _.get(item, 'TimeBucketStart', '');
+      const modifiedDate: string = moment(date.substring(0, 4) + '-' + date.substring(4, 6)).format(this.DATE_FORMAT);
+      const meetings: number = _.get(item, 'NumOfMtgs', 0);
       if (meetings > 0) {
         emptyArray = false;
       }
@@ -154,8 +154,8 @@ class SharedMeetingsReportCtrl {
     return moment().subtract(months, this.ReportConstants.MONTH).format('YYYYMM');
   }
 
-  private getBaseGraph(max: number): Array<ISharedMeetingData> {
-    let returnArray: Array<ISharedMeetingData> = [];
+  private getBaseGraph(max: number): ISharedMeetingData[] {
+    const returnArray: ISharedMeetingData[] = [];
 
     for (let i = this.timeSelected.value; i >= 0; i--) {
       returnArray.push({
@@ -171,7 +171,7 @@ class SharedMeetingsReportCtrl {
 
   private setDummyData(): void {
     this.state = this.ReportConstants.REFRESH;
-    let dummyData: Array<ISharedMeetingData> = [];
+    const dummyData: ISharedMeetingData[] = [];
 
     for (let i = this.timeSelected.value; i >= 0; i--) {
       dummyData.push({
@@ -188,7 +188,7 @@ class SharedMeetingsReportCtrl {
   private getDetailedReport(): void {
     this.SharedMeetingsReportService.getDetailedReportData(this.siteUrl, this.getMonth(0), this.getMonth(this.timeSelected.value))
       .then((response: any): void => {
-        let data: Array<ISharedMeetingCSV> = _.get(response, 'data.ConcurrentMeetingsDetail', []);
+        const data: ISharedMeetingCSV[] = _.get(response, 'data.ConcurrentMeetingsDetail', []);
         if (data.length > 0) {
           data.unshift({
             MeetingTopic: this.$translate.instant('sharedMeetingReports.csvMeetingTopic'),
@@ -201,8 +201,8 @@ class SharedMeetingsReportCtrl {
             HostName: this.$translate.instant('sharedMeetingReports.csvHostName'),
           });
 
-          let csvData: string = ($ as any).csv.fromObjects(data, { headers: false });
-          let url: string | undefined = this.SharedMeetingsReportService.getDownloadCSV(csvData);
+          const csvData: string = ($ as any).csv.fromObjects(data, { headers: false });
+          const url: string | undefined = this.SharedMeetingsReportService.getDownloadCSV(csvData);
           if (url) {
             this.csvHref = url;
             this.csvFilename = this.SharedMeetingsReportService.FILENAME;

@@ -10,7 +10,7 @@ export class UniqueLocationDirective implements ng.IDirective {
   public restrict: string = 'A';
   public require: string = 'ngModel';
   public link: ng.IDirectiveLinkFn = (scope, _elm, attrs, ngModelCtrl: ng.INgModelController) => {
-    let messages = scope.$eval(attrs.messages);
+    const messages = scope.$eval(attrs.messages);
     ngModelCtrl.$asyncValidators.uniqueAsyncValidator = (_modelValue, viewValue) => {
       return this.$q((resolve, reject) => {
         this.validateField(viewValue).then((result) => {

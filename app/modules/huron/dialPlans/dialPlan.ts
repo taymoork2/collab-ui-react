@@ -8,5 +8,5 @@ export interface IDialPlan {
   extentionsGenerated: boolean;
   supportsLocalDialing: boolean;
   supportsSimplifiedNationalDialing: boolean;
-  premiumNumbers: Array<string>;
+  premiumNumbers: string[];
 }

@@ -71,7 +71,7 @@ class LocationsWizardController implements ng.IComponentController {
       return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
     }).length > 0;
 
-    let params = {
+    const params = {
       basicInfo: true,
     };
     this.Orgservice.getOrg(data => {
@@ -143,7 +143,7 @@ class LocationsWizardController implements ng.IComponentController {
 
   private setShowDialPlanChangedDialogFlag(): void {
     //let originalConfig = this.HuronSettingsService.getOriginalConfig();
-    let originalConfig;
+    const originalConfig: any = {};
     if (this.huronSettingsData.steeringDigit !== originalConfig.steeringDigit
       || this.huronSettingsData.routingPrefix !== originalConfig.routingPrefix
       || this.huronSettingsData.regionCodeDialing !== originalConfig.regionCodeDialing) {
@@ -172,7 +172,7 @@ class LocationsWizardController implements ng.IComponentController {
     this.huronSettingsData.callerIdNumber = companyNumber.name;
   }
 
-  public onCompanyVoicemailFilter(filter: string): ng.IPromise<Array<IOption>> {
+  public onCompanyVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
     return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
       .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
   }
@@ -228,10 +228,10 @@ class LocationsWizardController implements ng.IComponentController {
     this.$timeout(() => {
       if (this.index === this.getLastIndex()) {
         //Change the green arrow button to a blue one
-        let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
+        const arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
         arrowButton.removeClass('btn--cta');
         //Hide helpText
-        let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
+        const helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
         helpText.removeClass('active');
         helpText.removeClass('enabled');
       }
@@ -252,7 +252,7 @@ class LocationsWizardController implements ng.IComponentController {
     }
     if (this.index === this.getLastIndex()) {
       //Change the blue arrow button to a green one
-      let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
+      const arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
       arrowButton.addClass('btn--cta');
     }
     if (this.index === this.getLastIndex() + 1) {

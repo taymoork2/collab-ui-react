@@ -16,8 +16,8 @@ export class ExtensionRangeLessThanValidator implements ng.IDirective {
       // only validate if endNumber is valid or populated
       if (_.isUndefined(_.get(scope, 'range.endNumber')) || _.get(scope, 'range.endNumber') === '') {
 
-        let controlId = _.get(ctrl, '$name', '').slice(-1);
-        let endNumberControl = _.get<ng.INgModelController>(scope.$parent, '$ctrl.extensionRangeForm.endRange' + controlId);
+        const controlId = _.get(ctrl, '$name', '').slice(-1);
+        const endNumberControl = _.get<ng.INgModelController>(scope.$parent, '$ctrl.extensionRangeForm.endRange' + controlId);
         endNumberControl.$validate();
       }
       return true;

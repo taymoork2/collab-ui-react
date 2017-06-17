@@ -51,8 +51,8 @@ describe('Component: sharedMeetingReport', function () {
       return moment().subtract(months, this.ReportConstants.MONTH).format('YYYYMM');
     };
 
-    this.createMaxMeetings = (months): Array<IMeetingData> => {
-      let returnArray: Array<IMeetingData> = [];
+    this.createMaxMeetings = (months): IMeetingData[] => {
+      const returnArray: IMeetingData[] = [];
 
       for (let i = 0; i <= months; i++) {
         returnArray.push({
@@ -64,8 +64,8 @@ describe('Component: sharedMeetingReport', function () {
       return returnArray;
     };
 
-    this.createMeetings = (): Array<ISharedMeetingCSV> => {
-      let returnArray: Array<ISharedMeetingCSV> = [];
+    this.createMeetings = (): ISharedMeetingCSV[] => {
+      const returnArray: ISharedMeetingCSV[] = [];
 
       for (let i = 0; i < 10; i++) {
         returnArray.push({
@@ -91,7 +91,7 @@ describe('Component: sharedMeetingReport', function () {
   describe('When APIs both return data', function () {
     beforeEach(function () {
       spyOn(this.SharedMeetingsReportService, 'getMaxConcurrentMeetingsData').and.callFake((): any => {
-        let APIResponse: any = _.cloneDeep(this.data.APIResponse);
+        const APIResponse: any = _.cloneDeep(this.data.APIResponse);
         APIResponse.MaxConcurrentMeetings = this.createMaxMeetings(this.controller.timeSelected.value);
 
         return this.$q.resolve({
@@ -100,7 +100,7 @@ describe('Component: sharedMeetingReport', function () {
       });
 
       spyOn(this.SharedMeetingsReportService, 'getDetailedReportData').and.callFake((): any => {
-        let APIResponse: any = _.cloneDeep(this.data.APIResponse);
+        const APIResponse: any = _.cloneDeep(this.data.APIResponse);
         APIResponse.ConcurrentMeetingsDetail = this.createMeetings();
 
         return this.$q.resolve({
@@ -175,7 +175,7 @@ describe('Component: sharedMeetingReport', function () {
       this.controller.toggleExportMenu();
       expect(this.controller.exportMenu).toBeTruthy();
 
-      let dummyClick: any = jasmine.createSpy('click');
+      const dummyClick: any = jasmine.createSpy('click');
       this.controller.dropdownSelect({
         click: dummyClick,
       });
@@ -224,7 +224,7 @@ describe('Component: sharedMeetingReport', function () {
     it('should start with expected defaults', function () {
       spyOn(this.SharedMeetingsReportService, 'getDetailedReportData').and.returnValue(this.$q.reject(this.error));
       spyOn(this.SharedMeetingsReportService, 'getMaxConcurrentMeetingsData').and.callFake((): any => {
-        let APIResponse: any = _.cloneDeep(this.data.APIResponse);
+        const APIResponse: any = _.cloneDeep(this.data.APIResponse);
         APIResponse.MaxConcurrentMeetings = this.createMaxMeetings(this.controller.timeSelected.value);
 
         return this.$q.resolve({

@@ -30,23 +30,23 @@ describe('scrollIndicator', () => {
 
     it('should inject require HTML', function () {
 
-      let container = this.$document.find('.container')[0];
+      const container = this.$document.find('.container')[0];
       expect(_.isElement(container)).toBeTruthy();
 
       // ensure the visibility tag element is in the container
-      let eocTag = this.$document.find('.container .scroll-indicator-eoc-tag')[0];
+      const eocTag = this.$document.find('.container .scroll-indicator-eoc-tag')[0];
       expect(_.isElement(eocTag)).toBeTruthy();
 
       // ensure indicator element is not in the scrolling container
-      let noIndicator = this.$document.find('.container .scroll-indicator')[0];
+      const noIndicator = this.$document.find('.container .scroll-indicator')[0];
       expect(angular.isElement(noIndicator)).toBeFalsy();
 
       // ensure the indicator element is child of the outer container
-      let indicator = this.$document.find('.outer .scroll-indicator')[0];
+      const indicator = this.$document.find('.outer .scroll-indicator')[0];
       expect(angular.isElement(indicator)).toBeTruthy();
 
       // ensure the indicator contains the icon
-      let icon = $(indicator).find('.icon');
+      const icon = $(indicator).find('.icon');
       expect(angular.isElement(icon)).toBeTruthy();
 
     });
@@ -57,7 +57,7 @@ describe('scrollIndicator', () => {
       this.$scope.$digest();
       expect(this.$scope.$ctrl.moreContent).toBeTruthy();
 
-      let indicator = this.$document.find('.outer .scroll-indicator')[0];
+      const indicator = this.$document.find('.outer .scroll-indicator')[0];
       expect(indicator).not.toHaveClass('ng-hide');
     });
 
@@ -70,7 +70,7 @@ describe('scrollIndicator', () => {
         this.$interval.flush(ScrollIndicatorController.MORE_CONTENT_CHECK_INTERVAL * 2);
         this.$scope.$digest();
         expect(this.$scope.$ctrl.moreContent).toBeFalsy();
-        let indicator = this.$document.find('.outer .scroll-indicator')[0];
+        const indicator = this.$document.find('.outer .scroll-indicator')[0];
         expect(indicator).toHaveClass('ng-hide');
         done();
       });

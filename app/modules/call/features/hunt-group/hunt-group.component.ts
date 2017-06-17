@@ -16,7 +16,7 @@ class HuntGroupCtrl implements ng.IComponentController {
    // edit mode specific data
   public title: string;
   public huronFeaturesUrl: string = 'huronfeatures';
-  public memberProperties: Array<string> = ['name', 'number'];
+  public memberProperties: string[] = ['name', 'number'];
 
   //common data
   public form: ng.IFormController;
@@ -68,7 +68,7 @@ class HuntGroupCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public setHuntGroupNumbers(numbers: Array<HuntGroupNumber>): void {
+  public setHuntGroupNumbers(numbers: HuntGroupNumber[]): void {
     this.huntGroup.numbers = numbers;
     this.form.$setDirty();
     this.huntGroup.numbers.length > 0 ? this.form.$invalid = false : this.form.$invalid = true;
@@ -92,7 +92,7 @@ class HuntGroupCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public setHuntGroupMembers(members: Array<CallFeatureMember>): void {
+  public setHuntGroupMembers(members: CallFeatureMember[]): void {
     this.huntGroup.members = members;
     this.form.$setDirty();
     this.checkForChanges();
@@ -245,7 +245,7 @@ class HuntGroupCtrl implements ng.IComponentController {
   }
 
   public nextButton($index): boolean {
-    let buttonStates = {
+    const buttonStates = {
       0: () => {
         return !_.isUndefined(_.get(this.huntGroup, 'name'));
       },
@@ -259,7 +259,7 @@ class HuntGroupCtrl implements ng.IComponentController {
         return _.get(this.huntGroup, 'members', []).length !== 0;
       },
       4: () => {
-        let fbDestination = _.get(this.huntGroup, 'fallbackDestination');
+        const fbDestination = _.get(this.huntGroup, 'fallbackDestination');
         if (!_.isUndefined(fbDestination) && !_.isNull(_.get(fbDestination, 'number')) ) {
           this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'enabled', 'add');
           return true;
@@ -307,7 +307,7 @@ class HuntGroupCtrl implements ng.IComponentController {
   }
 
   public applyElement(element: HTMLCollectionOf<Element>, appliedClass, method): boolean | undefined {
-    let domElement: Element = _.get<Element>(element, '[0]');
+    const domElement: Element = _.get<Element>(element, '[0]');
     if (domElement) {
       switch (method) {
         case 'add':

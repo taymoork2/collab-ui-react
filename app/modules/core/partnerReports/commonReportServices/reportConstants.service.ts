@@ -53,7 +53,7 @@ export class ReportConstants {
   public readonly QUALITY: string = 'quality';
 
   // Report Filtering All/Engagement/quality
-  public readonly filterArray: Array<IFilterObject> = [{
+  public readonly filterArray: IFilterObject[] = [{
     id: 'allReports',
     label: 'reportsPage.all',
     selected: true,
@@ -129,10 +129,10 @@ export class ReportConstants {
       max: this.YEAR,
     };
   }
-  get TIME_FILTER(): Array<ITimespan> {
+  get TIME_FILTER(): ITimespan[] {
     return [this.WEEK_FILTER, this.MONTH_FILTER, this.THREE_MONTH_FILTER];
   }
-  get ALT_TIME_FILTER(): Array<ITimespan> {
+  get ALT_TIME_FILTER(): ITimespan[] {
     return [this.WEEK_FILTER, this.MONTH_FILTER, this.THREE_MONTH_FILTER, this.SIX_MONTH_FILTER, this.YEAR_FILTER, this.CUSTOM_FILTER];
   }
 
@@ -149,7 +149,7 @@ export class ReportConstants {
       label: this.$translate.instant('activeUsers.activeUsers'),
     };
   }
-  get ACTIVE_FILTER(): Array<IDropdownBase> {
+  get ACTIVE_FILTER(): IDropdownBase[] {
     return [this.ACTIVE_FILTER_ONE, this.ACTIVE_FILTER_TWO];
   }
 
@@ -172,7 +172,7 @@ export class ReportConstants {
       label: this.$translate.instant('reportsPage.videoCalls'),
     };
   }
-  get MEDIA_FILTER(): Array<IDropdownBase> {
+  get MEDIA_FILTER(): IDropdownBase[] {
     return [this.MEDIA_FILTER_ONE, this.MEDIA_FILTER_TWO, this.MEDIA_FILTER_THREE];
   }
 

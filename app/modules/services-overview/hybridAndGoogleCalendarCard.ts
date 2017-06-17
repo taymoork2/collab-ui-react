@@ -80,7 +80,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     buttonClass: 'btn btn--primary',
   };
 
-  public hybridCalendarButtons: Array<ICardButton> = [{
+  public hybridCalendarButtons: ICardButton[] = [{
     name: 'servicesOverview.cards.hybridCalendar.buttons.resources',
     routerState: 'calendar-service.list',
     buttonClass: 'btn-link',
@@ -127,7 +127,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
   }
 
   // Contains data for Hybrid Services, not Google Calendar
-  public hybridStatusEventHandler(servicesStatuses: Array<IServiceStatus>) {
+  public hybridStatusEventHandler(servicesStatuses: IServiceStatus[]) {
     const service = 'squared-fusion-cal';
     // No need to do any work if we can't display the card
     this.canDisplay.promise.then(() => {

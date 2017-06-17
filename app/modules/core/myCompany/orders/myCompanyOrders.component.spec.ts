@@ -10,7 +10,7 @@ describe('Component: myCompanyOrders', () => {
       'Notification',
     );
 
-    let purchaseOrdersList: IOrderDetail[] = [{
+    const purchaseOrdersList: IOrderDetail[] = [{
       externalOrderId: '123',
       orderDate: new Date(),
       status: 'COMPLETED',

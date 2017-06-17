@@ -77,9 +77,9 @@ describe('Service: mediaMgrService', () => {
     });
 
     it('upload file to url', function () {
-      let blob = new Blob([''], { type: 'text/html' });
-      let file = <File>blob;
-      let uploadUrl = 'https://sparkcall-mms-int-us-east-1.s3.amazonaws.com/12345/abcd-5678/abcd-5678.raw?X-Amz-Credential=A2DA%2F205';
+      const blob = new Blob([''], { type: 'text/html' });
+      const file = <File>blob;
+      const uploadUrl = 'https://sparkcall-mms-int-us-east-1.s3.amazonaws.com/12345/abcd-5678/abcd-5678.raw?X-Amz-Credential=A2DA%2F205';
       this.$httpBackend.expectPUT(uploadUrl)
       .respond(200);
       this.MediaMgrService.uploadToUrl(file, uploadUrl)
@@ -90,7 +90,7 @@ describe('Service: mediaMgrService', () => {
     });
 
     it('UploadMedia Function', function () {
-      let blob = new Blob([''], { type: 'text/html' });
+      const blob = new Blob([''], { type: 'text/html' });
       this.mediaUpload = <IMediaUpload> {
         file: <File>blob,
         filename: 'media-upload-file.mp3',

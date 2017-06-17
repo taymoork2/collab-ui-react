@@ -14,7 +14,7 @@ export class CallForwardService {
     private Authinfo,
     private HuronConfig,
   ) {
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 

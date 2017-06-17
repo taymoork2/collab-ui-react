@@ -26,7 +26,7 @@ describe('Service: Common Graph Service', () => {
     this.json.getBaseSerialGraph[this.balloon] = this.json.baseVariables[this.balloon];
     this.json.getBaseSerialGraph[this.export] = this.json.baseVariables[this.export];
 
-    let baseSerialGraph = this.CommonGraphService.getBaseSerialGraph(this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData);
+    const baseSerialGraph = this.CommonGraphService.getBaseSerialGraph(this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData);
     expect(baseSerialGraph).toEqual(this.json.getBaseSerialGraph);
   });
 
@@ -34,7 +34,7 @@ describe('Service: Common Graph Service', () => {
     this.json.getBasePieChart[this.balloon] = this.json.baseVariables[this.balloon];
     this.json.getBasePieChart[this.export] = this.json.baseVariables[this.export];
 
-    let basePiechart = this.CommonGraphService.getBasePieChart(this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData);
+    const basePiechart = this.CommonGraphService.getBasePieChart(this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData);
     expect(basePiechart).toEqual(this.json.getBasePieChart);
   });
 });

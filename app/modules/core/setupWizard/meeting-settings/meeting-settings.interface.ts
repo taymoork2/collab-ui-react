@@ -16,7 +16,7 @@ export interface IConferenceService {
 }
 
 export interface IConferenceLicense {
-  features: Array<string>;
+  features: string[];
   isTrial: boolean;
   trialId: string;
   licenseId: string;

@@ -39,7 +39,7 @@ export class PstnAreaService {
   }
 
   public getCountryAreas(countryCode): ng.IPromise<IAreaData> {
-    let defer = this.$q.defer();
+    const defer = this.$q.defer();
     switch (countryCode) {
       case CCODE_CA:
         this.getProvinces().then((areas) => {

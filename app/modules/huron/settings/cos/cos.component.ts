@@ -81,11 +81,11 @@ class ClassOfService implements ng.IComponentController {
   }
 
   public onChange(value): void {
-    let indexnumber = _.findIndex(this.cosRestrictions, restriction => {
+    const indexnumber = _.findIndex(this.cosRestrictions, restriction => {
       return _.get(restriction, 'restriction', '') === value.restriction;
     });
 
-    let clone = _.cloneDeep(this.cosRestrictions);
+    const clone = _.cloneDeep(this.cosRestrictions);
     clone.splice(indexnumber, 1, value);
 
     this.onChangeFn({

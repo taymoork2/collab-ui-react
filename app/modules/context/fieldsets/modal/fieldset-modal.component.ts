@@ -164,7 +164,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
     this.actionInProgress = true;
     return this.ContextFieldsService.getFields()
       .then(data => {
-        let allFields = this.processedFields(data);
+        const allFields = this.processedFields(data);
         this.fields = this.getSelectedFields(allFields);
         this.allSelectableFields = this.searchOnlyAvailableFields(allFields);
         this.sortFields(this.allSelectableFields);
@@ -249,8 +249,8 @@ class FieldsetModalCtrl implements ng.IComponentController {
    * @returns {boolean}
    */
   public invalidCharactersValidation(viewValue: string) {
-    let value = viewValue || '';
-    let regex = new RegExp(/^[0-9a-zA-Z-_.]*$/g);
+    const value = viewValue || '';
+    const regex = new RegExp(/^[0-9a-zA-Z-_.]*$/g);
     return regex.test(value);
   }
 
@@ -260,7 +260,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
    * @returns {boolean}
    */
   public uniqueIdValidation(viewValue: string) {
-    let value = viewValue || '';
+    const value = viewValue || '';
     return this.existingFieldsetIds.indexOf(value) === -1;
   }
 
@@ -320,7 +320,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
    * @returns {Object[]}
    */
   public getSelectedFields(fullFieldList: IFieldData[]) {
-    let selectedFields: IFieldData[] = [];
+    const selectedFields: IFieldData[] = [];
     for (let i = fullFieldList.length - 1; i >= 0; i--) {
       for (let j = 0; j < this.fieldsetData.fields.length; j++) {
         if (fullFieldList[i] && (fullFieldList[i].id === this.fieldsetData.fields[j])) {

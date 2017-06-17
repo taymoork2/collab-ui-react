@@ -1,5 +1,3 @@
-/// <reference path="securitySetting.controller.ts"/>
-
 import testModule from './index';
 import { SecuritySettingController } from './securitySetting.controller';
 

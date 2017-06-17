@@ -195,13 +195,13 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       this.privateTrunkResource.destinations.push(this.privateTrunkResource.hybridDestination);
     }
     // Create the first SIP Destination
-    let resource = this.getResource(_.first(this.privateTrunkResource.destinations));
+    const resource = this.getResource(_.first(this.privateTrunkResource.destinations));
     this.promises.push(this.PrivateTrunkService.createPrivateTrunkResource(resource)
       .then(() => {
         this.resourceAddSuccess = true;
         //Add rest of the resources
         _.forEach (_.drop(this.privateTrunkResource.destinations, 1), dest => {
-          let resource = this.getResource(dest);
+          const resource = this.getResource(dest);
           this.promises.push(this.PrivateTrunkService.createPrivateTrunkResource(resource)
             .catch(error => {
               this.errors.push(error.data.errorMessage);
@@ -216,8 +216,8 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
   public getResource(dest): IPrivateTrunkResource {
-    let addressPort: string[] = dest.address.split(':');
-    let resource: IPrivateTrunkResource = {
+    const addressPort: string[] = dest.address.split(':');
+    const resource: IPrivateTrunkResource = {
       name: dest.name,
       address: addressPort[0],
     };
@@ -230,7 +230,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   public setupPrivateTrunk (): void {
     this.isSetup = true;
-    let promises: ng.IPromise<any>[] = [];
+    const promises: ng.IPromise<any>[] = [];
 
     promises.push(this.addSipDestinations());
     if (this.isFirstTimeSetup) {
@@ -276,7 +276,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
   public dismissModal(): void {
-    let templateUrl = (this.isFirstTimeSetup) ? 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html' : 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-destination-cancel-confirm.html';
+    const templateUrl = (this.isFirstTimeSetup) ? 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html' : 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-destination-cancel-confirm.html';
     this.$modal.open({
       templateUrl: templateUrl,
       type: 'dialog',

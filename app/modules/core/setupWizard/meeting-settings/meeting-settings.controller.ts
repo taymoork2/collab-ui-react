@@ -16,11 +16,11 @@ export class MeetingSettingsCtrl {
     errorMsg: '',
   };
 
-  public existingSites: Array<IExistingTrialSites> = [];
+  public existingSites: IExistingTrialSites[] = [];
   public disableValidateButton: boolean = false;
   public selectTimeZonePlaceholder = this.$translate.instant('firstTimeWizard.selectTimeZonePlaceholder');
   public timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
-  public sitesArray: Array<IWebExSite> = [];
+  public sitesArray: IWebExSite[] = [];
 
   /* @ngInject */
   constructor(
@@ -53,7 +53,7 @@ export class MeetingSettingsCtrl {
       return;
     }
 
-    let siteName = this.siteModel.name.concat(this.Config.siteDomainUrl.webexUrl);
+    const siteName = this.siteModel.name.concat(this.Config.siteDomainUrl.webexUrl);
     this.validateWebexSiteUrl(siteName).then((response) => {
       if (response.isValid && (response.errorCode === 'validSite')) {
         this.sitesArray.push(_.clone(this.siteModel));
@@ -73,7 +73,7 @@ export class MeetingSettingsCtrl {
   }
 
   public sumOfWebExLicensesAssigned() {
-    let result = _.sumBy(this.sitesArray, (site: IWebExSite) => {
+    const result = _.sumBy(this.sitesArray, (site: IWebExSite) => {
       return Number(site.licenseCount);
     });
 
@@ -81,7 +81,7 @@ export class MeetingSettingsCtrl {
   }
 
   public calculateLicensesRemaining() {
-    let licensesRemaining = this.licensesPurchased - this.sumOfWebExLicensesAssigned();
+    const licensesRemaining = this.licensesPurchased - this.sumOfWebExLicensesAssigned();
     if (licensesRemaining < 0) {
       return 0;
     }
@@ -101,8 +101,8 @@ export class MeetingSettingsCtrl {
   }
 
   private findExistingWebexTrialSites(): void {
-    let conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
-    let existingTrials = _.find(conferencingServices, (service: IConferenceService) => {
+    const conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+    const existingTrials = _.find(conferencingServices, (service: IConferenceService) => {
       return service.license.offerName === this.Config.offerCodes.EE || service.license.offerName === this.Config.offerCodes.MC;
     });
 

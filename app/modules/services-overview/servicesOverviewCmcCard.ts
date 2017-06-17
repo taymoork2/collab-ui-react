@@ -2,7 +2,7 @@ import { CardType, ICardButton, ServicesOverviewCard } from './ServicesOverviewC
 
 export class ServicesOverviewCmcCard extends ServicesOverviewCard {
 
-  private buttons: Array<ICardButton> = [{
+  private buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.cmc.buttons.status',
     routerState: 'cmc.status',
     buttonClass: 'btn-link',
@@ -12,7 +12,7 @@ export class ServicesOverviewCmcCard extends ServicesOverviewCard {
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     //$log.warn("this buttons", this.buttons)
     if (this.active) {
       return this.buttons;

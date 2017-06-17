@@ -30,7 +30,7 @@ export class LocationsService {
               private HuronConfig,
              // private Authinfo,
   ) {
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
     this.locationsService = <ILocationsResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
@@ -87,7 +87,7 @@ export class LocationsService {
     //   customerId: this.Authinfo.getOrgId(),
     //   locationId,
     // }).$promise;
-    let index = _.findIndex(this.locations, location =>  location.uuid === locationId);
+    const index = _.findIndex(this.locations, location =>  location.uuid === locationId);
 
     this.locations.splice(index, 1);
     return this.$q.resolve(location);

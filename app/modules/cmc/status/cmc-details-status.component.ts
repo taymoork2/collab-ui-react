@@ -6,8 +6,8 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   public orgId;
   public orgName;
   public status: ICmcOrgStatusResponse;
-  public userStatuses: Array<ICmcUserStatus>;
-  public fetchedUserStatuses: Array<ICmcUserStatus>;
+  public userStatuses: ICmcUserStatus[];
+  public fetchedUserStatuses: ICmcUserStatus[];
   public gridOptions;
   public userStatusesSummaryText: string;
   private statTemplate;
@@ -94,7 +94,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   }
 
   private initGrid() {
-    let columnDefs = [{
+    const columnDefs = [{
       width: '35%',
       sortable: true,
       field: 'displayName',

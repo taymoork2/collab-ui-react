@@ -105,7 +105,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
 
   private setSelectedResourceGroup(resourceGroupId) {
 
-    let selectedGroup = _.find(this.options, (group: IResourceGroupOptionPair) => {
+    const selectedGroup = _.find(this.options, (group: IResourceGroupOptionPair) => {
       return group.value === resourceGroupId;
     });
 
@@ -123,7 +123,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   public setResourceGroupOnUser(resourceGroupId) {
 
     this.saving = true;
-    let props = {
+    const props = {
       userId: this.userId,
       resourceGroups: {},
     };

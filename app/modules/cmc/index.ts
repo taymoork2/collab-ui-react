@@ -9,7 +9,7 @@ import { CmcUserService } from './status/cmc.user-service';
 import { CmcServiceMock } from './cmc.service-mock';
 
 import './cmc.scss';
-let orgServiceModule = require('modules/core/scripts/services/org.service');
+const orgServiceModule = require('modules/core/scripts/services/org.service');
 
 export default angular
   .module('cmc', [

@@ -15,7 +15,7 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
   public selectedNumber: IOption;
   public missingDirectNumbers: boolean;
   public filterPlaceholder: string;
-  public externalNumberOptions: Array<IOption>;
+  public externalNumberOptions: IOption[];
   public dialPlanCountryCode: string;
   public companyVoicemailEnabled: boolean;
   public onNumberFilter: Function;
@@ -87,7 +87,7 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
     if (this.deliveryMethod === VM_TO_SPARK) {
       this.features.VM2S = true;
       this.features.VM2T = false;
-      let pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
+      const pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
       this.onChange(pilotNumber, 'true', true);
     } else if (this.deliveryMethod === VM_TO_PHONE) {
       this.features.VM2S = false;
@@ -157,10 +157,10 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
     });
   }
 
-  private setCurrentOption(currentValue: string, existingOptions: Array<IOption>): IOption {
-    let existingOption: IOption = _.find(existingOptions, { value: currentValue });
+  private setCurrentOption(currentValue: string, existingOptions: IOption[]): IOption {
+    const existingOption: IOption = _.find(existingOptions, { value: currentValue });
     if (!existingOption) {
-      let currentExternalNumberOption: IOption = {
+      const currentExternalNumberOption: IOption = {
         value: currentValue,
         label: this.PhoneNumberService.getNationalFormat(currentValue),
       };

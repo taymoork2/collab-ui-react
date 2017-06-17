@@ -33,9 +33,9 @@ export class ReportPrintService {
   ) {}
 
   // Array Constants
-  private readonly DATE_ARRAY: Array<any> = this.CommonReportService.getReturnLineGraph(this.ReportConstants.THREE_MONTH_FILTER, { date: '' });
-  private readonly REPORT_TYPE_FILTERS: Array<string> = [this.ReportConstants.ALL, this.ReportConstants.ENGAGEMENT, this.ReportConstants.QUALITY];
-  private readonly TABLE_STYLES: Array<string> = [this.ReportConstants.CUSTOMER_DATA, this.ReportConstants.HORIZONTAL_CENTER, this.ReportConstants.NEGATIVE, this.ReportConstants.POSITIVE];
+  private readonly DATE_ARRAY: any[] = this.CommonReportService.getReturnLineGraph(this.ReportConstants.THREE_MONTH_FILTER, { date: '' });
+  private readonly REPORT_TYPE_FILTERS: string[] = [this.ReportConstants.ALL, this.ReportConstants.ENGAGEMENT, this.ReportConstants.QUALITY];
+  private readonly TABLE_STYLES: string[] = [this.ReportConstants.CUSTOMER_DATA, this.ReportConstants.HORIZONTAL_CENTER, this.ReportConstants.NEGATIVE, this.ReportConstants.POSITIVE];
 
   // Numerical Constants
   private readonly REPORT_WIDTH: number = 515;
@@ -89,7 +89,7 @@ export class ReportPrintService {
   };
 
   get PDF_STYLES(): any {
-    let pdfStyles: any = {};
+    const pdfStyles: any = {};
 
     pdfStyles[this.ReportConstants.CUSTOMER_DATA] = {
       margin: [0, this.MARGIN, 0, this.MARGIN],
@@ -164,13 +164,13 @@ export class ReportPrintService {
 
   // Full Page Export Functions
   public printCustomerPage(typeFilter: string, timeFilter: ITimespan, minMax: IMinMax, charts: ICharts, chartData: ICharts, chartFilters: ICharts, chartLabels: ICharts): void {
-    let layout: IPDFMakeLayout = this.createStarterLayout(typeFilter, timeFilter, minMax);
-    let promises: Array<any> = [];
-    let reports: ICharts = {};
-    let pagebreaks: ICharts = this.getPagebreaks(true);
+    const layout: IPDFMakeLayout = this.createStarterLayout(typeFilter, timeFilter, minMax);
+    const promises: any[] = [];
+    const reports: ICharts = {};
+    const pagebreaks: ICharts = this.getPagebreaks(true);
 
     _.forEach(charts, (chart: any, key: string): void => {
-      let promise = this.createReport(key, timeFilter, chart, chartData[key], chartFilters[key], chartLabels[key], pagebreaks[key]).then((response: Array<IPDFMakeContent>) => {
+      const promise = this.createReport(key, timeFilter, chart, chartData[key], chartFilters[key], chartLabels[key], pagebreaks[key]).then((response: IPDFMakeContent[]) => {
         reports[key] = response;
         return;
       });
@@ -199,13 +199,13 @@ export class ReportPrintService {
   }
 
   public printPartnerPage(typeFilter: string, timeFilter: ITimespan, charts: IPartnerCharts, chartData: IPartnerCharts): void {
-    let layout: IPDFMakeLayout = this.createStarterLayout(typeFilter, timeFilter, undefined);
-    let promises: Array<any> = [];
-    let reports: IPartnerCharts = {};
-    let pagebreaks: IPartnerCharts = this.getPagebreaks(false);
+    const layout: IPDFMakeLayout = this.createStarterLayout(typeFilter, timeFilter, undefined);
+    const promises: any[] = [];
+    const reports: IPartnerCharts = {};
+    const pagebreaks: IPartnerCharts = this.getPagebreaks(false);
 
     _.forEach(chartData, (data: IReportCard, key: string): void => {
-      let promise = this.createPartnerReport(timeFilter, charts[key], data, pagebreaks[key]).then((response: Array<IPDFMakeContent>) => {
+      const promise = this.createPartnerReport(timeFilter, charts[key], data, pagebreaks[key]).then((response: IPDFMakeContent[]) => {
         reports[key] = response;
         return;
       });
@@ -233,7 +233,7 @@ export class ReportPrintService {
   }
 
   private createStarterLayout(typeFilter: string, timeFilter: ITimespan, minMax: IMinMax | undefined): IPDFMakeLayout {
-    let layout: IPDFMakeLayout = {
+    const layout: IPDFMakeLayout = {
       content: [this.REPORT_HEADER, this.REPORT_LINE],
       footer: (page: number): IPDFMakeContent => {
         return {
@@ -245,7 +245,7 @@ export class ReportPrintService {
       styles: this.PDF_STYLES,
     };
 
-    let typeFilters: Array<IPDFMakeContent> = [];
+    const typeFilters: IPDFMakeContent[] = [];
     _.forEach(this.REPORT_TYPE_FILTERS, (filter: string): void => {
       let pageFilter: IPDFMakeContent;
 
@@ -271,7 +271,7 @@ export class ReportPrintService {
       typeFilters.push(pageFilter);
     });
 
-    let subHeader: IPDFMakeContent = {
+    const subHeader: IPDFMakeContent = {
       columns: [{
         columns: typeFilters,
         columnGap: this.COLUMN_GAP_SMALL,
@@ -297,15 +297,15 @@ export class ReportPrintService {
     }
 
     layout.content.push(subHeader);
-    let bottomLine: IPDFMakeContent = _.cloneDeep(this.REPORT_LINE);
+    const bottomLine: IPDFMakeContent = _.cloneDeep(this.REPORT_LINE);
     bottomLine.style = [this.DEFAULT_MARGINS];
     layout.content.push(bottomLine);
 
     return layout;
   }
 
-  private createReport(key: string, timeFilter: ITimespan, chart: any, chartData: IReportCard, chartFilter: IReportDropdown | undefined, chartLabels: Array<IReportLabel> | undefined, pagebreak: string | undefined): ng.IPromise<Array<IPDFMakeContent>> {
-    let report: Array<IPDFMakeContent> = this.createDefaultReport(chartData, timeFilter, pagebreak);
+  private createReport(key: string, timeFilter: ITimespan, chart: any, chartData: IReportCard, chartFilter: IReportDropdown | undefined, chartLabels: IReportLabel[] | undefined, pagebreak: string | undefined): ng.IPromise<IPDFMakeContent[]> {
+    const report: IPDFMakeContent[] = this.createDefaultReport(chartData, timeFilter, pagebreak);
 
     // Include Chart Filter to make Graph Display Information obvious
     if (chartFilter) {
@@ -325,7 +325,7 @@ export class ReportPrintService {
       });
     }
 
-    let captured: ng.IPromise<{}> = this.$q((resolve): void => {
+    const captured: ng.IPromise<{}> = this.$q((resolve): void => {
       chart.export.capture({}, (): void => {
         chart.export.toJPG({}, (data: any): void => {
           report.push({
@@ -337,12 +337,12 @@ export class ReportPrintService {
       });
     });
 
-    return captured.then((): Array<IPDFMakeContent> => {
+    return captured.then((): IPDFMakeContent[] => {
       if (chartLabels) {
-        let labelColumns: Array<IPDFMakeContent> = [];
+        const labelColumns: IPDFMakeContent[] = [];
 
         _.forEach(chartLabels, (label: IReportLabel): void => {
-          let numberStyles: Array<string> = [this.NUMBER];
+          const numberStyles: string[] = [this.NUMBER];
           if (label.hidden || _.isUndefined(label.class)) {
             numberStyles.push(this.GRAY);
           } else if (label.class) {
@@ -373,8 +373,8 @@ export class ReportPrintService {
     });
   }
 
-  private createPartnerReport(timeFilter: ITimespan, chart: any | undefined, chartData: IReportCard, pagebreak: string | undefined): ng.IPromise<Array<IPDFMakeContent>> {
-    let report: Array<IPDFMakeContent> = this.createDefaultReport(chartData, timeFilter, pagebreak);
+  private createPartnerReport(timeFilter: ITimespan, chart: any | undefined, chartData: IReportCard, pagebreak: string | undefined): ng.IPromise<IPDFMakeContent[]> {
+    const report: IPDFMakeContent[] = this.createDefaultReport(chartData, timeFilter, pagebreak);
 
     // If the graph is not set for any reason, display No Data message
     if (chartData.state !== this.ReportConstants.SET) {
@@ -385,7 +385,7 @@ export class ReportPrintService {
       });
     }
 
-    let captured: ng.IPromise<{}> = this.$q((resolve): void => {
+    const captured: ng.IPromise<{}> = this.$q((resolve): void => {
       if (chart) {
         chart.export.capture({}, (): void => {
           chart.export.toJPG({}, (data: any): void => {
@@ -397,17 +397,17 @@ export class ReportPrintService {
           });
         });
       } else if (chartData.table) {
-        let tableBody: Array<IPDFMakeContent> = [];
-        let tableHeaders: Array<IPDFMakeContent> = [];
+        const tableBody: IPDFMakeContent[] = [];
+        const tableHeaders: IPDFMakeContent[] = [];
         _.forEach(chartData.table.headers, (header: IReportsHeader, index: number): void => {
-          let rowStyle: Array<string> = [this.DEFAULT];
+          const rowStyle: string[] = [this.DEFAULT];
           _.forEach(this.TABLE_STYLES, (style: string): void => {
             if (header.class.indexOf(style) > -1) {
               rowStyle.push(style);
             }
           });
 
-          let headerColumn: IPDFMakeContent = {
+          const headerColumn: IPDFMakeContent = {
             text: this.getHeader(header.title, timeFilter),
             style: rowStyle,
             bold: true,
@@ -423,10 +423,10 @@ export class ReportPrintService {
         });
         tableBody.push(tableHeaders);
 
-        _.forEach((chartData.table.data), (customer: Array<IEndpointData>): void => {
-          let tableRow: Array<IPDFMakeContent> = [];
+        _.forEach((chartData.table.data), (customer: IEndpointData[]): void => {
+          const tableRow: IPDFMakeContent[] = [];
           _.forEach(customer, (datapoint: IEndpointData): void => {
-            let rowStyle: Array<string> = [this.DEFAULT];
+            const rowStyle: string[] = [this.DEFAULT];
             _.forEach(this.TABLE_STYLES, (style: string): void => {
               if (datapoint.class.indexOf(style) > -1 || (datapoint.splitClasses && datapoint.splitClasses.indexOf(style) > -1)) {
                 rowStyle.push(style);
@@ -465,12 +465,12 @@ export class ReportPrintService {
       }
     });
 
-    return captured.then((): Array<IPDFMakeContent> => {
+    return captured.then((): IPDFMakeContent[] => {
       return report;
     });
   }
 
-  private createDefaultReport(chartData: IReportCard, timeFilter: ITimespan, pagebreak: string | undefined): Array<IPDFMakeContent> {
+  private createDefaultReport(chartData: IReportCard, timeFilter: ITimespan, pagebreak: string | undefined): IPDFMakeContent[] {
     return [{
       text: this.$translate.instant(chartData.headerTitle),
       style: [this.HEADER],

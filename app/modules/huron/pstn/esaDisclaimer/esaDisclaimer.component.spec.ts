@@ -42,9 +42,9 @@ describe('Component: esaDisclaimerComponent', () => {
     });
 
     it('should call Terminus Customer PUT API on Agree', function () {
-      let putPayload = { e911Signee : USER_ID };
+      const putPayload = { e911Signee : USER_ID };
       this.$httpBackend.expectPUT(this.HuronConfig.getTerminusUrl() + '/customers/' + ORG_ID, putPayload).respond(200);
-      let promise = this.controller.onAgreeClick();
+      const promise = this.controller.onAgreeClick();
 
       promise.then(() => {
         expect(this.$rootScope.$broadcast).toHaveBeenCalledWith(ESA_DISCLAIMER_ACCEPT);
@@ -56,9 +56,9 @@ describe('Component: esaDisclaimerComponent', () => {
     });
 
     it('should notify error if Terminus Customer PUT call returns error', function () {
-      let putPayload = { e911Signee : USER_ID };
+      const putPayload = { e911Signee : USER_ID };
       this.$httpBackend.expectPUT(this.HuronConfig.getTerminusUrl() + '/customers/' + ORG_ID, putPayload).respond(500);
-      let promise = this.controller.onAgreeClick();
+      const promise = this.controller.onAgreeClick();
 
       promise.then(() => {
         expect(this.$rootScope.$broadcast).not.toHaveBeenCalledWith();

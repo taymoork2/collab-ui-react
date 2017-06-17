@@ -119,7 +119,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     if (_.isUndefined(this.cluster)) {
       return true;
     }
-    let provisionedConnectors = _.map(this.cluster.provisioning, 'connectorType');
+    const provisionedConnectors = _.map(this.cluster.provisioning, 'connectorType');
     return (_.includes(provisionedConnectors, 'c_cal') || _.includes(provisionedConnectors, 'c_ucmc'));
   }
 

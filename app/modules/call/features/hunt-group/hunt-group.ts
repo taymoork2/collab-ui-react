@@ -26,8 +26,8 @@ export class HuntGroup {
   public destinationRule: DestinationRule | undefined;
   public fallbackDestination: FallbackDestination;
   public alternateDestination: FallbackDestination;
-  public members: Array<CallFeatureMember>;
-  public numbers: Array<HuntGroupNumber>;
+  public members: CallFeatureMember[];
+  public numbers: HuntGroupNumber[];
 
   constructor(obj: {
     uuid?: string,
@@ -39,8 +39,8 @@ export class HuntGroup {
     destinationRule?: DestinationRule,
     fallbackDestination: FallbackDestination,
     alternateDestination: FallbackDestination,
-    members: Array<CallFeatureMember>,
-    numbers: Array<HuntGroupNumber>,
+    members: CallFeatureMember[],
+    numbers: HuntGroupNumber[],
   } = {
     uuid: undefined,
     name: undefined,

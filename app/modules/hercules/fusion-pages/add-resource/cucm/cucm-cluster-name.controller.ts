@@ -64,7 +64,7 @@ export class CucmClusterNameController {
         this.clusterId = cluster.id;
       })
       .then(() => {
-        let hostname = this.$stateParams.wizard.state().data.cucm.hostname;
+        const hostname = this.$stateParams.wizard.state().data.cucm.hostname;
         return this.HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostname, this.clusterId);
       })
       .catch(() => {

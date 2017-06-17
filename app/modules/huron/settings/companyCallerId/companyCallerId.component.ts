@@ -9,7 +9,7 @@ class CompanyCallerId implements ng.IComponentController {
   public companyCallerId: CompanyNumber;
   public selectedNumber: string;
   public customerName: string;
-  public externalNumberOptions: Array<IOption>;
+  public externalNumberOptions: IOption[];
   public onChangeFn: Function;
   public onNumberFilter: Function;
   public companyCallerIdEnabled: boolean;
@@ -51,7 +51,7 @@ class CompanyCallerId implements ng.IComponentController {
   public onCompanyCallerIdToggled(toggleValue: boolean): void {
     if (toggleValue) {
       this.selectedNumber = _.get<string>(this.externalNumberOptions, '[0].value');
-      let companyNumber = new CompanyNumber({
+      const companyNumber = new CompanyNumber({
         name: this.customerName,
         pattern: this.selectedNumber,
         externalCallerIdType: ExternalCallerIdType.COMPANY_CALLER_ID_TYPE,

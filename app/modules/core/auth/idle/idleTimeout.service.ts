@@ -61,7 +61,7 @@ export class IdleTimeoutService {
   private broadcastActiveTab() {
     this.Log.debug('IDLE TIMEOUT SERVICE: broadcasting to keep alive');
     //only want to write to LS once 60 secs
-    let lastUpdated = this.LocalStorage.get(StorageKeys.ACTIVE_TABS);
+    const lastUpdated = this.LocalStorage.get(StorageKeys.ACTIVE_TABS);
     if (!lastUpdated || (moment(lastUpdated, moment.ISO_8601).isBefore(moment().subtract(IdleTimeoutService.LOCAL_STORAGE_DEBOUNCE_INTERVAL, 'seconds')))) {
       this.LocalStorage.remove(StorageKeys.ACTIVE_TABS);
       this.LocalStorage.put(StorageKeys.ACTIVE_TABS, moment().toISOString());
@@ -114,7 +114,7 @@ export class IdleTimeoutService {
         this.keepAliveDeregistrer  = this.$rootScope.$on(this.Config.idleTabKeepAliveEvent, () => this.resetAndBroadcast({ type: this.Config.idleTabKeepAliveEvent }));
         this.idleSetter = this.initIdleTimer();
         //bind events to reset the timer.
-        let throttled = _.throttle(e => {
+        const throttled = _.throttle(e => {
           this.resetAndBroadcast(e);
         }, IdleTimeoutService.DEBOUNCE_INTERVAL);
         _.forEach(IdleTimeoutService.IDLE_RESET_EVENTS, EventName => {

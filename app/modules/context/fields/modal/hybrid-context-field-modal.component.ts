@@ -233,7 +233,7 @@ class FieldModalCtrl implements ng.IComponentController {
 
 
   public setAddEnumOptions() {
-    let option = {
+    const option = {
       index: this.optionsList.length,
       value: '',
       edit: true,
@@ -304,12 +304,12 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public saveOption(): void {
-    let option = _.find(this.optionsList, {
+    const option = _.find(this.optionsList, {
       edit: true,
     });
     option.edit = false;
 
-    let optionOrig = _.cloneDeep(option);
+    const optionOrig = _.cloneDeep(option);
 
     option.value = this.newOption;
     this.editingOption = false;
@@ -328,10 +328,10 @@ class FieldModalCtrl implements ng.IComponentController {
 
   public updateDataTypeDefinition(list: IOption[]) {
     //update the dataTypeDefintion of fieldData
-    let dataTypeDefintion: IDataTypeDefinition = {
+    const dataTypeDefintion: IDataTypeDefinition = {
       type: 'enum',
     };
-    let enumerations = _.map(list, function (option) {
+    const enumerations = _.map(list, function (option) {
       return option.value;
     });
 
@@ -416,7 +416,7 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public cancelEditOption(): void {
-    let option = _.find(this.optionsList, {
+    const option = _.find(this.optionsList, {
       edit: true,
     });
     option.edit = false;
@@ -524,13 +524,13 @@ class FieldModalCtrl implements ng.IComponentController {
 
   public uniqueOptionValidation(optionValue: string) {
     const value = optionValue || '';
-    let index =  _.findIndex(this.optionsListCopy, function (current) {
+    const index =  _.findIndex(this.optionsListCopy, function (current) {
       return current.value === value;
     });
 
     //handle when edit, allow the same value can be added
     if (!this.addEnumOption) {
-      let existingOption = _.find(this.optionsListCopy, function (item) {
+      const existingOption = _.find(this.optionsListCopy, function (item) {
         return item.edit === true;
       });
 

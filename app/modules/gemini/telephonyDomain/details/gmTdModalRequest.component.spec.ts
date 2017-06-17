@@ -44,7 +44,7 @@ describe('Component: gmTdModalRequest', () => {
 
     it('should display the correct element and bind the javasscript event', function () {
       spyOn(this.gemService, 'getStorage').and.returnValue(this.currentTelephonyDomain);
-      let response = this.preData.common;
+      const response = this.preData.common;
       response.content.data.body = [ { regionId: 'EMEA', regionName: 'EMEA' }, { regionId: 'US', regionName: 'US' }];
       this.TelephonyDomainService.getRegions.and.returnValue(this.$q.resolve(response));
       initComponent.call(this);

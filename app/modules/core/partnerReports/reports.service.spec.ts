@@ -10,7 +10,7 @@ describe('Service: Report Service', () => {
   const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
   const mediaQualityData = getJSONFixture('core/json/partnerReports/mediaQualityData.json');
   const registeredEndpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
-  const timeFilter: Array<ITimespan> = _.cloneDeep(defaults.timeFilter[0]);
+  const timeFilter: ITimespan[] = _.cloneDeep(defaults.timeFilter[0]);
   const rejectError = {
     status: 500,
   };
@@ -27,7 +27,7 @@ describe('Service: Report Service', () => {
 
     spyOn(this.CommonReportService, 'getModifiedDate').and.callFake((date: string, filter: ITimespan): string => {
       expect(filter).toEqual(jasmine.any(Object));
-      let dateArray: Array<any> = _.cloneDeep(defaults.returnGraph);
+      const dateArray: any[] = _.cloneDeep(defaults.returnGraph);
       let dateIndex: number = 0;
 
       _.forEach(dateArray, (item: any, index: number) => {
@@ -39,14 +39,14 @@ describe('Service: Report Service', () => {
       return dateArray[dateIndex].date;
     });
 
-    spyOn(this.CommonReportService, 'getReturnGraph').and.callFake((filter: ITimespan, date: string, graphItem: any): Array<any> => {
+    spyOn(this.CommonReportService, 'getReturnGraph').and.callFake((filter: ITimespan, date: string, graphItem: any): any[] => {
       expect(filter).toEqual(jasmine.any(Object));
       expect(date).toEqual(jasmine.any(String));
-      let dateArray: Array<any> = _.cloneDeep(defaults.returnGraph);
-      let graph: Array<any> = [];
+      const dateArray: any[] = _.cloneDeep(defaults.returnGraph);
+      const graph: any[] = [];
 
       _.forEach(dateArray, (item: any): void => {
-        let newItem = _.cloneDeep(graphItem);
+        const newItem = _.cloneDeep(graphItem);
         newItem.date = item.date;
         graph.push(newItem);
       });
@@ -80,7 +80,7 @@ describe('Service: Report Service', () => {
     });
 
     it('should getActiveUserData for an existing customer', function () {
-      let popData = _.cloneDeep(activeUserData.activePopResponse);
+      const popData = _.cloneDeep(activeUserData.activePopResponse);
       _.forEach(popData, (data) => {
         data.color = undefined;
       });
@@ -101,7 +101,7 @@ describe('Service: Report Service', () => {
     });
 
     it('should notify an error for getActiveUserData and return empty data', function () {
-      let popData = _.cloneDeep(activeUserData.activePopResponse);
+      const popData = _.cloneDeep(activeUserData.activePopResponse);
       _.forEach(popData, (data) => {
         data.percentage = 0;
         data.overallPopulation = 0;
@@ -177,7 +177,7 @@ describe('Service: Report Service', () => {
 
   describe('Registered Endpoint Service', function () {
     it('should get registered endpoints for a customer with positive response', function () {
-      let endpointData: Array<Array<IEndpointData>> = _.cloneDeep(registeredEndpointsData.registeredEndpointResponse);
+      const endpointData: IEndpointData[][] = _.cloneDeep(registeredEndpointsData.registeredEndpointResponse);
       _.forEach(endpointData, (data) => {
         data[0].splitClasses = undefined;
         data[2].splitClasses = undefined;
@@ -201,7 +201,7 @@ describe('Service: Report Service', () => {
   });
 
   describe('Helper Services', function () {
-    let managedOrgsUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/null/managedOrgs';
+    const managedOrgsUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/null/managedOrgs';
 
     it('getCustomerList should return a list of customers', function () {
       this.$httpBackend.whenGET(managedOrgsUrl).respond({

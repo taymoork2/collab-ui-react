@@ -26,16 +26,16 @@ export class PstnWizardComponent implements ng.IComponentOptions {
 export class PstnWizardCtrl implements ng.IComponentController {
   public tollFreeTitle: string;
   public emergencyAcknowledge: boolean = false;
-  public swivelNumbers: Array<string> = [];
+  public swivelNumbers: string[] = [];
   public showCarriers: boolean;
   public placeOrderLoad: boolean;
   public totalPortNumbers: number;
   public totalNewAdvancedOrder: number;
-  public newOrders: Array<IOrder>;
-  public advancedOrders: Array<IOrder>;
-  public swivelOrders: Array<IOrder>;
-  public newTollFreeOrders: Array<IOrder>;
-  public portOrders: Array<IOrder>;
+  public newOrders: IOrder[];
+  public advancedOrders: IOrder[];
+  public swivelOrders: IOrder[];
+  public newTollFreeOrders: IOrder[];
+  public portOrders: IOrder[];
   public PORTING_NUMBERS: string;
   public invalidCount: number = 0;
   public invalidSwivelCount: number = 0;
@@ -48,7 +48,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public loading: boolean;
   public isValid = false;
   public isTrial: boolean;
-  public orderCart: Array<IOrder> = [];
+  public orderCart: IOrder[] = [];
   public model: INumbersModel = {
     pstn: new NumberModel(),
     tollFree: new NumberModel(),
@@ -118,7 +118,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.PstnService.getCarrierTollFreeInventory(this.PstnModel.getProviderId())
       .then(response => {
         this.model.tollFree.areaCodeOptions = response.areaCodes;
-        let areaCodes = response.areaCodes.join(', ') + '.';
+        const areaCodes = response.areaCodes.join(', ') + '.';
         this.tollFreeTitle = this.$translate.instant('pstnSetup.tollFreeTitle', { areaCodes: areaCodes });
         this.model.tollFree.areaCode = null;
       })
@@ -126,7 +126,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public createToken(e): void {
-    let tokenNumber = e.attrs.label;
+    const tokenNumber = e.attrs.label;
     e.attrs.value = this.PhoneNumberService.getE164Format(tokenNumber);
     e.attrs.label = this.PhoneNumberService.getNationalFormat(tokenNumber);
   }
@@ -246,7 +246,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         } else {
           this.PstnModel.setOrders(this.orderCart);
           this.step += 1;
-          let orders = this.PstnWizardService.initOrders();
+          const orders = this.PstnWizardService.initOrders();
           this.totalPortNumbers = orders.totalPortNumbers;
           this.totalNewAdvancedOrder = orders.totalNewAdvancedOrder;
         }
@@ -261,7 +261,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         } else {
           //set numbers for if they go back
           this.PstnModel.setNumbers(this.swivelNumbers);
-          let swivelOrder = this.PstnWizardService.setSwivelOrder(this.swivelNumbers);
+          const swivelOrder = this.PstnWizardService.setSwivelOrder(this.swivelNumbers);
           this.PstnModel.setOrders(swivelOrder);
         }
         break;
@@ -284,7 +284,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         } else {
             //set numbers for if they go back
           this.PstnModel.setNumbers(this.swivelNumbers);
-          let swivelOrder = this.PstnWizardService.setSwivelOrder(this.swivelNumbers);
+          const swivelOrder = this.PstnWizardService.setSwivelOrder(this.swivelNumbers);
           this.PstnModel.setOrders(swivelOrder);
         }
         break;
@@ -386,7 +386,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public initTokens(didList): void {
-    let tmpDids = didList || this.did.getList();
+    const tmpDids = didList || this.did.getList();
     // reset valid and list before setTokens
     this.validCount = 0;
     this.invalidCount = 0;
@@ -423,7 +423,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     return _.size(_.flatten(this.orderCart));
   }
 
-  public onSwivelChange(numbers: Array<string>, invalidCount: number): void {
+  public onSwivelChange(numbers: string[], invalidCount: number): void {
     this.swivelNumbers = numbers;
     this.invalidSwivelCount = invalidCount;
   }

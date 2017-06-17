@@ -62,7 +62,7 @@ export class RetentionSettingController {
   ) {
     this.orgId = this.Authinfo.getOrgId();
 
-    let promises = {
+    const promises = {
       retention: this.RetentionService.getRetention(this.orgId),
       proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
     };
@@ -70,7 +70,7 @@ export class RetentionSettingController {
     this.$q.all(promises)
       .then((response) => {
         this.proPackPurchased = response.proPackPurchased;
-        let sparkDataRetentionDays = response.retention.sparkDataRetentionDays || this.RETENTION_DEFAULT;
+        const sparkDataRetentionDays = response.retention.sparkDataRetentionDays || this.RETENTION_DEFAULT;
         this.populateRetention(sparkDataRetentionDays);
       })
       .finally(() => {
@@ -103,7 +103,7 @@ export class RetentionSettingController {
       return;
     }
 
-    let retentionGuiOption = _.find(this.retentionOptions, { value: sparkDataRetentionDays });
+    const retentionGuiOption = _.find(this.retentionOptions, { value: sparkDataRetentionDays });
     this.initialRetention = sparkDataRetentionDays;
 
     // matches the value in the dropdown of default options

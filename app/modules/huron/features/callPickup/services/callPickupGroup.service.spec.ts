@@ -1,12 +1,12 @@
 //import { Member } from 'modules/huron/members';
 
 describe('Service: callPickupService', () => {
-  let membersList = getJSONFixture('huron/json/features/callPickup/membersList.json');
-  let numbersObject = getJSONFixture('huron/json/features/callPickup/numbersList.json');
-  let numbersArray = _.result(numbersObject, 'numbers');
-  let fake_picture_path = 'https://abcde/12345';
+  const membersList = getJSONFixture('huron/json/features/callPickup/membersList.json');
+  const numbersObject = getJSONFixture('huron/json/features/callPickup/numbersList.json');
+  const numbersArray = _.result(numbersObject, 'numbers');
+  const fake_picture_path = 'https://abcde/12345';
   let successSpy, failureSpy;
-  let cp = getJSONFixture('huron/json/features/callPickup/pickup.json');
+  const cp = getJSONFixture('huron/json/features/callPickup/pickup.json');
 
   beforeEach(function () {
     this.initModules('huron.call-pickup.members');
@@ -64,7 +64,7 @@ describe('Service: callPickupService', () => {
   });
 
   describe('verify line selected', () => {
-    let selectedMembers = getJSONFixture('huron/json/features/callPickup/member.json');
+    const selectedMembers = getJSONFixture('huron/json/features/callPickup/member.json');
     selectedMembers[0].checkboxes.value = false;
     selectedMembers[0].saveNumbers = [];
     beforeEach(initComponent);
@@ -239,8 +239,8 @@ describe('Service: callPickupService', () => {
 
     it('should return group name if line is in a pickup group', function () {
 
-      let lineInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineInPickupGroup.json');
-      let lineFeaturesInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineFeaturesInPickupGroup.json');
+      const lineInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineInPickupGroup.json');
+      const lineFeaturesInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineFeaturesInPickupGroup.json');
       this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers?number=3081&wide=true').respond(200, lineInPickupGroup);
       this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers/29812608-555c-4e41-92dc-409555ab93cd?wide=true').respond(200, lineFeaturesInPickupGroup);
       this.$scope.$digest();
@@ -251,8 +251,8 @@ describe('Service: callPickupService', () => {
     });
 
     it('should return false if line is not in a pickup group', function () {
-      let lineNotInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineNotInPickupGroup.json');
-      let lineFeaturesNotInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineFeaturesNotInPickupGroup.json');
+      const lineNotInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineNotInPickupGroup.json');
+      const lineFeaturesNotInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineFeaturesNotInPickupGroup.json');
       this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers?number=2064&wide=true').respond(200, lineNotInPickupGroup);
       this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers/b9c3e94b-3399-4ab4-8e39-7367f77c12f?wide=true').respond(200, lineFeaturesNotInPickupGroup);
       this.CallPickupGroupService.isLineInPickupGroup('2064')
@@ -262,14 +262,14 @@ describe('Service: callPickupService', () => {
     });
 
     it('should return true if ALL lines are in a pickup group', function () {
-      let member = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroup.json');
-      let memberNumbers = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumbers.json');
+      const member = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroup.json');
+      const memberNumbers = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumbers.json');
 
-      let memberWithAllLinesInPickupGroupNumber1 = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber1.json');
-      let memberWithAllLinesInPickupGroupNumber1Features = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber1Features.json');
+      const memberWithAllLinesInPickupGroupNumber1 = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber1.json');
+      const memberWithAllLinesInPickupGroupNumber1Features = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber1Features.json');
 
-      let memberWithAllLinesInPickupGroupNumber2 = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber2.json');
-      let memberWithAllLinesInPickupGroupNumber2Features = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber2Features.json');
+      const memberWithAllLinesInPickupGroupNumber2 = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber2.json');
+      const memberWithAllLinesInPickupGroupNumber2Features = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber2Features.json');
 
       //all numbers of member
       this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/ccf6f31f-b87c-4a0f-8ddf-bd3e489eeaed/numbers').respond(200, memberNumbers);

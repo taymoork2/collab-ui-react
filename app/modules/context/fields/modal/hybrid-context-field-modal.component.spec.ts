@@ -259,16 +259,16 @@ describe('Component: context field modal', () => {
     });
 
     describe('addAndEditOption', function () {
-      let optionsListCopy = [
+      const optionsListCopy = [
         { index: 0, value: '1', edit: false },
         { index: 1, value: '2', edit: false },
       ];
-      let addOptionsList = [
+      const addOptionsList = [
         { index: 0, value: '1', edit: false },
         { index: 1, value: '2', edit: false },
         { index: 2, value: '', edit: true },
       ];
-      let editOptionsListCopy = [
+      const editOptionsListCopy = [
         { index: 0, value: '1', edit: false },
         { index: 1, value: '2', edit: true },
       ];
@@ -325,7 +325,7 @@ describe('Component: context field modal', () => {
 
       describe('editOption', function () {
         it('should set the option edit as true when setEdit is called', function () {
-          let option = {
+          const option = {
             index: 2,
             value: '2',
             edit: false,
@@ -364,7 +364,7 @@ describe('Component: context field modal', () => {
         });
 
         it('should reset the flags and values when cancel', function () {
-          let option = {
+          const option = {
             index: 1,
             value: '2',
             edit: true };
@@ -387,13 +387,13 @@ describe('Component: context field modal', () => {
       });
 
       it('updateDataTypeDefinition', function () {
-        let optionsList = [
+        const optionsList = [
           { index: 0, edit: false, value: '1' },
           { index: 1, edit: false, value: '2' },
           { index: 2, edit: false, value: '3' },
         ];
 
-        let expectedDataTypeDefinition = {
+        const expectedDataTypeDefinition = {
           type: 'enum',
           enumerations: ['1', '2', '3'],
           translations: {
@@ -407,32 +407,32 @@ describe('Component: context field modal', () => {
     });
 
     describe('delete', function () {
-      let origOptionsListCopy = [
+      const origOptionsListCopy = [
         { index: 0, edit: false, value: '1' },
         { index: 1, edit: false, value: '2' },
         { index: 2, edit: false, value: '3' },
       ];
 
-      let optionToBeDeleted = {
+      const optionToBeDeleted = {
         index: 1,
         edit: false,
         value: '2',
       };
 
-      let optionsListCopyAfterDelete = [
+      const optionsListCopyAfterDelete = [
         { index: 0, edit: false, value: '1' },
         { index: 1, edit: false, value: '3' },
       ];
 
-      let reorderOptions = [
+      const reorderOptions = [
         { label: '1', value: '1', id: 0, name: '1' },
         { label: '3', value: '3', id: 1, name: '3' },
       ];
 
       it('should remove the option if confirmed', function (done) {
         //mock the modal open call through and get result
-        let modalResult = {};
-        let mockModalInstance = { result: this.$q.resolve(modalResult) };
+        const modalResult = {};
+        const mockModalInstance = { result: this.$q.resolve(modalResult) };
         spyOn(mockModalInstance.result, 'then').and.callThrough();
         spyOn(this.ModalService, 'open').and.returnValue(mockModalInstance);
 
@@ -498,7 +498,7 @@ describe('Component: context field modal', () => {
     });
 
     describe('setReorder', function () {
-      let origOptionsListCopy = [
+      const origOptionsListCopy = [
         { index: 0, edit: false, value: '1' },
         { index: 1, edit: false, value: '2' },
       ];
@@ -513,7 +513,7 @@ describe('Component: context field modal', () => {
       it('should save the order when save', function () {
         this.controller.optionsListCopy = origOptionsListCopy;
         this.controller.setReorder();
-        let newOptionsList = this.controller.optionsListCopy = [
+        const newOptionsList = this.controller.optionsListCopy = [
           { index: 0, edit: false, value: '2' },
           { index: 1, edit: false, value: '1' },
         ];

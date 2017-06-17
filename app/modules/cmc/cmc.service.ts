@@ -23,8 +23,8 @@ export class CmcService {
   }
 
   public setUserData(user: ICmcUser, data: ICmcUserData): ng.IPromise<any> {
-    let mobileNumberSet: ng.IPromise<any> = this.setMobileNumber(user, data.mobileNumber);
-    let entitlementSet: ng.IPromise<any> = this.setEntitlement(user, data.entitled);
+    const mobileNumberSet: ng.IPromise<any> = this.setMobileNumber(user, data.mobileNumber);
+    const entitlementSet: ng.IPromise<any> = this.setEntitlement(user, data.entitled);
     return this.$q.all(
       [
         mobileNumberSet,
@@ -35,8 +35,8 @@ export class CmcService {
 
   public getUserData(user: ICmcUser): ICmcUserData {
     this.$log.info('Getting data for user=', user);
-    let entitled = this.hasCmcEntitlement(user);
-    let mobileNumber = this.extractMobileNumber(user);
+    const entitled = this.hasCmcEntitlement(user);
+    const mobileNumber = this.extractMobileNumber(user);
     return <ICmcUserData> {
       mobileNumber: mobileNumber,
       entitled: entitled,
@@ -46,7 +46,7 @@ export class CmcService {
   // TODO: Find out when cmc settings should be unavailable...
   public allowCmcSettings(orgId: string): ng.IPromise<boolean> {
     // based on org entitlements ?
-    let deferred = this.$q.defer();
+    const deferred = this.$q.defer();
     this.Orgservice.getOrg((data, success) => {
       this.$log.debug('data', data);
       if (success) {
@@ -71,7 +71,7 @@ export class CmcService {
     if (!this.useMock) {
       //let deferred: ng.IDeferred<any> = this.$q.defer();
       //this.requestTimeout(deferred);
-      let url: string = this.cmcUrl + `/organizations/${orgId}/status`;
+      const url: string = this.cmcUrl + `/organizations/${orgId}/status`;
       return this.$http.get(url, { timeout: this.requestTimeout() }).then((response) => {
         return response.data;
       });
@@ -81,7 +81,7 @@ export class CmcService {
   }
 
   private requestTimeout(): ng.IPromise<any> {
-    let deferred: ng.IDeferred<any> = this.$q.defer();
+    const deferred: ng.IDeferred<any> = this.$q.defer();
     this.$timeout(() => {
       deferred.resolve();
     }, this.timeout);
@@ -93,8 +93,8 @@ export class CmcService {
   //      It's wrapped in a promise to make it easier
   //      to replace by CI or CMC requests
   public preCheckUser(user: ICmcUser): ng.IPromise<ICmcUserStatusResponse> {
-    let status: string = this.hasCallAwareEntitlement(user) ? 'ok' : 'error';
-    let issues: ICmcIssue[] = [];
+    const status: string = this.hasCallAwareEntitlement(user) ? 'ok' : 'error';
+    const issues: ICmcIssue[] = [];
     if (status === 'error') {
       issues.push({
         code: 5000, // TODO: Define 'official' code
@@ -102,7 +102,7 @@ export class CmcService {
       });
     }
 
-    let res: ICmcUserStatusResponse = {
+    const res: ICmcUserStatusResponse = {
       status: status,
       issues: issues,
     };
@@ -117,7 +117,7 @@ export class CmcService {
 
   private extractMobileNumber(user: ICmcUser): any {
     if (user.phoneNumbers) {
-      let nbr = _.find<any>(user.phoneNumbers, (nbr) => {
+      const nbr = _.find<any>(user.phoneNumbers, (nbr) => {
         return nbr.type === 'mobile';
       });
       return nbr !== undefined ? nbr.value : null;
@@ -159,7 +159,7 @@ export class CmcService {
   }
 
   public patchNumber(user: ICmcUser, number: string): IPromise<any> {
-    let userMobileData = {
+    const userMobileData = {
       schemas: this.Config.scimSchemas,
       phoneNumbers: [
         {
@@ -169,7 +169,7 @@ export class CmcService {
       ],
     };
 
-    let scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
+    const scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
     this.$log.info('Updating user', user);
     this.$log.info('User data', userMobileData);
     return this.$http({
@@ -180,8 +180,8 @@ export class CmcService {
   }
 
   private checkUniqueMobileNumber(user: ICmcUser, mobileNbr: string): IPromise<String> {
-    let filter: string = `phoneNumbers[type eq \"mobile\" and value eq \"${mobileNbr}\"]`;
-    let scimUrl: string = this.UrlConfig.getScimUrl(user.meta.organizationID) + '?filter=' + filter;
+    const filter: string = `phoneNumbers[type eq \"mobile\" and value eq \"${mobileNbr}\"]`;
+    const scimUrl: string = this.UrlConfig.getScimUrl(user.meta.organizationID) + '?filter=' + filter;
     return this.$http.get(scimUrl).then((response: any) => {
       if (response.data.Resources.length > 0) {
         return response.data.Resources[0].userName;

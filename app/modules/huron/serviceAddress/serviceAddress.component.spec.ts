@@ -2,11 +2,11 @@
 
 describe('Directive: hrServiceAddress', function () {
   let $q, $httpBackend, $compile, $scope, PstnAreaService, HuronCountryService;
-  let SEARCH_BUTTON = '.search-custom';
-  let HIDE = 'ng-hide';
+  const SEARCH_BUTTON = '.search-custom';
+  const HIDE = 'ng-hide';
   let element;
 
-  let location = {
+  const location = {
     zipName: 'Zip Code',
     typeName: 'State',
     areas: [{
@@ -15,7 +15,7 @@ describe('Directive: hrServiceAddress', function () {
     }],
   };
 
-  let countries = [{
+  const countries = [{
     id: 'US',
     name: 'United States',
   }];

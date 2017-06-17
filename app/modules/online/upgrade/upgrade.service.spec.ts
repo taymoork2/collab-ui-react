@@ -143,7 +143,7 @@ describe('Service: OnlineUpgradeService', () => {
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/123', patchPayload).respond(200);
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/789', patchPayload).respond(200);
 
-      let cancelSubscriptionsPromise = this.OnlineUpgradeService.cancelSubscriptions();
+      const cancelSubscriptionsPromise = this.OnlineUpgradeService.cancelSubscriptions();
       this.$httpBackend.flush();
       expect(cancelSubscriptionsPromise).toBeResolved();
     });
@@ -152,7 +152,7 @@ describe('Service: OnlineUpgradeService', () => {
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/123', patchPayload).respond(200);
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/789', patchPayload).respond(500);
 
-      let cancelSubscriptionsPromise = this.OnlineUpgradeService.cancelSubscriptions();
+      const cancelSubscriptionsPromise = this.OnlineUpgradeService.cancelSubscriptions();
       this.$httpBackend.flush();
       expect(cancelSubscriptionsPromise).toBeRejected();
     });

@@ -33,7 +33,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
   public $onChanges() {
     this.USSService.getUserJournal(this.userId, this.Authinfo.getOrgId(), 100, this.serviceId)
       .then(entries => {
-        let filteredEntries = filter(<any[]>entries, entry => {
+        const filteredEntries = filter(<any[]>entries, entry => {
           return includes(this.eventTypes, entry.entry.type) && entry.entry.payload.serviceId === this.serviceId;
         });
         this.historyEntries = map(take(filteredEntries, this.numEntriesToShow), this.decorateEntry.bind(this));
@@ -45,7 +45,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
   }
 
   private decorateEntry(e) {
-    let entry = e.entry;
+    const entry = e.entry;
     entry.timestamp = this.HybridServicesI18NService.getLocalTimestamp(e.time, 'lll (z)');
     if (entry.type === 'SetUserStatus') {
       entry.payload.entitled = true;
@@ -72,7 +72,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
   }
 
   private setResourceGroups() {
-    let addResourceGroupEntries = filter(this.historyEntries, entry => {
+    const addResourceGroupEntries = filter(this.historyEntries, entry => {
       return entry.type === 'AddUserResourceGroup';
     });
     if (addResourceGroupEntries.length === 0) {

@@ -8,7 +8,7 @@ export class DeviceMatcher implements IMatcher<IDevice> {
       return true;
     }
 
-    let termsExpanded = _.toLower(terms).split(/[\s,]+/);
+    const termsExpanded = _.toLower(terms).split(/[\s,]+/);
     return termsExpanded.every((term) => {
       if (!term) {
         return true;

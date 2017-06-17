@@ -20,24 +20,24 @@ const IserviceStatusToTxt = {
   setupNotComplete: 'servicesOverview.cardStatus.setupNotComplete',
 };
 
-export function filterAndGetCssStatus(HybridServicesClusterStatesService, services: Array<IServiceStatus>, serviceId: string): string | undefined {
-  let service = _.find(services, (service) => service.serviceId === serviceId);
+export function filterAndGetCssStatus(HybridServicesClusterStatesService, services: IServiceStatus[], serviceId: string): string | undefined {
+  const service = _.find(services, (service) => service.serviceId === serviceId);
   if (service) {
     return HybridServicesClusterStatesService.getStatusIndicatorCSSClass(service.status);
   }
   return undefined;
 }
 
-export function filterAndGetTxtStatus(services: Array<IServiceStatus>, serviceId: string): string | undefined {
-  let service = _.find(services, (service) => service.serviceId === serviceId);
+export function filterAndGetTxtStatus(services: IServiceStatus[], serviceId: string): string | undefined {
+  const service = _.find(services, (service) => service.serviceId === serviceId);
   if (service) {
     return IserviceStatusToTxt[service.status] || IserviceStatusToTxt['unknown'];
   }
   return undefined;
 }
 
-export function filterAndGetEnabledService(statuses: Array<IServiceStatus>, serviceId: string): boolean {
-  let service = _.find(statuses, (service) => service.serviceId === serviceId);
+export function filterAndGetEnabledService(statuses: IServiceStatus[], serviceId: string): boolean {
+  const service = _.find(statuses, (service) => service.serviceId === serviceId);
   return service && service.setup;
 }
 
@@ -58,7 +58,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
     }
   }
 
-  public hybridStatusEventHandler(servicesStatuses: Array<IServiceStatus>): void {
+  public hybridStatusEventHandler(servicesStatuses: IServiceStatus[]): void {
     this.status = {
       status: filterAndGetCssStatus(this.HybridServicesClusterStatesService, servicesStatuses, this.service),
       text: filterAndGetTxtStatus(servicesStatuses, this.service),

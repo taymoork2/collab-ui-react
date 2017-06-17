@@ -143,7 +143,7 @@ describe('Service: Common Report Service', () => {
       expect(options).toEqual(this.queryOne);
 
       options = this.CommonReportService.getOptions(this.filter[1], 'type', 'action');
-      let updatedQuery = _.cloneDeep(this.queryOne);
+      const updatedQuery = _.cloneDeep(this.queryOne);
       updatedQuery.intervalCount = 31;
       updatedQuery.spanCount = 7;
       expect(options).toEqual(updatedQuery);
@@ -158,7 +158,7 @@ describe('Service: Common Report Service', () => {
 
     it('getOptionsOverPeriod should return partner options', function () {
       let options: IIntervalQuery = this.CommonReportService.getOptionsOverPeriod(this.filter[0], 'type', 'action');
-      let updatedQuery = _.cloneDeep(this.queryOne);
+      const updatedQuery = _.cloneDeep(this.queryOne);
       updatedQuery.spanCount = 7;
       expect(options).toEqual(updatedQuery);
 
@@ -178,7 +178,7 @@ describe('Service: Common Report Service', () => {
       expect(options).toEqual(this.queryOne);
 
       options = this.CommonReportService.getTrendOptions(this.filter[1], 'type', 'action');
-      let updatedQuery = _.cloneDeep(this.queryOne);
+      const updatedQuery = _.cloneDeep(this.queryOne);
       updatedQuery.intervalCount = 31;
       expect(options).toEqual(updatedQuery);
 
@@ -189,7 +189,7 @@ describe('Service: Common Report Service', () => {
 
     it('getReportTypeOptions should return partner reportType options', function () {
       let options: IReportTypeQuery = this.CommonReportService.getReportTypeOptions(this.filter[0], 'type', 'action');
-      let updatedQuery = _.cloneDeep(this.queryTwo);
+      const updatedQuery = _.cloneDeep(this.queryTwo);
       updatedQuery.reportType = this.defaults.usageOptions[0];
       expect(options).toEqual(updatedQuery);
 
@@ -204,7 +204,7 @@ describe('Service: Common Report Service', () => {
 
     it('getTypeOptions should return customer type options', function () {
       let options: ITypeQuery = this.CommonReportService.getTypeOptions(this.filter[0], 'name');
-      let updatedQuery = _.cloneDeep(this.queryFour);
+      const updatedQuery = _.cloneDeep(this.queryFour);
       updatedQuery.type = this.defaults.usageOptions[0];
       updatedQuery.extension = undefined;
       expect(options).toEqual(updatedQuery);
@@ -220,7 +220,7 @@ describe('Service: Common Report Service', () => {
 
     it('getLineTypeOptions should return customer type options', function () {
       let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(this.filter[0], 'name');
-      let updatedQuery = _.cloneDeep(this.queryFour);
+      const updatedQuery = _.cloneDeep(this.queryFour);
       updatedQuery.type = this.defaults.altUsageOptions[0];
       updatedQuery.extension = undefined;
       expect(options).toEqual(updatedQuery);
@@ -239,7 +239,7 @@ describe('Service: Common Report Service', () => {
       expect(options).toEqual(this.queryThree);
 
       options = this.CommonReportService.getCustomerOptions(this.filter[1], 'type', 'action', true);
-      let updatedQuery = _.cloneDeep(this.queryThree);
+      const updatedQuery = _.cloneDeep(this.queryThree);
       updatedQuery.intervalCount = 31;
       updatedQuery.spanCount = 7;
       expect(options).toEqual(updatedQuery);
@@ -254,7 +254,7 @@ describe('Service: Common Report Service', () => {
 
     it('getAltCustomerOptions should return customer options', function () {
       let options: ICustomerIntervalQuery = this.CommonReportService.getAltCustomerOptions(this.filter[0], 'type', 'action', true);
-      let updatedQuery = _.cloneDeep(this.queryThree);
+      const updatedQuery = _.cloneDeep(this.queryThree);
       updatedQuery.spanCount = 7;
       expect(options).toEqual(updatedQuery);
 
@@ -272,16 +272,16 @@ describe('Service: Common Report Service', () => {
 
   describe('getModifiedDate responses:', function () {
     it('should return day-formated response for filter values 0 and 1', function () {
-      let responseDate: string = moment.tz(this.today, this.defaults.timezone).format(this.defaults.dayFormat);
-      let date: string = this.CommonReportService.getModifiedDate(this.today, this.filter[0]);
-      let dateTwo: string = this.CommonReportService.getModifiedDate(this.today, this.filter[1]);
+      const responseDate: string = moment.tz(this.today, this.defaults.timezone).format(this.defaults.dayFormat);
+      const date: string = this.CommonReportService.getModifiedDate(this.today, this.filter[0]);
+      const dateTwo: string = this.CommonReportService.getModifiedDate(this.today, this.filter[1]);
       expect(date).toEqual(responseDate);
       expect(dateTwo).toEqual(responseDate);
     });
 
     it('should return month-formated response for filter value 2', function () {
-      let responseDate: string = moment.tz(this.today, this.defaults.timezone).format(this.defaults.monthFormat);
-      let date: string = this.CommonReportService.getModifiedDate(this.today, this.filter[2]);
+      const responseDate: string = moment.tz(this.today, this.defaults.timezone).format(this.defaults.monthFormat);
+      const date: string = this.CommonReportService.getModifiedDate(this.today, this.filter[2]);
       expect(date).toEqual(responseDate);
     });
   });

@@ -103,9 +103,9 @@ class DirectoryNumber implements ng.IComponentController {
   }
 
   private setCurrentOption(currentValue: string, existingOptions: IDirectoryNumberOption[]) {
-    let existingOption: IDirectoryNumberOption = _.find(existingOptions, { value: currentValue });
+    const existingOption: IDirectoryNumberOption = _.find(existingOptions, { value: currentValue });
     if (!existingOption) {
-      let currentExternalNumberOption: IDirectoryNumberOption = {
+      const currentExternalNumberOption: IDirectoryNumberOption = {
         value: currentValue,
         label: currentValue,
       };
@@ -124,7 +124,7 @@ class DirectoryNumber implements ng.IComponentController {
   }
 
   private setMatchingExternalNumber(): void {
-    let matchingExternalNumber = _.find(this.externalOptions, (externalOption) => {
+    const matchingExternalNumber = _.find(this.externalOptions, (externalOption) => {
       if (_.isString(externalOption.value) && _.isString(this.internalSelected.value)) {
         return _.endsWith(externalOption.value, this.internalSelected.value);
       }

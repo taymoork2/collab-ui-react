@@ -66,7 +66,7 @@ export class SettingsCtrl {
       this.initRetention();
     }
 
-    let settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
+    const settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
     if (!_.isNull(settingsToShow)) {
       // scroll the selected settings section in to view.
       this.$timeout(() => {
@@ -86,10 +86,10 @@ export class SettingsCtrl {
   }
 
   public scrollIntoView(settingsToShow: string): void {
-    let settingElement = $(`setting-section[setting="settingsCtrl.${settingsToShow}"]`);
+    const settingElement = $(`setting-section[setting="settingsCtrl.${settingsToShow}"]`);
     if (_.isElement(settingElement[0])) {
       settingElement[0].scrollIntoView({ behavior: 'instant' });
-      let body = $('body');
+      const body = $('body');
       body.scrollTop(body.scrollTop() - $('.settings').offset().top);
     }
   }
@@ -98,7 +98,7 @@ export class SettingsCtrl {
     if (this.Authinfo.isPartner() || this.Authinfo.isDirectCustomer()) {
       this.branding = new BrandingSetting();
     } else if (this.Authinfo.isCustomerAdmin()) {
-      let params = {
+      const params = {
         basicInfo: true,
       };
       this.Orgservice.getOrg(_.noop, null, params).then(response => {
@@ -110,7 +110,7 @@ export class SettingsCtrl {
   }
 
   private initSecurity() {
-    let promises = {
+    const promises = {
       pinSettingsToggle: this.FeatureToggleService.atlasPinSettingsGetStatus(),
       proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
     };
@@ -122,7 +122,7 @@ export class SettingsCtrl {
   }
 
   private initRetention() {
-    let promises = {
+    const promises = {
       retentionToggle: this.FeatureToggleService.atlasDataRetentionSettingsGetStatus(),
       proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
     };

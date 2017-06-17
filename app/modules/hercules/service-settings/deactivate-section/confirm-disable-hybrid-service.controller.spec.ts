@@ -38,7 +38,7 @@ describe('Controller: ConfirmDisableHybridServiceCtrl ', () => {
   };
 
   it('must call CloudConnectorService.deactivateService with the correct serviceId when disabling Google Calendar, and then pop a green Notification', () => {
-    let serviceId: string = 'squared-fusion-gcal';
+    const serviceId: string = 'squared-fusion-gcal';
     initController(serviceId);
     controller.confirmDeactivation();
     $scope.$apply();
@@ -48,7 +48,7 @@ describe('Controller: ConfirmDisableHybridServiceCtrl ', () => {
   });
 
   it('must call ServiceDescriptor.disableService with the correct serviceId when disabling Google Calendar, and then pop a green Notification', () => {
-    let serviceId: string = 'something-that-is-not-google-calendar';
+    const serviceId: string = 'something-that-is-not-google-calendar';
     initController(serviceId);
     controller.confirmDeactivation();
     $scope.$apply();

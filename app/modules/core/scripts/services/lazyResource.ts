@@ -1,5 +1,5 @@
 export default function LazyResource($resource, lazyUrlGenerator, paramDefaults, actions, options) {
-  let methods = {};
+  const methods = {};
   let defaultMethods = ['save', 'get', 'query', 'remove', 'delete'];
 
   if (actions) {
@@ -8,7 +8,7 @@ export default function LazyResource($resource, lazyUrlGenerator, paramDefaults,
 
   defaultMethods.map((action) => {
     methods[action] = (...args) => {
-      let url = lazyUrlGenerator();
+      const url = lazyUrlGenerator();
       return $resource(url, paramDefaults, actions, options)[action](...args);
     };
   });

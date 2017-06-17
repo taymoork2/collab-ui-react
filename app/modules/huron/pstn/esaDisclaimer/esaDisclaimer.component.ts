@@ -21,7 +21,7 @@ export class EsaDisclaimerCtrl implements ng.IComponentController {
   ) {}
 
   public onAgreeClick(): ng.IPromise<any> {
-    let payload = {
+    const payload = {
       e911Signee: this.Authinfo.getUserId(),
     };
     return this.TerminusService.customer().update({

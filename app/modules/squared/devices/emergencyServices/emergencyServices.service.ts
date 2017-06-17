@@ -43,7 +43,7 @@ export class EmergencyServicesService {
   public getInitialData(): IEmergencyServicesData {
     this.currentDevice = this.$stateParams.currentDevice;
     this.huronDeviceService = this.$stateParams.huronDeviceService;
-    let emergencyData = {
+    const emergencyData = {
       emergencyNumber: this.$stateParams.currentNumber,
       emergencyAddress: this.$stateParams.currentAddress,
       status: this.$stateParams.status,
@@ -88,7 +88,7 @@ export class EmergencyServicesService {
 
   public getAddress(): ng.IPromise<IEmergencyAddress> {
     return this.PstnServiceAddressService.getAddress(this.Authinfo.getOrgId()).then((address: IEmergencyAddress) => {
-      let emergencyAddress = {
+      const emergencyAddress = {
         address1: address.streetAddress,
         address2: address.unit,
         city: address.city,

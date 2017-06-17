@@ -1,7 +1,7 @@
 import LocationsService from './index';
 
 describe('Service: CallLocations', () => {
-  let locationsList =  getJSONFixture('call/locations/locationsList.json');
+  const locationsList =  getJSONFixture('call/locations/locationsList.json');
 
   //TODO: remove comments and use actual APIs when  API is availble for httpBackend
   beforeEach(function () {

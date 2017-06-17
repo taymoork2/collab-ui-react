@@ -7,7 +7,7 @@ import { Notification } from 'modules/core/notifications';
 
 class CmcUserDetailsController implements ng.IComponentController {
 
-  public services: Array<IFeature>;
+  public services: IFeature[];
   public allowCmcSettings: boolean = false;
 
   private user: IUser;
@@ -41,7 +41,7 @@ class CmcUserDetailsController implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let userChanges = changes['user'];
+    const userChanges = changes['user'];
     this.$log.debug('userChanges', userChanges);
     if (userChanges) {
       if (userChanges.currentValue) {

@@ -1,6 +1,6 @@
 
-let ModalService = require('./modal.service');
-let ModalCtrl = require('./modal.controller');
+const ModalService = require('./modal.service');
+const ModalCtrl = require('./modal.controller');
 
 /**
  * Add a type to the default Modal settings (used by $modal)

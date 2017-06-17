@@ -3,16 +3,16 @@
 export interface IUser {
   id: string;
   userName: string;
-  entitlements: Array<string>;
-  licenseID: Array<string>;
-  addresses: Array<any>;
+  entitlements: string[];
+  licenseID: string[];
+  addresses: any[];
   meta: Object;
-  accountStatus: Array<string>;
+  accountStatus: string[];
   success: boolean;
   pendingStatus: boolean;
-  userSettings: Array<string>;
-  trainSiteNames: Array<string>;
-  roles: Array<string>;
+  userSettings: string[];
+  trainSiteNames: string[];
+  roles: string[];
   invitations?: IServiceInvitations;
 }
 
@@ -20,16 +20,16 @@ export interface IUser {
 export class User implements IUser {
   public id: string;
   public userName: string;
-  public entitlements: Array<string>;
-  public licenseID: Array<string>;
-  public addresses: Array<any>;
+  public entitlements: string[];
+  public licenseID: string[];
+  public addresses: any[];
   public meta: Object;
-  public accountStatus: Array<string>;
+  public accountStatus: string[];
   public success: boolean;
   public pendingStatus: boolean;
-  public userSettings: Array<string>;
-  public trainSiteNames: Array<string>;
-  public roles: Array<string>;
+  public userSettings: string[];
+  public trainSiteNames: string[];
+  public roles: string[];
   public invitations?: IServiceInvitations;
 
   constructor(obj: IUser = {
@@ -81,7 +81,7 @@ interface IEffectiveLicense {
 }
 
 interface IInvitation {
-  effectiveLicenses: Array<IEffectiveLicense>;
+  effectiveLicenses: IEffectiveLicense[];
 }
 
 interface IServiceInvitations {
@@ -141,7 +141,7 @@ export class UserOverviewService {
     const userUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId;
     return this.$http.get(userUrl)
       .then((response) => {
-        let userData: IUserData = new UserData();
+        const userData: IUserData = new UserData();
         userData.user = new User(<IUser>response.data);
         userData.sqEntitlements = new SquaredEntitlements(this.Utils.getSqEntitlements(userData.user));
         userData.user.trainSiteNames = this.updateTrainSiteNames(userData.user);
@@ -173,8 +173,8 @@ export class UserOverviewService {
 
     if (_.isEmpty(userData.user.entitlements)) {
 
-      let hasSyncKms = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
-      let hasCiscoucCES = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
+      const hasSyncKms = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
+      const hasCiscoucCES = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
 
       promise = this.getInvitationsForUser(userData.user.id)
         .then((inviteResponse) => {
@@ -188,7 +188,7 @@ export class UserOverviewService {
               userData.user.invitations.ms = true;
             }
 
-            let confId = this.getInvitationDetails(inviteResponse.effectiveLicenses, 'CF');
+            const confId = this.getInvitationDetails(inviteResponse.effectiveLicenses, 'CF');
             if (confId) {
               userData.user.invitations.cf = confId;
             }
@@ -222,9 +222,9 @@ export class UserOverviewService {
   }
 
   // return true if the invitations contain the requested license
-  private getInvitationDetails(invitations: Array<IEffectiveLicense>, license: string): any {
+  private getInvitationDetails(invitations: IEffectiveLicense[], license: string): any {
     if (invitations) {
-      let idx = _.findIndex(invitations, function (invite: any) {
+      const idx = _.findIndex(invitations, function (invite: any) {
         return invite.id.substring(0, 2) === license && invite.idOperation === 'ADD';
       });
       if (idx > -1) {
@@ -244,9 +244,9 @@ export class UserOverviewService {
     return false;
   }
 
-  private updateTrainSiteNames(user: IUser): Array<string> {
+  private updateTrainSiteNames(user: IUser): string[] {
     if (user.trainSiteNames) {
-      let ciTrainSiteNames = user.trainSiteNames.filter(
+      const ciTrainSiteNames = user.trainSiteNames.filter(
         (chkSiteUrl) => {
           return this.WebExUtilsFact.isCIEnabledSite(chkSiteUrl);
         },
@@ -261,8 +261,8 @@ export class UserOverviewService {
     // is there a sign-up date for the user?
     if (!_.isEmpty(user.entitlements)) {
 
-      let userHasSignedUp = _.some(user.userSettings, (x) => _.includes(x, 'spark.signUpDate'));
-      let hasCiscouc = this.userHasEntitlement(user, 'ciscouc');
+      const userHasSignedUp = _.some(user.userSettings, (x) => _.includes(x, 'spark.signUpDate'));
+      const hasCiscouc = this.userHasEntitlement(user, 'ciscouc');
 
       return (userHasSignedUp || hasCiscouc);
     }
@@ -272,14 +272,14 @@ export class UserOverviewService {
 
   public getUserPreferredLanguage(languageCode) {
     return this.ServiceSetup.getAllLanguages().then(languages => {
-      let userLanguageDetails = {
+      const userLanguageDetails = {
         language: {},
         translatedLanguages: [],
       };
       if (_.isEmpty(languages)) { return userLanguageDetails; }
-      let translatedLanguages = this.ServiceSetup.getTranslatedSiteLanguages(languages);
+      const translatedLanguages = this.ServiceSetup.getTranslatedSiteLanguages(languages);
       if (languageCode) {
-        let preferredLanguage = this.findPreferredLanguageByCode(translatedLanguages, languageCode);
+        const preferredLanguage = this.findPreferredLanguageByCode(translatedLanguages, languageCode);
         userLanguageDetails.language = preferredLanguage;
       }
       userLanguageDetails.translatedLanguages = translatedLanguages;
@@ -295,7 +295,7 @@ export class UserOverviewService {
   }
 
   public formatLanguage(language_code) {
-    let userLangSplit = _.split(language_code, /[-_]+/, 2);
+    const userLangSplit = _.split(language_code, /[-_]+/, 2);
     if (userLangSplit.length <= 1) {
       return language_code;
     }
@@ -310,7 +310,7 @@ export class UserOverviewService {
   }
 
   public updateUserPreferredLanguage(userId: string, languageCode: string) {
-    let userData = {
+    const userData = {
       schemas: this.Config.scimSchemas,
       preferredLanguage: languageCode,
     };

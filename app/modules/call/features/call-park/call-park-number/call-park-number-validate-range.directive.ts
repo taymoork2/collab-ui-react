@@ -23,7 +23,7 @@ export class CallParkRangeValidator implements ng.IDirective {
       }
 
       // check against existing values and don't call getEndRange API under certain conditions
-      let existingCallPark = this.CallParkService.getOriginalConfig();
+      const existingCallPark = this.CallParkService.getOriginalConfig();
       if (existingCallPark && existingCallPark.uuid) {
         switch (ctrl.$name) {
           case RangeFieldName.SINGLE_NUMBER:

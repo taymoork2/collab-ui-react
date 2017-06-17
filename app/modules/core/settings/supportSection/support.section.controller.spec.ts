@@ -101,7 +101,7 @@ describe('Controller: PartnerProfileCtrl', function () {
         this.controller.customHelpSite.url = 'helpUrl';
         this.controller.saveUseCustomHelpSite();
         this.controller.saveUseCustomSupportUrl();
-        let expectedOrgSettingsPart1 = {
+        const expectedOrgSettingsPart1 = {
           reportingSiteUrl: 'supportUrl',
           reportingSiteDesc: 'this is support text',
           // helpUrl: 'helpUrl',
@@ -110,7 +110,7 @@ describe('Controller: PartnerProfileCtrl', function () {
           // allowReadOnlyAccess: false,
           // allowCrashLogUpload: false
         };
-        let expectedOrgSettingsPart2 = {
+        const expectedOrgSettingsPart2 = {
           // reportingSiteUrl: 'supportUrl',
           // reportingSiteDesc: 'this is support text',
           helpUrl: 'helpUrl',

@@ -48,14 +48,14 @@ export class EnterprisePrivateTrunkService {
 
   public fetch() {
 
-    let promises = [
+    const promises = [
       this.PrivateTrunkService.getPrivateTrunk(),
       this.ServiceDescriptor.getServiceStatus('ept'),
     ];
     return this.$q.all(promises)
       .then((results: [IPrivateTrunkInfo, ITrunksFromFMS]) => {
-        let trunks: IPrivateTrunkResource[] = results[0].resources;
-        let service: ITrunksFromFMS = results[1];
+        const trunks: IPrivateTrunkResource[] = results[0].resources;
+        const service: ITrunksFromFMS = results[1];
         _.map(trunks, (trunk: IPrivateTrunkResourceWithStatus) => {
           const resource = _.find(service.resources, (resource: ITrunkFromFms) => resource.id === trunk.uuid);
           if (resource && resource.state) {

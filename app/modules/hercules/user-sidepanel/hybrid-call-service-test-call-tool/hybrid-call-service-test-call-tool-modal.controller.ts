@@ -105,7 +105,7 @@ class HybridCallServiceTestToolModalController {
   }
 
   private setUser(selectedUser: IUserFromCommonIdentity): ITestToolUser {
-    let updatedUser: ITestToolUser = {};
+    const updatedUser: ITestToolUser = {};
     updatedUser.input = selectedUser.displayName;
     updatedUser.displayName = selectedUser.displayName;
     updatedUser.userId = selectedUser.id;

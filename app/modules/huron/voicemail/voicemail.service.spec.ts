@@ -23,7 +23,7 @@ describe('Service: VoicemailService', function () {
   });
 
   it('Verify update voicemail user', function () {
-    let user = {
+    const user = {
       services: ['VOICE', 'VOICEMAIL'],
       voicemail: {},
     };

@@ -5,7 +5,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     return undefined;
   }
 
-  private _buttons: Array<ICardButton> = [{
+  private _buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.call.buttons.numbers',
     routerState: 'huronlines',
     buttonClass: 'btn-link',
@@ -15,7 +15,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.active) {
       return this._buttons;
     }
@@ -37,14 +37,14 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
   // TODO (jlowery): remove when sparkCallTenDigitExt feature toggle is removed.
   public sparkCallTenDigitExtFeatureToggleEventhandler(hasFeature: boolean) {
     if (hasFeature) {
-      let routeToNewSettings = {
+      const routeToNewSettings = {
         name: 'servicesOverview.cards.call.buttons.settings',
         routerState: 'huronsettingsnew',
         buttonClass: 'btn-link',
       };
-      let match = _.find(this._buttons, { name: 'servicesOverview.cards.call.buttons.settings' });
+      const match = _.find(this._buttons, { name: 'servicesOverview.cards.call.buttons.settings' });
       if (match) {
-        let index = _.indexOf(this._buttons, match);
+        const index = _.indexOf(this._buttons, match);
         this._buttons.splice(index, 1, routeToNewSettings);
       }
     }

@@ -107,7 +107,7 @@ describe('crUserCsvResults Component', () => {
       this.$scope.handleCancelImport = jasmine.createSpy('handleCancelImport');
       this.$scope.fakeCsv = this.fakeCsv;
 
-      let bindings = {
+      const bindings = {
         csvData: 'fakeCsv',
         onCancelImport: 'handleCancelImport()',
       };
@@ -207,7 +207,7 @@ describe('crUserCsvResults Component', () => {
 
     it('should show cancel dialog when close dialog is pressed', function () {
 
-      let closeBtn = this.view.find('.close-button a');
+      const closeBtn = this.view.find('.close-button a');
       expect(closeBtn).toHaveLength(1);
       closeBtn.click();
       this.$scope.$apply();
@@ -221,7 +221,7 @@ describe('crUserCsvResults Component', () => {
 
   describe('Controller', function () {
 
-    let bindings = {
+    const bindings = {
       csvData: this.fakeCsv,
       onCancelImport: jasmine.createSpy('onStatusChange'),
     };

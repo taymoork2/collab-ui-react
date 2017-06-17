@@ -282,7 +282,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
         .map((node) => {
           // We have to base the transformation on the connectors from `cluster`, not from `nodes` because of
           // https://sqbu-github.cisco.com/WebExSquared/fusion-management-service/issues/250
-          let connectors = _.chain(cluster.connectors)
+          const connectors = _.chain(cluster.connectors)
             .filter({ hostSerial: node.serial })
             .map(connector => {
               const mergedStatus = this.HybridServicesClusterStatesService.getMergedStateSeverity([connector]);
