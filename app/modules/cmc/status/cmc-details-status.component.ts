@@ -13,7 +13,8 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   private statTemplate;
   public filters: any[];
   private searchStr: string;
-  private nextUrl: string;
+  private nextUrl: string | null;
+  private ussLimit: number = 100;
 
   /* @ngInject */
   constructor(
@@ -65,22 +66,24 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
         this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });
       });
 
-    this.fetchUserStatuses(100).then( () => {
+    this.fetchUserStatuses(this.ussLimit).then( () => {
       this.CmcUserService.insertUserDisplayNames(this.userStatuses);
     });
   }
 
   private fetchUserStatuses(limit: number) {
-    return this.CmcUserService.getUsersWithCmcButMissingAware(limit)
+    return this.CmcUserService.getUsersWithCmcButMissingAware(limit, this.nextUrl)
       .then( (result: ICmcUserStatusInfoResponse) => {
-        this.userStatuses = result.userStatuses;
-        this.fetchedUserStatuses = result.userStatuses;
+        this.userStatuses = _.union(this.userStatuses, result.userStatuses);
+        this.$log.debug('userStatuses length', this.userStatuses.length);
+        this.fetchedUserStatuses = this.userStatuses;
         if (result.paging.next) {
           this.nextUrl = result.paging.next;
           this.$log.debug('nextUrl', this.nextUrl);
           this.userStatusesSummaryText = this.$translate.instant('cmc.statusPage.listingFirstActiveUsers', { noOfActiveUsers: this.userStatuses.length });
         } else {
           this.userStatusesSummaryText = '';
+          this.nextUrl = null;
         }
       })
       .catch((error: any) => {
@@ -134,6 +137,12 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   private onRegisterApi(gridApi): void {
     gridApi.infiniteScroll.on.needLoadMoreData(this.$scope, () => {
       this.$log.debug('needLoadMoreData');
+      if (this.nextUrl) {
+        this.fetchUserStatuses(this.ussLimit).then( () => {
+          this.CmcUserService.insertUserDisplayNames(this.userStatuses);
+          gridApi.infiniteScroll.dataLoaded();
+        });
+      }
     });
     gridApi.infiniteScroll.on.needLoadMoreDataTop(this.$scope, () => {
       this.$log.debug('needLoadMoreDataTop');
