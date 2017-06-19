@@ -59,13 +59,19 @@ export class CmcUserService {
   public insertUserDisplayNames(userData) {
     const ids = _.map(userData, 'userId');
     this.$log.info('ids:', ids);
-    const urlBase: string = this.UrlConfig.getAdminServiceUrl();
-    const url: string = urlBase + 'organization/' + this.Authinfo.getOrgId() + '/reports/devices?accountIds=' + ids.join();
+    const urlBase: string = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId());
+    const url: string = urlBase + '?filter=id+eq+' + ids.join("+or+id+eq+");
     return this.$http.get(url).then( (result: any) => {
-      _.each(result.data, (resolvedUser) => {
+      _.each(result.data.Resources, (resolvedUser) => {
         const res: any = _.find(userData, { userId: resolvedUser.id });
         if (res) {
           res.displayName = resolvedUser.displayName;
+          res.userName = resolvedUser.userName;
+          const mobile: any = _.find(resolvedUser.phoneNumbers, { type: 'mobile' });
+          if (mobile) {
+            this.$log.warn("mobile", mobile);
+            res.mobileNumber = mobile.value;
+          }
         }
       });
       this.$log.info('userData:', userData);
