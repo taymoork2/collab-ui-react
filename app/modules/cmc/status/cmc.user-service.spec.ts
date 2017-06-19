@@ -83,17 +83,19 @@ describe('CmcUserService', () => {
     this.$httpBackend.flush();
   });
 
-  it('should insert display name to user statuses', function () {
+  it('should fetch name/info from CI and insert to user statuses', function () {
 
     const orgId = this.Authinfo.getOrgId();
 
-    const nameResolvedUsers = [
-      { id: '1', displayName: 'helge' },
-      { id: '3', displayName: 'anders' },
-    ];
+    const nameResolvedUsers = {
+      Resources: [
+        { id: '1', displayName: 'helge' },
+        { id: '3', displayName: 'anders' },
+      ]
+    };
 
     this.$httpBackend
-      .when('GET', this.UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/reports/devices?accountIds=1,2,3')
+      .when('GET', this.UrlConfig.getScimUrl(orgId) + '?filter=id+eq+1+or+id+eq+2+or+id+eq+3')
       .respond(nameResolvedUsers);
 
     const userStatuses: ICmcUserStatus[] = <ICmcUserStatus[]> [
