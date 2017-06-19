@@ -2,7 +2,8 @@ import ILogService = angular.ILogService;
 class CustomerReportsHeaderCtrl {
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
+    // private $translate: ng.translate.ITranslateService,
+    private $translate,
     private $q: ng.IQService,
     private Authinfo,
     private FeatureToggleService,
@@ -12,48 +13,49 @@ class CustomerReportsHeaderCtrl {
   ) {
     if (Authinfo.isCare()) {
       this.headerTabs.push({
-        title: $translate.instant('reportsPage.careTab'),
+        title: this.$translate.instant('reportsPage.careTab'),
         state: 'reports.care',
       });
     }
     this.$q.all(this.promises).then((features: any): void => {
+      if (features.webexMetrics) {
+        this.headerTabs.push({
+          title: this.$translate.instant('reportsPage.sparkReports'),
+          state: 'reports.spark',
+        });
+        this.headerTabs.push({
+          title: this.$translate.instant('reportsPage.webexMetrics.title'),
+          state: 'reports.webex-metrics',
+        });
+      }
       if (features.isMfEnabled) {
         if (features.mf) {
           this.headerTabs.push({
-            title: $translate.instant('mediaFusion.report.title'),
+            title: this.$translate.instant('mediaFusion.report.title'),
             state: 'reports.media',
           });
         } else if (features.mfMilestoneTwo) {
           this.headerTabs.push({
-            title: $translate.instant('mediaFusion.report.title'),
+            title: this.$translate.instant('mediaFusion.report.title'),
             state: 'reports.mediaservice',
           });
         } else {
           this.headerTabs.push({
-            title: $translate.instant('mediaFusion.report.title'),
+            title: this.$translate.instant('mediaFusion.report.title'),
             state: 'reports.metrics',
           });
         }
       }
       this.headerTabs.push({
-        title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
+        title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),
         state: 'reports.device-usage',
       });
-      if (features.webexMetrics) {
-        this.headerTabs.push({
-          title: $translate.instant('reportsPage.webexMetrics.title'),
-          state: 'reports.webex-metrics',
-        });
-      }
     });
     this.checkWebex();
   }
 
   public pageTitle = this.$translate.instant('reportsPage.pageTitle');
-  public headerTabs = [{
-    title: this.$translate.instant('reportsPage.sparkReports'),
-    state: 'reports.spark',
-  }];
+  public headerTabs = new Array<any>();
 
   private webex: boolean = false;
   private promises: any = {

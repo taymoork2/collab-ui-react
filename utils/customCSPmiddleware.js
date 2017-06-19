@@ -35,6 +35,20 @@ module.exports = csp({
       'https://qlik-loader',
       'https://10.29.42.18:4244',
       'https://10.29.42.18',
+      'https://sjc-ngxbts.webex.com:4244',
+      'https://sjc-ngxbts.webex.com',
+      'https://rpbtqlkhsn006.webex.com:4244',
+      'https://rpbtqlkhsn006.webex.com',
+      'https://rpbtqlkhsn007.webex.com:4244',
+      'https://rpbtqlkhsn007.webex.com',
+      'https://rpbtqlkhsn008.webex.com:4244',
+      'https://rpbtqlkhsn008.webex.com',
+      'https://rpbtqlkhsn009.webex.com:4244',
+      'https://rpbtqlkhsn009.webex.com',
+      'https://rpbtqlkhsn010.webex.com:4244',
+      'https://rpbtqlkhsn010.webex.com',
+      'https://rpbtqlkhsn011.webex.com:4244',
+      'https://rpbtqlkhsn011.webex.com',
     ],
     objectSrc: [
       'http://www.cisco.com', // Terms of Service
@@ -77,6 +91,8 @@ module.exports = csp({
       'https://*.amazonaws.com', // MOH Media
       'https://bam.nr-data.net', // New Relic Browser
       'https://10.224.166.46:8443',
+      'http://rpbtqlkhsn002.webex.com:8080',
+      'https://rpbtqlkhsn006.webex.com',
     ],
     fontSrc: [
       '\'self\'',
