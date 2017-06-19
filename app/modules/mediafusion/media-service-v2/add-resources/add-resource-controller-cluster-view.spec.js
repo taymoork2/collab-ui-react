@@ -95,7 +95,7 @@ describe('AddResourceControllerClusterViewV2', function () {
   });
 
   // 2017 name change
-  describe('atlasITProPackGetStatus && atlas2017NameChangeGetStatus - ', function () {
+  describe('atlasProPackGetStatus && atlas2017NameChangeGetStatus - ', function () {
     it('nameChangeEnabled should be false when atlas2017NameChangeGetStatus is false', function () {
       expect(this.controller.nameChangeEnabled).toBeFalsy();
     });

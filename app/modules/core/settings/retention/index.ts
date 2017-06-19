@@ -2,7 +2,7 @@
 import { RetentionSettingComponent } from './retentionSetting.component';
 
 import notificationModule from 'modules/core/notifications';
-import ITProPack from 'modules/core/itProPack';
+import ProPack from 'modules/core/proPack';
 
 export default angular.module('core.settings.retention', [
   require('angular-cache'),
@@ -10,7 +10,7 @@ export default angular.module('core.settings.retention', [
   require('collab-ui-ng').default,
   require('modules/core/scripts/services/retention.service'),
   require('modules/core/scripts/services/authinfo'),
-  ITProPack,
+  ProPack,
   notificationModule,
 ])
   .component('retentionSetting', new RetentionSettingComponent())

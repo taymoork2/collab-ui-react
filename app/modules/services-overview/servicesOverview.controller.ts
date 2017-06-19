@@ -15,7 +15,7 @@ import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
-import { ProPackService }  from 'modules/core/itProPack/itProPack.service';
+import { ProPackService }  from 'modules/core/proPack/proPack.service';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 import { ICluster } from 'modules/hercules/hybrid-services.types';

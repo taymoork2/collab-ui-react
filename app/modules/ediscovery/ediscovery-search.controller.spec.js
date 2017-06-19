@@ -103,7 +103,7 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(result).toEqual(['ediscovery.dateError.StartDateMustBeforeEndDate', 'ediscovery.dateError.StartDateCannotBeInTheFuture']);
     });
 
-    it('should not exceed a 90 day range if itProPack is not purchased', function () {
+    it('should not exceed a 90 day range if ProPack is not purchased', function () {
       startDate = moment().subtract(91, 'days').format();
       endDate = moment().format();
 
