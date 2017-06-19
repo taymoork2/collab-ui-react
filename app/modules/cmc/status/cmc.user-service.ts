@@ -15,6 +15,8 @@ export class CmcUserService {
   ) {
   }
 
+  // TODO: Poor mans user status information is prelminary.
+  // TODO: Should be replaced when CMC or related connectors report CMC relevant info to USS.
   public getUsersWithCmcButMissingAware(limit: number, nextUrl?: string): ng.IPromise<ICmcUserStatusInfoResponse> {
     return this.getUsersWithEntitlement(this.Config.entitlements.cmc, limit, nextUrl)
       .then((cmcResult: ICmcUserStatusInfoResponse ) => {
@@ -22,7 +24,6 @@ export class CmcUserService {
         const cmcUsers: ICmcUserStatus[] = cmcResult.userStatuses;
         this.$log.debug('cmcUsers length', cmcUsers.length);
 
-        // Using new USS API
         const userIds: string[] = this.extractUserIds(cmcUsers);
         return this.getUsersWithEntitlementFromUserIds(this.Config.entitlements.fusion_uc, userIds).then((result: ICmcUserStatusInfoResponse) => {
           // this.$log.debug('getUsersWithEntitlementFromUserIds', result);
