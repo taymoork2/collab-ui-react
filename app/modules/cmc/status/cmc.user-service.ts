@@ -80,8 +80,7 @@ export class CmcUserService {
       _.each(result.data.Resources, (resolvedUser) => {
         const res: any = _.find(userData, { userId: resolvedUser.id });
         if (res) {
-          res.displayName = resolvedUser.displayName;
-          //res.userName = resolvedUser.userName || '';
+          res.userName = resolvedUser.userName || '';
           const mobile: any = _.find(resolvedUser.phoneNumbers, { type: 'mobile' });
           if (mobile) {
             res.mobileNumber = mobile.value;

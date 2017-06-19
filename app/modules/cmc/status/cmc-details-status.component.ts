@@ -110,10 +110,15 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
   private initGrid() {
     const columnDefs = [{
-      width: '35%',
+      width: '25%',
       sortable: true,
-      field: 'displayName',
+      field: 'userName',
       displayName: this.$translate.instant('cmc.statusPage.table.username'),
+    }, {
+      width: '20%',
+      sortable: true,
+      field: 'mobileNumber',
+      displayName: this.$translate.instant('cmc.statusPage.table.mobileNumber'),
     }, {
       width: '30%',
       sortable: true,
@@ -123,7 +128,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
       cellClass: 'ui-grid-cell-contents',
       sort: { direction: 'asc', priority: 0 },
     }, {
-      width: '35%',
+      width: '25%',
       sortable: true,
       field: 'lastStatusUpdate',
       displayName: this.$translate.instant('cmc.statusPage.table.lastUpdated'),

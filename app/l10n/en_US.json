@@ -2789,6 +2789,7 @@
       },
       "table": {
         "username": "User Name",
+        "mobileNumber": "Mobile Number",
         "serviceStatus": "Service Status",
         "lastUpdated": "Last Updated"
       }

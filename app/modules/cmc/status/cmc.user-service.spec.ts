@@ -88,16 +88,14 @@ describe('CmcUserService', () => {
 
     const orgId = this.Authinfo.getOrgId();
 
-    const nameResolvedUsers = {
-      Resources: [
-        { id: '1', displayName: 'helge' },
-        { id: '3', displayName: 'anders' },
-      ],
-    };
-
     this.$httpBackend
       .when('GET', encodeURI(this.UrlConfig.getScimUrl(orgId) + '?filter=id eq 1 or id eq 2 or id eq 3'))
-      .respond(nameResolvedUsers);
+      .respond({
+        Resources: [
+          { id: '1', userName: 'helge', phoneNumbers: [{ type: 'mobile', value: '+4711111111' }] },
+          { id: '3', userName: 'anders', phoneNumbers: [{ type: 'mobile', value: '+4733333333' }] },
+        ],
+      });
 
     const userStatuses: ICmcUserStatus[] = <ICmcUserStatus[]> [
       { userId: '1', state: 'a' },
@@ -106,9 +104,9 @@ describe('CmcUserService', () => {
     ];
 
     const expectedResult: ICmcUserStatus[] = <ICmcUserStatus[]> [
-      { userId: '1', state: 'a', displayName: 'helge' },
+      { userId: '1', state: 'a', userName: 'helge', mobileNumber: '+4711111111' },
       { userId: '2', state: 'b' },
-      { userId: '3', state: 'c', displayName: 'anders' },
+      { userId: '3', state: 'c', userName: 'anders', mobileNumber: '+4733333333' },
     ];
 
     this.CmcUserService.insertUserDisplayNames(userStatuses).then((result) => {
