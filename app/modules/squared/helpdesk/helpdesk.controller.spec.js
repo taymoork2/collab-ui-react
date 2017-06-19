@@ -26,7 +26,6 @@ describe('Controller: HelpdeskController', function () {
     this.userSearchResult = _.cloneDeep(this.jsonData.userSearchResult);
     this.orgSearchResult = _.cloneDeep(this.jsonData.orgSearchResult);
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.Authinfo, 'isInDelegatedAdministrationOrg').and.returnValue(true);
     spyOn(this.HelpdeskService, 'searchUsers');
@@ -312,20 +311,6 @@ describe('Controller: HelpdeskController', function () {
       expect(this.controller.searchingForUsers).toBeFalsy();
       expect(this.controller.searchingForOrgs).toBeFalsy();
       this.expectToShowOnlyUserAndOrgsResult();
-    });
-  });
-
-  // Name Changes
-  describe('atlas2017NameChangeGetStatus changes - ', function () {
-    it('should have base header name when toggle is false', function () {
-      this.initController();
-      expect(this.controller.pageHeader).toEqual('helpdesk.navHeaderTitle');
-    });
-
-    it('should have new header name when toggle is true', function () {
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-      this.initController();
-      expect(this.controller.pageHeader).toEqual('helpdesk.navHeaderTitleNew');
     });
   });
 });
