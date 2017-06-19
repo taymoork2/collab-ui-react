@@ -16,6 +16,12 @@ class CustomerReportsHeaderCtrl {
       });
     }
     this.$q.all(this.promises).then((features: any): void => {
+      if (features.webexReports) { // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
+        this.headerTabs.push({
+          title: 'customerPage.webex',
+          state: 'reports.webex_',
+        });
+      }
       if (features.isMfEnabled) {
         if (features.mf) {
           this.headerTabs.push({

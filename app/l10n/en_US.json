@@ -652,6 +652,12 @@
       "sparkReportWithTicket": "Spark Reports Login"
     }
   },
+  "webexReports": {
+    "audio": "Audio",
+    "session": "Session",
+    "classic": "Classic",
+    "quality": "Quality"
+  },
   "sharedMeetingReports": {
     "title": "SHARED MEETINGS USAGE",
     "link": "View Report",

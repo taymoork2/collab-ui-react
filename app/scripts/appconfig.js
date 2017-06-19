@@ -1781,6 +1781,11 @@
               },
             },
           })
+          // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
+          .state('reports.webex_', {
+            url: '/reports/webex_',
+            views: { tabContent: { template: '<cust-webex-reports></cust-webex-reports>' } },
+          })
           .state('reports.webex', {
             url: '/reports/webex',
             views: {
