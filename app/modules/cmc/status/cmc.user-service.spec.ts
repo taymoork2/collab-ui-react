@@ -65,8 +65,9 @@ describe('CmcUserService', () => {
         { userId: '4', state: 'c' },
       ],
     };
+
     this.$httpBackend
-      .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?limit=100&entitled=true&serviceId=squared-fusion-uc')
+      .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?serviceId=squared-fusion-uc&userId=1,2,3')
       .respond(userWithAwareResponse);
 
     const expectedResult: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse> {
