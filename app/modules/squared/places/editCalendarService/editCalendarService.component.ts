@@ -16,7 +16,6 @@ class EditCalendarService implements ng.IComponentController {
       directoryNumber,
       ussProps,
     },
-    atlasHerculesGoogleCalendarFeatureToggle: boolean,
   };
   private static fusionCal = 'squared-fusion-cal';
   private static fusionGCal = 'squared-fusion-gcal';
@@ -66,7 +65,7 @@ class EditCalendarService implements ng.IComponentController {
         const enabledServices: { id: string }[] = ServiceDescriptor.filterEnabledServices(services);
         const calendarExchange = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionCal));
         const googleCal = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionGCal));
-        this.showGCalService = !!googleCal && this.wizardData.atlasHerculesGoogleCalendarFeatureToggle;
+        this.showGCalService = !!googleCal;
         this.showExchangeService = !!calendarExchange;
 
         const existingCalLinks: IExternalLinkedAccount = _.head(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {

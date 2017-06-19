@@ -21,7 +21,6 @@
 
         function init() {
           $q.all({
-            hasGoogleCalendarFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar),
             nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
           }).then(function (featureToggles) {
             if (featureToggles.nameChangeEnabled) {
@@ -32,11 +31,11 @@
 
             return $q.all({
               clusterList: HybridServicesClusterService.getAll(),
-              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) && featureToggles.hasGoogleCalendarFeatureToggle ? CloudConnectorService.getService() : $q.resolve({}),
+              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) ? CloudConnectorService.getService() : $q.resolve({}),
               featureToggles: featureToggles,
             });
           }).then(function (response) {
-            if (response.featureToggles.hasGoogleCalendarFeatureToggle && Authinfo.isEntitled(Config.entitlements.fusion_google_cal)) {
+            if (Authinfo.isEntitled(Config.entitlements.fusion_google_cal)) {
               card.serviceList.push(response.gcalService);
             }
             if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {

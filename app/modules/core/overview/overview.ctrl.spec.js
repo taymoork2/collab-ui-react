@@ -355,7 +355,6 @@ describe('Controller: OverviewCtrl', function () {
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
-      hasGoogleCalendarFeatureToggle: false,
       $httpBackend: $httpBackend,
     });
 

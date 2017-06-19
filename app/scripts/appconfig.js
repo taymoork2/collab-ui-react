@@ -754,11 +754,6 @@
             controller: 'OverviewCtrl',
             controllerAs: 'overview',
             parent: 'main',
-            resolve: {
-              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
-              },
-            },
           })
           .state('my-company', {
             templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
@@ -4025,15 +4020,10 @@
             abstract: true,
             parent: 'main',
             template: '<div ui-view></div>',
-            resolve: {
-              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
-              },
-            },
           })
           .state('google-calendar-service.settings', {
             url: '/services/google-calendar/settings',
-            template: '<google-calendar-settings-page ng-if="$resolve.hasGoogleCalendarFeatureToggle"></google-calendar-settings-page>',
+            template: '<google-calendar-settings-page></google-calendar-settings-page>',
             controller: /* @ngInject */ function (Analytics) {
               return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_GOOG_SETTINGS);
             },
