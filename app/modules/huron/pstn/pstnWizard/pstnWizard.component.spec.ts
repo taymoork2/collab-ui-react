@@ -46,6 +46,7 @@ describe('Component: PstnWizardComponent', () => {
     spyOn(this.PstnModel, 'setOrders');
     spyOn(this.PstnWizardService, 'setSwivelOrder');
     spyOn(this.PstnWizardService, 'finalizeImport');
+    spyOn(this.PstnWizardService, 'blockByopNumberAdd');
     this.PstnWizardService.init.and.returnValue(this.$q.resolve());
     this.PstnWizardService.initSites.and.returnValue(this.$q.resolve());
     this.PstnService.listResellerCarriersV2.and.returnValue(this.$q.reject());
@@ -148,14 +149,46 @@ describe('Component: PstnWizardComponent', () => {
     it('should go to review if Skip button is clicked on step 8', function () {
       this.controller.step = 8;
       this.PstnModel.isEsaSigned.and.returnValue(false);
-      this.controller.goToReview();
+      this.controller.onSkip();
       expect(this.controller.step).toBe(10);
     });
     it('should go to review if Skip button is clicked on step 9', function () {
       this.controller.step = 9;
       this.PstnModel.isEsaSigned.and.returnValue(false);
-      this.controller.goToReview();
+      this.controller.onSkip();
       expect(this.controller.step).toBe(10);
+    });
+
+    it('should go to the step 9 if admin is partner and ESA is unsigned', function () {
+      this.PstnWizardService.blockByopNumberAdd.and.returnValue(true);
+      this.controller.goToSwivelNumbers();
+      expect(this.controller.step).toBe(9);
+    });
+
+    it('should skip from step 9 to 10 if customer has not been setup, admin is partner and ESA is unsigned', function () {
+      this.PstnWizardService.blockByopNumberAdd.and.returnValue(true);
+      this.PstnModel.isCustomerExists.and.returnValue(false);
+      this.controller.goToSwivelNumbers();
+      this.controller.onSkip();
+      expect(this.controller.step).toBe(10);
+    });
+
+    it('should go back from step 10 to step 9 if customer has not been setup, admin is partner and ESA is unsigned', function () {
+      this.PstnWizardService.blockByopNumberAdd.and.returnValue(true);
+      this.PstnModel.isCustomerExists.and.returnValue(false);
+      this.controller.goToSwivelNumbers();
+      this.controller.onSkip();
+      this.controller.previousStep();
+      expect(this.controller.step).toBe(9);
+    });
+
+    it('should skip from step 9 to dismissModal if customer has been setup and admin is partner', function () {
+      spyOn(this.controller, 'dismissModal');
+      this.PstnWizardService.blockByopNumberAdd.and.returnValue(true);
+      this.PstnModel.isCustomerExists.and.returnValue(true);
+      this.controller.goToSwivelNumbers();
+      this.controller.onSkip();
+      expect(this.controller.dismissModal).toHaveBeenCalled();
     });
   });
 
@@ -181,5 +214,4 @@ describe('Component: PstnWizardComponent', () => {
       expect(this.controller.step).toBe(5);
     });
   });
-
 });

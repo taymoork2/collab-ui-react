@@ -1,5 +1,5 @@
 import { Notification } from 'modules/core/notifications';
-import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE, NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY, TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER } from '../pstn.const';
+import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE, NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY, TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER, SWIVEL } from '../pstn.const';
 import { INumbersModel } from './number.model';
 import { PstnService } from '../pstn.service';
 import {
@@ -43,6 +43,7 @@ export class PstnWizardService {
     private PhoneNumberService: PhoneNumberService,
     private Orgservice,
     private FeatureToggleService,
+    private Authinfo,
   ) {
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.STEP_TITLE = {
@@ -101,7 +102,7 @@ export class PstnWizardService {
   }
 
   public isSwivel(): boolean {
-    return this.provider.apiImplementation === 'SWIVEL';
+    return this.provider.apiImplementation === SWIVEL;
   }
 
   //PSTN check to verify if the Partner is registered with the Terminus service as a carrier reseller
@@ -725,5 +726,12 @@ export class PstnWizardService {
     } else {
       return this.PstnService.releaseCarrierInventoryV2(this.PstnModel.getCustomerId(), order.reservationId, order.data.numbers, this.PstnModel.isCustomerExists());
     }
+  }
+
+  public blockByopNumberAdd(): boolean {
+    if (!this.Authinfo.isCustomerLaunchedFromPartner() && !this.Authinfo.isPartner()) {
+      return false;
+    }
+    return (this.isSwivel() && !this.PstnModel.isEsaSigned());
   }
 }

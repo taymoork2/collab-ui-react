@@ -4401,10 +4401,20 @@
     },
     "esaDisclaimer": {
       "title": "Emergency Service Address Disclaimer",
-      "messageMain": "IMPORTANT PLEASE READ: MISCONFIGURATION OR LACK OF ADEQUATE CONFIRGURATION CAN CAUSE EMERGENCY CALLS OR SERVICE DISPATCHES TO NOT BE PROPERLY ROUTED OR SIGNIFICANTLY DELAYED BEFORE ENABLING SPARK SERVICE, you must take the following three steps to ensure that any existing PSTN numbers that you port to Spark are mapped to the correct emergency service addresses and locations for the users associated with those PSTN numbers: Verify and update that the addresses associated with the PSTN numbers match the users’ addresses. Provision existing on premises IP PBX to send emergency calls to the proper PSTN trunk location that aligns to the location of the user. Coordinate with your carrier to ensure that the carrier and public safety answering point have the correct street address associated with each emergency services number (ESN). FAILURE TO FOLLOW THESE THREE STEPS MIGHT RESULT IN DISPATCH TO THE WRONG LOCATION AND / OR SIGNIFICANTLY DELAYED DISPATCH TO USERS IN EMERGENCY SITUATIONS, INCLUDING LIFE THREATENING SITUATIONS.",
-      "messageAgree": "By clicking \"Agree\", you have read and agree to comply with the terms and conditions.",
+      "paragraph1of7": "IMPORTANT PLEASE READ: Misconfiguration or lack of adequate configuration can cause emergency calls or services dispatches to not be properly routed or significantly delayed before enabling Cisco Spark Service.",
+      "paragraph2of7": "You must take the following three steps to ensure that any existing PSTN numbers that you port to Spark are mapped to the correct emergency service addresses and locations for the users associated with those PSTN numbers:",
+      "paragraph3of7": "1) Verify and update that the addresses associated with the PSTN numbers match the users’ addresses.",
+      "paragraph4of7": "2) Provision existing on premises IP PBX to send emergency calls to the proper PSTN trunk location that aligns to the location of the user.",
+      "paragraph5of7": "3) Coordinate with your carrier to ensure that the carrier and public safety answering point have the correct street address associated with each emergency services number (ESN).",
+      "paragraph6of7": "Failure to follow these three steps might result in dispatch to the wrong location and/or significantly delayed dispatch to users in emergency situations, including life threatening situations.",
+      "paragraph7of7": "By clicking \"Agree\", you have read and agree to comply with the terms and conditions.",
       "notificationText": "Accept the Emergency Service Address disclaimer so phone numbers can be added.",
       "notificationTextLink": "See Disclaimer"
+    },
+    "addByopNumberBlocked": {
+      "title": "Adding Phone Number Blocked",
+      "messageMain": "Customer needs to accept the Emergency Service Address disclaimer before phone numbers can be added. Customer can accept the disclaimer in the Notifications panel in their Overview page.",
+      "messageSkip": "Skip this step and add phone numbers later."
     }
   },
   "pstnContractInformation": {

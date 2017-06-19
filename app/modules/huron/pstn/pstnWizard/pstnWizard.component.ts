@@ -174,7 +174,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public goToSwivelNumbers(): void {
     if (this.i387FeatureToggle) {
-      if (this.PstnModel.isEsaSigned()) {
+      if (this.blockByopNumberAdd() || this.PstnModel.isEsaSigned()) {
         this.step = 9;
       } else {
         this.step = 8;
@@ -186,6 +186,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public isSwivel(): boolean {
     return this.PstnWizardService.isSwivel();
+  }
+
+  public blockByopNumberAdd(): boolean {
+    return this.PstnWizardService.blockByopNumberAdd();
   }
 
   public goToNumbers(): void {
@@ -226,12 +230,20 @@ export class PstnWizardCtrl implements ng.IComponentController {
       this.PstnModel.setEsaDisclaimerAgreed(false);
     } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 9) {
       this.PstnModel.setEsaDisclaimerAgreed(false);
+      if (this.blockByopNumberAdd()) {
+        this.step = 1;
+      }
     } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 10) {
-      this.step = this.prevStep === 8 ? 8 : 9;
+      if (this.blockByopNumberAdd()) {
+        this.step = 9;
+      } else {
+        this.step = this.prevStep === 8 ? 8 : 9;
+      }
       return;
     }else if (!this.isSwivel() && this.step === 6) {
       this.step -= 1;
     }
+
     if (this.step > 1) {
       this.step -= 1;
     }
@@ -318,6 +330,8 @@ export class PstnWizardCtrl implements ng.IComponentController {
         return this.isValid === false;
       case 5:
         return !this.emergencyAcknowledge;
+      case 9:
+        return this.blockByopNumberAdd();
     }
     return false;
   }
@@ -334,7 +348,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 8:
         return this.PstnModel.isCustomerExists();
       case 9:
-        return this.PstnModel.isEsaSigned();
+        return this.PstnModel.isEsaSigned() || (this.PstnModel.isCustomerExists() && this.blockByopNumberAdd());
       case 11:
         return true;
     }
@@ -451,12 +465,16 @@ export class PstnWizardCtrl implements ng.IComponentController {
         return true;
       case 9:
         this.prevStep = this.step;
-        return !this.PstnModel.isEsaSigned();
+        return !this.PstnModel.isEsaSigned() || this.blockByopNumberAdd();
     }
     return false;
   }
 
-  public goToReview(): void {
-    this.step = 10;
+  public onSkip(): void {
+    if (this.blockByopNumberAdd() && this.PstnModel.isCustomerExists()) {
+      this.dismissModal();
+    } else {
+      this.step = 10;
+    }
   }
 }

@@ -155,7 +155,14 @@
     </div>
   </div>
   <div ng-if="$ctrl.step == 9" >
+    <div class="adding-phone-number-blocked" ng-if="$ctrl.blockByopNumberAdd()">
+      <div><i class="icon icon-warning"></i></div><div><h1 class="h4" translate="pstnSetup.addByopNumberBlocked.title"></h1></div>
+      <div class="clearfix"></div>
+      <p id='addByopNumberBlockedMessageMain' translate="pstnSetup.addByopNumberBlocked.messageMain"></p>
+      <p translate="pstnSetup.addByopNumberBlocked.messageSkip"></p>
+    </div>
     <uc-pstn-swivel-numbers
+      ng-if="!$ctrl.blockByopNumberAdd()"
       numbers="$ctrl.swivelNumbers"
       acknowledge="$ctrl.emergencyAcknowledge"
       on-change="$ctrl.onSwivelChange(numbers, invalidCount)"
@@ -195,7 +202,7 @@
 <!-- footer -->
 <div class="modal-footer trials" ng-if="$ctrl.showButtons">
   <button ng-show="$ctrl.showSkipBtn()" class="skip-btn btn btn--link btn--none no-animate"
-    ng-click="$ctrl.goToReview()"
+    ng-click="$ctrl.onSkip()"
     translate="trialModal.skip">
   </button>
 
