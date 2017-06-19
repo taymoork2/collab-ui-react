@@ -96,7 +96,7 @@ describe('CmcUserService', () => {
     };
 
     this.$httpBackend
-      .when('GET', this.UrlConfig.getScimUrl(orgId) + '?filter=id+eq+1+or+id+eq+2+or+id+eq+3')
+      .when('GET', encodeURI(this.UrlConfig.getScimUrl(orgId) + '?filter=id eq 1 or id eq 2 or id eq 3'))
       .respond(nameResolvedUsers);
 
     const userStatuses: ICmcUserStatus[] = <ICmcUserStatus[]> [

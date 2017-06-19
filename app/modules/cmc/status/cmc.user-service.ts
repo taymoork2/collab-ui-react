@@ -75,8 +75,8 @@ export class CmcUserService {
   public insertUserDisplayNames(userData) {
     const ids = _.map(userData, 'userId');
     const urlBase: string = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId());
-    const url: string = urlBase + '?filter=id+eq+' + ids.join("+or+id+eq+");
-    return this.$http.get(url).then( (result: any) => {
+    const url: string = urlBase + '?filter=id eq ' + ids.join(" or id eq ");
+    return this.$http.get(encodeURI(url)).then( (result: any) => {
       _.each(result.data.Resources, (resolvedUser) => {
         const res: any = _.find(userData, { userId: resolvedUser.id });
         if (res) {
