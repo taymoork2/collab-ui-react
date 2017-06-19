@@ -186,6 +186,7 @@ describe('Service: PstnWizardService', () => {
       spyOn(this.PstnModel, 'isCustomerExists').and.returnValue(true);
       spyOn(this.PstnModel, 'isCarrierExists').and.returnValue(false);
       spyOn(this.PstnModel, 'isEsaSigned').and.returnValue(true);
+      spyOn(this.PstnModel, 'isEsaDisclaimerAgreed').and.returnValue(true);
       this.PstnWizardService.setSwivelOrder(swivelOrder);
 
       this.PstnWizardService.finalizeImport();
@@ -195,13 +196,15 @@ describe('Service: PstnWizardService', () => {
       expect(this.PstnModel.isCarrierExists).toHaveBeenCalled();
       expect(this.PstnService.updateCustomerCarrier).toHaveBeenCalled();
       expect(this.PstnModel.isEsaSigned).toHaveBeenCalled();
+      expect(this.PstnModel.isEsaDisclaimerAgreed).not.toHaveBeenCalled();
       expect(this.PstnService.orderNumbersV2Swivel).toHaveBeenCalled();
     });
 
-    it('should log e911 signee if the esa is not signed', function () {
+    it('should log e911 signee if the esa is not signed and  esadisclaimer is "Agreed"', function () {
       spyOn(this.PstnModel, 'isCustomerExists').and.returnValue(true);
       spyOn(this.PstnModel, 'isCarrierExists').and.returnValue(true);
       spyOn(this.PstnModel, 'isEsaSigned').and.returnValue(false);
+      spyOn(this.PstnModel, 'isEsaDisclaimerAgreed').and.returnValue(true);
       this.PstnWizardService.setSwivelOrder(swivelOrder);
 
       this.PstnWizardService.finalizeImport();
@@ -215,10 +218,28 @@ describe('Service: PstnWizardService', () => {
       expect(this.PstnService.orderNumbersV2Swivel).toHaveBeenCalled();
     });
 
+    it('should not log e911 signee if the esa is not signed and  esadisclaimer is "Skipped"', function () {
+      spyOn(this.PstnModel, 'isCustomerExists').and.returnValue(true);
+      spyOn(this.PstnModel, 'isCarrierExists').and.returnValue(true);
+      spyOn(this.PstnModel, 'isEsaSigned').and.returnValue(false);
+      spyOn(this.PstnModel, 'isEsaDisclaimerAgreed').and.returnValue(false);
+
+      this.PstnWizardService.finalizeImport();
+      this.$rootScope.$digest();
+      expect(this.PstnModel.isCustomerExists).toHaveBeenCalled();
+      expect(this.PstnService.createCustomerV2).not.toHaveBeenCalled();
+      expect(this.PstnModel.isCarrierExists).toHaveBeenCalled();
+      expect(this.PstnService.updateCustomerCarrier).not.toHaveBeenCalled();
+      expect(this.PstnModel.isEsaSigned).toHaveBeenCalled();
+      expect(this.PstnService.updateCustomerE911Signee).not.toHaveBeenCalled();
+      expect(this.PstnService.orderNumbersV2Swivel).not.toHaveBeenCalled();
+    });
+
     it('should not import numbers is swivel numbers are empty', function () {
       spyOn(this.PstnModel, 'isCustomerExists').and.returnValue(true);
       spyOn(this.PstnModel, 'isCarrierExists').and.returnValue(true);
       spyOn(this.PstnModel, 'isEsaSigned').and.returnValue(false);
+      spyOn(this.PstnModel, 'isEsaDisclaimerAgreed').and.returnValue(true);
       this.PstnWizardService.setSwivelOrder([]);
 
       this.PstnWizardService.finalizeImport();

@@ -64,6 +64,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public tokenmethods: TokenMethods;
   public titles: {};
   public dismiss: Function;
+  public prevStep: number = 1;
 
   private did: DirectInwardDialing = new DirectInwardDialing();
   private i387FeatureToggle: boolean;
@@ -222,7 +223,13 @@ export class PstnWizardCtrl implements ng.IComponentController {
       this.step = 1;
     } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 8) {
       this.step = 1;
-    } else if (!this.isSwivel() && this.step === 6) {
+      this.PstnModel.setEsaDisclaimerAgreed(false);
+    } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 9) {
+      this.PstnModel.setEsaDisclaimerAgreed(false);
+    } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 10) {
+      this.step = this.prevStep === 8 ? 8 : 9;
+      return;
+    }else if (!this.isSwivel() && this.step === 6) {
       this.step -= 1;
     }
     if (this.step > 1) {
@@ -276,6 +283,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         this.dismissModal();
         return;
       case 8:
+        this.PstnModel.setEsaDisclaimerAgreed(true);
         break;
       case 9:
         if (this.invalidSwivelCount) {
@@ -435,5 +443,21 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public dismissModal() {
     this.PstnModel.clear();
     this.dismiss();
+  }
+
+  public showSkipBtn(): boolean {
+    switch (this.step) {
+      case 8:
+        this.prevStep = this.step;
+        return true;
+      case 9:
+        this.prevStep = this.step;
+        return !this.PstnModel.isEsaSigned();
+    }
+    return false;
+  }
+
+  public goToReview(): void {
+    this.step = 10;
   }
 }

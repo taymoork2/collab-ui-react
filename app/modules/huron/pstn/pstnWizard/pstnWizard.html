@@ -194,7 +194,12 @@
 
 <!-- footer -->
 <div class="modal-footer trials" ng-if="$ctrl.showButtons">
-  <button ng-hide="$ctrl.hideBackBtn()" class="btn with-slim-offset offset-l"
+  <button ng-show="$ctrl.showSkipBtn()" class="skip-btn btn btn--link btn--none no-animate"
+    ng-click="$ctrl.goToReview()"
+    translate="trialModal.skip">
+  </button>
+
+  <button ng-hide="$ctrl.hideBackBtn()" class="btn with-slim-offset offset-l no-animate"
     ng-click="$ctrl.previousStep()"
     translate="common.back">
   </button>
