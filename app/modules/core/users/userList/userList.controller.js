@@ -384,7 +384,8 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function getDirSyncStatus() {
-      return DirSyncService.refreshStatus()
+      var dirSyncPromise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
+      return dirSyncPromise
         .finally(function () {
           $scope.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
         });

@@ -46,6 +46,17 @@ describe('DirSyncService', () => {
       expect(this.DirSyncService.refreshStatus()).toBeResolved();
       expect(this.DirSyncService.isDirSyncEnabled()).toBeTruthy();
       expect(this.DirSyncService.getConnectors()).toEqual(testConnectors);
+      expect(this.DirSyncService.requiresRefresh()).toBeFalsy(); // found all data
+    });
+
+    it('should assume dirsync is off if GET on /dirsync responds 400', function () {
+      this.$httpBackend.expectGET(DIR_SYNC_REGEX).respond(400);
+
+      expect(this.DirSyncService.refreshStatus()).toBeResolved();
+      // make sure we have defaults
+      expect(this.DirSyncService.isDirSyncEnabled()).toBeFalsy();
+      expect(this.DirSyncService.getConnectors()).toEqual([]);
+      expect(this.DirSyncService.requiresRefresh()).toBeFalsy(); // found all data
     });
 
     it('should use default properties if GET on /dirsync fails', function () {
@@ -55,6 +66,7 @@ describe('DirSyncService', () => {
       // make sure we have defaults
       expect(this.DirSyncService.isDirSyncEnabled()).toBeFalsy();
       expect(this.DirSyncService.getConnectors()).toEqual([]);
+      expect(this.DirSyncService.requiresRefresh()).toBeTruthy(); // did not find all data
     });
 
     it('should use default properties for connectors if GET on /dirsync/connector fails', function () {
@@ -64,6 +76,7 @@ describe('DirSyncService', () => {
       expect(this.DirSyncService.refreshStatus()).toBeResolved();
       expect(this.DirSyncService.isDirSyncEnabled()).toBeTruthy();
       expect(this.DirSyncService.getConnectors()).toEqual([]);
+      expect(this.DirSyncService.requiresRefresh()).toBeTruthy(); // did not find all data
     });
 
     it('should fetch DirSync status from Org if NOT a full admin user', function () {
@@ -74,6 +87,7 @@ describe('DirSyncService', () => {
       expect(this.DirSyncService.refreshStatus()).toBeResolved();
       expect(this.DirSyncService.isDirSyncEnabled()).toBeTruthy();
       expect(this.DirSyncService.getConnectors()).toEqual([]);
+      expect(this.DirSyncService.requiresRefresh()).toBeTruthy(); // did not find all data
     });
 
   });
