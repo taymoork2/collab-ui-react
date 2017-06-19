@@ -2783,10 +2783,14 @@
       "listingFirstActiveUsers": "Listing the first {{noOfActiveUsers}} active users",
       "callServiceAwareNotEntitled": "Not entitled for Call Aware",
       "sparkMobileConvergence": "Mobile Convergence",
-      "serviceStatus": "Service Status",
       "subHeading": "User Status Report",
       "status": {
         "active": "Active"
+      },
+      "table": {
+        "username": "User Name",
+        "serviceStatus": "Service Status",
+        "lastUpdated": "Last Updated"
       }
     }
   },
