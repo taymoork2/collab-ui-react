@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AACeDependenciesService(CeDependenciesService, Authinfo) {
-
     var service = {
       readCeDependencies: readCeDependencies,
     };

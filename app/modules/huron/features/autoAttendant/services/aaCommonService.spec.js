@@ -1,38 +1,37 @@
   'use strict';
 
   describe('Service:AACommonService', function () {
-
     var AACommonService, AutoAttendantCeMenuModelService;
 
     var ui = {};
     var aaRecord = {};
 
     var sortedOptions = [{
-      "title": 'autoAttendant.actionPhoneMenu',
-      "label": 'AutoAttendantTestLabel',
+      title: 'autoAttendant.actionPhoneMenu',
+      label: 'AutoAttendantTestLabel',
     }, {
-      "title": 'autoAttendant.actionRouteCall',
-      "label": 'autoAttendantTestLabel',
+      title: 'autoAttendant.actionRouteCall',
+      label: 'autoAttendantTestLabel',
     }, {
-      "title": 'autoAttendant.actionSayMessage',
-      "label": 'secondTestLabel',
+      title: 'autoAttendant.actionSayMessage',
+      label: 'secondTestLabel',
     }, {
-      "title": 'autoAttendant.phoneMenuDialExt',
-      "label": 'testLabel',
+      title: 'autoAttendant.phoneMenuDialExt',
+      label: 'testLabel',
     }];
 
     var unSortedOptions = [{
-      "title": 'autoAttendant.actionRouteCall',
-      "label": 'testLabel',
+      title: 'autoAttendant.actionRouteCall',
+      label: 'testLabel',
     }, {
-      "title": 'autoAttendant.phoneMenuDialExt',
-      "label": 'autoAttendantTestLabel',
+      title: 'autoAttendant.phoneMenuDialExt',
+      label: 'autoAttendantTestLabel',
     }, {
-      "title": 'autoAttendant.actionSayMessage',
-      "label": 'AutoAttendantTestLabel',
+      title: 'autoAttendant.actionSayMessage',
+      label: 'AutoAttendantTestLabel',
     }, {
-      "title": 'autoAttendant.actionPhoneMenu',
-      "label": 'secondTestLabel',
+      title: 'autoAttendant.actionPhoneMenu',
+      label: 'secondTestLabel',
     }];
 
 
@@ -48,7 +47,6 @@
     });
 
     describe('AACommonService services', function () {
-
       it('setSayMessageStatus should set to false', function () {
         AACommonService.setSayMessageStatus(false);
         expect(AACommonService.isFormDirty()).toBeFalsy();
@@ -116,41 +114,37 @@
       });
 
       it('is valid or invalid as set with one item', function () {
-        AACommonService.setIsValid("1", false);
+        AACommonService.setIsValid('1', false);
         expect(AACommonService.isValid()).toBeFalsy();
-        expect(AACommonService.getInvalid("1")).toBeFalsy();
+        expect(AACommonService.getInvalid('1')).toBeFalsy();
 
-        AACommonService.setIsValid("1", true);
+        AACommonService.setIsValid('1', true);
         expect(AACommonService.isValid()).toBeTruthy();
-        expect(AACommonService.getInvalid("1")).not.toBeDefined();
-
+        expect(AACommonService.getInvalid('1')).not.toBeDefined();
       });
 
       it('is making properly formatted key', function () {
-
         var k = AACommonService.makeKey('openHours', 'someTag');
 
         expect(k).toEqual('openHours' + '-' + 'someTag');
-
       });
 
       it('is valid or invalid as set for multiple items', function () {
-        AACommonService.setIsValid("1", false);
+        AACommonService.setIsValid('1', false);
         expect(AACommonService.isValid()).toBeFalsy();
 
-        AACommonService.setIsValid("1", true);
+        AACommonService.setIsValid('1', true);
         expect(AACommonService.isValid()).toBeTruthy();
 
-        AACommonService.setIsValid("1", false);
-        AACommonService.setIsValid("2", false);
+        AACommonService.setIsValid('1', false);
+        AACommonService.setIsValid('2', false);
         expect(AACommonService.isValid()).toBeFalsy();
 
-        AACommonService.setIsValid("1", true);
+        AACommonService.setIsValid('1', true);
         expect(AACommonService.isValid()).toBeFalsy();
 
-        AACommonService.setIsValid("2", true);
+        AACommonService.setIsValid('2', true);
         expect(AACommonService.isValid()).toBeTruthy();
-
       });
       it('setCallerInputToggle should set to false', function () {
         AACommonService.setCallerInputToggle(false);
@@ -194,12 +188,9 @@
         AACommonService.setQueueSettingsStatus(false);
         expect(AACommonService.isFormDirty()).toBeFalsy();
       });
-
-
     });
 
     describe('saveUiModel', function () {
-
       beforeEach(function () {
         spyOn(AutoAttendantCeMenuModelService, 'updateCombinedMenu');
         spyOn(AutoAttendantCeMenuModelService, 'deleteCombinedMenu');
@@ -237,7 +228,6 @@
     });
 
     describe('sortByProperty', function () {
-
       it('sort by title', function () {
         unSortedOptions.sort(AACommonService.sortByProperty('title'));
         for (var i = 0; i < sortedOptions.length; i++) {
@@ -251,12 +241,10 @@
           expect(unSortedOptions[i].label).toEqual(sortedOptions[i].label);
         }
       });
-
     });
 
     describe('collectThisCeActionValue', function () {
       it('should find the variable from runActionsOnInput (callerInput)', function () {
-
         var aaUiModel = {};
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
 
@@ -273,23 +261,20 @@
       });
 
       it('should find the variable from conditional (decision)', function () {
-
         var aaUiModel = {};
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
 
         aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
-        action.if = { 'leftCondition': 'My variable name' };
+        action.if = { leftCondition: 'My variable name' };
 
         aaUiModel['openHours'].entries[0].addAction(action);
 
         var result = AACommonService.collectThisCeActionValue(aaUiModel, false, true);
         expect(result[0]).toEqual('My variable name');
-
       });
       it('should not find the variable from conditional (decision)', function () {
-
         var aaUiModel = {};
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
 
@@ -301,7 +286,6 @@
 
         var result = AACommonService.collectThisCeActionValue(aaUiModel, true, false);
         expect(result.length).toEqual(0);
-
       });
     });
     it('should return list of doRest', function () {
@@ -342,11 +326,9 @@
 
         expect(available.length).toEqual(10);
         expect(available).toEqual(expected);
-
       });
 
       it('should send back available keys minus 0, 1 but with 9', function () {
-
         var inputActions = [{
           key: '0',
         }, {
@@ -358,7 +340,6 @@
         var available = AACommonService.keyActionAvailable('9', inputActions);
 
         expect(available.length).toEqual(10);
-
       });
 
       it('should send back available keys minus 0, 1 with 5', function () {
@@ -376,11 +357,6 @@
 
         expect(available.length).toEqual(9);
         expect(available).toEqual(expected);
-
-
       });
-
-
     });
-
   });

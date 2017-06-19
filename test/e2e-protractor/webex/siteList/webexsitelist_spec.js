@@ -5,7 +5,7 @@
 /* global webExCommon */
 
 // Start of site list tests
-describe('WebEx Sitelist: ' + webExCommon.BTS2.siteUrl + ": ", function () {
+describe('WebEx Sitelist: ' + webExCommon.BTS2.siteUrl + ': ', function () {
   var setup = false;
 
   beforeAll(function () {
@@ -53,7 +53,7 @@ describe('WebEx Sitelist: ' + webExCommon.BTS2.siteUrl + ": ", function () {
   });
 });
 
-describe('WebEx Sitelist: ' + webExCommon.BTS1.siteUrl + ": ", function () {
+describe('WebEx Sitelist: ' + webExCommon.BTS1.siteUrl + ': ', function () {
   var setup = false;
 
   beforeAll(function () {
@@ -99,7 +99,6 @@ describe('WebEx Sitelist: ' + webExCommon.BTS1.siteUrl + ": ", function () {
       utils.wait(webExCommon.BTS1.isCIID);
     }
   });
-
 });
 
 /**
@@ -109,7 +108,7 @@ describe('WebEx Sitelist: ' + webExCommon.BTS1.siteUrl + ": ", function () {
  * ********************* IMPORTANT *********************
  */
 //Start dev dmz tests
-xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ": ", function () {
+xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ': ', function () {
   var setup = false;
 
   // WARNING:
@@ -168,7 +167,6 @@ xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ": ", function (
       utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalImportIcon);
     }
   });
-
 }); //End dev dmz tests
 
 // End of site list tests

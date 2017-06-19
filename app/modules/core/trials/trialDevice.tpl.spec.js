@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Template: trialDevice.tpl.spec.js:', function () {
-
   var $compile, $controller, $httpBackend, $scope, $templateCache, Analytics, Orgservice;
   var view;
   var skipBtn, backBtn;

@@ -4,8 +4,8 @@ import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trun
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 export class ClusterDeregisterController {
-
-  public loading = false;
+  public loading: boolean = false;
+  public nameChangeEnabled: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -15,17 +15,19 @@ export class ClusterDeregisterController {
     private HybridServicesClusterService: HybridServicesClusterService,
     private PrivateTrunkService: PrivateTrunkService,
     private Notification: Notification,
-  ) { }
+    private FeatureToggleService,
+  ) {
+    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
+      this.nameChangeEnabled = toggle;
+    });
+  }
 
   public deregister() {
-
     this.loading = true;
     if (this.cluster.targetType === 'ept') {
       this.PrivateTrunkService.removePrivateTrunkResource(this.cluster.id)
         .then(() => {
-          this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopup', {
-            clusterName: this.cluster.name,
-          }));
+          this.callNotification();
           this.$modalInstance.close();
         })
         .catch((error) => {
@@ -35,9 +37,7 @@ export class ClusterDeregisterController {
     } else {
       this.HybridServicesClusterService.deregisterCluster(this.cluster.id)
         .then(() => {
-          this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopup', {
-            clusterName: this.cluster.name,
-          }));
+          this.callNotification();
           this.$modalInstance.close();
         })
         .catch((error) => {
@@ -45,7 +45,18 @@ export class ClusterDeregisterController {
           this.loading = false;
         });
     }
+  }
 
+  private callNotification(): void {
+    if (this.nameChangeEnabled) {
+      this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopupNew', {
+        clusterName: this.cluster.name,
+      }));
+    } else {
+      this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopup', {
+        clusterName: this.cluster.name,
+      }));
+    }
   }
 }
 

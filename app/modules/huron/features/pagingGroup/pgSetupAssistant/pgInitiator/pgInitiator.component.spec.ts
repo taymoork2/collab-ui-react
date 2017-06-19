@@ -4,16 +4,16 @@ describe('Component: pgInitiator', () => {
   const RADIO_MEMBER = 'input#membersonly';
   const RADIO_PUBLIC = 'input#public';
   const RADIO_CUSTOM = 'input#custom';
-  let membersList = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
-  let fake_picture_path = 'https://09876/zyxwuv';
+  const membersList = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
+  const fake_picture_path = 'https://09876/zyxwuv';
 
-  let memberServiceFailureResp = {
+  const memberServiceFailureResp = {
     data: 'Internal Server Error',
     status: 500,
     statusText: 'Internal Server Error',
   };
 
-  let userResponse = {
+  const userResponse = {
     id: '0001',
     name: {
       givenName: 'rtp2',
@@ -32,7 +32,7 @@ describe('Component: pgInitiator', () => {
       }],
   };
 
-  let getMachineAcctResponse = {
+  const getMachineAcctResponse = {
     id: 'fake-userid',
     schemas: [],
     name: '',
@@ -42,7 +42,7 @@ describe('Component: pgInitiator', () => {
     meta: {},
   };
 
-  let getMachineAcctResponse2 = {
+  const getMachineAcctResponse2 = {
     id: '0002',
     schemas: [],
     name: '',
@@ -135,8 +135,8 @@ describe('Component: pgInitiator', () => {
 
     it('should only display subset of fetched initiators if one has already selected', function () {
       this.controller.initiatorName = 'por';
-      let mem1 = _.cloneDeep(membersList[0]);
-      let memWithPic = {
+      const mem1 = _.cloneDeep(membersList[0]);
+      const memWithPic = {
         member: mem1,
         picturePath: fake_picture_path,
       };
@@ -173,7 +173,7 @@ describe('Component: pgInitiator', () => {
 
     it('should be able to select and unselect an initator', function () {
       this.controller.availableInitiators = membersList;
-      let mem1 = _.cloneDeep(this.controller.availableInitiators[0]);
+      const mem1 = _.cloneDeep(this.controller.availableInitiators[0]);
       this.getUserDefer.resolve(userResponse);
       this.controller.selectInitiators(mem1);
       this.$scope.$apply();
@@ -182,7 +182,7 @@ describe('Component: pgInitiator', () => {
       expect(this.controller.selectedInitiators[0].member.type).toEqual('USER_REAL_USER');
       expect(this.controller.selectedInitiators[0].picturePath).toEqual(fake_picture_path);
 
-      let memWithPic = {
+      const memWithPic = {
         member: mem1,
         picturePath: fake_picture_path,
       };
@@ -192,14 +192,14 @@ describe('Component: pgInitiator', () => {
     });
 
     it('should return empty string if the member is not in selectedInitiators', function () {
-      let mem1 = _.cloneDeep(membersList[0]);
-      let memWithPic = {
+      const mem1 = _.cloneDeep(membersList[0]);
+      const memWithPic = {
         member: mem1,
         picturePath: fake_picture_path,
       };
 
       this.controller.selectedInitiators.push(memWithPic);
-      let mem2 = _.cloneDeep(membersList[1]);
+      const mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getMembersPictures(mem2)).toEqual('');
     });
   });
@@ -217,30 +217,30 @@ describe('Component: pgInitiator', () => {
     beforeEach(initComponent);
 
     it('Can getDisplayNameInDropdown', function() {
-      let mem5 = _.cloneDeep(membersList[4]);
+      const mem5 = _.cloneDeep(membersList[4]);
       expect(this.controller.getDisplayNameInDropdown(mem5)).toEqual('peter@kickyourbutt.com');
 
-      let mem1 = _.cloneDeep(membersList[0]);
+      const mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getDisplayNameInDropdown(mem1)).toEqual('Chuck Norris (chuck.norris@kickyourbutt.com)');
 
-      let mem2 = _.cloneDeep(membersList[1]);
+      const mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getDisplayNameInDropdown(mem2)).toEqual('Koala Lounge');
     });
 
     it('Can getDisplayNameOnCard', function() {
-      let mem5 = _.cloneDeep(membersList[4]);
+      const mem5 = _.cloneDeep(membersList[4]);
       expect(this.controller.getDisplayNameOnCard(mem5)).toEqual('');
 
-      let mem1 = _.cloneDeep(membersList[0]);
+      const mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getDisplayNameOnCard(mem1)).toEqual('Chuck Norris');
 
-      let mem2 = _.cloneDeep(membersList[1]);
+      const mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getDisplayNameOnCard(mem2)).toEqual('Koala Lounge');
 
-      let mem3 = undefined;
+      const mem3 = undefined;
       expect(this.controller.getDisplayNameOnCard(mem3)).toEqual('');
 
-      let mem = new Member({
+      const mem = new Member({
         uuid: '0005',
         type: 'USER_PLACE',
         firstName: 'TOM',
@@ -257,12 +257,12 @@ describe('Component: pgInitiator', () => {
     beforeEach(initComponent);
 
     it('Can USER_REAL_USER type', function () {
-      let mem1 = _.cloneDeep(membersList[0]);
+      const mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getMemberType(mem1)).toEqual('user');
     });
 
     it('Can get USER_PLACE type', function() {
-      let mem2 = _.cloneDeep(membersList[1]);
+      const mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getMemberType(mem2)).toEqual('place');
     });
   });

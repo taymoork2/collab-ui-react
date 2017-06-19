@@ -1,7 +1,6 @@
 'use strict';
 
 var MediaServicePage = function () {
-
   this.mediaClusterList = element(by.css('.media-clusters-list'));
   this.mfCluster = element.all(by.binding('row.entity.groupName'));
   this.clickActivateBtn = element(by.css('[ng-click="med.enableMediaService(med.currentServiceId)"]'));

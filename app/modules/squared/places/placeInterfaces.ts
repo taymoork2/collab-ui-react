@@ -9,7 +9,7 @@ declare namespace csdm {
     directoryNumber?: string;
     devices: {};
     id?: string;
-    entitlements?: Array<any>;
+    entitlements?: any[];
     externalLinkedAccounts?: any[];
   }
 

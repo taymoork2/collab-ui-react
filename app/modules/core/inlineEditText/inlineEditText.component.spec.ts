@@ -147,7 +147,7 @@ describe('Component: InlineEditText', () => {
   describe('with validation', () => {
     beforeEach(function () {
       this.initComponent();
-      let invalidText = 'not allowed';
+      const invalidText = 'not allowed';
       this.validationMessage = 'Test validation message';
       this.$scope.myValidators = {
         testValidation: (value) => {

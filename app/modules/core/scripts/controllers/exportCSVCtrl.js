@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function ExportCSVCtrl($scope, $rootScope, $q, Authinfo, FeatureToggleService, UserListService, PartnerService, Log, Notification) {
-
     $scope.exporting = $rootScope.exporting;
     var promise = null;
 

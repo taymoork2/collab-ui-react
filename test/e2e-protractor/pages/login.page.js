@@ -5,7 +5,6 @@ var featureToggle = require('../utils/featureToggle.utils');
 /*global TIMEOUT*/
 
 var LoginPage = function () {
-
   var unauthorizedTitle = element(by.cssContainingText('.message-box__title ', 'Unauthorized'));
   this.emailField = element(by.css('[name="email"]'));
   this.setLoginUsername = function (username) {
@@ -122,7 +121,6 @@ var LoginPage = function () {
     this.setActiveDirectoryFederationServicesCredentials(credential);
     this.clickActiveDirectoryFederationServicesLoginSubmitButton();
   };
-
 };
 
 module.exports = LoginPage;

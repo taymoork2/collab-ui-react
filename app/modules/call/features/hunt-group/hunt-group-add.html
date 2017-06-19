@@ -11,61 +11,62 @@
       previous-fn="$ctrl.previousPage()"
       next-fn="$ctrl.nextPage()"
       next-text="$ctrl.createHelpText()">
-
-      <form novalidate name="$ctrl.form" role="form">
-        <uc-call-feature-name
-          ng-if="$ctrl.pageIndex === 0"
-          placeholder-key="huronHuntGroup.namePlaceholder"
-          name-hint-key="huronHuntGroup.nameHint"
-          name="$ctrl.huntGroup.name"
-          is-required="true"
-          is-new="true"
-          on-change-fn="$ctrl.setHuntGroupName(name)"
-          on-key-press-fn="$ctrl.enterNextPage(keyCode)"
-          ng-class="$ctrl.animation">
-        </uc-call-feature-name>
-
-        <div ng-if="$ctrl.pageIndex === 1" ng-class="$ctrl.animation">
-          <uc-hunt-group-numbers
-            numbers="$ctrl.huntGroup.numbers"
+      <div ng-class="{'cs-fallback-content': ($ctrl.pageIndex === 4)}">
+        <form novalidate name="$ctrl.form" role="form">
+          <uc-call-feature-name
+            ng-if="$ctrl.pageIndex === 0"
+            placeholder-key="huronHuntGroup.namePlaceholder"
+            name-hint-key="huronHuntGroup.nameHint"
+            name="$ctrl.huntGroup.name"
+            is-required="true"
             is-new="true"
-            on-change-fn="$ctrl.setHuntGroupNumbers(numbers)"
-            on-key-press-fn="$ctrl.enterNextPage(keyCode)">
-          </uc-hunt-group-numbers>
-        </div>
-
-        <div ng-if="$ctrl.pageIndex === 2" ng-class="$ctrl.animation">
-          <uc-hunt-group-method
-            hunt-method="$ctrl.huntGroup.huntMethod"
-            is-new="true"
-            on-change-fn="$ctrl.setHuntGroupMethod(method)"
-            on-key-press-fn="$ctrl.enterNextPage(keyCode)">
-          </uc-hunt-group-method>
-        </div>
-
-        <div ng-if="$ctrl.pageIndex === 3" ng-class="$ctrl.animation">
-          <uc-call-feature-members
-            members="$ctrl.huntGroup.members"
-            member-hint-key="huronHuntGroup.memberHint"
-            member-item-type="number"
-            remove-key="common.remove"
-            show-external-numbers="true"
-            is-new="true"
-            on-change-fn="$ctrl.setHuntGroupMembers(members)"
+            on-change-fn="$ctrl.setHuntGroupName(name)"
             on-key-press-fn="$ctrl.enterNextPage(keyCode)"
             ng-class="$ctrl.animation">
-          </uc-call-feature-members>
-        </div>
+          </uc-call-feature-name>
 
-        <div ng-if="$ctrl.pageIndex === 4" ng-class="$ctrl.animation">
-          <uc-fallback-destination
-            fallback-destination="$ctrl.huntGroup.fallbackDestination"
-            is-new="true"
-            on-change-fn="$ctrl.setHuntGroupFallbackDestination(fallbackDestination)">
-          </uc-fallback-destination>
-        </div>
+          <div ng-if="$ctrl.pageIndex === 1" ng-class="$ctrl.animation">
+            <uc-hunt-group-numbers
+              numbers="$ctrl.huntGroup.numbers"
+              is-new="true"
+              on-change-fn="$ctrl.setHuntGroupNumbers(numbers)"
+              on-key-press-fn="$ctrl.enterNextPage(keyCode)">
+            </uc-hunt-group-numbers>
+          </div>
 
-      </form>
+          <div ng-if="$ctrl.pageIndex === 2" ng-class="$ctrl.animation">
+            <uc-hunt-group-method
+              hunt-method="$ctrl.huntGroup.huntMethod"
+              is-new="true"
+              on-change-fn="$ctrl.setHuntGroupMethod(method)"
+              on-key-press-fn="$ctrl.enterNextPage(keyCode)">
+            </uc-hunt-group-method>
+          </div>
+
+          <div ng-if="$ctrl.pageIndex === 3" ng-class="$ctrl.animation">
+            <uc-call-feature-members
+              members="$ctrl.huntGroup.members"
+              member-hint-key="huronHuntGroup.memberHint"
+              member-item-type="number"
+              remove-key="common.remove"
+              show-external-numbers="true"
+              is-new="true"
+              on-change-fn="$ctrl.setHuntGroupMembers(members)"
+              on-key-press-fn="$ctrl.enterNextPage(keyCode)"
+              ng-class="$ctrl.animation">
+            </uc-call-feature-members>
+          </div>
+
+          <div ng-if="$ctrl.pageIndex === 4" ng-class="$ctrl.animation">
+            <uc-fallback-destination
+              fallback-destination="$ctrl.huntGroup.fallbackDestination"
+              is-new="true"
+              on-change-fn="$ctrl.setHuntGroupFallbackDestination(fallbackDestination)">
+            </uc-fallback-destination>
+          </div>
+
+        </form>
+      </div>
     </cs-setup-assistant>
   </cs-overlay-panel>
 </div>

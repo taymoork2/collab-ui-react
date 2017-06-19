@@ -84,7 +84,6 @@
       });
       // ...and return the appropriate value
       return _.get(result, 'license.siteUrl', null);
-
     }
   }
 })();

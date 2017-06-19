@@ -22,13 +22,13 @@ describe('Directive: aaHelpDirective', function () {
     element = $compile("<aa-help content='help me if you can'></aa-help>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("aa-help-icon");
+    expect(element.html()).toContain('aa-help-icon');
   });
 
   it('creates the appropriate content as attribute', function () {
     element = $compile("<div aa-help content='please, please help me'></div>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("aa-help-icon");
+    expect(element.html()).toContain('aa-help-icon');
   });
 });

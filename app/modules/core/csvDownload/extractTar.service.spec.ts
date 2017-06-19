@@ -1,6 +1,6 @@
 import testModule from './index';
-let base64 = require('base64-js');
-let pako = require('pako');
+const base64 = require('base64-js');
+const pako = require('pako');
 
 describe('ExtractTarService', () => {
 
@@ -16,7 +16,7 @@ describe('ExtractTarService', () => {
   }
 
   function initDependencySpies() {
-    let tgz = base64.toByteArray(
+    const tgz = base64.toByteArray(
       `H4sIAG3vgFgAA+3RQQrCMBCF4a49xVxAeWnT9DwiDQiCYEbQ2xttEdwUXBQR/m/zEjKLN8TH4tt8PI07v3mzDkkpRnvmkPpXqp3us95Cp6iQhi7JFOqxbUwr9flwLb6/1CqH4uf7wlwdy3nhfVrE3vknvP7/5tclAAAAAAAAAAAAAAAAAABfewA2RQ3eACgAAA==`,
     );
     this.tarData = pako.inflate(tgz);
@@ -47,7 +47,7 @@ describe('ExtractTarService', () => {
 
   it('should return contents of first file in the tar.gz', function (done) {
 
-    let promise = this.ExtractTarService.extractFile(this.tgzBlob, this.tgzMd5)
+    const promise = this.ExtractTarService.extractFile(this.tgzBlob, this.tgzMd5)
       .then((fileBlob) => {
         expect(fileBlob).toEqual(this.tarFileBlob);
       })
@@ -59,31 +59,31 @@ describe('ExtractTarService', () => {
   });
 
   it('should reject if checksums dont match', function () {
-    let promise = this.ExtractTarService.extractFile(this.tgzBlob, 'invalidchecksum');
+    const promise = this.ExtractTarService.extractFile(this.tgzBlob, 'invalidchecksum');
     expect(promise).toBeRejectedWith('checksum mismatch');
   });
 
   it('should reject if file is not valid', function () {
     _.set(global, 'fileReaderResult', []);
-    let promise = this.ExtractTarService.extractFile([]);
+    const promise = this.ExtractTarService.extractFile([]);
     expect(promise).toBeRejectedWith('buffer error');
   });
 
   it('should reject if file not gzipped', function () {
     _.set(global, 'fileReaderResult', this.tarData);
-    let promise = this.ExtractTarService.extractFile(this.tarData);
+    const promise = this.ExtractTarService.extractFile(this.tarData);
     expect(promise).toBeRejectedWith('incorrect header check');
   });
 
   it('should reject if file not a tar file', function () {
-    let notTarFile = base64.toByteArray('H4sICLcwglgAA3Rlc3QudHh0AAtxDQ7hAgC+14P3BQAAAA==');
+    const notTarFile = base64.toByteArray('H4sICLcwglgAA3Rlc3QudHh0AAtxDQ7hAgC+14P3BQAAAA==');
     _.set(global, 'fileReaderResult', notTarFile);
 
     this.untarSpy.and.callFake((_tarFile) => {
       return this.$q.reject('not a tar file');
     });
 
-    let promise = this.ExtractTarService.extractFile(notTarFile);
+    const promise = this.ExtractTarService.extractFile(notTarFile);
     expect(promise).toBeRejectedWith('not a tar file');
   });
 });

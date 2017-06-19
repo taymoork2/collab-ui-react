@@ -9,7 +9,7 @@ var hostnameConfig = require('./app/config/hostname.config');
 var processEnvUtil = require('./utils/processEnvUtil')();
 var args = require('yargs').argv;
 var _ = require('lodash');
-var remote = require('selenium-webdriver/remote');
+var FileDetector = require('./test/e2e-protractor/utils/file-detector');
 
 var gatingSuites = _.chain(appConfig.e2eSuites).omit('huron').values().value();
 
@@ -92,10 +92,12 @@ exports.config = {
 
     global.isSauce = !!(process.env.SAUCE__USERNAME && process.env.SAUCE__USERNAME.length > 0);
     if (global.isSauce) {
-      browser.setFileDetector(new remote.FileDetector());
+      browser.setFileDetector(new FileDetector());
     }
     global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
+
+    global.provisionerKeepCustomer = !!args.provisionerKeepCustomer;
 
     var jasmineReporters = require('jasmine-reporters');
     var SpecReporter = require('jasmine-spec-reporter');

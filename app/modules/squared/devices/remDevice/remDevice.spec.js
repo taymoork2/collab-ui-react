@@ -15,7 +15,6 @@ describe('Controller: RemDeviceController', function () {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(function (FeatureToggleService, $q, CsdmHuronOrgDeviceService) {
-
     CsdmHuronDeviceService = CsdmHuronOrgDeviceService.create();
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));

@@ -43,7 +43,7 @@ describe('hybridCallServiceConnectUserSettings', () => {
   }
 
   it('should read the Connect status and update internal entitlement data when user is *not* entitled', () => {
-    let callServiceConnectExpectedStatus: IUserStatus = {
+    const callServiceConnectExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-ec',
       entitled: false,
       lastStateChange: 1234,
@@ -57,7 +57,7 @@ describe('hybridCallServiceConnectUserSettings', () => {
   });
 
   it('should read the Connect status and update internal entitlement data when user is entitled', () => {
-    let callServiceConnectExpectedStatus: IUserStatus = {
+    const callServiceConnectExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-ec',
       entitled: true,
       lastStateChange: 1234,
@@ -104,7 +104,7 @@ describe('hybridCallServiceConnectUserSettings', () => {
 
   it('should on save call the callback, after waiting a bit and probing USS for fresh data', () => {
 
-    let callbackSpy = jasmine.createSpy('callback');
+    const callbackSpy = jasmine.createSpy('callback');
 
     const callServiceConnectStatusBefore: IUserStatus = {
       serviceId: 'squared-fusion-uc',

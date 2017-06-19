@@ -10,21 +10,20 @@
     Authinfo,
     WebExXmlApiFact
   ) {
-
     var obj = {};
 
     obj.getSiteAdminUrl = function (siteUrl) {
-      var funcName = "getSiteAdminUrl()";
-      var logMsg = "";
+      var funcName = 'getSiteAdminUrl()';
+      var logMsg = '';
 
-      var siteAdminProtocol = "https://";
-      var siteAdminLink = "/wbxadmin/default.do?siteurl=";
+      var siteAdminProtocol = 'https://';
+      var siteAdminLink = '/wbxadmin/default.do?siteurl=';
 
       var siteAdminUrl = siteAdminProtocol + siteUrl + siteAdminLink + obj.getSiteName(siteUrl);
 
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl + "\n" +
-        "siteAdminURl=" + JSON.stringify(siteAdminUrl);
+      logMsg = funcName + '\n' +
+        'siteUrl=' + siteUrl + '\n' +
+        'siteAdminURl=' + JSON.stringify(siteAdminUrl);
       $log.log(logMsg);
 
       return siteAdminUrl;
@@ -65,7 +64,6 @@
         (0 < webexLicensesNotCILen) &&
         (webexLicensesNotCILen == webexLicensesLen)
       ) {
-
         return false;
       }
 
@@ -73,10 +71,10 @@
     }; // isCIEnabledSite()
 
     obj.getSiteNameAndType = function (siteUrl) {
-      var funcName = "getSiteNameAndType()";
-      var logMsg = "";
+      var funcName = 'getSiteNameAndType()';
+      var logMsg = '';
 
-      var siteUrlParts = siteUrl.split(".");
+      var siteUrlParts = siteUrl.split('.');
       var siteUrlPartsCount = siteUrlParts.length;
       var isMCOnlineSite = false;
       var siteName = siteUrlParts[0];
@@ -84,25 +82,25 @@
       if (4 == siteUrlPartsCount) {
         var siteNameSuffix = siteUrlParts[1];
 
-        if ("my" == _.toLower(siteNameSuffix.slice(0, 2))) {
+        if ('my' == _.toLower(siteNameSuffix.slice(0, 2))) {
           siteName = siteName + '.' + siteNameSuffix;
           isMCOnlineSite = true;
         }
       }
 
       if (isMCOnlineSite) {
-        logMsg = funcName + "\n" +
-          "siteUrl=" + siteUrl + "\n" +
-          "siteUrlParts=" + siteUrlParts + "\n" +
-          "siteUrlPartsCount=" + siteUrlPartsCount + "\n" +
-          "siteName=" + siteName + "\n" +
-          "isMCOnlineSite=" + isMCOnlineSite;
+        logMsg = funcName + '\n' +
+          'siteUrl=' + siteUrl + '\n' +
+          'siteUrlParts=' + siteUrlParts + '\n' +
+          'siteUrlPartsCount=' + siteUrlPartsCount + '\n' +
+          'siteName=' + siteName + '\n' +
+          'isMCOnlineSite=' + isMCOnlineSite;
         $log.log(logMsg);
       }
 
       var resultObj = {
-        'siteName': siteName,
-        'isMCOnlineSite': isMCOnlineSite,
+        siteName: siteName,
+        isMCOnlineSite: isMCOnlineSite,
       };
 
       return resultObj;
@@ -123,25 +121,24 @@
       iconClass1,
       iconClass2
     ) {
-
       var infoCardObj = {
-        id: "SiteInfo",
+        id: 'SiteInfo',
         label: siteUrl,
         isLicensesOverage: false,
 
         licensesTotal: {
-          id: "licensesTotal",
-          count: "---",
+          id: 'licensesTotal',
+          count: '---',
         },
 
         licensesUsage: {
-          id: "licensesUsage",
-          count: "---",
+          id: 'licensesUsage',
+          count: '---',
         },
 
         licensesAvailable: {
-          id: "licensesAvailable",
-          count: "---",
+          id: 'licensesAvailable',
+          count: '---',
         },
 
         iframeLinkObj1: {
@@ -156,7 +153,6 @@
       };
 
       return infoCardObj;
-
     }; // getNewInfoObj()
 
     obj.validateXmlData = function (
@@ -165,21 +161,21 @@
       startOfBodyStr,
       endOfBodyStr
     ) {
-      var funcName = "validateXmlData()";
-      var logMsg = "";
+      var funcName = 'validateXmlData()';
+      var logMsg = '';
 
-      logMsg = funcName + ": " + "\n" +
-        "commentText=" + commentText + "\n" +
-        "infoXml=\n" + infoXml + "\n" +
-        "startOfBodyStr=" + startOfBodyStr + "\n" +
-        "endOfBodyStr=" + endOfBodyStr;
+      logMsg = funcName + ': ' + '\n' +
+        'commentText=' + commentText + '\n' +
+        'infoXml=\n' + infoXml + '\n' +
+        'startOfBodyStr=' + startOfBodyStr + '\n' +
+        'endOfBodyStr=' + endOfBodyStr;
       // $log.log(logMsg);
 
       var headerJson = WebExXmlApiFact.xml2JsonConvert(
-        commentText + " Header",
+        commentText + ' Header',
         infoXml,
-        "<serv:header>",
-        "<serv:body>"
+        '<serv:header>',
+        '<serv:body>'
       ).body;
 
       var bodyJson = {};
@@ -192,15 +188,15 @@
         ).body;
       }
 
-      var errReason = "";
-      var errId = "";
-      if ("SUCCESS" != headerJson.serv_header.serv_response.serv_result) {
+      var errReason = '';
+      var errId = '';
+      if ('SUCCESS' != headerJson.serv_header.serv_response.serv_result) {
         errReason = headerJson.serv_header.serv_response.serv_reason;
         errId = headerJson.serv_header.serv_response.serv_exceptionID;
 
-        logMsg = funcName + ": " + "ERROR!!!" + "\n" +
-          "headerJson=\n" + JSON.stringify(headerJson) + "\n" +
-          "errReason=\n" + errReason;
+        logMsg = funcName + ': ' + 'ERROR!!!' + '\n' +
+          'headerJson=\n' + JSON.stringify(headerJson) + '\n' +
+          'errReason=\n' + errReason;
         $log.log(logMsg);
       }
 
@@ -216,10 +212,10 @@
 
     obj.validateSiteVersionXmlData = function (siteVersionXml) {
       var siteVersion = this.validateXmlData(
-        "Site Version",
+        'Site Version',
         siteVersionXml,
-        "<ep:",
-        "</serv:bodyContent>"
+        '<ep:',
+        '</serv:bodyContent>'
       );
 
       return siteVersion;
@@ -229,10 +225,10 @@
 
     obj.validateUserInfoXmlData = function (userInfoXml) {
       var userInfo = this.validateXmlData(
-        "User Data",
+        'User Data',
         userInfoXml,
-        "<use:",
-        "</serv:bodyContent>"
+        '<use:',
+        '</serv:bodyContent>'
       );
 
       return userInfo;
@@ -240,10 +236,10 @@
 
     obj.validateSiteInfoXmlData = function (siteInfoXml) {
       var siteInfo = this.validateXmlData(
-        "Site Info",
+        'Site Info',
         siteInfoXml,
-        "<ns1:",
-        "</serv:bodyContent>"
+        '<ns1:',
+        '</serv:bodyContent>'
       );
 
       return siteInfo;
@@ -251,10 +247,10 @@
 
     obj.validateMeetingTypesInfoXmlData = function (meetingTypesInfoXml) {
       var meetingTypesInfo = this.validateXmlData(
-        "Meeting Types Info",
+        'Meeting Types Info',
         meetingTypesInfoXml,
-        "<mtgtype:",
-        "</serv:bodyContent>"
+        '<mtgtype:',
+        '</serv:bodyContent>'
       );
 
       return meetingTypesInfo;
@@ -262,10 +258,10 @@
 
     obj.validateAdminPagesInfoXmlData = function (adminPagesInfoXml) {
       var adminPagesInfo = this.validateXmlData(
-        "Admin Pages Info",
+        'Admin Pages Info',
         adminPagesInfoXml,
-        "<ns1:",
-        "</serv:bodyContent>"
+        '<ns1:',
+        '</serv:bodyContent>'
       );
 
       return adminPagesInfo;
@@ -283,7 +279,7 @@
       // var trainReleaseVersion = null;
       // var trainReleaseOrder = null;
 
-      if ("" === siteVersionJsonObj.errId) { // got a good response
+      if ('' === siteVersionJsonObj.errId) { // got a good response
         var siteVersionJson = siteVersionJsonObj.bodyJson;
 
         trainReleaseJson.trainReleaseVersion = siteVersionJson.ep_trainReleaseVersion;
@@ -299,7 +295,7 @@
 
       var enableT30UnifiedAdmin = null;
 
-      if ("" === enableT30UnifiedAdminJsonObj.errId) { // got a good response
+      if ('' === enableT30UnifiedAdminJsonObj.errId) { // got a good response
         enableT30UnifiedAdmin = enableT30UnifiedAdminJsonObj.bodyJson.ns1_enableT30UnifiedAdmin;
       }
 
@@ -307,8 +303,8 @@
     }; // getEnableT30UnifiedAdmin()
 
     obj.getOrgWebexLicenses = function (orgInfo) {
-      var funcName = "getOrgWebexLicenses()";
-      var logMsg = "";
+      var funcName = 'getOrgWebexLicenses()';
+      var logMsg = '';
 
       var orgWebexLicenses = [];
 
@@ -316,8 +312,8 @@
         var customerOrderIDs = orgInfo.data.customers;
 
         if (1 < customerOrderIDs.size) {
-          logMsg = funcName + "\n" +
-            "customerOrderIDs.size=" + customerOrderIDs.size;
+          logMsg = funcName + '\n' +
+            'customerOrderIDs.size=' + customerOrderIDs.size;
           $log.log(logMsg);
         }
 
@@ -351,8 +347,8 @@
 
       Auth.getCustomerAccount(Authinfo.getOrgId()).then(
         function getValidLicensesSuccess(response) {
-          var funcName = "getValidLicensesSuccess()";
-          var logMsg = "";
+          var funcName = 'getValidLicensesSuccess()';
+          var logMsg = '';
 
           var licenses = obj.getOrgWebexLicenses(response);
 
@@ -363,27 +359,26 @@
           var allSitesLicenseInfo = [];
 
           if (0 >= licenses.size) {
-            logMsg = funcName + "\n" +
-              "ERROR - no org licenses found in Atlas!" + "\n" +
-              "licenses=" + JSON.stringify(licenses);
+            logMsg = funcName + '\n' +
+              'ERROR - no org licenses found in Atlas!' + '\n' +
+              'licenses=' + JSON.stringify(licenses);
             $log.log(logMsg);
           } else {
             licenses.forEach(
               function checkLicense(license) {
                 if (
-                  ("CONFERENCING" == license.licenseType) ||
-                  ("CMR" == license.licenseType)
+                  ('CONFERENCING' == license.licenseType) ||
+                  ('CMR' == license.licenseType)
                 ) {
-
                   var capacity = license.capacity;
-                  var licenseFields = license.licenseId.split("_");
+                  var licenseFields = license.licenseId.split('_');
                   var webexSite = licenseFields[licenseFields.length - 1];
                   var offerCode = licenseFields[0];
 
                   var licenseInfo = {
-                    'webexSite': webexSite,
-                    'offerCode': offerCode,
-                    'capacity': capacity,
+                    webexSite: webexSite,
+                    offerCode: offerCode,
+                    capacity: capacity,
                   };
 
                   allSitesLicenseInfo.push(licenseInfo);
@@ -400,11 +395,11 @@
         }, // getValidLicensesSuccess()
 
         function getValidLicensesError(info) {
-          var funcName = "getValidLicensesError()";
-          var logMsg = "";
+          var funcName = 'getValidLicensesError()';
+          var logMsg = '';
 
-          logMsg = funcName + ": " + "\n" +
-            "info=" + JSON.stringify(info);
+          logMsg = funcName + ': ' + '\n' +
+            'info=' + JSON.stringify(info);
           $log.log(logMsg);
 
           deferredGetWebexLicenseInfo.reject(info);
@@ -418,7 +413,6 @@
       licenseInfo,
       infoCardObj
     ) {
-
       infoCardObj.licensesTotal.count = licenseInfo.volume;
       infoCardObj.licensesUsage.count = licenseInfo.usage;
       infoCardObj.licensesAvailable.count = licenseInfo.available;
@@ -442,9 +436,9 @@
         promise = deferred.promise;
       } else {
         var siteName = obj.getSiteName(siteUrl);
-        var logoutUrl = "https://" + $rootScope.nginxHost + "/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=" + siteName.toLowerCase();
+        var logoutUrl = 'https://' + $rootScope.nginxHost + '/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=' + siteName.toLowerCase();
 
-        $log.log('Logout from WebEx site ' + siteName + ", " + logoutUrl);
+        $log.log('Logout from WebEx site ' + siteName + ', ' + logoutUrl);
 
         var jqpromise = $.ajax({
           type: 'POST',
@@ -507,5 +501,4 @@
   } // webexUtilsFact()
 
   module.exports = WebExUtilsFact;
-
 })();

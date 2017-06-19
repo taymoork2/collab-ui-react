@@ -151,7 +151,7 @@ describe('Component: gmTdDetails', () => {
   }
 
   function setParameter(key, value) {
-    let preData = {
+    const preData = {
       links: [],
       content: {
         health: { code: 200, status: 'OK' },
@@ -166,7 +166,7 @@ describe('Component: gmTdDetails', () => {
 
     it('should watch', function () {
       spyOn(this.$scope, '$on').and.callThrough();
-      let currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
+      const currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(currentTD));
 
@@ -214,7 +214,7 @@ describe('Component: gmTdDetails', () => {
     });
 
     it('Should return correct data for TelephonyDomainService.getTelephonyDomain', function () {
-      let Element = '.gm-td-side-panel .feature-name';
+      const Element = '.gm-td-side-panel .feature-name';
       this.preData.content.data.body = this.telephonyDomain;
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.preData ));
@@ -262,7 +262,7 @@ describe('Component: gmTdDetails', () => {
 
 
     it('Should call onSeeAllPhoneNumbers when click the phone numbers section in page', function () {
-      let currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
+      const currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(currentTD));
 
@@ -272,7 +272,7 @@ describe('Component: gmTdDetails', () => {
     });
 
     it('OnEdit', function () {
-      let currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
+      const currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(currentTD));
 

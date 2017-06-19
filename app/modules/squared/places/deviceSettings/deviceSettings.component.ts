@@ -62,7 +62,7 @@ class DeviceSettings implements ng.IComponentController {
   private fetchAsyncSettings(): void {
     this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(placeUpgradeChannel => {
       if (placeUpgradeChannel) {
-        let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
+        const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
         if (firstUnsupportedDevice) {
           this.unsupportedDeviceTypeForUpgradeChannel = firstUnsupportedDevice.product;
         }
@@ -80,7 +80,7 @@ class DeviceSettings implements ng.IComponentController {
 
     this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(placeGuiSettings => {
       if (placeGuiSettings) {
-        let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
+        const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
         if (firstUnsupportedDevice) {
           this.unsupportedDeviceTypeForGuiSettings = firstUnsupportedDevice.product;
         }
@@ -109,7 +109,7 @@ class DeviceSettings implements ng.IComponentController {
   }
 
   private getUpgradeChannelObject(channel) {
-    let labelKey = 'CsdmStatus.upgradeChannels.' + channel;
+    const labelKey = 'CsdmStatus.upgradeChannels.' + channel;
     let label = this.$translate.instant('CsdmStatus.upgradeChannels.' + channel);
     if (label === labelKey) {
       label = channel;

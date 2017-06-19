@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: DisableMediaServiceController', function () {
-
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Hercules'));
@@ -18,7 +17,7 @@ describe('Controller: DisableMediaServiceController', function () {
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
+    $provide.value('Authinfo', authInfo);
   }));
 
   beforeEach(inject(function ($state, $controller, _$q_, $translate, _MediaServiceActivationV2_, _Notification_, _MediaClusterServiceV2_, _$httpBackend_, _ServiceDescriptor_) {
@@ -56,13 +55,14 @@ describe('Controller: DisableMediaServiceController', function () {
   });
   it('should call the MediaClusterServiceV2 deleteClusterWithConnector for deactivate', function () {
     var respnse = {
-      'status': 204,
+      status: 204,
     };
     spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.resolve(respnse));
     spyOn(ServiceDescriptor, 'disableService');
     spyOn(MediaServiceActivationV2, 'setisMediaServiceEnabled');
     spyOn(MediaServiceActivationV2, 'disableOrpheusForMediaFusion');
     spyOn(MediaServiceActivationV2, 'deactivateHybridMedia');
+    spyOn(MediaServiceActivationV2, 'disableMFOrgSettingsForDevOps');
     spyOn(Notification, 'success');
     controller.clusterIds = ['cluster1', 'cluster2'];
     controller.deactivate();
@@ -73,12 +73,13 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(MediaServiceActivationV2.setisMediaServiceEnabled).toHaveBeenCalled();
     expect(MediaServiceActivationV2.disableOrpheusForMediaFusion).toHaveBeenCalled();
     expect(MediaServiceActivationV2.deactivateHybridMedia).toHaveBeenCalled();
+    expect(MediaServiceActivationV2.disableMFOrgSettingsForDevOps).toHaveBeenCalled();
     expect(Notification.success).toHaveBeenCalled();
     expect(modalInstance.close).toHaveBeenCalled();
   });
   it('should notify error when deactivate call fails', function () {
     spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.resolve({
-      'status': 500,
+      status: 500,
     }));
     spyOn(Notification, 'error');
     controller.clusterIds = ['cluster1', 'cluster2'];

@@ -35,12 +35,12 @@ describe('AddLinesCtrl: Ctrl', function () {
 
     var data = {
       data: {
-        deviceName: "Red River",
+        deviceName: 'Red River',
       },
     };
 
     $scope.entitylist = [{
-      name: "Red River",
+      name: 'Red River',
     }];
 
     $scope.wizard = {};
@@ -101,7 +101,6 @@ describe('AddLinesCtrl: Ctrl', function () {
       $state: $state,
       CommonLineService: CommonLineService,
     });
-
   }
 
   afterEach(function () {
@@ -116,14 +115,13 @@ describe('AddLinesCtrl: Ctrl', function () {
         .respond({});
       initController();
       $scope.entitylist = [{
-        name: "Red River",
+        name: 'Red River',
       }];
 
       $scope.$apply();
     });
 
     it('activateDID', function () {
-
       controller.activateDID();
       $scope.$apply();
 
@@ -138,7 +136,6 @@ describe('AddLinesCtrl: Ctrl', function () {
       $scope.$apply();
       expect($scope.externalNumber.pattern).toEqual('+14084744532');
     });
-
   });
 
   describe('wizard functions', function () {
@@ -183,7 +180,7 @@ describe('AddLinesCtrl: Ctrl', function () {
             state: function () {
               return {
                 data: {
-                  function: "editServices",
+                  function: 'editServices',
                   account: {
                     cisUuid: deviceCisUuid,
                     enableCalService: false,

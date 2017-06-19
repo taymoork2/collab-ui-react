@@ -5,17 +5,17 @@
     .controller('AAMessageTypeCtrl', AAMessageTypeCtrl);
 
   /* @ngInject */
-  function AAMessageTypeCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
-
+  function AAMessageTypeCtrl($scope, $translate, AADynaAnnounceService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService/*, $window*/) {
     var vm = this;
     var conditional = 'conditional';
 
+    var finalList = [];
     var properties = {
-      NAME: ["play", "say", "runActionsOnInput"],
-      REPEAT_NAME: "repeatActionsOnInput",
-      LABEL: "label",
-      VALUE: "value",
-      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT",
+      NAME: ['play', 'say', 'runActionsOnInput', 'dynamic'],
+      REPEAT_NAME: 'repeatActionsOnInput',
+      LABEL: 'label',
+      VALUE: 'value',
+      HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT',
     };
 
     var messageType = {
@@ -28,6 +28,7 @@
     var actionType = {
       PLAY: 0,
       SAY: 1,
+      DYNAMIC: 2,
     };
 
     var holdActionDesc;
@@ -45,17 +46,18 @@
     };
 
     vm.messageOptions = [{
-      "label": $translate.instant('autoAttendant.uploadedFile'),
-      "value": "uploadFile",
-      "action": "play",
+      label: $translate.instant('autoAttendant.uploadedFile'),
+      value: 'uploadFile',
+      action: 'play',
     }, {
-      "label": $translate.instant('autoAttendant.actionSayMessage'),
-      "value": "sayMessage",
-      "action": "say",
+      label: $translate.instant('autoAttendant.actionSayMessage'),
+      value: 'sayMessage',
+      action: 'say',
     }];
 
     vm.messageType = messageType.ACTION;
     vm.saveUiModel = saveUiModel;
+    vm.saveDynamicUi = saveDynamicUi;
     vm.setMessageOptions = setMessageOptions;
     vm.isDynamicToggle = isDynamicToggle;
     vm.dynamicTags = ['DYNAMIC-EXAMPLE'];
@@ -65,7 +67,7 @@
 
     vm.MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024;
 
-    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs"></aa-insertion-element>';
+    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="Id" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + '"></aa-insertion-element>';
 
     //////////////////////////////////////////////////////
 
@@ -99,12 +101,25 @@
       if (vm.messageOption.value === vm.messageOptions[actionType.SAY].value) {
         action.description = '';
         if (action.name === vm.messageOptions[actionType.PLAY].action) {
-          action.name = vm.messageOptions[actionType.SAY].action;
+          if (isDynamicToggle()) {
+            action.name = 'dynamic';
+            vm.dynamicValues = [];
+            vm.menuEntry.dynamicList = [{
+              say: {
+                value: '',
+                voice: '',
+              },
+              isDynamic: false,
+              htmlModel: '',
+            }];
+          } else {
+            action.name = vm.messageOptions[actionType.SAY].action;
+          }
         }
       }
 
       if (vm.messageOption.value === vm.messageOptions[actionType.PLAY].value) {
-        if (action.name === vm.messageOptions[actionType.SAY].action) {
+        if (action.name === vm.messageOptions[actionType.SAY].action || action.name === 'dynamic') {
           action.name = vm.messageOptions[actionType.PLAY].action;
         }
       }
@@ -117,7 +132,75 @@
 
       vm.actionEntry.setValue(vm.messageInput);
       AACommonService.setSayMessageStatus(true);
+    }
 
+    function saveDynamicUi() {
+      var range = AADynaAnnounceService.getRange();
+      finalList = [];
+      var dynamicList = range.endContainer.ownerDocument.activeElement;
+      if (dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex}}')) {
+        vm.menuEntry.dynamicList = createDynamicList(dynamicList);
+        if (_.isEmpty(finalList)) {
+          finalList.push({
+            say: {
+              value: '',
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          });
+          vm.menuEntry.dynamicList = finalList;
+        }
+        AACommonService.setSayMessageStatus(true);
+      }
+    }
+
+    function createDynamicList(dynamicList) {
+      _.forEach(dynamicList.childNodes, function (node) {
+        var opt = {};
+
+        if ((node.nodeName === 'AA-INSERTION-ELEMENT' && node.childNodes.length > 0) || node.nodeName === 'DIV') {
+          return createDynamicList(node);
+        } else if (node.nodeName === 'BR') {
+          opt = {
+            say: {
+              value: '',
+              voice: '',
+              as: '',
+            },
+            isDynamic: true,
+            htmlModel: encodeURIComponent('<br>'),
+          };
+        } else if (node.nodeName === '#text') {
+          opt = {
+            say: {
+              value: node.nodeValue,
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          };
+        } else if (node.nodeName === 'SPAN' || node.nodeName === 'AA-INSERTION-ELEMENT') {
+          var attributes;
+          if (node.nodeName === 'SPAN') {
+            attributes = node.parentElement.attributes;
+          } else {
+            attributes = node.attributes;
+          }
+          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"></aa-insertion-element>';
+          opt = {
+            say: {
+              value: attributes[0].value,
+              voice: '',
+              as: attributes[1].value,
+            },
+            isDynamic: true,
+            htmlModel: encodeURIComponent(ele),
+          };
+        }
+        finalList.push(opt);
+      });
+      return finalList;
     }
 
     function getAction(menuEntry) {
@@ -156,7 +239,24 @@
           vm.messageInput = vm.actionEntry.value;
         }
       } else {
-        if (_.has(vm, 'actionEntry.name')) {
+        if (_.has(vm.menuEntry, 'dynamicList')) {
+          vm.dynamicValues = [];
+          _.forEach(vm.menuEntry.dynamicList, function (opt) {
+            var model = {};
+            if (!opt.isDynamic) {
+              model = {
+                model: opt.say.value,
+                html: opt.say.value,
+              };
+            } else {
+              model = {
+                model: opt.say.value,
+                html: decodeURIComponent(opt.htmlModel),
+              };
+            }
+            vm.dynamicValues.push(model);
+          });
+        } else if (_.has(vm, 'actionEntry.name')) {
           vm.messageOption = vm.messageOptions[_.get(actionType, vm.actionEntry.name.toUpperCase())];
           if (vm.actionEntry.name.toLowerCase() === vm.messageOptions[actionType.SAY].action) {
             vm.messageInput = vm.actionEntry.value;
@@ -172,8 +272,8 @@
       var sourceMenu;
       var queueAction;
 
-      holdActionDesc = "";
-      holdActionValue = "";
+      holdActionDesc = '';
+      holdActionValue = '';
 
       switch (vm.messageType) {
         case messageType.MENUHEADER:
@@ -203,11 +303,9 @@
                   vm.actionEntry = keyAction;
                 }
               }
-
             }
 
             break;
-
           }
         case messageType.ACTION:
           {
@@ -236,6 +334,7 @@
     }
 
     function activate() {
+      vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, AACommonService.getUniqueId());
       if ($scope.isMenuHeader) {
         vm.messageType = messageType.MENUHEADER;
       } else if ($scope.menuId && (!$scope.menuKeyIndex || $scope.menuKeyIndex <= -1)) {
@@ -252,7 +351,5 @@
     }
 
     activate();
-
   }
-
 })();

@@ -6,10 +6,14 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   public orgId;
   public orgName;
   public status: ICmcOrgStatusResponse;
-  public userStatuses: Array<ICmcUserStatus>;
+  public userStatuses: ICmcUserStatus[];
+  public fetchedUserStatuses: ICmcUserStatus[];
   public gridOptions;
   public userStatusesSummaryText: string;
   private statTemplate;
+  public filters: any[];
+  private searchStr: string;
+  private nextUrl: string;
 
   /* @ngInject */
   constructor(
@@ -20,6 +24,8 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     private $translate,
     private Notification: Notification,
     private $templateCache,
+    private $filter: ng.IFilterService,
+    private $scope: ng.IScope,
   ) {
     this.orgId = this.Authinfo.getOrgId();
     this.orgName = this.Authinfo.getOrgName();
@@ -27,6 +33,19 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
     this.statTemplate = this.$templateCache.get('modules/cmc/status/statColumn.tpl.html');
 
+    // TODO Add this and also  errors when CMC provides more info
+    // this.filters = [{
+    //   name: 'Activated',
+    //   filterValue: 'activated',
+    //   count: 0,
+    // } ];
+  }
+
+  public filterList(searchStr: string) {
+    this.$log.debug('searchStr', searchStr );
+    this.searchStr = searchStr;
+    this.$log.debug('user statuses', this.fetchedUserStatuses);
+    this.userStatuses = this.$filter('filter')(this.fetchedUserStatuses, { displayName: this.searchStr });
   }
 
   public $onInit() {
@@ -55,7 +74,10 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     return this.CmcUserService.getUsersWithCmcButMissingAware(limit)
       .then( (result: ICmcUserStatusInfoResponse) => {
         this.userStatuses = result.userStatuses;
+        this.fetchedUserStatuses = result.userStatuses;
         if (result.paging.next) {
+          this.nextUrl = result.paging.next;
+          this.$log.debug('nextUrl', this.nextUrl);
           this.userStatusesSummaryText = this.$translate.instant('cmc.statusPage.listingFirstActiveUsers', { noOfActiveUsers: this.userStatuses.length });
         } else {
           this.userStatusesSummaryText = '';
@@ -72,8 +94,8 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   }
 
   private initGrid() {
-    let columnDefs = [{
-      width: '25%',
+    const columnDefs = [{
+      width: '35%',
       sortable: true,
       field: 'displayName',
       displayName: 'User Name',
@@ -86,12 +108,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
       cellClass: 'ui-grid-cell-contents',
       sort: { direction: 'asc', priority: 0 },
     }, {
-      width: '25%',
-      sortable: false,
-      field: 'userId',
-      displayName: 'Id',
-    }, {
-      width: '20%',
+      width: '35%',
       sortable: true,
       field: 'lastStatusUpdate',
       displayName: 'Last Updated',
@@ -100,6 +117,9 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     this.gridOptions = {
       rowHeight: 37,
       data: '$ctrl.userStatuses',
+      onRegisterApi: (gridApi) => {
+        this.onRegisterApi(gridApi);
+      },
       multiSelect: false,
       columnDefs: columnDefs,
       enableColumnMenus: false,
@@ -108,6 +128,17 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
       enableHorizontalScrollbar: 0,
       enableVerticalScrollbar: 2,
     };
+  }
+
+  // This is base for paging
+  private onRegisterApi(gridApi): void {
+    gridApi.infiniteScroll.on.needLoadMoreData(this.$scope, () => {
+      this.$log.debug('needLoadMoreData');
+    });
+    gridApi.infiniteScroll.on.needLoadMoreDataTop(this.$scope, () => {
+      this.$log.debug('needLoadMoreDataTop');
+    });
+    this.$log.debug('gridApi', gridApi);
   }
 }
 

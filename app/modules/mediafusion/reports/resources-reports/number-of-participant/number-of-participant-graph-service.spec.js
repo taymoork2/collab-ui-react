@@ -9,7 +9,7 @@ describe('Service: Number of Participants Graph Service', function () {
 
   var numberOfParticipantChart = {
     dataProvider: [],
-    startDuration: "",
+    startDuration: '',
     balloon: {
       enabled: false,
     },
@@ -24,8 +24,8 @@ describe('Service: Number of Participants Graph Service', function () {
   };
 
   var daterange = {
-    label: "Last 24 Hours",
-    value: "0",
+    label: 'Last 24 Hours',
+    value: '0',
   };
   var numberOfParticipantGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/numberOfParticipant.json');
 
@@ -44,5 +44,4 @@ describe('Service: Number of Participants Graph Service', function () {
     var setNumberOfParticipantGraphResponse = NumberOfParticipantGraphService.setNumberOfParticipantGraph(numberOfParticipantGraphData, numberOfParticipantChart, daterange);
     expect(setNumberOfParticipantGraphResponse.graphs.length).toBe(2);
   });
-
 });

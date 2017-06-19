@@ -20,10 +20,12 @@ describe('CmcService', () => {
 
   it('should determine whether cmc settings are allowed for this org', function (done) {
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
-      callback({}, 200);
+      callback({
+        success: true,
+      }, true);
     });
     spyOn(this.CmcService, 'hasCmcService').and.returnValue(true);
-    let orgId = '1234';
+    const orgId = '1234';
     this.CmcService.allowCmcSettings(orgId).then(function (result) {
       expect(result).toBe(true);
       done();
@@ -32,7 +34,7 @@ describe('CmcService', () => {
   });
 
   describe('update phone number', function () {
-    let user: ICmcUser = <ICmcUser> {
+    const user: ICmcUser = <ICmcUser> {
       userName: 'dummyUser',
       id: '9999',
       meta: {
@@ -51,7 +53,7 @@ describe('CmcService', () => {
 
     it('patches user phone number if number is unique', function () {
 
-      let scimNoUser = {
+      const scimNoUser = {
         Resources: [],
       };
       this.$httpBackend
@@ -71,7 +73,7 @@ describe('CmcService', () => {
 
     it('patches user phone number if number is users own number', function () {
 
-      let scimResponseExistingUser = {
+      const scimResponseExistingUser = {
         Resources: [
           { userName: user.userName },
         ],
@@ -93,7 +95,7 @@ describe('CmcService', () => {
 
     it('throws error is number is not unique', function () {
 
-      let scimResponseExistingUser = {
+      const scimResponseExistingUser = {
         Resources: [
           { userName: 'someOtherName' },
         ],

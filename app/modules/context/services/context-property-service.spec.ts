@@ -2,7 +2,7 @@ import { PropertyConstants } from './context-property-service';
 
 describe('PropertyService', () => {
   let propertyResponse;
-  let managementUrl: string = 'https://management.produs1.ciscoccservice.com';
+  const managementUrl: string = 'https://management.produs1.ciscoccservice.com';
   const BASE_PROP_URL = managementUrl + PropertyConstants.PROPERTY_URL;
 
   beforeEach(function () {

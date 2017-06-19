@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function OtpService($rootScope, HuronUser) {
-
     var service = {
       hyphenateOtp: hyphenateOtp,
       generateOtp: generateOtp,
@@ -27,14 +26,14 @@
           friendlyExpiresOn: convertExpiryTime(data.expiresOn),
           valid: 'valid',
         };
-        $rootScope.$broadcast("otpGenerated");
+        $rootScope.$broadcast('otpGenerated');
         return otp;
       });
     }
 
     function hyphenateOtp(otp) {
       if (otp) {
-        return _.replace(otp, /(\d{4})(\d{4})(\d{4})(\d{4})/, "$1-$2-$3-$4");
+        return _.replace(otp, /(\d{4})(\d{4})(\d{4})(\d{4})/, '$1-$2-$3-$4');
       } else {
         return otp;
       }
@@ -47,6 +46,5 @@
       }
       return (moment(expiryTime).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)'));
     }
-
   }
 })();

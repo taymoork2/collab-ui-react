@@ -9,7 +9,7 @@ require('./_user-csv.scss');
 
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
-    Analytics, Authinfo, Config, CsvDownloadService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
+    Analytics, Authinfo, Config, CsvDownloadService, HuronCustomer, LogMetricsService, NAME_DELIMITER, OnboardService,
     Notification, ServiceDescriptor, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
     // variables
     var vm = this;
@@ -30,8 +30,8 @@ require('./_user-csv.scss');
       'Calendar Service': 'Hybrid Calendar Service (Exchange)',
     };
     var mutuallyExclusiveCalendarEntitlements = {
-      'squaredFusionCal': 'squaredFusionGCal',
-      'squaredFusionGCal': 'squaredFusionCal',
+      squaredFusionCal: 'squaredFusionGCal',
+      squaredFusionGCal: 'squaredFusionCal',
     };
     var USER_ID_EMAIL_HEADER = 'User ID/Email (Required)';
     var NO_RESOURCE_GROUP = '**no resource group**';
@@ -96,10 +96,10 @@ require('./_user-csv.scss');
       userErrorArray: [],
       csvChunk: 0,
     };
-    vm.model.desc = $translate.instant("csvUpload.desc", {
+    vm.model.desc = $translate.instant('csvUpload.desc', {
       maxUsers: maxUsers,
     });
-    vm.model.templateAnchorText = $translate.instant("firstTimeWizard.downloadStep");
+    vm.model.templateAnchorText = $translate.instant('firstTimeWizard.downloadStep');
 
     // watches
     $scope.$watch(function () {
@@ -163,7 +163,6 @@ require('./_user-csv.scss');
       } finally {
         setUploadProgress(100);
       }
-
     };
 
     var rootState = $previousState.get().state.name;
@@ -228,7 +227,7 @@ require('./_user-csv.scss');
       if (Authinfo.isOnline()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html",
+          templateUrl: 'modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html',
         }).result.then(function () {
           $state.go('my-company.subscriptions');
         });
@@ -278,9 +277,9 @@ require('./_user-csv.scss');
         eType = LogMetricsService.getEventType('bulkDirSyncUsers');
       }
       var data = {
-        'newUsersCount': vm.model.numNewUsers || 0,
-        'updatedUsersCount': vm.model.numExistingUsers || 0,
-        'errorUsersCount': _.isArray(vm.model.userErrorArray) ? vm.model.userErrorArray.length : 0,
+        newUsersCount: vm.model.numNewUsers || 0,
+        updatedUsersCount: vm.model.numExistingUsers || 0,
+        errorUsersCount: _.isArray(vm.model.userErrorArray) ? vm.model.userErrorArray.length : 0,
       };
       LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
     }
@@ -425,11 +424,9 @@ require('./_user-csv.scss');
     }
 
     function bulkSaveWithIndividualLicenses() {
-
       // received successful result from Userservice.bulkOnboardUsers
       // NOTE: must check httpStatus to see if onboard succeeded for each user)
       function successCallback(response, onboardedUsers) {
-
         function onboardedUserWithEmail(email) {
           return _.find(onboardedUsers, function (user) {
             return _.toLower(user.address) === _.toLower(email);
@@ -491,7 +488,6 @@ require('./_user-csv.scss');
           if (vm.handleHybridServicesResourceGroups) {
             updateResourceGroupsInUss(onboardSuccessUsers);
           }
-
         } else {
           // for some reason the userResponse is incorrect.  We need to error every user.
           _.forEach(onboardedUsers, function (user) {
@@ -633,7 +629,7 @@ require('./_user-csv.scss');
               resourceGroup = getResourceGroup(calendarServiceResourceGroup);
               if (!resourceGroup) {
                 processingError = true;
-                addUserError(csvRowIndex, id, $translate.instant("firstTimeWizard.invalidCalendarServiceResourceGroup", {
+                addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.invalidCalendarServiceResourceGroup', {
                   group: calendarServiceResourceGroup,
                 }));
               } else {
@@ -650,7 +646,7 @@ require('./_user-csv.scss');
               resourceGroup = getResourceGroup(callServiceResourceGroup);
               if (!resourceGroup) {
                 processingError = true;
-                addUserError(csvRowIndex, id, $translate.instant("firstTimeWizard.invalidCallServiceResourceGroup", {
+                addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.invalidCallServiceResourceGroup', {
                   group: callServiceResourceGroup,
                 }));
               } else {
@@ -669,6 +665,10 @@ require('./_user-csv.scss');
           // Report required field is missing
           processingError = true;
           addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.csvRequiredEmail'));
+        } else if (!OnboardService.validateEmail(id)) {
+          // Report email field is invalid
+          processingError = true;
+          addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.invalidEmailAddress'));
         } else if (_.includes(uniqueEmails, id)) {
           // Report a duplicate email
           processingError = true;
@@ -738,14 +738,14 @@ require('./_user-csv.scss');
 
           if (!processingError) {
             var user = {
-              'csvRow': csvRowIndex,
-              'address': id,
-              'name': firstName + NAME_DELIMITER + lastName,
-              'displayName': displayName,
-              'internalExtension': directoryNumber,
-              'directLine': directLine,
-              'licenses': licenseList,
-              'entitlements': entitleList,
+              csvRow: csvRowIndex,
+              address: id,
+              name: firstName + NAME_DELIMITER + lastName,
+              displayName: displayName,
+              internalExtension: directoryNumber,
+              directLine: directLine,
+              licenses: licenseList,
+              entitlements: entitleList,
             };
             if (vm.handleHybridServicesResourceGroups) {
               user.resourceGroups = {};
@@ -781,7 +781,6 @@ require('./_user-csv.scss');
        * users that are correctly defined.
        */
       function processCsvRows() {
-
         vm.isCancelledByUser = false;
 
         headers = generateHeaders(orgHeaders || null, csvHeaders || null);
@@ -793,7 +792,6 @@ require('./_user-csv.scss');
         // deal with AUDP -- only one column - Phone Number
 
         _.forEach(csvUsersArray, function (userRow, idx) {
-
           // note: the idx is 0-based, and the first row in the csv is the header, so we need
           // to add 2 to the array index to get the csv row.
           var userData = processCsvRow(userRow, idx + 2);
@@ -830,7 +828,6 @@ require('./_user-csv.scss');
        */
       function processRetryUsers() {
         return $q(function (resolve) {
-
           vm.model.numRetriesToAttempt--;
 
           if (vm.model.usersToRetry.length === 0) {
@@ -841,12 +838,10 @@ require('./_user-csv.scss');
             vm.model.retryTimerParts = msToTime(vm.model.retryTimer);
 
             var ip = $interval(function () {
-
               vm.model.retryTimer -= 1000;
               vm.model.retryTimerParts = msToTime(vm.model.retryTimer);
 
               if (vm.model.retryTimer <= 0) {
-
                 vm.model.isRetrying = false;
                 $interval.cancel(ip);
 
@@ -929,6 +924,5 @@ require('./_user-csv.scss');
     // wizard hooks
     vm.csvUploadNext = beforeSubmitCsv;
     vm.csvProcessingNext = bulkSaveWithIndividualLicenses;
-
   }
 })();

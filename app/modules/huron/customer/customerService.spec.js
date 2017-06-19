@@ -10,7 +10,7 @@ describe('Service: Huron Customer', function () {
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
   beforeEach(inject(function (_$httpBackend_, _$q_, _HuronCustomer_, _HuronConfig_, _PstnService_) {
@@ -33,7 +33,6 @@ describe('Service: Huron Customer', function () {
   });
 
   describe('startTrial function', function () {
-
     it('should start a new trial', function () {
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(201);
       HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com');
@@ -92,7 +91,5 @@ describe('Service: Huron Customer', function () {
       });
       $httpBackend.flush();
     });
-
   });
-
 });

@@ -7,13 +7,13 @@ describe('Component: directoryNumber', () => {
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const ESN_NUMBER = '.esn-number-field';
 
-  let internalNumbers: string[] = [
+  const internalNumbers: string[] = [
     '12345',
     '67890',
     '75023',
   ];
 
-  let externalNumbers: string[] = [
+  const externalNumbers: string[] = [
     '+12345',
     '+67890',
   ];

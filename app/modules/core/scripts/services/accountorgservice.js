@@ -78,10 +78,10 @@
     function addOrgCloudSipUri(org, cloudSipUri) {
       var url = getAccountSettingsUrl(org);
       var request = {
-        'id': org,
-        'settings': [{
-          'key': 'orgCloudSipUri',
-          'value': cloudSipUri + '.ciscospark.com',
+        id: org,
+        settings: [{
+          key: 'orgCloudSipUri',
+          value: cloudSipUri + '.ciscospark.com',
         }],
       };
 
@@ -91,10 +91,10 @@
     function addOrgDataRetentionPeriodDays(org, dataRetentionPeriodDays) {
       var url = getAccountSettingsUrl(org);
       var request = {
-        'id': org,
-        'settings': [{
-          'key': 'dataRetentionPeriodDays',
-          'value': dataRetentionPeriodDays,
+        id: org,
+        settings: [{
+          key: 'dataRetentionPeriodDays',
+          value: dataRetentionPeriodDays,
         }],
       };
 
@@ -104,10 +104,10 @@
     function modifyOrgDataRetentionPeriodDays(org, dataRetentionPeriodDays) {
       var url = getAccountSettingsUrl(org);
       var request = {
-        'id': org,
-        'settings': [{
-          'key': 'dataRetentionPeriodDays',
-          'value': dataRetentionPeriodDays,
+        id: org,
+        settings: [{
+          key: 'dataRetentionPeriodDays',
+          value: dataRetentionPeriodDays,
         }],
       };
 
@@ -134,7 +134,6 @@
       var url = getDeviceSettingsUrl(org) + '/clientSecurityPolicy';
 
       return $http.get(url);
-
     }
 
     // Sets the updated App Security Status to clientSecurityPolicy API on Save button event
@@ -148,7 +147,6 @@
       return $http.put(url, {
         clientSecurityPolicy: appSecurityStatus,
       });
-
     }
   }
 })();

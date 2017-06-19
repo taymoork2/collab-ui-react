@@ -41,7 +41,7 @@ class UserDetails implements ng.IComponentController {
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     const { details } = changes;
     if (details && details.currentValue && _.isArray(details.currentValue)) {
-      let detailChanges = <IUserDetailsFeature[]> details.currentValue;
+      const detailChanges = <IUserDetailsFeature[]> details.currentValue;
       this.determineHasActionAvailable(detailChanges);
       this.details = detailChanges;
     }

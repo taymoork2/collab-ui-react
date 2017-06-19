@@ -21,11 +21,11 @@ export class LineService {
     private HuronConfig,
   ) {
 
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
-    let saveAction: ng.resource.IActionDescriptor = {
+    const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
       headers: {
         'Access-Control-Expose-Headers': 'Location',

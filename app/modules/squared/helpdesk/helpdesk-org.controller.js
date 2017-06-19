@@ -155,7 +155,7 @@
       findServiceOrders(vm.orgId);
       findAdminUsers(org);
       vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
-      angular.element(".helpdesk-details").focus();
+      angular.element('.helpdesk-details').focus();
       setReadOnlyLaunchButtonVisibility(org);
     }
 

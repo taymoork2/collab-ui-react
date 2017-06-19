@@ -27,5 +27,9 @@
 
   .popover-content {
     overflow: hidden;
+    width: 14rem;
+    word-break: normal;
+    background-color: $brand-white;
+    color: $gray-dark-2;
   }
 }

@@ -29,21 +29,21 @@ describe('DomainManagementAddCtrl', () => {
   });
 
   it('should encode IDN (top level and domain)', () => {
-    let unEncoded = 'løv.no';
-    let encoded = 'xn--lv-lka.no';
+    const unEncoded = 'løv.no';
+    const encoded = 'xn--lv-lka.no';
     DomainManagementAddCtrl.domain = unEncoded;
     expect(DomainManagementAddCtrl.encodedDomain).toBe(encoded);
   });
   it('should encode IDN (top level and domain)', () => {
-    let unEncoded = 'Домены.бел'; //remark: with uppercase д
-    let encoded = 'xn--d1acufc5f.xn--90ais';
+    const unEncoded = 'Домены.бел'; //remark: with uppercase д
+    const encoded = 'xn--d1acufc5f.xn--90ais';
     DomainManagementAddCtrl.domain = unEncoded;
     expect(DomainManagementAddCtrl.encodedDomain).toBe(encoded);
   });
 
   it('should ignore UpperCase Domain names and treath them as valid', () => {
-    let unEncoded = 'Test.com';
-    let encoded = 'test.com';
+    const unEncoded = 'Test.com';
+    const encoded = 'test.com';
     DomainManagementAddCtrl.domain = unEncoded;
     expect(DomainManagementAddCtrl.encodedDomain).toBe(encoded);
     expect(DomainManagementAddCtrl.isValid).toBeTruthy();
@@ -53,7 +53,7 @@ describe('DomainManagementAddCtrl', () => {
   });
 
   it('should dissalow adding an existing domain', () => {
-    let domain = 'alreadyadded.com';
+    const domain = 'alreadyadded.com';
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList = [{ text: domain }];
 
@@ -64,8 +64,8 @@ describe('DomainManagementAddCtrl', () => {
   });
 
   it('should dissalow adding an existing IDN', () => {
-    let domain = 'Домены.бел';
-    let encoded = 'xn--d1acufc5f.xn--90ais';
+    const domain = 'Домены.бел';
+    const encoded = 'xn--d1acufc5f.xn--90ais';
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList = [{ text: encoded }];
     DomainManagementAddCtrl.domain = domain;
@@ -77,7 +77,7 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementService.addDomain = jasmine.createSpy('addDomain').and.returnValue(
       $q.resolve());
 
-    let unEncoded = 'test.com';
+    const unEncoded = 'test.com';
     //let encoded = 'test.com';
     DomainManagementAddCtrl.domain = unEncoded;
     DomainManagementAddCtrl.add();
@@ -89,7 +89,7 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementService.addDomain = jasmine.createSpy('addDomain').and.returnValue(
       $q.resolve());
 
-    let unEncoded = 'test.com';
+    const unEncoded = 'test.com';
     //let encoded = 'test.com';
     DomainManagementAddCtrl.domain = unEncoded;
     DomainManagementAddCtrl.add();
@@ -101,7 +101,7 @@ describe('DomainManagementAddCtrl', () => {
     DomainManagementService.addDomain = jasmine.createSpy('addDomain').and.returnValue(
       $q.reject('error-during-add'));
 
-    let unEncoded = 'test.com';
+    const unEncoded = 'test.com';
     //let encoded = 'test.com';
     DomainManagementAddCtrl.domain = unEncoded;
     DomainManagementAddCtrl.add();

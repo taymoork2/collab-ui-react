@@ -45,7 +45,7 @@ describe('Directive: selectOn', () => {
 
     it('should resolve with list of userPreferences and their states', function () {
 
-      let promise = this.FeatureToggleEditorService.updateUserPreferences(this.testUser);
+      const promise = this.FeatureToggleEditorService.updateUserPreferences(this.testUser);
       this.$rootScope.$digest();
       expect(promise).toBeResolvedWith([
         { key: 'SparkHideLaunch', value: true },
@@ -60,10 +60,10 @@ describe('Directive: selectOn', () => {
     beforeEach(function () {
       // mock patch operation so that it returns expected data
       this.$httpBackend.expectPATCH('http://example.com').respond((_method, _url, data, _headers, _param) => {
-        let userData = {
-          userPreferences: <Array<string>>[],
+        const userData = {
+          userPreferences: <string[]>[],
         };
-        let body = JSON.parse(data);
+        const body = JSON.parse(data);
         _.forEach(_.get(body, 'userPreferences', []), (pref: IPreferenceOperation) => {
           if (!_.isEqual(_.get(pref, 'operation'), 'delete')) {
             userData.userPreferences.push(pref.value);
@@ -77,12 +77,12 @@ describe('Directive: selectOn', () => {
 
       expect(this.UserPreferencesService.hasPreference(this.testUser, 'SparkTOSAccept')).toBeFalsy();
 
-      let newPref: IUserPreference = {
+      const newPref: IUserPreference = {
         key: 'SparkTOSAccept',
         value: true,
       };
 
-      let promise = this.FeatureToggleEditorService.updateUserPreference(this.testUser, newPref);
+      const promise = this.FeatureToggleEditorService.updateUserPreference(this.testUser, newPref);
       promise.then((updatedUser: IUser) => {
         expect(this.UserPreferencesService.hasPreference(updatedUser, 'SparkTOSAccept')).toBeTruthy();
       });
@@ -97,12 +97,12 @@ describe('Directive: selectOn', () => {
 
       expect(this.UserPreferencesService.hasPreference(this.testUser, 'SparkHideLaunch')).toBeTruthy();
 
-      let newPref: IUserPreference = {
+      const newPref: IUserPreference = {
         key: 'SparkHideLaunch',
         value: false,
       };
 
-      let promise = this.FeatureToggleEditorService.updateUserPreference(this.testUser, newPref);
+      const promise = this.FeatureToggleEditorService.updateUserPreference(this.testUser, newPref);
       promise.then((updatedUser: IUser) => {
         expect(this.UserPreferencesService.hasPreference(updatedUser, 'SparkHideLaunch')).toBeFalsy();
       });
@@ -120,7 +120,7 @@ describe('Directive: selectOn', () => {
 
     it('should resolve with list of DEV feature toggles', function () {
 
-      let toggles = {
+      const toggles = {
         featureToggles: [
           { key: 'testToggle_True', mutable: true, type: 'DEV', val: 'true' },
           { key: 'testToggle_NonDEV', mutable: true, type: 'PROD', val: 'true' },
@@ -130,7 +130,7 @@ describe('Directive: selectOn', () => {
 
       this.$httpBackend.expectGET(this.featureRegex).respond(200, toggles);
 
-      let promise = this.FeatureToggleEditorService.getFeatureToggles(this.userId);
+      const promise = this.FeatureToggleEditorService.getFeatureToggles(this.userId);
       this.$httpBackend.flush();
       expect(promise).toBeResolvedWith([
         { key: 'testToggle_True', mutable: true, type: 'DEV', val: 'true', value: true, isUpdating: false },
@@ -144,7 +144,7 @@ describe('Directive: selectOn', () => {
 
     it('should call to add a toggle', function () {
       const TOGGLE_ID = 'testToggle_Id';
-      let responseToggle = <IFeatureToggle>{
+      const responseToggle = <IFeatureToggle>{
         key: TOGGLE_ID,
         mutable: true,
         type: 'DEV',
@@ -152,7 +152,7 @@ describe('Directive: selectOn', () => {
       };
       this.$httpBackend.expectPOST(this.featureRegex).respond(200, responseToggle);
 
-      let promise = this.FeatureToggleEditorService.addToggle(this.userId, TOGGLE_ID);
+      const promise = this.FeatureToggleEditorService.addToggle(this.userId, TOGGLE_ID);
       expect(promise).toBeResolvedWith(jasmine.objectContaining({
         isUpdating: false,
         value: false,
@@ -162,7 +162,7 @@ describe('Directive: selectOn', () => {
 
     it('should call to update a toggle', function () {
       const TOGGLE_ID = 'testToggle_Id';
-      let responseToggle = <IFeatureToggle>{
+      const responseToggle = <IFeatureToggle>{
         key: TOGGLE_ID,
         mutable: true,
         type: 'DEV',
@@ -170,13 +170,13 @@ describe('Directive: selectOn', () => {
       };
       this.$httpBackend.expectPOST(this.featureRegex).respond(200, responseToggle);
 
-      let feature = {
+      const feature = {
         key: TOGGLE_ID,
         value: true,
         isUpdating: true,
       };
 
-      let promise = this.FeatureToggleEditorService.updateToggle(this.userId, feature);
+      const promise = this.FeatureToggleEditorService.updateToggle(this.userId, feature);
       expect(promise).toBeResolvedWith(jasmine.objectContaining({
         key: TOGGLE_ID,
         value: true,
@@ -185,10 +185,10 @@ describe('Directive: selectOn', () => {
 
     it('should call to deletw a toggle', function () {
       const TOGGLE_ID = 'testToggle_Id';
-      let url = /.*\/features\/users.*\/developer\/testToggle_Id/;
+      const url = /.*\/features\/users.*\/developer\/testToggle_Id/;
       this.$httpBackend.expectDELETE(url).respond(204);
 
-      let promise = this.FeatureToggleEditorService.deleteToggle(this.userId, TOGGLE_ID);
+      const promise = this.FeatureToggleEditorService.deleteToggle(this.userId, TOGGLE_ID);
       expect(promise).toBeResolved();
     });
 

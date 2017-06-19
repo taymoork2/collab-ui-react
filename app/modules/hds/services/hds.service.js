@@ -142,7 +142,7 @@
         members: _.map(uids, function (uid) {
           return {
             value: uid,
-            operation: "delete",
+            operation: 'delete',
           };
         }),
       };
@@ -164,10 +164,10 @@
     }
     function updateOrgsettingsHdsInfo(kmsServer, kmsServerMachineUUID, adrServer, securityService) {
       var data = {
-        'kmsServer': kmsServer,
-        'kmsServerMachineUUID': kmsServerMachineUUID,
-        'adrServer': adrServer,
-        'securityService': securityService,
+        kmsServer: kmsServer,
+        kmsServerMachineUUID: kmsServerMachineUUID,
+        adrServer: adrServer,
+        securityService: securityService,
       };
       return Orgservice.setOrgSettings(Authinfo.getOrgId(), data)
         .then(function () {

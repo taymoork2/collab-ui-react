@@ -1,10 +1,8 @@
 import './_extension-prefix.scss';
 
 import { ExtensionPrefixComponent } from './extensionPrefix.component';
-import { ExtensionLengthService } from './extensionLength.service';
 import notifications from 'modules/core/notifications';
-
-export * from './extensionLength.service';
+import huronSettingsServiceModule from 'modules/huron/settings/services';
 
 export default angular
   .module('huron.settings.extension-prefix', [
@@ -15,7 +13,7 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/cmiServices'),
     notifications,
+    huronSettingsServiceModule,
   ])
-  .service('ExtensionLengthService', ExtensionLengthService)
   .component('ucExtensionPrefixModal', new ExtensionPrefixComponent())
   .name;

@@ -10,84 +10,84 @@
       sessionTypes: null,
 
       meetingCenter: {
-        id: "MC",
-        label: "Meeting Center",
-        serviceType: "MeetingCenter",
+        id: 'MC',
+        label: 'Meeting Center',
+        serviceType: 'MeetingCenter',
         isEntitledOnAtlas: false,
         isEntitledOnWebEx: false,
         isSiteEnabled: false,
       }, // meetingCenter
 
       trainingCenter: {
-        id: "TC",
-        label: "Training Center",
-        serviceType: "TrainingCenter",
+        id: 'TC',
+        label: 'Training Center',
+        serviceType: 'TrainingCenter',
         isEntitledOnAtlas: false,
         isEntitledOnWebEx: false,
         isSiteEnabled: false,
 
         handsOnLabAdmin: {
-          id: "handsOnLabAdmin",
-          label: "",
+          id: 'handsOnLabAdmin',
+          label: '',
           value: false,
           isSiteEnabled: false,
         },
       }, // trainingCenter
 
       eventCenter: {
-        id: "EC",
-        label: "Event Center",
-        serviceType: "EventCenter",
+        id: 'EC',
+        label: 'Event Center',
+        serviceType: 'EventCenter',
         isEntitledOnAtlas: false,
         isEntitledOnWebEx: false,
         isSiteEnabled: false,
 
         optimizeBandwidthUsage: {
-          id: "optimizeBandwidthUsage",
-          label: "",
+          id: 'optimizeBandwidthUsage',
+          label: '',
           isSiteEnabled: false,
           value: false,
         },
       }, // eventCenter
 
       supportCenter: {
-        id: "SC",
-        label: "Support Center",
-        serviceType: "SupportCenter",
+        id: 'SC',
+        label: 'Support Center',
+        serviceType: 'SupportCenter',
         isEntitledOnAtlas: false,
         isEntitledOnWebEx: false,
         isSiteEnabled: false,
       }, // supportCenter
 
       pmr: {
-        id: "PMR",
-        label: "Personal Room",
+        id: 'PMR',
+        label: 'Personal Room',
         isSiteEnabled: false,
         value: false,
       },
 
       cmr: {
-        id: "CMR",
-        label: "Collaboration Meeting Rooms",
+        id: 'CMR',
+        label: 'Collaboration Meeting Rooms',
         value: false,
       },
 
       otherPrivilegesSection: {
-        label: "Other Privileges",
+        label: 'Other Privileges',
       },
 
       videoSettings: {
-        label: "",
+        label: '',
 
         hiQualVideo: {
-          id: "hiQualVideo",
-          label: "",
+          id: 'hiQualVideo',
+          label: '',
           isSiteEnabled: false,
           value: false,
 
           hiDefVideo: {
-            id: "hiDefVideo",
-            label: "",
+            id: 'hiDefVideo',
+            label: '',
             isSiteEnabled: false,
             value: false,
           },
@@ -95,7 +95,7 @@
       }, // videoSettings
 
       telephonyPriviledge: {
-        label: "",
+        label: '',
 
         hybridVoipOnly: {
           isSiteEnabled: false,
@@ -111,8 +111,8 @@
         },
 
         callInTeleconf: {
-          id: "callInTeleconf",
-          label: "",
+          id: 'callInTeleconf',
+          label: '',
           value: false,
 
           toll: {
@@ -128,55 +128,55 @@
           selectedCallInTollType: 0,
 
           callInTollTypes: [{
-            label: "",
+            label: '',
             value: 1,
-            id: "tollOnly",
-            name: "callInTollType",
+            id: 'tollOnly',
+            name: 'callInTollType',
           }, {
-            label: "",
+            label: '',
             value: 2,
-            id: "tollAndTollFree",
-            name: "callInTollType",
+            id: 'tollAndTollFree',
+            name: 'callInTollType',
           }],
 
           teleconfViaGlobalCallIn: {
-            id: "teleconfViaGlobalCallIn",
-            label: "",
+            id: 'teleconfViaGlobalCallIn',
+            label: '',
             isSiteEnabled: false,
             value: false,
           },
           teleCLIAuthEnabled: {
-            id: "teleCLIAuthEnabled",
-            label: "",
+            id: 'teleCLIAuthEnabled',
+            label: '',
             isSiteEnabled: false,
             value: false,
           },
         }, // callInTeleconf
 
         callBackTeleconf: {
-          id: "callBackTeleconf",
-          label: "",
+          id: 'callBackTeleconf',
+          label: '',
           isSiteEnabled: false,
           value: false,
 
           globalCallBackTeleconf: {
-            id: "globalCallBackTeleconf",
-            label: "",
+            id: 'globalCallBackTeleconf',
+            label: '',
             isSiteEnabled: false,
             value: false,
           },
         },
 
         otherTeleconfServices: {
-          id: "otherTeleconfServices",
-          label: "",
+          id: 'otherTeleconfServices',
+          label: '',
           isSiteEnabled: false,
           value: false,
         },
 
         integratedVoIP: {
-          id: "integratedVoIP",
-          label: "",
+          id: 'integratedVoIP',
+          label: '',
           isSiteEnabled: false,
           value: false,
         },
@@ -184,7 +184,7 @@
         viewReady: false,
         hasLoadError: false,
         sessionTicketErr: false,
-        errMsg: "",
+        errMsg: '',
         allowRetry: false,
         disableCancel: false,
         disableCancel2: false,

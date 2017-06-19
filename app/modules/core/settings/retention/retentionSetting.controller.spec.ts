@@ -1,5 +1,3 @@
-/// <reference path="retentionSetting.controller.ts"/>
-
 import { RetentionSettingController } from './retentionSetting.controller';
 import testModule from './index';
 

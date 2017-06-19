@@ -9,7 +9,7 @@ describe('Controller: Care Local Settings', function () {
   };
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
     inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
@@ -39,11 +39,16 @@ describe('Controller: Care Local Settings', function () {
         deferred.resolve('fake update response');
         return deferred.promise;
       });
+      spyOn(sunlightConfigService, 'onboardCareBot').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake onboardCareBot response');
+        return deferred.promise;
+      });
     })
   );
 
   describe('CareSettings - Init', function () {
-    it('should show enabled setup care button , if Org is not onboarded already.', function () {
+    it('should show enabled setup care button, if Org is not onboarded already.', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       expect(controller).toBeDefined();
       expect(controller.state).toBe(controller.ONBOARDED);
@@ -52,33 +57,54 @@ describe('Controller: Care Local Settings', function () {
     });
 
     it('should disable setup care, if already onboarded', function () {
-      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success' });
+      $httpBackend.expectGET(sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: controller.status.SUCCESS,
+          appOnboardStatus: controller.status.SUCCESS,
+        });
       expect(controller.state).toBe(controller.ONBOARDED);
       $httpBackend.flush();
       expect(controller.state).toBe(controller.ONBOARDED);
     });
 
     it('should show loading animation on setup care button, if Org onboarding is in progress', function () {
-      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Pending' });
+      $httpBackend.expectGET(sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: controller.status.PENDING,
+        });
       expect(controller.state).toBe(controller.ONBOARDED);
       $httpBackend.flush();
       expect(controller.state).toBe(controller.IN_PROGRESS);
     });
 
     it('should call updateChatConfig, if already onboarded and orgName is not present', function () {
-      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success' });
+      $httpBackend.expectGET(sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: controller.status.SUCCESS,
+          appOnboardStatus: controller.status.SUCCESS,
+        });
       $httpBackend.flush();
       expect(sunlightConfigService.updateChatConfig).toHaveBeenCalled();
     });
 
     it('should call updateChatConfig, if already onboarded and orgName is empty', function () {
-      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success', orgName: "" });
+      $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, {
+        csOnboardingStatus: controller.status.SUCCESS,
+        appOnboardStatus: controller.status.SUCCESS,
+        orgName: '',
+      });
       $httpBackend.flush();
       expect(sunlightConfigService.updateChatConfig).toHaveBeenCalled();
     });
 
     it('should not call updateChatConfig, if already onboarded and orgName is present', function () {
-      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success', orgName: "fake org name" });
+      $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, {
+        csOnboardingStatus: controller.status.SUCCESS,
+        appOnboardStatus: controller.status.SUCCESS,
+        orgName: 'fake org name',
+      });
       $httpBackend.flush();
       expect(sunlightConfigService.updateChatConfig).not.toHaveBeenCalled();
     });
@@ -104,7 +130,11 @@ describe('Controller: Care Local Settings', function () {
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
       controller.onboardToCare();
       $scope.$apply();
-      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success' });
+      $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, {
+        csOnboardingStatus: controller.status.SUCCESS,
+        appOnboardStatus: controller.status.SUCCESS,
+      });
       $interval.flush(10001);
       $httpBackend.flush();
       expect(controller.state).toBe(controller.ONBOARDED);
@@ -164,7 +194,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
   };
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
     inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
@@ -195,6 +225,11 @@ describe('Care Settings - when org has K2 entitlement', function () {
         deferred.resolve('fake update response');
         return deferred.promise;
       });
+      spyOn(sunlightConfigService, 'onboardCareBot').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake onboardCareBot response');
+        return deferred.promise;
+      });
     })
   );
 
@@ -212,6 +247,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
+        appOnboardStatus: 'Success',
         aaOnboardingStatus: 'Success',
       });
     expect(controller.state).toBe(controller.ONBOARDED);
@@ -223,6 +259,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Pending',
+        appOnboardStatus: 'Success',
         aaOnboardingStatus: 'Pending',
       });
     expect(controller.state).toBe(controller.ONBOARDED);
@@ -234,6 +271,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
+        appOnboardStatus: 'Success',
         aaOnboardingStatus: 'Pending',
       });
     expect(controller.state).toBe(controller.ONBOARDED);
@@ -245,6 +283,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
+        appOnboardStatus: 'Success',
         aaOnboardingStatus: 'Failure',
       });
     expect(controller.state).toBe(controller.ONBOARDED);
@@ -269,6 +308,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
+        appOnboardStatus: 'Success',
         aaOnboardingStatus: 'Success',
       });
     $interval.flush(10001);
@@ -307,7 +347,7 @@ describe('Care Settings - Routing Toggling', function () {
   };
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
       inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
@@ -338,7 +378,7 @@ describe('Care Settings - Routing Toggling', function () {
       deferred.resolve('fake update response');
       return deferred.promise;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
     $httpBackend.flush();
     expect(controller).toBeDefined();
     expect(controller.selectedRouting).toBe(controller.RoutingType.PICK);
@@ -350,7 +390,7 @@ describe('Care Settings - Routing Toggling', function () {
       deferred.resolve('fake update response');
       return deferred.promise;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "push" });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'push' });
     $httpBackend.flush();
     expect(controller).toBeDefined();
     expect(controller.selectedRouting).toBe(controller.RoutingType.PUSH);
@@ -365,7 +405,7 @@ describe('Care Settings - Routing Toggling', function () {
     spyOn(Notification, 'success').and.callFake(function () {
       return true;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
     $httpBackend.flush();
     controller.isProcessing = true;
     controller.updateRoutingType();
@@ -384,7 +424,7 @@ describe('Care Settings - Routing Toggling', function () {
     spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
       return true;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
     $httpBackend.flush();
     controller.updateRoutingType();
     $scope.$apply();
@@ -397,7 +437,7 @@ describe('Care Settings - Routing Toggling', function () {
       deferred.resolve('fake update response');
       return deferred.promise;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: "pick" });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
     $httpBackend.flush();
     controller.savedRoutingType = controller.RoutingType.PUSH;
     controller.cancelEdit();
@@ -405,3 +445,4 @@ describe('Care Settings - Routing Toggling', function () {
     expect(controller.selectedRouting).toBe(controller.RoutingType.PUSH);
   });
 });
+

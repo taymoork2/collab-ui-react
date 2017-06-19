@@ -18,7 +18,7 @@
     function getOrders() {
       return TerminusOrderService.query({
         customerId: PstnModel.getCustomerId(),
-        type: "PSTN",
+        type: 'PSTN',
       }).$promise.then(function (response) {
         vm.pstnOrders = response;
       });

@@ -68,7 +68,7 @@ export class HuronCompassService {
         if (isEmpty(res.data.orgSettings)) {
           this.baseDomain = this.defaultDomain();
         } else {
-          let orgSettings: any = JSON.parse(last<string>(res.data.orgSettings));
+          const orgSettings: any = JSON.parse(last<string>(res.data.orgSettings));
           this.baseDomain = get(orgSettings, HuronCompassService.SPARK_CALL_BASE_DOMAIN, this.defaultDomain());
           this.$rootScope.$emit('COMPASS_BASE_DOMAIN_CHANGED', this.baseDomain);
         }

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Single Number Reach', function () {
-
   var user = utils.randomTestGmail();
   var snrLine = telephony.getRandomNumber();
 
@@ -61,5 +60,4 @@ describe('Single Number Reach', function () {
   afterAll(function () {
     utils.deleteUser(user);
   });
-
 });

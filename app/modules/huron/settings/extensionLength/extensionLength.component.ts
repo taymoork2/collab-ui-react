@@ -89,8 +89,8 @@ class ExtensionLengthCtrl implements ng.IComponentController {
   }
 
   private buildExtensionLengthOptions(): string[] {
-    let options: string[] = [];
-    let minExtLength = this.extensionsAssigned ? _.toSafeInteger(this.extensionLength) : MIN_EXT_LENGTH;
+    const options: string[] = [];
+    const minExtLength = this.extensionsAssigned ? _.toSafeInteger(this.extensionLength) : MIN_EXT_LENGTH;
     for (let index = minExtLength; index <= MAX_EXT_LENGTH; index++) {
       options.push(_.toString(index));
     }

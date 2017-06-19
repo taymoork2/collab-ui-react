@@ -6,7 +6,7 @@ export class PlaceMatcher implements IMatcher<IPlace> {
       return true;
     }
 
-    let termsExpanded = _.toLower(terms).split(/[\s,]+/);
+    const termsExpanded = _.toLower(terms).split(/[\s,]+/);
     return termsExpanded.every((term) => {
       return this.termMatchesAnyFieldOfItem(term, matchable) || this.termMatchesAnyTag(matchable.tags, term);
     });

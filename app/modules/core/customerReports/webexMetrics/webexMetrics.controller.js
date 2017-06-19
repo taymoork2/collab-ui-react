@@ -6,36 +6,54 @@
     .controller('WebExMetricsCtrl', WebExMetricsCtrl);
 
   /* @ngInject */
-  function WebExMetricsCtrl($q, $stateParams, Authinfo, LocalStorage, Userservice, WebExApiGatewayService,
+  function WebExMetricsCtrl($q, $scope, $stateParams, $translate, Authinfo, LocalStorage, Userservice, WebExApiGatewayService,
     $sce,
     $timeout,
     $window,
-    QlikService
+    QlikService,
+    ITProPackService
   ) {
-
     var vm = this;
 
+    vm.metricsUrl = '';
+    vm.metrics = 'metrics';
+    vm.reportView = 'Base';
+    vm.search = 'search';
     vm.webexOptions = [];
     vm.webexSelected = null;
-
-    vm.updateWebexMetrics = updateWebexMetrics;
-
     vm.metricsOptions = [
       {
         id: '0',
-        type: 'webex',
-        url: '',
+        label: $translate.instant('reportsPage.webexMetrics.metrics'),
         selected: true,
+        filterType: vm.metrics,
+        toggle: function () {
+          resetIframe(vm.metrics);
+        },
       },
       {
         id: '1',
-        type: 'spark',
-        url: '',
-        selected: true,
+        label: $translate.instant('reportsPage.webexMetrics.search'),
+        selected: false,
+        filterType: vm.search,
+        toggle: function () {
+          resetIframe(vm.search);
+        },
       },
     ];
+
+    vm.updateWebexMetrics = updateWebexMetrics;
+
+    function resetIframe(filter) {
+      if (vm.currentFilter.filterType !== filter) {
+        vm.currentFilter = _.find(vm.metricsOptions, function (metrics) {
+          return metrics.filterType === filter;
+        });
+      }
+      updateIframe();
+    }
+
     vm.currentFilter = vm.metricsOptions[0];
-    vm.metricsType = vm.currentFilter.type;
 
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
@@ -94,7 +112,13 @@
             webexSelected = vm.webexOptions[0];
           }
           vm.webexSelected = webexSelected;
-          updateWebexMetrics();
+
+          ITProPackService.getITProPackPurchased().then(function (isPurchased) {
+            if (isPurchased) {
+              vm.reportView = 'Premium';
+            }
+            updateWebexMetrics();
+          });
         }
       );
     }
@@ -127,55 +151,51 @@
 
     function loadMetricsReport() {
       function loadUrlAndIframe(url) {
-        _.find(vm.metricsOptions, function (metrics) {
-          if (metrics.type === vm.metricsType) {
-            metrics.url = url;
-          }
-        });
+        vm.metricsOptions[0].url = url;
         updateIframe();
       }
 
       var userInfo = {
-        'org_id': Authinfo.getOrgId(),
-        'siteUrl': vm.webexSelected,
-        'email': Authinfo.getPrimaryEmail(),
+        org_id: Authinfo.getOrgId(),
+        siteUrl: vm.webexSelected,
+        email: Authinfo.getPrimaryEmail(),
       };
 
       //TODO: remove it before QBS API finished. just for 23-5-2017 demo
       vm.webexSelected = 'go.webex.com';
       userInfo = {
-        'org_id': 'cisco',
-        'siteUrl': vm.webexSelected,
-        'email': 'shiren@cisco.com',
+        org_id: 'TEST-QV-3',
+        siteUrl: vm.webexSelected,
+        email: 'qvadmin@cisco.com',
       };
 
-      QlikService.getMetricsLink(vm.metricsType, userInfo).then(function (urlWithTicket) {
-        var QlikMashupChartsUrl = 'https://ds2-win2012-01/extensions/forDemo/forDemo.html';
-        var QlikAppUrl = urlWithTicket.appUrl;
+      QlikService['getWebExReportQBSfor' + vm.reportView + 'Url'](userInfo).then(function (urlWithTicket) {
+        var QlikMashupChartsUrl = QlikService['getWebExReportAppfor' + vm.reportView + 'Url']();
+        var rx = /app[/](.*?)[/?]/g;
+        var QlikAppUrl = '';
+        QlikAppUrl = rx.exec(urlWithTicket.appUrl);
+        vm.currentFilter.appId = QlikAppUrl[1];
+        vm.currentFilter.QlikTicket = urlWithTicket.ticket;
 
-        QlikMashupChartsUrl += getAppParams(QlikAppUrl, 'app/');
         loadUrlAndIframe(QlikMashupChartsUrl);
       });
     }
 
-    function getAppParams(urls, matchStr) {
-      var appParams = '';
-      if (_.includes(urls, matchStr)) {
-        appParams = '?appId=';
-        appParams += (_.split(urls, matchStr))[1];
-        appParams.replace('/?', '&');
-      }
-      return appParams;
-    }
-
     function updateIframe() {
       vm.isIframeLoaded = false;
-      var iframeUrlOrig = vm.currentFilter.url;
-      iframeUrlOrig = $sce.trustAsResourceUrl(iframeUrlOrig);
+
+      var iframeUrl = vm.currentFilter.url;
+      $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
+      $scope.appId = vm.currentFilter.appId;
+      $scope.QlikTicket = vm.currentFilter.QlikTicket;
+      var parser = $window.document.createElement('a');
+      parser.href = iframeUrl;
+
       $timeout(
         function loadIframe() {
-          vm.metricsUrl = iframeUrlOrig;
-        },
+          var submitFormBtn = $window.document.getElementById('submitFormBtn');
+          submitFormBtn.click();
+        }, // loadIframe()
         0
       );
     }

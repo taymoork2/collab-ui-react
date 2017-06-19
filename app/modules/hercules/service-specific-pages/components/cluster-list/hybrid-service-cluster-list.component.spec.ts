@@ -194,14 +194,14 @@ describe('HybridServiceClusterList controller', () => {
 
   describe('grid options', () => {
 
-    let gridApiMock = {
+    const gridApiMock = {
       selection: {
         on: {
           rowSelectionChanged: function() {},
         },
       },
     };
-    let clusterId = '1917';
+    const clusterId = '1917';
 
     beforeEach(function initSpies() {
       spyOn($state, 'go');

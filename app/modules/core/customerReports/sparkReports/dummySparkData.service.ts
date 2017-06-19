@@ -46,8 +46,8 @@ export class DummySparkDataService {
     };
   }
 
-  private getDummyData(filter: ITimespan, callFunction: Function): Array<any> {
-    let dummyGraph: Array<any> = [];
+  private getDummyData(filter: ITimespan, callFunction: Function): any[] {
+    const dummyGraph: any[] = [];
 
     if (filter.value === 0) {
       for (let i = this.ReportConstants.DAYS; i >= 0; i--) {
@@ -68,8 +68,8 @@ export class DummySparkDataService {
 
   // should return one set of data for column version and one set for line graph version
   // TODO: remove column version of data after feature toggle is removed
-  public dummyActiveUserData(filter: ITimespan, lineGraph: boolean): Array<IActiveUserData> {
-    let dummyGraph: Array<IActiveUserData> = [];
+  public dummyActiveUserData(filter: ITimespan, lineGraph: boolean): IActiveUserData[] {
+    const dummyGraph: IActiveUserData[] = [];
     let timespan: number;
 
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
@@ -102,12 +102,12 @@ export class DummySparkDataService {
         date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
       }
     } else {
-      let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, this.ReportConstants);
+      const commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, this.ReportConstants);
       date = commonData.date;
     }
 
-    let totalRegisteredUsers = 25 + (25 * count);
-    let activeUsers = 25 * count;
+    const totalRegisteredUsers = 25 + (25 * count);
+    const activeUsers = 25 * count;
 
     return {
       date: date,
@@ -119,12 +119,12 @@ export class DummySparkDataService {
   }
 
   // TODO: remove dummyAvgRoom functions after final switch to new reports
-  public dummyAvgRoomData(filter: ITimespan): Array<IAvgRoomData> {
+  public dummyAvgRoomData(filter: ITimespan): IAvgRoomData[] {
     return this.getDummyData(filter, this.getAvgRoomDataPoint);
   }
 
   private getAvgRoomDataPoint(filter: ITimespan, index: number, constants: any): IAvgRoomData {
-    let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
+    const commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
 
     return {
       date: commonData.date,
@@ -137,12 +137,12 @@ export class DummySparkDataService {
   }
 
   // TODO: remove dummyFilesShared functions after final switch to new reports
-  public dummyFilesSharedData(filter: ITimespan): Array<IFilesShared> {
+  public dummyFilesSharedData(filter: ITimespan): IFilesShared[] {
     return this.getDummyData(filter, this.getFilesSharedDataPoint);
   }
 
   private getFilesSharedDataPoint(filter: ITimespan, index: number, constants: any): IFilesShared {
-    let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
+    const commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
 
     return {
       date: commonData.date,
@@ -153,8 +153,8 @@ export class DummySparkDataService {
   }
 
   // dummy conversation data
-  public dummyConversationData(filter: ITimespan): Array<IConversation> {
-    let dummyGraph: Array<IConversation> = [];
+  public dummyConversationData(filter: ITimespan): IConversation[] {
+    const dummyGraph: IConversation[] = [];
     let timespan: number;
 
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
@@ -178,7 +178,7 @@ export class DummySparkDataService {
       date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
     }
 
-    let newCount: number = 25 * count;
+    const newCount: number = 25 * count;
     return {
       date: date,
       balloon: false,
@@ -192,9 +192,9 @@ export class DummySparkDataService {
   }
 
   // media data
-  public dummyMediaData(filter: ITimespan, linegraph: boolean): Array<IMediaData> {
+  public dummyMediaData(filter: ITimespan, linegraph: boolean): IMediaData[] {
     if (linegraph) {
-      let dummyGraph: Array<IMediaData> = [];
+      const dummyGraph: IMediaData[] = [];
       let timespan: number;
 
       if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
@@ -221,9 +221,9 @@ export class DummySparkDataService {
       date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
     }
 
-    let goodQualityDurationSum = 25 + (15 * count);
-    let fairQualityDurationSum = 15 + (10 * count);
-    let poorQualityDurationSum = 5 + (5 * count);
+    const goodQualityDurationSum = 25 + (15 * count);
+    const fairQualityDurationSum = 15 + (10 * count);
+    const poorQualityDurationSum = 5 + (5 * count);
 
     return {
       date: date,
@@ -248,10 +248,10 @@ export class DummySparkDataService {
 
   // TODO: Delete when the feature toggle is removed
   private getMediaDataPoint(filter: ITimespan, index: number, constants: any): IMediaData {
-    let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
-    let goodQualityDurationSum = 25 + (15 * commonData.count);
-    let fairQualityDurationSum = 15 + (10 * commonData.count);
-    let poorQualityDurationSum = 5 + (5 * commonData.count);
+    const commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
+    const goodQualityDurationSum = 25 + (15 * commonData.count);
+    const fairQualityDurationSum = 15 + (10 * commonData.count);
+    const poorQualityDurationSum = 5 + (5 * commonData.count);
 
     return {
       date: commonData.date,
@@ -292,9 +292,9 @@ export class DummySparkDataService {
     };
   }
 
-  public dummyDeviceData(filter: ITimespan, linegraph: boolean): Array<IEndpointWrapper> {
+  public dummyDeviceData(filter: ITimespan, linegraph: boolean): IEndpointWrapper[] {
     if (linegraph) {
-      let dummyGraph: Array<IEndpointData> = [];
+      const dummyGraph: IEndpointData[] = [];
       let timespan: number;
 
       if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
@@ -324,7 +324,7 @@ export class DummySparkDataService {
   }
 
   private getDeviceDataPoint(filter: ITimespan, index: number, constants: any): IEndpointData {
-    let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
+    const commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
 
     return {
       date: commonData.date,

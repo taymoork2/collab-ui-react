@@ -13,7 +13,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
     buttonClass: 'btn btn--primary',
   };
 
-  private buttons: Array<ICardButton> = [{
+  private buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.hybridMedia.buttons.resources',
     routerState: 'media-service-v2.list',
     buttonClass: 'btn-link',
@@ -23,7 +23,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.active) {
       return this.buttons;
     }

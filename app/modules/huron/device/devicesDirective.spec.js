@@ -7,6 +7,6 @@ xdescribe('Directive: ucDevices', function () {
   });
 
   it('replaces the element with the appropriate content', function () {
-    expect(this.view.html()).toContain("dir-number-list");
+    expect(this.view.html()).toContain('dir-number-list');
   });
 });

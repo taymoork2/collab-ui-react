@@ -1,9 +1,9 @@
-let SunlightConfigService = require('./sunlightConfigService');
-let SunlightReportService = require('./sunlightReportService');
-let ConfigServices = require('./sunlightServices');
+const SunlightConfigService = require('./sunlightConfigService');
+const SunlightReportService = require('./sunlightReportService');
+const ConfigServices = require('./sunlightServices');
 
-let urlConfigModule = require('modules/core/config/urlConfig');
-let authInfoModule = require('modules/core/scripts/services/authinfo');
+const urlConfigModule = require('modules/core/config/urlConfig');
+const authInfoModule = require('modules/core/scripts/services/authinfo');
 
 export default angular
   .module('sunlight.services', [

@@ -44,12 +44,12 @@ export class CallConnectOptions implements ng.IComponentController {
   }
 
   public $onInit() {
-    let state = this.$stateParams.wizard.state();
+    const state = this.$stateParams.wizard.state();
     this.wizardData = state.data;
     this.resourceGroup.init();
     this.title = this.wizardData.title;
 
-    let existingHybridCallLink: IExternalLinkedAccount = _.head(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
+    const existingHybridCallLink: IExternalLinkedAccount = _.head(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
       return linkedAccount && (linkedAccount.providerID === CallConnectOptions.hybridCalluc);
     }));
     if (existingHybridCallLink) {
@@ -106,12 +106,12 @@ export class CallConnectOptions implements ng.IComponentController {
   }
 
   private getExtLinkedAccount(): IExternalLinkedAccount[] {
-    let newExtLink = {
+    const newExtLink = {
       providerID: CallConnectOptions.hybridCalluc,
       accountGUID: this.mailID,
       status: 'unconfirmed-email',
     };
-    let links: IExternalLinkedAccount[] = [];
+    const links: IExternalLinkedAccount[] = [];
 
     _.map(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
       return linkedAccount && (linkedAccount.providerID === CallConnectOptions.hybridCalluc);
@@ -136,7 +136,7 @@ export class CallConnectOptions implements ng.IComponentController {
           this.getExtLinkedAccount(),
           null)
           .then(() => {
-            let props = this.getUssProps();
+            const props = this.getUssProps();
             if (props) {
               this.USSService.updateUserProps(props).then(() => {
                 this.dismiss();
@@ -177,7 +177,7 @@ export class CallConnectOptions implements ng.IComponentController {
         if (this.wizardData.account.cisUuid) {
           this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
             if (props.resourceGroups && props.resourceGroups[CallConnectOptions.hybridCalluc]) {
-              let selectedGroup = _.find(this.resourceGroup.options, (group) => {
+              const selectedGroup = _.find(this.resourceGroup.options, (group) => {
                 return group.value === props.resourceGroups[CallConnectOptions.hybridCalluc];
               });
               if (selectedGroup) {
@@ -194,7 +194,7 @@ export class CallConnectOptions implements ng.IComponentController {
 
   public setResourceGroup(group: string) {
     if (!group) {
-      let selectedGroup = _.find(this.resourceGroup.options, (rgroup) => {
+      const selectedGroup = _.find(this.resourceGroup.options, (rgroup) => {
         return rgroup.value === '';
       });
       if (selectedGroup) {
@@ -204,7 +204,7 @@ export class CallConnectOptions implements ng.IComponentController {
   }
 
   private getUssProps(): { userId: string, resourceGroups: { 'squared-fusion-uc': string } } | null {
-    let isExistingPlaceOrNonEmptyRGroup = this.wizardData.account.cisUuid || (this.resourceGroup.selected && this.resourceGroup.selected.value);
+    const isExistingPlaceOrNonEmptyRGroup = this.wizardData.account.cisUuid || (this.resourceGroup.selected && this.resourceGroup.selected.value);
     if (this.resourceGroup.selected && isExistingPlaceOrNonEmptyRGroup) {
       return {
         userId: this.wizardData.account.cisUuid,

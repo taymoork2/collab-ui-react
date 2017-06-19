@@ -13,7 +13,6 @@
 
   /* @ngInject */
   function ReadonlyInterceptor($q, $injector, $log) {
-
     var allowedList = [
       '/api/v1/metrics',
       '/api/v1/compliance/',
@@ -80,5 +79,4 @@
       return _.includes(url, 'identity/scim/' + Authinfo.getUserOrgId() + '/v1/Users/' + Authinfo.getUserId());
     }
   }
-
 }());

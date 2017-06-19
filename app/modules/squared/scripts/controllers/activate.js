@@ -57,7 +57,6 @@
     var encryptedParam = $location.search().eqp;
 
     if (encryptedParam) {
-
       ActivateService.activateUser(encryptedParam)
         .then(function (res) {
           var data = res.data;

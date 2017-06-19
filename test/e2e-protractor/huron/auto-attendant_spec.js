@@ -8,7 +8,7 @@
  * SAUCE__MAX_INSTANCES=2
  * SAUCE__USERNAME=atlas-web-limited
  * SAUCE__ACCESS_KEY=b99c8bc7-4a28-4d87-8cd8-eba7c688d48c
- * 
+ *
  * as found in config/env.vars/dev file
  */
 
@@ -556,7 +556,7 @@ describe('Huron Auto Attendant', function () {
 
     it('should delete Caller Input and bring up confirming Modal', function () {
       autoattendant.scrollIntoView(autoattendant.callerInputFirst);
-      
+
       utils.click(autoattendant.callerInputRemoveAction);
 
       utils.expectIsEnabled(autoattendant.varNameSave);
@@ -630,7 +630,7 @@ describe('Huron Auto Attendant', function () {
 
     it('should be able to delete open/holiday lane for AA', function () {
       utils.click(autoattendant.schedule);
-      
+
       utils.click(autoattendant.scheduletrash);
 
       utils.wait(autoattendant.toggleHolidays, 120000);
@@ -687,13 +687,13 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.sessionVar);
       utils.click(autoattendant.newSessionVar);
-      
+
       utils.sendKeys(autoattendant.newVariableName, "123");
 
       utils.click(autoattendant.addVariableToSet);
 
       utils.expectCount(autoattendant.sessionVarAll, 2);
-  
+
       utils.expectIsDisabled(autoattendant.saveBtn);
 
       utils.click(autoattendant.restApiTrash);
@@ -703,7 +703,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.saveBtn);
 
       utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
-      utils.expectTextToBeSet(autoattendant.restApiUrlLabel, "This is test URL");
+      utils.waitForText(autoattendant.restApiUrlLabel, "This is test URL");
 
     });
 

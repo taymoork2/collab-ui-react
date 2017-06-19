@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Shared Line', function () {
-
   var user = utils.randomTestGmail();
   var user2 = utils.randomTestGmail();
 
@@ -71,5 +70,4 @@ describe('Shared Line', function () {
   afterAll(function () {
     utils.deleteUser(user, user2);
   });
-
 });

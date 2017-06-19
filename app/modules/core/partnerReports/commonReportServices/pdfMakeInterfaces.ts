@@ -1,20 +1,20 @@
 export interface IPDFMakeContent extends IPDFMakeBase {
   bold?: boolean;
   text?: string;
-  canvas?: Array<ICanvas>;
+  canvas?: ICanvas[];
   colSpan?: number;
-  columns?: Array<IPDFMakeContent>;
+  columns?: IPDFMakeContent[];
   columnGap?: number;
-  fit?: Array<number>;
+  fit?: number[];
   image?: any;
   pageBreak?: string;
-  stack?: Array<IPDFMakeContent>;
+  stack?: IPDFMakeContent[];
   table?: IPDFMakeTable;
   width?: number | string;
 }
 
 export interface IPDFMakeLayout {
-  content: Array<IPDFMakeContent>;
+  content: IPDFMakeContent[];
   footer?: Function | string;
   header?: Function | string;
   styles?: any;
@@ -31,13 +31,13 @@ interface ICanvas {
 }
 
 interface IPDFMakeTable extends IPDFMakeBase {
-  widths: Array<number | string>;
+  widths: (number | string)[];
   headerRows: number;
-  body: Array<IPDFMakeContent>;
+  body: IPDFMakeContent[];
 }
 
 interface IPDFMakeBase {
   alignment?: string;
   fillColor?: string;
-  style?: string | Array<string>;
+  style?: string | string[];
 }

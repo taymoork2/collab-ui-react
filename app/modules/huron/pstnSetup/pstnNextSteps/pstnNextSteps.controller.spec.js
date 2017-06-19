@@ -35,9 +35,7 @@ describe('Controller: PstnNextStepsCtrl', function () {
 
   describe('nextSteps', function () {
     beforeEach(function () {
-
       controller.launchCustomerPortal();
-
     });
     it('should create proper url', function () {
       expect($state.href).toHaveBeenCalledWith('login_swap', {
@@ -50,5 +48,4 @@ describe('Controller: PstnNextStepsCtrl', function () {
       expect($window.open).toHaveBeenCalled();
     });
   });
-
 });

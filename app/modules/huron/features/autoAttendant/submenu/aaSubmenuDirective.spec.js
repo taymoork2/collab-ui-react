@@ -51,16 +51,15 @@ describe('Directive: aaSubmenu', function () {
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     var mainMenu = AutoAttendantCeMenuModelService.newCeMenu();
     mainMenu.headers[0] = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    mainMenu.headers[0].setType("MENU_OPTION_ANNOUNCEMENT");
+    mainMenu.headers[0].setType('MENU_OPTION_ANNOUNCEMENT');
     mainMenu.headers[1] = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    mainMenu.headers[1].setType("MENU_OPTION_DEFAULT");
+    mainMenu.headers[1].setType('MENU_OPTION_DEFAULT');
     aaUiModel[schedule].addEntryAt(index, mainMenu);
     submenu = AutoAttendantCeMenuModelService.newCeMenu();
     submenu.attempts = 4;
     submenu.type = 'MENU_OPTION';
     submenu.key = '1';
     mainMenu.entries[0] = submenu;
-
   }));
 
   it('replaces the element with the appropriate content', function () {
@@ -72,11 +71,10 @@ describe('Directive: aaSubmenu', function () {
     expect(htmlText).toContain('aa-header="false"');
     expect(htmlText).toContain('aa-schedule="openHours"');
     expect(htmlText).toContain('aa-menu-id="menu2"');
-    expect(htmlText).toContain("aaSubmenu");
+    expect(htmlText).toContain('aaSubmenu');
   });
 
   it('replaces the element with the appropriate content, with a play action on the first button of the submenu', function () {
-
     submenu.entries[0] = AutoAttendantCeMenuModelService.newCeMenuEntry();
     submenu.entries[0].type = 'MENU_OPTION';
     submenu.entries[0].addAction(AutoAttendantCeMenuModelService.newCeActionEntry('play', ''));
@@ -89,7 +87,7 @@ describe('Directive: aaSubmenu', function () {
     expect(htmlText).toContain('aa-header="false"');
     expect(htmlText).toContain('aa-schedule="openHours"');
     expect(htmlText).toContain('aa-menu-id="menu2"');
-    expect(htmlText).toContain("aaSubmenu");
+    expect(htmlText).toContain('aaSubmenu');
     expect(htmlText).toContain('aa-key-index="0"');
   });
 });

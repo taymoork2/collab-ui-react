@@ -4,7 +4,7 @@ export class UserV1 {
   public lastName?: string;
   public userName?: string;
   public preferredLanguage?: string;
-  public services: Array<string>;
+  public services: string[];
   public voicemail?: Voicemail;
 
   constructor(obj: {
@@ -13,7 +13,7 @@ export class UserV1 {
     lastName: string | undefined,
     userName: string | undefined,
     preferredLanguage: string | undefined,
-    services: Array<string>,
+    services: string[],
     voicemail: Voicemail | undefined,
   }) {
     this.uuid = obj.uuid;
@@ -43,7 +43,7 @@ export class UserV2 {
   public userName?: string;
   public sipAddress?: string;
   public preferredLanguage?: string;
-  public numbers: Array<UserNumber>;
+  public numbers: UserNumber[];
 
   constructor(obj: {
     uuid: string | undefined,
@@ -52,7 +52,7 @@ export class UserV2 {
     userName: string | undefined,
     sipAddress: string | undefined,
     preferredLanguage: string | undefined,
-    numbers: Array<UserNumber>,
+    numbers: UserNumber[],
 
   }) {
     this.uuid = obj.uuid;

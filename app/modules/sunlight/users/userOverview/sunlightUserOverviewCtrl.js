@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function SunlightUserOverviewCtrl($state, $stateParams, SunlightConfigService, Notification, $translate, Log) {
-
     var vm = this;
 
     vm.currentUser = $stateParams.currentUser;
@@ -51,7 +50,6 @@
 
     /* Updates Sunlight user info in sunlight config service */
     vm.updateUserData = function (userId) {
-
       var updatedUserInfo = getUpdatedUserData();
 
       if (!updatedUserInfo.alias) {
@@ -67,7 +65,6 @@
           Notification.success('contactCenterUserConfig.successMessages.userUpdateSuccessMessage', {
             userId: vm.currentUser.userName,
           });
-
         }, function (response) {
           Log.debug('Failed to save sunlight user information in sunlight config Service. Status: ' + response.status + ' statusText: ' + response.statusText);
           Notification.errorWithTrackingId(response, 'contactCenterUserConfig.failureMessages.userUpdateFailureMessage', {
@@ -85,13 +82,11 @@
     };
 
     vm.loadUserInformation = function (userId) {
-
       SunlightConfigService.getUserInfo(userId)
         .then(function (response) {
           var data = response.data || {};
           vm.userData = data;
           vm.setUserInfoView(vm.userData);
-
         }, function (response) {
           Log.debug('Failed to retrieve sunlight user information from sunlight config Service with Status: ' + response.status + ' statusText: ' + response.statusText);
           Notification.error('contactCenterUserConfig.failureMessages.userloadFailureMessage', {

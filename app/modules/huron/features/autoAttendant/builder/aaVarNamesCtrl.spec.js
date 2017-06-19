@@ -6,13 +6,13 @@ describe('Controller: AAVarNamesModalCtrl', function () {
   var $scope;
 
   var aaModel = {
-    aaRecord: { callExperienceName: "thisCe" },
+    aaRecord: { callExperienceName: 'thisCe' },
 
     aaRecords: [
-      { callExperienceURL: 'URL Thomas/1111', 'callExperienceName': 'Earl Thomas' },
-      { callExperienceURL: 'URL of Sandwich/2222', 'callExperienceName': 'Earl of Sandwich' },
-      { callExperienceURL: 'URL Scruggs/3333', 'callExperienceName': 'Earl Scruggs' },
-      { callExperienceURL: 'URL Hines/4444', 'callExperienceName': 'Earl Hines' },
+      { callExperienceURL: 'URL Thomas/1111', callExperienceName: 'Earl Thomas' },
+      { callExperienceURL: 'URL of Sandwich/2222', callExperienceName: 'Earl of Sandwich' },
+      { callExperienceURL: 'URL Scruggs/3333', callExperienceName: 'Earl Scruggs' },
+      { callExperienceURL: 'URL Hines/4444', callExperienceName: 'Earl Hines' },
     ],
   };
 
@@ -41,7 +41,6 @@ describe('Controller: AAVarNamesModalCtrl', function () {
 
     $scope.schedule = 'openHours';
     controller = $controller;
-
   }));
 
   afterEach(function () {
@@ -82,7 +81,6 @@ describe('Controller: AAVarNamesModalCtrl', function () {
       expect(cntl.dependentNames[1]).toEqual('Earl Thomas');
       expect(cntl.dependentNames[2]).toEqual('Earl Scruggs');
       expect(cntl.dependentNames[3]).toEqual('Earl Hines');
-
     });
     it('should expect to be activated with local variable and no array', function () {
       var cntl = controller('AAVarNamesModalCtrl', {
@@ -97,9 +95,6 @@ describe('Controller: AAVarNamesModalCtrl', function () {
       expect(cntl.dependentNames.length).toEqual(1);
 
       expect(cntl.dependentNames[0]).toEqual('thisCe');
-
     });
-
   });
-
 });

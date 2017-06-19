@@ -199,6 +199,11 @@ var auth = {
     pass: 'Cisco!23',
     org: '06db50d9-a129-4a1f-9ee9-bcff65246b15',
   },
+  'huron-ui-test-partner': {
+    user: 'huron.ui.test.partner@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+  },
 };
 
 var clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec';

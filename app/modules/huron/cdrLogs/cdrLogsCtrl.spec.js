@@ -18,7 +18,7 @@ describe('Controller: CdrLogsCtrl', function () {
     formlyConfig = _formlyConfig_;
     Notification = _Notification_;
 
-    spyOn(state, "go");
+    spyOn(state, 'go');
 
     controller = $controller('CdrLogsCtrl', {
       $scope: $scope,
@@ -42,7 +42,6 @@ describe('Controller: CdrLogsCtrl', function () {
   it('statusAvalibility should return expected results for error codes', function () {
     expect(controller.statusAvalibility(callLegs[0])).toEqual(statusResponse[0]);
     expect(controller.statusAvalibility(callLegs[1])).toEqual(statusResponse[1]);
-
   });
 
   it('getAccordionHeader should return the correct title', function () {
@@ -59,16 +58,16 @@ describe('Controller: CdrLogsCtrl', function () {
 
   it('ElasticSearch path should contain the logstash days', function () {
     var esDays = 'logstash-2016.03.22,logstash-2016.03.23';
-    controller.model.startDate = moment("2016-03-22", dateFormat);
-    controller.model.endDate = moment("2016-03-23", dateFormat);
+    controller.model.startDate = moment('2016-03-22', dateFormat);
+    controller.model.endDate = moment('2016-03-23', dateFormat);
     controller.updateLogstashPath();
     expect(controller.logstashPath).toEqual(esDays);
   });
 
   it('ElasticSearch path should contain the logstash months', function () {
     var esMonths = 'logstash-2015.11.*,logstash-2015.12.*,logstash-2016.01.*,logstash-2016.02.*,logstash-2016.03.*';
-    controller.model.startDate = moment("2015-11-23", dateFormat);
-    controller.model.endDate = moment("2016-03-23", dateFormat);
+    controller.model.startDate = moment('2015-11-23', dateFormat);
+    controller.model.endDate = moment('2016-03-23', dateFormat);
     controller.updateLogstashPath();
     expect(controller.logstashPath).toEqual(esMonths);
   });

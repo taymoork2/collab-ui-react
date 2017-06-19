@@ -144,7 +144,6 @@
             status: status,
           });
           return $q.reject(data);
-
         })
         .then(function (data, status) {
           data = _.extend({}, data, {
@@ -170,20 +169,25 @@
           var trial = '';
 
           var result = [];
+          var subscriptions = Authinfo.getSubscriptions();
           _.forEach(usageLicenses, function (usageLicense) {
             var licenses = _.filter(usageLicense.licenses, function (license) {
               var match = _.find(statusLicenses, {
-                'licenseId': license.licenseId,
+                licenseId: license.licenseId,
               });
               trial = license.isTrial ? 'Trial' : 'unknown';
               return !(_.isUndefined(match) || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
             });
 
+            var matchSub = _.find(subscriptions, {
+              subscriptionId: usageLicense.internalSubscriptionId,
+            });
             var subscription = {
-              "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
-              "internalSubscriptionId": usageLicense.internalSubscriptionId ?
+              subscriptionId: usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
+              internalSubscriptionId: usageLicense.internalSubscriptionId ?
                 usageLicense.internalSubscriptionId : trial,
-              "licenses": licenses,
+              licenses: licenses,
+              endDate: _.get(matchSub, 'endDate', ''),
             };
             result.push(subscription);
           });
@@ -211,7 +215,7 @@
 
         validLicenses = _.filter(usageLicenses, function (license) {
           var match = _.find(statusLicenses, {
-            'licenseId': license.licenseId,
+            licenseId: license.licenseId,
           });
           // If the license is not valid do not add to list
           return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
@@ -227,15 +231,15 @@
       var adminUrl = null;
       if (oid) {
         if (searchStr) {
-          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers?searchPrefix=" + searchStr;
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + '/unlicensedUsers?searchPrefix=' + searchStr;
         } else {
-          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers";
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + '/unlicensedUsers';
         }
       } else {
         if (searchStr) {
-          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers?searchPrefix=" + searchStr;
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers?searchPrefix=' + searchStr;
         } else {
-          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers";
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers';
         }
       }
 

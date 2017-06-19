@@ -30,8 +30,8 @@ describe('Controller: AADecisionCtrl', function () {
     ceInfos: [],
   };
   var queue = [{
-    queueName: "queueyLewis",
-    queueUrl: "and/the/news",
+    queueName: 'queueyLewis',
+    queueUrl: 'and/the/news',
   }];
 
   var schedule = 'openHours';
@@ -43,7 +43,6 @@ describe('Controller: AADecisionCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AAModelService_, _AASessionVariableService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_, _QueueHelperService_) {
-
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     q = $q;
@@ -113,7 +112,6 @@ describe('Controller: AADecisionCtrl', function () {
     aaUiModel = null;
     menu = null;
     action = null;
-
   });
 
   describe('Conditional tests', function () {
@@ -161,7 +159,6 @@ describe('Controller: AADecisionCtrl', function () {
 
       expect(c.menuEntry.actions[0].name).toEqual('conditional');
       expect(c.isWarn).toEqual(false);
-
     });
     it('should set the If option ', function () {
       var c;
@@ -177,7 +174,6 @@ describe('Controller: AADecisionCtrl', function () {
 
       expect(c.ifOption.buffer).toEqual('Hello world');
       expect(c.isWarn).toEqual(false);
-
     });
     it('should set the then option ', function () {
       var c;
@@ -200,7 +196,6 @@ describe('Controller: AADecisionCtrl', function () {
       expect(c.actionEntry.then.value).toEqual('Demo AA');
       expect(c.actionEntry.then.name).toEqual('goto');
       expect(c.isWarn).toEqual(false);
-
     });
     it('should set the action entry from the ifOption buffer', function () {
       var c;
@@ -214,14 +209,13 @@ describe('Controller: AADecisionCtrl', function () {
 
       $scope.$apply();
 
-      var b = _.find(c.ifOptions, { 'value': 'Original-Remote-Party-ID' });
-      b.buffer = "Hello world";
+      var b = _.find(c.ifOptions, { value: 'Original-Remote-Party-ID' });
+      b.buffer = 'Hello world';
 
       c.update('Original-Remote-Party-ID');
 
       expect(c.actionEntry.if.rightCondition).toEqual(b.buffer);
       expect(c.isWarn).toEqual(false);
-
     });
 
     it('should set the action entry from the ifOption buffer', function () {
@@ -237,7 +231,7 @@ describe('Controller: AADecisionCtrl', function () {
 
       $scope.$apply();
 
-      var b = _.find(c.ifOptions, { 'value': 'callerReturned' });
+      var b = _.find(c.ifOptions, { value: 'callerReturned' });
       b.buffer = {
         label: 'test',
         value: 10080 * 60,
@@ -247,7 +241,6 @@ describe('Controller: AADecisionCtrl', function () {
 
       expect(c.actionEntry.if.rightCondition).toEqual(b.buffer.value);
       expect(c.isWarn).toEqual(false);
-
     });
 
     it('should the conditional from ifOption value', function () {
@@ -270,7 +263,6 @@ describe('Controller: AADecisionCtrl', function () {
       expect(c.actionEntry.if.rightCondition).toEqual(c.ifOption.buffer);
       expect(c.actionEntry.if.leftCondition).toEqual(c.ifOption.value);
       expect(c.isWarn).toEqual(false);
-
     });
 
     it('should set the caller returned conditional from ifOption value', function () {
@@ -296,7 +288,6 @@ describe('Controller: AADecisionCtrl', function () {
       expect(c.actionEntry.if.rightCondition).toEqual(c.ifOption.buffer.value);
       expect(c.actionEntry.if.leftCondition).toEqual(c.ifOption.value);
       expect(c.isWarn).toEqual(false);
-
     });
 
     it('set the custom Variable  conditional from ifOption value', function () {
@@ -338,7 +329,87 @@ describe('Controller: AADecisionCtrl', function () {
       c.setIfDecision();
 
       expect(c.isWarn).toEqual(false);
+    });
 
+    it('should add in new variable (added via callerInput)', function () {
+      var c;
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      c.ui = {};
+      c.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      c.ui.openHours.addEntryAt(index, menuOpen);
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+      action.variableName = 'my variable one';
+      menuOpen.addAction(action);
+
+      c.refreshVarSelects();
+
+      expect(c.sessionVarOptions.length).toEqual(2);
+      expect(c.sessionVarOptions[1]).toEqual('my variable one');
+    });
+    it('should not add in new ifOption when it is already there.', function () {
+      var c;
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      c.ui = {};
+      c.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      c.ui.openHours.addEntryAt(index, menuOpen);
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+      action.variableName = 'my variable one';
+      menuOpen.addAction(action);
+
+      c.refreshIfSelects();
+
+      expect(c.ifOptions.length).toEqual(6);
+      expect(c.ifOptions[c.ifOptions.length - 1].value).toMatch('sessionVariable');
+    });
+  });
+  describe('No SessionVars  Conditional tests', function () {
+    beforeEach(inject(function () {
+      spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve([]));
+    }));
+
+    it('should add in new variable with session object added (added via callerInput)', function () {
+      var c;
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      c.ui = {};
+      c.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      c.ui.openHours.addEntryAt(index, menuOpen);
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+      action.variableName = 'my variable one';
+      menuOpen.addAction(action);
+
+      c.refreshIfSelects();
+
+      expect(c.sessionVarOptions.length).toEqual(1);
+      expect(c.sessionVarOptions[0]).toEqual('my variable one');
+      expect(c.ifOptions.length).toEqual(6);
+      expect(c.ifOptions[c.ifOptions.length - 1].value).toMatch('sessionVariable');
     });
   });
 
@@ -368,12 +439,12 @@ describe('Controller: AADecisionCtrl', function () {
       });
 
       $scope.$apply();
-      var routeToQ = _.find(c.thenOptions, { 'value': 'routeToQueue' });
+      var routeToQ = _.find(c.thenOptions, { value: 'routeToQueue' });
 
       expect(routeToQ).toBeDefined();
 
-      expect(c.queues[0].description).toEqual("queueyLewis");
-      expect(c.queues[0].id).toEqual("news");
+      expect(c.queues[0].description).toEqual('queueyLewis');
+      expect(c.queues[0].id).toEqual('news');
     });
   });
 
@@ -393,12 +464,33 @@ describe('Controller: AADecisionCtrl', function () {
 
       $scope.$apply();
 
-      var b = _.find(c.ifOptions, { 'value': 'sessionVariable' });
+      var b = _.find(c.ifOptions, { value: 'sessionVariable' });
       expect(b).toBeDefined();
 
       expect(c.isWarn).toEqual(true);
-
     });
   });
+  describe('Variable is deleted', function () {
+    beforeEach(inject(function () {
+      spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve([]));
+      spyOn(aaCommonService, 'collectThisCeActionValue').and.returnValue([]);
+    }));
 
+    it('should delete variable from session array', function () {
+      var c;
+      action.if = {};
+      action.if.leftCondition = 'Some Random custom variable';
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+      c.sessionVarOptions.push('One');
+
+      $rootScope.$broadcast('CE Updated');
+
+      $scope.$apply();
+
+      expect(c.sessionVarOptions.length).toEqual(0);
+    });
+  });
 });

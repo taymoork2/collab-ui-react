@@ -19,7 +19,7 @@
 
       $scope = $rootScope.$new();
       $scope.currentUser = currentUser;
-      $scope.service = 'MESSAGING';
+      $scope.licenseType = 'MESSAGING';
 
       spyOn(Authinfo, 'hasAccount').and.returnValue(true);
       spyOn(Authinfo, 'getServices').and.returnValue(services);
@@ -32,7 +32,7 @@
     }));
 
     it('should update users entitlements with only configurable entitlements', function () {
-      $scope.changeEntitlement(currentUser);
+      $scope.$broadcast('save');
       $scope.$apply();
 
       expect(Userservice.updateUsers).toHaveBeenCalledWith(jasmine.any(Array), null, [{
@@ -44,7 +44,5 @@
     it('should get the display name from services array', function () {
       expect($scope.getServiceName('messengerInterop')).toEqual('Messenger interop');
     });
-
   });
-
 })();

@@ -71,32 +71,24 @@ require('modules/core/reports/amcharts-export.scss');
       var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
       if (vm.timeSelected.value === 0) {
-
         vm.label = vm.timeSelected.label;
         vm.date = date1.getHours() + ':' + (date1.getMinutes() < 10 ? '0' : '') + date1.getMinutes() + ' ' + month[date1.getMonth()] + ' ' + date1.getDate() + ',' + date1.getFullYear();
         vm.date = $translate.instant('mediaFusion.metrics.lastRefresh') + ' ' + vm.date;
-
       } else if (vm.timeSelected.value === 1) {
-
         vm.label = vm.timeSelected.label;
         date1.setDate(date1.getDate() - 7);
         var prevdate = new Date(date1);
         vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + ' ' + prevdate.getFullYear() + ' ' + '-' + ' ' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + ' ' + date2.getFullYear();
-
       } else if (vm.timeSelected.value === 2) {
-
         vm.label = vm.timeSelected.label;
         date1.setMonth(date1.getMonth() - 1);
         prevdate = new Date(date1);
         vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + ' ' + prevdate.getFullYear() + ' ' + '-' + ' ' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + ' ' + date2.getFullYear();
-
       } else {
-
         vm.label = vm.timeSelected.label;
         date1.setMonth(date1.getMonth() - 3);
         prevdate = new Date(date1);
         vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + ' ' + prevdate.getFullYear() + ' ' + '-' + ' ' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + ' ' + date2.getFullYear();
-
       }
     }
 
@@ -105,7 +97,7 @@ require('modules/core/reports/amcharts-export.scss');
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
           _.each(clusters, function (cluster) {
-            if (cluster.targetType === "mf_mgmt") {
+            if (cluster.targetType === 'mf_mgmt') {
               vm.clusterOptions.push(cluster.name);
               vm.Map[cluster.name] = cluster.id;
             }
@@ -113,7 +105,6 @@ require('modules/core/reports/amcharts-export.scss');
           deferred.resolve(vm.Map);
           vm.clusterId = vm.clusterOptions[0];
           vm.clusterSelected = vm.clusterOptions[0];
-
         }).catch(function (err) {
           Notification.errorWithTrackingId(err, vm.errorData);
         });
@@ -328,7 +319,6 @@ require('modules/core/reports/amcharts-export.scss');
             for (var i = 0; i <= response.graphs.length; i++) {
               if (response.graphs[i].valueField !== vm.clusterId) {
                 vm.utilizationStatus = vm.EMPTY;
-
               } else {
                 vm.utilizationClusterName = getClusterName(response.graphs);
                 setUtilizationGraph(response.graphData, vm.utilizationClusterName);
@@ -370,7 +360,6 @@ require('modules/core/reports/amcharts-export.scss');
             vm.cloud = response.data.callsOverflow;
             vm.total = vm.onprem + vm.cloud;
           }
-
         } else {
           if (response === vm.ABORT) {
             return;
@@ -398,7 +387,6 @@ require('modules/core/reports/amcharts-export.scss');
         }
         resizeCards();
       });
-
     }
 
     function setClusterAvailability() {
@@ -414,6 +402,5 @@ require('modules/core/reports/amcharts-export.scss');
         resizeCards();
       });
     }
-
   }
 })();

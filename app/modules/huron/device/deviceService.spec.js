@@ -13,7 +13,7 @@ describe('Service: DeviceService', function () {
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
+    $provide.value('Authinfo', authInfo);
   }));
 
   beforeEach(

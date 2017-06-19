@@ -5,9 +5,9 @@ import notificationsModule from 'modules/core/notifications';
 import featureToggleModule from 'modules/core/featureToggle';
 import csvSimpleExportModule from './csvSimpleExport';
 
-let analyticsModule = require('modules/core/analytics');
-let userListServiceModule = require('modules/core/scripts/services/userlist.service');
-let config = require('modules/core/config/config');
+const analyticsModule = require('modules/core/analytics');
+const userListServiceModule = require('modules/core/scripts/services/userlist.service');
+const config = require('modules/core/config/config');
 
 import './_csv-download.scss';
 

@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function UserProfileCtrl($scope, $location, $stateParams, Log, Userservice, Authinfo, Notification, Config) {
-
     var userid = $stateParams.uid;
     $scope.orgName = Authinfo.getOrgName();
 
@@ -16,7 +15,6 @@
         if ($scope.user.photos) {
           for (var i in $scope.user.photos) {
             if ($scope.user.photos[i].type === 'thumbnail') {
-
               $scope.photoPath = $scope.user.photos[i].value;
             }
           } //end for
@@ -32,10 +30,10 @@
 
     $scope.updateUser = function () {
       var userData = {
-        'schemas': Config.scimSchemas,
-        'name': {},
-        'meta': {
-          'attributes': [],
+        schemas: Config.scimSchemas,
+        name: {},
+        meta: {
+          attributes: [],
         },
       };
       // Add or delete properties depending on whether or not their value is empty/blank.
@@ -44,12 +42,12 @@
       // value. Instead, add the property to meta.attribute to have its value be deleted.
       if ($scope.user.name) {
         if ($scope.user.name.givenName) {
-          userData.name["givenName"] = $scope.user.name.givenName;
+          userData.name['givenName'] = $scope.user.name.givenName;
         } else {
           userData.meta.attributes.push('name.givenName');
         }
         if ($scope.user.name.familyName) {
-          userData.name["familyName"] = $scope.user.name.familyName;
+          userData.name['familyName'] = $scope.user.name.familyName;
         } else {
           userData.meta.attributes.push('name.familyName');
         }
@@ -77,6 +75,5 @@
           Notification.errorResponse(response, 'profilePage.error');
         });
     };
-
   }
 })();

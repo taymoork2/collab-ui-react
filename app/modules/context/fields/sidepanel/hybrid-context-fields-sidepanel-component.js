@@ -16,7 +16,6 @@ require('./_fields-sidepanel.scss');
 
   /* @ngInject */
   function ContextFieldsSidepanelCtrl(Analytics, ContextFieldsService, ContextFieldsetsService, Notification, $filter, ModalService, $state, $translate) {
-
     var vm = this;
     vm.associatedFieldsets = [];
     vm.fetchFailure = false;

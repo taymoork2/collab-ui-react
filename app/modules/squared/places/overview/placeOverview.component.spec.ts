@@ -39,7 +39,7 @@ describe('placeOverview component', () => {
     ServiceDescriptor = _ServiceDescriptor_;
   }));
 
-  let initController = (stateParams, scope, $state) => {
+  const initController = (stateParams, scope, $state) => {
     return $componentController('placeOverview', {
       $stateParams: stateParams,
       $scope: scope,
@@ -87,7 +87,7 @@ describe('placeOverview component', () => {
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
       spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
 
-      let currentUser: any = {
+      const currentUser: any = {
         success: true,
         roles: ['ciscouc.devops', 'ciscouc.devsupport'],
         meta: { organizationID: adminOrgId },
@@ -97,8 +97,7 @@ describe('placeOverview component', () => {
         id: adminCisUuid,
       };
 
-      spyOn(Userservice, 'getUser').and.callFake((uid, callback) => {
-        uid = uid; //make tslint happy
+      spyOn(Userservice, 'getUser').and.callFake((_, callback) => {
         callback(currentUser, 200);
       });
     });
@@ -172,7 +171,7 @@ describe('placeOverview component', () => {
 
           expect($state.go).toHaveBeenCalled();
           expect(goStateData.wizard).toBeDefined();
-          let wizardData = goStateData.wizard.state();
+          const wizardData = goStateData.wizard.state();
           expect(wizardData).toEqual(//jasmine.anything()
             {
               data: {
@@ -227,7 +226,7 @@ describe('placeOverview component', () => {
 
           expect($state.go).toHaveBeenCalled();
           expect(goStateData.wizard).toBeDefined();
-          let wizardData = goStateData.wizard.state();
+          const wizardData = goStateData.wizard.state();
           expect(wizardData).toEqual(//jasmine.anything()
             {
               data: {
@@ -288,7 +287,7 @@ describe('placeOverview component', () => {
       spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve({}));
       spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve({}));
       spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
-      let currentUser: any = {
+      const currentUser: any = {
         success: true,
         roles: ['ciscouc.devops', 'ciscouc.devsupport'],
         meta: { organizationID: orgId },
@@ -323,7 +322,7 @@ describe('placeOverview component', () => {
 
       expect($state.go).toHaveBeenCalled();
       expect(goStateData.wizard).toBeDefined();
-      let wizardData = goStateData.wizard.state();
+      const wizardData = goStateData.wizard.state();
       expect(wizardData).toEqual(
         {
           data: {

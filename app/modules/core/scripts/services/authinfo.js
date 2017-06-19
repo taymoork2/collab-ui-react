@@ -134,11 +134,10 @@
           authData.customerType = _.get(authData.customerAccounts, '[0].customerType', '');
           authData.customerId = _.get(authData.customerAccounts, '[0].customerId');
           authData.commerceRelation = _.get(authData.customerAccounts, '[0].commerceRelation', '');
-          authData.subscriptions = _.get(authData.customerAccounts, '[0].subscriptions', []);
+          authData.subscriptions = _.flattenDeep(_.map(authData.customerAccounts, 'subscriptions'));
           authData.customerAdminEmail = _.get(authData.customerAccounts, '[0].customerAdminEmail');
 
           for (var x = 0; x < authData.customerAccounts.length; x++) {
-
             var customerAccount = authData.customerAccounts[x];
             var customerAccountLicenses = [];
 
@@ -367,7 +366,7 @@
         }
 
         // allow the support state in the special case where the user is exclusively Help Desk AND a Compliance User
-        if (parentState === "support" && this.isHelpDeskAndComplianceUserOnly()) {
+        if (parentState === 'support' && this.isHelpDeskAndComplianceUserOnly()) {
           return true;
         }
 
@@ -559,6 +558,11 @@
       },
       isInDelegatedAdministrationOrg: function () {
         return authData.isInDelegatedAdministrationOrg;
+      },
+      isPremium: function () {
+        return _.some(authData.licenses, function (license) {
+          return license.offerName === Config.offerCodes.MGMTPRO;
+        });
       },
       getLicenseIsTrial: function (licenseType, entitlement) {
         var isTrial = _.chain(authData.licenses)

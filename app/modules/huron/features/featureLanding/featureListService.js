@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function HuronFeaturesListService() {
-
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
@@ -68,13 +67,11 @@
           });
           formattedList[refCardIndex].referenceNames.push(formattedList[cardToUpdateIndex].cardName);
           formattedList[refCardIndex].hasReferences = true;
-
         });
 
         formattedList[cardToUpdateIndex].dependsNames.sort(function (a, b) {
           return a.localeCompare(b);
         });
-
       });
       return orderByCardName(formattedList);
     }
@@ -99,7 +96,8 @@
       var formattedList = [];
       _.forEach(data, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
-        formattedCard.numbers = _.map(huntGroup.numbers, 'number');
+        //TO-DO i1484 : Remove the filter for 'NUMBER_FORMAT_ENTERPRISE_LINE' when CMI api returns the correct HG number filtering the ESN when it is same as DN.
+        formattedCard.numbers = _.map(_.filter(huntGroup.numbers, { type: 'NUMBER_FORMAT_ENTERPRISE_LINE' }), 'number');
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.id = huntGroup.uuid;
         formattedCard.featureName = 'huronFeatureDetails.hg';

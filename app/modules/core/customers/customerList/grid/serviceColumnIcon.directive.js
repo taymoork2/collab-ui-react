@@ -55,7 +55,6 @@
         } else {
           return getNonWebexTooltip(rowData, type);
         }
-
       }
 
       function getNonWebexTooltip(rowData, type) {
@@ -95,7 +94,6 @@
       }
 
       function getWebexTooltip(rowData) {
-
         var ariaItems = [
           $translate.instant('customerPage.ariaTooltips.service', { serviceName: scope.WEBEX_TRANSLATION }),
         ];
@@ -185,7 +183,7 @@
       }
 
       function translateTypeToIcon(type) {
-        var classType = "";
+        var classType = '';
         if (scope.showServiceManagedByAnotherPartner) {
           classType = 'service-icon-managed-by-others ';
         } else if (scope.showServiceManagedByCurrentPartner) {

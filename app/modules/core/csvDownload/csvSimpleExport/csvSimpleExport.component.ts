@@ -31,7 +31,7 @@ class CsvSimpleExportController implements ng.IComponentController {
       this.exporting = true;
       this.activeTooltip = this.exportingTooltip;
       this.$timeout(() => {
-        let ngCsvElement = this.$element.find('.download-element');
+        const ngCsvElement = this.$element.find('.download-element');
         ngCsvElement.click();
       });
     }

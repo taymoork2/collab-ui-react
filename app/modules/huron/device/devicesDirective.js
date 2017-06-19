@@ -17,5 +17,4 @@ require('./_hn-devices.scss');
 
     return directive;
   }
-
 })();

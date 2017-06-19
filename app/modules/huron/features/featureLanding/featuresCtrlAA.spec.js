@@ -5,7 +5,6 @@
 'use strict';
 
 describe('Features Controller', function () {
-
   var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, HuntGroupService, CallParkService, CallPickupGroupService, PagingGroupService, FeatureToggleService;
   var listOfAAs = getJSONFixture('huron/json/autoAttendant/aaList.json');
   var emptyListOfAAs = [];
@@ -16,25 +15,25 @@ describe('Features Controller', function () {
     return data;
   };
   var AAs = [{
-    'cardName': 'Main AA',
-    'numbers': ['1111'],
-    'id': 'c16a6027-caef-4429-b3af-9d61ddc71111',
-    'featureName': 'huronHuntGroup.hg',
-    'filterValue': 'AA',
+    cardName: 'Main AA',
+    numbers: ['1111'],
+    id: 'c16a6027-caef-4429-b3af-9d61ddc71111',
+    featureName: 'huronHuntGroup.hg',
+    filterValue: 'AA',
   }, {
-    'cardName': 'Second AA',
-    'numbers': ['2222'],
-    'id': 'c16a6027-caef-4429-b3af-9d61ddc72222',
-    'featureName': 'huronHuntGroup.hg',
-    'filterValue': 'AA',
-    'hasReferences': true,
-    'referenceNames': ['Main AA'],
+    cardName: 'Second AA',
+    numbers: ['2222'],
+    id: 'c16a6027-caef-4429-b3af-9d61ddc72222',
+    featureName: 'huronHuntGroup.hg',
+    filterValue: 'AA',
+    hasReferences: true,
+    referenceNames: ['Main AA'],
   }, {
-    'cardName': 'Third  AA',
-    'numbers': ['3333'],
-    'id': 'c16a6027-caef-4429-b3af-9d61ddc73333',
-    'featureName': 'huronHuntGroup.hg',
-    'filterValue': 'AA',
+    cardName: 'Third  AA',
+    numbers: ['3333'],
+    id: 'c16a6027-caef-4429-b3af-9d61ddc73333',
+    featureName: 'huronHuntGroup.hg',
+    filterValue: 'AA',
   }];
   var $event = {
     preventDefault: function () {},
@@ -87,7 +86,6 @@ describe('Features Controller', function () {
       Log: Log,
       Notification: Notification,
     });
-
   }));
 
   it('should get list of AAs and if there is any data, should change the pageState to showFeatures', function () {
@@ -125,7 +123,6 @@ describe('Features Controller', function () {
   });
 
   it('should search list of AAs', function () {
-
     getDeferred.resolve(getAAListSuccessResp(listOfAAs));
 
     $scope.$apply();
@@ -138,7 +135,6 @@ describe('Features Controller', function () {
     expect(featureCtrl.listOfFeatures.length).toEqual(1);
 
     expect(featureCtrl.listOfFeatures).toContain(saveF);
-
   });
 
   it('should filter a list of AAs', function () {
@@ -151,7 +147,6 @@ describe('Features Controller', function () {
 
     expect(featureCtrl.listOfFeatures.length).toEqual(AAs.length);
     expect(featureCtrl.listOfFeatures[0].cardName).toEqual(AAs[0].cardName);
-
   });
 
   it('should filter a list of AAs to zero length', function () {
@@ -163,10 +158,8 @@ describe('Features Controller', function () {
     featureCtrl.setFilter('XX');
 
     expect(featureCtrl.listOfFeatures.length).toEqual(0);
-
   });
   it('should receive the HURON_FEATURE_DELETED event when an AA gets deleted', function () {
-
     var saveFeature;
 
     getDeferred.resolve(getAAListSuccessResp(listOfAAs));
@@ -185,11 +178,9 @@ describe('Features Controller', function () {
     });
 
     expect(featureCtrl.listOfFeatures).not.toContain(saveFeature);
-
   });
 
   it('should receive the HURON_FEATURE_DELETED event when an AA gets deleted with dependencies', function () {
-
     var saveFeature;
 
     getDeferred.resolve(getAAListSuccessResp(listOfAAs));
@@ -213,7 +204,6 @@ describe('Features Controller', function () {
   });
 
   it('should Not delete an AA with dependencies', function () {
-
     var saveFeature;
 
     getDeferred.resolve(getAAListSuccessResp(listOfAAs));
@@ -231,5 +221,4 @@ describe('Features Controller', function () {
 
     expect(featureCtrl.listOfFeatures).toContain(saveFeature);
   });
-
 });

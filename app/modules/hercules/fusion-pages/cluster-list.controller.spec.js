@@ -115,11 +115,9 @@ describe('Controller: FusionClusterListController', function () {
       expect(controller.filters[4].count).toBe(1);
       expect(controller.displayedGroups.length).toBe(6);
     });
-
   });
 
   describe('Private Trunking ', function () {
-
     beforeEach(function () {
       EnterprisePrivateTrunkService.fetch.and.returnValue($q.resolve([
         {
@@ -146,7 +144,6 @@ describe('Controller: FusionClusterListController', function () {
     });
 
     it('should format data from EnterprisePrivateTrunkService so that it is on the FMS cluster format', function () {
-
       initController(true);
       controller._loadSipDestinations();
       $rootScope.$apply();
@@ -208,18 +205,13 @@ describe('Controller: FusionClusterListController', function () {
           ],
         },
       ]));
-
     });
 
     it('should not get private trunk data if you are not feature toggled', function () {
-
       initController(false);
       controller._loadSipDestinations();
       $rootScope.$apply();
       expect(EnterprisePrivateTrunkService.fetch).not.toHaveBeenCalled();
-
     });
-
   });
-
 });

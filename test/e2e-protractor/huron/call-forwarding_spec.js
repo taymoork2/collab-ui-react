@@ -1,11 +1,10 @@
 'use strict';
 
 describe('Call Forwarding', function () {
-
   var user = utils.randomTestGmail();
   var dropdownVariables = {
-    'voicemail': 'Voicemail',
-    'addNew': 'Add New',
+    voicemail: 'Voicemail',
+    addNew: 'Add New',
   };
   var snrLine = telephony.getRandomNumber();
   var externalCFLine = telephony.getRandomNumber();
@@ -150,5 +149,4 @@ describe('Call Forwarding', function () {
   afterAll(function () {
     utils.deleteUser(user);
   });
-
 });

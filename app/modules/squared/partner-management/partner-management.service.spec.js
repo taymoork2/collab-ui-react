@@ -46,11 +46,11 @@ describe('PartnerManagementService:', function () {
     };
 
     var postedData = {
-      'partnerOrgName': data.name,
-      'partnerAdminEmail': data.email,
-      'partnerType': data.partnerType.value,
-      'isPartner': true,
-      'isLifecyclePartner': ((data.lifeCyclePartner === true) ? 'true' : 'false'),
+      partnerOrgName: data.name,
+      partnerAdminEmail: data.email,
+      partnerType: data.partnerType.value,
+      isPartner: true,
+      isLifecyclePartner: ((data.lifeCyclePartner === true) ? 'true' : 'false'),
     };
 
     $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'partners',

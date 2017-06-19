@@ -8,7 +8,7 @@ class CsdmHuronUserDeviceService {
   }
 
   public create(userId) {
-    let devicesUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
+    const devicesUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
     return new CsdmHuronDeviceService(this.$http, this.$q, this.Authinfo, this.HuronConfig, this.CsdmConverter, this.UrlConfig, devicesUrl);
 
   }
@@ -114,9 +114,9 @@ class CsdmHuronDeviceService {
   public getLinesForDevice(huronDevice) {
     return this.$http.get(this.getDirectoryNumbersUrl(huronDevice.cisUuid))
       .then((res) => {
-        let lines: {}[] = [];
+        const lines: {}[] = [];
         return this.$q.all(_.map(res.data, (directoryNumber: any) => {
-          let line: any = {
+          const line: any = {
             directoryNumber: directoryNumber.directoryNumber.pattern,
             usage: directoryNumber.dnUsage,
           };
@@ -135,7 +135,7 @@ class CsdmHuronDeviceService {
   public getDeviceInfo(huronDevice) {
     return this.$http.get(this.getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid))
       .then((res) => {
-        let response: any = {
+        const response: any = {
           timeZone: null,
         };
         if (res.data) {
@@ -150,7 +150,7 @@ class CsdmHuronDeviceService {
   public getAtaInfo(huronDevice) {
     return this.$http.get(this.getAtaUrl(huronDevice.huronId, huronDevice.cisUuid))
       .then((res) => {
-        let response = {
+        const response = {
           port: null,
           inputAudioLevel: null,
           outputAudioLevel: null,
@@ -201,7 +201,7 @@ class CsdmHuronDeviceService {
   }
 
   public updateTags(url, tags) {
-    let jsonTags = CsdmHuronDeviceService.encodeHuronTags(JSON.stringify(tags || []));
+    const jsonTags = CsdmHuronDeviceService.encodeHuronTags(JSON.stringify(tags || []));
     if (jsonTags.length >= 128) {
       return this.$q.reject('List of tags is longer than supported.');
     }

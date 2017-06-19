@@ -8,7 +8,7 @@ describe('WebExSiteSettingsCtrl Test', function () {
   var Authinfo;
 
   var siteUrl = 'go.webex.com';
-  var email = "mojoco@webex.com";
+  var email = 'mojoco@webex.com';
 
   beforeEach(angular.mock.module('WebExApp'));
 
@@ -17,7 +17,6 @@ describe('WebExSiteSettingsCtrl Test', function () {
     _$controller_,
     _WebExSiteSettingsFact_
   ) {
-
     Authinfo = _Authinfo_;
     WebExSiteSettingsFact = _WebExSiteSettingsFact_;
 
@@ -25,7 +24,7 @@ describe('WebExSiteSettingsCtrl Test', function () {
     $controller = _$controller_;
 
     $stateParams = {
-      'siteUrl': siteUrl,
+      siteUrl: siteUrl,
     };
 
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);

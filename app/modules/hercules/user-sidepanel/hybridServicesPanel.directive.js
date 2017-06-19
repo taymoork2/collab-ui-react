@@ -106,15 +106,15 @@
       }
       if (!_.isUndefined(vm.updateEntitlements)) {
         vm.updateEntitlements({
-          'entitlements': vm.entitlements,
+          entitlements: vm.entitlements,
         });
       }
     }
 
     function getServiceIfEnabled(services, id) {
       var service = _.find(services, {
-        'id': id,
-        'enabled': true,
+        id: id,
+        enabled: true,
       });
       if (service) {
         service.entitled = false;
@@ -134,7 +134,7 @@
     return {
       restrict: 'E',
       scope: {
-        'updateEntitlements': '&bindEntitlements',
+        updateEntitlements: '&bindEntitlements',
       },
       bindToController: true,
       controllerAs: 'hybridServicesPanelCtrl',

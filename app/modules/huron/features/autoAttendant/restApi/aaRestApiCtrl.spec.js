@@ -75,6 +75,5 @@ describe('Controller: AARestApiCtrl', function () {
       $scope.$apply();
       expect(AACommonService.setIsValid).toHaveBeenCalled();
     });
-
   });
 });

@@ -1,7 +1,6 @@
 'use strict';
 
 var MeetingsPage = function () {
-
   this.meetingPreviewLink = element(by.id('details-panel'));
   this.filterButtonArrow = element(by.css('.ngHeaderButtonArrow'));
   this.decrementDayButton = element(by.css('[ng-click="decrementDay()"]'));
@@ -52,7 +51,6 @@ var MeetingsPage = function () {
   this.incrementDay = function () {
     utils.click(this.incrementDayButton);
   };
-
 };
 
 module.exports = MeetingsPage;

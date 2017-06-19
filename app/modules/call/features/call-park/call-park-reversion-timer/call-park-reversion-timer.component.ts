@@ -6,7 +6,7 @@ class CallParkReversionTimerCtrl implements ng.IComponentController {
   public onChangeFn: Function;
 
   public cpReversionTimerForm: ng.IFormController;
-  public options: Array<number> = [30, 45, 60, 120, 180, 300, 600, 900];
+  public options: number[] = [30, 45, 60, 120, 180, 300, 600, 900];
   public isError: boolean = false;
   public errorMsg: string;
 

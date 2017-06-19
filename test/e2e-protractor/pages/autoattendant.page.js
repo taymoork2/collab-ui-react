@@ -105,7 +105,7 @@ var AutoAttendantPage = function () {
   this.phoneMenuSayMessageOption = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
 
   this.phoneMenuMediaUploadInput = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.name('mediaUploadInput'));
-  this.phoneMenuAll = element.all(by.css('div.aa-panel-body[name="Phone Menu"]')).all(by.cssContainingText("h3", "Phone Menu"));
+  this.phoneMenuAll = element.all(by.css('div.aa-panel-body[name="Phone Menu"]')).all(by.cssContainingText('h3', 'Phone Menu'));
   this.phoneMenuSay = element.all(by.css('div.aa-panel-body[name="Phone Menu"] aa-message-type')).first();
   this.phonesayMessageInput = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-message-type [name="messageInput"]'));
   this.phonesayMessageLanguage = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div span.select-toggle'));
@@ -134,7 +134,7 @@ var AutoAttendantPage = function () {
 
   this.phoneMenuActionTargetFirstMessageOptions = this.phoneMenuActionTargets.first().element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
 
-  this.decisionFirst = element.all(by.css('div.aa-panel-body[name="Decision"]')).all(by.cssContainingText("h3", "If")).first();
+  this.decisionFirst = element.all(by.css('div.aa-panel-body[name="Decision"]')).all(by.cssContainingText('h3', 'If')).first();
   this.decisionIf = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div span.select-toggle'));
   this.decisionIfDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(6);
   this.decisionIfSession = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifSessionVariable"] + div span.select-toggle'));
@@ -148,7 +148,7 @@ var AutoAttendantPage = function () {
   this.decisionThenDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(2);
   this.decisionPhoneNumber = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.name('phoneinput'));
 
-  this.callerInputFirst = element.all(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.cssContainingText("h3", "Caller Input")).first();
+  this.callerInputFirst = element.all(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.cssContainingText('h3', 'Caller Input')).first();
   this.callerInputGetDigits = element(by.cssContainingText('cs-checkbox', 'Convert digit input to text string value'));
   this.callerInputTextFirst = element.all(by.name('callerInput')).first();
   this.callerInputNameVariable = element(by.name('callerInputNameVariable'));
@@ -209,7 +209,7 @@ var AutoAttendantPage = function () {
       return el.isDisplayed();
     })
   .first()
-  .all(by.css("div.aa-flex-row"))
+  .all(by.css('div.aa-flex-row'))
   .last();
 
   this.newStepForm = element.all(by.css('div.aa-panel[name="newStepForm"]')).first();
@@ -225,7 +225,7 @@ var AutoAttendantPage = function () {
         return el.isDisplayed();
       })
       .first()
-      .all(by.css("div.aa-flex-row"))
+      .all(by.css('div.aa-flex-row'))
       .last()
       .all(by.tagName('li'))
       .get(0)
@@ -236,7 +236,7 @@ var AutoAttendantPage = function () {
         return el.isDisplayed();
       })
       .first()
-      .all(by.css("div.aa-flex-row"))
+      .all(by.css('div.aa-flex-row'))
       .last()
       .all(by.tagName('li'))
       .get(1)
@@ -247,7 +247,7 @@ var AutoAttendantPage = function () {
       return el.isDisplayed();
     })
     .first()
-    .all(by.css("div.aa-flex-row"))
+    .all(by.css('div.aa-flex-row'))
     .last()
     .all(by.tagName('li'))
     .get(2);
@@ -258,7 +258,7 @@ var AutoAttendantPage = function () {
       return el.isDisplayed();
     })
     .first()
-    .all(by.css("div.aa-flex-row"))
+    .all(by.css('div.aa-flex-row'))
     .last()
     .all(by.tagName('li'))
     .get(3);
@@ -269,7 +269,7 @@ var AutoAttendantPage = function () {
       return el.isDisplayed();
     })
     .first()
-    .all(by.css("div.aa-flex-row"))
+    .all(by.css('div.aa-flex-row'))
     .last()
     .all(by.tagName('li'))
     .get(4);
@@ -280,7 +280,7 @@ var AutoAttendantPage = function () {
       return el.isDisplayed();
     })
     .first()
-    .all(by.css("div.aa-flex-row"))
+    .all(by.css('div.aa-flex-row'))
     .last()
     .all(by.tagName('li'))
     .get(5);
@@ -291,7 +291,7 @@ var AutoAttendantPage = function () {
       return el.isDisplayed();
     })
     .first()
-    .all(by.css("div.aa-flex-row"))
+    .all(by.css('div.aa-flex-row'))
     .last()
     .all(by.tagName('li'))
     .get(6);
@@ -419,7 +419,7 @@ var AutoAttendantPage = function () {
   }
 
   function assertImportSuccess(hours, holidays) {
-    notifications.assertSuccess("Copied " + hours + " Open Hours and " + holidays + " Holidays Successfully");
+    notifications.assertSuccess('Copied ' + hours + ' Open Hours and ' + holidays + ' Holidays Successfully');
   }
 
   function assertCalendarUpdateSuccess(test) {
@@ -440,7 +440,6 @@ var AutoAttendantPage = function () {
       e.scrollIntoView();
     }, webel);
   }
-
 };
 
 module.exports = AutoAttendantPage;

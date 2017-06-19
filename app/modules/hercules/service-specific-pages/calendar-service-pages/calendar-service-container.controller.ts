@@ -4,10 +4,10 @@ import { Notification } from 'modules/core/notifications';
 export class CalendarServiceContainerController extends ExpresswayContainerController {
 
   public tabs: any = [{
-    title: this.$translate.instant('common.resources'),
+    title: 'common.resources',
     state: 'calendar-service.list',
   }, {
-    title: this.$translate.instant('common.settings'),
+    title: 'common.settings',
     state: 'calendar-service.settings',
   }];
 
@@ -36,7 +36,6 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
     hasPartnerRegistrationFeatureToggle,
     hasNodesViewFeatureToggle,
     Notification: Notification,
-    private $translate: ng.translate.ITranslateService,
     ServiceDescriptor,
     ServiceStateChecker,
     USSService,

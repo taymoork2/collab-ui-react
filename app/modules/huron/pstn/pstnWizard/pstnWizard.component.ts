@@ -26,16 +26,16 @@ export class PstnWizardComponent implements ng.IComponentOptions {
 export class PstnWizardCtrl implements ng.IComponentController {
   public tollFreeTitle: string;
   public emergencyAcknowledge: boolean = false;
-  public swivelNumbers: Array<string> = [];
+  public swivelNumbers: string[] = [];
   public showCarriers: boolean;
   public placeOrderLoad: boolean;
   public totalPortNumbers: number;
   public totalNewAdvancedOrder: number;
-  public newOrders: Array<IOrder>;
-  public advancedOrders: Array<IOrder>;
-  public swivelOrders: Array<IOrder>;
-  public newTollFreeOrders: Array<IOrder>;
-  public portOrders: Array<IOrder>;
+  public newOrders: IOrder[];
+  public advancedOrders: IOrder[];
+  public swivelOrders: IOrder[];
+  public newTollFreeOrders: IOrder[];
+  public portOrders: IOrder[];
   public PORTING_NUMBERS: string;
   public invalidCount: number = 0;
   public invalidSwivelCount: number = 0;
@@ -48,7 +48,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public loading: boolean;
   public isValid = false;
   public isTrial: boolean;
-  public orderCart: Array<IOrder> = [];
+  public orderCart: IOrder[] = [];
   public model: INumbersModel = {
     pstn: new NumberModel(),
     tollFree: new NumberModel(),
@@ -66,6 +66,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public dismiss: Function;
 
   private did: DirectInwardDialing = new DirectInwardDialing();
+  private i387FeatureToggle: boolean;
 
   /* @ngInject */
   constructor(private PstnModel: PstnModel,
@@ -78,6 +79,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private $translate: ng.translate.ITranslateService,
               private PstnWizardService: PstnWizardService,
               private PhoneNumberService: PhoneNumberService,
+              private FeatureToggleService,
               ) {
     this.contact = this.PstnWizardService.getContact();
     this.address = _.cloneDeep(PstnModel.getServiceAddress());
@@ -95,6 +97,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.PstnWizardService.init().then(() => this.enableCarriers = true);
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then((enabled) => {
+      this.i387FeatureToggle = enabled;
+    });
   }
 
   public getCapabilities(): void {
@@ -113,7 +118,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.PstnService.getCarrierTollFreeInventory(this.PstnModel.getProviderId())
       .then(response => {
         this.model.tollFree.areaCodeOptions = response.areaCodes;
-        let areaCodes = response.areaCodes.join(', ') + '.';
+        const areaCodes = response.areaCodes.join(', ') + '.';
         this.tollFreeTitle = this.$translate.instant('pstnSetup.tollFreeTitle', { areaCodes: areaCodes });
         this.model.tollFree.areaCode = null;
       })
@@ -121,7 +126,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public createToken(e): void {
-    let tokenNumber = e.attrs.label;
+    const tokenNumber = e.attrs.label;
     e.attrs.value = this.PhoneNumberService.getE164Format(tokenNumber);
     e.attrs.label = this.PhoneNumberService.getNationalFormat(tokenNumber);
   }
@@ -167,7 +172,15 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public goToSwivelNumbers(): void {
-    this.step = 5;
+    if (this.i387FeatureToggle) {
+      if (this.PstnModel.isEsaSigned()) {
+        this.step = 9;
+      } else {
+        this.step = 8;
+      }
+    } else {
+      this.step = 5;
+    }
   }
 
   public isSwivel(): boolean {
@@ -205,13 +218,16 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public previousStep(): void {
     // pre check
-    if (this.isSwivel() && this.step === 5) {
+    if (!this.i387FeatureToggle && this.isSwivel() && this.step === 5) {
+      this.step = 1;
+    } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 8) {
       this.step = 1;
     } else if (!this.isSwivel() && this.step === 6) {
       this.step -= 1;
     }
-    this.step -= 1;
-
+    if (this.step > 1) {
+      this.step -= 1;
+    }
     //post check
     if (this.step === 1) {
       this.showButtons = false;
@@ -230,7 +246,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         } else {
           this.PstnModel.setOrders(this.orderCart);
           this.step += 1;
-          let orders = this.PstnWizardService.initOrders();
+          const orders = this.PstnWizardService.initOrders();
           this.totalPortNumbers = orders.totalPortNumbers;
           this.totalNewAdvancedOrder = orders.totalNewAdvancedOrder;
         }
@@ -245,7 +261,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         } else {
           //set numbers for if they go back
           this.PstnModel.setNumbers(this.swivelNumbers);
-          let swivelOrder = this.PstnWizardService.setSwivelOrder(this.swivelNumbers);
+          const swivelOrder = this.PstnWizardService.setSwivelOrder(this.swivelNumbers);
           this.PstnModel.setOrders(swivelOrder);
         }
         break;
@@ -257,6 +273,29 @@ export class PstnWizardCtrl implements ng.IComponentController {
         });
         return;
       case 7:
+        this.dismissModal();
+        return;
+      case 8:
+        break;
+      case 9:
+        if (this.invalidSwivelCount) {
+          this.Notification.error('pstnSetup.invalidNumberPrompt');
+          return;
+        } else {
+            //set numbers for if they go back
+          this.PstnModel.setNumbers(this.swivelNumbers);
+          const swivelOrder = this.PstnWizardService.setSwivelOrder(this.swivelNumbers);
+          this.PstnModel.setOrders(swivelOrder);
+        }
+        break;
+      case 10:
+        this.placeOrderLoad = true;
+        this.PstnWizardService.finalizeImport().then(() => {
+          this.step = 11;
+          this.placeOrderLoad = false;
+        });
+        return;
+      case 11:
         this.dismissModal();
         return;
     }
@@ -283,6 +322,12 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 5:
         return this.PstnModel.isCustomerExists();
       case 7:
+        return true;
+      case 8:
+        return this.PstnModel.isCustomerExists();
+      case 9:
+        return this.PstnModel.isEsaSigned();
+      case 11:
         return true;
     }
     return false;
@@ -341,7 +386,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public initTokens(didList): void {
-    let tmpDids = didList || this.did.getList();
+    const tmpDids = didList || this.did.getList();
     // reset valid and list before setTokens
     this.validCount = 0;
     this.invalidCount = 0;
@@ -378,7 +423,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     return _.size(_.flatten(this.orderCart));
   }
 
-  public onSwivelChange(numbers: Array<string>, invalidCount: number): void {
+  public onSwivelChange(numbers: string[], invalidCount: number): void {
     this.swivelNumbers = numbers;
     this.invalidSwivelCount = invalidCount;
   }

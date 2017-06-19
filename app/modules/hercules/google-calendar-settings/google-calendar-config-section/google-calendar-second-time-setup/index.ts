@@ -1,4 +1,5 @@
 import { GoogleCalendarSecondTimeSetupComponent } from './google-calendar-second-time-setup.component';
+import featureToggle from 'modules/core/featureToggle';
 import './_google-calendar-second-time-setup.scss';
 
 export default angular
@@ -6,6 +7,7 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
+    featureToggle,
   ])
   .component('googleCalendarSecondTimeSetup', new GoogleCalendarSecondTimeSetupComponent())
   .name;

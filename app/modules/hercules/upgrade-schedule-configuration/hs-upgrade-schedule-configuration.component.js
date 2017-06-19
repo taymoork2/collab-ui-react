@@ -200,8 +200,8 @@
         })
         .map(function (zone) {
           return {
-            'label': labelForTimeZone(zone),
-            'value': zone,
+            label: labelForTimeZone(zone),
+            value: zone,
           };
         })
         .sort(function (a, b) {

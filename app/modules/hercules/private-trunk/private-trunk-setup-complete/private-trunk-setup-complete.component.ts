@@ -1,7 +1,7 @@
 
 export class PrivateTrunkSetupCompleteCtrl implements ng.IComponentController {
   public verifiedDomains: string;
-  public callSelection: Array<string>;
+  public callSelection: string[];
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,

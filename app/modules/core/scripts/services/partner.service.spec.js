@@ -184,10 +184,10 @@ describe('Partner Service -', function () {
       isAdvanceCareEnabled: true,
     });
     var activeList = _.filter(returnList, {
-      state: "ACTIVE",
+      state: 'ACTIVE',
     });
     var expiredList = _.filter(returnList, {
-      state: "EXPIRED",
+      state: 'EXPIRED',
     });
     // Five customers, three active, two expired
     expect(returnList.length).toBe(5);
@@ -364,10 +364,10 @@ describe('Partner Service -', function () {
 
     it('should return true by making isServiceNotLicensed return true', function () {
       var serviceObj = {
-        '1': 1,
-        '2': 2,
-        '3': 3,
-        '4': 4,
+        1: 1,
+        2: 2,
+        3: 3,
+        4: 4,
       };
       expect(PartnerService.isServiceManagedByCurrentPartner(serviceObj)).toBe(true);
     });
@@ -448,7 +448,6 @@ describe('Partner Service -', function () {
         var list = PartnerService.getTrialMeetingServices(licenses);
         expect(list.length).toBe(1);
       });
-
     });
 
     describe('parseLicensesAndOffers -', function () {
@@ -759,7 +758,6 @@ describe('Partner Service -', function () {
       it('should  createLicenseMapping with proper icons', function () {
         var result = PartnerService.helpers.createLicenseMapping();
         expect(result[Config.licenseTypes.COMMUNICATION].icon).toBe('icon-circle-call');
-
       });
 
       it('should  create FreeServicesMapping consisting of Messaging, Call, and Conferencing (CF) ', function () {
@@ -768,7 +766,6 @@ describe('Partner Service -', function () {
         expect(result[0].code).toBe(Config.offerCodes.MS);
         expect(result[1].code).toBe(Config.offerCodes.CF);
         expect(result[2].code).toBe(Config.offerCodes.CO);
-
       });
 
       it('should return TRUE from isDisplayableService for trial license if looking for trials', function () {
@@ -853,7 +850,6 @@ describe('Partner Service -', function () {
         var result = new PartnerService.helpers.LicensedService(licenseInfo, mapping);
         expect(result.icon).toBe('icon-circle-group');
         expect(result.qty).toBe(20);
-
       });
       it('should build a non meeting service given license mapping', function () {
         var mapping = PartnerService.helpers.createLicenseMapping();
@@ -864,7 +860,6 @@ describe('Partner Service -', function () {
         var result = new PartnerService.helpers.LicensedService(licenseInfo, mapping);
         expect(result.licenseType).toBe(Config.licenseTypes.MESSAGING);
         expect(result.qty).toBe(10);
-
       });
 
       it('should add a service if there is not already one with the same name', function () {
@@ -881,7 +876,6 @@ describe('Partner Service -', function () {
         }];
         PartnerService.helpers.addService(services, service);
         expect(services.length).toBe(3);
-
       });
 
       it('should  sum quantities if there is already service with the same name', function () {
@@ -1042,10 +1036,10 @@ describe('Partner Service -', function () {
     describe('isServiceNotLicensed', function () {
       it('should return true if "volume" property is undefined and the total number of properties is 4', function () {
         var unlicensedServiceObj = {
-          '1': 1,
-          '2': 2,
-          '3': 3,
-          '4': 4,
+          1: 1,
+          2: 2,
+          3: 3,
+          4: 4,
         };
         var result = PartnerService.helpers.isServiceNotLicensed(unlicensedServiceObj);
         expect(result).toBe(true);
@@ -1061,11 +1055,11 @@ describe('Partner Service -', function () {
 
       it('should return false if the total number of properties is not 4', function () {
         var licensedServiceObj = {
-          '1': 1,
-          '2': 2,
-          '3': 3,
-          '4': 4,
-          '5': 5,
+          1: 1,
+          2: 2,
+          3: 3,
+          4: 4,
+          5: 5,
         };
         var result = PartnerService.helpers.isServiceNotLicensed(licensedServiceObj);
         expect(result).toBe(false);

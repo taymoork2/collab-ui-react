@@ -13,7 +13,7 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
     buttonClass: 'btn btn--primary',
   };
 
-  private buttons: Array<ICardButton> = [{
+  private buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.hybridCalendar.buttons.resources',
     routerState: 'calendar-service.list',
     buttonClass: 'btn-link',
@@ -23,7 +23,7 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.active) {
       return this.buttons;
     }

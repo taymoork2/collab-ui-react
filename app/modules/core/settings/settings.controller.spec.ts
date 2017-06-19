@@ -1,5 +1,3 @@
-/// <reference path="settings.controller.ts"/>
-
 import testModule from './index';
 
 describe('SettingsCtrl', function () {
@@ -129,10 +127,10 @@ describe('SettingsCtrl', function () {
   });
 
   describe('with save\cancel buttons', function () {
-    let ACTIVATE_SAVE_BUTTONS: string = 'settings-control-activate-footer';
-    let REMOVE_SAVE_BUTTONS: string = 'settings-control-remove-footer';
-    let SAVE_BROADCAST: string = 'settings-control-save';
-    let CANCEL_BROADCAST: string = 'settings-control-cancel';
+    const ACTIVATE_SAVE_BUTTONS: string = 'settings-control-activate-footer';
+    const REMOVE_SAVE_BUTTONS: string = 'settings-control-remove-footer';
+    const SAVE_BROADCAST: string = 'settings-control-save';
+    const CANCEL_BROADCAST: string = 'settings-control-cancel';
 
     beforeEach(function () {
       spyOn(this.$scope, '$emit').and.callThrough();

@@ -1,17 +1,30 @@
 @import '~collab-ui/scss/settings/colors';
 
-.cmc-side-panel-section {
+.cmc-side-panel-details-section {
+  .icon.error {
+    color: $color-negative-base;
+  }
+  .icon.active {
+    color: $color-cta-base;
+  }
   .status-error {
     color: $color-negative-base;
     margin-left: 2.5rem;
   }
+  .section-name {
+    padding-left: 0px;
+  }
 }
 
 .cmc {
-  .user-details {
-    .cmc-invalid {
-      color: $color-negative-base;
-    }
+  .success {
+    color: $color-cta-base;
+  }
+  .active {
+    color: $color-cta-base;
+  }
+  .error {
+    color: $color-negative-base;
   }
   .settings {
     background-color: $brand-white;
@@ -32,6 +45,13 @@
   }
   .status-page {
     background-color: $brand-white;
+    .sub-header {
+      float: right;
+      margin: 1.5rem;
+    }
+    .search-filter {
+      margin: 0.5rem 2rem;
+    }
     .org-status {
       padding-left: 1rem;
       padding-top: 2rem;
@@ -47,15 +67,8 @@
         }
       }
       .state-body {
-        //padding: 1.25rem;
         background: $gray-dark-1;
         color: $brand-white;
-        .success {
-          color: $color-cta-base;
-        }
-        .error {
-          color: $color-negative-base;
-        }
         .icon-circle-globe {
           font-size: 2rem;
           vertical-align: middle;
@@ -79,7 +92,7 @@
       padding-bottom: 2rem;
     }
     .user-status {
-      padding-left: 2rem;
+      margin-left: 1rem;
       .user-status-grid {
         background-color: $brand-white;
         vertical-align: middle;

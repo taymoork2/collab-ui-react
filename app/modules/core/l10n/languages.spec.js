@@ -3,7 +3,6 @@
 var testModule = require('./index').default;
 
 describe('Languages', function () {
-
   beforeEach(function init() {
     this.$window = {
       navigator: {},
@@ -111,7 +110,6 @@ describe('Languages', function () {
         this.$window.navigator.languages = ['pt'];
         expect(this.languagesProvider.getPreferredLanguage()).toBe('pt_BR');
       });
-
     });
 
     it('should have a default english preferred language', function () {

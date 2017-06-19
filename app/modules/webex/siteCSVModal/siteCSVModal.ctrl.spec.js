@@ -29,7 +29,6 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     _WebExSiteRowService_,
     _Notification_
   ) {
-
     $q = _$q_;
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
@@ -42,11 +41,11 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     deferredCSVImport = $q.defer();
     deferredCSVExport = $q.defer();
 
-    fakeCSVImportFileContents = "First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Call Service Connect,Meeting 25 Party,Spark Message,cisjsite031.webex.com - WebEx Meeting Center,sjsite04.webex.com - WebEx Meeting Center,sjsite14.webex.com - WebEx Collaboration Meeting Room,sjsite14.webex.com - WebEx Meeting Center,t30citestprov9.webex.com - WebEx Meeting Center John,Doe,John Doe,johndoe@example.com,true,true,true,true,true,true,true,true,true,true Jane,Doe,Jane Doe,janedoe@example.com,false,false,false,false,false,false,false,false,false,false";
+    fakeCSVImportFileContents = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Call Service Connect,Meeting 25 Party,Spark Message,cisjsite031.webex.com - WebEx Meeting Center,sjsite04.webex.com - WebEx Meeting Center,sjsite14.webex.com - WebEx Collaboration Meeting Room,sjsite14.webex.com - WebEx Meeting Center,t30citestprov9.webex.com - WebEx Meeting Center John,Doe,John Doe,johndoe@example.com,true,true,true,true,true,true,true,true,true,true Jane,Doe,Jane Doe,janedoe@example.com,false,false,false,false,false,false,false,false,false,false';
 
     fakeSiteRow = {
       license: {
-        siteUrl: "fake.webex.com",
+        siteUrl: 'fake.webex.com',
       },
 
       csvMock: {
@@ -179,8 +178,8 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     expect(WebExApiGatewayService.csvImport).toHaveBeenCalled();
 
     deferredCSVImport.reject({
-      "errorCode": "060100",
-      "errorMessage": "Your request has been prevented because a task is now running. Try again later.",
+      errorCode: '060100',
+      errorMessage: 'Your request has been prevented because a task is now running. Try again later.',
     });
 
     $rootScope.$apply();
@@ -189,7 +188,6 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     expect(WebExSiteRowService.updateCSVStatusInRow).toHaveBeenCalled();
     expect($scope.$close).toHaveBeenCalled();
   });
-
 }); // describe()
 
 describe('SiteCSVModalCtrl read only', function () {
@@ -217,7 +215,6 @@ describe('SiteCSVModalCtrl read only', function () {
     _WebExSiteRowService_,
     _Notification_
   ) {
-
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
 
@@ -225,11 +222,11 @@ describe('SiteCSVModalCtrl read only', function () {
 
     deferredCSVImport = _$q_.defer();
 
-    fakeCSVImportFileContents = "contents";
+    fakeCSVImportFileContents = 'contents';
 
     fakeSiteRow = {
       license: {
-        siteUrl: "fake.webex.com",
+        siteUrl: 'fake.webex.com',
       },
     };
 
@@ -246,7 +243,7 @@ describe('SiteCSVModalCtrl read only', function () {
     spyOn(_WebExApiGatewayService_, 'csvImport').and.returnValue(deferredCSVImport.promise);
     spyOn(_WebExSiteRowService_, 'updateCSVStatusInRow');
     spyOn(_Notification_, 'notifyReadOnly');
-    spyOn(_Authinfo_, "isReadOnlyAdmin").and.returnValue(true);
+    spyOn(_Authinfo_, 'isReadOnlyAdmin').and.returnValue(true);
   })); // beforeEach(inject())
 
   it('shows orange toast for import in read only mode', function () {
@@ -254,8 +251,8 @@ describe('SiteCSVModalCtrl read only', function () {
     SiteCSVModalCtrl.startImport();
 
     deferredCSVImport.reject({
-      "errorCode": "000001",
-      "errorMessage": "Insufficient privileges.",
+      errorCode: '000001',
+      errorMessage: 'Insufficient privileges.',
     });
 
     $rootScope.$apply();

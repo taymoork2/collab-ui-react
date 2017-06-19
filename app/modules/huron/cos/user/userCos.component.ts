@@ -61,9 +61,9 @@ class UserClassOfService implements ng.IComponentController {
   }
 
   private unifyRestrictions(cosRestrictions) {
-    let customerCos = _.get(cosRestrictions, 'customer', []);
+    const customerCos = _.get(cosRestrictions, 'customer', []);
     let memberCos = [];
-    let unifiedRestrictions: Array<IRestriction> = [];
+    const unifiedRestrictions: IRestriction[] = [];
 
     if (_.has(cosRestrictions, 'place')) {
       memberCos = _.get(cosRestrictions, 'place', []);
@@ -73,7 +73,7 @@ class UserClassOfService implements ng.IComponentController {
 
     //create union of two collections with user taking priority
     _.forEach(customerCos, (customerRestriction: IRestriction) => {
-      let cos = _.find(memberCos, (memberRestriction: IRestriction) => {
+      const cos = _.find(memberCos, (memberRestriction: IRestriction) => {
         return memberRestriction.restriction === customerRestriction.restriction;
       });
 
@@ -82,7 +82,7 @@ class UserClassOfService implements ng.IComponentController {
         options: [],
       };
 
-      let customerDefaultOption = this.$translate.instant('serviceSetupModal.cos.orgSetting', {
+      const customerDefaultOption = this.$translate.instant('serviceSetupModal.cos.orgSetting', {
         state: this.getSetting(customerRestriction.blocked),
       });
 
@@ -162,7 +162,7 @@ class UserClassOfService implements ng.IComponentController {
 
   public save(): void {
     this.saveInProcess = true;
-    let promises: any = [];
+    const promises: any = [];
     _.forEach(this.changedRestrictions, (restriction) => {
       //if has uuid, it is user specific
       if (restriction.uuid) {
@@ -228,7 +228,7 @@ class UserClassOfService implements ng.IComponentController {
   }
 
   public changeRestriction(newRestrictionChange: IRestriction): void {
-    let indexnumber = _.findIndex(this.changedRestrictions, (changedRestriction) => {
+    const indexnumber = _.findIndex(this.changedRestrictions, (changedRestriction) => {
       return _.get(changedRestriction, 'restriction', '') === newRestrictionChange.restriction;
     });
 

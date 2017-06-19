@@ -184,7 +184,6 @@
         order: 22,
       }];
       return freeServices;
-
     }
 
     function _LicensedService(licenseInfo, mapping) {
@@ -194,12 +193,15 @@
         service = (licenseInfo.offerName) ? mapping[licenseInfo.offerName] : mapping[Config.offerCodes.CF];
       } else {
         service = mapping[licenseInfo.licenseType] || mapping[licenseInfo.offerName];
+        if (!service) {
+          // TODO: remove after identifying unhandled offers
+          throw new Error('Unable to map licenseType: ' + licenseInfo.licenseType + ', offerName: ' + licenseInfo.offerName);
+        }
         service.licenseType = licenseInfo.licenseType;
       }
 
       _.assign(this, service);
       this.qty = licenseInfo.volume || 0;
-
     }
 
     function _addService(services, service) {
@@ -586,7 +588,6 @@
         setServiceSortOrder(result);
         return result;
       }
-
     }
 
     function exportCSV(isCareEnabled) {
@@ -841,7 +842,6 @@
     }
 
     function getFreeOrActiveServices(customer, options) {
-
       var paidServices = [];
       var meetingServices = [];
       var roomDevices = [];
@@ -962,10 +962,9 @@
     return $resource(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/:userId', {
       userId: '@userId',
     }, {
-      'update': {
+      update: {
         method: 'PATCH',
       },
     });
   }
-
 })();

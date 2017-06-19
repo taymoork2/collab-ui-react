@@ -102,7 +102,6 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
   });
 
   describe('Entitled to both Aware and Connect', function () {
-
     beforeEach(function () {
       USSService.getStatusesForUser.and.returnValue($q.resolve([{
         userId: '1234',

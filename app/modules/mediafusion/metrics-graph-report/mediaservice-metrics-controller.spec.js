@@ -53,13 +53,13 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     Config = _Config_;
 
     spyOn(MetricsGraphService, 'setCallVolumeGraph').and.returnValue({
-      'dataProvider': callVolumeData,
+      dataProvider: callVolumeData,
     });
     spyOn(MetricsGraphService, 'setAvailabilityGraph').and.returnValue({
-      'dataProvider': clusteravailabilityData,
+      dataProvider: clusteravailabilityData,
     });
     spyOn(MetricsGraphService, 'setUtilizationGraph').and.returnValue({
-      'dataProvider': dummydata,
+      dataProvider: dummydata,
     });
     httpMock.when('GET', /^\w+.*/).respond({});
     spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.resolve(callVolumeGraphData));
@@ -94,7 +94,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     it('should be created successfully and all expected calls completed', function () {
       expect(controller).toBeDefined();
       $timeout(function () {
-
         expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0]);
         expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0]);
         expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0]);
@@ -103,7 +102,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         expect(MetricsGraphService.setCallVolumeGraph).toHaveBeenCalled();
         expect(MetricsGraphService.setAvailabilityGraph).toHaveBeenCalled();
         expect(MetricsGraphService.setUtilizationGraph).toHaveBeenCalled();
-
       }, 30);
     });
   });
@@ -124,7 +122,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[3], allClusters);
       expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[3], allClusters);
       //expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[1], 'All');
-
     });
 
     it('All graphs should update on cluster filter changes', function () {
@@ -134,7 +131,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       //expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
-
     });
     it('should call getClusterAvailabilityData on time filter changes', function () {
       controller.timeSelected = timeOptions[2];
@@ -152,10 +148,10 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       controller.timeSelected = timeOptions[0];
       controller.clusterId = allClusters;
       var response = {
-        "data": {
-          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-          "callsOnPremise": 8,
-          "callsOverflow": 4,
+        data: {
+          orgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
+          callsOnPremise: 8,
+          callsOverflow: 4,
         },
       };
 
@@ -167,7 +163,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(controller.total).toBe(12);
 
       expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], allClusters);
-
     });
 
     it('should return total calls count when  onprem value only is there', function () {
@@ -175,9 +170,9 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'All Clusters';
       var response = {
-        "data": {
-          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-          "callsOnPremise": 23,
+        data: {
+          orgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
+          callsOnPremise: 23,
         },
       };
 
@@ -187,7 +182,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(controller.onprem).toBe(23);
       expect(controller.cloud).toBe('N/A');
       expect(controller.total).toBe(23);
-
     });
 
     it('should return total calls count when  cloud value only is there', function () {
@@ -195,9 +189,9 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'All Clusters';
       var response = {
-        "data": {
-          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-          "callsOverflow": 14,
+        data: {
+          orgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
+          callsOverflow: 14,
         },
       };
 
@@ -207,7 +201,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(controller.onprem).toBe('N/A');
       expect(controller.cloud).toBe(14);
       expect(controller.total).toBe(14);
-
     });
 
     it('should return total calls as 0 when zero values are present', function () {
@@ -215,10 +208,10 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'All Clusters';
       var response = {
-        "data": {
-          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-          "callsOnPremise": 0,
-          "callsOverflow": 0,
+        data: {
+          orgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
+          callsOnPremise: 0,
+          callsOverflow: 0,
         },
       };
 
@@ -230,7 +223,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(controller.total).toBe(0);
 
       expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], 'All Clusters');
-
     });
 
     it('should return total calls count when  cloud value only is there for a host', function () {
@@ -238,10 +230,10 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'MFA';
       var response = {
-        "data": {
-          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-          "clusterId": "MFA",
-          "callsRedirect": 14,
+        data: {
+          orgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
+          clusterId: 'MFA',
+          callsRedirect: 14,
         },
       };
 
@@ -251,7 +243,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(controller.onprem).toBe('N/A');
       expect(controller.cloud).toBe(14);
       expect(controller.total).toBe(14);
-
     });
 
     it('should return N/A as there is no response data with calls', function () {
@@ -259,9 +250,9 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'MFA';
       var response = {
-        "data": {
-          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-          "clusterId": "MFA",
+        data: {
+          orgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
+          clusterId: 'MFA',
         },
       };
 
@@ -271,7 +262,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(controller.onprem).toBe('N/A');
       expect(controller.cloud).toBe('N/A');
       expect(controller.total).toBe('N/A');
-
     });
   });
 

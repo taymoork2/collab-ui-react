@@ -67,8 +67,8 @@
         /*
          * Color from the gradient.
          */
-        ata.selectedColor = "#049FD9";
-        ata.unselectedColor = "#EBEBEC";
+        ata.selectedColor = '#049FD9';
+        ata.unselectedColor = '#EBEBEC';
 
         /*
          * Reset values.
@@ -93,7 +93,6 @@
             $modalInstance.close();
             Notification.success('ataSettings.saved');
           });
-
         };
       }
     )

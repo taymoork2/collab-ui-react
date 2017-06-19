@@ -88,7 +88,6 @@
     }
 
     function init() {
-
       vm.isCareEnabled = Authinfo.isCare();
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
@@ -277,6 +276,5 @@
       vm.trialDaysRemaining = daysLeft < 0 ? 0 : daysLeft;
       vm.trialUsedPercentage = Math.round((daysUsed / vm.trial.trialPeriod) * 100);
     }
-
   }
 })();

@@ -191,7 +191,6 @@ describe('Service: AAMediaUploadService', function () {
     }));
 
     it('should delete out the resources on aa close if not saved', function () {
-
       var resources = AAMediaUploadService.getResources('someId');
       var keeper = ceMenuModelService.newCeActionEntry('say massage', '');
       keeper.deleteUrl = 'keeper';
@@ -208,7 +207,6 @@ describe('Service: AAMediaUploadService', function () {
       expect($http.delete).toHaveBeenCalledWith('http:should not be here');
     });
     it('should delete out the resources on aa save if are marked active as false', function () {
-
       var resources = AAMediaUploadService.getResources('someId');
 
       var nokeeper = ceMenuModelService.newCeActionEntry('say massage', '');
@@ -231,7 +229,6 @@ describe('Service: AAMediaUploadService', function () {
       AAMediaUploadService.notifyAsSaved('someId', true);
 
       expect(resources.saved).toEqual(true);
-
     });
     it('should moved active to true', function () {
       var resources = AAMediaUploadService.getResources('someId');
@@ -239,7 +236,6 @@ describe('Service: AAMediaUploadService', function () {
       AAMediaUploadService.notifyAsActive('someId', true);
 
       expect(resources.active).toEqual(true);
-
     });
   });
 

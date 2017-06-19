@@ -22,7 +22,7 @@ class GmTdHistories implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
   ) {
-    let currentTD = this.gemService.getStorage('currentTelephonyDomain');
+    const currentTD = this.gemService.getStorage('currentTelephonyDomain');
     this.domainName = currentTD.domainName;
     this.customerId = currentTD.customerId;
     this.ccaDomainId = currentTD.ccaDomainId;
@@ -72,7 +72,7 @@ class GmTdHistories implements ng.IComponentController {
         });
 
         this.model = _.map(data, (item) => {
-          let formattedItem = _.assignIn({}, item, {
+          const formattedItem = _.assignIn({}, item, {
             action: _.upperFirst(item.action),
           });
 

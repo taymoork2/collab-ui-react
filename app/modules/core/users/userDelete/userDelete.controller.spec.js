@@ -115,7 +115,6 @@ describe('Controller: UserDeleteCtrl', function () {
       it('should have closed the modal', function () {
         expect($scope.$close).toHaveBeenCalled();
       });
-
     });
 
     describe('error delete', function () {
@@ -144,6 +143,5 @@ describe('Controller: UserDeleteCtrl', function () {
         expect($scope.$close).not.toHaveBeenCalled();
       });
     });
-
   });
 });

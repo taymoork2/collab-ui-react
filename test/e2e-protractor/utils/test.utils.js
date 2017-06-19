@@ -42,7 +42,18 @@ exports.resolvePath = function (filePath) {
 };
 
 exports.writeFile = function (file, text) {
-  return fs.writeFileSync(file, text);
+  return protractor.promise.controlFlow().execute(function () {
+    var defer = protractor.promise.defer();
+    fs.writeFile(file, text, function (err) {
+      if (err) {
+        console.log('error in writeFile: ', err);
+        defer.reject(err);
+      } else {
+        defer.fulfill();
+      }
+    });
+    return defer.promise;
+  });
 };
 
 exports.deleteFile = function (file) {
@@ -100,9 +111,9 @@ exports.getToken = function () {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     auth: {
-      'user': config.oauthClientRegistration.id,
-      'pass': config.oauthClientRegistration.secret,
-      'sendImmediately': true,
+      user: config.oauthClientRegistration.id,
+      pass: config.oauthClientRegistration.secret,
+      sendImmediately: true,
     },
     body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope,
   };
@@ -161,7 +172,6 @@ exports.waitForPresence = function (elem, timeout) {
     return EC.presenceOf(elem)().thenCatch(function () {
       // handle a possible stale element
       return false;
-
     });
   }
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
@@ -231,7 +241,7 @@ exports.expectIsDisplayed = function (elem, timeout) {
 
 exports.expectIsReadOnly = function (elem) {
   this.wait(elem).then(function () {
-    expect(elem.getAttribute("readonly")).toBeTruthy();
+    expect(elem.getAttribute('readonly')).toBeTruthy();
   });
 };
 
@@ -266,7 +276,6 @@ exports.expectIsNotPresent = function (elem) {
 };
 
 exports.expectIsNotDisplayed = function (elem, timeout) {
-
   if (elem instanceof protractor.ElementArrayFinder) {
     return browser.wait(function () {
       log('Waiting for element array not to be displayed: ' + elem.locator());
@@ -289,19 +298,21 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
 
-exports.expectAllNotDisplayed = this.expectIsNotDisplayed;
-exports.waitIsNotDisplayed = this.expectIsNotDisplayed;
-exports.waitIsDisplayed = this.expectIsDisplayed;
+exports.expectAllNotDisplayed = exports.expectIsNotDisplayed;
+exports.waitIsNotDisplayed = exports.expectIsNotDisplayed;
+exports.waitIsDisplayed = exports.expectIsDisplayed;
 
-exports.expectTextToBeSet = function (elem, text, timeout) {
-  browser.wait(function () {
-    return elem.getText().then(function (result) {
-      log('Waiting for element (' + elem.locator() + ').getText() to contain "' + text + '" currently "' + result + '"');
-      return result !== undefined && result !== null && result.indexOf(text) > -1;
-    }, function () {
-      return false;
-    });
-  }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
+exports.waitForText = function (elem, text, timeout) {
+  return exports.wait(elem, timeout).then(function () {
+    return browser.wait(function () {
+      return elem.getText().then(function (result) {
+        log('Waiting for element (' + elem.locator() + ').getText() to contain "' + text + '" currently "' + result + '"');
+        return result !== undefined && result !== null && result.indexOf(text) > -1;
+      }, function () {
+        return false;
+      });
+    }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
+  });
 };
 
 exports.waitForAttribute = function (elem, attr, value) {
@@ -472,24 +483,9 @@ exports.sendKeysUpArrow = function (element, howMany) {
 };
 
 exports.fileSendKeys = function (elem, value) {
-  var logMsg = 'Waiting for file input (' + elem.locator() + ') to set value: ' + value;
-  log(logMsg);
-  this.waitForPresence(elem).then(function () {
-    // sometimes remote webdriver isn't sending file with remote mapped filesystem
-    // let's brute force retries in the promise control flow and check errors
-    return browser.wait(function () {
-      return elem.sendKeys(value)
-        .then(function () {
-          return true;
-        }, function (e) {
-          if (e && e.stack) {
-            log(e.stack);
-          } else {
-            log(e);
-          }
-          return false;
-        });
-    }, TIMEOUT, logMsg);
+  return this.waitForPresence(elem).then(function () {
+    log('Send file keys to element: ' + elem.locator() + ' ' + value);
+    return elem.sendKeys(value);
   });
 };
 
@@ -674,9 +670,9 @@ exports.formatPhoneNumbers = function (value) {
   value = value.replace(/[^0-9]/g, '');
   var vLength = value.length;
   if (vLength === 10) {
-    value = value.replace(/(\d{3})(\d{3})(\d{4})/, "1 ($1) $2-$3");
+    value = value.replace(/(\d{3})(\d{3})(\d{4})/, '1 ($1) $2-$3');
   } else if (vLength === 11) {
-    value = value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4");
+    value = value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4');
   }
   return value;
 };
@@ -752,7 +748,6 @@ exports.getUserWithDn = function (name) {
   this.click(users.addUsersField);
   this.sendKeys(users.addUsersField, name + protractor.Key.ENTER);
   this.click(users.nextButton);
-
 };
 exports.loginToOnboardUsers = function (loginName, userName) {
   login.login(loginName, '#/users');
@@ -818,7 +813,6 @@ exports.quickDeleteUser = function (bFirst, name) {
     log('user is not preset');
     return false;
   });
-
 };
 
 exports.waitUntilElemIsPresent = function (elem, timeout) {

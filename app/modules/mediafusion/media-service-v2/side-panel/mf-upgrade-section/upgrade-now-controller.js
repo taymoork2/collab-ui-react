@@ -25,10 +25,8 @@
     };
 
     vm.close = $modalInstance.close;
-
   }
   angular
     .module('Mediafusion')
     .controller('UpgradeNowControllerV2', UpgradeNowControllerV2);
-
 }());

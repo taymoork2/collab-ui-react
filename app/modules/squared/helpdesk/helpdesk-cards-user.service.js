@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function HelpdeskCardsUserService(Config, LicenseService) {
-
     function getMessageCardForUser(user) {
       var messageCard = {
         entitled: false,

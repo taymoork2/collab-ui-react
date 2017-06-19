@@ -79,7 +79,7 @@ describe('Component: gmTelephonyDomains', () => {
 
   describe('$onInit', () => {
     it('should render ui-grid from gridOptions', function () {
-      let mockData = this.preData.common;
+      const mockData = this.preData.common;
       mockData.content.data.body = this.telephonyDomains;
       this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.resolve(mockData));
       initComponent.call(this);
@@ -94,7 +94,7 @@ describe('Component: gmTelephonyDomains', () => {
     });
 
     it('should notify in message for non 0 error returnCode', function() {
-      let mockData = this.preData.common;
+      const mockData = this.preData.common;
       mockData.content.data.returnCode = 100;
       this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.resolve(mockData));
       initComponent.call(this);
@@ -112,7 +112,7 @@ describe('Component: gmTelephonyDomains', () => {
     });
 
     it('should call $state.go when show TD detail', function () {
-      let item = {
+      const item = {
         ccaDomainId: 'ccaDomainId',
         domainName: 'domainName',
       };
@@ -124,7 +124,7 @@ describe('Component: gmTelephonyDomains', () => {
 
   describe('filter', () => {
     it('should filter for search', function() {
-      let mockData = this.preData.common;
+      const mockData = this.preData.common;
       mockData.content.data.returnCode = 0;
       mockData.content.data.body = this.telephonyDomains;
       this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.resolve(mockData));
@@ -139,7 +139,7 @@ describe('Component: gmTelephonyDomains', () => {
   describe('export telephony Domains list', () => {
     it('should show notification when export TD list successfully', function() {
       initComponent.call(this);
-      let mockData = this.preData.common;
+      const mockData = this.preData.common;
 
       mockData.content.data.body = this.telephonyDomains;
       this.TelephonyDomainService.telephonyDomainsExportCSV.and.returnValue(this.$q.resolve(mockData));

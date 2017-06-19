@@ -7,7 +7,7 @@
     vm.step = '1';
     vm.checkboxModel = false;
     vm.hadError = false;
-    vm.serviceId = "squared-fusion-media";
+    vm.serviceId = 'squared-fusion-media';
     vm.clusters = ClusterService.getClustersByConnectorType('mf_mgmt');
     vm.clusterNames = _.map(vm.clusters, 'name');
     vm.clusterIds = _.map(vm.clusters, 'id');
@@ -37,6 +37,7 @@
 
           MediaServiceActivationV2.disableOrpheusForMediaFusion();
           MediaServiceActivationV2.deactivateHybridMedia();
+          MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
           $state.go('overview');
           Notification.success('mediaFusion.deactivate.success');
         } else {
@@ -56,7 +57,6 @@
       });
       return loopPromises;
     }
-
   }
 
   angular

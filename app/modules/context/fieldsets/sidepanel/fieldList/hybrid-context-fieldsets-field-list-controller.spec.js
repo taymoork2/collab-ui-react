@@ -1,7 +1,6 @@
 'use strict';
 
 describe('ContextFieldsetsSidepanelFieldListCtrl', function () {
-
   var $controller, controller, $scope;
 
   beforeEach(angular.mock.module('Core'));
@@ -32,19 +31,19 @@ describe('ContextFieldsetsSidepanelFieldListCtrl', function () {
     initController(
       [
         {
-          'id': 'AAA_TEST_FIELD',
-          'dataType': 'string',
-          'lastUpdated': '2017-02-02T17:12:33.167Z',
+          id: 'AAA_TEST_FIELD',
+          dataType: 'string',
+          lastUpdated: '2017-02-02T17:12:33.167Z',
         },
         {
-          'id': 'AAA_TEST_FIELD4',
-          'dataType': 'string',
-          'lastUpdated': '2017-02-02T21:22:35.106Z',
+          id: 'AAA_TEST_FIELD4',
+          dataType: 'string',
+          lastUpdated: '2017-02-02T21:22:35.106Z',
         },
         {
-          'id': 'AAA_Agent_ID',
-          'dataType': 'string',
-          'lastUpdated': '2017-01-23T16:48:50.021Z',
+          id: 'AAA_Agent_ID',
+          dataType: 'string',
+          lastUpdated: '2017-01-23T16:48:50.021Z',
         },
       ]
     );

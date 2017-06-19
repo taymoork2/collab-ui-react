@@ -3,7 +3,7 @@ import { L2SipService } from './l2sip-service';
 describe('L2SIP Service', () => {
 
   let service: L2SipService;
-  let sipDestination = 'manunited.example.org';
+  const sipDestination = 'manunited.example.org';
   let validateTls: boolean;
   let $httpBackend;
 

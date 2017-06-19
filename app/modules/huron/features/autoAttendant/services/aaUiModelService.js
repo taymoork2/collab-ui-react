@@ -6,7 +6,6 @@
     .factory('AAUiModelService', AAUiModelService);
 
   function AAUiModelService() {
-
     var model = {};
 
     var service = {

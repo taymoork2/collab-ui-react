@@ -47,6 +47,13 @@
     border-style: solid;
     border-color: $color-primary-base;
   }
+
+  .icon-extension-mobility {
+    font-size: 3.5rem;
+    color: $gray-dark;
+    align-self: center;
+    margin-top: 20px;
+  }
 }
 
 .pstn-provider-logo {
@@ -343,6 +350,10 @@
       flex: 1;
       display: flex;
       flex-direction: row;
+    }
+
+    .swivel-package-details {
+      margin: auto;
     }
 
     .package-detail-label,

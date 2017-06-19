@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Directive: ShowReadOnly', function () {
-
   var compile, scope, directiveElem, Authinfo, translate;
 
   afterEach(function () {
@@ -36,5 +35,4 @@ describe('Directive: ShowReadOnly', function () {
     expect(divElement).toBeDefined();
     expect(divElement.text()).toEqual(translate.instant('readOnlyModal.banner'));
   });
-
 });

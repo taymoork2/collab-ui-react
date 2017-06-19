@@ -28,7 +28,7 @@ export class GraphService {
   ) {}
 
   // Active User Graph functions
-  public getActiveUsersGraph(data: Array<IActiveUserData>, chart) {
+  public getActiveUsersGraph(data: IActiveUserData[], chart) {
     if (data && data.length > 0 && chart) {
       chart.startDuration = 1;
       if (!data[0].balloon) {
@@ -44,12 +44,12 @@ export class GraphService {
     return chart;
   }
 
-  private createActiveUsersGraph(data: Array<IActiveUserData>) {
-    let valueAxes = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
+  private createActiveUsersGraph(data: IActiveUserData[]) {
+    const valueAxes = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].integersOnly = true;
     valueAxes[0].minimum = 0;
 
-    let catAxis = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
+    const catAxis = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
     catAxis.gridPosition = this.CommonGraphService.START;
 
     let startDuration = 1;
@@ -57,7 +57,7 @@ export class GraphService {
       startDuration = 0;
     }
 
-    let chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.activeUserGraphs(data), this.CommonGraphService.DATE, catAxis);
+    const chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.activeUserGraphs(data), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
     chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
     chartData.legend.labelText = '[[' + this.CommonGraphService.TITLE + ']]';
@@ -65,7 +65,7 @@ export class GraphService {
     return AmCharts.makeChart(this.ACTIVE_USERS_DIV, chartData);
   }
 
-  private activeUserGraphs(data: Array<IActiveUserData>) {
+  private activeUserGraphs(data: IActiveUserData[]) {
     const balloonText = '<span class="graph-text">' + this.$translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + this.$translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
     const values = ['totalRegisteredUsers', 'activeUsers'];
     const titles = [this.$translate.instant('activeUsers.users'), this.$translate.instant('activeUsers.activeUsers')];
@@ -73,7 +73,7 @@ export class GraphService {
     if (!data[0].balloon) {
       colors = [this.chartColors.grayLightFour, this.chartColors.grayLightThree];
     }
-    let graphs: Array<any> = [];
+    const graphs: any[] = [];
 
     _.forEach(values, (value, index) => {
       graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN));
@@ -91,7 +91,7 @@ export class GraphService {
   }
 
   // Media Quality Graph functions
-  public getMediaQualityGraph(data: Array<IMediaQualityData>, chart) {
+  public getMediaQualityGraph(data: IMediaQualityData[], chart) {
     if (data && data.length > 0 && chart) {
       chart.startDuration = 1;
       if (!data[0].balloon) {
@@ -107,11 +107,11 @@ export class GraphService {
     return chart;
   }
 
-  private createMediaQualityGraph(data: Array<IMediaQualityData>) {
-    let catAxis = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
+  private createMediaQualityGraph(data: IMediaQualityData[]) {
+    const catAxis = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
     catAxis.gridPosition = this.CommonGraphService.START;
 
-    let valueAxes = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
+    const valueAxes = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].totalColor = this.chartColors.brandWhite;
     valueAxes[0].integersOnly = true;
     valueAxes[0].minimum = 0;
@@ -122,7 +122,7 @@ export class GraphService {
       startDuration = 0;
     }
 
-    let chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.mediaQualityGraphs(data), this.CommonGraphService.DATE, catAxis);
+    const chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.mediaQualityGraphs(data), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
     chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
     chartData.legend.reversedOrder = true;
@@ -130,7 +130,7 @@ export class GraphService {
     return AmCharts.makeChart(this.MEDIA_QUALITY_DIV, chartData);
   }
 
-  private mediaQualityGraphs(data: Array<IMediaQualityData>) {
+  private mediaQualityGraphs(data: IMediaQualityData[]) {
     const totalCalls = this.$translate.instant('mediaQuality.totalCalls');
     const values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
     const titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
@@ -138,10 +138,10 @@ export class GraphService {
     if (!data[0].balloon) {
       colors = [this.chartColors.grayLightFour, this.chartColors.grayLightThree, this.chartColors.grayLightTwo];
     }
-    let graphs: Array<any> = [];
+    const graphs: any[] = [];
 
     for (let i = 0; i < values.length; i++) {
-      let title = this.$translate.instant(titles[i]);
+      const title = this.$translate.instant(titles[i]);
 
       graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN));
       graphs[i].title = this.$translate.instant(titles[i]);
@@ -158,7 +158,7 @@ export class GraphService {
   }
 
   // Active User Population Graph functions
-  public getActiveUserPopulationGraph(data: Array<IPopulationData>, chart) {
+  public getActiveUserPopulationGraph(data: IPopulationData[], chart) {
     if (data && data.length > 0 && chart) {
       chart.startDuration = 1;
       if (!data[0].balloon) {
@@ -166,7 +166,7 @@ export class GraphService {
       }
 
       chart.valueAxes[0].maximum = 100;
-      let dataPercentage = data[0].percentage;
+      const dataPercentage = data[0].percentage;
       if (_.isNumber(dataPercentage) && dataPercentage > data[0].overallPopulation && dataPercentage > 100) {
         chart.valueAxes[0].maximum = dataPercentage;
       } else if (data[0].overallPopulation > 100) {
@@ -182,20 +182,20 @@ export class GraphService {
     return chart;
   }
 
-  private createActiveUserPopulationGraph(data: Array<IPopulationData>) {
+  private createActiveUserPopulationGraph(data: IPopulationData[]) {
     data = this.modifyPopulation(data);
-    let catAxis = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
+    const catAxis = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
     catAxis.axisAlpha = 0;
     catAxis.fontSize = 15;
     catAxis.autoWrap = true;
     catAxis.labelColorField = 'labelColorField';
 
-    let valueAxes = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
+    const valueAxes = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].autoGridCount = false;
     valueAxes[0].minimum = 0;
     valueAxes[0].maximum = 100;
     valueAxes[0].unit = '%';
-    let dataPercentage = data[1].percentage;
+    const dataPercentage = data[1].percentage;
     if (_.isNumber(dataPercentage) && dataPercentage > data[0].overallPopulation && dataPercentage > 100) {
       valueAxes[0].maximum = dataPercentage;
     } else if (data[0].overallPopulation > 100) {
@@ -207,14 +207,14 @@ export class GraphService {
       startDuration = 0;
     }
 
-    let chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.populationGraphs(data), 'customerName', catAxis);
+    const chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.populationGraphs(data), 'customerName', catAxis);
     chartData.marginBottom = 60;
     chartData.chartCursor = this.CommonGraphService.getBaseVariable(this.CommonGraphService.CURSOR);
 
     return AmCharts.makeChart(this.ACTIVE_POP_DIV, chartData);
   }
 
-  private populationGraphs(data: Array<IPopulationData>) {
+  private populationGraphs(data: IPopulationData[]) {
     const balloonTextOne = '<span class="percent-label">' + this.$translate.instant('activeUserPopulation.averageLabel') + '</span><br><span class="percent-large">[[percentage]]%</span>';
     const balloonTextTwo = '<span class="percent-label">' + this.$translate.instant('activeUserPopulation.averageLabel') + '<br>' + this.$translate.instant('activeUserPopulation.acrossCustomers') + '</span><br><span class="percent-large">[[overallPopulation]]%</span>';
     let color = this.chartColors.primaryBase;
@@ -222,7 +222,7 @@ export class GraphService {
       color = this.chartColors.grayLightThree;
     }
 
-    let graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN);
+    const graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN);
     graph.fillColors = this.CommonGraphService.COLOR;
     graph.colorField = this.CommonGraphService.COLOR;
     graph.fontSize = 26;
@@ -231,7 +231,7 @@ export class GraphService {
     graph.balloonText = balloonTextOne;
     graph.showBalloon = data[0].balloon;
 
-    let graphs: Array<any> = [graph, {
+    const graphs: any[] = [graph, {
       type: 'step',
       valueField: 'overallPopulation',
       lineThickness: 2,
@@ -245,7 +245,7 @@ export class GraphService {
     return graphs;
   }
 
-  private modifyPopulation(data: Array<IPopulationData>): Array<IPopulationData> {
+  private modifyPopulation(data: IPopulationData[]): IPopulationData[] {
     if (data.length >= 1) {
       _.forEach(data, (item: IPopulationData) => {
         if (item.balloon) {
@@ -258,7 +258,7 @@ export class GraphService {
       });
 
       if (data.length === 1) {
-        let dummy: IPopulationData = {
+        const dummy: IPopulationData = {
           customerName: undefined,
           percentage: 0,
           overallPopulation: data[0].overallPopulation,
@@ -306,7 +306,7 @@ export class GraphService {
       textColor = this.chartColors.brandWhite;
     }
 
-    let chartData = this.CommonGraphService.getBasePieChart(data.dataProvider, balloonText, '75%', '30%', '[[percents]]%<br>[[label]]', true, 'label', 'value', this.CommonGraphService.COLOR, textColor);
+    const chartData = this.CommonGraphService.getBasePieChart(data.dataProvider, balloonText, '75%', '30%', '[[percents]]%<br>[[label]]', true, 'label', 'value', this.CommonGraphService.COLOR, textColor);
     chartData.color = textColor;
     chartData.labelColorField = textColor;
     chartData.allLabels = this.getCallMetricsLabels(data.labelData, data.dummy);

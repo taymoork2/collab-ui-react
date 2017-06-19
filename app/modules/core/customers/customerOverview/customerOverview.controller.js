@@ -9,7 +9,6 @@ require('./_customer-overview.scss');
 
   /* @ngInject */
   function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialPstnService, TrialService, Userservice) {
-
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerName = vm.currentCustomer.customerName;
@@ -110,8 +109,8 @@ require('./_customer-overview.scss');
         BrandService.disableCustomerLogos(vm.customerOrgId);
       }
     }, 2000, {
-      'leading': true,
-      'trailing': false,
+      leading: true,
+      trailing: false,
     });
 
     function init() {
@@ -197,7 +196,7 @@ require('./_customer-overview.scss');
         var lic = liclist[i];
         var licId = lic.licenseId;
         var lictype = lic.licenseType;
-        var isConfType = lictype === "CONFERENCING";
+        var isConfType = lictype === 'CONFERENCING';
         if (isConfType) {
           licIds.push(new LicenseFeature(licId, (_.isUndefined(lic.siteUrl) === false)));
         }
@@ -217,7 +216,7 @@ require('./_customer-overview.scss');
       var licIds = collectLicenseIdsForWebexSites(liclist);
       var partnerEmail = Authinfo.getPrimaryEmail();
       var emailObj = {
-        'address': partnerEmail,
+        address: partnerEmail,
       };
       var promise = $q.resolve();
       if (vm.isPartnerAdmin) {
@@ -461,7 +460,5 @@ require('./_customer-overview.scss');
         });
       }
     }
-
-
   }
 })();

@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AutoAttendantCeService(CeService, Authinfo, AANumberAssignmentService) {
-
     var service = {
       listCes: listCes,
       readCe: readCe,
@@ -70,7 +69,7 @@
      */
     function getCeId(ceUrl) {
       var aCeId;
-      if (ceUrl.substring(0, 4) === "http") {
+      if (ceUrl.substring(0, 4) === 'http') {
         aCeId = ceUrl.substr(ceUrl.lastIndexOf('/') + 1);
       } else {
         aCeId = ceUrl;

@@ -50,7 +50,7 @@ describe('Component: companyCallerId', () => {
     });
 
     it('should call onChangeFn when company caller id is toggled', function() {
-      let companyNumber = new CompanyNumber({
+      const companyNumber = new CompanyNumber({
         name: 'Awesome Sauce',
         externalCallerIdType: ExternalCallerIdType.COMPANY_CALLER_ID_TYPE,
       });
@@ -78,7 +78,7 @@ describe('Component: companyCallerId', () => {
     });
 
     it('should allow value to be typed in', function() {
-      let companyNumber = new CompanyNumber({
+      const companyNumber = new CompanyNumber({
         name: 'Awesome Sauce',
         pattern: '+19725551212',
         externalCallerIdType: ExternalCallerIdType.COMPANY_CALLER_ID_TYPE,
@@ -109,7 +109,7 @@ describe('Component: companyCallerId', () => {
     });
 
     it('should call onChangeFn when an external number is chosen from list', function() {
-      let companyNumber = new CompanyNumber({
+      const companyNumber = new CompanyNumber({
         name: 'Awesome Sauce',
         pattern: '+19725551414',
         externalCallerIdType: ExternalCallerIdType.COMPANY_CALLER_ID_TYPE,

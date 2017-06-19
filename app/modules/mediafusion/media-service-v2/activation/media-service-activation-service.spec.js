@@ -9,14 +9,14 @@ describe('MediaServiceActivationV2', function () {
   var Service, $q, $httpBackend, authinfo, Notification, HybridServicesClusterService, ServiceDescriptor;
   //var serviceId = "squared-fusion-media";
   var mediaAgentOrgIds = ['mediafusion'];
-  var serviceId = "squared-fusion-media";
+  var serviceId = 'squared-fusion-media';
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       authinfo = {
         getOrgId: jasmine.createSpy('getOrgId'),
       };
-      authinfo.getOrgId.and.returnValue("12345");
+      authinfo.getOrgId.and.returnValue('12345');
       $provide.value('Authinfo', authinfo);
     });
   });
@@ -33,8 +33,8 @@ describe('MediaServiceActivationV2', function () {
 
   it('should set user identity org to media agent org id mapping', function () {
     var data = {
-      "identityOrgId": "12345",
-      "mediaAgentOrgIds": mediaAgentOrgIds,
+      identityOrgId: '12345',
+      mediaAgentOrgIds: mediaAgentOrgIds,
     };
     $httpBackend.when('PUT', 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1/identity2agent', data).respond(204, {});
     Service.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIds);
@@ -42,7 +42,6 @@ describe('MediaServiceActivationV2', function () {
   });
 
   it('should return the user identity org to media agent org id mapping', function (done) {
-
     $httpBackend
       .expect('GET', 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1/identity2agent/' + authinfo.getOrgId())
       .respond(200, {
@@ -57,13 +56,16 @@ describe('MediaServiceActivationV2', function () {
   it('MediaServiceActivationV2 setServiceEnabled should be called for enableMediaService', function () {
     $httpBackend.when('GET', 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1/identity2agent/12345').respond({
       statusCode: 0,
-      identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
-      mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "mocked"],
+      identityOrgId: '5632f806-ad09-4a26-a0c0-a49a13f38873',
+      mediaAgentOrgIds: ['5632f806-ad09-4a26-a0c0-a49a13f38873', 'mocked'],
     });
     $httpBackend.when('POST', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/12345/services/rhesos').respond({
       statusCode: 200,
     });
     $httpBackend.when('POST', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/12345/services/spark').respond({
+      statusCode: 200,
+    });
+    $httpBackend.when('GET', 'https://identity.webex.com/organization/scim/v1/Orgs/12345?disableCache=true').respond({
       statusCode: 200,
     });
     $httpBackend.when('PATCH', /^\w+.*/).respond({});
@@ -118,8 +120,8 @@ describe('MediaServiceActivationV2', function () {
   it('should disable orpheus for mediafusion org', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({
       statusCode: 0,
-      identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
-      mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "squared"],
+      identityOrgId: '5632f806-ad09-4a26-a0c0-a49a13f38873',
+      mediaAgentOrgIds: ['5632f806-ad09-4a26-a0c0-a49a13f38873', 'squared'],
     });
     $httpBackend.when('DELETE', /^\w+.*/).respond({});
     spyOn(Notification, 'error');
@@ -132,8 +134,8 @@ describe('MediaServiceActivationV2', function () {
   it('should notify error when deleteUserIdentityOrgToMediaAgentOrgMapping fails for disableOrpheusForMediaFusion', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({
       statusCode: 0,
-      identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
-      mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "squared"],
+      identityOrgId: '5632f806-ad09-4a26-a0c0-a49a13f38873',
+      mediaAgentOrgIds: ['5632f806-ad09-4a26-a0c0-a49a13f38873', 'squared'],
     });
     $httpBackend.when('DELETE', /^\w+.*/).respond(500, null);
     spyOn(Notification, 'error');
@@ -146,8 +148,8 @@ describe('MediaServiceActivationV2', function () {
   it('setUserIdentityOrgToMediaAgentOrgMapping should be called for disableOrpheusForMediaFusion', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({
       statusCode: 0,
-      identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
-      mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "mocked", "fusion"],
+      identityOrgId: '5632f806-ad09-4a26-a0c0-a49a13f38873',
+      mediaAgentOrgIds: ['5632f806-ad09-4a26-a0c0-a49a13f38873', 'mocked', 'fusion'],
     });
     $httpBackend.when('PUT', /^\w+.*/).respond({});
     spyOn(Notification, 'error');
@@ -160,8 +162,8 @@ describe('MediaServiceActivationV2', function () {
   it('should notify error when setUserIdentityOrgToMediaAgentOrgMapping fails for disableOrpheusForMediaFusion', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({
       statusCode: 0,
-      identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
-      mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "mocked", "fusion"],
+      identityOrgId: '5632f806-ad09-4a26-a0c0-a49a13f38873',
+      mediaAgentOrgIds: ['5632f806-ad09-4a26-a0c0-a49a13f38873', 'mocked', 'fusion'],
     });
     $httpBackend.when('PUT', /^\w+.*/).respond(500, null);
     spyOn(Notification, 'error');
@@ -176,6 +178,17 @@ describe('MediaServiceActivationV2', function () {
       statusCode: 204,
     });
     Service.deactivateHybridMedia();
+    expect($httpBackend.flush).not.toThrow();
+  });
+  it('disableMFOrgSettingsForDevOps should be called successfully', function () {
+    $httpBackend.when('POST', 'https://identity.webex.com/organization/scim/v1/Orgs/12345?disableCache=true').respond({
+      statusCode: 204,
+    });
+    $httpBackend.when('GET', 'https://identity.webex.com/organization/scim/v1/Orgs/12345?disableCache=true').respond({
+      statusCode: 200,
+    });
+    $httpBackend.when('PATCH', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/12345/settings').respond({});
+    Service.disableMFOrgSettingsForDevOps();
     expect($httpBackend.flush).not.toThrow();
   });
 });

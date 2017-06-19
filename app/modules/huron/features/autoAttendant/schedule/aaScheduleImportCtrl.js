@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AAScheduleImportCtrl($modalInstance, Analytics, AAMetricNameService, AACalendarService, AAICalService, AAModelService, $translate, AANotificationService) {
-
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectAA');
     vm.options = [];
@@ -51,7 +50,6 @@
           }
 
           return false;
-
         });
 
         vm.options = _.map(filtered, function (obj) {
@@ -66,7 +64,6 @@
           function (covertToLowerCase) {
             return covertToLowerCase.label.toLowerCase();
           });
-
       }, function (response) {
         if (response.status !== 404) {
           AANotificationService.error('autoAttendant.failureImport', {

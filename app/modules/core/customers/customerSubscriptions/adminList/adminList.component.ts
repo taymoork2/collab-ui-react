@@ -7,7 +7,7 @@ class AdminListCtrl implements ng.IComponentController {
   public static readonly DEFAULT_DISPLAY_LIMIT: number = 3;
   public static readonly DEFAULT_ORDER_BY: string = 'email';
 
-  public members: Array<IAdminListItem>;
+  public members: IAdminListItem[];
   private _orderBy: string | undefined;
   private _displayLimit: number | undefined;
   private displayLimitReset: number;

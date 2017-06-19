@@ -1,7 +1,7 @@
 
 export interface IDirSyncService {
   isDirSyncEnabled(): boolean;
-  getConnectors(): Array<IDirectoryConnector>;
+  getConnectors(): IDirectoryConnector[];
   requiresRefresh(): boolean;
 
   refreshStatus(): ng.IPromise<void>;
@@ -20,12 +20,12 @@ export interface IDirSyncInfo {
   incrSyncInterval?: number;
   serviceMode: string;
   fullSyncEnabled?: boolean;
-  attrMappings?: Array<Object>;
-  domains?: Array<Object>;
+  attrMappings?: Object[];
+  domains?: Object[];
 }
 
 interface IDirectoryConnectors extends ng.resource.IResource<IDirectoryConnectors> {
-  connectors: Array<IDirectoryConnector>;
+  connectors: IDirectoryConnector[];
 }
 
 interface IDirectoryConnectorsResource extends ng.resource.IResourceClass<IDirectoryConnectors> {
@@ -85,7 +85,7 @@ export class DirSyncService implements IDirSyncService {
   /**
    * Promise resolve with list of IDirectoryConnectors available
    */
-  public getConnectors(): Array<IDirectoryConnector> {
+  public getConnectors(): IDirectoryConnector[] {
     return _.get(this.dirConnectors, 'connectors', []);
   }
 
@@ -152,7 +152,7 @@ export class DirSyncService implements IDirSyncService {
     let ciDirsyncEnabled = false;
     if (!_.isEmpty(orgInfo)) {
       ciDirsyncEnabled = <boolean> _.get(orgInfo, 'dirsyncEnabled');
-      let userAttributes: any = _.get(orgInfo, this.DIRSYNCATTRIBUTES_USER);
+      const userAttributes: any = _.get(orgInfo, this.DIRSYNCATTRIBUTES_USER);
       if (!_.isEmpty(userAttributes)) {
         attributeFound = _.includes(userAttributes, attribute);
       }

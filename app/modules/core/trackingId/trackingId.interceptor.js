@@ -46,16 +46,16 @@
       } else {
         whitelistSubdomainArray = [];
       }
-      var regex = "^https?://";
+      var regex = '^https?://';
       if (whitelistSubdomainArray.length) {
         // negative lookahead for whitelisted subdomains
-        regex += "(?!" + _.map(whitelistSubdomain, function (subdomain) {
+        regex += '(?!' + _.map(whitelistSubdomain, function (subdomain) {
           return _.escapeRegExp(subdomain + '.' + blacklistDomain);
         }).join('|');
-        regex += ")";
+        regex += ')';
       }
       // should only match specified domains
-      regex += ".*" + _.escapeRegExp('.' + blacklistDomain);
+      regex += '.*' + _.escapeRegExp('.' + blacklistDomain);
 
       return new RegExp(regex, 'i');
     }

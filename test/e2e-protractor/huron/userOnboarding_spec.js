@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Manual User Onboard with Numbers basic Test', function () {
-
   var user = utils.randomTestGmail();
 
   beforeAll(function () {
@@ -40,23 +39,19 @@ describe('Manual User Onboard with Numbers basic Test', function () {
 
         utils.expectIsDisplayed(telephony.communicationPanel);
         utils.expectCount(telephony.directoryNumbers, 1);
-
       }
     });
   });
-
 });
 
 //TODO fix hardcoded test user
 xdescribe('User Onboarding with DN Mapping', function () {
-
   var user = 'userwithdnmap@gmail.com';
 
   beforeEach(function () {
     utils.getUserWithDn(user);
     utils.click(users.advancedCommunications);
     utils.click(users.nextButton);
-
   });
 
   afterEach(function () {
@@ -77,7 +72,6 @@ xdescribe('User Onboarding with DN Mapping', function () {
     utils.expectIsDisplayed(telephony.communicationPanel);
     utils.expectCount(telephony.directoryNumbers, 1);
     utils.expectText(telephony.directoryNumbers.first(), testNumber);
-
   });
 
   it('update ExternalNumber and onboard User', function () {

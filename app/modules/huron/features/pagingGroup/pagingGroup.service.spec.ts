@@ -2,10 +2,10 @@ describe('Service: PagingGroupService', () => {
 
   let successSpy;
   let failureSpy;
-  let pg = getJSONFixture('huron/json/features/pagingGroup/pg.json');
-  let listOfPGs = getJSONFixture('huron/json/features/pagingGroup/pgListWithUUID.json');
+  const pg = getJSONFixture('huron/json/features/pagingGroup/pg.json');
+  const listOfPGs = getJSONFixture('huron/json/features/pagingGroup/pgListWithUUID.json');
 
-  let emptyNumber = {
+  const emptyNumber = {
     data: [],
   };
 

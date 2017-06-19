@@ -32,12 +32,12 @@ export class PrivateTrunkCertificateService {
   public readCerts(res?: any): ng.IPromise<any> {
     this.formattedCertList = [];
     if (res) {
-      let certId = _.get(res, 'data.certId', '');
+      const certId = _.get(res, 'data.certId', '');
       this.uploadedCertIds.push(certId);
     }
     return this.CertService.getCerts(this.Authinfo.getOrgId())
     .then( res => {
-      let certificates: ICertificate[] = res || [];
+      const certificates: ICertificate[] = res || [];
       this.formattedCertList = this.CertificateFormatterService.formatCerts(certificates);
       this.isImporting = false;
       return ({ formattedCertList: this.formattedCertList, isImporting: this.isImporting });

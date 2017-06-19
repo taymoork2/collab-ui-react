@@ -34,18 +34,16 @@ describe('Manage Users - Manual -', function () {
   });
 
   describe('Standard Org', function () {
-
     it('should select manually add/modify users', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsersPage.buttons.manageUsers);
-      utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+      utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
       utils.click(manageUsersPage.select.radio.orgManual);
       utils.click(manageUsersPage.buttons.next);
-      utils.expectTextToBeSet(manageUsersPage.select.title, 'Manually Add or Modify Users');
+      utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
     });
 
     it('should clear all users when Clear button pressed', function () {
-
       utils.click(manageUsersPage.manual.radio.emailAddress);
 
       utils.expectIsNotDisplayed(manageUsersPage.manual.emailAddress.tokens);
@@ -62,11 +60,9 @@ describe('Manage Users - Manual -', function () {
       utils.click(manageUsersPage.manual.clearButton);
 
       utils.expectIsNotDisplayed(manageUsersPage.manual.emailAddress.tokens);
-
     });
 
     it('should display an error if more then 25 users are being added', function () {
-
       utils.click(manageUsersPage.manual.radio.emailAddress);
       utils.expectIsNotDisplayed(manageUsersPage.manual.errorOverMaxUsers);
 
@@ -84,18 +80,15 @@ describe('Manage Users - Manual -', function () {
     });
 
     it('should add users by email address', function () {
-
       // Enter test email into edit box
       utils.click(manageUsersPage.manual.radio.emailAddress);
       _.forEach(usersEmailOnly, function (user) {
         utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, user.email + ', ');
       });
       utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, protractor.Key.ENTER);
-
     });
 
     it('should Manually Invite multiple users by name and email address', function () {
-
       // Enter test email into edit box
       utils.click(manageUsersPage.manual.radio.nameAndEmail);
       _.forEach(usersNamesAndEmail, function (user) {
@@ -109,8 +102,7 @@ describe('Manage Users - Manual -', function () {
     });
 
     it('should setup services for users (Message On)', function () {
-
-      utils.expectTextToBeSet(manageUsersPage.select.title, 'Add Services for Users');
+      utils.waitForText(manageUsersPage.select.title, 'Add Services for Users');
 
       // Need a license for valid HS services
       utils.click(manageUsersPage.manual.paidMsgCheckbox);
@@ -118,9 +110,9 @@ describe('Manage Users - Manual -', function () {
       utils.click(manageUsersPage.buttons.save);
 
       // make sure users were added as expected
-      utils.expectTextToBeSet(manageUsersPage.importStatus.newUsers, '' + allUsers.length);
-      utils.expectTextToBeSet(manageUsersPage.importStatus.updatedUsers, '0');
-      utils.expectTextToBeSet(manageUsersPage.importStatus.errorUsers, '0');
+      utils.waitForText(manageUsersPage.importStatus.newUsers, '' + allUsers.length);
+      utils.waitForText(manageUsersPage.importStatus.updatedUsers, '0');
+      utils.waitForText(manageUsersPage.importStatus.errorUsers, '0');
 
       utils.click(manageUsersPage.buttons.finish);
     });
@@ -143,6 +135,5 @@ describe('Manage Users - Manual -', function () {
         deleteUtils.deleteUser(user.email, token);
       });
     });
-
   });
 });

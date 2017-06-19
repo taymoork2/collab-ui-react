@@ -152,7 +152,7 @@
 
   /* @ngInject */
   function TerminusStateService($resource) {
-    return $resource('modules/huron/pstnSetup/states.json', {}, {
+    return $resource('modules/huron/pstn/pstnAreaService/states.json', {}, {
       query: {
         method: 'GET',
         isArray: true,

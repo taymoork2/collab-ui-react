@@ -37,7 +37,6 @@
           });
           vm.clusterList.sort();
           deferred.resolve(vm.clusterList);
-
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'mediaFusion.genericError');
@@ -78,7 +77,7 @@
                   });
                   if (vm.videoPropertySet.length > 0) {
                     var clusterPayload = {
-                      'assignedClusters': vm.selectedClusterId,
+                      assignedClusters: vm.selectedClusterId,
                     };
                     // Assign it the property set with cluster list
                     MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
@@ -117,10 +116,8 @@
       updateClusterLists: updateClusterLists,
       redirectPopUpAndClose: redirectPopUpAndClose,
     };
-
   }
   angular
     .module('Mediafusion')
     .service('AddResourceCommonServiceV2', AddResourceCommonServiceV2);
-
 }());

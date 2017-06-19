@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Advanced Spark Call Add User flow', function () {
-
   var inputEmail = utils.randomTestGmail();
 
   beforeAll(function () {
@@ -56,5 +55,4 @@ describe('Advanced Spark Call Add User flow', function () {
   afterAll(function () {
     utils.deleteUser(inputEmail);
   });
-
 });

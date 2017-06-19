@@ -1,6 +1,8 @@
 {
   "loginPage": {
     "title": "Cloud Collaboration Management",
+    "titleNew": "Spark Control Hub",
+    "titlePro": "Spark Control Hub Pro",
     "login": "Sign In",
     "loading": "Loading",
     "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement.",
@@ -454,6 +456,8 @@
     "support": "Help",
     "logout": "Sign Out",
     "appTitle": "Cloud Collaboration Management",
+    "newAppTitle": "Spark Control Hub",
+    "proAppTitle": "Spark Control Hub Pro",
     "genericTitle": "Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
@@ -570,7 +574,7 @@
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "conversationError": "There was an error while loading room and file data.",
-    "webex": "WebEx Reports",
+    "webex": "WebEx Classic",
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports",
     "downloadOptions": "Download Options",
@@ -618,6 +622,7 @@
       "nameNotFoundFor": "Name not found for",
       "nameNotResolvedFor": "Name not resolved for",
       "timeoutWhenTryingToResolveNameFor": "Timeout when trying to resolve name for",
+      "timeoutWhenFetchingMetrics": "Timeout when trying to get metrics for selected models",
       "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
         "all": "All",
@@ -635,7 +640,9 @@
       }
     },
     "webexMetrics": {
-      "title": "WebEx Metrics",
+      "title": "WebEx",
+      "metrics": "Metrics",
+      "search": "Search",
       "meetingUsage": "Meeting Usage",
       "joinMeetingTime": "Join Meeting Time",
       "webexReportInMashup": "CHP Reports",
@@ -644,6 +651,12 @@
       "webexReportWithTicket": "CHP Reports Login",
       "sparkReportWithTicket": "Spark Reports Login"
     }
+  },
+  "webexReports": {
+    "audio": "Audio",
+    "session": "Session",
+    "classic": "Classic",
+    "quality": "Quality"
   },
   "sharedMeetingReports": {
     "title": "SHARED MEETINGS USAGE",
@@ -974,13 +987,13 @@
         "cdrLogs": "CDR Call Flow",
         "viewCdrCallFlow": "View CDR Call Flow",
         "viewCdrCallFlowDesc": "Open the tool in a new tab",
-        "ediscovery": "Activity Reports",
-        "launchEdicoveryDesc": "Open the Activity Reports dashboard in a new tab",
+        "ediscovery": "eDiscovery Search and Extraction",
+        "launchEdicoveryDesc": "Open the eDiscovery Search and Extraction dashboard in a new tab",
         "partnerManagement": "Manage Partner Accounts",
         "viewPartnerManagementDesc": "The actions below open new tabs",
         "viewPartnerManagement": "Create New Partner Org",
         "editPartner": "Edit Partner Org",
-        "viewEdiscovery": "View Activity Reports",
+        "viewEdiscovery": "View eDiscovery Search and Extraction",
         "hybridCallTestTool": {
           "heading": "Hybrid Call",
           "description": "Run a test between two Hybrid Call Service Connect users",
@@ -1138,6 +1151,7 @@
     "begin": "Begin",
     "cancel": "Cancel",
     "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
+    "ciscoCollaborationCloudNew": "Cisco Spark Control Cloud",
     "close": "Close",
     "cluster": "Cluster",
     "confirm": "Confirm",
@@ -1216,6 +1230,7 @@
     "result": "Result",
     "retry": "Retry",
     "save": "Save",
+    "skip": "Skip",
     "saveLabel": "Do you want to save your changes?",
     "search": "Search",
     "searchMembers": "Search Members",
@@ -1366,8 +1381,10 @@
     "testSSOSetupTitle": "Test SSO Setup",
     "enableSSOTitle": "Enable SSO",
     "importMetadataDesc": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Collaboration Cloud by obtaining a trust metadata file from your IdP and uploading it here.",
+    "importMetadataDescNew": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Spark Control Cloud by obtaining a trust metadata file from your IdP and uploading it here.",
     "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Download the following trust metadata file from the Cisco Collaboration service, and upload it into your identity provider (IdP) management interface.",
+    "exportMetadataDesc1New": "Download the following trust metadata file from the Cisco Spark Control service, and upload it into your identity provider (IdP) management interface.",
     "exportMetadataDesc2": "When you have finished uploading the file into your IdP, return to this screen and press Next.",
     "testSSOSetupDesc": "Press the button below to test your SSO configuration. The test will open in a new browser window. Enter valid SSO credentials and verify the login was successful.",
     "testSSOSetupDesc2": "If your test was successful, enable Single Sign On below. Otherwise, disable Single Sign On or return to the previous steps.",
@@ -1526,7 +1543,9 @@
       "title": "Routing Prefix",
       "radioReserve": "Reserve a prefix",
       "radioReserveDesc": "This prefix will be used as a compound number to connect with users on the cloud.",
+      "reserveDesc": "This prefix is used as a compound number. Users can dial it to connect with other users at this location..  All locations share the same routing prefix length.",
       "exampleHelpText": "Example dialing: 8100-(extension)",
+      "placeholder": "8100",
       "numericOnlyError": "Routing Prefix can only contain digits.",
       "tooShortError": "Routing Prefix must contain at least one digit.",
       "tooLongError": "Routing Prefix can contain a maximum of seven digits."
@@ -1804,6 +1823,7 @@
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "enterDisplayName": "Enter a name for the Expressway cluster",
       "nameHelptext": "The cluster name is used for display purposes in Cloud Collaboration Management.",
+      "nameHelptextNew": "The cluster name is used for display purposes in {{appTitle}}.",
       "clusternameWatermark": "Enter cluster name…",
       "cannotCreateCluster": "Could not create cluster. Please try again later.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later.",
@@ -1811,6 +1831,7 @@
       "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
       "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
       "youMayNowRegister": "You may now register {{hostname}} with Cisco Collaboration Cloud",
+      "youMayNowRegisterNew": "You may now register {{hostname}} with Cisco Spark Control Cloud",
       "registerResourceButton": "Go to Expressway",
       "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters.",
       "confirmationDialogHeader": "Cancel Setup",
@@ -1827,6 +1848,7 @@
       "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later.",
       "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
+      "hostnameRegisteredNew": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Spark Control Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
       "partnersCannotConfigureClusters": "You cannot add this resource. A customer administrator must perform this step."
     },
     "activateService": {
@@ -1847,6 +1869,7 @@
       "fromCluster": "from the Expressway cluster {{clusterName}}.",
       "wipeSettingsWarning": "This action will remove {{connectorName}} from {{clusterName}} and delete all of the connector's local settings.",
       "notDeregistered": "{{clusterName}} will not be deregistered from Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
+      "notDeregisteredNew": "{{clusterName}} will not be deregistered from Cisco Spark Control Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
       "confirmButton": "Confirm Deactivation"
     },
     "clusters": {
@@ -2007,7 +2030,8 @@
       "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
     },
     "serviceHelpInfo": {
-      "servicePrivacyStatement": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>click here</a>."
+      "servicePrivacyStatement": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>click here</a>.",
+      "servicePrivacyStatementNew": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Spark Control Cloud about your Hybrid Service deployment. For more information <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>click here</a>."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
@@ -2092,7 +2116,7 @@
       "upgradeNow": "Upgrade Now"
     },
     "expresswayClusterSettings": {
-      "pageTitle": "{{clusterName}} settings",
+      "pageTitle": "{{clusterName}}",
       "upgradeScheduleHeader": "Upgrade",
       "upgradeScheduleSubHeader": "Upgrade Schedule",
       "resourceGroupsHeader": "Resource Group",
@@ -2123,14 +2147,18 @@
       "clusterNameCannotByEmpty": "Name cannot be empty.",
       "renameClusterDescription": "The name is for display purposes only.",
       "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
+      "deregisterClusterExplanationNew": "Remove this {{clusterType}} cluster from Cisco Spark Control Cloud.",
       "deregisterSipDestinationExplanation": "Remove this SIP Destination from Cisco Collaboration Cloud. This step removes all related configuration.",
+      "deregisterSipDestinationExplanationNew": "Remove this SIP Destination from Cisco Spark Control Cloud. This step removes all related configuration.",
       "deregisterMediaClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
       "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
       "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
       "couldNotDeregisterCluster": "Could not deregister cluster.",
       "deregisterConfirmRemoval": "Confirm Removal",
       "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
-      "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
+      "deregisterConfirmationTextNew": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Spark Control Cloud.",
+      "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud.",
+      "deregisterConfirmPopupNew": "{{clusterName}} was removed successfully from Cisco Spark Control Cloud."
     },
     "deactivateServiceComponent": {
       "deactivateServiceLabel": "Deactivate {{serviceName}}",
@@ -2191,7 +2219,9 @@
       "error": "Couldn't fetch API key",
       "authorization": {
         "title": "Authorize Cisco Collaboration Cloud on your G Suite account",
+        "titleNew": "Authorize Cisco Spark Control Cloud on your G Suite account",
         "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Collaboration Cloud on your G Suite account.",
+        "line1New": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Spark Control Cloud on your G Suite account.",
         "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to Security.",
         "item2": "Click <strong>Show more</strong> and then <strong>Advanced settings</strong>.",
         "item3": "Click <strong>Manage API Client Access</strong>.",
@@ -2223,6 +2253,7 @@
       "modalTitle": "Update API Client access",
       "title": "Update Client name and Scope",
       "line1": "To update or restore your G suite access to Cisco Collaboration Cloud, follow the steps below.",
+      "line1New": "To update or restore your G suite access to Cisco Spark Control Cloud, follow the steps below.",
       "success": "Great! Google Calendar is correctly configured."
     },
     "settings": {
@@ -2279,6 +2310,7 @@
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
         "certificatesHeading": "Certificates for Encrypted SIP Calls",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
+        "certificatesNew": "Use certificates provided from the Cisco Spark Control default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
         "certificatesCannotRead": "Could not read certificate list.",
         "certificatesCannotDelete": "Could not delete certificate. Try again later",
         "certificatesEmailAddress": "Email Address",
@@ -2369,7 +2401,8 @@
         "selectCalendarType": "Select Calendar type",
         "exchangeInfo": "Microsoft Exchange and Exchange Online (Office 365). Requires Expressway cluster.",
         "serviceInto": "Hybrid Calendar supports Exchange calendars via on-premises Expressway clusters and Google Calendar.",
-        "smallprint": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information click <a href=\"https://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">here</a>."
+        "smallprint": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information click <a href=\"https://example.org/\" target=\"_blank\">here</a>.",
+        "smallprintNew": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Spark Control Cloud about your Hybrid Service deployment. For more information click <a href=\"https://example.org/\" target=\"_blank\">here</a>."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -2525,6 +2558,7 @@
           },
           "end": {
             "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
+            "line1New": "You may now register the Expressway with Cisco Spark Control Cloud.",
             "line2": "Go to your Expressway to complete registration and configure the connector(s)."
           }
         },
@@ -2548,6 +2582,7 @@
           "enter-cluster-name": "Enter a name for the Cisco Unified Communications Manager cluster",
           "end": {
             "line1": "You may now register the Cisco Unified Communications Manager with Cisco Collaboration Cloud.",
+            "line1New": "You may now register the Cisco Unified Communications Manager with Cisco Spark Control Cloud.",
             "line2": "Go to your CUCM to complete the registration.",
             "finish": "Go to CUCM"
           }
@@ -2610,6 +2645,7 @@
       "renameGroupDescription": "Rename the resource group",
       "removeGroup": "Remove",
       "removeGroupDescription": "Remove the resource group from Cisco Collaboration Cloud",
+      "removeGroupDescriptionNew": "Remove the resource group from Cisco Spark Control Cloud",
       "groupNameCannotByEmpty": "Resource group name cannot be empty",
       "groupNameSaved": "Rename successful",
       "duplicateName": "A resource group with that name already exists. Please choose another name.",
@@ -2675,7 +2711,8 @@
       "version": "Version",
       "noNodes": "No nodes found",
       "loadingError": "Could not load cluster data",
-      "viewList": "View list",
+      "viewList": "Open nodes list",
+      "viewListDescription": "Open nodes list to review alarms and install upgrades",
       "enableMaintenanceMode": "Enable maintenance mode",
       "disableMaintenanceMode": "Disable maintenance mode",
       "goToNode": "Go to node",
@@ -2713,17 +2750,17 @@
     "userMenu": {
       "crossServices": "Cross Services",
       "mobile": "Mobile",
-      "statusOk": "Spark Mobile Convergence",
+      "statusOk": "Mobile Convergence",
       "statusNok": "Error"
     },
     "userSettings": {
-      "title": "Spark Mobile Convergence",
+      "title": "Mobile Convergence",
       "mobileNumber": "Mobile Number",
       "enabled": "Enabled",
       "status": "Status"
     },
     "detailsPage": {
-      "title": "Cmc",
+      "title": "Mobile",
       "settings": "Settings",
       "status": "Status"
     },
@@ -2731,7 +2768,7 @@
       "invalidInput": "Always provide valid mobile number when enabling"
     },
     "settingsPage": {
-      "title": "Spark Mobile Convergence",
+      "title": "Mobile Convergence",
       "description": "Current data is read only, for configuration please contact your Cisco specialist.",
       "mobileProvider": {
         "title": "Mobile Operator",
@@ -2745,8 +2782,12 @@
     "statusPage": {
       "listingFirstActiveUsers": "Listing the first {{noOfActiveUsers}} active users",
       "callServiceAwareNotEntitled": "Not entitled for Call Aware",
-      "sparkMobileConvergence": "Spark Mobile Convergence",
-      "serviceStatus": "Service Status"
+      "sparkMobileConvergence": "Mobile Convergence",
+      "serviceStatus": "Service Status",
+      "subHeading": "User Status Report",
+      "status": {
+        "active": "Active"
+      }
     }
   },
   "context": {
@@ -2766,7 +2807,8 @@
         "date": "Date Time",
         "double": "Decimal",
         "integer": "Number",
-        "string": "Short Text"
+        "string": "Short Text",
+        "enumString": "Single Select"
       },
       "status": "Status",
       "inUse": "In Use",
@@ -2815,7 +2857,18 @@
         "deleteField": "Delete Field",
         "deleteConfirmationText": "Are you sure you want to delete this field?",
         "limitReached": "Maximum fields reached.",
-        "fieldLimitReadFailed": "Unable to retrieve fields limit. Refresh your browser to try again"
+        "fieldLimitReadFailed": "Unable to retrieve fields limit. Refresh your browser to try again",
+        "enumOptionPlaceholder": "Add Option",
+        "enumOptionsReorder": "Reorder",
+        "enumOptionsSetDefault": "Set default",
+        "enumOptionsRemoveDefault": "Remove default",
+        "enumOptionsAdd": "Add",
+        "deleteOptionConfirmationHeader": "Delete Option",
+        "deleteOptionConfirmation": "Are you sure you want to delete this option?",
+        "optionUniqueError": "This option already exists. Add a different option.",
+        "optionsNumberErrorMessage": "Add two or more options.",
+        "optionRequired": "This field is required.",
+        "options": "Options ({{count}})"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -2872,6 +2925,7 @@
       "cluster": "Create or select cluster",
       "hostname": "Enter FQDN or IP address",
       "grant-registration-success-part-1": "You may now register your Hybrid Data Security Node to the Cisco Collaboration Cloud.",
+      "grant-registration-success-part-1-new": "You may now register your Hybrid Data Security Node to the Cisco Spark Control Cloud.",
       "grant-registration-success-part-2": "Node IP Address/FQDN: {{hostname}}",
       "grant-registration-success-part-3": "Cluster: {{clustername}}",
       "grant-success-information": " <i class='icon icon-warning'></i> Go to your Hybrid Data Security Node within one hour to finish registration.<br>After one hour you will need to start the process again.",
@@ -2879,6 +2933,7 @@
       "text1": "Create a new or select an existing Hybrid Data Security Cluster where you want to add the Hybrid Data Security Node.",
       "text3": "Enter the",
       "text3part2": "or IP address of the Hybrid Data Security Node that you want to register with the Cisco Collaboration Cloud.",
+      "text3part2New": "or IP address of the Hybrid Data Security Node that you want to register with the Cisco Spark Control Cloud.",
       "serverOnline": "The Hybrid Data Security server that you are registering already exists and is online.",
       "serverOffline": "The Hybrid Data Security server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Hybrid Data Security Node, you must install and configure the software on your new server.",
@@ -2886,6 +2941,7 @@
       "noProceed": "No, I need to install and configure the software.",
       "noProceed-helptext": "(Software will automatically download)",
       "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Data Security Node.",
+      "noInfoNew": "Install and configure the software on your server and return to Cisco {{appTitle}} to register your Hybrid Data Security Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/hds.ova'>Try Again.</a>",
       "noDesc1": "For important information and step-by-step installation instructions, see the ",
       "noDesc2": "Hybrid Data Security Deployment Guide.",
@@ -3017,8 +3073,8 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "Cisco Spark Activity Reports",
-    "heading": "Search Cisco Spark Space Activity",
+    "browserTabHeaderTitle": "eDiscovery Search and Extraction",
+    "heading": "Search Compliance Data",
     "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
     "searchTip": "Search data by space ID",
     "unableToDownloadFile": "Unable to download file",
@@ -3180,7 +3236,8 @@
     "skipAndFinish": "Skip Errors and Finish",
     "csvInvalidRow": "Row contains an incorrect number of columns.  Please verify the row contains six columns and try again.",
     "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
-    "csvDuplicateEmail": "Skipped due to duplicate email address.",
+    "invalidEmailAddress": "Invalid Email Address",
+    "csvDuplicateEmail": "This email is skipped due to duplicate email address in the CSV file.",
     "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
     "tooManyActiveMessageLicenses": "There are more than one \"Spark Message\" license enabled.  Please fix and try again.",
     "csvWrongLicenseFormat": "License fields contain invalid data. Please fix and try again.",
@@ -3526,6 +3583,7 @@
     "sessionVariableInfo": "Enter one or more values here; separate multiple entries with commas. Example: Spanish, French",
     "actionRouteCall": "Route Call",
     "actionRouteCallHint": "Route the call to a destination like a hunt group, auto attendant, or extension.",
+    "routeToPhoneNumberHelp": "To route calls to external numbers, you must configure your company caller ID.",
     "actionDialByExtensionHint": "Prompt the caller for an internal extension and route the call.",
     "actionDialByExtensionHelp": "Enter the message used to prompt the caller for the extension to dial. Select the language and the voice for this phrase.",
     "actionEndCall": "Disconnect",
@@ -4157,7 +4215,6 @@
   },
   "pstnOrderOverview": {
     "cancelled": "Cancelled",
-    "pstnOrders": "PSTN Orders",
     "successful": "Successful",
     "inProgress": "In Progress",
     "advanceOrder": "Advance Numbers",
@@ -4190,8 +4247,13 @@
   },
   "pstnSetup": {
     "setupPstn": "Setup PSTN",
+    "pstnMethod": "PSTN Method",
+    "finalizePstn": "Finalize PSTN",
+    "importNumbers": "Import Numbers",
+    "privatePstnTrunk": "Private PSTN Trunk",
     "setupService": "Set Up PSTN Service",
     "setupNumbers": "Set Up PSTN Numbers",
+    "addPhoneNumbers": "Add Phone Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
     "newNumbersTab": "Standard Numbers",
@@ -4217,10 +4279,12 @@
     "consecutive": "Consecutive",
     "block": "Block",
     "reviewAndOrder": "Review and Place Order",
+    "reviewSummary": "Review Summary",
     "package": "Package",
     "adding": "Adding",
     "numbersTitle": "Numbers",
     "numbers": "{count, plural, =1{# number} other{# numbers}}",
+    "importNumbersTitle": "Import {{count}} Numbers",
     "newNumbers": "{{count}} New",
     "portNumbers": "{{count}} Port",
     "thankYou": "Thank you",
@@ -4229,6 +4293,8 @@
     "nextStepPrompt1": "The customer has to sign a PSTN Contract that will be emailed to them.",
     "nextStepPrompt2": "The customer has to sign a PSTN Letter of Authorization that will be emailed to them.",
     "OrderSubmitted": "Customer's order has been submitted.",
+    "privatePstnFinalized": "‘Private PSTN Trunk’ selection finalized.",
+    "privatePstnNumbersImported": "‘Private PSTN Trunk’ numbers imported.",
     "checkOrderStatus": "Check Order Status",
     "launchPortal": "Setup Spark Service",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
@@ -4245,6 +4311,7 @@
     "customerCreateError": "Failed to create customer with the carrier.",
     "customerUpdateError": "Failed to update customer with the carrier.",
     "siteCreateError": "Failed to create the service address.",
+    "esaSignatureFailed": "Failed to save the ESA disclaimer acceptance.",
     "searchResults": "Search Results",
     "noSearchResults": "No Search Results",
     "emergencyAcknowledge": "Customer acknowledges dialing emergency numbers may not work on an enterprise class IP telephony network.",
@@ -4314,6 +4381,13 @@
       "agreeInstructions": "By clicking 'Agree' you have read and agree to comply with the terms and conditions.",
       "agreeInstructionsCanadaThinkTel": "By clicking 'Agree' you have read, understood, accept, and agree to comply with the terms and conditions, including specifically, the limitations to the ThinkTel VoIP 9-1-1 emergency dialing services described in Appendix 1 of the terms and conditions.",
       "viewTos": "View Terms of Service"
+    },
+    "esaDisclaimer": {
+      "title": "Emergency Service Address Disclaimer",
+      "messageMain": "IMPORTANT PLEASE READ: MISCONFIGURATION OR LACK OF ADEQUATE CONFIRGURATION CAN CAUSE EMERGENCY CALLS OR SERVICE DISPATCHES TO NOT BE PROPERLY ROUTED OR SIGNIFICANTLY DELAYED BEFORE ENABLING SPARK SERVICE, you must take the following three steps to ensure that any existing PSTN numbers that you port to Spark are mapped to the correct emergency service addresses and locations for the users associated with those PSTN numbers: Verify and update that the addresses associated with the PSTN numbers match the users’ addresses. Provision existing on premises IP PBX to send emergency calls to the proper PSTN trunk location that aligns to the location of the user. Coordinate with your carrier to ensure that the carrier and public safety answering point have the correct street address associated with each emergency services number (ESN). FAILURE TO FOLLOW THESE THREE STEPS MIGHT RESULT IN DISPATCH TO THE WRONG LOCATION AND / OR SIGNIFICANTLY DELAYED DISPATCH TO USERS IN EMERGENCY SITUATIONS, INCLUDING LIFE THREATENING SITUATIONS.",
+      "messageAgree": "By clicking \"Agree\", you have read and agree to comply with the terms and conditions.",
+      "notificationText": "Accept the Emergency Service Address disclaimer so phone numbers can be added.",
+      "notificationTextLink": "See Disclaimer"
     }
   },
   "pstnContractInformation": {
@@ -4352,6 +4426,12 @@
     "feature4": "Directory listing",
     "feature5": "E911",
     "feature6": "No set-up fees"
+  },
+  "byopstnFeatures": {
+    "feature1": "Use existing PSTN provider",
+    "feature2": "Import your phone numbers",
+    "feature3": "Bridge the cloud & enterprise",
+    "feature4": "Self mananged E911"
   },
   "partnerHomePage": {
     "trialsHeading": "Trials",
@@ -5342,6 +5422,7 @@
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
+      "messageNew": "Are you sure you want to delete {{groupName}} from Cisco Spark Control Cloud?",
       "errorHeader": "Unexpected Error",
       "errorMessage": "Unable delete {{groupName}}."
     },
@@ -5422,14 +5503,17 @@
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter FQDN or IP address",
       "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud. Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}",
+      "grant-registration-success-header-old-cluster-new": "You can now register your Hybrid Media Node to the Cisco Spark Control Cloud. Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
       "back": "Back",
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
       "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
+      "text2V2New": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Spark Control Cloud.",
       "text3V1": "Enter the",
       "text3V3": "or IP address of the Hybrid Media Node that you want to register with the Cisco Collaboration Cloud.",
+      "text3V3New": "or IP address of the Hybrid Media Node that you want to register with the Cisco Spark Control Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Hybrid Media Node, you must install and configure the software on your new server.",
@@ -5446,6 +5530,7 @@
       "noProceed": "No, I need to install and configure the software.",
       "noProceed-helptext": "(Software will automatically download)",
       "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Media Node.",
+      "noInfoNew": "Install and configure the software on your server and return to {{appTitle}} to register your Hybrid Media Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Try Again.</a>",
       "noDesc1": "For details on installation and configuration, visit ",
       "noDesc2": "Help Central.",
@@ -5868,6 +5953,7 @@
     "helpFaq": "Help Site",
     "matchingTix": "Matching Problem Reports",
     "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
+    "matchingDescrNew": "To match problem reports with the logs that are uploaded to the {{appTitle}} tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
     "brandingTitle": "Customize Branding",
     "supportTitle": "Support Setup",
@@ -6203,6 +6289,26 @@
       "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
+  "locations": {
+      "locationName": "Location Name",
+      "addText": "Add Location",
+      "copyTitle": "Copy Location",
+      "copyDesc": "This location will use the customized setting from the location that you copied.",
+      "deleteTitle": "Delete Location",
+      "deleteDesc": "Are you sure you want to delete location, {{locationName}}?",
+      "cannotDeleteDesc": "This location still has users and places and can not be deleted.",
+      "deleteButton": "OK, Delete it",
+      "deleteFailed": "Failed to Delete Location",
+      "makeDefault": "Make Default",
+      "copyLocation": "Duplicate",
+      "reload": "Reload",
+      "makeDefaultTitle": "Make Default",
+      "makeDefaultDesc": "Are you sure you want to make this location default?  It will be the defualt location for new users or places.",
+      "createLocation": "Create Location",
+      "cancelHeader": "Cancel Location Creation",
+      "cancelDialog": "Are you sure you wish to cancel location creation? This location will not be saved.",
+      "locationDesc": "Give this location a name to identify it."
+  },
   "sunlightDetails": {
     "title": "Care",
     "settingsTitle": "Settings",
@@ -6270,7 +6376,8 @@
     "title": "Call",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
-    "featuresTitle": "Features"
+    "featuresTitle": "Features",
+    "locationsTitle": "Locations"
   },
   "huronFeatureDetails": {
     "members": " Members",
@@ -6888,6 +6995,7 @@
       "hybrid": {
         "title": "Hybrid Services",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
+        "notEnabledTextNew": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Control Platform.",
         "notEnabledActionText": "Learn More",
         "serviceHeader": "Status",
         "services": {
@@ -7026,6 +7134,8 @@
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "loadError": "An error occurred while loading subscriptions.",
+    "onlinePurchase": "Purchased from Cisco Online Market Place",
+    "endDate": "Subscription end date: {{date}}",
     "licenseTypes": {
       "MS": "Standard Team Spaces",
       "CF": "Spark 25 Party Meetings",
@@ -7045,7 +7155,9 @@
   "onlineUpgradeModal": {
     "title": "Account Expired",
     "body": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cloud Collaboration Management portal you can buy a subscription.",
+    "bodyNew": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Spark Control Hub you can buy a subscription.",
     "cancelBody": "Alternately you can use the free version of Cisco Spark which does not come with the Cloud Collaboration Management portal.",
+    "cancelBodyNew": "Alternately you can use the free version of Cisco Spark which does not come with the Spark Control Hub.",
     "cancelButton": "Use free Cisco Spark",
     "cancelError": "An error has occurred while canceling your subscription.",
     "cancelSuccess": "You now have a free Cisco Spark account."
@@ -7111,6 +7223,7 @@
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",
     "navHeaderTitle": "Cloud Collaboration Help Desk",
+    "navHeaderTitleNew": "Spark Control Help Desk",
     "helpdesk": "Help Desk",
     "searchHeading": "Help Desk Support",
     "users": "Users",
@@ -7257,8 +7370,6 @@
     "resend": "Resend Invite",
     "resendSuccess": "Invitation resent successfully.",
     "sendCode": "Send Code",
-    "more": "More",
-    "less": "Less",
     "usage": "{{usage}} of {{volume}} in use",
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
@@ -7346,6 +7457,8 @@
   "partnerManagement": {
     "browserTabHeaderTitle": "Partner Management",
     "navHeaderTitle": "Cloud Collaboration Management",
+    "navHeaderTitleNew": "Spark Control Hub",
+    "navHeaderTitlePro": "Spark Control Hub Pro",
     "back": "Back",
     "next": "Next",
     "startOver": "Start Over",
@@ -7528,6 +7641,7 @@
         "title": "Call",
         "description": "Unified Communications and basic calling configurations for your organization.",
         "buttons": {
+          "locations": "Locations",
           "numbers": "Numbers",
           "features": "Features",
           "settings": "Settings",
@@ -7645,6 +7759,7 @@
         "help": "<a href=\"{{href}}\" target=\"_blank\">help</a>.",
         "dNSzoneHelp": "The DNS zone has been created on the Expressway-E to accept the inbound connection from the cloud. See ",
         "defaultTrustHelp": "Use Certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
+        "defaultTrustHelpNew": "Use Certificates provided from the Spark Control Hub default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
         "fullService": "Full service: in and outbound calling",
         "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
         "routingHelp": "The correct routing must be configured on CUCM. See ",
@@ -7667,7 +7782,9 @@
         "addSipDestination": "Add SIP destination",
         "certificateTitle": "Certificates",
         "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration default trust list or upload your own.",
+        "certificateDescriptionNew": "Choose whether you want to use the certificates provided by the Spark Control Hub default trust list or upload your own.",
         "certDesc": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration default trust list</a>",
+        "certDescNew": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Spark Control Hub default trust list</a>",
         "upload": "or upload your own. If you use your own, make sure the hostnames are on a verified domain",
         "click": ". For help, <a href=\"{{href}}\" target=\"_blank\">click here</a>.",
         "certificateDefault": "Default Cisco Certificates",
@@ -7675,6 +7792,7 @@
         "inactiveHelp": "The default trust list is ignored if you upload your own certificates. ",
         "restore": "Restore default certificates.",
         "certificateDefaultList": "Cisco Collaboration default trust list",
+        "certificateDefaultListNew": "Spark Control Hub default trust list",
         "certificateCustom": "Upload your own certificate",
         "view": "View",
         "dragAndDropKeyFileHere": "Drag and drop the certificate file here or ",
@@ -7697,7 +7815,7 @@
       },
       "cmc": {
         "title": "Mobile",
-        "description": "Spark Mobile Convergense is set up by your Cisco Professional. Please contact your Cisco Professional for changes.",
+        "description": "Mobile Convergence is a service which allows you to call any mobile phone from any Cisco device. The service is set up by your Cisco Professional. Please contact your Cisco Professional for changes.",
         "buttons": {
           "settings": "Settings",
           "status": "Status"

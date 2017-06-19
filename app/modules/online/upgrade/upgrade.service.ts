@@ -11,6 +11,7 @@ export interface IProdInst {
   productInstanceId: string;
   subscriptionId: string;
   name: string;
+  autoBilling: boolean;
 }
 
 interface ISubscriptionResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
@@ -34,7 +35,7 @@ export class OnlineUpgradeService {
     private Notification: Notification,
     private UrlConfig,
   ) {
-    let patchAction: ng.resource.IActionDescriptor = {
+    const patchAction: ng.resource.IActionDescriptor = {
       method: 'PATCH',
     };
     this.subscriptionResource = <ISubscriptionResource>this.$resource(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/:subscriptionId', {}, {
@@ -77,7 +78,7 @@ export class OnlineUpgradeService {
     return _.get<string>(this.Authinfo.getSubscriptions(), '[0].subscriptionId');
   }
 
-  public getProductInstances(userId): ng.IPromise<Array<IProdInst>> {
+  public getProductInstances(userId): ng.IPromise<IProdInst[]> {
     return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + userId)
       .then((response) => {
         const productGroups = _.get(response, 'data.productGroups');
@@ -89,15 +90,17 @@ export class OnlineUpgradeService {
   }
 
   private getProdInstAttrs(productInstance): IProdInst {
-    let prodInst: IProdInst = {
+    const prodInst: IProdInst = {
       productInstanceId: '',
       subscriptionId: '',
       name: '',
+      autoBilling: true,
     };
     if (productInstance) {
       prodInst.productInstanceId = productInstance.productInstanceId;
       prodInst.subscriptionId = productInstance.subscriptionInfo.subscriptionId;
       prodInst.name = productInstance.description;
+      prodInst.autoBilling = productInstance.autoBilling;
     }
 
     return prodInst;
@@ -112,7 +115,7 @@ export class OnlineUpgradeService {
   }
 
   public hasCancelledSubscriptions(): boolean {
-    let subscriptions = this.Authinfo.getSubscriptions();
+    const subscriptions = this.Authinfo.getSubscriptions();
     return !!subscriptions.length && _.every(subscriptions, subscription => this.isSubscriptionCancelled(subscription));
   }
 
@@ -125,7 +128,7 @@ export class OnlineUpgradeService {
   }
 
   private hasExpiredSubscriptions(): boolean {
-    let subscriptions = this.Authinfo.getSubscriptions();
+    const subscriptions = this.Authinfo.getSubscriptions();
     return !!subscriptions.length && _.every(subscriptions, subscription => this.isSubscriptionCancelledOrExpired(subscription));
   }
 

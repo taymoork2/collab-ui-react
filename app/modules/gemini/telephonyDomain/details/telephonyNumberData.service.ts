@@ -7,13 +7,13 @@ export class TelephonyNumberDataService {
 
   private rowId: number = 0;
   private constObject: any = {};
-  private tollTypeOptions: Array<any> = [];
-  private callTypeOptions: Array<any> = [];
-  private defaultNumberOptions: Array<any> = [];
-  private globalDisplayOptions: Array<any> = [];
-  private _countryOptions: Array<any> = [];
-  private isHiddenOptions: Array<any> = [];
-  private countryOptions: Array<any> = [];
+  private tollTypeOptions: any[] = [];
+  private callTypeOptions: any[] = [];
+  private defaultNumberOptions: any[] = [];
+  private globalDisplayOptions: any[] = [];
+  private _countryOptions: any[] = [];
+  private isHiddenOptions: any[] = [];
+  private countryOptions: any[] = [];
   private countryId2NameMapping: any = {};
   private countryName2IdMapping: any = {};
 
@@ -92,7 +92,7 @@ export class TelephonyNumberDataService {
   }
 
   public initGridOptions($this, isEdit) {
-    let columnDefs: any = [{
+    const columnDefs: any = [{
       field: 'phone',
       type: 'number',
       cellTooltip: true,
@@ -230,7 +230,7 @@ export class TelephonyNumberDataService {
       data.typeDisabled = !(_.isEmpty(telephonyDomainId) || _.toNumber(data.compareToSuperadminPhoneNumberStatus) === this.constObject.DATA_STATUS.NEW);
     }
 
-    let defaultNumberOptions = [{ label: '', value: '0' }];
+    const defaultNumberOptions = [{ label: '', value: '0' }];
     if (data.tollType.value === this.constObject.CCA_TOLL || data.tollType.value === this.constObject.CCA_TOLL_FREE) {
       const label = _.replace(data.tollType.label, 'CCA', 'Default');
       data.defaultNumber = data.defaultNumber === '1' ? { label: label, value: '1' } : this.defaultNumberOptions[0];
@@ -255,7 +255,7 @@ export class TelephonyNumberDataService {
   }
 
   public addNumber(data: any) {
-    let newData = {
+    const newData = {
       rowId: ++this.rowId,
       isEdit: !data || data.dataType === DATA_TYPE.IMPORT_TD,
       dataType: (data && data.dataType) ? data.dataType : DATA_TYPE.MANUAL_ADD,
@@ -293,7 +293,7 @@ export class TelephonyNumberDataService {
     // focus the last row when click add number button
     if (!data) {
       this.$timeout(() => {
-        let row = this.gridApi.core.getVisibleRows(this.gridApi.grid)[this.gridOptions.data.length - 1];
+        const row = this.gridApi.core.getVisibleRows(this.gridApi.grid)[this.gridOptions.data.length - 1];
         angular.element('#' + row.uid + '-phone').focus();
       }, 10);
     }

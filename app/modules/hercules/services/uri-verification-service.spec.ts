@@ -4,7 +4,7 @@ describe('URI Verification Service', () => {
 
   let service;
 
-  let dvList = [{
+  const dvList = [{
     text: 'pendingdomain.com',
     status: 'pending',
   }, {

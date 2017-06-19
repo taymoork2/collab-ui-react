@@ -5,7 +5,7 @@
     .controller('HeaderCtrl', HeaderCtrl);
 
   /* @ngInject */
-  function HeaderCtrl($translate, Utils, Authinfo) {
+  function HeaderCtrl($q, $translate, Authinfo, FeatureToggleService, ITProPackService, Utils) {
     var vm = this;
 
     vm.showOrgName = showOrgName;
@@ -15,8 +15,17 @@
 
     function init() {
       vm.icon = 'icon-cisco-logo';
-      $translate('loginPage.title').then(function (title) {
-        vm.headerTitle = title;
+      $q.all({
+        proPackEnabled: ITProPackService.hasITProPackPurchased(),
+        nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+      }).then(function (toggles) {
+        if (toggles.proPackEnabled && toggles.nameChangeEnabled) {
+          vm.headerTitle = $translate.instant('loginPage.titlePro');
+        } else if (toggles.nameChangeEnabled) {
+          vm.headerTitle = $translate.instant('loginPage.titleNew');
+        } else {
+          vm.headerTitle = $translate.instant('loginPage.title');
+        }
       });
       vm.navStyle = 'admin';
     }

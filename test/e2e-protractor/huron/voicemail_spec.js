@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Voicemail', function () {
-
   var user = utils.randomTestGmail();
 
   beforeAll(function () {
@@ -15,7 +14,7 @@ describe('Voicemail', function () {
   });
 
   it('should cancel saving the disabled state', function () {
-    utils.expectTextToBeSet(telephony.voicemailStatus, 'On');
+    utils.waitForText(telephony.voicemailStatus, 'On');
     utils.click(telephony.voicemailFeature);
     utils.expectSwitchState(telephony.voicemailSwitch, true);
     utils.expectIsDisplayed(telephony.voicemailTitle);
@@ -40,7 +39,7 @@ describe('Voicemail', function () {
     utils.expectSwitchState(telephony.voicemailSwitch, false);
 
     utils.clickLastBreadcrumb();
-    utils.expectTextToBeSet(telephony.voicemailStatus, 'Off');
+    utils.waitForText(telephony.voicemailStatus, 'Off');
   });
 
   it('should cancel saving the enabled state', function () {
@@ -69,11 +68,10 @@ describe('Voicemail', function () {
     utils.expectSwitchState(telephony.voicemailSwitch, true);
 
     utils.clickLastBreadcrumb();
-    utils.expectTextToBeSet(telephony.voicemailStatus, 'On');
+    utils.waitForText(telephony.voicemailStatus, 'On');
   });
 
   afterAll(function () {
     utils.deleteUser(user);
   });
-
 });

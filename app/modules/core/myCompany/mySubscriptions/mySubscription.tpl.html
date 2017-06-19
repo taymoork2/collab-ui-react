@@ -31,9 +31,10 @@
               widget-location="navigation-bar">
             </bmmp-subscription-upgrade-button>
           </div>
-         <div class="subscription-id" ng-if="subscription.viewAll">
-            <span class="h6" translate="subscriptions.subscription"></span>
-            <span class="h6">{{::subscription.subscriptionId}}</span>
+         <div class="subscription-id h6" ng-if="subscription.viewAll">
+            <span translate="subscriptions.subscription"></span>
+            <span>{{::subscription.subscriptionId}}</span>
+            <div>{{::subscription.endDate}}</div>
           </div>
         </div>
       </section></article>
@@ -43,10 +44,11 @@
       <article>
         <section>
           <div class="row">
-            <span class="column medium-2 sub-name" ng-class="mcpSub.subscriptionDetails.length === 1 && mcpSub.subscriptionDetails[0].isOnline ? 'h5' : 'h3'">{{::mcpSub.licenseSummary}}</span>
-            <div class="column medium-5 sub-name" ng-if="mcpSub.subscriptionDetails.length === 1 && (!mcpSub.subscriptionDetails[0].isTrial || mcpSub.subscriptionDetails[0].isOnline) && mcpSub.subscriptionDetails[0].subscriptionId">
-              <span class="h5" translate="subscriptions.subscription"></span>
-              <span class="h5">{{::mcpSub.subscriptionDetails[0].subscriptionId}}</span>
+            <span class="column medium-2 sub-name" ng-class="mcpSub.oneOnlineSub ? 'h5' : 'h3'">{{::mcpSub.licenseSummary}}</span>
+            <div class="column medium-5 sub-name" ng-if="mcpSub.showSingleSub">
+              <span class="h6" translate="subscriptions.subscription"></span>
+              <span class="h6">{{::mcpSub.subscriptionDetails[0].subscriptionId}}</span>
+              <div class="h6">{{::mcpSub.subscriptionDetails[0].endDate}}</div>
             </div>
           </div>
           <div class="row" ng-repeat="licenseCategory in mcpSub.licenseCategory" ng-show="mcpSub.showCategory(licenseCategory)">

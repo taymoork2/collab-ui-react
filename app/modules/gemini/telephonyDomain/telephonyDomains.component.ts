@@ -47,7 +47,7 @@ class TelephonyDomains implements ng.IComponentController {
   }
 
   private listenTdUpdated(): void {
-    let deregister = this.$rootScope.$on('tdUpdated', () => {
+    const deregister = this.$rootScope.$on('tdUpdated', () => {
       this.gridData = [];
       this.gridRefresh = true;
       this.setGridData();
@@ -93,7 +93,7 @@ class TelephonyDomains implements ng.IComponentController {
   }
 
   public showDetail(item) {
-    let info = {
+    const info = {
       tds: this.gridData_,
       customerId: this.customerId,
       ccaDomainId: item.ccaDomainId,
@@ -104,8 +104,8 @@ class TelephonyDomains implements ng.IComponentController {
 
   private initParameters(): void {
     if (!this.customerId) {
-      let customerId = this.gemService.getStorage('gmCustomerId');
-      let companyName = this.gemService.getStorage('gmCompanyName');
+      const customerId = this.gemService.getStorage('gmCustomerId');
+      const companyName = this.gemService.getStorage('gmCompanyName');
       this.$state.go('gem.base.tds', { companyName: companyName, customerId: customerId });
       return;
     }
@@ -123,10 +123,10 @@ class TelephonyDomains implements ng.IComponentController {
           this.Notification.error('gemini.errorCode.loadError');
         }
 
-        let data: any = _.get(res, 'content.data.body');
+        const data: any = _.get(res, 'content.data.body');
         _.forEach(data, (item) => {
-          let text = 'N/A';
-          let text_ = (item.backupBridgeName || 'N/A') + ' + ' + (item.primaryBridgeName || 'N/A');
+          const text = 'N/A';
+          const text_ = (item.backupBridgeName || 'N/A') + ' + ' + (item.primaryBridgeName || 'N/A');
 
           item.domainName = item.telephonyDomainName || item.domainName;
           item.totalSites = item.telephonyDomainSites.length;
@@ -143,7 +143,7 @@ class TelephonyDomains implements ng.IComponentController {
   }
 
   private setGridOptions(): void {
-    let columnDefs = [{
+    const columnDefs = [{
       width: '18%',
       sortable: true,
       cellTooltip: true,

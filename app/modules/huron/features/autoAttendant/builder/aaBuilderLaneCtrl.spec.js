@@ -63,5 +63,4 @@ describe('Controller: AABuilderLaneCtrl', function () {
       expect(aaUiModel['openHours']['entries'][2].getKey()).toEqual('1');
     });
   });
-
 });

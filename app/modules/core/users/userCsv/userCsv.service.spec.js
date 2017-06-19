@@ -45,7 +45,6 @@ describe('Controller: UserCsvService', function () {
   }));
 
   describe('UserCsvService', function () {
-
     describe('csvState', function () {
       it('getCsvStat should return csvStat', function () {
         expect(UserCsvService.getCsvStat()).toEqual(defaultCsvStat);
@@ -77,9 +76,7 @@ describe('Controller: UserCsvService', function () {
           }],
         });
         expect(csvStat.userErrorArray).toHaveLength(2);
-
       });
-
     });
 
     describe('error responses', function () {
@@ -198,7 +195,6 @@ describe('Controller: UserCsvService', function () {
         expect(responseWithHeader).toEqual(errorMsg + trackingId + dummyId);
         expect(noResponseAndHeader).toEqual(errorMsg + trackingId + dummyId);
       });
-
     });
   });
 });

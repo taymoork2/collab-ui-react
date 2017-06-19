@@ -52,25 +52,25 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   }
 
   var sortedOptions = [{
-    "label": 'autoAttendant.actionSayMessage',
+    label: 'autoAttendant.actionSayMessage',
   }, {
-    "label": 'autoAttendant.phoneMenuDialExt',
+    label: 'autoAttendant.phoneMenuDialExt',
   }, {
-    "label": 'autoAttendant.phoneMenuPlaySubmenu',
+    label: 'autoAttendant.phoneMenuPlaySubmenu',
   }, {
-    "label": 'autoAttendant.phoneMenuRepeatMenu',
+    label: 'autoAttendant.phoneMenuRepeatMenu',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteAA',
+    label: 'autoAttendant.phoneMenuRouteAA',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteHunt',
+    label: 'autoAttendant.phoneMenuRouteHunt',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteQueue',
+    label: 'autoAttendant.phoneMenuRouteQueue',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteToExtNum',
+    label: 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteUser',
+    label: 'autoAttendant.phoneMenuRouteUser',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteVM',
+    label: 'autoAttendant.phoneMenuRouteVM',
   }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -107,7 +107,6 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       $scope: $scope,
     });
     $scope.$apply();
-
   }));
 
   afterEach(function () {
@@ -172,9 +171,9 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var phoneMenu = {
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -191,9 +190,9 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2MenuEntry(ceMenu.entries[1]);
       var phoneMenu = {
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -213,10 +212,10 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2Menu(ceMenu.entries[2]);
       var phoneMenu = {
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
-        "attempts": 4,
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
+        attempts: 4,
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -239,10 +238,10 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2Menu(ceMenu.entries[2]);
       var phoneMenu = {
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
-        "attempts": attempts,
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
+        attempts: attempts,
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -265,9 +264,9 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       var phoneMenuEntry = raw2MenuEntry(ceMenuWithSay.entries[0]);
       var expectEntry = raw2MenuEntry(ceMenuWithRouteToUser.entries[0]);
       var phoneMenu = {
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
       };
       phoneMenu.entries.push(phoneMenuEntry);
       controller.menuEntry = phoneMenu;
@@ -275,7 +274,6 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       controller.keyActionChanged(0, data.selectedActionsRouteUser[0].action);
       expect(angular.equals(expectEntry, controller.menuEntry.entries[0])).toEqual(true);
     });
-
   });
 
   describe('addButtonZero', function () {
@@ -302,22 +300,19 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       expectedActions.push(data.selectedActionsPlaySubmenu[0]);
 
       expect(angular.equals(expectedActions, controller.selectedActions)).toEqual(true);
-
     });
-
   });
 
   describe('populateUiMenu', function () {
     it('should read the CeMenu and populate the Option menu with blank values', function () {
       controller.menuEntry = _.cloneDeep(data.ceMenu);
-      controller.menuEntry.entries[0].actions[0].name = "";
+      controller.menuEntry.entries[0].actions[0].name = '';
 
       controller.selectedActions = [];
 
       controller.populateOptionMenu();
 
-      expect(angular.equals(controller.selectedActions[0].action.name, "")).toEqual(true);
-
+      expect(angular.equals(controller.selectedActions[0].action.name, '')).toEqual(true);
     });
   });
 
@@ -338,5 +333,4 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       }
     });
   });
-
 });

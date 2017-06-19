@@ -70,7 +70,6 @@ describe('Controller: AARouteToAACtrl', function () {
   }));
 
   describe('AARouteToAA', function () {
-
     describe('activate', function () {
       it('should be able to create new AA entry', function () {
         var controller = $controller('AARouteToAACtrl', {
@@ -136,22 +135,18 @@ describe('Controller: AARouteToAACtrl', function () {
 
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
         aaUiModel[schedule].entries[0].actions[0] = action;
-
       });
 
       it('should create a conditional action with a "then" clause', function () {
-
         var controller = $controller('AARouteToAACtrl', {
           $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].then).toBeDefined();
         expect(controller.menuEntry.actions[0].then.name).toEqual('goto');
-
       });
 
       it('should create a condition action with then clause', function () {
-
         aaUiModel[schedule].entries[0].actions[0] = undefined;
 
         var controller = $controller('AARouteToAACtrl', {
@@ -161,11 +156,9 @@ describe('Controller: AARouteToAACtrl', function () {
         expect(controller.menuEntry.actions[0].name).toEqual('conditional');
         expect(controller.menuEntry.actions[0].then).toBeDefined();
         expect(controller.menuEntry.actions[0].then.name).toEqual('goto');
-
       });
 
       it('should change an action from routetoQueue to route', function () {
-
         aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
 
         var controller = $controller('AARouteToAACtrl', {
@@ -175,18 +168,14 @@ describe('Controller: AARouteToAACtrl', function () {
         expect(controller.menuEntry.actions[0].name).toEqual('conditional');
         expect(controller.menuEntry.actions[0].then).toBeDefined();
         expect(controller.menuEntry.actions[0].then.name).toEqual('goto');
-
       });
-
     });
 
     describe('fromRouteCall', function () {
       beforeEach(function () {
-
         aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
         aaUiModel[schedule].entries[0].addAction(action);
-
       });
 
       it('should be able to create new AA menu entry from Route Call', function () {
@@ -206,11 +195,9 @@ describe('Controller: AARouteToAACtrl', function () {
         aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
         aaUiModel[schedule].entries[0].actions = [];
-
       });
 
       it('should be able to create new AA entry from Route Call', function () {
-
         var controller = $controller('AARouteToAACtrl', {
           $scope: $scope,
         });
@@ -219,13 +206,11 @@ describe('Controller: AARouteToAACtrl', function () {
 
         expect(controller.menuEntry.actions[0].name).toEqual('goto');
         expect(controller.menuEntry.actions[0].value).toEqual('');
-
       });
     });
 
     describe('PhoneMenu Queue Fallback', function () {
       it('should be able to create new AA entry from Queue Fallback of PhoneMenu', function () {
-
         var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
         var fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
         fallback.addAction(disconnect);
@@ -249,6 +234,5 @@ describe('Controller: AARouteToAACtrl', function () {
         expect(fallbackAction.value).toEqual('');
       });
     });
-
   });
 });

@@ -133,7 +133,6 @@ require('./_wizard.scss');
         }
         vm.current.step = steps[index];
       }
-
     }
     function init() {
       initCurrent();
@@ -429,7 +428,6 @@ require('./_wizard.scss');
         vm.nextText = $translate.instant('common.save');
       }
     });
-
   }
 
   function crWizard() {
@@ -440,7 +438,7 @@ require('./_wizard.scss');
       scope: {
         tabs: '=',
         finish: '=',
-        isFirstTime: "=",
+        isFirstTime: '=',
       },
       templateUrl: 'modules/core/wizard/wizard.tpl.html',
     };
@@ -471,7 +469,6 @@ require('./_wizard.scss');
     return directive;
 
     function link(scope, element) {
-
       var cancelTabWatch = scope.$watch('wizard.current.tab', recompile);
       var cancelSubTabWatch = scope.$watch('wizard.current.subTab', recompile);
 
@@ -501,7 +498,6 @@ require('./_wizard.scss');
     return directive;
 
     function link(scope, element) {
-
       var cancelStepWatch = scope.$watch('wizard.current.step', recompile);
       var wizardNextTextWatch = scope.$watch('wizard.nextText', recompile);
 

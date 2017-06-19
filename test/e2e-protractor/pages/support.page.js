@@ -1,7 +1,6 @@
 'use strict';
 
 var SupportPage = function () {
-
   this.searchValidEmail = 'pbr-org-admin@squared2webex.com';
   this.searchValidUuid = 'c4753c5f-886a-42f9-a0d8-002d0b7fdf2d';
   this.searchValidLocusid = '';
@@ -63,7 +62,6 @@ var SupportPage = function () {
       return locusId;
     });
   };
-
 };
 
 module.exports = SupportPage;

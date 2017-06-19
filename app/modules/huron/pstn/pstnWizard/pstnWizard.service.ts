@@ -17,15 +17,19 @@ export class PstnWizardService {
     5: string;
     6: string;
     7: string;
+    8: string;
+    9: string;
+    10: string;
+    11: string;
   };
   private tokenfieldId = TOKEN_FIELD_ID;
   private PORTING_NUMBERS: string;
-  private advancedOrders: Array<IOrder> = [];
-  private swivelOrders: Array<IOrder> = [];
-  private portOrders: Array<IOrder> = [];
-  private newTollFreeOrders: Array<IOrder> = [];
-  private newOrders: Array<IOrder> = [];
-  private orderCart: Array<IOrder> = [];
+  private advancedOrders: IOrder[] = [];
+  private swivelOrders: IOrder[] = [];
+  private portOrders: IOrder[] = [];
+  private newTollFreeOrders: IOrder[] = [];
+  private newOrders: IOrder[] = [];
+  private orderCart: IOrder[] = [];
   private ftEnterprisePrivateTrunking: boolean = false;
 
   /* @ngInject */
@@ -49,13 +53,17 @@ export class PstnWizardService {
       5: $translate.instant('pstnSetup.setupNumbers'),
       6: $translate.instant('pstnSetup.setupService'),
       7: $translate.instant('pstnSetup.setupService'),
+      8: $translate.instant('pstnSetup.setupService'),
+      9: $translate.instant('pstnSetup.setupService'),
+      10: $translate.instant('pstnSetup.setupService'),
+      11: $translate.instant('pstnSetup.setupPstn'),
     };
   }
 
   public init(): ng.IPromise<any> {
-    let deferred = this.$q.defer();
+    const deferred = this.$q.defer();
     //Get and save organization/customer information
-    let params = {
+    const params = {
       basicInfo: true,
     };
     this.checkReseller();
@@ -65,8 +73,11 @@ export class PstnWizardService {
         this.PstnModel.setCountryCode(data.countryCode);
       }
       this.PstnService.getCustomerV2(this.PstnModel.getCustomerId())
-      .then(() => {
+      .then((response) => {
         this.PstnModel.setCustomerExists(true);
+        if (response.e911Signee) {
+          this.PstnModel.setEsaSigned(true);
+        }
         deferred.resolve(true);
       }, () => deferred.resolve(true));
     }, this.PstnModel.getCustomerId(), params);
@@ -152,6 +163,18 @@ export class PstnWizardService {
     }
   }
 
+  private logESAAcceptance(): ng.IPromise<any> {
+    if (!this.PstnModel.isEsaSigned()) {
+      return this.PstnService.updateCustomerE911Signee(this.PstnModel.getCustomerId())
+        .catch(response => {
+          this.Notification.errorResponse(response, 'pstnSetup.esaSignatureFailed');
+          return this.$q.reject(response);
+        });
+    } else {
+      return this.$q.resolve(true);
+    }
+  }
+
   private getEnterprisePrivateTrunkingFeatureToggle(): ng.IPromise<any> {
     return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
       .then((supported) => {
@@ -161,11 +184,11 @@ export class PstnWizardService {
   }
 
   private createNumbers(): ng.IPromise<any> {
-    let promises: Array<ng.IPromise<any>> = [];
-    let errors: any = [];
+    const promises: ng.IPromise<any>[] = [];
+    const errors: any = [];
     let promise;
 
-    let pushErrorArray = response => errors.push(this.Notification.processErrorResponse(response));
+    const pushErrorArray = response => errors.push(this.Notification.processErrorResponse(response));
 
     if (this.newOrders.length > 0) {
       promise = this.PstnService.orderNumbersV2(this.PstnModel.getCustomerId(), this.newOrders)
@@ -180,17 +203,17 @@ export class PstnWizardService {
     }
 
     if (this.portOrders.length > 0) {
-      promise = this.PstnService.portNumbers(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), <Array<string>>_.get(this, 'portOrders[0].data.numbers'))
+      promise = this.PstnService.portNumbers(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), <string[]>_.get(this, 'portOrders[0].data.numbers'))
         .catch(pushErrorArray);
       promises.push(promise);
     }
 
     if (this.swivelOrders.length > 0) {
       if (this.ftEnterprisePrivateTrunking) {
-        promise = this.PstnService.orderNumbersV2Swivel(this.PstnModel.getCustomerId(), <Array<string>>_.get(this, 'swivelOrders[0].data.numbers'))
+        promise = this.PstnService.orderNumbersV2Swivel(this.PstnModel.getCustomerId(), <string[]>_.get(this, 'swivelOrders[0].data.numbers'))
           .catch(pushErrorArray);
       } else {
-        promise = this.PstnService.orderNumbers(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), <Array<string>>_.get(this, 'swivelOrders[0].data.numbers'))
+        promise = this.PstnService.orderNumbers(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), <string[]>_.get(this, 'swivelOrders[0].data.numbers'))
           .catch(pushErrorArray);
       }
       promises.push(promise);
@@ -215,13 +238,30 @@ export class PstnWizardService {
     });
   }
 
-  public setSwivelOrder(order: Array<string>): Array<IOrder> {
-    let swivelOrder = [{
-      data: { numbers: order },
-      numberType: NUMTYPE_DID,
-      orderType: SWIVEL_ORDER,
-    }];
-    this.swivelOrders = swivelOrder;
+  private importNumbers(): ng.IPromise<any> {
+    const swivelNumbers: string[] = <string[]>_.get(this, 'swivelOrders[0].data.numbers', []);
+    if (swivelNumbers.length > 0) {
+      return this.PstnService.orderNumbersV2Swivel(this.PstnModel.getCustomerId(), swivelNumbers)
+        .catch(response => {
+          this.Notification.errorResponse(response, 'pstnSetup.orderNumbersError');
+          return this.$q.reject(response);
+        });
+    } else {
+      return this.$q.resolve(true);
+    }
+  }
+
+  public setSwivelOrder(order: string[]): IOrder[] {
+    if (order.length > 0) {
+      const swivelOrder = [{
+        data: { numbers: order },
+        numberType: NUMTYPE_DID,
+        orderType: SWIVEL_ORDER,
+      }];
+      this.swivelOrders = swivelOrder;
+    } else {
+      this.swivelOrders = [];
+    }
     return this.swivelOrders;
   }
 
@@ -262,8 +302,20 @@ export class PstnWizardService {
       .then(this.createNumbers.bind(this));
   }
 
+  public finalizeImport(): ng.IPromise<any> {
+    let promise = this.$q.resolve(true);
+    if (!this.PstnModel.isCustomerExists()) {
+      promise = this.createCustomerV2();
+    } else if (!this.PstnModel.isCarrierExists()) {
+      promise = this.updateCustomerCarrier();
+    }
+    return promise
+      .then(this.logESAAcceptance.bind(this))
+      .then(this.importNumbers.bind(this));
+  }
+
   public initOrders(): {totalNewAdvancedOrder: number, totalPortNumbers: number} {
-    let orderCart: Array<IOrder> = _.cloneDeep(this.PstnModel.getOrders());
+    const orderCart: IOrder[] = _.cloneDeep(this.PstnModel.getOrders());
     let totalNewAdvancedOrder, totalPortNumbers;
 
     this.portOrders = _.remove(orderCart, order => order.orderType === PORT_ORDER);
@@ -272,13 +324,13 @@ export class PstnWizardService {
       return order.orderType === NUMBER_ORDER && order.numberType === NUMTYPE_TOLLFREE;
     });
 
-    let pstnAdvancedOrders: any = _.remove(orderCart, order => {
+    const pstnAdvancedOrders: any = _.remove(orderCart, order => {
       return order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_DID;
     });
 
     this.swivelOrders = _.remove(orderCart, order => order.orderType === SWIVEL_ORDER);
 
-    let tollFreeAdvancedOrders: any = _.remove(orderCart, order => {
+    const tollFreeAdvancedOrders: any = _.remove(orderCart, order => {
       return order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_TOLLFREE;
     });
     this.advancedOrders = [].concat(pstnAdvancedOrders, tollFreeAdvancedOrders);
@@ -295,7 +347,7 @@ export class PstnWizardService {
     return { totalNewAdvancedOrder, totalPortNumbers };
   }
 
-  private getTotal(newOrders: Array<IOrder>, advancedOrders: Array<IOrder>): number {
+  private getTotal(newOrders: IOrder[], advancedOrders: IOrder[]): number {
     let total = 0;
     _.forEach(newOrders, order => {
       if (_.isString(order.data.numbers)) {
@@ -334,12 +386,12 @@ export class PstnWizardService {
     if (_.isString(telephoneNumber)) {
       return this.PhoneNumberService.getNationalFormat(telephoneNumber);
     } else {
-      let firstNumber = this.PhoneNumberService.getNationalFormat(_.head<string>(telephoneNumber));
-      let lastNumber = this.PhoneNumberService.getNationalFormat(_.last<string>(telephoneNumber));
+      const firstNumber = this.PhoneNumberService.getNationalFormat(_.head<string>(telephoneNumber));
+      const lastNumber = this.PhoneNumberService.getNationalFormat(_.last<string>(telephoneNumber));
       if (this.isConsecutiveArray(telephoneNumber)) {
         return firstNumber + ' - ' + _.last(lastNumber.split('-'));
       } else {
-        let commonNumber = this.getLongestCommonSubstring(firstNumber, lastNumber);
+        const commonNumber = this.getLongestCommonSubstring(firstNumber, lastNumber);
         return commonNumber + _.repeat('X', firstNumber.length - commonNumber.length);
       }
     }
@@ -370,7 +422,7 @@ export class PstnWizardService {
     }
   }
 
-  private isConsecutiveArray(array: Array<string>): boolean {
+  private isConsecutiveArray(array: string[]): boolean {
     return _.every(array, (value, index, arr) => {
       // return true for the first element
       if (index === 0) {
@@ -386,14 +438,14 @@ export class PstnWizardService {
       return '';
     }
     let i = 0;
-    let length = x.length;
+    const length = x.length;
     while (i < length && x.charAt(i) === y.charAt(i)) {
       i++;
     }
     return x.substring(0, i);
   }
 
-  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: {}, orderCart, model: INumbersModel): ng.IPromise<Array<IOrder>> {
+  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: {}, orderCart, model: INumbersModel): ng.IPromise<IOrder[]> {
     this.orderCart = orderCart;
     if (quantity) {
       if (numberType === NUMTYPE_DID) {
@@ -421,9 +473,9 @@ export class PstnWizardService {
     }
   }
 
-  private addToOrder(numberType: string, modelValue: INumbersModel): ng.IPromise<Array<IOrder>> {
+  private addToOrder(numberType: string, modelValue: INumbersModel): ng.IPromise<IOrder[]> {
     let model;
-    let promises: Array<any> = [];
+    const promises: any[] = [];
     let reservation;
     // add to cart
     if (numberType === NUMTYPE_DID) {
@@ -435,18 +487,18 @@ export class PstnWizardService {
     }
     _.forIn(model.searchResultsModel, (value, _key) => {
       if (value) {
-        let key = _.parseInt(<string>_key);
-        let searchResultsIndex = (model.paginateOptions.currentPage * model.paginateOptions.pageSize) + key;
+        const key = _.parseInt(<string>_key);
+        const searchResultsIndex = (model.paginateOptions.currentPage * model.paginateOptions.pageSize) + key;
         if (searchResultsIndex < model.searchResults.length) {
-          let numbers = model.searchResults[searchResultsIndex];
+          const numbers = model.searchResults[searchResultsIndex];
           if (numberType === NUMTYPE_DID) {
             reservation = this.PstnService.reserveCarrierInventoryV2(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), numbers, this.PstnModel.isCustomerExists());
           } else if (numberType === NUMTYPE_TOLLFREE) {
             reservation = this.PstnService.reserveCarrierTollFreeInventory(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), numbers, this.PstnModel.isCustomerExists());
           }
-          let promise = reservation
+          const promise = reservation
             .then(reservationData => {
-              let order: IOrder = {
+              const order: IOrder = {
                 data: {
                   numbers: numbers,
                 },
@@ -479,14 +531,14 @@ export class PstnWizardService {
     });
   }
 
-  private addAdvancedOrder(numberType: string, modelValue: INumbersModel): ng.IPromise<Array<IOrder>> {
+  private addAdvancedOrder(numberType: string, modelValue: INumbersModel): ng.IPromise<IOrder[]> {
     let model;
     if (numberType === NUMTYPE_DID) {
       model = modelValue.pstn;
     } else if (numberType === NUMTYPE_TOLLFREE) {
       model = modelValue.tollFree;
     }
-    let advancedOrder = {
+    const advancedOrder = {
       data: {
         areaCode: model.areaCode.code,
         length: parseInt(model.quantity, 10),
@@ -495,7 +547,7 @@ export class PstnWizardService {
       numberType: numberType,
       orderType: BLOCK_ORDER,
     };
-    let nxx = this.getNxxValue(modelValue);
+    const nxx = this.getNxxValue(modelValue);
     if (nxx !== null) {
       advancedOrder.data[NXX] = _.get(modelValue, 'pstn.nxx.code');
     }
@@ -504,18 +556,18 @@ export class PstnWizardService {
     return this.$q.resolve(this.orderCart);
   }
 
-  private addPortNumbersToOrder(): ng.IPromise<Array<IOrder>> {
-    let portOrder: any = {
+  private addPortNumbersToOrder(): ng.IPromise<IOrder[]> {
+    const portOrder: any = {
       data: {},
       orderType: PORT_ORDER,
     };
-    let portNumbersPartition = _.partition(this.getTokens(), 'invalid');
+    const portNumbersPartition = _.partition(this.getTokens(), 'invalid');
     portOrder.data.numbers = _.map(portNumbersPartition[1], 'value');
-    let existingPortOrder: any = _.find(this.orderCart, {
+    const existingPortOrder: any = _.find(this.orderCart, {
       orderType: PORT_ORDER,
     });
     if (existingPortOrder) {
-      let newPortNumbers = _.difference(portOrder.data.numbers, existingPortOrder.data.numbers);
+      const newPortNumbers = _.difference(portOrder.data.numbers, existingPortOrder.data.numbers);
       Array.prototype.push.apply(existingPortOrder.data.numbers, newPortNumbers);
     } else {
       this.orderCart.push(portOrder);
@@ -557,7 +609,7 @@ export class PstnWizardService {
       }
     }
     model.pstn.showAdvancedOrder = false;
-    let params = {
+    const params = {
       npa: _.get(model, 'pstn.areaCode.code'),
       count: this.getCount(model),
       sequential: model.pstn.consecutive,
@@ -630,7 +682,7 @@ export class PstnWizardService {
       }
       model.tollFree.isSingleResult = !block;
     }
-    let params = {
+    const params = {
       npa: _.get(model, 'tollFree.areaCode.code'),
       count: model.tollFree.quantity === 1 ? undefined : model.tollFree.quantity,
     };
@@ -657,7 +709,7 @@ export class PstnWizardService {
   public hasTollFreeCapability(): ng.IPromise<boolean> {
     return this.PstnService.getCarrierCapabilities(this.PstnModel.getProviderId())
         .then(response => {
-          let supportedCapabilities: string[] = [];
+          const supportedCapabilities: string[] = [];
           Object.keys(response)
             .filter(x => response[x].capability)
             .map(x => supportedCapabilities.push(response[x].capability));

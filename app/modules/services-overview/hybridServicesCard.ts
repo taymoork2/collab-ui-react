@@ -12,21 +12,21 @@ export class ServicesOverviewHybridServicesCard extends ServicesOverviewCard {
     buttonClass: 'btn-link',
   };
 
-  private _buttons: Array<ICardButton> = [{
+  private _buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.clusterList.buttons.all',
     routerState: 'cluster-list',
     buttonClass: 'btn-link',
   }];
 
-  public hybridClustersEventHandler(clusterList: Array<ICluster>): void {
+  public hybridClustersEventHandler(clusterList: ICluster[]): void {
     this.active = clusterList.length > 0;
   }
 
-  public sipDestinationsEventHandler(destinationList: Array<IPrivateTrunkResource>, clusterList: Array<ICluster>): void {
+  public sipDestinationsEventHandler(destinationList: IPrivateTrunkResource[], clusterList: ICluster[]): void {
     this.active = destinationList.length > 0 || clusterList.length > 0;
   }
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.active) {
       return this._buttons;
     } else {

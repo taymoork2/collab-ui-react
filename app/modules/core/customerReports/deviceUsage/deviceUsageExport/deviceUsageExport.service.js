@@ -7,15 +7,14 @@
 
   /* @ngInject */
   function DeviceUsageExportService($q, $document, $window, $log, $timeout, $http, Authinfo, UrlConfig) {
-
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
     //TODO: Remove deviceCategories and use aggregate ????
     function exportData(startDate, endDate, api, statusCallback, deviceCategories) {
-      var granularity = "day";
+      var granularity = 'day';
       var baseUrl = urlBase;
       if (api === 'mock') {
-        $log.info("Not implemented export for mock data");
+        $log.info('Not implemented export for mock data');
         return;
       } else if (api === 'local') {
         baseUrl = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
@@ -51,9 +50,9 @@
           var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
           var downloadLink = angular.element(downloadContainer.children()[0]);
           downloadLink.attr({
-            'href': $window.URL.createObjectURL(file),
-            'download': fileName,
-            'target': '_blank',
+            href: $window.URL.createObjectURL(file),
+            download: fileName,
+            target: '_blank',
           });
           $document.find('body').append(downloadContainer);
           $timeout(function () {
@@ -65,12 +64,12 @@
         return response;
       }).catch(function (error) {
         statusCallback(-1);
-        $log.warn("Device usage export was not successful, reason:", error);
+        $log.warn('Device usage export was not successful, reason:', error);
       });
     }
 
     function cancelExport() {
-      exportCanceler.resolve("cancelled");
+      exportCanceler.resolve('cancelled');
     }
 
     return {

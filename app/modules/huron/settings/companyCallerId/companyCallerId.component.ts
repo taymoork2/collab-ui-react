@@ -9,7 +9,7 @@ class CompanyCallerId implements ng.IComponentController {
   public companyCallerId: CompanyNumber;
   public selectedNumber: string;
   public customerName: string;
-  public externalNumberOptions: Array<IOption>;
+  public externalNumberOptions: IOption[];
   public onChangeFn: Function;
   public onNumberFilter: Function;
   public companyCallerIdEnabled: boolean;
@@ -51,7 +51,7 @@ class CompanyCallerId implements ng.IComponentController {
   public onCompanyCallerIdToggled(toggleValue: boolean): void {
     if (toggleValue) {
       this.selectedNumber = _.get<string>(this.externalNumberOptions, '[0].value');
-      let companyNumber = new CompanyNumber({
+      const companyNumber = new CompanyNumber({
         name: this.customerName,
         pattern: this.selectedNumber,
         externalCallerIdType: ExternalCallerIdType.COMPANY_CALLER_ID_TYPE,
@@ -68,9 +68,9 @@ class CompanyCallerId implements ng.IComponentController {
 
   public onCompanyCallerIdNumberChanged(value): void {
     if (_.isObject(value)) {
-      this.companyCallerId.pattern = _.get<string>(value, 'value');
+      this.companyCallerId.pattern = this.PhoneNumberService.getE164Format(_.get<string>(value, 'value'));
     } else {
-      this.companyCallerId.pattern = value;
+      this.companyCallerId.pattern = this.PhoneNumberService.getE164Format(value);
     }
     this.onChange(this.companyCallerId);
   }
@@ -93,6 +93,7 @@ export class CompanyCallerIdComponent implements ng.IComponentOptions {
   public controller = CompanyCallerId;
   public templateUrl = 'modules/huron/settings/companyCallerId/companyCallerId.html';
   public bindings = {
+    isLocation: '<',
     site: '<',
     customerName: '<',
     companyCallerId: '<',

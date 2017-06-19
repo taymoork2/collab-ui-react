@@ -2,7 +2,7 @@ import { Line } from '../lines/services';
 
 class DirectoryNumberListCtrl implements ng.IComponentController {
 
-  public directoryNumbers: Array<Line>;
+  public directoryNumbers: Line[];
   private primaryLabel: string;
   private primarySharedLabel: string;
   private sharedLabel: string;

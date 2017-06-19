@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineResource) {
-
     var vm = this;
     var conditional = 'conditional';
 
@@ -115,7 +114,6 @@
         } else {
           return $q.reject();
         }
-
       });
       return deferred.promise;
     }
@@ -184,7 +182,6 @@
     // get list of users for the provided search string
     // also retrieves extension for user for display, but not for searching
     function getUsers(searchStr, startat) {
-
       var abortSearchPromise = vm.abortSearchPromise;
 
       // if we didn't get a start-at, we are starting over
@@ -201,11 +198,9 @@
       var defer = $q.defer();
 
       UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data) {
-
         if (data.success) {
           var userInfoPromises = [];
           _.each(data.Resources, function (aUser) {
-
             userInfoPromises.push(getUserExtension(aUser.id).then(function (extension) {
               // only add to the user list if they have a primary extension
               if (extension) {
@@ -240,7 +235,6 @@
                   id: aUser.id,
                 });
               }
-
             }));
           });
           $q.all(userInfoPromises).then(function () {
@@ -248,10 +242,8 @@
             // if enough users didn't make it past sanity checks,
             // and we're still getting results back, then get some more.
             if (_.size(vm.users) < vm.sort.fullLoad && _.size(data.Resources) && !abortSearchPromise.promise.$$state.status) {
-
               startat += vm.sort.maxCount;
               defer.resolve(getUsers(searchStr, startat));
-
             } else {
               // otherwise we're done
               vm.users.sort(AACommonService.sortByProperty('description'));
@@ -261,14 +253,11 @@
         } else {
           defer.reject();
         }
-
       }, searchStr, false);
 
       return defer.promise;
-
     }
     function checkForRouteToVU(action, routeToName) {
-
       // make sure action is V or U not External Number, User, etc
       if (!(action.getName() === routeToName)) {
         action.setName(routeToName);
@@ -278,12 +267,10 @@
     }
 
     function activate() {
-
       var routeToUserOrVM = !_.isUndefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
 
       var ui = AAUiModelService.getUiModel();
       if ($scope.fromDecision) {
-
         var conditionalAction;
         fromDecision = true;
 
@@ -346,10 +333,8 @@
         }
       }
       populateUiModel();
-
     }
 
     activate();
-
   }
 })();

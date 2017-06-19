@@ -14,7 +14,7 @@ describe('CsdmHubFactory', function () {
     var listenerAddedListener = jasmine.createSpy('listenerAddedListener');
     var listenerRemovedListener = jasmine.createSpy('listenerRemovedListener');
     var scope = {
-      '$on': jasmine.createSpy('$on'),
+      $on: jasmine.createSpy('$on'),
     };
 
     hub.onListener('added', listenerAddedListener);
@@ -35,5 +35,4 @@ describe('CsdmHubFactory', function () {
     expect(listenerRemovedListener.calls.count()).toBe(1);
     expect(hub.count('foo')).toBe(0);
   });
-
 });

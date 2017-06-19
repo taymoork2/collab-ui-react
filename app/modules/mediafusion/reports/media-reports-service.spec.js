@@ -20,10 +20,10 @@ describe('Service: Media Reports Service', function () {
   vm.availabilityCardData = getJSONFixture('mediafusion/json/metrics-graph-report/availabilityCardData.json');
   vm.availabilitydata = vm.availabilityCardData.availability;
   vm.participantChangedata = {
-    "orgId": "11111111-2222-3333-a444-111111111bac",
-    "dataProvider": [{
-      "name": "participant_change",
-      "value": 2,
+    orgId: '11111111-2222-3333-a444-111111111bac',
+    dataProvider: [{
+      name: 'participant_change',
+      value: 2,
     }],
   };
 
@@ -42,12 +42,12 @@ describe('Service: Media Reports Service', function () {
   vm.error = {
     message: 'error',
     data: {
-      trackingId: "id",
+      trackingId: 'id',
     },
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", vm.Authinfo);
+    $provide.value('Authinfo', vm.Authinfo);
   }));
 
   beforeEach(inject(function (_$httpBackend_, _MediaReportsService_, _Notification_, _UrlConfig_) {
@@ -68,7 +68,6 @@ describe('Service: Media Reports Service', function () {
     vm.clientTypeUrl = vm.baseUrl + '/client_type_trend/?relativeTime=4h';
     vm.meetingLcationUrl = vm.baseUrl + '/meeting_location_trend/?relativeTime=4h';
     vm.participant_change = vm.baseUrl + '/overflow_participant_change/?relativeTime=4h';
-
   }));
 
   afterEach(function () {
@@ -279,5 +278,4 @@ describe('Service: Media Reports Service', function () {
       vm.$httpBackend.flush();
     });
   });
-
 });

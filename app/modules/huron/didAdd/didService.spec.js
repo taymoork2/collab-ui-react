@@ -41,5 +41,4 @@ describe('Controller: DidService', function () {
     DidService.clearDidList();
     expect(DidService.getDidList().length).toEqual(0);
   });
-
 });

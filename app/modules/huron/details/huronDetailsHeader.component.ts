@@ -4,7 +4,7 @@ interface IHeaderTab {
 }
 
 class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
-  public tabs: Array<IHeaderTab> = [];
+  public tabs: IHeaderTab[] = [];
   public title: string = 'huronDetails.title';
   public back: boolean = true;
   public backState: string = 'services-overview';
@@ -17,10 +17,20 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
   ) { }
 
   public $onInit(): void {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(enabled => {
+        if (enabled) {
+          this.tabs.splice(0, 0, {
+            title: 'huronDetails.locationsTitle',
+            state: 'calllocations',
+          });
+        }
+      });
     this.tabs.push({
       title: 'huronDetails.linesTitle',
       state: 'huronlines',
     });
+
     if (this.showFeatureTab()) {
       this.tabs.push({
         title: 'huronDetails.featuresTitle',

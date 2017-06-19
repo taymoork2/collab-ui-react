@@ -1,5 +1,5 @@
 <div class="csv-download">
-  <div ng-hide="$ctrl.noIcon">
+  <div ng-hide="$ctrl.noIcon" class="stat">
     <a href="" ng-click="$ctrl.downloadCsv()">
       <span ng-if="$ctrl.anchorText">{{::$ctrl.anchorText}}</span>
       <span ng-if="!$ctrl.anchorText" tooltip-placement="top" tooltip="{{$ctrl.tooltipMessage}}" tooltip-animation="false" tooltip-append-to-body="true">

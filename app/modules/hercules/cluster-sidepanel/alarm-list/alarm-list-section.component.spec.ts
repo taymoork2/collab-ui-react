@@ -53,9 +53,9 @@ describe('Component: AlarmListSectionComponent  ', () => {
   };
 
   it ('should change state to hybrid-services-connector-sidepanel.alarm-details in goToAlarm() when newLink is true', () => {
-    let alarms = [templateAlarm];
-    let connectorType = 'c_mgmt';
-    let newLink = 'true';
+    const alarms = [templateAlarm];
+    const connectorType = 'c_mgmt';
+    const newLink = 'true';
     initController(alarms, connectorType, newLink);
     expect(ctrl).toBeDefined();
 
@@ -64,9 +64,9 @@ describe('Component: AlarmListSectionComponent  ', () => {
   });
 
   it ('should change state to expressway-cluster-sidepanel.alarm-details in goToAlarm() for c_mgmt connector', () => {
-    let alarms = [templateAlarm];
-    let connectorType = 'c_mgmt';
-    let newLink = 'false';
+    const alarms = [templateAlarm];
+    const connectorType = 'c_mgmt';
+    const newLink = 'false';
     initController(alarms, connectorType, newLink);
     expect(ctrl).toBeDefined();
 
@@ -75,9 +75,9 @@ describe('Component: AlarmListSectionComponent  ', () => {
   });
 
   it ('should change state to hds-cluster-details.alarm-details in goToAlarm() for hds_app connector', () => {
-    let alarms = [templateAlarm];
-    let connectorType = 'hds_app';
-    let newLink = 'false';
+    const alarms = [templateAlarm];
+    const connectorType = 'hds_app';
+    const newLink = 'false';
     initController(alarms, connectorType, newLink);
     expect(ctrl).toBeDefined();
 
@@ -86,9 +86,9 @@ describe('Component: AlarmListSectionComponent  ', () => {
   });
 
   it ('should getSeverityIcon returns right icon', () => {
-    let alarms = [templateAlarm];
-    let connectorType = 'c_mgmt';
-    let newLink = 'false';
+    const alarms = [templateAlarm];
+    const connectorType = 'c_mgmt';
+    const newLink = 'false';
     initController(alarms, connectorType, newLink);
     expect(ctrl.getSeverityIcon('critical')).toBe('icon icon-error');
     expect(ctrl.getSeverityIcon('error')).toBe('icon icon-priority');

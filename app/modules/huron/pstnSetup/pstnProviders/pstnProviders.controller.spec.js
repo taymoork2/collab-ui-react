@@ -226,5 +226,4 @@ describe('Controller: PstnProvidersCtrl', function () {
       expect(PstnModel.isSiteExists()).toEqual(true);
     });
   });
-
 });

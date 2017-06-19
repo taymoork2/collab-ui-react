@@ -27,7 +27,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
   public saveInProcess: boolean = false;
   public form: ng.IFormController;
   public originalCallPickupGroup: IPickupGroup;
-  private callPickupProperties: Array<string> = ['name', 'notificationTimer', 'playSound', 'displayCallingPartyId', 'displayCalledPartyId'];
+  private callPickupProperties: string[] = ['name', 'notificationTimer', 'playSound', 'displayCallingPartyId', 'displayCalledPartyId'];
   /* @ngInject */
   constructor(
     private $timeout: ng.ITimeoutService,
@@ -61,11 +61,11 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
   }
 
   public populateSelectedMembers(callPickup: IPickupGroup): void {
-    let scope = this;
+    const scope = this;
     scope.selectedMembers = [];
-    let promises: Array<ng.IPromise<IMemberNumber[]>> = [];
+    const promises: ng.IPromise<IMemberNumber[]>[] = [];
     _.forEach(callPickup.members, function (member: Member) {
-      let memberData: IMember = {
+      const memberData: IMember = {
         member: member,
         picturePath: '',
         checkboxes: [],
@@ -77,22 +77,22 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
       scope.selectedMembers.push(memberData);
     });
     _.forEach(scope.selectedMembers, function(mem: IMember) {
-      let promise = scope.CallPickupGroupService.getMemberNumbers(mem.member.uuid);
+      const promise = scope.CallPickupGroupService.getMemberNumbers(mem.member.uuid);
       promises.push(promise);
     });
-    scope.$q.all(promises).then((memberNumbers: Array<IMemberNumber[]>) => {
+    scope.$q.all(promises).then((memberNumbers: IMemberNumber[][]) => {
       let index = 0;
       _.forEach(scope.selectedMembers, function (member: IMember) {
         member.checkboxes = scope.CallPickupGroupService.createCheckboxesForEdit(member, memberNumbers[index], scope.title);
         index++;
       });
       _.forEach(callPickup.numbers, function (number: any) {
-        let member = _.find(scope.selectedMembers, (member: IMember) => member.member.uuid === number.memberUuid);
-        let cb = _.find(member.checkboxes, (checkbox: ICardMemberCheckbox) => (checkbox.label.split('&')[0].trim() === number.internal.trim()));
+        const member = _.find(scope.selectedMembers, (member: IMember) => member.member.uuid === number.memberUuid);
+        const cb = _.find(member.checkboxes, (checkbox: ICardMemberCheckbox) => (checkbox.label.split('&')[0].trim() === number.internal.trim()));
         if (cb) {
           cb.value = true;
         }
-        let saveNum: ICallPickupNumbers = {
+        const saveNum: ICallPickupNumbers = {
           uuid: number.uuid,
           internalNumber: number.internal,
         };
@@ -138,8 +138,8 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
       case 0:
         return this.name !== '' && this.isNameValid;
       case 1:
-        let memberDefined: boolean = !(this.selectedMembers.length < 2);
-        let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
+        const memberDefined: boolean = !(this.selectedMembers.length < 2);
+        const helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
         if (memberDefined && this.isValidMember) {
           //Show helpText
           helpText.addClass('active');
@@ -160,10 +160,10 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
     this.$timeout(() => {
       if (this.index === this.getLastIndex()) {
         //Change the green arrow button to a blue one
-        let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
+        const arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
         arrowButton.removeClass('save-call-feature');
         //Hide helpText
-        let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
+        const helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
         helpText.removeClass('active');
         helpText.removeClass('enabled');
       }
@@ -176,7 +176,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
     this.index++;
     if (this.index === this.getLastIndex()) {
       //Change the blue arrow button to a green one
-      let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
+      const arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
       arrowButton.addClass('save-call-feature');
     }
     if (this.index === this.getLastIndex() + 1) {
@@ -268,13 +268,13 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
 
   public saveCallPickup(): void {
     this.saveInProcess = true;
-    let scope = this;
+    const scope = this;
     _.forEach(this.selectedMembers, function (member) {
       _.forEach(member.saveNumbers, function (number) {
         scope.saveNumbers.push(number.uuid);
       });
     });
-    let callPickupGroup: IPickupGroup = <IPickupGroup> {
+    const callPickupGroup: IPickupGroup = <IPickupGroup> {
       name: this.name,
       members: this.saveNumbers,
     };
@@ -329,7 +329,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
   }
 
   private checkForChanges(): void {
-    let scope = this;
+    const scope = this;
     this.$timeout(function () {
       if (!scope.checkNameValidity() || !scope.checkMemberValidity()) {
         scope.form.$setValidity('', false, scope.form);

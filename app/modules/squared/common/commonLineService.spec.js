@@ -10,7 +10,6 @@ describe('Service: CommonLineService', function () {
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$q_, _$rootScope_, _CommonLineService_, _TelephonyInfoService_) {
-
     $q = _$q_;
     $rootScope = _$rootScope_;
     CommonLineService = _CommonLineService_;
@@ -26,7 +25,6 @@ describe('Service: CommonLineService', function () {
   }));
 
   describe('Existence of the services', function () {
-
     it('loadPrimarySiteInfo exists', function () {
       expect(CommonLineService.loadPrimarySiteInfo).toBeDefined();
     });
@@ -87,7 +85,7 @@ describe('Service: CommonLineService', function () {
   describe('UserAdd DID and DN assignment', function () {
     beforeEach(function () {
       entitylist = [{
-        "name": "Old River Room",
+        name: 'Old River Room',
       }];
     });
 

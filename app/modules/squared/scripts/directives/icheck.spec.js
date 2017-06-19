@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Directive: icheck', function () {
-
   // load the directive's module
   beforeEach(angular.mock.module('Squared'));
 

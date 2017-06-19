@@ -17,6 +17,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     /* Search Page Functions */
     vm.showHover = showHover;
+    vm.getProPackTooltip = getProPackTooltip;
     vm.searchByLimit = searchByLimit;
     vm.searchByParameters = searchByParameters;
     vm.advancedSearch = advancedSearch;
@@ -222,6 +223,10 @@ var Spark = require('@ciscospark/spark-core').default;
       return vm.itProPackEnabled && !vm.itProPackPurchased;
     }
 
+    function getProPackTooltip() {
+      return (showHover()) ? $translate.instant('ediscovery.searchParameters.dateRangeTooltip') : '';
+    }
+
     function searchByLimit() {
       var limit = !_.isNull(vm.searchModel) ? splitWords(vm.searchModel) : null;
       if (_.isArray(limit) && _.isLength(limit.length) > 100) {
@@ -371,17 +376,17 @@ var Spark = require('@ciscospark/spark-core').default;
           var status = err && err.status ? err.status : 500;
           switch (status) {
             case 400:
-              vm.error = $translate.instant("ediscovery.search.invalidRoomId", {
+              vm.error = $translate.instant('ediscovery.search.invalidRoomId', {
                 roomId: roomId,
               });
               break;
             case 404:
-              vm.error = $translate.instant("ediscovery.search.roomNotFound", {
+              vm.error = $translate.instant('ediscovery.search.roomNotFound', {
                 roomId: roomId,
               });
               break;
             default:
-              vm.error = $translate.instant("ediscovery.search.roomNotFound", {
+              vm.error = $translate.instant('ediscovery.search.roomNotFound', {
                 roomId: roomId,
               });
               Notification.error('ediscovery.search.roomLookupError');
@@ -398,8 +403,8 @@ var Spark = require('@ciscospark/spark-core').default;
         .catch(function () {
           Notification.error('ediscovery.search.runFailed');
           EdiscoveryService.patchReport(vm.currentReportId, {
-            state: "FAILED",
-            failureReason: "UNEXPECTED_FAILURE",
+            state: 'FAILED',
+            failureReason: 'UNEXPECTED_FAILURE',
           });
         }).finally(function () {
           enableAvalonPolling();
@@ -606,7 +611,6 @@ var Spark = require('@ciscospark/spark-core').default;
       }
       return null;
     }
-
   }
   angular
     .module('Ediscovery')

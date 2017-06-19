@@ -109,7 +109,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   }
 
   public addDestination(): void {
-    let dest = new Destination();
+    const dest = new Destination();
     this.privateTrunkResource.destinations.push(dest);
     this.duplicateCountCheck = 1;
   }
@@ -125,7 +125,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 
   public changeDestination(index: number): void {
     if (this.privateTrunkResource.destinations[index].address) {
-      let destination = this.privateTrunkResource.destinations[index];
+      const destination = this.privateTrunkResource.destinations[index];
       if ( !_.isEmpty(destination.address) && !_.isEmpty(destination.name)) {
         this.changeSIPDestination();
         this.duplicateCountCheck = 1;
@@ -134,8 +134,8 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   }
 
   public invalidCharactersValidation(viewValue: string): boolean {
-    let value = _.split(viewValue, ':', 2);
-    let regex = new RegExp(/^(([a-zA-Z0-9\-]{1,63}[\.]))+([A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z])$/g);
+    const value = _.split(viewValue, ':', 2);
+    const regex = new RegExp(/^(([a-zA-Z0-9\-]{1,63}[\.]))+([A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z])$/g);
     return regex.test(value[0]);
   }
 
@@ -148,7 +148,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   }
 
   public uniqueDomainValidation(viewValue: string): ng.IPromise<boolean> {
-    let validateDefer = this.$q.defer();
+    const validateDefer = this.$q.defer();
     this.PrivateTrunkService.isValidUniqueSipDestination(viewValue)
     .then((res) => {
       if (res) {
@@ -161,12 +161,12 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   }
 
   public portValidation(viewValue: string) {
-    let port = _.split(viewValue, ':');
+    const port = _.split(viewValue, ':');
     return ((!_.isUndefined(port) && port.length > 1) ? _.toNumber(port[1]) === 0 || _.inRange(_.toNumber(port[1]), MIN_PORT, MAX_PORT) : true );
   }
 
   public domainlengthValidation(viewValue) {
-    let value = _.split(viewValue, ':', 2);
+    const value = _.split(viewValue, ':', 2);
     return value[0].length <= DOMAIN_MAX_LENGTH;
   }
 

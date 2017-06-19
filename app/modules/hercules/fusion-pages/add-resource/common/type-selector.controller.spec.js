@@ -55,7 +55,6 @@ describe('Controller: TypeSelectorController', function () {
       expect(controller.isEntitledTo.context).toBe(false);
       expect(controller.isEntitledTo.cucm).toBe(false);
     });
-
   });
 
   describe('canGoNext()', function () {

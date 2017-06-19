@@ -36,6 +36,7 @@ describe('Controller: Customer Reports Ctrl', function () {
                             '$q',
                             'Authinfo',
                             'FeatureToggleService',
+                            'ITProPackService',
                             'MediaServiceActivationV2');
 
     spyOn(this.Authinfo, 'isCare').and.returnValue(true);
@@ -54,11 +55,11 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(false));
-      spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(false));
+      spyOn(this.ITProPackService, 'hasITProPackEnabled').and.returnValue(this.$q.resolve(false));
 
-      let WebExApiGatewayService: any = {
+      const WebExApiGatewayService: any = {
         siteFunctions: (url: string): any => {
-          let defer = this.$q.defer();
+          const defer = this.$q.defer();
           defer.resolve({
             siteUrl: url,
           });
@@ -71,13 +72,10 @@ describe('Controller: Customer Reports Ctrl', function () {
         WebexReportService: WebexReportService,
         WebExApiGatewayService: WebExApiGatewayService,
         FeatureToggleService: this.FeatureToggleService,
+        ITProPackService: this.ITProPackService,
       });
 
       this.$scope.$apply();
-    });
-
-    it('pagetitle should be Reports', function () {
-      expect(this.controller.pageTitle).toEqual('reportsPage.pageTitle');
     });
 
     it('should only display spark and care reports tab', function () {
@@ -91,11 +89,11 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
-      spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(true));
+      spyOn(this.ITProPackService, 'hasITProPackEnabled').and.returnValue(this.$q.resolve(true));
 
-      let WebExApiGatewayService = {
+      const WebExApiGatewayService = {
         siteFunctions: (url: string): any => {
-          let defer = this.$q.defer();
+          const defer = this.$q.defer();
           defer.resolve({
             siteUrl: url,
             isAdminReportEnabled: true,
@@ -110,6 +108,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         WebexReportService: WebexReportService,
         WebExApiGatewayService: WebExApiGatewayService,
         FeatureToggleService: this.FeatureToggleService,
+        ITProPackService: this.ITProPackService,
       });
 
       this.$scope.$apply();

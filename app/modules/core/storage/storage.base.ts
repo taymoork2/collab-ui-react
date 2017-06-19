@@ -26,13 +26,13 @@ export abstract class StorageBase {
   }
 
   public pop(key) {
-    let value = this.get(key);
+    const value = this.get(key);
     this.remove(key);
     return value;
   }
 
   public popObject(key) {
-    let object = this.getObject(key);
+    const object = this.getObject(key);
     this.remove(key);
     return object;
   }

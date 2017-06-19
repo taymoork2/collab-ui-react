@@ -9,7 +9,7 @@ export class OrderDetailCtrl implements ng.IComponentController {
   public currentOrder: any;
   public currentCustomer: any;
   public allNumbersCount = 0;
-  public info: Array<any> = [];
+  public info: any[] = [];
   public tosAccepted = true;
   public createdBy: string;
   /* @ngInject */

@@ -28,7 +28,7 @@ describe('gridSpinner', () => {
       this.$scope.$apply();
 
       // ensure grid spinner is in the container
-      let spinner = this.$document.find('.container .grid-spinner')[0];
+      const spinner = this.$document.find('.container .grid-spinner')[0];
       expect(_.isElement(spinner)).toBeFalsy();
     });
 
@@ -36,7 +36,7 @@ describe('gridSpinner', () => {
       this.$scope.displaySpinner = true;
       this.$scope.$apply();
 
-      let spinner = this.$document.find('.container .grid-spinner')[0];
+      const spinner = this.$document.find('.container .grid-spinner')[0];
       expect(_.isElement(spinner)).toBeTruthy();
     });
 

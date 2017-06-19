@@ -9,7 +9,7 @@ describe('Component: trialRegionalSettings', () => {
     this.initModules('trial.regionalSettings');
     this.injectDependencies('$scope', '$q', 'HuronCountryService', 'FeatureToggleService');
 
-    let countryList = getJSONFixture('core/json/trials/countryList.json');
+    const countryList = getJSONFixture('core/json/trials/countryList.json');
 
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     spyOn(this.HuronCountryService, 'getCountryList').and.returnValue(countryList);

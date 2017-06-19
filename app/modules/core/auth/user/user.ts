@@ -14,52 +14,52 @@ export interface IMeta {
   created: string;
   lastModified: string;
   version: string;
-  attributes: Array<string>;
+  attributes: string[];
   location: string;
   organizationID: string;
 }
 
 export interface IUser {
-  schemas: Array<string>;
+  schemas: string[];
   userName: string;
-  emails: Array<ITypeValue>;
+  emails: ITypeValue[];
   name: IName;
-  entitlements: Array<string>;
+  entitlements: string[];
   userStatus: string;
   id: string;
   meta: IMeta;
-  ims: Array<ITypeValue>;
+  ims: ITypeValue[];
   displayName: string;
-  roles: Array<string>;
+  roles: string[];
   active: boolean;
-  accountStatus: Array<string>;
-  licenseID: Array<string>;
-  userSettings: Array<string>;
-  userPreferences: Array<string>;
-  sipAddresses: Array<ITypeValue>;
+  accountStatus: string[];
+  licenseID: string[];
+  userSettings: string[];
+  userPreferences: string[];
+  sipAddresses: ITypeValue[];
   avatarSyncEnabled: boolean;
   hideLaunch: boolean;
   hideToS: boolean;
 }
 
 export class User implements IUser {
-  public schemas: Array<string>;
+  public schemas: string[];
   public userName: string;
-  public emails: Array<ITypeValue>;
+  public emails: ITypeValue[];
   public name: IName;
-  public entitlements: Array<string>;
+  public entitlements: string[];
   public userStatus: string;
   public id: string;
   public meta: IMeta;
-  public ims: Array<ITypeValue>;
+  public ims: ITypeValue[];
   public displayName: string;
-  public roles: Array<string>;
+  public roles: string[];
   public active: boolean;
-  public accountStatus: Array<string>;
-  public licenseID: Array<string>;
-  public userPreferences: Array<string>;
-  public userSettings: Array<string>;
-  public sipAddresses: Array<ITypeValue>;
+  public accountStatus: string[];
+  public licenseID: string[];
+  public userPreferences: string[];
+  public userSettings: string[];
+  public sipAddresses: ITypeValue[];
   public avatarSyncEnabled: boolean;
   public hideLaunch: boolean;
   public hideToS: boolean;

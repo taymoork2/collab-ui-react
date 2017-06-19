@@ -43,13 +43,12 @@
       vm.deleteBtnDisabled = true;
 
       if (vm.featureFilter === 'AA') {
-
         var aaModel = AAModelService.getAAModel();
         var ceInfoToDelete;
         var delPosition;
         for (var i = 0; i < aaModel.ceInfos.length; i++) {
           var ceUrl = aaModel.ceInfos[i].getCeUrl();
-          var uuidPos = ceUrl.lastIndexOf("/");
+          var uuidPos = ceUrl.lastIndexOf('/');
           var uuid = ceUrl.substr(uuidPos + 1);
           if (uuid === vm.featureId) {
             ceInfoToDelete = aaModel.ceInfos[i];
@@ -167,5 +166,4 @@
       Notification.error(error);
     }
   }
-
 })();

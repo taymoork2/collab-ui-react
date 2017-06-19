@@ -17,12 +17,12 @@ describe('Service: DialingService', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
     spyOn(this.$state, 'go').and.returnValue(this.$q.resolve());
 
-    let getDialingResponseEmpty: ICOSRestrictionResponse = {
+    const getDialingResponseEmpty: ICOSRestrictionResponse = {
       customer: [],
       place: [],
     };
 
-    let getDialingResponse: ICOSRestrictionResponse = {
+    const getDialingResponse: ICOSRestrictionResponse = {
       customer: [],
       place: [{
         restriction: DialingType.INTERNATIONAL,

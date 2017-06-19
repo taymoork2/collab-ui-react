@@ -18,7 +18,6 @@
     TokenService,
     WebExUtilsFact
   ) {
-
     var _this = this;
 
     _this.funcName = 'ReportsIframeCtrl()';

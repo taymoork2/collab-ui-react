@@ -11,14 +11,17 @@ describe('Component: upgradeModal', () => {
     productInstanceId: productInstanceId,
     subscriptionId: subscriptionId,
     name: productName,
+    autoBilling: true,
   }];
 
   beforeEach(function () {
     this.initModules(onlineUpgradeModule);
     this.injectDependencies(
       '$q',
+      '$scope',
       '$state',
       'Auth',
+      'FeatureToggleService',
       'Notification',
       'OnlineUpgradeService',
     );
@@ -26,12 +29,14 @@ describe('Component: upgradeModal', () => {
     spyOn(this.$state, 'go');
     spyOn(this.Auth, 'logout');
     spyOn(this.Notification, 'success');
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.OnlineUpgradeService, 'getSubscriptionId').and.returnValue(subscriptionId);
     spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
     spyOn(this.OnlineUpgradeService, 'cancelSubscriptions').and.returnValue(this.$q.resolve());
     spyOn(this.OnlineUpgradeService, 'dismissModal');
 
     this.compileComponent('onlineUpgradeModal');
+    this.$scope.$apply();
   });
 
   it('should have a subscriptionId', function () {
@@ -66,5 +71,20 @@ describe('Component: upgradeModal', () => {
     this.view.find(BUY_BUTTON).click();
 
     expect(this.Auth.logout).toHaveBeenCalled();
+  });
+
+  // 2017 name change
+  describe('atlas2017NameChangeGetStatus - ', function () {
+    it('should have base name when toggle is false', function () {
+      expect(this.view.text()).toContain('onlineUpgradeModal.cancelBody');
+      expect(this.view.text()).not.toContain('onlineUpgradeModal.cancelBodyNew');
+    });
+
+    it('should have the new name when toggle is true', function () {
+      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+      this.compileComponent('onlineUpgradeModal');
+      this.$scope.$apply();
+      expect(this.view.text()).toContain('onlineUpgradeModal.cancelBodyNew');
+    });
   });
 });

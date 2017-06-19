@@ -143,7 +143,7 @@ describe('Component: autoAnswer', () => {
   });
 
   it('should display warning msg that it is enabled for a shared line member when toggle is turned on', function() {
-    let autoAnswer1 = _.cloneDeep(autoAnswer);
+    const autoAnswer1 = _.cloneDeep(autoAnswer);
     autoAnswer1.phones[0].enabled = false;
     autoAnswer1.phones[0].mode = undefined;
     autoAnswer1.enabledForSharedLineMember = true;
@@ -170,7 +170,7 @@ describe('Component: autoAnswer', () => {
   });
 
   it('should not display dropdown when there is only one supported phone', function() {
-    let autoAnswer2 = _.cloneDeep(autoAnswer);
+    const autoAnswer2 = _.cloneDeep(autoAnswer);
     autoAnswer2.phones.splice(1, 1);
     this.$scope.autoAnswer = autoAnswer2;
     this.$scope.$apply();

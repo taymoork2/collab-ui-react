@@ -640,14 +640,12 @@ describe('Controller: TrialCtrl:', function () {
         });
 
         describe('validateAdvanceCareLicense:', function () {
-
           it('advance care license validation allows value up to and including 50.', function () {
             controller.details.licenseCount = 100;
             controller.advanceCareTrial.enabled = true;
             controller.careTrial.details.quantity = 0;
             var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K2);
             expect(max).toBe(50);
-
           });
 
           it('advance care license validation allows max value up to and including 50 with advance care enabled', function () {
@@ -830,7 +828,6 @@ describe('Controller: TrialCtrl:', function () {
         });
       });
     });
-
   });
   describe('start trial mode:', function () {
     beforeEach(function () {
@@ -1009,7 +1006,6 @@ describe('Controller: TrialCtrl:', function () {
         it('should have Squared UC offer', function () {
           expect(controller.callTrial.enabled).toBeTruthy();
           expect(controller.pstnTrial.enabled).toBeTruthy();
-
         });
 
         it('should notify success', function () {
@@ -1075,7 +1071,6 @@ describe('Controller: TrialCtrl:', function () {
       });
 
       describe('with context service checked', function () {
-
         it('should enable context service', function () {
           controller.contextTrial.enabled = true;
           controller.callTrial.enabled = false;

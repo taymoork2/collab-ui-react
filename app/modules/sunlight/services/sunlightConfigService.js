@@ -21,6 +21,7 @@
       onBoardCare: onBoardCare,
       updateChatConfig: updateChatConfig,
       aaOnboard: aaOnboard,
+      onboardCareBot: onboardCareBot,
     };
 
     return service;
@@ -60,14 +61,19 @@
     }
 
     function onBoardCare() {
-      var onboardPayload = { 'orgDisplayName': Authinfo.getOrgName(),
-        'csDiscoveryUrl': 'discovery.produs1.ciscoccservice.com' };
+      var onboardPayload = { orgDisplayName: Authinfo.getOrgName(),
+        csDiscoveryUrl: 'discovery.produs1.ciscoccservice.com' };
       return $http.put(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/csonboard', onboardPayload);
     }
 
     function aaOnboard() {
       var onboardPayload = {};
       return $http.post(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/aaonboard', onboardPayload);
+    }
+
+    function onboardCareBot() {
+      var onboardPayload = {};
+      return $http.post(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/apponboard', onboardPayload);
     }
   }
 

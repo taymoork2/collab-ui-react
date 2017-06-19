@@ -1,5 +1,4 @@
 (function () {
-
   'use strict';
 
   /* @ngInject */
@@ -7,7 +6,7 @@
     return function iFrameResizable($scope, element, attributes) {
       $scope.initializeWindowSize = function () {
         var innerHeight = $window.innerHeight;
-        var targetElementId = attributes["iFrameResizable"];
+        var targetElementId = attributes['iFrameResizable'];
         var targetElement = $window.document.getElementById(targetElementId).getBoundingClientRect();
         var targetElementLocation = {
           left: targetElement.left + $window.pageXOffset,
@@ -31,5 +30,4 @@
   } // iFrameResizableDirective ()
 
   module.exports = iFrameResizableDirective;
-
 })();

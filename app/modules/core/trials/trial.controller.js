@@ -487,7 +487,6 @@
           } else {
             $state.modal.close();
           }
-
         })
         .finally(function () {
           vm.loading = false;
@@ -570,7 +569,6 @@
           }
         }
         return result;
-
       }, result);
 
       return licenseTypeAggregate;
@@ -578,7 +576,6 @@
 
 
     function setViewState(modalStage, value) {
-
       _.find(vm.trialStates, {
         name: modalStage,
       }).enabled = value;
@@ -943,7 +940,6 @@
       if (_.isFunction(addNumbersCallback)) {
         return addNumbersCallback(customerOrgId).catch(_.noop); //don't throw an error
       }
-
     }
 
     function saveTrialContext(customerOrgId) {

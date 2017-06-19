@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AAVarNamesModalCtrl($modalInstance, AAModelService, varNames, ceHasVar) {
-
     var vm = this;
 
     vm.ok = ok;
@@ -39,7 +38,6 @@
             vm.dependentNames.push(rec.callExperienceName);
           }
         }
-
       });
     }
 

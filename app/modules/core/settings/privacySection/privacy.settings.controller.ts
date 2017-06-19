@@ -9,7 +9,7 @@ export class PrivacySettingController {
   constructor(private Orgservice, Authinfo, private Notification) {
     this.orgId = Authinfo.getOrgId();
     this._showCrashLogSetting = Authinfo.isDeviceMgmt();
-    let params = {
+    const params = {
       basicInfo: true,
     };
     Orgservice.getOrg((data) => {
@@ -61,14 +61,14 @@ export class PrivacySettingController {
   }
 
   public updateAllowReadOnlyOrgAccess() {
-    let settings = {
+    const settings = {
       allowReadOnlyAccess: this.allowReadOnlyAccess,
     };
     this.updateOrgSettings(this.orgId, settings);
   }
 
   public updateAllowCrashLogUpload() {
-    let settings = {
+    const settings = {
       allowCrashLogUpload: this.allowCrashLogUpload,
     };
     this.updateOrgSettings(this.orgId, settings);

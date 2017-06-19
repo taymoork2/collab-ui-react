@@ -37,17 +37,17 @@ describe('Onboard users with Message Service', function () {
     it('should select manually add/modify users', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsersPage.buttons.manageUsers);
-      utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+      utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
       utils.click(manageUsersPage.select.radio.orgManual);
       utils.click(manageUsersPage.buttons.next);
-      utils.expectTextToBeSet(manageUsersPage.select.title, 'Manually Add or Modify Users');
+      utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
     });
 
 
     it('should clear user input field and error message', function () {
       utils.sendKeys(users.addUsersField, 'abcdefg' + protractor.Key.ENTER);
       utils.click(users.clearButton);
-      utils.expectTextToBeSet(users.addUsersField, '');
+      utils.waitForText(users.addUsersField, '');
       utils.expectIsDisabled(users.nextButton);
       utils.click(users.close);
       utils.expectIsNotDisplayed(users.manageDialog);

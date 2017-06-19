@@ -3,7 +3,6 @@
 var csvDownloadModule = require('modules/core/csvDownload').default;
 
 describe('Template: assignDnAndDirectLinesModal', function () {
-
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule);
     this.injectDependencies('$httpBackend', '$q', '$previousState', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService', 'WebExUtilsFact');
@@ -38,13 +37,13 @@ describe('Template: assignDnAndDirectLinesModal', function () {
     this.$httpBackend
       .whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites')
       .respond([{
-        "mediaTraversalMode": "TURNOnly",
-        "siteSteeringDigit": "8",
-        "vmCluster": null,
-        "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
-        "steeringDigit": "9",
-        "timeZone": "America/Los_Angeles",
-        "voicemailPilotNumberGenerated": "false",
+        mediaTraversalMode: 'TURNOnly',
+        siteSteeringDigit: '8',
+        vmCluster: null,
+        uuid: '70b8d459-7f58-487a-afc8-02c0a82d53ca',
+        steeringDigit: '9',
+        timeZone: 'America/Los_Angeles',
+        voicemailPilotNumberGenerated: 'false',
       }]);
   }
 

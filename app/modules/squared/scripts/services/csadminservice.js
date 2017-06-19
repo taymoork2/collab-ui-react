@@ -17,7 +17,7 @@
 
     function setCsAdmin(encryptedParam, callback) {
       var csadminData = {
-        'encryptedQueryString': encryptedParam,
+        encryptedQueryString: encryptedParam,
       };
       $http.post(csadminUrl, csadminData)
         .then(function (response) {

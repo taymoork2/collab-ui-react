@@ -1,7 +1,7 @@
 import pstnWizard from './index';
 
 describe('Service: PstnWizardService', () => {
-  let consecutiveOrder = {
+  const consecutiveOrder = {
     data: {
       numbers: [
         '+12145551000',
@@ -12,7 +12,7 @@ describe('Service: PstnWizardService', () => {
     orderType: 'NUMBER_ORDER',
   };
 
-  let singleOrder = {
+  const singleOrder = {
     data: {
       numbers: '+12145551000',
     },
@@ -20,7 +20,7 @@ describe('Service: PstnWizardService', () => {
     orderType: 'NUMBER_ORDER',
   };
 
-  let nonconsecutiveOrder = {
+  const nonconsecutiveOrder = {
     data: {
       numbers: [
         '+12145551234',
@@ -30,7 +30,7 @@ describe('Service: PstnWizardService', () => {
     numberType: 'DID',
     orderType: 'NUMBER_ORDER',
   };
-  let portOrder = {
+  const portOrder = {
     data: {
       numbers: [
         '+12145557001',
@@ -39,7 +39,7 @@ describe('Service: PstnWizardService', () => {
     },
     orderType: 'PORT_ORDER',
   };
-  let advancedOrder = {
+  const advancedOrder = {
     data: {
       areaCode: 321,
       length: 2,
@@ -48,7 +48,7 @@ describe('Service: PstnWizardService', () => {
     numberType: 'DID',
     orderType: 'BLOCK_ORDER',
   };
-  let advancedNxxOrder = {
+  const advancedNxxOrder = {
     data: {
       areaCode: 321,
       length: 2,
@@ -58,12 +58,12 @@ describe('Service: PstnWizardService', () => {
     numberType: 'DID',
     orderType: 'BLOCK_ORDER',
   };
-  let customerOrgId = '123-456-7890';
-  let swivelProvider = {
+  const customerOrgId = '123-456-7890';
+  const swivelProvider = {
     uuid: '098-7654-321',
     apiImplementation: 'SWIVEL',
   };
-  let swivelOrder = ['+4697793400', '+18007164851'];
+  const swivelOrder = ['+4697793400', '+18007164851'];
 
   beforeEach(function () {
     this.initModules(pstnWizard);
@@ -144,7 +144,7 @@ describe('Service: PstnWizardService', () => {
 
     it('should call V2 order API if huronEnterprisePrivateTrunking feature toggle is on', function () {
       spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
-      let promise = this.PstnWizardService.placeOrder().then(() => {
+      const promise = this.PstnWizardService.placeOrder().then(() => {
         expect(this.PstnService.orderNumbersV2Swivel).toHaveBeenCalledWith(customerOrgId, swivelOrder);
       });
       this.$rootScope.$digest();
@@ -153,12 +153,85 @@ describe('Service: PstnWizardService', () => {
 
     it('should call V1 order API if huronEnterprisePrivateTrunking feature toggle is off', function () {
       spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
-      let promise = this.PstnWizardService.placeOrder().then(() => {
+      const promise = this.PstnWizardService.placeOrder().then(() => {
         expect(this.PstnService.orderNumbers).toHaveBeenCalledWith(customerOrgId, swivelProvider.uuid, swivelOrder);
       });
       this.$rootScope.$digest();
       expect(promise).toBeResolved();
     });
+  });
+
+  describe('Finalize import of numbers for Private PSTN', function () {
+    beforeEach(function () {
+      spyOn(this.PstnService, 'createCustomerV2').and.returnValue(this.$q.resolve());
+      spyOn(this.PstnService, 'updateCustomerCarrier').and.returnValue(this.$q.resolve());
+      spyOn(this.PstnService, 'updateCustomerE911Signee').and.returnValue(this.$q.resolve());
+      spyOn(this.PstnService, 'orderNumbersV2Swivel').and.returnValue(this.$q.resolve());
+    });
+
+    it('should create customer if customer doesn\'t exist', function () {
+      spyOn(this.PstnModel, 'isCustomerExists').and.returnValue(false);
+      spyOn(this.PstnModel, 'isEsaSigned').and.returnValue(true);
+      this.PstnWizardService.setSwivelOrder(swivelOrder);
+
+      this.PstnWizardService.finalizeImport();
+      this.$rootScope.$digest();
+      expect(this.PstnModel.isCustomerExists).toHaveBeenCalled();
+      expect(this.PstnService.createCustomerV2).toHaveBeenCalled();
+      expect(this.PstnModel.isEsaSigned).toHaveBeenCalled();
+      expect(this.PstnService.orderNumbersV2Swivel).toHaveBeenCalled();
+    });
+
+    it('should update carrier if carrier doesn\'t exist', function () {
+      spyOn(this.PstnModel, 'isCustomerExists').and.returnValue(true);
+      spyOn(this.PstnModel, 'isCarrierExists').and.returnValue(false);
+      spyOn(this.PstnModel, 'isEsaSigned').and.returnValue(true);
+      this.PstnWizardService.setSwivelOrder(swivelOrder);
+
+      this.PstnWizardService.finalizeImport();
+      this.$rootScope.$digest();
+      expect(this.PstnModel.isCustomerExists).toHaveBeenCalled();
+      expect(this.PstnService.createCustomerV2).not.toHaveBeenCalled();
+      expect(this.PstnModel.isCarrierExists).toHaveBeenCalled();
+      expect(this.PstnService.updateCustomerCarrier).toHaveBeenCalled();
+      expect(this.PstnModel.isEsaSigned).toHaveBeenCalled();
+      expect(this.PstnService.orderNumbersV2Swivel).toHaveBeenCalled();
+    });
+
+    it('should log e911 signee if the esa is not signed', function () {
+      spyOn(this.PstnModel, 'isCustomerExists').and.returnValue(true);
+      spyOn(this.PstnModel, 'isCarrierExists').and.returnValue(true);
+      spyOn(this.PstnModel, 'isEsaSigned').and.returnValue(false);
+      this.PstnWizardService.setSwivelOrder(swivelOrder);
+
+      this.PstnWizardService.finalizeImport();
+      this.$rootScope.$digest();
+      expect(this.PstnModel.isCustomerExists).toHaveBeenCalled();
+      expect(this.PstnService.createCustomerV2).not.toHaveBeenCalled();
+      expect(this.PstnModel.isCarrierExists).toHaveBeenCalled();
+      expect(this.PstnService.updateCustomerCarrier).not.toHaveBeenCalled();
+      expect(this.PstnModel.isEsaSigned).toHaveBeenCalled();
+      expect(this.PstnService.updateCustomerE911Signee).toHaveBeenCalled();
+      expect(this.PstnService.orderNumbersV2Swivel).toHaveBeenCalled();
+    });
+
+    it('should not import numbers is swivel numbers are empty', function () {
+      spyOn(this.PstnModel, 'isCustomerExists').and.returnValue(true);
+      spyOn(this.PstnModel, 'isCarrierExists').and.returnValue(true);
+      spyOn(this.PstnModel, 'isEsaSigned').and.returnValue(false);
+      this.PstnWizardService.setSwivelOrder([]);
+
+      this.PstnWizardService.finalizeImport();
+      this.$rootScope.$digest();
+      expect(this.PstnModel.isCustomerExists).toHaveBeenCalled();
+      expect(this.PstnService.createCustomerV2).not.toHaveBeenCalled();
+      expect(this.PstnModel.isCarrierExists).toHaveBeenCalled();
+      expect(this.PstnService.updateCustomerCarrier).not.toHaveBeenCalled();
+      expect(this.PstnModel.isEsaSigned).toHaveBeenCalled();
+      expect(this.PstnService.updateCustomerE911Signee).toHaveBeenCalled();
+      expect(this.PstnService.orderNumbersV2Swivel).not.toHaveBeenCalled();
+    });
+
   });
 
 });

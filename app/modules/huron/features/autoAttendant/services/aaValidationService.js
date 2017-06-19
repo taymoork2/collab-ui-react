@@ -7,9 +7,8 @@
 
   /* @ngInject */
   function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AANotificationService, AACommonService, $translate, AAUtilityService) {
-
     var routeToCalls = [{
-      'name': 'goto',
+      name: 'goto',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToAATargetMissing',
       errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToAATargetMissing',
       errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToAATargetMissing',
@@ -112,7 +111,6 @@
         var ret = AACommonService.getInvalid(AACommonService.makeKey(whichLane, entry.routeToId));
         /* getInvalid returns false if an error, undefined if no error */
         return _.isUndefined(ret);
-
       }
       /* checking entry for blank value. Not empty? auto passes */
       if (!_.isEmpty(action.value)) {
@@ -120,7 +118,6 @@
       }
 
       return false;
-
     }
 
     /* whichMenu - index into the original array..position in the lane of this screen
@@ -155,9 +152,7 @@
 
     /* whichLane - openHours, closeHours, holiday */
     function checkAllKeys(optionMenu, whichLane, outErrors) {
-
       _.forEach(optionMenu.entries, function (entry) {
-
         /* will be defined only if a submenu. We can make use of this later to
          * differentiate btw menu and sub menus for the error condition
          */
@@ -194,17 +189,12 @@
                 key: saveKey,
                 subkey: entry.key,
               });
-
             }
-
           }
-
         });
-
       });
 
       return outErrors;
-
     }
 
     function checkForValidConditional(conditionalMenu, conditionalMenus, fromLane, translatedLabel) {
@@ -245,7 +235,6 @@
       }
 
       return validAction;
-
     }
 
     function isUnclosedQuotesConditional(rightCondition) {
@@ -253,7 +242,6 @@
     }
 
     function checkForValidCallerInputs(callerInputMenu, callerInputMenus, fromLane, translatedLabel) {
-
       var action = callerInputMenu.actions[0];
       var validAction = true;
       var atLeastOneNonBlank = false;
@@ -266,7 +254,6 @@
             schedule: translatedLabel,
             at: _.indexOf(callerInputMenus, callerInputMenu) + 1,
           });
-
         }
 
         if (action.inputType === 4) {
@@ -303,7 +290,6 @@
         }
 
         return !_.isEmpty(elem.actions[0].name);
-
       });
       return actions.length === 0;
     }
@@ -325,24 +311,19 @@
             at: _.indexOf(menuOptions, optionMenu) + 1,
             subkey: err.subkey,
           });
-
         } else {
-
           AANotificationService.error(err.msg, {
             key: err.key,
             schedule: translatedLabel,
             at: _.indexOf(menuOptions, optionMenu) + 1,
           });
         }
-
       });
 
       return isValid;
-
     }
 
     function checkForValidRouteCall(optionMenu, routeTosOnly, fromLane, translatedLabel) {
-
       var isValid = true;
 
       var error = checkAllActions(optionMenu, fromLane);
@@ -386,7 +367,6 @@
       }
 
       return openHoursValid && closedHoursValid && holidaysValid;
-
     }
 
     function checkForValid(uiCombinedMenu, fromLane, scheduleLabel) {
@@ -396,7 +376,7 @@
          the offending field */
 
       var menuOptions = _.filter(uiCombinedMenu.entries, {
-        'type': 'MENU_OPTION',
+        type: 'MENU_OPTION',
       });
 
       /* segregate the RouteCall menus so we can determine which
@@ -406,19 +386,18 @@
       var routeTosOnly = _.filter(uiCombinedMenu.entries, function (menu) {
         var actionName = _.get(menu, 'actions[0].name');
         return _.find(routeToCalls, {
-          'name': actionName,
+          name: actionName,
         });
       });
 
       var callerInputsOnly = _.filter(uiCombinedMenu.entries, function (menu) {
-        return _.includes([AACommonService.DIGITS_RAW, AACommonService.DIGITS_CHOICE], _.get(menu, 'actions[0].inputType', ""));
+        return _.includes([AACommonService.DIGITS_RAW, AACommonService.DIGITS_CHOICE], _.get(menu, 'actions[0].inputType', ''));
       });
       var conditionalsOnly = _.filter(uiCombinedMenu.entries, function (menu) {
-        return _.get(menu, 'actions[0].name', "") === 'conditional';
+        return _.get(menu, 'actions[0].name', '') === 'conditional';
       });
 
       _.forEach(uiCombinedMenu.entries, function (optionMenu) {
-
         if (optionMenu.type === 'MENU_OPTION') {
           if (!checkForValidPhoneMenu(optionMenu, menuOptions, fromLane, scheduleLabel)) {
             isValid = false;
@@ -439,7 +418,6 @@
       });
 
       return isValid;
-
     }
   }
 })();

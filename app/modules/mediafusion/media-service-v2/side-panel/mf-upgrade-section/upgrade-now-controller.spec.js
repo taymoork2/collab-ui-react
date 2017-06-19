@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: UpgradeNowControllerV2', function () {
-
   beforeEach(angular.mock.module('Mediafusion'));
 
   var $rootScope, controller, clusterId, ClusterService, Notification, $q, $translate, modalInstanceMock, windowMock;
@@ -33,7 +32,6 @@ describe('Controller: UpgradeNowControllerV2', function () {
       $modalInstance: modalInstanceMock,
       $window: windowMock,
     });
-
   }));
 
   it('check if UpgradeNowControllerV2 is Defined', function () {
@@ -45,11 +43,9 @@ describe('Controller: UpgradeNowControllerV2', function () {
     controller.upgrade();
     expect(ClusterService.upgradeSoftware).toHaveBeenCalled();
     expect(controller.saving).toBe(true);
-
   });
 
   it('check if upgradeSoftware is called with  clusterId', function () {
-
     ClusterService.upgradeSoftware.and.returnValue($q.resolve());
     controller.upgrade();
     expect(ClusterService.upgradeSoftware).toHaveBeenCalledWith(clusterId, 'mf_mgmt');

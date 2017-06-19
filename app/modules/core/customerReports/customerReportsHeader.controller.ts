@@ -1,45 +1,52 @@
+import ILogService = angular.ILogService;
 class CustomerReportsHeaderCtrl {
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
     private $q: ng.IQService,
     private Authinfo,
     private FeatureToggleService,
     private MediaServiceActivationV2,
     private WebExApiGatewayService,
+    private ITProPackService,
   ) {
     if (Authinfo.isCare()) {
       this.headerTabs.push({
-        title: $translate.instant('reportsPage.careTab'),
+        title: 'reportsPage.careTab',
         state: 'reports.care',
       });
     }
     this.$q.all(this.promises).then((features: any): void => {
+      if (features.webexReports) { // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
+        this.headerTabs.push({
+          title: 'customerPage.webex',
+          state: 'reports.webex_',
+        });
+      }
       if (features.isMfEnabled) {
         if (features.mf) {
           this.headerTabs.push({
-            title: $translate.instant('mediaFusion.report.title'),
+            title: 'mediaFusion.report.title',
             state: 'reports.media',
           });
         } else if (features.mfMilestoneTwo) {
           this.headerTabs.push({
-            title: $translate.instant('mediaFusion.report.title'),
+            title: 'mediaFusion.report.title',
             state: 'reports.mediaservice',
           });
         } else {
           this.headerTabs.push({
-            title: $translate.instant('mediaFusion.report.title'),
+            title: 'mediaFusion.report.title',
             state: 'reports.metrics',
           });
         }
       }
       this.headerTabs.push({
-        title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
+        title: 'reportsPage.usageReports.usageReportTitle',
         state: 'reports.device-usage',
       });
       if (features.webexMetrics) {
         this.headerTabs.push({
-          title: $translate.instant('reportsPage.webexMetrics.title'),
+          title: 'reportsPage.webexMetrics.title',
           state: 'reports.webex-metrics',
         });
       }
@@ -47,9 +54,8 @@ class CustomerReportsHeaderCtrl {
     this.checkWebex();
   }
 
-  public pageTitle = this.$translate.instant('reportsPage.pageTitle');
   public headerTabs = [{
-    title: this.$translate.instant('reportsPage.sparkReports'),
+    title: 'reportsPage.sparkReports',
     state: 'reports.spark',
   }];
 
@@ -58,18 +64,18 @@ class CustomerReportsHeaderCtrl {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
     mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
-    webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
+    webexMetrics: this.ITProPackService.hasITProPackEnabled(),
   };
 
   private checkWebex (): void {
-    let webexSiteUrls = this.getUniqueWebexSiteUrls(); // strip off any duplicate webexSiteUrl to prevent unnecessary XML API calls
+    const webexSiteUrls = this.getUniqueWebexSiteUrls(); // strip off any duplicate webexSiteUrl to prevent unnecessary XML API calls
 
     webexSiteUrls.forEach((url: string): void => {
       this.WebExApiGatewayService.siteFunctions(url).then((result: any): void => {
         if (result.isAdminReportEnabled && result.isIframeSupported) {
           if (!this.webex) {
             this.headerTabs.push({
-              title: this.$translate.instant('reportsPage.webex'),
+              title: 'reportsPage.webex',
               state: 'reports.webex',
             });
             this.webex = true;
@@ -80,8 +86,8 @@ class CustomerReportsHeaderCtrl {
   }
 
   private getUniqueWebexSiteUrls() {
-    let conferenceServices: Array<any> = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
-    let webexSiteUrls: Array<any> = [];
+    const conferenceServices: any[] = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+    const webexSiteUrls: any[] = [];
 
     conferenceServices.forEach((conferenceService: any): void => {
       webexSiteUrls.push(conferenceService.license.siteUrl);

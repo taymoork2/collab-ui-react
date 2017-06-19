@@ -10,10 +10,9 @@ describe('Service: ReportUtilService', function () {
   }));
 
   describe('tweaking', function () {
-
     it('report completed, failed or aborted will be marked as done', function () {
       var report = {
-        state: "RUNNNING",
+        state: 'RUNNNING',
       };
 
       var tweakedReport = Service.tweakReport(report);
@@ -22,13 +21,13 @@ describe('Service: ReportUtilService', function () {
       expect(tweakedReport.isDone).toBe(false);
 
       report = {
-        state: "FAILED",
+        state: 'FAILED',
       };
       tweakedReport = Service.tweakReport(report);
       expect(tweakedReport.isDone).toBe(true);
 
       report = {
-        state: "ABORTED",
+        state: 'ABORTED',
       };
       tweakedReport = Service.tweakReport(report);
       expect(tweakedReport.isDone).toBe(true);
@@ -38,13 +37,13 @@ describe('Service: ReportUtilService', function () {
       Service.setTimeoutInSeconds = 180;
 
       var report = {
-        state: "RUNNING",
+        state: 'RUNNING',
         lastUpdatedTime: moment().subtract(150, 'seconds').utc().format(),
       };
       expect(Service.tweakReport(report).timeoutDetected).toBe(false);
 
       report = {
-        state: "RUNNING",
+        state: 'RUNNING',
         lastUpdatedTime: moment().subtract(200, 'seconds').utc().format(),
       };
       expect(Service.tweakReport(report).timeoutDetected).toBe(true);
@@ -52,7 +51,7 @@ describe('Service: ReportUtilService', function () {
 
     it('report reaching expiry time will be marked as expired', function () {
       var report = {
-        state: "COMPLETED",
+        state: 'COMPLETED',
         expiryTime: moment().subtract(1, 'minute').utc().format(),
       };
       expect(Service.tweakReport(report).hasExpired).toBe(true);
@@ -60,32 +59,28 @@ describe('Service: ReportUtilService', function () {
 
     it('report completed and not expired will be marked as downloadable', function () {
       var report = {
-        state: "COMPLETED",
+        state: 'COMPLETED',
         expiryTime: moment().add(1, 'minute').utc().format(),
       };
       expect(Service.tweakReport(report).hasExpired).toBe(false);
       expect(Service.tweakReport(report).canBeDownloaded).toBe(true);
-
     });
 
     it('report accepted or running will be marked as cancable', function () {
       var report = {
-        state: "COMPLETED",
+        state: 'COMPLETED',
       };
       expect(Service.tweakReport(report).canBeCancelled).toBe(false);
 
       report = {
-        state: "ACCEPTED",
+        state: 'ACCEPTED',
       };
       expect(Service.tweakReport(report).canBeCancelled).toBe(true);
 
       report = {
-        state: "RUNNING",
+        state: 'RUNNING',
       };
       expect(Service.tweakReport(report).canBeCancelled).toBe(true);
-
     });
-
   });
-
 });

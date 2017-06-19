@@ -143,8 +143,10 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
   * `git push <fork> <local-branch>`
   * On your fork, select your branch and click `Pull request` to create a new PR
   * Add appropriate reviewers using [@mention](https://github.com/blog/821-mention-somebody-they-re-notified)
-    * Add `@WebExSquared/atlas-web-jedi` for core team members if unsure who should review your PR
+    * Add appropriate reviewers using [@mention](https://github.com/blog/821-mention-somebody-they-re-notified)
+    * Add `@WebExSquared/atlas-web-core-team` for core team members
     * *(Note: your PR may automatically be picked up by @atlas-ui-bot-gen, who will @mention other contributors when feasible)*
+  * **Important:** *Please allow a reasonable time for a response before pushing your code.  Large commits will take longer to review.  Smaller commits can be reviewed quicker and make it easier for adjustments to the comments.*
   * Respond to feedback and push new commits if necessary
 
 ##### 7. Push to Gauntlet (build queue-ing tool) for validated merge (after approved review)

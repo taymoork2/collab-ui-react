@@ -17,35 +17,35 @@ describe('drilldownReports Controller Positive Test cases', function () {
   beforeEach(function () {
     var props = {
       broadcast: {
-        refresh: "DummyRefreshString",
-        reset: "DummyResetString",
+        refresh: 'DummyRefreshString',
+        reset: 'DummyResetString',
       },
-      description: "Dummy set Description",
+      description: 'Dummy set Description',
       display: false,
       hasData: true,
-      emptyDescription: "Dummy Empty Description",
-      errorDescription: "DUmmy Error Description",
-      show: "Dummy Show",
-      hide: "Dummy Hide",
+      emptyDescription: 'Dummy Empty Description',
+      errorDescription: 'DUmmy Error Description',
+      show: 'Dummy Show',
+      hide: 'Dummy Hide',
       search: true,
-      searchPlaceholder: "Dummy Search Placeholder",
-      state: "SET",
+      searchPlaceholder: 'Dummy Search Placeholder',
+      state: 'SET',
       table: {
         columnDefs: [
           {
             field: 'userName',
             id: 'userName',
-            displayName: "Dummy userName",
+            displayName: 'Dummy userName',
             sortable: true,
           }, {
             field: 'csat',
             id: 'averageCsat',
-            displayName: "Dummy Csat",
+            displayName: 'Dummy Csat',
             sortable: true,
           },
         ],
       },
-      title: "Dummy Title",
+      title: 'Dummy Title',
     };
 
     $scope = $rootScope.$new();
@@ -69,14 +69,13 @@ describe('drilldownReports Controller Positive Test cases', function () {
   });
 
   it('Binding Props and caallback test', function () {
-
-    $log.warn("Controller......", ddController);
+    $log.warn('Controller......', ddController);
     //props check
     expect(ddController.props.broadcast).toBeDefined();
     expect(ddController.props.broadcast.refresh).toBeDefined();
     expect(ddController.props.broadcast.reset).toBeDefined();
     expect(ddController.props.broadcast.nonExistent).toBeUndefined();
-    expect(ddController.props.description).toEqual("Dummy set Description");
+    expect(ddController.props.description).toEqual('Dummy set Description');
     expect(ddController.toggleDrilldownReport).toBeDefined();
     expect(ddController.isDataEmpty()).toBe(false);
 

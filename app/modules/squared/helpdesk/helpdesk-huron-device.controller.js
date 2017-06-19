@@ -47,7 +47,7 @@
         vm.deviceNumbers = deviceNumbers;
       }, vm._helpers.notifyError);
 
-      angular.element(".helpdesk-details").focus();
+      angular.element('.helpdesk-details').focus();
     }
 
     function keyPressHandler(event) {

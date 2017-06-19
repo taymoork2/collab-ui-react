@@ -82,19 +82,19 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private fetchAsyncSettings() {
-    let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then(feature => {
+    const ataPromise = this.FeatureToggleService.csdmATAGetStatus().then(feature => {
       this.showATA = feature;
     });
-    let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
+    const hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
       this.csdmHybridCallFeature = feature;
     });
-    let placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
+    const placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
       this.csdmHybridCalendarFeature = feature;
     });
-    let gcalFeaturePromise = this.FeatureToggleService.atlasHerculesGoogleCalendarGetStatus().then(feature => {
+    const gcalFeaturePromise = this.FeatureToggleService.atlasHerculesGoogleCalendarGetStatus().then(feature => {
       this.atlasHerculesGoogleCalendarFeatureToggle = feature;
     });
-    let anyCalendarEnabledPromise = this.ServiceDescriptor.getServices().then(services => {
+    const anyCalendarEnabledPromise = this.ServiceDescriptor.getServices().then(services => {
       this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
@@ -125,7 +125,7 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private fetchDetailsForLoggedInUser() {
-    let userDetailsDeferred = this.$q.defer();
+    const userDetailsDeferred = this.$q.defer();
     this.Userservice.getUser('me', (data) => {
       if (data.success) {
         this.adminUserDetails = {
@@ -167,8 +167,8 @@ class PlaceOverview implements ng.IComponentController {
 
   public editCloudberryServices = (startAtService?): void => {
 
-    let startState = startAtService && this.startStateMap[startAtService] || 'addDeviceFlow.editServices';
-    let wizardState = {
+    const startState = startAtService && this.startStateMap[startAtService] || 'addDeviceFlow.editServices';
+    const wizardState = {
       data: {
         function: 'editServices',
         title: 'usersPreview.editServices',
@@ -213,7 +213,7 @@ class PlaceOverview implements ng.IComponentController {
         },
       },
     };
-    let wizard = this.WizardFactory.create(wizardState);
+    const wizard = this.WizardFactory.create(wizardState);
     this.$state.go(wizardState.currentStateName, {
       wizard: wizard,
     });
@@ -257,7 +257,7 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   public onGenerateOtpFn(): void {
-    let wizardState = {
+    const wizardState = {
       data: {
         function: 'showCode',
         showATA: this.showATA,
@@ -288,7 +288,7 @@ class PlaceOverview implements ng.IComponentController {
         'addDeviceFlow.showActivationCode': {},
       },
     };
-    let wizard = this.WizardFactory.create(wizardState);
+    const wizard = this.WizardFactory.create(wizardState);
     this.$state.go('addDeviceFlow.showActivationCode', {
       wizard: wizard,
     });

@@ -75,7 +75,7 @@ class InlineEditText implements ng.IComponentController {
 
   public save(): void {
     this.saveInProgress = true;
-    let newValue = this.form.$valid ? this.newValue : this.form.editInput.$viewValue;
+    const newValue = this.form.$valid ? this.newValue : this.form.editInput.$viewValue;
     this.$q.resolve(this.onSave({
       newValue: newValue,
     }))

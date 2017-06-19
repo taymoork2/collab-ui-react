@@ -81,14 +81,14 @@ describe('Component: hsClusterCard', function () {
     describe('upgradesAutomatically()', function () {
       it('should return true for context service', function () {
         ['cs_mgmt'].forEach((type) => {
-          let cluster = { targetType: type };
+          const cluster = { targetType: type };
           expect(this.controller.upgradesAutomatically(cluster)).toBe(true);
         });
       });
 
       it('should return false otherwise', function () {
         ['c_mgmt', 'mf_mgmt', 'hds_app', 'ucm_mgmt'].forEach((type) => {
-          let cluster = { targetType: type };
+          const cluster = { targetType: type };
           expect(this.controller.upgradesAutomatically(cluster)).toBe(false);
         });
       });
@@ -97,14 +97,14 @@ describe('Component: hsClusterCard', function () {
     describe('hideFooter()', function () {
       it('should return true for context service', function () {
         ['cs_mgmt'].forEach((type) => {
-          let cluster = { targetType: type };
+          const cluster = { targetType: type };
           expect(this.controller.hideFooter(cluster)).toBe(true);
         });
       });
 
       it('should return false otherwise', function () {
         ['c_mgmt', 'mf_mgmt', 'hds_app', 'ucm_mgmt'].forEach((type) => {
-          let cluster = { targetType: type };
+          const cluster = { targetType: type };
           expect(this.controller.hideFooter(cluster)).toBe(false);
         });
       });
@@ -115,7 +115,7 @@ describe('Component: hsClusterCard', function () {
     let $componentController;
     let controllerHdsCluster, $state;
 
-    let mockHDSCluster = {
+    const mockHDSCluster = {
       id: 2,
       name: 'IntegrationCluster',
       connectors: [{

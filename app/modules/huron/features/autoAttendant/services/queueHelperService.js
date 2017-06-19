@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function QueueHelperService(QueueService, Authinfo) {
-
     var service = {
       listQueues: listQueues,
 
@@ -19,6 +18,5 @@
         customerId: Authinfo.getOrgId(),
       }).$promise;
     }
-
   }
 })();

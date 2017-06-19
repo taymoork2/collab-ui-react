@@ -34,8 +34,8 @@ export class DummyReportService {
     };
   }
 
-  public dummyActiveUserData (filter: ITimespan): Array<IActiveUserData> {
-    let dummyGraph: Array<IActiveUserData> = [];
+  public dummyActiveUserData (filter: ITimespan): IActiveUserData[] {
+    const dummyGraph: IActiveUserData[] = [];
 
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
       for (let i = this.ReportConstants.DAYS; i >= 0; i--) {
@@ -55,9 +55,9 @@ export class DummyReportService {
   }
 
   private getActiveUserDatapoint(filter: ITimespan, index): IActiveUserData {
-    let timeAndOffset = this.getTimeAndOffset(filter, index);
-    let totalRegisteredUsers = 25 + (25 * timeAndOffset.offset);
-    let activeUsers = 25 * timeAndOffset.offset;
+    const timeAndOffset = this.getTimeAndOffset(filter, index);
+    const totalRegisteredUsers = 25 + (25 * timeAndOffset.offset);
+    const activeUsers = 25 * timeAndOffset.offset;
 
     return {
       date: timeAndOffset.date,
@@ -68,11 +68,11 @@ export class DummyReportService {
     };
   }
 
-  public dummyActivePopulationData(customers: Array<IReportsCustomer>): Array<IPopulationData> {
-    let loadingCustomer = this.$translate.instant('activeUserPopulation.loadingCustomer');
+  public dummyActivePopulationData(customers: IReportsCustomer[]): IPopulationData[] {
+    const loadingCustomer = this.$translate.instant('activeUserPopulation.loadingCustomer');
 
     if (customers && customers.length > 0) {
-      let returnArray: Array<IPopulationData> = [];
+      const returnArray: IPopulationData[] = [];
       for (let index = 0; index < customers.length; index ++) {
         returnArray.push(this.getActivePopulationDatapoint(loadingCustomer, index));
       }
@@ -93,8 +93,8 @@ export class DummyReportService {
     };
   }
 
-  public dummyMediaQualityData(filter: ITimespan): Array<IMediaQualityData> {
-    let dummyGraph: Array<IMediaQualityData> = [];
+  public dummyMediaQualityData(filter: ITimespan): IMediaQualityData[] {
+    const dummyGraph: IMediaQualityData[] = [];
 
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
       for (let i = this.ReportConstants.DAYS; i >= 0; i--) {
@@ -114,10 +114,10 @@ export class DummyReportService {
   }
 
   private getMediaDatapoint(filter: ITimespan, index): IMediaQualityData {
-    let timeAndOffset = this.getTimeAndOffset(filter, index);
-    let goodQualityDurationSum = 25 + (15 * timeAndOffset.offset);
-    let fairQualityDurationSum = 15 + (10 * timeAndOffset.offset);
-    let poorQualityDurationSum = 5 + (5 * timeAndOffset.offset);
+    const timeAndOffset = this.getTimeAndOffset(filter, index);
+    const goodQualityDurationSum = 25 + (15 * timeAndOffset.offset);
+    const fairQualityDurationSum = 15 + (10 * timeAndOffset.offset);
+    const poorQualityDurationSum = 5 + (5 * timeAndOffset.offset);
 
     return {
       date: timeAndOffset.date,
@@ -149,7 +149,7 @@ export class DummyReportService {
     };
   }
 
-  public dummyEndpointData(): Array<Array<IEndpointData>> {
+  public dummyEndpointData(): IEndpointData[][] {
     return [[{
       class: 'vertical-center ' + this.ReportConstants.CUSTOMER_DATA,
       output: [this.$translate.instant('activeUserPopulation.loadingCustomer')],

@@ -5,7 +5,7 @@
     .service('MediaServiceActivationV2', MediaServiceActivationV2);
 
   /* @ngInject */
-  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, HybridServicesClusterService, ServiceDescriptor) {
+  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, HybridServicesClusterService, ServiceDescriptor, Orgservice) {
     var vm = this;
     vm.mediaServiceId = 'squared-fusion-media';
 
@@ -37,6 +37,7 @@
           enableOrpheusForMediaFusion();
           enableRhesosEntitlement();
           enableCallServiceEntitlement();
+          setOrgSettingsForDevOps();
         },
         function error() {
           Notification.error('mediaFusion.mediaServiceActivationFailure');
@@ -116,7 +117,7 @@
           var index = mediaAgentOrgIdsArray.indexOf(orgId);
           mediaAgentOrgIdsArray.splice(index, 1);
 
-          index = mediaAgentOrgIdsArray.indexOf("squared");
+          index = mediaAgentOrgIdsArray.indexOf('squared');
           mediaAgentOrgIdsArray.splice(index, 1);
 
           if (mediaAgentOrgIdsArray.length > 0) {
@@ -151,11 +152,26 @@
 
     var enableCallServiceEntitlement = function () {
       var payload = {
-        "selfSubscribe": true,
-        "roles": ["Spark_CallService"],
+        selfSubscribe: true,
+        roles: ['Spark_CallService'],
       };
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/spark';
       return $http.post(url, payload);
+    };
+
+    var setOrgSettingsForDevOps = function () {
+      var settings = {
+        isMediaFusionEnabled: true,
+        mediaFusionEnabledAt: moment().utc(),
+      };
+      Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+    };
+
+    var disableMFOrgSettingsForDevOps = function () {
+      var settings = {
+        isMediaFusionEnabled: false,
+      };
+      Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
     };
 
     return {
@@ -167,6 +183,7 @@
       enableMediaService: enableMediaService,
       disableOrpheusForMediaFusion: disableOrpheusForMediaFusion,
       deactivateHybridMedia: deactivateHybridMedia,
+      disableMFOrgSettingsForDevOps: disableMFOrgSettingsForDevOps,
     };
   }
 })();

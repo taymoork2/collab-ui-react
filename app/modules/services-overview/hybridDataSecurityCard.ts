@@ -1,6 +1,7 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { HDSService } from 'modules/hds/services/hds.service';
 
 export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
@@ -22,7 +23,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     buttonClass: 'btn btn--primary',
   };
 
-  private buttons: Array<ICardButton> = [{
+  private buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.hybridDataSecurity.buttons.resources',
     routerState: 'hds.list',
     buttonClass: 'btn-link',
@@ -32,7 +33,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.treatAsPurchased()) {
       return (this.active) ? this.buttons : [this.setupButton];
     } else {
@@ -65,9 +66,12 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
 
   /* @ngInject */
   public constructor(
+    private $state,
     private Authinfo,
     private Config,
+    private HDSService: HDSService,
     HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    private Notification,
   ) {
     super({
       active: false,
@@ -85,5 +89,26 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     this.display = this.checkRoles() && this.Authinfo.isFusionHDS();
     this.hasITProPackPurchased = false;
     this.hasITProPackEnabled = false;
+    this.$state = $state;
+    this.Notification = Notification;
+    this.HDSService = HDSService;
+    this.setupButton.onClick = function () {
+      const hdsEntitlementObj = {
+        serviceId: 'sparkHybridDataSecurity',
+        displayName: 'Hybrid Data Security',
+        ciName: Config.entitlements.hds,
+        isConfigurable: false,
+        type: 'FREE_WITH_LICENSE',
+      };
+      HDSService.enableHdsEntitlement()
+        .then(function () {
+          if (!Authinfo.isEntitled(Config.entitlements.hds)) {
+            Authinfo.addEntitlement(hdsEntitlementObj);
+          }
+          $state.go('hds.list');
+        }).catch(function (error) {
+          Notification.errorWithTrackingId(error, 'error setting HDS service entitlements');
+        });
+    };
   }
 }

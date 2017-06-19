@@ -7,8 +7,8 @@ describe('Controller: AAHelpCtrl', function () {
   var Analytics;
   var AAMetricNameService;
 
-  var text = "Help me if you can.";
-  var metric = "track.Me.If.You.Can";
+  var text = 'Help me if you can.';
+  var metric = 'track.Me.If.You.Can';
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
@@ -37,18 +37,18 @@ describe('Controller: AAHelpCtrl', function () {
 
     it('should return only help text if showLink a string', function () {
       controller.content = text;
-      controller.showLink = "notboolean";
+      controller.showLink = 'notboolean';
       expect(controller.getHelpText()).toEqual(text);
     });
 
     it('should return empty string if all undefined', function () {
       controller.content = undefined;
       controller.showLink = undefined;
-      expect(controller.getHelpText()).toEqual("");
+      expect(controller.getHelpText()).toEqual('');
     });
 
     it('should return only help link if content empty', function () {
-      controller.content = "";
+      controller.content = '';
       controller.showLink = true;
       expect(controller.getHelpText()).toContain(controller.optionHelpLink);
     });
@@ -57,7 +57,6 @@ describe('Controller: AAHelpCtrl', function () {
       controller.content = text;
       controller.showLink = false;
       expect(controller.getHelpText()).toEqual(text);
-
     });
 
     it('show return help text with link', function () {
@@ -82,7 +81,7 @@ describe('Controller: AAHelpCtrl', function () {
     });
 
     it('should not send metrics if metrics are undefined', function () {
-      controller.metric = "";
+      controller.metric = '';
       controller.sendMetrics();
       expect(Analytics.trackEvent).not.toHaveBeenCalled();
     });

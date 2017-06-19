@@ -25,7 +25,7 @@
       if (Authinfo.hasAccount()) {
         vm.sites = Authinfo.getConferenceServices();
         vm.sites.forEach(function (entry) {
-          if (entry.license.features.indexOf("cloudmeetings") != -1) {
+          if (entry.license.features.indexOf('cloudmeetings') != -1) {
             var site = entry.license.siteUrl;
             if (vm.siteUrls.indexOf(site) == -1) {
               vm.siteUrls.push(site);

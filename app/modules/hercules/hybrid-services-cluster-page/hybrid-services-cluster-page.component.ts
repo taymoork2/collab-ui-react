@@ -51,10 +51,10 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
         // Don't show any tabs if the "Nodes" one is not available. Only the "Settings" tab would be weird
         if (this.hasNodesViewFeatureToggle) {
           this.tabs = [{
-            title: this.$translate.instant('common.nodes'),
+            title: 'common.nodes',
             state: `${route}-cluster.nodes`,
           }, {
-            title: this.$translate.instant('common.settings'),
+            title: 'common.settings',
             state: `${route}-cluster.settings`,
           }];
         }

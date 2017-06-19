@@ -37,12 +37,12 @@ describe('Service: Metrics Reports Service', function () {
   var error = {
     message: 'error',
     data: {
-      trackingId: "id",
+      trackingId: 'id',
     },
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
   beforeEach(inject(function (_$httpBackend_, _MetricsReportService_, _Notification_, UrlConfig) {
@@ -58,7 +58,6 @@ describe('Service: Metrics Reports Service', function () {
     clusterAvailabilityUrl = baseUrl + '/clusters_availability/?relativeTime=1d';
     totalCallsCard = baseUrl + '/total_calls/?relativeTime=1d';
     availabilityCard = baseUrl + '/agg_availability/?relativeTime=1d';
-
   }));
 
   afterEach(function () {
@@ -207,5 +206,4 @@ describe('Service: Metrics Reports Service', function () {
       $httpBackend.flush();
     });
   });
-
 });

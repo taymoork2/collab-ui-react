@@ -1,7 +1,6 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
-
   beforeEach(function () {
     this.initModules('Core');
 
@@ -152,7 +151,6 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have 5 tabs', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
-
   });
 
   describe('When Authinfo.isCSB is disabled', function () {
@@ -164,7 +162,6 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have 6 tabs', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
-
   });
 
   describe('When Authinfo.isCare is enabled and addUsers too', function () {
@@ -213,6 +210,10 @@ describe('SetupWizardCtrl', function () {
 
     it('the wizard should have 4 tabs and no SSO setup if FTW', function () {
       _.set(this.$state, 'current.data.firstTimeSetup', true);
+      this.enabledFeatureToggles = [
+        this.FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
+      ];
+
       this.initController();
       this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
@@ -241,7 +242,7 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have a lot of settings', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
       this.expectSubStepOrder('planReview', ['init']);
-      this.expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['setup', 'init']);
       this.expectSubStepOrder('messagingSetup', ['setup']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);

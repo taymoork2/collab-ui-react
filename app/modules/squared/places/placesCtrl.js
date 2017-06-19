@@ -157,7 +157,7 @@ require('../devices/_devices.scss');
         vm.startAddPlaceFlow = function () {
           var wizardState = {
             data: {
-              function: "addPlace",
+              function: 'addPlace',
               showATA: vm.showATA,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,

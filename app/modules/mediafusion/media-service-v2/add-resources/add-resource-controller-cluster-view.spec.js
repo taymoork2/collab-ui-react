@@ -1,98 +1,117 @@
-  'use strict';
+'use strict';
 
-  describe('AddResourceControllerClusterViewV2', function () {
-    beforeEach(angular.mock.module('Mediafusion'));
-    var redirectTargetPromise, $q, $window, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, Notification, $translate;
-    beforeEach(inject(function (_Notification_, _$translate_, _$window_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_) {
-      $q = _$q_;
-      httpBackend = $httpBackend;
-      httpBackend.when('GET', /^\w+.*/).respond({});
-      redirectTargetPromise = {
-        then: jasmine.createSpy('then'),
-      };
-      $state = {
-        'params': {
-          'wizard': {},
-          'firstTimeSetup': false,
-          'yesProceed': true,
-          'fromClusters': true,
-        },
-        'modal': {
-          close: jasmine.createSpy('close'),
-        },
-      };
-      $stateParams = _$stateParams_;
-      $window = _$window_;
-      AddResourceCommonServiceV2 = _AddResourceCommonServiceV2_;
-      $translate = _$translate_;
-      Notification = _Notification_;
-      controller = $controller('AddResourceControllerClusterViewV2', {
-        $q: $q,
-        Notification: Notification,
-        $translate: $translate,
-        $state: $state,
-        $stateParams: $stateParams,
-        AddResourceCommonServiceV2: AddResourceCommonServiceV2,
+describe('AddResourceControllerClusterViewV2', function () {
+  beforeEach(function () {
+    this.initModules('Mediafusion');
+    this.injectDependencies('$controller',
+      '$q',
+      '$scope',
+      '$state',
+      '$translate',
+      '$window',
+      'AddResourceCommonServiceV2',
+      'FeatureToggleService',
+      'ITProPackService'
+      );
+
+    this.jsonData = getJSONFixture('mediafusion/json/delete-cluster.json');
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue(this.$q.resolve({}));
+    spyOn(this.AddResourceCommonServiceV2, 'redirectPopUpAndClose');
+    spyOn(this.AddResourceCommonServiceV2, 'updateClusterLists').and.returnValue(this.$q.resolve({}));
+    spyOn(this.$window, 'open');
+
+    this.$state.modal = { close: _.noop };
+    this.$state.params = {
+      wizard: {},
+      firstTimeSetup: false,
+      yesProceed: true,
+      fromClusters: true,
+    };
+
+    this.initController = function () {
+      this.controller = this.$controller('AddResourceControllerClusterViewV2', {
+        $q: this.$q,
+        $translate: this.$translate,
+        $state: this.$state,
+        AddResourceCommonServiceV2: this.AddResourceCommonServiceV2,
+        FeatureToggleService: this.FeatureToggleService,
+        ITProPackService: this.ITProPackService,
       });
-    }));
-    it('controller should be defined', function () {
-      expect(controller).toBeDefined();
-    });
-
-    it('AddResourceCommonServiceV2.redirectPopUpAndClose should be called for redirectToTargetAndCloseWindowClicked', function () {
-      spyOn(AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue($q.resolve());
-      spyOn(AddResourceCommonServiceV2, 'redirectPopUpAndClose').and.returnValue(redirectTargetPromise);
-      controller.redirectToTargetAndCloseWindowClicked();
-      httpBackend.flush();
-      expect(AddResourceCommonServiceV2.addRedirectTargetClicked).toHaveBeenCalled();
-      expect(AddResourceCommonServiceV2.redirectPopUpAndClose).toHaveBeenCalled();
-    });
-
-    it('controller.enableRedirectToTarget should be true for next', function () {
-      controller.selectedCluster = 'selectedCluster';
-      controller.hostName = 'hostName';
-      controller.next();
-      expect(controller.enableRedirectToTarget).toBe(true);
-    });
-
-    it('AddResourceControllerClusterViewV2 canGoNext should disable the next button when the feild is empty', function () {
-      controller.hosts = [{
-        "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
-        "hostname": "10.196.5.251",
-        "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a",
-      }];
-      controller.canGoNext();
-      expect(controller.canGoNext()).toBeFalsy();
-    });
-
-    it('AddResourceControllerClusterViewV2 canGoNext should enable the next button when firstTimeSetup is true and yesProceed is false', function () {
-      controller.firstTimeSetup = true;
-      controller.yesProceed = false;
-      controller.canGoNext();
-      expect(controller.canGoNext()).toBeTruthy();
-    });
-
-    it('AddResourceControllerClusterViewV2 canGoNext should enable the next button when the feild is filled', function () {
-      controller.firstTimeSetup = true;
-      controller.yesProceed = true;
-      controller.hostName = "sampleHost";
-      controller.selectedCluster = "sampleCluster";
-      controller.canGoNext();
-      expect(controller.canGoNext()).toBeTruthy();
-    });
-
-    it('controller.enableRedirectToTarget should be true for next()', function () {
-      controller.selectedCluster = 'selectedCluster';
-      controller.hostName = 'hostName';
-      controller.next();
-      expect(controller.enableRedirectToTarget).toBe(true);
-    });
-    it('controller.noProceed should be true for next()', function () {
-      spyOn($window, 'open');
-      controller.radio = 0;
-      controller.noProceed = false;
-      controller.next();
-      expect(controller.noProceed).toBe(true);
-    });
-
+      this.$scope.$apply();
+    };
+    this.initController();
   });
+
+  it('AddResourceCommonServiceV2.redirectPopUpAndClose should be called for redirectToTargetAndCloseWindowClicked', function () {
+    this.controller.redirectToTargetAndCloseWindowClicked();
+    this.$scope.$apply();
+    expect(this.AddResourceCommonServiceV2.addRedirectTargetClicked).toHaveBeenCalled();
+    expect(this.AddResourceCommonServiceV2.redirectPopUpAndClose).toHaveBeenCalled();
+  });
+
+  it('controller.enableRedirectToTarget should be true for next', function () {
+    this.controller.selectedCluster = 'selectedCluster';
+    this.controller.hostName = 'hostName';
+    this.controller.next();
+    expect(this.controller.enableRedirectToTarget).toBe(true);
+  });
+
+  it('AddResourceControllerClusterViewV2 canGoNext should disable the next button when the feild is empty', function () {
+    this.controller.hosts = [this.jsonData.hosts];
+    this.controller.canGoNext();
+    expect(this.controller.canGoNext()).toBeFalsy();
+  });
+
+  it('AddResourceControllerClusterViewV2 canGoNext should enable the next button when firstTimeSetup is true and yesProceed is false', function () {
+    this.controller.firstTimeSetup = true;
+    this.controller.yesProceed = false;
+    this.controller.canGoNext();
+    expect(this.controller.canGoNext()).toBeTruthy();
+  });
+
+  it('AddResourceControllerClusterViewV2 canGoNext should enable the next button when the feild is filled', function () {
+    this.controller.firstTimeSetup = true;
+    this.controller.yesProceed = true;
+    this.controller.hostName = 'sampleHost';
+    this.controller.selectedCluster = 'sampleCluster';
+    this.controller.canGoNext();
+    expect(this.controller.canGoNext()).toBeTruthy();
+  });
+
+  it('controller.enableRedirectToTarget should be true for next()', function () {
+    this.controller.selectedCluster = 'selectedCluster';
+    this.controller.hostName = 'hostName';
+    this.controller.next();
+    expect(this.controller.enableRedirectToTarget).toBe(true);
+  });
+
+  it('controller.noProceed should be true for next()', function () {
+    this.controller.radio = 0;
+    this.controller.noProceed = false;
+    this.controller.next();
+    expect(this.controller.noProceed).toBe(true);
+  });
+
+  // 2017 name change
+  describe('atlasITProPackGetStatus && atlas2017NameChangeGetStatus - ', function () {
+    it('nameChangeEnabled should be false when atlas2017NameChangeGetStatus is false', function () {
+      expect(this.controller.nameChangeEnabled).toBeFalsy();
+    });
+
+    it('nameChangeEnabled should be true when atlas2017NameChangeGetStatus is true', function () {
+      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.nameChangeEnabled).toBeTruthy();
+    });
+
+    it('getAppTitle should return pro name if ITProPackService is true', function () {
+      expect(this.controller.getAppTitle()).toEqual('loginPage.titleNew');
+
+      this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.getAppTitle()).toEqual('loginPage.titlePro');
+    });
+  });
+});

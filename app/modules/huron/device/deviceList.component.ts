@@ -9,7 +9,7 @@ class DeviceList implements ng.IComponentController {
   public multipleOtp: boolean;
   public onGenerateFn: Function;
   public onShowDeviceDetailFn: Function;
-  public actionList: Array<IActionItem>;
+  public actionList: IActionItem[];
   public showActions: boolean = false;
   public showGenerateButton: boolean = false;
   public generateCodeText: string;

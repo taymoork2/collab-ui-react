@@ -4,8 +4,8 @@ describe('Component: userStatusHistory', () => {
 
   let mockJournalEntries = <any>[];
   let mockClusterList = <any>[];
-  let mockResourceGroups = <any>[];
-  let serviceId = '\'squared-fusion-cal\'';
+  const mockResourceGroups = <any>[];
+  const serviceId = '\'squared-fusion-cal\'';
 
   beforeEach(function () {
     this.initModules(userStatusHistory);

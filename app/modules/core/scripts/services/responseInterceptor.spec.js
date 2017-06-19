@@ -58,7 +58,7 @@ describe('ResponseInterceptor', function () {
       data: {
         error: {
           message: [{
-            description: "Invalid access token.",
+            description: 'Invalid access token.',
           }],
         },
       },
@@ -96,5 +96,4 @@ describe('ResponseInterceptor', function () {
     Interceptor.responseError(response);
     expect(Auth.logout).toHaveBeenCalledTimes(1);
   }
-
 });

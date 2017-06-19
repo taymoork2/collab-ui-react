@@ -143,7 +143,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
     this.savingPage = true;
 
-    let entitlements: IEntitlementNameAndState[] = [{
+    const entitlements: IEntitlementNameAndState[] = [{
       entitlementName: 'squaredFusionUC',
       entitlementState: this.newEntitlementValue === true ? 'ACTIVE' : 'INACTIVE',
     }];

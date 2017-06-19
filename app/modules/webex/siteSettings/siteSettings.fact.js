@@ -23,8 +23,8 @@
       ) {
         var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
           siteUrl,
-          "icon icon-circle-webex",
-          "icon icon-circle-star"
+          'icon icon-circle-webex',
+          'icon icon-circle-star'
         );
 
         var webExSiteSettingsObj = {
@@ -32,13 +32,13 @@
           hasLoadError: false,
           invalidNavUrls: false,
           sessionTicketError: false,
-          errMsg: "",
+          errMsg: '',
           pageTitle: pageTitle,
           pageTitleFull: pageTitleFull,
 
           siteUrl: siteUrl,
           siteName: siteName,
-          cardsSectionId: siteUrl + "-" + "cardsSection",
+          cardsSectionId: siteUrl + '-' + 'cardsSection',
 
           // siteInfo: null,
           // meetingTypesInfo: null,
@@ -46,7 +46,7 @@
           settingPagesInfo: null,
 
           emailAllHostsBtnObj: {
-            id: "emailAllHostsBtn",
+            id: 'emailAllHostsBtn',
             pageObj: null,
           }, // emailAllHostsBtnObj
 
@@ -56,21 +56,21 @@
           categoryObjs: [],
         }; // webExSiteSettingsObj
 
-        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj("CommonSettings", null));
-        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj("MC", "Meeting Center"));
-        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj("TC", "Training Center"));
-        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj("SC", "Support Center"));
-        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj("EC", "Event Center"));
+        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('CommonSettings', null));
+        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('MC', 'Meeting Center'));
+        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('TC', 'Training Center'));
+        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('SC', 'Support Center'));
+        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('EC', 'Event Center'));
 
-        webExSiteSettingsObj.categoryObjs.push(newCategoryObj("EMAIL", ""));
-        webExSiteSettingsObj.categoryObjs.push(newCategoryObj("SiteInfo", ""));
-        webExSiteSettingsObj.categoryObjs.push(newCategoryObj("CommonSettings", "common_options"));
-        webExSiteSettingsObj.categoryObjs.push(newCategoryObj("MC", "mc_options"));
-        webExSiteSettingsObj.categoryObjs.push(newCategoryObj("EC", "ec_options"));
-        webExSiteSettingsObj.categoryObjs.push(newCategoryObj("SC", "sc_options"));
-        webExSiteSettingsObj.categoryObjs.push(newCategoryObj("TC", "tc_options"));
-        webExSiteSettingsObj.categoryObjs.push(newCategoryObj("RA", "remote_options"));
-        webExSiteSettingsObj.categoryObjs.push(newCategoryObj("WebACD", "webacd_settings"));
+        webExSiteSettingsObj.categoryObjs.push(newCategoryObj('EMAIL', ''));
+        webExSiteSettingsObj.categoryObjs.push(newCategoryObj('SiteInfo', ''));
+        webExSiteSettingsObj.categoryObjs.push(newCategoryObj('CommonSettings', 'common_options'));
+        webExSiteSettingsObj.categoryObjs.push(newCategoryObj('MC', 'mc_options'));
+        webExSiteSettingsObj.categoryObjs.push(newCategoryObj('EC', 'ec_options'));
+        webExSiteSettingsObj.categoryObjs.push(newCategoryObj('SC', 'sc_options'));
+        webExSiteSettingsObj.categoryObjs.push(newCategoryObj('TC', 'tc_options'));
+        webExSiteSettingsObj.categoryObjs.push(newCategoryObj('RA', 'remote_options'));
+        webExSiteSettingsObj.categoryObjs.push(newCategoryObj('WebACD', 'webacd_settings'));
 
         return webExSiteSettingsObj;
 
@@ -88,17 +88,17 @@
             subSectionObjs: [],
           };
 
-          if ("SC" == cardId) {
+          if ('SC' == cardId) {
             cardObj.subSectionObjs.push({
-              id: "WebACD",
-              label: "WebACD",
+              id: 'WebACD',
+              label: 'WebACD',
               lang: null,
               pageObjs: null,
             });
 
             cardObj.subSectionObjs.push({
-              id: "RA",
-              label: "Remote Access",
+              id: 'RA',
+              label: 'Remote Access',
               lang: null,
               pageObjs: null,
             });
@@ -111,7 +111,6 @@
           categoryId,
           categoryPinPageId
         ) {
-
           var categoryObj = {
             id: categoryId,
             pinPageId: categoryPinPageId,
@@ -124,23 +123,23 @@
       }, // newWebExSiteSettingsObj()
 
       initSiteSettingsObj: function () {
-        var funcName = "initSiteSettingsObj()";
+        var funcName = 'initSiteSettingsObj()';
         var logMsg = funcName;
 
         var _this = this;
 
-        var siteUrl = $stateParams.siteUrl || "";
+        var siteUrl = $stateParams.siteUrl || '';
         var siteName = WebExUtilsFact.getSiteName(siteUrl);
-        var pageTitle = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitle");
-        var pageTitleFull = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
+        var pageTitle = $translate.instant('webexSiteSettingsLabels.siteSettingsIndexPageTitle');
+        var pageTitleFull = $translate.instant('webexSiteSettingsLabels.siteSettingsIndexPageTitleFull', {
           siteUrl: siteUrl,
         });
 
-        logMsg = funcName + ": " + "\n" +
-          "siteUrl=" + siteUrl + "\n" +
-          "siteName=" + siteName + "\n" +
-          "pageTitle=" + pageTitle + "\n" +
-          "pageTitleFull=" + pageTitleFull;
+        logMsg = funcName + ': ' + '\n' +
+          'siteUrl=' + siteUrl + '\n' +
+          'siteName=' + siteName + '\n' +
+          'pageTitle=' + pageTitle + '\n' +
+          'pageTitleFull=' + pageTitleFull;
         Log.debug(logMsg);
 
         _this.webExSiteSettingsObj = _this.newWebExSiteSettingsObj(
@@ -158,7 +157,7 @@
             // var funcName = "initSiteSettingsModel().getSessionTicketSuccess()";
             // var logMsg = "";
 
-            WebExXmlApiInfoSvc.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
+            WebExXmlApiInfoSvc.xmlApiUrl = 'https://' + siteUrl + '/WBXService/XMLService';
             WebExXmlApiInfoSvc.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
             WebExXmlApiInfoSvc.webexAdminID = Authinfo.getPrimaryEmail();
             WebExXmlApiInfoSvc.webexAdminSessionTicket = sessionTicket;
@@ -167,10 +166,10 @@
           }, // getSessionTicketSuccess()
 
           function getSessionTicketError(errId) {
-            var funcName = "initSiteSettingsModel().getSessionTicketError()";
-            var logMsg = "";
+            var funcName = 'initSiteSettingsModel().getSessionTicketError()';
+            var logMsg = '';
 
-            logMsg = funcName + ": " + "errId=" + errId;
+            logMsg = funcName + ': ' + 'errId=' + errId;
             Log.debug(logMsg);
 
             _this.webExSiteSettingsObj.sessionTicketError = true;
@@ -189,8 +188,8 @@
 
         _this.getSiteSettingsInfoXml().then(
           function getSiteSettingsInfoXmlSuccess(getInfoResult) {
-            var funcName = "getSiteSettingsInfoXmlSuccess()";
-            var logMsg = "";
+            var funcName = 'getSiteSettingsInfoXmlSuccess()';
+            var logMsg = '';
 
             // start of replacing "result" with something we want to test
             /*
@@ -227,15 +226,14 @@
             _this.webExSiteSettingsObj.settingPagesInfo = settingPagesInfo;
 
             if (
-              ("" !== settingPagesInfo.errId) ||
-              ("" !== settingPagesInfo.errReason)
+              ('' !== settingPagesInfo.errId) ||
+              ('' !== settingPagesInfo.errReason)
             ) {
-
               _this.webExSiteSettingsObj.hasLoadError = true;
             } else if (_.isUndefined(settingPagesInfo.bodyJson.ns1_siteAdminNavUrl)) {
-              logMsg = funcName + "\n" +
-                "ERROR: ns1_siteAdminNavUrl is undefined" + "\n" +
-                "siteUrl=" + _this.webExSiteSettingsObj.siteUrl;
+              logMsg = funcName + '\n' +
+                'ERROR: ns1_siteAdminNavUrl is undefined' + '\n' +
+                'siteUrl=' + _this.webExSiteSettingsObj.siteUrl;
               Log.error(logMsg);
 
               _this.webExSiteSettingsObj.hasLoadError = true;
@@ -243,7 +241,7 @@
             } else {
               var ns1_siteAdminNavUrl = settingPagesInfo.bodyJson.ns1_siteAdminNavUrl;
 
-              logMsg = funcName + ": " + "ns1_siteAdminNavUrl=" + "\n" +
+              logMsg = funcName + ': ' + 'ns1_siteAdminNavUrl=' + '\n' +
                 JSON.stringify(ns1_siteAdminNavUrl);
               Log.debug(logMsg);
 
@@ -256,10 +254,10 @@
           },
 
           function getSiteSettingsInfoXmlError(getInfoResult) {
-            var funcName = "getSiteSettingsInfoXmlError()";
-            var logMsg = "";
+            var funcName = 'getSiteSettingsInfoXmlError()';
+            var logMsg = '';
 
-            logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
+            logMsg = funcName + ': ' + 'getInfoResult=' + JSON.stringify(getInfoResult);
             Log.debug(logMsg);
 
             _this.webExSiteSettingsObj.hasLoadError = true;
@@ -268,14 +266,14 @@
       }, // getSiteSettingsInfo()
 
       processSettingPagesInfo: function (ns1_siteAdminNavUrl) {
-        var funcName = "processSettingPagesInfo()";
-        var logMsg = "";
+        var funcName = 'processSettingPagesInfo()';
+        var logMsg = '';
 
         var _this = this;
 
         ns1_siteAdminNavUrl.forEach(function (siteAdminNavUrl) {
-          logMsg = funcName + ": " +
-            "siteAdminNavUrl=" + "\n" +
+          logMsg = funcName + ': ' +
+            'siteAdminNavUrl=' + '\n' +
             JSON.stringify(siteAdminNavUrl);
           Log.debug(logMsg);
 
@@ -283,10 +281,10 @@
           var pageId = siteAdminNavUrl.ns1_navItemId;
           var iframeUrl = siteAdminNavUrl.ns1_url;
 
-          logMsg = funcName + ": " + "\n" +
-            "category=" + category + "\n" +
-            "pageId=" + pageId + "\n" +
-            "iframeUrl=" + iframeUrl;
+          logMsg = funcName + ': ' + '\n' +
+            'category=' + category + '\n' +
+            'pageId=' + pageId + '\n' +
+            'iframeUrl=' + iframeUrl;
           Log.debug(logMsg);
 
           _this.addPage(
@@ -317,7 +315,7 @@
             //   "pageObj=" + JSON.stringify(pageObj);
             // $log.log(logMsg);
 
-            if (pageObj.pageId == "site_info") {
+            if (pageObj.pageId == 'site_info') {
               var pageId = pageObj.pageId;
               var iframeUrl = pageObj.iframeUrl;
 
@@ -327,7 +325,7 @@
               // $log.log(logMsg);
 
               _this.addPage(
-                "CommonSettings",
+                'CommonSettings',
                 pageId,
                 iframeUrl);
             }
@@ -340,26 +338,25 @@
         pageId,
         iframeUrl
       ) {
-
-        var funcName = "addPage()";
-        var logMsg = "";
+        var funcName = 'addPage()';
+        var logMsg = '';
 
         var _this = this;
 
-        var locale = _.replace($translate.use(), "_", "-");
-        var webexPageId = categoryId + "_" + pageId;
-        var indexPageLabelId = "webexSiteSettingsLabels.indexPageLabel_" + webexPageId;
+        var locale = _.replace($translate.use(), '_', '-');
+        var webexPageId = categoryId + '_' + pageId;
+        var indexPageLabelId = 'webexSiteSettingsLabels.indexPageLabel_' + webexPageId;
         var indexPageLabel = $translate.instant(indexPageLabelId);
 
         // var iframePageLabelId = "webexSiteSettingsLabels.iframePageLabel_" + webexPageId;
         // var iframePageLabel = $translate.instant(iframePageLabelId);
 
         var uiSref =
-          "site-list.site-setting({" +
-          "  siteUrl: " + "'" + _this.webExSiteSettingsObj.siteUrl + "'" + "," +
-          "  webexPageId: " + "'" + webexPageId + "'" + "," +
-          "  settingPageIframeUrl: " + "'" + iframeUrl + "'" +
-          "})";
+          'site-list.site-setting({' +
+          '  siteUrl: ' + "'" + _this.webExSiteSettingsObj.siteUrl + "'" + ',' +
+          '  webexPageId: ' + "'" + webexPageId + "'" + ',' +
+          '  settingPageIframeUrl: ' + "'" + iframeUrl + "'" +
+          '})';
 
         var newPageObj = {
           id: webexPageId,
@@ -369,14 +366,14 @@
           uiSref: uiSref,
         };
 
-        logMsg = funcName + ": " + "\n" +
-          "newPageObj=" + JSON.stringify(newPageObj);
+        logMsg = funcName + ': ' + '\n' +
+          'newPageObj=' + JSON.stringify(newPageObj);
         // $log.log(logMsg);
 
         var categoryObj = _this.getCategoryObj(categoryId);
         if (null == categoryObj) {
-          logMsg = funcName + ": " +
-            categoryId + " cannot be processed!!!";
+          logMsg = funcName + ': ' +
+            categoryId + ' cannot be processed!!!';
           Log.error(logMsg);
         } else {
           var pinPageId = categoryObj.pinPageId;
@@ -385,7 +382,6 @@
             (null != pinPageId) &&
             (pinPageId == newPageObj.pageId)
           ) {
-
             categoryObj.pinPageObj = newPageObj;
           } else {
             var pageInsertionDone = false;
@@ -399,26 +395,26 @@
                     locale
                   );
 
-                  logMsg = funcName + ": " +
-                    "pageObj.label=" + pageObj.label + "\n" +
-                    "newPageObj.label=" + newPageObj.label + "\n" +
-                    "localeCompareResult=" + localeCompareResult;
+                  logMsg = funcName + ': ' +
+                    'pageObj.label=' + pageObj.label + '\n' +
+                    'newPageObj.label=' + newPageObj.label + '\n' +
+                    'localeCompareResult=' + localeCompareResult;
                   // $log.log(logMsg);
 
                   if (localeCompareResult < 0) {
-                    logMsg = funcName + ": " +
-                      "Page obj inserted" + "\n" +
-                      "newPageObj=" + JSON.stringify(newPageObj);
+                    logMsg = funcName + ': ' +
+                      'Page obj inserted' + '\n' +
+                      'newPageObj=' + JSON.stringify(newPageObj);
                     // $log.log(logMsg);
 
                     categoryObj.pageObjs.splice(pageIndex, 0, newPageObj);
 
                     pageInsertionDone = true;
                   } else if (localeCompareResult === 0) {
-                    logMsg = funcName + ": " +
-                      "Page obj updated" + "\n" +
-                      "pageObj=" + JSON.stringify(pageObj) + "\n" +
-                      "newPageObj=" + JSON.stringify(newPageObj);
+                    logMsg = funcName + ': ' +
+                      'Page obj updated' + '\n' +
+                      'pageObj=' + JSON.stringify(pageObj) + '\n' +
+                      'newPageObj=' + JSON.stringify(newPageObj);
                     // $log.log(logMsg);
 
                     pageObj.id = newPageObj.id;
@@ -436,9 +432,9 @@
             ); // categoryObj.pageObjs.forEach()
 
             if (!pageInsertionDone) {
-              logMsg = funcName + ": " +
-                "Page obj pushed" + "\n" +
-                "newPageObj=" + JSON.stringify(newPageObj);
+              logMsg = funcName + ': ' +
+                'Page obj pushed' + '\n' +
+                'newPageObj=' + JSON.stringify(newPageObj);
               // $log.log(logMsg);
 
               categoryObj.pageObjs.push(newPageObj);
@@ -476,7 +472,7 @@
         function updateEmailAllHostsBtnObj() {
           // var btnLabel = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle");
 
-          _this.webExSiteSettingsObj.emailAllHostsBtnObj.pageObj = _this.getCategoryObj("EMAIL").pageObjs[0];
+          _this.webExSiteSettingsObj.emailAllHostsBtnObj.pageObj = _this.getCategoryObj('EMAIL').pageObjs[0];
         } // updateEmailAllHostsBtnObj()
 
         function updateSiteInfoCardObj() {
@@ -485,9 +481,9 @@
 
           _this.getCategoryObj(_this.webExSiteSettingsObj.siteInfoCardObj.id).pageObjs.forEach(
             function checkPageObj(pageObj) {
-              if (pageObj.pageId == "site_info") {
+              if (pageObj.pageId == 'site_info') {
                 _this.webExSiteSettingsObj.siteInfoCardObj.iframeLinkObj1.iframePageObj = pageObj;
-              } else if (pageObj.pageId == "site_features") {
+              } else if (pageObj.pageId == 'site_features') {
                 _this.webExSiteSettingsObj.siteInfoCardObj.iframeLinkObj2.iframePageObj = pageObj;
               }
             } // checkPageObj()
@@ -513,11 +509,11 @@
 
               var siteSettingCardObjId = siteSettingCardObj.id;
 
-              if ("CommonSettings" == siteSettingCardObjId) {
-                siteSettingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
-                siteSettingCardObj.comment = $translate.instant("webexSiteSettingsLabels.commonSettingsCardNote");
+              if ('CommonSettings' == siteSettingCardObjId) {
+                siteSettingCardObj.label = $translate.instant('webexSiteSettingsLabels.commonSettingsCardTitle');
+                siteSettingCardObj.comment = $translate.instant('webexSiteSettingsLabels.commonSettingsCardNote');
               } else {
-                siteSettingCardObj.lang = "en"; //Centre names are in English
+                siteSettingCardObj.lang = 'en'; //Centre names are in English
               }
 
               var categoryObj = _this.getCategoryObj(siteSettingCardObjId);
@@ -527,7 +523,7 @@
                 function updateSubSectionObj(subSectionObj) {
                   categoryObj = _this.getCategoryObj(subSectionObj.id);
                   subSectionObj.pageObjs = categoryObj.pageObjs;
-                  subSectionObj.lang = "en"; //WebACD, Remote Acces are in English
+                  subSectionObj.lang = 'en'; //WebACD, Remote Acces are in English
                 }
               ); // subSectionObjs.forEach()
 

@@ -36,14 +36,14 @@ describe('Controller: SupportCtrl', function () {
       view = undefined;
     });
     beforeEach(inject(function (_$templateCache_) {
-      var html = _$templateCache_.get("modules/squared/support/support-status.html");
+      var html = _$templateCache_.get('modules/squared/support/support-status.html');
       view = $compile(angular.element(html))($scope);
     }));
 
     it('shows tools card if user has helpdesk role', function () {
       Authinfo.isHelpDeskUser = jasmine.createSpy('isHelpDeskUser').and.returnValue(true);
       $scope.$digest();
-      var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
+      var hasToolsCard = _.includes(view.html(), 'supportPageToolsCard');
       expect(hasToolsCard).toBeTruthy();
     });
 
@@ -65,7 +65,7 @@ describe('Controller: SupportCtrl', function () {
       });
 
       $scope.$digest();
-      var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
+      var hasToolsCard = _.includes(view.html(), 'supportPageToolsCard');
       expect(hasToolsCard).toBeTruthy();
     });
 
@@ -86,7 +86,7 @@ describe('Controller: SupportCtrl', function () {
       });
 
       $scope.$digest();
-      var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
+      var hasToolsCard = _.includes(view.html(), 'supportPageToolsCard');
       expect(hasToolsCard).toBeFalsy();
     });
 
@@ -94,7 +94,7 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser = jasmine.createSpy('isHelpDeskUser').and.returnValue(true);
       $scope.gotoHelpdesk = spyOn($scope, 'gotoHelpdesk');
       $scope.$digest();
-      view.find("#toolsCardHelpdeskButton").click();
+      view.find('#toolsCardHelpdeskButton').click();
       expect($scope.gotoHelpdesk.calls.count()).toBe(1);
     });
 
@@ -102,7 +102,7 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser = jasmine.createSpy('isHelpDeskUser').and.returnValue(false);
       $scope.gotoHelpdesk = spyOn($scope, 'gotoHelpdesk');
       $scope.$digest();
-      view.find("toolsCardHelpdeskButton").click();
+      view.find('toolsCardHelpdeskButton').click();
       expect($scope.gotoHelpdesk.calls.count()).toBe(0);
     });
 
@@ -125,7 +125,7 @@ describe('Controller: SupportCtrl', function () {
 
       $scope.gotoCdrSupport = spyOn($scope, 'gotoCdrSupport');
       $scope.$digest();
-      view.find("#toolsCardCdrCallFlowButton").click();
+      view.find('#toolsCardCdrCallFlowButton').click();
       expect($scope.gotoCdrSupport.calls.count()).toBe(1);
     });
 
@@ -148,9 +148,8 @@ describe('Controller: SupportCtrl', function () {
 
       $scope.gotoCdrSupport = spyOn($scope, 'gotoCdrSupport');
       $scope.$digest();
-      view.find("toolsCardCdrCallFlowButton").click();
+      view.find('toolsCardCdrCallFlowButton').click();
       expect($scope.gotoCdrSupport.calls.count()).toBe(0);
     });
   });
-
 });

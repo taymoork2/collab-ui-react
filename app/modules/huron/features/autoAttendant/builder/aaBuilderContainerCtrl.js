@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService) {
-
     var vm = this;
     vm.aaModel = {};
     vm.ui = {};
@@ -46,10 +45,10 @@
 
     function getScheduleTitle() {
       if (!vm.ui.isClosedHours && !vm.ui.isHolidays) {
-        return "autoAttendant.scheduleAllDay";
+        return 'autoAttendant.scheduleAllDay';
       }
 
-      return "autoAttendant.schedule";
+      return 'autoAttendant.schedule';
     }
 
     function setUpStyle() {

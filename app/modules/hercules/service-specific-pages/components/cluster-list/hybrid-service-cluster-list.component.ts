@@ -119,7 +119,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   }
 
   private goToSidepanel(clusterId: string) {
-    let routeMap = {
+    const routeMap = {
       ept: 'private-trunk-sidepanel',
       'squared-fusion-cal': 'expressway-cluster-sidepanel',
       'squared-fusion-uc': 'expressway-cluster-sidepanel',

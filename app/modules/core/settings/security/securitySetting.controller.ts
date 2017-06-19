@@ -24,7 +24,7 @@ export class SecuritySettingController {
   }
 
   private loadSetting() {
-    let promises = {
+    const promises = {
       security: this.AccountOrgService.getAppSecurity(this.orgId),
       proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
     };

@@ -1,5 +1,4 @@
 class GoogleCalendarSettingsCtrl implements ng.IComponentController {
-  public pageTitle = this.$translate.instant('hercules.hybridServiceNames.squared-fusion-gcal');
   public backState = 'services-overview';
   public userStatusesSummary = [];
   private subscribeStatusesSummary: any;
@@ -9,7 +8,6 @@ class GoogleCalendarSettingsCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $modal,
-    private $translate: ng.translate.ITranslateService,
     private USSService,
   ) {}
 

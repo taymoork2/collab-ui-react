@@ -60,7 +60,6 @@ describe('assignServices', function () {
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
     $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_,
     _Orgservice_, _$previousState_) {
-
     $scope = $rootScope.$new();
     $state = _$state_;
     $previousState = _$previousState_;
@@ -136,13 +135,13 @@ describe('assignServices', function () {
     $httpBackend
       .whenGET('https://cmi.huron-int.com/api/v1/voice/customers/1/sites')
       .respond([{
-        "mediaTraversalMode": "TURNOnly",
-        "siteSteeringDigit": "8",
-        "vmCluster": null,
-        "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
-        "steeringDigit": "9",
-        "timeZone": "America/Los_Angeles",
-        "voicemailPilotNumberGenerated": "false",
+        mediaTraversalMode: 'TURNOnly',
+        siteSteeringDigit: '8',
+        vmCluster: null,
+        uuid: '70b8d459-7f58-487a-afc8-02c0a82d53ca',
+        steeringDigit: '9',
+        timeZone: 'America/Los_Angeles',
+        voicemailPilotNumberGenerated: 'false',
       }]);
 
     $httpBackend
@@ -178,7 +177,7 @@ describe('assignServices', function () {
       $state: $state,
     });
 
-    var html = $templateCache.get("modules/core/users/userAdd/assignServices.tpl.html");
+    var html = $templateCache.get('modules/core/users/userAdd/assignServices.tpl.html');
     view = $compile(angular.element('<div>').append(html))($scope);
     $scope.$apply();
 

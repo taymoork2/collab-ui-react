@@ -18,7 +18,7 @@ require('./_user-manage.scss');
     vm.getCurrentState = getCurrentState;
     vm.isBusy = false;
     vm.isNextDisabled = false;
-    vm.dirSyncStatusMessage = "";
+    vm.dirSyncStatusMessage = '';
 
     vm.onInit();
 
@@ -62,22 +62,22 @@ require('./_user-manage.scss');
     }
 
     var transitions = {
-      'installConnector': {
+      installConnector: {
         next: '^.syncStatus',
         prev: rootState,
       },
 
-      'syncStatus': {
+      syncStatus: {
         next: '^.dirsyncServices',
         prev: '^.installConnector',
       },
 
-      'dirsyncServices': {
+      dirsyncServices: {
         next: '^.dirsyncResult',
         prev: '^.syncStatus',
       },
 
-      'dirsyncResult': {
+      dirsyncResult: {
         next: 'users.list',
       },
     };
@@ -146,5 +146,4 @@ require('./_user-manage.scss');
       });
     }
   }
-
 })();

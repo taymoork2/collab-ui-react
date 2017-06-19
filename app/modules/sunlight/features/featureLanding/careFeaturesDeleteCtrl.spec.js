@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Care Feature Delete Ctrl', function () {
-
   var controller, $rootScope, $q, $scope, $stateParams, $timeout, $translate, CareFeatureList, Log, Notification;
   var deferred;
 
@@ -9,18 +8,18 @@ describe('Care Feature Delete Ctrl', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   var successResponse = {
-    'status': 200,
-    'statusText': 'OK',
+    status: 200,
+    statusText: 'OK',
   };
   var failureResponse = {
-    'data': 'Internal Server Error',
-    'status': 500,
-    'statusText': 'Internal Server Error',
+    data: 'Internal Server Error',
+    status: 500,
+    statusText: 'Internal Server Error',
   };
 
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
 
   beforeEach(inject(function (_$rootScope_, $controller, _$stateParams_, _$timeout_, _$translate_, _$q_, Authinfo, _CareFeatureList_, _Notification_, _Log_) {
@@ -58,7 +57,6 @@ describe('Care Feature Delete Ctrl', function () {
       Log: Log,
       Notification: Notification,
     });
-
   }));
 
   it('should broadcast CARE_FEATURE_DELETED event when chat template is deleted successfully', function () {
@@ -67,7 +65,6 @@ describe('Care Feature Delete Ctrl', function () {
     $scope.$apply();
     $timeout.flush();
     expect($rootScope.$broadcast).toHaveBeenCalledWith('CARE_FEATURE_DELETED');
-
   });
 
   it('should give a successful notification when chat template is deleted successfully', function () {
@@ -87,5 +84,4 @@ describe('Care Feature Delete Ctrl', function () {
     $timeout.flush();
     expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String));
   });
-
 });

@@ -62,7 +62,7 @@ describe('Directive: aaMediaUpload', function () {
     });
 
     it('creates the appropriate content as element', function () {
-      expect(element.html()).toContain("mediaUpload");
+      expect(element.html()).toContain('mediaUpload');
     });
   });
 
@@ -73,7 +73,7 @@ describe('Directive: aaMediaUpload', function () {
     });
 
     it('creates the appropriate content as attribute', function () {
-      expect(element.html()).toContain("mediaUpload");
+      expect(element.html()).toContain('mediaUpload');
     });
   });
 });

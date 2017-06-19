@@ -41,7 +41,7 @@ export class MediaMgrCtrl implements ng.IComponentController {
   public mohUploadInProgress: boolean = false;
   public mohUploadPercentComplete: number = 0;
   public searchStr: string = '';
-  public mediaList: Array<IMedia>;
+  public mediaList: IMedia[];
 
   /* @ngInject */
   constructor(
@@ -149,7 +149,7 @@ export class MediaMgrCtrl implements ng.IComponentController {
   }
 
   public convertSize(sizeBytes: number): number {
-    let sizeMB = Math.round((sizeBytes / 1024) / 1024);
+    const sizeMB = Math.round((sizeBytes / 1024) / 1024);
     return sizeMB;
   }
 }

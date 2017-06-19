@@ -21,7 +21,7 @@ export class MediaMgrService {
     private $http: ng.IHttpService,
   ) {}
 
-  public getMedia(): ng.IPromise<Array<IMedia>> {
+  public getMedia(): ng.IPromise<IMedia[]> {
     return this.$http({
       method: 'GET',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media`,
@@ -34,7 +34,7 @@ export class MediaMgrService {
     let mediaId = '';
     return this.getUploadUrl(media)
       .then((response) => {
-        let data = <IUploadMetaDataResponse> response.data;
+        const data = <IUploadMetaDataResponse> response.data;
         mediaId = data.mediaId;
         return this.uploadToUrl(media.file, data.uploadUrl);
       }).then(() => {

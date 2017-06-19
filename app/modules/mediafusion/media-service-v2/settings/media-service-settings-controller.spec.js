@@ -7,20 +7,20 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
 
   beforeEach(inject(function ($controller, $httpBackend, $stateParams, _HybridServicesClusterService_, _MediaClusterServiceV2_, _Notification_, _$q_, _Analytics_, _Orgservice_) {
     clusters = [{
-      'id': 'a050fcc7-9ade-4790-a06d-cca596910421',
-      'name': 'MFA_TEST1',
-      'connectors': [{
-        'id': 'mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a',
-        'connectorType': 'mf_mgmt',
-        'upgradeState': 'upgraded',
-        'hostname': '10.196.5.251',
+      id: 'a050fcc7-9ade-4790-a06d-cca596910421',
+      name: 'MFA_TEST1',
+      connectors: [{
+        id: 'mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a',
+        connectorType: 'mf_mgmt',
+        upgradeState: 'upgraded',
+        hostname: '10.196.5.251',
       }, {
-        'id': 'mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075',
-        'connectorType': 'mf_mgmt',
-        'hostname': '10.196.5.246',
+        id: 'mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075',
+        connectorType: 'mf_mgmt',
+        hostname: '10.196.5.246',
       }],
-      'releaseChannel': 'DEV',
-      'targetType': 'mf_mgmt',
+      releaseChannel: 'DEV',
+      targetType: 'mf_mgmt',
     }];
     HybridServicesClusterService = _HybridServicesClusterService_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
@@ -50,7 +50,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     spyOn(Notification, 'success');
     spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve({}));
     spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.resolve({}));
-    controller.videoPropertySetId = "1234";
+    controller.videoPropertySetId = '1234';
     controller.setEnableVideoQuality();
     httpBackend.verifyNoOutstandingExpectation();
     expect(Orgservice.setOrgSettings).toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     spyOn(Notification, 'errorWithTrackingId');
     spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve({}));
     spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.reject());
-    controller.videoPropertySetId = "1234";
+    controller.videoPropertySetId = '1234';
     controller.setEnableVideoQuality();
     httpBackend.verifyNoOutstandingExpectation();
     expect(Orgservice.setOrgSettings).toHaveBeenCalled();
@@ -84,7 +84,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   it('check if createPropertySetAndAssignClusters creates propertysets and assigns clusters', function () {
     spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(clusters));
     spyOn(MediaClusterServiceV2, 'createPropertySet').and.returnValue($q.resolve({
-      'data': {
+      data: {
         id: '1234',
       },
     }));
@@ -102,7 +102,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     spyOn(Notification, 'errorWithTrackingId');
     spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(clusters));
     spyOn(MediaClusterServiceV2, 'createPropertySet').and.returnValue($q.resolve({
-      'data': {
+      data: {
         id: '1234',
       },
     }));

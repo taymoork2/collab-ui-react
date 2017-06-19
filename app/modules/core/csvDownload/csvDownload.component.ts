@@ -107,9 +107,9 @@ class CsvDownloadCtrl implements ng.IComponentController {
 
     // Register handler for all csv download requests
     if (this.type === CsvDownloadTypes.TYPE_ANY) {
-      let listener = this.$rootScope.$on('csv-download-request', (_event, options) => {
+      const listener = this.$rootScope.$on('csv-download-request', (_event, options) => {
         this.FILENAME = (options.filename || this.FILENAME);
-        let tooManyUsers = !!options.tooManyUsers;
+        const tooManyUsers = !!options.tooManyUsers;
         if (tooManyUsers && this.CsvDownloadService.downloadInProgress) {
           this.Notification.error('csvDownload.isRunning');
         } else {
@@ -123,7 +123,7 @@ class CsvDownloadCtrl implements ng.IComponentController {
               type: 'dialog',
               templateUrl: 'modules/core/csvDownload/csvDownloadConfirm.tpl.html',
               controller: function () {
-                let vm = this;
+                const vm = this;
                 vm.messageBody1 = this.CsvDownloadService.downloadInProgress ? this.$translate.instant('csvDownload.confirmCsvCancelMsg') : '';
                 vm.messageBody2 = this.$translate.instant('csvDownload.confirmCsvDownloadMsg');
               },

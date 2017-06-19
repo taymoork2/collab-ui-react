@@ -9,7 +9,7 @@ class HuntGroupFallbackDestinationCtrl implements ng.IComponentController {
   public onChangeDestinationRuleFn: Function;
   public onChangeDestinationFn: Function;
   public onChangeAlternateFn: Function;
-  public options: Array<number> = [2, 5, 10, 30, 60];
+  public options: number[] = [2, 5, 10, 30, 60];
   public fallbackDestForm: ng.IFormController;
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {

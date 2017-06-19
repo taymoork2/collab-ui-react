@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Care Feature Ctrl should ', function () {
-
   var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList,
     Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, $translate;
   var spiedAuthinfo = {
@@ -21,16 +20,16 @@ describe('Care Feature Ctrl should ', function () {
   };
   var getTemplateFailure = function () {
     return {
-      'data': 'Internal Server Error',
-      'status': 500,
-      'statusText': 'Internal Server Error',
+      data: 'Internal Server Error',
+      status: 500,
+      statusText: 'Internal Server Error',
     };
   };
 
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
 
   beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_) {
@@ -245,5 +244,4 @@ describe('Care Feature Ctrl should ', function () {
     expect(controller.filteredListOfFeatures.length).toEqual(1);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Chat+Callback Dev Template');
   });
-
 });

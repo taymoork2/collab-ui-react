@@ -10,7 +10,6 @@
 
    /* @ngInject */
   function HealthService($http, $q, UrlConfig) {
-
     var healthUrl = UrlConfig.getAdminServiceUrl() + 'ping';
 
     var service = {
@@ -20,7 +19,6 @@
     return service;
 
     function getHealthStatus() {
-
       return $http.get(healthUrl)
         .then(function (response) {
           return response.data.serviceState;
@@ -30,5 +28,4 @@
       });
     }
   }
-
 })();

@@ -103,8 +103,8 @@
           SYNC: 'sync',
         },
         manualMethods: {
-          '0': 'emailOnly',
-          '1': 'nameAndEmail',
+          0: 'emailOnly',
+          1: 'nameAndEmail',
         },
         saveResults: {
           SUCCESS: 'success',
@@ -487,7 +487,6 @@
       }
       var isTrial = _.some(licenseList, function (license) {
         return license && license.isTrial;
-
       });
       return isTrial ? 'trial' : 'active';
     }
@@ -496,5 +495,4 @@
       return email ? email.split('@')[1] || '' : '';
     }
   }
-
 })();

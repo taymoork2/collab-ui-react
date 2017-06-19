@@ -184,7 +184,6 @@ describe('User Service', function () {
   });
 
   describe('User Photo:', function () {
-
     beforeEach(function () {
       this.photoUrl = 'https://example.com/V1~b184c46919c0653716f712618bba017e~1A9RhIk6SueEdU-_4-nKJw==~1600';
       this.thumbnailUrl = 'https://example.com/V1~b184c46919c0653716f712618bba017e~1A9RhIk6SueEdU-_4-nKJw==~80';
@@ -192,7 +191,6 @@ describe('User Service', function () {
     });
 
     it('should correctly test for an existing thumbnail photo', function () {
-
       var user;
 
       expect(this.Userservice.isValidThumbnail(user)).toBeFalsy();
@@ -214,11 +212,9 @@ describe('User Service', function () {
       }];
 
       expect(this.Userservice.isValidThumbnail(user)).toBeTruthy();
-
     });
 
     it('should correctly return thumbnail photo', function () {
-
       var user;
 
       expect(this.Userservice.getUserPhoto(user)).toBeUndefined();
@@ -238,9 +234,7 @@ describe('User Service', function () {
         value: this.thumbnailUrl,
       }];
       expect(this.Userservice.getUserPhoto(user)).toEqual(this.thumbnailUrl);
-
     });
-
   });
 
   describe('getUserAsPromise():', function () {

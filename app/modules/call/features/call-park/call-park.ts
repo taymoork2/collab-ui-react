@@ -10,7 +10,7 @@ export class CallPark {
   public endRange: string | undefined;
   public fallbackDestination: FallbackDestination;
   public fallbackTimer: number;
-  public members: Array<CallFeatureMember>;
+  public members: CallFeatureMember[];
 
   constructor(obj: {
     uuid?: string,
@@ -19,7 +19,7 @@ export class CallPark {
     endRange?: string,
     fallbackDestination: FallbackDestination,
     fallbackTimer: number,
-    members: Array<CallFeatureMember>,
+    members: CallFeatureMember[],
   } = {
     uuid: undefined,
     name: undefined,

@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function HelpdeskHeaderController($interval, $scope, HelpdeskSearchHistoryService, HelpdeskSparkStatusService, UrlConfig) {
-
     var vm = this;
     vm.clearSearchHistory = clearSearchHistory;
     vm.populateHistory = populateHistory;

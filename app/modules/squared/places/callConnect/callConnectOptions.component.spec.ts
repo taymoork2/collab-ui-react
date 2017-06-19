@@ -19,7 +19,7 @@ describe('CallConnectOptions component:', () => {
     spyOn(this.ResourceGroupService, 'getAllAsOptions').and.returnValue(this.$q.resolve({}));
   });
 
-  let defaultState = () => {
+  const defaultState = () => {
     return {};
   };
 
@@ -33,7 +33,7 @@ describe('CallConnectOptions component:', () => {
     test.$rootScope = undefined;
   });
 
-  let initCallConnect = (wFunction: string, enableCalService: boolean, cisUuid: string) => {
+  const initCallConnect = (wFunction: string, enableCalService: boolean, cisUuid: string) => {
     state.stateParams = {
       wizard: {
         state: () => {
@@ -69,7 +69,7 @@ describe('CallConnectOptions component:', () => {
         it('calling next should give calendar as next step', () => {
           spyOn(state.stateParams.wizard, 'next').and.returnValue({});
           state.controller.next();
-          let nextParam = state.stateParams.wizard.next.calls.mostRecent().args;
+          const nextParam = state.stateParams.wizard.next.calls.mostRecent().args;
           expect(nextParam[1]).toBe('calendar');
         });
         it('should have next enabled', () => {
@@ -86,7 +86,7 @@ describe('CallConnectOptions component:', () => {
         it('calling next should give "next" as next step', () => {
           spyOn(state.stateParams.wizard, 'next').and.returnValue({});
           state.controller.next();
-          let nextParam = state.stateParams.wizard.next.calls.mostRecent().args;
+          const nextParam = state.stateParams.wizard.next.calls.mostRecent().args;
           expect(nextParam[1]).toBe('next');
         });
       });
@@ -103,7 +103,7 @@ describe('CallConnectOptions component:', () => {
         it('calling next should give calendar as next step', () => {
           spyOn(state.stateParams.wizard, 'next').and.returnValue({});
           state.controller.next();
-          let nextParam = state.stateParams.wizard.next.calls.mostRecent().args;
+          const nextParam = state.stateParams.wizard.next.calls.mostRecent().args;
           expect(nextParam[1]).toBe('calendar');
         });
       });
@@ -118,7 +118,7 @@ describe('CallConnectOptions component:', () => {
     });
   });
   describe('save ()', () => {
-    let uid = '8AB6D09F5AD6D216015AEACB5D3C0005';
+    const uid = '8AB6D09F5AD6D216015AEACB5D3C0005';
     beforeEach(() => {
       initCallConnect('with editServices', true, uid);
     });
@@ -128,14 +128,14 @@ describe('CallConnectOptions component:', () => {
       spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
       spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
 
-      let mailId = 'mail@example.com';
+      const mailId = 'mail@example.com';
       state.controller.mailID = mailId;
 
       state.controller.dismiss = () => {
       };
       state.controller.save();
       test.$rootScope.$digest();
-      let saveParams = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
+      const saveParams = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
       expect(saveParams[0]).toBe(place);
 
       expect(saveParams[1]).toContain(FUSION_HYBRID_EC);
@@ -154,18 +154,18 @@ describe('CallConnectOptions component:', () => {
     });
   });
   describe('next ()', () => {
-    let uid = '8AB6D09F5AD6D216015AEACB8E4D0006';
+    const uid = '8AB6D09F5AD6D216015AEACB8E4D0006';
     beforeEach(() => {
       initCallConnect('with newPlace', true, uid);
     });
     it('should include the correct entitlement and extLink for call in the wizard state', () => {
-      let mailId = 'mail@example.com';
+      const mailId = 'mail@example.com';
       spyOn(state.stateParams.wizard, 'next').and.returnValue({});
 
       state.controller.mailID = mailId;
       state.controller.next();
 
-      let nextParam = state.stateParams.wizard.next.calls.mostRecent().args;
+      const nextParam = state.stateParams.wizard.next.calls.mostRecent().args;
       expect(nextParam[0]).toBeTruthy();
       expect(nextParam[0].account).toBeTruthy();
       expect(nextParam[0].account.externalHybridCallIdentifier).toBeTruthy();

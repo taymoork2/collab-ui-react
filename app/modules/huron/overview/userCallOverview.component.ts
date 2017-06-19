@@ -7,12 +7,12 @@ const SNR_CHANGE = 'SNR_CHANGE';
 class UserCallOverviewCtrl implements ng.IComponentController {
 
   public currentUser;
-  public actionList: Array<IActionItem>;
-  public features: Array<IFeature>;
-  public directoryNumbers: Array<Line>;
+  public actionList: IActionItem[];
+  public features: IFeature[];
+  public directoryNumbers: Line[];
   public customerVmEnabled: boolean = false;
   public userVmEnabled: boolean = false;
-  public userServices: Array<string> = [];
+  public userServices: string[] = [];
   private externalTransferFeatureToggle;
   public snrEnabled: boolean = false;
 
@@ -45,7 +45,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.initActions();
-    let promises  = {
+    const promises  = {
       1: this.HuronVoicemailService.isEnabledForCustomer(),
       2: this.HuronUserService.getUserServices(this.currentUser.id),
       3: this.HuronUserService.getRemoteDestinations(this.currentUser.id),
@@ -54,7 +54,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     this.$q.all(promises).then( data => {
       this.customerVmEnabled = data[1];
       this.userServices = data[2];
-      let rd: UserRemoteDestination[] = data[3];
+      const rd: UserRemoteDestination[] = data[3];
       this.snrEnabled = (!_.isEmpty(rd) && rd[0].enableMobileConnect === 'true');
       this.externalTransferFeatureToggle = data[4];
     }).then(() => {
@@ -76,7 +76,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   private initFeatures(): void {
     this.features = [];
     if (this.customerVmEnabled) {
-      let vmService: IFeature = {
+      const vmService: IFeature = {
         name: this.$translate.instant('telephonyPreview.voicemail'),
         state: 'voicemail',
         detail: this.userVmEnabled ? this.$translate.instant('common.on') : this.$translate.instant('common.off'),
@@ -84,7 +84,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       };
       this.features.push(vmService);
     }
-    let snrService: IFeature = {
+    const snrService: IFeature = {
       name: this.$translate.instant('telephonyPreview.singleNumberReach'),
       state: 'snr',
       detail: this.snrEnabled ? this.$translate.instant('common.on') : this.$translate.instant('common.off'),
@@ -100,7 +100,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     };
     this.features.push(service);
 
-    let cosService: IFeature = {
+    const cosService: IFeature = {
       name: this.$translate.instant('serviceSetupModal.cos.title'),
       state: 'cos',
       detail: undefined,

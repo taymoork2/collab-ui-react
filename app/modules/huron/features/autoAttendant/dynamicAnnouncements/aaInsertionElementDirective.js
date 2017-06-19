@@ -11,6 +11,7 @@
       scope: {
         textValue: '@elementText',
         readAs: '@readAs',
+        elementId: '@elementId',
       },
       controller: 'AAInsertionElementCtrl',
       controllerAs: 'aaInsertionElement',

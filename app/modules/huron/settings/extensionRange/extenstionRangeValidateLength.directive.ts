@@ -25,7 +25,7 @@ export class ExtensionRangeLengthValidator implements ng.IDirective {
         endNumber = _.toSafeInteger(modelValue);
       }
 
-      let difference: number = _.subtract(endNumber, beginNumber);
+      const difference: number = _.subtract(endNumber, beginNumber);
       return (difference < this.MAX_RANGE_LENGTH);
     };
   }

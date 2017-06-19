@@ -1,9 +1,9 @@
 import ordersOverviewModule from './index';
 describe('Component: OrdersOverview', () => {
-  let customerOrders = getJSONFixture('huron/json/orderManagement/pstnOrdersOverview.json');
-  let customerSwivelOrders = getJSONFixture('huron/json/orderManagement/pstnSwivelOrdersOverview.json');
-  let carrierIntelepeer = getJSONFixture('huron/json/pstnSetup/carrierIntelepeer.json');
-  let carrierSwivel = getJSONFixture('huron/json/pstnSetup/carrierSwivel.json');
+  const customerOrders = getJSONFixture('huron/json/orderManagement/pstnOrdersOverview.json');
+  const customerSwivelOrders = getJSONFixture('huron/json/orderManagement/pstnSwivelOrdersOverview.json');
+  const carrierIntelepeer = getJSONFixture('huron/json/pstnSetup/carrierIntelepeer.json');
+  const carrierSwivel = getJSONFixture('huron/json/pstnSetup/carrierSwivel.json');
 
   beforeEach(function () {
     this.initModules(ordersOverviewModule);

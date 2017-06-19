@@ -59,10 +59,10 @@
           'Content-Type': 'text/plain',
         },
         data: {
-          "isTrial": true,
-          "properties": [{
-            "key": "siteUrl",
-            "value": siteUrl,
+          isTrial: true,
+          properties: [{
+            key: 'siteUrl',
+            value: siteUrl,
           }],
         },
       };
@@ -78,8 +78,8 @@
         };
         var isValid = (data.isValid === 'true');
         return {
-          'isValid': isValid && data.errorCode === '0',
-          'errorCode': errorCodes[data.errorCode] || 'invalidSite',
+          isValid: isValid && data.errorCode === '0',
+          errorCode: errorCodes[data.errorCode] || 'invalidSite',
         };
       }).catch(function (response) {
         Notification.errorResponse(response, 'trialModal.meeting.validationHttpError');
@@ -88,7 +88,7 @@
 
     function getTrialStatus(trialId) {
       return WebexOrderStatusResource.get({
-        'trialId': trialId,
+        trialId: trialId,
       }).$promise.then(function (data) {
         var orderStatus = data.provOrderStatus !== 'PROVISIONED';
         var timeZoneId = data.timeZoneId && data.timeZoneId.toString();

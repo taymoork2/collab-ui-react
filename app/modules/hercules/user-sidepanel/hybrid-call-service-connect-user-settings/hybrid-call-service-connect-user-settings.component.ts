@@ -80,7 +80,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
   public saveData() {
     this.savingPage = true;
 
-    let entitlements: IEntitlementNameAndState[] = [{
+    const entitlements: IEntitlementNameAndState[] = [{
       entitlementName: 'squaredFusionUC',
       entitlementState: 'ACTIVE',
     }, {

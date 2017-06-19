@@ -150,14 +150,12 @@
           } else {
             NotificationService.removeNotification(userErrorsId);
           }
-
         }
       }
     }
 
     function handleAtlasSipUriDomainEnterpriseNotification(serviceId) {
       if (!isSipUriAcknowledged) {
-
         if (hasSipUriDomainConfigured) {
           return;
         }
@@ -174,7 +172,6 @@
             }
           }
         }, null, params);
-
       }
     }
 
@@ -254,7 +251,6 @@
             });
           }
         });
-
     }
 
     // Do not show these alarms as the checkUserStatuses() notifications already covers the fact that your have users in the error state

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Video play spec', function () {
-
   describe('Launch video flow', function () {
     it('should login with a partner admin', function () {
       login.login('partner-admin');

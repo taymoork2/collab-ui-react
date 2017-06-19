@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function servicePartnerCtrl(gemService, Notification) {
-
     var vm = this;
     vm.loading = true;
     gemService.getSpData().then(function (res) {

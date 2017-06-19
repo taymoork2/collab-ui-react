@@ -12,7 +12,7 @@ export interface IDropdownBase {
 // export menu
 export interface IExportDropdown {
   header: IExportMenu;
-  menu: Array<IExportMenu>;
+  menu: IExportMenu[];
 }
 
 export interface IExportMenu {
@@ -73,20 +73,20 @@ export interface ISecondaryReport {
   errorDescription: string;
   search: boolean;
   state: string;
-  sortOptions: Array<IReportSortOption>;
+  sortOptions: IReportSortOption[];
   table: IReportsTable;
   title: string;
 }
 
 export interface IReportDropdown {
-  array: Array<IDropdownBase>;
+  array: IDropdownBase[];
   click: Function;
   disabled: boolean;
   selected: IDropdownBase;
 }
 
 export interface IReportsTable {
-  headers: Array<IReportsHeader>;
+  headers: IReportsHeader[];
   data: any;
   dummy: boolean;
 }
@@ -117,13 +117,13 @@ export interface IReportTooltip {
 // Endpoint interface
 export interface IEndpointData {
   class: string;
-  output: Array<string>;
+  output: string[];
   splitClasses?: string;
 }
 
 // Call Metrics Interfaces
 export interface ICallMetricsData {
-  dataProvider: Array<ICallMetricsDataProvider>;
+  dataProvider: ICallMetricsDataProvider[];
   labelData: ICallMetricsLabels;
   dummy: boolean;
 }
@@ -150,7 +150,7 @@ export interface IMediaQualityData extends IGraphBase {
 
 // Active User interfaces
 export interface IActiveUserCustomerData {
-  graphData: Array<IActiveUserData>;
+  graphData: IActiveUserData[];
   populationData: IPopulationData;
   totalActive: number;
   totalRegistered: number;
@@ -183,8 +183,8 @@ export interface IPopulationData {
 }
 
 export interface IActiveUserReturnData {
-  graphData: Array<IActiveUserData>;
-  popData: Array<IPopulationData>;
+  graphData: IActiveUserData[];
+  popData: IPopulationData[];
   isActiveUsers: boolean;
 }
 

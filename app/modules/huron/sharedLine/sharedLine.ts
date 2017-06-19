@@ -3,14 +3,14 @@ export class SharedLine {
   public primary: boolean = false;
   public user: SharedLineUser;
   public place: SharedLinePlace;
-  public phones: Array<SharedLinePhone>;
+  public phones: SharedLinePhone[];
 
   constructor(obj: {
     uuid: string,
     primary: boolean,
     user: SharedLineUser,
     place: SharedLinePlace,
-    phones: Array<SharedLinePhone>,
+    phones: SharedLinePhone[],
   }) {
     this.uuid = obj.uuid;
     this.primary = obj.primary;

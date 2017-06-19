@@ -21,31 +21,31 @@ describe('Controller: AARouteToUserCtrl', function () {
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
   var completeUserCisResponse = {
-    "userName": "dudette@gmail.com",
-    "name": {
-      "givenName": "Super",
-      "familyName": "Admin",
+    userName: 'dudette@gmail.com',
+    name: {
+      givenName: 'Super',
+      familyName: 'Admin',
     },
-    "userStatus": "active",
-    "id": "47026507-4F83-0B5B-9C1D-8DBA89F2E01C",
-    "displayName": "Super Admin",
-    "success": true,
+    userStatus: 'active',
+    id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
+    displayName: 'Super Admin',
+    success: true,
   };
 
   var notSoCompleteUserCisResponse = {
-    "userName": "dude@gmail.com",
-    "name": {
-      "givenName": "inferior",
-      "familyName": "user",
+    userName: 'dude@gmail.com',
+    name: {
+      givenName: 'inferior',
+      familyName: 'user',
     },
-    "userStatus": "active",
-    "id": "5FCF9B4A-4A44-943B-4A4A-A397974E97D4",
-    "displayName": "",
-    "success": true,
+    userStatus: 'active',
+    id: '5FCF9B4A-4A44-943B-4A4A-A397974E97D4',
+    displayName: '',
+    success: true,
   };
 
   var cmiCompleteUserGet;
@@ -53,253 +53,253 @@ describe('Controller: AARouteToUserCtrl', function () {
   var cmiExtensionInfoGet;
 
   var directoryCmiResponse = {
-    "firstName": "firstName",
-    "middleName": "middleName",
-    "lastName": "lastName",
-    "nickName": "nickName",
-    "userId": "dudette@gmail.com",
-    "userName": "dudette@gmail.com",
-    "mailId": "dudette@gmail.com",
-    "associatedDevices": {
-      "associatedDevice": [{
-        "uuid": "236f9531-e4ee-42f0-9f52-249480b42927",
-        "name": "SEP74A02FC0F752",
+    firstName: 'firstName',
+    middleName: 'middleName',
+    lastName: 'lastName',
+    nickName: 'nickName',
+    userId: 'dudette@gmail.com',
+    userName: 'dudette@gmail.com',
+    mailId: 'dudette@gmail.com',
+    associatedDevices: {
+      associatedDevice: [{
+        uuid: '236f9531-e4ee-42f0-9f52-249480b42927',
+        name: 'SEP74A02FC0F752',
       }],
     },
-    "primaryDirectoryNumber": {
-      "uuid": "51d41da5-31ba-49ce-8540-ea103c33bc49",
-      "pattern": "2252",
-      "routePartition": {
-        "uuid": "cd2002a3-9de4-4a5f-96e3-a74ab658aac9",
-        "name": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2_000001_EXT_RP",
+    primaryDirectoryNumber: {
+      uuid: '51d41da5-31ba-49ce-8540-ea103c33bc49',
+      pattern: '2252',
+      routePartition: {
+        uuid: 'cd2002a3-9de4-4a5f-96e3-a74ab658aac9',
+        name: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2_000001_EXT_RP',
       },
     },
-    "directoryUri": "",
-    "telephoneNumber": "",
-    "title": "",
-    "mobileNumber": "",
-    "homeNumber": "",
-    "pagerNumber": "",
-    "selfService": "2252",
-    "userProfile": null,
-    "customer": {
-      "uuid": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
-      "name": "Huron Int Test 1",
+    directoryUri: '',
+    telephoneNumber: '',
+    title: '',
+    mobileNumber: '',
+    homeNumber: '',
+    pagerNumber: '',
+    selfService: '2252',
+    userProfile: null,
+    customer: {
+      uuid: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
+      name: 'Huron Int Test 1',
     },
-    "uuid": "7f86555a-165f-412b-b31e-1cc6b1431bca",
-    "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/7f86555a-165f-412b-b31e-1cc6b1431bca",
-    "links": [{
-      "rel": "voice",
-      "href": "/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/7f86555a-165f-412b-b31e-1cc6b1431bca",
+    uuid: '7f86555a-165f-412b-b31e-1cc6b1431bca',
+    url: 'https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/7f86555a-165f-412b-b31e-1cc6b1431bca',
+    links: [{
+      rel: 'voice',
+      href: '/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/7f86555a-165f-412b-b31e-1cc6b1431bca',
     }],
   };
 
   var noDirectoryCmiResponse = {
-    "firstName": "firstName",
-    "middleName": "middleName",
-    "lastName": "lastName",
-    "nickName": "nickName",
-    "userId": "dudette@gmail.com",
-    "userName": "dudette@gmail.com",
-    "mailId": "dudette@gmail.com",
-    "associatedDevices": {
-      "associatedDevice": [{
-        "uuid": "236f9531-e4ee-42f0-9f52-249480b42927",
-        "name": "SEP74A02FC0F752",
+    firstName: 'firstName',
+    middleName: 'middleName',
+    lastName: 'lastName',
+    nickName: 'nickName',
+    userId: 'dudette@gmail.com',
+    userName: 'dudette@gmail.com',
+    mailId: 'dudette@gmail.com',
+    associatedDevices: {
+      associatedDevice: [{
+        uuid: '236f9531-e4ee-42f0-9f52-249480b42927',
+        name: 'SEP74A02FC0F752',
       }],
     },
-    "directoryUri": "",
-    "telephoneNumber": "",
-    "title": "",
-    "mobileNumber": "",
-    "homeNumber": "",
-    "pagerNumber": "",
-    "selfService": "2252",
-    "userProfile": null,
-    "customer": {
-      "uuid": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
-      "name": "Huron Int Test 1",
+    directoryUri: '',
+    telephoneNumber: '',
+    title: '',
+    mobileNumber: '',
+    homeNumber: '',
+    pagerNumber: '',
+    selfService: '2252',
+    userProfile: null,
+    customer: {
+      uuid: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
+      name: 'Huron Int Test 1',
     },
-    "uuid": "7f86555a-165f-412b-b31e-1cc6b1431bca",
-    "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/7f86555a-165f-412b-b31e-1cc6b1431bca",
-    "links": [{
-      "rel": "voice",
-      "href": "/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/7f86555a-165f-412b-b31e-1cc6b1431bca",
+    uuid: '7f86555a-165f-412b-b31e-1cc6b1431bca',
+    url: 'https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/7f86555a-165f-412b-b31e-1cc6b1431bca',
+    links: [{
+      rel: 'voice',
+      href: '/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/7f86555a-165f-412b-b31e-1cc6b1431bca',
     }],
   };
 
   var userListCISResponse = {
-    "totalResults": "3",
-    "itemsPerPage": "2",
-    "startIndex": "1",
-    "schemas": [
-      "urn:scim:schemas:core:1.0",
-      "urn:scim:schemas:extension:cisco:commonidentity:1.0",
+    totalResults: '3',
+    itemsPerPage: '2',
+    startIndex: '1',
+    schemas: [
+      'urn:scim:schemas:core:1.0',
+      'urn:scim:schemas:extension:cisco:commonidentity:1.0',
     ],
-    "Resources": [{
-      "userName": "dudette@gmail.com",
-      "name": {
-        "givenName": "some",
-        "familyName": "user",
+    Resources: [{
+      userName: 'dudette@gmail.com',
+      name: {
+        givenName: 'some',
+        familyName: 'user',
       },
-      "entitlements": [
-        "ciscouc",
-        "squared-call-initiation",
-        "spark",
-        "webex-squared",
+      entitlements: [
+        'ciscouc',
+        'squared-call-initiation',
+        'spark',
+        'webex-squared',
       ],
-      "id": "47026507-4F83-0B5B-9C1D-8DBA89F2E01C",
-      "meta": {
-        "created": "2015-11-16T16:40:54.084Z",
-        "lastModified": "2016-01-06T18:06:47.999Z",
-        "version": "19382735439",
-        "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
-        "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
+      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
+      meta: {
+        created: '2015-11-16T16:40:54.084Z',
+        lastModified: '2016-01-06T18:06:47.999Z',
+        version: '19382735439',
+        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
+        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
       },
-      "displayName": "Super Admin",
-      "active": true,
-      "licenseID": [
-        "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32",
+      displayName: 'Super Admin',
+      active: true,
+      licenseID: [
+        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
       ],
-      "avatarSyncEnabled": false,
+      avatarSyncEnabled: false,
     }, {
-      "userName": "dude@gmail.com",
-      "name": {
-        "givenName": "inferior",
-        "familyName": "user",
+      userName: 'dude@gmail.com',
+      name: {
+        givenName: 'inferior',
+        familyName: 'user',
       },
-      "entitlements": [
-        "ciscouc",
-        "squared-call-initiation",
-        "spark",
-        "webex-squared",
+      entitlements: [
+        'ciscouc',
+        'squared-call-initiation',
+        'spark',
+        'webex-squared',
       ],
-      "id": "5FCF9B4A-4A44-943B-4A4A-A397974E97D4",
-      "meta": {
-        "created": "2015-11-16T16:40:54.084Z",
-        "lastModified": "2016-01-06T18:06:47.999Z",
-        "version": "19382735439",
-        "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
-        "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
+      id: '5FCF9B4A-4A44-943B-4A4A-A397974E97D4',
+      meta: {
+        created: '2015-11-16T16:40:54.084Z',
+        lastModified: '2016-01-06T18:06:47.999Z',
+        version: '19382735439',
+        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
+        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
       },
-      "active": true,
-      "licenseID": [
-        "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32",
+      active: true,
+      licenseID: [
+        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
       ],
-      "avatarSyncEnabled": false,
+      avatarSyncEnabled: false,
     }, {
-      "userName": "dudette@gmail.com",
-      "name": {
-        "givenName": "some",
-        "familyName": "user",
+      userName: 'dudette@gmail.com',
+      name: {
+        givenName: 'some',
+        familyName: 'user',
       },
-      "entitlements": [
-        "ciscouc",
-        "squared-call-initiation",
-        "spark",
-        "webex-squared",
+      entitlements: [
+        'ciscouc',
+        'squared-call-initiation',
+        'spark',
+        'webex-squared',
       ],
-      "id": "47026507-4F83-0B5B-9C1D-8DBA89F2E01C",
-      "meta": {
-        "created": "2015-11-16T16:40:54.084Z",
-        "lastModified": "2016-01-06T18:06:47.999Z",
-        "version": "19382735439",
-        "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
-        "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
+      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
+      meta: {
+        created: '2015-11-16T16:40:54.084Z',
+        lastModified: '2016-01-06T18:06:47.999Z',
+        version: '19382735439',
+        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
+        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
       },
-      "displayName": "Test Admin",
-      "active": true,
-      "licenseID": [
-        "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32",
+      displayName: 'Test Admin',
+      active: true,
+      licenseID: [
+        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
       ],
-      "avatarSyncEnabled": false,
+      avatarSyncEnabled: false,
     }, {
-      "userName": "dudette@gmail.com",
-      "name": {
-        "givenName": "some",
-        "familyName": "user",
+      userName: 'dudette@gmail.com',
+      name: {
+        givenName: 'some',
+        familyName: 'user',
       },
-      "entitlements": [
-        "ciscouc",
-        "squared-call-initiation",
-        "spark",
-        "webex-squared",
+      entitlements: [
+        'ciscouc',
+        'squared-call-initiation',
+        'spark',
+        'webex-squared',
       ],
-      "id": "47026507-4F83-0B5B-9C1D-8DBA89F2E01C",
-      "meta": {
-        "created": "2015-11-16T16:40:54.084Z",
-        "lastModified": "2016-01-06T18:06:47.999Z",
-        "version": "19382735439",
-        "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
-        "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
+      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
+      meta: {
+        created: '2015-11-16T16:40:54.084Z',
+        lastModified: '2016-01-06T18:06:47.999Z',
+        version: '19382735439',
+        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
+        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
       },
-      "displayName": "AA Admin",
-      "active": true,
-      "licenseID": [
-        "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32",
+      displayName: 'AA Admin',
+      active: true,
+      licenseID: [
+        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
       ],
-      "avatarSyncEnabled": false,
+      avatarSyncEnabled: false,
     }],
-    "success": true,
+    success: true,
   };
 
   var userListCISResponse2 = {
-    "totalResults": "3",
-    "itemsPerPage": "1",
-    "startIndex": "3",
-    "schemas": [
-      "urn:scim:schemas:core:1.0",
-      "urn:scim:schemas:extension:cisco:commonidentity:1.0",
+    totalResults: '3',
+    itemsPerPage: '1',
+    startIndex: '3',
+    schemas: [
+      'urn:scim:schemas:core:1.0',
+      'urn:scim:schemas:extension:cisco:commonidentity:1.0',
     ],
-    "Resources": [{
-      "userName": "dudette@gmail.com",
-      "name": {
-        "givenName": "some",
-        "familyName": "user",
+    Resources: [{
+      userName: 'dudette@gmail.com',
+      name: {
+        givenName: 'some',
+        familyName: 'user',
       },
-      "entitlements": [
-        "ciscouc",
-        "squared-call-initiation",
-        "spark",
-        "webex-squared",
+      entitlements: [
+        'ciscouc',
+        'squared-call-initiation',
+        'spark',
+        'webex-squared',
       ],
-      "id": "47026507-4F83-0B5B-9C1D-8DBA89F2E01C",
-      "meta": {
-        "created": "2015-11-16T16:40:54.084Z",
-        "lastModified": "2016-01-06T18:06:47.999Z",
-        "version": "19382735439",
-        "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
-        "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
+      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
+      meta: {
+        created: '2015-11-16T16:40:54.084Z',
+        lastModified: '2016-01-06T18:06:47.999Z',
+        version: '19382735439',
+        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
+        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
       },
-      "displayName": "Super Admin",
-      "active": true,
-      "licenseID": [
-        "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32",
+      displayName: 'Super Admin',
+      active: true,
+      licenseID: [
+        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
       ],
-      "avatarSyncEnabled": false,
+      avatarSyncEnabled: false,
     }],
-    "success": true,
+    success: true,
   };
 
   var userListEmptyCISResponse = {
-    "totalResults": "3",
-    "itemsPerPage": "0",
-    "startIndex": "4",
-    "schemas": [
-      "urn:scim:schemas:core:1.0",
-      "urn:scim:schemas:extension:cisco:commonidentity:1.0",
+    totalResults: '3',
+    itemsPerPage: '0',
+    startIndex: '4',
+    schemas: [
+      'urn:scim:schemas:core:1.0',
+      'urn:scim:schemas:extension:cisco:commonidentity:1.0',
     ],
-    "Resources": [],
-    "success": true,
+    Resources: [],
+    success: true,
   };
 
   var listUsersProps = {
-    "attributes": "attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings",
-    "filter": "filter=active%20eq%20true%20or%20displayName%20sw%20%22xz%22",
-    "startIndex": 0,
-    "count": 10,
-    "sortBy": "name",
-    "sortOrder": "ascending",
+    attributes: 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings',
+    filter: 'filter=active%20eq%20true%20or%20displayName%20sw%20%22xz%22',
+    startIndex: 0,
+    count: 10,
+    sortBy: 'name',
+    sortOrder: 'ascending',
   };
 
   // we have two test users - one with all the properties like display name, extension, etc., and another without
@@ -328,11 +328,11 @@ describe('Controller: AARouteToUserCtrl', function () {
   ];
 
   var sortedOptions = [{
-    'description': users[3].displayName.concat(' (').concat(users[3].extension).concat(')'),
+    description: users[3].displayName.concat(' (').concat(users[3].extension).concat(')'),
   }, {
-    'description': users[0].displayName.concat(' (').concat(users[0].extension).concat(')'),
+    description: users[0].displayName.concat(' (').concat(users[0].extension).concat(')'),
   }, {
-    'description': users[2].displayName.concat(' (').concat(users[2].extension).concat(')'),
+    description: users[2].displayName.concat(' (').concat(users[2].extension).concat(')'),
   }];
 
   var schedule = 'openHours';
@@ -449,22 +449,20 @@ describe('Controller: AARouteToUserCtrl', function () {
     cmiNotSoCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/' + users[1].id);
     cmiNotSoCompleteUserGet.respond(200, noDirectoryCmiResponse);
 
-    var cmiDirectoryNumberUrl = HuronConfig.getCmiUrl() + "/voice/customers/directorynumbers?order=pattern-asc&pattern=2252";
+    var cmiDirectoryNumberUrl = HuronConfig.getCmiUrl() + '/voice/customers/directorynumbers?order=pattern-asc&pattern=2252';
     var cmiExtensionInfo = [{
-      "pattern": "5801",
-      "description": "",
-      "voiceMailProfile": {
-        "uuid": "e733741a-a7e2-4ab5-894f-81df6feaa56c",
-        "name": "dec55d7a-9d08-4a12-a9a7-052939c29ae0_000001_VMProf",
+      pattern: '5801',
+      description: '',
+      voiceMailProfile: {
+        uuid: 'e733741a-a7e2-4ab5-894f-81df6feaa56c',
+        name: 'dec55d7a-9d08-4a12-a9a7-052939c29ae0_000001_VMProf',
       },
     }];
     cmiExtensionInfoGet = $httpBackend.whenGET(cmiDirectoryNumberUrl);
     cmiExtensionInfoGet.respond(200, cmiExtensionInfo);
-
   }));
 
   describe('AARouteToUser', function () {
-
     it('should be able to create new route to user entry', function () {
       var controller = $controller('AARouteToUserCtrl', {
         $scope: $scope,
@@ -473,7 +471,6 @@ describe('Controller: AARouteToUserCtrl', function () {
       expect(controller).toBeDefined();
       expect(controller.menuKeyEntry.actions[0].name).toEqual('routeToUser');
       expect(controller.menuKeyEntry.actions[0].value).toEqual('');
-
     });
 
     it('should be able to create new route to voicemail entry', function () {
@@ -486,7 +483,6 @@ describe('Controller: AARouteToUserCtrl', function () {
       expect(controller).toBeDefined();
       expect(controller.menuKeyEntry.actions[0].name).toEqual('routeToVoiceMail');
       expect(controller.menuKeyEntry.actions[0].value).toEqual('');
-
     });
 
     it('should initialize the options list, format extensions ,filter out users without extension and check for sorted list ', function () {
@@ -523,7 +519,6 @@ describe('Controller: AARouteToUserCtrl', function () {
 
       // there are 3 users across the mocked CIS calls, but remember 1 user is a bad user
       expect(controller.users.length).toEqual(4);
-
     });
 
     it('should filter voicemail users correctly in successful case', function () {
@@ -542,7 +537,6 @@ describe('Controller: AARouteToUserCtrl', function () {
 
       // there are 3 users across the mocked CIS calls, but remember 1 user is a bad user
       expect(controller.users.length).toEqual(4);
-
     });
 
     it('should filter voicemail users when voicemail profile query returns 404', function () {
@@ -561,11 +555,9 @@ describe('Controller: AARouteToUserCtrl', function () {
 
       // the 404 should mean all users don't have a voicemail profile
       expect(controller.users.length).toEqual(0);
-
     });
 
     it('should format name with error on extension correctly', function () {
-
       cmiCompleteUserGet.respond(500);
 
       var controller = $controller('AARouteToUserCtrl', {
@@ -584,11 +576,9 @@ describe('Controller: AARouteToUserCtrl', function () {
       $scope.$apply();
 
       expect(controller.users[1].description).toEqual(nameNumber);
-
     });
 
     it('should omit user with 404 on extension', function () {
-
       cmiCompleteUserGet.respond(404);
 
       var controller = $controller('AARouteToUserCtrl', {
@@ -604,7 +594,6 @@ describe('Controller: AARouteToUserCtrl', function () {
       $scope.$apply();
 
       expect(controller.users.length).toEqual(0);
-
     });
 
     describe('activate', function () {
@@ -628,7 +617,6 @@ describe('Controller: AARouteToUserCtrl', function () {
 
         expect(controller.userSelected.id).toEqual(users[0].id);
         expect(controller.userSelected.description).toEqual(nameNumber1);
-
       });
 
       it('should read and display an existing route to voicemail entry', function () {
@@ -653,7 +641,6 @@ describe('Controller: AARouteToUserCtrl', function () {
 
         expect(controller.userSelected.id).toEqual(users[0].id);
         expect(controller.userSelected.description).toEqual(nameNumber1);
-
       });
 
       it('should format selected name with error on extension correctly', function () {
@@ -678,15 +665,11 @@ describe('Controller: AARouteToUserCtrl', function () {
 
         expect(controller.userSelected.id).toEqual(users[0].id);
         expect(controller.userSelected.description).toEqual(nameNumber);
-
       });
-
     });
 
     describe('populateUi', function () {
-
       it('should write UI entry back into UI model via populateUiModel', function () {
-
         var controller = $controller('AARouteToUserCtrl', {
           $scope: $scope,
         });
@@ -700,9 +683,7 @@ describe('Controller: AARouteToUserCtrl', function () {
         $scope.$apply();
 
         expect(controller.userSelected.id).toEqual(users[0].id);
-
       });
-
     });
     describe('fromDecision', function () {
       beforeEach(function () {
@@ -714,22 +695,18 @@ describe('Controller: AARouteToUserCtrl', function () {
 
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
         aaUiModel[schedule].entries[0].actions[0] = action;
-
       });
 
       it('should create a Voice Mail conditional action with then clause', function () {
-
         var controller = $controller('AARouteToUserCtrl', {
           $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].then).toBeDefined();
         expect(controller.menuEntry.actions[0].then.name).toEqual('routeToUser');
-
       });
 
       it('should create a condition action with then clause', function () {
-
         aaUiModel[schedule].entries[0].actions[0] = undefined;
 
         var controller = $controller('AARouteToUserCtrl', {
@@ -742,7 +719,6 @@ describe('Controller: AARouteToUserCtrl', function () {
       });
 
       it('should change an action from routetoQueue to routeToUser', function () {
-
         aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
 
         var controller = $controller('AARouteToUserCtrl', {
@@ -753,17 +729,14 @@ describe('Controller: AARouteToUserCtrl', function () {
         expect(controller.menuEntry.actions[0].then).toBeDefined();
         expect(controller.menuEntry.actions[0].then.name).toEqual('routeToUser');
       });
-
     });
 
     describe('fromRouteCall overwrite', function () {
       beforeEach(function () {
-
         aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
 
         aaUiModel[schedule].entries[0].addAction(action);
-
       });
 
       it('should overwrite user id from model via saveUiModel', function () {
@@ -793,7 +766,6 @@ describe('Controller: AARouteToUserCtrl', function () {
 
         expect(controller.menuEntry.actions[0].name).toEqual('routeToUser');
         expect(controller.menuEntry.actions[0].value).toEqual('');
-
       });
     });
 
@@ -804,25 +776,20 @@ describe('Controller: AARouteToUserCtrl', function () {
         aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
         aaUiModel[schedule].entries[0].actions = [];
-
       });
 
       it('should be able to create new User entry from Route Call', function () {
-
         var controller = $controller('AARouteToUserCtrl', {
           $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('routeToUser');
         expect(controller.menuEntry.actions[0].value).toEqual('');
-
       });
-
     });
 
     describe('fromNewStep_Queue_Fallback', function () {
       it('should be able to create new route entry from Queue Fallback of new step', function () {
-
         var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
         var fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
         fallback.addAction(disconnect);
@@ -873,6 +840,5 @@ describe('Controller: AARouteToUserCtrl', function () {
         expect(fallbackAction.value).toEqual('');
       });
     });
-
   });
 });

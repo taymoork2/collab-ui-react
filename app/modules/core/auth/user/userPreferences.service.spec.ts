@@ -60,16 +60,16 @@ describe('UserPreferencesService Service', () => {
       // mock result of the PATCH call.
       this.$httpBackend.expectPATCH(this.User.meta.location)
         .respond((method, url, data) => {
-          let patchData = JSON.parse(data);
+          const patchData = JSON.parse(data);
           expect(patchData.schemas).toBeDefined();
           expect(patchData.userPreferences).toBeDefined();
           expect(_.some(patchData.userPreferences, (vo: IPreferenceOperation) => vo.value === UserPreferencesService.USER_PREF_TOS)).toBeTruthy();
           expect(_.some(patchData.userPreferences, (vo: IPreferenceOperation) => vo.value === UserPreferencesService.USER_PREF_LAUNCH)).toBeTruthy();
 
-          let activePrefs = _.flatMap(patchData.userPreferences, (pref) => {
+          const activePrefs = _.flatMap(patchData.userPreferences, (pref) => {
             return (_.isEqual(pref.operation, 'delete') ? null : pref.value);
           });
-          let userPrefs = _.filter(activePrefs, key => !_.isNull(key));
+          const userPrefs = _.filter(activePrefs, key => !_.isNull(key));
 
           // return mock version of the server response
           return [201, {
@@ -86,7 +86,7 @@ describe('UserPreferencesService Service', () => {
     it('should support add new preference', function () {
       this.User.userPreferences = [];
 
-      let promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_TOS, true);
+      const promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_TOS, true);
       expect(promise).toBeResolvedWith(jasmine.objectContaining({
         data: {
           schemas: this.User.schemas,
@@ -99,7 +99,7 @@ describe('UserPreferencesService Service', () => {
     it('should support adding an existing preference', function () {
       this.User.userPreferences = [UserPreferencesService.USER_PREF_TOS, UserPreferencesService.USER_PREF_LAUNCH];
 
-      let promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_TOS, true);
+      const promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_TOS, true);
       expect(promise).toBeResolvedWith(jasmine.objectContaining({
         data: {
           schemas: this.User.schemas,
@@ -111,7 +111,7 @@ describe('UserPreferencesService Service', () => {
     it('should support removing existing preference', function () {
       this.User.userPreferences = [UserPreferencesService.USER_PREF_TOS, UserPreferencesService.USER_PREF_LAUNCH];
 
-      let promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_TOS, false);
+      const promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_TOS, false);
       expect(promise).toBeResolvedWith(jasmine.objectContaining({
         data: {
           schemas: this.User.schemas,
@@ -123,7 +123,7 @@ describe('UserPreferencesService Service', () => {
     it('should support removing non-existing preference', function () {
       this.User.userPreferences = [UserPreferencesService.USER_PREF_TOS];
 
-      let promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_LAUNCH, false);
+      const promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_LAUNCH, false);
       expect(promise).toBeResolvedWith(jasmine.objectContaining({
         data: {
           schemas: this.User.schemas,

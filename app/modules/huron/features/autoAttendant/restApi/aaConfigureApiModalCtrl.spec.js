@@ -27,7 +27,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AASessionVariableService_, _AutoAttendantCeMenuModelService_, _$translate_) {
-
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     q = $q;
@@ -178,5 +177,4 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       expect(modalFake.close).toHaveBeenCalled();
     });
   });
-
 });

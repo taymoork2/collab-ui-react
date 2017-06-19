@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Remove bulk created accounts from Admin account', function () {
-
   it('should login as an account admin', function () {
     login.login('account-admin', '#/users');
   });

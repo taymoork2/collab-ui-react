@@ -1,5 +1,4 @@
 (function () {
-
   'use strict';
 
   angular
@@ -100,19 +99,17 @@
     }
 
     function init() {
-      vm.pageTitle = $translate.instant('gss.pageTitle');
-
       vm.headerTabs = [{
-        title: $translate.instant('gss.dashboard'),
+        title: 'gss.dashboard',
         state: 'gss.dashboard',
       }, {
-        title: $translate.instant('gss.services'),
+        title: 'gss.services',
         state: 'gss.services',
       }, {
-        title: $translate.instant('gss.components'),
+        title: 'gss.components',
         state: 'gss.components',
       }, {
-        title: $translate.instant('gss.incidents'),
+        title: 'gss.incidents',
         state: 'gss.incidents',
       }];
 

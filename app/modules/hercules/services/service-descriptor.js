@@ -12,7 +12,6 @@
 
   /* @ngInject */
   function ServiceDescriptor($http, UrlConfig, Authinfo, Orgservice) {
-
     function getServiceStatus(serviceId, orgId) {
       return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/services/' + serviceId + '/status')
         .then(function (response) {

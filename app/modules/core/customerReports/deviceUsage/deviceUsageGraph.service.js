@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function DeviceUsageGraphService($translate, chartColors) {
-
     function makeChart(id, chart) {
       var amChart = AmCharts.makeChart(id, chart);
       _.each(amChart.graphs, function (graph) {
@@ -48,69 +47,69 @@
 
     function getLineChart() {
       return {
-        'type': 'serial',
-        'categoryField': 'time',
-        'dataDateFormat': 'YYYY-MM-DD',
-        'addClassNames': true,
-        'categoryAxis': {
-          'minPeriod': 'DD',
-          'parseDates': true,
-          'autoGridCount': true,
+        type: 'serial',
+        categoryField: 'time',
+        dataDateFormat: 'YYYY-MM-DD',
+        addClassNames: true,
+        categoryAxis: {
+          minPeriod: 'DD',
+          parseDates: true,
+          autoGridCount: true,
           //'title': 'Last 7 Days',
-          'centerLabels': true,
-          'equalSpacing': true,
+          centerLabels: true,
+          equalSpacing: true,
         },
-        'listeners': [],
-        'export': {
-          'enabled': true,
+        listeners: [],
+        export: {
+          enabled: true,
         },
-        'chartCursor': {
-          'enabled': true,
-          'categoryBalloonDateFormat': 'YYYY-MM-DD',
-          'cursorColor': chartColors.primaryDarker,
-          'cursorAlpha': 0.5,
-          'valueLineAlpha': 0.5,
+        chartCursor: {
+          enabled: true,
+          categoryBalloonDateFormat: 'YYYY-MM-DD',
+          cursorColor: chartColors.primaryDarker,
+          cursorAlpha: 0.5,
+          valueLineAlpha: 0.5,
         },
-        'trendLines': [
+        trendLines: [
 
         ],
-        'graphs': [
+        graphs: [
           {
-            'type': 'column',
-            'labelText': '[[value]]',
-            'labelPosition': 'top',
-            'id': 'video',
-            'title': $translate.instant('reportsPage.usageReports.callDuration'),
-            'valueField': 'totalDurationY',
-            'lineThickness': 2,
-            'fillAlphas': 0.6,
-            'lineAlpha': 0.0,
-            'lineColor': chartColors.primaryDarker,
-            'bulletColor': '#ffffff',
-            'bulletBorderAlpha': 1,
-            'useLineColorForBulletBorder': true,
-            'labelFunction': getLabel,
+            type: 'column',
+            labelText: '[[value]]',
+            labelPosition: 'top',
+            id: 'video',
+            title: $translate.instant('reportsPage.usageReports.callDuration'),
+            valueField: 'totalDurationY',
+            lineThickness: 2,
+            fillAlphas: 0.6,
+            lineAlpha: 0.0,
+            lineColor: chartColors.primaryDarker,
+            bulletColor: '#ffffff',
+            bulletBorderAlpha: 1,
+            useLineColorForBulletBorder: true,
+            labelFunction: getLabel,
           },
         ],
-        'guides': [
+        guides: [
 
         ],
-        'valueAxes': [
+        valueAxes: [
           {
-            'id': 'ValueAxis-1',
-            'title': $translate.instant('reportsPage.usageReports.callHours'),
+            id: 'ValueAxis-1',
+            title: $translate.instant('reportsPage.usageReports.callHours'),
           },
         ],
-        'allLabels': [
+        allLabels: [
 
         ],
-        'balloon': {
-          'cornerRadius': 4,
+        balloon: {
+          cornerRadius: 4,
         },
-        'legend': {
-          'enabled': false,
-          'useGraphSettings': true,
-          'valueWidth': 100,
+        legend: {
+          enabled: false,
+          useGraphSettings: true,
+          valueWidth: 100,
         },
       };
     }

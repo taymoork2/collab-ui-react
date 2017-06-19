@@ -71,26 +71,26 @@ describe('Controller: ReassignClusterControllerV2', function () {
     controller.clusterDetail = {
       id: 'id',
     };
-    controller.selectedCluster = "testCluster1";
+    controller.selectedCluster = 'testCluster1';
     spyOn(MediaClusterServiceV2, 'moveV2Host').and.returnValue($q.reject());
     controller.reassign();
     httpMock.verifyNoOutstandingExpectation();
     expect(MediaClusterServiceV2.moveV2Host).toHaveBeenCalled();
-    expect(controller.error).toBe("mediaFusion.reassign.reassignErrorMessage");
+    expect(controller.error).toBe('mediaFusion.reassign.reassignErrorMessage');
   });
   it('check if createClusterV2 is called with  clusterId', function () {
     httpMock.when('POST', /^\w+.*/).respond({});
     controller.clusterDetail = null;
     controller.selectModel = {
-      "10.196.5.251": "MFA_TEST3",
-      "10.196.5.246": "MFA_TEST4",
+      '10.196.5.251': 'MFA_TEST3',
+      '10.196.5.246': 'MFA_TEST4',
     };
     controller.clusters = [{
-      "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-      "name": "MFA_TEST2",
+      id: 'a050fcc7-9ade-4790-a06d-cca596910421',
+      name: 'MFA_TEST2',
     }];
     spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.resolve({
-      data: "",
+      data: '',
     }));
     controller.reassign();
     httpMock.verifyNoOutstandingExpectation();
@@ -111,14 +111,14 @@ describe('Controller: ReassignClusterControllerV2', function () {
     expect(controller.options.length).toBe(1);
   });
   it('canContinue should enable continue button when the feild is filled', function () {
-    controller.selectedCluster = "testCluster1";
-    controller.selectPlaceholder = "testCluster2";
+    controller.selectedCluster = 'testCluster1';
+    controller.selectPlaceholder = 'testCluster2';
     controller.canContinue();
     expect(controller.canContinue()).toBeTruthy();
   });
   it('canContinue should disable continue button when the feild is empty', function () {
     controller.selectedCluster = '';
-    controller.selectPlaceholder = "testCluster2";
+    controller.selectPlaceholder = 'testCluster2';
     controller.canContinue();
     expect(controller.canContinue()).toBeFalsy();
   });

@@ -12,7 +12,7 @@ export class DomainManagementCtrl {
 
     CiService.getUser().then(curUser => {
 
-      let myOrgId = Authinfo.getOrgId();
+      const myOrgId = Authinfo.getOrgId();
 
       if (curUser.managedOrgs && _.some(curUser.managedOrgs, { orgId: myOrgId })) {
         //Partner is logged on, skip verification test

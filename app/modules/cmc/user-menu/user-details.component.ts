@@ -7,7 +7,7 @@ import { Notification } from 'modules/core/notifications';
 
 class CmcUserDetailsController implements ng.IComponentController {
 
-  public services: Array<IFeature>;
+  public services: IFeature[];
   public allowCmcSettings: boolean = false;
 
   private user: IUser;
@@ -41,7 +41,7 @@ class CmcUserDetailsController implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let userChanges = changes['user'];
+    const userChanges = changes['user'];
     this.$log.debug('userChanges', userChanges);
     if (userChanges) {
       if (userChanges.currentValue) {
@@ -70,6 +70,14 @@ class CmcUserDetailsController implements ng.IComponentController {
                 });
             });
         }
+      }).catch((error) => {
+        this.$log.debug('error', error);
+        let msg: string = 'unknown';
+        if (error.Errors && error.Errors.length > 0) {
+          msg = error.Errors[0].description;
+        }
+        this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });
+        this.services[ 0 ].actionAvailable = false;
       });
   }
 

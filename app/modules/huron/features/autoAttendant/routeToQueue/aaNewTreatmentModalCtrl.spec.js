@@ -73,17 +73,17 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var play = 'play';
   var disconnect = 'disconnect';
   var sortedOptions = [{
-    "label": 'autoAttendant.destinations.Disconnect',
+    label: 'autoAttendant.destinations.Disconnect',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteAA',
+    label: 'autoAttendant.phoneMenuRouteAA',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteHunt',
+    label: 'autoAttendant.phoneMenuRouteHunt',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteToExtNum',
+    label: 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteUser',
+    label: 'autoAttendant.phoneMenuRouteUser',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteVM',
+    label: 'autoAttendant.phoneMenuRouteVM',
   }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -194,7 +194,6 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     });
 
     describe('FallBack', function () {
-
       it('test for default option as Disconnect', function () {
         var fallbackAction = controller.menuEntry.actions[0].queueSettings.fallback.actions[0];
         expect(fallbackAction.name).toEqual('disconnect');

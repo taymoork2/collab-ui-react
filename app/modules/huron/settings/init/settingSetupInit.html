@@ -1,0 +1,10 @@
+<div class="selectable-buttons">
+  <button ng-click="$ctrl.select(1)" ng-class="{active: $ctrl.selected === 1}">
+    <h3>Simple Dialing</h3>
+    <p>Assign unique extensions to each user within your company.  Users can dial each other with their exension number.</p>
+  </button>
+  <button ng-click="$ctrl.select(2)" ng-class="{active: $ctrl.selected === 2}">
+    <h3>Multi-tier Dialing</h3>
+    <p>Divide your company into number blocks by selecting a routing prefix for each logical block.  Users in the same block can dial each other with extension numbers.  Between blocks users dial the routing prefix and extension number.</p>
+  </button>
+</div> 

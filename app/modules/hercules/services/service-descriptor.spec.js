@@ -81,7 +81,7 @@ describe('ServiceDescriptor', function () {
 
   it('should GET DisableEmailSendingToUser', function () {
     var data = {
-      'orgSettings': ['{"calSvcDisableEmailSendingToEndUser":true}'],
+      orgSettings: ['{"calSvcDisableEmailSendingToEndUser":true}'],
     };
     $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?basicInfo=true&disableCache=true')
       .respond(200, data);
@@ -93,7 +93,7 @@ describe('ServiceDescriptor', function () {
 
   it('should PATCH DisableEmailSendingToUser', function () {
     var data = {
-      'calSvcDisableEmailSendingToEndUser': true,
+      calSvcDisableEmailSendingToEndUser: true,
     };
     $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
       .respond(200, {});
@@ -117,7 +117,7 @@ describe('ServiceDescriptor', function () {
   it('should return true if service "squared-fusion-ec" is enabled', function () {
     $httpBackend
       .expectGET('https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/' + authinfo.getOrgId() + '/services').respond(
-      200, { items: [{ 'id': 'squared-fusion-ec', 'enabled': true }] }
+      200, { items: [{ id: 'squared-fusion-ec', enabled: true }] }
     );
 
     Service.isServiceEnabled('squared-fusion-ec').then(function (response) {

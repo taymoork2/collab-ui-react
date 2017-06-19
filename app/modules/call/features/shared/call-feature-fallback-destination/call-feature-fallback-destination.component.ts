@@ -11,7 +11,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public isNew: boolean;
   public onChangeFn: Function;
 
-  public callDestInputs: Array<string> = ['internal', 'external'];
+  public callDestInputs: string[] = ['internal', 'external'];
 
   public selectedReversionNumber: any;
   public showMember: boolean;
@@ -78,7 +78,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     }
   }
 
-  public getMemberList(value: any): ng.IPromise<Array<any>> {
+  public getMemberList(value: any): ng.IPromise<any[]> {
     if (isNaN(value)) {
       return this.MemberService.getMemberList(value, true).then( members => {
         return members;
@@ -133,7 +133,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   }
 
   public onChangeSendToVoicemail(): void {
-    let fallbackDestination = new FallbackDestination({
+    const fallbackDestination = new FallbackDestination({
       name: this.fallbackDestination.name,
       numberUuid: this.fallbackDestination.numberUuid,
       number: this.fallbackDestination.number,

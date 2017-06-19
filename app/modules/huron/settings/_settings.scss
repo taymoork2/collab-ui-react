@@ -2,6 +2,7 @@
 @import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
+@import './init/_settingSetupInit';
 
 .huronsettings-state {
   @extend %page-background-white;
@@ -97,7 +98,7 @@
     }
 
     .warning-padding {
-      padding-left: 30px;
+      padding-left: 16px;
     }
 
     .no-border {

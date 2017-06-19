@@ -21,7 +21,7 @@ describe('Component: mediaMgrModal', () => {
   const SEARCH_FILTER = 'cs-searchfilter';
   const FILE_UPLOAD = 'i#fileUpload';
 
-  let mediaList: Array<IMedia> = [
+  const mediaList: IMedia[] = [
     { mediaId : 'a16db6c1-08e8-4386-87c0-477917b03c27', mediaState : 'PROCESSING', filename : 'fall-ads-2017.mp3', description : '', displayName : 'fall-ads-2017', duration : '', size : 1769392, errorInfo : '' },
     { mediaId : '207970b0-b9cc-426c-af09-155f9af0d877', mediaState : 'PROCESSING', filename : 'winter-ads-2017.mp3', description : '', displayName : 'winter-ads-2017', duration : '', size : 5321000, errorInfo : '' },
     { mediaId : 'd57ec625-bd8f-4e4b-8eee-268f2ef49b47', mediaState : 'PROCESSING', filename : 'spring-ads-2017.mp3', description : '', displayName : 'spring-ads-2017', duration : '', size : 5321000, errorInfo : '' },
@@ -75,7 +75,7 @@ describe('Component: mediaMgrModal', () => {
   describe('mediaMgr modal navigation', () => {
     it('when media panel selected', function() {
       spyOn(this.controller, 'setModal');
-      let navButton = this.view.find(NAV_MEDIA);
+      const navButton = this.view.find(NAV_MEDIA);
       navButton.click();
       this.controller.activeModal = ModalView.Media;
       this.$scope.$apply();
@@ -85,7 +85,7 @@ describe('Component: mediaMgrModal', () => {
     });
     it('when trash panel selected', function() {
       spyOn(this.controller, 'setModal');
-      let navButton = this.view.find(NAV_TRASH);
+      const navButton = this.view.find(NAV_TRASH);
       navButton.click();
       this.controller.activeModal = ModalView.Trash;
       this.$scope.$apply();
@@ -97,7 +97,7 @@ describe('Component: mediaMgrModal', () => {
 
   describe('media panel', () => {
     beforeEach(function() {
-      let navButton = this.view.find(NAV_MEDIA);
+      const navButton = this.view.find(NAV_MEDIA);
       navButton.click();
       this.controller.activeModal = ModalView.Media;
       this.$scope.$apply();
@@ -116,12 +116,12 @@ describe('Component: mediaMgrModal', () => {
     it('when media is selected and deleted', function() {
       spyOn(this.controller, 'setActiveMedia');
       spyOn(this.controller, 'deleteMedia').and.callThrough();
-      let media = this.view.find(MEDIA_CONTENT);
+      const media = this.view.find(MEDIA_CONTENT);
       media.eq(0).find(MEDIA_ITEM).click();
       this.controller.activeMedia = mediaList[0];
       this.$scope.$apply();
       expect(this.controller.setActiveMedia).toHaveBeenCalled();
-      let selectedMedia = this.view.find(MEDIA_SELECTED);
+      const selectedMedia = this.view.find(MEDIA_SELECTED);
       selectedMedia.find(TRASH_BUTTON).click();
       this.$scope.$apply();
       expect(this.controller.deleteMedia).toHaveBeenCalledWith(this.controller.activeMedia);
@@ -132,7 +132,7 @@ describe('Component: mediaMgrModal', () => {
 
   describe('trash panel', () => {
     beforeEach(function() {
-      let navButton = this.view.find(NAV_TRASH);
+      const navButton = this.view.find(NAV_TRASH);
       navButton.click();
       this.controller.activeModal = ModalView.Trash;
       this.$scope.$apply();
@@ -143,7 +143,7 @@ describe('Component: mediaMgrModal', () => {
     });
     it('when media is selected and deleted', function() {
       spyOn(this.controller, 'removeMedia').and.callThrough();
-      let trash = this.view.find(TRASH_CONTENT);
+      const trash = this.view.find(TRASH_CONTENT);
       trash.eq(0).find(TRASH_BUTTON).click();
       this.$scope.$apply();
       expect(this.controller.removeMedia).toHaveBeenCalled();
@@ -152,7 +152,7 @@ describe('Component: mediaMgrModal', () => {
     });
     it('when trash is emptied', function() {
       spyOn(this.controller, 'deleteAll').and.callThrough();
-      let navButton = this.view.find(EMPTY_TRASH);
+      const navButton = this.view.find(EMPTY_TRASH);
       expect(navButton).not.toBeDisabled();
       navButton.click();
       this.$scope.$apply();

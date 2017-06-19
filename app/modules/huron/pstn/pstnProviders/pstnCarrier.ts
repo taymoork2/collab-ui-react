@@ -1,3 +1,5 @@
+import { BYO_PSTN } from '../pstn.const';
+import { PRIVATE_PSTN_TRUNK } from '../pstn.const';
 export interface IPstnCarrierGet {
   apiImplementation: string;
   country: string;
@@ -6,8 +8,8 @@ export interface IPstnCarrierGet {
   description: string;
   displayName: string;
   name: string;
-  offers: Array<any>;
-  services: Array<any>;
+  offers: any[];
+  services: any[];
   url: string;
   uuid: string;
   vendor: string;
@@ -22,8 +24,8 @@ export class PstnCarrierGet implements IPstnCarrierGet {
   public description: string;
   public displayName: string;
   public name: string;
-  public offers: Array<any>;
-  public services: Array<any>;
+  public offers: any[];
+  public services: any[];
   public url: string;
   public uuid: string;
   public vendor: string;
@@ -52,7 +54,7 @@ export interface IPstnCarrierStatic {
   logoAlt: string;
   countryCode: string;
   docSrc: string;
-  features: Array<any>;
+  features: any[];
 }
 
 export class PstnCarrierStatic implements IPstnCarrierStatic {
@@ -61,7 +63,7 @@ export class PstnCarrierStatic implements IPstnCarrierStatic {
   public logoAlt: string;
   public countryCode: string;
   public docSrc: string;
-  public features: Array<any>;
+  public features: any[];
 
   public constructor() {
     this.name = '';
@@ -87,8 +89,8 @@ export class PstnCarrier {
   public description: string;
   public displayName: string;
   public name: string;
-  public offers: Array<any>;
-  public services: Array<any>;
+  public offers: any[];
+  public services: any[];
   public url: string;
   public uuid: string;
   public vendor: string;
@@ -96,10 +98,10 @@ export class PstnCarrier {
   public logoSrc: string;
   public logoAlt: string;
   public docSrc: string;
-  public features: Array<any>;
+  public features: any[];
   public title: string;
   public selected: boolean;
-  private capabilities: Array<IPstnCarrierCapability>;
+  private capabilities: IPstnCarrierCapability[];
 
   constructor() {
     this.logoSrc = '';
@@ -132,7 +134,9 @@ export class PstnCarrier {
     this.vendor = carrier.vendor;
     this.voiceCarrierRef = carrier.voiceCarrierRef;
 
-    if (_.isString(this.displayName) && this.displayName.length > 0) {
+    if (_.isString(this.name) && this.name ===  BYO_PSTN) {
+      this.title = PRIVATE_PSTN_TRUNK;
+    } else if (_.isString(this.displayName) && this.displayName.length > 0) {
       this.title = this.displayName;
     } else if (_.isString(this.name) && this.name.length > 0) {
       this.title = this.name;
@@ -150,13 +154,13 @@ export class PstnCarrier {
     });
   }
 
-  public setCapabilities(capablities: Array<IPstnCarrierCapability>): void {
+  public setCapabilities(capablities: IPstnCarrierCapability[]): void {
     if (_.isArray(capablities)) {
       this.capabilities = capablities;
     }
   }
 
-  public getCapabilities(): Array<IPstnCarrierCapability> {
+  public getCapabilities(): IPstnCarrierCapability[] {
     return this.capabilities;
   }
 

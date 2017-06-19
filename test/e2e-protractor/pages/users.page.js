@@ -247,7 +247,7 @@ var UsersPage = function () {
   this.createUser = function (userName) {
     utils.click(navigation.usersTab);
     utils.click(manageUsersPage.buttons.manageUsers);
-    utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+    utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
     utils.click(manageUsersPage.select.radio.orgManual);
     utils.click(manageUsersPage.buttons.next);
 
@@ -271,7 +271,6 @@ var UsersPage = function () {
   };
 
   this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
-
     utils.clickUser(alias);
     utils.expectIsDisplayed(users.servicesPanel);
 
@@ -315,8 +314,9 @@ var UsersPage = function () {
         return randomAddress;
       })
       .value();
-    utils.writeFile(path, fileText);
-    return userList;
+    return utils.writeFile(path, fileText).then(function () {
+      return userList;
+    });
   };
 };
 

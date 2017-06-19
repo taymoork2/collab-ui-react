@@ -197,7 +197,7 @@ describe('Component: context fieldset modal', () => {
   describe('processedFields', function () {
     it('should correctly update the fieldInfo', function () {
       this.controller.fieldsetData = { id: '', description: '', fields: ['field1', 'field2'] };
-      let unprocessedFields = [{
+      const unprocessedFields = [{
         id: 'field1',
         description: 'desc1',
         classification: 'unencrypted',
@@ -208,7 +208,7 @@ describe('Component: context fieldset modal', () => {
         refUrl: '',
         lastUpdated: '',
       }];
-      let processedFields = this.controller.processedFields(unprocessedFields);
+      const processedFields = this.controller.processedFields(unprocessedFields);
       expect(processedFields[0].classification).toBe('context.dictionary.fieldPage.unencrypted');
       expect(processedFields[0].fieldInfo).toBe('context.dictionary.fieldPage.unencrypted, String');
     });
@@ -226,11 +226,11 @@ describe('Component: context fieldset modal', () => {
     });
 
     it('should set the selected fields of the fieldset correctly', function (done) {
-      let fields = new Array<string>();
+      const fields = new Array<string>();
       mockedFields.forEach(field => {
         fields.push(field.id);
       });
-      let existingFieldsetData = {
+      const existingFieldsetData = {
         id: 'EXISTING_FIELDSET',
         description: 'a description',
         fields: fields,
@@ -251,7 +251,7 @@ describe('Component: context fieldset modal', () => {
   describe('getSelectedFields', function () {
     it('should return selected fields list', function () {
       this.controller.fieldsetData = { id: '', description: '', fields: ['field2', 'field3'] };
-      let selectedFields = this.controller.getSelectedFields(mockedFields);
+      const selectedFields = this.controller.getSelectedFields(mockedFields);
       expect(selectedFields[0].id).toBe('field2');
       expect(selectedFields[0].description).toBe('desc2');
       expect(selectedFields[0].classification).toBe('context.dictionary.fieldPage.unencrypted');

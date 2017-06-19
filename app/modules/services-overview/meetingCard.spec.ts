@@ -23,7 +23,7 @@ describe('ServiceOverviewMeetingCard', () => {
   });
 
   it('should include both siteUrls and linkedSiteUrls when present in button list', () => {
-    let list: any = [{ license: { siteUrl: 'site-url' } },
+    const list: any = [{ license: { siteUrl: 'site-url' } },
       { license: { linkedSiteUrl: 'linked-site-url' } },
       { noLicense: { differentObj: 'param' } }];
     meetingCard.updateWebexSiteList(list);
@@ -34,7 +34,7 @@ describe('ServiceOverviewMeetingCard', () => {
   });
 
   it('should filter out empty urls', () => {
-    let list: any = [{ license: { siteUrl: 'site-url' } }, { license: { noUrl: 'else' } }, { noLicense: { differentObj: 'param' } }];
+    const list: any = [{ license: { siteUrl: 'site-url' } }, { license: { noUrl: 'else' } }, { noLicense: { differentObj: 'param' } }];
     meetingCard.updateWebexSiteList(list);
 
     expect(_.some(meetingCard.getButtons(), { name: 'site-url' })).toBeTruthy();

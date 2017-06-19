@@ -125,7 +125,6 @@ describe('Controller: organizationOverviewCtrl', function () {
   });
 
   describe('test that allow hybrid services release channels behave: ', function () {
-
     it('should not show hybrid services if missing squared-fusion-mgmt entitlement', function () {
       initController([]);
       expect($scope.showHybridServices).toBeFalsy();

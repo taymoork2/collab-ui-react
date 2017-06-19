@@ -1,4 +1,5 @@
 import settingsComponentModule from './index';
+import { JSON_US } from 'modules/huron/pstn';
 
 describe('Component: settings', () => {
   const BUTTON_SAVE = '.save-section .btn--primary';
@@ -37,7 +38,7 @@ describe('Component: settings', () => {
       'NumberService',
       'DialPlanService',
       'PstnServiceAddressService',
-      'PstnSetupStatesService',
+      'PstnAreaService',
       'HuronCountryService',
       'CallerId',
       'VoicemailMessageAction',
@@ -75,11 +76,11 @@ describe('Component: settings', () => {
     spyOn(this.VoicemailMessageAction, 'get').and.returnValue(this.$q.resolve(messageAction));
     spyOn(this.Authinfo, 'getOrgName').and.returnValue('Cisco Org Name');
     spyOn(this.PstnServiceAddressService, 'getAddress').and.returnValue(this.$q.resolve());
-    spyOn(this.PstnSetupStatesService, 'getStates').and.returnValue(this.$q.resolve(states));
+    spyOn(this.PstnAreaService, 'getStates').and.returnValue(this.$q.resolve(states));
     spyOn(this.HuronCountryService, 'getCountryList').and.returnValue(this.$q.resolve(cmiCountries));
     // spyOn(this.DirectoryNumberService, 'query').and.returnValue(this.$q.resolve([]));
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
-    this.$httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(200, states);
+    this.$httpBackend.whenGET(JSON_US).respond(200, states);
     this.$httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/1/directorynumbers').respond(200, []);
 
     this.featureToggleDefer = this.$q.defer();

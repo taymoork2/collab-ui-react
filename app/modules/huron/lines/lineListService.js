@@ -9,7 +9,6 @@
 
   /* @ngInject */
   function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnService, UserLineAssociationService) {
-
     var customerId = Authinfo.getOrgId();
     var apiImplementation = undefined;
     var vendor = undefined;
@@ -26,10 +25,10 @@
     return service;
 
     function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType, gridData) {
-      var wildcard = "%";
+      var wildcard = '%';
 
       var queryString = {
-        'customerId': customerId,
+        customerId: customerId,
       };
 
       if (searchStr.length > 0) {
@@ -37,15 +36,15 @@
         queryString.internalnumber = wildcard + searchStr + wildcard;
         queryString.externalnumber = wildcard + searchStr + wildcard;
 
-        queryString.predicatejoinoperator = "or";
+        queryString.predicatejoinoperator = 'or';
       }
 
       switch (filterType) {
-        case "assignedLines":
-          queryString.assignedlines = "true";
+        case 'assignedLines':
+          queryString.assignedlines = 'true';
           break;
-        case "unassignedLines":
-          queryString.assignedlines = "false";
+        case 'unassignedLines':
+          queryString.assignedlines = 'false';
           break;
       }
 
@@ -134,7 +133,6 @@
             }
           });
         });
-
     } // end of function getLineList
 
     function getApiImplementation() {
@@ -158,10 +156,10 @@
       // add export code here
 
       var linesPerPage = Config.usersperpage;
-      var sortBy = "internalnumber";
-      var sortOrder = "-asc";
-      var searchStr = "";
-      var filterType = "all";
+      var sortBy = 'internalnumber';
+      var sortOrder = '-asc';
+      var searchStr = '';
+      var filterType = 'all';
       var deferred = $q.defer();
       var lines = [];
       var page = 0;
@@ -172,13 +170,12 @@
       function getLinesInBatches(startIndex) {
         getLineList(startIndex, linesPerPage, sortBy, sortOrder, searchStr, filterType)
           .then(function (response) {
-
             if (response.length > 0) {
               lines = lines.concat(response);
               page++;
               getLinesInBatches((page * 100) + 1);
             } else if (response.length <= 0) {
-              Log.debug("No more lines returned. Exporting to file.");
+              Log.debug('No more lines returned. Exporting to file.');
 
               if (lines.length === 0) {
                 Log.debug('No lines found.');
@@ -186,9 +183,9 @@
               }
               // header line for CSV file
               var headerLine = {};
-              headerLine.internalNumber = "internalNumber";
-              headerLine.externalNumber = "externalNumber";
-              headerLine.userId = "userId";
+              headerLine.internalNumber = 'internalNumber';
+              headerLine.externalNumber = 'externalNumber';
+              headerLine.userId = 'userId';
               exportedLines.push(headerLine);
 
               // data to export for CSV file
@@ -201,17 +198,16 @@
               } // end of for-loop
               deferred.resolve(exportedLines);
             } else {
-              Log.debug("Exporting lines failed.");
-              deferred.reject("Exporting lines failed.");
+              Log.debug('Exporting lines failed.');
+              deferred.reject('Exporting lines failed.');
             }
           })
           .catch(function () {
             Log.debug('Query for all lines failed.');
-            deferred.reject("Exporting lines failed.");
+            deferred.reject('Exporting lines failed.');
           });
       } // end of getLinesInBatches
       return deferred.promise;
     } // end of exportCSV
-
   } // end of function LineListService
 })();

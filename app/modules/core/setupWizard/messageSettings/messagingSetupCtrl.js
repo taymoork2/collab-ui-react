@@ -106,7 +106,6 @@
           .catch(function (response) {
             Notification.errorResponse(response, 'firstTimeWizard.messengerEnableWebexError');
           });
-
       } else if (!vm.msgIntegration && msgIntFlag) {
         AccountOrgService.deleteMessengerInterop(orgId)
           .then(function () {

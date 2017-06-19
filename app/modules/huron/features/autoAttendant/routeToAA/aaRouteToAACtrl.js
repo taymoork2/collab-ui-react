@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AARouteToAACtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
-
     var vm = this;
     var conditional = 'conditional';
 
@@ -66,7 +65,6 @@
       }
 
       vm.aaName = ceId2aaName(action.value);
-
     }
 
     function saveUiModel() {
@@ -82,7 +80,6 @@
       action.setValue(aaName2CeId(vm.aaName));
     }
     function checkForRouteToAA(action) {
-
       // make sure action is AA not External Number, HG, User, etc
       if (!(action.getName() === 'goto')) {
         action.setName('goto');
@@ -106,7 +103,6 @@
         if (!conditionalAction || conditionalAction.getName() !== conditional) {
           conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
           vm.menuEntry.actions[0] = conditionalAction;
-
         }
         if (!$scope.fromFallback) {
           if (!conditionalAction.then) {
@@ -127,7 +123,6 @@
               vm.menuEntry.addAction(action);
             } else {
               checkForRouteToAA(vm.menuEntry.actions[0]);
-
             }
           }
         } else {
@@ -140,7 +135,6 @@
             action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
             vm.menuEntry.addAction(action);
           }
-
         }
       }
 
@@ -171,6 +165,5 @@
     }
 
     activate();
-
   }
 })();

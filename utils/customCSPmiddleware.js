@@ -32,6 +32,8 @@ module.exports = csp({
       'http://127.0.0.1:8000',
       'https://ds2-qlikdemo',
       'https://ds2-win2012-01',
+      'https://qlik-loader',
+      'https://10.29.42.18:4244',
       'https://10.29.42.18',
     ],
     objectSrc: [
@@ -74,7 +76,7 @@ module.exports = csp({
       'https://*.clouddrive.com', // CSV download
       'https://*.amazonaws.com', // MOH Media
       'https://bam.nr-data.net', // New Relic Browser
-      'https://10.194.245.72:8443',
+      'https://10.224.166.46:8443',
     ],
     fontSrc: [
       '\'self\'',

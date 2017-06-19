@@ -2,7 +2,6 @@
 
 //TODO fix add new line defaults
 xdescribe('Line Configuration', function () {
-
   var user = utils.randomTestGmail();
 
   beforeAll(function () {

@@ -12,7 +12,7 @@ describe('Service : AccountOrgService', function () {
   var appSecurityRegex = /.*\/settings\/clientSecurityPolicy\.*/;
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
+    $provide.value('Authinfo', authInfo);
   }));
 
   beforeEach(inject(function (_$httpBackend_, _AccountOrgService_) {
@@ -52,7 +52,6 @@ describe('Service : AccountOrgService', function () {
 
     //App Security Getter check
     it('should get Appsecurity setting from clientSecurityPolicy', function () {
-
       $httpBackend.whenGET(appSecurityRegex).respond(function () {
         var data = {
           clientSecurityPolicy: true,
@@ -66,5 +65,4 @@ describe('Service : AccountOrgService', function () {
       $httpBackend.flush();
     });
   });
-
 });

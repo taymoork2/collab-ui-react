@@ -10,8 +10,7 @@
   function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService,
     UserServiceCommon, UserDirectoryNumberService, InternalNumberPoolService, ExternalNumberPool,
     ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer, InternationalDialing) {
-
-    var broadcastEvent = "telephonyInfoUpdated";
+    var broadcastEvent = 'telephonyInfoUpdated';
 
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var cbUseGlobal = $translate.instant('internationalDialingPanel.useGlobal');
@@ -176,10 +175,10 @@
       if (userDnUuid) {
         telephonyInfo.currentDirectoryNumber.userDnUuid = userDnUuid;
       } else {
-        telephonyInfo.currentDirectoryNumber.userDnUuid = "none";
+        telephonyInfo.currentDirectoryNumber.userDnUuid = 'none';
       }
       if (broadcast) {
-        $rootScope.$broadcast("currentLineChanged");
+        $rootScope.$broadcast('currentLineChanged');
       }
     }
 
@@ -200,7 +199,7 @@
           if (remoteDestinationInfo) {
             snrInfo.remoteDestinations = remoteDestinationInfo;
             if (remoteDestinationInfo !== undefined && remoteDestinationInfo.length > 0) {
-              snrInfo.singleNumberReachEnabled = (remoteDestinationInfo[0].enableMobileConnect === "true");
+              snrInfo.singleNumberReachEnabled = (remoteDestinationInfo[0].enableMobileConnect === 'true');
               snrInfo.destination = remoteDestinationInfo[0].destination;
               snrInfo.answerTooLateTimer = remoteDestinationInfo[0].answerTooLateTimer;
             }
@@ -224,13 +223,13 @@
             var userDnList = [];
             for (var i = 0; i < userDnInfo.length; i++) {
               var userLine = {
-                'dnUsage': getDnType(userDnInfo[i].dnUsage),
-                'uuid': userDnInfo[i].directoryNumber.uuid,
-                'pattern': userDnInfo[i].directoryNumber.pattern,
-                'userDnUuid': userDnInfo[i].uuid,
-                'altDnUuid': '',
-                'altDnPattern': '',
-                'dnSharedUsage': '',
+                dnUsage: getDnType(userDnInfo[i].dnUsage),
+                uuid: userDnInfo[i].directoryNumber.uuid,
+                pattern: userDnInfo[i].directoryNumber.pattern,
+                userDnUuid: userDnInfo[i].uuid,
+                altDnUuid: '',
+                altDnPattern: '',
+                dnSharedUsage: '',
               };
 
               if (userLine.dnUsage === 'Primary') {
@@ -248,8 +247,8 @@
               }.bind(userLine));
 
               DirectoryNumberUserService.query({
-                'customerId': Authinfo.getOrgId(),
-                'directoryNumberId': userLine.uuid,
+                customerId: Authinfo.getOrgId(),
+                directoryNumberId: userLine.uuid,
               }).$promise
                 .then(function (data) {
                   if (this.dnUsage === 'Primary') {
@@ -448,9 +447,9 @@
         }
         var globalText;
         if (custRestriction) {
-          globalText = cbUseGlobal + " " + $translate.instant('internationalDialingPanel.off');
+          globalText = cbUseGlobal + ' ' + $translate.instant('internationalDialingPanel.off');
         } else {
-          globalText = cbUseGlobal + " " + $translate.instant('internationalDialingPanel.on');
+          globalText = cbUseGlobal + ' ' + $translate.instant('internationalDialingPanel.on');
         }
         if (!overRide) {
           telephonyInfo.internationalDialingStatus = globalText;
@@ -469,6 +468,5 @@
           }
         });
     }
-
   }
 })();

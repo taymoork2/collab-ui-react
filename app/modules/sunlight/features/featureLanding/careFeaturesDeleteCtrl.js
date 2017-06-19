@@ -56,6 +56,5 @@
       });
       Notification.errorWithTrackingId(response, error);
     }
-
   }
 })();

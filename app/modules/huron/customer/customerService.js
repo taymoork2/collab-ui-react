@@ -7,11 +7,10 @@
 
   /* @ngInject */
   function HuronCustomer(Authinfo, CustomerCommonService, CustomerVoiceCmiService, PstnService, $q) {
-
     var customerPayload = {
-      'uuid': null,
-      'name': null,
-      'servicePackage': 'VOICE_ONLY',
+      uuid: null,
+      name: null,
+      servicePackage: 'VOICE_ONLY',
     };
 
     var service = {

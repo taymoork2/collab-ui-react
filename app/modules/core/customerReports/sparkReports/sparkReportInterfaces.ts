@@ -6,7 +6,7 @@ import {
 } from '../../partnerReports/partnerReportInterfaces';
 
 export interface IActiveUserWrapper {
-  graphData: Array<IActiveUserData>;
+  graphData: IActiveUserData[];
   isActiveUsers: boolean;
 }
 
@@ -29,7 +29,7 @@ export interface ICharts {
 
 export interface IEndpointWrapper {
   deviceType: string;
-  graph: Array<IEndpointData>;
+  graph: IEndpointData[];
   balloon: boolean;
   emptyGraph: boolean;
 }
@@ -40,8 +40,8 @@ export interface IEndpointData {
 }
 
 export interface IEndpointContainer {
-  graphData: Array<IEndpointWrapper>;
-  filterArray: Array<IDropdownBase>;
+  graphData: IEndpointWrapper[];
+  filterArray: IDropdownBase[];
 }
 
 // TODO: remove IFilesShared when the switch from column graphs to line graphs is finalized
@@ -60,13 +60,13 @@ export interface IConversation extends IGraphBase {
 }
 
 export interface IConversationWrapper {
-  array: Array<IConversation>;
+  array: IConversation[];
   hasRooms: boolean;
   hasFiles: boolean;
 }
 
 export interface IMetricsData {
-  dataProvider: Array<IMetricsDataProvider>;
+  dataProvider: IMetricsDataProvider[];
   displayData: IMetricsLabel | undefined;
   dummy: boolean;
 }

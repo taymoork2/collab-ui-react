@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function SSOService($http, Log, Authinfo, UrlConfig) {
-
     return {
       getMetaInfo: function (callback) {
         var remoteIdpUrl = UrlConfig.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp?attributes=id&attributes=entityId';
@@ -120,7 +119,6 @@
             data.status = response.status;
             callback(data, response.status);
           });
-
       },
     };
   }

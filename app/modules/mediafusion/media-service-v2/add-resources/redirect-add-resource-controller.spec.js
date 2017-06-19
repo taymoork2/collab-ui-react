@@ -80,7 +80,7 @@ describe('RedirectAddResourceControllerV2', function () {
     expect($modalInstance.dismiss).toHaveBeenCalled();
   });
   xit('RedirectAddResourceControllerV2 closeSetupModal should close the modal when firstTimeSetup is false', function () {
-    spyOn($modalInstance, "close");
+    spyOn($modalInstance, 'close');
     firstTimeSetup = false;
     controller.closeSetupModal(false);
     expect($modalInstance.close).toHaveBeenCalled();
@@ -110,8 +110,8 @@ describe('RedirectAddResourceControllerV2', function () {
   it('RedirectAddResourceControllerV2 canGoNext should enable the next button when the feild is filled', function () {
     controller.firstTimeSetup = true;
     controller.yesProceed = true;
-    controller.hostName = "sampleHost";
-    controller.selectedCluster = "sampleCluster";
+    controller.hostName = 'sampleHost';
+    controller.selectedCluster = 'sampleCluster';
     controller.canGoNext();
     expect(controller.canGoNext()).toBeTruthy();
   });

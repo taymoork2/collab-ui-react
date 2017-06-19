@@ -18,7 +18,7 @@ class PagingInitiatorCtrl implements ng.IComponentController {
               private $q: ng.IQService) {
   }
 
-  public fetchInitiators(): ng.IPromise<Array<Member>> {
+  public fetchInitiators(): ng.IPromise<Member[]> {
     return this.FeatureMemberService.getMemberSuggestions(this.initiatorName).then(
       (data: Member[]) => {
         this.availableInitiators = _.reject(data, (mem) => {
@@ -27,7 +27,7 @@ class PagingInitiatorCtrl implements ng.IComponentController {
           });
         });
 
-        let promises: Array<ng.IPromise<any>> = [];
+        const promises: ng.IPromise<any>[] = [];
         _.forEach(this.availableInitiators, (item: any): void => {
           // If Place is a room device type, remove from availableInitiators
           if (item.type === USER_PLACE) {
@@ -55,7 +55,7 @@ class PagingInitiatorCtrl implements ng.IComponentController {
   public selectInitiators(member: Member): void {
     if (member) {
       this.initiatorName = '';
-      let memberWithPicture: IMemberWithPicture = {
+      const memberWithPicture: IMemberWithPicture = {
         member: member,
         picturePath: '',
       };
@@ -83,7 +83,7 @@ class PagingInitiatorCtrl implements ng.IComponentController {
   }
 
   public getMembersPictures(member: Member): string {
-    let index = _.findIndex(this.selectedInitiators, function (mem) {
+    const index = _.findIndex(this.selectedInitiators, function (mem) {
       return (mem.member.uuid === member.uuid);
     });
     if (index !== -1) {

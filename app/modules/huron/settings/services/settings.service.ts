@@ -5,11 +5,12 @@ import { Notification } from 'modules/core/notifications';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/huron/settings/companyCallerId';
 import { AvrilService, IAvrilSite, AvrilSite, IAvrilFeatures, AvrilFeatures } from 'modules/huron/avril';
 import { TerminusService } from 'modules/huron/pstn';
+import { ExtensionLengthService } from './extensionLength.service';
 
 export class HuronSettingsData {
   public customer: CustomerSettings;
   public site: ISite;
-  public internalNumberRanges: Array<IExtensionRange>;
+  public internalNumberRanges: IExtensionRange[];
   public cosRestrictions: any;
   public companyCallerId: CompanyNumber;
   public voicemailToEmailSettings: IVoicemailToEmail;
@@ -24,7 +25,7 @@ export class CustomerSettings extends Customer {
     uuid: string,
     name: string,
     servicePackage: string,
-    links: Array<Link>,
+    links: Link[],
     hasVoicemailService: boolean,
     hasVoiceService: boolean,
   }) {
@@ -52,11 +53,11 @@ export interface IVoicemailToEmail {
 
 export class HuronSettingsService {
   private huronSettingsDataCopy: HuronSettingsData;
-  private errors: Array<any> = [];
+  private errors: any[] = [];
   private VOICE_ONLY = 'VOICE_ONLY';
-  private DEMO_STANDARD = 'DEMO_STANDARD';
-  private VOICE_VOICEMAIL = 'VOICE_VOICEMAIL';
-  private VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL';
+  private DEMO_STANDARD = 'DEMO_STANDARD'; // Unity only
+  private VOICE_VOICEMAIL = 'VOICE_VOICEMAIL'; // Avril Only
+  private VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL'; // Unity and Avril
   private supportsAvrilVoicemail: boolean = false;
   private supportsAvrilVoicemailMailbox: boolean = false;
 
@@ -74,35 +75,36 @@ export class HuronSettingsService {
     private VoicemailMessageAction,
     private FeatureToggleService,
     private TerminusService: TerminusService,
+    private ExtensionLengthService: ExtensionLengthService,
   ) {
-
+    //Avril and Unity Support
     this.FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable)
       .then(result => this.supportsAvrilVoicemail = result);
-
+    //Avril only, Should have supportsAvrilVoicemail = false
     this.FeatureToggleService.supports(FeatureToggleService.features.avrilVmMailboxEnable)
       .then(result => this.supportsAvrilVoicemailMailbox = result);
   }
 
   public get(siteId: string): ng.IPromise<HuronSettingsData> {
-    let huronSettingsData = new HuronSettingsData();
+    const huronSettingsData = new HuronSettingsData();
     this.errors = [];
     return this.$q.all({
       customerAndSite: this.getSite(siteId)
         .then(site => {
           huronSettingsData.site = site;
           return this.getCustomer()
-            .then(customer => {
+            .then((customer: CustomerSettings) => {
               huronSettingsData.customer = customer;
-              if (_.get<boolean>(customer, 'hasVoicemailService') && !this.supportsAvrilVoicemail) {
+              if (_.get<boolean>(customer, 'hasVoicemailService') && !this.supportsAvrilVoicemailMailbox) {
                 return this.getVoicemailUserTemplate()
-                  .then(userTemplate => this.getVoicemailToEmail(userTemplate.objectId))
+                  .then(userTemplate => this.getVoicemailToEmail(_.get(userTemplate, 'objectId', '')))
                   .then(voicemailToEmailSettings => {
                     huronSettingsData.voicemailToEmailSettings = {
                       messageActionId: voicemailToEmailSettings.messageActionId,
                       voicemailToEmail: voicemailToEmailSettings.voicemailToEmail,
                     };
                   });
-              } else if (_.get<boolean>(customer, 'hasVoicemailService') && this.supportsAvrilVoicemail) {
+              } else if (_.get<boolean>(customer, 'hasVoicemailService') && this.supportsAvrilVoicemailMailbox) {
                 return this.getAvrilSite(site)
                   .then(avrilSite => {
                     huronSettingsData.avrilFeatures = avrilSite.features;
@@ -184,8 +186,25 @@ export class HuronSettingsService {
     }
   }
 
-  private createParallelRequests(data: HuronSettingsData): Array<ng.IPromise<any>> {
-    let promises: Array<ng.IPromise<any>> = [];
+  public saveExtensionLengthIncrease(newExtensionLength: string, extensionPrefix: string): ng.IPromise<any> {
+    return this.ExtensionLengthService.saveExtensionLength(newExtensionLength, extensionPrefix)
+      .then(() => {
+        if (this.huronSettingsDataCopy.customer.hasVoicemailService && !this.supportsAvrilVoicemailMailbox) {
+          return this.getVoicemailUserTemplate()
+            .then(userTemplate => {
+              // using the huronSettingsDataCopy object here because no other changes
+              // will be allowed when extension length is increased, so the data copy value will be
+              // correct.  Doing this allows us to not pass the routingPrefix around in components
+              // that don't care about it.
+              const postalCode = this.deriveVoicemailPostalCode(this.huronSettingsDataCopy.site.routingPrefix || '', newExtensionLength);
+              return this.updateVoicemailPostalCode(userTemplate.objectId, postalCode);
+            });
+        }
+      });
+  }
+
+  private createParallelRequests(data: HuronSettingsData): ng.IPromise<any>[] {
+    const promises: ng.IPromise<any>[] = [];
     if (!_.isEqual(data.internalNumberRanges, this.huronSettingsDataCopy.internalNumberRanges)) {
       Array.prototype.push.apply(promises, this.updateInternalNumberRanges(data.internalNumberRanges, this.skipInternalNumberRangeDelete(data, this.huronSettingsDataCopy)));
     }
@@ -256,7 +275,7 @@ export class HuronSettingsService {
       });
   }
 
-  private getInternalNumberRanges(): ng.IPromise<Array<IExtensionRange>> {
+  private getInternalNumberRanges(): ng.IPromise<IExtensionRange[]> {
     return this.ServiceSetup.listInternalNumberRanges().then(ranges => {
       return _.map<any, IExtensionRange>(ranges, range => {
         return {
@@ -295,8 +314,8 @@ export class HuronSettingsService {
     return extensionLength < origExtensionLength;
   }
 
-  private updateInternalNumberRanges(internalNumberRanges: Array<IExtensionRange>, skipDelete: boolean = false): Array<ng.IPromise<any>> {
-    let promises: Array<ng.IPromise<any>> = [];
+  private updateInternalNumberRanges(internalNumberRanges: IExtensionRange[], skipDelete: boolean = false): ng.IPromise<any>[] {
+    const promises: ng.IPromise<any>[] = [];
     if (!skipDelete) {
       // first look for ranges to delete.
       _.forEach(this.huronSettingsDataCopy.internalNumberRanges, range => {
@@ -347,7 +366,7 @@ export class HuronSettingsService {
 
   private getCompanyCallerId(): ng.IPromise<CompanyNumber> {
     return this.CallerId.listCompanyNumbers().then(companyNumbers => {
-      let companyCallerId = _.find<CompanyNumber>(companyNumbers, companyNumber => {
+      const companyCallerId = _.find<CompanyNumber>(companyNumbers, companyNumber => {
         return companyNumber.externalCallerIdType === ExternalCallerIdType.COMPANY_CALLER_ID_TYPE
           || (companyNumber.externalCallerIdType === ExternalCallerIdType.COMPANY_NUMBER_TYPE);
       });
@@ -386,11 +405,11 @@ export class HuronSettingsService {
   }
 
   private saveCustomerServicePackage(customerData: CustomerSettings, siteData: ISite): ng.IPromise<void> {
-    let customer = {};
+    const customer = {};
     if (customerData.hasVoicemailService) {
       if (this.supportsAvrilVoicemail && !this.supportsAvrilVoicemailMailbox) {
         _.set(customer, 'servicePackage', this.VOICE_VOICEMAIL_AVRIL);
-      } else if (this.supportsAvrilVoicemail && this.supportsAvrilVoicemailMailbox) {
+      } else if (!this.supportsAvrilVoicemail && this.supportsAvrilVoicemailMailbox) {
         _.set(customer, 'servicePackage', this.VOICE_VOICEMAIL);
       } else {
         _.set(customer, 'servicePackage', this.DEMO_STANDARD);
@@ -407,8 +426,8 @@ export class HuronSettingsService {
 
   private updateVoiceMailSettings(customerData: CustomerSettings, siteData: ISite, voicemailToEmailData: IVoicemailToEmail, avrilFeatures: IAvrilFeatures): ng.IPromise<any> {
     if (customerData.hasVoicemailService) {
-      if (this.supportsAvrilVoicemail && !this.supportsAvrilVoicemailMailbox) { // update Unity and Avril if needed
-        let promises: Array<ng.IPromise<any>> = [];
+      if (!this.supportsAvrilVoicemailMailbox) { // Do not update Unity if Avril only
+        const promises: ng.IPromise<any>[] = [];
         return this.getVoicemailUserTemplate()
           .then(userTemplate => {
             if (!_.isEqual(this.huronSettingsDataCopy.voicemailToEmailSettings, voicemailToEmailData)) {
@@ -417,18 +436,12 @@ export class HuronSettingsService {
             if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
               || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
               || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)) {
-              let postalCode = this.deriveVoicemailPostalCode(siteData.routingPrefix || '', siteData.extensionLength);
+              const postalCode = this.deriveVoicemailPostalCode(siteData.routingPrefix || '', siteData.extensionLength);
               promises.push(this.updateVoicemailPostalCode(userTemplate.objectId, postalCode));
             }
             if (!_.isEqual(this.huronSettingsDataCopy.site.timeZone, siteData.timeZone)
               || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)) {
               promises.push(this.updateVoicemailTimeZone(userTemplate.objectId, siteData.timeZone));
-            }
-            if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
-              || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
-              || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)
-              || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)) {
-              promises.push(this.updateAvrilSite(siteData, avrilFeatures));
             }
             if (promises.length > 0) {
               return this.$q.all(promises)
@@ -437,7 +450,7 @@ export class HuronSettingsService {
               return this.$q.resolve();
             }
           });
-      } else if (this.supportsAvrilVoicemail) { // only update Avril if needed
+      } else if (this.supportsAvrilVoicemailMailbox) { // only update Avril if needed
         if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
           || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
           || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)
@@ -503,8 +516,8 @@ export class HuronSettingsService {
   }
 
   private deriveVoicemailPostalCode(routingPrefix: string, extensionLength: string): string {
-    let steeringDigit = _.isUndefined(routingPrefix) ? '' : routingPrefix.charAt(0);
-    let siteCode = _.isUndefined(routingPrefix) ? '' : routingPrefix.substr(1);
+    const steeringDigit = _.isUndefined(routingPrefix) ? '' : routingPrefix.charAt(0);
+    const siteCode = _.isUndefined(routingPrefix) ? '' : routingPrefix.substr(1);
     return [steeringDigit, siteCode, extensionLength].join('-');
   }
 

@@ -79,7 +79,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
-
   }));
 
   describe('fromDecision', function () {
@@ -94,7 +93,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
     });
 
     it('should create a condition then action', function () {
-
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope,
       });
@@ -104,7 +102,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
       expect(controller.menuEntry.actions[0].then.name).toEqual('routeToQueue');
     });
     it('should create a condition action with then clause', function () {
-
       aaUiModel[schedule].entries[0].actions[0] = undefined;
 
       var controller = $controller('AARouteToQueueCtrl', {
@@ -114,10 +111,8 @@ describe('Controller: AARouteToQueueCtrl', function () {
       expect(controller.menuEntry.actions[0].name).toEqual('conditional');
       expect(controller.menuEntry.actions[0].then).toBeDefined();
       expect(controller.menuEntry.actions[0].then.name).toEqual('routeToQueue');
-
     });
     it('should change an action from route to routeToQueue ', function () {
-
       aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('route', '');
 
       var controller = $controller('AARouteToQueueCtrl', {
@@ -127,7 +122,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
       expect(controller.menuEntry.actions[0].name).toEqual('conditional');
       expect(controller.menuEntry.actions[0].then).toBeDefined();
       expect(controller.menuEntry.actions[0].then.name).toEqual('routeToQueue');
-
     });
   });
 
@@ -191,7 +185,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
         controller.openQueueTreatmentModal();
         $scope.$apply();
         expect(controller.menuEntry.actions[0].description).toEqual('');
-        controller.menuEntry.actions[0].description = "Added text";
+        controller.menuEntry.actions[0].description = 'Added text';
         modal.reject();
         $scope.$apply();
         expect(controller.menuEntry.actions[0].description).toEqual('');
@@ -223,7 +217,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
         controller.openQueueTreatmentModal();
         $scope.$apply();
         expect(controller.menuKeyEntry.actions[0].description).toEqual('');
-        controller.menuKeyEntry.actions[0].description = "Added text";
+        controller.menuKeyEntry.actions[0].description = 'Added text';
         modal.reject();
         $scope.$apply();
         expect(controller.menuKeyEntry.actions[0].description).toEqual('');
@@ -233,16 +227,13 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
   describe('fromRouteCall overwrite', function () {
     beforeEach(function () {
-
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
 
       aaUiModel[schedule].entries[0].addAction(action);
-
     });
 
     it('should be able to create new Queue entry from Route Call', function () {
-
       $scope.fromRouteCall = true;
 
       var controller = $controller('AARouteToQueueCtrl', {
@@ -259,7 +250,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
       expect(controller.queueSelected.id).toEqual('');
       expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
       expect(controller.menuEntry.actions[0].value).toEqual('');
-
     });
   });
 
@@ -270,10 +260,8 @@ describe('Controller: AARouteToQueueCtrl', function () {
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
       aaUiModel[schedule].entries[0].actions = [];
-
     });
     it('should populate the ui from the menuEntry', function () {
-
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope,
       });
@@ -287,7 +275,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
       $scope.$apply();
 
       expect(controller.queueSelected.id).toEqual('myId');
-
     });
     it('should be able to show the already selected queue', function () {
       var controller = $controller('AARouteToQueueCtrl', {
@@ -304,7 +291,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
     });
 
     it('should be able to create new AA entry from Route Call', function () {
-
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope,
       });
@@ -319,7 +305,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
       expect(controller.queueSelected.id).toEqual('');
       expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
       expect(controller.menuEntry.actions[0].value).toEqual('');
-
     });
 
     it('should be able to create new AA entry from Route Call', function () {
@@ -336,7 +321,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
       expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
       expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
       expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
-
     });
 
     it('should be able to change update via saveUIModel', function () {
@@ -344,8 +328,8 @@ describe('Controller: AARouteToQueueCtrl', function () {
         $scope: $scope,
       });
       controller.queueSelected = {
-        name: "Test Queue",
-        id: "c16a6027-caef-4429-b3af-9d61ddc7964b",
+        name: 'Test Queue',
+        id: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
       };
 
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
@@ -358,13 +342,10 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
       expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
     });
-
   });
 
   describe('AARouteToQueue', function () {
-
     it('should be able to create new AA entry', function () {
-
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope,
       });
@@ -379,19 +360,15 @@ describe('Controller: AARouteToQueueCtrl', function () {
       expect(controller.queueSelected.id).toEqual('');
       expect(controller.menuKeyEntry.actions[0].name).toEqual('routeToQueue');
       expect(controller.menuKeyEntry.actions[0].value).toEqual('');
-
-
     });
 
     it('should initialize the options list', function () {
-
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope,
       });
 
       $scope.$apply();
       expect(controller.queues.length).toEqual(1);
-
     });
 
     describe('activate', function () {
@@ -415,7 +392,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
         aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
         aaUiModel[schedule].entries[0].actions = [];
-
       });
       it('should be able to create new AA while hideQueues is false', function () {
         var controller = $controller('AARouteToQueueCtrl', {
@@ -454,8 +430,8 @@ describe('Controller: AARouteToQueueCtrl', function () {
           $scope: $scope,
         });
         controller.queueSelected = {
-          name: "Test Queue",
-          id: "c16a6027-caef-4429-b3af-9d61ddc7964b",
+          name: 'Test Queue',
+          id: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
         };
 
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
@@ -467,7 +443,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
         var headerEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         controller.menuEntry.headers = [];
-        headerEntry.setVoice("Anna");
+        headerEntry.setVoice('Anna');
         controller.menuEntry.headers.push(headerEntry);
 
         controller.saveUiModel();
@@ -476,9 +452,8 @@ describe('Controller: AARouteToQueueCtrl', function () {
         expect(controller.menuKeyEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
 
         var queueSettings = _.get(controller.menuKeyEntry, 'actions[0].queueSettings');
-        expect(queueSettings.voice).toEqual("Anna");
+        expect(queueSettings.voice).toEqual('Anna');
       });
     });
-
   });
 });

@@ -8,7 +8,7 @@ export class CallFeatureMember {
   public type: MemberType;
   public cardType: CardType | undefined;
   public complexCardType: ComplexCardType | undefined;
-  public memberItems?: Array<MemberItem> | undefined;
+  public memberItems?: MemberItem[] | undefined;
   public memberItemId?: string | undefined;
   public thumbnailSrc?: string | undefined;
 
@@ -20,7 +20,7 @@ export class CallFeatureMember {
     type: MemberType,
     cardType: CardType | undefined,
     complexCardType: ComplexCardType | undefined,
-    memberItems: Array<MemberItem> | undefined,
+    memberItems: MemberItem[] | undefined,
     memberItemId: string | undefined,
     thumbnailSrc: string | undefined,
   }) {

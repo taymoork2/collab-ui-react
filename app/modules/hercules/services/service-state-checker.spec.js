@@ -213,7 +213,7 @@ describe('Service: ServiceStateChecker', function () {
     }]);
     USSService.getOrgId.and.returnValue('orgId');
     USSService.getOrg.and.returnValue($q.resolve({
-      'sipDomain': 'somedomain',
+      sipDomain: 'somedomain',
     }));
     ServiceDescriptor.isServiceEnabled.and.returnValue($q.resolve(true));
 
@@ -247,7 +247,7 @@ describe('Service: ServiceStateChecker', function () {
     }]);
     USSService.getOrgId.and.returnValue('orgId');
     USSService.getOrg.and.returnValue($q.resolve({
-      'sipDomain': 'somedomain',
+      sipDomain: 'somedomain',
     }));
     ServiceDescriptor.isServiceEnabled.and.returnValue($q.resolve(true));
 
@@ -274,8 +274,8 @@ describe('Service: ServiceStateChecker', function () {
     // now we set the value in CI
     Orgservice.getOrg = function (cb) {
       cb({
-        'orgSettings': {
-          'sipCloudDomain': 'sipCloudDomain',
+        orgSettings: {
+          sipCloudDomain: 'sipCloudDomain',
         },
       }, 200);
 

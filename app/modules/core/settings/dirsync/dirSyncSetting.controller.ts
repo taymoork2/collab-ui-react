@@ -8,7 +8,7 @@ export class DirSyncSettingController {
 
   public updatingStatus: boolean;
   public dirSyncEnabled: boolean;
-  public connectors: Array<IDirectoryConnector>;
+  public connectors: IDirectoryConnector[];
 
   /* @ngInject */
   constructor(
@@ -26,7 +26,7 @@ export class DirSyncSettingController {
   }
 
   public disableDirSync(): void {
-    let options = <IToolkitModalSettings>{
+    const options = <IToolkitModalSettings>{
       type: 'dialog',
       title: this.$translate.instant('globalSettings.dirsync.turnOffDirSync'),
       message: this.$translate.instant('globalSettings.dirsync.turnOffDirSyncWarning'),
@@ -35,7 +35,7 @@ export class DirSyncSettingController {
     };
     this.ModalService.open(options).result
       .then(() => {
-        let startTime = moment();
+        const startTime = moment();
         let status = 200;
         this.DirSyncService.disableSync()
           .then(() => {
@@ -58,7 +58,7 @@ export class DirSyncSettingController {
   }
 
   public deregisterConnector(connector: IDirectoryConnector): void {
-    let options = <IToolkitModalSettings>{
+    const options = <IToolkitModalSettings>{
       type: 'dialog',
       title: `${this.$translate.instant('globalSettings.dirsync.deregister')} ${connector.name}`,
       message: this.$translate.instant('globalSettings.dirsync.deregisterWarning'),
@@ -67,7 +67,7 @@ export class DirSyncSettingController {
     };
     this.ModalService.open(options).result
       .then(() => {
-        let startTime = moment();
+        const startTime = moment();
         let status = 200;
         this.DirSyncService.deregisterConnector(connector)
           .then(() => {

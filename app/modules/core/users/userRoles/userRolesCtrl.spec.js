@@ -45,7 +45,6 @@ describe('Controller: UserRolesCtrl', function () {
     spyOn(Userservice, 'updateUserProfile').and.callFake(function () {
       return $q.resolve({ data: currentUser });
     });
-
   }));
 
   function initController() {
@@ -87,7 +86,6 @@ describe('Controller: UserRolesCtrl', function () {
       expect($scope.rolesObj.complianceValue).toBeDefined();
       expect($scope.rolesObj.complianceValue).toBeFalsy();
     });
-
   });
 
   describe('Initialize isPartner from current org response', function () {
@@ -117,7 +115,6 @@ describe('Controller: UserRolesCtrl', function () {
   });
 
   describe('SIP User', function () {
-
     describe('Verify Admin Roles Radio input setting: ', function () {
       beforeEach(function () {
         $stateParams.currentUser = fakeUserJSONFixture.fakeUser2;
@@ -171,15 +168,15 @@ describe('Controller: UserRolesCtrl', function () {
         $scope.formUserData.name.familyName = '';
         $scope.formUserData.displayName = '';
         $scope.checkAdminDisplayName();
-        expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", false);
-        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith("noSelection", false);
+        expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith('notblank', false);
+        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith('noSelection', false);
       });
 
       it('should invalidate display name if not first name, last name and display name are all blank', function () {
         $scope.formUserData.displayName = 'DN';
         $scope.checkAdminDisplayName();
-        expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", true);
-        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith("noSelection", false);
+        expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith('notblank', true);
+        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith('noSelection', false);
       });
     });
 
@@ -194,8 +191,8 @@ describe('Controller: UserRolesCtrl', function () {
         $scope.formUserData.name.familyName = '';
         $scope.formUserData.displayName = '';
         $scope.checkAdminDisplayName();
-        expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", true);
-        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith("noSelection", true);
+        expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith('notblank', true);
+        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith('noSelection', true);
       });
     });
 
@@ -244,7 +241,6 @@ describe('Controller: UserRolesCtrl', function () {
 
           expect(Userservice.patchUserRoles).toHaveBeenCalled();
           expect(Userservice.updateUserProfile).not.toHaveBeenCalled();
-
         });
 
         it('should notify an error when updateUserProfile fails', function () {

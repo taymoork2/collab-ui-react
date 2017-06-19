@@ -1,10 +1,10 @@
 describe('Component: pgNumber setup', () => {
 
-  let numberData = {
+  const numberData = {
     extension: '2222',
     extensionUUID: '22a2dc30-041f-4d25-9351-325eb1db7f79',
   };
-  let successResponse = [numberData];
+  const successResponse = [numberData];
 
   beforeEach(function () {
     this.initModules('huron.paging-group.number');
