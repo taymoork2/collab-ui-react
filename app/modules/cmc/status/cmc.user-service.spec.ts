@@ -92,7 +92,7 @@ describe('CmcUserService', () => {
       Resources: [
         { id: '1', displayName: 'helge' },
         { id: '3', displayName: 'anders' },
-      ]
+      ],
     };
 
     this.$httpBackend
