@@ -1,8 +1,8 @@
-import { ProPackService } from './itProPack.service';
+import { ProPackService } from './proPack.service';
 import FeatureToggleService from 'modules/core/featureToggle';
 
 export default angular
-  .module('core.itProPack', [
+  .module('core.proPack', [
     FeatureToggleService,
   ])
   .service('ProPackService', ProPackService)

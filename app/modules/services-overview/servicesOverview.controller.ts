@@ -15,7 +15,7 @@ import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
-import { ITProPackService }  from 'modules/core/itProPack/itProPack.service';
+import { ProPackService }  from 'modules/core/itProPack/itProPack.service';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 import { ICluster } from 'modules/hercules/hybrid-services.types';
@@ -40,9 +40,10 @@ export class ServicesOverviewCtrl {
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
-    private ITProPackService: ITProPackService,
+    private ProPackService: ProPackService,
     private HDSService,
     private Notification,
+
   ) {
     this.cards = [
       new ServicesOverviewMessageCard(this.Authinfo),
@@ -82,12 +83,12 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('hybridDataSecurityFeatureToggleEventHandler', supports);
       });
 
-    const ItPropackPromises = {
-      hasITProPackEnabled: this.ITProPackService.hasITProPackEnabled(),
-      hasITProPackPurchased: this.ITProPackService.hasITProPackPurchased(),
+    const PropackPromises = {
+      hasITProPackEnabled: this.ProPackService.hasProPackEnabled(),
+      hasITProPackPurchased: this.ProPackService.hasProPackPurchased(),
     };
-    this.$q.all(ItPropackPromises).then(result => {
-      this.forwardEvent('itProPackEventHandler', result);
+    this.$q.all(PropackPromises).then(result => {
+      this.forwardEvent('proPackEventHandler', result);
     });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp)

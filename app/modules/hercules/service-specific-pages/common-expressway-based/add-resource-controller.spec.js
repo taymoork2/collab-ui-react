@@ -13,7 +13,7 @@ describe('Controller: AddResourceController', function () {
       'FmsOrgSettings',
       'HybridServicesExtrasService',
       'HybridServicesClusterService',
-      'ITProPackService',
+      'ProPackService',
       'ResourceGroupService'
     );
 
@@ -22,7 +22,7 @@ describe('Controller: AddResourceController', function () {
     this.newConnectorType = 'c_cal';
 
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.HybridServicesExtrasService, 'addPreregisteredClusterToAllowList').and.returnValue(this.$q.resolve({}));
     spyOn(this.FmsOrgSettings, 'get').and.returnValue(this.$q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
     spyOn(this.HybridServicesClusterService, 'provisionConnector').and.returnValue(this.$q.resolve({ id: this.clusterIdOfNewCluster }));
@@ -113,13 +113,13 @@ describe('Controller: AddResourceController', function () {
   });
 
   // 2017 name change
-  describe('atlas2017NameChangeGetStatus & atlasITProPackGetStatus - ', function () {
+  describe('atlas2017NameChangeGetStatus & atlasProPackGetStatus - ', function () {
     it('when toggles are false - nameChangeEnabled should be false and base localizedHostNameHelpText should be returned', function () {
       expect(this.controller.nameChangeEnabled).toBeFalsy();
       expect(this.controller.localizedHostNameHelpText).toEqual('hercules.addResourceDialog.nameHelptext');
     });
 
-    it('when toggles are true - nameChangeEnabled should be true and localizedHostNameHelpText should be new or pro based on hasITProPackPurchased', function () {
+    it('when toggles are true - nameChangeEnabled should be true and localizedHostNameHelpText should be new or pro based on hasProPackPurchased', function () {
       this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
       this.$translate.instant.calls.reset();
       this.initController();
@@ -132,7 +132,7 @@ describe('Controller: AddResourceController', function () {
         appTitle: 'loginPage.titlePro',
       }]);
 
-      this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+      this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
       this.$translate.instant.calls.reset();
       this.initController();
       expect(this.controller.localizedHostNameHelpText).toEqual('hercules.addResourceDialog.nameHelptextNew');

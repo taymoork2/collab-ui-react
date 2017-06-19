@@ -4,10 +4,10 @@ describe('Controller: EdiscoverySearchController', function () {
   beforeEach(angular.mock.module('Ediscovery'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, ITProPackService, Notification, TrialService;
+  var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, ProPackService, Notification, TrialService;
   var promise, result, startDate, endDate;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _ITProPackService_, _Notification_, _TrialService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _ProPackService_, _Notification_, _TrialService_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -18,13 +18,13 @@ describe('Controller: EdiscoverySearchController', function () {
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
     TrialService = _TrialService_;
-    ITProPackService = _ITProPackService_;
+    ProPackService = _ProPackService_;
 
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue($q.resolve(false));
-    spyOn(ITProPackService, 'hasITProPackPurchased').and.returnValue($q.resolve(false));
-    spyOn(ITProPackService, 'hasITProPackEnabled').and.returnValue($q.resolve(false));
+    spyOn(ProPackService, 'hasProPackPurchased').and.returnValue($q.resolve(false));
+    spyOn(ProPackService, 'hasProPackEnabled').and.returnValue($q.resolve(false));
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
     spyOn(TrialService, 'getDaysLeftForCurrentUser');
   }));
@@ -38,7 +38,7 @@ describe('Controller: EdiscoverySearchController', function () {
       EdiscoveryNotificationService: EdiscoveryNotificationService,
       FeatureToggleService: FeatureToggleService,
       Notification: Notification,
-      ITProPackService: ITProPackService,
+      ProPackService: ProPackService,
     });
 
     $scope.$apply();

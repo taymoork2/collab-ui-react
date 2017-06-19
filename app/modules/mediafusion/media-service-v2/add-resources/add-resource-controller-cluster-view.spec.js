@@ -11,12 +11,12 @@ describe('AddResourceControllerClusterViewV2', function () {
       '$window',
       'AddResourceCommonServiceV2',
       'FeatureToggleService',
-      'ITProPackService'
+      'ProPackService'
       );
 
     this.jsonData = getJSONFixture('mediafusion/json/delete-cluster.json');
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue(this.$q.resolve({}));
     spyOn(this.AddResourceCommonServiceV2, 'redirectPopUpAndClose');
     spyOn(this.AddResourceCommonServiceV2, 'updateClusterLists').and.returnValue(this.$q.resolve({}));
@@ -37,7 +37,7 @@ describe('AddResourceControllerClusterViewV2', function () {
         $state: this.$state,
         AddResourceCommonServiceV2: this.AddResourceCommonServiceV2,
         FeatureToggleService: this.FeatureToggleService,
-        ITProPackService: this.ITProPackService,
+        ProPackService: this.ProPackService,
       });
       this.$scope.$apply();
     };
@@ -106,10 +106,10 @@ describe('AddResourceControllerClusterViewV2', function () {
       expect(this.controller.nameChangeEnabled).toBeTruthy();
     });
 
-    it('getAppTitle should return pro name if ITProPackService is true', function () {
+    it('getAppTitle should return pro name if ProPackService is true', function () {
       expect(this.controller.getAppTitle()).toEqual('loginPage.titleNew');
 
-      this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+      this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.getAppTitle()).toEqual('loginPage.titlePro');
     });

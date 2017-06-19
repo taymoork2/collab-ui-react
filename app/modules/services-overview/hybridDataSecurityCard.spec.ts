@@ -108,7 +108,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
       card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, HybridServicesClusterStatesService, Notification);
       card.hybridStatusEventHandler([]);
       card.hybridDataSecurityFeatureToggleEventHandler(false);
-      card.itProPackEventHandler({});
+      card.proPackEventHandler({});
       expect(card.loading).toBe(false);
     });
     it('should countinue loading if only hybridStatusEventHandler is called', () => {
@@ -119,15 +119,15 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     it('should countinue loading if only two handlers are called', () => {
       card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, HybridServicesClusterStatesService, Notification);
       card.hybridDataSecurityFeatureToggleEventHandler(false);
-      card.itProPackEventHandler({});
+      card.proPackEventHandler({});
       expect(card.loading).toBe(true);
     });
   });
   describe('Determining correct configuration for IT ProPack Purchased', () => {
-    describe ('ITProPack feature toggle is not enabled', function () {
+    describe ('ProPack feature toggle is not enabled', function () {
       beforeEach(function() {
         card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, HybridServicesClusterStatesService, Notification);
-        card.itProPackEventHandler({ hasITProPackEnabled: false, hasITProPackPurchased: false });
+        card.proPackEventHandler({ hasProPackEnabled: false, hasProPackPurchased: false });
       });
 
       it('if services are set up we should see a card with 2 buttons', () => {
@@ -140,10 +140,10 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
         expect(card.getButtons()[0].name).toBe('servicesOverview.genericButtons.setup');
       });
     });
-    describe ('ITProPack feature toggle is enabled and ProPack has been purchased', function () {
+    describe ('ProPack feature toggle is enabled and ProPack has been purchased', function () {
       beforeEach(function() {
         card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, HybridServicesClusterStatesService, Notification);
-        card.itProPackEventHandler({ hasITProPackEnabled: true, hasITProPackPurchased: true });
+        card.proPackEventHandler({ hasProPackEnabled: true, hasProPackPurchased: true });
       });
       it('if services are set up we should see a card with 2 buttons without tooltip text', () => {
         card.hybridStatusEventHandler([{ serviceId: 'spark-hybrid-datasecurity', setup: true, status: 'yolo' }]);
@@ -157,10 +157,10 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
 
       });
     });
-    describe ('ITPropack feature toggle is enabled and Propack has NOT been purchased', function () {
+    describe ('Propack feature toggle is enabled and Propack has NOT been purchased', function () {
       beforeEach(function() {
         card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, HybridServicesClusterStatesService, Notification);
-        card.itProPackEventHandler({ hasITProPackEnabled: true, hasITProPackPurchased: false });
+        card.proPackEventHandler({ hasProPackEnabled: true, hasProPackPurchased: false });
       });
       it('if services are set up we should see an inactive card with \'learn more \' button and a tooltip text', () => {
         expect(card.getButtons().length).toBe(1);

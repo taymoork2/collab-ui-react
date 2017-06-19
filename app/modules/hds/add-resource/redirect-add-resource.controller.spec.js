@@ -7,11 +7,11 @@ describe('Controller: HDSRedirectAddResourceController', function () {
       '$q',
       'FeatureToggleService',
       'HDSAddResourceCommonService',
-      'ITProPackService'
+      'ProPackService'
     );
 
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.HDSAddResourceCommonService, 'updateClusterLists').and.returnValue(this.$q.resolve([]));
 
     this.mockModal = { dismiss: jasmine.createSpy('dismiss') };
@@ -21,7 +21,7 @@ describe('Controller: HDSRedirectAddResourceController', function () {
         $modalInstance: this.mockModal,
         FeatureToggleService: this.FeatureToggleService,
         firstTimeSetup: false,
-        ITProPackService: this.ITProPackService,
+        ProPackService: this.ProPackService,
       });
       this.$scope.$apply();
     };
@@ -37,10 +37,10 @@ describe('Controller: HDSRedirectAddResourceController', function () {
     expect(this.controller.nameChangeEnabled).toBeTruthy();
   });
 
-  it('getAppTitle should return new or pro Atlas name based on hasITProPackPurchased', function () {
+  it('getAppTitle should return new or pro Atlas name based on hasProPackPurchased', function () {
     expect(this.controller.getAppTitle()).toEqual('loginPage.titleNew');
 
-    this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+    this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
     this.initController();
     expect(this.controller.getAppTitle()).toEqual('loginPage.titlePro');
   });

@@ -7,12 +7,12 @@ describe('Controller: HeaderCtrl', function () {
       '$scope',
       'Authinfo',
       'FeatureToggleService',
-      'ITProPackService',
+      'ProPackService',
       'Utils'
     );
 
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
 
     this.initController = function () {
       this.controller = this.$controller('HeaderCtrl', {
@@ -94,9 +94,9 @@ describe('Controller: HeaderCtrl', function () {
       expect(this.controller.headerTitle).toEqual('loginPage.titleNew');
     });
 
-    it('should set headerTitle to loginPage.titlePro when atlas2017NameChangeGetStatus and hasITProPackPurchased is true', function () {
+    it('should set headerTitle to loginPage.titlePro when atlas2017NameChangeGetStatus and hasProPackPurchased is true', function () {
       this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-      this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+      this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.headerTitle).toEqual('loginPage.titlePro');
     });

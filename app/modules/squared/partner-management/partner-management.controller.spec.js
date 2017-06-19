@@ -3,12 +3,12 @@
 describe('PartnerManagementController:', function () {
   beforeEach(function () {
     this.initModules(require('./index').default);
-    this.injectDependencies('$controller', '$scope', '$state', '$q', 'FeatureToggleService', 'ITProPackService', 'Notification', 'PartnerManagementService');
+    this.injectDependencies('$controller', '$scope', '$state', '$q', 'FeatureToggleService', 'ProPackService', 'Notification', 'PartnerManagementService');
 
     this.jsonData = getJSONFixture('squared/json/partnerManagement.json');
 
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Notification, 'errorWithTrackingId');
     spyOn(this.$state, 'go');
     spyOn(this.PartnerManagementService, 'getOrgDetails').and.returnValue(this.$q.when({
@@ -170,9 +170,9 @@ describe('PartnerManagementController:', function () {
         expect(this.controller.getHeader()).toEqual('partnerManagement.navHeaderTitleNew');
       });
 
-      it('should return new Pro name when atlas2017NameChangeGetStatus and hasITProPackPurchased is true', function () {
+      it('should return new Pro name when atlas2017NameChangeGetStatus and hasProPackPurchased is true', function () {
         this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-        this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+        this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
         this.initController();
         expect(this.controller.getHeader()).toEqual('partnerManagement.navHeaderTitlePro');
       });
