@@ -20,7 +20,7 @@ export class ProPackService {
 
   // This will be true if the ProPack Toggle and propack is purchased are true
   public hasProPackPurchased(): ng.IPromise<boolean> {
-    let promises = {
+    const promises = {
       proPack: this.hasProPackEnabled(),
       proPackPurchased: this.getProPackPurchased(),
     };
@@ -31,7 +31,7 @@ export class ProPackService {
 
   // This will be true if the ProPack Toggle is false OR propack is purchased
   public hasProPackPurchasedOrNotEnabled(): ng.IPromise<boolean> {
-    let promises = {
+    const promises = {
       proPack: this.hasProPackEnabled(),
       proPackPurchased: this.getProPackPurchased(),
     };
@@ -42,7 +42,7 @@ export class ProPackService {
 
   //This will be true if the ProPack Toggle is true and the propack is not purchased
   public hasProPackEnabledAndNotPurchased(): ng.IPromise<boolean> {
-    let promises = {
+    const promises = {
       proPack: this.hasProPackEnabled(),
       proPackPurchased: this.getProPackPurchased(),
     };

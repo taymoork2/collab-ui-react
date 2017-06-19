@@ -46,7 +46,7 @@ describe('ProPackService', () => {
   });
   describe('hasProPackPurchased()', () => {
     it('should return true if both atlas-it-pro-pack-purchased and atlas-it-pro-pack FTs are enabled', function(){
-      let promise = this.ProPackService.hasProPackPurchased().then(result => {
+      const promise = this.ProPackService.hasProPackPurchased().then(result => {
         expect(result).toBeTruthy();
       });
       this.$rootScope.$digest();
@@ -74,7 +74,7 @@ describe('ProPackService', () => {
 
   describe('hasProPackPurchasedOrNotEnabled()', () => {
     it('should return true if both atlas-it-pro-pack-purchased is enabled and atlas-it-pro-pack FTs is enabled', function(){
-      let promise = this.ProPackService.hasProPackPurchasedOrNotEnabled().then(result => {
+      const promise = this.ProPackService.hasProPackPurchasedOrNotEnabled().then(result => {
         expect(result).toBeTruthy();
       });
       this.$rootScope.$digest();
@@ -84,7 +84,7 @@ describe('ProPackService', () => {
     it('should return true if atlas-it-pro-pack-purchased is disabled and atlas-it-pro-pack FT is disabled ', function(){
       this.FeatureToggleService.atlasITProPackGetStatus.and.returnValue(this.$q.resolve(false));
       this.FeatureToggleService.atlasITProPackPurchasedGetStatus.and.returnValue(this.$q.resolve(false));
-      let promise = this.ProPackService.hasProPackPurchasedOrNotEnabled().then(result => {
+      const promise = this.ProPackService.hasProPackPurchasedOrNotEnabled().then(result => {
         expect(result).toBeTruthy();
       });
       this.$rootScope.$digest();
@@ -94,7 +94,7 @@ describe('ProPackService', () => {
     it('should return false if atlas-it-pro-pack-purchased is disabled and atlas-it-pro-pack FT is enabled ', function(){
       this.FeatureToggleService.atlasITProPackGetStatus.and.returnValue(this.$q.resolve(true));
       this.FeatureToggleService.atlasITProPackPurchasedGetStatus.and.returnValue(this.$q.resolve(false));
-      let promise = this.ProPackService.hasProPackPurchasedOrNotEnabled().then(result => {
+      const promise = this.ProPackService.hasProPackPurchasedOrNotEnabled().then(result => {
         expect(result).toBeFalsy();
       });
       this.$rootScope.$digest();
@@ -104,7 +104,7 @@ describe('ProPackService', () => {
 
   describe('hasProPackEnabledAndNotPurchased()', () => {
     it('should return false if atlas-it-pro-pack-purchased is enabled and atlas-it-pro-pack FTs is enabled', function(){
-      let promise = this.ProPackService.hasProPackEnabledAndNotPurchased().then(result => {
+      const promise = this.ProPackService.hasProPackEnabledAndNotPurchased().then(result => {
         expect(result).toBeFalsy();
       });
       this.$rootScope.$digest();
@@ -114,7 +114,7 @@ describe('ProPackService', () => {
     it('should return false if atlas-it-pro-pack-purchased is disabled and atlas-it-pro-pack FT is disabled ', function(){
       this.FeatureToggleService.atlasITProPackGetStatus.and.returnValue(this.$q.resolve(false));
       this.FeatureToggleService.atlasITProPackPurchasedGetStatus.and.returnValue(this.$q.resolve(false));
-      let promise = this.ProPackService.hasProPackEnabledAndNotPurchased().then(result => {
+      const promise = this.ProPackService.hasProPackEnabledAndNotPurchased().then(result => {
         expect(result).toBeFalsy();
       });
       this.$rootScope.$digest();
@@ -124,7 +124,7 @@ describe('ProPackService', () => {
     it('should return true if atlas-it-pro-pack-purchased is disabled and atlas-it-pro-pack FT is enabled ', function(){
       this.FeatureToggleService.atlasITProPackGetStatus.and.returnValue(this.$q.resolve(true));
       this.FeatureToggleService.atlasITProPackPurchasedGetStatus.and.returnValue(this.$q.resolve(false));
-      let promise = this.ProPackService.hasProPackEnabledAndNotPurchased().then(result => {
+      const promise = this.ProPackService.hasProPackEnabledAndNotPurchased().then(result => {
         expect(result).toBeTruthy();
       });
       this.$rootScope.$digest();

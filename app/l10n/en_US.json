@@ -3123,7 +3123,7 @@
       "messagesPlaceholder": "Enter comma separated values",
       "messagesHelpText": "e.g. project, manager",
       "noMatchesFound": "No Matches Found",
-      "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about our IT Pro Package."
+      "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about Pro Pack."
     },
     "searchResults": {
       "backToSearch": "Back to Search",
@@ -7054,7 +7054,7 @@
       "defaultRetentionOption": "Default retention time",
       "customRetentionOption": "Custom retention time between 1 and 120 months",
       "customRetentionMonths": "months",
-      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about our IT Pro Package.",
+      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about Pro Pack.",
       "modalTitle": "Update Retention Time",
       "modalBody1": "Are you sure you want to update the retention time for Spark Message to a shorter period?",
       "modalBody2": "Any additional data older than the new time period will be deleted.",
@@ -7713,7 +7713,7 @@
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
         "description": "Manage your encryption keys and other security services on-premises.",
-        "tooltip": "This premium feature is available with the IT Pro Pack. Contact your partner to learn more.",
+        "tooltip": "This premium feature is available with the Pro Pack. Contact your partner to learn more.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
