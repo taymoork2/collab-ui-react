@@ -6,6 +6,7 @@ import notifications from 'modules/core/notifications';
 import huronCountryService from 'modules/huron/countries';
 
 export * from './pstnWizard.service';
+export * from './directInwardDialing';
 
 export default angular
   .module('huron.pstn.pstn-wizard', [

@@ -190,8 +190,8 @@ describe('Controller: PstnNumbersCtrl', function () {
       expect(controller.model.tollFree.areaCodeOptions).toBeDefined();
     });
 
-    it('should have 1 quantity', function () {
-      expect(controller.model.pstn.quantity).toEqual(null);
+    it('should have defaults quantity', function () {
+      expect(controller.model.pstn.quantity).toEqual(2);
       expect(controller.model.tollFree.quantity).toEqual(1);
     });
 

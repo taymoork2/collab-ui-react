@@ -1,0 +1,62 @@
+<form name="$ctrl.form" isolate-form novalidate>
+  <div class="flex-search" ng-class="{error: ($ctrl.form.search.$error.pattern || $ctrl.form.search.$error.invalid) && $ctrl.form.search.$touched}">
+    <input type="text" name="search" autocomplete="off" ng-model="$ctrl.searchVal" ng-change="$ctrl.searchChange()" placeholder="{{::'pstnSetup.pstnSelector.searchPlaceholder' | translate}}" pattern="^\d{3}(\d{3})?$" ng-maxlength="$ctrl.maxLength" maxlength="{{$ctrl.maxLength}}" required>
+    <button ng-disabled="$ctrl.form.$invalid" class="btn-primary" ng-click="$ctrl.onSearch()">
+      <span translate="common.search"></span>
+    </button>
+  </div>
+  <p class="cs-input__help-text" translate="pstnSetup.pstnSelector.searchDesc"></p>
+  <div ng-class="{error: ($ctrl.form.search.$error.pattern || $ctrl.form.search.$error.invalid) && $ctrl.form.search.$touched}">
+    <div class="cs-input__messages" ng-if="$ctrl.form.search.$error.pattern">
+      <div class="message" translate="pstnSetup.pstnSelector.invalidFormat"></div>
+    </div>
+    <div class="cs-input__messages" ng-if="$ctrl.form.search.$error.invalid">
+      <div class="message" translate="pstnSetup.pstnSelector.unavailableNPA"></div>
+    </div>
+  </div>
+  <div class="row collapse-both block" ng-if="!$ctrl.simple">
+    <div class="search-options">
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.model.block"
+        id="blockChk{{$ctrl.numberType}}"
+        name="blockChk{{$ctrl.numberType}}"
+        ng-click="$ctrl.blockClick()"
+        cs-input-label="{{::'pstnSetup.block' | translate}}">
+
+      <i class="icon icon-info" tooltip="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
+    </div>
+    <div class="medium-4 columns" ng-if="$ctrl.model.block">
+      <input
+        id="quantity{{$ctrl.numberType}}"
+        name="quantity{{$ctrl.numberType}}"
+        type="number"
+        placeholder="{{::'pstnSetup.quantity' | translate}}"
+        min="2"
+        max="100"
+        ng-model="$ctrl.model.quantity"
+        ng-disabled="!$ctrl.model.block"
+        ng-required="$ctrl.model.block">
+      <div ng-if="$ctrl.form['quantity'+$ctrl.numberType].$valid === false && $ctrl.model.block">
+        <p translate="pstnSetup.quantityRange"></p>
+      </div>
+    </div>
+    <div class="search-options" ng-if="$ctrl.model.block">
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="$ctrl.model.consecutive"
+          ng-disabled="!$ctrl.model.block"
+          id="consecutiveChk"
+          name="consecutiveChk"
+          cs-input-label="{{::'pstnSetup.consecutive' | translate}}">
+      <i class="icon icon-info"
+          tooltip="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}"
+          tooltip-trigger="mouseenter"
+          tooltip-placement="right"
+          tooltip-animation="false"
+      ></i>
+    </div>
+  </div>
+</form>
