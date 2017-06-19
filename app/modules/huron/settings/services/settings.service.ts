@@ -196,8 +196,8 @@ export class HuronSettingsService {
               // will be allowed when extension length is increased, so the data copy value will be
               // correct.  Doing this allows us to not pass the routingPrefix around in components
               // that don't care about it.
-              const postalCode = this.deriveVoicemailPostalCode(this.huronSettingsDataCopy.site.routingPrefix || '', newExtensionLength);
-              return this.updateVoicemailPostalCode(userTemplate.objectId, postalCode);
+              const vmAddress = this.deriveVoicemailAddress(this.huronSettingsDataCopy.site.routingPrefix || '', newExtensionLength, extensionPrefix);
+              return this.updateVoicemailAddress(userTemplate.objectId, vmAddress);
             });
         }
       });
@@ -436,8 +436,8 @@ export class HuronSettingsService {
             if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
               || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
               || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)) {
-              const postalCode = this.deriveVoicemailPostalCode(siteData.routingPrefix || '', siteData.extensionLength);
-              promises.push(this.updateVoicemailPostalCode(userTemplate.objectId, postalCode));
+              const vmaddress = this.deriveVoicemailAddress(siteData.routingPrefix || '', siteData.extensionLength, '');
+              promises.push(this.updateVoicemailAddress(userTemplate.objectId, vmaddress));
             }
             if (!_.isEqual(this.huronSettingsDataCopy.site.timeZone, siteData.timeZone)
               || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)) {
@@ -501,10 +501,10 @@ export class HuronSettingsService {
       });
   }
 
-  private updateVoicemailPostalCode(userTemplateId: string, postalCode: string): ng.IPromise<void> {
-    return this.ServiceSetup.updateVoicemailPostalcode(postalCode, userTemplateId)
+  private updateVoicemailAddress(userTemplateId: string, address: string): ng.IPromise<void> {
+    return this.ServiceSetup.updateVoicemailUserTemplate({ address: address }, userTemplateId)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.error.updateVoicemailPostalCode'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.error.updateVoicemailAddress'));
       });
   }
 
@@ -515,10 +515,8 @@ export class HuronSettingsService {
       });
   }
 
-  private deriveVoicemailPostalCode(routingPrefix: string, extensionLength: string): string {
-    const steeringDigit = _.isUndefined(routingPrefix) ? '' : routingPrefix.charAt(0);
-    const siteCode = _.isUndefined(routingPrefix) ? '' : routingPrefix.substr(1);
-    return [steeringDigit, siteCode, extensionLength].join('-');
+  private deriveVoicemailAddress(routingPrefix: string, extensionLength: string, extensionPrefix: string): string {
+    return [routingPrefix, extensionLength, extensionPrefix].join('-');
   }
 
   private saveAutoAttendantSite(site: ISite): ng.IPromise<void> {
