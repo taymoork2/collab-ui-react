@@ -95,7 +95,7 @@ export class HybridServicesExtrasService {
   private translateWithFallback(alarmKey: string, fallback: string, translateReplacements: any) {
     const translationKey = `hercules.serviceAlarms.${alarmKey}`;
     const translation = this.$translate.instant(translationKey, translateReplacements);
-    return translation === translationKey ? fallback : translation;
+    return _.includes(translation, translationKey) ? fallback : translation;
   }
 }
 
