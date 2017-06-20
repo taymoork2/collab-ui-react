@@ -77,6 +77,7 @@
       getAccessTokenPostData: getAccessTokenPostData,
       getNewAccessTokenPostData: getNewAccessTokenPostData,
       getOAuthClientRegistrationCredentials: getOAuthClientRegistrationCredentials,
+      getOAuthRevokeUserTokenUrl: getOAuthRevokeUserTokenUrl,
     };
 
     // public
@@ -92,6 +93,10 @@
 
     function getOauthDeleteRefreshTokenUrl() {
       return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user?refreshtokens=';
+    }
+
+    function getOAuthRevokeUserTokenUrl() {
+      return getOauth2Url() + 'tokens?username=';
     }
 
     function getOAuthClientRegistrationCredentials() {

@@ -1541,14 +1541,32 @@
               service: 'CONTACTCENTER',
             },
           })
-          .state('user-overview.userProfile', {
+          .state('user-overview.user-profile', {
+            templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
+            controller: 'UserRolesCtrl',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate, FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
+                  if (enabled) {
+                    _.set($state.get('user-overview.user-profile'), 'data.displayName', $translate.instant('usersPreview.userDetails'));
+                  } else {
+                    _.set($state.get('user-overview.user-profile'), 'data.displayName', $translate.instant('rolesPanel.roles'));
+                  }
+                });
+              },
+            },
+          })
+          .state('user-overview.roles-and-security', {
             templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
             controller: 'UserRolesCtrl',
             data: {
-              displayName: 'Roles',
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                _.set($state.get('user-overview.roles-and-security'), 'data.displayName', $translate.instant('usersPreview.rolesAndSecurity'));
+              },
             },
           })
-
           .state('user-overview.cmc', {
             template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
             params: {

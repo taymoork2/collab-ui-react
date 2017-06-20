@@ -401,7 +401,14 @@
     "userDetails": "User Details",
     "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:",
     "notConfigured": "Not Configured",
-    "dirsyncToolTip": "Use DirSync to update the user's preferred language."
+    "dirsyncToolTip": "Use DirSync to update the user's preferred language.",
+    "rolesAndSecurity": "Roles and Security",
+    "security": "Security",
+    "resetAccessSuccess": "{{name}}'s access reset successfully. Please allow a few hours to take effect.",
+    "resetAccessFailure": "Unable to reset {{name}}'s access. Please try later.",
+    "resetAccess": "Reset Access",
+    "learnMore": "Learn more.",
+    "resetAccessDetail": "Revoke user access tokens for the Cisco Spark app on desktop, web, and mobile. This deletes any cached content and prompts the user to sign in again."
   },
   "tabs": {
     "overviewTab": "Overview",

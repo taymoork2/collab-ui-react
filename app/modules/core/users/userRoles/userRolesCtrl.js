@@ -3,13 +3,11 @@ require('./_user-roles.scss');
 (function () {
   'use strict';
 
-  angular.module('Squared')
-    .controller('UserRolesCtrl', UserRolesCtrl);
+  module.exports = UserRolesCtrl;
 
   /* @ngInject */
-  function UserRolesCtrl($q, $scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, FeatureToggleService, EdiscoveryService) {
+  function UserRolesCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, EdiscoveryService, FeatureToggleService, Log, Notification, Orgservice, SessionStorage, Userservice) {
     var COMPLIANCE = 'compliance';
-
     $scope.currentUser = $stateParams.currentUser;
     $scope.sipAddr = '';
     $scope.dirsyncEnabled = false;
@@ -22,9 +20,11 @@ require('./_user-roles.scss');
     FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerManagement).then(function (result) {
       $scope.showPartnerManagementRole = result;
     });
+
     $scope.showOrderAdminRole = false;
     $scope.showComplianceRole = false;
     $scope.updateRoles = updateRoles;
+    $scope.resetAccess = resetAccess;
     $scope.clearCheckboxes = clearCheckboxes;
     $scope.supportCheckboxes = supportCheckboxes;
     $scope.partialCheckboxes = partialCheckboxes;
@@ -33,6 +33,10 @@ require('./_user-roles.scss');
     $scope.partnerManagementOnCheckedHandler = partnerManagementOnCheckedHandler;
     $scope.resetFormData = resetFormData;
     $scope.enableReadonlyAdminOption = false;
+    $scope.enableRolesAndSecurityOption = false;
+    $scope.showUserDetailSection = true;
+    $scope.showSecuritySection = false;
+    $scope.showRolesSection = true;
     $scope.rolesObj = {
       adminRadioValue: 0,
     };
@@ -70,7 +74,6 @@ require('./_user-roles.scss');
     };
 
     $scope.checkAdminDisplayName = checkAdminDisplayName;
-
     $scope.updatingUser = false;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function () {
@@ -80,7 +83,20 @@ require('./_user-roles.scss');
     FeatureToggleService.supports(FeatureToggleService.features.atlasComplianceRole).then(function (enabled) {
       $scope.showComplianceRole = !!enabled;
     });
-
+    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
+      $scope.enableRolesAndSecurityOption = enabled;
+      if ($scope.enableRolesAndSecurityOption) {
+        if ($state.current.name === 'user-overview.user-profile') {
+          $scope.showUserDetailSection = true;
+          $scope.showSecuritySection = false;
+          $scope.showRolesSection = false;
+        } else if ($state.current.name === 'user-overview.roles-and-security') {
+          $scope.showUserDetailSection = false;
+          $scope.showSecuritySection = true;
+          $scope.showRolesSection = true;
+        }
+      }
+    });
     initView();
 
     ///////////////////////////
@@ -181,10 +197,14 @@ require('./_user-roles.scss');
       setFormValuesToMatchRoles();
       setFormUserData();
       if (_.has($scope, 'rolesEdit.form')) {
-        _.attempt($scope.rolesEdit.form.$setPristine);
-        _.attempt($scope.rolesEdit.form.$setUntouched);
-        _.attempt($scope.rolesEdit.form.displayName.$setValidity('notblank', true));
-        _.attempt($scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', true));
+        $scope.rolesEdit.form.$setPristine();
+        $scope.rolesEdit.form.$setUntouched();
+        if ($scope.showUserDetailSection) {
+          $scope.rolesEdit.form.displayName.$setValidity('notblank', true);
+        }
+        if ($scope.showRolesSection) {
+          $scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', true);
+        }
       }
     }
 
@@ -349,12 +369,14 @@ require('./_user-roles.scss');
     }
 
     function patchUserRoles() {
-      var roles = rolesFromScope();
-      if (!_.isEqual(roles, $scope.initialRoles)) {
-        return Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles)
-          .then(function (response) {
-            $scope.currentUser.roles = response.data.userResponse[0].roles;
-          });
+      if ($scope.showRolesSection) {
+        var roles = rolesFromScope();
+        if (!_.isEqual(roles, $scope.initialRoles)) {
+          return Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles)
+            .then(function (response) {
+              $scope.currentUser.roles = response.data.userResponse[0].roles;
+            });
+        }
       }
     }
 
@@ -370,7 +392,9 @@ require('./_user-roles.scss');
           attributes: [],
         },
       };
-
+      if (!$scope.showUserDetailSection) {
+        return;
+      }
       if ($scope.formUserData.name) {
         if ($scope.formUserData.name.givenName) {
           userData.name['givenName'] = $scope.formUserData.name.givenName;
@@ -447,6 +471,9 @@ require('./_user-roles.scss');
     function checkAdminDisplayName() {
       // If the user is an admin user,
       // the first name, last name and display name cannot be all blank.
+      if (!$scope.showUserDetailSection) {
+        return;
+      }
       if ($scope.rolesObj.adminRadioValue !== 0) {
         var firstName = _.get($scope.formUserData, 'name.givenName', null);
         var lastName = _.get($scope.formUserData, 'name.familyName', null);
@@ -456,7 +483,9 @@ require('./_user-roles.scss');
       } else {
         $scope.rolesEdit.form.displayName.$setValidity('notblank', true);
       }
-      $scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', getPartialAdminValidity());
+      if ($scope.showRolesSection) {
+        $scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', getPartialAdminValidity());
+      }
     }
 
     function orderadminOnCheckedHandler() {
@@ -483,6 +512,21 @@ require('./_user-roles.scss');
       } else {
         return true;
       }
+    }
+
+    function resetAccess() {
+      $scope.resettingAccess = true;
+      var userName = $scope.currentUser.userName;
+      Auth.revokeUserAuthTokens(userName)
+        .then(function () {
+          Notification.success('usersPreview.resetAccessSuccess', { name: userName });
+        })
+        .catch(function errorHandler(response) {
+          Notification.errorResponse(response, 'usersPreview.resetAccessFailure', { name: userName });
+        })
+        .finally(function () {
+          $scope.resettingAccess = false;
+        });
     }
   }
 })();
