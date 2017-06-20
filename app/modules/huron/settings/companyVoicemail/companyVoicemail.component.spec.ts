@@ -131,7 +131,7 @@ describe('Component: companyVoicemail', () => {
       this.$scope.companyVoicemailEnabled = true;
       this.$scope.dialPlanCountryCode = '+1';
       this.$scope.site = {
-        voicemailPilotNumberGenerated: 'false',
+        voicemailPilotNumberGenerated: false,
         voicemailPilotNumber: '+19725551212',
       };
       this.$scope.$apply();

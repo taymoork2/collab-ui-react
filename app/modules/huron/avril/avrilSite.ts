@@ -68,7 +68,7 @@ export class AvrilFeatures implements IAvrilFeatures {
   } = {
     VM2E: false,
     VM2E_PT: false,
-    VM2S: true,
+    VM2S: false,
     VM2T: false,
     VMOTP: false,
   }) {
