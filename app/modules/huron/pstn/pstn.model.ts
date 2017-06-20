@@ -26,6 +26,7 @@ export class PstnModel {
   private isTrial: boolean;
   private countryCode: string;
   private esaSigned: boolean;
+  private esaDisclaimerAgreed: boolean;
 
   public constructor() {
     this.clear();
@@ -50,6 +51,7 @@ export class PstnModel {
     this.isTrial = true;
     this.countryCode = 'US';
     this.esaSigned = false;
+    this.esaDisclaimerAgreed = false;
   }
 
   public clearProviderSpecificData(): void {
@@ -217,6 +219,13 @@ export class PstnModel {
     this.countryCode = _countryCode;
   }
 
+  public isEsaDisclaimerAgreed(): boolean {
+    return this.esaDisclaimerAgreed;
+  }
+
+  public setEsaDisclaimerAgreed(_esaDisclaimerAgreed: boolean): void {
+    this.esaDisclaimerAgreed = _esaDisclaimerAgreed;
+  }
 }
 
 export default angular.module('huron.pstn.pstn-model', [

@@ -15,7 +15,7 @@ describe('Huron Functional: call-settings', () => {
   let customerName;
 
   beforeAll(done => {
-    customerName = os.userInfo().username + '_call-settings'
+    customerName = `${os.userInfo().username}_call-settings`;
 
     let offers = [];
     offers.push(new TrialOffer({
@@ -29,7 +29,7 @@ describe('Huron Functional: call-settings', () => {
 
     const trial = new AtlasTrial({
       customerName: customerName,
-      customerEmail: 'huron.ui.test.partner+' + customerName + '@gmail.com',
+      customerEmail: `huron.ui.test.partner+${customerName}@gmail.com`,
       offers: offers,
     });
 
@@ -56,51 +56,53 @@ describe('Huron Functional: call-settings', () => {
     navigation.expectDriverCurrentUrl('call-settingsnew');
   });
 
-  describe('Set a routing prefix', () => {
-    it('should show a routing prefix input when "Reserve a Prefix" radio is checked', () => {
-      utils.click(callSettings.reservePrefixRadio);
-      utils.expectIsDisplayed(callSettings.dialingPrefixInput, LONG_TIMEOUT);
-    });
-
-    it('should enable save button when valid entry is entered', () => {
-      utils.expectIsDisabled(callSettings.saveButton);
-      utils.sendKeys(callSettings.dialingPrefixInput, '8765');
-      utils.expectIsEnabled(callSettings.saveButton);
-    });
-
-    it('should popup warning modal on save', () => {
-      utils.click(callSettings.saveButton);
-      utils.waitForModal().then(() => {
-        utils.expectIsDisplayed(callSettings.dialPlanWarningModalTitle);
+  describe('Internal Dialing Section', () => {
+    describe('set a routing prefix', () => {
+      it('should show a routing prefix input when "Reserve a Prefix" radio is checked', () => {
+        utils.click(callSettings.reservePrefixRadio);
+        utils.expectIsDisplayed(callSettings.dialingPrefixInput, LONG_TIMEOUT);
       });
-    });
 
-    it('should save successfully', () => {
-      utils.click(callSettings.dialPlanWarningYesBtn).then(() => {
-        notifications.assertSuccess();
-      });
-    });
-  });
-
-  describe('add extension range', () => {
-    it('should display extension range inputs when "Add Extension Range" link is clicked', () => {
-      utils.click(callSettings.addExtensionRangeBtn);
-      utils.expectIsDisplayed(callSettings.beginRange, LONG_TIMEOUT);
-      utils.expectIsDisplayed(callSettings.endRange, LONG_TIMEOUT);
-    });
-
-    it('should enable save button when valid entries are entered', () => {
-      utils.expectIsDisabled(callSettings.saveButton);
-      utils.sendKeys(callSettings.beginRange, '400');
-      utils.sendKeys(callSettings.endRange, '499');
-      utils.waitUntilEnabled(callSettings.saveButton).then(() => {
+      it('should enable save button when valid entry is entered', () => {
+        utils.expectIsDisabled(callSettings.saveButton);
+        utils.sendKeys(callSettings.dialingPrefixInput, '8765');
         utils.expectIsEnabled(callSettings.saveButton);
       });
+
+      it('should popup warning modal on save', () => {
+        utils.click(callSettings.saveButton);
+        utils.waitForModal().then(() => {
+          utils.expectIsDisplayed(callSettings.dialPlanWarningModalTitle);
+        });
+      });
+
+      it('should save successfully', () => {
+        utils.click(callSettings.dialPlanWarningYesBtn).then(() => {
+          notifications.assertSuccess();
+        });
+      });
     });
 
-    it('should save successfully', () => {
-      utils.click(callSettings.saveButton).then(() => {
-        notifications.assertSuccess();
+    describe('add extension range', () => {
+      it('should display extension range inputs when "Add Extension Range" link is clicked', () => {
+        utils.click(callSettings.addExtensionRangeBtn);
+        utils.expectIsDisplayed(callSettings.beginRange, LONG_TIMEOUT);
+        utils.expectIsDisplayed(callSettings.endRange, LONG_TIMEOUT);
+      });
+
+      it('should enable save button when valid entries are entered', () => {
+        utils.expectIsDisabled(callSettings.saveButton);
+        utils.sendKeys(callSettings.beginRange, '400');
+        utils.sendKeys(callSettings.endRange, '499');
+        utils.waitUntilEnabled(callSettings.saveButton).then(() => {
+          utils.expectIsEnabled(callSettings.saveButton);
+        });
+      });
+
+      it('should save successfully', () => {
+        utils.click(callSettings.saveButton).then(() => {
+          notifications.assertSuccess();
+        });
       });
     });
   });

@@ -253,7 +253,7 @@
     function translateWithFallback(messageKey, fallback, translateReplacements) {
       var translationKey = 'hercules.userStatusMessages.' + messageKey;
       var translation = $translate.instant(translationKey, translateReplacements);
-      return translation === translationKey ? fallback : translation;
+      return _.includes(translation, translationKey) ? fallback : translation;
     }
 
     function convertToTranslateReplacements(messageReplacementValues) {

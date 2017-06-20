@@ -75,7 +75,6 @@ describe('placeOverview component', () => {
 
       spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.resolve('0q9u09as09vu0a9sv'));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
-      spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve({}));
       spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve({}));
       spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve({}));
       spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
@@ -181,7 +180,6 @@ describe('placeOverview component', () => {
                 csdmHybridCalendarFeature: false,
                 hybridCalendarEnabledOnOrg: false,
                 hybridCallEnabledOnOrg: false,
-                atlasHerculesGoogleCalendarFeatureToggle: false,
                 admin: {
                   firstName: adminFirstName,
                   lastName: adminLastName,
@@ -236,7 +234,6 @@ describe('placeOverview component', () => {
                 csdmHybridCalendarFeature: false,
                 hybridCalendarEnabledOnOrg: false,
                 hybridCallEnabledOnOrg: false,
-                atlasHerculesGoogleCalendarFeatureToggle: false,
                 admin: {
                   firstName: adminFirstName,
                   lastName: adminLastName,
@@ -285,7 +282,6 @@ describe('placeOverview component', () => {
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(showHybrid));
       spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve({}));
-      spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve({}));
       spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
       const currentUser: any = {
         success: true,
@@ -332,7 +328,6 @@ describe('placeOverview component', () => {
             csdmHybridCalendarFeature: false,
             hybridCalendarEnabledOnOrg: false,
             hybridCallEnabledOnOrg: false,
-            atlasHerculesGoogleCalendarFeatureToggle: false,
             account: {
               deviceType: 'cloudberry',
               type: 'shared',

@@ -46,7 +46,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     this.$log.debug('searchStr', searchStr );
     this.searchStr = searchStr;
     this.$log.debug('user statuses', this.fetchedUserStatuses);
-    this.userStatuses = this.$filter('filter')(this.fetchedUserStatuses, { displayName: this.searchStr });
+    this.userStatuses = this.$filter('filter')(this.fetchedUserStatuses, { userName: this.searchStr });
   }
 
   public updateGridAtResize = () => {

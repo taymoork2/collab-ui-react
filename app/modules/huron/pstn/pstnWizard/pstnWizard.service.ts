@@ -164,7 +164,7 @@ export class PstnWizardService {
   }
 
   private logESAAcceptance(): ng.IPromise<any> {
-    if (!this.PstnModel.isEsaSigned()) {
+    if (!this.PstnModel.isEsaSigned() && this.PstnModel.isEsaDisclaimerAgreed()) {
       return this.PstnService.updateCustomerE911Signee(this.PstnModel.getCustomerId())
         .catch(response => {
           this.Notification.errorResponse(response, 'pstnSetup.esaSignatureFailed');

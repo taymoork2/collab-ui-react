@@ -44,7 +44,6 @@ describe('CallConnectOptions component:', () => {
                 enableCalService: enableCalService,
                 entitlements: ['webex-squared', FUSION_HYBRID_EC, FUSION_HYBRID_UC],
               },
-              atlasHerculesGoogleCalendarFeatureToggle: true,
               function: wFunction,
             },
           };
