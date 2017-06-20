@@ -169,7 +169,7 @@
       on-acknowledge="$ctrl.onAcknowledge(value)">
     </uc-pstn-swivel-numbers>
   </div>
-  <div ng-if="$ctrl.step == 10" class="pstn-review">
+  <div ng-if="$ctrl.step == 10" class="pstn-review swivel-pstn-review">
     <div class="review-container">
       <i class="icon icon-circle-call"></i>
       <h1 class="title" translate="pstnSetup.reviewSummary"></h1>
@@ -178,19 +178,19 @@
           <div class="package-detail-label">
             <div translate="pstnSetup.pstnMethod"></div>
             <div class="detail-text" translate="pstnSetup.privatePstnTrunk" ></div>
-            <div translate="pstnSetup.numbersTitle"></div>
-            <div class="detail-text" translate="pstnSetup.importNumbersTitle" translate-value-count="{{::$ctrl.swivelNumbers.length}}"></div>
+            <div translate="pstnSetup.numbers" translate-value-count="{{::$ctrl.swivelNumbers.length}}" translate-interpolation="messageformat"></div>
+            <div class="detail-text" translate="pstnSetup.importNumbersTitle" translate-value-count="{{::$ctrl.swivelNumbers.length}}" translate-interpolation="messageformat"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div ng-if="$ctrl.step == 11" class="pstn-next-steps">
-    <div class="flex-container">
+    <div class="flex-container swivel-pstn-next-steps">
       <i class="icon icon-check-mark-success"></i>
       <h3 translate="pstnSetup.thankYou"></h3>
       <h2 ng-if="$ctrl.swivelNumbers.length === 0" translate="pstnSetup.privatePstnFinalized"></h2>
-      <h2 ng-if="$ctrl.swivelNumbers.length !== 0" translate="pstnSetup.privatePstnNumbersImported"></h2>
+      <h2 ng-if="$ctrl.swivelNumbers.length !== 0" translate="pstnSetup.privatePstnNumbersImported" translate-value-count="{{::$ctrl.swivelNumbers.length}}" translate-interpolation="messageformat"></h2>
       <div ng-if="$ctrl.swivelNumbers.length !== 0">
         <button class="left btn btn--people" ng-click="$ctrl.launchCustomerPortal()" translate="pstnSetup.launchPortal">
         </button>
@@ -205,7 +205,6 @@
     ng-click="$ctrl.onSkip()"
     translate="trialModal.skip">
   </button>
-
   <button ng-hide="$ctrl.hideBackBtn()" class="btn with-slim-offset offset-l no-animate"
     ng-click="$ctrl.previousStep()"
     translate="common.back">

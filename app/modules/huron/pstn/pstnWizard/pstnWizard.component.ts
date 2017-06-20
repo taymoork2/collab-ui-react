@@ -329,7 +329,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 5:
         return !this.emergencyAcknowledge;
       case 9:
-        return this.blockByopNumberAddForPartnerAdmin;
+        return this.blockByopNumberAddForPartnerAdmin || this.swivelNumbers.length === 0;
     }
     return false;
   }
