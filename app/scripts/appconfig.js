@@ -962,13 +962,13 @@
             template: '<div ui-view class="flex-container flex-item-resize"></div>',
           })
           .state('users.manage.advanced.add.ob.installConnector', {
-            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html',
+            templateUrl: 'modules/core/users/userManage/userManageInstallConnector.tpl.html',
           })
           .state('users.manage.advanced.add.ob.syncStatus', {
             templateUrl: 'modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html',
           })
           .state('users.manage.advanced.add.ob.dirsyncServices', {
-            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html',
+            templateUrl: 'modules/core/users/userManage/userManageAssignServices.tpl.html',
             controller: /* @ngInject */ function ($scope) {
               $scope.dirsyncInitForServices();
             },

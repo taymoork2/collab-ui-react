@@ -159,8 +159,8 @@ describe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have 6 tabs', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 5 tabs', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
@@ -171,8 +171,8 @@ describe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have the 7 steps', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
+    it('the wizard should have the 6 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
     });
 
     it('careSettings should have a single substep', function () {
@@ -210,9 +210,6 @@ describe('SetupWizardCtrl', function () {
 
     it('the wizard should have 4 tabs and no SSO setup if FTW', function () {
       _.set(this.$state, 'current.data.firstTimeSetup', true);
-      this.enabledFeatureToggles = [
-        this.FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
-      ];
 
       this.initController();
       this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
@@ -274,78 +271,6 @@ describe('SetupWizardCtrl', function () {
     this.$scope.$apply();
     this.expectStepOrder(['enterpriseSettings']);
     this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
-  });
-
-  describe('atlasFTSWRemoveUsersSSO feature test', function () {
-    beforeEach(function () {
-      this.Authinfo.isCSB.and.returnValue(false); // why isn't this default for testing?
-    });
-
-    describe('firstTimeSetup is false', function () {
-      describe('does not support consolidated first time setup wizard', function () {
-        beforeEach(initController);
-
-        it('the wizard should have 6 tabs', function () {
-          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
-        });
-
-        it('enterpriseSettings should have all steps', function () {
-          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-        });
-      });
-
-      describe('supports consolidated first time setup wizard', function () {
-        beforeEach(function () {
-          this.enabledFeatureToggles = [
-            this.FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
-          ];
-          this.initController();
-        });
-
-        it('the wizard should not have addUsers tab', function () {
-          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
-        });
-
-        it('enterpriseSettings should still have all steps', function () {
-          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-        });
-      });
-    });
-
-    describe('firstTimeSetup is true', function () {
-      beforeEach(function () {
-        _.set(this.$state, 'current.data.firstTimeSetup', true);
-      });
-
-      describe('does not support consolidated first time setup wizard', function () {
-        beforeEach(initController);
-
-        it('the wizard should have 6 tabs', function () {
-          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
-        });
-
-        it('enterpriseSettings should have all steps', function () {
-          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-        });
-      });
-
-      describe('supports consolidated first time setup wizard', function () {
-        beforeEach(function () {
-          this.enabledFeatureToggles = [
-            this.FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
-          ];
-          this.initController();
-        });
-
-        it('the wizard should not have addUsers tab', function () {
-          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
-        });
-
-        it('enterpriseSettings should only have sip uri step', function () {
-          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
-        });
-      });
-    });
   });
 
   describe('stateParams with onlyShowSingleTab and numberOfSteps', function () {
