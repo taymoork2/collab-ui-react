@@ -143,6 +143,7 @@ describe('Component: cmcUserDetails ', () => {
       meta: {
         organizationID: '1234',
       },
+      entitlements: ['cmc'],
     };
     return user;
   }
