@@ -153,7 +153,7 @@
     }
 
     function clickUserDetailsService(feature) {
-      $state.go('user-overview.' + feature.state, { 'preferredLanguageDetails': preferredLanguageDetails });
+      $state.go('user-overview.' + feature.state, { preferredLanguageDetails: preferredLanguageDetails });
     }
 
     function getDisplayableServices(serviceName) {

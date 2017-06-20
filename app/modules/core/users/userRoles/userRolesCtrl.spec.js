@@ -11,7 +11,7 @@ describe('Controller: UserRolesCtrl', function () {
 
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _$state_, _$translate_, _Config_, _$stateParams_, _$controller_, _Auth_, _Authinfo_, _FeatureToggleService_, _Log_, _Notification_, _SessionStorage_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _SessionStorage_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -64,8 +64,6 @@ describe('Controller: UserRolesCtrl', function () {
       setEntitledForCompliance: _.noop,
     };
   }));
-//$q, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, EdiscoveryService,
-//FeatureToggleService, Log, Notification, Orgservice, SessionStorage, Userservice) {
 
   function initController() {
     controller = $controller('UserRolesCtrl', {

@@ -821,7 +821,6 @@ describe('Auth Service', function () {
   describe('Revoke Access Token', function () {
     beforeEach(function () {
       OAuthConfig.getOAuthRevokeUserTokenUrl = jasmine.createSpy('getOAuthRevokeUserTokenUrl').and.returnValue('http://www.example.com/idb/oauth2/v1/tokens?username=');
-
     });
 
     it('revoke user token should be forbidden', function () {

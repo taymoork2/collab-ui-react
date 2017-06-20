@@ -1,7 +1,7 @@
 //TODO Change module name to "core.user.userRoles"
 
-let UserRoleService = require('./userRole.service');
-let UserRolesCtrl = require('./userRolesCtrl');
+const UserRoleService = require('./userRole.service');
+const UserRolesCtrl = require('./userRolesCtrl');
 
 import './_user-roles.scss';
 

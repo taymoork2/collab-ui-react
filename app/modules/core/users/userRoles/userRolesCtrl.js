@@ -74,7 +74,6 @@ require('./_user-roles.scss');
     };
 
     $scope.checkAdminDisplayName = checkAdminDisplayName;
-    $scope.resetAccess = resetAccess;
     $scope.updatingUser = false;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function () {

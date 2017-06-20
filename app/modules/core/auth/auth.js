@@ -20,8 +20,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $translate, Authinfo, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation, HuronCompassService, $window) {
-
+  function Auth($http, $injector, $q, $sanitize, $translate, $window, Authinfo, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
     var service = {
       logout: logout,
       logoutAndRedirectTo: logoutAndRedirectTo,

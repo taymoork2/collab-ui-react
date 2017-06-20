@@ -174,10 +174,10 @@ describe('Component: sectionTitle', () => {
 
   describe('with an action', () => {
     beforeEach(function () {
-      this.actionSpy = jasmine.createSpy('actionFunction');
+      this.$scope.actionSpy = jasmine.createSpy('actionFunction');
       this.compileComponent('sectionTitle', {
         titleKey: 'custom.key',
-        onActionClick: 'actionSpy',
+        onActionClick: 'actionSpy()',
       });
     });
 
@@ -185,8 +185,10 @@ describe('Component: sectionTitle', () => {
       expect(this.view.find('.section-title-row .section-name')).toHaveText('custom.key');
     });
 
-    it('should have an arrow icon', function () {
+    it('should have an arrow icon and execute action', function () {
       expect(this.view).toContainElement('.icon-arrow-next');
+      this.view.find('.icon-arrow-next').click();
+      expect(this.$scope.actionSpy).toHaveBeenCalled();
     });
   });
 });
