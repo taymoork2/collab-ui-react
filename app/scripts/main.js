@@ -153,7 +153,10 @@
 
   angular.module('HDS', ['Core', 'Hercules']);
 
-  angular.module('Ediscovery', ['Core']);
+  angular.module('Ediscovery', [
+    'Core',
+    require('modules/ediscovery/bytes_filter'),
+  ]);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
