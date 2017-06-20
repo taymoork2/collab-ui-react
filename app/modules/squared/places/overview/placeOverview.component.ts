@@ -16,7 +16,6 @@ class PlaceOverview implements ng.IComponentController {
   private csdmHybridCalendarFeature = false;
   private hybridCalendarEnabledOnOrg = false;
   private hybridCallEnabledOnOrg = false;
-  private atlasHerculesGoogleCalendarFeatureToggle = false;
   public generateCodeIsDisabled = true;
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
@@ -91,9 +90,6 @@ class PlaceOverview implements ng.IComponentController {
     const placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
       this.csdmHybridCalendarFeature = feature;
     });
-    const gcalFeaturePromise = this.FeatureToggleService.atlasHerculesGoogleCalendarGetStatus().then(feature => {
-      this.atlasHerculesGoogleCalendarFeatureToggle = feature;
-    });
     const anyCalendarEnabledPromise = this.ServiceDescriptor.getServices().then(services => {
       this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
@@ -103,7 +99,7 @@ class PlaceOverview implements ng.IComponentController {
       }).some().value();
     });
 
-    this.$q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, anyCalendarEnabledPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
+    this.$q.all([ataPromise, hybridPromise, placeCalendarPromise, anyCalendarEnabledPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
       this.generateCodeIsDisabled = false;
     });
 
@@ -176,7 +172,6 @@ class PlaceOverview implements ng.IComponentController {
         csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
-        atlasHerculesGoogleCalendarFeatureToggle: this.atlasHerculesGoogleCalendarFeatureToggle,
         account: {
           deviceType: this.currentPlace.type,
           type: 'shared',
@@ -265,7 +260,6 @@ class PlaceOverview implements ng.IComponentController {
         csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
-        atlasHerculesGoogleCalendarFeatureToggle: this.atlasHerculesGoogleCalendarFeatureToggle,
         admin: this.adminUserDetails,
         account: {
           type: 'shared',

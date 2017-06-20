@@ -1,4 +1,6 @@
-// TODO: temporary copy from selenium-webdriver/remote to figure out what is happening with our file upload
+// keeping this forked file-detector for verbose logging
+// can replace with original 'selenium-webdriver/remote' in the future if necessary
+
 /* eslint-env es6 */
 /* eslint-disable */
 const AdmZip = require('adm-zip'),
@@ -32,11 +34,10 @@ class FileDetector extends input.FileDetector {
 
       var command = new cmd.Command(cmd.Name.UPLOAD_FILE)
           .setParameter('file', zip.toBuffer().toString('base64'));
-      console.log('command: ', command);
+      log('file-detector: ', command);
       return driver.schedule(command,
           'remote.FileDetector.handleFile(' + file + ')');
     }, function(err) {
-      console.log('error occurred in file detector: ', err);
       if (err.code === 'ENOENT') {
         return file;  // Not a file; return original input.
       }

@@ -48,10 +48,6 @@
     vm.isUser = !vm.isPlace;
     vm.isInvitePending = vm.getUser() && vm.isUser ? Userservice.isInvitePending(vm.getUser()) : false;
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
-      .then(function (supported) {
-        vm.atlasHerculesGoogleCalendarFeatureToggle = supported;
-      });
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp)
       .then(function (supported) {
         vm.atlasHybridImpFeatureToggle = supported;
@@ -143,7 +139,7 @@
           });
           var calServiceExchange = getExtension('squared-fusion-cal') || {};
           var calServiceGoogle = getExtension('squared-fusion-gcal');
-          if (calServiceGoogle && vm.atlasHerculesGoogleCalendarFeatureToggle) {
+          if (calServiceGoogle) {
             CloudConnectorService.getService()
               .then(function (service) {
                 var isSetup = service.setup;

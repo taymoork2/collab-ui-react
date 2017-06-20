@@ -7,11 +7,11 @@
     .controller('hybridServicesPanelCtrl', hybridServicesPanelCtrl);
 
   /* @ngInject */
-  function hybridServicesPanelCtrl(OnboardService, ServiceDescriptor, CloudConnectorService, Authinfo, $q, FeatureToggleService, $translate) {
+  function hybridServicesPanelCtrl(Authinfo, OnboardService, ServiceDescriptor, CloudConnectorService, $q, $translate) {
     var vm = this;
     vm.isEnabled = false;
     vm.entitlements = [];
-    vm.hasGoogleCalendarFeature = false;
+    vm.showCalendarChoice = Authinfo.isFusionGoogleCal();
     vm.services = {
       calendarEntitled: false,
       selectedCalendarType: null,
@@ -53,22 +53,14 @@
     vm.setEntitlements = setEntitlements;
     vm.hasHuronCallEntitlement = hasHuronCallEntitlement;
 
-    if (Authinfo.isEntitled('squared-fusion-gcal')) {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
-        .then(function (hasGoogleCalendarFeatureToggle) {
-          vm.hasGoogleCalendarFeature = hasGoogleCalendarFeatureToggle;
-          init();
-        });
-    } else {
-      init();
-    }
+    init();
 
     ////////////////
 
     function init() {
       $q.all({
         servicesFromFms: ServiceDescriptor.getServices(),
-        gcalService: vm.hasGoogleCalendarFeature ? CloudConnectorService.getService() : $q.resolve({}),
+        gcalService: CloudConnectorService.getService(),
       }).then(function (response) {
         vm.services.calendarExchange = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-cal');
         vm.services.callServiceAware = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-uc');

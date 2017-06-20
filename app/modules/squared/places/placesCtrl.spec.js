@@ -30,7 +30,6 @@ describe('Controller: PlacesCtrl', function () {
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve(true));
     spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
     spyOn(CsdmDataModelService, 'subscribeToChanges').and.returnValue(true);
   }
@@ -269,7 +268,6 @@ describe('Controller: PlacesCtrl', function () {
           expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
           expect(wizardState.function).toBe('addPlace');
           expect(wizardState.showATA).toBe(true);
-          expect(wizardState.atlasHerculesGoogleCalendarFeatureToggle).toBe(true);
           expect(wizardState.csdmHybridCalendarFeature).toBe(true);
           expect(wizardState.csdmHybridCallFeature).toBe(true);
           expect(wizardState.admin.firstName).toBe(adminFirstName);

@@ -1,6 +1,4 @@
 <div class="status-page">
-
-
   <div class="org-status">
 
     <div class="row state-header">
@@ -8,7 +6,7 @@
         <span translate="cmc.statusPage.sparkMobileConvergence" />
       </div>
       <div class="columns large-6">
-        <span translate="cmc.statusPage.serviceStatus" />
+        <span translate="cmc.statusPage.table.serviceStatus" />
       </div>
     </div>
     <div class="row state-body">
@@ -43,7 +41,7 @@
   <div class="user-status">
     <div>
       {{$ctrl.userStatusesSummaryText}}
-      <div class="gridStyle col-md-12 user-status-grid" ui-grid-infinite-scroll ui-grid="$ctrl.gridOptions"></div>
+      <div class="col-md-12 user-status-grid" ui-grid-infinite-scroll ui-grid="$ctrl.gridOptions"></div>
     </div>
   </div>
 </div>

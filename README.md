@@ -1,8 +1,9 @@
 # Atlas Contribution Guide
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
 ## About
 
-Take a moment to familiarize yourself with the following rules, guidelines, and contribution process.
+Please take a moment to familiarize yourself with the following rules, guidelines, and contribution process.
 
 Learn more about project specifics:
 * [npm scripts](docs/npm-scripts.md)

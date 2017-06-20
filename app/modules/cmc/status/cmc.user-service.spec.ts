@@ -65,8 +65,9 @@ describe('CmcUserService', () => {
         { userId: '4', state: 'c' },
       ],
     };
+
     this.$httpBackend
-      .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?limit=100&entitled=true&serviceId=squared-fusion-uc')
+      .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?serviceId=squared-fusion-uc&userId=1,2,3')
       .respond(userWithAwareResponse);
 
     const expectedResult: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse> {
@@ -83,18 +84,18 @@ describe('CmcUserService', () => {
     this.$httpBackend.flush();
   });
 
-  it('should insert display name to user statuses', function () {
+  it('should fetch name/info from CI and insert to user statuses', function () {
 
     const orgId = this.Authinfo.getOrgId();
 
-    const nameResolvedUsers = [
-      { id: '1', displayName: 'helge' },
-      { id: '3', displayName: 'anders' },
-    ];
-
     this.$httpBackend
-      .when('GET', this.UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/reports/devices?accountIds=1,2,3')
-      .respond(nameResolvedUsers);
+      .when('GET', encodeURI(this.UrlConfig.getScimUrl(orgId) + '?filter=id eq 1 or id eq 2 or id eq 3'))
+      .respond({
+        Resources: [
+          { id: '1', userName: 'helge', phoneNumbers: [{ type: 'mobile', value: '+4711111111' }] },
+          { id: '3', userName: 'anders', phoneNumbers: [{ type: 'mobile', value: '+4733333333' }] },
+        ],
+      });
 
     const userStatuses: ICmcUserStatus[] = <ICmcUserStatus[]> [
       { userId: '1', state: 'a' },
@@ -103,9 +104,9 @@ describe('CmcUserService', () => {
     ];
 
     const expectedResult: ICmcUserStatus[] = <ICmcUserStatus[]> [
-      { userId: '1', state: 'a', displayName: 'helge' },
+      { userId: '1', state: 'a', userName: 'helge', mobileNumber: '+4711111111' },
       { userId: '2', state: 'b' },
-      { userId: '3', state: 'c', displayName: 'anders' },
+      { userId: '3', state: 'c', userName: 'anders', mobileNumber: '+4733333333' },
     ];
 
     this.CmcUserService.insertUserDisplayNames(userStatuses).then((result) => {

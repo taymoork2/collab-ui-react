@@ -50,10 +50,10 @@
       margin: 1.5rem;
     }
     .search-filter {
-      margin: 0.5rem 2rem;
+      margin-left: 2rem;
+      padding-bottom: 0.5rem;
     }
     .org-status {
-      padding-left: 1rem;
       padding-top: 2rem;
       .state-header {
         border: 1px solid $gray-light-3;
@@ -61,6 +61,7 @@
         .columns {
           border-right: 1px solid $gray-light-3;
           padding: 0.75rem;
+          padding-left: 2rem;
           span {
             font-size: 1rem;
           }
@@ -69,6 +70,7 @@
       .state-body {
         background: $gray-dark-1;
         color: $brand-white;
+        padding-left: 1rem;
         .icon-circle-globe {
           font-size: 2rem;
           vertical-align: middle;
@@ -86,29 +88,35 @@
       padding: 0rem;
       border-bottom: 1px solid $gray-light-3;
     }
-    .stats {
-      padding: 0.5rem;
-      padding-left: 3rem;
-      padding-bottom: 2rem;
-    }
     .user-status {
-      margin-left: 1rem;
       .user-status-grid {
         background-color: $brand-white;
-        vertical-align: middle;
-        .icon.running {
-          color: $color-cta-base;
+
+        // Various 'hacks' to make grid render correctly
+        // * within remaining page height boundaries
+        // * independent on scrollbar in left main menu
+        height: calc(100vh - (450px));
+        .ui-grid-render-container {
+          left: -8px;
+          .ui-grid-header-cell:first-child {
+            padding-left: 1rem;
+          }
         }
-        .icon.error {
-          color: $color-negative-base;
+        .ui-grid-cell:first-child {
+          padding-left: 1rem;
+        }
+
+        .icon {
+          padding-right: 0.5rem;
+          top: 3px;
         }
       }
     }
-    .control-label {
-      color: $gray-dark-4;
+    .icon.running {
+      color: $color-cta-base;
     }
-    .vertical-space {
-      padding: 1.5rem;
+    .icon.error {
+      color: $color-negative-base;
     }
   }
 }

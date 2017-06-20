@@ -106,9 +106,8 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     buttonClass: 'btn-link',
   };
 
-  public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {
+  public fetchGoogleCalendar() {
     const serviceId = 'squared-fusion-gcal';
-    this.display = this.Authinfo.isFusionCal() && this.Authinfo.isFusionGoogleCal() && hasFeature;
     if (this.display) {
       // We only get the status for Hybrid Calendar that way
       this.CloudConnectorService.getService()
@@ -156,7 +155,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     private $state,
     private $q: ng.IQService,
     private $modal,
-    private Authinfo,
+    Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
   ) {
@@ -168,5 +167,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       name: 'servicesOverview.cards.hybridCalendar.title',
       template: 'modules/services-overview/hybridAndGoogleCalendarCard.tpl.html',
     });
+    this.display = Authinfo.isFusionCal() && Authinfo.isFusionGoogleCal();
+    this.fetchGoogleCalendar();
   }
 }

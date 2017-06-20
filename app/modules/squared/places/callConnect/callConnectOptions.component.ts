@@ -9,7 +9,6 @@ export class CallConnectOptions implements ng.IComponentController {
       entitlements: string[],
       externalLinkedAccounts: IExternalLinkedAccount[],
     },
-    atlasHerculesGoogleCalendarFeatureToggle,
     function: string,
   };
   private static hybridCalluc = 'squared-fusion-uc';

@@ -1581,6 +1581,7 @@
       "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of the Voicemail Access Prefix.",
       "autoAttendantPost": "Failed to save Auto Attendant Site information.",
       "updateVoicemailPostalCode": "Failed to update Voicemail Postal Code.",
+      "updateVoicemailAddress": "Failed to update Voicemail Address",
       "updateCustomerVoice": "Customer voice plan failed to update."
     },
     "warning": {
@@ -2783,10 +2784,15 @@
       "listingFirstActiveUsers": "Listing the first {{noOfActiveUsers}} active users",
       "callServiceAwareNotEntitled": "Not entitled for Call Aware",
       "sparkMobileConvergence": "Mobile Convergence",
-      "serviceStatus": "Service Status",
       "subHeading": "User Status Report",
       "status": {
         "active": "Active"
+      },
+      "table": {
+        "username": "User Name",
+        "mobileNumber": "Mobile Number",
+        "serviceStatus": "Service Status",
+        "lastUpdated": "Last Updated"
       }
     }
   },
