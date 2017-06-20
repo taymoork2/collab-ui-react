@@ -46,7 +46,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     this.$log.debug('searchStr', searchStr );
     this.searchStr = searchStr;
     this.$log.debug('user statuses', this.fetchedUserStatuses);
-    this.userStatuses = this.$filter('filter')(this.fetchedUserStatuses, { displayName: this.searchStr });
+    this.userStatuses = this.$filter('filter')(this.fetchedUserStatuses, { userName: this.searchStr });
   }
 
   public updateGridAtResize = () => {
@@ -164,6 +164,11 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     gridApi.infiniteScroll.on.needLoadMoreDataTop(this.$scope, () => {
       this.$log.debug('needLoadMoreDataTop');
     });
+
+    // gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
+    //   this.$log.warn('click XXXXXX click ', row)
+    // });
+
     this.gridApi = gridApi;
     this.$log.debug('gridApi', gridApi);
   }
