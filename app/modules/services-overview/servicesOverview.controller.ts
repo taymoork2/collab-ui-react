@@ -90,10 +90,6 @@ export class ServicesOverviewCtrl {
       this.forwardEvent('itProPackEventHandler', result);
     });
 
-    this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
-      .then(supports => {
-        this.forwardEvent('googleCalendarFeatureToggleEventHandler', supports);
-      });
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp)
       .then(supports => {
         this.forwardEvent('atlasHybridImpFeatureToggleEventHandler', supports);

@@ -290,12 +290,13 @@ exports.config = {
 };
 
 function Logger() {
-  var lastLogMessage = '';
+  var lastLogMessage;
   var lastLogMessageCount = 0;
 
-  function log(message) {
+  function log() {
     if (log.verbose || args.verbose) {
-      if (lastLogMessage === message) {
+      var message = Array.prototype.slice.call(arguments);
+      if (_.isEqual(lastLogMessage, message)) {
         lastLogMessageCount++;
       } else {
         if (lastLogMessage && lastLogMessageCount) {
@@ -303,7 +304,7 @@ function Logger() {
         }
         lastLogMessage = message;
         lastLogMessageCount = 0;
-        console.log(message);
+        console.log.apply(console.log, arguments);
       }
     }
   }

@@ -86,11 +86,6 @@
     };
     $scope.calendarType.init();
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
-      .then(function (supported) {
-        $scope.atlasHerculesGoogleCalendarFeatureToggle = supported;
-      });
-
     FeatureToggleService.calsvcShowPreferredSiteNameGetStatus().then(function (toggle) {
       $scope.extension.hasShowPreferredWebExSiteNameFeatureToggle = toggle;
       if (toggle) {

@@ -50,7 +50,6 @@ describe('EditCalendarService component:', () => {
                 return {
                   data: {
                     account: { entitlements: ['webex-squared', 'spark'] },
-                    atlasHerculesGoogleCalendarFeatureToggle: true,
                   },
                 };
               },
@@ -85,7 +84,6 @@ describe('EditCalendarService component:', () => {
                 return {
                   data: {
                     account: { entitlements: ['webex-squared', 'spark'] },
-                    atlasHerculesGoogleCalendarFeatureToggle: true,
                   },
                 };
               },
@@ -120,7 +118,6 @@ describe('EditCalendarService component:', () => {
                 return {
                   data: {
                     account: { entitlements: ['webex-squared', 'spark'] },
-                    atlasHerculesGoogleCalendarFeatureToggle: true,
                   },
                 };
               },
@@ -297,7 +294,6 @@ describe('EditCalendarService component:', () => {
           return {
             data: {
               account: { entitlements: ['webex-squared', 'spark'], cisUuid: id },
-              atlasHerculesGoogleCalendarFeatureToggle: true,
             },
           };
         },

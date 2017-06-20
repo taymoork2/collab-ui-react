@@ -27,35 +27,24 @@ describe('ServicesOverviewHybridCallCard', () => {
     expect(card.loading).toBe(true);
   });
 
-  it('should be displayed if the user has the hybrid cal entitlement but neither the hybrid google cal entitlement not the feature toggle', () => {
+  it('should be displayed if the user has the hybrid cal entitlement but not the hybrid google cal entitlement', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(false);
     card = new ServicesOverviewHybridCalendarCard(Authinfo, HybridServicesClusterStatesService);
-    card.googleCalendarFeatureToggleEventHandler(false);
     expect(card.display).toBe(true);
   });
 
-  it('should be displayed if the user has the hybrid cal entitlement and the feature toggle but not the hybrid google cal entitlement', () => {
+  it('should not be displayed if the user has the hybrid cal entitlement and the hybrid google cal entitlement', () => {
     Authinfo.isFusionCal.and.returnValue(true);
+    Authinfo.isFusionGoogleCal.and.returnValue(true);
+    card = new ServicesOverviewHybridCalendarCard(Authinfo, HybridServicesClusterStatesService);
+    expect(card.display).toBe(false);
+  });
+
+  it('should not be displayed if the user have neither the hybrid cal entitlement nor the hybrid google cal entitlement', () => {
+    Authinfo.isFusionCal.and.returnValue(false);
     Authinfo.isFusionGoogleCal.and.returnValue(false);
     card = new ServicesOverviewHybridCalendarCard(Authinfo, HybridServicesClusterStatesService);
-    card.googleCalendarFeatureToggleEventHandler(true);
-    expect(card.display).toBe(true);
-  });
-
-  it('should be displayed if the user has the hybrid cal entitlement and the hybrid google cal entitlement but not the feature toggle', () => {
-    Authinfo.isFusionCal.and.returnValue(true);
-    Authinfo.isFusionGoogleCal.and.returnValue(true);
-    card = new ServicesOverviewHybridCalendarCard(Authinfo, HybridServicesClusterStatesService);
-    card.googleCalendarFeatureToggleEventHandler(false);
-    expect(card.display).toBe(true);
-  });
-
-  it('should not be displayed if the user the hybrid cal entitlement, the hybrid google cal entitlement and the feature toggle', () => {
-    Authinfo.isFusionCal.and.returnValue(true);
-    Authinfo.isFusionGoogleCal.and.returnValue(true);
-    card = new ServicesOverviewHybridCalendarCard(Authinfo, HybridServicesClusterStatesService);
-    card.googleCalendarFeatureToggleEventHandler(true);
     expect(card.display).toBe(false);
   });
 
