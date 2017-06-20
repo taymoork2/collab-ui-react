@@ -20,7 +20,6 @@ require('./_setup-wizard.scss');
     }
 
     function initToggles() {
-
       if (isFirstTimeSetup) {
         shouldRemoveSSOSteps = true;
       }
@@ -271,14 +270,14 @@ require('./_setup-wizard.scss');
           }],
         };
 
-        var userOrFinishTabIndex = _.findIndex(tabs, function (tab) {
+        var finishTabIndex = _.findIndex(tabs, function (tab) {
           return (tab.name === 'finish');
         });
 
-        if (userOrFinishTabIndex === -1) { // finish tab not found
+        if (finishTabIndex === -1) { // finish tab not found
           tabs.push(careTab);
         } else {
-          tabs.splice(userOrFinishTabIndex, 0, careTab);
+          tabs.splice(finishTabIndex, 0, careTab);
         }
       }
     }

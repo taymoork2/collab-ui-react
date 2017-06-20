@@ -60,7 +60,7 @@ describe('Controller: WizardCtrl', function () {
       name: 'testSSO',
       template: 'modules/core/setupWizard/enterprise.testSSO.tpl.html',
     }],
-  }
+  },
   ];
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_,
