@@ -47,7 +47,7 @@ describe('Controller: UserRolesCtrl', function () {
 
     Orgservice = {
       getOrgCacheOption: _.noop,
-    }
+    };
     spyOn(Orgservice, 'getOrgCacheOption').and.callFake(function (callback) {
       callback({});
     });
@@ -58,7 +58,7 @@ describe('Controller: UserRolesCtrl', function () {
     });
     spyOn(Auth, 'revokeUserAuthTokens').and.callFake(function () {
       return $q.resolve();
-    });;
+    });
 
     EdiscoveryService = {
       setEntitledForCompliance: _.noop,

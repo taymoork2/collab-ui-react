@@ -204,5 +204,5 @@ module.exports = {
   csdmAtaReboot: 'csdm-ata-reboot',
   hI1484: 'h-i1484',
   hI1485: 'h-i1485',
-  atlasRolesAndSecurity: "atlas-roles-and-security",
+  atlasRolesAndSecurity: 'atlas-roles-and-security',
 };
