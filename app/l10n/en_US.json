@@ -2411,8 +2411,7 @@
         "defaultWarning": "Confirm Default Schedule",
         "postponeLabel": "The next available upgrade is scheduled to begin:",
         "postponeAction": "Postpone",
-        "postponeModalTitle": "Postpone Upgrade",
-        "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
+        "postponeSuccess": "Upgrade postponed. The next upgrade is schedule to begin on {{datetime}}."
       },
       "emergencyUpgrade": {
         "expressway": {
