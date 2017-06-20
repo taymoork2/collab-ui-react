@@ -4862,7 +4862,7 @@
   },
   "externalTransfer": {
     "title": "External Call Transfers/Conference",
-    "desc": "Choose whether external users are allowed to do external call transfers and conferences. This setting affects the entire organization; afterward you can override this setting for individual users."
+    "desc": "Choose whether external users are allowed to do external call transfers and conferences. This setting affects the entire organization, but you can override this setting for individual users afterward."
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
