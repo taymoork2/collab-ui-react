@@ -46,7 +46,8 @@ describe('Component: PstnWizardComponent', () => {
     spyOn(this.PstnModel, 'setOrders');
     spyOn(this.PstnWizardService, 'setSwivelOrder');
     spyOn(this.PstnWizardService, 'finalizeImport');
-    spyOn(this.PstnWizardService, 'blockByopNumberAdd');
+    spyOn(this.PstnWizardService, 'blockByopNumberAddForPartnerAdmin');
+    spyOn(this.PstnWizardService, 'blockByopNumberAddForAllAdmin');
     this.PstnWizardService.init.and.returnValue(this.$q.resolve());
     this.PstnWizardService.initSites.and.returnValue(this.$q.resolve());
     this.PstnService.listResellerCarriersV2.and.returnValue(this.$q.reject());
@@ -160,13 +161,13 @@ describe('Component: PstnWizardComponent', () => {
     });
 
     it('should go to the step 9 if admin is partner and ESA is unsigned', function () {
-      this.PstnWizardService.blockByopNumberAdd.and.returnValue(true);
+      this.PstnWizardService.blockByopNumberAddForPartnerAdmin.and.returnValue(true);
       this.controller.goToSwivelNumbers();
       expect(this.controller.step).toBe(9);
     });
 
     it('should skip from step 9 to 10 if customer has not been setup, admin is partner and ESA is unsigned', function () {
-      this.PstnWizardService.blockByopNumberAdd.and.returnValue(true);
+      this.PstnWizardService.blockByopNumberAddForPartnerAdmin.and.returnValue(true);
       this.PstnModel.isCustomerExists.and.returnValue(false);
       this.controller.goToSwivelNumbers();
       this.controller.onSkip();
@@ -174,7 +175,7 @@ describe('Component: PstnWizardComponent', () => {
     });
 
     it('should go back from step 10 to step 9 if customer has not been setup, admin is partner and ESA is unsigned', function () {
-      this.PstnWizardService.blockByopNumberAdd.and.returnValue(true);
+      this.PstnWizardService.blockByopNumberAddForPartnerAdmin.and.returnValue(true);
       this.PstnModel.isCustomerExists.and.returnValue(false);
       this.controller.goToSwivelNumbers();
       this.controller.onSkip();
@@ -182,9 +183,9 @@ describe('Component: PstnWizardComponent', () => {
       expect(this.controller.step).toBe(9);
     });
 
-    it('should skip from step 9 to dismissModal if customer has been setup and admin is partner', function () {
+    it('should skip from step 9 to dismissModal if customer has been setup', function () {
       spyOn(this.controller, 'dismissModal');
-      this.PstnWizardService.blockByopNumberAdd.and.returnValue(true);
+      this.PstnWizardService.blockByopNumberAddForAllAdmin.and.returnValue(true);
       this.PstnModel.isCustomerExists.and.returnValue(true);
       this.controller.goToSwivelNumbers();
       this.controller.onSkip();

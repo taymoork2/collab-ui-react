@@ -728,10 +728,14 @@ export class PstnWizardService {
     }
   }
 
-  public blockByopNumberAdd(): boolean {
+  public blockByopNumberAddForPartnerAdmin(): boolean {
     if (!this.Authinfo.isCustomerLaunchedFromPartner() && !this.Authinfo.isPartner()) {
       return false;
     }
+    return this.blockByopNumberAddForAllAdmin();
+  }
+
+  public blockByopNumberAddForAllAdmin(): boolean {
     return (this.isSwivel() && !this.PstnModel.isEsaSigned());
   }
 }

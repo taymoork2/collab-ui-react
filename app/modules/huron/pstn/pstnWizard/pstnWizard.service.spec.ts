@@ -130,16 +130,16 @@ describe('Service: PstnWizardService', () => {
     });
   });
 
-  describe('blockByopNumberAdd', function() {
+  describe('blockByopNumberAddForPartnerAdmin', function() {
 
     it('should not block number Add if admin is not partner', function() {
       spyOn(this.Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(false);
       spyOn(this.Authinfo, 'isPartner').and.returnValue(false);
 
-      const _blockByopNumberAdd = this.PstnWizardService.blockByopNumberAdd();
+      const _blockByopNumberAddForPartnerAdmin = this.PstnWizardService.blockByopNumberAddForPartnerAdmin();
       this.$rootScope.$digest();
 
-      expect(_blockByopNumberAdd).toBe(false);
+      expect(_blockByopNumberAddForPartnerAdmin).toBe(false);
     });
 
     it('should  block number Add if admin is partner', function() {
@@ -148,10 +148,10 @@ describe('Service: PstnWizardService', () => {
       spyOn(this.PstnModel, 'getProvider').and.returnValue(swivelProvider);
       spyOn(this.PstnModel, 'isEsaSigned').and.returnValue(false);
 
-      const _blockByopNumberAdd = this.PstnWizardService.blockByopNumberAdd();
+      const _blockByopNumberAddForPartnerAdmin = this.PstnWizardService.blockByopNumberAddForPartnerAdmin();
       this.$rootScope.$digest();
 
-      expect(_blockByopNumberAdd).toBe(true);
+      expect(_blockByopNumberAddForPartnerAdmin).toBe(true);
     });
   });
 
