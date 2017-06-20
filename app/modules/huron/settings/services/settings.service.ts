@@ -431,7 +431,14 @@ export class HuronSettingsService {
         return this.getVoicemailUserTemplate()
           .then(userTemplate => {
             if (!_.isEqual(this.huronSettingsDataCopy.voicemailToEmailSettings, voicemailToEmailData)) {
-              promises.push(this.setVoicemailToEmail(userTemplate.objectId, voicemailToEmailData));
+              if (!voicemailToEmailData.messageActionId) {
+                promises.push(this.getVoicemailToEmail(userTemplate.objectId).then(messageAction => {
+                  voicemailToEmailData.messageActionId = _.get<string>(messageAction, 'messageActionId');
+                  this.setVoicemailToEmail(userTemplate.objectId, voicemailToEmailData);
+                }));
+              } else {
+                promises.push(this.setVoicemailToEmail(userTemplate.objectId, voicemailToEmailData));
+              }
             }
             if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
               || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
@@ -483,7 +490,7 @@ export class HuronSettingsService {
   private setVoicemailToEmail(userTemplateId: string, voicemailToEmailSettings: IVoicemailToEmail): ng.IPromise<void> {
     return this.VoicemailMessageAction.update(voicemailToEmailSettings.voicemailToEmail, userTemplateId, voicemailToEmailSettings.messageActionId)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.voicemailToEmailUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.voicemailToEmailUpdateError'));
       });
   }
 

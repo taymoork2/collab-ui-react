@@ -43,8 +43,8 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     }
 
     if (site && site.currentValue) {
-      if (!_.isUndefined(_.get(site.currentValue, 'voicemailPilotNumber')) &&
-        _.get(site.currentValue, 'voicemailPilotNumberGenerated') === 'false') {
+      if (_.get(site.currentValue, 'voicemailPilotNumber') &&
+        _.get(site.currentValue, 'voicemailPilotNumberGenerated') === false) {
         this.externalVoicemailAccess = true;
         this.selectedNumber = this.setCurrentOption(_.get<string>(site.currentValue, 'voicemailPilotNumber'), this.externalNumberOptions);
       } else {

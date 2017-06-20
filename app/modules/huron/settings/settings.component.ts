@@ -287,7 +287,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   }
 
   public onVoicemailToEmailChanged(voicemailToEmail: boolean) {
-    _.set(this.huronSettingsData.voicemailToEmailSettings, 'voicemailToEmail', voicemailToEmail);
+    _.set(this.huronSettingsData, 'voicemailToEmailSettings.voicemailToEmail', voicemailToEmail);
     this.checkForChanges();
   }
 

@@ -3,13 +3,13 @@ import { AvrilFeatures } from 'modules/huron/avril';
 
 describe('Component: companyVoicemailAvril', () => {
   const VOICEMAIL_TOGGLE = 'input#companyVoicemailToggle';
-  const VM_TO_SPARK_RADIO = 'input#vmToSpark';
-  const VM_TO_PHONE_RADIO = 'input#vmToPhone';
-  const VM_TO_SPARK_AND_PHONE_RADIO = 'input#vmToSparkAndPhone';
+  const EXTERNAL_VM_CHECKBOX = 'input#externalVoicemailAccess';
   const VOICEMAIL_TO_EMAIL_CHECKBOX = 'input#voicemailToEmail';
   const WITH_ATTACHMENT_RADIO = 'input#withAttachment';
   const WITHOUT_ATTACHMENT_RADIO = 'input#withoutAttachment';
   const COMPANY_NUMBER_SELECT = '.csSelect-container[name="companyVoicemailNumber"]';
+  const MESSAGE_CONTAINER = '.msg-container';
+  const NO_EXTERNAL_NUMBER_WARNING = COMPANY_NUMBER_SELECT + ' ' + MESSAGE_CONTAINER;
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const GENERATED_VM_PILOT_NUMBER = '+150708071004091414081311041300051000081';
   const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbersOptions.json');
@@ -47,11 +47,8 @@ describe('Component: companyVoicemailAvril', () => {
       expect(this.view.find(VOICEMAIL_TOGGLE)).not.toBeChecked();
     });
 
-    it('should not have Delivery Methods radios or Voicemail to Email checkbox when voicemail is off', function() {
-      expect(this.view).not.toContainElement(VM_TO_SPARK_RADIO);
-      expect(this.view).not.toContainElement(VM_TO_PHONE_RADIO);
-      expect(this.view).not.toContainElement(VM_TO_SPARK_AND_PHONE_RADIO);
-      expect(this.view).not.toContainElement(COMPANY_NUMBER_SELECT);
+    it('should not have External Voicemail Access and Voicemail to Email checkboxes when voicemail is off', function() {
+      expect(this.view).not.toContainElement(EXTERNAL_VM_CHECKBOX);
       expect(this.view).not.toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
     });
   });
@@ -70,18 +67,16 @@ describe('Component: companyVoicemailAvril', () => {
 
     it('should have External Voicemail Access and Voicemail to Email checkboxes when voicemail is toggled on', function() {
       this.view.find(VOICEMAIL_TOGGLE).click();
-      expect(this.view).toContainElement(VM_TO_SPARK_RADIO);
-      expect(this.view).toContainElement(VM_TO_PHONE_RADIO);
-      expect(this.view).toContainElement(VM_TO_SPARK_AND_PHONE_RADIO);
+      expect(this.view).toContainElement(EXTERNAL_VM_CHECKBOX);
       expect(this.view).toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
     });
 
-    it('should disable Voicemail to Phone and Voicemail to Spark and Phone radios and display warning text when External Voicemail Access is checked.', function() {
+    it('should have an empty drop down list of numbers and display warning text when External Voicemail Access is checked.', function() {
       this.view.find(VOICEMAIL_TOGGLE).click();
-      expect(this.view.find(VM_TO_SPARK_RADIO)).toBeChecked();
-      expect(this.view.find(VM_TO_SPARK_RADIO)).not.toBeDisabled();
-      expect(this.view.find(VM_TO_PHONE_RADIO)).toBeDisabled();
-      expect(this.view.find(VM_TO_SPARK_AND_PHONE_RADIO)).toBeDisabled();
+      expect(this.view).toContainElement(EXTERNAL_VM_CHECKBOX);
+      this.view.find(EXTERNAL_VM_CHECKBOX).click();
+      expect(this.view).toContainElement(COMPANY_NUMBER_SELECT);
+      expect(this.view).toContainElement(NO_EXTERNAL_NUMBER_WARNING);
     });
   });
 
@@ -92,42 +87,27 @@ describe('Component: companyVoicemailAvril', () => {
       this.$scope.$apply();
     });
 
-    it('should have a drop down list of numbers and display warning text when Voicemail to Phone is checked.', function() {
+    it('should have a drop down list of numbers and display warning text when External Voicemail Access is checked.', function() {
       this.view.find(VOICEMAIL_TOGGLE).click();
-      expect(this.view).toContainElement(VM_TO_PHONE_RADIO);
-      this.view.find(VM_TO_PHONE_RADIO).click().click();
+      expect(this.view).toContainElement(EXTERNAL_VM_CHECKBOX);
+      this.view.find(EXTERNAL_VM_CHECKBOX).click();
       expect(this.view).toContainElement(COMPANY_NUMBER_SELECT);
       expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('(972) 555-1212');
       expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('(972) 555-1313');
       expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(2)).toHaveText('(972) 555-1414');
     });
 
-    it('should call onChangeFn when an external number is chosen for Voicemail to Phone', function() {
+    it('should call onChangeFn when an external number is chosen', function() {
       const avrilFeatures = new AvrilFeatures({
         VM2E: false,
         VM2E_PT: false,
         VM2S: false,
-        VM2T: true,
+        VM2T: false,
         VMOTP: false,
       });
       this.view.find(VOICEMAIL_TOGGLE).click();
-      expect(this.view).toContainElement(VM_TO_PHONE_RADIO);
-      this.view.find(VM_TO_PHONE_RADIO).click().click();
-      this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
-      expect(this.$scope.onChangeFn.calls.argsFor(2)).toEqual(['+19725551212', 'false', true, avrilFeatures]);
-    });
-
-    it('should call onChangeFn when an external number is chosen for Voicemail to Spark and Phone', function() {
-      const avrilFeatures = new AvrilFeatures({
-        VM2E: false,
-        VM2E_PT: false,
-        VM2S: true,
-        VM2T: true,
-        VMOTP: false,
-      });
-      this.view.find(VOICEMAIL_TOGGLE).click();
-      expect(this.view).toContainElement(VM_TO_SPARK_AND_PHONE_RADIO);
-      this.view.find(VM_TO_SPARK_AND_PHONE_RADIO).click().click();
+      expect(this.view).toContainElement(EXTERNAL_VM_CHECKBOX);
+      this.view.find(EXTERNAL_VM_CHECKBOX).click();
       this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
       expect(this.$scope.onChangeFn.calls.argsFor(2)).toEqual(['+19725551212', 'false', true, avrilFeatures]);
     });
@@ -144,7 +124,7 @@ describe('Component: companyVoicemailAvril', () => {
       const avrilFeatures = new AvrilFeatures({
         VM2E: true,
         VM2E_PT: false,
-        VM2S: true,
+        VM2S: false,
         VM2T: false,
         VMOTP: false,
       });
@@ -163,7 +143,7 @@ describe('Component: companyVoicemailAvril', () => {
       const avrilFeatures = new AvrilFeatures({
         VM2E: false,
         VM2E_PT: true,
-        VM2S: true,
+        VM2S: false,
         VM2T: false,
         VMOTP: false,
       });
