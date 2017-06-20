@@ -3674,7 +3674,7 @@
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "routeCallPopover": "Select how to route call.",
-    "selectPlaceHolder": "Search or Select",
+    "selectPlaceholder": "Search or Select",
     "selectVariablePlaceholder": "Select Variable",
     "validSip": "Enter a valid SIP address",
     "routeToSipInputShort": "Input is too short to be a valid SIP URI. E.g. 'sip:x-x-xxx-xxxx@voip-provider.eg.net'",
