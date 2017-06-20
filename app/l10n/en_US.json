@@ -4181,6 +4181,10 @@
     "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries.",
     "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}"
   },
+  "lineLabel": {
+    "title": "Line Label",
+    "description": "This label will appear next to this line on devices."
+  },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
     "error": "International Dialing configuration failed. ",
