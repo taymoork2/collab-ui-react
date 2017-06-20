@@ -7,7 +7,7 @@ require('./_partnerProfile.scss');
     .controller('PartnerProfileCtrl', PartnerProfileCtrl);
 
   /* @ngInject */
-  function PartnerProfileCtrl($q, $scope, $translate, $window, Authinfo, FeatureToggleService, FeedbackService, ITProPackService, Log, Notification, Orgservice, UserListService, Utils) {
+  function PartnerProfileCtrl($q, $scope, $translate, $window, Authinfo, FeatureToggleService, FeedbackService, ProPackService, Log, Notification, Orgservice, UserListService, Utils) {
     var orgId = Authinfo.getOrgId();
 
     // toggles api calls, show/hides divs based on customer or partner profile
@@ -205,7 +205,7 @@ require('./_partnerProfile.scss');
     var proPackEnabled = undefined;
     $scope.nameChangeEnabled = undefined;
     $q.all({
-      proPackEnabled: ITProPackService.hasITProPackPurchased(),
+      proPackEnabled: ProPackService.hasProPackPurchased(),
       nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
     }).then(function (toggles) {
       proPackEnabled = toggles.proPackEnabled;

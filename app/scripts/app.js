@@ -86,7 +86,7 @@
     require('modules/core/scripts/services/utils'),
     require('modules/core/scripts/services/log'),
     require('modules/core/storage').default,
-    require('modules/core/itProPack').default,
+    require('modules/core/proPack').default,
     require('modules/core/scripts/services/logmetricsservice'),
     require('modules/core/scripts/services/missing-translation-handler.factory').default,
     require('modules/core/scripts/services/responseinterceptor'),

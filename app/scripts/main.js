@@ -24,7 +24,7 @@
     'core.pageparam',
     'core.previousstate',
     'core.trackingId',
-    'core.itProPack',
+    'core.proPack',
     'core.trial',
     'core.utils',
     'csDonut',

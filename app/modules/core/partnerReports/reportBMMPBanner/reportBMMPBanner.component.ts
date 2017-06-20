@@ -7,11 +7,11 @@ class ReportBMMPBannerCtrl {
     private $q: ng.IQService,
     private Analytics,
     private BmmpService,
-    private ITProPackService,
+    private ProPackService,
   ) {
     this.$q.all({
-      isProPackEnabled: this.ITProPackService.hasITProPackEnabled(),
-      isProPackPurchased: this.ITProPackService.hasITProPackPurchased(),
+      isProPackEnabled: this.ProPackService.hasProPackEnabled(),
+      isProPackPurchased: this.ProPackService.hasProPackPurchased(),
     }). then((toggles: any): void => {
       this.isProPackEnabled = toggles.isProPackEnabled;
       this.isProPackPurchased = toggles.isProPackPurchased;

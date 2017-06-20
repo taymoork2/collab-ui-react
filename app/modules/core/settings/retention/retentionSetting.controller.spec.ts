@@ -5,7 +5,7 @@ describe('Controller: RetentionSettingController', () => {
 
   let controller: RetentionSettingController;
   let $scope, $controller, $q;
-  let RetentionService, Authinfo, ITProPackService;
+  let RetentionService, Authinfo, ProPackService;
   let secondRetentionOption: string;
 
   beforeEach(angular.mock.module(testModule));
@@ -13,13 +13,13 @@ describe('Controller: RetentionSettingController', () => {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _RetentionService_, _ITProPackService_, _Authinfo_) {
+  function dependencies($rootScope, _$controller_, _$q_, _RetentionService_, _ProPackService_, _Authinfo_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     RetentionService = _RetentionService_;
     Authinfo = _Authinfo_;
-    ITProPackService = _ITProPackService_;
+    ProPackService = _ProPackService_;
   }
 
   function initSpies() {
@@ -27,7 +27,7 @@ describe('Controller: RetentionSettingController', () => {
       sparkDataRetentionDays: secondRetentionOption,
     }));
     spyOn(RetentionService, 'setRetention').and.returnValue($q.resolve());
-    spyOn(ITProPackService, 'hasITProPackPurchasedOrNotEnabled').and.returnValue($q.resolve(false));
+    spyOn(ProPackService, 'hasProPackPurchasedOrNotEnabled').and.returnValue($q.resolve(false));
   }
 
   function initController() {

@@ -12,7 +12,7 @@ describe('Template: partnerProfile', function () {
       'Authinfo',
       'BrandService',
       'FeatureToggleService',
-      'ITProPackService',
+      'ProPackService',
       'Notification',
       'Orgservice',
       'WebexClientVersion',
@@ -21,7 +21,7 @@ describe('Template: partnerProfile', function () {
 
     spyOn(this.Authinfo, 'isPartner');
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorResponse');

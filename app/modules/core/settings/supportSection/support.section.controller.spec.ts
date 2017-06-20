@@ -16,7 +16,7 @@ describe('Controller: PartnerProfileCtrl', function () {
       'UserListService',
       'WebexClientVersion',
       'FeatureToggleService',
-      'ITProPackService',
+      'ProPackService',
     );
 
     spyOn(this.Notification, 'success');
@@ -27,7 +27,7 @@ describe('Controller: PartnerProfileCtrl', function () {
     spyOn(this.Orgservice, 'getOrg');
     spyOn(this.BrandService, 'getLogoUrl').and.returnValue(this.$q.resolve('logoUrl'));
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.WebexClientVersion, 'getWbxClientVersions').and.returnValue(this.$q.resolve());
     spyOn(this.WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue(this.$q.resolve());
     spyOn(this.WebexClientVersion, 'getTemplate').and.returnValue(this.$q.resolve());
@@ -194,10 +194,10 @@ describe('Controller: PartnerProfileCtrl', function () {
         expect(this.controller.nameChangeEnabled).toBeTruthy();
       });
 
-      it('getAppTitle should depend on hasITProPackPurchased', function () {
+      it('getAppTitle should depend on hasProPackPurchased', function () {
         expect(this.controller.getAppTitle()).toEqual('loginPage.titleNew');
 
-        this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+        this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
         this.initController();
         expect(this.controller.getAppTitle()).toEqual('loginPage.titlePro');
       });

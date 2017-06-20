@@ -3,12 +3,12 @@ import reportBanner from './index';
 describe('Component: reportCard', function () {
   beforeEach(function () {
     this.initModules(reportBanner);
-    this.injectDependencies('$componentController', '$q', '$scope', 'Analytics', 'BmmpService', 'ITProPackService');
+    this.injectDependencies('$componentController', '$q', '$scope', 'Analytics', 'BmmpService', 'ProPackService');
 
     spyOn(this.Analytics, 'trackPremiumEvent');
     spyOn(this.BmmpService, 'init');
-    spyOn(this.ITProPackService, 'hasITProPackEnabled').and.returnValue(this.$q.resolve(true));
-    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
 
     this.initController = (): void => {
       this.controller = this.$componentController('reportBmmpBanner', { }, { });
@@ -23,7 +23,7 @@ describe('Component: reportCard', function () {
     expect(this.BmmpService.init).toHaveBeenCalled();
 
     this.BmmpService.init.calls.reset();
-    this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+    this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
     this.initController();
     expect(this.controller.isProPackEnabled).toBeTruthy();
     expect(this.controller.isProPackPurchased).toBeTruthy();

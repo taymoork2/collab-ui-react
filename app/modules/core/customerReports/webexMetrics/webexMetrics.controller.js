@@ -11,7 +11,7 @@
     $timeout,
     $window,
     QlikService,
-    ITProPackService
+    ProPackService
   ) {
     var vm = this;
 
@@ -113,7 +113,7 @@
           }
           vm.webexSelected = webexSelected;
 
-          ITProPackService.getITProPackPurchased().then(function (isPurchased) {
+          ProPackService.getProPackPurchased().then(function (isPurchased) {
             if (isPurchased) {
               vm.reportView = 'Premium';
             }

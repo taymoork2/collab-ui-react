@@ -6,7 +6,7 @@
     .controller('AddResourceControllerClusterViewV2', AddResourceControllerClusterViewV2);
 
   /* @ngInject */
-  function AddResourceControllerClusterViewV2($translate, $state, $stateParams, $window, $q, AddResourceCommonServiceV2, FeatureToggleService, ITProPackService) {
+  function AddResourceControllerClusterViewV2($translate, $state, $stateParams, $window, $q, AddResourceCommonServiceV2, FeatureToggleService, ProPackService) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -32,7 +32,7 @@
 
     var proPackEnabled = undefined;
     $q.all({
-      proPackEnabled: ITProPackService.hasITProPackPurchased(),
+      proPackEnabled: ProPackService.hasProPackPurchased(),
       nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
     }).then(function (toggles) {
       proPackEnabled = toggles.proPackEnabled;

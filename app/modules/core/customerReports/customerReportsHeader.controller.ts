@@ -7,7 +7,7 @@ class CustomerReportsHeaderCtrl {
     private FeatureToggleService,
     private MediaServiceActivationV2,
     private WebExApiGatewayService,
-    private ITProPackService,
+    private ProPackService,
   ) {
     if (Authinfo.isCare()) {
       this.headerTabs.push({
@@ -64,7 +64,7 @@ class CustomerReportsHeaderCtrl {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
     mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
-    webexMetrics: this.ITProPackService.hasITProPackEnabled(),
+    webexMetrics: this.ProPackService.hasProPackEnabled(),
   };
 
   private checkWebex (): void {

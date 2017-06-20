@@ -7,7 +7,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
   /* @ngInject */
   function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService,
-    FeatureToggleService, ITProPackService, Notification, TokenService) {
+    FeatureToggleService, ProPackService, Notification, TokenService) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
@@ -46,8 +46,8 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.currentReportId = null;
     vm.ongoingSearch = false;
     vm.ediscoveryToggle = false;
-    vm.itProPackPurchased = false;
-    vm.itProPackEnabled = false;
+    vm.proPackPurchased = false;
+    vm.proPackEnabled = false;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchEmailPlaceholder');
@@ -97,16 +97,16 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.warning = null;
 
       $q.all([
-        ITProPackService.hasITProPackEnabled(),
-        ITProPackService.hasITProPackPurchased(),
+        ProPackService.hasProPackEnabled(),
+        ProPackService.hasProPackPurchased(),
         FeatureToggleService.atlasEdiscoveryGetStatus(),
         FeatureToggleService.atlasEdiscoveryIPSettingGetStatus(),
       ]).then(function (toggles) {
-        vm.itProPackEnabled = toggles[0];
-        vm.itProPackPurchased = toggles[1];
+        vm.proPackEnabled = toggles[0];
+        vm.proPackPurchased = toggles[1];
         vm.ediscoveryToggle = toggles[2];
         vm.ediscoveryIPSettingToggle = toggles[3];
-        if (!vm.itProPackPurchased) {
+        if (!vm.proPackPurchased) {
           vm.firstEnabledDate = moment().subtract(90, 'days').format('YYYY-MM-DD');
         }
       });
@@ -171,7 +171,7 @@ var Spark = require('@ciscospark/spark-core').default;
         errors.push($translate.instant('ediscovery.dateError.StartDateCannotBeInTheFuture'));
       }
 
-      if (moment(start).isBefore(ninetyDayLimit) && !vm.itProPackPurchased) {
+      if (moment(start).isBefore(ninetyDayLimit) && !vm.proPackPurchased) {
         errors.push($translate.instant('ediscovery.dateError.InvalidDateRange'));
       }
 
@@ -180,7 +180,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function dateWarnings(end) {
       var warnings = [];
-      if (end !== moment().endOf('day').format('YYYY-MM-DD') && !vm.itProPackPurchased) {
+      if (end !== moment().endOf('day').format('YYYY-MM-DD') && !vm.proPackPurchased) {
         warnings.push($translate.instant('ediscovery.dateError.InvalidEndDate'));
       }
       return warnings;
@@ -220,7 +220,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     /* Search Page Functions */
     function showHover() {
-      return vm.itProPackEnabled && !vm.itProPackPurchased;
+      return vm.proPackEnabled && !vm.proPackPurchased;
     }
 
     function getProPackTooltip() {

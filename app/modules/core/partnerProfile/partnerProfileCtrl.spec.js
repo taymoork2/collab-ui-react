@@ -10,7 +10,7 @@ describe('Controller: PartnerProfileCtrl', function () {
       'Authinfo',
       'BrandService',
       'FeatureToggleService',
-      'ITProPackService',
+      'ProPackService',
       'Notification',
       'Orgservice',
       'WebexClientVersion',
@@ -18,7 +18,7 @@ describe('Controller: PartnerProfileCtrl', function () {
     );
 
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ITProPackService, 'hasITProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorResponse');
@@ -123,10 +123,10 @@ describe('Controller: PartnerProfileCtrl', function () {
         expect(this.$scope.nameChangeEnabled).toBeTruthy();
       });
 
-      it('getAppTitle should depend on hasITProPackPurchased', function () {
+      it('getAppTitle should depend on hasProPackPurchased', function () {
         expect(this.$scope.getAppTitle()).toEqual('loginPage.titleNew');
 
-        this.ITProPackService.hasITProPackPurchased.and.returnValue(this.$q.resolve(true));
+        this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
         this.initController();
         expect(this.$scope.getAppTitle()).toEqual('loginPage.titlePro');
       });

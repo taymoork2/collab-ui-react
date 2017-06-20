@@ -4,7 +4,7 @@
   module.exports = PartnerManagementController;
 
   /* @ngInject */
-  function PartnerManagementController($scope, $state, $translate, $window, $q, FeatureToggleService, ITProPackService, Notification, PartnerManagementService) {
+  function PartnerManagementController($scope, $state, $translate, $window, $q, FeatureToggleService, Notification, PartnerManagementService, ProPackService) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('partnerManagement.browserTabHeaderTitle');
     });
@@ -15,7 +15,7 @@
     var proPackEnabled = undefined;
     var nameChangeEnabled = undefined;
     $q.all({
-      proPackEnabled: ITProPackService.hasITProPackPurchased(),
+      proPackEnabled: ProPackService.hasProPackPurchased(),
       nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
     }).then(function (toggles) {
       proPackEnabled = toggles.proPackEnabled;
