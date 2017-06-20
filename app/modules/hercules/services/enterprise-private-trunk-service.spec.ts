@@ -104,10 +104,10 @@ describe('EnterprisePrivateTrunkService ', () => {
     $httpBackend.flush();
     const trunks: any = EnterprisePrivateTrunkService.getAllResources();
 
-    expect(trunks[0].serviceStatus).toBe('unknown');
-    expect(trunks[1].serviceStatus).toBe('operational');
-    expect(trunks[2].serviceStatus).toBe('outage');
-    expect(trunks[3].serviceStatus).toBe('impaired');
+    expect(trunks[0].status.state).toBe('unknown');
+    expect(trunks[1].status.state).toBe('operational');
+    expect(trunks[2].status.state).toBe('outage');
+    expect(trunks[3].status.state).toBe('impaired');
   });
 
 });

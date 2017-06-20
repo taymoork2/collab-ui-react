@@ -3,19 +3,19 @@ import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trun
 import { IPrivateTrunkInfo, IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 
 export interface IPrivateTrunkResourceWithStatus extends IPrivateTrunkResource {
-  serviceStatus: TrunkStatus;
+  status: ITrunkStatus;
 }
 
-export interface ITrunksFromFMS {
+export interface IServiceStatus {
   alarmsUrl: string;
   id: string;
-  state: TrunkStatus;
-  resources: ITrunkFromFms[];
+  state: StatusEnum;
+  resources: ITrunkStatus[];
 }
 
-export interface ITrunkFromFms {
+export interface ITrunkStatus {
   id: string;
-  state: TrunkStatus;
+  state: StatusEnum;
   type: string;
   destinations: IDestination[];
   alarms: IConnectorAlarm[];
@@ -23,10 +23,10 @@ export interface ITrunkFromFms {
 
 export interface IDestination {
   address: string;
-  state: TrunkStatus;
+  state: StatusEnum;
 }
 
-type TrunkStatus = 'operational' | 'impaired' | 'outage' | 'unknown';
+type StatusEnum = 'operational' | 'impaired' | 'outage' | 'unknown';
 
 export class EnterprisePrivateTrunkService {
 
@@ -47,24 +47,19 @@ export class EnterprisePrivateTrunkService {
   }
 
   public fetch() {
-
     const promises = [
       this.PrivateTrunkService.getPrivateTrunk(),
       this.ServiceDescriptor.getServiceStatus('ept'),
     ];
     return this.$q.all(promises)
-      .then((results: [IPrivateTrunkInfo, ITrunksFromFMS]) => {
+      .then((results: [IPrivateTrunkInfo, IServiceStatus]) => {
         const trunks: IPrivateTrunkResource[] = results[0].resources;
-        const service: ITrunksFromFMS = results[1];
-        _.map(trunks, (trunk: IPrivateTrunkResourceWithStatus) => {
-          const resource = _.find(service.resources, (resource: ITrunkFromFms) => resource.id === trunk.uuid);
-          if (resource && resource.state) {
-            trunk.serviceStatus = resource.state;
-          } else {
-            trunk.serviceStatus = 'unknown';
-          }
+        const serviceStatus: IServiceStatus = results[1];
+        return _.map(trunks, (trunk: IPrivateTrunkResourceWithStatus) => {
+          const resource = _.find(serviceStatus.resources, (resource: ITrunkStatus) => resource.id === trunk.uuid);
+          trunk.status = resource || { id: trunk.uuid, state: 'unknown', type: 'trunk', destinations: [], alarms: [] };
+          return trunk;
         });
-        return trunks;
       })
       .then((trunksWithStatus: IPrivateTrunkResourceWithStatus[]) => {
         return _.sortBy(trunksWithStatus, (trunk: { name: string }) => trunk.name);
@@ -79,11 +74,10 @@ export class EnterprisePrivateTrunkService {
     return this.trunkCache;
   }
 
-  public getTrunkFromFMS(trunkId: string) {
-    return this.ServiceDescriptor.getServiceStatus('ept')
-      .then((trunks: ITrunksFromFMS) => {
-        return _.find(trunks.resources, (trunk: any) => trunk.id === trunkId);
-      });
+  public getTrunk(trunkId: string) {
+    return _.find(this.trunkCache,  (trunk: IPrivateTrunkResource) => {
+      return trunk.uuid === trunkId;
+    });
   }
 
   public getTrunkFromCmi(trunkId: string) {
