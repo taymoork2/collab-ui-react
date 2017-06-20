@@ -50,27 +50,27 @@ describe('Huron Functional: call-features', () => {
     navigation.expectDriverCurrentUrl('overview');
     utils.expectIsDisplayed(navigation.tabs);
   });
-
+});
+describe('No huron features provisioned', () => {
   it('should be an href to Huron call features page', () => {
     navigation.clickServicesTab();
     utils.click(callFeatures.callFeatures);
     utils.expectIsDisplayed(callFeatures.newFeatureButton);
   });
-  
+
   it('should display buttons for provisioning each feature', () => {
     utils.click(callFeatures.newFeatureButton);
     utils.expectIsDisplayed(callFeatures.createNewFeatureModalTitle);
-    utils.expectIsDisplayed(callFeatures.AaFeatureButton);
-    utils.expectIsDisplayed(callFeatures.HgFeatureButton);
-    utils.expectIsDisplayed(callFeatures.CpFeatureButton);
-    utils.expectIsDisplayed(callFeatures.PgFeatureButton);
-    utils.expectIsDisplayed(callFeatures.PiFeatureButton);
-    utils.expectIsDisplayed(callFeatures.CloseBtn);
+    utils.expectIsDisplayed(callFeatures.aaFeatureButton);
+    utils.expectIsDisplayed(callFeatures.hgFeatureButton);
+    utils.expectIsDisplayed(callFeatures.cpFeatureButton);
+    utils.expectIsDisplayed(callFeatures.pgFeatureButton);
+    utils.expectIsDisplayed(callFeatures.piFeatureButton);
+    utils.expectIsDisplayed(callFeatures.closeBtn);
   });
 
-  it('should close feature modal and on new feature page', () => {
-    utils.click(callFeatures.CloseBtn);
+  it('should close feature modal and display new feature page', () => {
+    utils.click(callFeatures.closeBtn);
     utils.expectIsDisplayed(callFeatures.newFeatureButton);
   });
-
 });
