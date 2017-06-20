@@ -64,10 +64,12 @@ class CmcUserDetailsController implements ng.IComponentController {
           this.precheckOrg(user.meta.organizationID)
             .then((res: ICmcOrgStatusResponse) => {
               this.orgReady = (res.status === 'ok');
-              this.precheckUser(user)
-                .then((res: ICmcUserStatusResponse) => {
-                  this.userReady = (res.status === 'ok');
-                });
+              if (this.isUserCmcEntitled(user)) {
+                this.precheckUser(user)
+                  .then((res: ICmcUserStatusResponse) => {
+                    this.userReady = (res.status === 'ok');
+                  });
+              }
             });
         }
       }).catch((error) => {
@@ -91,6 +93,10 @@ class CmcUserDetailsController implements ng.IComponentController {
         }
         return res;
       });
+  }
+
+  private isUserCmcEntitled(user: IUser): boolean {
+    return _.includes(user.entitlements, 'cmc');
   }
 
   private precheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {

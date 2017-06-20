@@ -14,7 +14,9 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   public orgReady: boolean = false;
   public userReady: boolean = false;
 
-  public issues: ICmcIssue[];  public messages = {
+  public issues: ICmcIssue[] | null = null;
+  private orgIssues: ICmcIssue[] | null;
+  public messages = {
     pattern: 'Invalid Mobile Number',
   };
   private oldCmcUserData: ICmcUserData;
@@ -36,7 +38,13 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     };
 
     this.$log.warn('Current user:', this.user);
-    this.validateOrgAndUserContent(this.user);
+    if (this.isUserCmcEntitled(this.user)) {
+      this.validateOrgAndUserContent(this.user);
+    }
+  }
+
+  private isUserCmcEntitled(user: ICmcUser): boolean {
+    return _.includes(user.entitlements, 'cmc');
   }
 
   private extractCmcData() {
@@ -83,6 +91,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     this.entitled = this.oldCmcUserData.entitled;
     this.mobileNumber = this.oldCmcUserData.mobileNumber;
     this.validDataChange = false;
+    this.issues = this.orgIssues;
   }
 
   public dataChanged() {
@@ -91,6 +100,12 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     this.invalid = !valid && (this.mobileChanged() || this.enableChanged());
     this.validDataChange = valid;
     this.invalidMessage = this.getInvalidMessage();
+    if (!this.invalid && this.entitled) {
+      this.validateOrgAndUserContent(this.user);
+    } else {
+      this.orgIssues = this.issues;
+      this.issues = null;
+    }
   }
 
   public entitle(toggleValue) {
@@ -100,6 +115,12 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     this.invalid = !valid && (this.mobileChanged() || this.enableChanged());
     this.validDataChange = valid;
     this.invalidMessage = this.getInvalidMessage();
+    if (!this.invalid && toggleValue) {
+      this.validateOrgAndUserContent(this.user);
+    } else {
+      this.orgIssues = this.issues;
+      this.issues = null;
+    }
   }
 
   public validateOrgAndUserContent(user: IUser) {
@@ -109,18 +130,23 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     this.precheckOrg(user.meta.organizationID)
       .then((res: ICmcOrgStatusResponse) => {
         this.orgReady = (res.status === 'ok');
+        this.precheckUser(user)
+          .then((res: ICmcUserStatusResponse) => {
+            this.userReady = (res.status === 'ok');
+          });
       });
-    this.precheckUser(user)
-      .then((res: ICmcUserStatusResponse) => {
-        this.userReady = (res.status === 'ok');
-      });
+    // this.precheckUser(user)
+    //   .then((res: ICmcUserStatusResponse) => {
+    //     console.warn('res', res);
+    //     this.userReady = (res.status === 'ok');
+    //   });
   }
 
   private precheckUser(user: IUser): ng.IPromise<ICmcUserStatusResponse> {
     return this.CmcService.preCheckUser(user)
       .then((res: ICmcUserStatusResponse) => {
         this.$log.debug('precheckUser:', res);
-        if (res.status === 'error' && res.issues) {
+        if (res.status === 'error' && res.issues && this.issues) {
           this.issues.push(res.issues[ 0 ]);
         }
         return res;
@@ -131,7 +157,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     return this.CmcService.preCheckOrg(orgId)
       .then((res: ICmcOrgStatusResponse) => {
         this.$log.debug('precheckOrg', res);
-        if (res.status === 'error' && res.issues) {
+        if (res.status === 'error' && res.issues && this.issues) {
           this.issues.push(res.issues[ 0 ]);
         }
         return res;
