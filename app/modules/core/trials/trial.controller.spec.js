@@ -200,7 +200,6 @@ describe('Controller: TrialCtrl:', function () {
           it('should call $state.href() with vm.currentTrial.customer* properties', function () {
             expect($state.href).toHaveBeenCalledWith('login', {
               customerOrgId: 'fake-customer-org-id',
-              customerOrgName: 'fake-customer-name',
             });
           });
         });

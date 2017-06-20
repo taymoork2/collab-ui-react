@@ -29,7 +29,6 @@
     function launchCustomerPortal() {
       $window.open($state.href('login', {
         customerOrgId: PstnModel.getCustomerId(),
-        customerOrgName: PstnModel.getCustomerName(),
       }));
     }
   }

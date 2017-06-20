@@ -736,12 +736,10 @@
     // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
     function launchCustomerPortal() {
       var customerOrgId = vm.isEditTrial() ? vm.currentTrial.customerOrgId : vm.customerOrgId;
-      var customerOrgName = vm.isEditTrial() ? vm.currentTrial.customerName : vm.details.customerName;
 
       sendToAnalytics(Analytics.eventNames.YES);
       $window.open($state.href('login', {
         customerOrgId: customerOrgId,
-        customerOrgName: customerOrgName,
       }));
       $state.modal.close();
       cancelCustomer();

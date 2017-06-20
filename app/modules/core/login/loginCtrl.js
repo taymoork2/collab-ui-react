@@ -19,11 +19,9 @@
       PageParam.set(pageParam);
     }
 
-    if ($stateParams.customerOrgId && $stateParams.customerOrgName) {
-      SessionStorage.put('customerOrgName', $stateParams.customerOrgName);
+    if ($stateParams.customerOrgId) {
       SessionStorage.put('customerOrgId', $stateParams.customerOrgId);
-    } else if ($stateParams.partnerOrgId && $stateParams.partnerOrgName) {
-      SessionStorage.put('partnerOrgName', $stateParams.partnerOrgName);
+    } else if ($stateParams.partnerOrgId) {
       SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
     }
 

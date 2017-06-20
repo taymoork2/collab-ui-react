@@ -9,15 +9,12 @@
     .name;
 
   /* @ngInject */
-  function Localize($filter, Utils, SessionStorage) {
+  function Localize($filter, Utils, Authinfo) {
     return {
       varTitle: function () {
-        var currentOrgName = SessionStorage.get('customerOrgName');
-        var partnerOrgName = SessionStorage.get('partnerOrgName');
-        if (currentOrgName) {
-          return currentOrgName;
-        } else if (partnerOrgName) {
-          return partnerOrgName;
+        var orgName = Authinfo.getOrgName();
+        if (orgName) {
+          return orgName;
         } else if (Utils.isAdminPage()) {
           return $filter('translate')('index.appTitle');
         } else {

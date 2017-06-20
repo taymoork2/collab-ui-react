@@ -712,7 +712,6 @@ require('./_customer-list.scss');
 
       $window.open($state.href('login', {
         customerOrgId: customer.customerOrgId,
-        customerOrgName: customer.customerName,
       }));
     }
 
