@@ -17,6 +17,15 @@ describe('Service: DigitalRiverService', () => {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
+  it('should get digital river auth token', function () {
+    this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/users/authtoken').respond(200, 'abc+123');
+    this.DigitalRiverService.getDigitalRiverToken().then(response => {
+      expect(this.$document.prop).toHaveBeenCalledWith('cookie', 'webexToken=abc+123;domain=ciscospark.com;secure');
+      expect(response).toEqual('abc+123');
+    });
+    this.$httpBackend.flush();
+  });
+
   it('should get digital river order history url', function () {
     this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/users/authtoken').respond(200, 'abc+123');
     this.DigitalRiverService.getOrderHistoryUrl('spark').then(response => {
