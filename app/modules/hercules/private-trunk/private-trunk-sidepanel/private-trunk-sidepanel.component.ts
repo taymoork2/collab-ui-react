@@ -1,5 +1,4 @@
-import { EnterprisePrivateTrunkService, ITrunkFromFms, IDestination } from 'modules/hercules/services/enterprise-private-trunk-service';
-import { Notification } from 'modules/core/notifications';
+import { EnterprisePrivateTrunkService, IDestination, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
 
 class PrivateTrunkSidepanelComponentCtrl implements ng.IComponentController {
@@ -12,10 +11,10 @@ class PrivateTrunkSidepanelComponentCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
-    private Notification: Notification,
   ) {}
 
   public $onInit() {
@@ -26,26 +25,21 @@ class PrivateTrunkSidepanelComponentCtrl implements ng.IComponentController {
   }
 
   public getData(): void {
-    this.EnterprisePrivateTrunkService.getTrunkFromFMS(this.trunkId)
-      .then((trunk: ITrunkFromFms) => {
+    if (this.trunkId) {
+      this.$scope.$watch(() => {
+        return this.EnterprisePrivateTrunkService.getTrunk(this.trunkId);
+      }, (trunk: IPrivateTrunkResourceWithStatus) => {
         if (trunk) {
-          this.alarms = trunk.alarms;
-          this.destinations = trunk.destinations;
+          this.name = trunk.name;
+          this.address = trunk.address;
+          if (trunk.status) {
+            this.alarms = trunk.status.alarms;
+            this.destinations = trunk.status.destinations;
+          }
         }
-      })
-      .catch(error => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
-    this.EnterprisePrivateTrunkService.getTrunkFromCmi(this.trunkId)
-      .then((trunk) => {
-        this.name = trunk.name;
-        this.address = trunk.address;
-      })
-      .catch(error => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
+      }, true);
+    }
   }
-
 }
 
 export class PrivateTrunkSidepanelComponent implements ng.IComponentOptions {

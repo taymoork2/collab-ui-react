@@ -10,9 +10,7 @@ describe('Component: PrivateTrunkSidepanelComponent ', () => {
         '$q',
         'EnterprisePrivateTrunkService',
       );
-      spyOn(this.EnterprisePrivateTrunkService, 'getTrunkFromFMS').and.returnValue(this.$q.resolve({}));
-      spyOn(this.EnterprisePrivateTrunkService, 'getTrunkFromCmi').and.returnValue(this.$q.resolve({}));
-
+      spyOn(this.EnterprisePrivateTrunkService, 'getTrunk').and.returnValue({});
       this.compileComponent('private-trunk-sidepanel');
     });
 
@@ -46,14 +44,14 @@ describe('Component: PrivateTrunkSidepanelComponent ', () => {
 
     beforeEach(initSpies);
     function initSpies(): void {
-      spyOn(EnterprisePrivateTrunkService, 'getTrunkFromFMS').and.returnValue($q.resolve({}));
-      spyOn(EnterprisePrivateTrunkService, 'getTrunkFromCmi').and.returnValue($q.resolve({}));
+      spyOn(EnterprisePrivateTrunkService, 'getTrunk').and.returnValue({});
     }
 
     const trunkId = '1234';
 
     function initController() {
       ctrl = $componentController('privateTrunkSidepanel', {
+        $scope: $scope,
         EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
       }, { trunkId: trunkId });
     }
@@ -62,8 +60,7 @@ describe('Component: PrivateTrunkSidepanelComponent ', () => {
       initController();
       ctrl.$onInit();
       $scope.$apply();
-      expect(EnterprisePrivateTrunkService.getTrunkFromFMS).toHaveBeenCalledWith(trunkId);
-      expect(EnterprisePrivateTrunkService.getTrunkFromCmi).toHaveBeenCalledWith(trunkId);
+      expect(EnterprisePrivateTrunkService.getTrunk).toHaveBeenCalledWith(trunkId);
     });
 
   });
