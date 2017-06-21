@@ -1,13 +1,10 @@
 'use strict';
 
+var testModule = require('./oauthConfig');
+
 describe('OAuthConfig', function () {
-  beforeEach(angular.mock.module('Core'));
-
   var OAuthConfig, $location;
-
-  afterEach(function () {
-    OAuthConfig = $location = undefined;
-  });
+  beforeEach(angular.mock.module(testModule));
 
   beforeEach(inject(function (_$location_, _OAuthConfig_) {
     OAuthConfig = _OAuthConfig_;
@@ -15,6 +12,9 @@ describe('OAuthConfig', function () {
     spyOn($location, 'host');
   }));
 
+  afterEach(function () {
+    OAuthConfig = $location = undefined;
+  });
   var devHost = 'localhost';
   var prodHost = 'admin.ciscospark.com';
   var cfeHost = 'cfe-admin.ciscospark.com';
@@ -35,6 +35,7 @@ describe('OAuthConfig', function () {
           if (!host) {
             throw new Error('Unknown environment ' + env);
           }
+
           if (!OAuthConfig[fn]) {
             throw new Error('Unknown method ' + fn);
           }
@@ -79,5 +80,14 @@ describe('OAuthConfig', function () {
   it('should return correct logout url', function () {
     var url = OAuthConfig.getLogoutUrl();
     expect(url).toBe('https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=spark&goto=https%3A%2F%2Fadmin.ciscospark.com%2F');
+  });
+
+  it('should return correct revoke access token url', function () {
+    whenCalling('getOAuthRevokeUserTokenUrl', 'random-string', 'random-string').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/tokens?username=',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/tokens?username=',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/tokens?username=',
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/tokens?username=',
+    });
   });
 });

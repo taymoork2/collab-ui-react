@@ -6,7 +6,7 @@
     .controller('HDSRedirectAddResourceController', HDSRedirectAddResourceController);
 
   /* @ngInject */
-  function HDSRedirectAddResourceController($modal, $modalInstance, $q, $state, $translate, $window, FeatureToggleService, firstTimeSetup, HDSAddResourceCommonService, ITProPackService, Notification) {
+  function HDSRedirectAddResourceController($modal, $modalInstance, $q, $state, $translate, $window, FeatureToggleService, firstTimeSetup, HDSAddResourceCommonService, ProPackService, Notification) {
     var vm = this;
     vm.clusterList = [];
     var states = {
@@ -35,7 +35,7 @@
     vm.nameChangeEnabled = undefined;
     var proPackEnabled = undefined;
     $q.all({
-      proPackEnabled: ITProPackService.hasITProPackPurchased(),
+      proPackEnabled: ProPackService.hasProPackPurchased(),
       nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
     }).then(function (toggles) {
       proPackEnabled = toggles.proPackEnabled;

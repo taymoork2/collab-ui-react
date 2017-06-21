@@ -32,9 +32,10 @@
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
     vm.clickUserDetailsService = clickUserDetailsService;
+    vm.clickRolesAndSecurity = clickRolesAndSecurity;
     vm.actionList = [];
     vm.hasSparkCall = false;
-
+    vm.enableRolesAndSecurityOption = false;
     var msgState = {
       name: $translate.instant('onboardModal.message'),
       icon: 'icon-circle-message',
@@ -76,6 +77,9 @@
       currentUserId: '',
       hasSparkCall: false,
     };
+    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
+      vm.enableRolesAndSecurityOption = enabled;
+    });
     init();
 
     /////////////////////////////
@@ -142,6 +146,10 @@
 
     function clickService(feature) {
       $state.go('user-overview.' + feature.state);
+    }
+
+    function clickRolesAndSecurity() {
+      $state.go('user-overview.roles-and-security');
     }
 
     function clickUserDetailsService(feature) {

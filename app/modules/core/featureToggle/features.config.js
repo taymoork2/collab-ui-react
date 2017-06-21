@@ -14,7 +14,6 @@ module.exports = {
   atlasEdiscovery: 'atlas-ediscovery',
   atlasEdiscoveryIPSetting: 'atlas-ediscovery-ip-setting',
   atlasEmailStatus: 'atlas-email-status',
-  atlasFTSWRemoveUsersSSO: 'atlas-ftsw-remove-users-sso',
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
   atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
   atlasHybridDataSecurity: 'atlas-hybrid-data-security',
@@ -203,4 +202,6 @@ module.exports = {
   hi1487: 'h-i1487',
   csdmAtaReboot: 'csdm-ata-reboot',
   hI1484: 'h-i1484',
+  hI1485: 'h-i1485',
+  atlasRolesAndSecurity: 'atlas-roles-and-security',
 };

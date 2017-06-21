@@ -1,6 +1,6 @@
 import { ReportBMMPBannerComponent } from './reportBMMPBanner.component';
 import BmmpModule from 'modules/bmmp';
-import ItProPackModule from 'modules/core/itProPack';
+import ProPackModule from 'modules/core/proPack';
 
 export default angular
   .module('reports.reportBanner', [
@@ -10,7 +10,7 @@ export default angular
     require('modules/core/analytics'),
     require('modules/core/scripts/services/authinfo'),
     BmmpModule,
-    ItProPackModule,
+    ProPackModule,
   ])
   .component('reportBmmpBanner', new ReportBMMPBannerComponent())
   .name;

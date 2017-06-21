@@ -268,14 +268,17 @@
     /**
       * Ediscovery Events
       */
-    function trackEdiscoverySteps(eventName, trackingId) {
-      if (!_.isString(eventName) || eventName.length !== 0) {
+    function trackEdiscoverySteps(eventName, searchProperties) {
+      if (!_.isString(eventName) || eventName.length === 0) {
         return $q.reject(NO_EVENT_NAME);
       }
 
       var properties = {
         from: _.get($state, '$current.name'),
-        trackingId: trackingId,
+        trackingId: _.get(searchProperties, 'trackingId', 'N/A'),
+        emailSelected: _.get(searchProperties, 'emailSelected', 'false'),
+        spaceSelected: _.get(searchProperties, 'spaceSelected', 'false'),
+        searchedWithKeyword: _.get(searchProperties, 'searchedWithKeyword', 'false'),
       };
 
       _getOrgData('EDISCOVERY').then(function (data) {

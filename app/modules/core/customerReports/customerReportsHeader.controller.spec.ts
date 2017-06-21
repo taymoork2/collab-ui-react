@@ -36,7 +36,7 @@ describe('Controller: Customer Reports Ctrl', function () {
                             '$q',
                             'Authinfo',
                             'FeatureToggleService',
-                            'ITProPackService',
+                            'ProPackService',
                             'MediaServiceActivationV2');
 
     spyOn(this.Authinfo, 'isCare').and.returnValue(true);
@@ -55,7 +55,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(false));
-      spyOn(this.ITProPackService, 'hasITProPackEnabled').and.returnValue(this.$q.resolve(false));
+      spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
 
       const WebExApiGatewayService: any = {
         siteFunctions: (url: string): any => {
@@ -72,7 +72,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         WebexReportService: WebexReportService,
         WebExApiGatewayService: WebExApiGatewayService,
         FeatureToggleService: this.FeatureToggleService,
-        ITProPackService: this.ITProPackService,
+        ProPackService: this.ProPackService,
       });
 
       this.$scope.$apply();
@@ -89,7 +89,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
-      spyOn(this.ITProPackService, 'hasITProPackEnabled').and.returnValue(this.$q.resolve(true));
+      spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
 
       const WebExApiGatewayService = {
         siteFunctions: (url: string): any => {
@@ -108,7 +108,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         WebexReportService: WebexReportService,
         WebExApiGatewayService: WebExApiGatewayService,
         FeatureToggleService: this.FeatureToggleService,
-        ITProPackService: this.ITProPackService,
+        ProPackService: this.ProPackService,
       });
 
       this.$scope.$apply();

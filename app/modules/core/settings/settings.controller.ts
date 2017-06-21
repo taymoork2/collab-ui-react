@@ -38,7 +38,7 @@ export class SettingsCtrl {
     private Authinfo,
     private Orgservice,
     private FeatureToggleService,
-    private ITProPackService,
+    private ProPackService,
   ) {
   }
 
@@ -112,7 +112,7 @@ export class SettingsCtrl {
   private initSecurity() {
     const promises = {
       pinSettingsToggle: this.FeatureToggleService.atlasPinSettingsGetStatus(),
-      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
     };
     this.$q.all(promises).then((result) => {
       if (result.pinSettingsToggle) {
@@ -124,7 +124,7 @@ export class SettingsCtrl {
   private initRetention() {
     const promises = {
       retentionToggle: this.FeatureToggleService.atlasDataRetentionSettingsGetStatus(),
-      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
     };
 
     this.$q.all(promises).then((result) => {

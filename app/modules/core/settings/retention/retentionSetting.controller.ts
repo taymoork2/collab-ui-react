@@ -58,13 +58,13 @@ export class RetentionSettingController {
     private Authinfo,
     private Notification,
     private RetentionService,
-    private ITProPackService,
+    private ProPackService,
   ) {
     this.orgId = this.Authinfo.getOrgId();
 
     const promises = {
       retention: this.RetentionService.getRetention(this.orgId),
-      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
     };
 
     this.$q.all(promises)

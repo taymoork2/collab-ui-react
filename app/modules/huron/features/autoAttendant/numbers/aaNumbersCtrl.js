@@ -8,6 +8,7 @@
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService, AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, PhoneNumberService, TelephonyInfoService, ExternalNumberPool) {
     var vm = this;
+    var uniqueCtrlIdentifier = 'numbersCtrl' + AACommonService.getUniqueId();
 
     vm.addNumber = addNumber;
     vm.loadNums = loadNums;
@@ -44,6 +45,7 @@
     // Add Number, top-level method called by UI
     function addNumber(phoneNum) {
       var number = phoneNum.value;
+
 
       if (_.isUndefined(number) || number === '') {
         return;
@@ -117,14 +119,15 @@
 
       resources.push(resource);
 
+      AACommonService.setIsValid(uniqueCtrlIdentifier, false);
+
       // Assign the number in CMI
       saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
         function () {
           // after assignment, the extension ESN numbers are derived; update CE based on CMI ESN info
           // Also take advantage of the query to check ALL numbers for UUID
-
-          AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(function (resources) {
-              // find first e164 number, move to array[0] if not already there
+          return AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(function (resources) {
+            // find first e164 number, move to array[0] if not already there
             var r = _.find(resources, function (resource) {
               return (PhoneNumberService.validateDID(resource.number));
             });
@@ -159,6 +162,9 @@
           });
 
           resources.pop();
+        }).finally(function () {
+          // always leave the inValid state to off to allow button save if needed
+          AACommonService.setIsValid(uniqueCtrlIdentifier, true);
         });
     }
 

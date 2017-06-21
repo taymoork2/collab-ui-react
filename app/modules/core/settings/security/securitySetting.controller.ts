@@ -16,7 +16,7 @@ export class SecuritySettingController {
     private $q,
     private AccountOrgService,
     private Authinfo,
-    private ITProPackService,
+    private ProPackService,
     private Notification,
   ) {
     this.orgId = this.Authinfo.getOrgId();
@@ -26,7 +26,7 @@ export class SecuritySettingController {
   private loadSetting() {
     const promises = {
       security: this.AccountOrgService.getAppSecurity(this.orgId),
-      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
     };
 
     this.$q.all(promises)

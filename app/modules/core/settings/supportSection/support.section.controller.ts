@@ -84,14 +84,14 @@ export class SupportSettingsController {
     private $q: ng.IQService,
     private Authinfo,
     private FeatureToggleService,
-    private ITProPackService,
+    private ProPackService,
     private Log,
     private Notification: Notification,
     private Orgservice,
     private UserListService,
   ) {
     this.$q.all({
-      proPackEnabled: this.ITProPackService.hasITProPackPurchased(),
+      proPackEnabled: this.ProPackService.hasProPackPurchased(),
       nameChangeEnabled: this.FeatureToggleService.atlas2017NameChangeGetStatus(),
     }).then((toggles: any): void => {
       this.proPackEnabled = toggles.proPackEnabled;

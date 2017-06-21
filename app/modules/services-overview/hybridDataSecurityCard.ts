@@ -8,8 +8,8 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     return undefined;
   }
 
-  private hasITProPackPurchased: boolean;
-  private hasITProPackEnabled: boolean;
+  private hasProPackPurchased: boolean;
+  private hasProPackEnabled: boolean;
 
   private learnMoreButton: ICardButton = {
     name: 'servicesOverview.genericButtons.learnMore',
@@ -53,15 +53,15 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
 
   }
 
-  public itProPackEventHandler(result): void {
-    this.hasITProPackEnabled = result.hasITProPackEnabled;
-    this.hasITProPackPurchased = result.hasITProPackPurchased;
+  public proPackEventHandler(result): void {
+    this.hasProPackEnabled = result.hasProPackEnabled;
+    this.hasProPackPurchased = result.hasProPackPurchased;
     this.infoText = this.treatAsPurchased() ? '' : 'servicesOverview.cards.hybridDataSecurity.tooltip';
     this.setLoading();
   }
 
   private treatAsPurchased(): boolean {
-    return this.hasITProPackPurchased || !this.hasITProPackEnabled;
+    return this.hasProPackPurchased || !this.hasProPackEnabled;
   }
 
   /* @ngInject */
@@ -87,8 +87,8 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       initEventsNumber: 2,
     }, HybridServicesClusterStatesService);
     this.display = this.checkRoles() && this.Authinfo.isFusionHDS();
-    this.hasITProPackPurchased = false;
-    this.hasITProPackEnabled = false;
+    this.hasProPackPurchased = false;
+    this.hasProPackEnabled = false;
     this.$state = $state;
     this.Notification = Notification;
     this.HDSService = HDSService;

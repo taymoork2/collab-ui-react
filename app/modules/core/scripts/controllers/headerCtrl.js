@@ -5,7 +5,7 @@
     .controller('HeaderCtrl', HeaderCtrl);
 
   /* @ngInject */
-  function HeaderCtrl($q, $translate, Authinfo, FeatureToggleService, ITProPackService, Utils) {
+  function HeaderCtrl($q, $translate, Authinfo, FeatureToggleService, ProPackService, Utils) {
     var vm = this;
 
     vm.showOrgName = showOrgName;
@@ -16,7 +16,7 @@
     function init() {
       vm.icon = 'icon-cisco-logo';
       $q.all({
-        proPackEnabled: ITProPackService.hasITProPackPurchased(),
+        proPackEnabled: ProPackService.hasProPackPurchased(),
         nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
       }).then(function (toggles) {
         if (toggles.proPackEnabled && toggles.nameChangeEnabled) {

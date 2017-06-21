@@ -401,7 +401,14 @@
     "userDetails": "User Details",
     "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:",
     "notConfigured": "Not Configured",
-    "dirsyncToolTip": "Use DirSync to update the user's preferred language."
+    "dirsyncToolTip": "Use DirSync to update the user's preferred language.",
+    "rolesAndSecurity": "Roles and Security",
+    "security": "Security",
+    "resetAccessSuccess": "{{name}}'s access reset successfully. Please allow a few hours to take effect.",
+    "resetAccessFailure": "Unable to reset {{name}}'s access. Please try later.",
+    "resetAccess": "Reset Access",
+    "learnMore": "Learn more.",
+    "resetAccessDetail": "Revoke user access tokens for the Cisco Spark app on desktop, web, and mobile. This deletes any cached content and prompts the user to sign in again."
   },
   "tabs": {
     "overviewTab": "Overview",
@@ -988,12 +995,12 @@
         "viewCdrCallFlow": "View CDR Call Flow",
         "viewCdrCallFlowDesc": "Open the tool in a new tab",
         "ediscovery": "eDiscovery Search and Extraction",
-        "launchEdicoveryDesc": "Open the eDiscovery Search and Extraction dashboard in a new tab",
+        "launchEdicoveryDesc": "Search and extract compliance data for your organization",
         "partnerManagement": "Manage Partner Accounts",
         "viewPartnerManagementDesc": "The actions below open new tabs",
         "viewPartnerManagement": "Create New Partner Org",
         "editPartner": "Edit Partner Org",
-        "viewEdiscovery": "View eDiscovery Search and Extraction",
+        "viewEdiscovery": "View eDiscovery",
         "hybridCallTestTool": {
           "heading": "Hybrid Call",
           "description": "Run a test between two Hybrid Call Service Connect users",
@@ -1182,6 +1189,7 @@
     "incorrectFormat": "Incorrect format",
     "info": "Info",
     "invalidEmail": "This is not a valid Email Address.",
+    "invalidFormat": "Invalid Format",
     "invalidMax": "Maximum value is {{max}}.",
     "invalidMaxLength": "Character length cannot be more than {{max}}.",
     "invalidMinLength": "Character length cannot be less than {{min}}.",
@@ -2411,8 +2419,7 @@
         "defaultWarning": "Confirm Default Schedule",
         "postponeLabel": "The next available upgrade is scheduled to begin:",
         "postponeAction": "Postpone",
-        "postponeModalTitle": "Postpone Upgrade",
-        "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
+        "postponeSuccess": "Upgrade postponed. The next upgrade is schedule to begin on {{datetime}}."
       },
       "emergencyUpgrade": {
         "expressway": {
@@ -3124,7 +3131,7 @@
       "messagesPlaceholder": "Enter comma separated values",
       "messagesHelpText": "e.g. project, manager",
       "noMatchesFound": "No Matches Found",
-      "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about our IT Pro Package."
+      "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about Pro Pack."
     },
     "searchResults": {
       "backToSearch": "Back to Search",
@@ -4182,6 +4189,10 @@
     "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries.",
     "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}"
   },
+  "lineLabel": {
+    "title": "Line Label",
+    "description": "This label will appear next to this line on devices."
+  },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
     "error": "International Dialing configuration failed. ",
@@ -4859,7 +4870,7 @@
   },
   "externalTransfer": {
     "title": "External Call Transfers/Conference",
-    "desc": "Choose whether external users are allowed to do external call transfers and conferences. This setting affects the entire organization; afterward you can override this setting for individual users."
+    "desc": "Choose whether external users are allowed to do external call transfers and conferences. This setting affects the entire organization, but you can override this setting for individual users afterward."
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
@@ -7051,7 +7062,7 @@
       "defaultRetentionOption": "Default retention time",
       "customRetentionOption": "Custom retention time between 1 and 120 months",
       "customRetentionMonths": "months",
-      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about our IT Pro Package.",
+      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about Pro Pack.",
       "modalTitle": "Update Retention Time",
       "modalBody1": "Are you sure you want to update the retention time for Spark Message to a shorter period?",
       "modalBody2": "Any additional data older than the new time period will be deleted.",
@@ -7710,7 +7721,7 @@
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
         "description": "Manage your encryption keys and other security services on-premises.",
-        "tooltip": "This premium feature is available with the IT Pro Pack. Contact your partner to learn more.",
+        "tooltip": "This premium feature is available with the Pro Pack. Contact your partner to learn more.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"

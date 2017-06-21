@@ -818,7 +818,27 @@ describe('Auth Service', function () {
       expect(result.services.length).toBe(0);
     });
   });
+  describe('Revoke Access Token', function () {
+    beforeEach(function () {
+      OAuthConfig.getOAuthRevokeUserTokenUrl = jasmine.createSpy('getOAuthRevokeUserTokenUrl').and.returnValue('http://www.example.com/idb/oauth2/v1/tokens?username=');
+    });
 
+    it('revoke user token should be forbidden', function () {
+      $httpBackend
+        .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com')
+        .respond(403, {});
+      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com');
+      expect(promise).toBeRejected();
+    });
+
+    it('revoke user token should be success', function () {
+      $httpBackend
+        .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com')
+        .respond(204, {});
+      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com');
+      expect(promise).toBeResolved();
+    });
+  });
   // helpers
 
   function stubCredentials() {

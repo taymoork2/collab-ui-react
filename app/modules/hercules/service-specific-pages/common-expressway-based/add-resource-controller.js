@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AddResourceController($modal, $modalInstance, $q, $state, $translate, $window, connectorType, FeatureToggleService, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, ITProPackService, Notification, ResourceGroupService, serviceId) {
+  function AddResourceController($modal, $modalInstance, $q, $state, $translate, $window, connectorType, FeatureToggleService, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, ProPackService, Notification, ResourceGroupService, serviceId) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -52,7 +52,7 @@
     vm.nameChangeEnabled = false;
     $q.all({
       nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
-      proPackEnabled: ITProPackService.hasITProPackPurchased(),
+      proPackEnabled: ProPackService.hasProPackPurchased(),
     }).then(function (toggles) {
       vm.nameChangeEnabled = toggles.nameChangeEnabled;
       if (vm.nameChangeEnabled) {

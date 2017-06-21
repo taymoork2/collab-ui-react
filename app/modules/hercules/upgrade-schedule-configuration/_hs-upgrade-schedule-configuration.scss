@@ -1,31 +1,51 @@
+@import '~collab-ui/scss/settings/colors';
+
 hs-upgrade-schedule-configuration {
   display: block;
 
   .btn--cta {
     margin-bottom: 1rem;
   }
-}
 
-.upgrade-schedule-form {
-  max-width: 350px;
-  display: flex;
-  flex-wrap: wrap;
-}
+  .postpone-section {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+  }
 
-.upgrade-schedule-time {
-  margin-right: 20px;
-  flex: 1 0 100px;
-}
+  .postpone-section-left {
+    color: $color-primary-base;
+    font-size: 14px;
+    padding-top: 4px;
+  }
 
-.upgrade-schedule-day {
-  flex: 1 0 200px;
-}
+  .postpone-section-right {
+    margin-left: 0.6rem;
+    font-size: 14px;
+  }
 
-.upgrade-schedule-timezone {
-  margin-top: 20px;
-  flex: 1 0 250px;
-}
+  .upgrade-schedule-form {
+    max-width: 350px;
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-.upgrade-schedule-next-time {
-  margin-right: 20px;
+  .upgrade-schedule-time {
+    margin-right: 20px;
+    flex: 1 0 100px;
+  }
+
+  .upgrade-schedule-day {
+    flex: 1 0 200px;
+  }
+
+  .upgrade-schedule-timezone {
+    margin-top: 20px;
+    flex: 1 0 250px;
+  }
+
+  .upgrade-schedule-next-time {
+    margin-right: 10px;
+    color: #333;
+  }
 }

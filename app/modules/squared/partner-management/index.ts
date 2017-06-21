@@ -1,5 +1,5 @@
 import featureToggleModule from 'modules/core/featureToggle';
-import itProPackModule from 'modules/core/itProPack';
+import proPackModule from 'modules/core/proPack';
 import notificationModule from 'modules/core/notifications';
 
 require('./partner-management.scss');
@@ -12,7 +12,7 @@ const validateUnusedDirective = require('./validate-unused.directive');
 export default angular
   .module('squared.partner-management', [
     featureToggleModule,
-    itProPackModule,
+    proPackModule,
     notificationModule,
     require('modules/core/config/urlConfig'),
     require('angular-translate'),

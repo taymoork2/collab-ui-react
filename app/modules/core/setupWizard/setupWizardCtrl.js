@@ -6,15 +6,12 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils, DirSyncService) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
-    var shouldRemoveAddUserTab = false;
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
     var supportsAtlasPMRonM2 = false;
-
     $scope.tabs = [];
-    $scope.isDirSyncEnabled = false;
     $scope.isTelstraCsbEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
 
@@ -23,20 +20,9 @@ require('./_setup-wizard.scss');
     }
 
     function initToggles() {
-      var atlasFTSWRemoveUsersSSOPromise = FeatureToggleService.supports(FeatureToggleService.features.atlasFTSWRemoveUsersSSO)
-        .then(function (atlasFTSWRemoveUsersSSO) {
-          if (atlasFTSWRemoveUsersSSO) {
-            shouldRemoveAddUserTab = true;
-            if (isFirstTimeSetup) {
-              shouldRemoveSSOSteps = true;
-            }
-          } else {
-            return DirSyncService.refreshStatus().then(function () {
-              $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
-            });
-          }
-        });
-
+      if (isFirstTimeSetup) {
+        shouldRemoveSSOSteps = true;
+      }
       var tenDigitExtPromise = FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
         .then(function (sparkCallTenDigitExt) {
           $scope.sparkCallTenDigitExtEnabled = sparkCallTenDigitExt;
@@ -60,7 +46,6 @@ require('./_setup-wizard.scss');
         });
 
       return $q.all([
-        atlasFTSWRemoveUsersSSOPromise,
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
         tenDigitExtPromise,
@@ -70,12 +55,12 @@ require('./_setup-wizard.scss');
 
     function init() {
       var tabs = getInitTabs();
-      initAddUserTab(tabs);
+
       initEnterpriseSettingsTab(tabs);
       initMeetingSettingsTab(tabs);
       initCallSettingsTab(tabs);
       initCareTab(tabs);
-      initCSB(tabs);
+
       initSharedDeviceOnly(tabs);
       initAtlasPMRonM2(tabs);
       initFinishTab(tabs);
@@ -129,104 +114,8 @@ require('./_setup-wizard.scss');
           name: 'testSSO',
           template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html',
         }],
-      }, {
-        name: 'addUsers',
-        label: 'firstTimeWizard.addUsers',
-        description: 'firstTimeWizard.addUsersSubDescription',
-        icon: 'icon-add-users',
-        title: 'firstTimeWizard.addUsers',
-        controller: 'AddUserCtrl',
-        subTabs: [{
-          name: 'csv',
-          controller: 'UserCsvCtrl as csv',
-          controllerAs: 'csv',
-          steps: [{
-            name: 'init',
-            template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html',
-          }, {
-            name: 'csvDownload',
-            template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html',
-          }, {
-            name: 'csvUpload',
-            template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html',
-          }, {
-            name: 'csvProcessing',
-            template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
-            buttons: false,
-          }, {
-            name: 'csvResult',
-            template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
-            buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html',
-          }],
-        }, {
-          name: 'advanced',
-          controller: 'OnboardCtrl',
-          steps: [{
-            name: 'init',
-            template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html',
-          }, {
-            name: 'installConnector',
-            template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html',
-          }, {
-            name: 'syncStatus',
-            template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html',
-          }],
-        }],
-      }];
-    }
-
-    function initAddUserTab(tabs) {
-      var userTab = _.find(tabs, {
-        name: 'addUsers',
-      });
-      if (userTab) {
-        if (shouldRemoveAddUserTab) {
-          _.remove(tabs, userTab);
-          return;
-        }
-
-        var simpleSubTab = {
-          name: 'simple',
-          controller: 'OnboardCtrl',
-          steps: [{
-            name: 'init',
-            template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html',
-          }, {
-            name: 'manualEntry',
-            template: 'modules/core/setupWizard/addUsers/addUsers.manualEntry.tpl.html',
-          }, {
-            name: 'assignServices',
-            template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html',
-          }, {
-            name: 'assignDnAndDirectLines',
-            template: 'modules/core/setupWizard/addUsers/addUsers.assignDnAndDirectLines.tpl.html',
-          }, {
-            name: 'addUsersResults',
-            template: 'modules/core/setupWizard/addUsers/addUsers.results.tpl.html',
-          }],
-        };
-        var advancedSubTabSteps = [{
-          name: 'dirsyncServices',
-          template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html',
-        }, {
-          name: 'dirsyncProcessing',
-          template: 'modules/core/setupWizard/addUsers/addUsers.processDirSync.tpl.html',
-          buttons: false,
-        }, {
-          name: 'dirsyncResult',
-          template: 'modules/core/setupWizard/addUsers/addUsers.uploadResultDirSync.tpl.html',
-          buttons: 'modules/core/setupWizard/addUsers/addUsers.dirSyncResultButtons.tpl.html',
-        }];
-
-        if ($scope.isDirSyncEnabled) {
-          var advancedSubTab = _.find(userTab.subTabs, {
-            name: 'advanced',
-          });
-          advancedSubTab.steps = advancedSubTab.steps.concat(advancedSubTabSteps);
-        } else {
-          userTab.subTabs.splice(0, 0, simpleSubTab);
-        }
-      }
+      },
+      ];
     }
 
     function initMeetingSettingsTab(tabs) {
@@ -381,30 +270,23 @@ require('./_setup-wizard.scss');
           }],
         };
 
-        var userOrFinishTabIndex = _.findIndex(tabs, function (tab) {
-          return (tab.name === 'finish' || tab.name === 'addUsers');
+        var finishTabIndex = _.findIndex(tabs, function (tab) {
+          return (tab.name === 'finish');
         });
 
-        if (userOrFinishTabIndex === -1) { // addUsers and finish tab not found
+        if (finishTabIndex === -1) { // finish tab not found
           tabs.push(careTab);
         } else {
-          tabs.splice(userOrFinishTabIndex, 0, careTab);
+          tabs.splice(finishTabIndex, 0, careTab);
         }
       }
     }
 
-    function initCSB(tabs) {
-      if ($scope.isCSB) {
-        _.remove(tabs, {
-          name: 'addUsers',
-        });
-      }
-    }
 
     function initSharedDeviceOnly(tabs) {
       if (isSharedDevicesOnlyLicense) {
         _.remove(tabs, function (tab) {
-          return tab.name === 'messagingSetup' || tab.name === 'addUsers';
+          return tab.name === 'messagingSetup';
         });
       }
     }

@@ -208,7 +208,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     HuronConfig = null;
     AAModelService = null;
     AAUiModelService = null;
-
     AANumberAssignmentService = null;
     AutoAttendantCeInfoModelService = null;
     Authinfo = null;
@@ -238,6 +237,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
   describe('addNumber', function () {
     var controller;
+    var isValidSpy;
 
     beforeEach(function () {
       controller = control('AABuilderNumbersCtrl', {
@@ -255,6 +255,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       controller.name = rawCeInfo.callExperienceName;
       controller.ui = {};
       controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
+      isValidSpy = jasmine.createSpy('setIsValid');
+      AACommonService.setIsValid = isValidSpy;
     });
 
     it('should move an external phone number from available to selected successfully', function () {
@@ -327,6 +329,9 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       // and the internal 999999should have sorted last - special case for internal
       expect(resources[resources.length - 1].number).toEqual('999999');
+
+      expect(isValidSpy.calls.count()).toEqual(8);
+      expect(isValidSpy.calls.allArgs()).toEqual([['numbersCtrl1', false], ['numbersCtrl1', false], ['numbersCtrl1', true], ['numbersCtrl1', true], ['numbersCtrl1', false], ['numbersCtrl1', true], ['numbersCtrl1', false], ['numbersCtrl1', true]]);
     });
 
     it('should report error when cannot format extension on assignment', function () {
@@ -346,6 +351,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
         status: 500,
       }));
 
+
       controller.addNumber({
         value: '1234',
       });
@@ -354,6 +360,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       $httpBackend.flush();
 
       expect(errorSpy).toHaveBeenCalled();
+      expect(isValidSpy.calls.count()).toEqual(2);
+      expect(isValidSpy.calls.allArgs()).toEqual([['numbersCtrl1', false], ['numbersCtrl1', true]]);
     });
   });
 
@@ -394,6 +402,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       // we should have 3 numbers now
       expect(AACommonService.isFormDirty()).toBe(true);
+
 
       expect(resources.length).toEqual(orig_length - 1);
     });

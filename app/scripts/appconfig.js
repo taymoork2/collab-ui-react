@@ -119,7 +119,7 @@
           })
           .state('login', {
             parent: 'loginLazyLoad',
-            url: '/login?bmmp_env&email',
+            url: '/login?bmmp_env&email&customerOrgId&partnerOrgId',
             views: {
               'main@': {
                 template: '<login/>',
@@ -962,13 +962,13 @@
             template: '<div ui-view class="flex-container flex-item-resize"></div>',
           })
           .state('users.manage.advanced.add.ob.installConnector', {
-            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html',
+            templateUrl: 'modules/core/users/userManage/userManageInstallConnector.tpl.html',
           })
           .state('users.manage.advanced.add.ob.syncStatus', {
             templateUrl: 'modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html',
           })
           .state('users.manage.advanced.add.ob.dirsyncServices', {
-            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html',
+            templateUrl: 'modules/core/users/userManage/userManageAssignServices.tpl.html',
             controller: /* @ngInject */ function ($scope) {
               $scope.dirsyncInitForServices();
             },
@@ -1541,14 +1541,32 @@
               service: 'CONTACTCENTER',
             },
           })
-          .state('user-overview.userProfile', {
+          .state('user-overview.user-profile', {
+            templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
+            controller: 'UserRolesCtrl',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate, FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
+                  if (enabled) {
+                    _.set($state.get('user-overview.user-profile'), 'data.displayName', $translate.instant('usersPreview.userDetails'));
+                  } else {
+                    _.set($state.get('user-overview.user-profile'), 'data.displayName', $translate.instant('rolesPanel.roles'));
+                  }
+                });
+              },
+            },
+          })
+          .state('user-overview.roles-and-security', {
             templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
             controller: 'UserRolesCtrl',
             data: {
-              displayName: 'Roles',
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                _.set($state.get('user-overview.roles-and-security'), 'data.displayName', $translate.instant('usersPreview.rolesAndSecurity'));
+              },
             },
           })
-
           .state('user-overview.cmc', {
             template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
             params: {
@@ -2217,26 +2235,6 @@
             templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
             controller: 'PartnerReportCtrl',
             controllerAs: 'nav',
-          })
-          .state('login_swap', {
-            parent: 'loginLazyLoad',
-            url: '/login/:customerOrgId/:customerOrgName',
-            views: {
-              'main@': {
-                template: '<login/>',
-              },
-            },
-            authenticate: false,
-          })
-          .state('launch_partner_org', {
-            parent: 'loginLazyLoad',
-            url: '/login/:partnerOrgId/:partnerOrgName/:launchPartner',
-            views: {
-              'main@': {
-                template: '<login/>',
-              },
-            },
-            authenticate: false,
           })
           .state('partnercustomers', {
             parent: 'partner',
