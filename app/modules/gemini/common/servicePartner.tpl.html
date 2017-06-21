@@ -1,5 +1,5 @@
 <div class="gemini-page">
-  <cs-page-header title="{{::'gemini.cca.title' | translate}}" title-name="{{::'gemini.cca.title' | translate}}"></cs-page-header>
+  <cs-page-header title-name="gemini.cca.title"></cs-page-header>
   <div class="cs-card-container multiple-layouts gemServices">
     <div ng-if="gsls.loading" class="grid-refresh">
       <span class="spinner-example-large">
@@ -11,7 +11,7 @@
         <article>
           <header>
             <div class="header-with-left-icon">
-              <span  dropdown class="card-icon h3">
+              <span dropdown class="card-icon h3">
                 {{val.companyName| limitTo:1 | uppercase}}
               </span>
               <h4 class="title ellipsis text-left" title="{{val.companyName}}">{{val.companyName}}</h4>
