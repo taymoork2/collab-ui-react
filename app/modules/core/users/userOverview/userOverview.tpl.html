@@ -14,13 +14,13 @@
       on-feature-click="userOverview.clickService(feature)">
     </feature-list>
   </cs-sp-section>
+  <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
   <cs-sp-section ng-if="userOverview.enableRolesAndSecurityOption">
     <section-title
       title-key="usersPreview.rolesAndSecurity"
       on-action-click="userOverview.clickRolesAndSecurity()">
     </section-title>
   </cs-sp-section>
-  <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
   <uc-devices ng-if="userOverview.showDevices"></uc-devices>
   <uc-user-details
     ng-show="userOverview.hasSparkCall"
