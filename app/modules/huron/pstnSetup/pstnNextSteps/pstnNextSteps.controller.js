@@ -27,9 +27,8 @@
     ////////////////////////
 
     function launchCustomerPortal() {
-      $window.open($state.href('login_swap', {
+      $window.open($state.href('login', {
         customerOrgId: PstnModel.getCustomerId(),
-        customerOrgName: PstnModel.getCustomerName(),
       }));
     }
   }

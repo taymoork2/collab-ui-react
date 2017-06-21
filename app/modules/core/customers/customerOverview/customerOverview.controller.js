@@ -42,7 +42,6 @@ require('./_customer-overview.scss');
     vm.isProPackEnabled = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
-    vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
     vm.currentAdminId = Authinfo.getUserId();
 
@@ -295,9 +294,8 @@ require('./_customer-overview.scss');
     }
 
     function openCustomerPortal() {
-      var openWindow = $window.open($state.href('login_swap', {
+      var openWindow = $window.open($state.href('login', {
         customerOrgId: vm.customerOrgId,
-        customerOrgName: vm.customerName,
       }));
 
       if (!openWindow || openWindow.closed || typeof openWindow.closed === 'undefined') {

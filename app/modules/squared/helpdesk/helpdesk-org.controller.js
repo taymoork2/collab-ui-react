@@ -284,9 +284,8 @@
     function launchAtlasReadonly() {
       vm.launchingAtlas = true;
       HelpdeskService.elevateToReadonlyAdmin(vm.orgId).then(function () {
-        $window.open($state.href('login_swap', {
+        $window.open($state.href('login', {
           customerOrgId: vm.orgId,
-          customerOrgName: vm.org.displayName,
         }));
       }, vm._helpers.notifyError)
         .finally(function () {
