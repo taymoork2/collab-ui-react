@@ -6,25 +6,37 @@
     .controller('WebExMetricsCtrl', WebExMetricsCtrl);
 
   /* @ngInject */
-  function WebExMetricsCtrl($q, $scope, $stateParams, $translate, Authinfo, LocalStorage, Userservice, WebExApiGatewayService,
+  function WebExMetricsCtrl($q, $scope, $stateParams, Authinfo, LocalStorage, Userservice, WebExApiGatewayService,
     $sce,
     $timeout,
     $window,
+    Notification,
     QlikService,
     ProPackService
   ) {
     var vm = this;
 
-    vm.metricsUrl = '';
     vm.metrics = 'metrics';
-    vm.reportView = 'Base';
     vm.search = 'search';
     vm.webexOptions = [];
     vm.webexSelected = null;
+    vm.webexMetrics = {};
+
+    vm.webexMetrics.views = [
+      {
+        view: 'Base',
+        appName: 'basic_webex_v1',
+      },
+      {
+        view: 'Premium',
+        appName: 'premium_webex_v1',
+      },
+    ];
+    vm.reportView = vm.webexMetrics.views[0];
     vm.metricsOptions = [
       {
         id: '0',
-        label: $translate.instant('reportsPage.webexMetrics.metrics'),
+        label: 'reportsPage.webexMetrics.metrics',
         selected: true,
         filterType: vm.metrics,
         toggle: function () {
@@ -33,7 +45,7 @@
       },
       {
         id: '1',
-        label: $translate.instant('reportsPage.webexMetrics.search'),
+        label: 'reportsPage.webexMetrics.search',
         selected: false,
         filterType: vm.search,
         toggle: function () {
@@ -161,33 +173,37 @@
         email: Authinfo.getPrimaryEmail(),
       };
 
-      //TODO: remove it before QBS API finished. just for 23-5-2017 demo
-      vm.webexSelected = 'go.webex.com';
-      userInfo = {
-        org_id: 'TEST-QV-3',
-        siteUrl: vm.webexSelected,
-        email: 'qvadmin@cisco.com',
-      };
+      QlikService['getWebExReportQBSfor' + vm.reportView.view + 'Url'](userInfo).then(function (data) {
+        var QlikMashupChartsUrl = QlikService['getWebExReportAppfor' + vm.reportView.view + 'Url']();
 
-      QlikService['getWebExReportQBSfor' + vm.reportView + 'Url'](userInfo).then(function (urlWithTicket) {
-        var QlikMashupChartsUrl = QlikService['getWebExReportAppfor' + vm.reportView + 'Url']();
-        var rx = /app[/](.*?)[/?]/g;
-        var QlikAppUrl = '';
-        QlikAppUrl = rx.exec(urlWithTicket.appUrl);
-        vm.currentFilter.appId = QlikAppUrl[1];
-        vm.currentFilter.QlikTicket = urlWithTicket.ticket;
+        vm.webexMetrics.appData = {
+          ticket: data.ticket,
+          appId: vm.reportView.appName,
+          node: data.host,
+          qrp: data.qlik_reverse_proxy,
+          persistent: data.isPersistent,
+          vID: data.siteId,
+        };
+        vm.webexMetrics.appData.url = QlikMashupChartsUrl.replace('QRP', vm.webexMetrics.appData.qrp);
 
         loadUrlAndIframe(QlikMashupChartsUrl);
+      })
+      .catch(function (error) {
+        Notification.errorWithTrackingId(error, 'common.error');
       });
     }
 
     function updateIframe() {
       vm.isIframeLoaded = false;
 
-      var iframeUrl = vm.currentFilter.url;
+      var iframeUrl = vm.webexMetrics.appData.url;
       $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
-      $scope.appId = vm.currentFilter.appId;
-      $scope.QlikTicket = vm.currentFilter.QlikTicket;
+      $scope.appId = vm.webexMetrics.appData.appId;
+      $scope.QlikTicket = vm.webexMetrics.appData.ticket;
+      $scope.node = vm.webexMetrics.appData.node;
+      $scope.persistent = vm.webexMetrics.appData.persistent;
+      $scope.vID = vm.webexMetrics.appData.vID;
+      $scope.QlikTicket = vm.webexMetrics.appData.ticket;
       var parser = $window.document.createElement('a');
       parser.href = iframeUrl;
 

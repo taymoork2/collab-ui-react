@@ -1729,8 +1729,10 @@
             views: {
               tabContent: {
                 controllerAs: 'nav',
-                controller: 'SparkReportCtrl',
-                templateUrl: 'modules/core/customerReports/sparkReports/sparkReports.tpl.html',
+                controller: 'SparkMetricsCtrl',
+                templateUrl: 'modules/core/customerReports/webexMetrics/sparkMetrics.tpl.html',
+                /*controller: 'SparkReportCtrl',
+                templateUrl: 'modules/core/customerReports/sparkReports/sparkReports.tpl.html',*/
               },
             },
           })

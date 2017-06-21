@@ -16,6 +16,16 @@ class CustomerReportsHeaderCtrl {
       });
     }
     this.$q.all(this.promises).then((features: any): void => {
+      if (features.webexMetrics) {
+        this.headerTabs.push({
+          title: 'reportsPage.sparkReports',
+          state: 'reports.spark',
+        });
+        this.headerTabs.push({
+          title: 'reportsPage.webexMetrics.title',
+          state: 'reports.webex-metrics',
+        });
+      }
       if (features.webexReports) { // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
         this.headerTabs.push({
           title: 'customerPage.webex',
@@ -44,20 +54,11 @@ class CustomerReportsHeaderCtrl {
         title: 'reportsPage.usageReports.usageReportTitle',
         state: 'reports.device-usage',
       });
-      if (features.webexMetrics) {
-        this.headerTabs.push({
-          title: 'reportsPage.webexMetrics.title',
-          state: 'reports.webex-metrics',
-        });
-      }
     });
     this.checkWebex();
   }
 
-  public headerTabs = [{
-    title: 'reportsPage.sparkReports',
-    state: 'reports.spark',
-  }];
+  public headerTabs = new Array<any>();
 
   private webex: boolean = false;
   private promises: any = {
