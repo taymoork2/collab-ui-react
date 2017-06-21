@@ -9,12 +9,14 @@ describe('Component: PstnTrialSetupComponent', () => {
       '$scope',
       '$timeout',
       '$q',
+      'FeatureToggleService',
       '$httpBackend',
       'Analytics',
       'PstnModel',
       'PstnService',
       'TrialPstnService',
     );
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
   });
 
   function initComponent() {
@@ -77,6 +79,38 @@ describe('Component: PstnTrialSetupComponent', () => {
         expect(this.controller.providerImplementation).toBe(pstnCarrier.apiImplementation);
         expect(this.controller.providerSelected).toBe(true);
       });
+    });
+
+    describe('Disable Next', function () {
+      it('should return true for invalid tokens', function () {
+        this.controller.invalidCount = 1;
+        expect(this.controller.disableNextButton()).toBeTruthy();
+      });
+
+      it('should return true for pmp with no numbers', function () {
+        this.controller.invalidCount = 0;
+        this.controller.providerSelected = true;
+        this.controller.providerImplementation = 'My API';
+        this.controller.trialData.details.pstnNumberInfo.numbers = [];
+        expect(this.controller.disableNextButton()).toBeTruthy();
+      });
+
+      it('should return true for pmp with no address verified', function () {
+        this.controller.invalidCount = 0;
+        this.controller.providerSelected = true;
+        this.controller.providerImplementation = 'My API';
+        this.controller.addressFound = false;
+        expect(this.controller.disableNextButton()).toBeTruthy();
+      });
+
+      it('should return false for SWIVEL', function () {
+        this.controller.invalidCount = 0;
+        this.controller.providerSelected = true;
+        this.controller.providerImplementation = this.controller.SWIVEL;
+        this.controller.trialData.details.swivelNumbers = [ '9726783456' ];
+        expect(this.controller.disableNextButton()).toBeFalsy();
+      });
+
     });
 
   });

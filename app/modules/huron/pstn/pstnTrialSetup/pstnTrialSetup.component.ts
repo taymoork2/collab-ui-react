@@ -32,6 +32,8 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   public readOnly: boolean = false;
   public dismiss: Function;
 
+  public ftEnterpriseTrunking: boolean  = false;
+
   /* @ngInject */
   constructor(private PstnModel: PstnModel,
               private TrialPstnService,
@@ -43,7 +45,8 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
               private Analytics,
               private PstnServiceAddressService,
               private $translate: ng.translate.ITranslateService,
-              private HuronCompassService: HuronCompassService) {
+              private HuronCompassService: HuronCompassService,
+              private FeatureToggleService) {
     this.trialData = this.TrialPstnService.getData();
     this.SWIVEL = SWIVEL;
     this.parentTrialData = $scope.$parent.trialData;
@@ -56,6 +59,10 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
       this.addressFound = true;
       this.addressLoading = false;
     }
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then(result => {
+      this.ftEnterpriseTrunking = result;
+    });
   }
 
   public onProviderChange(reset?): void {
@@ -196,17 +203,21 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
     if (!this.checkForInvalidTokens()) {
       // there are invalid tokens
       return true;
-    } else if (this.providerImplementation === this.SWIVEL && _.size(this.trialData.details.swivelNumbers) === 0) {
-      // no swivel numbers entered
-      return true;
-    } else if (this.providerImplementation !== this.SWIVEL && _.size(this.trialData.details.pstnNumberInfo.numbers) === 0) {
-      // no PSTN numbers
-      return true;
-    } else if (this.providerImplementation !== this.SWIVEL && !this.addressFound) {
+    } else if (this.providerSelected === true && this.providerImplementation === this.SWIVEL) {
+      if (!this.ftEnterpriseTrunking) {
+        return _.size(this.trialData.details.swivelNumbers) === 0;
+      } else {
+          // no swivel numbers needed
+        return false;
+      }
+    } else if (this.providerSelected === true && this.providerImplementation !== this.SWIVEL && _.size(this.trialData.details.pstnNumberInfo.numbers) !== 0) {
+      // PSTN numbers
+      return false;
+    } else if (this.providerSelected === true && this.providerImplementation !== this.SWIVEL && !this.addressFound) {
       return true;
     } else {
-      // have some valid numbers
-      return false;
+      // provider not selected or no valid numbers
+      return true;
     }
   }
 
