@@ -516,8 +516,9 @@ require('./_user-roles.scss');
 
     function resetAccess() {
       $scope.resettingAccess = true;
-      var userName = $scope.currentUser.userName;
-      Auth.revokeUserAuthTokens(userName)
+      var userName = _.get($scope, 'currentUser.userName');
+      var orgId = _.get($scope, 'currentUser.meta.organizationID');
+      Auth.revokeUserAuthTokens(userName, orgId)
         .then(function () {
           Notification.success('usersPreview.resetAccessSuccess', { name: userName });
         })
