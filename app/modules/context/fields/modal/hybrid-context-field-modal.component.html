@@ -198,11 +198,11 @@
     class="btn btn-primary"
     translate="common.create"
     ng-click="$ctrl.create()"
-    ng-disabled="!$ctrl.createOrSaveButtonEnabled() || !$ctrl.minimumOptionsCheckPassed"></button>
+    ng-disabled="!$ctrl.createOrSaveButtonEnabled()"></button>
   <button
     ng-if="!$ctrl.createMode"
     class="btn btn-primary"
     translate="common.save"
     ng-click="$ctrl.update()"
-    ng-disabled="!$ctrl.createOrSaveButtonEnabled() || forms.newFieldForm.$pristine || !$ctrl.uniqueOptionCheckPassed || !$ctrl.minimumOptionsCheckPassed"></button>
+    ng-disabled="!$ctrl.createOrSaveButtonEnabled() || forms.newFieldForm.$pristine"></button>
 </div>
