@@ -202,8 +202,8 @@
         .catch(logErrorAndReject('Failed to delete the oAuth token'));
     }
 
-    function revokeUserAuthTokens(userName) {
-      var revokeUrl = OAuthConfig.getOAuthRevokeUserTokenUrl() + $window.encodeURIComponent(userName);
+    function revokeUserAuthTokens(userName, orgId) {
+      var revokeUrl = OAuthConfig.getOAuthRevokeUserTokenUrl() + $window.encodeURIComponent(userName) + '&orgid=' + orgId;
       return $http.delete(revokeUrl);
     }
 
