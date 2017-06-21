@@ -8,8 +8,6 @@ import { CallFeaturesPage } from '../pages/callFeatures.page';
 
 const callFeatures = new CallFeaturesPage();
 
-/* global LONG_TIMEOUT */
-
 describe('Huron Functional: call-features', () => {
   const testPartner = 'huron-ui-test-partner';
   let customerName;
