@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService, HybridServicesExtrasService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     var service = {
@@ -496,7 +496,10 @@
     function elevateToReadonlyAdmin(orgId) {
       return $http
         .post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke')
-        .then(USSService.notifyReadOnlyLaunch);
+        .then(USSService.notifyReadOnlyLaunch)
+        .catch(angular.noop)
+        .then(HybridServicesExtrasService.notifyReadOnlyLaunch)
+        .catch(angular.noop);
     }
 
     function getHybridStatusesForUser(userId, orgId) {
