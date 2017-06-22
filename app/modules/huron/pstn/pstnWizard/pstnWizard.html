@@ -192,7 +192,7 @@
       <h2 ng-if="$ctrl.swivelNumbers.length === 0" translate="pstnSetup.privatePstnFinalized"></h2>
       <h2 ng-if="$ctrl.swivelNumbers.length !== 0" translate="pstnSetup.privatePstnNumbersImported" translate-value-count="{{::$ctrl.swivelNumbers.length}}" translate-interpolation="messageformat"></h2>
       <div ng-if="$ctrl.swivelNumbers.length !== 0">
-        <button class="left btn btn--people" ng-click="$ctrl.launchCustomerPortal()" translate="pstnSetup.launchPortal">
+        <button ng-if="$ctrl.loggedInPartnerPortal" class="left btn btn--people" ng-click="$ctrl.launchCustomerPortal()" translate="pstnSetup.launchPortal">
         </button>
       </div>
     </div>

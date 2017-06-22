@@ -738,4 +738,12 @@ export class PstnWizardService {
   public blockByopNumberAddForAllAdmin(): boolean {
     return (this.isSwivel() && !this.PstnModel.isEsaSigned());
   }
+
+  public isPartnerPortal(): boolean {
+    return this.Authinfo.isPartner();
+  }
+
+  public isLoggedInAsPartner(): boolean {
+    return (this.Authinfo.isCustomerLaunchedFromPartner() || this.Authinfo.isPartner());
+  }
 }
