@@ -66,7 +66,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public titles: {};
   public dismiss: Function;
   public prevStep: number = 1;
-
+  public loggedInPartnerPortal: boolean = false;
   private did: DirectInwardDialing = new DirectInwardDialing();
   private i387FeatureToggle: boolean;
 
@@ -174,6 +174,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public goToSwivelNumbers(): void {
+    this.loggedInPartnerPortal = this.PstnWizardService.isPartnerPortal();
     if (this.i387FeatureToggle) {
       this.blockByopNumberAddForPartnerAdmin = this.PstnWizardService.blockByopNumberAddForPartnerAdmin();
       if (this.blockByopNumberAddForPartnerAdmin || this.PstnModel.isEsaSigned()) {
@@ -469,10 +470,33 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public onSkip(): void {
-    if (this.PstnWizardService.blockByopNumberAddForAllAdmin() && this.PstnModel.isCustomerExists()) {
-      this.dismissModal();
-    } else {
-      this.step = 10;
+    switch (this.step) {
+      case 8:
+        if (this.PstnModel.isCustomerExists()) {
+          this.dismissModal();
+        }  else {
+          this.finalizeCustomerAndEsA();
+        }
+        break;
+      case 9:
+        if (this.PstnWizardService.isLoggedInAsPartner()) {
+          if (this.PstnModel.isCustomerExists()) {
+            this.dismissModal();
+          } else {
+            this.step = 10;
+          }
+        } else if (this.PstnWizardService.blockByopNumberAddForAllAdmin) {
+          this.finalizeCustomerAndEsA();
+        }
+        break;
+      default:
+        this.dismissModal();
     }
+  }
+
+  public finalizeCustomerAndEsA(): void {
+    this.PstnModel.clearSwivelNumbers();
+    this.onSwivelChange([], 0);
+    this.step = 10;
   }
 }

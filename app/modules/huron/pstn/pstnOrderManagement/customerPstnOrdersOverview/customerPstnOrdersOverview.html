@@ -6,7 +6,7 @@
           <span translate="pstnOrderOverview.historyAndImports"></span>
         </div>
         <div ng-if="$ctrl.vendor !== 'undefined'">
-          <span ng-if="$ctrl.vendor !== 'BYOPSTN'" translate="{{$ctrl.vendor}}"></span>
+          <span ng-if="$ctrl.vendor !== 'BYOPSTN'">{{$ctrl.vendor}}</span>
           <span ng-if="$ctrl.vendor === 'BYOPSTN'" translate="pstnOrderOverview.privatePstnTrunk"></span>
         </div>
       </div>
