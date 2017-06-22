@@ -6,8 +6,12 @@ export class CallSettingsPage {
     this.dialPlanWarningModalTitle = element(by.cssContainingText('.modal-title', 'Dial Plan Settings'));
     this.dialPlanWarningYesBtn = element(by.css('.modal-footer .btn--primary'));
     this.addExtensionRangeBtn = element(by.css('uc-extension-range .btn-link'));
-    this.beginRange = element(by.id('beginRange1'));
-    this.endRange = element(by.id('endRange1'));
-    this.extensionLengthModalTitle = element(by.cssContainingText('.modal-title', 'Warning'));
+    this.beginRange = element(by.css('input#beginRange1'));
+    this.endRange = element(by.css('input#endRange1'));
+    this.extensionLengthWarningTitle = element(by.cssContainingText('.modal-title', 'Warning'));
+    this.continueButton = element(by.cssContainingText('button', 'Continue'));
+    this.extensionPrefixTitle = element(by.cssContainingText('.modal-title', 'Choose Prefix'));
+    this.extensionPrefixInput = element(by.id('extensionPrefix'));
+    this.extensionPrefixSaveButton = element(by.css('.modal-footer .btn-primary'));
   }
 };
