@@ -4,12 +4,14 @@ import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { Notification } from 'modules/core/notifications';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/huron/settings/companyCallerId';
 import { AvrilService, IAvrilSite, AvrilSite, IAvrilFeatures, AvrilFeatures } from 'modules/huron/avril';
+import { MediaOnHoldService } from 'modules/huron/mediaOnHold';
 import { TerminusService } from 'modules/huron/pstn';
 import { ExtensionLengthService } from './extensionLength.service';
 
 export class HuronSettingsData {
   public customer: CustomerSettings;
   public site: ISite;
+  public companyMoh: string;
   public internalNumberRanges: IExtensionRange[];
   public cosRestrictions: any;
   public companyCallerId: CompanyNumber;
@@ -65,6 +67,7 @@ export class HuronSettingsService {
   constructor(
     private HuronSiteService: HuronSiteService,
     private HuronCustomerService: HuronCustomerService,
+    private MediaOnHoldService: MediaOnHoldService,
     private Notification: Notification,
     private $q: ng.IQService,
     private AvrilService: AvrilService,
@@ -117,6 +120,7 @@ export class HuronSettingsService {
               }
             });
         }),
+      companyMoh: this.getCompanyMedia().then(companyMoh => huronSettingsData.companyMoh = companyMoh),
       internalNumberRanges: this.getInternalNumberRanges().then(internalNumberRanges => huronSettingsData.internalNumberRanges = internalNumberRanges),
       cosRestrictions: this.getCosRestrictions().then(cosRestrictions => huronSettingsData.cosRestrictions = cosRestrictions),
       companyCallerId: this.getCompanyCallerId().then(companyCallerId => huronSettingsData.companyCallerId = companyCallerId),
@@ -254,6 +258,23 @@ export class HuronSettingsService {
     return this.HuronSiteService.getTheOnlySite()
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.siteGetError'));
+        return this.$q.reject();
+      });
+  }
+
+  private getCompanyMedia(): ng.IPromise<string> {
+    let mediaOnHold = '1';
+    return this.MediaOnHoldService.getMediaOnHold()
+      .then(mediaList => {
+        _.forEach(mediaList, media => {
+          if (media.assignments && _.find(media.assignments, ['idType', 'ORG_ID'])) {
+            mediaOnHold = media.rhesosId;
+          }
+        });
+        return mediaOnHold;
+      })
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
         return this.$q.reject();
       });
   }
