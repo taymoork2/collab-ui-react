@@ -70,7 +70,9 @@
       // lookup customer carriers
       return PstnService.getCustomer(PstnModel.getCustomerId())
         .then(initCustomer)
-        .then(_.partial(PstnService.listCustomerCarriers, PstnModel.getCustomerId()))
+        .then(function () {
+          return PstnService.listCustomerCarriers(PstnModel.getCustomerId());
+        })
         .then(function (carriers) {
           if (_.isArray(carriers) && carriers.length > 0) {
             PstnModel.setCarrierExists(true);
