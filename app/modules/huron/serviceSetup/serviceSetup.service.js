@@ -31,59 +31,10 @@
         }).$promise;
       },
 
-      getAvrilSite: function (siteUuid) {
-        return AvrilSiteUpdateService.get({
-          customerId: Authinfo.getOrgId(),
-          siteId: siteUuid,
-        }).$promise;
-      },
-
-      updateSite: function (siteUuid, site) {
-        return SiteService.update({
-          customerId: Authinfo.getOrgId(),
-          siteId: siteUuid,
-        }, site).$promise;
-      },
-
-      updateAvrilSite: function (siteUuid, features) {
-        return AvrilSiteUpdateService.update({
-          customerId: Authinfo.getOrgId(),
-          siteId: siteUuid,
-        }, features).$promise;
-      },
-
-      createAvrilSite: function (siteUuid, siteStrDigit, code, lang, timezone, extLength, voicemailPilotNumber) {
-        return AvrilSiteService.save({
-          customerId: Authinfo.getOrgId(),
-          guid: siteUuid,
-          siteCode: code,
-          siteSteeringDigit: siteStrDigit,
-          language: lang,
-          timeZone: timezone,
-          extensionLength: extLength,
-          pilotNumber: voicemailPilotNumber,
-        }).$promise;
-      },
-
       saveAutoAttendantSite: function (site) {
         return CeSiteService.save({
           customerId: Authinfo.getOrgId(),
         }, site).$promise;
-      },
-
-      getMediaOnHoldList: function () {
-        return MediaManagerService.get({
-          orgId: Authinfo.getOrgId(),
-        }).$promise;
-      },
-
-      setCompanyMediaOnHold: function (mediaId, assignmentInfo) {
-        return MediaManagerService.save({
-          orgId: Authinfo.getOrgId(),
-          mediaFileId: mediaId,
-          //TODO (yorao): Check during EFT. Assignments might not require sending empty array in the future with potential changes to Rhesos API. Remove empty array pass when chagnes are available.
-          assignments: assignmentInfo || [],
-        }).$promise;
       },
 
       loadExternalNumberPool: function (pattern) {
@@ -244,10 +195,6 @@
           });
         });
         return localizedCountries;
-      },
-
-      isOverlapping: function (x1, x2, y1, y2) {
-        return Math.max(x1, y1) <= Math.min(x2, y2);
       },
 
       listCosRestrictions: function () {
