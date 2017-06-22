@@ -1718,21 +1718,30 @@
             },
           })
           .state('reports', {
+            url: '/reports',
             templateUrl: 'modules/core/customerReports/customerReportsHeader.tpl.html',
             controller: 'CustomerReportsHeaderCtrl',
             controllerAs: 'header',
             parent: 'main',
-            abstract: true,
+            // abstract: true,
           })
           .state('reports.spark', {
-            url: '/reports',
+            url: '/reports/spark',
+            views: {
+              tabContent: {
+                controllerAs: 'nav',
+                controller: 'SparkReportCtrl',
+                templateUrl: 'modules/core/customerReports/sparkReports/sparkReports.tpl.html',
+              },
+            },
+          })
+          .state('reports.sparkMetrics', {
+            url: '/reports/sparkMetrics',
             views: {
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'SparkMetricsCtrl',
                 templateUrl: 'modules/core/customerReports/webexMetrics/sparkMetrics.tpl.html',
-                /*controller: 'SparkReportCtrl',
-                templateUrl: 'modules/core/customerReports/sparkReports/sparkReports.tpl.html',*/
               },
             },
           })

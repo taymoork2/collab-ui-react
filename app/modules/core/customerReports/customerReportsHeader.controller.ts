@@ -3,6 +3,7 @@ class CustomerReportsHeaderCtrl {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $state,
     private Authinfo,
     private FeatureToggleService,
     private MediaServiceActivationV2,
@@ -16,14 +17,19 @@ class CustomerReportsHeaderCtrl {
       });
     }
     this.$q.all(this.promises).then((features: any): void => {
-      if (features.webexMetrics) {
+      if (features.webexMetrics && features.proPackEnabled) {
         this.headerTabs.push({
           title: 'reportsPage.sparkReports',
-          state: 'reports.spark',
+          state: 'reports.sparkMetrics',
         });
         this.headerTabs.push({
           title: 'reportsPage.webexMetrics.title',
           state: 'reports.webex-metrics',
+        });
+      } else {
+        this.headerTabs.push({
+          title: 'reportsPage.sparkReports',
+          state: 'reports.spark',
         });
       }
       if (features.webexReports) { // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
@@ -54,6 +60,7 @@ class CustomerReportsHeaderCtrl {
         title: 'reportsPage.usageReports.usageReportTitle',
         state: 'reports.device-usage',
       });
+      this.goToFirstReportsTab();
     });
     this.checkWebex();
   }
@@ -65,7 +72,8 @@ class CustomerReportsHeaderCtrl {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
     mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
-    webexMetrics: this.ProPackService.hasProPackEnabled(),
+    webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
+    proPackEnabled: this.ProPackService.hasProPackEnabled(),
   };
 
   private checkWebex (): void {
@@ -84,6 +92,11 @@ class CustomerReportsHeaderCtrl {
         }
       }).catch(_.noop);
     });
+  }
+
+  public goToFirstReportsTab(): void {
+    const firstTab = this.headerTabs[0];
+    this.$state.go(firstTab);
   }
 
   private getUniqueWebexSiteUrls() {

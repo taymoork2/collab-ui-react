@@ -27,15 +27,11 @@
         view: 'Premium',
         appName: 'premium_spark_v1',
       },
-      {
-        view: 'Partner',
-        appName: 'partner_spark_v1',
-      },
     ];
     vm.reportView = vm.sparkMetrics.views[0];
 
     function generateWebexMetricsUrl() {
-      if (Authinfo.isPartner()) {
+      /*if (Authinfo.isPartner()) {
         vm.reportView = vm.sparkMetrics.views[2];
       } else {
         ProPackService.getProPackPurchased().then(function (isPurchased) {
@@ -44,7 +40,13 @@
           }
           loadMetricsReport();
         });
-      }
+      }*/
+      ProPackService.getProPackPurchased().then(function (isPurchased) {
+        if (isPurchased) {
+          vm.reportView = vm.sparkMetrics.views[1];
+        }
+        loadMetricsReport();
+      });
     }
 
     if (!_.isUndefined(Authinfo.getPrimaryEmail())) {

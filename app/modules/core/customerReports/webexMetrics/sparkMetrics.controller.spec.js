@@ -5,10 +5,10 @@ xdescribe('Controller: Spark Metrics Ctrl', function () {
 
   var testData = {
     postResult: {
-      "ticket": "0Ibh4usd9bERRzLR",
-      "host": "qlik-loader",
-      "qlik_reverse_proxy": "qlik-loader",
-      "appname": "basic_spark_v1__qvadmin@cisco.com",
+      'ticket': '0Ibh4usd9bERRzLR',
+      'host': 'qlik-loader',
+      'qlik_reverse_proxy': 'qlik-loader',
+      'appname': 'basic_spark_v1__qvadmin@cisco.com',
     },
     postAppResult: 'QRP/custportal',
   };
