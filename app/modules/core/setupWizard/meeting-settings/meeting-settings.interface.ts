@@ -1,7 +1,16 @@
 export interface IWebExSite {
   name: string;
   timeZone?: string;
+  timeZoneId?: string | object;
+  centerType: string;
   licenseCount?: number;
+}
+
+export interface IWebexSiteDetail {
+  siteUrl: string;
+  timezone: string;
+  centerType: string;
+  quantity: number;
 }
 
 export interface ISiteNameError {
@@ -31,4 +40,15 @@ export interface IConferenceLicense {
 
 export interface IExistingTrialSites extends IWebExSite {
   keepExistingSite: boolean;
+}
+
+export interface IWebexLicencesPayload {
+  provisionOrder: boolean;
+  serviceOrderUUID: string | null;
+  webexProvisioningParams: IWebexProvisioningParams;
+}
+
+export interface IWebexProvisioningParams {
+  webexSiteDetailsList: IWebexSiteDetail[];
+  audioPartnerName: string | null;
 }

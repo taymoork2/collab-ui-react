@@ -152,11 +152,8 @@ require('./_setup-wizard.scss');
       };
 
       if (showMeetingSettingsTab(userEmail)) {
-        if (hasWebexMeetingTrial()) {
-          _.remove(meetingTab.steps, { name: 'init' });
-        } else if (isDirectOrderWithoutTrial()) {
-          _.remove(meetingTab.steps, { name: 'migrateTrial' });
-        }
+        var stepToRemove = hasWebexMeetingTrial() ? 'init' : 'migrateTrial';
+        _.remove(meetingTab.steps, { name: stepToRemove });
         meetingTab.steps = meetingTab.steps.concat(trialFlowSteps);
         tabs.splice(1, 0, meetingTab);
       }
@@ -243,10 +240,6 @@ require('./_setup-wizard.scss');
       return _.some(conferencingServices, function (service) {
         return _.get(service, 'license.offerName') === Config.offerCodes.MC || _.get(service, 'license.offerName') === Config.offerCodes.EE;
       });
-    }
-
-    function isDirectOrderWithoutTrial() {
-      return !hasWebexMeetingTrial();
     }
 
     function showCallSettings() {
