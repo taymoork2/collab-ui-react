@@ -184,10 +184,6 @@ class HuntGroupCtrl implements ng.IComponentController {
   public save(): void {
     this.saveInProcess = true;
 
-    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION) {
-      this.huntGroup.alternateDestination = new FallbackDestination();
-    }
-
     this.HuntGroupService.updateHuntGroup(this.huntGroup.uuid || '', this.huntGroup)
     .then((huntGroup: HuntGroup) => {
       this.Notification.success('huronHuntGroup.successUpdate', { huntGroupName: this.huntGroup.name } );
