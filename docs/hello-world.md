@@ -86,9 +86,11 @@ User: ['say-hello',..]
 
 **3. Test and Run**
 * run the app using:
-```bash
-$ npm start
-```
+
+  ```bash
+  $ npm start
+  ```
+
 * you should see your new menu and when you click on it you should see the hello world page
 * test the app using `npm run protractor -- --suite <module>`, this will test your module
 * test the entire suite by running: `npm run protractor -- --suite jenkins`
