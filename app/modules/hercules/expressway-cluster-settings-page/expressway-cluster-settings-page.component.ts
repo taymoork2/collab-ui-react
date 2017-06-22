@@ -24,7 +24,6 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   public deactivateServices = {
     title: 'hercules.expresswayClusterSettings.deactivateServicesHeader',
   };
-  public localizedClusterNameWatermark = this.$translate.instant('hercules.expresswayClusterSettings.clusterNameWatermark');
 
   /* @ngInject */
   constructor(

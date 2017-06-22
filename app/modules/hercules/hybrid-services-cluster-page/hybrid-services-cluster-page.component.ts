@@ -2,7 +2,8 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 
 class HybridServicesClusterPageCtrl implements ng.IComponentController {
   public tabs: { title: string, state: string }[] = [];
-  public localizedTitle: string;
+  public title: string;
+  public titleValues: object;
   public backUrl: string = 'cluster-list';
   public hasNodesViewFeatureToggle: boolean;
 
@@ -10,7 +11,6 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
   constructor(
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
-    private $translate: ng.translate.ITranslateService,
     private HybridServicesClusterService: HybridServicesClusterService,
   ) {}
 
@@ -22,9 +22,10 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
   }
 
   private updateName(name: string): void {
-    this.localizedTitle = this.$translate.instant('hercules.expresswayClusterSettings.pageTitle', {
+    this.title = 'hercules.expresswayClusterSettings.pageTitle';
+    this.titleValues = {
       clusterName: name,
-    });
+    };
   }
 
   private init(id) {

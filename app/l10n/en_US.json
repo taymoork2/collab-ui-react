@@ -2538,6 +2538,7 @@
         "go-to-expressway": "Go to Expressway",
         "upgrade": "Upgrade available",
         "upgrading": "Installing upgrade",
+        "pending": "Pending upgrade",
         "alarms": "Alarms",
         "maintenance": "Maintenance",
         "pendingMaintenance": "Pending maintenance"

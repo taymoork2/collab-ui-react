@@ -4,7 +4,7 @@
   /* @ngInject */
   function MediaServiceControllerV2($modal, $state, $stateParams, Authinfo, HybridServicesClusterService) {
     var vm = this;
-    vm.backState = $stateParams.backTo || 'services-overview';
+    vm.backState = $stateParams.backState || 'services-overview';
 
     // Added for cs-page-header
     vm.tabs = [
