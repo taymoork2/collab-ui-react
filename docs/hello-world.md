@@ -1,4 +1,4 @@
-## Adding a simple page ("Hello World")
+## Adding a Simple Page ("Hello World")
 
 **1. Add a new module**
 * add new module folder:
