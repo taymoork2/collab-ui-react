@@ -71,8 +71,6 @@ require('./_setup-wizard.scss');
       initMeetingSettingsTab(tabs);
       initCallSettingsTab(tabs);
       initCareTab(tabs);
-
-      initSharedDeviceOnly(tabs);
       initAtlasPMRonM2(tabs);
       initFinishTab(tabs);
       removeTabsWithEmptySteps(tabs);
@@ -81,17 +79,6 @@ require('./_setup-wizard.scss');
 
     function getInitTabs() {
       return [{
-        name: 'messagingSetup',
-        label: 'firstTimeWizard.messageSettings',
-        description: 'firstTimeWizard.messagingSetupSub',
-        icon: 'icon-convo',
-        title: 'firstTimeWizard.messagingSetup',
-        controller: 'MessagingSetupCtrl as msgSetup',
-        steps: [{
-          name: 'setup',
-          template: 'modules/core/setupWizard/messageSettings/messagingSetup.tpl.html',
-        }],
-      }, {
         name: 'enterpriseSettings',
         label: 'firstTimeWizard.enterpriseSettings',
         description: 'firstTimeWizard.enterpriseSettingsSub',
@@ -212,7 +199,7 @@ require('./_setup-wizard.scss');
           if (customer && hasPendingCallLicenses) {
             SetupWizardService.activateAndCheckCapacity().catch(function (error) {
               $timeout(function () {
-              //   $scope.$emit('wizardNextButtonDisable', true);
+                //   $scope.$emit('wizardNextButtonDisable', true);
               });
               if (error.errorCode === 42003) {
                 //Error code from Drachma
@@ -293,15 +280,6 @@ require('./_setup-wizard.scss');
         } else {
           tabs.splice(finishTabIndex, 0, careTab);
         }
-      }
-    }
-
-
-    function initSharedDeviceOnly(tabs) {
-      if (isSharedDevicesOnlyLicense) {
-        _.remove(tabs, function (tab) {
-          return tab.name === 'messagingSetup';
-        });
       }
     }
 
