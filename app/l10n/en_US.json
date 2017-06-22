@@ -408,7 +408,8 @@
     "resetAccessFailure": "Unable to reset {{name}}'s access. Please try later.",
     "resetAccess": "Reset Access",
     "learnMore": "Learn more.",
-    "resetAccessDetail": "Revoke user access tokens for the Cisco Spark app on desktop, web, and mobile. This deletes any cached content and prompts the user to sign in again."
+    "resetAccessDetail": "Revoke user access tokens for the Cisco Spark app on desktop, web, and mobile. This deletes any cached content and prompts the user to sign in again.",
+    "location": "Location"
   },
   "tabs": {
     "overviewTab": "Overview",
@@ -6393,7 +6394,8 @@
       "createLocation": "Create Location",
       "cancelHeader": "Cancel Location Creation",
       "cancelDialog": "Are you sure you wish to cancel location creation? This location will not be saved.",
-      "locationDesc": "Give this location a name to identify it."
+      "locationDesc": "Give this location a name to identify it.",
+      "locationSelectDesc": "Choose the physical location where this user primarily works from."
   },
   "sunlightDetails": {
     "title": "Care",

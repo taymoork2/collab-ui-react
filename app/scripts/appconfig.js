@@ -1154,6 +1154,23 @@
               },
             },
           })
+          .state('user-overview.userLocationDetails', {
+            template: '<user-location-details></user-location-details>',
+            params: {
+              reloadToggle: false,
+            },
+            data: {},
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.userLocationDetails').data.displayName = $translate.instant('usersPreview.location');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/locations/user-location-details'));
+                }, 'user-location-details');
+              }),
+            },
+          })
           .state('user-overview.csdmDevice', {
             views: {
               '': {
