@@ -4,8 +4,8 @@
 * There is no need to edit the index.html file, all dependencies are managed through webpack
 * Each module has a feature directory that contains the following content:
   - html template files
-  - javacript controllers
-  - directive JS files
+  - angular components, controllers, services, and directives
+  - javascript unit-tests
   - scss style sheets
   - images should not be stored in the modules directory
 * images should be placed in the images directory. They should organized with the same directory structure as the modules
