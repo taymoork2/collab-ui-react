@@ -77,7 +77,7 @@ describe('CmcUserService', () => {
         { userId: '3', state: '' },
       ],
     };
-    this.CmcUserService.getUsersWithCmcButMissingAware(100).then((result) => {
+    this.CmcUserService.getUsersWithCmcAndDetectMissingAware(100).then((result) => {
       expect(result).toEqual(expectedResult);
     });
 

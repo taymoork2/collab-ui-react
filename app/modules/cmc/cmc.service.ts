@@ -2,9 +2,10 @@ import { ICmcUserData, ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcUser, 
 
 export class CmcService {
 
-  //private cmcUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
+  // TODO: Replace by proper entries in urlconfig !
   private cmcUrl: string = 'https://cmc-controller.intb1.ciscospark.com/api/v1';
-  private useMock: boolean = false;
+
+  private useMock: boolean = false; // Only set to true for testing
 
   private timeout: number = 5000; // ms
 
@@ -66,7 +67,6 @@ export class CmcService {
     return deferred.promise;
   }
 
-  // TODO Adapt to cmc status call
   public preCheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
     if (!this.useMock) {
       //let deferred: ng.IDeferred<any> = this.$q.defer();
@@ -88,10 +88,7 @@ export class CmcService {
     return deferred.promise;
   }
 
-  // TODO Preliminary poor mans user precheck
-  //      which only checks call aware entitlement.
-  //      It's wrapped in a promise to make it easier
-  //      to replace by CI or CMC requests
+  // TODO Change this preliminary poor mans user precheck
   public preCheckUser(user: ICmcUser): ng.IPromise<ICmcUserStatusResponse> {
     const status: string = this.hasCallAwareEntitlement(user) ? 'ok' : 'error';
     const issues: ICmcIssue[] = [];
