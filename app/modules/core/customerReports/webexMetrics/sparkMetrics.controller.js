@@ -77,7 +77,8 @@
           appId: vm.reportView.appName,
           node: data.host,
           qrp: data.qlik_reverse_proxy,
-          vID: Authinfo.getOrgId(),
+          persistent: false,
+          vID: '1eb65fdf-9643-417f-9974-ad72cae0e10f', //Authinfo.getOrgId(),
         };
         vm.sparkMetrics.appData.url = QlikMashupChartsUrl.replace('QRP', vm.sparkMetrics.appData.qrp);
 
