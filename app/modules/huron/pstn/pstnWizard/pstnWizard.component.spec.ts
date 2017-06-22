@@ -142,17 +142,32 @@ describe('Component: PstnWizardComponent', () => {
       this.controller.step = 8;
       expect(this.controller.showSkipBtn()).toBe(true);
     });
+
     it('should see the Skip button on step 9', function () {
       this.controller.step = 9;
       this.PstnModel.isEsaSigned.and.returnValue(false);
       expect(this.controller.showSkipBtn()).toBe(true);
     });
+
+    it('should disable next if numbers is empty on step 9', function () {
+      this.controller.step = 9;
+      this.controller.swivelNumbers = [];
+      expect(this.controller.nextDisabled()).toBe(true);
+    });
+
+    it('should enable next if numbers is not empty on step 9', function () {
+      this.controller.step = 9;
+      this.controller.swivelNumbers = ['+12342342343'];
+      expect(this.controller.nextDisabled()).toBe(false);
+    });
+
     it('should go to review if Skip button is clicked on step 8', function () {
       this.controller.step = 8;
       this.PstnModel.isEsaSigned.and.returnValue(false);
       this.controller.onSkip();
       expect(this.controller.step).toBe(10);
     });
+
     it('should go to review if Skip button is clicked on step 9', function () {
       this.controller.step = 9;
       this.PstnModel.isEsaSigned.and.returnValue(false);
