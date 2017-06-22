@@ -1559,13 +1559,13 @@
       "tooLongError": "Routing Prefix can contain a maximum of seven digits."
     },
     "externalTransfer": {
-      "title": "External Call Transfers/Conference",
+      "title": "External Call Transfer/Conference",
       "desc": "Choose whether this user is allowed to do external call transfers and conferences. This will override global settings.",
       "neverAllow": "Never Allow",
       "alwaysAllow": "Always Allow",
       "orgSetting": "Organization Settings ({{state}})",
-      "success": "External Call Transfers/Conference settings successfully saved.",
-      "error": "External Call Transfers/Conference settings failed to update"
+      "success": "External Call Transfer/Conference settings successfully saved.",
+      "error": "External Call Transfer/Conference settings failed to update."
     },
     "cos": {
       "title": "Dialing Restrictions",
@@ -4035,7 +4035,7 @@
     "showMore": "Show more",
     "showLess": "Show less",
     "localDialing": "Local Dialing",
-    "externalTransfer": "External Call Transfers/Conference"
+    "externalTransfer": "External Call Transfer/Conference"
   },
   "preferredLanguage": {
     "title": "Preferred Language",
@@ -4882,8 +4882,8 @@
     "callerIdNumber": "Caller ID Number"
   },
   "externalTransfer": {
-    "title": "External Call Transfers/Conference",
-    "desc": "Choose whether external users are allowed to do external call transfers and conferences. This setting affects the entire organization, but you can override this setting for individual users afterward."
+    "title": "External Call Transfer/Conference",
+    "desc": "Choose whether users are allowed to execute call transfers and conferences. This setting affects the entire organization, but you can override this setting for individual users afterward."
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
