@@ -57,6 +57,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public showPortNumbers: boolean = false;
   public showTollFreeNumbers: boolean = false;
   public enableCarriers: boolean;
+  public blockByopNumberAddForPartnerAdmin: boolean;
   public close: Function;
   public get provider() {
     return this.PstnModel.getProvider();
@@ -174,7 +175,8 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public goToSwivelNumbers(): void {
     if (this.i387FeatureToggle) {
-      if (this.blockByopNumberAddForPartnerAdmin() || this.PstnModel.isEsaSigned()) {
+      this.blockByopNumberAddForPartnerAdmin = this.PstnWizardService.blockByopNumberAddForPartnerAdmin();
+      if (this.blockByopNumberAddForPartnerAdmin || this.PstnModel.isEsaSigned()) {
         this.step = 9;
       } else {
         this.step = 8;
@@ -186,10 +188,6 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public isSwivel(): boolean {
     return this.PstnWizardService.isSwivel();
-  }
-
-  public blockByopNumberAddForPartnerAdmin(): boolean {
-    return this.PstnWizardService.blockByopNumberAddForPartnerAdmin();
   }
 
   public goToNumbers(): void {
@@ -230,11 +228,11 @@ export class PstnWizardCtrl implements ng.IComponentController {
       this.PstnModel.setEsaDisclaimerAgreed(false);
     } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 9) {
       this.PstnModel.setEsaDisclaimerAgreed(false);
-      if (this.blockByopNumberAddForPartnerAdmin()) {
+      if (this.blockByopNumberAddForPartnerAdmin) {
         this.step = 1;
       }
     } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 10) {
-      if (this.blockByopNumberAddForPartnerAdmin()) {
+      if (this.blockByopNumberAddForPartnerAdmin) {
         this.step = 9;
       } else {
         this.step = this.prevStep === 8 ? 8 : 9;
@@ -331,7 +329,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 5:
         return !this.emergencyAcknowledge;
       case 9:
-        return this.blockByopNumberAddForPartnerAdmin();
+        return this.blockByopNumberAddForPartnerAdmin;
     }
     return false;
   }
@@ -348,7 +346,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 8:
         return this.PstnModel.isCustomerExists();
       case 9:
-        return this.PstnModel.isEsaSigned() || (this.PstnModel.isCustomerExists() && this.blockByopNumberAddForPartnerAdmin());
+        return this.PstnModel.isEsaSigned() || (this.PstnModel.isCustomerExists() && this.blockByopNumberAddForPartnerAdmin);
       case 11:
         return true;
     }
@@ -465,7 +463,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         return true;
       case 9:
         this.prevStep = this.step;
-        return !this.PstnModel.isEsaSigned() || this.blockByopNumberAddForPartnerAdmin();
+        return !this.PstnModel.isEsaSigned() || this.blockByopNumberAddForPartnerAdmin;
     }
     return false;
   }
