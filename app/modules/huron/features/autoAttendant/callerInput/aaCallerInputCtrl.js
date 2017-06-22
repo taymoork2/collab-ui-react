@@ -56,6 +56,7 @@
     vm.voiceOption = voiceOption;
     vm.voiceBackup = voiceOption;
     vm.voicePlaceholder = selectPlaceholder;
+
     vm.voiceOptions = [];
     vm.inputActions = [];
     vm.convertDigitState = false;
