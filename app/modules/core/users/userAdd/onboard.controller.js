@@ -633,19 +633,17 @@ require('./_user-add.scss');
     }
 
     function setCareService() {
-      if (hasLicense('CD')) {
+      var hasSyncKms = _.includes($scope.currentUser.roles, Config.backend_roles.spark_synckms);
+      var hasContextServiceEntitlement = _.includes($scope.currentUser.entitlements, Config.entitlements.context);
+      var hasSunlightDigital = _.includes($scope.currentUser.entitlements, Config.entitlements.care_digital);
+      var hasSunlightVoice = _.includes($scope.currentUser.entitlements, Config.entitlements.care_inbound_voice);
+      if (hasSyncKms && hasContextServiceEntitlement && hasSunlightDigital) {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K1;
-      } else if (hasLicense('CV')) {
+      } else if (hasSyncKms && hasContextServiceEntitlement && hasSunlightVoice) {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K2;
       } else {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
       }
-    }
-
-    function hasLicense(licensePrefix) {
-      return _.find($scope.currentUser.licenseID, function (userLicense) {
-        return (userLicense.substring(0, 2) === licensePrefix);
-      });
     }
 
     function shouldAddCallService() {

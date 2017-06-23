@@ -74,6 +74,7 @@
         messenger_interop: 'messenger-interop',
         messenger: 'webex-messenger',
         care: 'cloud-contact-center',
+        care_digital: 'cloud-contact-center-digital',
         care_inbound_voice: 'cloud-contact-center-inbound-voice',
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
