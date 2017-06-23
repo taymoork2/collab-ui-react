@@ -1,5 +1,5 @@
 require('./ediscovery.scss');
-require('@ciscospark/plugin-search');
+require('@ciscospark/internal-plugin-search');
 var Spark = require('@ciscospark/spark-core').default;
 
 (function () {
@@ -254,15 +254,16 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.unencryptedRoomIds = null;
       vm.emailSelected = _.eq(vm.searchByOptions[0], vm.searchBySelected);
       vm.roomIdSelected = _.eq(vm.searchByOptions[1], vm.searchBySelected);
+
       Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.INITIAL_SEARCH, {
         trackingId: 'N/A',
         emailSelected: vm.emailSelected && vm.searchModel,
         spaceSelected: vm.roomIdSelected && vm.searchModel,
         searchedWithKeyword: vm.queryModel,
       });
-      spark.mercury.connect()
+      spark.internal.mercury.connect()
         .then(function () {
-          return spark.encryption.kms.createUnboundKeys({
+          return spark.internal.encryption.kms.createUnboundKeys({
             count: 1,
           });
         })
@@ -275,7 +276,7 @@ var Spark = require('@ciscospark/spark-core').default;
         .then(function (keyword) {
           vm.encryptedEmails = vm.emailSelected ? keyword : null;
           vm.unencryptedRoomIds = vm.roomIdSelected ? splitWords(keyword) : null;
-          return _.isNull(vm.queryModel) ? null : spark.encryption.encryptText(vm.encryptedResult, vm.queryModel);
+          return _.isNull(vm.queryModel) ? null : spark.internal.encryption.encryptText(vm.encryptedResult, vm.queryModel);
         })
         .then(function (query) {
           vm.encryptedQuery = query;
@@ -615,7 +616,7 @@ var Spark = require('@ciscospark/spark-core').default;
       var emails = splitWords(_emails);
       if (emails) {
         var promises = emails.map(function (s) {
-          return spark.encryption.encryptText(vm.encryptedResult, s);
+          return spark.internal.encryption.encryptText(vm.encryptedResult, s);
         });
         return $q.all(promises);
       }
