@@ -101,7 +101,7 @@ function deleteAtlasCustomerIfFound(token, partnerName, customerName) {
     })
 }
 
-function loginPartner(partnerEmail) {
+export function loginPartner(partnerEmail) {
   return login.login(partnerEmail, '#/partner/customers');
 }
 
