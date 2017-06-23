@@ -109,7 +109,7 @@ export class PstnService {
     return this.TerminusService.carrier().query({
       service: PSTN,
       defaultOffer: true,
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public listDefaultCarriersV2(): ng.IPromise<any[]> {
@@ -117,26 +117,26 @@ export class PstnService {
       service: PSTN,
       defaultOffer: true,
       country: this.PstnModel.getCountryCode(),
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public listResellerCarriers(): ng.IPromise<any[]> {
     return this.TerminusService.resellerCarrier().query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public listResellerCarriersV2(): ng.IPromise<any[]> {
     return this.TerminusService.resellerCarrierV2().query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
       country: this.PstnModel.getCountryCode(),
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public listCustomerCarriers(customerId): ng.IPromise<any[]> {
     return this.TerminusService.customerCarriers().query({
       customerId: customerId,
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public getCarrierDetails(carriers): ng.IPromise<any> {

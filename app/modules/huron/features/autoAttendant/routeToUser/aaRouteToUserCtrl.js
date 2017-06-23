@@ -24,7 +24,7 @@
       fullLoad: 10, // how many to query, a full listing
     };
 
-    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
+    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 
     vm.uiMenu = {};

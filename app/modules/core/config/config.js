@@ -384,6 +384,7 @@
         'overview',
         'profile',
         'reports',
+        'webexReportsPanel',
         'settings',
         'setupwizardmodal',
         'support',

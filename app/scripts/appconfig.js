@@ -1717,6 +1717,19 @@
               settingPageIframeUrl: null,
             },
           })
+          .state('webexReportsPanel', {
+            data: {},
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': { template: '<cust-webex-reports-panel></cust-webex-reports-panel>' },
+              'header@webexReportsPanel': { templateUrl: 'modules/core/customerReports/webexReports/search/webexReportsPanelHeader.html' },
+            },
+          })
+          .state('webexReportsPanel.more', {
+            template: '<cust-webex-reports-more></cust-webex-reports-more>',
+            onEnter: SidePanelLargeOpen,
+            onExit: SidePanelLargeClose,
+          })
           .state('reports', {
             templateUrl: 'modules/core/customerReports/customerReportsHeader.tpl.html',
             controller: 'CustomerReportsHeaderCtrl',
@@ -1804,6 +1817,10 @@
           .state('reports.webex_', {
             url: '/reports/webex_',
             views: { tabContent: { template: '<cust-webex-reports></cust-webex-reports>' } },
+          })
+          .state('reports.webex_.search', {
+            url: '/reports/webex_/search',
+            template: '<cust-webex-reports-search></cust-webex-reports-search>',
           })
           .state('reports.webex', {
             url: '/reports/webex',

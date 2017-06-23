@@ -65,6 +65,11 @@ export class PstnModel {
     this.orders = [];
   }
 
+  public clearSwivelNumbers(): void {
+    this.numbers = [];
+    this.orders = [];
+  }
+
   public setCustomerId(_customerId: string): void {
     this.customerId = _customerId;
   }

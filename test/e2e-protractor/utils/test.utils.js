@@ -827,6 +827,6 @@ exports.waitForModal = function () {
 };
 
 exports.selectDropdown = function (dropdown, option) {
-  this.click(element(by.css(dropdown + ' a.select-toggle')));
+  this.click(element(by.css(dropdown + ' span.select-toggle')));
   this.click(element(by.cssContainingText(dropdown + ' .select-options a', option)));
 };

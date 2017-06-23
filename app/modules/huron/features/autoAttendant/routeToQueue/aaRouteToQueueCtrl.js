@@ -17,7 +17,7 @@
       id: '',
     };
 
-    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
+    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
     vm.queues = [];
 

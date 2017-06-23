@@ -48,6 +48,7 @@ describe('Component: PstnWizardComponent', () => {
     spyOn(this.PstnWizardService, 'finalizeImport');
     spyOn(this.PstnWizardService, 'blockByopNumberAddForPartnerAdmin');
     spyOn(this.PstnWizardService, 'blockByopNumberAddForAllAdmin');
+    spyOn(this.PstnWizardService, 'isLoggedInAsPartner');
     this.PstnWizardService.init.and.returnValue(this.$q.resolve());
     this.PstnWizardService.initSites.and.returnValue(this.$q.resolve());
     this.PstnService.listResellerCarriersV2.and.returnValue(this.$q.reject());
@@ -142,20 +143,47 @@ describe('Component: PstnWizardComponent', () => {
       this.controller.step = 8;
       expect(this.controller.showSkipBtn()).toBe(true);
     });
+
     it('should see the Skip button on step 9', function () {
       this.controller.step = 9;
       this.PstnModel.isEsaSigned.and.returnValue(false);
       expect(this.controller.showSkipBtn()).toBe(true);
     });
-    it('should go to review if Skip button is clicked on step 8', function () {
+
+    it('should disable next if numbers is empty on step 9', function () {
+      this.controller.step = 9;
+      this.controller.swivelNumbers = [];
+      expect(this.controller.nextDisabled()).toBe(true);
+    });
+
+    it('should enable next if numbers is not empty on step 9', function () {
+      this.controller.step = 9;
+      this.controller.swivelNumbers = ['+12342342343'];
+      expect(this.controller.nextDisabled()).toBe(false);
+    });
+
+    it('should go to review if Skip button is clicked on step 8 and customer is not created', function () {
       this.controller.step = 8;
+      this.PstnModel.isCustomerExists.and.returnValue(false);
       this.PstnModel.isEsaSigned.and.returnValue(false);
+      this.controller.goToSwivelNumbers();
       this.controller.onSkip();
       expect(this.controller.step).toBe(10);
     });
+
+    it('should dismiss the modal if Skip button is clicked on step 8 and customer is created', function () {
+      spyOn(this.controller, 'dismissModal');
+      this.controller.step = 8;
+      this.PstnModel.isCustomerExists.and.returnValue(true);
+      this.controller.goToSwivelNumbers();
+      this.controller.onSkip();
+      expect(this.controller.dismissModal).toHaveBeenCalled();
+    });
+
     it('should go to review if Skip button is clicked on step 9', function () {
       this.controller.step = 9;
       this.PstnModel.isEsaSigned.and.returnValue(false);
+      this.controller.goToSwivelNumbers();
       this.controller.onSkip();
       expect(this.controller.step).toBe(10);
     });
@@ -185,11 +213,31 @@ describe('Component: PstnWizardComponent', () => {
 
     it('should skip from step 9 to dismissModal if customer has been setup', function () {
       spyOn(this.controller, 'dismissModal');
+      this.PstnWizardService.isLoggedInAsPartner.and.returnValue(true);
       this.PstnWizardService.blockByopNumberAddForAllAdmin.and.returnValue(true);
       this.PstnModel.isCustomerExists.and.returnValue(true);
       this.controller.goToSwivelNumbers();
       this.controller.onSkip();
       expect(this.controller.dismissModal).toHaveBeenCalled();
+    });
+
+    it('should skip from step 9 to dismissModal if customer has been setup, admin is customer', function () {
+      spyOn(this.controller, 'dismissModal');
+      this.PstnWizardService.isLoggedInAsPartner.and.returnValue(false);
+      this.PstnWizardService.blockByopNumberAddForAllAdmin.and.returnValue(false);
+      this.PstnModel.isCustomerExists.and.returnValue(true);
+      this.controller.goToSwivelNumbers();
+      this.controller.onSkip();
+      expect(this.controller.dismissModal).toHaveBeenCalled();
+    });
+
+    it('should skip from step 9 to review step 10 if customer has been setup, admin is customer but esa is not signed', function () {
+      this.PstnWizardService.isLoggedInAsPartner.and.returnValue(false);
+      this.PstnWizardService.blockByopNumberAddForAllAdmin.and.returnValue(true);
+      this.PstnModel.isCustomerExists.and.returnValue(true);
+      this.controller.step = 9;
+      this.controller.onSkip();
+      expect(this.controller.step).toBe(10);
     });
   });
 

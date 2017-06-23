@@ -56,7 +56,7 @@ describe('Huron Functional: call-settings', () => {
     navigation.expectDriverCurrentUrl('call-settingsnew');
   });
 
-  describe('Internal Dialing Section', () => {
+  describe('Internal Dialing', () => {
     describe('set a routing prefix', () => {
       it('should show a routing prefix input when "Reserve a Prefix" radio is checked', () => {
         utils.click(callSettings.reservePrefixRadio);
@@ -105,14 +105,36 @@ describe('Huron Functional: call-settings', () => {
         });
       });
     });
-  });
 
-  // FYI: ensure this suite is the last to execute
-  xdescribe('increase extension length', () => {
-    it('should display a modal when extension length is increased', () => {
-      utils.selectDropdown('extensionLength', '7');
-      utils.waitForModal().then(() => {
-        utils.expectIsDisplayed(callSettings.extensionLengthModalTitle);
+    // FYI: ensure this suite is the last to execute
+    describe('increase extension length', () => {
+      it('should display a warning dialog when extension length is increased', () => {
+        utils.selectDropdown('.csSelect-container[name="extensionLength"]', '7');
+        utils.waitForModal().then(() => {
+          utils.expectIsDisplayed(callSettings.extensionLengthWarningTitle);
+        });
+      });
+
+      it('should display Choose Prefix modal when continue is clicked', () => {
+        utils.click(callSettings.continueButton);
+        utils.waitForModal().then(() => {
+          utils.expectIsDisplayed(callSettings.extensionPrefixTitle);
+          utils.expectIsDisplayed(callSettings.extensionPrefixInput);
+        });
+      });
+
+      it('should enable save button when valid entries are entered', () => {
+        utils.expectIsDisabled(callSettings.extensionPrefixSaveButton);
+        utils.sendKeys(callSettings.extensionPrefixInput, '5678');
+        utils.waitUntilEnabled(callSettings.extensionPrefixSaveButton).then(() => {
+          utils.expectIsEnabled(callSettings.extensionPrefixSaveButton);
+        });
+      });
+
+      it('should save successfully', () => {
+        utils.click(callSettings.extensionPrefixSaveButton).then(() => {
+          notifications.assertSuccess();
+        });
       });
     });
   });
