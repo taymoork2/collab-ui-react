@@ -6,7 +6,7 @@
     .controller('WebExMetricsCtrl', WebExMetricsCtrl);
 
   /* @ngInject */
-  function WebExMetricsCtrl($q, $scope, $stateParams, Authinfo, LocalStorage, Userservice, WebExApiGatewayService,
+  function WebExMetricsCtrl($q, $scope, $stateParams, Authinfo, LocalStorage, Userservice, WebExApiGatewayService, $log,
     $sce,
     $timeout,
     $window,
@@ -102,6 +102,8 @@
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
                   vm.webexOptions.push(result.siteUrl);
+                  vm.webexOptions.push('alpha.webex.com');
+                  vm.webexOptions.push('go.webex.com');
                 }
               }).catch(_.noop));
         }
@@ -127,7 +129,7 @@
 
           ProPackService.getProPackPurchased().then(function (isPurchased) {
             if (isPurchased) {
-              vm.reportView = 'Premium';
+              vm.reportView = vm.webexMetrics.views[1];
             }
             updateWebexMetrics();
           });
@@ -169,10 +171,11 @@
 
       var userInfo = {
         org_id: Authinfo.getOrgId(),
-        siteUrl: vm.webexSelected,
+        siteUrl: vm.webexSelected.toLowerCase(),
         email: Authinfo.getPrimaryEmail(),
       };
-
+      $log.log(userInfo.siteUrl);
+      $log.log('getWebExReportQBSfor' + vm.reportView.view + 'Url');
       QlikService['getWebExReportQBSfor' + vm.reportView.view + 'Url'](userInfo).then(function (data) {
         var QlikMashupChartsUrl = QlikService['getWebExReportAppfor' + vm.reportView.view + 'Url']();
 
