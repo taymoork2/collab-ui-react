@@ -1,9 +1,11 @@
-import { ReportBMMPBannerComponent } from './reportBMMPBanner.component';
+import { LearnMoreBannerComponent } from './learnMoreBanner.component';
+import { LearnMoreBannerService } from './learnMoreBanner.service';
 import BmmpModule from 'modules/bmmp';
 import ProPackModule from 'modules/core/proPack';
+import './learn-more-banner.scss';
 
 export default angular
-  .module('reports.reportBanner', [
+  .module('bmmp.learn-more-banner', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
@@ -12,5 +14,6 @@ export default angular
     BmmpModule,
     ProPackModule,
   ])
-  .component('reportBmmpBanner', new ReportBMMPBannerComponent())
+  .component('learnMoreBanner', new LearnMoreBannerComponent())
+  .service('LearnMoreBannerService', LearnMoreBannerService)
   .name;
