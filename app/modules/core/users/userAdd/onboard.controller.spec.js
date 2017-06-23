@@ -63,6 +63,7 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.getCareServicesWithoutCareLicense = getJSONFixture('core/json/authInfo/careServicesWithoutCareLicense.json');
     this.mock.getCareServicesWithoutCareVoiceLicense = getJSONFixture('core/json/authInfo/careServicesWithoutCareVoiceLicense.json');
     this.mock.getConferenceServices = getJSONFixture('core/json/authInfo/confServices.json');
+    this.mock.getConfCMRServicesDiffCases = getJSONFixture('core/json/authInfo/confCMRServicesDiffCases.json');
     this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -1211,6 +1212,28 @@ describe('OnboardCtrl: Ctrl', function () {
       var billingServiceId = 'Trial';
       var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
       expect(result).toEqual(true);
+    });
+  });
+
+  describe('fetch different siteUrl cases ', function () {
+    beforeEach(function () {
+      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConfCMRServicesDiffCases.conf);
+      spyOn(this.Authinfo, 'getCmrServices').and.returnValue(this.mock.getConfCMRServicesDiffCases.cmr);
+    });
+    beforeEach(initController);
+
+    it('advanced licenses should have 1 record', function () {
+      expect(this.$scope.advancedLicenses.length).toEqual(1);
+    });
+
+    it('advanced licenses confLic should have 1 record', function () {
+      expect(this.$scope.advancedLicenses[0].confLic.length).toEqual(1);
+    });
+
+    it('advanced licenses cmrLic should have 1 record', function () {
+      expect(this.$scope.advancedLicenses[0].cmrLic.length).toEqual(1);
     });
   });
 
