@@ -28,7 +28,7 @@ describe('Component: cmcDetailsStatus ', () => {
 
         const someUsers = createSomeUserStatuses(10);
 
-        spyOn(this.CmcUserService, 'getUsersWithCmcButMissingAware').and.returnValue(
+        spyOn(this.CmcUserService, 'getUsersWithCmcAndDetectMissingAware').and.returnValue(
           this.$q.resolve({
             userStatuses: someUsers,
             paging: {
@@ -49,7 +49,7 @@ describe('Component: cmcDetailsStatus ', () => {
 
         const someUsers = createSomeUserStatuses(10);
 
-        spyOn(this.CmcUserService, 'getUsersWithCmcButMissingAware').and.returnValue(
+        spyOn(this.CmcUserService, 'getUsersWithCmcAndDetectMissingAware').and.returnValue(
           this.$q.resolve({
             userStatuses: someUsers,
             paging: {
@@ -71,7 +71,7 @@ describe('Component: cmcDetailsStatus ', () => {
 
         spyOn(this.Notification, 'error').and.callThrough();
 
-        spyOn(this.CmcUserService, 'getUsersWithCmcButMissingAware').and.returnValue(
+        spyOn(this.CmcUserService, 'getUsersWithCmcAndDetectMissingAware').and.returnValue(
           this.$q.reject({ data: { message: 'request failed' } } ),
         );
 
