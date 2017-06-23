@@ -311,11 +311,8 @@ export class PstnWizardCtrl implements ng.IComponentController {
         this.placeOrderLoad = true;
         this.PstnWizardService.finalizeImport().then(() => {
           this.step = 11;
-          this.placeOrderLoad = false;
         })
-        .catch(() => {
-          this.placeOrderLoad = false;
-        });
+        .finally(() => this.placeOrderLoad = false);
         return;
       case 11:
         this.dismissModal();
