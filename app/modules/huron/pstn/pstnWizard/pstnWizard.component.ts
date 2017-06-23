@@ -312,6 +312,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
         this.PstnWizardService.finalizeImport().then(() => {
           this.step = 11;
           this.placeOrderLoad = false;
+        })
+        .catch(() => {
+          this.placeOrderLoad = false;
         });
         return;
       case 11:
@@ -497,6 +500,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public finalizeCustomerAndEsA(): void {
     this.PstnModel.clearSwivelNumbers();
     this.onSwivelChange([], 0);
+    this.PstnWizardService.setSwivelOrder([]);
     this.step = 10;
   }
 }
