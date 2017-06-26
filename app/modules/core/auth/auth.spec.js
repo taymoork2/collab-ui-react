@@ -825,17 +825,17 @@ describe('Auth Service', function () {
 
     it('revoke user token should be forbidden', function () {
       $httpBackend
-        .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com')
+        .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com&orgid=eca72332-dc0a-4da6-a8a1-eaaad58d2dc9')
         .respond(403, {});
-      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com');
+      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com', 'eca72332-dc0a-4da6-a8a1-eaaad58d2dc9');
       expect(promise).toBeRejected();
     });
 
     it('revoke user token should be success', function () {
       $httpBackend
-        .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com')
+        .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com&orgid=eca72332-dc0a-4da6-a8a1-eaaad58d2dc9')
         .respond(204, {});
-      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com');
+      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com', 'eca72332-dc0a-4da6-a8a1-eaaad58d2dc9');
       expect(promise).toBeResolved();
     });
   });

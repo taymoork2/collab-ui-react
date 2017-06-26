@@ -65,7 +65,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
     this.CmcService.preCheckOrg(this.Authinfo.getOrgId())
       .then((res: ICmcOrgStatusResponse) => {
-        this.$log.info('Result from preCheckOrg:', res);
+        this.$log.debug('Result from preCheckOrg:', res);
         this.status = res;
       })
       .catch((error: any) => {
@@ -84,7 +84,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   }
 
   private fetchUserStatuses(limit: number) {
-    return this.CmcUserService.getUsersWithCmcButMissingAware(limit, this.nextUrl)
+    return this.CmcUserService.getUsersWithCmcAndDetectMissingAware(limit, this.nextUrl)
       .then( (result: ICmcUserStatusInfoResponse) => {
         this.userStatuses = _.union(this.userStatuses, result.userStatuses);
         this.$log.debug('userStatuses length', this.userStatuses.length);
@@ -165,7 +165,6 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
       this.$log.debug('needLoadMoreDataTop');
     });
     this.gridApi = gridApi;
-    this.$log.debug('gridApi', gridApi);
   }
 }
 

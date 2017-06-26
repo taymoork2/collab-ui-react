@@ -105,7 +105,7 @@
     }
 
     function queryUser(oid, email) {
-      var serviceUrl = UrlConfig.getScimUrl(oid) + '?filter=username eq "' + email + '"';
+      var serviceUrl = UrlConfig.getScimUrl(oid) + '?filter=username eq "' + encodeURIComponent(email) + '"';
       return $http.get(serviceUrl).then(extractData);
     }
 
@@ -116,7 +116,7 @@
       } else {
         emailFilter = _.chain(emails)
           .map(function (email) {
-            return 'username eq "' + email.text + '"';
+            return 'username eq "' + encodeURIComponent(email.text) + '"';
           })
           .join(' or ')
           .value();

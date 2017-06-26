@@ -1,4 +1,4 @@
-import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER } from './pstn.const';
+import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, BYOPSTN, SWIVEL } from './pstn.const';
 
 import { Notification } from 'modules/core/notifications/notification.service';
 import {
@@ -109,7 +109,7 @@ export class PstnService {
     return this.TerminusService.carrier().query({
       service: PSTN,
       defaultOffer: true,
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public listDefaultCarriersV2(): ng.IPromise<any[]> {
@@ -117,26 +117,26 @@ export class PstnService {
       service: PSTN,
       defaultOffer: true,
       country: this.PstnModel.getCountryCode(),
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public listResellerCarriers(): ng.IPromise<any[]> {
     return this.TerminusService.resellerCarrier().query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public listResellerCarriersV2(): ng.IPromise<any[]> {
     return this.TerminusService.resellerCarrierV2().query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
       country: this.PstnModel.getCountryCode(),
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public listCustomerCarriers(customerId): ng.IPromise<any[]> {
     return this.TerminusService.customerCarriers().query({
       customerId: customerId,
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public getCarrierDetails(carriers): ng.IPromise<any> {
@@ -746,6 +746,18 @@ export class PstnService {
 
   public getProvider(): any {
     return this.PstnModel.getProvider();
+  }
+
+  public isByopCustomerAndEsaUnsigned(customerId: string): ng.IPromise<boolean> {
+    return this.getCustomerV2(customerId).then((result) => {
+      if (_.has(result, PSTN_CARRIER_ID) && (!_.has(result, E911_SIGNEE) || _.get(result, E911_SIGNEE) === null)) {
+        const carriers = [{ uuid: result.pstnCarrierId }];
+        return this.getCarrierDetails(carriers).then((carrierDetails) => {
+          return (carrierDetails.length === 1 && carrierDetails[0].apiImplementation === SWIVEL && carrierDetails[0].vendor === BYOPSTN);
+        });
+      }
+      return false;
+    });
   }
 
   private setCreatedBy(): string {

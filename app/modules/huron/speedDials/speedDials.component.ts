@@ -80,12 +80,12 @@ class SpeedDialCtrl implements ng.IComponentController {
 
     if (!this.reachSpeedDialLimit()) {
       this.actionListCopy.push({
-        actionKey: this.$translate.instant('speedDials.addSpeedDial'),
+        actionKey: 'speedDials.addSpeedDial',
         actionFunction: this.add.bind(this),
       });
     }
     this.actionListCopy.push({
-      actionKey: this.$translate.instant('speedDials.reorder'),
+      actionKey: 'speedDials.reorder',
       actionFunction: this.setReorder.bind(this),
     });
     this.actionList = _.cloneDeep(this.actionListCopy);

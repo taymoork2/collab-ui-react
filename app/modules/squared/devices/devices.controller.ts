@@ -187,7 +187,7 @@ export class DevicesController {
     });
     const getLoggedOnUserPromise = this.fetchDetailsForLoggedInUser();
     const personalPromise = this.FeatureToggleService.cloudberryPersonalModeGetStatus().then((showPersonal: boolean) => {
-      this.showPersonal = !showPersonal;
+      this.showPersonal = showPersonal;
     });
     const placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then((feature: boolean) => {
       this.csdmHybridCalendarFeature = feature;

@@ -120,22 +120,6 @@ require('./_setup-wizard.scss');
 
     function initMeetingSettingsTab(tabs) {
       var userEmail = Authinfo.getUserName();
-      var trialFlowSteps = [{
-        name: 'migrateTrial',
-        template: 'modules/core/setupWizard/meeting-settings/meeting-migrate-trial.html',
-      },
-      {
-        name: 'siteSetup',
-        template: 'modules/core/setupWizard/meeting-settings/meeting-site-setup.html',
-      },
-      {
-        name: 'licenseDistribution',
-        template: 'modules/core/setupWizard/meeting-settings/meeting-license-distribution.html',
-      },
-      {
-        name: 'summary',
-        template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
-      }];
       var meetingTab = {
         name: 'meetingSettings',
         required: true,
@@ -146,18 +130,28 @@ require('./_setup-wizard.scss');
         controller: 'MeetingSettingsCtrl as meetingCtrl',
         controllerAs: 'meetingCtrl',
         steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-init.html',
+          name: 'migrateTrial',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-migrate-trial.html',
+        },
+        {
+          name: 'siteSetup',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-site-setup.html',
+        },
+        {
+          name: 'licenseDistribution',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-license-distribution.html',
+        },
+        {
+          name: 'summary',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
         }],
       };
 
       if (showMeetingSettingsTab(userEmail)) {
-        if (hasWebexMeetingTrial()) {
-          _.remove(meetingTab.steps, { name: 'init' });
-        } else if (isDirectOrderWithoutTrial()) {
+        if (!hasWebexMeetingTrial()) {
           _.remove(meetingTab.steps, { name: 'migrateTrial' });
         }
-        meetingTab.steps = meetingTab.steps.concat(trialFlowSteps);
+
         tabs.splice(1, 0, meetingTab);
       }
     }
@@ -243,10 +237,6 @@ require('./_setup-wizard.scss');
       return _.some(conferencingServices, function (service) {
         return _.get(service, 'license.offerName') === Config.offerCodes.MC || _.get(service, 'license.offerName') === Config.offerCodes.EE;
       });
-    }
-
-    function isDirectOrderWithoutTrial() {
-      return !hasWebexMeetingTrial();
     }
 
     function showCallSettings() {

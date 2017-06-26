@@ -687,11 +687,11 @@ require('./_user-add.scss');
       $scope.advancedLicenses = [];
 
       var formatLicense = function (site) {
-        var confMatches = _.filter(confFeatures, {
-          siteUrl: site,
+        var confMatches = _.filter(confFeatures, function (o) {
+          return _.toUpper(o.siteUrl) === _.toUpper(site);
         });
-        var cmrMatches = _.filter(cmrFeatures, {
-          siteUrl: site,
+        var cmrMatches = _.filter(cmrFeatures, function (o) {
+          return _.toUpper(o.siteUrl) === _.toUpper(site);
         });
         var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
         return {

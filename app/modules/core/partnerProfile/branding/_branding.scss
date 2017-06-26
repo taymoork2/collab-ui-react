@@ -69,10 +69,16 @@
 .branding-modal {
   .item-space {
     padding-top: 2rem;
+    text-align: center;
   }
 
   img {
     width: 100%;
+  }
+
+  .logo-example {
+    float: none;
+    margin: 0 auto;
   }
 
   .modal-body {

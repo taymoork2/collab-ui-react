@@ -55,7 +55,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
           return this.$q.resolve(false);
         })
         .catch((err) => {
-          return this.$q.resolve(err !== null && err.status === 502);
+          return this.$q.resolve(err !== null && (err.status === 502 || err.status === 412));
         });
     }
 

@@ -117,6 +117,9 @@
     };
 
     vm.next = function () {
+      if (!vm.isNameValid()) {
+        return;
+      }
       var nextOption = vm.showPersonal ? '' : (vm.deviceType + '_');
       if (wizardData.function == 'addPlace') {
         nextOption += 'create';

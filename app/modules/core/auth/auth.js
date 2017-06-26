@@ -202,8 +202,11 @@
         .catch(logErrorAndReject('Failed to delete the oAuth token'));
     }
 
-    function revokeUserAuthTokens(userName) {
-      var revokeUrl = OAuthConfig.getOAuthRevokeUserTokenUrl() + $window.encodeURIComponent(userName);
+    function revokeUserAuthTokens(userName, orgId) {
+      if (!_.isString(userName) || !_.isString(orgId)) {
+        return $q.reject('Invalid parameters passed');
+      }
+      var revokeUrl = OAuthConfig.getOAuthRevokeUserTokenUrl() + $window.encodeURIComponent(userName) + '&orgid=' + orgId;
       return $http.delete(revokeUrl);
     }
 

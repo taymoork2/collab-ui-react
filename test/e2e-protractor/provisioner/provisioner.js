@@ -21,6 +21,7 @@ export function provisionAtlasCustomer(partnerName, trial) {
               });
           } else {
             console.log(`${trial.customerName} found in Atlas! provisionerKeepCustomer flag is true, skipping create.`);
+            return Promise.resolve();
           }
         });
     });
@@ -51,7 +52,7 @@ export function provisionCmiCustomer(partnerName, customer, site, numberRange) {
 export function provisionCustomerAndLogin(partnerName, trial, cmiCustomer, site, numberRange) {
   return this.provisionAtlasCustomer(partnerName, trial)
     .then(atlasCustomer => {
-      if (cmiCustomer) {
+      if (atlasCustomer && cmiCustomer) {
         cmiCustomer.uuid = atlasCustomer.customerOrgId;
         cmiCustomer.name = atlasCustomer.customerName;
         return this.provisionCmiCustomer(partnerName, cmiCustomer, site, numberRange)

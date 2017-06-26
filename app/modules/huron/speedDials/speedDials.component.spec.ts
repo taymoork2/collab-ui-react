@@ -3,7 +3,7 @@ describe('component: speedDial', () => {
   const DROPDOWN_LIST_ADD = '.actions-services li:nth-child(1) a';
 
   const INPUT_NAME = 'input[name="label"]';
-  const INPUT_NUMBER = 'div#speedDialsContainer input.phone-number';
+  const INPUT_NUMBER = 'input[name="phoneinput"]';
   const SAVE_BUTTON = 'button.btn--primary';
   const READ_ONLY = '.sd-readonly-wrapper .sd-label';
   const DROPDOWN_LIST_REORDER = '.actions-services li:nth-child(2) a';

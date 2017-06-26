@@ -93,6 +93,9 @@
     }
 
     vm.next = function () {
+      if (!vm.isNameValid()) {
+        return;
+      }
       $stateParams.wizard.next({
         account: {
           name: vm.displayName,

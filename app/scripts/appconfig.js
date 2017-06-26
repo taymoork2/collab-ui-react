@@ -1154,6 +1154,23 @@
               },
             },
           })
+          .state('user-overview.userLocationDetails', {
+            template: '<user-location-details></user-location-details>',
+            params: {
+              reloadToggle: false,
+            },
+            data: {},
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.userLocationDetails').data.displayName = $translate.instant('usersPreview.location');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/locations/user-location-details'));
+                }, 'user-location-details');
+              }),
+            },
+          })
           .state('user-overview.csdmDevice', {
             views: {
               '': {
@@ -1717,6 +1734,19 @@
               settingPageIframeUrl: null,
             },
           })
+          .state('webexReportsPanel', {
+            data: {},
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': { template: '<cust-webex-reports-panel></cust-webex-reports-panel>' },
+              'header@webexReportsPanel': { templateUrl: 'modules/core/customerReports/webexReports/search/webexReportsPanelHeader.html' },
+            },
+          })
+          .state('webexReportsPanel.more', {
+            template: '<cust-webex-reports-more></cust-webex-reports-more>',
+            onEnter: SidePanelLargeOpen,
+            onExit: SidePanelLargeClose,
+          })
           .state('reports', {
             url: '/reports',
             templateUrl: 'modules/core/customerReports/customerReportsHeader.tpl.html',
@@ -1815,6 +1845,10 @@
           .state('reports.webex_', {
             url: '/webex_',
             views: { tabContent: { template: '<cust-webex-reports></cust-webex-reports>' } },
+          })
+          .state('reports.webex_.search', {
+            url: '/reports/webex_/search',
+            template: '<cust-webex-reports-search></cust-webex-reports-search>',
           })
           .state('reports.webex', {
             url: '/webex',

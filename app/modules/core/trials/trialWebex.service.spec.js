@@ -152,4 +152,42 @@ describe('Service: Webex Trial Service', function () {
       });
     });
   });
+
+  describe('provision a webex site', function () {
+    it('should successfully send WebEx site for provisioning', function () {
+      var subscriptionId = 'some-test-id-here';
+      var payload = {
+        provisionOrder: true,
+        serviceOrderUUID: 'some-service-uuid-here',
+        webexProvisioningParams: {
+          webexSiteDetailsList: [{ siteUrl: 'somenewsiteurl@webex.com', timezone: '7', centerType: 'MC', quantity: 4 }],
+          audioPartnerName: 'someaudiopartnerhere@gmail.com',
+        },
+      };
+      var response = { status: 200, message: 'Updated Provisioning parameters' };
+      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision').respond(response);
+      this.TrialWebexService.provisionWebexSites(payload, subscriptionId).then(function (response) {
+        expect(response.status).toBe(200);
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('api should return 400 invalid request due to invalid request', function () {
+      var subscriptionId = 'some-test-id-here';
+      var payload = {
+        provisionOrder: true,
+        serviceOrderUUID: 'some-service-uuid-here',
+        webexProvisioningParams: {
+          webexSiteDetailsList: [{ siteUrl: 'somenewsiteurl@webex.com', timezone: '7', centerType: 'someInvalidCenterTypeHere', quantity: 4 }],
+          audioPartnerName: 'someaudiopartnerhere@gmail.com',
+        },
+      };
+      var errorResponse = { status: 400, message: 'Invalid Request' };
+      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision').respond(errorResponse);
+      this.TrialWebexService.provisionWebexSites(payload, subscriptionId).catch(function (response) {
+        expect(response.status).toBe(400);
+      });
+      this.$httpBackend.flush();
+    });
+  });
 });

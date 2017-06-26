@@ -96,8 +96,8 @@
       var formattedList = [];
       _.forEach(data, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
-        //TO-DO i1484 : Remove the filter for 'NUMBER_FORMAT_ENTERPRISE_LINE' when CMI api returns the correct HG number filtering the ESN when it is same as DN.
-        formattedCard.numbers = _.map(_.filter(huntGroup.numbers, { type: 'NUMBER_FORMAT_ENTERPRISE_LINE' }), 'number');
+        _.remove(huntGroup.numbers, { type: 'NUMBER_FORMAT_ENTERPRISE_LINE' });
+        formattedCard.numbers = _.map(huntGroup.numbers, 'number');
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.id = huntGroup.uuid;
         formattedCard.featureName = 'huronFeatureDetails.hg';

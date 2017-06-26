@@ -11,9 +11,19 @@ describe('Controller: OverviewCtrl', function () {
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
   var isCustomerLaunchedFromPartner = true;
-  var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').ESA_DISCLAIMER_ACCEPT;
-  var SWIVEL = require('modules/huron/pstn/pstn.const').SWIVEL;
-  var BYOPSTN = require('modules/huron/pstn/pstn.const').BYOPSTN;
+  var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
+  var _pstnService = {
+    getCustomerV2: function () {
+      return $q.resolve({
+        trial: true,
+      });
+    },
+    getCustomerTrialV2: function () {
+      return $q.resolve({
+        acceptedDate: 'today',
+      });
+    },
+  };
 
   afterEach(function () {
     controller = $filter = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = HybridServicesClusterService = SunlightReportService = $httpBackend = undefined;
@@ -160,6 +170,7 @@ describe('Controller: OverviewCtrl', function () {
     beforeEach(function () {
       isCustomerLaunchedFromPartner = true;
       inject(defaultWireUpFunc);
+      spyOn(PstnService, 'isByopCustomerAndEsaUnsigned');
     });
 
     it('should NOT call ToS check if logged in as a Partner', function () {
@@ -167,7 +178,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should NOT call ESA check if logged in as a Partner', function () {
-      expect(PstnService.getCarrierDetails).not.toHaveBeenCalled();
+      expect(PstnService.isByopCustomerAndEsaUnsigned).not.toHaveBeenCalled();
     });
   });
 
@@ -182,11 +193,28 @@ describe('Controller: OverviewCtrl', function () {
 
     it('should call ESA check if logged in as a Partner', function () {
       var TOTAL_NOTIFICATIONS = 10;
-      expect(PstnService.getCarrierDetails).toHaveBeenCalled();
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
-
+      expect(controller.esaDisclaimerNotification).toBeTruthy();
       $rootScope.$broadcast(PSTN_ESA_DISCLAIMER_ACCEPT);
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+  });
+
+  describe('Notifications - Login as Customer, isByopCustomerAndEsaUnsigned false', function () {
+    beforeEach(function () {
+      isCustomerLaunchedFromPartner = false;
+      PstnService = _.cloneDeep(_pstnService);
+      _.assign(PstnService, {
+        isByopCustomerAndEsaUnsigned: function () {
+          return $q.resolve(false);
+        } });
+      inject(defaultWireUpFunc);
+    });
+
+    it('should not have ESA notification if isByopCustomerAndEsaUnsigned returned false', function () {
+      var TOTAL_NOTIFICATIONS = 9;
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+      expect(controller.esaDisclaimerNotification).toBeFalsy();
     });
   });
 
@@ -280,25 +308,12 @@ describe('Controller: OverviewCtrl', function () {
       }),
     };
 
-    PstnService = {
-      getCustomerV2: function () {
-        return $q.resolve({
-          trial: true,
-          pstnCarrierId: '111-222-333',
-        });
-      },
-      getCustomerTrialV2: function () {
-        return $q.resolve({
-          acceptedDate: 'today',
-        });
-      },
-      getCarrierDetails: function () {
-        return $q.resolve([{
-          apiImplementation: SWIVEL,
-          vendor: BYOPSTN,
-        }]);
-      },
-    };
+    if (_.isUndefined(PstnService)) {
+      PstnService = _.cloneDeep(_pstnService);
+      _.assign(PstnService, { isByopCustomerAndEsaUnsigned: function () {
+        return $q.resolve(true);
+      } });
+    }
 
     ReportsService = {
       getOverviewMetrics: function () {},
@@ -334,8 +349,6 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(PstnService, 'getCustomerTrialV2').and.callThrough();
-    spyOn(PstnService, 'getCustomerV2').and.callThrough();
-    spyOn(PstnService, 'getCarrierDetails').and.callThrough();
 
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
 

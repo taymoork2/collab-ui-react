@@ -1,3 +1,4 @@
+import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
 
@@ -32,6 +33,7 @@ export class OnlineUpgradeService {
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
     private Authinfo,
+    private DigitalRiverService: DigitalRiverService,
     private Notification: Notification,
     private UrlConfig,
   ) {
@@ -45,6 +47,7 @@ export class OnlineUpgradeService {
 
   public openUpgradeModal(): void {
     this.dismissModal();
+    this.DigitalRiverService.getDigitalRiverToken();
     this.upgradeModal = this.$modal.open({
       template: '<online-upgrade-modal></online-upgrade-modal>',
       backdrop: 'static',
@@ -124,6 +127,7 @@ export class OnlineUpgradeService {
       subscriptionId: id,
     }, {
       action: CANCEL,
+      downgradeSubscription: true,
     }).$promise;
   }
 
