@@ -7,7 +7,11 @@
           <div class="icon-container" ng-click="subscription.viewAll = !subscription.viewAll" ng-class="{'icon-container-down': subscription.viewAll}">
             <i class="icon icon-right-arrow-contained"></i>
           </div>
-          <h4 class="sub-name">{{::subscription.name}}</h4>
+          <h4 class="sub-name">{{::subscription.name}}
+            <div class="subscription-badge" ng-if="subscription.isOnline">
+              <span class="badge ng-scope" ng-class="subscription.badge">{{::subscription.endDate}}</span>
+            </div>
+          </h4>
         </div>
         <div class="columns medium-8 subscription-column">
           <div ng-repeat="license in subscription.licenses" class="detail" ng-if="($index < 3) || subscription.viewAll" ng-class="{'tooltip-present': !subscription.viewAll}" tooltip-html-unsafe="{{::license.tooltip}}" tooltip-enable="!subscription.viewAll && license.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">
@@ -31,10 +35,9 @@
               widget-location="navigation-bar">
             </bmmp-subscription-upgrade-button>
           </div>
-         <div class="subscription-id h6" ng-if="subscription.viewAll">
+          <div ng-class="{'online-subscription-id': subscription.isOnline}" class="subscription-id h6" ng-if="subscription.viewAll">
             <span translate="subscriptions.subscription"></span>
             <span>{{::subscription.subscriptionId}}</span>
-            <div>{{::subscription.endDate}}</div>
           </div>
         </div>
       </section></article>
@@ -44,11 +47,24 @@
       <article>
         <section>
           <div class="row">
-            <span class="column medium-2 sub-name" ng-class="mcpSub.oneOnlineSub ? 'h5' : 'h3'">{{::mcpSub.licenseSummary}}</span>
+            <div class="column medium-2 sub-name">
+              <span ng-class="mcpSub.oneOnlineSub ? 'h5' : 'h3'">{{::mcpSub.licenseSummary}}</span>
+              <div class="subscription-badge" ng-if="mcpSub.showSingleSub && mcpSub.subscriptionDetails[0].isOnline">
+                <span class="badge ng-scope" ng-class="mcpSub.subscriptionDetails[0].badge">{{::mcpSub.subscriptionDetails[0].endDate}}</span>
+              </div>
+            </div>
             <div class="column medium-5 sub-name" ng-if="mcpSub.showSingleSub">
-              <span class="h6" translate="subscriptions.subscription"></span>
-              <span class="h6">{{::mcpSub.subscriptionDetails[0].subscriptionId}}</span>
-              <div class="h6">{{::mcpSub.subscriptionDetails[0].endDate}}</div>
+              <div class="container text-right">
+                <bmmp-subscription-upgrade-button ng-if="mcpSub.subscriptionDetails[0].isOnline"
+                  class="btn btn--primary upgrade-button"
+                  bmmp-attr="mcpSub.bmmpAttr"
+                  widget-location="navigation-bar">
+                </bmmp-subscription-upgrade-button>
+              </div>
+              <div>
+                <span class="h6" translate="subscriptions.subscription"></span>
+                <span class="h6">{{::mcpSub.subscriptionDetails[0].subscriptionId}}</span>
+              </div>
             </div>
           </div>
           <div class="row" ng-repeat="licenseCategory in mcpSub.licenseCategory" ng-show="mcpSub.showCategory(licenseCategory)">

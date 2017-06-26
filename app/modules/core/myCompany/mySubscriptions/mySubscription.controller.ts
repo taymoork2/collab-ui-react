@@ -37,12 +37,22 @@ export class MySubscriptionCtrl {
   private readonly CARE_CLASS: string = 'icon-headset';
 
   private readonly CARE: string = 'CARE';
-  private readonly SUBSCRIPTION_TYPES: any = {
+  private readonly SUBSCRIPTION_TYPES = {
     message: 0,
     meeting: 1,
     call: 2,
     room: 3,
     care: 4,
+  };
+  private readonly EXPIRATION_BADGES = {
+    default: 'default',
+    warning: 'warning',
+    alert: 'alert',
+  };
+  private readonly EXPIRATION_DAYS = {
+    warning: 30,
+    alert: 5,
+    expired: 0,
   };
 
   /* @ngInject */
@@ -222,6 +232,7 @@ export class MySubscriptionCtrl {
           viewAll: false,
           numSubscriptions: subscriptions.length,
           endDate: '',
+          badge: '',
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
@@ -233,7 +244,22 @@ export class MySubscriptionCtrl {
           }
         }
         if (subscription.endDate) {
-          newSubscription.endDate = this.$translate.instant('subscriptions.endDate', { date: moment(subscription.endDate).format('MMM DD, YYYY') });
+          const currentDate = new Date();
+          const subscriptionEndDate = new Date(subscription.endDate);
+          const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
+          const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+          newSubscription.endDate = this.$translate.instant('subscriptions.expires', { date: moment(subscriptionEndDate).format('MMM DD, YYYY') });
+          if (diffDays > this.EXPIRATION_DAYS.warning) {
+            newSubscription.badge = this.EXPIRATION_BADGES.default;
+          } else if (diffDays > this.EXPIRATION_DAYS.alert) {
+            newSubscription.badge = this.EXPIRATION_BADGES.warning;
+          } else if (diffDays > this.EXPIRATION_DAYS.expired) {
+            newSubscription.badge = this.EXPIRATION_BADGES.alert;
+          } else {
+            newSubscription.endDate = this.$translate.instant('subscriptions.expired');
+            newSubscription.badge = this.EXPIRATION_BADGES.alert;
+          }
         }
 
         _.forEach(subscription.licenses, (license: any, licenseIndex: number): void => {

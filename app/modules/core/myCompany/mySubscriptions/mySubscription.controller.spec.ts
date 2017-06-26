@@ -91,7 +91,8 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.subscriptionsFormatted[0].changeplanOverride = '';
     this.data.subscriptionsFormatted[0].internalSubscriptionId = onlineIntSubId;
     this.data.subscriptionsFormatted[0].quantity = 100;
-    this.data.subscriptionsFormatted[0].endDate = 'subscriptions.endDate';
+    this.data.subscriptionsFormatted[0].endDate = 'subscriptions.expired';
+    this.data.subscriptionsFormatted[0].badge = 'alert';
     this.startController();
 
     expect(this.controller.hybridServices).toEqual(this.data.servicesFormatted);
@@ -130,7 +131,8 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.trialSubscriptionData[0].name = productName;
     this.data.trialSubscriptionData[0].internalSubscriptionId = onlineIntSubId;
     this.data.trialSubscriptionData[0].quantity = 100;
-    this.data.trialSubscriptionData[0].endDate = 'subscriptions.endDate';
+    this.data.trialSubscriptionData[0].endDate = 'subscriptions.expired';
+    this.data.trialSubscriptionData[0].badge = 'alert';
 
     this.startController();
     this.$httpBackend.flush();
