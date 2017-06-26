@@ -96,7 +96,7 @@ class CustomerReportsHeaderCtrl {
 
   public goToFirstReportsTab(): void {
     const firstTab = this.headerTabs[0];
-    this.$state.go(firstTab);
+    this.$state.go(firstTab.state);
   }
 
   private getUniqueWebexSiteUrls() {

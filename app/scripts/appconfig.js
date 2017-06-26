@@ -1726,7 +1726,7 @@
             // abstract: true,
           })
           .state('reports.spark', {
-            url: '/reports/spark',
+            url: '/spark',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1736,7 +1736,7 @@
             },
           })
           .state('reports.sparkMetrics', {
-            url: '/reports/sparkMetrics',
+            url: '/sparkMetrics',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1746,7 +1746,7 @@
             },
           })
           .state('reports.metrics', {
-            url: '/reports/metrics',
+            url: '/metrics',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1756,7 +1756,7 @@
             },
           })
           .state('reports.webex-metrics', {
-            url: '/reports/webexMetrics/:siteUrl',
+            url: '/webexMetrics/:siteUrl',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1772,7 +1772,7 @@
             },
           })
           .state('reports.media', {
-            url: '/reports/media',
+            url: '/media',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1782,7 +1782,7 @@
             },
           })
           .state('reports.mediaservice', {
-            url: '/reports/mediaservice',
+            url: '/mediaservice',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1792,7 +1792,7 @@
             },
           })
           .state('reports.care', {
-            url: '/reports/care',
+            url: '/care',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1802,7 +1802,7 @@
             },
           })
           .state('reports.device-usage', {
-            url: '/reports/device/usage',
+            url: '/device/usage',
             views: {
               tabContent: {
                 controllerAs: 'deviceUsage',
@@ -1813,11 +1813,11 @@
           })
           // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
           .state('reports.webex_', {
-            url: '/reports/webex_',
+            url: '/webex_',
             views: { tabContent: { template: '<cust-webex-reports></cust-webex-reports>' } },
           })
           .state('reports.webex', {
-            url: '/reports/webex',
+            url: '/webex',
             views: {
               tabContent: {
                 controllerAs: 'nav',
