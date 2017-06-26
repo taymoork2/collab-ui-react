@@ -40,6 +40,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public showVoiceMailDisableDialog: boolean = false;
   public supportsAvrilVoicemail: boolean = false;
   public supportsAvrilVoicemailMailbox: boolean = false;
+  public isCompanyMOHEnabled: boolean = false;
   public ishI1484: boolean;
 
   public huronSettingsData: HuronSettingsData;
@@ -129,6 +130,9 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
       .then(result => this.ishI1484 = result);
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronMOHEnable)
+      .then(result => this.isCompanyMOHEnabled = result);
 
     return this.$q.resolve();
   }

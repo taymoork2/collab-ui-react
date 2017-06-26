@@ -4,7 +4,7 @@ import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { Notification } from 'modules/core/notifications';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/huron/settings/companyCallerId';
 import { AvrilService, IAvrilSite, AvrilSite, IAvrilFeatures, AvrilFeatures } from 'modules/huron/avril';
-import { MediaOnHoldService } from 'modules/huron/mediaOnHold';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { TerminusService } from 'modules/huron/pstn';
 import { ExtensionLengthService } from './extensionLength.service';
 
@@ -62,6 +62,7 @@ export class HuronSettingsService {
   private VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL'; // Unity and Avril
   private supportsAvrilVoicemail: boolean = false;
   private supportsAvrilVoicemailMailbox: boolean = false;
+  private supportsCompanyMoh: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -86,6 +87,10 @@ export class HuronSettingsService {
     //Avril only, Should have supportsAvrilVoicemail = false
     this.FeatureToggleService.supports(FeatureToggleService.features.avrilVmMailboxEnable)
       .then(result => this.supportsAvrilVoicemailMailbox = result);
+    //Company Media On Hold Support
+    this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
+      .then(result => this.supportsCompanyMoh = result);
+
   }
 
   public get(siteId: string): ng.IPromise<HuronSettingsData> {
@@ -213,6 +218,10 @@ export class HuronSettingsService {
       Array.prototype.push.apply(promises, this.updateInternalNumberRanges(data.internalNumberRanges, this.skipInternalNumberRangeDelete(data, this.huronSettingsDataCopy)));
     }
 
+    if (!_.isEqual(data.companyMoh, this.huronSettingsDataCopy.companyMoh)) {
+      promises.push(this.updateCompanyMediaOnHold(data.companyMoh));
+    }
+
     if (!_.isEqual(data.cosRestrictions, this.huronSettingsDataCopy.cosRestrictions)) {
       promises.push(this.saveCosRestrictions(data.cosRestrictions));
     }
@@ -263,20 +272,14 @@ export class HuronSettingsService {
   }
 
   private getCompanyMedia(): ng.IPromise<string> {
-    let mediaOnHold = '1';
-    return this.MediaOnHoldService.getMediaOnHold()
-      .then(mediaList => {
-        _.forEach(mediaList, media => {
-          if (media.assignments && _.find(media.assignments, ['idType', 'ORG_ID'])) {
-            mediaOnHold = media.rhesosId;
-          }
-        });
-        return mediaOnHold;
-      })
+    if (this.supportsCompanyMoh) {
+      return this.MediaOnHoldService.getCompanyMedia()
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
         return this.$q.reject();
       });
+    }
+    return this.$q.resolve('');
   }
 
   private createSite(site: ISite): ng.IPromise<string | void> {
@@ -293,6 +296,13 @@ export class HuronSettingsService {
     return this.HuronSiteService.updateSite(site)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.siteUpdateError'));
+      });
+  }
+
+  private updateCompanyMediaOnHold(mediaFileId: string): ng.IPromise<void> {
+    return this.MediaOnHoldService.updateMediaOnHold(mediaFileId)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
       });
   }
 

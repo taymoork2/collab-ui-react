@@ -1,11 +1,14 @@
 <label class="control-label" for="companyMohSelect" translate="serviceSetupModal.mediaOnHold"></label>
-<p class="description-block" translate="serviceSetupModal.dfDescription"></p>
-<div class="medium-5">
+<div class="medium-5 display-flex">
   <cs-select
     name="companyMohSelect"
     ng-model="$ctrl.selected"
-    options="$ctrl.dateFormatOptions"
-    on-change-fn="$ctrl.onDateFormatChanged()"
+    options="$ctrl.companyMohOptions"
+    on-change-fn="$ctrl.onCompanyMohChanged()"
     filter="false">
   </cs-select>
 </div>
+<span class="warning-padding">
+  <a translate="mediaOnHoldPanel.mediaManager" ng-click="$ctrl.openMediaMgrModal()"></a>
+</span>
+

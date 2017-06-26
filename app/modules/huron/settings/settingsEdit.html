@@ -11,7 +11,9 @@
     </div>
 
     <!-- Media on Hold settings -->
-    <div class="cs-form__section" ng-if="$ctrl.showRegionAndVoicemail">
+    <div 
+    cr-feature-toggle feature-show="huron-moh-enable"
+    class="cs-form__section">
       <div class="section__info">
         <div cs-sticky>
           <h4 class="section__title" translate="serviceSetupModal.mediaOnHold"></h4>
@@ -20,11 +22,11 @@
       </div>
       <div class="section__content">
         <div class="sub-section">
-          <uc-media-hold
+          <uc-company-media-on-hold
             company-moh="$ctrl.huronSettingsData.companyMoh"
             company-moh-options="$ctrl.settingsOptions.companyMohOptions"
             on-change-fn="$ctrl.onCompanyMohChanged(companyMoh)">
-          </uc-media-hold>
+          </uc-company-media-on-hold>
         </div>
       </div>
     </div>

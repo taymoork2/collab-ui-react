@@ -21,6 +21,7 @@ import dateFormatModule from 'modules/huron/settings/dateFormat';
 import defaultCountryModule from 'modules/huron/settings/defaultCountry';
 import cosRestrictionModule from 'modules/huron/settings/cos';
 import companyCallerIdModule from 'modules/huron/settings/companyCallerId';
+import companyMohModule from 'modules/huron/settings/companyMoh';
 import emergencyServiceNumberModule from 'modules/huron/settings/emergencyServiceNumber';
 import emergencyServiceAddressModule from 'modules/huron/settings/emergencyServiceAddress';
 import externalTransferModule from 'modules/huron/settings/externalCallTransfer';
@@ -57,6 +58,7 @@ export default angular
     emergencyServiceAddressModule,
     externalTransferModule,
     phoneNumberModule,
+    companyMohModule,
     huronSettingsServiceModule,
     featureToggleServiceModule,
     pstnAreaService,

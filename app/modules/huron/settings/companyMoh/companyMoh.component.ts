@@ -1,24 +1,37 @@
 import { IOption } from 'modules/huron/dialing/dialing.service';
 
 class CompanyMediaOnHoldCtrl implements ng.IComponentController {
-  public dateFormat: string;
+  public companyMoh: string;
   public selected: IOption;
-  public dateFormatOptions: IOption[];
+  public companyMohOptions: IOption[];
+  public mediaMgrModal;
   public onChangeFn: Function;
 
   /* @ngInject */
-  constructor() { }
+  constructor(
+    private $modal,
+    private $scope: ng.IScope,
+  ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { dateFormat } = changes;
-    if (dateFormat && dateFormat.currentValue) {
-      this.selected = _.find(this.dateFormatOptions, { value: this.dateFormat });
+    const { companyMoh } = changes;
+    if (companyMoh && companyMoh.currentValue === this.companyMoh) {
+      this.selected = _.find(this.companyMohOptions, { value: this.companyMoh });
     }
   }
 
-  public onDateFormatChanged(): void {
+  public openMediaMgrModal(): void {
+    this.mediaMgrModal = this.$modal.open({
+      scope: this.$scope,
+      component: 'MediaMgrComponent',
+      template: '<media-mgr close="$close()" dismiss="$dismiss()"></media-mgr>',
+      type: 'full',
+    });
+  }
+
+  public onCompanyMohChanged(): void {
     this.onChangeFn({
-      dateFormat: _.get(this.selected, 'value'),
+      companyMoh: _.get(this.selected, 'value'),
     });
   }
 }
@@ -27,8 +40,8 @@ export class CompanyMediaOnHoldComponent implements ng.IComponentOptions {
   public controller = CompanyMediaOnHoldCtrl;
   public templateUrl = 'modules/huron/settings/companyMoh/companyMoh.html';
   public bindings = {
-    dateFormat: '<',
-    dateFormatOptions: '<',
+    companyMoh: '<',
+    companyMohOptions: '<',
     onChangeFn: '&',
   };
 }
