@@ -15,6 +15,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   public userServices: string[] = [];
   private externalTransferFeatureToggle;
   public snrEnabled: boolean = false;
+  public wide: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -125,7 +126,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   }
 
   private initNumbers(): void {
-    this.LineService.getLineList(LineConsumerType.USERS, this.currentUser.id)
+    this.LineService.getLineList(LineConsumerType.USERS, this.currentUser.id, this.wide)
       .then(lines => this.directoryNumbers = lines);
   }
 }

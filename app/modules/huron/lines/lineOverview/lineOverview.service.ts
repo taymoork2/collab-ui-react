@@ -21,7 +21,7 @@ export class LineOverviewData {
 
 export class LineOverviewService {
 
-  private numberProperties: string[] = ['uuid', 'primary', 'shared', 'internal', 'external', 'siteToSite', 'incomingCallMaximum'];
+  private numberProperties: string[] = ['uuid', 'primary', 'shared', 'internal', 'external', 'siteToSite', 'incomingCallMaximum', 'label'];
   private callForwardAllProperties: string[] = ['destination', 'voicemailEnabled'];
   private callForwardBusyProperties: string[] = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled', 'ringDurationTimer'];
   private lineOverviewDataCopy: LineOverviewData;
@@ -42,11 +42,11 @@ export class LineOverviewService {
     private FeatureToggleService,
   ) {}
 
-  public get(consumerType: LineConsumerType, ownerId: string, numberId: string = ''): ng.IPromise<LineOverviewData> {
+  public get(consumerType: LineConsumerType, ownerId: string, numberId: string = '', wide: boolean = false): ng.IPromise<LineOverviewData> {
     const lineOverviewData = new LineOverviewData();
     this.errors = [];
     const promises: ng.IPromise<any>[] = [];
-    promises.push(this.getLine(consumerType, ownerId, numberId));
+    promises.push(this.getLine(consumerType, ownerId, numberId, wide));
     promises.push(this.getCallForward(consumerType, ownerId, numberId));
     promises.push(this.getSharedLines(consumerType, ownerId, numberId));
     promises.push(this.getCallerId(consumerType, ownerId, numberId));
@@ -161,11 +161,11 @@ export class LineOverviewService {
     }
   }
 
-  private getLine(consumerType: LineConsumerType, ownerId: string, numberId: string): ng.IPromise<Line | void> {
+  private getLine(consumerType: LineConsumerType, ownerId: string, numberId: string, wide: boolean = false): ng.IPromise<Line | void> {
     if (!numberId) {
       return this.$q.resolve(new Line());
     } else {
-      return this.LineService.getLine(consumerType, ownerId, numberId)
+      return this.LineService.getLine(consumerType, ownerId, numberId, wide)
         .then(line => {
           return new Line(_.pick<Line, Line>(line, this.numberProperties));
         }).catch(error => {
@@ -174,10 +174,10 @@ export class LineOverviewService {
     }
   }
 
-  private createLine(consumerType: LineConsumerType, ownerId: string, data: Line): ng.IPromise<Line> {
+  private createLine(consumerType: LineConsumerType, ownerId: string, data: Line, wide: boolean = false): ng.IPromise<Line> {
     return this.LineService.createLine(consumerType, ownerId, data).then(location => {
       const newUuid = _.last(location.split('/'));
-      return this.LineService.getLine(consumerType, ownerId, newUuid)
+      return this.LineService.getLine(consumerType, ownerId, newUuid, wide)
         .then(line => {
           return new Line(_.pick<Line, Line>(line, this.numberProperties));
         }).catch(error => {

@@ -4,6 +4,7 @@ import { CallForward } from 'modules/huron/callForward';
 describe('Component: lineOverview', () => {
   const BUTTON_SAVE = '.button-container .btn--primary';
   const BUTTON_CANCEL = '.button-container button:not(.btn--primary)';
+  const LINE_LABEL_INPUT = 'input#lineLabel';
 
   const existingLinePrimary: Line = {
     uuid: '0001',
@@ -13,6 +14,10 @@ describe('Component: lineOverview', () => {
     incomingCallMaximum: 8,
     primary: true,
     shared: false,
+    label: {
+      value: 'someuser@some.com',
+      appliesToAllSharedLines: false,
+    },
   };
 
   const existingLineNonPrimary: Line = {
@@ -23,6 +28,10 @@ describe('Component: lineOverview', () => {
     incomingCallMaximum: 2,
     primary: false,
     shared: false,
+    label: {
+      value: 'someuser@some.com',
+      appliesToAllSharedLines: false,
+    },
   };
 
   const esnPrefix: string = '7100';
@@ -102,6 +111,8 @@ describe('Component: lineOverview', () => {
       expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
       expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
+      expect(this.view.find(LINE_LABEL_INPUT)).toExist();
+      expect(this.view.find(LINE_LABEL_INPUT).val()).toEqual('someuser@some.com');
     });
 
     it('should set consumerType to LineConsumerType.PLACES if place is passed in for ownerType', function () {
@@ -136,6 +147,10 @@ describe('Component: lineOverview', () => {
       this.$scope.$apply();
 
       spyOn(this.$state, 'go');
+    });
+
+    it('should NOT show line label on add a new line', function () {
+      expect(this.view.find(LINE_LABEL_INPUT)).not.toExist();
     });
 
     it('should grab the first available internal line', function () {

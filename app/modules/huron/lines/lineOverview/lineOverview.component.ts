@@ -21,6 +21,7 @@ class LineOverview implements ng.IComponentController {
   public showActions: boolean = false;
   public deleteConfirmation: string;
   public deleteSharedLineMessage: string;
+  public wide: boolean = true;
 
   // Directory Number properties
   public esnPrefix: string;
@@ -91,7 +92,7 @@ class LineOverview implements ng.IComponentController {
   }
 
   public getLineOverviewData(): void {
-    this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId)
+    this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId, this.wide)
     .then(lineOverviewData => {
       this.lineOverviewData = lineOverviewData;
       this.userVoicemailEnabled = lineOverviewData.voicemailEnabled;

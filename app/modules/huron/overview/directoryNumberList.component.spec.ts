@@ -14,6 +14,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 2,
         primary: true,
         shared: false,
+        label: {
+          value: 'someuser@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69249',
@@ -23,6 +27,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser2@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
     ];
 
@@ -64,7 +72,7 @@ describe('Component: directoryNumberList', () => {
     });
 
     it('should display line label - check the first line', function () {
-      expect(this.view.find(LINE_LABEL).get(0)).toContainText('71002329');
+      expect(this.view.find(LINE_LABEL).get(0)).toContainText('someuser@some.com');
     });
   });
 
@@ -79,6 +87,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 2,
         primary: true,
         shared: false,
+        label: {
+          value: 'someuser@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69249',
@@ -88,6 +100,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser2@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69248',
@@ -97,6 +113,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser3@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69247',
@@ -106,6 +126,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser4@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69246',
@@ -115,6 +139,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser5@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69245',
@@ -124,6 +152,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser6@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
     ];
 
