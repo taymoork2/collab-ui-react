@@ -2,6 +2,8 @@ require('./ediscovery.scss');
 require('@ciscospark/internal-plugin-search');
 var Spark = require('@ciscospark/spark-core').default;
 
+//TODO agendel: need to address the use of babel-polyfil which is required by spark-core.
+
 (function () {
   'use strict';
 
