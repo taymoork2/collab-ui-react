@@ -4,6 +4,7 @@ import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgra
 import { SharedMeetingsReportService } from './sharedMeetings/sharedMeetingsReport.service';
 import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from './subscriptionsInterfaces';
 import * as moment from 'moment';
+import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 
 export class MySubscriptionCtrl {
   public hybridServices: any[] = [];
@@ -52,15 +53,16 @@ export class MySubscriptionCtrl {
     private $window: ng.IWindowService,
     private Authinfo,
     private Config,
-    private FeatureToggleService,
     private DigitalRiverService: DigitalRiverService,
-    private OnlineUpgradeService: OnlineUpgradeService,
-    private SharedMeetingsReportService: SharedMeetingsReportService,
+    private FeatureToggleService,
+    private HybridServicesUtilsService: HybridServicesUtilsService,
     private Notification: Notification,
+    private OnlineUpgradeService: OnlineUpgradeService,
     private Orgservice,
     private ServiceDescriptor,
-    private WebExUtilsFact,
+    private SharedMeetingsReportService: SharedMeetingsReportService,
     private UrlConfig,
+    private WebExUtilsFact,
   ) {
     _.forEach(this.SUBSCRIPTION_TYPES, (_value, key: string): void => {
       const category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
@@ -428,6 +430,7 @@ export class MySubscriptionCtrl {
     this.ServiceDescriptor.getServices().then((services) => {
       return this.ServiceDescriptor.filterEnabledServices(services);
     }).then((enabledServices) => {
+      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator(s1.id, s2.id));
       return _.map(enabledServices, (service: any) => {
         if (service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec') {
           return this.$translate.instant(`hercules.serviceNames.${service.id}.full`);

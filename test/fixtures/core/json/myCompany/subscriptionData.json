@@ -479,5 +479,5 @@
     "enabled": true,
     "emailSubscribers": "kjetil@example.org"
   }],
-  "servicesFormatted": ["hercules.serviceNames.squared-fusion-uc.full", "hercules.serviceNames.squared-fusion-cal"]
+  "servicesFormatted": ["hercules.serviceNames.squared-fusion-cal", "hercules.serviceNames.squared-fusion-uc.full"]
 }
