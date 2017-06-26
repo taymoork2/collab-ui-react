@@ -21,6 +21,14 @@ describe('Controller: Customer Reports Ctrl', function () {
     state: 'reports.webex-metrics',
   }];
 
+  let propackTabs: any = [{
+    title: 'reportsPage.sparkReports',
+    state: 'reports.sparkMetrics',
+  }, {
+    title: 'reportsPage.webexMetrics.title',
+    state: 'reports.webex-metrics',
+  }]
+
   afterAll(function () {
     headerTabs = undefined;
   });
@@ -55,6 +63,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(false));
+      spyOn(this.FeatureToggleService, 'webexMetrics').and.returnValue(this.$q.resolve(false));
       spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
 
       const WebExApiGatewayService: any = {
@@ -89,6 +98,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
+      spyOn(this.FeatureToggleService, 'webexMetrics').and.returnValue(this.$q.resolve(true));
       spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
 
       const WebExApiGatewayService = {
@@ -102,6 +112,9 @@ describe('Controller: Customer Reports Ctrl', function () {
           return defer.promise;
         },
       };
+
+      headerTabs.shift();
+      headerTabs = propackTabs.concat(headerTabs);
 
       this.controller = this.$controller('CustomerReportsHeaderCtrl', {
         $q: this.$q,
