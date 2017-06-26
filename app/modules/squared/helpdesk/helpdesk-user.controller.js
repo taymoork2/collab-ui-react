@@ -132,7 +132,7 @@
 
     function mailgunEventTypeToL10nKey(emailEvent) {
       var eventType = _.get(emailEvent, 'event');
-      var emailStatuses = ['unsubscribed', 'delivered', 'failed', 'accepted', 'rejected'];
+      var emailStatuses = ['unsubscribed', 'delivered', 'failed', 'accepted', 'rejected', 'opened', 'clicked', 'complained', 'stored'];
       if (!_.includes(emailStatuses, eventType)) {
         return 'common.unknown';
       }
