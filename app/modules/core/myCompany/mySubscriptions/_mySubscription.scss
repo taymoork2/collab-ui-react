@@ -188,6 +188,10 @@
         @include vr-spacing(p, 1.5);
         @include vr-spacing(m, 0);
 
+        li {
+          list-style: inside;
+        }
+
         .icon-circle {
           @include vr-spacing(pr, 0.5);
 
