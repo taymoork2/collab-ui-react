@@ -22,6 +22,7 @@
     };
   }
 
-  angular.module('Ediscovery')
-    .filter('bytesFilter', BytesFilter);
+  module.exports = angular.module('ediscovery.bytes', [])
+    .filter('bytesFilter', BytesFilter)
+    .name;
 }());
