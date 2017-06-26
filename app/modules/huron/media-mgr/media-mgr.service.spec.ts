@@ -1,6 +1,6 @@
 import mediaMgrModule from './index';
-import { IMedia } from 'modules/huron/media-mgr/media-mgr.component';
-import { IMediaUpload } from 'modules/huron/media-mgr/media-mgr.component';
+import { IMedia } from './media-mgr.component';
+import { IMediaUpload } from './media-mgr.component';
 
 describe('Service: mediaMgrService', () => {
   beforeEach(function() {

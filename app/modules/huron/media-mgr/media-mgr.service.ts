@@ -1,5 +1,5 @@
-import { IMedia } from 'modules/huron/media-mgr/media-mgr.component';
-import { IMediaUpload } from 'modules/huron/media-mgr/media-mgr.component';
+import { IMedia } from './media-mgr.component';
+import { IMediaUpload } from './media-mgr.component';
 
 interface IUploadMetaDataResponse {
   createTime: string;
@@ -79,6 +79,17 @@ export class MediaMgrService {
       },
     };
     return this.$http(transcodeReq);
+  }
+
+  public restoreMedia(media: IMedia): ng.IPromise<any> {
+    const deleteReq: ng.IRequestConfig = {
+      method: 'PUT',
+      url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media/${media.mediaId}`,
+      data: {
+        action: 'UNDELETE',
+      },
+    };
+    return this.$http(deleteReq);
   }
 
   public deleteMedia(media: IMedia): ng.IPromise<any> {
