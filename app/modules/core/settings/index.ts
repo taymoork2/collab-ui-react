@@ -4,6 +4,7 @@ import './_settings.scss';
 
 import authenticationModule from './authentication';
 import brandingModule from './branding';
+import deviceBrandingModule from './deviceBranding';
 import domainsModule from './domain';
 import dirSyncModule from './dirsync';
 import privacySectionModule from './privacySection';
@@ -19,6 +20,7 @@ export default angular.module('core.settings', [
   require('angular-translate'),
   authenticationModule,
   brandingModule,
+  deviceBrandingModule,
   dirSyncModule,
   privacySectionModule,
   retentionModule,

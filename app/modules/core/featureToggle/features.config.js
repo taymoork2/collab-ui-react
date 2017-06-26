@@ -160,6 +160,7 @@ module.exports = {
   csdmATA: 'csdm-ata',
   csdmHybridCall: 'csdm-hybrid-call',
   csdmPlaceCalendar: 'csdm-hybrid-calendar',
+  csdmDeviceBranding: 'csdm-device-branding',
   atlasHybridNodesView: 'atlas-hybrid-nodes-view',
   atlasHybridVoicemail: 'atlas-hybrid-voicemail',
   atlasHybridImp: 'atlas-hybrid-imp',

@@ -1,4 +1,3 @@
-
 import { SettingSection } from './settingSection';
 import { AuthenticationSetting } from './authentication/authenticationSetting.component';
 import { BrandingSetting } from './branding/brandingSetting.component';
@@ -9,6 +8,7 @@ import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';
 import { DirSyncSetting } from './dirsync/dirSyncSetting.component';
+import { DeviceBrandingSetting } from './deviceBranding/device-branding-setting.component';
 
 export class SettingsCtrl {
 
@@ -18,6 +18,7 @@ export class SettingsCtrl {
   public sipDomain: SettingSection;
   public authentication: SettingSection;
   public branding: SettingSection;
+  public deviceBranding: SettingSection;
   public support: SettingSection;
   public retention: SettingSection;
   public dirsync: SettingSection;
@@ -64,7 +65,10 @@ export class SettingsCtrl {
       this.sipDomain = new SipDomainSetting();
       this.dirsync = new DirSyncSetting();
       this.initRetention();
+
     }
+    //TODO temporary adding device branding
+    this.initDeviceBranding();
 
     const settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
     if (!_.isNull(settingsToShow)) {
@@ -107,6 +111,14 @@ export class SettingsCtrl {
         }
       });
     }
+  }
+
+  private initDeviceBranding() {
+    this.FeatureToggleService.csdmDeviceBrandingGetStatus().then((toggle) => {
+      if (toggle) {
+        this.deviceBranding = new DeviceBrandingSetting();
+      }
+    });
   }
 
   private initSecurity() {
