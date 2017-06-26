@@ -45,7 +45,7 @@
                 <li ng-if="$ctrl.displayMaintenanceModeMenuItem($ctrl.data.targetType) && node.maintenanceMode === 'off'">
                   <a ng-click="$ctrl.enableMaintenanceMode(node)">
                     <span translate="hercules.nodesPage.enableMaintenanceMode"></span>
-                    <i class="icon icon-question-circle" tooltip-placement="left" tooltip="{{::'Use maintenance mode to stop the connectors in this node and ignore alarms.'}}" tooltip-append-to-body="true"></i>
+                    <i class="icon icon-question-circle" tooltip-placement="left" tooltip="{{::'hercules.nodesPage.maintenanceModeTooltip' | translate}}" tooltip-append-to-body="true"></i>
                   </a>
                 </li>
                 <li ng-if="$ctrl.displayMaintenanceModeMenuItem($ctrl.data.targetType) && node.maintenanceMode !== 'off'">
