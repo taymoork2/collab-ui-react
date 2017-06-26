@@ -40,4 +40,7 @@
   .cs-form {
     margin: 0;
   }
+  .content-container {
+    height: calc(100vh - (50px + (1px * 2) + 180px));
+  }
 }
