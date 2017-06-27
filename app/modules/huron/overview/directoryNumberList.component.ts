@@ -8,14 +8,23 @@ class DirectoryNumberListCtrl implements ng.IComponentController {
   private sharedLabel: string;
   private lineThreshold: number;
   public numberOfLines: number | undefined = this.lineThreshold;
+  public lineLabelToggle: boolean;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
   ) {
     this.primaryLabel = this.$translate.instant('helpdesk.primary');
     this.primarySharedLabel = this.$translate.instant('helpdesk.primaryShared');
     this.sharedLabel = this.$translate.instant('helpdesk.shared');
+  }
+
+  public $onInit(): void {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1485)
+      .then((result) => {
+        this.lineLabelToggle = result;
+      });
   }
 
   public setLineUseLabel(primary: boolean, shared: boolean): string {
