@@ -115,7 +115,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
 
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
-      pattern: '+9999999991',
+      pattern: '+19005451234',
       uuid: '9999999991-id',
     }, {
       pattern: '+8888888881',
@@ -226,12 +226,31 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       c.ui.ceInfo = ce2CeInfo(rawCeInfo);
 
       c.loadNums();
-
+      $httpBackend.flush();
       $scope.$apply();
+
+      expect(c.availablePhoneNums[0].label).toEqual('(900) 545-1234');
 
       expect(c.numberTypeList[c.ui.ceInfo.resources[0].number]).toEqual('directoryNumber');
 
       expect(c.numberTypeList[c.ui.ceInfo.resources[1].number]).toEqual('externalNumber');
+    });
+    it('should query and/or not query phone numbers', function () {
+      var c = control('AABuilderNumbersCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
+
+      c.ui.ceInfo = ce2CeInfo(rawCeInfo);
+
+      c.loadNums('dummy query');
+      $httpBackend.flush();
+      $scope.$apply();
+      expect(c.availablePhoneNums.length).toEqual(6);
+
+      c.availablePhoneNums = [];
+      c.loadNums('dummy query');
+      expect(c.availablePhoneNums.length).toEqual(0);
     });
   });
 
