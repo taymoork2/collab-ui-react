@@ -21,13 +21,13 @@ describe('Controller: Customer Reports Ctrl', function () {
     state: 'reports.webex-metrics',
   }];
 
-  let propackTabs: any = [{
+  const propackTabs: any = [{
     title: 'reportsPage.sparkReports',
     state: 'reports.sparkMetrics',
   }, {
     title: 'reportsPage.webexMetrics.title',
     state: 'reports.webex-metrics',
-  }]
+  }];
 
   afterAll(function () {
     headerTabs = undefined;
