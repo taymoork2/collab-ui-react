@@ -6,7 +6,7 @@
     .controller('WebExMetricsCtrl', WebExMetricsCtrl);
 
   /* @ngInject */
-  function WebExMetricsCtrl($q, $scope, $stateParams, Authinfo, LocalStorage, Userservice, WebExApiGatewayService, $log,
+  function WebExMetricsCtrl($scope, $stateParams, Authinfo, LocalStorage, Userservice,
     $sce,
     $timeout,
     $window,
@@ -21,6 +21,7 @@
     vm.webexOptions = [];
     vm.webexSelected = null;
     vm.webexMetrics = {};
+    vm.isNoData = false;
 
     vm.webexMetrics.views = [
       {
@@ -71,10 +72,11 @@
       return self.indexOf(value) === index;
     }
 
-    function getUniqueWebexSiteUrls() {
+    function getUniqueWebexSiteUrls(siteUrls) {
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
       var linkedConferenceServices = Authinfo.getConferenceServicesWithLinkedSiteUrl() || [];
       var webexSiteUrls = [];
+      webexSiteUrls = webexSiteUrls.concat(siteUrls);
 
       conferenceServices.forEach(
         function getWebExSiteUrl(conferenceService) {
@@ -91,64 +93,53 @@
       return webexSiteUrls.filter(onlyUnique);
     }
 
-    function generateWebexMetricsUrl() {
-      var promiseChain = [];
-      var webexSiteUrls = getUniqueWebexSiteUrls();
+    function generateWebexMetricsUrl(siteUrls) {
+      var webexSiteUrls = getUniqueWebexSiteUrls(siteUrls);
 
-      webexSiteUrls.forEach(
-        function chkWebexSiteUrl(url) {
-          promiseChain.push(
-            WebExApiGatewayService.siteFunctions(url).then(
-              function getSiteSupportsIframeSuccess(result) {
-                if (result.isAdminReportEnabled && result.isIframeSupported) {
-                  vm.webexOptions.push(result.siteUrl);
-                }
-              }).catch(_.noop));
-        }
-      );
-
-      $q.all(promiseChain).then(
-        function promisChainDone() {
-          var stateParamsSiteUrl = $stateParams.siteUrl;
-          var stateParamsSiteUrlIndex = vm.webexOptions.indexOf(stateParamsSiteUrl);
-
-          var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
-          var storageMetricsSiteUrlIndex = vm.webexOptions.indexOf(storageMetricsSiteUrl);
-
-          var webexSelected = null;
-          if (-1 !== stateParamsSiteUrlIndex) {
-            webexSelected = stateParamsSiteUrl;
-          } else if (-1 !== storageMetricsSiteUrlIndex) {
-            webexSelected = storageMetricsSiteUrl;
-          } else {
-            webexSelected = vm.webexOptions[0];
-          }
-          vm.webexSelected = webexSelected;
-
-          ProPackService.getProPackPurchased().then(function (isPurchased) {
-            if (isPurchased) {
-              vm.reportView = vm.webexMetrics.views[1];
-            }
-            updateWebexMetrics();
-          });
-        }
-      );
+      vm.webexOptions = webexSiteUrls;
+      promisChainDone();
     }
-    if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-      generateWebexMetricsUrl();
-    } else {
-      Userservice.getUser(
-        'me',
-        function (data) {
-          if (data.success) {
-            if (data.emails) {
-              Authinfo.setEmails(data.emails);
-              generateWebexMetricsUrl();
+
+    function promisChainDone() {
+      var stateParamsSiteUrl = $stateParams.siteUrl;
+      var stateParamsSiteUrlIndex = vm.webexOptions.indexOf(stateParamsSiteUrl);
+
+      var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
+      var storageMetricsSiteUrlIndex = vm.webexOptions.indexOf(storageMetricsSiteUrl);
+
+      var webexSelected = null;
+      if (-1 !== stateParamsSiteUrlIndex) {
+        webexSelected = stateParamsSiteUrl;
+      } else if (-1 !== storageMetricsSiteUrlIndex) {
+        webexSelected = storageMetricsSiteUrl;
+      } else {
+        webexSelected = vm.webexOptions[0];
+      }
+      vm.webexSelected = webexSelected;
+
+      ProPackService.getProPackPurchased().then(function (isPurchased) {
+        if (isPurchased) {
+          vm.reportView = vm.webexMetrics.views[1];
+        }
+        updateWebexMetrics();
+      });
+    }
+
+    Userservice.getUser(
+      'me',
+      function (data) {
+        if (data.success) {
+          var adminTrainSites = [];
+          if (data.emails) {
+            Authinfo.setEmails(data.emails);
+            if (!_.isUndefined(data.adminTrainSiteNames)) {
+              adminTrainSites = data.adminTrainSiteNames;
             }
+            generateWebexMetricsUrl(adminTrainSites);
           }
         }
-      );
-    }
+      }
+    );
 
     function updateWebexMetrics() {
       var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
@@ -158,7 +149,12 @@
         LocalStorage.put('webexMetricsSiteUrl', webexSelected);
       }
 
-      loadMetricsReport();
+      if (!_.isNull(vm.webexSelected)) {
+        vm.isNoData = false;
+        loadMetricsReport();
+      } else {
+        vm.isNoData = true;
+      }
     }
 
     function loadMetricsReport() {
@@ -172,8 +168,6 @@
         siteUrl: vm.webexSelected.toLowerCase(),
         email: Authinfo.getPrimaryEmail(),
       };
-      $log.log(userInfo.siteUrl);
-      $log.log('getWebExReportQBSfor' + vm.reportView.view + 'Url');
       QlikService['getWebExReportQBSfor' + vm.reportView.view + 'Url'](userInfo).then(function (data) {
         var QlikMashupChartsUrl = QlikService['getWebExReportAppfor' + vm.reportView.view + 'Url']();
 

@@ -3,7 +3,8 @@
      name="webexMetricsIframeLoading"
      align="center">
     <br/>
-    <i class="icon icon-spinner icon-2x"></i>
+    <i ng-hide="nav.isNoData" class="icon icon-spinner icon-2x"></i>
+    <div ng-show="nav.isNoData" translate="reportsPage.noData"></div>
 </div>
 
 <div ng-show="nav.isIframeLoaded"
