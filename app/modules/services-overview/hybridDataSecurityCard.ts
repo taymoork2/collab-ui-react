@@ -54,8 +54,8 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   }
 
   public proPackEventHandler(result): void {
-    this.hasProPackEnabled = result.hasProPackEnabled;
-    this.hasProPackPurchased = result.hasProPackPurchased;
+    this.hasProPackEnabled = result.hasITProPackEnabled;
+    this.hasProPackPurchased = result.hasITProPackPurchased;
     this.infoText = this.treatAsPurchased() ? '' : 'servicesOverview.cards.hybridDataSecurity.tooltip';
     this.setLoading();
   }
