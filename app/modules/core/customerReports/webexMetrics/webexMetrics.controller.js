@@ -102,8 +102,6 @@
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
                   vm.webexOptions.push(result.siteUrl);
-                  vm.webexOptions.push('alpha.webex.com');
-                  vm.webexOptions.push('go.webex.com');
                 }
               }).catch(_.noop));
         }
