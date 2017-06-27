@@ -88,7 +88,6 @@ describe('Controller: Customer Reports Ctrl', function () {
 
     it('should only display spark and care reports tab', function () {
       expect(this.controller.headerTabs).toEqual([headerTabs[0], headerTabs[2], headerTabs[4]]);
-      expect(this.$state.go).toHaveBeenCalled();
     });
 
   });
@@ -129,7 +128,6 @@ describe('Controller: Customer Reports Ctrl', function () {
 
     it('should display all reports tabs', function () {
       expect(this.controller.headerTabs).toEqual(headerTabs);
-      expect(this.$state.go).toHaveBeenCalled();
     });
   });
 });

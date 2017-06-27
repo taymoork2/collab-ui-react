@@ -60,7 +60,9 @@ class CustomerReportsHeaderCtrl {
         title: 'reportsPage.usageReports.usageReportTitle',
         state: 'reports.device-usage',
       });
-      this.goToFirstReportsTab();
+      if (this.$state.current.name === 'reports') {
+        this.goToFirstReportsTab();
+      }
     });
     this.checkWebex();
   }
