@@ -25,12 +25,14 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     "scheduleEventTypeMap": {
       "open": "openHours",
     },
-    "actionSets": [{
-      "name": "openHours",
-      "actions": [{
-        "play": {
-          "description": "Welcome prompt",
-          "url": "file1.avi",
+    actionSets: [{
+      name: 'openHours',
+      actions: [{
+        play: {
+          description: 'Welcome prompt',
+          url: 'file1.avi',
+          voice: 'Vanessa',
+          deleteUrl: 'file1.avi',
         },
       }],
     }],
@@ -167,7 +169,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       };
       _ceRecord.callExperienceName = 'AA Custom';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
-
       // if this splice to removes actions after play .. should be length -1
       _welcomeMenu.entries.splice(1, _welcomeMenu.entries.length - 1);
 
