@@ -3,9 +3,9 @@
 
   var serviceUrlMapping = {
     AdminServiceUrl: {
-      dev: 'https://atlas-a.wbx2.com/admin/api/v1/',
-      cfe: 'https://atlas-a.wbx2.com/admin/api/v1/',
-      integration: 'https://atlas-a.wbx2.com/admin/api/v1/',
+      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
+      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     },
     LocusServiceUrl: {
