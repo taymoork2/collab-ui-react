@@ -3,6 +3,7 @@ class CustomerReportsHeaderCtrl {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $state,
     private Authinfo,
     private FeatureToggleService,
     private MediaServiceActivationV2,
@@ -16,6 +17,21 @@ class CustomerReportsHeaderCtrl {
       });
     }
     this.$q.all(this.promises).then((features: any): void => {
+      if (features.webexMetrics && features.proPackEnabled) {
+        this.headerTabs.push({
+          title: 'reportsPage.sparkReports',
+          state: 'reports.sparkMetrics',
+        });
+        this.headerTabs.push({
+          title: 'reportsPage.webexMetrics.title',
+          state: 'reports.webex-metrics',
+        });
+      } else {
+        this.headerTabs.push({
+          title: 'reportsPage.sparkReports',
+          state: 'reports.spark',
+        });
+      }
       if (features.webexReports) { // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
         this.headerTabs.push({
           title: 'customerPage.webex',
@@ -44,27 +60,22 @@ class CustomerReportsHeaderCtrl {
         title: 'reportsPage.usageReports.usageReportTitle',
         state: 'reports.device-usage',
       });
-      if (features.webexMetrics) {
-        this.headerTabs.push({
-          title: 'reportsPage.webexMetrics.title',
-          state: 'reports.webex-metrics',
-        });
+      if (this.$state.current.name === 'reports') {
+        this.goToFirstReportsTab();
       }
     });
     this.checkWebex();
   }
 
-  public headerTabs = [{
-    title: 'reportsPage.sparkReports',
-    state: 'reports.spark',
-  }];
+  public headerTabs = new Array<any>();
 
   private webex: boolean = false;
   private promises: any = {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
     mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
-    webexMetrics: this.ProPackService.hasProPackEnabled(),
+    webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
+    proPackEnabled: this.ProPackService.hasProPackEnabled(),
   };
 
   private checkWebex (): void {
@@ -83,6 +94,11 @@ class CustomerReportsHeaderCtrl {
         }
       }).catch(_.noop);
     });
+  }
+
+  public goToFirstReportsTab(): void {
+    const firstTab = this.headerTabs[0];
+    this.$state.go(firstTab.state);
   }
 
   private getUniqueWebexSiteUrls() {
