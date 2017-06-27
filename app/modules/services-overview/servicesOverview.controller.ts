@@ -84,8 +84,8 @@ export class ServicesOverviewCtrl {
       });
 
     const PropackPromises = {
-      hasITProPackEnabled: this.ProPackService.hasProPackEnabled(),
-      hasITProPackPurchased: this.ProPackService.hasProPackPurchased(),
+      hasProPackEnabled: this.ProPackService.hasProPackEnabled(),
+      hasProPackPurchased: this.ProPackService.hasProPackPurchased(),
     };
     this.$q.all(PropackPromises).then(result => {
       this.forwardEvent('proPackEventHandler', result);
