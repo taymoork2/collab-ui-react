@@ -1,4 +1,4 @@
-import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, BYOPSTN, SWIVEL } from './pstn.const';
+import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, SWIVEL } from './pstn.const';
 
 import { Notification } from 'modules/core/notifications/notification.service';
 import {
@@ -748,12 +748,12 @@ export class PstnService {
     return this.PstnModel.getProvider();
   }
 
-  public isByopCustomerAndEsaUnsigned(customerId: string): ng.IPromise<boolean> {
+  public isSwivelCustomerAndEsaUnsigned(customerId: string): ng.IPromise<boolean> {
     return this.getCustomerV2(customerId).then((result) => {
       if (_.has(result, PSTN_CARRIER_ID) && (!_.has(result, E911_SIGNEE) || _.get(result, E911_SIGNEE) === null)) {
         const carriers = [{ uuid: result.pstnCarrierId }];
         return this.getCarrierDetails(carriers).then((carrierDetails) => {
-          return (carrierDetails.length === 1 && carrierDetails[0].apiImplementation === SWIVEL && carrierDetails[0].vendor === BYOPSTN);
+          return (carrierDetails.length === 1 && carrierDetails[0].apiImplementation === SWIVEL);
         });
       }
       return false;

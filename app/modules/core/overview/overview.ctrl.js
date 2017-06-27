@@ -234,7 +234,7 @@ require('./_overview.scss');
         return;
       }
       if (vm.orgData !== null) {
-        PstnService.isByopCustomerAndEsaUnsigned(vm.orgData.id).then(function (result) {
+        PstnService.isSwivelCustomerAndEsaUnsigned(vm.orgData.id).then(function (result) {
           if (result) {
             vm.esaDisclaimerNotification = OverviewNotificationFactory.createEsaDisclaimerNotification();
             vm.notifications.push(vm.esaDisclaimerNotification);

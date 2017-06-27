@@ -170,7 +170,7 @@ describe('Controller: OverviewCtrl', function () {
     beforeEach(function () {
       isCustomerLaunchedFromPartner = true;
       inject(defaultWireUpFunc);
-      spyOn(PstnService, 'isByopCustomerAndEsaUnsigned');
+      spyOn(PstnService, 'isSwivelCustomerAndEsaUnsigned');
     });
 
     it('should NOT call ToS check if logged in as a Partner', function () {
@@ -178,7 +178,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should NOT call ESA check if logged in as a Partner', function () {
-      expect(PstnService.isByopCustomerAndEsaUnsigned).not.toHaveBeenCalled();
+      expect(PstnService.isSwivelCustomerAndEsaUnsigned).not.toHaveBeenCalled();
     });
   });
 
@@ -200,18 +200,18 @@ describe('Controller: OverviewCtrl', function () {
     });
   });
 
-  describe('Notifications - Login as Customer, isByopCustomerAndEsaUnsigned false', function () {
+  describe('Notifications - Login as Customer, isSwivelCustomerAndEsaUnsigned false', function () {
     beforeEach(function () {
       isCustomerLaunchedFromPartner = false;
       PstnService = _.cloneDeep(_pstnService);
       _.assign(PstnService, {
-        isByopCustomerAndEsaUnsigned: function () {
+        isSwivelCustomerAndEsaUnsigned: function () {
           return $q.resolve(false);
         } });
       inject(defaultWireUpFunc);
     });
 
-    it('should not have ESA notification if isByopCustomerAndEsaUnsigned returned false', function () {
+    it('should not have ESA notification if isSwivelCustomerAndEsaUnsigned returned false', function () {
       var TOTAL_NOTIFICATIONS = 9;
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
       expect(controller.esaDisclaimerNotification).toBeFalsy();
@@ -310,7 +310,7 @@ describe('Controller: OverviewCtrl', function () {
 
     if (_.isUndefined(PstnService)) {
       PstnService = _.cloneDeep(_pstnService);
-      _.assign(PstnService, { isByopCustomerAndEsaUnsigned: function () {
+      _.assign(PstnService, { isSwivelCustomerAndEsaUnsigned: function () {
         return $q.resolve(true);
       } });
     }
