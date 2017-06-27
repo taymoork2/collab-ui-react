@@ -1,6 +1,6 @@
 'use strict';
 
-import { BYOPSTN, SWIVEL } from './pstn.const';
+import { SWIVEL } from './pstn.const';
 
 describe('Service: PstnService', function () {
 
@@ -377,11 +377,11 @@ describe('Service: PstnService', function () {
 
   it('should return byop customer esa disclaimer status', function () {
     const byopCustomer = { pstnCarrierId: suite.carrierId };
-    const byopCarrier = { apiImplementation: SWIVEL, vendor: BYOPSTN };
+    const swivelCarrier = { apiImplementation: SWIVEL };
 
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId).respond(byopCustomer);
-    this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(byopCarrier);
-    const promise = this.PstnService.isByopCustomerAndEsaUnsigned(suite.customerId);
+    this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(swivelCarrier);
+    const promise = this.PstnService.isSwivelCustomerAndEsaUnsigned(suite.customerId);
     promise.then(function (result) {
       expect(result).toBe(true);
     });
