@@ -3,9 +3,10 @@
 # better option for matching \r\n?
 new_line="
 "
+line_start="^"
+line_end="$"
 
 # validate the commit headline with a regex
-line_start="^"
 commit_type="(feat|fix|docs|style|refactor|perf|test|chore|revert|WIP)"
 optional_scope="(\([a-zA-Z0-9,\-\*]+\))?"
 colon_and_space="\: "
@@ -17,11 +18,17 @@ revert_headline="Revert \".+\""
 revert_body="This reverts commit [a-f0-9]{40}\."
 revert_regex="${line_start}${revert_headline}${new_line}${new_line}${revert_body}"
 
+# git defaults for merge conflicts
+merge_branch="Merge branch '.*'"
+merge_optional_of="( of [^\ ]+)?"
+merge_optional_into="( into [^\ ]+)?"
+merge_regex="${line_start}${merge_branch}${merge_optional_of}${merge_optional_into}${line_end}"
+
 
 # read msg file and remove comments
 file=$(sed '/^#/ d' "$1")
 
-if ! [[ ${file} =~ ${atlas_regex} || ${file} =~ ${revert_regex} ]]; then
+if ! [[ ${file} =~ ${atlas_regex} || ${file} =~ ${revert_regex} || ${file} =~ ${merge_regex} ]]; then
   echo ""
   echo "Attempted to save commit message:"
   echo ""
