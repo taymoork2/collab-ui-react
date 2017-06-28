@@ -87,6 +87,6 @@ class CsdmCache {
 }
 
 module.exports = angular
-    .module('Squared')
-    .service('CsdmCacheFactory', CsdmCacheFactory)
+  .module('Squared')
+  .service('CsdmCacheFactory', CsdmCacheFactory)
   .name;

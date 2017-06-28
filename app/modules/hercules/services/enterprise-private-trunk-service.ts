@@ -1,6 +1,8 @@
 import { IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk.service';
 import { IPrivateTrunkInfo, IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
+import { CsdmCacheUpdater } from 'modules/squared/devices/services/CsdmCacheUpdater';
+import { CsdmHubFactory, CsdmPollerFactory } from 'modules/squared/devices/services/CsdmPoller';
 
 export interface IPrivateTrunkResourceWithStatus extends IPrivateTrunkResource {
   status: ITrunkStatus;
@@ -38,9 +40,9 @@ export class EnterprisePrivateTrunkService {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
-    private CsdmCacheUpdater,
-    private CsdmHubFactory,
-    private CsdmPoller,
+    private CsdmCacheUpdater: CsdmCacheUpdater,
+    private CsdmHubFactory: CsdmHubFactory,
+    private CsdmPoller: CsdmPollerFactory,
     private PrivateTrunkService: PrivateTrunkService,
     private ServiceDescriptor,
   ) {
