@@ -7,6 +7,7 @@ export class CustomerSetupPage {
       title: element(by.cssContainingText('.section__info', 'Trial Services')),
       checkbox: {
         meetingTrial: element(by.css('label[for="meetingTrial"]')),
+        call: element(by.id('callTrial')),
       },
     };
     this.licensesQuantity = {
@@ -23,6 +24,44 @@ export class CustomerSetupPage {
     };
     this.nonTrialServices = {
       title: element(by.cssContainingText('.section__info', 'Non Trial Services')),
+    };
+    this.skipButton = element(by.css('.skip-btn'));
+    this.launchCustomerPortalButton = element(by.cssContainingText('.btn.btn--primary', 'Yes'));
+    this.pstnProvider = element.all(by.css('.pstn-provider-card')).first();
+    this.pstnContactInformation = {
+      title: element(by.cssContainingText('.section__info', 'PSTN Contract Information')),
+    };
+    this.phoneNumbers = {
+      title: element.all(by.cssContainingText('.section__info> h4.ng-scope', 'Phone Numbers')).last(),
+    };
+    this.trialFinish = {
+      title: element(by.cssContainingText('.splash-msg__title', 'Your trial is ready')),
+      description: element(by.cssContainingText('.splash-msg__description', 'Do you want to set up the services for the customer?')),
+    };
+    this.wizPlanReview = {
+      call: {
+        colHeader: element(by.cssContainingText('.column-header', 'Call')),
+      },
+    };
+    this.wizCallSetting = {
+      companyVoiceMail: {
+        lable: element(by.cssContainingText('.control-label.ng-scope', 'Company Voicemail')),
+        toggle: element(by.css('[for="companyVoicemailToggle"]')),
+      },
+    };
+    this.wizEnterpriseSetting = {
+      subDomainInput: element(by.id('sipDomainInput')),
+      checkAvailabilityBtn: element(by.css('.btn.btn--cta.ng-isolate-scope')),
+    };
+    this.wizFinish = {
+      message: element.all(by.css('.finish-page.ng-scope>.ng-scope')).first(),
+    };
+    this.services = {
+      title: element(by.css('.page-header__title')),
+      serviceList: element(by.css('.services-list')),
+      call: {
+        callSettingsLink: element(by.cssContainingText('.btn-link', 'Settings')),
+      },
     };
   }
 };

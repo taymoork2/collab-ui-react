@@ -8,16 +8,16 @@ export class AddPlacesPage {
     this.selectHuron = element(by.css('[ng-click="chooseDeviceType.huron()"]'));
     this.addExtension = element(by.name('internalNumber'));
     this.nxtBtn3 = element(by.css('[ng-click="addLines.next()"]'));
-    this.qrCode = element(by.css('div.qrCodeSection'));
+    this.qrCode = element.all(by.css('div.qrCodeSection')).first();
     this.closeGrp = element(by.css('button.close'));
     this.searchPlaces = element(by.css('i.icon-search'));
     this.searchBar = element(by.id('searchFilter'));
     this.clickLocation = element(by.cssContainingText('.ui-grid-cell-contents', 'Naboo'));
-    this.overviewPg = element(by.cssContainingText('.ng-binding', 'Overview'));
+    this.overviewPg = element.all(by.cssContainingText('.ng-binding', 'Overview')).first();
     this.servicesSctn = element(by.cssContainingText('.section-name', 'Services'));
     this.devicesSctn = element(by.cssContainingText('.section-name', 'Devices'));
-    this.callClick = element(by.cssContainingText('.feature-label', 'Cisco Spark + Spark Call'));
-    this.callStngsPg = element(by.cssContainingText('.ng-binding', 'Call'));
+    this.callClick = element(by.cssContainingText('.feature-label', 'Cisco Spark + Cisco Spark Call'));
+    this.callStngsPg = element.all(by.cssContainingText('.ng-binding', 'Call')).first();
     this.prfrdLang = element(by.cssContainingText('.section-name', 'Preferred Language'));
     this.prfrdLangDd = element(by.css('.csSelect-container[name="languageSelect"]'))
     this.dirNumSct = element(by.cssContainingText('.section-name', 'Directory Numbers'));
