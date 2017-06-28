@@ -1,9 +1,11 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('QlikService', QlikService);
+  // module.exports = QlikService;
+  module.exports = angular
+    .module('core.customer-reports')
+    .service('QlikService', QlikService)
+    .name;
 
   /* @ngInject */
   function QlikService($http, $q, UrlConfig) {
@@ -35,12 +37,12 @@
       var url = UrlConfig.getWebExReportQBSforPremiumUrl();
       return $http.post(url, data).then(extractData).catch(catchError);
     }
-    function getWebExReportAppforBaseUrl() {
-      return UrlConfig.getWebExReportAppforBaseUrl();
+    function getWebExReportAppforBaseUrl(qrp) {
+      return UrlConfig.getWebExReportAppforBaseUrl(qrp);
     }
 
-    function getWebExReportAppforPremiumUrl() {
-      return UrlConfig.getWebExReportAppforPremiumUrl();
+    function getWebExReportAppforPremiumUrl(qrp) {
+      return UrlConfig.getWebExReportAppforPremiumUrl(qrp);
     }
 
     function getSparkReportQBSforBaseUrl(data) {
@@ -53,12 +55,12 @@
       return $http.post(url, data).then(extractData).catch(catchError);
     }
 
-    function getSparkReportAppforBaseUrl() {
-      return UrlConfig.getSparkReportAppforBaseUrl();
+    function getSparkReportAppforBaseUrl(qrp) {
+      return UrlConfig.getSparkReportAppforBaseUrl(qrp);
     }
 
-    function getSparkReportAppforPremiumUrl() {
-      return UrlConfig.getSparkReportAppforPremiumUrl();
+    function getSparkReportAppforPremiumUrl(qrp) {
+      return UrlConfig.getSparkReportAppforPremiumUrl(qrp);
     }
   }
 }());
