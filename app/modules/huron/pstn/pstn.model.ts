@@ -6,6 +6,20 @@ export interface IOrder {
   data: any;
 }
 
+export interface IAuthLicense {
+  licenseId: string;
+  offerName: string;
+  licenseType: string;
+  features: string[];
+  isTrial: boolean;
+  trialId: string;
+  status: string;
+  partnerEmail: string;
+}
+
+export interface IAuthCustomer {
+  licenses: IAuthLicense[];
+}
 
 export class PstnModel {
   private customerId: string;
