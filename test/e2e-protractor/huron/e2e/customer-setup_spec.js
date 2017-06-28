@@ -21,6 +21,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
   var partnerWindow;
 
   beforeAll(done => {
+    provisioner.tearDownAtlasCustomer(testPartner, CUSTOMER_NAME);
     provisioner.loginPartner(testPartner)
     .then(done);
   });
@@ -42,6 +43,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
     utils.expectIsDisplayed(customerSetup.regionalSettings.title);
     utils.expectIsDisplayed(customerSetup.nonTrialServices.title);
   });
+
   describe('Create customer flow', () => {
     it('should enter company information', () => {
       utils.sendKeys(partner.customerNameInput, CUSTOMER_NAME);
@@ -85,6 +87,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
       });
     });
   });
+
   describe('Setup customer wizard Flow', () => {
     it('should Navigate to call settings page of setup wizard', () => {
       utils.click(wizard.beginBtn);
@@ -112,6 +115,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
       utils.expectIsDisplayed(navigation.tabs);
     });
   });
+
   describe('Validate customer setup flow', () => {
     it('should navigate to customer services page', () => {
       utils.click(navigation.servicesTab);
@@ -137,6 +141,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
       utils.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid-cell', CUSTOMER_EMAIL)).first());
     });
   });
+
   describe('Add user flow', () => {
     describe('Create user flow', () => {
       it('should navigate to Manage Users page and "Manualy add or modify users" radio button is selected', () => {
@@ -195,6 +200,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
         utils.expectIsDisplayed(navigation.tabs);
       });
     });
+
     describe('User validation flow', () => {
       it('Enter the user details on the search bar and Navigate to user details view', () => {
         utils.click(AddUser.usersList.searchFilter);
@@ -258,11 +264,13 @@ describe('Huron Functional: e2e-customer-setup', () => {
       });
     });
   });
+
   describe('Add places flow', () => {
     it('should navigate to places page', () => {
       utils.click(addPlaces.placesTab);
       navigation.expectDriverCurrentUrl('places');
     });
+
     describe('create a new place', () => {
       it('should show an option to add new place', () => {
         utils.click(addPlaces.addNewPlace);
@@ -288,6 +296,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
         utils.expectIsDisplayed(addPlaces.qrCode);
       });
     });
+
     describe('Verify setup', () => {
       it('should list newly added place by search', () =>{
         utils.click(addPlaces.closeGrp);
@@ -297,6 +306,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
       it('should click on newly added place and bring up side menu', () => {
         utils.click(addPlaces.clickLocation);
       });
+
       describe('Side Panel Options', () => {
         it('should land on overview page', () => {
           utils.expectIsDisplayed(addPlaces.overviewPg);
@@ -315,7 +325,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
         });
         it('should have Preferred Language section with dropdown', () => {
           utils.expectIsDisplayed(addPlaces.prfrdLang);
-          utils.expectIsDisplayed(addPlaces.prfrdLangDd)
+          utils.expectIsDisplayed(addPlaces.prfrdLangDd);
         });
         it('should have Directory Numbers section', () => {
           utils.expectIsDisplayed(addPlaces.dirNumSct);
@@ -354,6 +364,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
       });
     });
   });
+
   describe('delete customer flow', () => {
     it('should close customer browser window', () => {
       browser.close();
