@@ -1252,6 +1252,7 @@
     "cluster": "Cluster",
     "confirm": "Confirm",
     "continue": "Continue",
+    "copyToClipboard": "Copy to Clipboard",
     "create": "Create",
     "dateRange": "Date Range",
     "deactivate": "Deactivate",
@@ -3221,6 +3222,13 @@
       "invalidLimit": "search must be limited to less than 100 emails or room id's",
       "noMatchesFound": "No Matches Found",
       "requestFailed": "Request Failed: Tracking ID {{trackingId}}"
+    },
+    "encryption": {
+      "instructions" : "After downloading your report, use this password to open the .zip file. You can also access the password by clicking on the key icon in the reports list.",
+      "instructionsShort": "After downloading your report, use this password to open the .zip file.",
+      "passwordFor" : "Password for {{reportName}}",
+      "tooltipContact": "Contact {{name}} to access this report.",
+      "unableGetPassword": "Unable to get the password"
     },
     "searchParameters": {
       "search": "Search",

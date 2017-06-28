@@ -6,6 +6,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
   var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, ProPackService, Notification, TrialService;
   var promise, result, startDate, endDate;
+  var testEncryptionKeyUrl = 'kms://cisco.com/keys/14eed485-c7e0-4e4b-970b-802c63da4058';
 
   beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _ProPackService_, _Notification_, _TrialService_) {
     $scope = _$rootScope_.$new();
@@ -210,6 +211,63 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(EdiscoveryService.createReport).toHaveBeenCalled();
       expect(Notification.error.calls.count()).toBe(1);
       expect(EdiscoveryService.patchReport.calls.count()).toBe(1);
+    });
+  });
+
+  describe('Generate report and retrieve the key', function () {
+    beforeEach(initController);
+    var generatedResult;
+    beforeEach(function () {
+      FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue($q.resolve(true));
+      generatedResult = {
+        displayName: 'test1',
+        url: 'whatever',
+        id: '12345678',
+        state: 'COMPLETED',
+        encryptionKeyUrl: testEncryptionKeyUrl,
+      };
+
+      spyOn(EdiscoveryService, 'createReport').and.returnValue(promise);
+      spyOn(EdiscoveryService, 'generateReport').and.returnValue($q.resolve(generatedResult));
+      spyOn(EdiscoveryService, 'getReport');
+      spyOn(EdiscoveryService, 'getReportKey').and.returnValue($q.resolve('key123'));
+      spyOn(EdiscoveryNotificationService, 'notify');
+    });
+
+    it('should get the key when report is complete and has encryptionKeyUrl', function () {
+      EdiscoveryService.getReport.and.returnValue($q.resolve(generatedResult));
+      ediscoverySearchController.generateReport({});
+      $scope.$apply();
+      expect(EdiscoveryService.getReportKey).toHaveBeenCalledWith(testEncryptionKeyUrl, undefined);
+      expect(ediscoverySearchController.report.reportKey).toBe('key123');
+    });
+
+    it('should not attempt to get the key if encryptionKeyUrl is not set in the report', function () {
+      var noUrlResult = _.clone(generatedResult);
+      delete (noUrlResult.encryptionKeyUrl);
+      EdiscoveryService.getReport.and.returnValue($q.resolve(noUrlResult));
+      ediscoverySearchController.generateReport({});
+      $scope.$apply();
+      expect(EdiscoveryService.getReportKey).not.toHaveBeenCalled();
+      expect(ediscoverySearchController.report.reportKey).toBeUndefined();
+      expect(EdiscoveryNotificationService.notify).toHaveBeenCalled();
+      expect(ediscoverySearchController.isReportComplete).toBe(true);
+    });
+
+    it('should not attempt to get the key if report is FAILED or ABORTED', function () {
+      generatedResult.state = 'ABORTED';
+      EdiscoveryService.getReport.and.returnValue($q.resolve(generatedResult));
+      ediscoverySearchController.generateReport({});
+      $scope.$apply();
+      expect(EdiscoveryService.getReportKey).not.toHaveBeenCalled();
+      expect(ediscoverySearchController.report.reportKey).toBeUndefined();
+
+      generatedResult.state = 'FAILED';
+      EdiscoveryService.getReport.and.returnValue($q.resolve(generatedResult));
+      ediscoverySearchController.generateReport({});
+      $scope.$apply();
+      expect(EdiscoveryService.getReportKey).not.toHaveBeenCalled();
+      expect(ediscoverySearchController.report.reportKey).toBeUndefined();
     });
   });
 
