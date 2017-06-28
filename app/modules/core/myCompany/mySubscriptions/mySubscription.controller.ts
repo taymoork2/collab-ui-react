@@ -4,6 +4,7 @@ import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgra
 import { SharedMeetingsReportService } from './sharedMeetings/sharedMeetingsReport.service';
 import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from './subscriptionsInterfaces';
 import * as moment from 'moment';
+import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 
 export class MySubscriptionCtrl {
   public hybridServices: any[] = [];
@@ -36,12 +37,22 @@ export class MySubscriptionCtrl {
   private readonly CARE_CLASS: string = 'icon-headset';
 
   private readonly CARE: string = 'CARE';
-  private readonly SUBSCRIPTION_TYPES: any = {
+  private readonly SUBSCRIPTION_TYPES = {
     message: 0,
     meeting: 1,
     call: 2,
     room: 3,
     care: 4,
+  };
+  private readonly EXPIRATION_BADGES = {
+    default: 'default',
+    warning: 'warning',
+    alert: 'alert',
+  };
+  private readonly EXPIRATION_DAYS = {
+    warning: 30,
+    alert: 5,
+    expired: 0,
   };
 
   /* @ngInject */
@@ -52,15 +63,16 @@ export class MySubscriptionCtrl {
     private $window: ng.IWindowService,
     private Authinfo,
     private Config,
-    private FeatureToggleService,
     private DigitalRiverService: DigitalRiverService,
-    private OnlineUpgradeService: OnlineUpgradeService,
-    private SharedMeetingsReportService: SharedMeetingsReportService,
+    private FeatureToggleService,
+    private HybridServicesUtilsService: HybridServicesUtilsService,
     private Notification: Notification,
+    private OnlineUpgradeService: OnlineUpgradeService,
     private Orgservice,
     private ServiceDescriptor,
-    private WebExUtilsFact,
+    private SharedMeetingsReportService: SharedMeetingsReportService,
     private UrlConfig,
+    private WebExUtilsFact,
   ) {
     _.forEach(this.SUBSCRIPTION_TYPES, (_value, key: string): void => {
       const category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
@@ -220,6 +232,7 @@ export class MySubscriptionCtrl {
           viewAll: false,
           numSubscriptions: subscriptions.length,
           endDate: '',
+          badge: '',
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
@@ -231,7 +244,22 @@ export class MySubscriptionCtrl {
           }
         }
         if (subscription.endDate) {
-          newSubscription.endDate = this.$translate.instant('subscriptions.endDate', { date: moment(subscription.endDate).format('MMM DD, YYYY') });
+          const currentDate = new Date();
+          const subscriptionEndDate = new Date(subscription.endDate);
+          const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
+          const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+          newSubscription.endDate = this.$translate.instant('subscriptions.expires', { date: moment(subscriptionEndDate).format('MMM DD, YYYY') });
+          if (diffDays > this.EXPIRATION_DAYS.warning) {
+            newSubscription.badge = this.EXPIRATION_BADGES.default;
+          } else if (diffDays > this.EXPIRATION_DAYS.alert) {
+            newSubscription.badge = this.EXPIRATION_BADGES.warning;
+          } else if (diffDays > this.EXPIRATION_DAYS.expired) {
+            newSubscription.badge = this.EXPIRATION_BADGES.alert;
+          } else {
+            newSubscription.endDate = this.$translate.instant('subscriptions.expired');
+            newSubscription.badge = this.EXPIRATION_BADGES.alert;
+          }
         }
 
         _.forEach(subscription.licenses, (license: any, licenseIndex: number): void => {
@@ -428,6 +456,7 @@ export class MySubscriptionCtrl {
     this.ServiceDescriptor.getServices().then((services) => {
       return this.ServiceDescriptor.filterEnabledServices(services);
     }).then((enabledServices) => {
+      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator(s1.id, s2.id));
       return _.map(enabledServices, (service: any) => {
         if (service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec') {
           return this.$translate.instant(`hercules.serviceNames.${service.id}.full`);

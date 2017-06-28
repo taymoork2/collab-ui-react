@@ -6,25 +6,38 @@
     .controller('WebExMetricsCtrl', WebExMetricsCtrl);
 
   /* @ngInject */
-  function WebExMetricsCtrl($q, $scope, $stateParams, $translate, Authinfo, LocalStorage, Userservice, WebExApiGatewayService,
+  function WebExMetricsCtrl($scope, $stateParams, Authinfo, LocalStorage, Userservice,
     $sce,
     $timeout,
     $window,
+    Notification,
     QlikService,
     ProPackService
   ) {
     var vm = this;
 
-    vm.metricsUrl = '';
     vm.metrics = 'metrics';
-    vm.reportView = 'Base';
     vm.search = 'search';
     vm.webexOptions = [];
     vm.webexSelected = null;
+    vm.webexMetrics = {};
+    vm.isNoData = false;
+
+    vm.webexMetrics.views = [
+      {
+        view: 'Base',
+        appName: 'basic_webex_v1',
+      },
+      {
+        view: 'Premium',
+        appName: 'premium_webex_v1',
+      },
+    ];
+    vm.reportView = vm.webexMetrics.views[0];
     vm.metricsOptions = [
       {
         id: '0',
-        label: $translate.instant('reportsPage.webexMetrics.metrics'),
+        label: 'reportsPage.webexMetrics.metrics',
         selected: true,
         filterType: vm.metrics,
         toggle: function () {
@@ -33,7 +46,7 @@
       },
       {
         id: '1',
-        label: $translate.instant('reportsPage.webexMetrics.search'),
+        label: 'reportsPage.webexMetrics.search',
         selected: false,
         filterType: vm.search,
         toggle: function () {
@@ -59,10 +72,11 @@
       return self.indexOf(value) === index;
     }
 
-    function getUniqueWebexSiteUrls() {
+    function getUniqueWebexSiteUrls(siteUrls) {
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
       var linkedConferenceServices = Authinfo.getConferenceServicesWithLinkedSiteUrl() || [];
       var webexSiteUrls = [];
+      webexSiteUrls = webexSiteUrls.concat(siteUrls);
 
       conferenceServices.forEach(
         function getWebExSiteUrl(conferenceService) {
@@ -79,64 +93,53 @@
       return webexSiteUrls.filter(onlyUnique);
     }
 
-    function generateWebexMetricsUrl() {
-      var promiseChain = [];
-      var webexSiteUrls = getUniqueWebexSiteUrls();
+    function generateWebexMetricsUrl(siteUrls) {
+      var webexSiteUrls = getUniqueWebexSiteUrls(siteUrls);
 
-      webexSiteUrls.forEach(
-        function chkWebexSiteUrl(url) {
-          promiseChain.push(
-            WebExApiGatewayService.siteFunctions(url).then(
-              function getSiteSupportsIframeSuccess(result) {
-                if (result.isAdminReportEnabled && result.isIframeSupported) {
-                  vm.webexOptions.push(result.siteUrl);
-                }
-              }).catch(_.noop));
-        }
-      );
-
-      $q.all(promiseChain).then(
-        function promisChainDone() {
-          var stateParamsSiteUrl = $stateParams.siteUrl;
-          var stateParamsSiteUrlIndex = vm.webexOptions.indexOf(stateParamsSiteUrl);
-
-          var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
-          var storageMetricsSiteUrlIndex = vm.webexOptions.indexOf(storageMetricsSiteUrl);
-
-          var webexSelected = null;
-          if (-1 !== stateParamsSiteUrlIndex) {
-            webexSelected = stateParamsSiteUrl;
-          } else if (-1 !== storageMetricsSiteUrlIndex) {
-            webexSelected = storageMetricsSiteUrl;
-          } else {
-            webexSelected = vm.webexOptions[0];
-          }
-          vm.webexSelected = webexSelected;
-
-          ProPackService.getProPackPurchased().then(function (isPurchased) {
-            if (isPurchased) {
-              vm.reportView = 'Premium';
-            }
-            updateWebexMetrics();
-          });
-        }
-      );
+      vm.webexOptions = webexSiteUrls;
+      promisChainDone();
     }
-    if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-      generateWebexMetricsUrl();
-    } else {
-      Userservice.getUser(
-        'me',
-        function (data) {
-          if (data.success) {
-            if (data.emails) {
-              Authinfo.setEmails(data.emails);
-              generateWebexMetricsUrl();
+
+    function promisChainDone() {
+      var stateParamsSiteUrl = $stateParams.siteUrl;
+      var stateParamsSiteUrlIndex = vm.webexOptions.indexOf(stateParamsSiteUrl);
+
+      var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
+      var storageMetricsSiteUrlIndex = vm.webexOptions.indexOf(storageMetricsSiteUrl);
+
+      var webexSelected = null;
+      if (-1 !== stateParamsSiteUrlIndex) {
+        webexSelected = stateParamsSiteUrl;
+      } else if (-1 !== storageMetricsSiteUrlIndex) {
+        webexSelected = storageMetricsSiteUrl;
+      } else {
+        webexSelected = vm.webexOptions[0];
+      }
+      vm.webexSelected = webexSelected;
+
+      ProPackService.getProPackPurchased().then(function (isPurchased) {
+        if (isPurchased) {
+          vm.reportView = vm.webexMetrics.views[1];
+        }
+        updateWebexMetrics();
+      });
+    }
+
+    Userservice.getUser(
+      'me',
+      function (data) {
+        if (data.success) {
+          var adminTrainSites = [];
+          if (data.emails) {
+            Authinfo.setEmails(data.emails);
+            if (!_.isUndefined(data.adminTrainSiteNames)) {
+              adminTrainSites = data.adminTrainSiteNames;
             }
+            generateWebexMetricsUrl(adminTrainSites);
           }
         }
-      );
-    }
+      }
+    );
 
     function updateWebexMetrics() {
       var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
@@ -146,7 +149,12 @@
         LocalStorage.put('webexMetricsSiteUrl', webexSelected);
       }
 
-      loadMetricsReport();
+      if (!_.isNull(vm.webexSelected)) {
+        vm.isNoData = false;
+        loadMetricsReport();
+      } else {
+        vm.isNoData = true;
+      }
     }
 
     function loadMetricsReport() {
@@ -157,37 +165,40 @@
 
       var userInfo = {
         org_id: Authinfo.getOrgId(),
-        siteUrl: vm.webexSelected,
+        siteUrl: vm.webexSelected.toLowerCase(),
         email: Authinfo.getPrimaryEmail(),
       };
+      QlikService['getWebExReportQBSfor' + vm.reportView.view + 'Url'](userInfo).then(function (data) {
+        var QlikMashupChartsUrl = QlikService['getWebExReportAppfor' + vm.reportView.view + 'Url']();
 
-      //TODO: remove it before QBS API finished. just for 23-5-2017 demo
-      vm.webexSelected = 'go.webex.com';
-      userInfo = {
-        org_id: 'TEST-QV-3',
-        siteUrl: vm.webexSelected,
-        email: 'qvadmin@cisco.com',
-      };
-
-      QlikService['getWebExReportQBSfor' + vm.reportView + 'Url'](userInfo).then(function (urlWithTicket) {
-        var QlikMashupChartsUrl = QlikService['getWebExReportAppfor' + vm.reportView + 'Url']();
-        var rx = /app[/](.*?)[/?]/g;
-        var QlikAppUrl = '';
-        QlikAppUrl = rx.exec(urlWithTicket.appUrl);
-        vm.currentFilter.appId = QlikAppUrl[1];
-        vm.currentFilter.QlikTicket = urlWithTicket.ticket;
+        vm.webexMetrics.appData = {
+          ticket: data.ticket,
+          appId: vm.reportView.appName,
+          node: data.host,
+          qrp: data.qlik_reverse_proxy,
+          persistent: data.isPersistent,
+          vID: data.siteId,
+        };
+        vm.webexMetrics.appData.url = QlikMashupChartsUrl.replace('QRP', vm.webexMetrics.appData.qrp);
 
         loadUrlAndIframe(QlikMashupChartsUrl);
+      })
+      .catch(function (error) {
+        Notification.errorWithTrackingId(error, 'common.error');
       });
     }
 
     function updateIframe() {
       vm.isIframeLoaded = false;
 
-      var iframeUrl = vm.currentFilter.url;
+      var iframeUrl = vm.webexMetrics.appData.url;
       $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
-      $scope.appId = vm.currentFilter.appId;
-      $scope.QlikTicket = vm.currentFilter.QlikTicket;
+      $scope.appId = vm.webexMetrics.appData.appId;
+      $scope.QlikTicket = vm.webexMetrics.appData.ticket;
+      $scope.node = vm.webexMetrics.appData.node;
+      $scope.persistent = vm.webexMetrics.appData.persistent;
+      $scope.vID = vm.webexMetrics.appData.vID;
+      $scope.QlikTicket = vm.webexMetrics.appData.ticket;
       var parser = $window.document.createElement('a');
       parser.href = iframeUrl;
 

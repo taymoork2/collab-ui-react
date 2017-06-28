@@ -31,7 +31,7 @@
       return vm.getUser();
     }, function (user) {
       // init-like controller
-      vm.user.entitlements = user.entitlements;
+      vm.getUser().entitlements = user.entitlements;
       vm.extensions = getExtensions();
       checkEntitlements(enforceLicenseCheck);
     }, true);

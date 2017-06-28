@@ -12,6 +12,7 @@ export interface ISubscription {
   upgradeTrialUrl?: string;
   viewAll: boolean;
   endDate: string;
+  badge: string;
 }
 
 export interface ISubscriptionCategory {

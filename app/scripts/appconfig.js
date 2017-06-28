@@ -773,11 +773,6 @@
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html',
               },
-              headerRight: {
-                controllerAs: 'subscriptionHeader',
-                controller: 'SubscriptionHeaderCtrl',
-                templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html',
-              },
             },
           })
           .state('my-company.info', {
@@ -1748,14 +1743,15 @@
             onExit: SidePanelLargeClose,
           })
           .state('reports', {
+            url: '/reports',
             templateUrl: 'modules/core/customerReports/customerReportsHeader.tpl.html',
             controller: 'CustomerReportsHeaderCtrl',
             controllerAs: 'header',
             parent: 'main',
-            abstract: true,
+            // abstract: true,
           })
           .state('reports.spark', {
-            url: '/reports',
+            url: '/spark',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1764,8 +1760,18 @@
               },
             },
           })
+          .state('reports.sparkMetrics', {
+            url: '/sparkMetrics',
+            views: {
+              tabContent: {
+                controllerAs: 'nav',
+                controller: 'SparkMetricsCtrl',
+                templateUrl: 'modules/core/customerReports/webexMetrics/sparkMetrics.tpl.html',
+              },
+            },
+          })
           .state('reports.metrics', {
-            url: '/reports/metrics',
+            url: '/metrics',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1775,7 +1781,7 @@
             },
           })
           .state('reports.webex-metrics', {
-            url: '/reports/webexMetrics/:siteUrl',
+            url: '/webexMetrics/:siteUrl',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1791,7 +1797,7 @@
             },
           })
           .state('reports.media', {
-            url: '/reports/media',
+            url: '/media',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1801,7 +1807,7 @@
             },
           })
           .state('reports.mediaservice', {
-            url: '/reports/mediaservice',
+            url: '/mediaservice',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1811,7 +1817,7 @@
             },
           })
           .state('reports.care', {
-            url: '/reports/care',
+            url: '/care',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1821,7 +1827,7 @@
             },
           })
           .state('reports.device-usage', {
-            url: '/reports/device/usage',
+            url: '/device/usage',
             views: {
               tabContent: {
                 controllerAs: 'deviceUsage',
@@ -1832,7 +1838,7 @@
           })
           // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
           .state('reports.webex_', {
-            url: '/reports/webex_',
+            url: '/webex_',
             views: { tabContent: { template: '<cust-webex-reports></cust-webex-reports>' } },
           })
           .state('reports.webex_.search', {
@@ -1840,7 +1846,7 @@
             template: '<cust-webex-reports-search></cust-webex-reports-search>',
           })
           .state('reports.webex', {
-            url: '/reports/webex',
+            url: '/webex',
             views: {
               tabContent: {
                 controllerAs: 'nav',

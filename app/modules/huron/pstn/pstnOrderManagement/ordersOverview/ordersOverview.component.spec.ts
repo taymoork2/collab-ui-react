@@ -115,30 +115,26 @@ describe('Component: OrdersOverview', () => {
       expect(this.PstnService.getFormattedNumberOrders).toHaveBeenCalled();
     });
     it('should have the correct number of combined orders', function () {
-      expect(this.controller.ordersWithDuplicates.length).toEqual(4);
+      expect(this.controller.ordersWithDuplicates.length).toEqual(2);
       expect(this.controller.orders.length).toEqual(2);
     });
 
     it('should have the correct count of combined numbers', function () {
-      expect(this.controller.orders[0].numbers.length).toEqual(3);
+      expect(this.controller.orders[0].numbers.length).toEqual(1);
       expect(angular.copy(this.controller.orders)).toContain({
         uuid: 'eb8b5381-d908-4f28-9f23-bcd61d0792b6',
         carrierOrderId: '12345',
-        carrierBatchId: '11',
         status: 'PROVISIONED',
         created: 'Tue May 30 22:36:52 UTC 2017',
         formattedDate: 'May 30, 2017',
-        numbers: [{ number: '9728134000', network: 'PROVISIONED' },
-          { number: '9728134001', network: 'PROVISIONED' },
-          { number: '9728134003', network: 'PROVISIONED' }],
+        numbers: [{ number: '9728134000', network: 'PROVISIONED' }],
       }, {
-        uuid: 'eb8b5381-d908-4f28-9f23-bcd61d0792b8',
+        uuid: 'eb8b5381-d908-4f28-9f23-bcd61d0792b7',
         carrierOrderId: '12346',
-        carrierBatchId: '11',
         status: 'PROVISIONED',
-        created: 'Tue May 29 22:36:52 UTC 2017',
-        formattedDate: 'May 29, 2017',
-        numbers: [{ number: '9728134012', network: 'PROVISIONED' }],
+        created: 'Tue May 30 22:36:55 UTC 2017',
+        formattedDate: 'May 30, 2017',
+        numbers: [{ number: '9728134001', network: 'PROVISIONED' }],
       });
     });
     it('should display Order Search Input and placeholder text', function () {

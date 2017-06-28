@@ -6,7 +6,6 @@ import onlineUpgradeModule from 'modules/online/upgrade/index';
 import webexUtilsModule from 'modules/webex/utils/index';
 import sharedMeetingModule from './sharedMeetings/index';
 import { MySubscriptionCtrl } from './mySubscription.controller';
-import { SubscriptionHeaderCtrl } from './subscriptionHeader.controller';
 
 export default angular
   .module('myCompany.subscriptions', [
@@ -20,8 +19,8 @@ export default angular
     require('scripts/app.templates'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/hercules/services/service-descriptor'),
+    require('modules/hercules/services/hybrid-services-utils.service').default,
     require('collab-ui-ng').default,
   ])
   .controller('MySubscriptionCtrl', MySubscriptionCtrl)
-  .controller('SubscriptionHeaderCtrl', SubscriptionHeaderCtrl)
   .name;

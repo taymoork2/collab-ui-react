@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: WebEx Metrics Ctrl', function () {
+xdescribe('Controller: WebEx Metrics Ctrl', function () {
   var controller, WebExApiGatewayService, Userservice;
 
   afterEach(function () {
