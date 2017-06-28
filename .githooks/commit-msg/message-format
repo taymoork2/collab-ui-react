@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# better option for matching \r\n?
-new_line="
-"
 line_start="^"
 line_end="$"
 
@@ -11,12 +8,13 @@ commit_type="(feat|fix|docs|style|refactor|perf|test|chore|revert|WIP)"
 optional_scope="(\([a-zA-Z0-9,\-\*]+\))?"
 colon_and_space="\: "
 any_trailing_content=".+"
-atlas_regex="${line_start}${commit_type}${optional_scope}${colon_and_space}${any_trailing_content}"
+atlas_regex="${line_start}${commit_type}${optional_scope}${colon_and_space}${any_trailing_content}${line_end}"
 
 # git defaults for revert conflict
 revert_headline="Revert \".+\""
 revert_body="This reverts commit [a-f0-9]{40}\."
-revert_regex="${line_start}${revert_headline}${new_line}${new_line}${revert_body}"
+revert_headline_regex="${line_start}${revert_headline}${line_end}"
+revert_body_regex="${line_start}${revert_body}${line_end}"
 
 # git defaults for merge conflicts
 merge_branch="Merge branch '.*'"
@@ -25,21 +23,52 @@ merge_optional_into="( into [^\ ]+)?"
 merge_regex="${line_start}${merge_branch}${merge_optional_of}${merge_optional_into}${line_end}"
 
 
-# read msg file and remove comments
-file=$(sed '/^#/ d' "$1")
+# read commit-msg file and remove comments
+file=$(sed '/^#/d' "$1")
 
-if ! [[ ${file} =~ ${atlas_regex} || ${file} =~ ${revert_regex} || ${file} =~ ${merge_regex} ]]; then
-  echo ""
-  echo "Attempted to save commit message:"
-  echo ""
-  echo "\`\`\`"
-  echo "${file}"
-  echo "\`\`\`"
-  echo ""
-  echo "Commit message does not meet expected guidelines:"
-  echo "https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/How-to-commit-changes#commit-message-raw-format"
-  echo ""
-  echo "Please retry with a proper commit or use \`npm run commit\` to help you format a message"
+# read first line for headline
+commit_msg_headline="$( echo "$file" | head -1 )"
 
-  exit 1
+# read third lines and remaining for body
+commit_msg_body="$( echo "$file" | tail -n +3 )"
+
+function is_valid_atlas {
+  if [[ ${commit_msg_headline} =~ ${atlas_regex} ]]; then
+    return 0;
+  fi
+  return 1;
+}
+
+function is_valid_revert {
+  if [[ ${commit_msg_headline} =~ ${revert_headline_regex} && \
+    ${commit_msg_body} =~ ${revert_body_regex} ]]; then
+    return 0;
+  fi
+  return 1;
+}
+
+function is_valid_merge {
+  if [[ ${commit_msg_headline} =~ ${merge_regex} ]]; then
+    return 0;
+  fi
+  return 1;
+}
+
+if is_valid_atlas || is_valid_revert || is_valid_merge ; then
+  exit 0;
 fi
+
+
+echo ""
+echo "Attempted to save commit message:"
+echo ""
+echo "\`\`\`"
+echo "${file}"
+echo "\`\`\`"
+echo ""
+echo "Commit message does not meet expected guidelines:"
+echo "https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/How-to-commit-changes#commit-message-raw-format"
+echo ""
+echo "Please retry with a proper commit or use \`npm run commit\` to help you format a message"
+
+exit 1
