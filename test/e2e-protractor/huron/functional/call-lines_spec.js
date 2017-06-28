@@ -1,47 +1,18 @@
 import * as provisioner from '../../provisioner/provisioner';
-import * as os from 'os';
-import { AtlasTrial, TrialOffer, Offers } from '../../provisioner/atlas-trial';
-import { CmiCustomer } from '../../provisioner/cmi-customer';
-import { CmiSite } from '../../provisioner/cmi-site';
-import { CmiNumberRange } from '../../provisioner/cmi-number-range';
+import { huronCustomer } from '../../provisioner/huron-customer-config';
 import { CallLinesPage } from '../pages/callLines.page';
 
 const callLines = new CallLinesPage();
 
 describe('Huron Functional: call-lines', () => {
-  const testPartner = 'huron-ui-test-partner';
-  let customerName;
-
+  const customer = huronCustomer('call-lines');
   beforeAll(done => {
-    customerName = `${os.userInfo().username}_call-lines`;
-
-    let offers = [];
-    offers.push(new TrialOffer({
-      id: Offers.OFFER_CALL,
-      licenseCount: 100,
-    }));
-    offers.push(new TrialOffer({
-      id: Offers.OFFER_ROOM_SYSTEMS,
-      licenseCount: 5,
-    }));
-
-    const trial = new AtlasTrial({
-      customerName: customerName,
-      customerEmail: `huron.ui.test.partner+${customerName}@gmail.com`,
-      offers: offers,
-    });
-
-    const numberRange = new CmiNumberRange({
-      beginNumber: '300',
-      endNumber: '399',
-    });
-
-    provisioner.provisionCustomerAndLogin(testPartner, trial, new CmiCustomer(), new CmiSite(), numberRange)
-      .then(done);
+    provisioner.provisionCustomerAndLogin(customer)
+     .then(done);
   });
 
   afterAll(done => {
-    provisioner.tearDownAtlasCustomer(testPartner, customerName).then(done);
+    provisioner.tearDownAtlasCustomer(customer.partner, customer.name).then(done);
   });
 
   it('should be on overview page of customer portal', () => {
