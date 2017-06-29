@@ -1,5 +1,5 @@
-import { LocationsService } from 'modules/call/locations/locations.service';
-import { Notification } from 'modules/core/notifications';
+// import { LocationsService } from 'modules/call/locations/locations.service';
+// import { Notification } from 'modules/core/notifications';
 
 class MakeDefaultLocationCtrl implements ng.IComponentController {
   public saveInProcess: boolean;
@@ -9,20 +9,18 @@ class MakeDefaultLocationCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor (
-    private LocationsService: LocationsService,
-    private Notification: Notification,
-  ) {
-
-  }
+    // private LocationsService: LocationsService,
+    // private Notification: Notification,
+  ) {}
 
   public makeDefaultLocation(): void {
     this.saveInProcess = true;
-    this.LocationsService.updateLocation(this.uuid, {
-      isDefault: true,
-    })
-    .then(() => this.close())
-    .catch((error) => this.Notification.errorResponse(error))
-    .finally(() => this.saveInProcess = false);
+    // this.LocationsService.updateLocation(this.uuid, {
+    //   isDefault: true,
+    // })
+    // .then(() => this.close())
+    // .catch((error) => this.Notification.errorResponse(error))
+    // .finally(() => this.saveInProcess = false);
   }
 }
 
