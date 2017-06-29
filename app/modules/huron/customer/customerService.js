@@ -89,7 +89,7 @@
       var customer = _.cloneDeep(customerPayload);
       customer.uuid = undefined;
       customer.name = name;
-      customer.voicemail = undefined;
+      customer.servicePackage = undefined;
 
       return CustomerCommonService.update({
         customerId: uuid || Authinfo.getOrgId(),
