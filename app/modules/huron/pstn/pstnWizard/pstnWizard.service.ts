@@ -1,10 +1,13 @@
 import { Notification } from 'modules/core/notifications';
-import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE, NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY, TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER, SWIVEL } from '../pstn.const';
+import {
+  NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE,
+  NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY,
+  TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER, SWIVEL,
+} from '../pstn.const';
 import { INumbersModel } from './number.model';
 import { PstnService } from '../pstn.service';
 import {
-  PstnModel,
-  IOrder,
+  PstnModel, IOrder, IAuthCustomer, IAuthLicense,
 } from '../pstn.model';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
@@ -44,6 +47,7 @@ export class PstnWizardService {
     private Orgservice,
     private FeatureToggleService,
     private Authinfo,
+    private Auth,
   ) {
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.STEP_TITLE = {
@@ -276,17 +280,24 @@ export class PstnWizardService {
   }
 
   private createCustomerV2(): ng.IPromise<boolean> {
-    return this.PstnService.createCustomerV2(
-      this.PstnModel.getCustomerId(),
-      this.PstnModel.getCustomerName(),
-      this.PstnModel.getCustomerFirstName(),
-      this.PstnModel.getCustomerLastName(),
-      this.PstnModel.getCustomerEmail(),
-      this.PstnModel.getProviderId(),
-      this.PstnModel.getIsTrial(),
-    ).catch(response => {
-      this.Notification.errorResponse(response, 'pstnSetup.customerCreateError');
-      return this.$q.reject(response);
+    return this.Auth.getCustomerAccount(this.PstnModel.getCustomerId()).then((org) => {
+      let isTrial: boolean = true;
+      const customer: IAuthCustomer = _.get<IAuthCustomer>(org, 'data.customers[0]');
+      if (customer) {
+        isTrial = this.isTrialCallOrRoom(customer.licenses);
+      }
+      return this.PstnService.createCustomerV2(
+        this.PstnModel.getCustomerId(),
+        this.PstnModel.getCustomerName(),
+        this.PstnModel.getCustomerFirstName(),
+        this.PstnModel.getCustomerLastName(),
+        this.PstnModel.getCustomerEmail(),
+        this.PstnModel.getProviderId(),
+        isTrial,
+      ).catch(function (response) {
+        this.Notification.errorResponse(response, 'PstnModel.customerCreateError');
+        return this.$q.reject(response);
+      });
     });
   }
 
@@ -745,5 +756,13 @@ export class PstnWizardService {
 
   public isLoggedInAsPartner(): boolean {
     return (this.Authinfo.isCustomerLaunchedFromPartner() || this.Authinfo.isPartner());
+  }
+
+  public isTrialCallOrRoom(licenses: IAuthLicense[]): boolean {
+    const paidLicense: IAuthLicense = _.find(licenses, (license: IAuthLicense) => {
+      return (license.licenseType === 'COMMUNICATION' && !license.isTrial) || (license.licenseType === 'SHARED_DEVICES' && !license.isTrial);
+    });
+    //if no paid licenses then it's a trial
+    return _.isUndefined(paidLicense);
   }
 }

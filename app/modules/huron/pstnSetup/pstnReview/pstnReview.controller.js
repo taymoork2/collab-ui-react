@@ -5,7 +5,7 @@
     .controller('PstnReviewCtrl', PstnReviewCtrl);
 
   /* @ngInject */
-  function PstnReviewCtrl($q, $translate, $state, PstnModel, PstnService, PstnServiceAddressService, Notification) {
+  function PstnReviewCtrl($q, $translate, $state, PstnModel, PstnService, PstnServiceAddressService, Notification, Auth) {
     var vm = this;
     var NUMBER_ORDER = require('modules/huron/pstn').NUMBER_ORDER;
     var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
@@ -51,17 +51,21 @@
     }
 
     function createCustomerV2() {
-      return PstnService.createCustomerV2(
-        PstnModel.getCustomerId(),
-        PstnModel.getCustomerName(),
-        PstnModel.getCustomerFirstName(),
-        PstnModel.getCustomerLastName(),
-        PstnModel.getCustomerEmail(),
-        PstnModel.getProviderId(),
-        PstnModel.getIsTrial()
-      ).catch(function (response) {
-        Notification.errorResponse(response, 'PstnModel.customerCreateError');
-        return $q.reject(response);
+      return Auth.getCustomerAccount(PstnModel.getCustomerId()).then(function (org) {
+        var isTrial = isTrialCallOrRoom(_.get(org, 'data.customers[0]'));
+
+        return PstnService.createCustomerV2(
+          PstnModel.getCustomerId(),
+          PstnModel.getCustomerName(),
+          PstnModel.getCustomerFirstName(),
+          PstnModel.getCustomerLastName(),
+          PstnModel.getCustomerEmail(),
+          PstnModel.getProviderId(),
+          isTrial
+        ).catch(function (response) {
+          Notification.errorResponse(response, 'PstnModel.customerCreateError');
+          return $q.reject(response);
+        });
       });
     }
 
@@ -211,6 +215,14 @@
         .then(createNumbers)
         .then(goToNextSteps)
         .finally(stopPlaceOrderLoad);
+    }
+
+    function isTrialCallOrRoom(customer) {
+      var isPaid = _.find(customer.licenses, function (license) {
+        return (license.licenseType === 'COMMUNICATION' && !license.isTrial) || (license.licenseType === 'SHARED_DEVICES' && !license.isTrial);
+      });
+
+      return _.isUndefined(isPaid);
     }
   }
 })();
