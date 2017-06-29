@@ -19,5 +19,24 @@ export class CallSettingsPage {
     this.dialingRestrictionsTitle = element(by.cssContainingText('.section__title.ng-scope', 'Dialing Restrictions'));
     this.companyCallerIdTitle = element(by.cssContainingText('.section__title.ng-scope', 'Company Caller ID'));
     this.companyVoicemailTitle = element(by.cssContainingText('.section__title.ng-scope', 'Company Voicemail'));
+    // External Dialing Section
+    this.dialWarning = element(by.cssContainingText('.text-wrap', 'First digit of Voicemail Access Prefix'));
+    this.dialOneForExtLine = element(by.cssContainingText('.cs-radio-group', 'Require this user to'));
+    this.dialOneChkBx = element(by.css('label[for="requireOneToDial"]'));
+    this.dialChkbxEmpty = element(by.css('#requireOneToDial.ng-empty'));
+    this.dialChkbxNotEmpty = element(by.css('#requireOneToDial.ng-not-empty'));
+    this.pstnWarning = element(by.cssContainingText('.icon-warning', 'To use local dialing, you must setup your PSTN service'))
+    this.simplifiedLocalRadio = element(by.css('.cs-radio[for="localDialing"]'));
+    this.areaCode = element(by.css('input#areacode-input'));
+    // Voicemail Section
+    this.bottomOfPage = element.all(by.css('cs-input__help-text')).last();
+    this.voicemailSwitch = element(by.css('label[for="companyVoicemailToggle"]'));
+    this.voicemailWarningModalTitle = element(by.cssContainingText('.modal-title', 'Turning On Company Voicemail'));
+    this.voicemailModalDoneButton = element(by.id('doneButton'));
+    this.externalVoicemailCheckBox = element(by.css('label[for="externalVoicemailAccess"]'));
+    this.externalVoicemailDropdown = element.all(by.css('[name="companyVoicemailNumber"]')).first();
+    this.voicemailToEmailCheckBox = element(by.css('label[for="voicemailToEmail"]'));
+    this.voicemailDisableTitle = element(by.cssContainingText('.modal-title', 'Disable Company Voicemail'));
+    this.voicemailWarningDisable = element(by.css('.modal-footer .btn--negative'));
   }
 };
