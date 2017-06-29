@@ -7,7 +7,7 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtilsService, ServiceDescriptor, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
+  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtilsService, ServiceDescriptorService, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -121,10 +121,10 @@
         return;
       }
       // Filter out extensions that are not enabled in FMS
-      ServiceDescriptor.getServices().then(function (services) {
+      ServiceDescriptorService.getServices().then(function (services) {
         if (services) {
           _.forEach(vm.extensions, function (extension) {
-            extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
+            extension.enabled = ServiceDescriptorService.filterEnabledServices(services).some(function (service) {
               return extension.id === service.id && extension.id !== 'squared-fusion-gcal';
             });
             extension.isSetup = extension.enabled;

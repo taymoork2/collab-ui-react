@@ -5,6 +5,7 @@ import { Notification } from 'modules/core/notifications';
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import { FilteredDeviceViewDataSource } from './filtered-deviceview-datasource';
 import { DeviceMatcher } from './device-matcher';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class DevicesController {
 
@@ -34,23 +35,25 @@ export class DevicesController {
   };
   private gridOptions: any;
 
-  constructor(private $q: ng.IQService,
-              private $state,
-              private $translate: ng.translate.ITranslateService,
-              private $templateCache,
-              private Userservice,
-              private WizardFactory,
-              private FeatureToggleService,
-              private $modal: IToolkitModalService,
-              private Notification: Notification,
-              private DeviceExportService,
-              private ServiceDescriptor,
-              $timeout: ng.ITimeoutService,
-              CsdmDataModelService: ICsdmDataModelService,
-              AccountOrgService,
-              $scope: ng.IScope,
-              CsdmHuronOrgDeviceService,
-              private Authinfo) {
+  constructor(
+    private $q: ng.IQService,
+    private $state,
+    private $translate: ng.translate.ITranslateService,
+    private $templateCache,
+    private Userservice,
+    private WizardFactory,
+    private FeatureToggleService,
+    private $modal: IToolkitModalService,
+    private Notification: Notification,
+    private DeviceExportService,
+    private ServiceDescriptorService: ServiceDescriptorService,
+    $timeout: ng.ITimeoutService,
+    CsdmDataModelService: ICsdmDataModelService,
+    AccountOrgService,
+    $scope: ng.IScope,
+    CsdmHuronOrgDeviceService,
+    private Authinfo,
+  ) {
     this.fetchAsyncSettings();
     this.filteredView = new FilteredView<IDevice>(new FilteredDeviceViewDataSource(CsdmDataModelService, $q),
       new DeviceMatcher(),
@@ -192,11 +195,11 @@ export class DevicesController {
     const placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then((feature: boolean) => {
       this.csdmHybridCalendarFeature = feature;
     });
-    const anyCalendarEnabledPromise = this.ServiceDescriptor.getServices().then((services) => {
-      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter((service) => {
+    const anyCalendarEnabledPromise = this.ServiceDescriptorService.getServices().then((services) => {
+      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
-      this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter((service) => {
+      this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });

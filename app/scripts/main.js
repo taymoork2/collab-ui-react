@@ -147,7 +147,7 @@
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
-    require('modules/hercules/services/service-descriptor'),
+    require('modules/hercules/services/service-descriptor.service').default,
     require('modules/hercules/services/uss-service'),
   ]);
 

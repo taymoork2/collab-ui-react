@@ -1,4 +1,5 @@
 import { Notification } from 'modules/core/notifications';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 interface ISipForm extends ng.IFormController {
   sipDomainInput: ng.INgModelController;
@@ -57,7 +58,7 @@ export class SipDomainSettingController {
     private FeatureToggleService,
     private Notification: Notification,
     private Orgservice,
-    private ServiceDescriptor,
+    private ServiceDescriptorService: ServiceDescriptorService,
     private SparkDomainManagementService,
     private UrlConfig,
   ) {
@@ -85,7 +86,7 @@ export class SipDomainSettingController {
       $scope.$on('$destroy', onSaveEventDeregister);
 
       if (this.toggle) {
-        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec').then((enabled: boolean): void => {
+        this.ServiceDescriptorService.isServiceEnabled('squared-fusion-ec').then((enabled: boolean): void => {
           this.isCsc = enabled;
         });
 

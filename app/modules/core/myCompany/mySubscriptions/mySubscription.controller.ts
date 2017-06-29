@@ -5,6 +5,7 @@ import { SharedMeetingsReportService } from './sharedMeetings/sharedMeetingsRepo
 import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from './subscriptionsInterfaces';
 import * as moment from 'moment';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class MySubscriptionCtrl {
   public hybridServices: any[] = [];
@@ -69,7 +70,7 @@ export class MySubscriptionCtrl {
     private Notification: Notification,
     private OnlineUpgradeService: OnlineUpgradeService,
     private Orgservice,
-    private ServiceDescriptor,
+    private ServiceDescriptorService: ServiceDescriptorService,
     private SharedMeetingsReportService: SharedMeetingsReportService,
     private UrlConfig,
     private WebExUtilsFact,
@@ -453,8 +454,8 @@ export class MySubscriptionCtrl {
   }
 
   private hybridServicesRetrieval() {
-    this.ServiceDescriptor.getServices().then((services) => {
-      return this.ServiceDescriptor.filterEnabledServices(services);
+    this.ServiceDescriptorService.getServices().then((services) => {
+      return this.ServiceDescriptorService.filterEnabledServices(services);
     }).then((enabledServices) => {
       enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator(s1.id, s2.id));
       return _.map(enabledServices, (service: any) => {

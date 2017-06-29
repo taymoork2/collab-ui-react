@@ -1,4 +1,6 @@
 import { Notification } from 'modules/core/notifications';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 export class ConfirmDisableHybridServiceCtrl {
 
@@ -12,13 +14,13 @@ export class ConfirmDisableHybridServiceCtrl {
     private $modalInstance,
     private CloudConnectorService,
     private Notification: Notification,
-    private ServiceDescriptor,
-    public serviceId: string,
+    private ServiceDescriptorService: ServiceDescriptorService,
+    public serviceId: HybridServiceId,
   ) {}
 
   public confirmDeactivation = () => {
     this.loading = true;
-    let disable = this.ServiceDescriptor.disableService;
+    let disable = this.ServiceDescriptorService.disableService;
     if (this.serviceId === 'squared-fusion-gcal') {
       disable = this.CloudConnectorService.deactivateService;
     }

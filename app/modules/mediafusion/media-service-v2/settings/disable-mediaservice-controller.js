@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DisableMediaServiceController(MediaClusterServiceV2, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptor, ClusterService) {
+  function DisableMediaServiceController(MediaClusterServiceV2, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptorService, ClusterService) {
     var vm = this;
     vm.step = '1';
     vm.checkboxModel = false;
@@ -32,7 +32,7 @@
         });
         $modalInstance.close();
         if (!vm.hadError) {
-          ServiceDescriptor.disableService(vm.serviceId);
+          ServiceDescriptorService.disableService(vm.serviceId);
           MediaServiceActivationV2.setisMediaServiceEnabled(false);
 
           MediaServiceActivationV2.disableOrpheusForMediaFusion();

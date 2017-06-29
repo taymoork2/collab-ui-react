@@ -6,7 +6,7 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($translate, Authinfo, ClusterService, DomainManagementService, FmsOrgSettings, HybridServicesExtrasService, HybridServicesUtilsService, NotificationService, Orgservice, ServiceDescriptor, USSService, Notification) {
+  function ServiceStateChecker($translate, Authinfo, ClusterService, DomainManagementService, FmsOrgSettings, HybridServicesExtrasService, HybridServicesUtilsService, NotificationService, Orgservice, ServiceDescriptorService, USSService, Notification) {
     var isSipUriAcknowledged = false;
     var hasSipUriDomainConfigured = false;
     var hasVerifiedDomains = false;
@@ -103,7 +103,7 @@
             addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
             break;
           case 'squared-fusion-uc':
-            ServiceDescriptor.isServiceEnabled('squared-fusion-ec').then(function (enabled) {
+            ServiceDescriptorService.isServiceEnabled('squared-fusion-ec').then(function (enabled) {
               if (enabled) {
                 addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
               } else {
@@ -180,7 +180,7 @@
         return;
       }
 
-      ServiceDescriptor.getServices().then(function (items) {
+      ServiceDescriptorService.getServices().then(function (items) {
         var callServiceConnect = _.find(items, {
           id: 'squared-fusion-ec',
         });
