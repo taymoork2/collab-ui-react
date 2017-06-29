@@ -42,21 +42,7 @@ echo "[INFO] Inspecting checksums of $manifest_files from last successful build.
 checksums_ok=$(is_checksums_ok "$manifest_checksums_file" && echo "true" || echo "false")
 
 echo "[INFO] Checking if it is time to refresh..."
-# FIXME:
-# - temporarily setting to 14 days refresh period while we investigate 'npm install' breakage
-#
-#   ```
-#   ...
-#   npm ERR! 404 Not Found: artifactory
-#   npm ERR! 404
-#   npm ERR! 404  'artifactory' is not in the npm registry.
-#   npm ERR! 404 You should bug the author to publish it (or use the name yourself!)
-#   npm ERR! 404 It was specified as a dependency of '@ciscospark/internal-plugin-encryption'
-#   ...
-#   ```
-# min_refresh_period=$(( 60 * 60 * 24 ))  # 24 hours
-min_refresh_period=$(( 60 * 60 * 24 * 14 ))  # 2 weeks
-
+min_refresh_period=$(( 60 * 60 * 24 ))  # 24 hours
 # shellcheck disable=SC2154
 time_to_refresh=$(is_time_to_refresh $min_refresh_period "$last_refreshed_file" \
     && echo "true" || echo "false")
