@@ -634,7 +634,7 @@
       "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
         "all": "All",
-        "roomSystems": "DX, MX, and SX Devices",
+        "roomSystems": "Cisco Spark Room Kit, DX, MX and SX series",
         "sparkBoard": "Cisco Spark Board"
       },
       "export": {
@@ -4759,7 +4759,7 @@
     "supportedLocationsCertification": "I certify that this customer is in a <a href=\"https://support.ciscospark.com/customer/portal/articles/1940194-where-is-cisco-spark-available\" target=\"_blank\">supported location</a> for Cisco Spark",
     "supportedLocationWarning": "Please check the box above to certify that this customer is in a supported location for Cisco Spark",
     "context": "Enable Context Service for Cisco Unified Contact Center.",
-    "roomSystem": "DX, MX or SX system",
+    "roomSystem": "Cisco Spark Room Kit, DX, MX and SX series",
     "sparkBoardSystem": "Cisco Spark Board",
     "roomSysUsOnly": "Cisco Spark Room Device (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
@@ -4862,7 +4862,7 @@
     "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
     "myOrganization": "My Organization",
     "meetingParty": "Meeting 25 Party",
-    "roomSystem": "DX, MX or SX",
+    "roomSystem": "Cisco Spark Room Kit, DX, MX and SX series",
     "sparkBoard": "Cisco Spark Board",
     "branding": "Customer Branding",
     "MS": "Message",
@@ -5105,7 +5105,7 @@
       "deskPhoneExamplesExtra": "e.g. 8845, 8865, 8800 or Analog Telephone Adapter port",
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "roomSystem": "Room Device",
-      "roomSystemExamplesExpanded": "Cisco Spark Board, DX, MX and SX series",
+      "roomSystemExamplesExpanded": "e.g. Cisco Spark Board, Room Kit, DX, MX or SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
     },
     "chooseAccountType": {
@@ -7246,7 +7246,7 @@
       "EE": "Webex Enterprise Edition",
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Cisco Spark Call",
-      "SD": "DX, MX or SX system",
+      "SD": "Cisco Spark Room Kit, DX, MX and SX series",
       "SB": "Cisco Spark Board",
       "CDC": "Chat and Callback",
       "CVC": "Chat, Callback and Inbound Call"
@@ -7421,7 +7421,7 @@
       "CO": "Advanced Cisco Spark Call",
       "CMR": "Collaboration Meeting Rooms",
       "ST": "Storage",
-      "SD": "DX, MX, or SX systems",
+      "SD": "Cisco Spark Room Kit, DX, MX and SX series",
       "SB": "Cisco Spark Board",
       "linkedSite": "Legacy WebEx License",
       "CDC": "Chat and Callback",
