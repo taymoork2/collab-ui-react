@@ -49,7 +49,7 @@
       <div class="section__content">
         <div class="pg-search-add">
           <input id="paging-group-member" type="text" ng-click="$ctrl.resetFilter()" ng-model="$ctrl.memberName"class="cs-input"
-            typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchMembers($viewValue) | limitTo:10" typeahead-template-url="userTemplate.html"
+            typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchMembers('MEMBER') | limitTo:10" typeahead-template-url="userTemplate.html"
             typeahead-on-select="$ctrl.selectMembers($item)" placeholder="{{:: 'common.selectMembers' | translate}}"
             typeahead-min-length="3" typeahead-wait-ms="300">
           <div class="search-member">
