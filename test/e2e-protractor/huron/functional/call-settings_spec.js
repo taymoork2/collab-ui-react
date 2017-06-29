@@ -27,6 +27,59 @@ describe('Huron Functional: call-settings', () => {
     navigation.expectDriverCurrentUrl('call-settingsnew');
   });
 
+  describe('Regional Settings', () => {
+    const newPreferredLanguage = 'English (United Kingdom)';
+    const newTimeZone = 'Etc/GMT+12';
+    const newDateFormat = 'DD-MM-YY';
+    const newTimeFormat = '24 hour';
+
+    it('click on preferred  language drop down', () => {
+      utils.selectDropdown('.csSelect-container[name="preferredLanguage"]', newPreferredLanguage);
+    });
+    
+    it('click on time zone drop down', () => {
+      utils.selectDropdown('.csSelect-container[name="timeZone"]', newTimeZone);
+    });
+
+    it('make sure save button is displayed', () => {
+      utils.expectIsDisplayed(callSettings.saveButton);
+    });
+
+    it('make sure cancel button is displayed', () => {
+      utils.expectIsDisplayed(callSettings.cancelButton);
+    });
+
+    it('click on date format drop down', () => {
+      utils.selectDropdown('.csSelect-container[name="dateFormatSelect"]', newDateFormat);
+    });
+
+    it('click on time format drop down', () => {
+      utils.selectDropdown('.csSelect-container[name="timeFormatSelect"]', newTimeFormat);
+    });
+    
+    it('click on save button', () => {
+      utils.click(callSettings.saveButton).then(()=> {
+        notifications.assertSuccess();
+      });
+    });
+
+    it('saved time zone is displayed', () => {
+      utils.expectText(callSettings.timeZone, newTimeZone);
+    });
+
+    it('saved date format is displayed', () => {
+      utils.expectText(callSettings.dateFormat, newDateFormat);
+    });
+
+    it('saved time format is displayed', () => {
+      utils.expectText(callSettings.timeFormat, newTimeFormat);
+    });
+      
+    it('saved preferred language is displayed', () => {
+      utils.expectText(callSettings.preferredLanguage, newPreferredLanguage);
+    });
+  });
+
   describe('Internal Dialing', () => {
     describe('set a routing prefix', () => {
       it('should show a routing prefix input when "Reserve a Prefix" radio is checked', () => {
@@ -182,5 +235,17 @@ describe('Huron Functional: call-settings', () => {
         });
       });
     })
+  });
+  
+  describe('Dialing Restrictions', () => {
+    it('national dialing should be disabled', () => {
+      utils.expectIsDisplayed(callSettings.nationalDialing);
+    });
+    it('premium dialing should be disabled', () => {
+      utils.expectIsDisplayed(callSettings.premiumDialing);
+    });
+    it('international dialing should be disabled', () => {
+      utils.expectIsDisplayed(callSettings.internationalDialing);
+    });
   });
 });
