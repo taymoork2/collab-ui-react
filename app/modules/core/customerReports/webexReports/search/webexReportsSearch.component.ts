@@ -41,6 +41,7 @@ class WebexReportsSearch implements ng.IComponentController {
   public $onInit(): void {
     this.initDateRange();
     this.setGridOptions();
+    this.$scope.$emit('selectEnable', false);
   }
 
   public showDetail(item) {
