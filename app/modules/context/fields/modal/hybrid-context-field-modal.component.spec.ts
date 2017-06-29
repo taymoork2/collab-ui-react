@@ -34,7 +34,6 @@ describe('Component: context field modal', () => {
       'ContextFieldsService',
       'Notification',
       '$rootScope',
-      'ModalService',
     );
 
     spyOn(this.$translate, 'instant').and.callThrough();
@@ -268,10 +267,6 @@ describe('Component: context field modal', () => {
         { index: 1, value: '2', edit: false },
         { index: 2, value: '', edit: true },
       ];
-      const editOptionsListCopy = [
-        { index: 0, value: '1', edit: false },
-        { index: 1, value: '2', edit: true },
-      ];
 
       describe('addOption', function () {
         it('should set the correct controller flags when setAddEnumOptions is called', function () {
@@ -289,8 +284,8 @@ describe('Component: context field modal', () => {
         });
 
         it('should save and cancel when adding an option', function () {
-          this.controller.optionsList = addOptionsList;
-          this.controller.optionsListCopy = optionsListCopy;
+          this.controller.optionsList = _.cloneDeep(addOptionsList);
+          this.controller.optionsListCopy = _.cloneDeep(optionsListCopy);
           this.controller.newOption = '3';
           this.controller.saveOption();
           expect(this.controller.optionsListCopy).toEqual(this.controller.optionsList);
@@ -311,8 +306,8 @@ describe('Component: context field modal', () => {
         });
 
         it('should reset when cancel adding an option', function () {
-          this.controller.optionsList = addOptionsList;
-          this.controller.optionsListCopy = optionsListCopy;
+          this.controller.optionsList = _.cloneDeep(addOptionsList);
+          this.controller.optionsListCopy = _.cloneDeep(optionsListCopy);
           this.controller.newOption = '3';
 
           this.controller.cancelAddOption();
@@ -324,6 +319,10 @@ describe('Component: context field modal', () => {
       });
 
       describe('editOption', function () {
+        const editOptionsListCopy = [
+          { index: 0, value: '1', edit: false },
+          { index: 1, value: '2', edit: true },
+        ];
         it('should set the option edit as true when setEdit is called', function () {
           const option = {
             index: 2,
@@ -338,11 +337,11 @@ describe('Component: context field modal', () => {
         });
 
         it('should save the option correctly when editing an option which is the default option', function () {
-          this.controller.optionsListCopy = editOptionsListCopy;
+          this.controller.optionsListCopy = _.cloneDeep(editOptionsListCopy);
           this.controller.setEdit( {
             index: 1,
             value: '2',
-            edit: true }, true);
+            edit: false }, true);
 
           this.controller.newOption = '5';
           this.controller.defaultOption = '2';
@@ -367,8 +366,11 @@ describe('Component: context field modal', () => {
           const option = {
             index: 1,
             value: '2',
-            edit: true };
-          this.controller.optionsListCopy = editOptionsListCopy;
+            edit: false };
+          this.controller.optionsListCopy = _.cloneDeep([
+            { index: 0, value: '1', edit: false },
+            { index: 1, value: '2', edit: true },
+          ]);
           this.controller.setEdit(option, true);
           this.controller.newOption = '5';
           this.controller.defaultOption = '2';
@@ -399,6 +401,7 @@ describe('Component: context field modal', () => {
           translations: {
             en_US: ['1', '2', '3'],
           },
+          inactiveEnumerations: [],
         };
         this.controller.updateDataTypeDefinition(optionsList);
 
@@ -429,23 +432,67 @@ describe('Component: context field modal', () => {
         { label: '3', value: '3', id: 1, name: '3' },
       ];
 
-      it('should remove the option if confirmed', function (done) {
-        //mock the modal open call through and get result
-        const modalResult = {};
-        const mockModalInstance = { result: this.$q.resolve(modalResult) };
-        spyOn(mockModalInstance.result, 'then').and.callThrough();
-        spyOn(this.ModalService, 'open').and.returnValue(mockModalInstance);
+      beforeEach(function () {
+        this.setupAndDeleteOption = function() {
+          this.controller.optionsListCopy = _.cloneDeep(origOptionsListCopy);
+          this.controller.optionsList = _.cloneDeep(origOptionsListCopy);
+          this.controller.existingFieldOptionsList = _.cloneDeep(origOptionsListCopy);
+          this.controller.deleteOption(optionToBeDeleted, this.$scope.newFieldForm);
+          this.$rootScope.$digest();
+        };
 
-        this.controller.optionsList = this.controller.optionsListCopy = origOptionsListCopy;
+        this.verifyDelete = function() {
+          expect(this.controller.optionsList).toEqual(this.controller.optionsListCopy);
+          expect(this.controller.optionsListCopy).toEqual(optionsListCopyAfterDelete);
+          expect(this.controller.optionRadios).toEqual(reorderOptions);
+          expect(formIsSetDirty).toBe(true);
+        };
 
+        this.verifyInactiveOptionIsSet = function () {
+          expect(this.controller.inactiveOptionsList).toEqual([optionToBeDeleted]);
+          expect(this.controller.fieldData.dataTypeDefinition.enumerations).toEqual(['1', '3', '2']);
+          expect(this.controller.fieldData.dataTypeDefinition.inactiveEnumerations).toEqual(['2']);
+        };
+
+        this.verifyInactiveOptionIsNotSet = function () {
+          expect(this.controller.inactiveOptionsList).toEqual([]);
+          expect(this.controller.fieldData.dataTypeDefinition.enumerations).toEqual(['1', '3']);
+          expect(this.controller.fieldData.dataTypeDefinition.inactiveEnumerations).toEqual([]);
+        };
+      });
+
+      it('should remove the option and set inactive enum in edit mode', function (done) {
+        this.controller.createMode = false;
+        this.setupAndDeleteOption();
+
+        this.verifyDelete();
+        this.verifyInactiveOptionIsSet();
+        done();
+      });
+
+      it('should not add option to inactive list if the option is not one of the items in the existing list', function (done) {
+        const listWithoutDeletedOption = [
+          { index: 0, edit: false, value: '1' },
+          { index: 1, edit: false, value: '3' },
+        ];
+        this.controller.createMode = false;
+        this.controller.optionsListCopy = _.cloneDeep(origOptionsListCopy);
+        this.controller.optionsList = _.cloneDeep(origOptionsListCopy);
+        this.controller.existingFieldOptionsList = _.cloneDeep(listWithoutDeletedOption);
         this.controller.deleteOption(optionToBeDeleted, this.$scope.newFieldForm);
         this.$rootScope.$digest();
 
-        expect(mockModalInstance.result.then).toHaveBeenCalledWith(jasmine.any(Function));
-        expect(this.controller.optionsList).toEqual(this.controller.optionsListCopy);
-        expect(this.controller.optionsListCopy).toEqual(optionsListCopyAfterDelete);
-        expect(this.controller.optionRadios).toEqual(reorderOptions);
-        expect(formIsSetDirty).toBe(true);
+        this.verifyDelete();
+        this.verifyInactiveOptionIsNotSet();
+        done();
+      });
+
+      it('should remove the option but not set the inactiveEnumeration in create', function (done) {
+        this.controller.createMode = true;
+        this.setupAndDeleteOption();
+
+        this.verifyDelete();
+        this.verifyInactiveOptionIsNotSet();
         done();
       });
 
@@ -495,6 +542,12 @@ describe('Component: context field modal', () => {
           ]);
         });
       });
+
+      describe('mark option inactive when edit', function () {
+        it('should move the option to inactiveEnumerations when delete', function () {
+
+        });
+      });
     });
 
     describe('setReorder', function () {
@@ -503,7 +556,7 @@ describe('Component: context field modal', () => {
         { index: 1, edit: false, value: '2' },
       ];
       it('should set the correct controller flags when setReorder is called', function () {
-        this.controller.optionsListCopy = origOptionsListCopy;
+        this.controller.optionsListCopy = _.cloneDeep(origOptionsListCopy);
         this.controller.setReorder();
         expect(this.controller.reorderEnumOptions).toBe(true);
         expect(this.controller.actionList.length).toBe(0);
@@ -511,7 +564,7 @@ describe('Component: context field modal', () => {
       });
 
       it('should save the order when save', function () {
-        this.controller.optionsListCopy = origOptionsListCopy;
+        this.controller.optionsListCopy = _.cloneDeep(origOptionsListCopy);
         this.controller.setReorder();
         const newOptionsList = this.controller.optionsListCopy = [
           { index: 0, edit: false, value: '2' },
@@ -526,12 +579,12 @@ describe('Component: context field modal', () => {
           { label: '2', value: '2', id: 0, name: '2' },
           { label: '1', value: '1', id: 1, name: '1' },
         ]);
-        expect(this.controller.optionReorderListCopy).toEqual(undefined);
+        expect(this.controller.optionReorderListCopy).toEqual([]);
         expect(formIsSetDirty).toBe(true);
       });
 
       it('should reset the order when cancel', function () {
-        this.controller.optionsListCopy = origOptionsListCopy;
+        this.controller.optionsListCopy = _.cloneDeep(origOptionsListCopy);
         this.controller.setReorder();
         this.controller.optionsListCopy = [
           { index: 0, edit: false, value: '2' },
@@ -597,6 +650,50 @@ describe('Component: context field modal', () => {
         expect(this.controller.fieldData.defaultValue).toEqual(undefined);
       });
 
+    });
+
+    describe('isSingleSelectCheckPassed', function () {
+      it('should return false if the otpions is less than two', function () {
+        this.controller.fieldData.dataTypeUI = 'context.dictionary.dataTypes.enumString';
+        this.controller.optionsListCopy = [
+          { index: 0, edit: false, value: '1' },
+        ];
+        expect(this.controller.isSingleSelectCheckPassed()).toBe(false);
+      });
+
+      it('should return true if the otpions is equal to two', function () {
+        this.controller.fieldData.dataTypeUI = 'context.dictionary.dataTypes.enumString';
+        this.controller.optionsListCopy = [
+          { index: 0, edit: false, value: '1' },
+          { index: 1, edit: false, value: '2' },
+        ];
+        expect(this.controller.isSingleSelectCheckPassed()).toBe(true);
+      });
+    });
+
+    describe('uniqueOptionValidation', function () {
+      /*tslint:disable*/
+      it('should return false if the opton is one of the existing options in createMode', function () {
+        this.controller.createMode = true;
+        this.controller.addEnumOption = true;
+        this.controller.optionsListCopy = [
+          { index: 0, edit: false, value: '1' },
+          { index: 1, edit: false, value: '2' },
+        ];
+
+        expect(this.controller.uniqueOptionValidation('2')).toBe(false);
+      });
+
+      it('should return true if the opton is one of the existing options in edit mode', function () {
+        this.controller.createMode = false;
+        this.controller.addEnumOption = false;
+        this.controller.optionsListCopy = [
+          { index: 0, edit: false, value: '1' },
+          { index: 1, edit: true, value: '2' },
+        ];
+
+        expect(this.controller.uniqueOptionValidation('2')).toBe(true);
+      });
     });
   });
 });
