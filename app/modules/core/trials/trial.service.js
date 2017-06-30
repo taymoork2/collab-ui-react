@@ -131,6 +131,10 @@
         offers: _getOffers(data),
       };
 
+      if (_hasCallOrRoomOffer(trialData.offers)) {
+        trialData['country'] = TrialPstnService.getCountryCode();
+      }
+
       var editTrialUrl = trialsUrl + '/' + trialId;
 
       function logEditTrialMetric(status) {
@@ -422,6 +426,12 @@
         params: params,
       };
       return result;
+    }
+
+    function _hasCallOrRoomOffer(offers) {
+      return _.find(offers, function (offer) {
+        return offer.id === 'CALL' || offer.id === 'ROOMSYSTEMS';
+      });
     }
   }
 })();
