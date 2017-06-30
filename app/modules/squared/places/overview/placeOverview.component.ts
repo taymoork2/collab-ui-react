@@ -143,7 +143,7 @@ class PlaceOverview implements ng.IComponentController {
     if (this.currentPlace.type === 'cloudberry') {
       this.showPstn = this.Authinfo.isSquaredUC();
       this.actionList = [{
-        actionKey: 'usersPreview.editServices',
+        actionKey: 'common.edit',
         actionFunction: () => {
           this.editCloudberryServices();
         },
