@@ -4,12 +4,14 @@ import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { Notification } from 'modules/core/notifications';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/huron/settings/companyCallerId';
 import { AvrilService, IAvrilSite, AvrilSite, IAvrilFeatures, AvrilFeatures } from 'modules/huron/avril';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { TerminusService } from 'modules/huron/pstn';
 import { ExtensionLengthService } from './extensionLength.service';
 
 export class HuronSettingsData {
   public customer: CustomerSettings;
   public site: ISite;
+  public companyMoh: string;
   public internalNumberRanges: IExtensionRange[];
   public cosRestrictions: any;
   public companyCallerId: CompanyNumber;
@@ -60,11 +62,13 @@ export class HuronSettingsService {
   private VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL'; // Unity and Avril
   private supportsAvrilVoicemail: boolean = false;
   private supportsAvrilVoicemailMailbox: boolean = false;
+  private supportsCompanyMoh: boolean = false;
 
   /* @ngInject */
   constructor(
     private HuronSiteService: HuronSiteService,
     private HuronCustomerService: HuronCustomerService,
+    private MediaOnHoldService: MediaOnHoldService,
     private Notification: Notification,
     private $q: ng.IQService,
     private AvrilService: AvrilService,
@@ -83,6 +87,10 @@ export class HuronSettingsService {
     //Avril only, Should have supportsAvrilVoicemail = false
     this.FeatureToggleService.supports(FeatureToggleService.features.avrilVmMailboxEnable)
       .then(result => this.supportsAvrilVoicemailMailbox = result);
+    //Company Media On Hold Support
+    this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
+      .then(result => this.supportsCompanyMoh = result);
+
   }
 
   public get(siteId: string): ng.IPromise<HuronSettingsData> {
@@ -117,6 +125,7 @@ export class HuronSettingsService {
               }
             });
         }),
+      companyMoh: this.getCompanyMedia().then(companyMoh => huronSettingsData.companyMoh = companyMoh),
       internalNumberRanges: this.getInternalNumberRanges().then(internalNumberRanges => huronSettingsData.internalNumberRanges = internalNumberRanges),
       cosRestrictions: this.getCosRestrictions().then(cosRestrictions => huronSettingsData.cosRestrictions = cosRestrictions),
       companyCallerId: this.getCompanyCallerId().then(companyCallerId => huronSettingsData.companyCallerId = companyCallerId),
@@ -209,6 +218,10 @@ export class HuronSettingsService {
       Array.prototype.push.apply(promises, this.updateInternalNumberRanges(data.internalNumberRanges, this.skipInternalNumberRangeDelete(data, this.huronSettingsDataCopy)));
     }
 
+    if (!_.isEqual(data.companyMoh, this.huronSettingsDataCopy.companyMoh)) {
+      promises.push(this.updateCompanyMediaOnHold(data.companyMoh));
+    }
+
     if (!_.isEqual(data.cosRestrictions, this.huronSettingsDataCopy.cosRestrictions)) {
       promises.push(this.saveCosRestrictions(data.cosRestrictions));
     }
@@ -258,6 +271,17 @@ export class HuronSettingsService {
       });
   }
 
+  private getCompanyMedia(): ng.IPromise<string> {
+    if (this.supportsCompanyMoh) {
+      return this.MediaOnHoldService.getCompanyMedia()
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
+        return this.$q.reject();
+      });
+    }
+    return this.$q.resolve('');
+  }
+
   private createSite(site: ISite): ng.IPromise<string | void> {
     return this.HuronSiteService.createSite(site)
       .then(location => {
@@ -272,6 +296,13 @@ export class HuronSettingsService {
     return this.HuronSiteService.updateSite(site)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.siteUpdateError'));
+      });
+  }
+
+  private updateCompanyMediaOnHold(mediaFileId: string): ng.IPromise<void> {
+    return this.MediaOnHoldService.updateMediaOnHold(mediaFileId)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
       });
   }
 

@@ -3,6 +3,7 @@ import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { HuntGroupService } from 'modules/call/features/hunt-group';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 
 export class HuronSettingsOptions {
   public preferredLanguageOptions: IOption[];
@@ -13,6 +14,7 @@ export class HuronSettingsOptions {
   public companyCallerIdOptions: IOption[];
   public companyVoicemailOptions: IOption[];
   public emergencyServiceNumberOptions: IEmergencyNumberOption[];
+  public companyMohOptions: IOption[];
   public dialPlan: IDialPlan;
   public extensionsAssigned: boolean;
 }
@@ -31,6 +33,8 @@ export class HuronSettingsOptionsService {
     private PhoneNumberService: PhoneNumberService,
     private DialPlanService: DialPlanService,
     private HuntGroupService: HuntGroupService,
+    private MediaOnHoldService: MediaOnHoldService,
+    private FeatureToggleService,
     private Authinfo,
     private DirectoryNumberService,
     private CeService,
@@ -47,6 +51,7 @@ export class HuronSettingsOptionsService {
       companyCallerIdOptions: this.loadCompanyCallerIdNumbers(undefined),
       companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined),
       emergencyServiceNumbers: this.loadEmergencyServiceNumbers(undefined),
+      companyMohOptions: this.loadCompanyMohOptions(),
       dialPlan: this.loadDialPlan(),
       extensionsAssigned: this.areExtensionsAssigned(),
     }).then(response => {
@@ -58,6 +63,7 @@ export class HuronSettingsOptionsService {
       settingsOptions.companyCallerIdOptions = _.get<IOption[]>(response, 'companyCallerIdOptions');
       settingsOptions.companyVoicemailOptions = _.get<IOption[]>(response, 'companyVoicemailOptions');
       settingsOptions.emergencyServiceNumberOptions = _.get<IEmergencyNumberOption[]>(response, 'emergencyServiceNumbers');
+      settingsOptions.companyMohOptions = _.get<IOption[]>(response, 'companyMohOptions', []);
       settingsOptions.dialPlan = _.get<IDialPlan>(response, 'dialPlan');
       settingsOptions.extensionsAssigned = _.get<boolean>(response, 'extensionsAssigned');
       return settingsOptions;
@@ -114,6 +120,30 @@ export class HuronSettingsOptionsService {
     return this.ServiceSetup.getTimeZones().then(timezones => {
       return this.ServiceSetup.getTranslatedTimeZones(timezones);
     });
+  }
+
+  private loadCompanyMohOptions(): ng.IPromise<IOption[]> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronMOHEnable)
+      .then(supportsCompanyMoh => {
+        if (supportsCompanyMoh) {
+          return this.MediaOnHoldService.getMediaOnHold()
+          .then(mediaList => {
+            const mediaOptions = _.map(mediaList, media => {
+              return <IOption> {
+                label: media.displayName,
+                value: media.rhesosId,
+              };
+            });
+            mediaOptions.push(<IOption>{
+              label: 'Generic Media',
+              value: '1',
+            });
+            return mediaOptions;
+          });
+        } else {
+          return this.$q.resolve([]);
+        }
+      });
   }
 
   public loadEmergencyServiceNumbers(filter: string | undefined): ng.IPromise<IEmergencyNumberOption[]> {
