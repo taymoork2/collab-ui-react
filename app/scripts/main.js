@@ -154,7 +154,7 @@
     require('modules/hercules/services/hybrid-services-utils.service').default,
     require('modules/hercules/services/l2sip-service').default,
     require('modules/hercules/services/service-descriptor.service').default,
-    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/uss.service').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
