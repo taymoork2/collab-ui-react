@@ -48,9 +48,9 @@
     "webdriver": "webdriver-manager update"
   },
   "dependencies": {
-    "@ciscospark/internal-plugin-encryption": "^1.1.1",
-    "@ciscospark/internal-plugin-search": "^1.1.1",
-    "@ciscospark/spark-core": "^1.0.0",
+    "@ciscospark/internal-plugin-encryption": "1.1.6",
+    "@ciscospark/internal-plugin-search": "1.1.6",
+    "@ciscospark/spark-core": "1.1.6",
     "acorn": "^5.0.3",
     "angular": "~1.5.7",
     "angular-animate": "~1.5.5",
@@ -133,7 +133,7 @@
     "@types/ui-grid": "^0.0.35",
     "angular-mocks": "~1.5.7",
     "autoprefixer": "^7.1.1",
-    "awesome-typescript-loader": "^3.1.2",
+    "awesome-typescript-loader": "~3.1.3",
     "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-latest": "^6.24.1",

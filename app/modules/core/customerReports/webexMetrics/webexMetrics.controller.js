@@ -22,6 +22,7 @@
     vm.webexSelected = null;
     vm.webexMetrics = {};
     vm.isNoData = false;
+    vm.selectEnable = true;
 
     vm.webexMetrics.views = [
       {
@@ -55,6 +56,11 @@
       },
     ];
 
+    var deregister = $scope.$on('selectEnable', function () {
+      vm.selectEnable = !vm.selectEnable;
+    });
+    $scope.$on('$destroy', deregister);  // -- by zoncao@cisco.com for site select
+
     vm.updateWebexMetrics = updateWebexMetrics;
 
     function resetIframe(filter) {
@@ -63,6 +69,11 @@
           return metrics.filterType === filter;
         });
       }
+
+      if (filter === 'search') {
+        return false;
+      }
+
       updateIframe();
     }
 

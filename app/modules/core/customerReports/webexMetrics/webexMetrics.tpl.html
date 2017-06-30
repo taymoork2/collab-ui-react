@@ -3,7 +3,7 @@
   <cs-page-sub-header-left class="medium-6">
     <report-filter filter-array="nav.metricsOptions"></report-filter>
   </cs-page-sub-header-left>
-  <cs-page-sub-header-right class="medium-6">
+  <cs-page-sub-header-right class="medium-6" ng-show="nav.selectEnable">
     <div class="medium-6 columns webexPage">
       <cs-select ng-model="nav.webexSelected" options="nav.webexOptions" on-change-fn="nav.updateWebexMetrics()">
       </cs-select>
@@ -13,5 +13,6 @@
 
 <!-- Main Content -->
 <div class="content-container" style="overflow: hidden; padding: 0;">
-  <div ng-include="'modules/core/customerReports/webexMetrics/webexMetricsFrame.tpl.html'"></div>
+  <cust-webex-reports-search ng-if="nav.currentFilter.filterType === 'search'"></cust-webex-reports-search>
+  <div ng-if="nav.currentFilter.filterType === 'metrics'" ng-include="'modules/core/customerReports/webexMetrics/webexMetricsFrame.tpl.html'"></div>
 </div>

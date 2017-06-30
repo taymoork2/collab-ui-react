@@ -61,7 +61,6 @@ class FieldsetModalCtrl implements ng.IComponentController {
   public enableFieldsSelection: Boolean = false; //whether enable the fields selection
 
   private maxFieldsPerFieldsetAllowed: number = PropertyConstants.MAX_FIELDS_PER_FIELDSET_DEFAULT_VALUE; //maximum fields per fieldset allowed
-  private publiclyAccessibleMap: Object;       //Map for publiclyAccessible
 
   /* @ngInject */
   constructor(
@@ -104,11 +103,6 @@ class FieldsetModalCtrl implements ng.IComponentController {
     this.classificationMap['ENCRYPTED'] = this.localizedStrings['encrypted'];
     this.classificationMap['UNENCRYPTED'] = this.localizedStrings['unencrypted'];
     this.classificationMap['PII'] = this.localizedStrings['pii'];
-
-    //map publiclyAccessible to value that matches by api
-    this.publiclyAccessibleMap = {};
-    this.publiclyAccessibleMap[this.$translate.instant('context.dictionary.custom')] = false;
-    this.publiclyAccessibleMap[this.$translate.instant('context.dictonary.cisco')] = true;
 
     //check if it is create or eidt
     this.createMode = !Boolean(_.get(this.existingFieldsetData, 'id'));
@@ -176,11 +170,6 @@ class FieldsetModalCtrl implements ng.IComponentController {
       });
   }
 
-  public fixDataForApi() {
-    this.fieldsetData.publiclyAccessible = this.publiclyAccessibleMap[this.fieldsetData.publiclyAccessibleUI];
-    return this.fieldsetData;
-  }
-
   /**
    * Create a new fieldset
    * @returns {Promise<R>}
@@ -204,7 +193,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
 
   public update () {
     this.actionInProgress = true;
-    return this.ContextFieldsetsService.updateAndGetFieldset(this.fixDataForApi())
+    return this.ContextFieldsetsService.updateAndGetFieldset(this.fieldsetData)
       .then(data => {
         this.fieldsetData = _.cloneDeep(data);
         this.callback(this.fieldsetData);

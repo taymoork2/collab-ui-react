@@ -1,19 +1,21 @@
 'use strict';
 
 describe('Controller: PstnReviewCtrl', function () {
-  var controller, $controller, $scope, $q, $state, PstnModel, PstnService, PstnServiceAddressService, ExternalNumberPool;
+  var controller, $controller, $scope, $q, $state, Auth, PstnModel, PstnService, PstnServiceAddressService, ExternalNumberPool;
 
   var carrierList = getJSONFixture('huron/json/pstnSetup/carrierList.json');
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var orderCart = getJSONFixture('huron/json/pstnSetup/orderCart.json');
+  var customerAccount = getJSONFixture('huron/json/pstnSetup/customerAccount.json');
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _PstnModel_, _PstnService_, _PstnServiceAddressService_, _ExternalNumberPool_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _Auth_, _PstnModel_, _PstnService_, _PstnServiceAddressService_, _ExternalNumberPool_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     $state = _$state_;
+    Auth = _Auth_;
     PstnModel = _PstnModel_;
     PstnService = _PstnService_;
     PstnServiceAddressService = _PstnServiceAddressService_;
@@ -27,6 +29,7 @@ describe('Controller: PstnReviewCtrl', function () {
     PstnModel.setSiteExists(true);
     PstnModel.setOrders(orderCart);
 
+    spyOn(Auth, 'getCustomerAccount').and.returnValue($q.resolve(customerAccount));
     spyOn(PstnService, 'createCustomerV2').and.returnValue($q.resolve());
     spyOn(PstnService, 'updateCustomerCarrier').and.returnValue($q.resolve());
     spyOn(PstnService, 'orderNumbersV2').and.returnValue($q.resolve());
