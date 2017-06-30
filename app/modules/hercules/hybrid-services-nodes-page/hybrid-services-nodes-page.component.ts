@@ -1,6 +1,6 @@
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService } from 'modules/core/modal';
-import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType, IConnectorProvisioning } from 'modules/hercules/hybrid-services.types';
+import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType, IConnectorProvisioning, ConnectorState } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
@@ -11,6 +11,7 @@ interface ISimplifiedConnector {
   hasUpgradeAvailable: boolean;
   id: string;
   maintenanceMode: ConnectorMaintenanceMode;
+  originalState: ConnectorState;
   service: string;
   status: IMergedStateSeverity;
   statusName: string;
@@ -242,14 +243,14 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     return this.$q.all(promises);
   }
 
-  public openUpgradeModal(): void {
+  public openUpgradeModal(connectorType): void {
     this.$modal.open({
       templateUrl: 'modules/hercules/connector-upgrade-modal/connector-upgrade-modal.html',
       type: 'small',
       controller: 'ConnectorUpgradeController',
       controllerAs: 'ConnectorUpgradeCtrl',
       resolve: {
-        connectorTypes: () => this.connectorTypesWithUpgrade,
+        connectorType: () => connectorType,
         cluster: () => this.clusterCache,
       },
     })
@@ -291,6 +292,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
                 hasUpgradeAvailable: hasUpgradeAvailable(cluster.provisioning, connector),
                 id: connector.id,
                 maintenanceMode: this.getMaintenanceModeForConnector(connector),
+                originalState: connector.state,
                 service: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),
                 status: mergedStatus,
                 statusName: this.$translate.instant(`hercules.status.${mergedStatus.name}`),
@@ -315,7 +317,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     this.connectorTypesWithUpgrade = _.chain(result.nodes)
       .map((node) => node.connectors)
       .flatten<ISimplifiedConnector>()
-      .filter((connector) => connector.hasUpgradeAvailable)
+      .filter((connector) => connector.hasUpgradeAvailable && connector.originalState !== 'offline')
       .map((connector) => connector.connectorType)
       .uniq()
       .value();

@@ -2181,8 +2181,7 @@
     },
     "connectorUpgrade": {
       "title": "Connector Upgrade",
-      "text": "You are about to update the following nodes in this cluster:",
-      "XtoY": "{{name}} to {{version}}",
+      "text": "You are about to update {{name}} connectors to {{version}}.",
       "releaseNotes": "Release Notes",
       "releaseNotesLink": "Open in a new tab",
       "upgradeNow": "Upgrade Now"
@@ -2801,9 +2800,9 @@
         "title": "Disable maintenance mode",
         "message": "Are you sure you want to disable maintenance mode for this node?"
       },
-      "alertBannerNumber": "{count, plural, =1{Upgrade} other{Upgrades}} available.",
-      "alertBannerTime": "The upgrade will be applied on {{date}}.",
-      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Install now</a>?"
+      "alertBannerNumber": "{count, plural, =1{Upgrade for connectors available!} other{Upgrades for connectors available!}}",
+      "alertBannerTime": "{count, plural, =1{It} other{They}} will be applied on {date}.",
+      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>."
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"
