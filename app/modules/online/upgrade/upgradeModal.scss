@@ -1,3 +1,5 @@
-.online-upgrade-modal.modal-footer > .btn + .btn {
-  min-width: 50%;
+.online-upgrade-modal {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1.5rem;
 }

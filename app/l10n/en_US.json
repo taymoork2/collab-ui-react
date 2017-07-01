@@ -7261,6 +7261,8 @@
     "bodyNew": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cisco Spark Control Hub you can buy a subscription.",
     "cancelBody": "Alternately you can use the free version which does not come with the Cloud Collaboration Management portal.",
     "cancelBodyNew": "Alternately you can use the free version which does not come with the Cisco Spark Control Hub.",
+    "freemiumBody": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cloud Collaboration Management portal you will need to buy a subscription.",
+    "freemiumBodyNew": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cisco Spark Control Hub you will need to buy a subscription.",
     "cancelButton": "Use Free Version",
     "cancelError": "An error has occurred while canceling your subscription.",
     "cancelSuccess": "You now have a free account."
