@@ -6,7 +6,7 @@ describe('MediaServiceActivationV2', function () {
   beforeEach(angular.mock.module('Hercules'));
 
   // instantiate service
-  var Service, $q, $httpBackend, authinfo, Notification, HybridServicesClusterService, ServiceDescriptor;
+  var Service, $q, $httpBackend, authinfo, Notification, HybridServicesClusterService, ServiceDescriptorService;
   //var serviceId = "squared-fusion-media";
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = 'squared-fusion-media';
@@ -21,10 +21,10 @@ describe('MediaServiceActivationV2', function () {
     });
   });
 
-  beforeEach(inject(function (_$q_, _Notification_, $injector, _MediaServiceActivationV2_, _HybridServicesClusterService_, _ServiceDescriptor_) {
+  beforeEach(inject(function (_$q_, _Notification_, $injector, _MediaServiceActivationV2_, _HybridServicesClusterService_, _ServiceDescriptorService_) {
     //$rootScope = _$rootScope_;
     Service = _MediaServiceActivationV2_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     $q = _$q_;
     $httpBackend = $injector.get('$httpBackend');
@@ -70,7 +70,7 @@ describe('MediaServiceActivationV2', function () {
     });
     $httpBackend.when('PATCH', /^\w+.*/).respond({});
     $httpBackend.when('PUT', /^\w+.*/).respond({});
-    spyOn(ServiceDescriptor, 'enableService').and.returnValue($q.resolve({}));
+    spyOn(ServiceDescriptorService, 'enableService').and.returnValue($q.resolve({}));
     Service.enableMediaService(serviceId);
     expect($httpBackend.flush).not.toThrow();
   });
@@ -80,7 +80,7 @@ describe('MediaServiceActivationV2', function () {
     $httpBackend.when('PUT', /^\w+.*/).respond(500, null);
     $httpBackend.when('POST', /^\w+.*/).respond(500, null);
     $httpBackend.when('PATCH', /^\w+.*/).respond({});
-    spyOn(ServiceDescriptor, 'enableService').and.callThrough();
+    spyOn(ServiceDescriptorService, 'enableService').and.callThrough();
     spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.reject({}));
     Service.enableMediaService(serviceId);
     expect($httpBackend.flush).not.toThrow();
@@ -111,7 +111,7 @@ describe('MediaServiceActivationV2', function () {
   });
   it('Should notify about activation failure when enableMediaService fails', function () {
     $httpBackend.when('PATCH', /^\w+.*/).respond(500, null);
-    spyOn(ServiceDescriptor, 'enableService').and.callThrough();
+    spyOn(ServiceDescriptorService, 'enableService').and.callThrough();
     spyOn(Notification, 'error');
     Service.enableMediaService(serviceId);
     $httpBackend.flush();

@@ -5,7 +5,7 @@ describe('Controller: DisableMediaServiceController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var controller, MediaClusterServiceV2, $q, MediaServiceActivationV2, Notification, httpMock, ServiceDescriptor;
+  var controller, MediaClusterServiceV2, $q, MediaServiceActivationV2, Notification, httpMock, ServiceDescriptorService;
 
   // var serviceId = "squared-fusion-media";
   var modalInstance = {
@@ -20,10 +20,10 @@ describe('Controller: DisableMediaServiceController', function () {
     $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(inject(function ($state, $controller, _$q_, $translate, _MediaServiceActivationV2_, _Notification_, _MediaClusterServiceV2_, _$httpBackend_, _ServiceDescriptor_) {
+  beforeEach(inject(function ($state, $controller, _$q_, $translate, _MediaServiceActivationV2_, _Notification_, _MediaClusterServiceV2_, _$httpBackend_, _ServiceDescriptorService_) {
     $q = _$q_;
     MediaServiceActivationV2 = _MediaServiceActivationV2_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
     Notification = _Notification_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     spyOn($state, 'go');
@@ -58,7 +58,7 @@ describe('Controller: DisableMediaServiceController', function () {
       status: 204,
     };
     spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.resolve(respnse));
-    spyOn(ServiceDescriptor, 'disableService');
+    spyOn(ServiceDescriptorService, 'disableService');
     spyOn(MediaServiceActivationV2, 'setisMediaServiceEnabled');
     spyOn(MediaServiceActivationV2, 'disableOrpheusForMediaFusion');
     spyOn(MediaServiceActivationV2, 'deactivateHybridMedia');
@@ -69,7 +69,7 @@ describe('Controller: DisableMediaServiceController', function () {
     httpMock.verifyNoOutstandingExpectation();
     expect(MediaClusterServiceV2.deleteClusterWithConnector).toHaveBeenCalled();
     expect(MediaClusterServiceV2.deleteClusterWithConnector.calls.count()).toEqual(2);
-    expect(ServiceDescriptor.disableService).toHaveBeenCalled();
+    expect(ServiceDescriptorService.disableService).toHaveBeenCalled();
     expect(MediaServiceActivationV2.setisMediaServiceEnabled).toHaveBeenCalled();
     expect(MediaServiceActivationV2.disableOrpheusForMediaFusion).toHaveBeenCalled();
     expect(MediaServiceActivationV2.deactivateHybridMedia).toHaveBeenCalled();

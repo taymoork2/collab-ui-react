@@ -12,7 +12,7 @@
     });
 
   /* @ngInject */
-  function HerculesNotificationsController($q, $modal, $scope, $state, $translate, HybridServicesClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService) {
+  function HerculesNotificationsController($q, $modal, $scope, $state, $translate, HybridServicesClusterService, Notification, NotificationService, ServiceStateChecker, USSService) {
     var vm = this;
     vm.showNotifications = false;
     vm.notificationsLength = notificationsLength;

@@ -1,5 +1,8 @@
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import IExternalLinkedAccount = csdm.IExternalLinkedAccount;
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
+import { Notification } from 'modules/core/notifications';
 
 class EditCalendarService implements ng.IComponentController {
   private dismiss: Function;
@@ -59,10 +62,18 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   /* @ngInject */
-  constructor(private CsdmDataModelService: ICsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService, private USSService, private Notification) {
-    ServiceDescriptor.getServices()
+  constructor(
+    private CsdmDataModelService: ICsdmDataModelService,
+    private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
+    ServiceDescriptorService: ServiceDescriptorService,
+    private ResourceGroupService: ResourceGroupService,
+    private USSService,
+    private Notification: Notification,
+  ) {
+    ServiceDescriptorService.getServices()
       .then((services) => {
-        const enabledServices: { id: string }[] = ServiceDescriptor.filterEnabledServices(services);
+        const enabledServices = ServiceDescriptorService.filterEnabledServices(services);
         const calendarExchange = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionCal));
         const googleCal = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionGCal));
         this.showGCalService = !!googleCal;

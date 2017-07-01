@@ -30,14 +30,14 @@ describe('Controller: MySubscriptionCtrl', function () {
       'FeatureToggleService',
       'OnlineUpgradeService',
       'Orgservice',
-      'ServiceDescriptor',
+      'ServiceDescriptorService',
       'SharedMeetingsReportService',
       'WebExUtilsFact');
 
     this.data = _.cloneDeep(getJSONFixture('core/json/myCompany/subscriptionData.json'));
     this.siteUrl = 'siteUrl';
 
-    spyOn(this.ServiceDescriptor, 'getServices').and.returnValue(this.$q.resolve(this.data.servicesResponse));
+    spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve(this.data.servicesResponse));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');
@@ -56,7 +56,7 @@ describe('Controller: MySubscriptionCtrl', function () {
         $translate: this.$translate,
         $window: this.$window,
         Orgservice: this.Orgservice,
-        ServiceDescriptor: this.ServiceDescriptor,
+        ServiceDescriptorService: this.ServiceDescriptorService,
         Authinfo: this.Authinfo,
         WebExUtilsFact: this.WebExUtilsFact,
       });

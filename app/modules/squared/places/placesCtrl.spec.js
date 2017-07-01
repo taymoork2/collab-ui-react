@@ -2,16 +2,17 @@
 
 describe('Controller: PlacesCtrl', function () {
   var $scope, $controller, $state, $timeout, $q, controller, $httpBackend;
-  var CsdmDataModelService, Userservice, Authinfo, FeatureToggleService, ServiceDescriptor;
+  var CsdmDataModelService, Userservice, Authinfo, FeatureToggleService, ServiceDescriptorService;
   var accounts = getJSONFixture('squared/json/accounts.json');
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Core'));
+  // beforeEach(angular.mock.module(require('modules/hercules/services/service-descriptor.service').default));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$httpBackend_, _$state_, _$timeout_, _$q_, _CsdmDataModelService_, _Userservice_, _Authinfo_, _FeatureToggleService_, _ServiceDescriptor_) {
+  function dependencies($rootScope, _$controller_, _$httpBackend_, _$state_, _$timeout_, _$q_, _CsdmDataModelService_, _Userservice_, _Authinfo_, _FeatureToggleService_, _ServiceDescriptorService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -21,7 +22,7 @@ describe('Controller: PlacesCtrl', function () {
     Userservice = _Userservice_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
     $httpBackend = _$httpBackend_;
   }
 
@@ -30,7 +31,7 @@ describe('Controller: PlacesCtrl', function () {
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
-    spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
+    spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
     spyOn(CsdmDataModelService, 'subscribeToChanges').and.returnValue(true);
   }
 

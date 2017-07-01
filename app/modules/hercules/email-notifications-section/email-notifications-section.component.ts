@@ -1,4 +1,6 @@
 import { Notification } from 'modules/core/notifications';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 class EmailNotificationsSectionCtrl implements ng.IComponentController {
   public generalSectionTexts = {
@@ -8,7 +10,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
   public emailSubscribers: { text: string }[] = [];
   public enableEmailSendingToUser = true;
   public savingEmail = false;
-  public defaultWebExSiteOrgLevelOptions = [];
+  public defaultWebExSiteOrgLevelOptions: string[] = [];
   public defaultWebExSiteOrgLevel = '';
   public defaultWebExSiteOrgLevelSelectPlaceholder = this.$translate.instant('hercules.settings.defaultWebExSiteOrgLevelSelectPlaceholder');
   public searchable = true;
@@ -16,7 +18,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
   public oneButtonToPushIntervalOptions = [0, 1, 5, 10, 15];
   public oneButtonToPushIntervalMinutes: number | null = null;
 
-  private serviceId: string;
+  private serviceId: HybridServiceId;
 
   /* @ngInject */
   constructor(
@@ -24,7 +26,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
     private FeatureToggleService,
     private MailValidatorService,
     private Notification: Notification,
-    private ServiceDescriptor,
+    private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
@@ -36,11 +38,11 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
 
   private init(serviceId) {
     this.serviceId = serviceId;
-    this.ServiceDescriptor.getEmailSubscribers(serviceId)
+    this.ServiceDescriptorService.getEmailSubscribers(serviceId)
       .then((emailSubscribers: string[]) => {
         this.emailSubscribers = _.map(emailSubscribers, user => ({ text: user }));
       });
-    this.ServiceDescriptor.getOrgSettings()
+    this.ServiceDescriptorService.getOrgSettings()
       .then(orgSettings => {
         this.enableEmailSendingToUser = !orgSettings.calSvcDisableEmailSendingToEndUser;
         if (orgSettings.calSvcDefaultWebExSite !== undefined) {
@@ -50,7 +52,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
           this.oneButtonToPushIntervalMinutes = orgSettings.bgbIntervalMinutes;
         }
       });
-    this.defaultWebExSiteOrgLevelOptions = this.ServiceDescriptor.getAllWebExSiteOrgLevel();
+    this.defaultWebExSiteOrgLevelOptions = this.ServiceDescriptorService.getAllWebExSiteOrgLevel();
     this.FeatureToggleService.calsvcOneButtonToPushIntervalGetStatus()
       .then(support => {
         this.hasCalsvcOneButtonToPushIntervalFeatureToggle = support;
@@ -67,7 +69,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
       this.Notification.error('hercules.errors.invalidEmail');
     } else {
       this.savingEmail = true;
-      this.ServiceDescriptor.setEmailSubscribers(this.serviceId, emailSubscribers)
+      this.ServiceDescriptorService.setEmailSubscribers(this.serviceId, emailSubscribers)
         .then(response => {
           if (response.status === 204) {
             this.Notification.success('hercules.settings.emailNotificationsSavingSuccess');
@@ -80,7 +82,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
   }
 
   private writeEnableEmailSendingToUser = _.debounce(value => {
-    this.ServiceDescriptor.setDisableEmailSendingToUser(value)
+    this.ServiceDescriptorService.setDisableEmailSendingToUser(value)
       .then(() => this.Notification.success('hercules.settings.emailUserNotificationsSavingSuccess'))
       .catch(error => {
         this.enableEmailSendingToUser = !this.enableEmailSendingToUser;

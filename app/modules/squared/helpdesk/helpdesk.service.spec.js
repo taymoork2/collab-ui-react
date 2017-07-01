@@ -3,17 +3,17 @@
 describe('HelpdeskService', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, $q, HelpdeskMockData,
+  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptorService, $scope, $q, HelpdeskMockData,
     CsdmConverter, HelpdeskHttpRequestCanceller, FeatureToggleService, CacheFactory;
 
   afterEach(function () {
-    $timeout = $httpBackend = Service = urlBase = ServiceDescriptor = $scope = $q = HelpdeskMockData =
+    $timeout = $httpBackend = Service = urlBase = ServiceDescriptorService = $scope = $q = HelpdeskMockData =
       CsdmConverter = HelpdeskHttpRequestCanceller = FeatureToggleService = CacheFactory = undefined;
   });
 
-  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_, _CacheFactory_) {
+  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptorService_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_, _CacheFactory_) {
     Service = _HelpdeskService_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
     HelpdeskHttpRequestCanceller = _HelpdeskHttpRequestCanceller_;
     $scope = _$rootScope_.$new();
     $q = _$q_;
@@ -195,10 +195,10 @@ describe('HelpdeskService', function () {
       id: 'squared-a-cool-service',
     }];
 
-    spyOn(ServiceDescriptor, 'getServices');
+    spyOn(ServiceDescriptorService, 'getServices');
     var deferred = $q.defer();
     deferred.resolve(serviceDescriptionsMock);
-    ServiceDescriptor.getServices.and.returnValue(deferred.promise);
+    ServiceDescriptorService.getServices.and.returnValue(deferred.promise);
 
     var result;
     Service.getHybridServices('1234').then(function (res) {

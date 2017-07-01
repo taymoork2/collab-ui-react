@@ -5,7 +5,7 @@
     .service('MediaServiceActivationV2', MediaServiceActivationV2);
 
   /* @ngInject */
-  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, HybridServicesClusterService, ServiceDescriptor, Orgservice) {
+  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, HybridServicesClusterService, ServiceDescriptorService, Orgservice) {
     var vm = this;
     vm.mediaServiceId = 'squared-fusion-media';
 
@@ -31,7 +31,7 @@
 
 
     function enableMediaService(serviceId) {
-      ServiceDescriptor.enableService(serviceId).then(
+      ServiceDescriptorService.enableService(serviceId).then(
         function success() {
           setisMediaServiceEnabled(true);
           enableOrpheusForMediaFusion();
