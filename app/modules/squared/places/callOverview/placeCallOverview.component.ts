@@ -17,7 +17,6 @@ class PlaceCallOverview implements ng.IComponentController {
   public plIsLoaded: boolean = false;
   public prefLanguageSaveInProcess: boolean = false;
   public onPrefLanguageChange: boolean = false;
-  private externalTransferFeatureToggle;
   // Data from services
   public placeCallOverviewData: PlaceCallOverviewData;
   public displayDescription: string;
@@ -32,7 +31,6 @@ class PlaceCallOverview implements ng.IComponentController {
     private LineService: LineService,
     private Notification: Notification,
     private PlaceCallOverviewService: PlaceCallOverviewService,
-    private FeatureToggleService,
   ) {
 
     this.displayPlace($stateParams.currentPlace);
@@ -99,18 +97,15 @@ class PlaceCallOverview implements ng.IComponentController {
       this.features.push(cosService);
     }
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.hi1033).then((enabled) => {
-      this.externalTransferFeatureToggle = enabled;
-      if (this.currentPlace.type === 'huron' && this.externalTransferFeatureToggle) {
-        const transferService: IFeature = {
-          name: this.$translate.instant('telephonyPreview.externalTransfer'),
-          state: 'externaltransfer',
-          detail: undefined,
-          actionAvailable: true,
-        };
-        this.features.push(transferService);
-      }
-    });
+    if (this.currentPlace.type === 'huron') {
+      const transferService: IFeature = {
+        name: this.$translate.instant('telephonyPreview.externalTransfer'),
+        state: 'externaltransfer',
+        detail: undefined,
+        actionAvailable: true,
+      };
+      this.features.push(transferService);
+    }
   }
 
   private initNumbers(): void {
