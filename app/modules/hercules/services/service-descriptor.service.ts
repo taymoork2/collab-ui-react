@@ -106,7 +106,7 @@ export class ServiceDescriptorService {
       .then(this.extractData);
   }
 
-  public disableService(serviceId: HybridServiceId): ng.IPromise<''> {
+  public disableService = (serviceId: HybridServiceId): ng.IPromise<''> => {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/services/${serviceId}`;
     return this.$http.patch(url, { enabled: false })
       .then(this.extractData);
