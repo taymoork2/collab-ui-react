@@ -58,8 +58,13 @@
   font-size: $h5-font-size;
 }
 
-#deleteExternalNumberOption {
+.actions {
   span {
     color: $color-alerts-base;
   }
+}
+
+.dropdown-menu.dropdown-primary {
+  overflow: visible;
+  position: absolute;
 }
