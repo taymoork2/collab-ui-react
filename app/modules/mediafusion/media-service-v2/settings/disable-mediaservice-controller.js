@@ -2,16 +2,23 @@
   'use strict';
 
   /* @ngInject */
-  function DisableMediaServiceController(MediaClusterServiceV2, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptorService, ClusterService) {
+  function DisableMediaServiceController(MediaClusterServiceV2, HybridServicesClusterService, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptorService) {
     var vm = this;
     vm.step = '1';
+    var deferred = $q.defer();
     vm.checkboxModel = false;
     vm.hadError = false;
     vm.serviceId = 'squared-fusion-media';
-    vm.clusters = ClusterService.getClustersByConnectorType('mf_mgmt');
-    vm.clusterNames = _.map(vm.clusters, 'name');
-    vm.clusterIds = _.map(vm.clusters, 'id');
-    vm.clusterNames.sort();
+    vm.isLoading = false;
+    vm.clusters = {};
+    vm.getClusterList = getClusterList;
+    vm.getClusterList();
+    deferred.promise.then(function () {
+      vm.isLoading = true;
+      vm.clusterNames = _.map(vm.clusters, 'name');
+      vm.clusterIds = _.map(vm.clusters, 'id');
+      vm.clusterNames.sort();
+    });
 
     vm.cancel = function () {
       $modalInstance.dismiss();
@@ -48,6 +55,17 @@
     var recoverPromise = function () {
       return undefined;
     };
+
+    function getClusterList() {
+      HybridServicesClusterService.getAll()
+      .then(function (clusters) {
+        vm.clusters = _.filter(clusters, {
+          targetType: 'mf_mgmt',
+        });
+        deferred.resolve(vm.clusters);
+      });
+      return deferred.promise;
+    }
 
     function deRegisterCluster() {
       var loopPromises = [];
