@@ -1,8 +1,8 @@
 'use strict';
 
 /* globals manageUsersPage */
-// TODO re-enable after backend is fixed in prod
-xdescribe('Squared Add User Flow', function () {
+
+describe('Squared Add User Flow', function () {
   var token;
   var inviteEmail, inviteEmail2;
 
