@@ -204,7 +204,7 @@
     }
 
     function refreshFn() {
-      if (_.isUndefined($stateParams.refreshFn)) {
+      if (!_.isFunction($stateParams.refreshFn)) {
         return $q.resolve(true);
       } else {
         return $stateParams.refreshFn();

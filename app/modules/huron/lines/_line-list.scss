@@ -58,13 +58,13 @@
   font-size: $h5-font-size;
 }
 
-.actions {
+.linelist-actions {
   span {
     color: $color-alerts-base;
   }
 }
 
-.dropdown-menu.dropdown-primary {
+.linelist-actions-dropdown-menu.dropdown-primary {
   overflow: visible;
   position: absolute;
 }

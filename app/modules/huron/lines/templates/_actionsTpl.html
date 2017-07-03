@@ -2,8 +2,8 @@
   <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">
     <i class="icon icon-three-dots"></i>
   </button>
-  <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" >
-    <li ng-if="grid.appScope.canShowExternalNumberDelete(row.entity)" class="actions">
+  <ul cs-dropdown-menu class="linelist-actions-dropdown-menu dropdown-primary" role="menu" >
+    <li ng-if="grid.appScope.canShowExternalNumberDelete(row.entity)" class="linelist-actions">
       <a ng-click="grid.appScope.deleteExternalNumber($event, row.entity.externalNumber)"><span translate="linesPage.deletePhoneNumber"></span>
       </a>
     </li>
