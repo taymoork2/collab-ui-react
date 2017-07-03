@@ -11,16 +11,7 @@ source ./bin/include/env-var-helpers
 
 # -----
 # Phase 1: Pre-setup
-# - look for any zombie instances of process names (there shouldn't be any when Jenkins runs this)
-proc_names_to_scan="bin\\/sc gulp bin\\/spin"
-for i in $proc_names_to_scan; do
-    if [ -n "$(get_pids "$i")" ]; then
-        echo "[WARN] stale process found: $i"
-        kill_wait "$i"
-    fi
-done
-
-# - detect if running in local dev environment, inject env vars as appropriate (this won't be needed
+# detect if running in local dev environment, inject env vars as appropriate (this won't be needed
 #   in a Jenkins build env, as env vars are injected via other means)
 if ! is_ci; then
     echo "[INFO] detected running in local dev environment, injecting build env vars for \"dev\"."
