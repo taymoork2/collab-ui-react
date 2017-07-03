@@ -204,10 +204,10 @@
     }
 
     function refreshFn() {
-      if (!_.isFunction($stateParams.refreshFn)) {
-        return $q.resolve(true);
-      } else {
+      if (_.isFunction($stateParams.refreshFn)) {
         return $stateParams.refreshFn();
+      } else {
+        return $q.resolve(true);
       }
     }
 
