@@ -1,4 +1,4 @@
-interface IDocumentationSectionCtrl  {
+interface IDocumentationSectionCtrl {
   helpLink: string;
   localizedServiceName: string;
   downloadLink: string;
@@ -11,12 +11,13 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
   public helpLink: string;
   public localizedServiceName: string;
   public downloadLink: string;
+  public downloadDemoLink: string;
   private serviceId: string;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-  ) {}
+  ) { }
 
   public $onInit() {
 
@@ -24,6 +25,7 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
 
     if (this.serviceId === 'squared-fusion-media') {
       this.downloadLink = 'https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova';
+      this.downloadDemoLink = 'https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/hybrid-media-demo/hybridmedia_demo.ova';
       this.helpLink = 'https://www.cisco.com/go/hybrid-services-media';
     }
     if (this.serviceId === 'spark-hybrid-datasecurity') {
