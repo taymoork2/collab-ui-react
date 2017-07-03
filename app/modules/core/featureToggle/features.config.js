@@ -170,7 +170,6 @@ module.exports = {
   avrilVmMailboxEnable: 'avril-vm-mailbox-enable',
   avrilVoicemaill1249: 'avril-voicemail-l1249',
   cloudberryPersonalMode: 'ce-enable-personal-mode',
-  hi1033: 'h-i1033',
   huronFederatedSparkCall: 'huron-federated-spark-call',
   sparkCallTenDigitExt: 'i751-10d-ext',
   huronNetworkLocaleGB: 'huron-l10n-network-locale-gb',
