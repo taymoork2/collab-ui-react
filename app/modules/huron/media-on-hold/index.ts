@@ -9,6 +9,8 @@ export default angular
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('angular-resource'),
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/huron/telephony/telephonyConfig'),
   ])
   .service('MediaOnHoldService', MediaOnHoldService)
   .name;

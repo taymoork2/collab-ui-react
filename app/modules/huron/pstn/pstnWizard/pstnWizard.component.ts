@@ -15,6 +15,7 @@ export class PstnWizardComponent implements ng.IComponentOptions {
   public bindings = {
     dismiss: '&',
     close: '&',
+    refreshFn: '&',
     customerId: '<',
     customerName: '<',
     customerEmail: '<',
@@ -59,6 +60,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public enableCarriers: boolean;
   public blockByopNumberAddForPartnerAdmin: boolean;
   public close: Function;
+  public refreshFn: Function;
   public get provider() {
     return this.PstnModel.getProvider();
   }
@@ -286,6 +288,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 6:
         this.placeOrderLoad = true;
         this.PstnWizardService.placeOrder().then(() => {
+          this.refreshFn();
           this.step = 7;
           this.placeOrderLoad = false;
         });
@@ -310,6 +313,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 10:
         this.placeOrderLoad = true;
         this.PstnWizardService.finalizeImport().then(() => {
+          this.refreshFn();
           this.step = 11;
         })
         .finally(() => this.placeOrderLoad = false);

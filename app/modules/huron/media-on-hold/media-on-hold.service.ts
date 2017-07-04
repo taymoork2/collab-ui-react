@@ -1,6 +1,9 @@
 import { IMediaOnHold } from '../media-on-hold/media-on-hold';
+import { IOption } from 'modules/huron/dialing';
 
 interface IMediaOnHoldResource extends ng.resource.IResourceClass<ng.resource.IResource<IMediaOnHold>> {}
+
+const GENERIC_MEDIA_ID = '1';
 
 export class MediaOnHoldService {
   private mediaOnHoldResource: IMediaOnHoldResource;
@@ -36,6 +39,36 @@ export class MediaOnHoldService {
     });
   }
 
+  public getCompanyMedia(): ng.IPromise<string> {
+    return this.getMediaOnHold()
+      .then(mediaList => {
+        let mediaOnHold = GENERIC_MEDIA_ID;
+        _.forEach(mediaList, media => {
+          if (media.assignments && _.find(media.assignments, ['idType', 'ORG_ID'])) {
+            mediaOnHold = media.rhesosId;
+          }
+        });
+        return mediaOnHold;
+      });
+  }
+
+  public getCompanyMohOptions(): ng.IPromise<IOption[]> {
+    return this.getMediaOnHold()
+      .then(mediaList => {
+        const mediaOptions = _.map(mediaList, media => {
+          return <IOption> {
+            label: media.displayName,
+            value: media.rhesosId,
+          };
+        });
+        mediaOptions.push(<IOption>{
+          label: 'Generic Media',
+          value: GENERIC_MEDIA_ID,
+        });
+        return mediaOptions;
+      });
+  }
+
   public getLineMediaOnHold(lineId: string): ng.IPromise<IMediaOnHold[]> {
     return this.lineMediaOnHoldResource.query({
       orgId: this.Authinfo.getOrgId(),
@@ -57,10 +90,10 @@ export class MediaOnHoldService {
     });
   }
 
-  public getLineMedia(): ng.IPromise<string> {
-    return this.getMediaOnHold()
+  public getLineMedia(lineId: string): ng.IPromise<string> {
+    return this.getLineMediaOnHold(lineId)
       .then(mediaList => {
-        let mediaOnHold = '1';
+        let mediaOnHold = GENERIC_MEDIA_ID;
         _.forEach(mediaList, media => {
           if (media.assignments && _.find(media.assignments, ['idType', 'NUM_UUID'])) {
             mediaOnHold = media.rhesosId;
@@ -68,27 +101,6 @@ export class MediaOnHoldService {
         });
         return mediaOnHold;
       });
-  }
-
-  public getCompanyMedia(): ng.IPromise<string> {
-    return this.getMediaOnHold()
-      .then(mediaList => {
-        let mediaOnHold = '1';
-        _.forEach(mediaList, media => {
-          if (media.assignments && _.find(media.assignments, ['idType', 'ORG_ID'])) {
-            mediaOnHold = media.rhesosId;
-          }
-        });
-        return mediaOnHold;
-      });
-  }
-
-  public updateCompanyMediaOnHold(rhesosId: string): ng.IPromise<any> {
-    return this.mediaOnHoldResource.save({
-      orgId: this.Authinfo.getOrgId(),
-      mediaFileId: rhesosId,
-      assignments: [],
-    }).$promise;
   }
 
   public updateMediaOnHold(media: string, assignmentId?: string): ng.IPromise<any> {

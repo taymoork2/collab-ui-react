@@ -161,6 +161,7 @@ describe('Controller: LineListCtrl', function () {
         customerEmail: customerInfo.customerAdminEmail,
         customerCommunicationLicenseIsTrial: true,
         customerRoomSystemsLicenseIsTrial: true,
+        refreshFn: controller.getLineList,
       });
     });
   });
