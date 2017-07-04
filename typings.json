@@ -1,6 +1,0 @@
-{
-  "name": "wx2adminwebclient",
-  "globalDependencies": {
-    "bmmp": "file:typings/custom/bmmp-index.d.ts"
-  }
-}

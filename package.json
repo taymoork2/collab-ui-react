@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git"
   },
+  "//": [
+    "TODO: remove typings script after a short transition period"
+  ],
   "scripts": {
     "analyze": "npm run build -- --env.analyze",
     "build": "npm run clean && node --max-old-space-size=2048 ./node_modules/.bin/webpack --bail --profile",
@@ -44,7 +47,7 @@
     "test": "npm run ktest-all --",
     "ts-spec-delete": "node ./utils/ts-spec-delete.js",
     "tslint": "tslint --type-check --format stylish --project ./tsconfig.json",
-    "typings": "rimraf ./typings/globals ./typings/index.d.ts && typings install",
+    "typings": "rimraf ./typings",
     "webdriver": "webdriver-manager update"
   },
   "dependencies": {
@@ -118,7 +121,8 @@
     "x2js": "git+https://github.com/abdmob/x2js.git#v1.2.0"
   },
   "//": [
-    "TODO: upgrade @types/lodash and refactor for undefined return types"
+    "TODO: upgrade @types/lodash and refactor for undefined return types",
+    "TODO: remove typings dependency after collab-ui-ng removes postinstall script"
   ],
   "devDependencies": {
     "@types/amcharts": "^0.0.39",
