@@ -19,7 +19,6 @@
     WebExApiGatewayService,
     WebExApiGatewayConstsService
   ) {
-
     this.initSiteRowsObj = function () {
       _this.siteRows = {
         gridData: [],
@@ -118,8 +117,8 @@
     }; //configureGrid
 
     this.getConferenceServices = function () {
-      var funcName = "getConferenceServices()";
-      var logMsg = "";
+      var funcName = 'getConferenceServices()';
+      var logMsg = '';
 
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
 
@@ -128,7 +127,6 @@
       // $log.log(logMsg);
       if (conferenceServices) {
         conferenceServices.forEach(function (conferenceService) {
-
           var newSiteUrl = conferenceService.license.siteUrl;
 
           var findCriteria = {
@@ -143,9 +141,9 @@
           // var siteRowExists = false;
 
           if (siteRowExists) {
-            logMsg = funcName + "\n" +
-              "WARNING - duplicate siteUrl found!" + "\n" +
-              "newSiteUrl=" + newSiteUrl;
+            logMsg = funcName + '\n' +
+              'WARNING - duplicate siteUrl found!' + '\n' +
+              'newSiteUrl=' + newSiteUrl;
             $log.log(logMsg);
           } else {
             conferenceService.showCSVInfo = false;
@@ -170,7 +168,7 @@
             conferenceService.showLicenseTypes = false;
             conferenceService.multipleWebexServicesLicensed = false;
             conferenceService.licenseTypeContentDisplay = null;
-            conferenceService.licenseTypeId = newSiteUrl + "_";
+            conferenceService.licenseTypeId = newSiteUrl + '_';
             conferenceService.licenseTooltipDisplay = null;
             conferenceService.MCLicensed = false;
             conferenceService.ECLicensed = false;
@@ -196,8 +194,8 @@
     }; // getConferenceServices()
 
     this.getLinkedConferenceServices = function () {
-      var funcName = "getLinkedConferenceServices()";
-      var logMsg = "";
+      var funcName = 'getLinkedConferenceServices()';
+      var logMsg = '';
 
       var linkedConferenceServices = Authinfo.getConferenceServicesWithLinkedSiteUrl();
 
@@ -216,9 +214,9 @@
           );
 
           if (siteRowExists) {
-            logMsg = funcName + "\n" +
-              "WARNING - duplicate linkedSiteUrl found!" + "\n" +
-              "newSiteUrl=" + newSiteUrl;
+            logMsg = funcName + '\n' +
+              'WARNING - duplicate linkedSiteUrl found!' + '\n' +
+              'newSiteUrl=' + newSiteUrl;
             $log.log(logMsg);
           } else {
             conferenceService.isLinkedSite = true;
@@ -231,7 +229,6 @@
           }
         });
       }
-
     }; // getLinkedConferenceServices()
 
     this.updateConferenceServices = function () {
@@ -286,20 +283,19 @@
               // var logMsg = "";
               var siteUrl = siteRow.license.siteUrl;
               var count = 0;
-              siteRow.licenseTooltipDisplay = "";
+              siteRow.licenseTooltipDisplay = '';
 
               //Get the site's MC, EC, SC, TC, CMR license information
               //MC
               var siteMC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "MC",
+                offerCode: 'MC',
               });
 
               if (
                 (siteMC != null) &&
                 (siteMC.length > 0)
               ) {
-
                 siteRow.MCLicensed = true;
 
                 siteMC.forEach(
@@ -309,17 +305,16 @@
                       capacity: mc.capacity,
                     });
 
-                    siteRow.licenseTypeId = siteRow.licenseTypeId + "MC" + mc.capacity + "-";
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + 'MC' + mc.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
                       capacity: mc.capacity,
                     });
 
                     count++;
                   }
                 ); //siteMC.forEach
-
               } else {
                 siteRow.MCLicensed = false;
               }
@@ -327,14 +322,13 @@
               //EE
               var siteEE = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "EE",
+                offerCode: 'EE',
               });
 
               if (
                 (siteEE != null) &&
                 (siteEE.length > 0)
               ) {
-
                 siteRow.EELicensed = true;
 
                 siteEE.forEach(
@@ -344,17 +338,16 @@
                       capacity: ee.capacity,
                     });
 
-                    siteRow.licenseTypeId = siteRow.licenseTypeId + "EE" + ee.capacity + "-";
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + 'EE' + ee.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
                       capacity: ee.capacity,
                     });
 
                     count++;
                   }
                 ); //siteEE.forEach
-
               } else {
                 siteRow.EELicensed = false;
               }
@@ -362,14 +355,13 @@
               //CMR
               var siteCMR = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "CMR",
+                offerCode: 'CMR',
               });
 
               if (
                 (siteCMR != null) &&
                 (siteCMR.length > 0)
               ) {
-
                 siteRow.CMRLicensed = true;
 
                 siteCMR.forEach(
@@ -379,17 +371,16 @@
                       capacity: cmr.capacity,
                     });
 
-                    siteRow.licenseTypeId = siteRow.licenseTypeId + "CMR" + cmr.capacity + "-";
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + 'CMR' + cmr.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
                       capacity: cmr.capacity,
                     });
 
                     count++;
                   }
                 ); //siteCMR.forEach
-
               } else {
                 siteRow.CMRLicensed = false;
               }
@@ -397,14 +388,13 @@
               //EC
               var siteEC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "EC",
+                offerCode: 'EC',
               });
 
               if (
                 (siteEC != null) &&
                 (siteEC.length > 0)
               ) {
-
                 siteRow.ECLicensed = true;
 
                 siteEC.forEach(
@@ -414,17 +404,16 @@
                       capacity: ec.capacity,
                     });
 
-                    siteRow.licenseTypeId = siteRow.licenseTypeId + "EC" + ec.capacity + "-";
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + 'EC' + ec.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
                       capacity: ec.capacity,
                     });
 
                     count++;
                   }
                 ); //siteEC.forEach
-
               } else {
                 siteRow.ECLicensed = false;
               }
@@ -432,14 +421,13 @@
               //SC
               var siteSC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "SC",
+                offerCode: 'SC',
               });
 
               if (
                 (siteSC != null) &&
                 (siteSC.length > 0)
               ) {
-
                 siteRow.SCLicensed = true;
 
                 siteSC.forEach(
@@ -449,17 +437,16 @@
                       capacity: sc.capacity,
                     });
 
-                    siteRow.licenseTypeId = siteRow.licenseTypeId + "SC" + sc.capacity + "-";
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + 'SC' + sc.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
                       capacity: sc.capacity,
                     });
 
                     count++;
                   }
                 ); //siteSC.forEach
-
               } else {
                 siteRow.SCLicensed = false;
               }
@@ -467,14 +454,13 @@
               //TC
               var siteTC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "TC",
+                offerCode: 'TC',
               });
 
               if (
                 (siteTC != null) &&
                 (siteTC.length > 0)
               ) {
-
                 siteRow.TCLicensed = true;
 
                 siteTC.forEach(
@@ -484,27 +470,26 @@
                       capacity: tc.capacity,
                     });
 
-                    siteRow.licenseTypeId = siteRow.licenseTypeId + "TC" + tc.capacity + "-";
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + 'TC' + tc.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
                       capacity: tc.capacity,
                     });
 
                     count++;
                   }
                 ); //siteTC.forEach
-
               } else {
                 siteRow.TCLicensed = false;
               }
 
-              siteRow.licenseTypeId = siteRow.licenseTypeId + "license";
+              siteRow.licenseTypeId = siteRow.licenseTypeId + 'license';
 
               if (count > 1) {
                 siteRow.multipleWebexServicesLicensed = true;
                 siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
-                siteRow.licenseTooltipDisplay = _.replace(siteRow.licenseTooltipDisplay, "<br>", "");
+                siteRow.licenseTooltipDisplay = _.replace(siteRow.licenseTooltipDisplay, '<br>', '');
               } else {
                 siteRow.multipleWebexServicesLicensed = false;
                 siteRow.licenseTooltipDisplay = null;
@@ -517,17 +502,15 @@
               siteRow.showLicenseTypes = true;
             } // processGridForLicense()
           ); // siteRows.gridData.forEach()
-
         }, // getWebexLicenseInfoSuccess()
 
         function getWebexLicenseInfoError() {
-          var funcName = "updateLicenseTypesColumn().getWebexLicenseInfoError()";
+          var funcName = 'updateLicenseTypesColumn().getWebexLicenseInfoError()';
           // var logMsg = "";
 
           $log.log(funcName);
         } // getWebexLicenseInfoError()
       ); //getWebexLicenseInfo.then()
-
     }; // updateLicenseTypesColumn
 
     this.updateActionsColumnForAllRows = function () {
@@ -539,7 +522,6 @@
       }).forEach(function (siteRow) {
         _this.updateActionsColumnForOneRow(siteRow);
       }); // gridData.forEach()
-
     }; // updateActionsColumnForAllRows
 
     this.updateActionsColumnForOneRow = function (siteRow) {
@@ -588,7 +570,6 @@
             (!siteRow.isCSVSupported) ||
             (!siteRow.showCSVIconAndResults)
           ) {
-
             // no further data to get
             siteRow.showCSVInfo = true;
             return;
@@ -608,21 +589,20 @@
         }, // siteFunctionsSuccess()
 
         function siteFunctionsError(response) {
-
-          var funcName = "updateActionsColumnForOneRow().siteFunctionsError()";
-          var logMsg = "";
+          var funcName = 'updateActionsColumnForOneRow().siteFunctionsError()';
+          var logMsg = '';
           siteRow.isIframeSupported = false;
           siteRow.isAdminReportEnabled = false;
           siteRow.showSiteLinks = true;
           siteRow.showCSVInfo = true;
           siteRow.isError = true;
 
-          if (response.response.indexOf("030048") != -1) {
+          if (response.response.indexOf('030048') != -1) {
             siteRow.isWarn = true;
           }
 
-          logMsg = funcName + ": " + "\n" +
-            "response=" + JSON.stringify(response);
+          logMsg = funcName + ': ' + '\n' +
+            'response=' + JSON.stringify(response);
           $log.log(logMsg);
         } // siteFunctionsError()
       ); // WebExApiGatewayService.siteFunctions().then
@@ -644,7 +624,6 @@
         (null != siteRow.csvMock) &&
         (siteRow.csvMock.mockStatus)
       ) {
-
         if (null == siteRow.csvMock.mockStatusCurrentIndex) {
           siteRow.csvMock.mockStatusCurrentIndex = siteRow.csvMock.mockStatusStartIndex;
         }
@@ -662,7 +641,6 @@
           (WebExApiGatewayConstsService.csvStatusTypes.length <= siteRow.csvMock.mockStatusCurrentIndex) ||
           (siteRow.csvMock.mockStatusEndIndex < siteRow.csvMock.mockStatusCurrentIndex)
         ) {
-
           siteRow.csvMock.mockStatusCurrentIndex = siteRow.csvMock.mockStatusStartIndex;
         }
       }
@@ -691,20 +669,20 @@
         }, // success()
 
         function error(response) {
-          var funcName = "WebExApiGatewayService.csvStatus.error()";
-          var logMsg = "";
+          var funcName = 'WebExApiGatewayService.csvStatus.error()';
+          var logMsg = '';
 
-          logMsg = funcName + "\n" +
-            "siteUrl=" + siteRow.siteUrl + "\n" +
-            "response=" + JSON.stringify(response);
+          logMsg = funcName + '\n' +
+            'siteUrl=' + siteRow.siteUrl + '\n' +
+            'response=' + JSON.stringify(response);
           $log.log(logMsg);
 
-          if (response.errorId == "060502") {
+          if (response.errorId == '060502') {
             // TODO: restore this after CSCvd83672 is deployed to WebEx production
             // - see also: https://jira-eng-chn-sjc1.cisco.com/jira/projects/ATLAS/issues/ATLAS-2022
             // $log.log("Redirect to login...");
             // Auth.redirectToLogin();
-            $log.log("Redirect to login (disabled)...");
+            $log.log('Redirect to login (disabled)...');
             siteRow.csvStatusObj = response;
           } else {
             siteRow.csvStatusObj = response;
@@ -715,7 +693,6 @@
     }; // updateCSVStatusInRow()
 
     this.updateDisplayControlFlagsInRow = function (siteRow) {
-
       // var funcName = "updateDisplayControlFlagsInRow()";
       // var logMsg = "";
 
@@ -732,6 +709,5 @@
 
     this.siteRows = null;
     this.initSiteRowsObj();
-
   } // WebExSiteRowService
 })();

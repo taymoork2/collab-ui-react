@@ -1,9 +1,7 @@
 'use strict';
 
 describe('Validate Media Service Managemnt Page', function () {
-
   describe('Listing Media Service Clusters on page load', function () {
-
     it('login as media super admin', function () {
       login.login('media-super-admin');
       //login.loginThroughGui('mediafusion54@yahoo.com', 'Cisco$234', '#/users');
@@ -190,10 +188,10 @@ describe('Validate Media Service Managemnt Page', function () {
         expect(mediaservice.clusterSettingsLink.getText()).toEqual(selectedClusterName);
         utils.click(mediaservice.clusterSettingsLink);
         browser.sleep(3000);
-        expect(mediaservice.clusterSettingsPageHeader.getText()).toEqual(selectedClusterName + " settings");
+        expect(mediaservice.clusterSettingsPageHeader.getText()).toEqual(selectedClusterName + ' settings');
         utils.expectIsDisplayed(mediaservice.clusterUpgradeTitle);
         utils.expectIsDisplayed(mediaservice.clusterReleaseChannelTitle);
-        expect(selectedClusterReleaseChannel).toEqual("Stable");
+        expect(selectedClusterReleaseChannel).toEqual('Stable');
         utils.expectIsDisplayed(mediaservice.clusterDeleteClusterTitle);
         utils.click(mediaservice.deleteClusterButton);
         utils.expectIsDisplayed(mediaservice.deleteClusterModalHeader);
@@ -206,7 +204,5 @@ describe('Validate Media Service Managemnt Page', function () {
     it('Should log out', function () {
       navigation.logout();
     });
-
   });
-
 });

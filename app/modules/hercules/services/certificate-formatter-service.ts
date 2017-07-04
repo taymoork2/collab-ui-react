@@ -50,8 +50,8 @@ export class CertificateFormatterService {
     }
 
     return _.map(certificates, (certificate: ICertificate) => {
-      let certificateAsArray = _.get(certificate, 'decoded.subjectDN', '').split(/,(?:\s)(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-      let certificatesAsMap: IcertificatesAsMap = _.chain(certificateAsArray)
+      const certificateAsArray = _.get(certificate, 'decoded.subjectDN', '').split(/,(?:\s)(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+      const certificatesAsMap: IcertificatesAsMap = _.chain(certificateAsArray)
         .map( (s) => {
           const result = s.split('=');
           result[1] = _.replace(result[1], /^"|"$/g, '');

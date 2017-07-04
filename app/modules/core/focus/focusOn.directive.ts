@@ -10,7 +10,7 @@ export class FocusOn implements ng.IDirective {
   ) {}
 
   public link: ng.IDirectiveLinkFn = ($scope, $element, $attr: IFocusOnAttributes) => {
-    let focus = (shouldFocus: boolean) => {
+    const focus = (shouldFocus: boolean) => {
       if (shouldFocus) {
         this.$timeout(() => $element.focus());
       }

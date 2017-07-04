@@ -78,7 +78,6 @@ describe('Controller: CustomerListCtrl', function () {
 
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-
   }));
 
   function initController() {
@@ -348,9 +347,9 @@ describe('Controller: CustomerListCtrl', function () {
 
     it('should sum the quantities if several services of the given type are present', function () {
       var additionalLicense = {
-        licenseId: "MS_8171ee27-424e-4ac2-ae98-4508f12ae8d5",
-        offerName: "MS",
-        licenseType: "MESSAGING",
+        licenseId: 'MS_8171ee27-424e-4ac2-ae98-4508f12ae8d5',
+        offerName: 'MS',
+        licenseType: 'MESSAGING',
         volume: 200,
         isTrial: true,
       };
@@ -366,12 +365,12 @@ describe('Controller: CustomerListCtrl', function () {
 
     it('should return the column from columnGroup for single column group', function () {
       var entry = {
-        'licenseList': [{
-          'licenseId': 'MS_3c4b0cda-7315-430d-b3d6-97fd5b09991b',
-          'licenseType': 'MESSAGING',
+        licenseList: [{
+          licenseId: 'MS_3c4b0cda-7315-430d-b3d6-97fd5b09991b',
+          licenseType: 'MESSAGING',
         }, {
-          'licenseId': 'CF_14aee12e-62f0-431b-afe0-58554d064ec3',
-          'licenseType': 'CONFERENCING',
+          licenseId: 'CF_14aee12e-62f0-431b-afe0-58554d064ec3',
+          licenseType: 'CONFERENCING',
         }],
       };
 
@@ -381,7 +380,7 @@ describe('Controller: CustomerListCtrl', function () {
 
     it('should return the EE for 2nd webex column if there is no webex license', function () {
       var entry = {
-        'licenseList': [{}],
+        licenseList: [{}],
       };
 
       var result = controller.getSubfields(entry, 'meeting');
@@ -390,15 +389,15 @@ describe('Controller: CustomerListCtrl', function () {
 
     it('should return webex with license for 2nd webex column if there is one', function () {
       var entry = {
-        'licenseList': [{
-          'offerName': 'MC',
-          'licenseType': 'CONFERENCING',
-          'status': 'ACTIVE',
+        licenseList: [{
+          offerName: 'MC',
+          licenseType: 'CONFERENCING',
+          status: 'ACTIVE',
         }, {
-          'licenseId': 'CMR_34302adb-1cb4-4501-a6aa-69b31b7e9558_algendel01.webex.com',
-          'offerName': 'CMR',
-          'licenseType': 'CMR',
-          'status': 'ACTIVE',
+          licenseId: 'CMR_34302adb-1cb4-4501-a6aa-69b31b7e9558_algendel01.webex.com',
+          offerName: 'CMR',
+          licenseType: 'CMR',
+          status: 'ACTIVE',
         }],
       };
 
@@ -502,5 +501,4 @@ describe('Controller: CustomerListCtrl', function () {
       expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
     });
   });
-
 });

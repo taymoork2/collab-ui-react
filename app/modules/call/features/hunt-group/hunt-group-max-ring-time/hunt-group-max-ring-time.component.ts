@@ -2,7 +2,7 @@ class HuntGroupMaxRingTimeCtrl implements ng.IComponentController {
   public maxRingSecs: string;
   public onChangeFn: Function;
 
-  public options: Array<number> = [10, 15, 20];
+  public options: number[] = [10, 15, 20];
 
   public onMaxRingSecsChange(seconds: number): void {
     this.onChangeFn({

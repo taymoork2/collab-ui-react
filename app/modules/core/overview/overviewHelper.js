@@ -5,16 +5,15 @@
     .module('Core')
     .factory('OverviewHelper',
       function () {
-
         function isntCancelledOrSuspended(license) {
           return !(license.status === 'CANCELLED' || license.status === 'SUSPENDED');
         }
 
         function mapStatus(oldStatus, componentStatus) {
           if (oldStatus == 'danger') return 'danger';
-          if (componentStatus == "partial_outage" || componentStatus == 'degraded_performance' || oldStatus == 'warning') return "warning";
-          if (componentStatus == "operational") return "success";
-          return "danger";
+          if (componentStatus == 'partial_outage' || componentStatus == 'degraded_performance' || oldStatus == 'warning') return 'warning';
+          if (componentStatus == 'operational') return 'success';
+          return 'danger';
         }
 
         var statusIds = {

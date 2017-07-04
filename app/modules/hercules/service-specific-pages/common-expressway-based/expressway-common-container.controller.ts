@@ -1,6 +1,7 @@
 import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { Notification } from 'modules/core/notifications';
-import { ConnectorType } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export abstract class ExpresswayContainerController {
 
@@ -17,14 +18,14 @@ export abstract class ExpresswayContainerController {
     private Authinfo,
     private ClusterService: ClusterService,
     protected hasPartnerRegistrationFeatureToggle,
+    protected hasNodesViewFeatureToggle,
     protected Notification: Notification,
-    protected ServiceDescriptor,
+    protected ServiceDescriptorService: ServiceDescriptorService,
     private ServiceStateChecker,
     protected USSService,
-    protected servicesId: string[],
+    protected servicesId: HybridServiceId[],
     private connectorType: ConnectorType,
   ) {
-
     this.firstTimeSetup();
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
@@ -43,7 +44,7 @@ export abstract class ExpresswayContainerController {
   }
 
   protected firstTimeSetup(): void {
-    this.ServiceDescriptor.isServiceEnabled(this.servicesId[0]).then((enabled) => {
+    this.ServiceDescriptorService.isServiceEnabled(this.servicesId[0]).then((enabled) => {
       if (enabled) {
         return;
       }

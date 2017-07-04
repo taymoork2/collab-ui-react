@@ -3,7 +3,7 @@ import { IUserStatus } from 'modules/hercules/services/hybrid-services-user-side
 
 describe('hybridCallServiceAwareUserSettings', () => {
 
-  let $componentController, $q, $timeout, $scope, ctrl, DomainManagementService, HybridServicesClusterService, HybridServiceUserSidepanelHelperService, ModalService, UCCService, UriVerificationService;
+  let $componentController, $q, $scope, ctrl, DomainManagementService, HybridServicesClusterService, HybridServiceUserSidepanelHelperService, ModalService, UCCService, UriVerificationService;
 
   beforeEach(angular.mock.module('Hercules'));
 
@@ -15,11 +15,10 @@ describe('hybridCallServiceAwareUserSettings', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$q_, $rootScope, _$timeout_, _DomainManagementService_, _HybridServicesClusterService_, _HybridServiceUserSidepanelHelperService_, _ModalService_, _UCCService_, _UriVerificationService_) {
+  function dependencies (_$componentController_, _$q_, $rootScope, _DomainManagementService_, _HybridServicesClusterService_, _HybridServiceUserSidepanelHelperService_, _ModalService_, _UCCService_, _UriVerificationService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = $rootScope;
-    $timeout = _$timeout_;
     DomainManagementService = _DomainManagementService_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     HybridServiceUserSidepanelHelperService = _HybridServiceUserSidepanelHelperService_;
@@ -29,7 +28,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
   }
 
   function cleanup() {
-    $componentController = ctrl = $scope = $timeout = DomainManagementService = HybridServicesClusterService = HybridServiceUserSidepanelHelperService = UCCService = UriVerificationService = undefined;
+    $componentController = ctrl = $scope = DomainManagementService = HybridServicesClusterService = HybridServiceUserSidepanelHelperService = UCCService = UriVerificationService = undefined;
   }
 
   function initSpies() {
@@ -55,7 +54,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
   }
 
   it('should read the Aware status and update internal entitlement data when user is *not* entitled', () => {
-    let callServiceAwareExpectedStatus: IUserStatus = {
+    const callServiceAwareExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-uc',
       entitled: false,
       lastStateChange: 1234,
@@ -69,7 +68,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
   });
 
   it('should read the Aware status and update internal entitlement data when user is entitled', () => {
-    let callServiceAwareExpectedStatus: IUserStatus = {
+    const callServiceAwareExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-uc',
       entitled: true,
       lastStateChange: 1234,
@@ -85,7 +84,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
 
   it('should get and store the directory URI from UCCService, and then do a check for verified domains', () => {
     const expectedDirectoryURI = 'manchester@example.org';
-    let callServiceAwareExpectedStatus: IUserStatus = {
+    const callServiceAwareExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-uc',
       entitled: true,
       lastStateChange: 1234,
@@ -116,7 +115,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
       connectors: [expectedConnector],
     };
 
-    let callServiceAwareExpectedStatus: IUserStatus = {
+    const callServiceAwareExpectedStatus: IUserStatus = {
       connectorId: connectorId,
       clusterId: clusterId,
       serviceId: 'squared-fusion-uc',
@@ -137,13 +136,13 @@ describe('hybridCallServiceAwareUserSettings', () => {
 
   it('should display a popup confirmation on save if Call Service Connect is enabled for the user', () => {
 
-    let callServiceAwareExpectedStatus: IUserStatus = {
+    const callServiceAwareExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-uc',
       entitled: true,
       lastStateChange: 1234,
       lastStateChangeText: 'something',
     };
-    let callServiceConnectExpectedStatus: IUserStatus = {
+    const callServiceConnectExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-ec',
       entitled: true,
       lastStateChange: 1234,
@@ -223,7 +222,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
 
   it('should on save call the callback, after waiting a bit and probing USS for fresh data', () => {
 
-    let callbackSpy = jasmine.createSpy('callback');
+    const callbackSpy = jasmine.createSpy('callback');
 
     const callServiceAwareStatusBefore: IUserStatus = {
       serviceId: 'squared-fusion-uc',
@@ -246,8 +245,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
     initController(callbackSpy);
 
     ctrl.saveData();
-    $timeout.flush(2000);
-    $timeout.verifyNoPendingTasks();
+    $scope.$apply();
 
     expect(HybridServiceUserSidepanelHelperService.getDataFromUSS.calls.count()).toBe(2);
     expect(callbackSpy.calls.count()).toBe(1);

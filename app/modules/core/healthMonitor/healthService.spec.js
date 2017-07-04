@@ -49,5 +49,4 @@ describe('HealthService', function () {
       expect(promise).toBeRejected();
     });
   });
-
 });

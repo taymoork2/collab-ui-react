@@ -7,7 +7,7 @@
   <cs-sp-container>
     <div class="warning" ng-show="$ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.reordering">
       <div class="cs-input__messages">
-        <div class="message limit-reach-warning" translate="speedDial.limitSpeedDialReach"></div>
+        <div class="message limit-reach-warning" translate="speedDial.limitSpeedDialsReach"></div>
       </div>
     </div>
     <cs-sp-section>
@@ -26,6 +26,7 @@
                   <p>{{sd.number | telephoneNumber}}</p>
                 </div>
                 <div ng-if="!$ctrl.editing && !$ctrl.reordering">
+                  <i ng-if="sd.callPickupEnabled" tooltip="{{$ctrl.getTooltipText(sd)}}" tooltip-placement="left" tooltip-trigger="mouseenter focus" class="icon icon-info sd-spacing-edit"></i>
                   <a class="icon icon-edit sd-spacing-edit" ng-click="$ctrl.setEdit(sd)"></a>
                   <a class="icon icon-trash" ng-click="$ctrl.delete(sd)"></a>
                 </div>
@@ -61,7 +62,7 @@
                     on-change-fn="$ctrl.setSpeedDial(model)">
                 </cs-call-destination>
               </div>
-              <div cr-feature-toggle feature-show="huronBlfPickup" ng-if="$ctrl.isValid">
+              <div ng-if="$ctrl.isValid">
                 <input
                   cs-input
                   type="checkbox"

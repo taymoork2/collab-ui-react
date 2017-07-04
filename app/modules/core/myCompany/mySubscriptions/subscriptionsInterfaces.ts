@@ -3,7 +3,7 @@ export interface ISubscription {
   internalSubscriptionId?: string;
   isTrial: boolean;
   isOnline: boolean;
-  licenses: Array<IOfferData>;
+  licenses: IOfferData[];
   name?: string;
   numSubscriptions: number;
   productInstanceId?: string;
@@ -11,16 +11,18 @@ export interface ISubscription {
   subscriptionId?: string;
   upgradeTrialUrl?: string;
   viewAll: boolean;
+  endDate: string;
+  badge: string;
 }
 
 export interface ISubscriptionCategory {
   label?: string;
-  offers: Array<IOfferData>;
-  offerWrapper: Array<IOfferWrapper>;
+  offers: IOfferData[];
+  offerWrapper: IOfferWrapper[];
 }
 
 export interface IOfferWrapper {
-  offers: Array<IOfferData>;
+  offers: IOfferData[];
   siteUrl?: string;
   type?: string;
 }

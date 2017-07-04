@@ -2,7 +2,6 @@
 
 //Below is the Test Suit written for FaultRuleService
 describe('WebexReportService Test', function () {
-
   //load the service's module
   beforeEach(angular.mock.module('WebExApp'));
 
@@ -18,8 +17,7 @@ describe('WebexReportService Test', function () {
   var ref1, ref2;
 
   beforeEach(inject(function (_WebexReportService_, _$translate_) {
-
-    var useLocale = "en_US";
+    var useLocale = 'en_US';
 
     WebexReportService = _WebexReportService_;
 
@@ -43,38 +41,36 @@ describe('WebexReportService Test', function () {
     //   $translate: $translate
     // });
 
-    testReports = new WebexReportService.ReportsSection("testReports",
-      "mojoco.webex.com", ["x", "y"],
-      "testReportsCat");
+    testReports = new WebexReportService.ReportsSection('testReports',
+      'mojoco.webex.com', ['x', 'y'],
+      'testReportsCat');
 
-    ref1 = WebexReportService.instantiateUIsref("www.dontcare.come", "abcReport", "mojoco.webex.com");
-    ref2 = WebexReportService.instantiateUIsref("www.dontcare.come", "meeting_in_progess", "mojoco.webex.com");
-
+    ref1 = WebexReportService.instantiateUIsref('www.dontcare.come', 'abcReport', 'mojoco.webex.com');
+    ref2 = WebexReportService.instantiateUIsref('www.dontcare.come', 'meeting_in_progess', 'mojoco.webex.com');
   }));
 
-  it("Test of a test", function () {
+  it('Test of a test', function () {
     //expect(WebexReportService).toBeDefined();
-    expect("x").toBe("x");
+    expect('x').toBe('x');
   });
 
-  it("webex: can reverse mapping", function () {
+  it('webex: can reverse mapping', function () {
     var mapping = {
-      "x": "y",
-      "w": "z",
+      x: 'y',
+      w: 'z',
     };
     var reversedMap = WebexReportService.reverseMapping(mapping);
-    var x = reversedMap["y"];
-    var w = reversedMap["z"];
-    expect(x).toBe("x");
-    expect(w).toBe("w");
+    var x = reversedMap['y'];
+    var w = reversedMap['z'];
+    expect(x).toBe('x');
+    expect(w).toBe('w');
   });
 
-  it("webex: reports section has correct section name", function () {
-    expect(testReports.section_name).toBe("testReports");
+  it('webex: reports section has correct section name', function () {
+    expect(testReports.section_name).toBe('testReports');
   });
 
-  it("webex: reports section when sort and pinned, pinned item should be first", function () {
-
+  it('webex: reports section when sort and pinned, pinned item should be first', function () {
     //the idea here is that even though meeting_usage is second, it should appear first
     //since it is one of the pinned item.
 
@@ -86,8 +82,6 @@ describe('WebexReportService Test', function () {
 
     var topReportId = trs.uisrefs[0].reportPageId;
 
-    expect(topReportId).toBe("meeting_in_progess");
-
+    expect(topReportId).toBe('meeting_in_progess');
   });
-
 });

@@ -10,7 +10,7 @@ describe('Directive: ucExternalNumberOverview', function () {
   });
 
   it('replaces the element with the appropriate content', function () {
-    expect(this.view.html()).toContain("cs-sp-section");
-    expect(this.view.html()).toContain("customerPage.call");
+    expect(this.view.html()).toContain('cs-sp-section');
+    expect(this.view.html()).toContain('customerPage.call');
   });
 });

@@ -37,13 +37,11 @@ describe('Directive: aaMessageType', function () {
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel.openHours.addEntryAt(0, menuEntry);
-
   }));
 
   it('creates the appropriate content as element', function () {
     element = $compile("<aa-message-type aa-schedule='openHours' aa-index='0' name='messageType'></aa-message-type>")($rootScope);
     $rootScope.$digest();
-    expect(element.html()).toContain("messageType");
+    expect(element.html()).toContain('messageType');
   });
-
 });

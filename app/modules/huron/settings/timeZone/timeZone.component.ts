@@ -3,7 +3,7 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 class TimeZoneCtrl implements ng.IComponentController {
   public timeZone: string;
   public selected: IOption;
-  public timeZoneOptions: Array<IOption>;
+  public timeZoneOptions: IOption[];
   public onChangeFn: Function;
   public timeZonePlaceholder: string;
   public filterPlaceholder: string;

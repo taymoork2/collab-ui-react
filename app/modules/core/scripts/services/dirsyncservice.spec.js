@@ -3,7 +3,6 @@
 describe('DirSyncServiceOld', function () {
   beforeEach(angular.mock.module('Core'));
   describe('getDirSyncStatus', function () {
-
     var $httpBackend, DirSyncServiceOld, UrlConfig, Authinfo, Log;
 
     beforeEach(function () {
@@ -75,6 +74,5 @@ describe('DirSyncServiceOld', function () {
       expect(callback.calls.argsFor(0)[0].success).toBe(true);
       expect(callback.calls.argsFor(0)[0].serviceMode).toBe('ENABLED');
     });
-
   });
 });

@@ -154,6 +154,15 @@ describe('HybridServiceClusterList controller', () => {
       expect(EnterprisePrivateTrunkService.subscribe.calls.count()).toBe(0);
     });
 
+    it('should call ClusterService on init when building the IM&P Service cluster list', () => {
+      ctrl = initController('spark-hybrid-impinterop', '1234');
+      ctrl.$onInit();
+      expect(ClusterService.getClustersByConnectorType.calls.count()).toBe(1);
+      expect(ClusterService.subscribe.calls.count()).toBe(1);
+      expect(EnterprisePrivateTrunkService.getAllResources.calls.count()).toBe(0);
+      expect(EnterprisePrivateTrunkService.subscribe.calls.count()).toBe(0);
+    });
+
     it('should call ClusterService on init when building the Hybrid Data Security cluster list', () => {
       ctrl = initController('spark-hybrid-datasecurity', '1234');
       ctrl.$onInit();
@@ -185,14 +194,14 @@ describe('HybridServiceClusterList controller', () => {
 
   describe('grid options', () => {
 
-    let gridApiMock = {
+    const gridApiMock = {
       selection: {
         on: {
           rowSelectionChanged: function() {},
         },
       },
     };
-    let clusterId = '1917';
+    const clusterId = '1917';
 
     beforeEach(function initSpies() {
       spyOn($state, 'go');
@@ -225,6 +234,16 @@ describe('HybridServiceClusterList controller', () => {
       expect($state.go).toHaveBeenCalledWith('expressway-cluster-sidepanel', {
         clusterId: clusterId,
         connectorType: 'c_ucmc',
+      });
+    });
+
+    it('should automatically open the the Expressway (imp) cluster sidepanel if a clusterId is provided', () => {
+      ctrl = initController('spark-hybrid-impinterop', clusterId);
+      ctrl.$onInit();
+      ctrl.clusterListGridOptions.onRegisterApi(gridApiMock);
+      expect($state.go).toHaveBeenCalledWith('expressway-cluster-sidepanel', {
+        clusterId: clusterId,
+        connectorType: 'c_imp',
       });
     });
 
@@ -325,10 +344,9 @@ describe('HybridServiceClusterList template', () => {
     }
   });
 
-  it('should build the ui-grid table and pass data to it', function () {
+  it('should display the spinner', function () {
     expect(this.view.find('div.hercules-clusters-list').length).toBe(1);
-    expect(this.view.find('div.ui-grid').length).toBe(1);
-    expect(this.view.find('div.ui-grid').attr('ui-grid')).toBe('$ctrl.clusterListGridOptions');
+    expect(this.view.find('div.loading-list').length).toBe(1);
   });
 
 

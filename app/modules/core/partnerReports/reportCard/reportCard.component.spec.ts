@@ -23,7 +23,7 @@ describe('Component: reportCard', function () {
     this.threeMonths = 'reportsPage.threeMonths';
     this.threeMonthsTwo = 'reportsPage.threeMonths2';
     this.length = this.secondaryOptions.sortOptions.length - 1;
-    this.getTranslation = (type: string): Array<Array<any>> => {
+    this.getTranslation = (type: string): any[][] => {
       return [[this.translation, { time: this.time[type] }]];
     };
 
@@ -144,7 +144,7 @@ describe('Component: reportCard', function () {
 
     it('should call getTranslation', function () {
       const translation = this.controller.getDescription(this.translation, false);
-      const translationArray: Array<Array<any>> = this.getTranslation(this.description);
+      const translationArray: any[][] = this.getTranslation(this.description);
       translationArray.unshift([this.threeMonthsTwo]);
       translationArray.unshift([this.threeMonths]);
 
@@ -172,7 +172,7 @@ describe('Component: reportCard', function () {
 
     it('should call getTranslation', function () {
       const translation = this.controller.getHeader(this.translation, false);
-      const translationArray: Array<Array<any>> = this.getTranslation(this.header);
+      const translationArray: any[][] = this.getTranslation(this.header);
       translationArray.unshift([this.threeMonthsTwo]);
       translationArray.unshift([this.threeMonths]);
 

@@ -1,4 +1,5 @@
 import { Notification } from 'modules/core/notifications';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 interface ISipForm extends ng.IFormController {
   sipDomainInput: ng.INgModelController;
@@ -57,7 +58,7 @@ export class SipDomainSettingController {
     private FeatureToggleService,
     private Notification: Notification,
     private Orgservice,
-    private ServiceDescriptor,
+    private ServiceDescriptorService: ServiceDescriptorService,
     private SparkDomainManagementService,
     private UrlConfig,
   ) {
@@ -69,7 +70,7 @@ export class SipDomainSettingController {
       this.subdomainCount++;
       this.checkRoomLicense();
 
-      let onSaveEventDeregister = this.$scope.$on(this.WIZARD_BROADCAST, (): void => {
+      const onSaveEventDeregister = this.$scope.$on(this.WIZARD_BROADCAST, (): void => {
         if (this.toggle) {
           if (this.inputValue === this.currentDisplayName) {
             this.$rootScope.$emit(this.WIZARD_EMIT);
@@ -85,15 +86,15 @@ export class SipDomainSettingController {
       $scope.$on('$destroy', onSaveEventDeregister);
 
       if (this.toggle) {
-        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec').then((enabled: boolean): void => {
+        this.ServiceDescriptorService.isServiceEnabled('squared-fusion-ec').then((enabled: boolean): void => {
           this.isCsc = enabled;
         });
 
-        let onSettingsSaveEventDeregister = this.$rootScope.$on(this.SAVE_BROADCAST, (): void => {
+        const onSettingsSaveEventDeregister = this.$rootScope.$on(this.SAVE_BROADCAST, (): void => {
           this.updateSubdomain();
         });
 
-        let onSettingsCancelEventDeregister = this.$rootScope.$on(this.CANCEL_BROADCAST, (): void => {
+        const onSettingsCancelEventDeregister = this.$rootScope.$on(this.CANCEL_BROADCAST, (): void => {
           this.toggleSipForm();
         });
 
@@ -167,7 +168,7 @@ export class SipDomainSettingController {
   }
 
   public checkSipDomainAvailability() {
-    let domain = this._inputValue;
+    const domain = this._inputValue;
     this.isLoading = true;
     this.isButtonDisabled = true;
     this.errorMsg = this.$translate.instant('firstTimeWizard.setSipDomainErrorMessage');
@@ -197,12 +198,12 @@ export class SipDomainSettingController {
   }
 
   private loadSipDomain() {
-    let params = {
+    const params = {
       basicInfo: true,
     };
     this.Orgservice.getOrg((data, status) => {
       let displayName = '';
-      let sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
+      const sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
       if (status === 200) {
         if (data.orgSettings.sipCloudDomain) {
           displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
@@ -325,7 +326,7 @@ export class SipDomainSettingController {
   private checkRoomLicense() {
     this.Orgservice.getLicensesUsage().then((response) => {
       this.isRoomLicensed = _.some(response, function (subscription) {
-        let licenses = _.get(subscription, 'licenses');
+        const licenses = _.get(subscription, 'licenses');
         return _.some(licenses, function (license) {
           return _.get(license, 'offerName') === 'SD' || _.get(license, 'offerName') === 'SB';
         });
@@ -360,13 +361,13 @@ export class SipDomainSettingController {
   }
 
   private loadSubdomains() {
-    let params = {
+    const params = {
       basicInfo: true,
       disableCache: true,
     };
     this.Orgservice.getOrg((data, status) => {
       let displayName = '';
-      let sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
+      const sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
       if (status === 200 && _.get(data, 'orgSettings.sipCloudDomain', false)) {
         displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
         this.isSSAReserved = true;

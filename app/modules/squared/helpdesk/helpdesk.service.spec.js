@@ -3,17 +3,17 @@
 describe('HelpdeskService', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, $q, HelpdeskMockData,
+  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptorService, $scope, $q, HelpdeskMockData,
     CsdmConverter, HelpdeskHttpRequestCanceller, FeatureToggleService, CacheFactory;
 
   afterEach(function () {
-    $timeout = $httpBackend = Service = urlBase = ServiceDescriptor = $scope = $q = HelpdeskMockData =
+    $timeout = $httpBackend = Service = urlBase = ServiceDescriptorService = $scope = $q = HelpdeskMockData =
       CsdmConverter = HelpdeskHttpRequestCanceller = FeatureToggleService = CacheFactory = undefined;
   });
 
-  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_, _CacheFactory_) {
+  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptorService_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_, _CacheFactory_) {
     Service = _HelpdeskService_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
     HelpdeskHttpRequestCanceller = _HelpdeskHttpRequestCanceller_;
     $scope = _$rootScope_.$new();
     $q = _$q_;
@@ -28,43 +28,42 @@ describe('HelpdeskService', function () {
   }));
 
   it('searching orgs', function () {
-
     var orgResponseMock = {
-      "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
-      "displayName": "Marvel Partners",
-      "meta": {
-        "created": "2015-04-03T00:06:14.681Z",
-        "uri": "https://identity.webex.com/organization/scim/v1/Orgs/ce8d17f8-1734-4a54-8510-fae65acc505e",
+      id: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
+      displayName: 'Marvel Partners',
+      meta: {
+        created: '2015-04-03T00:06:14.681Z',
+        uri: 'https://identity.webex.com/organization/scim/v1/Orgs/ce8d17f8-1734-4a54-8510-fae65acc505e',
       },
-      "zone": "AllZone",
-      "ssoEnabled": false,
-      "dirsyncEnabled": false,
-      "schemas": ["urn:cisco:codev:identity:organization:core:1.0"],
-      "services": [
-        "squared-call-initiation",
-        "atlas-portal",
-        "spark",
-        "squared-fusion-uc",
-        "squared-syncup",
-        "cloudmeetings",
-        "webex-squared",
-        "ciscouc",
+      zone: 'AllZone',
+      ssoEnabled: false,
+      dirsyncEnabled: false,
+      schemas: ['urn:cisco:codev:identity:organization:core:1.0'],
+      services: [
+        'squared-call-initiation',
+        'atlas-portal',
+        'spark',
+        'squared-fusion-uc',
+        'squared-syncup',
+        'cloudmeetings',
+        'webex-squared',
+        'ciscouc',
       ],
-      "selfSubscribeServices": ["squared-call-initiation", "squared-syncup", "cloudMeetings", "webex-squared"],
-      "manages": [{
-        "orgId": "aed98e0f-485b-46b5-8623-ed48bab2f882",
-        "roles": ["id_full_admin"],
+      selfSubscribeServices: ['squared-call-initiation', 'squared-syncup', 'cloudMeetings', 'webex-squared'],
+      manages: [{
+        orgId: 'aed98e0f-485b-46b5-8623-ed48bab2f882',
+        roles: ['id_full_admin'],
       }, {
-        "orgId": "192e66a3-3f63-45a2-a0a3-e2c5f1a97396",
-        "roles": ["id_full_admin"],
+        orgId: '192e66a3-3f63-45a2-a0a3-e2c5f1a97396',
+        roles: ['id_full_admin'],
       }, {
-        "orgId": "bc1d8493-69a7-4ba7-a0c0-62abf1b57ac6",
-        "roles": ["id_full_admin"],
+        orgId: 'bc1d8493-69a7-4ba7-a0c0-62abf1b57ac6',
+        roles: ['id_full_admin'],
       }],
-      "isPartner": false,
-      "delegatedAdministration": true,
-      "isTestOrg": true,
-      "orgSettings": [],
+      isPartner: false,
+      delegatedAdministration: true,
+      isTestOrg: true,
+      orgSettings: [],
     };
 
     $httpBackend
@@ -82,20 +81,20 @@ describe('HelpdeskService', function () {
 
   it('resolves org displayname for user', function () {
     var orgSearchResponseMock = {
-      "items": [{
-        "id": "2222",
-        "displayName": "Bill Gates Foundation",
+      items: [{
+        id: '2222',
+        displayName: 'Bill Gates Foundation',
       }],
     };
 
     var userSearchResult = [{
-      "active": true,
-      "id": "1111",
-      "organization": {
-        id: "2222",
+      active: true,
+      id: '1111',
+      organization: {
+        id: '2222',
       },
-      "userName": "bill.gates",
-      "displayName": "Bill Gates",
+      userName: 'bill.gates',
+      displayName: 'Bill Gates',
     }];
 
     $httpBackend
@@ -108,18 +107,17 @@ describe('HelpdeskService', function () {
 
     $httpBackend.flush();
 
-    expect(userSearchResult[0].organization.displayName).toEqual("Bill Gates Foundation");
+    expect(userSearchResult[0].organization.displayName).toEqual('Bill Gates Foundation');
 
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('user search times out', function () {
-
     var orgSearchResponseMock = {
-      "items": [{
-        "id": "2222",
-        "displayName": "Bill Gates Foundation",
+      items: [{
+        id: '2222',
+        displayName: 'Bill Gates Foundation',
       }],
     };
 
@@ -129,7 +127,7 @@ describe('HelpdeskService', function () {
 
     var error;
 
-    Service.searchUsers("whatever", "1111", 30, null, null).then(function () { }).catch(function (err) {
+    Service.searchUsers('whatever', '1111', 30, null, null).then(function () { }).catch(function (err) {
       error = err;
     });
 
@@ -139,15 +137,13 @@ describe('HelpdeskService', function () {
 
     expect(error.cancelled).toBeFalsy();
     expect(error.timedout).toBeTruthy();
-
   });
 
   it('user search cancelled', function () {
-
     var orgSearchResponseMock = {
-      "items": [{
-        "id": "2222",
-        "displayName": "Bill Gates Foundation",
+      items: [{
+        id: '2222',
+        displayName: 'Bill Gates Foundation',
       }],
     };
 
@@ -158,7 +154,7 @@ describe('HelpdeskService', function () {
 
     var error;
 
-    Service.searchUsers("whatever", "1111", 30, null, null).then(function () { }).catch(function (err) {
+    Service.searchUsers('whatever', '1111', 30, null, null).then(function () { }).catch(function (err) {
       error = err;
     });
 
@@ -174,51 +170,49 @@ describe('HelpdeskService', function () {
 
     expect(error.cancelled).toBeTruthy();
     expect(error.timedout).toBeFalsy();
-
   });
 
-  it("get list of hybrid services relevant services in an org", function () {
+  it('get list of hybrid services relevant services in an org', function () {
     var serviceDescriptionsMock = [{
-      "emailSubscribers": "",
-      "enabled": false,
-      "id": "squared-not-fusion",
+      emailSubscribers: '',
+      enabled: false,
+      id: 'squared-not-fusion',
     }, {
-      "emailSubscribers": "",
-      "enabled": false,
-      "id": "squared-fusion-uc",
+      emailSubscribers: '',
+      enabled: false,
+      id: 'squared-fusion-uc',
     }, {
-      "emailSubscribers": "",
-      "enabled": false,
-      "id": "squared-fusion-cal",
+      emailSubscribers: '',
+      enabled: false,
+      id: 'squared-fusion-cal',
     }, {
-      "emailSubscribers": "",
-      "enabled": false,
-      "id": "squared-fusion-mgmt",
+      emailSubscribers: '',
+      enabled: false,
+      id: 'squared-fusion-mgmt',
     }, {
-      "emailSubscribers": "",
-      "enabled": false,
-      "id": "squared-a-cool-service",
+      emailSubscribers: '',
+      enabled: false,
+      id: 'squared-a-cool-service',
     }];
 
-    spyOn(ServiceDescriptor, 'getServices');
+    spyOn(ServiceDescriptorService, 'getServices');
     var deferred = $q.defer();
     deferred.resolve(serviceDescriptionsMock);
-    ServiceDescriptor.getServices.and.returnValue(deferred.promise);
+    ServiceDescriptorService.getServices.and.returnValue(deferred.promise);
 
     var result;
-    Service.getHybridServices("1234").then(function (res) {
+    Service.getHybridServices('1234').then(function (res) {
       result = res;
     });
 
     $scope.$apply();
     expect(result.length).toBe(3);
-    expect(result[0].id).toEqual("squared-fusion-uc");
-    expect(result[1].id).toEqual("squared-fusion-cal");
-    expect(result[2].id).toEqual("squared-fusion-mgmt");
+    expect(result[0].id).toEqual('squared-fusion-uc');
+    expect(result[1].id).toEqual('squared-fusion-cal');
+    expect(result[2].id).toEqual('squared-fusion-mgmt');
   });
 
   describe('getOrgDisplayName', function () {
-
     beforeEach(function () {
       CacheFactory.get('helpdeskOrgDisplayNameCache').removeAll();
     });
@@ -239,7 +233,6 @@ describe('HelpdeskService', function () {
     });
 
     it('should reject promise when response.items is not an array', function () {
-
       $httpBackend
         .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
         .respond(200, { items: 'this is not an array' });
@@ -256,7 +249,6 @@ describe('HelpdeskService', function () {
     });
 
     it('should reject promise when response.items is an empty array', function () {
-
       $httpBackend
         .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
         .respond(200, { items: [] });
@@ -273,7 +265,6 @@ describe('HelpdeskService', function () {
     });
 
     it('should reject promise when response.items does not contain displayName', function () {
-
       $httpBackend
         .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
         .respond(200, { items: [{ noName: 'test', id: 'testOrgId' }] });
@@ -290,7 +281,6 @@ describe('HelpdeskService', function () {
     });
 
     it('should reject promise on HTTP error', function () {
-
       $httpBackend
         .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
         .respond(503, 'ignoreme');
@@ -306,7 +296,6 @@ describe('HelpdeskService', function () {
         });
       $httpBackend.flush();
     });
-
   });
 
   it('finds cloudberry devices by display name', function () {

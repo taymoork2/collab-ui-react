@@ -12,7 +12,7 @@ describe('Service: CallForwardService', () => {
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
-    let getCallForwardResponse: CallForward = new CallForward();
+    const getCallForwardResponse: CallForward = new CallForward();
 
     this.getCallForwardResponse = getCallForwardResponse;
   });
@@ -50,12 +50,12 @@ describe('Service: CallForwardService', () => {
   });
 
   it('should send proper PUT payload', function () {
-    let callForward = new CallForward();
+    const callForward = new CallForward();
     callForward.callForwardBusy.internalDestination = '5555551212';
     callForward.callForwardBusy.externalDestination = '5555559999';
     callForward.callForwardBusy.ringDurationTimer = 30;
 
-    let callForwardPutPayload = {
+    const callForwardPutPayload = {
       callForwardAll: {
         destination: null,
         voicemailEnabled: false,

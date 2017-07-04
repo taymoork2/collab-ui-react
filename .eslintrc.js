@@ -37,9 +37,7 @@ module.exports = {
     'no-underscore-dangle': 0,
     'no-use-before-define': 0,
     'operator-assignment': 0,
-    'padded-blocks': 0,
-    'quote-props': 0,
-    'quotes': 0,
+    'quote-props': ['error', 'consistent-as-needed', { keywords: false, unnecessary: true, numbers: false }],
     'spaced-comment': 0,
     'vars-on-top': 0,
     // activate rules from the lodash plugin

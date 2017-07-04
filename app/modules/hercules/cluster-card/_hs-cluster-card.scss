@@ -144,30 +144,6 @@ hs-cluster-card {
       }
     }
 
-    &.card-c_mgmt {
-      header::after {
-        border-top-color: $color-cta-base;
-      }
-    }
-
-    &.card-mf_mgmt {
-      header::after {
-        border-top-color: $color-meetings-base;
-      }
-    }
-
-    &.card-ucm_mgmt {
-      header::after {
-        border-top-color: $color-people-base;
-      }
-    }
-
-    &.card-ept {
-      header::after {
-        border-top-color: $gray-light-2;
-      }
-    }
-
     .no-connectors {
       opacity: 0.6;
     }

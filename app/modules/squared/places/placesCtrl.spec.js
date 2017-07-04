@@ -2,16 +2,17 @@
 
 describe('Controller: PlacesCtrl', function () {
   var $scope, $controller, $state, $timeout, $q, controller, $httpBackend;
-  var CsdmDataModelService, Userservice, Authinfo, FeatureToggleService, ServiceDescriptor;
+  var CsdmDataModelService, Userservice, Authinfo, FeatureToggleService, ServiceDescriptorService;
   var accounts = getJSONFixture('squared/json/accounts.json');
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Core'));
+  // beforeEach(angular.mock.module(require('modules/hercules/services/service-descriptor.service').default));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$httpBackend_, _$state_, _$timeout_, _$q_, _CsdmDataModelService_, _Userservice_, _Authinfo_, _FeatureToggleService_, _ServiceDescriptor_) {
+  function dependencies($rootScope, _$controller_, _$httpBackend_, _$state_, _$timeout_, _$q_, _CsdmDataModelService_, _Userservice_, _Authinfo_, _FeatureToggleService_, _ServiceDescriptorService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -21,7 +22,7 @@ describe('Controller: PlacesCtrl', function () {
     Userservice = _Userservice_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
     $httpBackend = _$httpBackend_;
   }
 
@@ -30,13 +31,11 @@ describe('Controller: PlacesCtrl', function () {
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve(true));
-    spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
+    spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
     spyOn(CsdmDataModelService, 'subscribeToChanges').and.returnValue(true);
   }
 
   function initController() {
-
     controller = $controller('PlacesCtrl', {
       $scope: $scope,
       $state: $state,
@@ -46,7 +45,6 @@ describe('Controller: PlacesCtrl', function () {
   }
 
   describe('bigOrg', function () {
-
     beforeEach(function () {
       spyOn(CsdmDataModelService, 'isBigOrg').and.returnValue($q.resolve(true));
 
@@ -57,25 +55,22 @@ describe('Controller: PlacesCtrl', function () {
     beforeEach(initController);
 
     describe('init', function () {
-
       it('should init controller', function () {
         expect(controller).toBeDefined();
         expect(controller.filteredView).toBeDefined();
       });
 
-      it('should be in searching org state', function () {
-        expect(controller.filteredView.listState).toEqual(controller.filteredView.searching);
+      it('should be in initializing state', function () {
+        expect(controller.filteredView.listState).toEqual(controller.filteredView.initializing);
       });
     });
 
     describe('initialized', function () {
-
       beforeEach(function () {
         $scope.$apply();
       });
 
       describe('listState', function () {
-
         it('should be in searchonly state', function () {
           expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
         });
@@ -86,17 +81,15 @@ describe('Controller: PlacesCtrl', function () {
         });
 
         describe('searched with short string', function () {
-
           it('should not search', function () {
             expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
-            controller.filteredView.setCurrentSearch("a");
+            controller.filteredView.setCurrentSearch('a');
             $timeout.flush(10000);
             expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
           });
         });
 
         describe('searched with long string', function () {
-
           var searchPart1 = accounts[Object.keys(accounts)[1]].displayName.substr(0, 3);
           var searchPart2 = accounts[Object.keys(accounts)[1]].displayName.substr(3, 2);
 
@@ -113,14 +106,12 @@ describe('Controller: PlacesCtrl', function () {
             });
 
             it('should search', function () {
-
               $timeout.flush(10000);
               expect(controller.filteredView.listState).toEqual(controller.filteredView.searching);
             });
           });
 
           describe('with places', function () {
-
             beforeEach(function () {
               spyOn(CsdmDataModelService, 'getSearchPlacesMap').and.returnValue($q.resolve(accounts));
               $scope.$apply();
@@ -128,13 +119,12 @@ describe('Controller: PlacesCtrl', function () {
             });
 
             describe('listState', function () {
-
               it('should be in showresult state', function () {
                 expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
               });
 
               it('should be in emptysearchresult state if next search is client-side with no matches', function () {
-                controller.filteredView.setCurrentSearch(searchPart1 + "sdfdsfds");
+                controller.filteredView.setCurrentSearch(searchPart1 + 'sdfdsfds');
                 $timeout.flush(10000);
                 expect(controller.filteredView.listState).toEqual(controller.filteredView.emptysearchresult);
               });
@@ -181,19 +171,17 @@ describe('Controller: PlacesCtrl', function () {
     beforeEach(initController);
 
     describe('init', function () {
-
       it('should init controller', function () {
         expect(controller).toBeDefined();
         expect(controller.filteredView).toBeDefined();
       });
 
       it('should be in searching state', function () {
-        expect(controller.filteredView.listState).toEqual(controller.filteredView.searching);
+        expect(controller.filteredView.listState).toEqual(controller.filteredView.initializing);
       });
     });
 
     describe('initialized with places', function () {
-
       beforeEach(function () {
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve(accounts));
         $scope.$apply();
@@ -201,13 +189,12 @@ describe('Controller: PlacesCtrl', function () {
       });
 
       describe('listState', function () {
-
         it('should be in showresult state', function () {
           expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
         });
 
         it('should be in emptysearchresult state if search with no matches', function () {
-          controller.filteredView.setCurrentSearch("aasdfefsdfdsf");
+          controller.filteredView.setCurrentSearch('aasdfefsdfdsf');
           $timeout.flush(10000);
           expect(controller.filteredView.listState).toEqual(controller.filteredView.emptysearchresult);
         });
@@ -282,7 +269,6 @@ describe('Controller: PlacesCtrl', function () {
           expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
           expect(wizardState.function).toBe('addPlace');
           expect(wizardState.showATA).toBe(true);
-          expect(wizardState.atlasHerculesGoogleCalendarFeatureToggle).toBe(true);
           expect(wizardState.csdmHybridCalendarFeature).toBe(true);
           expect(wizardState.csdmHybridCallFeature).toBe(true);
           expect(wizardState.admin.firstName).toBe(adminFirstName);

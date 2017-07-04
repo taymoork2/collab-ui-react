@@ -7,18 +7,17 @@
 
   /* @ngInject */
   function AAHelpCtrl($scope, $translate, Config, AAMetricNameService, Analytics) {
-
     var vm = this;
 
-    vm.content = "";
+    vm.content = '';
     vm.showLink = false;
-    vm.trigger = "focus";
-    vm.placement = "auto right";
-    vm.metric = "";
+    vm.trigger = 'focus';
+    vm.placement = 'auto right';
+    vm.metric = '';
 
-    vm.optionHelp = $translate.instant("autoAttendant.aaHelpFAQ");
-    vm.helpUrlAATag = Config.helpUrl + "/tags#/?tags=auto%20attendant";
-    vm.optionHelpLink = "<a href='" + vm.helpUrlAATag + "' target='blank'>" + vm.helpUrlAATag + "</a>";
+    vm.optionHelp = $translate.instant('autoAttendant.aaHelpFAQ');
+    vm.helpUrlAATag = Config.helpUrl + '/tags#/?tags=auto%20attendant';
+    vm.optionHelpLink = "<a href='" + vm.helpUrlAATag + "' target='blank'>" + vm.helpUrlAATag + '</a>';
 
     vm.getHelpText = getHelpText;
     vm.sendMetrics = sendMetrics;
@@ -33,14 +32,14 @@
     }
 
     function getHelpText() {
-      var helpText = "";
+      var helpText = '';
 
       if (vm.content) {
         helpText = vm.content;
       }
 
       if (vm.showLink === true) {
-        helpText = vm.content + "<br><br>" + vm.optionHelp + "<br>" + vm.optionHelpLink;
+        helpText = vm.content + '<br><br>' + vm.optionHelp + '<br>' + vm.optionHelpLink;
       }
 
       return helpText;

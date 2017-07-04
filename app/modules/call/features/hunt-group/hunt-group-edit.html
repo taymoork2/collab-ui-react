@@ -74,13 +74,34 @@
             on-change-fn="$ctrl.setMaxWaitMins(minutes)">
           </uc-hunt-group-max-wait-time>
         </div>
-        <div class="sub-section">
+        <div ng-if="!$ctrl.isHi1487Supported" class="sub-section">
           <h5 class="sub-section__title" translate="huronHuntGroup.fallbackLabel"></h5>
           <p class="sub-section__description" translate="huronHuntGroup.fallbackDesc"></p>
           <uc-fallback-destination
             fallback-destination="$ctrl.huntGroup.fallbackDestination"
             on-change-fn="$ctrl.setHuntGroupFallbackDestination(fallbackDestination)">
           </uc-fallback-destination>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-form__section" ng-if="$ctrl.isHi1487Supported" >
+      <div class="section__info">
+        <h4 class="section__title" translate="huronHuntGroup.fallbackLabel"></h4>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__title" translate="huronHuntGroup.fallbackRule"></h5>
+          <div>
+            <uc-hunt-group-fallback-destination
+              destination-rule="$ctrl.huntGroup.destinationRule"
+              fallback-destination="$ctrl.huntGroup.fallbackDestination"
+              alternate-destination="$ctrl.huntGroup.alternateDestination"
+              on-change-destination-rule-fn="$ctrl.setHuntGroupDestinationRule(destinationRule)"
+              on-change-destination-fn="$ctrl.setHuntGroupFallbackDestination(fallbackDestination)"
+              on-change-alternate-fn="$ctrl.setHuntGroupAlternateDestination(alternateDestination)">
+            </uc-hunt-group-fallback-destination>
+          </div>
         </div>
       </div>
     </div>
@@ -94,8 +115,9 @@
           <h5 class="sub-section__title" translate="huronHuntGroup.callsToSparkAppLabel"></h5>
           <div>
             <uc-hunt-group-calls-to-spark-app
-              callsToSparkApp="$ctrl.huntGroup.callsToSparkApp"
-              on-change-fn="$ctrl.setHuntGroupCallsToSparkApp()">
+              send-to-app="$ctrl.huntGroup.sendToApp"
+              on-change-fn="$ctrl.setHuntGroupSendToApp()"
+              destination-rule="$ctrl.huntGroup.destinationRule">
             </uc-hunt-group-calls-to-spark-app>
           </div>
         </div>

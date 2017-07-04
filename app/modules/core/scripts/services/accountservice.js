@@ -10,13 +10,13 @@
       createAccount: function (customerOrgName, customerAdminEmail, partnerAdminEmail, isPartner, beId, begeoId, duration, licenseCount, offersList, startDate) {
         var accountUrl = UrlConfig.getAdminServiceUrl() + 'accounts';
         var accountRequest = {
-          'offers': [],
+          offers: [],
         };
 
         for (var i in offersList) {
           accountRequest.offers.push({
-            'id': offersList[i],
-            'licenseCount': licenseCount,
+            id: offersList[i],
+            licenseCount: licenseCount,
           });
         }
 

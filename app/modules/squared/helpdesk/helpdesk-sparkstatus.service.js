@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function HelpdeskSparkStatusService($q, ReportsService) {
-
     function getHealthStatuses() {
       var deferred = $q.defer();
       ReportsService.healthMonitor(function (data, status) {
@@ -17,7 +16,7 @@
     }
 
     function highestSeverity(healthStatuses) {
-      var overallSparkStatus = "unknown";
+      var overallSparkStatus = 'unknown';
       var error = _.find(healthStatuses, function (data) {
         return data.status === 'error';
       });

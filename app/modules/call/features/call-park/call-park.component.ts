@@ -15,14 +15,14 @@ class CallParkCtrl implements ng.IComponentController {
   // edit mode specific data
   public title: string;
   public huronFeaturesUrl: string = 'huronfeatures';
-  public memberProperties: Array<string> = ['name', 'number'];
+  public memberProperties: string[] = ['name', 'number'];
 
   // common data
   public form: ng.IFormController;
   public callParkId: string;
   public callPark: CallPark;
   public range: ICallParkRangeItem;
-  public selectedMembers: Array<string> = [];
+  public selectedMembers: string[] = [];
   public extensionLength: string = CallParkCtrl.DEFAULT_EXTENSION_LENGTH;
   public isLoading: boolean = false;
   public saveInProcess: boolean = false;
@@ -80,7 +80,7 @@ class CallParkCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public setCallParkMembers(members: Array<CallFeatureMember>): void {
+  public setCallParkMembers(members: CallFeatureMember[]): void {
     this.callPark.members = members;
     this.form.$setDirty();
     this.callPark.members.length > 0 ? this.form.$invalid = false : this.form.$invalid = true;
@@ -184,7 +184,7 @@ class CallParkCtrl implements ng.IComponentController {
   }
 
   public nextButton($index): boolean {
-    let buttonStates = {
+    const buttonStates = {
       0: () => {
         return !_.isUndefined(_.get(this.callPark, 'name'));
       },
@@ -239,7 +239,7 @@ class CallParkCtrl implements ng.IComponentController {
   }
 
   public applyElement(element: HTMLCollectionOf<Element>, appliedClass, method): boolean | undefined {
-    let domElement: Element = _.get<Element>(element, '[0]');
+    const domElement: Element = _.get<Element>(element, '[0]');
     if (domElement) {
       switch (method) {
         case 'add':

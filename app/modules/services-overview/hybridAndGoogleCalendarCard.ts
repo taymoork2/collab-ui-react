@@ -80,7 +80,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     buttonClass: 'btn btn--primary',
   };
 
-  public hybridCalendarButtons: Array<ICardButton> = [{
+  public hybridCalendarButtons: ICardButton[] = [{
     name: 'servicesOverview.cards.hybridCalendar.buttons.resources',
     routerState: 'calendar-service.list',
     buttonClass: 'btn-link',
@@ -106,9 +106,8 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     buttonClass: 'btn-link',
   };
 
-  public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {
+  public fetchGoogleCalendar() {
     const serviceId = 'squared-fusion-gcal';
-    this.display = this.Authinfo.isFusionCal() && this.Authinfo.isFusionGoogleCal() && hasFeature;
     if (this.display) {
       // We only get the status for Hybrid Calendar that way
       this.CloudConnectorService.getService()
@@ -127,7 +126,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
   }
 
   // Contains data for Hybrid Services, not Google Calendar
-  public hybridStatusEventHandler(servicesStatuses: Array<IServiceStatus>) {
+  public hybridStatusEventHandler(servicesStatuses: IServiceStatus[]) {
     const service = 'squared-fusion-cal';
     // No need to do any work if we can't display the card
     this.canDisplay.promise.then(() => {
@@ -156,7 +155,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     private $state,
     private $q: ng.IQService,
     private $modal,
-    private Authinfo,
+    Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
   ) {
@@ -168,5 +167,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       name: 'servicesOverview.cards.hybridCalendar.title',
       template: 'modules/services-overview/hybridAndGoogleCalendarCard.tpl.html',
     });
+    this.display = Authinfo.isFusionCal() && Authinfo.isFusionGoogleCal();
+    this.fetchGoogleCalendar();
   }
 }

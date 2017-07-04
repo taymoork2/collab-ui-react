@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: OverviewCtrl', function () {
-
   // load the controller's module
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
@@ -12,6 +11,19 @@ describe('Controller: OverviewCtrl', function () {
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
   var isCustomerLaunchedFromPartner = true;
+  var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
+  var _pstnService = {
+    getCustomerV2: function () {
+      return $q.resolve({
+        trial: true,
+      });
+    },
+    getCustomerTrialV2: function () {
+      return $q.resolve({
+        acceptedDate: 'today',
+      });
+    },
+  };
 
   afterEach(function () {
     controller = $filter = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = HybridServicesClusterService = SunlightReportService = $httpBackend = undefined;
@@ -60,7 +72,6 @@ describe('Controller: OverviewCtrl', function () {
   describe('Callcard with healthStatus Event', function () {
     beforeEach(inject(defaultWireUpFunc));
     it('should update its status', function () {
-
       var callCard = getCard('overview.cards.call.title');
 
       callCard.healthStatusUpdatedHandler({
@@ -159,10 +170,15 @@ describe('Controller: OverviewCtrl', function () {
     beforeEach(function () {
       isCustomerLaunchedFromPartner = true;
       inject(defaultWireUpFunc);
+      spyOn(PstnService, 'isSwivelCustomerAndEsaUnsigned');
     });
 
     it('should NOT call ToS check if logged in as a Partner', function () {
       expect(PstnService.getCustomerTrialV2).not.toHaveBeenCalled();
+    });
+
+    it('should NOT call ESA check if logged in as a Partner', function () {
+      expect(PstnService.isSwivelCustomerAndEsaUnsigned).not.toHaveBeenCalled();
     });
   });
 
@@ -173,6 +189,32 @@ describe('Controller: OverviewCtrl', function () {
     });
     it('should call ToS check if logged in as a Customer', function () {
       expect(PstnService.getCustomerTrialV2).toHaveBeenCalled();
+    });
+
+    it('should call ESA check if logged in as a Partner', function () {
+      var TOTAL_NOTIFICATIONS = 10;
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+      expect(controller.esaDisclaimerNotification).toBeTruthy();
+      $rootScope.$broadcast(PSTN_ESA_DISCLAIMER_ACCEPT);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+  });
+
+  describe('Notifications - Login as Customer, isSwivelCustomerAndEsaUnsigned false', function () {
+    beforeEach(function () {
+      isCustomerLaunchedFromPartner = false;
+      PstnService = _.cloneDeep(_pstnService);
+      _.assign(PstnService, {
+        isSwivelCustomerAndEsaUnsigned: function () {
+          return $q.resolve(false);
+        } });
+      inject(defaultWireUpFunc);
+    });
+
+    it('should not have ESA notification if isSwivelCustomerAndEsaUnsigned returned false', function () {
+      var TOTAL_NOTIFICATIONS = 9;
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+      expect(controller.esaDisclaimerNotification).toBeFalsy();
     });
   });
 
@@ -200,7 +242,6 @@ describe('Controller: OverviewCtrl', function () {
         { badgeText: 'common.new' },
       ]);
     });
-
   });
 
   function getCard(filter) {
@@ -267,18 +308,12 @@ describe('Controller: OverviewCtrl', function () {
       }),
     };
 
-    PstnService = {
-      getCustomerV2: function () {
-        return $q.resolve({
-          trial: true,
-        });
-      },
-      getCustomerTrialV2: function () {
-        return $q.resolve({
-          acceptedDate: "today",
-        });
-      },
-    };
+    if (_.isUndefined(PstnService)) {
+      PstnService = _.cloneDeep(_pstnService);
+      _.assign(PstnService, { isSwivelCustomerAndEsaUnsigned: function () {
+        return $q.resolve(true);
+      } });
+    }
 
     ReportsService = {
       getOverviewMetrics: function () {},
@@ -312,7 +347,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(PstnService, 'getCustomerTrialV2').and.callThrough();
 
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
@@ -333,7 +368,6 @@ describe('Controller: OverviewCtrl', function () {
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
-      hasGoogleCalendarFeatureToggle: false,
       $httpBackend: $httpBackend,
     });
 

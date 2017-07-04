@@ -6,7 +6,7 @@ class VoicemailCtrl implements ng.IComponentController {
   public ownerId: string;
   public enableVoicemail: boolean;
   public customerId: string;
-  public services: Array<string>;
+  public services: string[];
   public saveInProcess: boolean = false;
   public form: ng.IFormController;
   public watcher: string;

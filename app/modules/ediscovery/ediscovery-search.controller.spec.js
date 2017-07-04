@@ -4,10 +4,10 @@ describe('Controller: EdiscoverySearchController', function () {
   beforeEach(angular.mock.module('Ediscovery'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, ITProPackService, Notification, TrialService;
+  var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, ProPackService, Notification, TrialService;
   var promise, result, startDate, endDate;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _ITProPackService_, _Notification_, _TrialService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _ProPackService_, _Notification_, _TrialService_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -18,15 +18,16 @@ describe('Controller: EdiscoverySearchController', function () {
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
     TrialService = _TrialService_;
-    ITProPackService = _ITProPackService_;
+    ProPackService = _ProPackService_;
 
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve());
+    spyOn(Analytics, 'trackEdiscoverySteps').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
-    spyOn(ITProPackService, 'hasITProPackPurchased').and.returnValue($q.resolve(false));
-    spyOn(ITProPackService, 'hasITProPackEnabled').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue($q.resolve(false));
+    spyOn(ProPackService, 'hasProPackPurchased').and.returnValue($q.resolve(false));
+    spyOn(ProPackService, 'hasProPackEnabled').and.returnValue($q.resolve(false));
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
     spyOn(TrialService, 'getDaysLeftForCurrentUser');
-
   }));
 
   function initController() {
@@ -38,7 +39,7 @@ describe('Controller: EdiscoverySearchController', function () {
       EdiscoveryNotificationService: EdiscoveryNotificationService,
       FeatureToggleService: FeatureToggleService,
       Notification: Notification,
-      ITProPackService: ITProPackService,
+      ProPackService: ProPackService,
     });
 
     $scope.$apply();
@@ -70,7 +71,6 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(ediscoverySearchController.encryptedEmails).toBeNull();
       expect(ediscoverySearchController.unencryptedRoomIds).toBeNull();
     });
-
   });
 
   describe('Date Validation', function () {
@@ -104,7 +104,7 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(result).toEqual(['ediscovery.dateError.StartDateMustBeforeEndDate', 'ediscovery.dateError.StartDateCannotBeInTheFuture']);
     });
 
-    it('should not exceed a 90 day range if itProPack is not purchased', function () {
+    it('should not exceed a 90 day range if ProPack is not purchased', function () {
       startDate = moment().subtract(91, 'days').format();
       endDate = moment().format();
 
@@ -149,7 +149,6 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(EdiscoveryService.createReport).toHaveBeenCalled();
       expect(EdiscoveryService.generateReport.calls.count()).toBe(1);
     });
-
   });
 
   describe('Create report with error', function () {
@@ -215,7 +214,6 @@ describe('Controller: EdiscoverySearchController', function () {
   });
 
   describe('entering controller with stateParams', function () {
-
     beforeEach(inject(function (_$translate_, _EdiscoveryService_, _$q_, _$rootScope_, _$controller_) {
       $scope = _$rootScope_.$new();
       $controller = _$controller_;
@@ -277,7 +275,5 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(ediscoverySearchController.report.displayName).toEqual('whatever');
       expect(ediscoverySearchController.currentReportId).toBe('4567');
     });
-
   });
-
 });

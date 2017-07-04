@@ -1,40 +1,44 @@
 import deactivateSection from './deactivate-section.component';
 
-describe('Component: DeactivateSection ', () => {
-
-  let $componentController, $scope, $state, $q;
-
+describe('Component: DeactivateSection ', function () {
   beforeEach(function () {
     this.initModules(deactivateSection);
-  });
+    this.injectDependencies('$componentController', '$q', '$state', '$scope', 'FeatureToggleService');
 
-  beforeEach(inject(function (_$componentController_, _$state_, $rootScope, _$q_) {
-    $componentController = _$componentController_;
-    $state = _$state_;
-    $scope = $rootScope.$new();
-    $q = _$q_;
-  }));
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.$state, 'go');
 
-  it('redirects to the services overview page when the admin has confirmed deletion', () => {
-
-    let MockModalService = {
-      open: () => {
-        return {
-          result: $q.resolve(true),
-        };
-      },
+    this.MockModalService = {
+      open: jasmine.createSpy('open').and.returnValue({
+        result: this.$q.resolve(true),
+      }),
     };
-    spyOn($state, 'go');
 
-    let ctrl = $componentController('deactivateSection', {
-      $modal: MockModalService,
-      $state: $state,
-    });
-
-    ctrl.confirmDisable();
-    $scope.$apply();
-    expect($state.go).toHaveBeenCalledWith('services-overview');
-
+    this.initController = (): void => {
+      this.controller = this.$componentController('deactivateSection', {
+        $modal: this.MockModalService,
+        $state: this.$state,
+        FeatureToggleService: this.FeatureToggleService,
+      });
+      this.controller.$onInit();
+      this.$scope.$apply();
+    };
+    this.initController();
   });
 
+  it('redirects to the services overview page when the admin has confirmed deletion', function () {
+    this.controller.confirmDisable();
+    this.$scope.$apply();
+    expect(this.$state.go).toHaveBeenCalledWith('services-overview');
+    expect(this.MockModalService.open).toHaveBeenCalled();
+  });
+
+  // 2017 name change
+  it('nameChangeEnabled should match the return value of atlas2017NameChangeGetStatus', function () {
+    expect(this.controller.nameChangeEnabled).toBeFalsy();
+
+    this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+    this.initController();
+    expect(this.controller.nameChangeEnabled).toBeTruthy();
+  });
 });

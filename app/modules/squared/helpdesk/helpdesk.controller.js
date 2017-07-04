@@ -7,7 +7,7 @@ require('./helpdesk.scss');
   function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
-      $window.document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
+      $window.document.title = $translate.instant('helpdesk.browserTabHeaderTitle');
     });
     var vm = this;
     vm.search = search;
@@ -41,8 +41,8 @@ require('./helpdesk.scss');
     });
 
     function showSearchHelp() {
-      var searchHelpUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog.html";
-      var searchHelpMobileUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html";
+      var searchHelpUrl = 'modules/squared/helpdesk/helpdesk-search-help-dialog.html';
+      var searchHelpMobileUrl = 'modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html';
       var isSearchOrderEnabled = vm.isOrderSearchEnabled;
       $modal.open({
         templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl,
@@ -194,8 +194,8 @@ require('./helpdesk.scss');
           vm.currentSearch.orgSearchResults = null;
           vm.currentSearch.orgSearchFailure = null;
           if (err.status === 400) {
-            var message = _.get(err.data, "message");
-            if (message && message.indexOf("Search phrase is too generic" != -1)) {
+            var message = _.get(err.data, 'message');
+            if (message && message.indexOf('Search phrase is too generic' != -1)) {
               vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.tooManySearchResults');
             } else {
               vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.badOrgSearchInput');
@@ -315,7 +315,7 @@ require('./helpdesk.scss');
         vm.searchingForOrders = true;
         HelpdeskService.searchOrders(searchString).then(function (res) {
           var order = [];
-          var found = _.find(res, function (el) { return el.orderStatus === "PROVISIONED"; });
+          var found = _.find(res, function (el) { return el.orderStatus === 'PROVISIONED'; });
           if (!_.isUndefined(found)) {
             order.push(found);
           }
@@ -335,7 +335,7 @@ require('./helpdesk.scss');
           vm.currentSearch.orderSearchResults = null;
           vm.currentSearch.orderSearchFailure = null;
           if (err.status === 404) {
-            var errorCode = _.get(err.data, "errorCode");
+            var errorCode = _.get(err.data, 'errorCode');
             // Compare the error code with 'Order not found' (400117)
             if (errorCode === 400117) {
               vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
@@ -360,7 +360,7 @@ require('./helpdesk.scss');
 
     function isValidOrderEntry(searchString) {
       // A valid order search entry should has a prefix of 'ssw' or minimum 8-digit followed by a hyphen '-'
-      if (searchString.toLowerCase().indexOf("ssw") === 0) {
+      if (searchString.toLowerCase().indexOf('ssw') === 0) {
         return true;
       }
       var n = searchString.search('-');
@@ -457,11 +457,11 @@ require('./helpdesk.scss');
       var S = 83;
 
       var activeElement = angular.element($window.document.activeElement);
-      var inputFieldHasFocus = activeElement[0]["id"] === "searchInput";
+      var inputFieldHasFocus = activeElement[0]['id'] === 'searchInput';
       if (inputFieldHasFocus && !(event.keyCode === 27 || event.keyCode === 13)) {
         return; // if not escape and enter, nothing to do
       }
-      var activeTabIndex = activeElement[0]["tabIndex"];
+      var activeTabIndex = activeElement[0]['tabIndex'];
       var newTabIndex = -1;
 
       switch (event.keyCode) {
@@ -497,7 +497,7 @@ require('./helpdesk.scss');
           break;
 
         case S:
-          var orgLink = JSON.parse(activeElement.find("a")[0]["name"]);
+          var orgLink = JSON.parse(activeElement.find('a')[0]['name']);
         // TODO: Avoid throwing console error when element not found !
           if (orgLink) {
             initSearchWithOrgFilter(orgLink);
@@ -520,15 +520,14 @@ require('./helpdesk.scss');
 
     function stats(searchType, details) {
       return {
-        "searchType": searchType,
-        "details": details,
+        searchType: searchType,
+        details: details,
       };
     }
 
     function reportSearchSummary(searchString, res, startTime, orgId) {
       HelpdeskSplunkReporterService.reportStats(searchString, res, startTime, orgId);
     }
-
   }
   angular
     .module('Squared')

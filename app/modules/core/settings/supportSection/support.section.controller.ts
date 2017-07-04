@@ -1,6 +1,8 @@
 import { Notification } from 'modules/core/notifications';
 
 export class SupportSettingsController {
+  private proPackEnabled: boolean = false;
+  public nameChangeEnabled: boolean = false;
 
   private customSupport = { enable: false, url: '', text: '' };
   private oldCustomSupport = { enable: false, url: '', text: '' };
@@ -79,12 +81,23 @@ export class SupportSettingsController {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private $q: ng.IQService,
     private Authinfo,
-    private Orgservice,
-    private Notification: Notification,
-    private UserListService,
+    private FeatureToggleService,
+    private ProPackService,
     private Log,
+    private Notification: Notification,
+    private Orgservice,
+    private UserListService,
   ) {
+    this.$q.all({
+      proPackEnabled: this.ProPackService.hasProPackPurchased(),
+      nameChangeEnabled: this.FeatureToggleService.atlas2017NameChangeGetStatus(),
+    }).then((toggles: any): void => {
+      this.proPackEnabled = toggles.proPackEnabled;
+      this.nameChangeEnabled = toggles.nameChangeEnabled;
+    });
+
     this.orgId = Authinfo.getOrgId();
     this.initTexts();
     this.initOrgInfo();
@@ -99,7 +112,7 @@ export class SupportSettingsController {
   }
 
   private initOrgInfo() {
-    this.UserListService.listPartners(this.orgId, (data: { partners: Array<Partner> }) => {
+    this.UserListService.listPartners(this.orgId, (data: { partners: Partner[] }) => {
       if (_.isEmpty(data.partners)) {
         return;
       }
@@ -111,13 +124,13 @@ export class SupportSettingsController {
       });
     });
 
-    let params = {
+    const params = {
       basicInfo: true,
       disableCache: true,
     };
     this.Orgservice.getOrg((data, status) => {
       if (data.success) {
-        let settings = data.orgSettings;
+        const settings = data.orgSettings;
 
         if (!_.isEmpty(settings.reportingSiteUrl)) {
           this.customSupport.enable = true;
@@ -158,8 +171,8 @@ export class SupportSettingsController {
   public saveUseCustomSupportUrl() {
     if (this.customSupportUrlIsValid()) {
       // let isCiscoHelp = this.isManaged ? this.isCiscoHelp : this.useCustomHelpSite === false;
-      let isCiscoSupport = this.isManaged ? this.isCiscoSupport : this.useCustomSupportUrl === false;
-      let settings = {
+      const isCiscoSupport = this.isManaged ? this.isCiscoSupport : this.useCustomSupportUrl === false;
+      const settings = {
         reportingSiteUrl: this.customSupport.url || null,
         reportingSiteDesc: this.customSupport.text || null,
         // helpUrl: this.helpUrl || null,
@@ -184,9 +197,9 @@ export class SupportSettingsController {
 
   public saveUseCustomHelpSite() {
     if (this.customHelpSiteIsValid()) {
-      let isCiscoHelp = this.isManaged ? this.isCiscoHelp : this.useCustomHelpSite === false;
+      const isCiscoHelp = this.isManaged ? this.isCiscoHelp : this.useCustomHelpSite === false;
       // var isCiscoSupport = this.isManaged ? this.isCiscoSupport : this.useCustomSupportUrl;
-      let settings = {
+      const settings = {
         // reportingSiteUrl: this.supportUrl || null,
         // reportingSiteDesc: this.supportText || null,
         helpUrl: this.customHelpSite.url || null,
@@ -202,6 +215,10 @@ export class SupportSettingsController {
     } else {
       this.Notification.error('partnerProfile.orgSettingsError');
     }
+  }
+
+  public getAppTitle(): string {
+    return this.proPackEnabled ? this.$translate.instant('loginPage.titlePro') : this.$translate.instant('loginPage.titleNew');
   }
 
   private resetCustomHelpSiteForm() {

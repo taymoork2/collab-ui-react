@@ -16,7 +16,7 @@ export class PstnSwivelNumbersComponent implements ng.IComponentOptions {
 }
 
 export class PstnSwivelNumbersCtrl implements ng.IComponentController {
-  public numbers: Array<any> = [];
+  public numbers: any[] = [];
   public onChange: Function;
   public onAcknowledge: Function;
   public tokenfieldid: string = 'swivelAddNumbersID';
@@ -31,6 +31,8 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   public tokenmethods: TokenMethods;
   public acknowledge: boolean;
   public invalidCount: number = 0;
+  private i387FeatureToggle: boolean;
+  private hPstnFeatureToggle: boolean;
 
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
@@ -55,8 +57,13 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
       .then((supported) => {
-        let numberOfTokens = supported ? maxNumberOfByopTokens : maxNumberOfTokens;
+        const numberOfTokens = supported ? maxNumberOfByopTokens : maxNumberOfTokens;
         _.set(this.tokenoptions, tokenfieldlimit, numberOfTokens);
+        this.i387FeatureToggle = supported;
+      });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPstn)
+      .then((supported) => {
+        this.hPstnFeatureToggle = supported;
       });
   }
 
@@ -79,7 +86,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
       //noop
     }
 
-    let duplicate = _.find(this.getSwivelNumberTokens(), {
+    const duplicate = _.find(this.getSwivelNumberTokens(), {
       value: e.attrs.value,
     });
     if (duplicate) {
@@ -147,13 +154,13 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   }
 
   private removeNumber(value): void {
-    let index = _.indexOf(this.numbers, value);
+    const index = _.indexOf(this.numbers, value);
     if (index > -1) {
       this.numbers.splice(index, 1);
     }
   }
 
-  private getSwivelNumberTokens(): Array<{value, label}> {
+  private getSwivelNumberTokens(): {value, label}[] {
     return angular.element('#' + this.tokenfieldid).tokenfield('getTokens');
   }
 

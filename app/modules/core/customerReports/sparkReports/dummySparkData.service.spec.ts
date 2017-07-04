@@ -47,18 +47,18 @@ describe('Controller: Dummy Customer Reports', function () {
   });
 
   it('dummyActiveUserData should return the expected responses', function () {
-    let dummyActiveData = _.cloneDeep(this.dummyData.activeUser);
+    const dummyActiveData = _.cloneDeep(this.dummyData.activeUser);
     expect(this.DummySparkDataService.dummyActiveUserData(this.defaults.timeFilter[0], false)).toEqual(this.updateDates(dummyActiveData.one, this.defaults.timeFilter[0]));
     expect(this.DummySparkDataService.dummyActiveUserData(this.defaults.timeFilter[1], false)).toEqual(this.updateDates(dummyActiveData.two, this.defaults.timeFilter[1]));
     expect(this.DummySparkDataService.dummyActiveUserData(this.defaults.timeFilter[2], false)).toEqual(this.updateDates(dummyActiveData.three, this.defaults.timeFilter[2]));
 
-    let dummyLineData = _.cloneDeep(this.activeData.dummyData);
+    const dummyLineData = _.cloneDeep(this.activeData.dummyData);
     expect(this.DummySparkDataService.dummyActiveUserData(this.defaults.timeFilter[0], true)).toEqual(this.updateLineDates(dummyLineData.one, this.defaults.timeFilter[0]));
     expect(this.DummySparkDataService.dummyActiveUserData(this.defaults.timeFilter[1], true)).toEqual(this.updateLineDates(dummyLineData.two, this.defaults.timeFilter[1]));
   });
 
   it('dummyConversationData should return the expected responses', function () {
-    let dummyData = _.cloneDeep(this.conversationData.dummyData);
+    const dummyData = _.cloneDeep(this.conversationData.dummyData);
     expect(this.DummySparkDataService.dummyConversationData(this.defaults.timeFilter[0])).toEqual(this.updateLineDates(dummyData.one, this.defaults.timeFilter[0]));
     expect(this.DummySparkDataService.dummyConversationData(this.defaults.timeFilter[1])).toEqual(this.updateLineDates(dummyData.two, this.defaults.timeFilter[1]));
   });

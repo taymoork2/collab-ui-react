@@ -60,7 +60,9 @@
     "isOnline": false,
     "viewAll": false,
     "name": "subscriptions.enterpriseTrial",
-    "numSubscriptions": 1
+    "numSubscriptions": 1,
+    "endDate": "",
+    "badge": ""
   }],
   "subscriptionsResponse": [{
     "licenses": [{
@@ -453,8 +455,10 @@
     "isTrial": false,
     "isOnline": false,
     "viewAll": false,
-    "name": "subscriptions.numberedName",
-    "numSubscriptions": 1
+    "name": "subscriptions.subscriptionNum",
+    "numSubscriptions": 1,
+    "endDate": "",
+    "badge": ""
   }],
   "servicesResponse": [{
     "id": "squared-fusion-mgmt",
@@ -477,5 +481,5 @@
     "enabled": true,
     "emailSubscribers": "kjetil@example.org"
   }],
-  "servicesFormatted": ["hercules.serviceNames.squared-fusion-uc.full", "hercules.serviceNames.squared-fusion-cal"]
+  "servicesFormatted": ["hercules.serviceNames.squared-fusion-cal", "hercules.serviceNames.squared-fusion-uc.full"]
 }

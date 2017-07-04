@@ -87,6 +87,10 @@
       display: flex;
     }
 
+    .subscription-badge {
+      height: 24px;
+    }
+
     .subscription-column {
       @include vr-spacing(p, 0);
       border-left: rem-calc(1) solid $gray-light-3;
@@ -188,6 +192,10 @@
         @include vr-spacing(p, 1.5);
         @include vr-spacing(m, 0);
 
+        li {
+          list-style: inside;
+        }
+
         .icon-circle {
           @include vr-spacing(pr, 0.5);
 
@@ -260,8 +268,12 @@
         width: vr-adjust(500);
       }
 
+      .online-subscription-id {
+        top: vr-adjust(90);
+      }
+
       .upgrade-button {
-        width: vr-adjust(188);
+        width: vr-adjust(140);
       }
     }
   }

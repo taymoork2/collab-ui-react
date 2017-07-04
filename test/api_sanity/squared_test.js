@@ -8,7 +8,7 @@ var refuteError = function (err) {
 };
 
 var assertStatusCode = function (status, res) {
-  assert.equal(status, res.statusCode, "Expected status " + status + " but was " + res.statusCode + ". Response: " + res.body);
+  assert.equal(status, res.statusCode, 'Expected status ' + status + ' but was ' + res.statusCode + '. Response: ' + res.body);
 };
 
 var twoMinutes = 1000 * 60 * 2;

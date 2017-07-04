@@ -51,7 +51,7 @@
 
     //----------------------------------------------------------------------//
 
-    $log.log("Show panel3");
+    $log.log('Show panel3');
 
     $scope.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
     $scope.initPanel();

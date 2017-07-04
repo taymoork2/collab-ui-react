@@ -10,7 +10,7 @@ export class AuthenticationSettingController {
     private $state: ng.ui.IStateService,
     private Orgservice,
   ) {
-    let params = {
+    const params = {
       basicInfo: true,
     };
     this.Orgservice.getAdminOrg(this.getAdminOrgHandler.bind(this), null, params);

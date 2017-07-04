@@ -28,7 +28,6 @@ describe('Service: EdiscoveryService', function () {
       .respond({});
 
     spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
-
   }));
 
   afterEach(function () {
@@ -173,8 +172,8 @@ describe('Service: EdiscoveryService', function () {
       type: 'ROOM_QUERY',
       url: 'https://atlas-a.wbx2.com/admin/api/v1/compliance/organizations/7e688a07-6ea9-422c-8246-5c564df92219/reports/f41d296f-f301-41e0-b935-7c27714e81fa',
       roomQuery: {
-        'startDate': '2016-06-08T00:00:00.000Z',
-        'endDate': '2016-06-09T00:00:00.000Z',
+        startDate: '2016-06-08T00:00:00.000Z',
+        endDate: '2016-06-09T00:00:00.000Z',
       },
     };
 
@@ -225,14 +224,14 @@ describe('Service: EdiscoveryService', function () {
 
   beforeEach(function () {
     httpBackend.whenPATCH(responseUrl + reportId, {
-      state: "ABORTED",
+      state: 'ABORTED',
     }).respond();
   });
 
   describe('Patch Report API', function () {
     it('can patch report', function (done) {
       Service.patchReport(reportId, {
-        state: "ABORTED",
+        state: 'ABORTED',
       }).then(function () {
         done();
       });

@@ -5,32 +5,32 @@
   function sunlightReportService($http, $q, $rootScope, $translate, Authinfo, UrlConfig) {
     var sunlightReportUrl = UrlConfig.getSunlightReportServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/report/';
 
-    var dayFormat = "MMM DD";
-    var monthFormat = "MMM";
+    var dayFormat = 'MMM DD';
+    var monthFormat = 'MMM';
     var hourFormat = 'HH:mm';
 
     var convertInMinutes = 60 * 1000;
 
     var emptyOrgstats = {
-      "numTasksAssignedState": 0,
-      "avgCsatScores": 0.0,
-      "numWorkingTasks": 0,
-      "numTasksHandledState": 0,
-      "numTasksQueuedState": 0,
-      "numTasksAbandonedState": 0,
-      "numTasksAssignedToAbandonedState": 0,
-      "avgTaskCloseTime": 0,
-      "avgTaskWaitTime": 0,
-      "numCsatScores": 0,
-      "numPendingTasks": 0,
+      numTasksAssignedState: 0,
+      avgCsatScores: 0.0,
+      numWorkingTasks: 0,
+      numTasksHandledState: 0,
+      numTasksQueuedState: 0,
+      numTasksAbandonedState: 0,
+      numTasksAssignedToAbandonedState: 0,
+      avgTaskCloseTime: 0,
+      avgTaskWaitTime: 0,
+      numCsatScores: 0,
+      numPendingTasks: 0,
     };
 
     var emptyUserstats = {
-      "tasksHandled": 0,
-      "tasksAssigned": 0,
-      "avgCsatScore": 0,
-      "handleTime": 0,
-      "numCsatScores": 0,
+      tasksHandled: 0,
+      tasksAssigned: 0,
+      avgCsatScore: 0,
+      handleTime: 0,
+      numCsatScores: 0,
     };
 
     var service = {
@@ -87,7 +87,6 @@
                   resolve(mergeReportingAndUserData(reportingUserData, ciCareUsers));
                 }
               });
-
         });
       } else {
         return $q.resolve([]);
@@ -166,7 +165,7 @@
         } else if (!ciUser.name.givenName && ciUser.name.familyName) {
           return ciUser.name.familyName;
         } else {
-          return ciUser.name.givenName + " " + ciUser.name.familyName;
+          return ciUser.name.givenName + ' ' + ciUser.name.familyName;
         }
       } else if (ciUser.displayName) {
         return ciUser.displayName;
@@ -239,7 +238,7 @@
           config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            if (reportName === "all_user_stats") {
+            if (reportName === 'all_user_stats') {
               var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
                 return userData.userId;
               });
@@ -260,7 +259,7 @@
           config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            if (reportName === "all_user_stats") {
+            if (reportName === 'all_user_stats') {
               var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
                 return userData.userId;
               });
@@ -281,7 +280,7 @@
           config = getQueryConfig('hourly', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            if (reportName === "all_user_stats") {
+            if (reportName === 'all_user_stats') {
               var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
                 return userData.userId;
               });
@@ -301,7 +300,7 @@
           config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            if (reportName === "all_user_stats") {
+            if (reportName === 'all_user_stats') {
               var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
                 return userData.userId;
               });
@@ -321,7 +320,7 @@
           config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            if (reportName === "all_user_stats") {
+            if (reportName === 'all_user_stats') {
               var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
                 return userData.userId;
               });
@@ -589,9 +588,7 @@
     function weekFormatter(time, format) {
       return momentFormatter(time.endOf('week'), format);
     }
-
   }
 
   module.exports = sunlightReportService;
-
 })();

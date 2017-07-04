@@ -6,7 +6,7 @@
     .service('HDSAddResourceCommonService', HDSAddResourceCommonService);
 
   /* @ngInject */
-  function HDSAddResourceCommonService($window, HybridServicesClusterService, HybridServicesExtrasService, Notification, ServiceDescriptor) {
+  function HDSAddResourceCommonService($window, HybridServicesClusterService, HybridServicesExtrasService, Notification, ServiceDescriptorService) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -80,12 +80,12 @@
     }
 
     function allowListHost(hostName, clusterId) {
-      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, 3600, clusterId);
+      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, clusterId);
     }
 
     function redirectPopUpAndClose(hostName, enteredCluster, firstTimeSetup) {
       if (firstTimeSetup) {
-        ServiceDescriptor.enableService('spark-hybrid-datasecurity');
+        ServiceDescriptorService.enableService('spark-hybrid-datasecurity');
       }
       vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId));
     }
@@ -95,6 +95,5 @@
       updateClusterLists: updateClusterLists,
       redirectPopUpAndClose: redirectPopUpAndClose,
     };
-
   }
 }());

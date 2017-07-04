@@ -46,7 +46,7 @@ class GmTdNotesCtrl implements ng.IComponentController {
   }
 
   public onSave(): void {
-    let postData = {
+    const postData = {
       customerID: this.customerId,
       siteID: this.ccaDomainId,
       action: 'add_notes_td',
@@ -54,7 +54,7 @@ class GmTdNotesCtrl implements ng.IComponentController {
       objectName: this.newNote,
     };
 
-    let notes = _.get(postData, 'objectName');
+    const notes = _.get(postData, 'objectName');
     if (this.gemService.getByteLength(notes) > this.noteMaxByte) {
       this.Notification.error('gemini.cbgs.notes.errorMsg.maxLength', { maxLength: this.noteMaxByte });
       return;
@@ -64,7 +64,7 @@ class GmTdNotesCtrl implements ng.IComponentController {
     this.TelephonyDomainService.postNotes(postData).then((res) => {
       this.loading = false;
 
-      let resJson: any = _.get(res, 'content.data');
+      const resJson: any = _.get(res, 'content.data');
       if (resJson.returnCode) {
         this.Notification.notify(this.gemService.showError(resJson.returnCode));
         return;

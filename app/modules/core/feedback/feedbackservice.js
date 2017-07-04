@@ -6,10 +6,10 @@
     return {
       getFeedbackUrl: function (appType, feedbackId) {
         var feedbackData = {
-          'appType': appType,
-          'appVersion': Config.getEnv(),
-          'feedbackId': feedbackId,
-          'languageCode': $translate.use(),
+          appType: appType,
+          appVersion: Config.getEnv(),
+          feedbackId: feedbackId,
+          languageCode: $translate.use(),
         };
 
         if (!appType || !feedbackId) {
@@ -28,5 +28,4 @@
   angular
     .module('Core')
     .service('FeedbackService', FeedbackService);
-
 }());

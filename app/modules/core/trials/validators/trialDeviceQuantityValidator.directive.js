@@ -60,5 +60,4 @@
       return !(typeQuantity < limit.min || typeQuantity > limit.max);
     }
   }
-
 })();

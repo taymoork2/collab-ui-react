@@ -16,6 +16,7 @@
       createHdsTrialUsersGroup: createHdsTrialUsersGroup,
       deleteCIGroup: deleteCIGroup,
       getHdsTrialUserGroupID: getHdsTrialUserGroupID,
+      queryGroup: queryGroup,
       queryUser: queryUser,
       queryUsers: queryUsers,
       getHdsTrialUsers: getHdsTrialUsers,
@@ -26,6 +27,7 @@
       deleteHdsServerInfo: deleteHdsServerInfo,
       setOrgAltHdsServersHds: setOrgAltHdsServersHds,
       refreshEncryptionServerForTrialUsers: refreshEncryptionServerForTrialUsers,
+      enableHdsEntitlement: enableHdsEntitlement,
       getHDSInfo: getHDSInfo,
     };
 
@@ -71,6 +73,11 @@
       return $http.post(serviceUrl, json).then(extractData);
     }
 
+    function queryGroup(oid, groupName) {
+      var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '?filter=displayName eq "' + groupName + '"', 'Users', 'Groups');
+      return $http.get(serviceUrl).then(extractData);
+    }
+
     function getHdsTrialUserGroupID() {
       var deferred = $q.defer();
       var params = {
@@ -98,7 +105,7 @@
     }
 
     function queryUser(oid, email) {
-      var serviceUrl = UrlConfig.getScimUrl(oid) + '?filter=username eq "' + email + '"';
+      var serviceUrl = UrlConfig.getScimUrl(oid) + '?filter=username eq "' + encodeURIComponent(email) + '"';
       return $http.get(serviceUrl).then(extractData);
     }
 
@@ -109,7 +116,7 @@
       } else {
         emailFilter = _.chain(emails)
           .map(function (email) {
-            return 'username eq "' + email.text + '"';
+            return 'username eq "' + encodeURIComponent(email.text) + '"';
           })
           .join(' or ')
           .value();
@@ -135,7 +142,7 @@
         members: _.map(uids, function (uid) {
           return {
             value: uid,
-            operation: "delete",
+            operation: 'delete',
           };
         }),
       };
@@ -157,10 +164,10 @@
     }
     function updateOrgsettingsHdsInfo(kmsServer, kmsServerMachineUUID, adrServer, securityService) {
       var data = {
-        'kmsServer': kmsServer,
-        'kmsServerMachineUUID': kmsServerMachineUUID,
-        'adrServer': adrServer,
-        'securityService': securityService,
+        kmsServer: kmsServer,
+        kmsServerMachineUUID: kmsServerMachineUUID,
+        adrServer: adrServer,
+        securityService: securityService,
       };
       return Orgservice.setOrgSettings(Authinfo.getOrgId(), data)
         .then(function () {
@@ -266,6 +273,11 @@
 
     function refreshEncryptionServerForTrialUsers(gid) {
       var serviceUrl = UrlConfig.getHybridEncryptionServiceUrl() + '/flushTrialUserGroupCache/' + gid;
+      return $http.post(serviceUrl).then(extractData);
+    }
+
+    function enableHdsEntitlement() {
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services?configureService=sparkHybridDataSecurity';
       return $http.post(serviceUrl).then(extractData);
     }
 

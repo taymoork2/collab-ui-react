@@ -103,7 +103,6 @@ describe('Service: Trial Device Service:', function () {
     it('should return a country if it is in the list', function () {
       var result = this.TrialDeviceService.getCountryCodeByName('Belgium');
       expect(result).toBe('BE');
-
     });
     it('should return an empty object if country is not in the list', function () {
       var result = this.TrialDeviceService.getCountryCodeByName('Blargh');
@@ -143,5 +142,4 @@ describe('Service: Trial Device Service:', function () {
       expect(endResult).toBeFalsy();
     });
   });
-
 });

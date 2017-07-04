@@ -82,6 +82,5 @@
     vm.showChannelOption = function (channel) {
       return _.includes(vm.allowedChannels, channel);
     };
-
   }
 })();

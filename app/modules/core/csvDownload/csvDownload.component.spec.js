@@ -3,7 +3,6 @@
 var testModule = require('./index').default;
 
 describe('csvDownload', function () {
-
   ///////////////////
   function init() {
     this.initModules(testModule, 'Core', 'Huron');
@@ -50,10 +49,8 @@ describe('csvDownload', function () {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe("Controller", function () {
-
+  describe('Controller', function () {
     it('should register/unregister for event handlers on creation/destruction', function () {
-
       var listeners = this.$rootScope.$$listeners;
 
       // initially, these event listeners don't exist
@@ -85,11 +82,9 @@ describe('csvDownload', function () {
       this.controller.goToDownload();
       expect(this.$state.go).toHaveBeenCalled();
     });
-
   });
 
-  describe("Component", function () {
-
+  describe('Component', function () {
     beforeEach(function () {
       this.$httpBackend.when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/csv/organizations/null/users/template').respond({});
       this.$window.navigator.msSaveOrOpenBlob = undefined;
@@ -125,8 +120,8 @@ describe('csvDownload', function () {
         noIcon: 'true',
       }]);
 
-      expect(this.view.find('i:first')).toHaveClass("icon");
-      expect(this.view.find('i:first')).not.toHaveClass("icon-circle-download");
+      expect(this.view.find('i:first')).toHaveClass('icon');
+      expect(this.view.find('i:first')).not.toHaveClass('icon-circle-download');
     });
 
     it('should download template by clicking the anchor', function () {
@@ -167,7 +162,6 @@ describe('csvDownload', function () {
   });
 
   describe('Browser: IE only behavior', function () {
-
     beforeEach(function () {
       this.$window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () { });
 

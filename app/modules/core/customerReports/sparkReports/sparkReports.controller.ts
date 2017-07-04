@@ -183,10 +183,10 @@ export class SparkReportCtrl {
   public currentFilter: string = this.ALL;
   public displayEngagement: boolean = true;
   public displayQuality: boolean = true;
-  public filterArray: Array<IFilterObject> = _.cloneDeep(this.ReportConstants.filterArray);
+  public filterArray: IFilterObject[] = _.cloneDeep(this.ReportConstants.filterArray);
 
   // Time Filter Controls
-  public timeOptions: Array<ITimespan> = _.cloneDeep(this.ReportConstants.TIME_FILTER);
+  public timeOptions: ITimespan[] = _.cloneDeep(this.ReportConstants.TIME_FILTER);
   public timeSelected: ITimespan = this.ReportConstants.WEEK_FILTER;
   public timeUpdates: ITimeSliderFunctions = {
     sliderUpdate: (min: number, max: number): void => {
@@ -239,7 +239,7 @@ export class SparkReportCtrl {
   }
 
   // Active User Report Controls
-  private activeArray: Array<IDropdownBase> = _.cloneDeep(this.ReportConstants.ACTIVE_FILTER);
+  private activeArray: IDropdownBase[] = _.cloneDeep(this.ReportConstants.ACTIVE_FILTER);
   public activeDropdown: IReportDropdown;
 
   public activeOptions: IReportCard = {
@@ -295,7 +295,7 @@ export class SparkReportCtrl {
     this.CardUtils.resize(0);
   }
 
-  private setActiveGraph(data: Array<IActiveUserData>): void {
+  private setActiveGraph(data: IActiveUserData[]): void {
     this.exportArrays.active = null;
     let tempActiveUserChart: any;
     if (this.displayNewReports) {
@@ -319,11 +319,11 @@ export class SparkReportCtrl {
     this.$rootScope.$broadcast(this.secondaryActiveOptions.broadcast);
 
     this.SparkReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
-      let graphData: Array<any> = _.get(response, 'graphData', []);
+      const graphData: any[] = _.get(response, 'graphData', []);
       this.updateActiveLineGraph(response, graphData.length > 0);
     });
 
-    this.SparkReportService.getMostActiveUserData(this.timeSelected).then((response: Array<IActiveTableBase>): void => {
+    this.SparkReportService.getMostActiveUserData(this.timeSelected).then((response: IActiveTableBase[]): void => {
       if (response.length === 0) {
         this.secondaryActiveOptions.state = this.ReportConstants.EMPTY;
       } else {
@@ -352,11 +352,11 @@ export class SparkReportCtrl {
       if (_.isUndefined(this.activeUserSevenDayData)) {
         this.SparkLineReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
           this.activeUserSevenDayData = response;
-          let graphData = _.get(response, 'graphData', []);
+          const graphData = _.get(response, 'graphData', []);
           this.updateActiveLineGraph(this.activeUserSevenDayData, graphData.length > 0);
         });
       } else {
-        let graphData = _.get(this.activeUserSevenDayData, 'graphData', []);
+        const graphData = _.get(this.activeUserSevenDayData, 'graphData', []);
         this.updateActiveLineGraph(this.activeUserSevenDayData, graphData.length > 0);
       }
     } else if (_.isUndefined(this.activeUserYearData)) {
@@ -374,7 +374,7 @@ export class SparkReportCtrl {
     if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value || this.timeSelected.value === this.ReportConstants.MONTH_FILTER.value
       || this.timeSelected.value === this.ReportConstants.THREE_MONTH_FILTER.value) {
       this.secondaryActiveOptions.display = true;
-      this.SparkLineReportService.getMostActiveUserData(this.timeSelected).then((response: Array<IActiveTableBase>): void => {
+      this.SparkLineReportService.getMostActiveUserData(this.timeSelected).then((response: IActiveTableBase[]): void => {
         if (response.length === 0) {
           this.secondaryActiveOptions.state = this.ReportConstants.EMPTY;
         } else {
@@ -402,11 +402,11 @@ export class SparkReportCtrl {
     this.CardUtils.resize(0);
   }
 
-  private activePopulated(data: Array<IActiveUserData>): boolean {
-    let length: number = data.length;
+  private activePopulated(data: IActiveUserData[]): boolean {
+    const length: number = data.length;
     if ((length > 0) && (length > this.minMax.min) && (length > this.minMax.max)) {
       for (let i = this.minMax.min; i <= this.minMax.max; i++) {
-        let datapoint: IActiveUserData = _.cloneDeep(data[i]);
+        const datapoint: IActiveUserData = _.cloneDeep(data[i]);
         if (datapoint.totalRegisteredUsers > 0) {
           return true;
         }
@@ -426,7 +426,7 @@ export class SparkReportCtrl {
     titlePopover: this.ReportConstants.UNDEF,
   };
 
-  private setAverageGraph(data: Array<IAvgRoomData> | Array<IConversation>): void {
+  private setAverageGraph(data: IAvgRoomData[] | IConversation[]): void {
     this.exportArrays.rooms = null;
     let temprooms: any;
     if (this.displayNewReports) {
@@ -442,7 +442,7 @@ export class SparkReportCtrl {
   }
 
   private setAvgRoomData() {
-    this.SparkReportService.getAvgRoomData(this.timeSelected).then((response: Array<IAvgRoomData>): void => {
+    this.SparkReportService.getAvgRoomData(this.timeSelected).then((response: IAvgRoomData[]): void => {
       if (response.length === 0) {
         this.avgRoomOptions.state = this.ReportConstants.EMPTY;
       } else {
@@ -459,7 +459,7 @@ export class SparkReportCtrl {
   private setConversationGraphs(): void {
     this.filesSharedOptions.state = this.ReportConstants.REFRESH;
     this.avgRoomOptions.state = this.ReportConstants.REFRESH;
-    let dummyData = this.DummySparkDataService.dummyConversationData(this.timeSelected);
+    const dummyData = this.DummySparkDataService.dummyConversationData(this.timeSelected);
     this.setAverageGraph(dummyData);
     this.setFilesGraph(dummyData);
 
@@ -511,16 +511,16 @@ export class SparkReportCtrl {
   }
 
   private conversationPopulated(data: IConversationWrapper): IConversationPopulated {
-    let populated = {
+    const populated = {
       files: false,
       rooms: false,
     };
 
-    let dataArray = _.get(data, 'array', []);
-    let length: number = dataArray.length;
+    const dataArray = _.get(data, 'array', []);
+    const length: number = dataArray.length;
     if ((length > 0) && (length > this.minMax.min) && (length > this.minMax.max) && (data.hasRooms || data.hasFiles)) {
       for (let i = this.minMax.min; i <= this.minMax.max; i++) {
-        let datapoint: IConversation = _.cloneDeep(dataArray[i]);
+        const datapoint: IConversation = _.cloneDeep(dataArray[i]);
         if (datapoint.totalRooms > 0) {
           populated.rooms = true;
         }
@@ -544,7 +544,7 @@ export class SparkReportCtrl {
     titlePopover: this.ReportConstants.UNDEF,
   };
 
-  private setFilesGraph(data: Array<IFilesShared> | Array<IConversation>): void {
+  private setFilesGraph(data: IFilesShared[] | IConversation[]): void {
     this.exportArrays.files = null;
     let tempfiles: any;
     if (this.displayNewReports) {
@@ -560,7 +560,7 @@ export class SparkReportCtrl {
   }
 
   private setFilesSharedData() {
-    this.SparkReportService.getFilesSharedData(this.timeSelected).then((response: Array<IFilesShared>): void => {
+    this.SparkReportService.getFilesSharedData(this.timeSelected).then((response: IFilesShared[]): void => {
       if (response.length === 0) {
         this.filesSharedOptions.state = this.ReportConstants.EMPTY;
       } else {
@@ -571,8 +571,8 @@ export class SparkReportCtrl {
   }
 
   // Media Quality Report Controls
-  private mediaData: Array<IMediaData> = [];
-  private mediaArray: Array<IDropdownBase> = _.cloneDeep(this.ReportConstants.MEDIA_FILTER);
+  private mediaData: IMediaData[] = [];
+  private mediaArray: IDropdownBase[] = _.cloneDeep(this.ReportConstants.MEDIA_FILTER);
 
   public mediaOptions: IReportCard = {
     animate: true,
@@ -591,7 +591,7 @@ export class SparkReportCtrl {
         if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
           this.updateQualityGraph(this.qualitySevenDayData, this.qualitySevenDayData && this.qualitySevenDayData.length > 0);
         } else {
-          let populated = this.qualityPopulated(this.qualityYearData);
+          const populated = this.qualityPopulated(this.qualityYearData);
           this.updateQualityGraph(this.qualityYearData, populated);
           this.zoomChart(this.charts.media);
         }
@@ -603,7 +603,7 @@ export class SparkReportCtrl {
     selected: this.mediaArray[0],
   };
 
-  private setMediaGraph(data: Array<IMediaData>): void {
+  private setMediaGraph(data: IMediaData[]): void {
     this.exportArrays.media = null;
     let tempmedia: any;
     if (this.displayNewReports) {
@@ -621,17 +621,17 @@ export class SparkReportCtrl {
   private setMediaData() {
     this.mediaDropdown.disabled = true;
     this.mediaData = [];
-    this.SparkReportService.getMediaQualityData(this.timeSelected).then((response: Array<IMediaData>): void => {
+    this.SparkReportService.getMediaQualityData(this.timeSelected).then((response: IMediaData[]): void => {
       this.mediaData = response;
       this.updateQualityGraph(response, response.length > 0);
     });
   }
 
   // Call Quality Line Graph Controls
-  private qualitySevenDayData: Array<IMediaData>;
-  private qualityYearData: Array<IMediaData>;
+  private qualitySevenDayData: IMediaData[];
+  private qualityYearData: IMediaData[];
 
-  public qualityLabels: Array<IReportLabel>;
+  public qualityLabels: IReportLabel[];
   public qualityTooltip: IReportTooltip;
 
   private resetQualityLabels(): void {
@@ -651,31 +651,31 @@ export class SparkReportCtrl {
 
     if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
       if (_.isUndefined(this.qualitySevenDayData)) {
-        this.SparkLineReportService.getMediaQualityData(this.timeSelected).then((response: Array<IMediaData>): void => {
+        this.SparkLineReportService.getMediaQualityData(this.timeSelected).then((response: IMediaData[]): void => {
           this.qualitySevenDayData = response;
-          let populated = this.qualitySevenDayData.length > 0;
+          const populated = this.qualitySevenDayData.length > 0;
           this.updateQualityGraph(this.qualitySevenDayData, populated);
         });
       } else {
-        let populated = this.qualitySevenDayData.length > 0;
+        const populated = this.qualitySevenDayData.length > 0;
         this.updateQualityGraph(this.qualitySevenDayData, populated);
       }
     } else if (_.isUndefined(this.qualityYearData)) {
       this.zoomChart(this.charts.media);
-      this.SparkLineReportService.getMediaQualityData(this.timeSelected).then((response: Array<IMediaData>): void => {
+      this.SparkLineReportService.getMediaQualityData(this.timeSelected).then((response: IMediaData[]): void => {
         this.qualityYearData = response;
-        let populated = this.qualityPopulated(this.qualityYearData);
+        const populated = this.qualityPopulated(this.qualityYearData);
         this.updateQualityGraph(this.qualityYearData, populated);
         this.zoomChart(this.charts.media);
       });
     } else {
-      let populated = this.qualityPopulated(this.qualityYearData);
+      const populated = this.qualityPopulated(this.qualityYearData);
       this.updateQualityGraph(this.qualityYearData, populated);
       this.zoomChart(this.charts.media);
     }
   }
 
-  private updateQualityGraph(data: Array<IMediaData>, populated: boolean): void {
+  private updateQualityGraph(data: IMediaData[], populated: boolean): void {
     if (populated) {
       this.setMediaGraph(data);
       this.mediaOptions.state = this.ReportConstants.SET;
@@ -686,7 +686,7 @@ export class SparkReportCtrl {
 
     if (this.displayNewReports && populated) {
       for (let i = this.minMax.min; i <= this.minMax.max; i++) {
-        let item: IMediaData = data[i];
+        const item: IMediaData = data[i];
         if (this.mediaDropdown.selected.value === this.ReportConstants.MEDIA_FILTER_ONE.value) {
           this.qualityLabels[0].number = _.toInteger(this.qualityLabels[0].number) + item.goodQualityDurationSum;
           this.qualityLabels[1].number = _.toInteger(this.qualityLabels[1].number) + item.fairQualityDurationSum;
@@ -701,18 +701,18 @@ export class SparkReportCtrl {
           this.qualityLabels[2].number = _.toInteger(this.qualityLabels[2].number) + item.poorVideoQualityDurationSum;
         }
       }
-      let total: number = this.minMax.max - this.minMax.min + 1;
+      const total: number = this.minMax.max - this.minMax.min + 1;
       this.qualityLabels[0].number = Math.round(_.toInteger(this.qualityLabels[0].number) / total);
       this.qualityLabels[1].number = Math.round(_.toInteger(this.qualityLabels[1].number) / total);
       this.qualityLabels[2].number = Math.round(_.toInteger(this.qualityLabels[2].number) / total);
     }
   }
 
-  private qualityPopulated(data: Array<IMediaData>): boolean {
-    let length: number = data.length;
+  private qualityPopulated(data: IMediaData[]): boolean {
+    const length: number = data.length;
     if ((length > 0) && (length > this.minMax.min) && (length > this.minMax.max)) {
       for (let i = this.minMax.min; i <= this.minMax.max; i++) {
-        let datapoint: IMediaData = _.cloneDeep(data[i]);
+        const datapoint: IMediaData = _.cloneDeep(data[i]);
         if (datapoint.totalDurationSum > 0) {
           return true;
         }
@@ -722,7 +722,7 @@ export class SparkReportCtrl {
   }
 
   // Registered Endpoints Report Controls
-  private currentDeviceGraphs: Array<IEndpointWrapper> = [];
+  private currentDeviceGraphs: IEndpointWrapper[] = [];
 
   public deviceOptions: IReportCard = {
     animate: true,
@@ -757,7 +757,7 @@ export class SparkReportCtrl {
     selected: this.ReportConstants.DEFAULT_ENDPOINT,
   };
 
-  private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter?: IDropdownBase): void {
+  private setDeviceGraph(data: IEndpointWrapper[], deviceFilter?: IDropdownBase): void {
     this.exportArrays.device = null;
     let tempDevicesChart: any;
 
@@ -859,11 +859,11 @@ export class SparkReportCtrl {
   }
 
   private devicePopulated(data: IEndpointContainer) {
-    let graphData: IEndpointWrapper = data.graphData[this.deviceDropdown.selected.value];
-    let length: number = graphData.graph.length;
+    const graphData: IEndpointWrapper = data.graphData[this.deviceDropdown.selected.value];
+    const length: number = graphData.graph.length;
     if (!graphData.emptyGraph && (length > this.minMax.min) && (length > this.minMax.max)) {
       for (let i = this.minMax.min; i <= this.minMax.max; i++) {
-        let datapoint: IEndpointData = _.cloneDeep(graphData.graph[i]);
+        const datapoint: IEndpointData = _.cloneDeep(graphData.graph[i]);
         if (datapoint.totalRegisteredDevices > 0) {
           return true;
         }
@@ -883,7 +883,7 @@ export class SparkReportCtrl {
     titlePopover: this.ReportConstants.UNDEF,
   };
 
-  public metricsLabels: Array<IReportLabel> = [{
+  public metricsLabels: IReportLabel[] = [{
     hidden: false,
     number: 0,
     text: 'callMetrics.totalCalls',
@@ -899,7 +899,7 @@ export class SparkReportCtrl {
 
   private setMetricGraph(data: IMetricsData): void {
     this.exportArrays.metrics = null;
-    let tempmetrics: any = this.SparkGraphService.setMetricsGraph(data, this.charts.metrics);
+    const tempmetrics: any = this.SparkGraphService.setMetricsGraph(data, this.charts.metrics);
     if (tempmetrics) {
       this.charts.metrics = tempmetrics;
       this.exportArrays.metrics = this.ReportPrintService.createExportMenu(this.charts.metrics);
@@ -932,8 +932,8 @@ export class SparkReportCtrl {
   }
 
   // new metrics controller
-  private sevenDayMetrics: Array<IMetricsData>;
-  private yearlyMetrics: Array<IMetricsData>;
+  private sevenDayMetrics: IMetricsData[];
+  private yearlyMetrics: IMetricsData[];
 
   private setCallMetricsGraph(): void {
     this.metricsOptions.state = this.ReportConstants.REFRESH;
@@ -942,7 +942,7 @@ export class SparkReportCtrl {
 
     if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
       if (_.isUndefined(this.sevenDayMetrics)) {
-        this.SparkLineReportService.getMetricsData(this.timeSelected).then((response: Array<IMetricsData>): void => {
+        this.SparkLineReportService.getMetricsData(this.timeSelected).then((response: IMetricsData[]): void => {
           this.sevenDayMetrics = response;
           this.setMetricsData(this.sevenDayMetrics, 1, 7);
         });
@@ -950,7 +950,7 @@ export class SparkReportCtrl {
         this.setMetricsData(this.sevenDayMetrics, 1, 7);
       }
     } else if (_.isUndefined(this.yearlyMetrics)) {
-      this.SparkLineReportService.getMetricsData(this.timeSelected).then((response: Array<IMetricsData>): void => {
+      this.SparkLineReportService.getMetricsData(this.timeSelected).then((response: IMetricsData[]): void => {
         this.yearlyMetrics = response;
         this.setMetricsData(this.yearlyMetrics, this.minMax.min + 1, this.minMax.max + 1);
       });
@@ -959,11 +959,11 @@ export class SparkReportCtrl {
     }
   }
 
-  private setMetricsData(data: Array<IMetricsData>, min: number, max: number): void {
+  private setMetricsData(data: IMetricsData[], min: number, max: number): void {
     let combinedData: IMetricsData = _.cloneDeep(data[min]);
     for (let i = min + 1; i <= max; i++) {
       if (combinedData && combinedData.displayData && data[i] && data[i].displayData) {
-        let display: IMetricsLabel = _.get(data[i], 'display', {
+        const display: IMetricsLabel = _.get(data[i], 'display', {
           totalCalls: 0,
           totalAudioDuration: 0,
           totalFailedCalls: 0,
@@ -985,7 +985,7 @@ export class SparkReportCtrl {
 
     this.metricsOptions.state = this.ReportConstants.EMPTY;
     if (combinedData && combinedData.displayData) {
-      let average = (_.toInteger(combinedData.displayData.totalFailedCalls) / combinedData.displayData.totalCalls) * this.ReportConstants.PERCENTAGE_MULTIPLIER;
+      const average = (_.toInteger(combinedData.displayData.totalFailedCalls) / combinedData.displayData.totalCalls) * this.ReportConstants.PERCENTAGE_MULTIPLIER;
       combinedData.displayData.totalFailedCalls = average.toFixed(this.ReportConstants.FIXED);
       this.setMetricGraph(combinedData);
       this.setMetrics(combinedData.displayData);

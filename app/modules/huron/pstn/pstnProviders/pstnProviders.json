@@ -2,6 +2,7 @@
     "name": "INTELEPEER",
     "logoSrc": "images/carriers/logo_intelepeer.svg",
     "logoAlt": "IntelePeer",
+    "countryCode": "US",
     "docSrc": "docs/carriers/IntelePeerVoicePackage.pdf",
     "features": [
         "intelepeerFeatures.feature1",
@@ -13,6 +14,7 @@
     "name": "TATA",
     "logoSrc": "images/carriers/logo_tata_comm.svg",
     "logoAlt": "Tata",
+    "countryCode": "US",
     "docSrc": "",
     "features": [
         "tataFeatures.feature1",
@@ -22,9 +24,17 @@
         "tataFeatures.feature5"
     ]
 }, {
+    "name": "TATA",
+    "logoSrc": "images/carriers/logo_tata_comm.svg",
+    "logoAlt": "Tata",
+    "countryCode": "GB",
+    "docSrc": "",
+    "features": []
+}, {
     "name": "THINKTEL",
     "logoSrc": "images/carriers/logo_thinktel.svg",
     "logoAlt": "ThinkTel",
+    "countryCode": "CA",
     "docSrc": "",
     "features": [
         "thinktelFeatures.feature1",
@@ -38,12 +48,14 @@
     "name": "TELSTRA",
     "logoSrc": "images/carriers/logo_telstra.svg",
     "logoAlt": "Telstra",
+    "countryCode": "US",
     "docSrc": "",
     "features": []
 }, {
     "name": "WESTUC",
     "logoSrc": "images/carriers/logo_westuc.svg",
     "logoAlt": "West Corporation",
+    "countryCode": "US",
     "docSrc": "",
     "features": [
         "westucFeatures.feature1",
@@ -52,5 +64,15 @@
         "westucFeatures.feature4",
         "westucFeatures.feature5",
         "westucFeatures.feature6"        
+    ]
+}, {
+    "name": "BYOPSTN",
+    "countryCode": "US",
+    "docSrc": "",
+    "features": [
+        "byopstnFeatures.feature1",
+        "byopstnFeatures.feature2",
+        "byopstnFeatures.feature3",
+        "byopstnFeatures.feature4"
     ]
 }]

@@ -20,17 +20,17 @@
   //         callExperienceURL
   //
   function AARecord() {
-    this.callExperienceName = "";
+    this.callExperienceName = '';
     this.assignedResources = [];
     this.actionSets = [{
-      "name": "regularOpenActions",
-      "actions": [],
+      name: 'regularOpenActions',
+      actions: [],
     }];
     this.scheduleEventTypeMap = {};
   }
 
   function AARecordWithEmptyActionSets() {
-    this.callExperienceName = "";
+    this.callExperienceName = '';
     this.assignedResources = [];
     this.actionSets = [];
     this.scheduleEventTypeMap = {};
@@ -43,7 +43,6 @@
   }
 
   function AAModelService() {
-
     var aaModel = {};
 
     var service = {
@@ -74,6 +73,5 @@
     function setAAModel(aaMdl) {
       aaModel = aaMdl;
     }
-
   }
 })();

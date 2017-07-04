@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AARouteToSipEndpointCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
-
     var vm = this;
     vm.model = {};
     vm.uniqueCtrlIdentifer = '';
@@ -32,7 +31,7 @@
     var routeToSipEndpoint = 'routeToSipEndpoint';
 
     var fromRouteCall = false;
-    var sipInitial = "sip:";
+    var sipInitial = 'sip:';
 
     /////////////////////
 
@@ -72,7 +71,7 @@
     }
 
     $scope.$on(
-      "$destroy",
+      '$destroy',
       function () {
         AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
       }
@@ -102,7 +101,6 @@
           // used by aaValidationService to identify this menu
           vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuEntry.routeToId);
         }
-
       } else {
         vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
@@ -138,6 +136,5 @@
     }
 
     activate();
-
   }
 })();

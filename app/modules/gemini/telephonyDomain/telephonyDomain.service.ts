@@ -66,12 +66,7 @@ export class TelephonyDomainService {
   }
 
   public getDownloadUrl() {
-    return `${this.url}files/templates/telephony_numbers_template`;
-  }
-
-  public getCountries() {
-    const url = `${this.UrlConfig.getGeminiUrl()}countries`;
-    return this.$http.get(url).then(this.extractData);
+    return `${this.UrlConfig.getGeminiUrl()}files/templates/telephony_numbers_template`;
   }
 
   public getAccessNumberInfo(accessNumber: string) {
@@ -91,10 +86,10 @@ export class TelephonyDomainService {
 
   public telephonyDomainsExportCSV(customerId: string) {
     return this.getTelephonyDomains(customerId).then((response) => {
-      let lines: any = _.get(response, 'content.data');
+      const lines: any = _.get(response, 'content.data');
 
       let exportedLines: any[] = [];
-      let headerLine = {
+      const headerLine = {
         domainName: this.$translate.instant('gemini.tds.field.telephonyDomains'),
         totalSites: this.$translate.instant('gemini.tds.field.totalSites'),
         bridgeSet: this.$translate.instant('gemini.tds.field.bridgeSet'),
@@ -117,9 +112,9 @@ export class TelephonyDomainService {
 
   public exportNumbersToCSV(customerId: string, ccaDomainId: string) {
     return this.getNumbers(customerId, ccaDomainId).then((response) => {
-      let lines: any = _.get(response, 'content.data');
+      const lines: any = _.get(response, 'content.data');
       let exportedLines: any[] = [];
-      let headerLine = {
+      const headerLine = {
         phoneNumber: this.$translate.instant('gemini.tds.numbers.field.phoneNumber').toUpperCase(),
         phoneLabel: this.$translate.instant('gemini.tds.numbers.field.phoneLabel').toUpperCase(),
         accessNumber: this.$translate.instant('gemini.tds.numbers.field.accessNumber').toUpperCase(),
@@ -166,12 +161,14 @@ export class TelephonyDomainService {
       ? this.$translate.instant('gemini.tds.numbers.field.labels.hidden')
       : this.$translate.instant('gemini.tds.numbers.field.labels.display');
 
-    let countryId2NameMapping = this.gemService.getStorage('countryId2NameMapping');
-    item.countryName = countryId2NameMapping[item.countryId];
+    const gmCountry = this.gemService.getStorage('gmCountry');
+    if (gmCountry) {
+      item.countryName = gmCountry.countryId2NameMapping[item.countryId];
+    }
   }
 
   private formatNumbersData(data: any) {
-    let oneLine = {
+    const oneLine = {
       phoneNumber: this.formatAsCsvString(data.phone),
       phoneLabel: this.formatAsCsvString(data.label),
       accessNumber: this.formatAsCsvString(data.dnisNumberFormat),
@@ -185,7 +182,7 @@ export class TelephonyDomainService {
   }
 
   private formatTdData(data: any) {
-    let newData: any [] = [];
+    const newData: any [] = [];
     let oneLine = {
       domainName: this.formatAsCsvString(data.telephonyDomainName || data.domainName),
       totalSites: this.formatAsCsvString(data.telephonyDomainSites.length),

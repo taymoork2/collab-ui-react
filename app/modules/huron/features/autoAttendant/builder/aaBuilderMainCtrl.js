@@ -10,7 +10,6 @@
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
-
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
     vm.aaModel = {};
@@ -46,7 +45,7 @@
       tname: 'Basic',
       actions: [{
         lane: 'openHours',
-        actionset: ['say', 'runActionsOnInput'],
+        actionset: ['play', 'runActionsOnInput'],
       }],
     }, {
       tname: 'Custom',
@@ -100,7 +99,6 @@
 
     // Returns true if the provided assigned resources are different in size or in the passed-in field
     function areAssignedResourcesDifferent(aa1, aa2, tag) {
-
       // if we have a different number of resources, we definitely have a difference
       if (aa1.length !== aa2.length) {
         return true;
@@ -110,7 +108,6 @@
         var a2 = _.map(aa2, tag);
         return (_.difference(a1, a2).length > 0 || _.difference(a2, a1).length > 0);
       }
-
     }
 
     // Save the phone number resources originally in the CE (used on exit with no save, and on save error)
@@ -136,14 +133,12 @@
     }
 
     function closePanel() {
-
       AAMediaUploadService.resetResources();
 
       AutoAttendantCeMenuModelService.clearCeMenuMap();
       unAssignAssigned().finally(function () {
         $state.go('huronfeatures');
       });
-
     }
 
     function populateUiModel() {
@@ -224,9 +219,7 @@
     // Set the numbers in CMI with error details (involves multiple saves in the AANumberAssignmentService service)
     // Notify the user of any numbers that failed
     function saveAANumberAssignmentWithErrorDetail(resources) {
-
       return AANumberAssignmentService.formatAAE164ResourcesBasedOnCMI(resources).then(function (fmtResources) {
-
         AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, fmtResources).then(
           function (response) {
             if (_.get(response, 'failedResources.length', false)) {
@@ -261,9 +254,9 @@
           if (AATrackChangeService.isChanged('AAName', aaRecord.callExperienceName)) {
             var scheduleId = aaRecord.scheduleId;
             var nameChangeEvent = {
-              'type': 'AANameChange',
-              'scheduleId': scheduleId,
-              'newName': aaRecord.callExperienceName,
+              type: 'AANameChange',
+              scheduleId: scheduleId,
+              newName: aaRecord.callExperienceName,
             };
             AADependencyService.notifyAANameChange(nameChangeEvent);
             AATrackChangeService.track('AAName', aaRecord.callExperienceName);
@@ -276,7 +269,6 @@
           $rootScope.$broadcast('CE Saved');
 
           AAMediaUploadService.saveResources();
-
         },
         function (response) {
           AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
@@ -313,7 +305,6 @@
           AANotificationService.success('autoAttendant.successCreateCe', {
             name: aaRecord.callExperienceName,
           });
-
         },
         function (response) {
           AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
@@ -345,7 +336,6 @@
     }
 
     function saveAARecords(validateCES) {
-
       var deferred = $q.defer();
       var aaRecords = vm.aaModel.aaRecords;
       var aaRecord = vm.aaModel.aaRecord;
@@ -394,22 +384,16 @@
         // If a possible discrepancy was found between the phone number list in CE and the one stored in CMI
         // Try a complete save here and report error details
         if (vm.aaModel.possibleNumberDiscrepancy) {
-
           var currentlyShownResources = AutoAttendantCeInfoModelService.getCeInfo(aaRecord).getResources();
 
           return saveAANumberAssignmentWithErrorDetail(currentlyShownResources).then(function () {
-
             return AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentlyShownResources).then(function () {
-
               updateCE(recNum);
-
             });
-
           });
         } else {
           return updateCE(recNum);
         }
-
       }
     }
 
@@ -428,14 +412,12 @@
     }
 
     function getSaveErrorMessages() {
-
       var messages = vm.errorMessages.join('<br>');
 
       return messages;
     }
 
     function setupTemplate() {
-
       if (!vm.templateName) {
         return;
       }
@@ -461,11 +443,11 @@
       _.forEach(specifiedTemplate.actions, function (action) {
         var uiMenu = vm.ui[action.lane];
 
-        if (action.lane === "holidays") {
+        if (action.lane === 'holidays') {
           vm.ui.isHolidays = true;
         }
 
-        if (action.lane === "closedHours") {
+        if (action.lane === 'closedHours') {
           vm.ui.isClosedHours = true;
         }
 
@@ -484,19 +466,17 @@
             menuEntry.type = 'MENU_OPTION';
 
             var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-            keyEntry.type = "MENU_OPTION";
+            keyEntry.type = 'MENU_OPTION';
             keyEntry.key = '0';
             var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
             keyEntry.addAction(emptyAction);
             menuEntry.entries.push(keyEntry);
-
           } else {
             menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
             menuAction = AutoAttendantCeMenuModelService.newCeActionEntry(actionset, '');
             menuEntry.addAction(menuAction);
           }
           uiMenu.appendEntry(menuEntry);
-
         });
       });
     }
@@ -506,10 +486,9 @@
       if (_.isUndefined(vm.aaModel.aaRecord)) {
         if (aaName === '') {
           vm.aaModel.aaRecord = AAModelService.getNewAARecord();
-          vm.aaModel.aaRecordUUID = "";
+          vm.aaModel.aaRecordUUID = '';
           vm.isAANameDefined = false;
         } else {
-
           var aaRecord = _.find(vm.aaModel.aaRecords, {
             callExperienceName: aaName,
           });
@@ -518,6 +497,10 @@
             AutoAttendantCeService.readCe(aaRecord.callExperienceURL).then(
               function (data) {
                 vm.aaModel.aaRecord = data;
+
+                // make sure assigned numbers are from CMI, CES might be out of date.
+                vm.aaModel.aaRecord.assignedResources = _.cloneDeep(aaRecord.assignedResources);
+
                 vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(aaRecord.callExperienceURL);
                 vm.populateUiModel();
                 vm.isAANameDefined = true;
@@ -672,7 +655,7 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone)
+      getTimeZoneOptions().then(getSystemTimeZone())
       .finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();

@@ -137,6 +137,5 @@
       // Different sequence = old + 1
       expect(parseInt(trackingIdComponents[2], 10) + 1).toEqual(parseInt(trackingId2Components[2], 10));
     });
-
   });
 })();

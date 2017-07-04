@@ -12,7 +12,7 @@ describe('Service: CallerId', function () {
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
   beforeEach(inject(function (_CallerId_, _$httpBackend_, _HuronConfig_) {
@@ -196,5 +196,4 @@ describe('Service: CallerId', function () {
   //   });
 
   // });
-
 });

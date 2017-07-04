@@ -1,14 +1,15 @@
 import { UserOverviewService } from './userOverview.service';
-let UserOverviewCtrl = require('./userOverviewCtrl');
+const UserOverviewCtrl = require('./userOverviewCtrl');
 
+import messagingPreviewModule from './messaging-preview';
 import featureToggleServiceModule from 'modules/core/featureToggle';
 import notifictionModule from 'modules/core/notifications';
 import sunlightServiceModule from 'modules/sunlight/services';
 import webExUtilsModule from 'modules/webex/utils';
 
-let coreAuthModule = require('modules/core/auth/auth');
-let ngResourceModule = require('angular-resource');
-let onboardModule = require('modules/core/users/userAdd/onboard.module');
+const coreAuthModule = require('modules/core/auth/auth');
+const ngResourceModule = require('angular-resource');
+const onboardModule = require('modules/core/users/userAdd/onboard.module');
 
 import './_user-overview.scss';
 
@@ -16,6 +17,7 @@ export default angular
   .module('core.users.userOverview', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
+    messagingPreviewModule,
     sunlightServiceModule,
     ngResourceModule,
     notifictionModule,

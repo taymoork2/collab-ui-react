@@ -13,7 +13,6 @@
 
   /* @ngInject */
   function TimingInterceptor($q, $log, $injector, Config) {
-
     return {
       request: requestHandler,
       response: responseHandler,
@@ -52,5 +51,4 @@
       return $q.reject(responseHandler(responseOrRejection));
     }
   }
-
 })();

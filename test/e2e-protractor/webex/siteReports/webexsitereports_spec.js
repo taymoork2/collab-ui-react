@@ -21,7 +21,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
   describe(webExCommon.testInfo.describeText, function () {
     var setup = false;
 
-    if (webExCommon.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == 'T31') {
       beforeAll(function () {
         var promise = webEx.setup(
           1,
@@ -63,7 +63,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       });
     }
 
-    if (webExCommon.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == 'T31') {
       it('should sign in as ' + webExCommon.BTS4.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
@@ -101,7 +101,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       }
     });
 
-    if (webExCommon.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == 'T31') {
       it('should navigate to webex reports index for site ' + webExCommon.testInfo.siteUrl, function () {
         if (setup) {
           utils.click(webExSiteReports.webexReportsLink);

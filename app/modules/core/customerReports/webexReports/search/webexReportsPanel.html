@@ -1,0 +1,102 @@
+<div class="customer-overview gemini-side-panel">
+  <div ui-view="header"></div>
+
+  <cs-sp-container class="panel-container">
+    <cs-sp-section>
+      <div class="row">
+        <div class="pull-left medium-9">
+          <div class="feature-name">{{::'webexReports.meetingName' | translate}}: {{$ctrl.overview.meetingName}}</div>
+        </div>
+
+        <div class="pull-right medium-3">
+          <span class="pull-right" ng-if="$ctrl.overview.status">
+            <i class="icon icon-circle status-indicator"
+               ng-class="{'success': $ctrl.overview.status === 1}"></i>
+            {{$ctrl.overview.status_}}
+          </span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-12">
+          <span class="feature-name">{{::'webexReports.meetingNumber' | translate}}: {{$ctrl.overview.meetingNumber}}</span>
+        </div>
+        <div class="medium-12">
+          <span class="feature-name">{{::'webexReports.meetingType' | translate}}: {{$ctrl.overview.meetingType}}</span>
+        </div>
+      </div>
+    </cs-sp-section>
+
+    <div ng-if="$ctrl.loading" class="grid-refresh">
+      <i class="icon icon-spinner icon-3x"></i>
+    </div>
+    <div ng-if="!$ctrl.loading">
+      <cs-sp-section>
+        <div class="section-title-row">
+          <a ng-click="$ctrl.showDetailMore()">
+            <span class="section-name pull-left" translate="webexReports.session"></span>
+            <span class="pull-right feature-arrow">
+              {{$ctrl.overview.date}} <i class="icon icon-right-arrow"></i>
+            </span>
+          </a>
+        </div>
+
+        <div class="feature-list">
+          <ul>
+            <li>{{::'webexReports.createTime' | translate}}: {{$ctrl.data.session.createTime_}} <span class="pull-right">{{::'webexReports.scheduledFrom' | translate}} {{$ctrl.data.session.scheduleFrom}}</span></li>
+            <li>{{::'webexReports.startTime' | translate}}: {{$ctrl.data.session.startTime_}} <span class="pull-right">{{::'webexReports.startFrom' | translate}} {{$ctrl.data.session.startFrom}}</span></li>
+            <li>{{::'webexReports.endTime' | translate}}: {{$ctrl.data.session.endTime_}}</li>
+            <li>{{::'webexReports.siteIdAndName' | translate}}: {{$ctrl.data.session.siteID}} / {{$ctrl.data.session.siteName}}</li>
+          </ul>
+        </div>
+
+      </cs-sp-section>
+
+      <cs-sp-section>
+        <div class="section-title-row">
+          <a ng-click="$ctrl.showDetailMore()">
+            <span class="section-name" translate="webexReports.participants"></span>
+            <span class="pull-right feature-arrow"> <i class="icon icon-right-arrow"></i></span>
+          </a>
+        </div>
+
+        <div class="feature-list">
+          <ul>
+            <li>{{::'webexReports.hostNameAndId' | translate}}: {{$ctrl.data.participents.hostName}} / {{$ctrl.data.participents.hostID}}</li>
+            <li>{{::'webexReports.hostEmail' | translate}}: {{$ctrl.data.participents.hostEmail}}</li>
+          </ul>
+        </div>
+      </cs-sp-section>
+
+      <cs-sp-section>
+        <div class="section-title-row">
+          <span class="section-name" translate="webexReports.features"></span>
+        </div>
+
+        <div class="feature-col">
+          <ul>
+            <li ng-repeat="val in $ctrl.data.features_" ng-class="($index+1)%3==0?'text-right':''">
+              <h6>{{val.key}}</h6>
+              <small ng-class="{'success': val.class}">{{val.val}}</small>
+            </li>
+          </ul>
+        </div>
+      </cs-sp-section>
+
+      <cs-sp-section>
+        <div class="section-title-row">
+          <span class="section-name" translate="webexReports.connection"></span>
+        </div>
+
+        <div class="feature-list">
+          <ul>
+            <li ng-repeat="val in $ctrl.data.connection_">
+              <span class="feature-name">{{val.key}}</span>
+              <span class="pull-right feature-status" ng-class="{'success': val.class}">{{val.val}}</span>
+            </li>
+          </ul>
+        </div>
+      </cs-sp-section>
+    </div>
+  </cs-sp-container>
+</div>

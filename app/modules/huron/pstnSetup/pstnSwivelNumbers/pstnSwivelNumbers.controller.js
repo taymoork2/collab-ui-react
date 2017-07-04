@@ -165,6 +165,5 @@
     function onAcknowledge(value) {
       vm.emergencyAcknowledge = value;
     }
-
   }
 })();

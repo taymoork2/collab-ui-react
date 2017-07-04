@@ -313,7 +313,7 @@
       var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
       var requestData = {
         sortedBy: [sortBy],
-        attributes: ["name", "displayName", "userName", "entitlements", "active"],
+        attributes: ['name', 'displayName', 'userName', 'entitlements', 'active'],
       };
       $http({
         method: 'POST',
@@ -434,11 +434,11 @@
               } else {
                 // header line for CSV file
                 var header = {};
-                header.firstName = "First Name";
-                header.lastName = "Last Name";
-                header.displayName = "Display Name";
-                header.email = "User ID/Email (Required)";
-                header.entitlements = "Entitlements";
+                header.firstName = 'First Name';
+                header.lastName = 'Last Name';
+                header.displayName = 'Display Name';
+                header.email = 'User ID/Email (Required)';
+                header.entitlements = 'Entitlements';
                 exportedUsers.push(header);
 
                 //formatting the data for export
@@ -486,7 +486,6 @@
 
     // TODO: rm this after replacing all instances of usage to listPartnersAsPromise
     function listPartners(orgId, callback) {
-
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
 
       $http.get(adminUrl)
@@ -508,7 +507,6 @@
     // TODO: revisit after graduation, consider:
     // - simply unpacking the 'data' property on success
     function listPartnersAsPromise(orgId) {
-
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
 
       return $http.get(adminUrl)

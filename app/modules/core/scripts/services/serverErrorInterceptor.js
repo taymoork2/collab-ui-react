@@ -11,7 +11,6 @@
 
   /* @ngInject */
   function ServerErrorInterceptor($q, $log, $injector, Config) {
-
     return {
       responseError: function (response) {
         return $q.reject(responseHandler(response));
@@ -34,5 +33,4 @@
       return response;
     }
   }
-
 })();

@@ -1,6 +1,7 @@
 import { IPreferredLanugageOption } from '../../preferredLanguage/preferredLanugage.interfaces';
 import { UserOverviewService } from '../../../core/users/userOverview/userOverview.service';
 import { Notification } from '../../../core/notifications';
+import { IToolkitModalService } from '../../../core/modal/index';
 
 interface IUserDetailsOverviewFeature {
   selectedLanguageCode?: string | undefined;
@@ -23,6 +24,7 @@ class UserDetailsOverview implements ng.IComponentController {
     private UserOverviewService: UserOverviewService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
+    private ModalService: IToolkitModalService,
   ) { }
 
   public $onInit(): void {
@@ -32,8 +34,8 @@ class UserDetailsOverview implements ng.IComponentController {
 
   private initPreferredLanguageData(): void {
     if (!_.isEmpty(this.preferredLanguageDetails)) {
-      let selectedLanguageCode = _.get(this.preferredLanguageDetails, 'selectedLanguageCode');
-      let languageOptions = _.get(this.preferredLanguageDetails, 'languageOptions');
+      const selectedLanguageCode = _.get(this.preferredLanguageDetails, 'selectedLanguageCode');
+      const languageOptions = _.get(this.preferredLanguageDetails, 'languageOptions');
       this.preferredLanguage = this.findPreferredLanguageByCode(languageOptions, selectedLanguageCode);
       this.preferredLanguageOptions = <IPreferredLanugageOption[]> languageOptions;
       this.preferredLanguageDetailsCopy = _.cloneDeep(this.preferredLanguageDetails);
@@ -47,10 +49,22 @@ class UserDetailsOverview implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public openSaveModal(): void {
+    this.ModalService.open({
+      title: this.$translate.instant('preferredLanguage.saveModal.title'),
+      message: this.$translate.instant('preferredLanguage.saveModal.message1') + '<br/><br/>'
+        + this.$translate.instant('preferredLanguage.saveModal.message2'),
+      close: this.$translate.instant('common.yes'),
+      dismiss: this.$translate.instant('common.no'),
+    }).result.then(() => {
+      this.savePreferredLanguage();
+    });
+  }
+
   public savePreferredLanguage(): void {
     this.prefLanguageSaveInProcess = true;
     if (!this.checkForPreferredLanguageChanges(this.preferredLanguage)) {
-      let prefLang = this.preferredLanguage.value ? this.preferredLanguage.value : null;
+      const prefLang = this.preferredLanguage.value ? this.preferredLanguage.value : null;
       this.UserOverviewService.updateUserPreferredLanguage(this.preferredLanguageDetails.currentUserId, prefLang)
         .then(() => {
           this.preferredLanguageDetails.selectedLanguageCode = prefLang;
@@ -68,8 +82,8 @@ class UserDetailsOverview implements ng.IComponentController {
 
   public onCancelPreferredLanguage(): void {
     if (!this.checkForPreferredLanguageChanges(this.preferredLanguage)) {
-      let copyPrefLanguageCode = this.preferredLanguageDetailsCopy.selectedLanguageCode;
-      let copyLanguageOptions = this.preferredLanguageDetailsCopy.languageOptions;
+      const copyPrefLanguageCode = this.preferredLanguageDetailsCopy.selectedLanguageCode;
+      const copyLanguageOptions = this.preferredLanguageDetailsCopy.languageOptions;
       this.preferredLanguage = this.findPreferredLanguageByCode(copyLanguageOptions, copyPrefLanguageCode);
     }
     this.resetPreferredLanguageFlags();

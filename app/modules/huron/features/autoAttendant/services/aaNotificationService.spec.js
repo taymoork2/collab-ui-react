@@ -44,7 +44,7 @@ describe('Service: AANotificationService', function () {
     it('should parse through response and call core Notification for CES', function () {
       AANotificationService.errorResponse(response, message, parameters);
       expect(Notification.notify).toHaveBeenCalledWith(
-        "autoAttendant.errorCreateCe Key: CES0005 Description: No Database Entries found for the specified criteria TrackingId: ATLAS_09d583dc-e55a-2574-7862-ff14fe6b9aed_2", 'error');
+        'autoAttendant.errorCreateCe Key: CES0005 Description: No Database Entries found for the specified criteria TrackingId: ATLAS_09d583dc-e55a-2574-7862-ff14fe6b9aed_2', 'error');
     });
   });
 
@@ -78,7 +78,7 @@ describe('Service: AANotificationService', function () {
     it('should parse through response with data.error.message which is not an object', function () {
       AANotificationService.errorResponse(response, message, parameters);
       expect(Notification.notify).toHaveBeenCalledWith(
-        "autoAttendant.errorCreateCe Key: CES0005 Description: message field is not an object TrackingId: ATLAS_09d583dc-e55a-2574-7862-ff14fe6b9aed_2", 'error');
+        'autoAttendant.errorCreateCe Key: CES0005 Description: message field is not an object TrackingId: ATLAS_09d583dc-e55a-2574-7862-ff14fe6b9aed_2', 'error');
     });
   });
 
@@ -90,5 +90,4 @@ describe('Service: AANotificationService', function () {
       expect(Notification.error).toHaveBeenCalledWith(message, parameters);
     });
   });
-
 });

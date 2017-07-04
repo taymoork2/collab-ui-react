@@ -1,64 +1,15 @@
 import testModule from '../index';
 
-const TOLL_TYPE = [{ label: 'CCA Toll', value: 'CCA Toll' }, { label: 'CCA Toll Free', value: 'CCA Toll Free' }];
-const DEFAULT_NUMBER = [{ label: 'Default Toll', value: '1' }, { label: 'Default Toll Free', value: '1' }];
-const GLOBAL_DISPLAY = [{ label: 'Display', value: '1' }, { label: 'NO', value: '0' }];
-const HIDDEN_ON_CLIENT = [{ label: 'Display', value: 'false' }, { label: 'Hidden', value: 'true' }];
 describe('Component: gmTdNumbers', () => {
   beforeAll(function () {
-    this.newTD = {
-      ccaDomainId: '',
-      customerId: 'ff808081527ccb3f0153116a3531041e',
-      domainName: '',
-      telephonyDomainId: '',
-      region: 'EMEA',
-      isEdit: true,
-    };
+    this.preData = getJSONFixture('gemini/common.json');
 
-    this.editTD = {
-      ccaDomainId: 'ff808081527ccb3f0153116a3531041b',
-      customerId: 'ff808081527ccb3f0153116a3531041e',
-      domainName: 'xxy_test_TD',
-      telephonyDomainId: '',
-      region: 'EMEA',
-      isEdit: true,
-    };
-
-    this.constObject = {
-      SELECT_TYPE: 'Select Type',
-      SELECT_COUNTRY: 'Select Country',
-      CCA_TOLL: 'CCA Toll',
-      CCA_TOLL_FREE: 'CCA Toll Free',
-      INTERNATIONAL: 'International',
-      DOMESTIC: 'Domestic',
-      DEFAULT_TOLL: 'Default Toll',
-      DEFAULT_TOLL_FREE: 'Default Toll Free',
-      DISPLAY: 'Display',
-      HIDDEN: 'Hidden',
-      NO: 'NO',
-      DATA_STATUS: { NEW: 1, UPDATED: 2, DELETED: 3, NO_CHANGE: 4 },
-    };
-
-    this.number = {
-      dnisId: 'ff8080815bcce6c9015bead026e20d24',
-      countryId: 1,
-      tollType: 'CCA Toll',
-      phone: '1111111',
-      label: 'p1',
-      dnisNumber: '11133333333',
-      dnisNumberFormat: '11133333333',
-      phoneType: 'Domestic',
-      defaultDialInLanguage: '',
-      firstAltChoice: '',
-      secondAltChoice: '',
-      compareToSuperadminPhoneNumberStatus: '0',
-      superAdminCallInNumberDto: null,
-      spCustomerId: 'ff808081570807760157d570572619f4',
-      defaultNumber: '1',
-      globalListDisplay: '1',
-      ccaDomainId: 'ff8080815bcce6c9015bead026df0d23',
-      isHidden: 'false',
-    };
+    this.submittedTD = this.preData.submittedTD;
+    this.constObject = this.preData.gmTdConstObject;
+    this.allOptions = this.preData.gmTdAllOptions;
+    this.newAccessNumber = this.preData.newAccessNumber;
+    this.exsitedAccessNumber = this.preData.exsitedAccessNumber;
+    this.nonccaAccessNumber = this.preData.nonccaAccessNumber;
 
     this.fakeModal = {
       result: {
@@ -77,63 +28,23 @@ describe('Component: gmTdNumbers', () => {
   });
 
   beforeEach(function () {
-    this.mockData = {
-      telephonyNumbers: {
-        content: {
-          data: {
-            returnCode: 0,
-            body: [],
-          },
-        },
-      },
-      accessNumber: {
-        content: {
-          data: {
-            body: [
-              { id: 0,
-                number: '123456789',
-                tollType: null,
-                callType: null,
-                billingFormat: null,
-                languages: null,
-                accessNumberGroup: null,
-              },
-            ],
-            returnCode: 0,
-            trackId: '',
-          },
-        },
-      },
-      returnError: {
-        content: {
-          data: {
-            returnCode: 500,
-            trackId: '',
-          },
-        },
-      },
-      postFail: {
-        content: {
-          data: {
-            code: 5002,
-            message: 'submit fail',
-          },
-        },
-      },
-      postSuccess: {
-        content: {
-          data: {
-            code: 5000,
-          },
-        },
-      },
-    };
+    this.telephonyNumber = _.assign({}, this.preData.gmTdNumber);
+    this.telephonyNumbers = _.assign({}, this.preData.common);
+    this.returnJson = _.assign({}, this.preData.common);
+    this.accessNumberEntity = _.assign({}, this.preData.common);
+    this.postResponse = { content: { data: {} } };
+    this.rows = [];
   });
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$scope', '$state', '$modal', 'gemService', '$q', 'Notification', '$translate', '$timeout', '$interval', 'TelephonyDomainService', 'PreviousState');
+    this.injectDependencies('$scope', 'UrlConfig', '$httpBackend', '$state', '$modal', 'gemService', 'TelephonyNumberDataService', '$q', 'Notification', '$translate', '$timeout', 'TelephonyDomainService', 'PreviousState', 'WindowLocation');
     initSpies.apply(this);
+  });
+
+  afterEach(function () {
+    this.$httpBackend.verifyNoOutstandingExpectation();
+    this.$httpBackend.verifyNoOutstandingRequest();
   });
 
   function initSpies() {
@@ -149,6 +60,44 @@ describe('Component: gmTdNumbers', () => {
     spyOn(this.TelephonyDomainService, 'postTelephonyDomain').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'exportNumbersToCSV').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getDownloadUrl').and.returnValue('downloadUrl');
+    spyOn(this.WindowLocation, 'set').and.callFake(function (url) {
+      url = '';
+    });
+  }
+
+  function initConstObjectAndAllOptions() {
+    this.controller.constObject = this.constObject;
+    this.TelephonyNumberDataService.constObject = this.constObject;
+    this.TelephonyNumberDataService.tollTypeOptions = this.allOptions.tollTypeOptions;
+    this.TelephonyNumberDataService.callTypeOptions = this.allOptions.callTypeOptions;
+    this.TelephonyNumberDataService._countryOptions = this.allOptions._countryOptions;
+    this.TelephonyNumberDataService.countryOptions = this.allOptions.countryOptions;
+    this.TelephonyNumberDataService.countryId2NameMapping = this.allOptions.countryId2NameMapping;
+    this.TelephonyNumberDataService.countryName2IdMapping = this.allOptions.countryName2IdMapping;
+    this.TelephonyNumberDataService.isHiddenOptions = this.allOptions.isHiddenOptions;
+    this.TelephonyNumberDataService.defaultNumberOptions = this.allOptions.defaultNumberOptions;
+    this.TelephonyNumberDataService.globalDisplayOptions = this.allOptions.globalDisplayOptions;
+  }
+
+  function updateTDAndShowNumber(telephonyNumbers) {
+    telephonyNumbers = telephonyNumbers || [ this.telephonyNumber ];
+
+    this.telephonyNumbers.content.data.body = [];
+    for (let i = 0; i < telephonyNumbers.length; i++) {
+      this.telephonyNumbers.content.data.body.push(telephonyNumbers[i]);
+    }
+
+    this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(this.telephonyNumbers));
+    updateTD.apply(this);
+  }
+
+  function updateTD() {
+    this.gemService.setStorage('currentTelephonyDomain', this.submittedTD);
+    initComponent.apply(this);
+    this.$timeout.flush();
+
+    const gridApi = this.TelephonyNumberDataService.gridApi;
+    this.rows = gridApi.core.getVisibleRows(gridApi.grid);
   }
 
   function initComponent() {
@@ -158,40 +107,15 @@ describe('Component: gmTdNumbers', () => {
     this.gemService.setStorage('remedyTicket', {});
     this.gemService.setStorage('currentTdNotes', [ 'note' ]);
     this.gemService.setStorage('currentTdHistories', [ 'history' ]);
-    this.gemService.setStorage('countryOptions', [{ label: 'US', value: 1 }, { label: 'China', value: 2 }]);
-    this.gemService.setStorage('countryId2NameMapping', { 1: 'US', 2: 'China' });
-    this.gemService.setStorage('countryName2IdMapping', { US: 1, China: 2 });
+
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
+    this.$httpBackend.flush();
 
     this.compileComponent('gmTdNumbers', {});
     this.$scope.$apply();
 
-    this.controller.constObject = this.constObject;
-  }
-
-  function requestTDAndAddNumber() {
-    this.gemService.setStorage('currentTelephonyDomain', this.newTD);
-    initComponent.apply(this);
-    this.controller.addNumber();
-    this.$timeout.flush();
-  }
-
-  function updateTDAndShowNumber(num) {
-    num = num ? num : 1;
-
-    let body = this.mockData.telephonyNumbers.content.data.body;
-    for (let i = 0; i < num; i++) {
-      body.push(this.number);
-    }
-
-    this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(this.mockData.telephonyNumbers));
-    updateTD.apply(this);
-  }
-
-  function updateTD() {
-    this.gemService.setStorage('currentTelephonyDomain', this.editTD);
-    initComponent.apply(this);
-    this.$timeout.flush(500);
-    this.$interval.flush(10);
+    initConstObjectAndAllOptions.apply(this);
   }
 
   it('$onInit > edit TD', function () {
@@ -199,492 +123,507 @@ describe('Component: gmTdNumbers', () => {
     expect(this.controller.gridData.length).toBe(1);
   });
 
-  it('$onInit > edit TD > get Numbers return error', function () {
-    this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(this.mockData.returnError));
-    updateTD.apply(this);
-
-    expect(this.Notification.notify).toHaveBeenCalled();
-  });
-
-  it('submit TD > validateForm > invalid Phone', function () {
-    requestTDAndAddNumber.apply(this);
-
-    _.assign(this.controller.gridData[0], this.number);
-    this.controller.gridData[0].phone = '';
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].validation.phone.invalid).toBe(true);
-
-    _.assign(this.controller.gridData[0], this.number);
-    this.controller.gridData[0].phone = '~~~';
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].validation.phone.invalid).toBe(true);
-
-    _.assign(this.controller.gridData[0], this.number);
-    this.controller.gridData[0].phone = '123456';
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].validation.phone.invalid).toBe(true);
-  });
-
-  it('submit TD > validateForm > invalid Label', function () {
-    requestTDAndAddNumber.apply(this);
-
-    _.assign(this.controller.gridData[0], this.number);
-    this.controller.gridData[0].label = '';
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].validation.label.invalid).toBe(true);
-
-    _.assign(this.controller.gridData[0], this.number);
-    this.controller.gridData[0].label = '测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试';
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].validation.label.invalid).toBe(true);
-  });
-
-  it('submit TD > validateForm > invalid Access Number', function () {
-    requestTDAndAddNumber.apply(this);
-
-    _.assign(this.controller.gridData[0], this.number);
-    this.controller.gridData[0].dnisNumberFormat = '';
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].validation.dnisNumberFormat.invalid).toBe(true);
-
-    _.assign(this.controller.gridData[0], this.number);
-    this.controller.gridData[0].dnisNumberFormat = '123456';
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].validation.dnisNumberFormat.invalid).toBe(true);
-  });
-
-  it('submit TD > validateForm > invalid TollType', function () {
-    requestTDAndAddNumber.apply(this);
-
-    _.assign(this.controller.gridData[0], this.number);
-    this.controller.gridData[0].tollType = { label: '', value: '' };
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].validation.tollType.invalid).toBe(true);
-  });
-
-  it('submit TD > validateForm > invalid CallType', function () {
-    requestTDAndAddNumber.apply(this);
-
-    _.assign(this.controller.gridData[0], this.number);
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[0].callType = { label: '', value: '' };
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].validation.callType.invalid).toBe(true);
-  });
-
-  it('submit TD > validateForm > invalid Country', function () {
-    requestTDAndAddNumber.apply(this);
-
-    _.assign(this.controller.gridData[0], this.number);
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[0].callType = { label: 'Domestic', value: 'Domestic' };
-    this.controller.gridData[0].country = { label: '', value: '' };
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].validation.country.invalid).toBe(true);
-  });
-
-  it('submit TD > validateDefaultNumber > invalid no Default Toll number', function () {
-    updateTDAndShowNumber.apply(this);
-
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].defaultNumberValidation.invalid).toBe(true);
-  });
-
-  it('submit TD > validateDefaultNumber > invalid two Default Toll numbers', function () {
-    updateTDAndShowNumber.apply(this, [2]);
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[1].tollType = TOLL_TYPE[0];
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[0];
-    this.controller.gridData[1].defaultNumber = DEFAULT_NUMBER[0];
-
-    this.controller.submitTD();
-    expect(this.controller.gridData[1].defaultNumberValidation.invalid).toBe(true);
-  });
-
-  it('submit TD > validateDefaultNumber > invalid two Default Toll Free numbers', function () {
-    updateTDAndShowNumber.apply(this, [3]);
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[1].tollType = TOLL_TYPE[1];
-    this.controller.gridData[2].tollType = TOLL_TYPE[1];
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[0];
-    this.controller.gridData[1].defaultNumber = DEFAULT_NUMBER[1];
-    this.controller.gridData[2].defaultNumber = DEFAULT_NUMBER[1];
-
-    this.controller.submitTD();
-    expect(this.controller.gridData[2].defaultNumberValidation.invalid).toBe(true);
-  });
-
-  it('submit TD > validateGlobalDisplay > invalid no Display CCA Toll number', function () {
-    updateTDAndShowNumber.apply(this);
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[0];
-    this.controller.gridData[0].globalListDisplay = GLOBAL_DISPLAY[1];
-
-    this.controller.submitTD();
-    expect(this.controller.gridData[0].globalDisplayValidation.invalid).toBe(true);
-  });
-
-  it('submit TD > validateDuplicatedPhnNumber > invalid two duplicate numbers', function () {
-    updateTDAndShowNumber.apply(this, [2]);
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[0];
-    this.controller.gridData[0].globalListDisplay = GLOBAL_DISPLAY[0];
-    this.controller.gridData[1].tollType = TOLL_TYPE[1];
-
-    this.controller.submitTD();
-    expect(this.Notification.error).toHaveBeenCalled();
-  });
-
-  it('submit TD > validateConflictDnisNumber > invalid two same access numbers have different toll type or call type', function () {
-    updateTDAndShowNumber.apply(this, [2]);
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[0];
-    this.controller.gridData[0].globalListDisplay = GLOBAL_DISPLAY[0];
-    this.controller.gridData[1].label = 'p2';
-    this.controller.gridData[1].tollType = TOLL_TYPE[1];
-
-    this.controller.submitTD();
-    expect(this.Notification.error).toHaveBeenCalled();
-  });
-
-  it('submit TD > validatePhoneNumberDisplay > invalid one phone number which appears once is hidden', function () {
-    updateTDAndShowNumber.apply(this);
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[0];
-    this.controller.gridData[0].globalListDisplay = GLOBAL_DISPLAY[0];
-    this.controller.gridData[0].isHidden = HIDDEN_ON_CLIENT[1];
-
-    this.controller.submitTD();
-    expect(this.Notification.error).toHaveBeenCalled();
-  });
-
-  it('submit TD > validatePhoneNumberDisplay > confirm two same phone numbers are display', function () {
-    updateTDAndShowNumber.apply(this, [2]);
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[0];
-    this.controller.gridData[0].globalListDisplay = GLOBAL_DISPLAY[0];
-    this.controller.gridData[0].isHidden = HIDDEN_ON_CLIENT[0];
-    this.controller.gridData[1].dnisNumber = '22222222';
-    this.controller.gridData[1].tollType = TOLL_TYPE[1];
-    this.controller.gridData[1].isHidden = HIDDEN_ON_CLIENT[0];
-
-    this.TelephonyDomainService.postTelephonyDomain.and.returnValue(this.$q.resolve(this.mockData.postFail));
-    this.controller.submitTD();
-    this.fakeModal.ok();
-    this.$scope.$apply();
-
-    this.TelephonyDomainService.postTelephonyDomain.and.returnValue(this.$q.resolve(this.mockData.postSuccess));
-    this.controller.submitTD();
-    this.fakeModal.ok();
-    this.$scope.$apply();
-
-    this.TelephonyDomainService.postTelephonyDomain.and.returnValue(this.$q.reject({ status: 404 }));
-    this.controller.submitTD();
-    this.fakeModal.ok();
-    this.$scope.$apply();
-
-    expect(this.$modal.open).toHaveBeenCalled();
-  });
-
-  it('submit TD > add & update & delete number successfully', function () {
-    updateTDAndShowNumber.apply(this, [3]);
-    let row = { entity: this.controller.gridData[0] };
-    this.controller.deleteNumber(row);
-    this.$scope.$apply();
-
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[0];
-    this.controller.gridData[0].globalListDisplay = GLOBAL_DISPLAY[0];
-    this.controller.gridData[0].isHidden = HIDDEN_ON_CLIENT[0];
-
-    this.controller.gridData[1].phone = '22222222';
-    this.controller.gridData[1].dnisNumber = '22222222';
-    this.controller.gridData[1].dnisNumberFormat = '22222222';
-    this.controller.gridData[1].tollType = TOLL_TYPE[1];
-    this.controller.gridData[1].defaultNumber = DEFAULT_NUMBER[1];
-    this.controller.gridData[1].globalListDisplay = GLOBAL_DISPLAY[0];
-    this.controller.gridData[1].isHidden = HIDDEN_ON_CLIENT[0];
-
-    this.controller.addNumber();
-    _.assign(this.controller.gridData[2], this.number);
-    this.controller.gridData[2].dataType = 0;
-    this.controller.gridData[2].phone = '33333333';
-    this.controller.gridData[2].dnisNumber = '33333333';
-    this.controller.gridData[2].dnisNumberFormat = '33333333';
-    this.controller.gridData[2].tollType = TOLL_TYPE[1];
-    this.controller.gridData[2].globalListDisplay = GLOBAL_DISPLAY[0];
-    this.controller.gridData[2].isHidden = HIDDEN_ON_CLIENT[0];
-    this.$scope.$apply();
-
-    this.TelephonyDomainService.postTelephonyDomain.and.returnValue(this.$q.resolve(this.mockData.postSuccess));
-    this.controller.submitTD();
-    this.fakeModal.ok();
-    this.$scope.$apply();
-
-    expect(this.$modal.open).toHaveBeenCalled();
-  });
-
-  it('change Access Number > input invalid access number', function () {
-    requestTDAndAddNumber.apply(this);
-
-    this.controller.gridData[0].dnisNumberFormat = '';
-    this.controller.gridData[0].dnisNumber = '';
-
-    let row = { entity: this.controller.gridData[0] };
-    this.controller.changeAccessNumber(row);
-    expect(this.controller.gridData[0].typeDisabled).toBe(true);
-  });
-
-  it('change Access Number > input invalid access number then show notification', function () {
-    requestTDAndAddNumber.apply(this);
-
-    this.controller.gridData[0].dnisNumberFormat = '12345678';
-
-    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.mockData.returnError));
-    let row = { entity: this.controller.gridData[0] };
-    this.controller.changeAccessNumber(row);
-    this.$scope.$apply();
-
-    expect(this.Notification.notify).toHaveBeenCalled();
-  });
-
-  it('change Access Number > input new access number not existed in super admin', function () {
-    requestTDAndAddNumber.apply(this);
-
-    this.controller.gridData[0].dnisNumberFormat = '12345678';
-
-    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.mockData.accessNumber));
-    let row = { entity: this.controller.gridData[0] };
-    this.controller.changeAccessNumber(row);
-    this.$scope.$apply();
-
-    expect(this.controller.gridData[0].typeDisabled).toBe(false);
-  });
-
-  it('change Access Number > input access number existed in super admin', function () {
-    requestTDAndAddNumber.apply(this);
-
-    this.controller.gridData[0].dnisNumberFormat = '123456789';
-    this.mockData.accessNumber.content.data.body[0].tollType = 'CCA Toll';
-    this.mockData.accessNumber.content.data.body[0].callType = 'Domestic';
-
-    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.mockData.accessNumber));
-    let row = { entity: this.controller.gridData[0] };
-    this.controller.changeAccessNumber(row);
-    this.$scope.$apply();
-
-    expect(this.controller.gridData[0].typeDisabled).toBe(true);
-  });
-
-  it('change Access Number > input access number which is non CCA in super admin', function () {
-    requestTDAndAddNumber.apply(this);
-
-    this.controller.gridData[0].dnisNumberFormat = '123456789';
-    this.mockData.accessNumber.content.data.body[0].tollType = 'Toll';
-
-    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.mockData.accessNumber));
-    let row = { entity: this.controller.gridData[0] };
-    this.controller.changeAccessNumber(row);
-    this.$scope.$apply();
-
-    expect(this.controller.gridData[0].typeDisabled).toBe(true);
-  });
-
-  it('change Access Number > input new access number existed in current TD', function () {
+  it('$onInit > edit TD and add new number', function () {
     updateTDAndShowNumber.apply(this);
 
     this.controller.addNumber();
-    this.controller.gridData[1].dnisNumberFormat = '11133333333';
+    this.$timeout.flush(10);
+    expect(this.controller.gridData.length).toBe(2);
+  });
 
-    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.mockData.accessNumber));
-    let row = { entity: this.controller.gridData[1] };
-    this.controller.changeAccessNumber(row);
+  it('$onInit > edit TD and sort number', function () {
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber, { tollType: '' })];
+    telephonyNumbers.push(_.assign({}, this.telephonyNumber));
+
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.controller.TelephonyNumberDataService.sortDropdownList(this.rows[0].entity.tollType, this.rows[1].entity.tollType);
+    this.controller.TelephonyNumberDataService.sortDropdownList(this.rows[0].entity.callType, this.rows[1].entity.callType);
+
+    expect(this.controller.gridData.length).toBe(2);
+  });
+
+  it('$onInit > edit TD with only one deleted number', function () {
+    this.telephonyNumber.compareToSuperadminPhoneNumberStatus = 3;
+
+    updateTDAndShowNumber.apply(this);
+    expect(this.controller.gridData.length).toBe(0);
+  });
+
+  it('changePhone > resetDuplicateRowValidation', function () {
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    telephonyNumbers.push(_.assign({}, this.telephonyNumber, { defaultNumber: '0' }));
+
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.controller.submitTD();
+
+    this.rows[0].entity.phone = '77777777';
+    this.controller.changePhone(this.rows[0], '1111111');
+    expect(this.rows[0].entity.duplicatedRowValidation.invalid).toBe(false);
+  });
+
+  it('changeLabel > resetDuplicateRowValidation', function () {
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    telephonyNumbers.push(_.assign({}, this.telephonyNumber, { defaultNumber: '0' }));
+
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.controller.submitTD();
+
+    this.rows[0].entity.label = 'p11';
+    this.controller.changeLabel(this.rows[0], 'p1');
+    expect(this.rows[0].entity.duplicatedRowValidation.invalid).toBe(false);
+  });
+
+  it('changeDnisNumber > resetDuplicateRowValidation', function () {
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    telephonyNumbers.push(_.assign({}, this.telephonyNumber, { defaultNumber: '0' }));
+
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.controller.submitTD();
+
+    this.rows[0].entity.dnisNumberFormat = '33333333333';
+    this.controller.changeDnisNumber(this.rows[0], '11133333333');
+    expect(this.rows[0].entity.duplicatedRowValidation.invalid).toBe(false);
+  });
+
+  it('changeAccessNumber > invalid empty access number', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.rows[0].entity.dnisNumberFormat = '';
+    this.controller.changeAccessNumber(this.rows[0]);
+    expect(this.rows[0].entity.typeDisabled).toBe(true);
+  });
+
+  it('changeAccessNumber > get access number info not existed in super admin', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.accessNumberEntity.content.data.body = [];
+    this.accessNumberEntity.content.data.body.push(this.newAccessNumber);
+    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.accessNumberEntity));
+
+    this.rows[0].entity.dnisNumberFormat = '123456789';
+    this.controller.changeAccessNumber(this.rows[0]);
     this.$scope.$apply();
 
-    expect(this.controller.gridData[0].tollType.value).toEqual(this.controller.gridData[1].tollType.value);
+    expect(this.rows[0].entity.typeDisabled).toBe(false);
   });
 
-  it('change Toll Type', function () {
-    requestTDAndAddNumber.apply(this);
-
-    _.assign(this.controller.gridData[0], this.number);
-    let row = { entity: this.controller.gridData[0] };
-
-    this.controller.accessNumber2EntityMapping[this.number.dnisNumber] = { status: 0, tollType: 'CCA Toll' };
-    this.controller.changeTollType(row);
-
-    expect(this.controller.gridData.length).toBe(1);
-  });
-
-  it('change Call Type', function () {
-    requestTDAndAddNumber.apply(this);
-
-    _.assign(this.controller.gridData[0], this.number);
-    let row = { entity: this.controller.gridData[0] };
-
-    this.controller.accessNumber2EntityMapping[this.number.dnisNumber] = { status: 0, callType: 'Domestic' };
-    this.controller.changeCallType(row);
-
-    expect(this.controller.gridData.length).toBe(1);
-  });
-
-  it('change Default Number as Default Toll when only one number', function () {
-    requestTDAndAddNumber.apply(this);
-
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[0];
-    let row = { entity: this.controller.gridData[0], uid: 'r0' };
-    this.controller.changeDefaultNumber(row);
-
-    expect(this.controller.curDefTollRow.uid).toBe('r0');
-  });
-
-  it('change Default Number as Default Toll Free when only one number', function () {
-    requestTDAndAddNumber.apply(this);
-
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[1];
-    let row = { entity: this.controller.gridData[0], uid: 'r0' };
-    this.controller.changeDefaultNumber(row);
-
-    expect(this.controller.curDefTollFreeRow.uid).toBe('r0');
-  });
-
-  it('change Default Number as Default Toll when the other is Default Toll', function () {
+  it('changeAccessNumber > get access number info existed in super admin', function () {
     updateTDAndShowNumber.apply(this);
 
-    this.controller.gridData[0].tollType = TOLL_TYPE[0];
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[0];
-    let row = { entity: this.controller.gridData[0], uid: 'r0' };
-    this.controller.changeDefaultNumber(row);
+    this.accessNumberEntity.content.data.body = [];
+    this.accessNumberEntity.content.data.body.push(this.exsitedAccessNumber);
+    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.accessNumberEntity));
 
-    this.controller.addNumber();
-    this.controller.gridData[1].tollType = TOLL_TYPE[0];
-    this.controller.gridData[1].defaultNumber = DEFAULT_NUMBER[0];
-    row = { entity: this.controller.gridData[1], uid: 'r1' };
-    this.controller.changeDefaultNumber(row);
+    this.rows[0].entity.dnisNumberFormat = '123456789';
+    this.controller.changeAccessNumber(this.rows[0]);
+    this.$scope.$apply();
 
-    expect(this.controller.curDefTollRow.uid).toBe('r1');
+    expect(this.rows[0].entity.typeDisabled).toBe(true);
   });
 
-  it('change Default Number as Default Toll Free when the other is Default Toll Free', function () {
+  it('changeAccessNumber > get non CCA access number info', function () {
     updateTDAndShowNumber.apply(this);
 
-    this.controller.gridData[0].tollType = TOLL_TYPE[1];
-    this.controller.gridData[0].defaultNumber = DEFAULT_NUMBER[1];
-    let row = { entity: this.controller.gridData[0], uid: 'r0' };
-    this.controller.changeDefaultNumber(row);
+    this.accessNumberEntity.content.data.body = [];
+    this.accessNumberEntity.content.data.body.push(this.nonccaAccessNumber);
+    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.accessNumberEntity));
 
-    this.controller.addNumber();
-    this.controller.gridData[1].tollType = TOLL_TYPE[1];
-    this.controller.gridData[1].defaultNumber = DEFAULT_NUMBER[1];
-    row = { entity: this.controller.gridData[1], uid: 'r1' };
-    this.controller.changeDefaultNumber(row);
+    this.rows[0].entity.dnisNumberFormat = '123456789';
+    this.controller.changeAccessNumber(this.rows[0]);
+    this.$scope.$apply();
 
-    expect(this.controller.curDefTollFreeRow.uid).toBe('r1');
+    expect(this.rows[0].entity.validation.dnisNumberFormat.invalid).toBe(true);
   });
 
-  it('Delete Number', function () {
-    requestTDAndAddNumber.apply(this);
+  it('changeTollType > get access number info', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.accessNumberEntity.content.data.body = [];
+    this.accessNumberEntity.content.data.body.push(this.newAccessNumber);
+    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.accessNumberEntity));
+
+    this.rows[0].entity.dnisNumberFormat = '123456789';
+    this.controller.changeAccessNumber(this.rows[0]);
+    this.$scope.$apply();
+
+    this.controller.changeTollType(this.rows[0]);
+
+    expect(this.rows[0].entity.typeDisabled).toBe(false);
+  });
+
+  it('changeCallType > get access number info', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.accessNumberEntity.content.data.body = [];
+    this.accessNumberEntity.content.data.body.push(this.newAccessNumber);
+    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.accessNumberEntity));
+
+    this.rows[0].entity.dnisNumberFormat = '123456789';
+    this.controller.changeAccessNumber(this.rows[0]);
+    this.$scope.$apply();
+
+    this.controller.changeCallType(this.rows[0]);
+
+    expect(this.rows[0].entity.typeDisabled).toBe(false);
+  });
+
+  it('changeDefaultNumber > change the second number to Default Toll', function () {
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    telephonyNumbers.push(_.assign({}, this.telephonyNumber, { defaultNumber: '0' }));
+
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.rows[1].entity.defaultNumber = { label: 'Default Toll', value: '1' };
+    this.controller.changeDefaultNumber(this.rows[1]);
+
+    expect(this.rows[1].entity.isHnDisabled).toBe(true);
+  });
+
+  it('changeDefaultNumber > change the second number to Default Toll Free', function () {
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    _.assign(telephonyNumbers[0], { tollType: 'CCA Toll Free' });
+    telephonyNumbers.push(_.assign({}, this.telephonyNumber, { tollType: 'CCA Toll Free', defaultNumber: '0' }));
+
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.rows[1].entity.defaultNumber = { label: 'Default Toll Free', value: '1' };
+    this.controller.changeDefaultNumber(this.rows[1]);
+
+    expect(this.rows[1].entity.isHnDisabled).toBe(true);
+  });
+
+  it('changeDefaultNumber > resetDefaultNumberValidation', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.rows[0].entity.defaultNumber = { label: '', value: '0' };
+    this.controller.submitTD();
+
+    this.rows[0].entity.defaultNumber = { label: 'Default Toll', value: '1' };
+    this.controller.changeDefaultNumber(this.rows[0]);
+
+    expect(this.rows[0].entity.defaultNumberValidation.invalid).toBe(false);
+  });
+
+  it('changeGlobalDisplay > resetGlobalDisplayValidation', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.rows[0].entity.globalListDisplay = { label: 'NO', value: '0' };
+    this.controller.submitTD();
+
+    this.rows[0].entity.globalListDisplay = { label: 'Display', value: '1' };
+    this.controller.changeGlobalDisplay(this.rows[0]);
+
+    expect(this.rows[0].entity.globalDisplayValidation.invalid).toBe(false);
+  });
+
+  it('changeHiddenOnClient > resetPhnNumDisplayValidation', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.rows[0].entity.isHidden = { label: 'Hidden', value: 'true' };
+    this.controller.submitTD();
+
+    this.rows[0].entity.isHidden = { label: 'Display', value: 'false' };
+    this.controller.changeHiddenOnClient(this.rows[0]);
+
+    expect(this.rows[0].entity.phnNumDisplayValidation.invalid).toBe(false);
+  });
+
+  it('delete Number > delete one submitted number', function () {
+    updateTDAndShowNumber.apply(this);
+
     this.controller.submitLoading = true;
-    let row = { entity: this.controller.gridData[0] };
-    this.controller.deleteNumber(row);
-    expect(this.controller.gridData.length).toBe(1);
+    this.controller.deleteNumber(this.rows[0]);
 
     this.controller.submitLoading = false;
-    this.controller.deleteNumber(row);
+    this.controller.deleteNumber(this.rows[0]);
     expect(this.controller.gridData.length).toBe(0);
+  });
 
-    this.controller.addNumber();
-    this.controller.gridData[0].dataType = 3;
-    row = { entity: this.controller.gridData[0] };
-    this.controller.deleteNumber(row);
-    expect(this.controller.gridData.length).toBe(0);
+  it('delete Number > delete one number imported from TD', function () {
+    updateTDAndShowNumber.apply(this);
 
-    this.controller.addNumber();
-    this.controller.gridData[0].dataType = 1;
-    row = { entity: this.controller.gridData[0] };
-    this.controller.deleteNumber(row);
-    expect(this.controller.gridData.length).toBe(0);
+    const importTDNumbers = [ this.telephonyNumber ];
+    this.gemService.setStorage('currentTelephonyDomain', { importTDNumbers: importTDNumbers });
+    this.controller.importTD();
+    this.fakeModal.ok();
+    this.$scope.$apply();
+
+    this.controller.deleteNumber(this.rows[1]);
+    expect(this.controller.gridData.length).toBe(1);
   });
 
   it('download template', function () {
     initComponent.apply(this);
     this.controller.downloadTemplate();
     this.fakeModal.ok();
+
     expect(this.$modal.open).toHaveBeenCalled();
   });
 
   it('import TD', function () {
-    initComponent.apply(this);
+    updateTDAndShowNumber.apply(this);
 
-    let importTDNumbers = [ this.number ];
+    const importTDNumbers = [ this.telephonyNumber ];
     this.gemService.setStorage('currentTelephonyDomain', { importTDNumbers: importTDNumbers });
     this.controller.importTD();
     this.fakeModal.ok();
-    this.$interval.flush(10);
-    expect(this.controller.gridData.length).toBe(1);
+    this.$scope.$apply();
+
+    expect(this.controller.gridData.length).toBe(2);
   });
 
   it('import CSV', function () {
-    initComponent.apply(this);
+    updateTDAndShowNumber.apply(this);
 
-    let number = _.assignIn({}, this.number, { country: 'US' });
+    const number = _.assign({}, this.telephonyNumber, { country: 'US' });
     delete number.countryId;
 
     this.controller.importNumberCSV([ number ]);
-    this.$timeout.flush();
-    this.$interval.flush(10);
-    expect(this.controller.gridData.length).toBe(1);
+    this.$timeout.flush(10);
+
+    expect(this.controller.gridData.length).toBe(2);
   });
 
-  it('onEditTD', function () {
+  it('onEditTD > change region', function () {
     updateTDAndShowNumber.apply(this);
 
     this.controller.submitLoading = true;
     this.controller.onEditTD();
 
+    const importTDNumbers = [ this.telephonyNumber ];
+    this.gemService.setStorage('currentTelephonyDomain', { importTDNumbers: importTDNumbers });
     this.controller.submitLoading = false;
-    this.controller.gridData[0].dataType = 1;
+    this.controller.importTD();
+    this.fakeModal.ok();
+    this.$scope.$apply();
+
     this.controller.onEditTD();
-    let currentTD = this.gemService.getStorage('currentTelephonyDomain');
+    const currentTD = this.gemService.getStorage('currentTelephonyDomain');
     currentTD.region = 'US';
 
     this.fakeModal.ok();
-    expect(this.controller.gridData.length).toBe(0);
+    this.$scope.$apply();
+
+    expect(this.controller.gridData.length).toBe(1);
   });
 
   it('export to CSV', function () {
-    initComponent.apply(this);
-    this.controller.exportToCSV();
-
     updateTDAndShowNumber.apply(this);
     this.controller.exportToCSV();
     this.$scope.$apply();
 
     this.TelephonyDomainService.exportNumbersToCSV.and.returnValue(this.$q.reject({ status: 404 }));
     this.controller.exportToCSV();
-    this.$scope.$apply();
     this.$timeout.flush(1500);
+    this.$scope.$apply();
 
     expect(this.Notification.errorResponse).toHaveBeenCalled();
-  });
-
-  it('sortDropdownList', function () {
-    initComponent.apply(this);
-    let a = { label: '', value: '' };
-    let b = { label: '', value: '' };
-    let result = this.controller.sortDropdownList(a, b);
-    expect(result).toBe(0);
-
-    a = b = { label: '', value: '1' };
-    result = this.controller.sortDropdownList(a, b);
-    expect(result).toBe(0);
   });
 
   it('onCancel', function () {
     initComponent.apply(this);
     this.controller.onCancel();
     expect(this.PreviousState.go).toHaveBeenCalled();
+  });
+
+  it('submitTD > validatePhone', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.rows[0].entity.phone = '';
+    this.controller.submitTD();
+
+    this.rows[0].entity.phone = '<>';
+    this.controller.submitTD();
+
+    this.rows[0].entity.phone = '123';
+    this.controller.submitTD();
+
+    expect(this.rows[0].entity.validation.phone.invalid).toBe(true);
+  });
+
+  it('submitTD > validateLabel', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.rows[0].entity.label = '';
+    this.controller.submitTD();
+
+    this.rows[0].entity.label = '测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测';
+    this.controller.submitTD();
+
+    expect(this.rows[0].entity.validation.label.invalid).toBe(true);
+  });
+
+  it('submitTD > validateAccessNumber', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.rows[0].entity.dnisNumberFormat = '';
+    this.controller.submitTD();
+
+    this.rows[0].entity.dnisNumberFormat = '123';
+    this.controller.submitTD();
+
+    expect(this.rows[0].entity.validation.dnisNumberFormat.invalid).toBe(true);
+  });
+
+  it('submitTD > validateTollType', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.rows[0].entity.tollType = { label: 'Select Type', value: '' };
+    this.controller.submitTD();
+
+    expect(this.rows[0].entity.validation.tollType.invalid).toBe(true);
+  });
+
+  it('submitTD > validateCallType', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.rows[0].entity.callType = { label: 'Select Type', value: '' };
+    this.controller.submitTD();
+
+    expect(this.rows[0].entity.validation.callType.invalid).toBe(true);
+  });
+
+  it('submitTD > validateCountry', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.rows[0].entity.country = { label: 'Select Country', value: '' };
+    this.controller.submitTD();
+
+    expect(this.rows[0].entity.validation.country.invalid).toBe(true);
+  });
+
+  it('submitTD > validateNumbersCount > exceed 300 numbers', function () {
+    const telephonyNumbers: any = [];
+    for (let i = 0; i < 301; i++) {
+      telephonyNumbers.push(_.assign({}, this.telephonyNumber));
+    }
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.controller.submitTD();
+    expect(this.Notification.error).toHaveBeenCalled();
+  });
+
+  it('submitTD > validateDefaultNumber > have two default toll numbers', function () {
+    const telephonyNumbers: any = [];
+    for (let i = 0; i < 2; i++) {
+      telephonyNumbers.push(_.assign({}, this.telephonyNumber));
+    }
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.controller.submitTD();
+    expect(this.rows[1].entity.defaultNumberValidation.invalid).toBe(true);
+  });
+
+  it('submitTD > validateDefaultNumber > have two default toll free numbers', function () {
+    const telephonyNumbers: any = [_.assign({}, this.telephonyNumber)];
+    for (let i = 0; i < 2; i++) {
+      telephonyNumbers.push(_.assign({}, this.telephonyNumber, { tollType: 'CCA Toll Free' }));
+    }
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.controller.submitTD();
+    expect(this.rows[2].entity.defaultNumberValidation.invalid).toBe(true);
+  });
+
+  it('submitTD > validateConflictDnisNumber > same access number have conflict toll type', function () {
+    const telephonyNumbers: any = [_.assign({}, this.telephonyNumber, { phone: '123456789' })];
+    telephonyNumbers.push(_.assign({}, this.telephonyNumber, { tollType: 'CCA Toll Free' }));
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.controller.submitTD();
+    expect(this.rows[1].entity.validation.tollType.invalid).toBe(true);
+  });
+
+  it('submitTD > validatePhoneNumberDisplay > same phone number are all display on client', function () {
+    const telephonyNumbers: any = [_.assign({}, this.telephonyNumber, { label: 'p11' })];
+    telephonyNumbers.push(_.assign({}, this.telephonyNumber, { defaultNumber: '0' }));
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.controller.submitTD();
+    expect(this.$modal.open).toHaveBeenCalled();
+  });
+
+  it('submitTD successfully', function () {
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    telephonyNumbers.push(_.assign({}, this.telephonyNumber, { phone: '22222222', defaultNumber: '0' }));
+    telephonyNumbers.push(_.assign({}, this.telephonyNumber, { phone: '33333333', defaultNumber: '0' }));
+
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    this.rows[0].entity.phone = '00000000';
+    this.controller.deleteNumber(this.rows[2]);
+
+    const number = _.assign({}, this.telephonyNumber, { phone: '44444444', country: 'US', defaultNumber: '0' });
+    delete number.countryId;
+
+    this.controller.importNumberCSV([ number ]);
+    this.$timeout.flush(10);
+
+    this.postResponse.content.data.code = 5000;
+    this.TelephonyDomainService.postTelephonyDomain.and.returnValue(this.$q.resolve(this.postResponse));
+    this.controller.submitTD();
+    this.fakeModal.ok();
+    this.$scope.$apply();
+
+    expect(this.controller.gridData.length).toBe(3);
+  });
+
+  it('submitTD fail', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.postResponse.content.data.code = 5003;
+    this.TelephonyDomainService.postTelephonyDomain.and.returnValue(this.$q.resolve(this.postResponse));
+    this.controller.submitTD();
+    this.fakeModal.ok();
+    this.$scope.$apply();
+    expect(this.Notification.error).toHaveBeenCalled();
+
+    this.TelephonyDomainService.postTelephonyDomain.and.returnValue(this.$q.reject({ status: 404 }));
+    this.controller.submitTD();
+    this.fakeModal.ok();
+    this.$scope.$apply();
+    expect(this.Notification.errorResponse).toHaveBeenCalled();
+  });
+
+  it('$onInit > TelephonyNumberDataService initCountries', function () {
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+
+    updateTDAndShowNumber.apply(this, [telephonyNumbers]);
+
+    const gmCountry = {
+      countryOptions : { label: 'US', value: 1 },
+      countryId2NameMapping : { 1: 'US' },
+      countryName2IdMapping : { US: 1 },
+    };
+    this.gemService.setStorage('gmCountry', gmCountry);
+    this.controller.TelephonyNumberDataService.initCountries();
+
+    expect(this.controller.gridData.length).toBe(1);
+  });
+
+  it('changeAccessNumber > get access number info return error', function () {
+    updateTDAndShowNumber.apply(this);
+
+    this.returnJson.content.data.returnCode = 500;
+    this.TelephonyDomainService.getAccessNumberInfo.and.returnValue(this.$q.resolve(this.returnJson));
+
+    this.rows[0].entity.dnisNumberFormat = '123456789';
+    this.controller.changeAccessNumber(this.rows[0]);
+    this.$scope.$apply();
+
+    expect(this.Notification.notify).toHaveBeenCalled();
+  });
+
+  it('$onInit > edit TD > get Numbers return error', function () {
+    this.returnJson.content.data.returnCode = 500;
+    this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(this.returnJson));
+    updateTD.apply(this);
+
+    expect(this.Notification.notify).toHaveBeenCalled();
   });
 
 });

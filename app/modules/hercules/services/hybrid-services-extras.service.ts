@@ -1,9 +1,15 @@
 import { HybridServiceId, IServiceAlarm, IAlarmReplacementValues, ConnectorType } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 
+export interface IAllowedRegistrationHost {
+  ttlInSeconds: number;
+  hostname: string;
+  url: string;
+}
+
 /**
  * This service does HTTP requests to FMS endpoints that aren't clusters or connectors
- * The ones seldomly used (/allowedRedirectTargets, /channels, etc.)
+ * The ones seldomly used (/allowedRegistrationHosts, /channels, etc.)
  */
 export class HybridServicesExtrasService {
   /* @ngInject */
@@ -16,14 +22,13 @@ export class HybridServicesExtrasService {
   ) {
     this.extractDataAndTranslateAlarms = this.extractDataAndTranslateAlarms.bind(this);
     this.extractDataFromResponse = this.extractDataFromResponse.bind(this);
+    this.notifyReadOnlyLaunch = this.notifyReadOnlyLaunch.bind(this);
   }
 
-  public addPreregisteredClusterToAllowList(hostname: string, ttlInSeconds: number, clusterId: string): ng.IPromise<any> {
-    const url = `${this.UrlConfig.getHerculesUrl()}/organizations/${this.Authinfo.getOrgId()}/allowedRedirectTargets`;
+  public addPreregisteredClusterToAllowList(hostname: string, clusterId: string): ng.IPromise<any> {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/allowedRegistrationHosts`;
     return this.$http.post(url, {
       hostname: hostname,
-      ttlInSeconds: ttlInSeconds,
-      clusterId: clusterId,
     });
   }
 
@@ -33,10 +38,13 @@ export class HybridServicesExtrasService {
       .then(this.extractDataAndTranslateAlarms);
   }
 
-  public getPreregisteredClusterAllowList(): ng.IPromise<any> {
-    const url = `${this.UrlConfig.getHerculesUrl()}/organizations/${this.Authinfo.getOrgId()}/allowedRedirectTargets`;
+  public getPreregisteredClusterAllowList(clusterId: string): ng.IPromise<IAllowedRegistrationHost[]> {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/allowedRegistrationHosts`;
     return this.$http.get(url)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then(({ items }) => {
+        return items as IAllowedRegistrationHost[];
+      });
   }
 
   public getReleaseNotes(releaseChannel: string, connectorType: ConnectorType): ng.IPromise<string> {
@@ -46,6 +54,11 @@ export class HybridServicesExtrasService {
       .then((data) => {
         return _.get(data, 'releaseNotes', '');
       });
+  }
+
+  public notifyReadOnlyLaunch(): ng.IPromise<any> {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/internals/actions/invalidateUser/invoke`;
+    return this.$http.post(url, null);
   }
 
   private convertToTranslateReplacements(alarmReplacementValues: IAlarmReplacementValues[]) {
@@ -88,7 +101,7 @@ export class HybridServicesExtrasService {
   private translateWithFallback(alarmKey: string, fallback: string, translateReplacements: any) {
     const translationKey = `hercules.serviceAlarms.${alarmKey}`;
     const translation = this.$translate.instant(translationKey, translateReplacements);
-    return translation === translationKey ? fallback : translation;
+    return _.includes(translation, translationKey) ? fallback : translation;
   }
 }
 

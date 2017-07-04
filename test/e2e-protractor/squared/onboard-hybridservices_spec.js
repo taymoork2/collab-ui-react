@@ -5,8 +5,8 @@ describe('Onboard users with Hybrid Services', function () {
   var testUser = utils.randomTestGmailwithSalt('hybridservices');
 
   function expectHybridServices(calendar, callAware, callConnectBoolean) {
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, calendar);
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, callAware);
+    utils.waitForText(users.hybridServices_sidePanel_Calendar, calendar);
+    utils.waitForText(users.hybridServices_sidePanel_UC, callAware);
 
     var isCallServiceAwareEnabled = callAware !== 'Off';
     // Get into the call service settings, make sure EC is off!

@@ -31,5 +31,4 @@
 
   module.exports.ConfigTemplateService = ConfigTemplateService;
   module.exports.ConfigUserService = ConfigUserService;
-
 })();

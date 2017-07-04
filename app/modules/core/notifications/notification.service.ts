@@ -52,12 +52,12 @@ export class Notification {
   }
 
   public processErrorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): string {
-    let errorMsg = this.getErrorMessage(errorKey, errorParams);
+    const errorMsg = this.getErrorMessage(errorKey, errorParams);
     return this.addResponseMessage(errorMsg, response, true);
   }
 
   public errorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
-    let errorMsg = this.processErrorResponse(response, errorKey, errorParams);
+    const errorMsg = this.processErrorResponse(response, errorKey, errorParams);
     this.notifyErrorResponse(errorMsg, response);
   }
 
@@ -81,8 +81,8 @@ export class Notification {
     if (!notifications.length) {
       return;
     }
-    let closeHtml = `<button type="button" class="close toast-close-button"><span class="sr-only">${this.$translate.instant('common.close')}</span></button>`;
-    let directiveData = {};
+    const closeHtml = `<button type="button" class="close toast-close-button"><span class="sr-only">${this.$translate.instant('common.close')}</span></button>`;
+    const directiveData = {};
     _.set(directiveData, allowHtml ? Notification.HTML_MESSAGES : Notification.MESSAGES , notifications);
 
     this.toaster.pop({
@@ -103,7 +103,7 @@ export class Notification {
   }
 
   private addResponseMessage(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>, useResponseData: boolean = false): string {
-    let status = _.get<number>(response, 'status');
+    const status = _.get<number>(response, 'status');
     if (this.isCancelledResponse(response)) {
       errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusCancelled');
     } else if (this.isOfflineStatus(status)) {
@@ -152,7 +152,7 @@ export class Notification {
 
   private addMessageFromResponseData(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
     let error: string;
-    let errors: Array<any> | string;
+    let errors: any[] | string;
     let responseMessage: string | undefined;
     if ((errors = _.get(response, 'data.error.message', [])) && (_.isArray(errors) || _.isString(errors)) && errors.length) { // for CCATG API spec
       responseMessage = this.getMessageFromErrorDataStructure(errors);
@@ -178,7 +178,7 @@ export class Notification {
   /**
    * https://wiki.cisco.com/display/WX2RESTAPI/CCATG+RESTful+API+Design+Guidelines#CCATGRESTfulAPIDesignGuidelines-3.9StatusCodes
    */
-  private getMessageFromErrorDataStructure(errors: Array<string|Object> | string): string {
+  private getMessageFromErrorDataStructure(errors: (string|Object)[] | string): string {
     if (_.isString(errors)) {
       return errors;
     }
@@ -199,13 +199,16 @@ export class Notification {
   }
 
   private addTrackingId(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
-    let headers = _.get(response, 'headers');
+    const headers = _.get(response, 'headers');
     let trackingId = _.isFunction(headers) && headers('TrackingID');  // exposed via CORS headers
     if (!trackingId) {
       trackingId = _.get(response, 'data.trackingId'); // for CCATG API spec
     }
     if (!trackingId) {
-      trackingId = _.get(response, 'data.error.trackingId');  // falback to old data structure
+      trackingId = _.get(response, 'data.error.trackingId');  // fallback to old data structure
+    }
+    if (!trackingId) {
+      trackingId = _.get(response, 'config.headers.TrackingID');  // fallback for when request could not be made
     }
     if (_.isString(trackingId) && trackingId.length) {
       errorMsg = `${this.addTrailingPeriod(errorMsg)} TrackingID: ${trackingId}`;

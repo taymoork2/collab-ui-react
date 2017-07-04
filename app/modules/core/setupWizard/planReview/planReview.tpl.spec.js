@@ -24,6 +24,7 @@ describe('Template: planReview', function () {
     getCareServices: jasmine.createSpy('getCareServices').and.returnValue(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: jasmine.createSpy('getCmrServices').and.returnValue(getJSONFixture('core/json/authInfo/cmrServices.json')),
     getLicenses: jasmine.createSpy('getLicenses').and.returnValue(getJSONFixture('core/json/authInfo/licenseServices.json')),
+    getSubscriptions: jasmine.createSpy('getSubscriptions').and.returnValue('[]'),
     isCare: jasmine.createSpy('isCare').and.returnValue(true),
   };
 
@@ -79,7 +80,6 @@ describe('Template: planReview', function () {
   });
 
   describe('Plan Review', function () {
-
     it('should have Care service info populated', function () {
       expect(controller).toBeDefined();
       expect(controller.isCareEnabled).toEqual(true);

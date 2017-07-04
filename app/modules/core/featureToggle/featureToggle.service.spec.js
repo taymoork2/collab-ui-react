@@ -3,7 +3,6 @@
 var testModule = require('./index').default;
 
 describe('FeatureToggleService', function () {
-
   function init() {
     this.initModules(testModule);
     this.injectDependencies('$httpBackend', '$state', 'Authinfo', 'FeatureToggleService');
@@ -133,5 +132,4 @@ describe('FeatureToggleService', function () {
       expect(this.$state.go).toHaveBeenCalledWith('login');
     });
   });
-
 });

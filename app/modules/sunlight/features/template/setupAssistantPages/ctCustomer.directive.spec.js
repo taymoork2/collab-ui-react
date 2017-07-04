@@ -19,11 +19,11 @@ describe('Directive: ct-customer Customer Information Page', function () {
     }, {
       name: 'type',
       value: {
-        id: "category",
-        text: "category",
+        id: 'category',
+        text: 'category',
         dictionaryType: {
-          fieldSet: "ccc_core",
-          fieldName: "ccc_category",
+          fieldSet: 'ccc_core',
+          fieldName: 'ccc_category',
         },
       },
       categoryOptions: ['option1', 'option2', 'option3'],
@@ -47,7 +47,7 @@ describe('Directive: ct-customer Customer Information Page', function () {
   }));
 
   function renderCtCustomerDirective() {
-    element = $compile("<ct-customer/>")($rootScope);
+    element = $compile('<ct-customer/>')($rootScope);
     $rootScope.$digest();
     return element;
   }

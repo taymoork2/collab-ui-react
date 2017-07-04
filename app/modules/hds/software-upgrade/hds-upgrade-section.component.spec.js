@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Component: hdsUpgradeSection', function () {
-
   var controller, $componentController, $scope, $rootScope, $modal,
     mockCluster, mockUpgradingCluster, ClusterService;
 

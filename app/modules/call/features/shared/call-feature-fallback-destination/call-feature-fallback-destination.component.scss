@@ -14,6 +14,11 @@
       border: 0 none;
     }
   }
+  .cs-fallback-content {
+    height: calc(100vh - 143px);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 }
 
 uc-fallback-destination {
@@ -24,9 +29,7 @@ uc-fallback-destination {
     .overlay-panel & {
       @include vr-spacing(ml, 26, 0px, true);
       @include vr-spacing(pb, 1);
-
-      position: fixed !important;
-      height: 16rem !important;
+      height: 10rem !important;
       width: 54rem;
       left: 50%;
       margin-right: auto;
@@ -37,5 +40,12 @@ uc-fallback-destination {
       align-content: flex-start;
       justify-content: center;
     }
+  }
+
+  .card-member {
+    margin-left: 0;
+  }
+  .cs-card-number {
+    margin-left: 0;
   }
 }

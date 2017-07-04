@@ -33,6 +33,7 @@
 
   .cs-card-block {
     justify-content: center;
+    min-height: rem-calc(450px);
   }
 
   h4 {
@@ -45,6 +46,13 @@
     border: 1px;
     border-style: solid;
     border-color: $color-primary-base;
+  }
+
+  .icon-extension-mobility {
+    font-size: 3.5rem;
+    color: $gray-dark;
+    align-self: center;
+    margin-top: 20px;
   }
 }
 
@@ -296,6 +304,20 @@
 }
 
 .pstn-review {
+  &.swivel-pstn-review {
+    justify-content: center;
+    .icon-circle-call {
+      color: $brand-info;
+    }
+
+    .title {
+      color: $gray-base;
+      line-height: 1.33;
+      font-weight: 200;
+      font-size: 2.25rem;
+    }
+  }
+
   .review-container {
     display: flex;
     flex-direction: column;
@@ -344,6 +366,10 @@
       flex-direction: row;
     }
 
+    .swivel-package-details {
+      margin: auto;
+    }
+
     .package-detail-label,
     .package-detail-text {
       line-height: 34px;
@@ -364,6 +390,10 @@
       margin-right: 50px;
     }
   }
+}
+
+.swivel-pstn-next-steps {
+  margin: auto;
 }
 
 .pstn-next-steps {

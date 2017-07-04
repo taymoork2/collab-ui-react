@@ -10,88 +10,188 @@
   </h3>
 </div>
 <div class="modal-body context-modal-body">
-  <form name="newFieldForm">
-  <div class="context-modal-content">
-    <!-- ID -->
-    <div class="cs-input-group">
-      <p class="cs-input-label" translate="context.dictionary.fieldPage.fieldId"></p>
-      <input
-        cs-input
-        type="text"
-        id="fieldId"
-        name="fieldId"
-        placeholder="{{::'context.dictionary.fieldPage.fieldIdPlaceholder' | translate}}"
-        ng-model="$ctrl.fieldData.id"
-        cs-input-group-size="medium-12"
-        cs-input-messages="$ctrl.validationMessages"
-        cs-input-validators="$ctrl.validators"
-        focus-on
-        ng-disabled="!$ctrl.createMode">
-    </div>
+  <form name="forms.newFieldForm">
+    <div class="context-modal-content">
+      <!-- ID -->
+      <div class="cs-input-group">
+        <p class="cs-input-label" translate="context.dictionary.fieldPage.fieldId"></p>
+        <input
+          cs-input
+          type="text"
+          id="fieldId"
+          name="fieldId"
+          placeholder="{{::'context.dictionary.fieldPage.fieldIdPlaceholder' | translate}}"
+          ng-model="$ctrl.fieldData.id"
+          cs-input-group-size="medium-12"
+          cs-input-messages="$ctrl.validationMessages"
+          cs-input-validators="$ctrl.validators"
+          focus-on
+          ng-disabled="!$ctrl.createMode">
+      </div>
 
-    <!-- EN_US LABEL -->
-    <div class="cs-input-group">
-      <p class="cs-input-label" translate="context.dictionary.fieldPage.label"></p>
-      <input
-        cs-input
-        type="text"
-        id="fieldLabel"
-        placeholder="{{::'context.dictionary.fieldPage.labelPlaceholder' | translate}}"
-        ng-model="$ctrl.fieldData.translations.en_US"
-        cs-input-group-size="medium-12"
-        cs-input-help-text="{{::'context.dictionary.fieldPage.labelHelpText' | translate}}">
-    </div>
+      <!-- EN_US LABEL -->
+      <div class="cs-input-group">
+        <p class="cs-input-label" translate="context.dictionary.fieldPage.label"></p>
+        <input
+          cs-input
+          type="text"
+          id="fieldLabel"
+          placeholder="{{::'context.dictionary.fieldPage.labelPlaceholder' | translate}}"
+          ng-model="$ctrl.fieldData.translations.en_US"
+          cs-input-group-size="medium-12"
+          cs-input-help-text="{{::'context.dictionary.fieldPage.labelHelpText' | translate}}">
+      </div>
 
-    <!-- DESCRIPTION -->
-    <div class="cs-input-group">
-      <p translate="common.description"></p>
-      <textarea
-        rows="4"
-        id="fieldDescription"
-        class="form-control"
-        placeholder="{{::'context.dictionary.fieldPage.descriptionPlaceholder' | translate}}"
-        ng-model="$ctrl.fieldData.description"/>
-    </div>
+      <!-- DESCRIPTION -->
+      <div class="cs-input-group">
+        <p translate="common.description"></p>
+        <textarea
+          rows="4"
+          id="fieldDescription"
+          class="form-control"
+          placeholder="{{::'context.dictionary.fieldPage.descriptionPlaceholder' | translate}}"
+          ng-model="$ctrl.fieldData.description"/>
+      </div>
 
-    <!-- DATA TYPE -->
-    <div class="cs-input-group">
-      <p translate="context.dictionary.fieldPage.dataType"></p>
-      <div class="row">
-        <div class="small-6 medium-6 large-6">
-          <cs-select
-            ng-model="$ctrl.fieldData.dataTypeUI"
-            options="$ctrl.dataTypeOptions"
-            placeholder="$ctrl.dataTypePlaceholder">
-          </cs-select>
+      <!-- DATA TYPE -->
+      <div class="cs-input-group">
+        <p translate="context.dictionary.fieldPage.dataType"></p>
+        <div class="row">
+          <div class="small-6 medium-6 large-6">
+            <cs-select
+              ng-model="$ctrl.fieldData.dataTypeUI"
+              options="$ctrl.dataTypeOptions"
+              placeholder="$ctrl.dataTypePlaceholder">
+            </cs-select>
+          </div>
+        </div>
+        <div ng-if="$ctrl.displaySingleSelectOptions()" class="options-section">
+          <div ng-if="$ctrl.showEditOptionsListIcons()" class="options-list-action-buttons">
+            <button class="btn btn--link btn--primary pull-right" ng-click="$ctrl.saveOptionsList(forms.newFieldForm)" translate="common.save"></button>
+            <button class="btn btn--link cancel-button pull-right" ng-click="$ctrl.cancelOptionsList()" translate="common.cancel"></button>
+          </div>
+
+          <section-title title-key="context.dictionary.fieldPage.options" title-key-values="{count: {{$ctrl.optionsListCopy.length}}}" action-list="$ctrl.actionList"></section-title>
+
+          <div translate="context.dictionary.fieldPage.optionsNumberErrorMessage" class="cs-input__help-text" ng-class="{ 'error-text': !$ctrl.isMinimumOptionsSet() }" />
+
+          <div class="options-container">
+            <div id="optionList">
+              <div ng-repeat="option in $ctrl.optionsListCopy"
+                   ng-class="{'options-reorder': $ctrl.reorderEnumOptions}"
+              >
+                <div ng-if="!option.edit && !$ctrl.setDefaultEnumOption" class="options-readonly-wrapper">
+                  <div class="option-name-readonly">
+                    {{option.value}}
+                    <span ng-if="$ctrl.isDefaultOption(option) && $ctrl.showDefaultFlag()" class="badge"
+                          translate="common.default"></span>
+                  </div>
+                  <div ng-if="$ctrl.showEditOptionIcons()">
+                    <a class="icon icon-edit options-spacing-edit" ng-click="$ctrl.setEdit(option, true)"></a>
+                    <a class="icon icon-trash" ng-click="$ctrl.deleteOption(option, forms.newFieldForm)"></a>
+                  </div>
+                  <div ng-if="$ctrl.reorderEnumOptions">
+                    <a class="icon icon-tables"></a>
+                  </div>
+                </div>
+                <div ng-if="option.edit && !$ctrl.addEnumOption" class="options-edit-wrapper">
+                  <div class="options-spacing-input row">
+                    <span class="option-text-input">
+                      <input
+                        id="editOption"
+                        name="editOption"
+                        cs-input
+                        type="text"
+                        ng-model="$ctrl.newOption"
+                        ng-required="true"
+                        placeholder="{{::'context.dictionary.fieldPage.enumOptionPlaceholder' | translate}}"
+                        cs-input-messages="$ctrl.optionValidationMessages"
+                        cs-input-validators="$ctrl.optionValidators"
+                        focus-on
+                      >
+                    </span>
+                    <button class="btn btn--circle btn--small btn--primary icon icon-check pull-right"
+                            ng-click="$ctrl.saveOption()"
+                            ng-disabled="!$ctrl.saveOptionButtonEnabled()"></button>
+                    <button class="btn btn--circle btn--small btn--white icon icon-close pull-right"
+                            ng-click="$ctrl.cancelEditOption()"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Add option -->
+            <div ng-if="$ctrl.showAddButton()" class="add-button">
+              <button type="button" class="btn btn--link " translate="context.dictionary.fieldPage.enumOptionsAdd"
+                      ng-click="$ctrl.setAddEnumOptions()"></button>
+            </div>
+            <div ng-if="$ctrl.addEnumOption" class="options-edit-wrapper">
+              <div class="options-spacing-input row">
+                <span class="option-text-input">
+                  <input
+                    id="addOption"
+                    name="addOption"
+                    cs-input
+                    type="text"
+                    ng-model="$ctrl.newOption"
+                    ng-required="true"
+                    placeholder="{{::'context.dictionary.fieldPage.enumOptionPlaceholder' | translate}}"
+                    cs-input-messages="$ctrl.optionValidationMessages"
+                    cs-input-validators="$ctrl.optionValidators"
+                    focus-on
+                  >
+                </span>
+                <button class="btn btn--circle btn--small btn--primary icon icon-check pull-right"
+                        ng-click="$ctrl.saveOption()"
+                        ng-disabled="!$ctrl.saveOptionButtonEnabled()"></button>
+                <button class="btn btn--circle btn--small btn--white icon icon-close pull-right"
+                        ng-click="$ctrl.cancelAddOption()"></button>
+              </div>
+            </div>
+
+            <!-- Set default -->
+            <div ng-if="$ctrl.setDefaultEnumOption" class="options-row-wrapper">
+              <div class="cs-radio-group">
+                <input
+                  cs-input
+                  type="radio"
+                  ng-model="$ctrl.defaultOption"
+                  id="'{{'radio-'+radio.id}}"
+                  name="{{'radio'+radio.id}}"
+                  ng-value="::radio.value"
+                  cs-input-label="{{radio.label}}"
+                  ng-repeat="radio in $ctrl.optionRadios"
+                >
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- DATA PRIVACY -->
-    <div class="cs-input-group">
-      <p translate="context.dictionary.fieldPage.classification"></p>
-      <div class="row">
-        <div class="small-6 medium-6 large-6">
-          <cs-select
-            ng-model="$ctrl.fieldData.classificationUI"
-            options="$ctrl.classificationOptions"
-            on-change-fn="$ctrl.classificationOnChange()">
-          </cs-select>
+      <!-- DATA PRIVACY -->
+      <div class="cs-input-group">
+        <p translate="context.dictionary.fieldPage.classification"></p>
+        <div class="row">
+          <div class="small-6 medium-6 large-6">
+            <cs-select
+              ng-model="$ctrl.fieldData.classificationUI"
+              options="$ctrl.classificationOptions"
+              on-change-fn="$ctrl.classificationOnChange()">
+            </cs-select>
+          </div>
         </div>
+        <p class="cs-input__help-text">{{$ctrl.classificationHelpText}}</p>
       </div>
-      <p class="cs-input__help-text">{{$ctrl.classificationHelpText}}</p>
-    </div>
 
-    <!-- SEARCHABLE -->
-    <input
-      cs-input
-      type="checkbox"
-      ng-model="$ctrl.fieldData.searchable"
-      id="fieldSearchable"
-      name="fieldSearchable"
-      cs-input-label="{{'context.dictionary.fieldPage.searchable' | translate}}"
-      cs-input-help-text="{{::'context.dictionary.fieldPage.searchableHelpText' | translate}}">
-  </div>
+      <!-- SEARCHABLE -->
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.fieldData.searchable"
+        id="fieldSearchable"
+        name="fieldSearchable"
+        cs-input-label="{{'context.dictionary.fieldPage.searchable' | translate}}"
+        cs-input-help-text="{{::'context.dictionary.fieldPage.searchableHelpText' | translate}}">
+    </div>
   </form>
 </div>
 <div class="modal-footer">
@@ -106,5 +206,5 @@
     class="btn btn-primary"
     translate="common.save"
     ng-click="$ctrl.update()"
-    ng-disabled="!$ctrl.createOrSaveButtonEnabled() || newFieldForm.$pristine"></button>
+    ng-disabled="!$ctrl.createOrSaveButtonEnabled() || forms.newFieldForm.$pristine"></button>
 </div>

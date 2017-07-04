@@ -43,6 +43,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   private dismiss: Function;
   public isFirstTimeSetup: boolean;
   public promises: ng.IPromise<any>[] = [];
+  public errors: string[] = [];
 
   /* @ngInject */
   constructor(
@@ -184,7 +185,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
     return this.PrivateTrunkService.setPrivateTrunk(this.selectedVerifiedDomains)
       .catch(error => {
         this.privateTrunkAddError = true;
-        this.Notification.notify(error, 'servicesOverview.cards.privateTrunk.error.privateTrunkError');
+        this.errors.push(error.data.errorMessage);
       });
   }
 
@@ -194,27 +195,29 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       this.privateTrunkResource.destinations.push(this.privateTrunkResource.hybridDestination);
     }
     // Create the first SIP Destination
-    let resource = this.getResource(_.first(this.privateTrunkResource.destinations));
+    const resource = this.getResource(_.first(this.privateTrunkResource.destinations));
     this.promises.push(this.PrivateTrunkService.createPrivateTrunkResource(resource)
       .then(() => {
         this.resourceAddSuccess = true;
         //Add rest of the resources
         _.forEach (_.drop(this.privateTrunkResource.destinations, 1), dest => {
-          let resource = this.getResource(dest);
+          const resource = this.getResource(dest);
           this.promises.push(this.PrivateTrunkService.createPrivateTrunkResource(resource)
             .catch(error => {
-              this.Notification.notify(error, 'servicesOverview.cards.privateTrunk.error.resourceError');
+              this.errors.push(error.data.errorMessage);
             }));
         });
       }).catch(error => {
-        this.Notification.notify(error, 'servicesOverview.cards.privateTrunk.error.resourceError');
+        this.resourceAddSuccess = false;
+        this.errors.push(this.$translate.instant('servicesOverview.cards.privateTrunk.error.resourceError'));
+        this.errors.push(error.data.errorMessage);
       }));
     return this.$q.all(this.promises);
   }
 
   public getResource(dest): IPrivateTrunkResource {
-    let addressPort: string[] = dest.address.split(':');
-    let resource: IPrivateTrunkResource = {
+    const addressPort: string[] = dest.address.split(':');
+    const resource: IPrivateTrunkResource = {
       name: dest.name,
       address: addressPort[0],
     };
@@ -227,18 +230,24 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   public setupPrivateTrunk (): void {
     this.isSetup = true;
-    let promises: ng.IPromise<any>[] = [];
+    const promises: ng.IPromise<any>[] = [];
 
     promises.push(this.addSipDestinations());
     if (this.isFirstTimeSetup) {
       promises.push(this.createPrivateTrunk());
       this.$q.all(promises).then(() => {
         this.isSetup = false;
-        if (!this.privateTrunkAddError || this.resourceAddSuccess) {
+        if (!this.privateTrunkAddError && this.resourceAddSuccess) {
           this.currentStepIndex++;
         }
         if (this.privateTrunkAddError || !this.resourceAddSuccess) {
+          this.Notification.notify(this.errors, 'error');
           this.cleanupOnError();
+          this.PrivateTrunkPrereqService.dismissModal();
+        } else if (this.errors.length) {
+          //At least one resouce has been added and one or more resource addition failed.
+          //This is success path, but do notify errors.
+          this.Notification.notify(this.errors, 'error');
         }
       });
     } else {
@@ -246,6 +255,8 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
         this.isSetup = false;
         if (this.resourceAddSuccess) {
           this.Notification.success('servicesOverview.cards.privateTrunk.success.resource');
+        } else {
+          this.Notification.notify(this.errors, 'error');
         }
         this.$state.go('private-trunk-overview.list');
         this.dismiss();
@@ -265,7 +276,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
   public dismissModal(): void {
-    let templateUrl = (this.isFirstTimeSetup) ? 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html' : 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-destination-cancel-confirm.html';
+    const templateUrl = (this.isFirstTimeSetup) ? 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html' : 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-destination-cancel-confirm.html';
     this.$modal.open({
       templateUrl: templateUrl,
       type: 'dialog',

@@ -13,5 +13,6 @@
 @import '../service-settings/calendar-service-setup/select-calendar-service';
 @import '../cluster-sidepanel/expressway-upgrade-section/expressway-upgrade-section';
 @import '../../mediafusion/media-service-v2/side-panel/mf-upgrade-section/_mf-upgrade-section.scss';
-@import 'shared';
 @import '../private-trunk/private-trunk';
+@import '../connector-upgrade-modal/connector-upgrade-modal';
+@import 'shared';

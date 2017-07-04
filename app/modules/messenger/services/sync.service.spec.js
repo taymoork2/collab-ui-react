@@ -11,12 +11,12 @@
         authinfo = {
           getOrgId: jasmine.createSpy('getOrgId'),
         };
-        authinfo.getOrgId.and.returnValue("12345");
+        authinfo.getOrgId.and.returnValue('12345');
 
         urlconfig = {
           getMessengerServiceUrl: jasmine.createSpy('getMessengerServiceUrl'),
         };
-        urlconfig.getMessengerServiceUrl.and.returnValue("foo");
+        urlconfig.getMessengerServiceUrl.and.returnValue('foo');
 
         $provide.value('Authinfo', authinfo);
         $provide.value('UrlConfig', urlconfig);

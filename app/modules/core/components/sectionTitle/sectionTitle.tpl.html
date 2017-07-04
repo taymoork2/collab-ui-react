@@ -1,5 +1,5 @@
 <div class="section-title-row">
-  <span class="section-name" translate="{{$ctrl.titleKey}}"></span>
+  <span class="section-name" translate="{{$ctrl.titleKey}}" translate-values="{{$ctrl.titleKeyValues}}"></span>
   <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="$ctrl.shouldShowActions()">
     <span ng-if="!$ctrl.asButton">
       <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
@@ -12,7 +12,10 @@
       </ul>
     </span>
     <span ng-if="$ctrl.asButton">
-      <a class="as-button" ng-click="$ctrl.actionList[0].actionFunction()" translate="{{$ctrl.actionList[0].actionKey}}"></a>
+      <a ng-if="!$ctrl.shouldShowArrow()" class="as-button" ng-click="$ctrl.actionList[0].actionFunction()" translate="{{$ctrl.actionList[0].actionKey}}"></a>
+      <a ng-if="$ctrl.shouldShowArrow()" class="as-arrow" ng-click="$ctrl.onActionClick()">
+        <i class="icon icon-arrow-next"></i>
+      </a>
     </span>
   </span>
 </div>

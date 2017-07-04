@@ -1,24 +1,19 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
-
-export interface IGridApiScope extends ng.IScope {
-  gridApi?: uiGrid.IGridApi;
-}
+import { TelephonyNumberDataService } from './telephonyNumberData.service';
+import { TelephonyNumberValidateService } from './telephonyNumberValidate.service';
 
 const DATA_TYPE: any = { MANUAL_ADD : 0, IMPORT_TD : 1, IMPORT_CSV : 2, SUBMITTED : 3 };
 const DNIS_TYPE: any = { NEW: 0, EXISTED: 1, NON_CCA: 2 };
 const DNIS_CHANGE_TYPE: any = { INPUT_DNIS: 0, CHANGE_TOLLTYPE: 1, CHANGE_CALLTYPE: 2 };
-const MAX_PHONE_LENGTH: number = 11 * 1024;
-const MAX_PHONE_NUMBERS: number = 300;
-const CELL_TEMPLATE_URL: string = 'modules/gemini/telephonyDomain/details/cellTemplate/';
+
+const SUBMIT_CONFIRM_TEMPLATE = 'modules/gemini/telephonyDomain/details/gmTdSubmitConfirm.tpl.html';
+const SUBMIT_MUTIDISPLAY_TEMPLATE = 'modules/gemini/telephonyDomain/details/gmTdSubmitMultipleDisplayConfirm.tpl.html';
 
 class GmTdNumbersCtrl implements ng.IComponentController {
 
   public isEdit: boolean = false;
-  public loading: boolean = false;
-  public submitLoading: boolean = false;
-  public exportLoading: boolean = false;
   public downloadUrl: string;
   public customerId: string;
   public ccaDomainId: string;
@@ -26,11 +21,11 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   public telephonyDomainId: string;
   private curDefTollRow: any;
   private curDefTollFreeRow: any;
-  private gridData: any = [];
-  private gridOptions: any = {};
   private currentTD: any = {};
-  private countryId2NameMapping: any = {};
-  private countryName2IdMapping: any = {};
+  private constObject: any = {};
+  public loading: boolean = false;
+  public submitLoading: boolean = false;
+  public exportLoading: boolean = false;
   private accessNumber2EntityMapping: any = {};
   private accessNumber2RowsMapping: any = {};
   private phoneEntity2RowsMapping: any = {};
@@ -40,20 +35,17 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private phoneNumber2RowsMapping: any = {};
   private dnisId2SubmittedNumberMapping: any = {};
   private dnisId2ImportedNumberMapping: any = {};
-  private deleteTelephonyNumberData: any = [];
-  private submitTelephonyAllData: any = [];
+  private gridData: any[] = [];
+  private deleteTelephonyNumberData: any[] = [];
+  private submitTelephonyAllData: any[] = [];
+  private tollTypeOptions: any[] = [];
+  private callTypeOptions: any[] = [];
+  private defaultNumberOptions: any[] = [];
+  private globalDisplayOptions: any[] = [];
+  private _countryOptions: any[] = [];
+  private countryOptions: any[] = [];
+  private isHiddenOptions: any[] = [];
   private phoneAndLabelLength: number = 0;
-  private tollTypeOptions: any = [];
-  private callTypeOptions: any = [];
-  private defaultNumberOptions: any = [];
-  private globalDisplayOptions: any = [];
-  private countryOptions: any = [];
-  private _countryOptions: any = [];
-  private isHiddenOptions: any = [];
-  private phoneNumberPattern = /^[\+\-\d+\(\)\.\s]*$/;
-  private accessNumberPattern = /^\+{0,1}\d{7,30}$/;
-  private initSubmittedRowsInterval: any;
-  private constObject: any = {};
 
   /* @ngInject */
   public constructor(
@@ -61,16 +53,15 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     private $scope,
     private gemService,
     private PreviousState,
-    private uiGridConstants,
-    private $window: ng.IWindowService,
+    private WindowLocation,
     private $modal: IToolkitModalService,
     private Notification: Notification,
     private $timeout: ng.ITimeoutService,
-    private $interval: ng.IIntervalService,
     private $element: ng.IRootElementService,
-    private $templateCache: ng.ITemplateCacheService,
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
+    private TelephonyNumberDataService: TelephonyNumberDataService,
+    private TelephonyNumberValidateService: TelephonyNumberValidateService,
   ) {
     this.currentTD = this.gemService.getStorage('currentTelephonyDomain');
     if (this.currentTD) {
@@ -87,57 +78,25 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     this.initDropdownOptions();
     this.listenRegionUpdated();
 
-    this.initCountries();
-    this.setGridOptions();
+    this.initGridOptions();
     this.$scope.$emit('detailWatch', { isEdit: this.isEdit });
     this.$state.current.data.displayName = this.$translate.instant('gemini.tds.phoneNumbers');
   }
 
-  public $onDestroy(): void {
-    if (this.initSubmittedRowsInterval) {
-      this.$interval.cancel(this.initSubmittedRowsInterval);
-    }
-  }
-
   private initConstObject() {
-    this.constObject.SELECT_TYPE = this.$translate.instant('gemini.tds.numbers.field.labels.selectType');
-    this.constObject.SELECT_COUNTRY = this.$translate.instant('gemini.tds.numbers.field.labels.selectCountry');
-    this.constObject.CCA_TOLL = this.$translate.instant('gemini.tds.numbers.field.labels.ccaToll');
-    this.constObject.CCA_TOLL_FREE = this.$translate.instant('gemini.tds.numbers.field.labels.ccaTollFree');
-    this.constObject.INTERNATIONAL = this.$translate.instant('gemini.tds.numbers.field.labels.international');
-    this.constObject.DOMESTIC = this.$translate.instant('gemini.tds.numbers.field.labels.domestic');
-    this.constObject.DEFAULT_TOLL = this.$translate.instant('gemini.tds.defaultToll');
-    this.constObject.DEFAULT_TOLL_FREE = this.$translate.instant('gemini.tds.defaultTollFree');
-    this.constObject.DISPLAY = this.$translate.instant('gemini.tds.numbers.field.labels.display');
-    this.constObject.HIDDEN = this.$translate.instant('gemini.tds.numbers.field.labels.hidden');
-    this.constObject.NO = this.$translate.instant('gemini.tds.numbers.field.labels.no');
-
-    this.constObject.DATA_STATUS = this.gemService.getNumberStatus();
+    this.constObject = this.TelephonyNumberDataService.initConstObject();
   }
 
   private initDropdownOptions(): void  {
-    const SELECT_TYPE = this.constObject.SELECT_TYPE;
-    const SELECT_COUNTRY = this.constObject.SELECT_COUNTRY;
-    const CCA_TOLL = this.constObject.CCA_TOLL;
-    const CCA_TOLL_FREE = this.constObject.CCA_TOLL_FREE;
-    const INTERNATIONAL = this.constObject.INTERNATIONAL;
-    const DOMESTIC = this.constObject.DOMESTIC;
-    const DISPLAY = this.constObject.DISPLAY;
-    const HIDDEN = this.constObject.HIDDEN;
-    const NO = this.constObject.NO;
+    const allOptions = this.TelephonyNumberDataService.initDropdownOptions();
 
-    this.tollTypeOptions = [{ label: SELECT_TYPE, value: '' }, { label: CCA_TOLL, value: CCA_TOLL }, { label: CCA_TOLL_FREE, value: CCA_TOLL_FREE }];
-    this.callTypeOptions = [{ label: SELECT_TYPE, value: '' }, { label: INTERNATIONAL, value: INTERNATIONAL }, { label: DOMESTIC, value: DOMESTIC }];
-    this.defaultNumberOptions = [{ label: '', value: '0' }];
-    this.globalDisplayOptions = [{ label: DISPLAY, value: '1' }, { label: NO, value: '0' }];
-    this._countryOptions = [{ label: SELECT_COUNTRY, value: '' }];
-    this.isHiddenOptions = [{ label: DISPLAY, value: 'false' }, { label: HIDDEN, value: 'true' }];
-  }
-
-  private initCountries(): void {
-    this.countryOptions = this.gemService.getStorage('countryOptions');
-    this.countryId2NameMapping = this.gemService.getStorage('countryId2NameMapping');
-    this.countryName2IdMapping = this.gemService.getStorage('countryName2IdMapping');
+    this.tollTypeOptions = allOptions.tollTypeOptions;
+    this.callTypeOptions = allOptions.callTypeOptions;
+    this._countryOptions = allOptions._countryOptions;
+    this.countryOptions = allOptions.countryOptions;
+    this.isHiddenOptions = allOptions.isHiddenOptions;
+    this.defaultNumberOptions = allOptions.defaultNumberOptions;
+    this.globalDisplayOptions = allOptions.globalDisplayOptions;
   }
 
   private listenRegionUpdated(): void  {
@@ -147,6 +106,15 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     this.$scope.$on('$destroy', deregister);
   }
 
+  private initGridOptions() {
+    this.TelephonyNumberDataService.initGridOptions(this, this.isEdit);
+    this.$timeout(() => {
+      this.$scope.gridApi = this.TelephonyNumberDataService.gridApi;
+      this.gridData = this.TelephonyNumberDataService.gridOptions.data;
+      this.initSubmittedNumber();
+    });
+  }
+
   private initSubmittedNumber(): void {
     if (!this.ccaDomainId) {
       return;
@@ -154,245 +122,59 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
     this.loading = true;
     this.TelephonyDomainService.getNumbers(this.customerId, this.ccaDomainId).then((res) => {
-      let resJson: any = _.get(res, 'content.data');
+      const resJson: any = _.get(res, 'content.data');
       if (resJson.returnCode) {
         this.Notification.notify(this.gemService.showError(resJson.returnCode));
         return;
       }
 
-      let data = resJson.body;
+      const data = resJson.body;
       _.forEach(data, (item: any) => {
         if (_.toNumber(item.compareToSuperadminPhoneNumberStatus) === this.constObject.DATA_STATUS.DELETED) {
           return true;
         }
 
         item.dataType = DATA_TYPE.SUBMITTED;
-        this.initDropdownList(item);
-        this.addNumber(item);
+        this.TelephonyNumberDataService.initNumber(item, this.telephonyDomainId);
       });
-
-      if (this.isEdit) {
-        this.initSubmittedRowsInterval = this.$interval(() => {
-          this.initAccessNumber2RowsMapping();
-        }, 10);
-      }
 
       this.loading = false;
     });
   }
 
-  private initAccessNumber2RowsMapping() {
-    let allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
-    if (allRows.length === this.gridData.length && this.gridData.length > 0) {
-      this.$interval.cancel(this.initSubmittedRowsInterval);
+  public addNumber() {
+    this.TelephonyNumberDataService.addNumber(null);
+  }
 
-      _.forEach(allRows, (row) => {
-        if (row.entity.dataType === DATA_TYPE.SUBMITTED) {
-          this.dnisId2SubmittedNumberMapping[row.entity.dnisId] = _.cloneDeep(row.entity);
-          this.curDefTollRow = row.entity.defaultNumber.label === this.constObject.DEFAULT_TOLL ? this.curDefTollRow = row : this.curDefTollRow;
-          this.curDefTollFreeRow = row.entity.defaultNumber.label === this.constObject.DEFAULT_TOLL_FREE ? this.curDefTollFreeRow = row : this.curDefTollFreeRow;
-        }
+  public changePhone(row, oldValue) {
+    this.TelephonyNumberValidateService.validatePhone(row);
 
-        if (!this.accessNumber2RowsMapping[row.entity.dnisNumber]) {
-          this.accessNumber2RowsMapping[row.entity.dnisNumber] = [];
-        }
-        this.accessNumber2RowsMapping[row.entity.dnisNumber].push(row);
-      });
+    if (oldValue) {
+      this.resetDuplicateRowValidation(row, oldValue, row.entity.label, row.entity.dnisNumber);
     }
   }
 
-  private setGridOptions(): void {
-    let columnDefs: any = [{
-      field: 'phone',
-      type: 'number',
-      cellTooltip: true,
-      displayName: this.$translate.instant('gemini.tds.numbers.field.phoneNumber'),
-      cellClass: this.isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'phoneNumberCellTemplate.tpl.html'),
-    }, {
-      width: '11%',
-      field: 'label',
-      displayName: this.$translate.instant('gemini.tds.numbers.field.phoneLabel'),
-      cellClass: this.isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'phoneLabelCellTemplate.tpl.html'),
-    }, {
-      width: '12%',
-      field: 'dnisNumberFormat',
-      type: 'number',
-      cellTooltip: true,
-      displayName: this.$translate.instant('gemini.tds.numbers.field.accessNumber'),
-      cellClass: this.isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'accessNumberCellTemplate.tpl.html'),
-    }, {
-      width: '9%',
-      field: 'tollType',
-      sortingAlgorithm: this.sortDropdownList,
-      cellTooltip: true,
-      displayName: this.$translate.instant('gemini.tds.numbers.field.tollType'),
-      cellClass: this.isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'tollTypeCellTemplate.tpl.html'),
-    }, {
-      width: '8%',
-      field: 'callType',
-      sortingAlgorithm: this.sortDropdownList,
-      cellTooltip: true,
-      displayName: this.$translate.instant('gemini.tds.numbers.field.callType'),
-      cellClass: this.isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'callTypeCellTemplate.tpl.html'),
-    }, {
-      width: '12%',
-      field: 'defaultNumber',
-      sortingAlgorithm: this.sortDropdownList,
-      cellTooltip: true,
-      displayName: this.$translate.instant('gemini.tds.numbers.field.defaultNumber'),
-      cellClass: this.isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'defaultNumberCellTemplate.tpl.html'),
-    }, {
-      width: '11%',
-      field: 'globalListDisplay',
-      sortingAlgorithm: this.sortDropdownList,
-      cellTooltip: true,
-      displayName: this.$translate.instant('gemini.tds.numbers.field.globalDisplay'),
-      cellClass: this.isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'globalListDisplayCellTemplate.tpl.html'),
-    }, {
-      width: '9%',
-      field: 'country',
-      sortingAlgorithm: this.sortDropdownList,
-      cellTooltip: true,
-      displayName: this.$translate.instant('gemini.tds.numbers.field.country'),
-      cellClass: this.isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'countryCellTemplate.tpl.html'),
-    }, {
-      width: '13%',
-      field: 'isHidden',
-      sortingAlgorithm: this.sortDropdownList,
-      cellTooltip: true,
-      displayName: this.$translate.instant('gemini.tds.numbers.field.hiddenOnClient'),
-      cellClass: this.isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'isHiddenCellTemplate.tpl.html'),
-    }];
+  public changeLabel(row, oldValue) {
+    this.TelephonyNumberValidateService.validateLabel(row);
 
-    if (this.isEdit) {
-      let actionColumn = {
-        field: 'index',
-        width: '5%',
-        enableSorting: false,
-        displayName: this.$translate.instant('gemini.tds.numbers.field.action'),
-        cellClass: 'cell-border-none',
-        cellTemplate: '<div class="ui-grid-cell-contents text-center"><button class="btn--none" ng-click="grid.appScope.deleteNumber(row)"><i class="icon icon-trash"></i></button></div>',
-      };
-
-      columnDefs.push(actionColumn);
+    if (oldValue) {
+      this.resetDuplicateRowValidation(row, row.entity.phone, oldValue, row.entity.dnisNumber);
     }
-
-    this.gridOptions = {
-      rowHeight: 42,
-      data: '$ctrl.gridData',
-      multiSelect: false,
-      columnDefs: columnDefs,
-      enableColumnMenus: false,
-      enableColumnResizing: true,
-      appScopeProvider: this,
-      enableVerticalScrollbar: this.uiGridConstants.scrollbars.NEVER,
-      enableHorizontalScrollbar: this.uiGridConstants.scrollbars.NEVER,
-      virtualizationThreshold: 500,
-      onRegisterApi: (gridApi) => {
-        this.$scope.gridApi = gridApi;
-        this.$timeout(() => {
-          this.initSubmittedNumber();
-        }, 500);
-      },
-    };
   }
 
-  public sortDropdownList(a, b) {
-    if (a.value === '' || b.value === '') {
-      return (a.value === '' && b.value === '') ? 0 : (a.value === '' ? -1 : 1);
+  public changeDnisNumber(row, oldValue) {
+    this.TelephonyNumberValidateService.validateAccessNumber(row);
+
+    if (oldValue) {
+      this.resetDuplicateRowValidation(row, row.entity.phone, row.entity.label, oldValue);
     }
-    return a.label === b.label ? 0 : (a.label.length < b.label.length ? -1 : 1);
   }
 
-  public validatePhone(row, oldVal) {
-    let invalid, show = false;
-    let message = '';
-
-    let phone = _.trim(row.entity.phone);
-    if (!phone.length) {
-      invalid = show = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Phone Number' });
-    } else if (!this.phoneNumberPattern.test(phone)) {
-      invalid = show = true;
-      message = this.getValidationMessage('PhoneNumberInvalidFormat');
-    } else if (!_.inRange(_.replace(phone, /[^0-9]/ig, '').length, 7, 33)) {
-      invalid = show = true;
-      message = this.getValidationMessage('PhoneNumberLengthRange');
-    }
-
-    row.entity.validation.phone.invalid = invalid;
-    row.entity.validation.phone.message = message;
-    row.entity.validation.phone.show = show;
-
-    if (oldVal) {
-      this.resetDuplicatedRowValidation(row, oldVal, row.entity.label, row.entity.dnisNumber);
-    }
-
-    return !invalid;
-  }
-
-  public validateLabel(row, oldVal) {
-    let invalid, show = false;
-    let message = '';
-
-    let label = _.trim(row.entity.label);
-    if (!label.length) {
-      invalid = show = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Phone Label' });
-    } else if (_.gt(this.gemService.getByteLength(label), 85)) {
-      invalid = show = true;
-      message = this.getValidationMessage('PhoneLabelInvalidFormat');
-    }
-
-    row.entity.validation.label.invalid = invalid;
-    row.entity.validation.label.message = message;
-    row.entity.validation.label.show = show;
-
-    if (oldVal) {
-      this.resetDuplicatedRowValidation(row, row.entity.phone, oldVal, row.entity.dnisNumber);
-    }
-
-    return !invalid;
-  }
-
-  public validateAccessNumber(row, oldVal) {
-    let invalid, show = false;
-    let message = '';
-
-    let accessNumber = _.trim(row.entity.dnisNumberFormat);
-    if (!accessNumber.length) {
-      invalid = show = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Access Number' });
-    } else if (!this.accessNumberPattern.test(accessNumber)) {
-      invalid = show = true;
-      message = this.getValidationMessage('AccessNumberInvalidFormat');
-    }
-
-    row.entity.validation.dnisNumberFormat.invalid = invalid;
-    row.entity.validation.dnisNumberFormat.message = message;
-    row.entity.validation.dnisNumberFormat.show = show;
-
-    if (oldVal) {
-      this.resetDuplicatedRowValidation(row, row.entity.phone, row.entity.label, oldVal);
-    }
-
-    return !invalid;
-  }
-
-  private resetDuplicatedRowValidation (row, phone, label, dnisNumber) {
+  private resetDuplicateRowValidation(row, phone, label, dnisNumber) {
     if (row.entity.duplicatedRowValidation.invalid) {
       row.entity.duplicatedRowValidation.invalid = false;
 
-      let rows = this.phoneEntity2RowsMapping[phone + '_' + label + '_' + dnisNumber];
+      const rows = this.phoneEntity2RowsMapping[phone + '_' + label + '_' + dnisNumber];
       _.forEach(rows, (r, k) => {
         if (r.uid === row.uid) {
           rows.splice(k, 1);
@@ -406,71 +188,14 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }
   }
 
-  private validateTollType(row) {
-    let invalid, show = false;
-    let message = '';
-
-    if (!row.entity.tollType.value.length) {
-      invalid = show = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Toll Type' });
-    }
-
-    row.entity.validation.tollType.invalid = invalid;
-    row.entity.validation.tollType.message = message;
-    row.entity.validation.tollType.show = show;
-
-    return !invalid;
-  }
-
-  private validateCallType(row) {
-    let invalid, show = false;
-    let message = '';
-
-    if (!row.entity.callType.value.length) {
-      invalid = show = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Call Type' });
-    }
-
-    row.entity.validation.callType.invalid = invalid;
-    row.entity.validation.callType.message = message;
-    row.entity.validation.callType.show = show;
-
-    return !invalid;
-  }
-
-  public validateCountry(row) {
-    let invalid, show = false;
-    let message = '';
-
-    if (!_.isNumber(row.entity.country.value)) {
-      invalid = show = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Country' });
-    }
-
-    row.entity.isEdit = invalid;
-    row.entity.validation.country.invalid = invalid;
-    row.entity.validation.country.message = message;
-    row.entity.validation.country.show = show;
-
-    return !invalid;
-  }
-
-  public resetPhnNumDisplayValidation(row) {
-    let phone = row.entity.phone;
-    let rows = this.phoneNumber2RowsMapping[phone];
-    _.forEach(rows, (row) => {
-      row.entity.phnNumDisplayValidation = { invalid: false, message: '', show: false };
-    });
-  }
-
   public changeAccessNumber(row) {
-    let preValue = row.entity.dnisNumber;
+    const preValue = row.entity.dnisNumber;
 
-    let accessNumber = _.trim(_.replace(row.entity.dnisNumberFormat, '+', ''));
+    const accessNumber = _.trim(_.replace(row.entity.dnisNumberFormat, '+', ''));
     row.entity.dnisNumber = accessNumber;
 
     if (!accessNumber.length || row.entity.validation.dnisNumberFormat.invalid) {
-      let val = { label: this.constObject.SELECT_TYPE, value: '' };
+      const val = { label: this.constObject.SELECT_TYPE, value: '' };
       this.resetTollType(row, val, true);
       this.resetCallType(row, val, true);
     } else if (preValue !== accessNumber) {
@@ -491,7 +216,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }
 
     this.TelephonyDomainService.getAccessNumberInfo(accessNumber).then((res: any) => {
-      let returnCode = _.get(res, 'content.data.returnCode');
+      const returnCode = _.get(res, 'content.data.returnCode');
       if (returnCode) {
         this.Notification.notify(this.gemService.showError(returnCode));
         return;
@@ -506,7 +231,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
         accessNumberEntity.callType = row.entity.callType;
 
         if (this.isEdit && this.ccaDomainId !== '' && this.telephonyDomainId === '') {
-          let dnisRows = this.accessNumber2RowsMapping[row.entity.dnisNumber];
+          const dnisRows = this.accessNumber2RowsMapping[row.entity.dnisNumber];
           accessNumberEntity.tollType = dnisRows ? dnisRows[0].entity.tollType : row.entity.tollType;
           accessNumberEntity.callType = dnisRows ? dnisRows[0].entity.callType : row.entity.callType;
         }
@@ -526,11 +251,11 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   private resetAccessNumberAttribute(row, accessNumberEntity, type) {
-    let status = accessNumberEntity.status;
+    const status = accessNumberEntity.status;
 
-    let disabled = status > 0;
-    let accessNumber = accessNumberEntity.number;
-    let rows = this.accessNumber2RowsMapping[accessNumber];
+    const disabled = status > 0;
+    const accessNumber = accessNumberEntity.number;
+    const rows = this.accessNumber2RowsMapping[accessNumber];
     if (rows && rows.length > 0) {
       _.forEach(rows, (row) => {
         if (row.entity.dnisNumber === accessNumber) {
@@ -544,8 +269,10 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       this.$element.find('#' + row.uid + '-tollType').find('.select-toggle').focus();
     }
     if (status === DNIS_TYPE.NON_CCA) {
+      const message = this.TelephonyNumberValidateService.getValidationMessage('dnisNumberNotAvailable');
+
       row.entity.validation.dnisNumberFormat.invalid = true;
-      row.entity.validation.dnisNumberFormat.message = this.getValidationMessage('dnisNumberNotAvailable');
+      row.entity.validation.dnisNumberFormat.message = message;
       row.entity.validation.dnisNumberFormat.show = true;
 
       this.$element.find('#' + row.uid + '-dnisNumberFormat').focus();
@@ -558,7 +285,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     this.resetDefaultNumber(row);
 
     if (!_.isEmpty(val.value)) {
-      this.validateTollType(row);
+      this.TelephonyNumberValidateService.validateTollType(row);
     }
   }
 
@@ -567,13 +294,13 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     row.entity.callType = val;
 
     if (!_.isEmpty(val.value)) {
-      this.validateCallType(row);
+      this.TelephonyNumberValidateService.validateCallType(row);
     }
   }
 
   public changeTollType(row) {
-    let accessNumber = row.entity.dnisNumber;
-    let accessNumberEntity = this.accessNumber2EntityMapping[accessNumber];
+    const accessNumber = row.entity.dnisNumber;
+    const accessNumberEntity = this.accessNumber2EntityMapping[accessNumber];
     if (accessNumberEntity && accessNumberEntity.status === DNIS_TYPE.NEW) {
       accessNumberEntity.tollType = row.entity.tollType;
     }
@@ -582,8 +309,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   public changeCallType(row) {
-    let accessNumber = row.entity.dnisNumber;
-    let accessNumberEntity = this.accessNumber2EntityMapping[accessNumber];
+    const accessNumber = row.entity.dnisNumber;
+    const accessNumberEntity = this.accessNumber2EntityMapping[accessNumber];
     if (accessNumberEntity && accessNumberEntity.status === DNIS_TYPE.NEW) {
       accessNumberEntity.callType = row.entity.callType;
     }
@@ -595,7 +322,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     this.resetDefaultNumberValidation(row);
     this.resetGlobalDisplayValidation(row);
 
-    let defaultNumber = row.entity.defaultNumber;
+    const defaultNumber = row.entity.defaultNumber;
     if (defaultNumber.value === '0') {
       row.entity.isHnDisabled = false; // enable hiddenOnClinet
       row.entity.gldsDisabled = true; // disable globalListDisplay
@@ -628,20 +355,20 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private resetDefaultNumberValidation(row) {
     row.entity.defaultNumberValidation = { invalid: false, message: '', show: false };
 
-    let rows_0 = this.defaultNumber2RowsMapping[row.entity.tollType.value + '_0'] || [];
-    let rows_1 = this.defaultNumber2RowsMapping[row.entity.tollType.value + '_1'] || [];
-    let rows = _.concat(rows_0, rows_1);
+    const rows_0 = this.defaultNumber2RowsMapping[row.entity.tollType.value + '_0'] || [];
+    const rows_1 = this.defaultNumber2RowsMapping[row.entity.tollType.value + '_1'] || [];
+    const rows = _.concat(rows_0, rows_1);
     _.forEach(rows, (row) => {
       row.entity.defaultNumberValidation = { invalid: false, message: '', show: false };
     });
   }
 
   private resetDefaultNumber(row) {
-    let oldOptions = row.entity.defaultNumberOptions;
-    let newOptions = [{ label: '', value: '0' }];
+    const oldOptions = row.entity.defaultNumberOptions;
+    const newOptions = [{ label: '', value: '0' }];
 
-    let tollType = row.entity.tollType.value;
-    let label = (tollType === this.constObject.CCA_TOLL ? this.constObject.DEFAULT_TOLL : (tollType === this.constObject.CCA_TOLL_FREE ? this.constObject.DEFAULT_TOLL_FREE : ''));
+    const tollType = row.entity.tollType.value;
+    const label = (tollType === this.constObject.CCA_TOLL ? this.constObject.DEFAULT_TOLL : (tollType === this.constObject.CCA_TOLL_FREE ? this.constObject.DEFAULT_TOLL_FREE : ''));
     if (!_.isEmpty(label)) {
       newOptions.push({ label: label, value: '1' });
     }
@@ -669,12 +396,22 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     });
   }
 
+  public changeHiddenOnClient(row) {
+    const phone = row.entity.phone;
+    const rows = this.phoneNumber2RowsMapping[phone];
+    _.forEach(rows, (row) => {
+      row.entity.phnNumDisplayValidation = { invalid: false, message: '', show: false };
+    });
+  }
+
   public deleteNumber(row) {
     if (this.submitLoading) {
       return;
     }
 
-    this.gridData.splice(this.gridData.indexOf(row.entity), 1);
+    _.remove(this.gridData, (data: any) => {
+      return row.entity.rowId === data.rowId;
+    });
 
     if (row.entity.dataType === DATA_TYPE.SUBMITTED) {
       this.deleteTelephonyNumberData.push(row);
@@ -683,43 +420,12 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }
   }
 
-  private initDropdownList(data) {
-    data.tollType = (data.tollType === this.constObject.CCA_TOLL || data.tollType === this.constObject.CCA_TOLL_FREE) ? { label: data.tollType, value: data.tollType } : this.tollTypeOptions[0];
-    data.callType = (data.phoneType === this.constObject.INTERNATIONAL || data.phoneType === this.constObject.DOMESTIC) ? { label: data.phoneType, value: data.phoneType } : this.callTypeOptions[0];
-
-    if (data.dataType === DATA_TYPE.SUBMITTED) {
-      data.typeDisabled = !(_.isEmpty(this.telephonyDomainId) || _.toNumber(data.compareToSuperadminPhoneNumberStatus) === this.constObject.DATA_STATUS.NEW);
-    }
-
-    let defaultNumberOptions = [{ label: '', value: '0' }];
-    if (data.tollType.value === this.constObject.CCA_TOLL || data.tollType.value === this.constObject.CCA_TOLL_FREE) {
-      const label = _.replace(data.tollType.label, 'CCA', 'Default');
-      data.defaultNumber = data.defaultNumber === '1' ? { label: label, value: '1' } : this.defaultNumberOptions[0];
-      defaultNumberOptions.push({ label: label, value: '1' });
-    } else {
-      data.defaultNumber = this.defaultNumberOptions[0];
-    }
-
-    data.defaultNumberOptions = defaultNumberOptions;
-    data.globalListDisplay = data.globalListDisplay === '0' ? this.globalDisplayOptions[1] : this.globalDisplayOptions[0];
-
-    if (data.countryId && this.countryId2NameMapping[data.countryId]) {
-      data.country = { label: this.countryId2NameMapping[data.countryId], value: data.countryId };
-    } else if (data.country && this.countryName2IdMapping[data.country]) {
-      data.country = { label: data.country, value: this.countryName2IdMapping[data.country] };
-    } else {
-      data.country = this._countryOptions[0];
-    }
-
-    data.isHidden = data.isHidden === 'false' ? this.isHiddenOptions[0] : this.isHiddenOptions[1];
-  }
-
   public downloadTemplate() {
     this.$modal.open({
       type: 'dialog',
       templateUrl: 'modules/gemini/telephonyDomain/details/downloadConfirm.html',
     }).result.then(() => {
-      this.$window.open(this.TelephonyDomainService.getDownloadUrl());
+      this.WindowLocation.set(this.TelephonyDomainService.getDownloadUrl());
     });
   }
 
@@ -728,31 +434,22 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       type: 'default',
       template: '<gm-import-td dismiss="$dismiss()" close="$close()" class="new-field-modal"></gm-import-td>',
     }).result.then(() => {
-      let data = this.gemService.getStorage('currentTelephonyDomain');
+      const data = this.gemService.getStorage('currentTelephonyDomain');
 
-      let importedNum = 0;
-      let numbers = _.get(data, 'importTDNumbers', []);
-      _.map(numbers, (item: any) => {
+      const numbers = _.get(data, 'importTDNumbers', []);
+      _.forEach(numbers, (item: any) => {
         if (!this.dnisId2ImportedNumberMapping[item.dnisId]) {
           delete item.defaultNumber;
           delete item.globalListDisplay;
 
           item.dataType = DATA_TYPE.IMPORT_TD;
           item.typeDisabled = true;
-          this.initDropdownList(item);
-          this.addNumber(item);
-
-          importedNum++;
+          this.TelephonyNumberDataService.initNumber(item, this.telephonyDomainId);
         }
 
         this.dnisId2ImportedNumberMapping[item.dnisId] = item;
       });
 
-      if (importedNum) {
-        this.initSubmittedRowsInterval = this.$interval(() => {
-          this.initAccessNumber2RowsMapping();
-        }, 10);
-      }
     });
   }
 
@@ -762,68 +459,22 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
     this.$timeout(() => {
       _.forEach(numbers, (item) => {
-        let formattedItem = _.assignIn({}, item, {
+        const formattedItem = _.assignIn({}, item, {
           dataType: DATA_TYPE.IMPORT_CSV,
           typeDisabled: false,
+          country: item.country.replace(/,/g, '#@#'),
         });
-        this.initDropdownList(formattedItem);
-        this.addNumber(formattedItem);
+
+        this.TelephonyNumberDataService.initNumber(formattedItem, this.telephonyDomainId);
         imported++;
       });
 
       if (imported) {
         this.Notification.success('gemini.tds.numbers.import.resultMsg.success', { importedNumbersCount: imported });
-        this.initSubmittedRowsInterval = this.$interval(() => {
-          this.initAccessNumber2RowsMapping();
-        }, 10);
       }
 
       this.loading = false;
     }, 10);
-  }
-
-  public addNumber(data: any) {
-    let newData = {
-      isEdit: !data || data.dataType === DATA_TYPE.IMPORT_TD,
-      dataType: (data && data.dataType) ? data.dataType : DATA_TYPE.MANUAL_ADD,
-      dnisId: (data && data.dnisId) ? data.dnisId : '',
-      phone: (data && data.phone) ? data.phone : '',
-      label: (data && data.label) ? data.label : '',
-      dnisNumberFormat: (data && data.dnisNumberFormat) ? data.dnisNumberFormat : '',
-      dnisNumber: (data && data.dnisNumber) ? data.dnisNumber : '',
-      tollType: (data && data.tollType) ? data.tollType : this.tollTypeOptions[0],
-      callType: (data && data.callType) ? data.callType : this.callTypeOptions[0],
-      defaultNumber: (data && data.defaultNumber) ? data.defaultNumber : this.defaultNumberOptions[0],
-      globalListDisplay: (data && data.globalListDisplay) ? data.globalListDisplay : this.globalDisplayOptions[0],
-      country: (data && data.country) ? data.country : this._countryOptions[0],
-      isHidden: (data && data.isHidden) ? data.isHidden : this.isHiddenOptions[0],
-      defaultNumberOptions: (data && data.defaultNumberOptions) ? data.defaultNumberOptions : this.defaultNumberOptions,
-      typeDisabled: !data ? true : data.typeDisabled,
-      denbDisabled: !data || data.tollType.value === '',
-      gldsDisabled: !data || data.defaultNumber.value === '0',
-      isHnDisabled: data && data.defaultNumber.value === '1',
-      validation: {
-        phone: { validateFunc: this.validatePhone },
-        label: { validateFunc: this.validateLabel },
-        dnisNumberFormat: { validateFunc: this.validateAccessNumber },
-        tollType: { validateFunc: this.validateTollType },
-        callType: { validateFunc: this.validateCallType },
-        country: { validateFunc: this.validateCountry },
-      },
-      defaultNumberValidation: { invalid: false, message: '', show: false },
-      globalDisplayValidation: { invalid: false, message: '', show: false },
-      duplicatedRowValidation: { invalid: false, message: '', show: false },
-      phnNumDisplayValidation: { invalid: false, message: '', show: false },
-    };
-    this.gridData.push(newData);
-
-    // focus the last row when click add number button
-    if (!data) {
-      this.$timeout(() => {
-        let row = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid)[this.gridData.length - 1];
-        this.$element.find('#' + row.uid + '-phone').focus();
-      });
-    }
   }
 
   public onCancel(): void {
@@ -831,124 +482,26 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   public submitTD() {
-    let flag = true;
+    let result = 0;
 
-    flag = this.validateForm();
+    const allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
+    const mappings = {
+      phoneAndLabelLength: this.phoneAndLabelLength = 0,
+      defaultNumber2RowsMapping: this.defaultNumber2RowsMapping = {},
+      globalDisplay2RowsMapping: this.globalDisplay2RowsMapping = {},
+      phoneEntity2RowsMapping: this.phoneEntity2RowsMapping = {},
+      dnisNumber2AttrsMapping: this.dnisNumber2AttrsMapping = {},
+      phoneNumber2RowsMapping: this.phoneNumber2RowsMapping = {},
+    };
 
-    if (flag) {
-      flag = this.validateNumbersCount() && this.validateDefaultNumber() && this.validateGlobalDisplay()
-        && this.validateDuplicatedPhnNumber() && this.validateConflictDnisNumber()
-        && this.validatePhoneNumberAndLabelLength() && this.validatePhoneNumberDisplay();
+    result = this.TelephonyNumberValidateService.validateFormOnSubmit(mappings, allRows, this.constObject);
+    if (result) {
+      this.postAll(result);
     }
-
-    if (flag) {
-      this.postAll();
-    }
-  }
-
-  private validateForm() {
-    let flag = true;
-
-    this.phoneAndLabelLength = 0;
-    this.defaultNumber2RowsMapping = {};
-    this.globalDisplay2RowsMapping = {};
-    this.phoneEntity2RowsMapping = {};
-    this.dnisNumber2AttrsMapping = {};
-    this.phoneNumber2RowsMapping = {};
-    this.submitTelephonyAllData = [];
-
-    let rows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
-    _.forEach(rows, (row) => {
-      flag = this.validateRow(row);
-      if (flag) {
-        this.setDefaultNumberCountMapping(row);
-        this.setGlobalDisplayCountMapping(row);
-        this.setDuplicatePhnNumberMapping(row);
-        this.setConflictDnisNumberMapping(row);
-        this.setPhoneNumberDisplayMapping(row);
-        this.setPhoneNumberAndLabelLength(row);
-        this.setNewAddTelephonyNumberData(row);
-        this.setUpdateAndRemainNumberData(row);
-      }
-
-      return flag;
-    });
-
-    return flag;
-  }
-
-  private validateRow(row) {
-    let flag = true;
-
-    _.forEach(row.entity.validation, (v: any, k: any) => {
-      if (!_.isUndefined(v.invalid) && !v.invalid) {
-        return false;
-      }
-
-      flag = v.validateFunc.apply(this, [row]);
-      if (!flag) {
-        let elem = this.$element.find('#' + row.uid + '-' + k);
-        (k === 'phone' || k === 'label' || k === 'dnisNumberFormat') ? elem.focus() : elem.find('.select-toggle').focus();
-      }
-
-      return flag;
-    });
-
-    return flag;
-  }
-
-  private setDefaultNumberCountMapping(row) {
-    if (row.entity.tollType.value === '') {
-      return;
-    }
-
-    let key = row.entity.tollType.value + '_' + row.entity.defaultNumber.value;
-    if (!this.defaultNumber2RowsMapping[key]) {
-      this.defaultNumber2RowsMapping[key] = [];
-    }
-    this.defaultNumber2RowsMapping[key].push(row);
-  }
-
-  private setGlobalDisplayCountMapping(row) {
-    if (row.entity.tollType.value !== this.constObject.CCA_TOLL) {
-      return;
-    }
-
-    let key = row.entity.tollType.value + '_' + row.entity.globalListDisplay.value;
-    if (!this.globalDisplay2RowsMapping[key]) {
-      this.globalDisplay2RowsMapping[key] = [];
-    }
-    this.globalDisplay2RowsMapping[key].push(row);
-  }
-
-  private setDuplicatePhnNumberMapping(row) {
-    let key = row.entity.phone + '_' + row.entity.label + '_' + row.entity.dnisNumber;
-    if (!this.phoneEntity2RowsMapping[key]) {
-      this.phoneEntity2RowsMapping[key] = [];
-    }
-    this.phoneEntity2RowsMapping[key].push(row);
-  }
-
-  private setConflictDnisNumberMapping(row) {
-    let dnisAttrEntity = this.dnisNumber2AttrsMapping[row.entity.dnisNumber];
-    !dnisAttrEntity ? dnisAttrEntity = [row] : dnisAttrEntity.push(row);
-    this.dnisNumber2AttrsMapping[row.entity.dnisNumber] = dnisAttrEntity;
-  }
-
-  private setPhoneNumberDisplayMapping(row) {
-    let key = row.entity.phone;
-    if (!this.phoneNumber2RowsMapping[key]) {
-      this.phoneNumber2RowsMapping[key] = [];
-    }
-    this.phoneNumber2RowsMapping[key].push(row);
-  }
-
-  private setPhoneNumberAndLabelLength(row) {
-    this.phoneAndLabelLength += this.gemService.getByteLength(row.entity.phone + '@%' + row.entity.label);
   }
 
   private setSubmitTelephonyDomainData() {
-    let telephonyDomain = {
+    const telephonyDomain = {
       step : _.isEmpty(this.ccaDomainId) ? 'addTelephonyDomainStep' : 'updateTelephonyDomainStep',
       resource: 'TelephonyDomainResource.' + (_.isEmpty(this.ccaDomainId) ? 'addTelephonyDomain' : 'updateTelephonyDomain'),
       params : {
@@ -970,26 +523,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
         telephonyNumberList: [],
       },
     };
-    this.submitTelephonyAllData.unshift(telephonyDomain);
-  }
-
-  private setNewAddTelephonyNumberData(row) {
-    if (row.entity.dataType === DATA_TYPE.SUBMITTED) {
-      return;
-    }
-
-    let body = this.setSubmitTelephonyNumberBody(row);
-    let telephonyNumber = {
-      step: 'addPhoneNumberStep',
-      resource: 'TelephonyDomainResource.addPhoneNumberByTelephonyDomain',
-      params: {
-        spCustomerId: this.customerId,
-        ccaDomainId: this.ccaDomainId ? this.ccaDomainId : '${addTelephonyDomainStep.body.ccaDomainId}',
-      },
-      body: body,
-    };
-
-    this.submitTelephonyAllData.push(telephonyNumber);
+    this.submitTelephonyAllData.push(telephonyDomain);
   }
 
   private setDeleteTelephonyNumberData() {
@@ -998,8 +532,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }
 
     _.forEach(this.deleteTelephonyNumberData, (row) => {
-      let body = this.setSubmitTelephonyNumberBody(row);
-      let telephonyNumber = {
+      const body = this.setSubmitTelephonyNumberBody(row);
+      const telephonyNumber = {
         step: 'deletePhoneNumberStep' + row.entity.dnisId,
         resource: 'TelephonyDomainResource.deletePhoneNumberByTelephonyDomain',
         params: {
@@ -1014,30 +548,60 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     });
   }
 
-  private setUpdateAndRemainNumberData(row) {
-    if (!this.ccaDomainId || row.entity.dataType !== DATA_TYPE.SUBMITTED) {
+  private setNewAddTelephonyNumberData() {
+    const allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
+    const newRows: any = _.filter(allRows, (row: any) => {
+      return row.entity.dataType !== DATA_TYPE.SUBMITTED;
+    });
+
+    _.forEach(newRows, (row) => {
+      const body = this.setSubmitTelephonyNumberBody(row);
+      /* tslint:disable no-invalid-template-strings */
+      const telephonyNumber = {
+        step: 'addPhoneNumberStep',
+        resource: 'TelephonyDomainResource.addPhoneNumberByTelephonyDomain',
+        params: {
+          spCustomerId: this.customerId,
+          ccaDomainId: this.ccaDomainId ? this.ccaDomainId : '${addTelephonyDomainStep.body.ccaDomainId}',
+        },
+        body: body,
+      };
+
+      this.submitTelephonyAllData.push(telephonyNumber);
+    });
+  }
+
+  private setUpdateAndRemainNumberData() {
+    if (!this.ccaDomainId) {
       return;
     }
 
-    if (this.dnisId2SubmittedNumberMapping[row.entity.dnisId]) {
-      let step = '', resource = '', params = {};
-      if (!this.isSamePhoneNumber(row)) {
-        step = 'updatePhoneNumberStep' + row.entity.dnisId;
-        resource = 'TelephonyDomainResource.updatePhoneNumberByTelephonyDomain';
-        params = { spCustomerId: this.customerId, ccaDomainId: this.ccaDomainId, dnisId: row.entity.dnisId };
-      } else {
-        step = 'remainPhoneNumberStep' + row.entity.dnisId;
-        resource = 'TelephonyDomainResource.remainPhoneNumberByTelephonyDomain';
-      }
+    const allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
+    const submittedRows = _.filter(allRows, (row: any) => {
+      return row.entity.dataType === DATA_TYPE.SUBMITTED;
+    });
 
-      let body = this.setSubmitTelephonyNumberBody(row);
-      let telephonyNumber = { step: step, resource: resource, params: params, body: body };
-      this.submitTelephonyAllData.push(telephonyNumber);
-    }
+    _.forEach(submittedRows, (row) => {
+      if (this.dnisId2SubmittedNumberMapping[row.entity.dnisId]) {
+        let step = '', resource = '', params = {};
+        if (!this.isSamePhoneNumber(row)) {
+          step = 'updatePhoneNumberStep' + row.entity.dnisId;
+          resource = 'TelephonyDomainResource.updatePhoneNumberByTelephonyDomain';
+          params = { spCustomerId: this.customerId, ccaDomainId: this.ccaDomainId, dnisId: row.entity.dnisId };
+        } else {
+          step = 'remainPhoneNumberStep' + row.entity.dnisId;
+          resource = 'TelephonyDomainResource.remainPhoneNumberByTelephonyDomain';
+        }
+
+        const body = this.setSubmitTelephonyNumberBody(row);
+        const telephonyNumber = { step: step, resource: resource, params: params, body: body };
+        this.submitTelephonyAllData.push(telephonyNumber);
+      }
+    });
   }
 
   private setSubmitTelephonyNumberBody(row) {
-    let body = {
+    const body = {
       dnisId: row.entity.dataType === DATA_TYPE.SUBMITTED ? row.entity.dnisId : '',
       ccaDomainId: this.ccaDomainId,
       spCustomerId: this.customerId,
@@ -1059,7 +623,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private isSamePhoneNumber(row) {
     let result = true;
 
-    let originNumber = this.dnisId2SubmittedNumberMapping[row.entity.dnisId];
+    const originNumber = this.dnisId2SubmittedNumberMapping[row.entity.dnisId];
     _.forEach(row.entity.validation, (v: any, k: any) => {
       if (v && !_.isEqual(row.entity[k], originNumber[k])) {
         result = false;
@@ -1076,205 +640,28 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     return result;
   }
 
-  private validateNumbersCount() {
-    if (this.gridData.length > MAX_PHONE_NUMBERS) {
-      this.Notification.error(this.getValidationMessage('exceedNumberCount', {}, false));
-      return false;
-    }
-
-    return true;
-  }
-
-  private validateDefaultNumber() {
-    const CCA_TOLL = this.constObject.CCA_TOLL;
-    const CCA_TOLL_FREE = this.constObject.CCA_TOLL_FREE;
-
-    let defaultTollCount = this.defaultNumber2RowsMapping[CCA_TOLL + '_1'] ? this.defaultNumber2RowsMapping[CCA_TOLL + '_1'].length : 0;
-    let defaultTollFreeCount = this.defaultNumber2RowsMapping[CCA_TOLL_FREE + '_1'] ? this.defaultNumber2RowsMapping[CCA_TOLL_FREE + '_1'].length : 0;
-
-    let row, message = '';
-    if (defaultTollCount === 0) {
-      row = (this.gridData.length === 1 || !this.defaultNumber2RowsMapping[CCA_TOLL + '_0']) ? this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid)[0] : this.defaultNumber2RowsMapping[CCA_TOLL + '_0'][0];
-      message = this.getValidationMessage('oneDefaultTollRequired');
-    } else if (defaultTollCount > 1) {
-      row = this.defaultNumber2RowsMapping[CCA_TOLL + '_1'][1];
-      message = this.getValidationMessage('oneDefaultTollMost');
-    } else if (defaultTollFreeCount > 1) {
-      row = this.defaultNumber2RowsMapping[CCA_TOLL_FREE + '_1'][1];
-      message = this.getValidationMessage('oneDefaultTollFreeMost');
-    }
-
-    if (!_.isEmpty(row) && !_.isEmpty(message)) {
-      row.entity.isEdit = true;
-      row.entity.defaultNumberValidation = { invalid: true, message: message, show: true };
-      this.$element.find('#' + row.uid + '-defaultNumber').find('.select-toggle').focus();
-      return false;
-    }
-
-    return true;
-  }
-
-  private validateGlobalDisplay() {
-    const CCA_TOLL = this.constObject.CCA_TOLL;
-    let displayCount = this.globalDisplay2RowsMapping[CCA_TOLL + '_1'] ? this.globalDisplay2RowsMapping[CCA_TOLL + '_1'].length : 0;
-
-    let row, message = '';
-    if (displayCount === 0) {
-      message = this.getValidationMessage('oneGlobalDisplayLeast');
-      row = this.globalDisplay2RowsMapping[CCA_TOLL + '_0'][0];
-    }
-
-    if (!_.isEmpty(row) && !_.isEmpty(message)) {
-      row.entity.isEdit = true;
-      row.entity.globalDisplayValidation = { invalid: true, message: message, show: true };
-      this.$element.find('#' + row.uid + '-globalListDisplay').find('.select-toggle').focus();
-      return false;
-    }
-
-    return true;
-  }
-
-  private validateDuplicatedPhnNumber() {
-    let flag = true;
-
-    _.forEach(this.phoneEntity2RowsMapping, (rowArray) => {
-      if (rowArray.length <= 1) {
-        return true;
-      }
-
-      for (let i = 0; i < rowArray.length; i++) {
-        rowArray[i].entity.duplicatedRowValidation.invalid = true;
-      }
-      this.$element.find('#' + rowArray[0].uid + '-phone').focus();
-
-      flag = false;
-      return flag;
-    });
-
-    if (!flag) {
-      this.Notification.error(this.getValidationMessage('duplicatedPhoneNumbers', {}, false), {}, this.getValidationMessage('duplicatedErrorTitle', {}, false));
-    }
-
-    return flag;
-  }
-
-  private validateConflictDnisNumber() {
-    let flag = true;
-
-    _.forEach(this.dnisNumber2AttrsMapping, (attrArray) => {
-      if (attrArray.length <= 1) {
-        return true;
-      }
-
-      let base_rows = _.filter(attrArray, (row: any) => {
-        return row.entity.dataType === DATA_TYPE.IMPORT_TD || (this.telephonyDomainId !== '' && row.entity.dataType === DATA_TYPE.SUBMITTED);
-      });
-
-      let base_row = (base_rows && base_rows.length) ? base_rows[0] : attrArray[0];
-      let conflict_rows = _.filter(attrArray, (row: any) => {
-        return !_.isEqual(row.entity.tollType, base_row.entity.tollType) || !_.isEqual(row.entity.callType, base_row.entity.callType);
-      });
-
-      if (!conflict_rows.length) {
-        return true;
-      }
-
-      let conflict_row = conflict_rows[0];
-      let key = !_.isEqual(conflict_row.entity.tollType, base_row.entity.tollType) ? 'tollType' : 'callType';
-
-      conflict_row.entity.validation[key].invalid = true;
-      conflict_row.entity.validation[key].message = this.getValidationMessage('conflict' + _.upperFirst(key));
-      conflict_row.entity.validation[key].show = true;
-      this.$element.find('#' + conflict_row.uid + '-' + key).find('.select-toggle').focus();
-
-      flag = false;
-      return flag;
-    });
-
-    if (!flag) {
-      this.Notification.error(this.getValidationMessage('conflictAccessNumbers', {}, false), {}, this.getValidationMessage('conflictErrorTitle', {}, false));
-    }
-
-    return flag;
-  }
-
-  private validatePhoneNumberAndLabelLength() { //11kb validation
-    let flag = true;
-
-    if (this.phoneAndLabelLength > MAX_PHONE_LENGTH) {
-      this.Notification.error(this.getValidationMessage('exceedPhoneLength', {}, false), {}, this.getValidationMessage('exceedPhoneLengthTitle', {}, false));
-      flag = false;
-    }
-
-    return flag;
-  }
-
-  private validatePhoneNumberDisplay() {
-    let flag = true, message = '', uid = '';
-
-    _.forEach(this.phoneNumber2RowsMapping, (rowArray) => {
-      let displayRows: any = [];
-      for (let i = 0; i < rowArray.length; i++) {
-        if (rowArray[i].entity.isHidden.value === 'false') {
-          displayRows.push(rowArray[i]);
-        }
-      }
-
-      if (displayRows.length === 0) {
-        rowArray[0].entity.isEdit = true;
-        rowArray[0].entity.phnNumDisplayValidation.invalid = true;
-
-        uid = rowArray[0].uid;
-        message = this.getValidationMessage('noDisplayNumber', {}, false);
-        flag = false;
-      } else if (displayRows.length > 1) {
-        _.forEach(displayRows, (row) => {
-          if (row.entity.defaultNumber.value === '0') {
-            row.entity.isEdit = true;
-            row.entity.phnNumDisplayValidation.invalid = true;
-            _.isEmpty(uid) ? uid = row.uid : uid = uid;
-          }
-        });
-
-        this.$modal.open({
-          type: 'dialog',
-          templateUrl: 'modules/gemini/telephonyDomain/details/gmTdSubmitMultipleDisplayConfirm.tpl.html',
-        }).result.then(() => {
-          this.confirmPostAll();
-        });
-
-        flag = false;
-      }
-
-      return flag;
-    });
-
-    if (!flag) {
-      this.$element.find('#' + uid + '-isHidden').find('.select-toggle').focus();
-      this.Notification.error(message);
-    }
-
-    return flag;
-  }
-
-  private postAll() {
+  private postAll(result) {
     this.$modal.open({
       type: 'dialog',
-      templateUrl: 'modules/gemini/telephonyDomain/details/gmTdSubmitConfirm.tpl.html',
+      templateUrl: result === 1 ? SUBMIT_CONFIRM_TEMPLATE : SUBMIT_MUTIDISPLAY_TEMPLATE,
     }).result.then(() => {
       this.confirmPostAll();
     });
   }
 
   private confirmPostAll() {
+    this.submitTelephonyAllData = [];
+
     this.setSubmitTelephonyDomainData();
     this.setDeleteTelephonyNumberData();
+    this.setNewAddTelephonyNumberData();
+    this.setUpdateAndRemainNumberData();
 
     this.$scope.$emit('detailWatch', { isEdit: false });
     this.submitLoading = true;
     this.TelephonyDomainService.postTelephonyDomain(this.customerId, this.submitTelephonyAllData).then((res: any) => {
-      let returnCode = _.get(res, 'content.data.code');
-      let returnMessage = _.get(res, 'content.data.message', '');
+      const returnCode = _.get(res, 'content.data.code');
+      const returnMessage = _.get(res, 'content.data.message', '');
 
       if (returnCode <= 5001) {
         this.Notification.success('gemini.tds.submit.returnCode.' + returnCode);
@@ -1296,7 +683,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       return;
     }
 
-    let region = this.currentTD.region;
+    const region = this.currentTD.region;
     this.$modal.open({
       type: 'full',
       template: '<gm-td-modal-request dismiss="$dismiss()" close="$close()" class="new-field-modal"></gm-td-modal-request>',
@@ -1311,19 +698,13 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   private changeRegion() {
-    let allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
-    _.forEach(allRows, (row) => {
-      if (row.entity.dataType === DATA_TYPE.IMPORT_TD) {
-        this.gridData.splice(this.gridData.indexOf(row.entity), 1);
-        delete this.dnisId2ImportedNumberMapping[row.entity.dnisId];
-      }
+    const deletedRows = _.remove(this.gridData, (data: any) => {
+      return data.dataType === DATA_TYPE.IMPORT_TD;
     });
-  }
 
-  private getValidationMessage(key: string, params: any = undefined, hasErrorIcon: boolean = true) {
-    let body = this.$translate.instant('gemini.tds.submit.validation.' + key, params);
-    body = hasErrorIcon ? '<div class="tn-error-msg">' + body + '</div>' : body;
-    return body;
+    _.forEach(deletedRows, (data: any) => {
+      delete this.dnisId2ImportedNumberMapping[data.dnisId];
+    });
   }
 
   public exportToCSV() {

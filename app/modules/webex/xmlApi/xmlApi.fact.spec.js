@@ -37,7 +37,6 @@ describe('WebExXmlApiFact', function () {
     spyOn(WebExXmlApiFact, 'tokeninfo').and.returnValue(deferred.promise);
 
     spyOn(Auth, 'redirectToLogin');
-
   }));
 
   it('redirects to login if token is not found', function () {

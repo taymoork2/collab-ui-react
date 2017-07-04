@@ -6,19 +6,19 @@ describe('Controller:MediaReportsController', function () {
   var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, Notification, MeetingLocationAdoptionGraphService, ClientTypeAdoptionGraphService, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, MediaReportsDummyGraphService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, MediaSneekPeekResourceService;
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
-  var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
+  var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/availabilityResourceData.json');
   var callVolumeGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
   var utilizationGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
   var participantDistributionGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
   var clientTypeData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeGraphData.json');
   var clientTypeCountData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeCountData.json');
   var meetingLocationData = getJSONFixture('mediafusion/json/metrics-graph-report/meetingLocationGraphData.json');
-  var participantChangedata = { "data":
+  var participantChangedata = { data:
   {
-    "orgId": "11111111-2222-3333-a444-111111111bac",
-    "dataProvider": [{
-      "name": "participant_change",
-      "value": 2,
+    orgId: '11111111-2222-3333-a444-111111111bac',
+    dataProvider: [{
+      name: 'participant_change',
+      value: 2,
     }],
   },
   };
@@ -69,19 +69,19 @@ describe('Controller:MediaReportsController', function () {
     Config = _Config_;
 
     spyOn(CallVolumeResourceGraphService, 'setCallVolumeGraph').and.returnValue({
-      'dataProvider': callVolumeData,
+      dataProvider: callVolumeData,
     });
     spyOn(AvailabilityResourceGraphService, 'setAvailabilityGraph').and.returnValue({
-      'dataProvider': clusteravailabilityData,
+      dataProvider: clusteravailabilityData,
     });
     spyOn(UtilizationResourceGraphService, 'setUtilizationGraph').and.returnValue({
-      'dataProvider': utilizationGraphData,
+      dataProvider: utilizationGraphData,
     });
     spyOn(ParticipantDistributionResourceGraphService, 'setParticipantDistributionGraph').and.returnValue({
-      'dataProvider': participantDistributionGraphData,
+      dataProvider: participantDistributionGraphData,
     });
     spyOn(ClientTypeAdoptionGraphService, 'setClientTypeGraph').and.returnValue({
-      'dataProvider': clientTypeData,
+      dataProvider: clientTypeData,
     });
     httpMock.when('GET', /^\w+.*/).respond({});
 
@@ -120,7 +120,6 @@ describe('Controller:MediaReportsController', function () {
       spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.resolve(utilizationGraphData));
       spyOn(MediaReportsService, 'getParticipantDistributionData').and.returnValue($q.resolve(participantDistributionGraphData));
       $timeout(function () {
-
         expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0]);
         expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0]);
         expect(MediaReportsService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0]);
@@ -130,7 +129,6 @@ describe('Controller:MediaReportsController', function () {
         expect(AvailabilityResourceGraphService.setAvailabilityGraph).toHaveBeenCalled();
         expect(UtilizationResourceGraphService.setUtilizationGraph).toHaveBeenCalled();
         expect(ParticipantDistributionResourceGraphService.setParticipantDistributionGraph).toHaveBeenCalled();
-
       }, 30);
     });
   });
@@ -198,13 +196,14 @@ describe('Controller:MediaReportsController', function () {
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalled();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalled();
       expect(MediaReportsService.getOverflowIndicator).toHaveBeenCalled();
+      expect(controller.clusterUnavailablityFlag).toBeTruthy();
     });
 
     it('setTotalCallsData should invoke getTotalCallsData', function () {
       var response = {
-        'data': {
-          'callsOnPremise': 20,
-          'callsRedirect': 30,
+        data: {
+          callsOnPremise: 20,
+          callsRedirect: 30,
         },
       };
       spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
@@ -216,7 +215,7 @@ describe('Controller:MediaReportsController', function () {
       expect(controller.onprem).toBe(20);
       expect(controller.cloudOverflow).toBe(30);
       expect(controller.total).toBe(50);
-      expect(controller.second_card_value).toBe("30");
+      expect(controller.second_card_value).toBe('30');
       expect(controller.cardIndicator).toBe(2);
     });
 
@@ -230,10 +229,10 @@ describe('Controller:MediaReportsController', function () {
 
     it('setTotalCallsPie should invoke getTotalCallsData', function () {
       var response = {
-        'data': {
-          'cloudCalls': 30,
-          'callsOverflow': 40,
-          'callsOnPremise': 20,
+        data: {
+          cloudCalls: 30,
+          callsOverflow: 40,
+          callsOnPremise: 20,
         },
       };
       spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
@@ -255,8 +254,8 @@ describe('Controller:MediaReportsController', function () {
 
     it('setClusterAvailability should set the clusterAvailability', function () {
       var response = {
-        'data': {
-          'availabilityPercent': 20,
+        data: {
+          availabilityPercent: 20,
         },
       };
       spyOn(MediaReportsService, 'getClusterAvailabilityData').and.returnValue($q.resolve(response));
@@ -270,7 +269,7 @@ describe('Controller:MediaReportsController', function () {
     it('setSneekPeekData should call MediaReportsService and MediaSneekPeekResourceService', function () {
       spyOn(MediaReportsService, 'getClusterAvailabilityTooltip').and.callThrough();
       spyOn(MediaSneekPeekResourceService, 'getClusterAvailabilitySneekPeekValues').and.returnValue({
-        values: ["dummyCluster"],
+        values: ['dummyCluster'],
       });
       spyOn(MediaReportsService, 'getOverflowIndicator').and.returnValue($q.resolve(participantChangedata));
       controller.setSneekPeekData();

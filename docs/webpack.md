@@ -1,6 +1,6 @@
 ## What is Webpack? ##
 
-Simply put, webpack is a module bundler that can load any type of module and produce a corresponding static asset.  Read up on webpack [here](https://webpack.github.io/docs/what-is-webpack.html)!
+Simply put, webpack is a module bundler that can load any type of module and produce a corresponding static asset. Read up on webpack [here](https://webpack.github.io/docs/what-is-webpack.html)!
 
 ## Goals of using Webpack ##
 

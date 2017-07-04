@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: HelpdeskOrderController', function () {
-
   beforeEach(angular.mock.module('Squared'));
   var $stateParams, $controller, $scope, $timeout, HelpdeskService, Notification, orderController, $q;
   var order1TierJson = getJSONFixture('core/json/orders/order.json');

@@ -7,12 +7,12 @@
 
   /* @ngInject */
   function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
-
     var vm = this;
 
     var actionName = 'conditional';
     vm.queues = [];
 
+    vm.ui = {};
     vm.menuEntry = {};
     vm.actionEntry = {};
 
@@ -75,12 +75,55 @@
 
     vm.setIfDecision = setIfDecision;
     vm.update = update;
+    vm.refreshIfSelects = refreshIfSelects;
+    vm.refreshVarSelects = refreshVarSelects;
+
+    var fromQuery = [];
 
     ///////////////////////////////////////////////////////
+    $scope.$on('CE Updated', function () {
+      getSessionVariables().finally(function () {
+        refreshVarSelects();
+      });
+    });
+
+    function addLocalAndQueriedSessionVars() {
+      // reset the displayed SessionVars to the original queried items
+
+      vm.sessionVarOptions = fromQuery;
+
+      // add in any user entered SessionVars
+      // false === don't collect conditionals
+      vm.sessionVarOptions = _.concat(vm.sessionVarOptions, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+
+      vm.sessionVarOptions = _.uniq(vm.sessionVarOptions).sort();
+    }
+    function refreshIfSelects() {
+      // If a caller input var was entered AND the decision screen is already on screen we
+      // need to add the (possibly) missing session variable selection to the dropdown
+
+      addLocalAndQueriedSessionVars();
+
+      if (_.find(vm.ifOptions, { value: 'sessionVariable' })) {
+        return; // already there nothing to do
+      }
+      if (vm.sessionVarOptions.length > 0) {
+        addSessionObject();
+      }
+    }
+
+    function refreshVarSelects() {
+      // reload the session variables.
+      // params true === collect session variables
+      addLocalAndQueriedSessionVars();
+
+      // resets possibly warning messages
+      setLeft();
+    }
 
     function update(which) {
       AACommonService.setDecisionStatus(true);
-      var option = _.find(vm.ifOptions, { 'value': which });
+      var option = _.find(vm.ifOptions, { value: which });
       if (_.isEqual(option.value, 'callerReturned')) {
         vm.actionEntry.if.rightCondition = option.buffer.value;
       } else {
@@ -115,7 +158,7 @@
     }
 
     function setRight() {
-      var option = _.find(vm.ifOptions, { 'value': vm.ifOption.value });
+      var option = _.find(vm.ifOptions, { value: vm.ifOption.value });
       if (_.isEqual(option.value, 'callerReturned')) {
         vm.actionEntry.if.rightCondition = option.buffer.value;
       } else {
@@ -142,10 +185,9 @@
         buffer: '',
       });
     }
-
     function setActionEntry() {
-      var ui = AAUiModelService.getUiModel();
-      var uiMenu = ui[$scope.schedule];
+      vm.ui = AAUiModelService.getUiModel();
+      var uiMenu = vm.ui[$scope.schedule];
       vm.menuEntry = uiMenu.entries[$scope.index];
       var action = getAction(vm.menuEntry);
       if (!action) {
@@ -158,10 +200,9 @@
 
     function populateMenu() {
       if (vm.actionEntry.if.leftCondition) {
-
-        vm.ifOption = _.find(vm.ifOptions, { 'value': vm.actionEntry.if.leftCondition });
+        vm.ifOption = _.find(vm.ifOptions, { value: vm.actionEntry.if.leftCondition });
         if (!vm.ifOption) {
-          vm.ifOption = _.find(vm.ifOptions, { 'value': 'sessionVariable' });
+          vm.ifOption = _.find(vm.ifOptions, { value: 'sessionVariable' });
           if (!vm.ifOption) {
             addSessionObject();
             vm.ifOption = vm.ifOptions[vm.ifOptions.length - 1];
@@ -170,13 +211,13 @@
           vm.sessionVarOption = vm.actionEntry.if.leftCondition;
         }
         if (vm.ifOption.value === 'callerReturned') {
-          vm.ifOption.buffer = _.find(vm.callerReturnedOptions, { 'value': vm.actionEntry.if.rightCondition });
+          vm.ifOption.buffer = _.find(vm.callerReturnedOptions, { value: vm.actionEntry.if.rightCondition });
         } else {
           vm.ifOption.buffer = vm.actionEntry.if.rightCondition;
         }
       }
       if (_.has(vm.actionEntry, 'then.name')) {
-        vm.thenOption = _.find(vm.thenOptions, { 'value': vm.actionEntry.then.name });
+        vm.thenOption = _.find(vm.thenOptions, { value: vm.actionEntry.then.name });
       }
     }
     /* No support for Queues as of this story US260317
@@ -256,17 +297,28 @@
       setActionEntry();
       sortAndSetActionType();
 
+      addLocalAndQueriedSessionVars();
+
+      // make sure the option is displayed, from either queried or user entered
+      if (vm.sessionVarOptions.length > 0) {
+        addSessionObject();
+      }
+
       populateMenu();
     }
 
-    function init() {
-      AASessionVariableService.getSessionVariables(AAModelService.getAAModel().aaRecordUUID).then(function (data) {
+    function getSessionVariables() {
+      fromQuery = [];
+
+      return AASessionVariableService.getSessionVariables(AAModelService.getAAModel().aaRecordUUID).then(function (data) {
         if (!_.isUndefined(data) && data.length > 0) {
-          vm.sessionVarOptions = data;
-          vm.sessionVarOptions.sort();
-          addSessionObject();
+          fromQuery = data;
         }
-      }).finally(function () {
+      });
+    }
+
+    function init() {
+      getSessionVariables().finally(function () {
         /* no support for Queues as of this story.
          * if (AACommonService.isRouteQueueToggle()) {
          *
@@ -279,7 +331,5 @@
     }
 
     init();
-
   }
-
 })();

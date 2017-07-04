@@ -26,6 +26,11 @@
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
     vm.deactivateTrialMode = deactivateTrialMode;
     vm.deactivateProductionMode = deactivateProductionMode;
+    vm.dirsyncEnabled = false;
+    vm.groupAssigned = groupAssigned;
+    vm.setHDSDefaultForAltHDSServersGroup = setHDSDefaultForAltHDSServersGroup;
+    vm.defaultHDSGroupName = 'HdsTrialGroup';
+    vm.defaultHDSGroup = null;
     var localizedHdsModeError = $translate.instant('hds.resources.settings.hdsModeGetError');
     var trialKmsServer = '';
     var trialKmsServerMachineUUID = '';
@@ -36,25 +41,25 @@
 
     // TODO: below is the jason to recover initial state, remove it when at the very late stage of HDS dev
     var jsonTrialMode = {
-      "altHdsServers": [
+      altHdsServers: [
         {
-          "type": "kms",
-          "kmsServer": "customer.com",
-          "kmsServerMachineUUID": "e336ae2b-7afb-4e90-a023-61103e06a861",
-          "groupId": "755d989a-feef-404a-8669-085eb054afef",
-          "active": false,
+          type: 'kms',
+          kmsServer: 'customer.com',
+          kmsServerMachineUUID: 'e336ae2b-7afb-4e90-a023-61103e06a861',
+          groupId: '755d989a-feef-404a-8669-085eb054afef',
+          active: false,
         },
         {
-          "type": "adr",
-          "adrServer": "5f40d7be-da6b-4a10-9c6c-8b061aee053a",
-          "groupId": "755d989a-feef-404a-8669-085eb054afef",
-          "active": false,
+          type: 'adr',
+          adrServer: '5f40d7be-da6b-4a10-9c6c-8b061aee053a',
+          groupId: '755d989a-feef-404a-8669-085eb054afef',
+          active: false,
         },
         {
-          "type": "sec",
-          "securityService": "2d2bdeaf-3e63-4561-be2f-4ecc1a48dcd4",
-          "groupId": "755d989a-feef-404a-8669-085eb054afef",
-          "active": false,
+          type: 'sec',
+          securityService: '2d2bdeaf-3e63-4561-be2f-4ecc1a48dcd4',
+          groupId: '755d989a-feef-404a-8669-085eb054afef',
+          active: false,
         },
       ],
     };
@@ -111,6 +116,7 @@
           vm.orgSettings = data.orgSettings;
           vm.altHdsServers = data.orgSettings.altHdsServers;
           vm.prodDomain = vm.orgSettings.kmsServer;
+          vm.dirsyncEnabled = data.dirsyncEnabled;
           if (typeof vm.altHdsServers === 'undefined' || vm.altHdsServers.length === 1) {
             // prod info
             if (typeof vm.prodDomain === 'undefined') {
@@ -145,7 +151,13 @@
                   trialSecurityService = server.securityService;
                 }
               });
-              getTrialUsersInfo();
+              if (vm.groupAssigned()) {
+                getTrialUsersInfo();
+              } else {
+                if (vm.dirsyncEnabled === true) {
+                  setHDSDefaultForAltHDSServersGroup();
+                }
+              }
             } else {
               vm.model.serviceMode = vm.NA_MODE;
             }
@@ -156,6 +168,35 @@
           Notification.error(localizedHdsModeError + status);
         }
       }, null, params);
+    }
+
+    function setHDSDefaultForAltHDSServersGroup() {
+      //For dirsync orgs retrieve default HDS group info by name
+      HDSService.queryGroup(Authinfo.getOrgId(), vm.defaultHDSGroupName)
+                  .then(function (group) {
+                    vm.defaultHDSGroup = group.Resources[0];
+                    vm.trialUserGroupId = vm.defaultHDSGroup.id;
+                    //Assign group id to each server
+                    _.forEach(vm.altHdsServers, function (server) {
+                      server.groupId = vm.defaultHDSGroup.id;
+                    });
+                    var altHdsServersJson = {
+                      altHdsServers: vm.altHdsServers,
+                    };
+                    HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), altHdsServersJson)
+                          .then(function () {
+                            vm.model.serviceMode = vm.PRE_TRIAL;
+                            getTrialUsersInfo();
+                          }).catch(function (error) {
+                            Notification.errorWithTrackingId(error, localizedHdsModeError);
+                          });
+                  }).catch(function (error) {
+                    Notification.error(localizedHdsModeError + error.statusText);
+                  });
+    }
+
+    function groupAssigned() {
+      return (_.isString(vm.trialUserGroupId) && vm.trialUserGroupId.length > 0);
     }
 
     function recoverPreTrial() {
@@ -178,7 +219,7 @@
           });
         }
         var myJSON = {
-          'altHdsServers': vm.altHdsServers,
+          altHdsServers: vm.altHdsServers,
         };
         HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
           .then(function () {
@@ -239,6 +280,9 @@
         controllerAs: 'editTrialUsersCtrl',
         templateUrl: 'modules/hds/settings/edittrialusers_modal/edit-trial-users.html',
         type: 'small',
+        resolve: {
+          dirsyncEnabled: vm.dirsyncEnabled,
+        },
       })
         .result.then(function () {
           setTimeout(function () {
@@ -262,7 +306,7 @@
               });
             }
             var myJSON = {
-              'altHdsServers': vm.altHdsServers,
+              altHdsServers: vm.altHdsServers,
             };
             HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
               .then(function () {
@@ -348,7 +392,17 @@
           type: 'dialog',
         })
           .result.then(function () {
-            cleanTrialUserGroup()
+            if (vm.dirsyncEnabled === true) {
+              manageHdsServersInfo(vm.trialUserGroupId)
+                .then(function () {
+                  Notification.success('hds.resources.settings.succeedDeactivateProductionMode');
+                }).catch(function (error) {
+                  Notification.errorWithTrackingId(error, localizedHdsModeError);
+                }).finally(function () {
+                  vm.lock = false;
+                });
+            } else {
+              cleanTrialUserGroup()
               .then(function () {
                 createTrialUserGroup()
                   .then(function (newGroupID) {
@@ -367,6 +421,7 @@
                 Notification.errorWithTrackingId(error, localizedHdsModeError);
                 vm.lock = false;
               });
+            }
           }).catch(function () {
             // user clicked Cancle Button, no need for a notification.
             vm.lock = false;

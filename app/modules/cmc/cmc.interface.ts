@@ -1,3 +1,5 @@
+import { IUser } from 'modules/core/auth/user/user';
+
 export interface ICmcProvider {
   id: string;
   name: string;
@@ -21,6 +23,15 @@ export interface ICmcStatusResponse {
   issues?: ICmcIssue[];
 }
 
+export interface ICmcUserData {
+  mobileNumber: string;
+  entitled: boolean;
+}
+
+export interface ICmcUser extends IUser {
+  phoneNumbers?: any[];
+}
+
 export interface ICmcOrgStatusResponse extends ICmcStatusResponse {
   details?: {
     providers: {mobileProvider: ICmcMobileProvider, ucProvider: ICmcProvider},
@@ -30,9 +41,21 @@ export interface ICmcOrgStatusResponse extends ICmcStatusResponse {
 export interface ICmcUserStatusResponse extends ICmcStatusResponse {
 }
 
-export interface ICmcError {
-  message: string;
-  errors?: {
-    description: string;
-  }[];
+export interface ICmcUserStatus {
+  userId: string;
+  state?: string;
+  serviceId?: string;
+  orgId?: string;
+  lastStatusUpdate?: string;
+  lastStateChange?: string;
+  entitled?: string;
+  displayName?: string;
+  userName?: string;
+}
+
+export interface ICmcUserStatusInfoResponse {
+  userStatuses: ICmcUserStatus[];
+  paging: {
+    next: string;
+  };
 }

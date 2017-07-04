@@ -8,12 +8,12 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $state, $scope, $translate, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
+    var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
 
-    vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
@@ -30,10 +30,12 @@ require('./_overview.scss');
 
     vm.notifications = [];
     vm.pstnToSNotification = null;
+    vm.esaDisclaimerNotification = null;
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
     vm.notificationComparator = notificationComparator;
     vm.ftHuronPstn = false;
+    vm.ftEnterpriseTrunking = false;
 
     ////////////////////////////////
 
@@ -87,7 +89,7 @@ require('./_overview.scss');
             if (!flag.raised) {
               if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_cal)) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
-              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal) && hasGoogleCalendarFeatureToggle) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal)) {
                 vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService));
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
@@ -116,6 +118,8 @@ require('./_overview.scss');
           vm.orgData = data;
 
           getTOSStatus();
+          getEsaDisclaimerStatus();
+
           if (!data.orgSettings.sipCloudDomain) {
             vm.notifications.push(OverviewNotificationFactory.createCloudSipUriNotification());
           }
@@ -180,6 +184,11 @@ require('./_overview.scss');
 
       FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
         vm.ftHuronPstn = result;
+
+        FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
+          vm.ftEnterpriseTrunking = result;
+          getEsaDisclaimerStatus();
+        });
       });
 
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
@@ -217,6 +226,27 @@ require('./_overview.scss');
     function onPstnToSAccept() {
       if (vm.pstnToSNotification !== null) {
         dismissNotification(vm.pstnToSNotification);
+      }
+    }
+
+    function getEsaDisclaimerStatus() {
+      if (Authinfo.isCustomerLaunchedFromPartner() || !vm.ftEnterpriseTrunking) {
+        return;
+      }
+      if (vm.orgData !== null) {
+        PstnService.isSwivelCustomerAndEsaUnsigned(vm.orgData.id).then(function (result) {
+          if (result) {
+            vm.esaDisclaimerNotification = OverviewNotificationFactory.createEsaDisclaimerNotification();
+            vm.notifications.push(vm.esaDisclaimerNotification);
+            $scope.$on(PSTN_ESA_DISCLAIMER_ACCEPT, onPstnEsaDisclaimerAccept);
+          }
+        });
+      }
+    }
+
+    function onPstnEsaDisclaimerAccept() {
+      if (vm.esaDisclaimerNotification !== null) {
+        dismissNotification(vm.esaDisclaimerNotification);
       }
     }
 

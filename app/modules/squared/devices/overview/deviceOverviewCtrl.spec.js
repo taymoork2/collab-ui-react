@@ -3,11 +3,12 @@
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, $state, controller, $httpBackend;
   var $q, UrlConfig, CsdmDeviceService, Authinfo, Notification, CsdmDataModelService;
-  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, TerminusUserDeviceE911Service;
-  var PstnSetupStatesService, CsdmHuronDeviceService, ServiceSetup, DeviceOverviewService;
+  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, TerminusService;
+  var PstnAreaService, CsdmHuronDeviceService, ServiceSetup, DeviceOverviewService;
 
   var location = {
-    type: 'State',
+    zipName: 'Zip Code',
+    typeName: 'State',
     areas: [{
       name: 'Texas',
       abbreviation: 'TX',
@@ -23,7 +24,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
   function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _Authinfo_,
     _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _CsdmDataModelService_,
-    _PstnSetupStatesService_, _ServiceSetup_, _DeviceOverviewService_, _TerminusUserDeviceE911Service_) {
+    _PstnAreaService_, _ServiceSetup_, _DeviceOverviewService_, _TerminusService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -39,10 +40,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
     CsdmDataModelService = _CsdmDataModelService_;
     RemoteSupportModal = _RemoteSupportModal_;
     HuronConfig = _HuronConfig_;
-    PstnSetupStatesService = _PstnSetupStatesService_;
+    PstnAreaService = _PstnAreaService_;
     ServiceSetup = _ServiceSetup_;
     DeviceOverviewService = _DeviceOverviewService_;
-    TerminusUserDeviceE911Service = _TerminusUserDeviceE911Service_;
+    TerminusService = _TerminusService_;
   }
 
   function initSpies() {
@@ -55,12 +56,19 @@ describe('Controller: DeviceOverviewCtrl', function () {
     spyOn(CsdmDataModelService, 'reloadItem').and.returnValue($q.reject());
     spyOn(CsdmHuronDeviceService, 'getLinesForDevice').and.returnValue($q.resolve([]));
     spyOn(CsdmHuronDeviceService, 'getDeviceInfo').and.returnValue($q.resolve({}));
-    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
+    spyOn(PstnAreaService, 'getCountryAreas').and.returnValue($q.resolve(location));
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'getTranslatedTimeZones').and.returnValue($q.resolve());
     spyOn(DeviceOverviewService, 'getCountryOptions').and.returnValue($q.resolve());
-    spyOn(TerminusUserDeviceE911Service, 'get').and.returnValue({
-      $promise: $q.reject(),
+
+    spyOn(TerminusService, 'customerNumberE911V2').and.callFake(function () {
+      return {
+        get: function () {
+          return {
+            $promise: $q.reject(),
+          };
+        },
+      };
     });
   }
 
@@ -442,7 +450,6 @@ describe('Controller: DeviceOverviewCtrl', function () {
       $scope.$apply();
       expect(controller.addTag).toHaveBeenCalled();
     });
-
   });
 });
 
@@ -450,7 +457,7 @@ describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, UrlConfig;
   var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig;
-  var usStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states.json');
+  var usStatesList = getJSONFixture('../../app/modules/huron/pstn/pstnAreaService/states.json');
   var $timeout;
 
   beforeEach(angular.mock.module('Hercules'));
@@ -480,17 +487,16 @@ describe('Huron Device', function () {
   }
 
   newTimeZone = {
-    "id": "America/Anchorage",
-    "label": "America/Anchorage",
+    id: 'America/Anchorage',
+    label: 'America/Anchorage',
   };
 
   newCountry = {
-    "label": "Canada",
-    "value": "CA",
+    label: 'Canada',
+    value: 'CA',
   };
 
   function CsdmHuronDeviceService(q) {
-
     function setTimezoneForDevice() {
       return q.resolve(true);
     }
@@ -526,7 +532,7 @@ describe('Huron Device', function () {
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET(HuronConfig.getTerminusV2Url() + '/customers/numbers/e911').respond(200);
-    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(usStatesList);
+    $httpBackend.whenGET('modules/huron/pstn/pstnAreaService/states.json').respond(usStatesList);
 
     countries = getJSONFixture('huron/json/settings/countries.json');
 
@@ -548,7 +554,6 @@ describe('Huron Device', function () {
     spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.resolve(true));
     spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.resolve(true));
     spyOn($stateParams.huronDeviceService, 'setSettingsForAta').and.returnValue($q.resolve(true));
-
   }
 
   function initController() {

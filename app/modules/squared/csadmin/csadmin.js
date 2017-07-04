@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function CsAdminCtrl($scope, $location, Log, csadminservice) {
-
     //initialize ng-show variables
     $scope.result = {
       success: false,

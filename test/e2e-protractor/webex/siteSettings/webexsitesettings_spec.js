@@ -20,7 +20,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
   describe(webExCommon.testInfo.describeText, function () {
     var setup = false;
 
-    if (webExCommon.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == 'T31') {
       beforeAll(function () {
         var promise = webEx.setup(
           1,
@@ -62,7 +62,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       });
     }
 
-    if (webExCommon.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == 'T31') {
       it('should sign in as ' + webExCommon.BTS4.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
@@ -100,7 +100,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       }
     });
 
-    if (webExCommon.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == 'T31') {
       it('should click on configure site cog for ' + webExCommon.BTS4.siteUrl, function () {
         if (setup) {
           utils.click(webExCommon.BTS4.configCog);
@@ -118,7 +118,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       });
     }
 
-    if (webExCommon.testInfo.testType == "T31") { // for T31 site only
+    if (webExCommon.testInfo.testType == 'T31') { // for T31 site only
       it('should click on common settings cmr link', function () {
         if (setup) {
           utils.click(webExSiteSettings.configureCommonCMRLink);
@@ -337,7 +337,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       }
     });
 
-    if (webExCommon.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == 'T31') {
       it('should click on configure site cog and navigate to site settings index', function () {
         if (setup) {
           utils.click(webExSiteSettings.siteListCrumb);

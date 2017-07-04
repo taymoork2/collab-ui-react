@@ -32,7 +32,7 @@ describe('Directive: setupAssistantPages', function () {
   }));
 
   function validateAppropriateContent(directiveName, expectedContent) {
-    element = $compile("<" + directiveName + " mode='chat'/>")($rootScope);
+    element = $compile('<' + directiveName + " mode='chat'/>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain(expectedContent);
@@ -48,5 +48,4 @@ describe('Directive: setupAssistantPages', function () {
   it('replaces the elements of ct-name with the appropriate content', function () {
     validateAppropriateContent('ct-name', 'ct-input');
   });
-
 });

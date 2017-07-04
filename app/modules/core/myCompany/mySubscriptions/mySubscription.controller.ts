@@ -3,11 +3,14 @@ import { Notification } from 'modules/core/notifications';
 import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
 import { SharedMeetingsReportService } from './sharedMeetings/sharedMeetingsReport.service';
 import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from './subscriptionsInterfaces';
+import * as moment from 'moment';
+import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class MySubscriptionCtrl {
-  public hybridServices: Array<any> = [];
-  public licenseCategory: Array<ISubscriptionCategory> = [];
-  public subscriptionDetails: Array<ISubscription> = [];
+  public hybridServices: any[] = [];
+  public licenseCategory: ISubscriptionCategory[] = [];
+  public subscriptionDetails: ISubscription[] = [];
   public visibleSubscriptions: boolean = false;
   public hasEnterpriseTrial: boolean = false;
   public trialUrlFailed: boolean = false;
@@ -17,6 +20,10 @@ export class MySubscriptionCtrl {
   public isSharedMeetingsReportsEnabled: boolean;
   public temporarilyOverrideSharedMeetingsReportsFeatureToggle = { default: false, defaultValue: true };
   public bmmpAttr: IBmmpAttr;
+  public licenseSummary: string;
+  public subExpiration: string;
+  public oneOnlineSub: boolean = false;
+  public showSingleSub: boolean = false;
 
   private readonly BASE_CATEGORY: ISubscriptionCategory = {
     offers: [],
@@ -31,12 +38,22 @@ export class MySubscriptionCtrl {
   private readonly CARE_CLASS: string = 'icon-headset';
 
   private readonly CARE: string = 'CARE';
-  private readonly SUBSCRIPTION_TYPES: any = {
+  private readonly SUBSCRIPTION_TYPES = {
     message: 0,
     meeting: 1,
     call: 2,
     room: 3,
     care: 4,
+  };
+  private readonly EXPIRATION_BADGES = {
+    default: 'default',
+    warning: 'warning',
+    alert: 'alert',
+  };
+  private readonly EXPIRATION_DAYS = {
+    warning: 30,
+    alert: 5,
+    expired: 0,
   };
 
   /* @ngInject */
@@ -47,18 +64,19 @@ export class MySubscriptionCtrl {
     private $window: ng.IWindowService,
     private Authinfo,
     private Config,
-    private FeatureToggleService,
     private DigitalRiverService: DigitalRiverService,
-    private OnlineUpgradeService: OnlineUpgradeService,
-    private SharedMeetingsReportService: SharedMeetingsReportService,
+    private FeatureToggleService,
+    private HybridServicesUtilsService: HybridServicesUtilsService,
     private Notification: Notification,
+    private OnlineUpgradeService: OnlineUpgradeService,
     private Orgservice,
-    private ServiceDescriptor,
-    private WebExUtilsFact,
+    private ServiceDescriptorService: ServiceDescriptorService,
+    private SharedMeetingsReportService: SharedMeetingsReportService,
     private UrlConfig,
+    private WebExUtilsFact,
   ) {
     _.forEach(this.SUBSCRIPTION_TYPES, (_value, key: string): void => {
-      let category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
+      const category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
       category.label = $translate.instant('subscriptions.' + key);
 
       this.licenseCategory.push(category);
@@ -170,7 +188,7 @@ export class MySubscriptionCtrl {
 
   // combines licenses for the license view
   private addSubscription(index: number, item: IOfferData, siteIndex?: number): void {
-    let offers: Array<IOfferData>;
+    let offers: IOfferData[];
     let exists: boolean = false;
 
     if (_.isNumber(siteIndex)) {
@@ -195,7 +213,7 @@ export class MySubscriptionCtrl {
   }
 
   private sortSubscription(index: number, siteIndex: number): void {
-    const offers: Array<IOfferData> = _.get(this.licenseCategory, `[${index}].offerWrapper[${siteIndex}].offers`, []);
+    const offers: IOfferData[] = _.get(this.licenseCategory, `[${index}].offerWrapper[${siteIndex}].offers`, []);
     this.licenseCategory[index].offerWrapper[siteIndex].offers = _.sortBy(offers, (element: IOfferData): number => {
       const rank = {
         CDC: 1,
@@ -206,14 +224,16 @@ export class MySubscriptionCtrl {
   }
 
   private subscriptionRetrieval(): void {
-    this.Orgservice.getLicensesUsage(false).then((subscriptions: Array<any>): void => {
+    this.Orgservice.getLicensesUsage(false).then((subscriptions: any[]): void => {
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
-        let newSubscription: ISubscription = {
+        const newSubscription: ISubscription = {
           licenses: [],
           isTrial: false,
           isOnline: false,
           viewAll: false,
           numSubscriptions: subscriptions.length,
+          endDate: '',
+          badge: '',
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
@@ -224,10 +244,28 @@ export class MySubscriptionCtrl {
             newSubscription.isOnline = true;
           }
         }
+        if (subscription.endDate) {
+          const currentDate = new Date();
+          const subscriptionEndDate = new Date(subscription.endDate);
+          const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
+          const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+          newSubscription.endDate = this.$translate.instant('subscriptions.expires', { date: moment(subscriptionEndDate).format('MMM DD, YYYY') });
+          if (diffDays > this.EXPIRATION_DAYS.warning) {
+            newSubscription.badge = this.EXPIRATION_BADGES.default;
+          } else if (diffDays > this.EXPIRATION_DAYS.alert) {
+            newSubscription.badge = this.EXPIRATION_BADGES.warning;
+          } else if (diffDays > this.EXPIRATION_DAYS.expired) {
+            newSubscription.badge = this.EXPIRATION_BADGES.alert;
+          } else {
+            newSubscription.endDate = this.$translate.instant('subscriptions.expired');
+            newSubscription.badge = this.EXPIRATION_BADGES.alert;
+          }
+        }
 
         _.forEach(subscription.licenses, (license: any, licenseIndex: number): void => {
           if (license.offerName in this.Config.offerCodes) {
-            let offer: IOfferData = {
+            const offer: IOfferData = {
               licenseId: license.licenseId,
               licenseType: license.licenseType,
               licenseModel: _.get(license, 'licenseModel', ''),
@@ -259,7 +297,7 @@ export class MySubscriptionCtrl {
               this.addSubscription(this.SUBSCRIPTION_TYPES.room, _.cloneDeep(offer));
             } else if (license.offerName === this.Config.offerCodes.CDC || license.offerName === this.Config.offerCodes.CVC) {
               offer.class = this.CARE_CLASS;
-              let existingIndex = _.findIndex(this.licenseCategory[this.SUBSCRIPTION_TYPES.care].offerWrapper, (sub: IOfferWrapper): boolean => {
+              const existingIndex = _.findIndex(this.licenseCategory[this.SUBSCRIPTION_TYPES.care].offerWrapper, (sub: IOfferWrapper): boolean => {
                 return sub.type === this.CARE;
               });
 
@@ -279,7 +317,7 @@ export class MySubscriptionCtrl {
                 offer.class = this.WEBEX_CLASS;
               }
 
-              let existingSite: number = _.findIndex(this.licenseCategory[this.SUBSCRIPTION_TYPES.meeting].offerWrapper, (sub: IOfferWrapper): boolean => {
+              const existingSite: number = _.findIndex(this.licenseCategory[this.SUBSCRIPTION_TYPES.meeting].offerWrapper, (sub: IOfferWrapper): boolean => {
                 return sub.siteUrl === offer.siteUrl;
               });
 
@@ -307,7 +345,7 @@ export class MySubscriptionCtrl {
             newSubscription.quantity = newSubscription.licenses[0].volume;
           }
           // sort licenses into display order/order for determining subscription name
-          let licenseTypes: Array<any> = _.toArray(this.Config.offerCodes);
+          const licenseTypes: any[] = _.toArray(this.Config.offerCodes);
           newSubscription.licenses.sort((a, b) => {
             return licenseTypes.indexOf(a.offerName) - licenseTypes.indexOf(b.offerName);
           });
@@ -318,6 +356,13 @@ export class MySubscriptionCtrl {
           }
         }
       });
+
+      if (this.subscriptionDetails.length > 1 ||
+         (this.subscriptionDetails.length === 1 && !this.subscriptionDetails[0].isOnline)) {
+        this.licenseSummary = this.$translate.instant('subscriptions.licenseSummary');
+      } else if (this.subscriptionDetails.length === 1 && this.subscriptionDetails[0].isOnline) {
+        this.oneOnlineSub = true;
+      }
 
       if (_.find(this.subscriptionDetails, 'isOnline')) {
         // create cookie for Digital River
@@ -333,17 +378,33 @@ export class MySubscriptionCtrl {
               this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.enterpriseTrial', { number: enterpriseTrials++ });
               this.hasEnterpriseTrial = true;
             } else {
-              this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
+              let id = _.get(subscription, 'subscriptionId');
+              if (_.isString(id) && id.length >= 4) {
+                id = id.substr(id.length - 4);
+                this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.subscriptionNum', { number: id });
+              } else {
+                this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
+              }
             }
           } else {
             const prodResponse: IProdInst = _.find(instances, ['subscriptionId', subscription.internalSubscriptionId]);
+            if (prodResponse.autoBilling) {
+              this.subscriptionDetails[index].endDate = '';
+            }
             if (subscription.isTrial) {
               this.setBMMPTrial(subscription, prodResponse);
             } else {
               this.setBMMP(subscription, prodResponse);
             }
+            if (this.subscriptionDetails.length === 1) {
+              this.licenseSummary = this.$translate.instant('subscriptions.licenseSummaryOnline', { name: prodResponse.name });
+            }
           }
         });
+        if (this.subscriptionDetails.length === 1 && (!this.subscriptionDetails[0].isTrial ||
+            this.subscriptionDetails[0].isOnline) && this.subscriptionDetails[0].subscriptionId) {
+          this.showSingleSub = true;
+        }
       });
     });
   }
@@ -393,9 +454,10 @@ export class MySubscriptionCtrl {
   }
 
   private hybridServicesRetrieval() {
-    this.ServiceDescriptor.getServices().then((services) => {
-      return this.ServiceDescriptor.filterEnabledServices(services);
+    this.ServiceDescriptorService.getServices().then((services) => {
+      return this.ServiceDescriptorService.filterEnabledServices(services);
     }).then((enabledServices) => {
+      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator(s1.id, s2.id));
       return _.map(enabledServices, (service: any) => {
         if (service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec') {
           return this.$translate.instant(`hercules.serviceNames.${service.id}.full`);

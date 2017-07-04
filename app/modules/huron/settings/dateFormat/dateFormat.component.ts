@@ -3,7 +3,7 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 class HuronDateFormatCtrl implements ng.IComponentController {
   public dateFormat: string;
   public selected: IOption;
-  public dateFormatOptions: Array<IOption>;
+  public dateFormatOptions: IOption[];
   public onChangeFn: Function;
 
   /* @ngInject */

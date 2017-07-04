@@ -2,14 +2,12 @@
   'use strict';
 
   function DrilldownReportController($scope, $q, ReportConstants, $timeout, CardUtils) {
-
     var dd = this;
     dd.gridData = [];
     $scope.gridData = dd.gridData;
     var RESIZE_DELAY_IN_MS = 100;
 
     dd.$onInit = function () {
-
       var defaultProps = {
         broadcast: {},
         description: '',
@@ -174,5 +172,4 @@
     controllerAs: 'dd',
   }
   );
-
 })();

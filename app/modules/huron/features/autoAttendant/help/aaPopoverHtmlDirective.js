@@ -3,20 +3,20 @@
 
   angular
     .module('uc.autoattendant')
-    .directive("aaPopoverHtmlPopup", aaPopoverHtmlPopup)
-    .directive("aaPopoverHtml", aaPopoverHtml);
+    .directive('aaPopoverHtmlPopup', aaPopoverHtmlPopup)
+    .directive('aaPopoverHtml', aaPopoverHtml);
 
   /* @ngInject */
   function aaPopoverHtmlPopup() {
     return {
-      restrict: "EA",
+      restrict: 'EA',
       replace: true,
       scope: {
-        title: "@",
-        content: "@",
-        placement: "@",
-        animation: "&",
-        isOpen: "&",
+        title: '@',
+        content: '@',
+        placement: '@',
+        animation: '&',
+        isOpen: '&',
       },
       templateUrl: 'modules/huron/features/autoAttendant/help/aaPopoverHtmlPopup.tpl.html',
     };
@@ -24,6 +24,6 @@
 
   /* @ngInject */
   function aaPopoverHtml($tooltip) {
-    return $tooltip("aaPopoverHtml", "popover", 'click');
+    return $tooltip('aaPopoverHtml', 'popover', 'click');
   }
 })();

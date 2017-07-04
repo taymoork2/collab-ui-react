@@ -8,7 +8,7 @@ describe('SparkDomainManagementService: Service', function () {
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
+    $provide.value('Authinfo', authInfo);
   }));
 
   var $httpBackend, SparkDomainManagementService;
@@ -37,8 +37,8 @@ describe('SparkDomainManagementService: Service', function () {
   it('should present that the domain is not available', function () {
     $httpBackend.whenPOST(sparkDomainRegex).respond(function () {
       var data = {
-        'isDomainAvailable': false,
-        'isDomainReserved': true,
+        isDomainAvailable: false,
+        isDomainReserved: true,
       };
       return [200, data];
     });
@@ -54,8 +54,8 @@ describe('SparkDomainManagementService: Service', function () {
   it('should present that the domain is available', function () {
     $httpBackend.whenPOST(sparkDomainRegex).respond(function () {
       var data = {
-        'isDomainAvailable': true,
-        'isDomainReserved': false,
+        isDomainAvailable: true,
+        isDomainReserved: false,
       };
       return [200, data];
     });
@@ -71,8 +71,8 @@ describe('SparkDomainManagementService: Service', function () {
   it('should add a Sip Domain', function () {
     $httpBackend.whenPOST(sparkDomainRegex).respond(function () {
       var data = {
-        'isDomainAvailable': false,
-        'isDomainReserved': true,
+        isDomainAvailable: false,
+        isDomainReserved: true,
       };
       return [200, data];
     });

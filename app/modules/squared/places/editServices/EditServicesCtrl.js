@@ -97,7 +97,7 @@
               CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements())
                 .then(function () {
                   $scope.$dismiss();
-                  Notification.success("addDeviceWizard.editServices.servicesSaved");
+                  Notification.success('addDeviceWizard.editServices.servicesSaved');
                 }, function (error) {
                   Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
                 });

@@ -64,8 +64,8 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
 
       function csvApiRequestError(response) {
         expect(response).not.toEqual(null);
-        expect(response.errorCode).toEqual("060502");
-        expect(response.errorMessage).toEqual("Auth token is invalid.");
+        expect(response.errorCode).toEqual('060502');
+        expect(response.errorMessage).toEqual('Auth token is invalid.');
       }
     );
   }));

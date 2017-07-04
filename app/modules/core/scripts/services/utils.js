@@ -9,7 +9,6 @@
 
   /* @ngInject */
   function Utils($rootScope, $location, $window) {
-
     var guid = (function () {
       function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)

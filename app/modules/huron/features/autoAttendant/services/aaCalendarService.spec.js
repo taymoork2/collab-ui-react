@@ -17,7 +17,7 @@ describe('Service: AACalendarService', function () {
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
   beforeEach(inject(function (_AACalendarService_, _$httpBackend_, _HuronConfig_) {
@@ -199,7 +199,6 @@ describe('Service: AACalendarService', function () {
       expect(successSpy).not.toHaveBeenCalled();
       expect(failureSpy).toHaveBeenCalled();
     });
-
   });
 
   describe('deleteCalendar', function () {
@@ -285,5 +284,4 @@ describe('Service: AACalendarService', function () {
       expect(failureSpy).toHaveBeenCalled();
     });
   });
-
 });

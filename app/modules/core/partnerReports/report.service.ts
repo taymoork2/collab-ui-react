@@ -68,15 +68,15 @@ export class ReportService {
     }
     this.activeUserCancelPromise = this.$q.defer();
 
-    let reportOptions: IIntervalQuery = this.CommonReportService.getOptions(filter, this.ACTIVE_USERS, this.CommonReportService.DETAILED);
+    const reportOptions: IIntervalQuery = this.CommonReportService.getOptions(filter, this.ACTIVE_USERS, this.CommonReportService.DETAILED);
     this.activeUserDetailedPromise = this.CommonReportService.getPartnerReport(reportOptions, undefined, this.activeUserCancelPromise).then((response) => {
-      let data = _.get(response, 'data.data');
+      const data = _.get(response, 'data.data');
       if (data) {
         let overallActive = 0;
         let overallRegistered = 0;
 
         _.forEach(data, (customer) => {
-          let customerData = this.formatActiveUserOrgData(customer);
+          const customerData = this.formatActiveUserOrgData(customer);
           this.activeUserCustomerGraphs[customer.orgId] = customerData;
           overallActive += customerData.totalActive;
           overallRegistered += customerData.totalRegistered;
@@ -97,8 +97,8 @@ export class ReportService {
   }
 
   private formatActiveUserOrgData(org): IActiveUserCustomerData {
-    let graphData: Array<IActiveUserData> = [];
-    let populationData: IPopulationData = {
+    const graphData: IActiveUserData[] = [];
+    const populationData: IPopulationData = {
       customerName: org.orgId,
       percentage: undefined,
       overallPopulation: this.overallPopulation,
@@ -110,11 +110,11 @@ export class ReportService {
     let totalRegistered = 0;
 
     _.forEach(_.get(org, 'data'), (item: any): void => {
-      let date: string = item.date;
-      let details: any = item.details;
+      const date: string = item.date;
+      const details: any = item.details;
       if (details && date) {
-        let activeUsers = _.toInteger(details.activeUsers);
-        let totalRegisteredUsers = _.toInteger(details.totalRegisteredUsers);
+        const activeUsers = _.toInteger(details.activeUsers);
+        const totalRegisteredUsers = _.toInteger(details.totalRegisteredUsers);
 
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
           graphData.push({
@@ -131,7 +131,7 @@ export class ReportService {
       }
     });
 
-    let percentage: number = this.CommonReportService.getPercentage(totalActive, totalRegistered);
+    const percentage: number = this.CommonReportService.getPercentage(totalActive, totalRegistered);
     if (!isNaN(percentage) && percentage >= 0) {
       populationData.percentage = percentage;
     }
@@ -144,7 +144,7 @@ export class ReportService {
     };
   }
 
-  public getActiveUserData(customers: Array<IReportsCustomer>, filter: ITimespan): ng.IHttpPromise<IActiveUserReturnData> {
+  public getActiveUserData(customers: IReportsCustomer[], filter: ITimespan): ng.IHttpPromise<IActiveUserReturnData> {
     let overallStatus = true;
     let promise: ng.IPromise<any>;
 
@@ -172,18 +172,18 @@ export class ReportService {
     });
   }
 
-  private getActiveGraphData(customers: Array<IReportsCustomer>, filter: ITimespan): IActiveUserReturnData {
-    let returnData: IActiveUserReturnData = {
+  private getActiveGraphData(customers: IReportsCustomer[], filter: ITimespan): IActiveUserReturnData {
+    const returnData: IActiveUserReturnData = {
       graphData: [],
       popData: [],
       isActiveUsers: false,
     };
     let date: string = '';
-    let activeDataSet: Array<Array<IActiveUserData>> = [];
+    const activeDataSet: IActiveUserData[][] = [];
 
     _.forEach(customers, (org: IReportsCustomer) => {
       // placeholder for the combined population graph
-      let emptyPopGraph: IPopulationData = {
+      const emptyPopGraph: IPopulationData = {
         customerName: org.label,
         percentage: 0,
         overallPopulation: this.overallPopulation,
@@ -191,11 +191,11 @@ export class ReportService {
         color: undefined,
         labelColorField: this.chartColors.grayDarkThree,
       };
-      let orgData: IActiveUserCustomerData = this.activeUserCustomerGraphs[org.value];
+      const orgData: IActiveUserCustomerData = this.activeUserCustomerGraphs[org.value];
 
       if (orgData) {
         // gather active user data for combining below
-        let orgActive: Array<IActiveUserData> = orgData.graphData;
+        const orgActive: IActiveUserData[] = orgData.graphData;
         activeDataSet.push(orgActive);
 
         if (orgActive && (orgActive.length > 0) && (date === '' || orgActive[(orgActive.length - 1)].date > date)) {
@@ -208,7 +208,7 @@ export class ReportService {
         }
 
         // add to the combined population graph
-        let popGraph = this.activeUserCustomerGraphs[org.value].populationData;
+        const popGraph = this.activeUserCustomerGraphs[org.value].populationData;
         if (popGraph) {
           popGraph.customerName = org.label;
           popGraph.overallPopulation = this.overallPopulation;
@@ -222,14 +222,14 @@ export class ReportService {
     });
 
     // combine the active user data into a single graph
-    let baseGraph: Array<IActiveUserData> = this.CommonReportService.getReturnGraph(filter, date, {
+    let baseGraph: IActiveUserData[] = this.CommonReportService.getReturnGraph(filter, date, {
       totalRegisteredUsers: 0,
       activeUsers: 0,
       percentage: 0,
       balloon: true,
     });
     let emptyGraph = true;
-    _.forEach(activeDataSet, (item: Array<IActiveUserData>) => {
+    _.forEach(activeDataSet, (item: IActiveUserData[]) => {
       if (item.length > 0) {
         baseGraph = this.combineMatchingDates(baseGraph, item, filter);
         emptyGraph = false;
@@ -242,7 +242,7 @@ export class ReportService {
     return returnData;
   }
 
-  private combineMatchingDates(graphData: Array<IActiveUserData>, customerData: Array<IActiveUserData>, filter: ITimespan): Array<IActiveUserData> {
+  private combineMatchingDates(graphData: IActiveUserData[], customerData: IActiveUserData[], filter: ITimespan): IActiveUserData[] {
     if (graphData.length > 0) {
       _.forEach(customerData, (datapoint: IActiveUserData) => {
         _.forEach(graphData, (graphpoint: IActiveUserData) => {
@@ -257,13 +257,13 @@ export class ReportService {
     return graphData;
   }
 
-  public getActiveTableData(customers: Array<IReportsCustomer>, filter: ITimespan): ng.IHttpPromise<Array<IActiveTableData>> {
+  public getActiveTableData(customers: IReportsCustomer[], filter: ITimespan): ng.IHttpPromise<IActiveTableData[]> {
     if (this.activeTableCancelPromise) {
       this.activeTableCancelPromise.resolve(this.ABORT);
     }
     this.activeTableCancelPromise = this.$q.defer();
 
-    let customerArray: Array<IReportsCustomer> = [];
+    const customerArray: IReportsCustomer[] = [];
     _.forEach(customers, (customer) => {
       if (customer.isAllowedToManage) {
         customerArray.push(customer);
@@ -274,11 +274,11 @@ export class ReportService {
       return this.$q.resolve([]);
     } else {
       // TODO: Remove IIntervalQuery once API is fixed; currently necessary to avoid exceptions from API
-      let extraOptions: IIntervalQuery = this.CommonReportService.getOptions(filter, this.ACTIVE_USERS, this.TOPN);
-      let reportOptions: IReportTypeQuery = this.CommonReportService.getReportTypeOptions(filter, this.ACTIVE_USERS, this.TOPN);
+      const extraOptions: IIntervalQuery = this.CommonReportService.getOptions(filter, this.ACTIVE_USERS, this.TOPN);
+      const reportOptions: IReportTypeQuery = this.CommonReportService.getReportTypeOptions(filter, this.ACTIVE_USERS, this.TOPN);
 
       return this.CommonReportService.getPartnerReportByReportType(reportOptions, extraOptions, customerArray, this.activeTableCancelPromise).then((response) => {
-        let tableData: Array<IActiveTableData> = [];
+        const tableData: IActiveTableData[] = [];
         _.forEach(_.get(response, 'data.data'), (org) => {
           _.forEach(_.get(org, 'data'), (item) => {
             tableData.push({
@@ -297,17 +297,17 @@ export class ReportService {
     }
   }
 
-  public getMediaQualityMetrics(customers: Array<IReportsCustomer>, filter: ITimespan): ng.IHttpPromise<Array<IMediaQualityData>> {
+  public getMediaQualityMetrics(customers: IReportsCustomer[], filter: ITimespan): ng.IHttpPromise<IMediaQualityData[]> {
     if (this.qualityCancelPromise) {
       this.qualityCancelPromise.resolve(this.ABORT);
     }
     this.qualityCancelPromise = this.$q.defer();
 
-    let reportOptions = this.CommonReportService.getOptions(filter, 'callQuality', this.CommonReportService.DETAILED);
+    const reportOptions = this.CommonReportService.getOptions(filter, 'callQuality', this.CommonReportService.DETAILED);
     return this.CommonReportService.getPartnerReport(reportOptions, customers, this.qualityCancelPromise).then((response) => {
-      let data: any = _.get(response, 'data.data');
+      const data: any = _.get(response, 'data.data');
       if (data) {
-        let graphItem: IMediaQualityData = {
+        const graphItem: IMediaQualityData = {
           date: '',
           totalDurationSum: 0,
           goodQualityDurationSum: 0,
@@ -320,7 +320,7 @@ export class ReportService {
         let date: string = '';
         _.forEach(data, (org: any) => {
           if (_.isArray(org.data)) {
-            let orgDate: string = org.data[org.data.length - 1].date;
+            const orgDate: string = org.data[org.data.length - 1].date;
             if (orgDate && (date === '' || orgDate > date)) {
               date = orgDate;
             }
@@ -330,9 +330,9 @@ export class ReportService {
         let baseGraph = this.CommonReportService.getReturnGraph(filter, date, graphItem);
         let graphUpdated = false;
         _.forEach(data, (org: any) => {
-          let orgData = _.get(org, 'data');
+          const orgData = _.get(org, 'data');
           if (_.isArray(orgData)) {
-            let graph = this.parseMediaQualityData(orgData, filter);
+            const graph = this.parseMediaQualityData(orgData, filter);
             if (graph.length > 0) {
               baseGraph = this.combineQualityGraphs(baseGraph, graph);
               graphUpdated = true;
@@ -349,17 +349,17 @@ export class ReportService {
     });
   }
 
-  private parseMediaQualityData(orgData: Array<any>, filter: ITimespan): Array<IMediaQualityData> {
-    let graph: Array<IMediaQualityData> = [];
+  private parseMediaQualityData(orgData: any[], filter: ITimespan): IMediaQualityData[] {
+    const graph: IMediaQualityData[] = [];
     _.forEach(orgData, (item) => {
-      let details: any = _.get(item, 'details');
+      const details: any = _.get(item, 'details');
       if (details) {
-        let totalSum = _.toInteger(details.totalDurationSum);
-        let goodSum = _.toInteger(details.goodQualityDurationSum);
-        let fairSum = _.toInteger(details.fairQualityDurationSum);
-        let poorSum = _.toInteger(details.poorQualityDurationSum);
-        let partialSum = fairSum + poorSum;
-        let date = _.get(item, 'date', '');
+        const totalSum = _.toInteger(details.totalDurationSum);
+        const goodSum = _.toInteger(details.goodQualityDurationSum);
+        const fairSum = _.toInteger(details.fairQualityDurationSum);
+        const poorSum = _.toInteger(details.poorQualityDurationSum);
+        const partialSum = fairSum + poorSum;
+        const date = _.get(item, 'date', '');
 
         if (totalSum > 0 && date) {
           graph.push({
@@ -377,7 +377,7 @@ export class ReportService {
     return graph;
   }
 
-  private combineQualityGraphs(baseGraph: Array<IMediaQualityData>, graph: Array<IMediaQualityData>): Array<IMediaQualityData> {
+  private combineQualityGraphs(baseGraph: IMediaQualityData[], graph: IMediaQualityData[]): IMediaQualityData[] {
     _.forEach(graph, (graphItem) => {
       _.forEach(baseGraph, (baseGraphItem) => {
         if (graphItem.date === baseGraphItem.date) {
@@ -392,12 +392,12 @@ export class ReportService {
     return baseGraph;
   }
 
-  public getCallMetricsData(customers: Array<IReportsCustomer>, filter: ITimespan): ng.IHttpPromise<ICallMetricsData> {
+  public getCallMetricsData(customers: IReportsCustomer[], filter: ITimespan): ng.IHttpPromise<ICallMetricsData> {
     if (this.callMetricsCancelPromise) {
       this.callMetricsCancelPromise.resolve(this.ABORT);
     }
     this.callMetricsCancelPromise = this.$q.defer();
-    let returnArray: ICallMetricsData = {
+    const returnArray: ICallMetricsData = {
       dataProvider: [],
       labelData: {
         numTotalCalls: 0,
@@ -406,12 +406,12 @@ export class ReportService {
       dummy: false,
     };
 
-    let reportOptions = this.CommonReportService.getOptionsOverPeriod(filter, 'callMetrics', this.CommonReportService.DETAILED);
+    const reportOptions = this.CommonReportService.getOptionsOverPeriod(filter, 'callMetrics', this.CommonReportService.DETAILED);
     return this.CommonReportService.getPartnerReport(reportOptions, customers, this.callMetricsCancelPromise).then((response) => {
-      let data = _.get(response, 'data.data');
+      const data = _.get(response, 'data.data');
       if (data) {
         let transformDataSet: boolean = false;
-        let transformData: ICallMetricsData = {
+        const transformData: ICallMetricsData = {
           dataProvider: [{
             label: this.$translate.instant('callMetrics.callConditionFail'),
             value: 0,
@@ -429,9 +429,9 @@ export class ReportService {
         };
 
         _.forEach(data, (item) => {
-          let details: any = _.get(item, 'data[0].details');
+          const details: any = _.get(item, 'data[0].details');
           if (details) {
-            let totalCalls = _.toInteger(details.totalCalls);
+            const totalCalls = _.toInteger(details.totalCalls);
 
             if (totalCalls > 0) {
               transformData.labelData.numTotalCalls += totalCalls;
@@ -453,21 +453,21 @@ export class ReportService {
     });
   }
 
-  public getRegisteredEndpoints(customers: Array<IReportsCustomer>, filter: ITimespan): ng.IHttpPromise<Array<Array<IEndpointData>>> {
+  public getRegisteredEndpoints(customers: IReportsCustomer[], filter: ITimespan): ng.IHttpPromise<IEndpointData[][]> {
     if (this.endpointsCancelPromise) {
       this.endpointsCancelPromise.resolve(this.ABORT);
     }
     this.endpointsCancelPromise = this.$q.defer();
 
-    let reportOptions: IIntervalQuery = this.CommonReportService.getTrendOptions(filter, 'registeredEndpoints', 'trend');
+    const reportOptions: IIntervalQuery = this.CommonReportService.getTrendOptions(filter, 'registeredEndpoints', 'trend');
     return this.CommonReportService.getPartnerReport(reportOptions, customers, this.endpointsCancelPromise).then((response) => {
-      let returnArray: Array<Array<IEndpointData>> = [];
-      let data = _.get(response, 'data.data');
+      const returnArray: IEndpointData[][] = [];
+      const data = _.get(response, 'data.data');
       if (data) {
         _.forEach(data, (item) => {
-          let details: any = _.get(item, 'details');
+          const details: any = _.get(item, 'details');
           if (details) {
-            let customerName: string = this.getCustomerName(customers, details.orgId);
+            const customerName: string = this.getCustomerName(customers, details.orgId);
             let direction: string = this.ReportConstants.NEGATIVE;
             let registeredDevicesTrend: string = details.registeredDevicesTrend;
 
@@ -484,13 +484,13 @@ export class ReportService {
         });
       }
 
-      let rLength: number = returnArray.length;
-      let cLength: number = customers.length;
+      const rLength: number = returnArray.length;
+      const cLength: number = customers.length;
       if (cLength > rLength && rLength > 0) {
         _.forEach(customers, (org) => {
           let emptyOrg: boolean = true;
           _.forEach(returnArray, (item) => {
-            let orgName = _.get(item, '[0].output[0]');
+            const orgName = _.get(item, '[0].output[0]');
             if (orgName === org.label) {
               emptyOrg = false;
             }
@@ -506,7 +506,7 @@ export class ReportService {
     });
   }
 
-  private getCustomerName(customer: Array<IReportsCustomer>, uuid: string): string {
+  private getCustomerName(customer: IReportsCustomer[], uuid: string): string {
     let customerName = '';
     _.forEach(customer, (org) => {
       if (org.value === uuid) {
@@ -516,7 +516,7 @@ export class ReportService {
     return customerName;
   }
 
-  private createEndpointTableEntry(customerName: string, min: string, max: string, direction: string, trend: string, yesterday: string): Array<IEndpointData> {
+  private createEndpointTableEntry(customerName: string, min: string, max: string, direction: string, trend: string, yesterday: string): IEndpointData[] {
     return [{
       class: 'vertical-center ' + this.ReportConstants.CUSTOMER_DATA,
       output: [customerName],

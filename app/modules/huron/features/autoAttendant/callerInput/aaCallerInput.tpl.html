@@ -39,7 +39,7 @@
                 </cs-select>
               </div>
               <div class="small-9 columns">
-                <input cs-input type="text" name="callerInput" placeholder="{{ :: 'autoAttendant.callerInputValue' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsg" ng-change="aaCallerInput.keyInputChanged($index, keyAction)" ng-model="keyAction.value" class="aa-pm-action-input">
+                <input cs-input type="text" name="callerInput" placeholder="{{ :: 'autoAttendant.callerInputValue' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" ng-pattern="/^[a-zA-Z0-9 ]*$/" cs-input-messages="aaCallerInput.validationMsgs" ng-change="aaCallerInput.keyInputChanged($index, keyAction)" ng-model="keyAction.value" class="aa-pm-action-input">
                 </input>
               </div>
               <div class="small-1 columns">

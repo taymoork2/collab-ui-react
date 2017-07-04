@@ -2,8 +2,13 @@ import { IHuronService, IEmergencyAddress, IEmergency, IState, IEmergencyService
 import { MemberService } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/services/featureMember.service';
 import { HuronCompassService } from 'modules/huron/compass/compass.service';
-import { PstnService } from '../../../huron/pstn/pstn.service';
-import { PstnModel } from '../../../huron/pstn/pstn.model';
+import {
+  PstnService,
+  PstnModel,
+  TerminusService,
+  PstnAreaService,
+  IAreaData,
+} from 'modules/huron/pstn';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
@@ -20,17 +25,17 @@ export class EmergencyServicesService {
     private ServiceSetup,
     private Authinfo,
     private PstnServiceAddressService,
-    private PstnSetupStatesService,
+    private PstnAreaService: PstnAreaService,
     private PstnModel: PstnModel,
     private PstnService: PstnService,
-    private TerminusUserDeviceE911Service,
+    private TerminusService: TerminusService,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
     private HuronCompassService: HuronCompassService,
   ) {
-    this.PstnSetupStatesService.getLocation(this.HuronCompassService.getCountryCode()).then((location) => {
-      this.zipLabel = location.zip;
-      this.locationLabel = location.type;
+    this.PstnAreaService.getCountryAreas(this.HuronCompassService.getCountryCode()).then((location: IAreaData) => {
+      this.zipLabel = location.zipName;
+      this.locationLabel = location.typeName;
       this.stateOptions = location.areas;
     });
   }
@@ -38,7 +43,7 @@ export class EmergencyServicesService {
   public getInitialData(): IEmergencyServicesData {
     this.currentDevice = this.$stateParams.currentDevice;
     this.huronDeviceService = this.$stateParams.huronDeviceService;
-    let emergencyData = {
+    const emergencyData = {
       emergencyNumber: this.$stateParams.currentNumber,
       emergencyAddress: this.$stateParams.currentAddress,
       status: this.$stateParams.status,
@@ -83,7 +88,7 @@ export class EmergencyServicesService {
 
   public getAddress(): ng.IPromise<IEmergencyAddress> {
     return this.PstnServiceAddressService.getAddress(this.Authinfo.getOrgId()).then((address: IEmergencyAddress) => {
-      let emergencyAddress = {
+      const emergencyAddress = {
         address1: address.streetAddress,
         address2: address.unit,
         city: address.city,
@@ -99,7 +104,7 @@ export class EmergencyServicesService {
   }
 
   public getAddressForNumber(number: string): ng.IPromise<{e911Address, status}> {
-    return this.TerminusUserDeviceE911Service.get({
+    return this.TerminusService.customerNumberE911V2().get({
       customerId: this.Authinfo.getOrgId(),
       number: number,
     }).$promise.then(response => {
@@ -153,7 +158,7 @@ export class EmergencyServicesService {
         e911Address: address,
       };
     }
-    return this.TerminusUserDeviceE911Service
+    return this.TerminusService.customerNumberE911V2()
       .update({
         customerId: this.Authinfo.getOrgId(),
         number: emergency.emergencyNumber,

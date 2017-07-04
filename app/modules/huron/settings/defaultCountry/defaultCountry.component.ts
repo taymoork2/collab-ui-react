@@ -3,7 +3,7 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 class HuronDefaultCountryCtrl implements ng.IComponentController {
   public defaultCountry: string;
   public selected: IOption;
-  public defaultCountryOptions: Array<IOption>;
+  public defaultCountryOptions: IOption[];
   public onChangeFn: Function;
 
   /* @ngInject */

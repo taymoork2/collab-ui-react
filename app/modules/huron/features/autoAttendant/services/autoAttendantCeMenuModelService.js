@@ -286,7 +286,6 @@
 
   /* @ngInject */
   function AutoAttendantCeMenuModelService(AAUtilityService, $translate) {
-
     // cannot use aaCommon's defined variables because of circular dependency.
     // aaCommonService shou not have this service, need to refactor it out.
 
@@ -350,7 +349,6 @@
           var stringEscaped = escape(stringToDecode);
           var escapedStringDecoded = decodeURIComponent(stringEscaped);
           return escapedStringDecoded;
-
         } catch (exception) {
           // exception can occur if string was previously encoded non-utf-8
           return stringToDecode;
@@ -437,13 +435,19 @@
       cesFallback(action, inAction.routeToQueue);
 
       return action;
-
     }
 
     function parseAction(menuEntry, inAction) {
       //read from db
       var action;
-      if (!_.isUndefined(inAction.play)) {
+
+      if (!_.isUndefined(inAction.dynamic)) {
+        action = new Action('dynamic', '');
+        var dynamicList = inAction.dynamic.dynamicOperations;
+        menuEntry.dynamicList = dynamicList;
+        action.voice = dynamicList[0].say.voice;
+        menuEntry.addAction(action);
+      } else if (!_.isUndefined(inAction.play)) {
         action = new Action('play', decodeUtf8(inAction.play.url));
         setDescription(action, inAction.play);
         action.voice = inAction.play.voice;
@@ -461,13 +465,11 @@
         setDescription(action, inAction.route);
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToExtension)) {
-
         action = new Action('routeToExtension', inAction.routeToExtension.destination);
 
         setDescription(action, inAction.routeToExtension);
 
         menuEntry.addAction(action);
-
       } else if (!_.isUndefined(inAction.routeToHuntGroup)) {
         action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
         setDescription(action, inAction.routeToHuntGroup);
@@ -577,19 +579,19 @@
         action.if.rightCondition = exp.isConditions;
 
         if (inAction.conditional.true[0].route) {
-          action.then = new Action("route", inAction.conditional.true[0].route.destination);
+          action.then = new Action('route', inAction.conditional.true[0].route.destination);
         }
         if (inAction.conditional.true[0].routeToHuntGroup) {
-          action.then = new Action("routeToHuntGroup", inAction.conditional.true[0].routeToHuntGroup.id);
+          action.then = new Action('routeToHuntGroup', inAction.conditional.true[0].routeToHuntGroup.id);
         }
         if (inAction.conditional.true[0].goto) {
-          action.then = new Action("goto", inAction.conditional.true[0].goto.ceid);
+          action.then = new Action('goto', inAction.conditional.true[0].goto.ceid);
         }
         if (inAction.conditional.true[0].routeToUser) {
-          action.then = new Action("routeToUser", inAction.conditional.true[0].routeToUser.id);
+          action.then = new Action('routeToUser', inAction.conditional.true[0].routeToUser.id);
         }
         if (inAction.conditional.true[0].routeToVoiceMail) {
-          action.then = new Action("routeToVoiceMail", inAction.conditional.true[0].routeToVoiceMail.id);
+          action.then = new Action('routeToVoiceMail', inAction.conditional.true[0].routeToVoiceMail.id);
         }
         if (inAction.conditional.true[0].routeToQueue) {
           action.then = makeRouteToQueue(inAction.conditional.true[0]);
@@ -599,7 +601,6 @@
         }
 
         menuEntry.addAction(action);
-
       } else {
         // insert an empty action
         action = new Action('', '');
@@ -774,7 +775,6 @@
     }
 
     function getWelcomeMenu(ceRecord, actionSetName) {
-
       if (_.isUndefined(ceRecord) || _.isUndefined(actionSetName)) {
         return undefined;
       }
@@ -798,7 +798,6 @@
         // if inputType is 2 then dial by extension, else make an option menu.
 
         if (_.isUndefined(ceActionArray[i].runActionsOnInput) && _.isUndefined(ceActionArray[i].runCustomActions)) {
-
           menuEntry = new CeMenuEntry();
           parseAction(menuEntry, ceActionArray[i]);
           if (menuEntry.actions.length > 0) {
@@ -830,7 +829,6 @@
     /*
      */
     function getOptionMenu(ceRecord, actionSetName) {
-
       if (_.isUndefined(ceRecord) || _.isUndefined(actionSetName)) {
         return undefined;
       }
@@ -862,7 +860,6 @@
     }
 
     function getOptionMenuFromAction(optionMenuAction, actionSetName) {
-
       if (!_.isUndefined(optionMenuAction) && !_.isUndefined(optionMenuAction.runActionsOnInput)) {
         var menu = new CeMenu();
         menu.setType('MENU_OPTION');
@@ -949,7 +946,6 @@
     }
 
     function getCustomMenu(ceRecord, actionSetName) {
-
       if (_.isUndefined(ceRecord) || _.isUndefined(actionSetName)) {
         return undefined;
       }
@@ -984,7 +980,6 @@
     }
 
     function getCombinedMenu(ceRecord, actionSetName) {
-
       var welcomeMenu = getWelcomeMenu(ceRecord, actionSetName);
       if (!_.isUndefined(welcomeMenu)) {
         // remove the disconnect action because we manually add it to the UI
@@ -1005,7 +1000,7 @@
     function addDisconnectAction(actions) {
       actions.push({});
       actions[actions.length - 1]['disconnect'] = {
-        "treatment": "none",
+        treatment: 'none',
       };
     }
 
@@ -1034,7 +1029,6 @@
     }
 
     function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu, actionSetValue) {
-
       updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue);
 
       updateMenu(ceRecord, actionSetName, aaCombinedMenu);
@@ -1148,6 +1142,14 @@
       return true;
     }
 
+    function updateDynaListVoice(dynaList, voice) {
+      _.forEach(dynaList, function (opt) {
+        if (_.has(opt, 'say')) {
+          opt.say.voice = voice;
+        }
+      });
+    }
+
     function createWelcomeMenu(aaMenu) {
       var newActionArray = [];
       for (var i = 0; i < aaMenu.entries.length; i++) {
@@ -1163,7 +1165,13 @@
             if (!_.isUndefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
-            if (actionName === 'say') {
+            if (actionName === 'dynamic') {
+              var voice = menuEntry.actions[0].getVoice();
+              updateDynaListVoice(menuEntry.dynamicList, voice);
+              var dynamicOperations = menuEntry.dynamicList;
+              newActionArray[i].dynamic = {};
+              newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
+            } else if (actionName === 'say') {
               newActionArray[i][actionName].value = encodeUtf8(menuEntry.actions[0].getValue());
               newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
             } else if (actionName === 'play') {
@@ -1274,7 +1282,6 @@
     }
 
     function createConditional(action) {
-
       var out = {};
       var tag;
 
@@ -1491,7 +1498,6 @@
                 newAction.inputs.push(inputItem);
               }
             });
-
           }
 
           newAction.minNumberOfCharacters = 1;
@@ -1507,7 +1513,6 @@
      * Read aaMenu and populate mainMenu object
      */
     function createOptionMenu(inputAction, aaMenu) {
-
       // create menuOptions section
       var newOptionArray = [];
       var menuEntry;
@@ -1533,8 +1538,8 @@
           // for submenu, always return to parent when invalid inputs timeout.
           newOption.actions[0]['runActionsOnInput'] = _menu;
           newOption.actions[0]['runActionsOnInput']['incompleteInputActions'] = [{
-            "repeatActionsOnInput": {
-              "level": -1,
+            repeatActionsOnInput: {
+              level: -1,
             },
           }];
           createOptionMenu(_menu, menuEntry);
@@ -1641,7 +1646,6 @@
      * ceRecord: a customer AA record
      */
     function deleteMenu(ceRecord, actionSetName, aaMenuType) {
-
       if (_.isUndefined(actionSetName) || actionSetName === null) {
         return false;
       }
@@ -1706,7 +1710,6 @@
      * ceRecord: a customer AA record
      */
     function deleteCombinedMenu(ceRecord, actionSetName) {
-
       if (_.isUndefined(actionSetName) || actionSetName === null) {
         return false;
       }
@@ -1766,6 +1769,5 @@
     function isCeMenuEntry(obj) {
       return (objectType(obj) === 'CeMenuEntry');
     }
-
   }
 })();

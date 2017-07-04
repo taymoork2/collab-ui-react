@@ -3,7 +3,6 @@
 var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
 
 describe('HybridContextFieldsCtrl', function () {
-
   var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsService, Log, Notification, LogMetricsService, PropertyService;
   var fakeGridApi = {
     infiniteScroll: {
@@ -81,15 +80,15 @@ describe('HybridContextFieldsCtrl', function () {
   describe('getFields()', function () {
     it('should set the gridOptions data correctly when one field list is resolved', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'classification': 'PII Encrypted',
-        'dataType': 'String',
-        'searchable': 'Yes',
-        'publiclyAccessible': 'true',
-        'translations': { 'en_US': 'Agent ID' },
-        'locales': [],
-        'refUrl': '/dictionary/field/v1/id/Agent_ID',
-        'id': 'Agent_ID',
-        'lastUpdated': '01/23/2017',
+        classification: 'PII Encrypted',
+        dataType: 'String',
+        searchable: 'Yes',
+        publiclyAccessible: 'true',
+        translations: { en_US: 'Agent ID' },
+        locales: [],
+        refUrl: '/dictionary/field/v1/id/Agent_ID',
+        id: 'Agent_ID',
+        lastUpdated: '01/23/2017',
       }]));
       controller = initController();
       $scope.$apply();
@@ -112,11 +111,11 @@ describe('HybridContextFieldsCtrl', function () {
   describe('processFieldList()', function () {
     it('should process field data when data returned is missing dataType', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'publiclyAccessible': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'refUrl': '/dictionary/field/v1/id/NoDataType',
-        'id': 'NoDataType',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        publiclyAccessible: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        refUrl: '/dictionary/field/v1/id/NoDataType',
+        id: 'NoDataType',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }]));
       controller = initController();
       $scope.$apply();
@@ -131,11 +130,11 @@ describe('HybridContextFieldsCtrl', function () {
 
     it('should process field data when data returned and publiclyAccessible', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'publiclyAccessible': 'true',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'refUrl': '/dictionary/field/v1/id/NoDataType',
-        'id': 'NoDataType',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        publiclyAccessible: 'true',
+        translations: { english: 'First Name', french: 'Prénom' },
+        refUrl: '/dictionary/field/v1/id/NoDataType',
+        id: 'NoDataType',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }]));
       controller = initController();
       $scope.$apply();
@@ -150,11 +149,11 @@ describe('HybridContextFieldsCtrl', function () {
 
     it('should process field data when data returned is missing lastUpdated', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'publiclyAccessible': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'refUrl': '/dictionary/field/v1/id/NoDataType',
-        'id': 'NoDataType',
-        'dataType': 'integer',
+        publiclyAccessible: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        refUrl: '/dictionary/field/v1/id/NoDataType',
+        id: 'NoDataType',
+        dataType: 'integer',
       }]));
       controller = initController();
       $scope.$apply();
@@ -167,11 +166,11 @@ describe('HybridContextFieldsCtrl', function () {
 
     it('should process field data when dataType is date time', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'publiclyAccessible': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'refUrl': '/dictionary/field/v1/id/NoDataType',
-        'id': 'NoDataType',
-        'dataType': 'date',
+        publiclyAccessible: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        refUrl: '/dictionary/field/v1/id/NoDataType',
+        id: 'NoDataType',
+        dataType: 'date',
       }]));
       controller = initController();
       $scope.$apply();
@@ -184,14 +183,14 @@ describe('HybridContextFieldsCtrl', function () {
 
     it('should process when data is encrypted, integer, searchable', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'description': 'Some description added for Test Integer',
-        'classification': 'ENCRYPTED',
-        'publiclyAccessible': 'false',
-        'searchable': 'true',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'refUrl': '/dictionary/field/v1/id/TestInteger',
-        'id': 'TestInteger',
-        'dataType': 'integer',
+        description: 'Some description added for Test Integer',
+        classification: 'ENCRYPTED',
+        publiclyAccessible: 'false',
+        searchable: 'true',
+        translations: { english: 'First Name', french: 'Prénom' },
+        refUrl: '/dictionary/field/v1/id/TestInteger',
+        id: 'TestInteger',
+        dataType: 'integer',
       }]));
       controller = initController();
       $scope.$apply();
@@ -204,13 +203,13 @@ describe('HybridContextFieldsCtrl', function () {
 
     it('should process when data is unencrypted, boolean, missing searchable', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'description': 'Field for TestBoolean',
-        'classification': 'UNENCRYPTED',
-        'publiclyAccessible': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'refUrl': '/dictionary/field/v1/id/NoDataType',
-        'id': 'TestBoolean',
-        'dataType': 'boolean',
+        description: 'Field for TestBoolean',
+        classification: 'UNENCRYPTED',
+        publiclyAccessible: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        refUrl: '/dictionary/field/v1/id/NoDataType',
+        id: 'TestBoolean',
+        dataType: 'boolean',
       }]));
       controller = initController();
       $scope.$apply();
@@ -224,14 +223,14 @@ describe('HybridContextFieldsCtrl', function () {
 
     it('should process when data is PII, double', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'description': 'Field for TestDouble',
-        'classification': 'PII',
-        'publiclyAccessible': 'false',
-        'searchable': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'refUrl': '/dictionary/field/v1/id/NoDataType',
-        'id': 'TestDouble',
-        'dataType': 'double',
+        description: 'Field for TestDouble',
+        classification: 'PII',
+        publiclyAccessible: 'false',
+        searchable: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        refUrl: '/dictionary/field/v1/id/NoDataType',
+        id: 'TestDouble',
+        dataType: 'double',
       }]));
       controller = initController();
       $scope.$apply();
@@ -244,12 +243,12 @@ describe('HybridContextFieldsCtrl', function () {
 
     it('should process when data is missing classification, boolean, missing searchable', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'description': 'Field for NoClassification',
-        'publiclyAccessible': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'refUrl': '/dictionary/field/v1/id/NoDataType',
-        'id': 'NoClassification',
-        'dataType': 'boolean',
+        description: 'Field for NoClassification',
+        publiclyAccessible: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        refUrl: '/dictionary/field/v1/id/NoDataType',
+        id: 'NoClassification',
+        dataType: 'boolean',
       }]));
       controller = initController();
       $scope.$apply();
@@ -264,23 +263,23 @@ describe('HybridContextFieldsCtrl', function () {
   describe('filterList()', function () {
     it('should update grid data', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'description': 'Field for abcd',
-        'classification': 'PII',
-        'publiclyAccessible': 'false',
-        'searchable': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'refUrl': '/dictionary/field/v1/id/FieldContainsSearchStr',
-        'id': 'FieldContainsSearchStr',
-        'dataType': 'double',
+        description: 'Field for abcd',
+        classification: 'PII',
+        publiclyAccessible: 'false',
+        searchable: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        refUrl: '/dictionary/field/v1/id/FieldContainsSearchStr',
+        id: 'FieldContainsSearchStr',
+        dataType: 'double',
       }, {
-        'description': 'Field for xyz',
-        'classification': 'PII',
-        'publiclyAccessible': 'false',
-        'searchable': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'refUrl': '/dictionary/field/v1/id/FieldNotContainSearchStr',
-        'id': 'FieldNotContainSearchStr',
-        'dataType': 'double',
+        description: 'Field for xyz',
+        classification: 'PII',
+        publiclyAccessible: 'false',
+        searchable: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        refUrl: '/dictionary/field/v1/id/FieldNotContainSearchStr',
+        id: 'FieldNotContainSearchStr',
+        dataType: 'double',
       }]));
       controller = initController();
       $scope.$apply();
@@ -310,33 +309,33 @@ describe('HybridContextFieldsCtrl', function () {
       $scope.$apply();
 
       var fieldList = [{
-        'description': 'Field for NoClassification',
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': '2017Field',
-        'dataTypeUI': 'boolean',
-        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
+        description: 'Field for NoClassification',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: '2017Field',
+        dataTypeUI: 'boolean',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
       }, {
-        'description': 'Field for NoClassification',
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': '2016Field',
-        'dataTypeUI': 'boolean',
-        'lastUpdatedUI': '2016-01-26T18:42:42.124Z',
+        description: 'Field for NoClassification',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: '2016Field',
+        dataTypeUI: 'boolean',
+        lastUpdatedUI: '2016-01-26T18:42:42.124Z',
       }, {
-        'description': 'Field for NoClassification',
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': '2015Field',
-        'dataTypeUI': 'boolean',
-        'lastUpdatedUI': '2015-01-26T18:42:42.124Z',
+        description: 'Field for NoClassification',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: '2015Field',
+        dataTypeUI: 'boolean',
+        lastUpdatedUI: '2015-01-26T18:42:42.124Z',
       }, {
-        'description': 'Field for abc3',
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': '2014FieldWithDateMatch',
-        'dataTypeUI': 'boolean',
-        'lastUpdatedUI': '2014-02-15T18:42:42.124Z',
+        description: 'Field for abc3',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: '2014FieldWithDateMatch',
+        dataTypeUI: 'boolean',
+        lastUpdatedUI: '2014-02-15T18:42:42.124Z',
       }];
 
       controller.filterBySearchStr(fieldList, '15')
@@ -355,47 +354,47 @@ describe('HybridContextFieldsCtrl', function () {
       $scope.$apply();
 
       var fieldList = [{
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'First',
-        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'First',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'SearchStrInTranslation',
-        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'SearchStrInTranslation',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'SearchStrInClassification',
-        'classificationUI': 'first',
-        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'SearchStrInClassification',
+        classificationUI: 'first',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'SearchStrInDescription',
-        'description': 'First in description',
-        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'SearchStrInDescription',
+        description: 'First in description',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'SearchStrLowerCaseInLastUpdatedDate',
-        'lastUpdatedUI': 'first in date',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'SearchStrLowerCaseInLastUpdatedDate',
+        lastUpdatedUI: 'first in date',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'SearchStrInDataType',
-        'dataTypeUI': '$$first in datatype',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'SearchStrInDataType',
+        dataTypeUI: '$$first in datatype',
       }, {
-        'otherKey1': 'First',
-        'OhterKey2': 'first',
-        'otherKey3': 'anyOtherFirst',
+        otherKey1: 'First',
+        OhterKey2: 'first',
+        otherKey3: 'anyOtherFirst',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'SearchStrInSearchable',
-        'dataTypeUI': 'String',
-        'searchableUI': 'somethingfirstabce',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'SearchStrInSearchable',
+        dataTypeUI: 'String',
+        searchableUI: 'somethingfirstabce',
       }];
       controller.filterBySearchStr(fieldList, 'first')
         .then(function (filteredList) {
@@ -417,55 +416,55 @@ describe('HybridContextFieldsCtrl', function () {
       $scope.$apply();
 
       var fieldList = [{
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'aaa_test',
-        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'aaa_test',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'aaa.test',
-        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'aaa.test',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'SearchStrInClassificationUpperCase',
-        'classificationUI': 'ContainsAAA_Test',
-        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'SearchStrInClassificationUpperCase',
+        classificationUI: 'ContainsAAA_Test',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'aaa test',
-        'description': 'First in description',
-        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'aaa test',
+        description: 'First in description',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'AAA test!',
-        'lastUpdatedUI': 'first in date',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'AAA test!',
+        lastUpdatedUI: 'first in date',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'SearchStrInDataType',
-        'dataTypeUI': 'aaa_TEST',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'SearchStrInDataType',
+        dataTypeUI: 'aaa_TEST',
       }, {
-        'otherKey1': 'aaa-test',
-        'OhterKey2': 'aaa_test',
-        'otherKey3': 'anyOtherFirst',
-        'id': 'SearchStrInOtherFields',
+        otherKey1: 'aaa-test',
+        OhterKey2: 'aaa_test',
+        otherKey3: 'anyOtherFirst',
+        id: 'SearchStrInOtherFields',
       }, {
-        'publiclyAccessibleUI': 'false',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'SearchStrInSearchable',
+        publiclyAccessibleUI: 'false',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'SearchStrInSearchable',
 
-        'dataTypeUI': 'String',
-        'searchableUI': 'aaa_TEST',
+        dataTypeUI: 'String',
+        searchableUI: 'aaa_TEST',
       }, {
-        'publiclyAccessibleUI': 'aaa_test_something',
-        'translations': { 'english': 'First Name', 'french': 'Prénom' },
-        'id': 'SearchStrInPubliclyAccessible',
-        'dataType': 'String',
-        'searchable': 'something',
+        publiclyAccessibleUI: 'aaa_test_something',
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'SearchStrInPubliclyAccessible',
+        dataType: 'String',
+        searchable: 'something',
       }];
       controller.filterBySearchStr(fieldList, 'aaa_test')
         .then(function (filteredList) {
@@ -481,30 +480,29 @@ describe('HybridContextFieldsCtrl', function () {
     });
 
     describe('max fields allowed', function () {
-
       var DEFAULT_MAX_FIELDS = PropertyConstants.MAX_FIELDS_DEFAULT_VALUE;
       var ORG_ID = 'some-org';
       var MAX_FIELDS_PROPERTY = PropertyConstants.MAX_FIELDS_PROP_NAME;
 
       beforeEach(function () {
         ContextFieldsService.getFields.and.returnValue($q.resolve([{
-          'description': 'Field for abcd',
-          'classification': 'PII',
-          'publiclyAccessible': 'false',
-          'searchable': 'false',
-          'translations': { 'english': 'First Name' },
-          'refUrl': '/dictionary/field/v1/id/FieldContainsSearchStr',
-          'id': 'FieldContainsSearchStr',
-          'dataType': 'double',
+          description: 'Field for abcd',
+          classification: 'PII',
+          publiclyAccessible: 'false',
+          searchable: 'false',
+          translations: { english: 'First Name' },
+          refUrl: '/dictionary/field/v1/id/FieldContainsSearchStr',
+          id: 'FieldContainsSearchStr',
+          dataType: 'double',
         }, {
-          'description': 'Field for xyz',
-          'classification': 'PII',
-          'publiclyAccessible': 'false',
-          'searchable': 'false',
-          'translations': { 'english': 'First Name' },
-          'refUrl': '/dictionary/field/v1/id/FieldNotContainSearchStr',
-          'id': 'FieldNotContainSearchStr',
-          'dataType': 'double',
+          description: 'Field for xyz',
+          classification: 'PII',
+          publiclyAccessible: 'false',
+          searchable: 'false',
+          translations: { english: 'First Name' },
+          refUrl: '/dictionary/field/v1/id/FieldNotContainSearchStr',
+          id: 'FieldNotContainSearchStr',
+          dataType: 'double',
         }]));
         controller = initController();
         spyOn(Authinfo, 'getOrgId').and.returnValue(ORG_ID);
@@ -531,7 +529,6 @@ describe('HybridContextFieldsCtrl', function () {
   });
 
   describe('field edit feature', function () {
-
     beforeEach(function () {
       this.injectDependencies(
         '$q',

@@ -2,7 +2,7 @@ import { IDirectoryConnector } from 'modules/core/featureToggle';
 
 class DirConnectorsController implements ng.IComponentController {
 
-  public connectors: Array<IDirectoryConnector>;
+  public connectors: IDirectoryConnector[];
   private onDeregister: Function;
 
   constructor(

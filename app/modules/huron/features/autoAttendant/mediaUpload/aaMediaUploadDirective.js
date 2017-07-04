@@ -20,8 +20,8 @@
         menuKeyIndex: '@aaKeyIndex',
         fromSubMenu: '@aaFromSubMenu',
         type: '@aaMediaType',
-        change: "&aaChange",
-        mediaState: "=aaMediaState",
+        change: '&aaChange',
+        mediaState: '=aaMediaState',
       },
     };
   }

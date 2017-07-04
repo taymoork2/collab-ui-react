@@ -57,9 +57,8 @@ class SpeedDialCtrl implements ng.IComponentController {
     this.firstReordering = true;
     this.editing = false;
     this.reordering = false;
-    this.SpeedDialService.getUserName(this.ownerId)
-    .then((user) => {
-      this.ownerName = this.FeatureMemberService.getFirstLastName(user);
+    this.FeatureMemberService.getUser(this.ownerId).then((user) => {
+      this.ownerName = this.FeatureMemberService.getFullNameFromUser(user);
     });
     this.SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
       this.speedDialList = data.speedDials;
@@ -81,12 +80,12 @@ class SpeedDialCtrl implements ng.IComponentController {
 
     if (!this.reachSpeedDialLimit()) {
       this.actionListCopy.push({
-        actionKey: this.$translate.instant('speedDials.addSpeedDial'),
+        actionKey: 'speedDials.addSpeedDial',
         actionFunction: this.add.bind(this),
       });
     }
     this.actionListCopy.push({
-      actionKey: this.$translate.instant('speedDials.reorder'),
+      actionKey: 'speedDials.reorder',
       actionFunction: this.setReorder.bind(this),
     });
     this.actionList = _.cloneDeep(this.actionListCopy);
@@ -125,7 +124,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   }
 
   public add(): void {
-    let sd = {
+    const sd = {
       index: this.speedDialList.length + 1,
       label: '',
       number: '',
@@ -148,7 +147,7 @@ class SpeedDialCtrl implements ng.IComponentController {
 
   public save(): void {
     if (this.editing) {
-      let sd = _.find(this.speedDialList, {
+      const sd = _.find(this.speedDialList, {
         edit: true,
       });
       sd.edit = false;
@@ -182,7 +181,7 @@ class SpeedDialCtrl implements ng.IComponentController {
 
   public reset(): void {
     if (this.editing) {
-      let sd = _.find(this.speedDialList, {
+      const sd = _.find(this.speedDialList, {
         edit: true,
       });
       if (_.isEmpty(sd.label) || _.isEmpty(sd.number)) {
@@ -247,6 +246,11 @@ class SpeedDialCtrl implements ng.IComponentController {
         this.Notification.error('speedDials.speedDialChangesFailed');
       });
     });
+  }
+
+  public getTooltipText(sd: ISpeedDial): string {
+    const tooltipText = this.$translate.instant('speedDials.blfPickup', { username: this.ownerName, extension: sd.number });
+    return tooltipText;
   }
 
   private updateIndex(): void {

@@ -68,8 +68,9 @@ export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController
     useResources: false,
   };
   public currentStep: StepName = 'loading';
-  public loading = true;
-  public processing = false;
+  public loading: boolean = true;
+  public processing: boolean = false;
+  public nameChangeEnabled: boolean;
   public testAccountForm: ng.IFormController;
   public errorMessages = {
     testAccount: {
@@ -89,9 +90,14 @@ export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private Notification: Notification,
+    private FeatureToggleService,
   ) { }
 
   public $onInit(): void {
+    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
+      this.nameChangeEnabled = toggle;
+    });
+
     this.CloudConnectorService.getApiKey()
       .then((data) => {
         this.data.clientName = data.apiClientId;

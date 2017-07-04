@@ -43,7 +43,6 @@ describe('Directive: aaDialByExt', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel.openHours.addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenu());
-
   }));
 
   afterEach(function () {
@@ -56,6 +55,6 @@ describe('Directive: aaDialByExt', function () {
   it('replaces the element with the appropriate content', function () {
     element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-dial-by-ext>")($rootScope);
     $rootScope.$digest();
-    expect(element.html()).toContain("aaDialByExtCtrl");
+    expect(element.html()).toContain('aaDialByExtCtrl');
   });
 });

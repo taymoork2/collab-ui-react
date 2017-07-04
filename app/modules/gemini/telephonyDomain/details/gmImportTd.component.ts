@@ -11,11 +11,11 @@ class GmImportTdCtrl implements ng.IComponentController {
   public data: any = {};
   public gridOptions = {};
   public selectPlaceholder: string;
-  public options: Array<Object> = [];
+  public options: Object[] = [];
   public loadingNumbers: boolean = true;
   public loadingContent: boolean = true;
   public isShowNumbers: boolean = false;
-  public isHiddenOptions: Array<Object>;
+  public isHiddenOptions: Object[];
   public selectedGridLinesLength: number = 0;
   public selected = { label: '', value: '' };
 
@@ -51,12 +51,12 @@ class GmImportTdCtrl implements ng.IComponentController {
     this.getCountries();
     this.setGridData();
 
-    let data = this.gemService.getStorage('currentTelephonyDomain');
+    const data = this.gemService.getStorage('currentTelephonyDomain');
     data.importTDNumbers = [];
   }
 
   public onImport() {
-    let data = this.gemService.getStorage('currentTelephonyDomain');
+    const data = this.gemService.getStorage('currentTelephonyDomain');
     data.importTDNumbers = _.values(this.selectedGridLines);
 
     this.gemService.setStorage('currentTelephonyDomain', data);
@@ -130,6 +130,8 @@ class GmImportTdCtrl implements ng.IComponentController {
       columnDefs: columnDefs,
       enableRowSelection: true,
       enableColumnMenus: false,
+      enableVerticalScrollbar: false,
+      enableHorizontalScrollbar: false,
       onRegisterApi: (gridApi) => {
         const api = gridApi;
         api.selection.on.rowSelectionChanged(this.$scope, (row) => { this.addOrDelRow(row); });
@@ -174,7 +176,10 @@ class GmImportTdCtrl implements ng.IComponentController {
   }
 
   private getCountries() {
-    this.countryId2NameMapping = this.gemService.getStorage('countryId2NameMapping');
+    const gmCountry = this.gemService.getStorage('gmCountry');
+    if (gmCountry) {
+      this.countryId2NameMapping = gmCountry.countryId2NameMapping;
+    }
   }
 }
 export class GmImportTdComponent implements ng.IComponentOptions {

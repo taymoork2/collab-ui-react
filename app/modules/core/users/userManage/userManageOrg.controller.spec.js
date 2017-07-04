@@ -1,7 +1,6 @@
 'use strict';
 
 describe('UserManageOrgController', function () {
-
   ///////////////////
 
   function init() {

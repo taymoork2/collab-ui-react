@@ -1,17 +1,19 @@
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
 import { IUser } from 'modules/core/auth/user/user';
 import { CmcService } from './../cmc.service';
+
 import { ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcIssue } from './../cmc.interface';
 import { Notification } from 'modules/core/notifications';
 
 class CmcUserDetailsController implements ng.IComponentController {
 
-  public services: Array<IFeature>;
+  public services: IFeature[];
   public allowCmcSettings: boolean = false;
 
   private user: IUser;
   public orgReady: boolean = false;
   public userReady: boolean = false;
+  private timeoutStatus: number = -1;
 
   public issues: ICmcIssue[];
 
@@ -24,10 +26,10 @@ class CmcUserDetailsController implements ng.IComponentController {
               private Notification: Notification) {
     this.services = [];
     this.services.push(<IFeature>{
-      name: 'Collaboration Mobile Convergence',
+      name: $translate.instant('cmc.userMenu.mobile'),
       icon: 'icon-circle-mobile',
       actionAvailable: false,
-      detail: '',
+      detail: this.$translate.instant('cmc.userMenu.statusOk'),
       state: 'cmc',
     });
     this.$log.debug('state', this.$state);
@@ -39,7 +41,7 @@ class CmcUserDetailsController implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let userChanges = changes['user'];
+    const userChanges = changes['user'];
     this.$log.debug('userChanges', userChanges);
     if (userChanges) {
       if (userChanges.currentValue) {
@@ -62,12 +64,22 @@ class CmcUserDetailsController implements ng.IComponentController {
           this.precheckOrg(user.meta.organizationID)
             .then((res: ICmcOrgStatusResponse) => {
               this.orgReady = (res.status === 'ok');
-              this.precheckUser(user)
-                .then((res: ICmcUserStatusResponse) => {
-                  this.userReady = (res.status === 'ok');
-                });
+              if (this.isUserCmcEntitled(user)) {
+                this.precheckUser(user)
+                  .then((res: ICmcUserStatusResponse) => {
+                    this.userReady = (res.status === 'ok');
+                  });
+              }
             });
         }
+      }).catch((error) => {
+        this.$log.debug('error', error);
+        let msg: string = 'unknown';
+        if (error.Errors && error.Errors.length > 0) {
+          msg = error.Errors[0].description;
+        }
+        this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });
+        this.services[ 0 ].actionAvailable = false;
       });
   }
 
@@ -77,12 +89,15 @@ class CmcUserDetailsController implements ng.IComponentController {
         this.$log.debug('precheckUser:', res);
         if (res.status === 'error' && res.issues) {
           this.issues.push(res.issues[ 0 ]);
-          this.services[ 0 ].detail = this.$translate.instant('cmc.userSettings.menuStatus.error');
+          this.services[ 0 ].detail = this.$translate.instant('cmc.userMenu.statusNok');
         }
         return res;
       });
   }
 
+  private isUserCmcEntitled(user: IUser): boolean {
+    return _.includes(user.entitlements, 'cmc');
+  }
 
   private precheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
     return this.CmcService.preCheckOrg(orgId)
@@ -90,14 +105,16 @@ class CmcUserDetailsController implements ng.IComponentController {
         this.$log.debug('precheckOrg', res);
         if (res.status === 'error' && res.issues) {
           this.issues.push(res.issues[ 0 ]);
-          this.services[ 0 ].detail = this.$translate.instant('cmc.userSettings.menuStatus.error');
+          this.services[ 0 ].detail = this.$translate.instant('cmc.userMenu.statusNok');
         }
         return res;
       })
       .catch((error) => {
         this.$log.debug('error', error);
         let msg: string = 'unknown';
-        if (error.data && error.data.message) {
+        if (error && error.status && error.status === this.timeoutStatus) {
+          msg = 'Request Timeout';
+        } else if (error.data && error.data.message) {
           msg = error.data.message;
         }
         this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });

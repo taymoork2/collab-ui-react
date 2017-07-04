@@ -33,7 +33,7 @@ describe('UserInfoDirective', function () {
   }
 
   function compileTemplate() {
-    view = $compile("<cr-user-info/>")($rootScope);
+    view = $compile('<cr-user-info/>')($rootScope);
     $rootScope.$apply();
     scope = view.scope();
   }

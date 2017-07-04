@@ -14,6 +14,7 @@ describe('Service: VoicemailService', function () {
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
     spyOn(this.HuronVoicemailService, 'isFeatureEnabledAvril').and.returnValue(this.$q.resolve(false));
+    spyOn(this.HuronVoicemailService, 'isFeatureEnabledAvrilOnly').and.returnValue(this.$q.resolve(false));
   });
 
   afterEach(function () {
@@ -22,7 +23,7 @@ describe('Service: VoicemailService', function () {
   });
 
   it('Verify update voicemail user', function () {
-    let user = {
+    const user = {
       services: ['VOICE', 'VOICEMAIL'],
       voicemail: {},
     };

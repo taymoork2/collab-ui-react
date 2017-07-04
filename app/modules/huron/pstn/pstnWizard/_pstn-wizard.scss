@@ -1,3 +1,5 @@
+@import '~collab-ui/scss/settings/colors';
+
 uc-pstn-paid-wizard {
   margin: initial !important;
   section {
@@ -10,3 +12,25 @@ uc-pstn-paid-wizard {
   }
 }
 
+.adding-phone-number-blocked {
+  margin: auto;
+  width: 70%;
+  padding: 20% 0;
+  p {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  h1.h4:not(.v-center) {
+    float: left;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .icon-warning {
+    color: $color-attention;
+    float: left;
+    margin-right: 0.75rem;
+    top: 0.45rem;
+  }
+}

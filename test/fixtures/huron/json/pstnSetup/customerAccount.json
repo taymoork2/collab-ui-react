@@ -1,0 +1,43 @@
+{
+    "data": {
+        "customers": [
+            {
+                "licenses": [
+                    {
+                        "licenseId":"123456",
+                        "offerName":"CO",
+                        "licenseType":"COMMUNICATION",
+                        "features":["ciscouc"],
+                        "volume":10,
+                        "isTrial":true,
+                        "trialId":"123",
+                        "status":"PENDING",
+                        "partnerEmail":"a@a.com"
+                    },
+                    {
+                        "licenseId":"123457",
+                        "offerName":"CO",
+                        "licenseType":"SHARED_DEVICES",
+                        "features":["ciscouc"],
+                        "volume":10,
+                        "isTrial":true,
+                        "trialId":"123",
+                        "status":"PENDING",
+                        "partnerEmail":"a@a.com"
+                    },
+                    {
+                        "licenseId":"123458",
+                        "offerName":"CO",
+                        "licenseType":"SOMETHING_ELSE",
+                        "features":["ciscouc"],
+                        "volume":10,
+                        "isTrial":true,
+                        "trialId":"123",
+                        "status":"PENDING",
+                        "partnerEmail":"a@a.com"
+                    }
+                ]
+            }
+        ]
+    }
+}

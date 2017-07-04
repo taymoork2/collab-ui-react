@@ -27,7 +27,7 @@ describe('Service: CustomVariableService', function () {
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
   beforeEach(inject(function (_CustomVariableService_, _$httpBackend_, _HuronConfig_) {
@@ -90,9 +90,7 @@ describe('Service: CustomVariableService', function () {
     });
   });
   describe('getVariableDependencies', function () {
-
     it('should list all call experiences with dependent variables', function () {
-
       $httpBackend.whenGET(customVariablesURL).respond(200, dependentVariables);
       CustomVariableService.getVariableDependencies(variableName).then(
         successSpy,
@@ -106,7 +104,6 @@ describe('Service: CustomVariableService', function () {
     });
 
     it('should notify on Not Found Error 404', function () {
-
       $httpBackend.whenGET(customVariablesURL).respond(404);
       CustomVariableService.getVariableDependencies(variableName).then(
         successSpy,
@@ -118,7 +115,6 @@ describe('Service: CustomVariableService', function () {
     });
 
     it('should notify on Internal Server Error 500', function () {
-
       $httpBackend.whenGET(customVariablesURL).respond(500);
       CustomVariableService.getVariableDependencies(variableName).then(
         successSpy,

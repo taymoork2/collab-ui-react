@@ -5,8 +5,8 @@ export const USER = 'USER';
 
 export interface IPickupGroup extends ng.resource.IResource<IPickupGroup> {
   name: string;
-  members: Array<string>;
-  numbers: Array<any>;
+  members: string[];
+  numbers: any[];
   notificationTimer: number | undefined;
   playSound: boolean | true;
   displayCallingPartyId: boolean | true;
@@ -28,8 +28,8 @@ export interface IMemberNumber extends ng.resource.IResource<IMemberNumber> {
 export interface IMember {
   member: Member;
   picturePath: string;
-  checkboxes: Array<ICardMemberCheckbox>;
-  saveNumbers: Array<ICallPickupNumbers>;
+  checkboxes: ICardMemberCheckbox[];
+  saveNumbers: ICallPickupNumbers[];
 }
 
 export interface ICardMemberCheckbox {

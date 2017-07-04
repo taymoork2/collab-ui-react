@@ -13,7 +13,6 @@
     WebExSiteRowService,
     Authinfo
   ) {
-
     // var funcName = "SiteCSVModalCtrl()";
     // var logMsg = '';
     var vm = this;
@@ -87,11 +86,11 @@
         }
       ).catch(
         function catchError(response) {
-          var funcName = "SiteListCtrl.csvExport().catchError()";
-          var logMsg = "";
+          var funcName = 'SiteListCtrl.csvExport().catchError()';
+          var logMsg = '';
 
-          logMsg = funcName + "\n" +
-            "response=" + JSON.stringify(response);
+          logMsg = funcName + '\n' +
+            'response=' + JSON.stringify(response);
           $log.log(logMsg);
 
           displayResult(
@@ -119,7 +118,6 @@
         (null == vm.modal.file) ||
         (0 == vm.modal.file.length)
       ) {
-
         displayResult(
           false,
           false,
@@ -166,7 +164,6 @@
       resultMsg,
       errId
     ) {
-
       // var funcName = "displayResult()";
       // var logMsg = "";
 
@@ -177,7 +174,7 @@
         Notification.success(resultMsg);
       } else {
         //If this is a read only admin and WebEx returns "Access denied, additional privileges are required"
-        if (errId == "000001" && _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
+        if (errId == '000001' && _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
           Notification.notifyReadOnly(errId);
         } else {
           Notification.error(resultMsg);
@@ -188,7 +185,6 @@
         (closeModal) &&
         (_.isFunction($scope.$close))
       ) {
-
         //SiteListService.updateCSVStatusInRow(vm.siteRow);
         $scope.$close();
       } else {

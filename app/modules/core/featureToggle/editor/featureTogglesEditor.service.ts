@@ -37,8 +37,8 @@ export class FeatureToggleEditorService {
   /**
    * return list of UserPreferences
    */
-  public updateUserPreferences(user: IUser): ng.IPromise<Array<IUserPreference>> {
-    let preferences = _.map(this.UserPreferencesService.allPrefs,
+  public updateUserPreferences(user: IUser): ng.IPromise<IUserPreference[]> {
+    const preferences = _.map(this.UserPreferencesService.allPrefs,
       (id: string) => {
         return {
           key: id,
@@ -55,11 +55,11 @@ export class FeatureToggleEditorService {
   /**
    * Return list of DEV Feature featureToggles
    */
-  public getFeatureToggles(userId: string): ng.IPromise<Array<IFeatureToggle>> {
-    let url = `${this.featuresUrl}/${userId}/developer`;
+  public getFeatureToggles(userId: string): ng.IPromise<IFeatureToggle[]> {
+    const url = `${this.featuresUrl}/${userId}/developer`;
     return this.$http.get(url, { cache: false })
       .then((response) => {
-        let toggles = _.get<Array<IFeatureToggle>>(response.data, 'featureToggles');
+        const toggles = _.get<IFeatureToggle[]>(response.data, 'featureToggles');
 
         // remove all non-dev feature toggles
         _.remove(toggles, (feature: IFeatureToggle) => {
@@ -80,15 +80,15 @@ export class FeatureToggleEditorService {
    * Add a new Feature Toggle with the passed id
    */
   public addToggle(userId: string, toggleId: string): ng.IPromise<IFeatureToggle> {
-    let url = `${this.featuresUrl}/${userId}/developer`;
-    let body = {
+    const url = `${this.featuresUrl}/${userId}/developer`;
+    const body = {
       key: toggleId,
       val: false,
       mutable: true,
     };
     return this.$http.post(url, body)
       .then((response) => {
-        let toggle = <IFeatureToggle>response.data;
+        const toggle = <IFeatureToggle>response.data;
         toggle.value = this.isTrue(toggle.val);
         toggle.isUpdating = false;
         return toggle;
@@ -99,15 +99,15 @@ export class FeatureToggleEditorService {
    * Write data for this feature toggle
    */
   public updateToggle(userId: string, feature: IFeatureToggle): ng.IPromise<IFeatureToggle> {
-    let url = `${this.featuresUrl}/${userId}/developer`;
-    let body = {
+    const url = `${this.featuresUrl}/${userId}/developer`;
+    const body = {
       key: feature.key,
       val: feature.value,
       mutable: true,
     };
     return this.$http.post(url, body)
       .then((response) => {
-        let toggle = <IFeatureToggle>response.data;
+        const toggle = <IFeatureToggle>response.data;
         toggle.value = this.isTrue(toggle.val);
         toggle.isUpdating = false;
         return toggle;
@@ -118,7 +118,7 @@ export class FeatureToggleEditorService {
    * Delete the named toggle
    */
   public deleteToggle(userId: string, toggleId: string): ng.IPromise<IFeatureToggle> {
-    let url = `${this.featuresUrl}/${userId}/developer/${toggleId}`;
+    const url = `${this.featuresUrl}/${userId}/developer/${toggleId}`;
     return this.$http.delete(url);
   }
 

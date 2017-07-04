@@ -3,9 +3,6 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 import { IAvrilFeatures } from 'modules/huron/avril';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
-const VM_TO_SPARK: string = 'vmToSpark';
-const VM_TO_PHONE: string = 'vmToPhone';
-const VM_TO_SPARK_AND_PHONE: string = 'vmToSparkAndPhone';
 const VM_TO_EMAIL_WITH_ATTACH: string = 'withAttachment';
 const VM_TO_EMAIL_WITHOUT_ATTACH: string = 'withoutAttachment';
 
@@ -15,12 +12,12 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
   public selectedNumber: IOption;
   public missingDirectNumbers: boolean;
   public filterPlaceholder: string;
-  public externalNumberOptions: Array<IOption>;
+  public externalNumberOptions: IOption[];
   public dialPlanCountryCode: string;
   public companyVoicemailEnabled: boolean;
+  public externalVoicemailAccess: boolean;
   public onNumberFilter: Function;
   public onChangeFn: Function;
-  public companyVoicemailAvrilForm: ng.IFormController;
   public deliveryMethod: string;
   public attachmentPref: string;
   public voicemailToEmail: boolean = false;
@@ -56,14 +53,6 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
     }
 
     if (features && features.currentValue) {
-      if (!_.get<boolean>(features.currentValue, 'VM2S') && _.get<boolean>(features.currentValue, 'VM2T')) {
-        this.deliveryMethod = VM_TO_PHONE;
-      } else if (_.get<boolean>(features.currentValue, 'VM2S') && _.get<boolean>(features.currentValue, 'VM2T')) {
-        this.deliveryMethod = VM_TO_SPARK_AND_PHONE;
-      } else if (_.get<boolean>(features.currentValue, 'VM2S')) {
-        this.deliveryMethod = VM_TO_SPARK;
-      }
-
       if (_.get<boolean>(features.currentValue, 'VM2E')) {
         this.voicemailToEmail = true;
         this.attachmentPref = VM_TO_EMAIL_WITH_ATTACH;
@@ -77,31 +66,27 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
     }
 
     if (site && site.currentValue) {
-      if (!_.isUndefined(_.get(site.currentValue, 'voicemailPilotNumber')) && !_.get(site.currentValue, 'voicemailPilotNumberGenerated')) {
+      if (_.get(site.currentValue, 'voicemailPilotNumber') &&
+        _.get(site.currentValue, 'voicemailPilotNumberGenerated') === false) {
+        this.externalVoicemailAccess = true;
         this.selectedNumber = this.setCurrentOption(_.get<string>(site.currentValue, 'voicemailPilotNumber'), this.externalNumberOptions);
+      } else {
+        this.externalVoicemailAccess = false;
       }
-    }
-  }
-
-  public onDeliveryMethodChanged(): void {
-    if (this.deliveryMethod === VM_TO_SPARK) {
-      this.features.VM2S = true;
-      this.features.VM2T = false;
-      let pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
-      this.onChange(pilotNumber, 'true', true);
-    } else if (this.deliveryMethod === VM_TO_PHONE) {
-      this.features.VM2S = false;
-      this.features.VM2T = true;
-      this.onCompanyVoicemailChange(true);
-    } else if (this.deliveryMethod === VM_TO_SPARK_AND_PHONE) {
-      this.features.VM2S = true;
-      this.features.VM2T = true;
-      this.onCompanyVoicemailChange(true);
     }
   }
 
   public onCompanyVoicemailNumberChanged(): void {
     this.onChange(this.selectedNumber.value, 'false', true);
+  }
+
+  public onExternalVoicemailAccessChanged(): void {
+    if (this.externalVoicemailAccess) {
+      this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
+    } else {
+      const pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
+      this.onChange(pilotNumber, 'true', true);
+    }
   }
 
   public onVoicemailToEmailChanged(): void {
@@ -157,10 +142,10 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
     });
   }
 
-  private setCurrentOption(currentValue: string, existingOptions: Array<IOption>): IOption {
-    let existingOption: IOption = _.find(existingOptions, { value: currentValue });
+  private setCurrentOption(currentValue: string, existingOptions: IOption[]): IOption {
+    const existingOption: IOption = _.find(existingOptions, { value: currentValue });
     if (!existingOption) {
-      let currentExternalNumberOption: IOption = {
+      const currentExternalNumberOption: IOption = {
         value: currentValue,
         label: this.PhoneNumberService.getNationalFormat(currentValue),
       };

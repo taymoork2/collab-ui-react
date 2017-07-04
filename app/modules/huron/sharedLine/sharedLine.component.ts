@@ -3,9 +3,9 @@ import { Member, USER_REAL_USER } from '../members';
 
 class SharedLineCtrl implements ng.IComponentController {
   public selectedMember: Member | undefined;
-  public newSharedLineMembers: Array<Member>;
+  public newSharedLineMembers: Member[];
   public selectedSharedLine: SharedLine;
-  public sharedLines: Array<SharedLine>;
+  public sharedLines: SharedLine[];
   public oneAtATime: boolean = true;
 
   public selectSharedLineUserFn: Function;
@@ -61,8 +61,8 @@ class SharedLineCtrl implements ng.IComponentController {
 
   private formatUserName(firstName: string, lastName: string, userName: string): string {
     let _userName = userName;
-    let _firstName = firstName || '';
-    let _lastName = lastName || '';
+    const _firstName = firstName || '';
+    const _lastName = lastName || '';
     if (_firstName.length > 0 || _lastName.length > 0) {
       _userName = _.trim(_firstName + ' ' + _lastName);
     }

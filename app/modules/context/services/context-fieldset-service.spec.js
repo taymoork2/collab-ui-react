@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: contextFieldsetsService', function () {
-
   var fieldsetData, fieldId;
   var dictionaryUrl = 'https://dictionary.produs1.ciscoccservice.com';
 
@@ -24,41 +23,41 @@ describe('Service: contextFieldsetsService', function () {
   it('should get fieldsets and process results successfully', function () {
     fieldsetData = [
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa custom fieldset with some long description description description description description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aaa custom fieldset with some long description description description description description',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
           'AAA_TEST_FIELD4',
           'Context_Notes',
           'Context_Mobile_Phone',
         ],
-        'publiclyAccessible': false,
-        'fieldDefinitions': [
+        publiclyAccessible: false,
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD4',
-            'lastUpdated': '2017-02-02T21:22:35.106Z',
+            id: 'AAA_TEST_FIELD4',
+            lastUpdated: '2017-02-02T21:22:35.106Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
           {
-            'id': 'Context_Mobile_Phone',
-            'lastUpdated': '2017-01-23T16:48:50.096Z',
+            id: 'Context_Mobile_Phone',
+            lastUpdated: '2017-01-23T16:48:50.096Z',
           },
           {
-            'id': 'Context_Notes',
-            'lastUpdated': '2017-01-23T16:48:49.159Z',
+            id: 'Context_Notes',
+            lastUpdated: '2017-01-23T16:48:49.159Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-        'id': 'aaa_custom_fieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+        id: 'aaa_custom_fieldset',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       }];
 
     this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=id:*&maxEntries=1500').respond(200, fieldsetData);
@@ -93,63 +92,63 @@ describe('Service: contextFieldsetsService', function () {
     fieldId = 'AAA_TEST_FIELD';
     fieldsetData = [
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa custom fieldset with some long description description description description description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aaa custom fieldset with some long description description description description description',
+        fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
           'AAA_TEST_FIELD4',
           'Context_Notes',
           'Context_Mobile_Phone',
         ],
-        'publiclyAccessible': false,
-        'fieldDefinitions': [
+        publiclyAccessible: false,
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'AAA_TEST_FIELD4',
-            'lastUpdated': '2017-02-02T21:22:35.106Z',
+            id: 'AAA_TEST_FIELD4',
+            lastUpdated: '2017-02-02T21:22:35.106Z',
           },
           {
-            'id': 'Agent_ID',
-            'lastUpdated': '2017-01-23T16:48:50.021Z',
+            id: 'Agent_ID',
+            lastUpdated: '2017-01-23T16:48:50.021Z',
           },
           {
-            'id': 'Context_Mobile_Phone',
-            'lastUpdated': '2017-01-23T16:48:50.096Z',
+            id: 'Context_Mobile_Phone',
+            lastUpdated: '2017-01-23T16:48:50.096Z',
           },
           {
-            'id': 'Context_Notes',
-            'lastUpdated': '2017-01-23T16:48:49.159Z',
+            id: 'Context_Notes',
+            lastUpdated: '2017-01-23T16:48:49.159Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
-        'id': 'aaa_custom_fieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
+        id: 'aaa_custom_fieldset',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       },
       {
-        'orgId': 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        'description': 'aaa custom fieldset with some long description description description description description',
-        'fields': [
+        orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+        description: 'aaa custom fieldset with some long description description description description description',
+        fields: [
           'AAA_TEST_FIELD',
           'Context_Notes',
         ],
-        'publiclyAccessible': false,
-        'fieldDefinitions': [
+        publiclyAccessible: false,
+        fieldDefinitions: [
           {
-            'id': 'AAA_TEST_FIELD',
-            'lastUpdated': '2017-02-02T17:12:33.167Z',
+            id: 'AAA_TEST_FIELD',
+            lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
-            'id': 'Context_Notes',
-            'lastUpdated': '2017-01-23T16:48:49.159Z',
+            id: 'Context_Notes',
+            lastUpdated: '2017-01-23T16:48:49.159Z',
           },
         ],
-        'refUrl': '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
-        'id': 'ccc_custom_fieldset',
-        'lastUpdated': '2017-02-10T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
+        id: 'ccc_custom_fieldset',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       }];
 
     this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/search?q=fieldId:' + fieldId + '&maxEntries=1500').respond(200, fieldsetData);
@@ -227,11 +226,11 @@ describe('Service: contextFieldsetsService', function () {
   describe('getInUse', function () {
     it('should get in use status', function () {
       this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/status/someId').respond(200, {
-        'status': {
-          'inUse': false,
+        status: {
+          inUse: false,
         },
-        'refUrl': '/dictionary/fieldset/v1/someId',
-        'id': 'someId',
+        refUrl: '/dictionary/fieldset/v1/someId',
+        id: 'someId',
       });
 
       this.ContextFieldsetsService.getInUse('someId').then(function (status) {

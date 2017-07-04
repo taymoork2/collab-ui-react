@@ -49,14 +49,14 @@ export class SparkReportService {
     }
     this.activeDeferred = this.$q.defer();
 
-    let returnData: IActiveUserWrapper = {
+    const returnData: IActiveUserWrapper = {
       graphData: [],
       isActiveUsers: false,
     };
 
-    let options: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'activeUsers', this.CommonReportService.DETAILED, undefined);
+    const options: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'activeUsers', this.CommonReportService.DETAILED, undefined);
     return this.CommonReportService.getCustomerReport(options, this.activeDeferred).then((response: any): IActiveUserWrapper => {
-      let data = _.get(response, 'data.data[0].data');
+      const data = _.get(response, 'data.data[0].data');
       if (data) {
         return this.adjustActiveData(data, filter, returnData);
       } else {
@@ -69,22 +69,22 @@ export class SparkReportService {
 
   private adjustActiveData(activeData: any, filter: ITimespan, returnData: IActiveUserWrapper): IActiveUserWrapper {
     let emptyGraph: boolean = true;
-    let graphItem: IActiveUserData = {
+    const graphItem: IActiveUserData = {
       date: '',
       totalRegisteredUsers: 0,
       activeUsers: 0,
       percentage: 0,
       balloon: true,
     };
-    let returnGraph: Array<IActiveUserData> = this.CommonReportService.getReturnGraph(filter, activeData[(activeData.length - 1)].date, graphItem);
+    const returnGraph: IActiveUserData[] = this.CommonReportService.getReturnGraph(filter, activeData[(activeData.length - 1)].date, graphItem);
 
     _.forEach(activeData, (item: any): void => {
-      let date: string = this.CommonReportService.getModifiedDate(item.date, filter);
-      let details: any = _.get(item, 'details');
+      const date: string = this.CommonReportService.getModifiedDate(item.date, filter);
+      const details: any = _.get(item, 'details');
 
       if (details) {
-        let activeUsers: number = _.toInteger(details.activeUsers);
-        let totalRegisteredUsers: number = _.toInteger(details.totalRegisteredUsers);
+        const activeUsers: number = _.toInteger(details.activeUsers);
+        const totalRegisteredUsers: number = _.toInteger(details.totalRegisteredUsers);
 
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
           _.forEach(returnGraph, (graphPoint) => {
@@ -107,21 +107,21 @@ export class SparkReportService {
   }
 
   // Most Active User Data
-  public getMostActiveUserData(filter: ITimespan): ng.IPromise<Array<IActiveTableBase>> {
+  public getMostActiveUserData(filter: ITimespan): ng.IPromise<IActiveTableBase[]> {
     // cancel any currently running jobs
     if (this.mostActiveDeferred) {
       this.mostActiveDeferred.resolve(this.ReportConstants.ABORT);
     }
     this.mostActiveDeferred = this.$q.defer();
 
-    let deferred: ng.IDeferred<Array<IActiveTableBase>> = this.$q.defer();
-    let returnArray: Array<IActiveTableBase> = [];
-    let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'mostActive');
+    const deferred: ng.IDeferred<IActiveTableBase[]> = this.$q.defer();
+    const returnArray: IActiveTableBase[] = [];
+    const options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'mostActive');
     this.CommonReportService.getCustomerActiveUserData(options, this.mostActiveDeferred).then((response: any): void => {
-      let responseData: any = _.get(response, 'data.data');
+      const responseData: any = _.get(response, 'data.data');
       if (responseData) {
         _.forEach(responseData, (item: any): void => {
-          let details: any = _.get(item, 'details', undefined);
+          const details: any = _.get(item, 'details', undefined);
           if (details) {
             returnArray.push({
               numCalls: _.toInteger(details.sparkCalls) + _.toInteger(item.details.sparkUcCalls),
@@ -141,7 +141,7 @@ export class SparkReportService {
   }
 
   // Average Room Data
-  public getAvgRoomData(filter: ITimespan): ng.IPromise<Array<IAvgRoomData>> {
+  public getAvgRoomData(filter: ITimespan): ng.IPromise<IAvgRoomData[]> {
     // cancel any currently running jobs
     if (this.groupDeferred) {
       this.groupDeferred.resolve(this.ReportConstants.ABORT);
@@ -156,42 +156,42 @@ export class SparkReportService {
     this.oneToOneDeferred = this.$q.defer();
     this.avgDeferred = this.$q.defer();
 
-    let groupOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'conversations', this.CommonReportService.TIME_CHARTS, true);
-    let oneToOneOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'convOneOnOne', this.CommonReportService.TIME_CHARTS, true);
-    let avgOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'avgConversations', this.CommonReportService.TIME_CHARTS, true);
-    let promises: Array<ng.IHttpPromise<any>> = [];
+    const groupOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'conversations', this.CommonReportService.TIME_CHARTS, true);
+    const oneToOneOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'convOneOnOne', this.CommonReportService.TIME_CHARTS, true);
+    const avgOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'avgConversations', this.CommonReportService.TIME_CHARTS, true);
+    const promises: ng.IHttpPromise<any>[] = [];
 
-    let groupPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(groupOptions, this.groupDeferred).then((response: any): Array<any> => {
+    const groupPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(groupOptions, this.groupDeferred).then((response: any): any[] => {
       return _.get(response, 'data.data', []);
     }, (error: any): void => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.groupError', []);
     });
     promises.push(groupPromise);
 
-    let oneToOnePromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(oneToOneOptions, this.oneToOneDeferred).then((response: any): Array<any> => {
+    const oneToOnePromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(oneToOneOptions, this.oneToOneDeferred).then((response: any): any[] => {
       return _.get(response, 'data.data', []);
     }, (error: any): void => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.oneToOneError', []);
     });
     promises.push(oneToOnePromise);
 
-    let avgPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(avgOptions, this.avgDeferred).then((response: any): Array<any> => {
+    const avgPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(avgOptions, this.avgDeferred).then((response: any): any[] => {
       return _.get(response, 'data.data', []);
-    }, (error: any): Array<any> => {
+    }, (error: any): any[] => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.avgError', []);
     });
     promises.push(avgPromise);
 
-    return this.$q.all(promises).then((values: Array<any>) => {
+    return this.$q.all(promises).then((values: any[]) => {
       return this.combineAvgRooms(values[0], values[1], values[2], filter);
     }, () => {
       return [];
     });
   }
 
-  private combineAvgRooms(groupData: Array<any>, oneToOneData: Array<any>, avgData: Array<any>, filter: ITimespan): Array<IAvgRoomData> {
+  private combineAvgRooms(groupData: any[], oneToOneData: any[], avgData: any[], filter: ITimespan): IAvgRoomData[] {
     let emptyGraph: boolean = true;
-    let graphItem: IAvgRoomData = {
+    const graphItem: IAvgRoomData = {
       date: '',
       balloon: true,
       groupRooms: 0,
@@ -201,9 +201,9 @@ export class SparkReportService {
     };
     let date: string = '';
     if (groupData[0] && oneToOneData[0] && avgData[0]) {
-      let groupDate: string = groupData[0].date;
-      let oneToOneDate: string = oneToOneData[0].date;
-      let avgDate: string = avgData[0].date;
+      const groupDate: string = groupData[0].date;
+      const oneToOneDate: string = oneToOneData[0].date;
+      const avgDate: string = avgData[0].date;
       if (groupData.length > 0) {
         date = groupDate;
         if ((oneToOneData.length > 0) && (groupDate < oneToOneDate)) {
@@ -221,9 +221,9 @@ export class SparkReportService {
       }
     }
 
-    let returnGraph: Array<IAvgRoomData> = this.CommonReportService.getReturnGraph(filter, date, graphItem);
+    const returnGraph: IAvgRoomData[] = this.CommonReportService.getReturnGraph(filter, date, graphItem);
     _.forEach(groupData, (groupItem: any): void => {
-      let modDate: string = this.CommonReportService.getModifiedDate(groupItem.date, filter);
+      const modDate: string = this.CommonReportService.getModifiedDate(groupItem.date, filter);
 
       _.forEach(returnGraph, (returnItem: IAvgRoomData): void => {
         if (returnItem.date === modDate) {
@@ -237,7 +237,7 @@ export class SparkReportService {
     });
 
     _.forEach(oneToOneData, (oneToOneItem: any): void => {
-      let modDate: string = this.CommonReportService.getModifiedDate(oneToOneItem.date, filter);
+      const modDate: string = this.CommonReportService.getModifiedDate(oneToOneItem.date, filter);
 
       _.forEach(returnGraph, (returnItem: IAvgRoomData): void => {
         if (returnItem.date === modDate) {
@@ -252,7 +252,7 @@ export class SparkReportService {
 
     if (!emptyGraph) {
       _.forEach(avgData, (avgItem: any): void => {
-        let modDate: string = this.CommonReportService.getModifiedDate(avgItem.date, filter);
+        const modDate: string = this.CommonReportService.getModifiedDate(avgItem.date, filter);
 
         _.forEach(returnGraph, (returnItem: IAvgRoomData): void => {
           if (returnItem.date === modDate) {
@@ -268,7 +268,7 @@ export class SparkReportService {
   }
 
   // Files Shared Data
-  public getFilesSharedData(filter: ITimespan): ng.IPromise<Array<IFilesShared>> {
+  public getFilesSharedData(filter: ITimespan): ng.IPromise<IFilesShared[]> {
     // cancel any currently running jobs
     if (this.contentSharedDeferred) {
       this.contentSharedDeferred.resolve(this.ReportConstants.ABORT);
@@ -279,34 +279,34 @@ export class SparkReportService {
     this.contentSharedDeferred = this.$q.defer();
     this.contentShareSizesDeferred = this.$q.defer();
 
-    let contentSharedOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'contentShared', this.CommonReportService.TIME_CHARTS, true);
-    let contentShareSizesOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'contentShareSizes', this.CommonReportService.TIME_CHARTS, true);
-    let promises: Array<ng.IHttpPromise<any>> = [];
+    const contentSharedOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'contentShared', this.CommonReportService.TIME_CHARTS, true);
+    const contentShareSizesOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'contentShareSizes', this.CommonReportService.TIME_CHARTS, true);
+    const promises: ng.IHttpPromise<any>[] = [];
 
-    let contentSharedPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(contentSharedOptions, this.contentSharedDeferred).then((response: any): Array<any> => {
+    const contentSharedPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(contentSharedOptions, this.contentSharedDeferred).then((response: any): any[] => {
       return _.get(response, 'data.data', []);
     }, (error: any): void => {
       return this.CommonReportService.returnErrorCheck(error, 'filesShared.contentSharedError', []);
     });
     promises.push(contentSharedPromise);
 
-    let contentShareSizesPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(contentShareSizesOptions, this.contentShareSizesDeferred).then((response: any): Array<any> => {
+    const contentShareSizesPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(contentShareSizesOptions, this.contentShareSizesDeferred).then((response: any): any[] => {
       return _.get(response, 'data.data', []);
     }, (error: any): void => {
       return this.CommonReportService.returnErrorCheck(error, 'filesShared.contentShareSizesDataError', []);
     });
     promises.push(contentShareSizesPromise);
 
-    return this.$q.all(promises).then((values: Array<any>): Array<IFilesShared> => {
+    return this.$q.all(promises).then((values: any[]): IFilesShared[] => {
       return this.combineFilesShared(values[0], values[1], filter);
-    }, (): Array<IFilesShared> => {
+    }, (): IFilesShared[] => {
       return [];
     });
   }
 
-  private combineFilesShared(contentSharedData: Array<any>, contentShareSizesData: Array<any>, filter: ITimespan): Array<IFilesShared> {
+  private combineFilesShared(contentSharedData: any[], contentShareSizesData: any[], filter: ITimespan): IFilesShared[] {
     let emptyGraph: boolean = true;
-    let graphItem = {
+    const graphItem = {
       date: '',
       balloon: true,
       contentShared: 0,
@@ -315,8 +315,8 @@ export class SparkReportService {
 
     let date: string = '';
     if (contentSharedData[0] && contentShareSizesData[0]) {
-      let contentSharedDate = contentSharedData[0].date;
-      let contentShareSizesDate = contentShareSizesData[0].date;
+      const contentSharedDate = contentSharedData[0].date;
+      const contentShareSizesDate = contentShareSizesData[0].date;
       if (contentSharedData.length > 0) {
         date = contentSharedDate;
         if ((contentShareSizesData.length > 0) && (contentSharedDate < contentShareSizesDate)) {
@@ -327,9 +327,9 @@ export class SparkReportService {
       }
     }
 
-    let returnGraph: Array<IFilesShared> = this.CommonReportService.getReturnGraph(filter, date, graphItem);
+    const returnGraph: IFilesShared[] = this.CommonReportService.getReturnGraph(filter, date, graphItem);
     _.forEach(contentSharedData, (contentItem: any): void => {
-      let modDate: string = this.CommonReportService.getModifiedDate(contentItem.date, filter);
+      const modDate: string = this.CommonReportService.getModifiedDate(contentItem.date, filter);
 
       _.forEach(returnGraph, (returnItem: IFilesShared): void => {
         if (returnItem.date === modDate) {
@@ -343,7 +343,7 @@ export class SparkReportService {
 
     if (!emptyGraph) {
       _.forEach(contentShareSizesData, (shareItem: any): void => {
-        let modDate: string = this.CommonReportService.getModifiedDate(shareItem.date, filter);
+        const modDate: string = this.CommonReportService.getModifiedDate(shareItem.date, filter);
 
         _.forEach(returnGraph, (returnItem: IFilesShared): void => {
           if (returnItem.date === modDate) {
@@ -365,7 +365,7 @@ export class SparkReportService {
       this.metricsDeferred.resolve(this.ReportConstants.ABORT);
     }
     this.metricsDeferred = this.$q.defer();
-    let returnArray: IMetricsData = {
+    const returnArray: IMetricsData = {
       dataProvider: [{
         callCondition: this.$translate.instant('callMetrics.audioCalls'),
         numCalls: 0,
@@ -380,17 +380,17 @@ export class SparkReportService {
       displayData: undefined,
       dummy: false,
     };
-    let options: ICustomerIntervalQuery = this.CommonReportService.getAltCustomerOptions(filter, 'callMetrics', this.CommonReportService.DETAILED, undefined);
+    const options: ICustomerIntervalQuery = this.CommonReportService.getAltCustomerOptions(filter, 'callMetrics', this.CommonReportService.DETAILED, undefined);
 
     return this.CommonReportService.getCustomerReport(options, this.metricsDeferred).then((response: any): IMetricsData => {
-      let details: any = _.get(response, 'data.data[0].data[0].details');
+      const details: any = _.get(response, 'data.data[0].data[0].details');
       if (details) {
-        let totalCalls: number = _.toInteger(details.totalCalls);
+        const totalCalls: number = _.toInteger(details.totalCalls);
         if (totalCalls > 0) {
-          let audioCalls: number = _.toInteger(details.sparkUcAudioCalls);
-          let successfulCalls: number = _.toInteger(details.totalSuccessfulCalls);
-          let videoCalls: number = _.toInteger(details.sparkUcVideoCalls) + _.toInteger(details.sparkVideoCalls);
-          let totalFailedCalls: number = _.toInteger(details.totalFailedCalls);
+          const audioCalls: number = _.toInteger(details.sparkUcAudioCalls);
+          const successfulCalls: number = _.toInteger(details.totalSuccessfulCalls);
+          const videoCalls: number = _.toInteger(details.sparkUcVideoCalls) + _.toInteger(details.sparkVideoCalls);
+          const totalFailedCalls: number = _.toInteger(details.totalFailedCalls);
 
           returnArray.dataProvider[0].numCalls = audioCalls;
           returnArray.dataProvider[0].percentage = this.CommonReportService.getPercentage(audioCalls, successfulCalls);
@@ -412,18 +412,18 @@ export class SparkReportService {
   }
 
   // Media Quality Data
-  public getMediaQualityData(filter: ITimespan): ng.IHttpPromise<Array<IMediaData>> {
+  public getMediaQualityData(filter: ITimespan): ng.IHttpPromise<IMediaData[]> {
     // cancel any currently running jobs
     if (this.mediaDeferred) {
       this.mediaDeferred.resolve(this.ReportConstants.ABORT);
     }
     this.mediaDeferred = this.$q.defer();
 
-    let options: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'callQuality', this.CommonReportService.DETAILED, undefined);
-    return this.CommonReportService.getCustomerReport(options, this.mediaDeferred).then((response: any): Array<IMediaData> => {
+    const options: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'callQuality', this.CommonReportService.DETAILED, undefined);
+    return this.CommonReportService.getCustomerReport(options, this.mediaDeferred).then((response: any): IMediaData[] => {
       let emptyGraph: boolean = true;
-      let data: any = _.get(response, 'data.data[0].data');
-      let graphItem: IMediaData = {
+      const data: any = _.get(response, 'data.data[0].data');
+      const graphItem: IMediaData = {
         date: '',
         totalDurationSum: 0,
         goodQualityDurationSum: 0,
@@ -442,7 +442,7 @@ export class SparkReportService {
         partialVideoSum: 0,
         balloon: true,
       };
-      let graph: Array<IMediaData> = this.CommonReportService.getReturnGraph(filter, data[data.length - 1].date, graphItem);
+      const graph: IMediaData[] = this.CommonReportService.getReturnGraph(filter, data[data.length - 1].date, graphItem);
 
       _.forEach(data, (item: any): void => {
         const goodSum: number = _.toInteger(item.details.goodQualityDurationSum);
@@ -458,7 +458,7 @@ export class SparkReportService {
         const poorAudioQualityDurationSum: number = poorSum - poorVideoQualityDurationSum;
 
         if (goodSum > 0 || fairSum > 0 || poorSum > 0) {
-          let modifiedDate = this.CommonReportService.getModifiedDate(item.date, filter);
+          const modifiedDate = this.CommonReportService.getModifiedDate(item.date, filter);
 
           _.forEach(graph, (graphPoint): void => {
             if (graphPoint.date === modifiedDate) {
@@ -490,7 +490,7 @@ export class SparkReportService {
       } else {
         return graph;
       }
-    }).catch((error): Array<IMediaData> => {
+    }).catch((error): IMediaData[] => {
       return this.CommonReportService.returnErrorCheck(error, 'mediaQuality.customerError', []);
     });
   }
@@ -502,7 +502,7 @@ export class SparkReportService {
       this.deviceDeferred.resolve(this.ReportConstants.ABORT);
     }
     this.deviceDeferred = this.$q.defer();
-    let deviceArray: IEndpointContainer = {
+    const deviceArray: IEndpointContainer = {
       graphData: [{
         deviceType: this.ReportConstants.DEFAULT_ENDPOINT.label,
         graph: [],
@@ -512,7 +512,7 @@ export class SparkReportService {
       filterArray: [this.ReportConstants.DEFAULT_ENDPOINT],
     };
 
-    let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'deviceType');
+    const options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'deviceType');
     return this.CommonReportService.getCustomerReportByType(options, this.deviceDeferred).then((response: any): IEndpointContainer => {
       return this.analyzeDeviceData(response, filter, deviceArray);
     }).catch((error: any): IEndpointContainer => {
@@ -521,8 +521,8 @@ export class SparkReportService {
   }
 
   private analyzeDeviceData(response: any, filter: ITimespan, deviceArray: IEndpointContainer): IEndpointContainer {
-    let data: Array<any> = _.get(response, 'data.data', []);
-    let graphItem: IEndpointData = {
+    const data: any[] = _.get(response, 'data.data', []);
+    const graphItem: IEndpointData = {
       date: '',
       totalRegisteredDevices: 0,
     };
@@ -530,7 +530,7 @@ export class SparkReportService {
     let responseLength: number = 0;
 
     _.forEach(data, (item: any): void => {
-      let details: any = _.get(item, 'details');
+      const details: any = _.get(item, 'details');
       if (details && responseLength < details.length) {
         responseLength = details.length;
         date = details[responseLength - 1].recordTime;
@@ -543,7 +543,7 @@ export class SparkReportService {
         value: (index + 1),
         label: item.deviceType,
       });
-      let tempGraph: IEndpointWrapper = {
+      const tempGraph: IEndpointWrapper = {
         deviceType: item.deviceType,
         graph: this.CommonReportService.getReturnGraph(filter, date, graphItem),
         emptyGraph: true,
@@ -551,8 +551,8 @@ export class SparkReportService {
       };
 
       _.forEach(item.details, (detail: any): void => {
-        let registeredDevices: number = _.toInteger(detail.totalRegisteredDevices);
-        let modifiedDate: string = this.CommonReportService.getModifiedDate(detail.recordTime, filter);
+        const registeredDevices: number = _.toInteger(detail.totalRegisteredDevices);
+        const modifiedDate: string = this.CommonReportService.getModifiedDate(detail.recordTime, filter);
 
         _.forEach(tempGraph.graph, (graphPoint: IEndpointData, index: number): void => {
           if (graphPoint.date === modifiedDate && (registeredDevices > 0)) {

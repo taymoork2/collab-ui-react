@@ -18,6 +18,7 @@
         minlength={{$ctrl.prefixLength}}
         ng-model="$ctrl.extensionPrefix"
         ng-change="$ctrl.onExtensionPrefixChanges()"
+        focus-on
         required>
       <p class="cs-input__help-text">{{$ctrl.exampleExtensionHelpText}}</p>
       <div class="cs-input__messages" ng-messages="$ctrl.extensionPrefixForm.extensionPrefix.$error" role="alert" ng-if='$ctrl.extensionPrefixForm.extensionPrefix.$touched'>

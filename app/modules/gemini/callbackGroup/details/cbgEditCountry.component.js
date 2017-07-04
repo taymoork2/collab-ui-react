@@ -106,6 +106,5 @@
           vm.btnDisable = (JSON.stringify(countries) == JSON.stringify(info.countries));
       }
     }
-
   }
 })();

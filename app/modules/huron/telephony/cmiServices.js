@@ -626,5 +626,4 @@
       customerId: '@customerId',
     });
   }
-
 })();

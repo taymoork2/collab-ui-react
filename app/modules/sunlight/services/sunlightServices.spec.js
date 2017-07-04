@@ -16,7 +16,6 @@ describe('sunlightServices', function () {
   });
 
   describe('ConfigTemplateService', function () {
-
     it('should support update', function () {
       var url = new RegExp('.*/organization/' + TEST_ORG_ID + '/template/' + TEST_TEMPLATE_ID);
       this.$httpBackend.expectPUT(url).respond(200);
@@ -32,11 +31,9 @@ describe('sunlightServices', function () {
       this.$httpBackend.flush();
       expect(promise).toBeResolved();
     });
-
   });
 
   describe('ConfigUserService', function () {
-
     it('should support update', function () {
       var url = new RegExp('.*/user' + TEST_ORG_ID);
       this.$httpBackend.expectPUT(url).respond(200);
@@ -44,7 +41,5 @@ describe('sunlightServices', function () {
       this.$httpBackend.flush();
       expect(promise).toBeResolved();
     });
-
   });
-
 });

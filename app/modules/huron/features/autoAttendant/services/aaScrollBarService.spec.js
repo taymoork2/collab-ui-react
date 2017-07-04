@@ -37,9 +37,7 @@
     afterEach(function () {});
 
     describe('scrollBuilderToTarget:', function () {
-
       it('just return if there is no target', function () {
-
         AAScrollBar.scrollBuilderToTarget();
 
         expect(container.animate).not.toHaveBeenCalled();
@@ -50,7 +48,7 @@
       });
 
       it('handle a valid target that does not need scrolling, return after given delay', function () {
-        AAScrollBar.scrollBuilderToTarget("#testTarget0");
+        AAScrollBar.scrollBuilderToTarget('#testTarget0');
         expect(container.animate).not.toHaveBeenCalled();
 
         $timeout.flush();
@@ -59,13 +57,11 @@
 
       it('handle valid target that needs scrolling', function () {
         spyOn($.fn, 'outerHeight').and.returnValue(400);
-        AAScrollBar.scrollBuilderToTarget("#testTarget1");
+        AAScrollBar.scrollBuilderToTarget('#testTarget1');
         expect(container.animate).not.toHaveBeenCalled();
 
         $timeout.flush();
         expect(container.animate).toHaveBeenCalled();
       });
-
     });
-
   });

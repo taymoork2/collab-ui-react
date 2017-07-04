@@ -487,7 +487,6 @@
           } else {
             $state.modal.close();
           }
-
         })
         .finally(function () {
           vm.loading = false;
@@ -570,7 +569,6 @@
           }
         }
         return result;
-
       }, result);
 
       return licenseTypeAggregate;
@@ -578,7 +576,6 @@
 
 
     function setViewState(modalStage, value) {
-
       _.find(vm.trialStates, {
         name: modalStage,
       }).enabled = value;
@@ -592,6 +589,7 @@
       var checks = [
         hasEnabledAnyTrial(vm, vm.preset),
         vm.preset.context !== vm.contextTrial.enabled,
+        vm.preset.countryCode !== vm.details.country,
         vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
         vm.preset.sparkBoard && (vm.preset.sparkBoardValue !== vm.sparkBoardTrial.details.quantity),
         vm.preset.care && (vm.preset.careLicenseValue !== vm.careTrial.details.quantity),
@@ -739,12 +737,10 @@
     // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
     function launchCustomerPortal() {
       var customerOrgId = vm.isEditTrial() ? vm.currentTrial.customerOrgId : vm.customerOrgId;
-      var customerOrgName = vm.isEditTrial() ? vm.currentTrial.customerName : vm.details.customerName;
 
       sendToAnalytics(Analytics.eventNames.YES);
-      $window.open($state.href('login_swap', {
+      $window.open($state.href('login', {
         customerOrgId: customerOrgId,
-        customerOrgName: customerOrgName,
       }));
       $state.modal.close();
       cancelCustomer();
@@ -815,6 +811,7 @@
         careLicenseValue: _.get(findOffer(Config.offerTypes.care), 'licenseCount', 0),
         advanceCareLicenseValue: _.get(findOffer(Config.offerTypes.advanceCare), 'licenseCount', 0),
         context: false, // we don't know this yet, so default to false
+        countryCode: hasOfferType(Config.trials.call, Config.offerTypes.call) || hasOfferType(Config.offerTypes.roomSystems) ? TrialPstnService.getCountryCode() : '',
       };
     }
 
@@ -925,6 +922,9 @@
         if (vm.pstnTrial.enabled) {
           _.set(initResults, 'preset.pstn', results.hasSetupPstn);
         }
+        if (initResults.callTrial.enabled || initResults.roomSystemTrial.enabled) {
+          _.set(initResults, 'details.country', preset.countryCode);
+        }
       }
       return initResults;
     }
@@ -943,7 +943,6 @@
       if (_.isFunction(addNumbersCallback)) {
         return addNumbersCallback(customerOrgId).catch(_.noop); //don't throw an error
       }
-
     }
 
     function saveTrialContext(customerOrgId) {

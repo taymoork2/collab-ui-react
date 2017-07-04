@@ -90,9 +90,9 @@
     function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
         $modal.open({
-          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
           controller: 'HelpdeskExtendedInfoDialogController as modal',
-          modalId: "HelpdeskExtendedInfoDialog",
+          modalId: 'HelpdeskExtendedInfoDialog',
           resolve: {
             title: function () {
               return 'helpdesk.userDetails';
@@ -132,7 +132,7 @@
 
     function mailgunEventTypeToL10nKey(emailEvent) {
       var eventType = _.get(emailEvent, 'event');
-      var emailStatuses = ['unsubscribed', 'delivered', 'failed', 'accepted', 'rejected'];
+      var emailStatuses = ['unsubscribed', 'delivered', 'failed', 'accepted', 'rejected', 'opened', 'clicked', 'complained', 'stored'];
       if (!_.includes(emailStatuses, eventType)) {
         return 'common.unknown';
       }
@@ -464,7 +464,7 @@
       }
 
       vm.cardsAvailable = true;
-      angular.element(".helpdesk-details").focus();
+      angular.element('.helpdesk-details').focus();
     }
 
     function filterLog(metadataList, condnFn) {
@@ -538,5 +538,4 @@
         });
     }
   }
-
 }());

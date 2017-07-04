@@ -216,9 +216,9 @@
 
     var createClusterV2 = function (clusterName, releaseChannel) {
       var payLoad = {
-        "name": clusterName,
-        "releaseChannel": releaseChannel,
-        "targetType": "mf_mgmt",
+        name: clusterName,
+        releaseChannel: releaseChannel,
+        targetType: 'mf_mgmt',
       };
 
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
@@ -228,12 +228,10 @@
 
     var addRedirectTarget = function (hostName, clusterId) {
       var payLoad = {
-        "hostname": hostName,
-        "clusterId": clusterId,
-        ttlInSeconds: 60 * 60,
+        hostname: hostName,
       };
 
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/allowedRegistrationHosts';
       return $http
         .post(url, payLoad);
     };
@@ -265,8 +263,8 @@
 
     function updateV2Cluster(clusterId, clusterName, releaseChannel) {
       var payLoad = {
-        "name": clusterName,
-        "releaseChannel": releaseChannel,
+        name: clusterName,
+        releaseChannel: releaseChannel,
       };
 
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
@@ -304,7 +302,6 @@
       return $http
         .get(url)
         .then(extractDataFromResponse);
-
     }
 
     function getPropertySets() {
@@ -375,5 +372,4 @@
   angular
     .module('Mediafusion')
     .service('MediaClusterServiceV2', MediaClusterServiceV2);
-
 }());

@@ -1,12 +1,13 @@
-import { CmcUserData } from './cmcUserData';
-import { ICmcUser } from './cmcUser.interface';
-import { ICmcOrgStatusResponse } from './cmc.interface';
-import { ICmcUserStatusResponse } from './cmc.interface';
-import { ICmcIssue } from './cmc.interface';
+import { ICmcUserData, ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcUser, ICmcIssue } from './cmc.interface';
+
 export class CmcService {
 
-  private dockerUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
-  private useDocker: boolean = false;
+  // TODO: Replace by proper entries in urlconfig !
+  private cmcUrl: string = 'https://cmc-controller.intb1.ciscospark.com/api/v1';
+
+  private useMock: boolean = false; // Only set to true for testing
+
+  private timeout: number = 5000; // ms
 
   /* @ngInject */
   constructor(
@@ -17,45 +18,48 @@ export class CmcService {
     private UrlConfig,
     private CmcServiceMock,
     private $http: ng.IHttpService,
+    private $translate,
+    private $timeout: ng.ITimeoutService,
   ) {
   }
 
-  public setUserData(user: ICmcUser, data: CmcUserData) {
-
-    let mobileNumberSet: ng.IPromise<any> = this.setMobileNumber(user, data.mobileNumber);
-    let entitlementSet: ng.IPromise<any> = this.setEntitlement(user, data.entitled);
-    this.$q.all(
+  public setUserData(user: ICmcUser, data: ICmcUserData): ng.IPromise<any> {
+    const mobileNumberSet: ng.IPromise<any> = this.setMobileNumber(user, data.mobileNumber);
+    const entitlementSet: ng.IPromise<any> = this.setEntitlement(user, data.entitled);
+    return this.$q.all(
       [
         mobileNumberSet,
         entitlementSet,
       ],
-    )
-      .then((res: any) => {
-        this.$log.info('user data set:', res);
-      })
-      .catch((error: any) => {
-        // TODO: Handler error properly
-        this.$log.warn('Error setting user data:', error);
-      });
+    );
   }
 
-  public getUserData(user: ICmcUser): CmcUserData {
+  public getUserData(user: ICmcUser): ICmcUserData {
     this.$log.info('Getting data for user=', user);
-    let entitled = this.hasCmcEntitlement(user);
-    let mobileNumber = this.extractMobileNumber(user);
-    return new CmcUserData(mobileNumber, entitled);
+    const entitled = this.hasCmcEntitlement(user);
+    const mobileNumber = this.extractMobileNumber(user);
+    return <ICmcUserData> {
+      mobileNumber: mobileNumber,
+      entitled: entitled,
+    };
   }
 
   // TODO: Find out when cmc settings should be unavailable...
   public allowCmcSettings(orgId: string): ng.IPromise<boolean> {
     // based on org entitlements ?
-    let deferred = this.$q.defer();
+    const deferred = this.$q.defer();
     this.Orgservice.getOrg((data, success) => {
+      this.$log.debug('data', data);
       if (success) {
-        deferred.resolve(this.hasCmcService(data.services));
-        this.$log.debug('org data:', data);
+        if (data.success) {
+          deferred.resolve(this.hasCmcService(data.services));
+          this.$log.debug('org data:', data);
+        } else {
+          deferred.reject(data);
+        }
       } else {
         deferred.resolve(false);
+        this.$log.debug('data', data);
       }
     }, orgId, {
       basicInfo: true,
@@ -63,11 +67,12 @@ export class CmcService {
     return deferred.promise;
   }
 
-  // TODO Adapt to cmc status call
   public preCheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
-    if (this.useDocker) {
-      let url: string = this.dockerUrl + `/organizations/${orgId}/status`;
-      return this.$http.get(url).then((response) => {
+    if (!this.useMock) {
+      //let deferred: ng.IDeferred<any> = this.$q.defer();
+      //this.requestTimeout(deferred);
+      const url: string = this.cmcUrl + `/organizations/${orgId}/status`;
+      return this.$http.get(url, { timeout: this.requestTimeout() }).then((response) => {
         return response.data;
       });
     } else {
@@ -75,13 +80,18 @@ export class CmcService {
     }
   }
 
-  // TODO Preliminary poor mans user precheck
-  //      which only checks call aware entitlement.
-  //      It's wrapped in a promise to make it easier
-  //      to replace by CI or CMC requests
+  private requestTimeout(): ng.IPromise<any> {
+    const deferred: ng.IDeferred<any> = this.$q.defer();
+    this.$timeout(() => {
+      deferred.resolve();
+    }, this.timeout);
+    return deferred.promise;
+  }
+
+  // TODO Change this preliminary poor mans user precheck
   public preCheckUser(user: ICmcUser): ng.IPromise<ICmcUserStatusResponse> {
-    let status: string = this.hasCallAwareEntitlement(user) ? 'ok' : 'error';
-    let issues: ICmcIssue[] = [];
+    const status: string = this.hasCallAwareEntitlement(user) ? 'ok' : 'error';
+    const issues: ICmcIssue[] = [];
     if (status === 'error') {
       issues.push({
         code: 5000, // TODO: Define 'official' code
@@ -89,7 +99,7 @@ export class CmcService {
       });
     }
 
-    let res = {
+    const res: ICmcUserStatusResponse = {
       status: status,
       issues: issues,
     };
@@ -104,7 +114,7 @@ export class CmcService {
 
   private extractMobileNumber(user: ICmcUser): any {
     if (user.phoneNumbers) {
-      let nbr = _.find<any>(user.phoneNumbers, (nbr) => {
+      const nbr = _.find<any>(user.phoneNumbers, (nbr) => {
         return nbr.type === 'mobile';
       });
       return nbr !== undefined ? nbr.value : null;
@@ -132,7 +142,21 @@ export class CmcService {
   }
 
   private setMobileNumber(user: ICmcUser, number: string): IPromise<any>  {
-    let userMobileData = {
+    return this.checkUniqueMobileNumber(user, number).then((existingUsername) => {
+      if (existingUsername && user.userName !== existingUsername) {
+        return this.$q.reject({
+          data: {
+            message: `${number} ` + this.$translate.instant('cmc.failures.alreadyRegisteredForAtLeastOneMoreUser') + ' ' + existingUsername,
+          },
+        });
+      } else {
+        return this.patchNumber(user, number);
+      }
+    });
+  }
+
+  public patchNumber(user: ICmcUser, number: string): IPromise<any> {
+    const userMobileData = {
       schemas: this.Config.scimSchemas,
       phoneNumbers: [
         {
@@ -142,7 +166,7 @@ export class CmcService {
       ],
     };
 
-    let scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
+    const scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
     this.$log.info('Updating user', user);
     this.$log.info('User data', userMobileData);
     return this.$http({
@@ -150,7 +174,18 @@ export class CmcService {
       url: scimUrl,
       data: userMobileData,
     });
+  }
 
+  private checkUniqueMobileNumber(user: ICmcUser, mobileNbr: string): IPromise<String> {
+    const filter: string = `phoneNumbers[type eq \"mobile\" and value eq \"${mobileNbr}\"]`;
+    const scimUrl: string = this.UrlConfig.getScimUrl(user.meta.organizationID) + '?filter=' + filter;
+    return this.$http.get(scimUrl).then((response: any) => {
+      if (response.data.Resources.length > 0) {
+        return response.data.Resources[0].userName;
+      } else {
+        return null;
+      }
+    });
   }
 
 }

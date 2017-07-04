@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function drillDownReportProps($translate, ReportConstants, uiGridConstants) {
-
     var broadcastRefresh = 'DrilldownReport::Refresh';
     var broadcastReset = 'DrilldownReport::Reset';
 
@@ -225,7 +224,7 @@
   }
 
   function getClassName(grid, row) {
-    var className = "";
+    var className = '';
 
     if (row.entity.isError) {
       className = 'ui-grid-ui-error';

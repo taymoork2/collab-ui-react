@@ -1,6 +1,5 @@
 'use strict';
 
-//This commit is just for demo needed.
 xdescribe('Controller: WebEx Metrics Ctrl', function () {
   var controller, WebExApiGatewayService, Userservice;
 
@@ -9,7 +8,7 @@ xdescribe('Controller: WebEx Metrics Ctrl', function () {
   });
 
   beforeEach(function () {
-    this.initModules('Core');
+    this.initModules('core.customer-reports');
     this.injectDependencies('$controller',
       '$scope',
       '$q');
@@ -32,6 +31,7 @@ xdescribe('Controller: WebEx Metrics Ctrl', function () {
 
     controller = this.$controller('WebExMetricsCtrl', {
       $q: this.$q,
+      $scope: this.$scope,
       WebExApiGatewayService: WebExApiGatewayService,
       Userservice: Userservice,
     });
@@ -43,9 +43,9 @@ xdescribe('Controller: WebEx Metrics Ctrl', function () {
     expect(controller.webexOptions.length).toBe(0);
   });
 
-  it('initial state, isIframeLoaded should be false, currentFilter should be CHP Reports', function () {
+  it('initial state, isIframeLoaded should be false, currentFilter should be metrics', function () {
     expect(controller.isIframeLoaded).toBeFalsy();
-    expect(controller.currentFilter.type).toBe('webex');
+    expect(controller.currentFilter.filterType).toBe('metrics');
   });
 });
 

@@ -36,9 +36,9 @@ var TelephonyPage = function () {
   this.cancelDisassociation = element(by.css('.modal-template')).element(by.css('.btn-default'));
   this.disassociateLine = element(by.css('.modal-template')).element(by.css('.btn-danger'));
 
-  this.forwardNoneRadio = element(by.cssContainingText("label", "Do not forward calls"));
-  this.forwardAllRadio = element(by.cssContainingText("label", "Forward all calls"));
-  this.forwardBusyNoAnswerRadio = element(by.cssContainingText("label", "Forward calls when line is busy or away"));
+  this.forwardNoneRadio = element(by.cssContainingText('label', 'Do not forward calls'));
+  this.forwardAllRadio = element(by.cssContainingText('label', 'Forward all calls'));
+  this.forwardBusyNoAnswerRadio = element(by.cssContainingText('label', 'Forward calls when line is busy or away'));
   this.forwardAll = element(by.css('cs-combobox[name="forwardAllCalls"]'));
   this.forwardBusyNoAnswer = element(by.css('cs-combobox[name="forwardNABCalls"]'));
   this.forwardExternalCalls = element(by.css('label[for="ckForwardExternalCalls"]'));

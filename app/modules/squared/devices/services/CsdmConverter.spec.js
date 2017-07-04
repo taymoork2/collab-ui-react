@@ -53,7 +53,6 @@ describe('CsdmConverterSpec', function () {
   });
 
   describe('pass thru fields', function () {
-
     it('displayName', function () {
       var arr = [{
         displayName: 'bar',
@@ -131,7 +130,6 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertHuronDevices(arr)[0].huronId).toBe('f0b72ba5-0121-452b-a0c8-f6680f660de6');
     });
-
   }); // pass thru fields
 
   describe('photos', function () {
@@ -154,16 +152,16 @@ describe('CsdmConverterSpec', function () {
   describe('image', function () {
     it('should convert sx10 to correct image', function () {
       var arr = [{
-        product: "Cisco TelePresence SX10",
-        imageFilename: "tralala.png",
+        product: 'Cisco TelePresence SX10',
+        imageFilename: 'tralala.png',
       }];
       expect(converter.convertCloudberryDevices(arr)[0].image).toBe('images/devices-hi/tralala.png');
     });
 
     it('should convert MODEL_CISCO_7811 to correct image', function () {
       var arr = [{
-        product: "MODEL_CISCO_7811",
-        imageFilename: "nfdsøafnkdløf.png",
+        product: 'MODEL_CISCO_7811',
+        imageFilename: 'nfdsøafnkdløf.png',
       }];
       expect(converter.convertHuronDevices(arr)[0].image).toBe('images/devices-hi/nfdsøafnkdløf.png');
     });
@@ -173,12 +171,12 @@ describe('CsdmConverterSpec', function () {
     it('should convert device with issues yellow color but keep status', function () {
       var arr = [{
         status: {
-          level: "error",
+          level: 'error',
           connectionStatus: 'CONNECTED',
         },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("1");
+      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe('1');
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('warning');
     });
 
@@ -189,7 +187,7 @@ describe('CsdmConverterSpec', function () {
         },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("5");
+      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe('5');
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('success');
     });
 
@@ -200,13 +198,12 @@ describe('CsdmConverterSpec', function () {
         },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("2");
+      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe('2');
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('danger');
     });
-
   }); // aggregatedState & cssColorClass
 
-  describe("software event", function () {
+  describe('software event', function () {
     it('should convert software', function () {
       var arr = [{
         status: {
@@ -228,7 +225,7 @@ describe('CsdmConverterSpec', function () {
     });
   });
 
-  describe("ip event", function () {
+  describe('ip event', function () {
     it('should convert ip', function () {
       var arr = [{
         status: {
@@ -243,7 +240,7 @@ describe('CsdmConverterSpec', function () {
     });
   });
 
-  describe("diagnostics events", function () {
+  describe('diagnostics events', function () {
     xit('should show localized tcpfallback', function () {
       var arr = [{
         status: {
@@ -277,7 +274,7 @@ describe('CsdmConverterSpec', function () {
     });
   });
 
-  describe("has issues", function () {
+  describe('has issues', function () {
     it('has issues when status.level is not ok', function () {
       var arr = [{
         status: {
@@ -309,7 +306,7 @@ describe('CsdmConverterSpec', function () {
     });
   });
 
-  describe("lastConnectionTime", function () {
+  describe('lastConnectionTime', function () {
     it('when long ago', function () {
       var arr = [{
         status: {
@@ -317,7 +314,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'UNKNOWN',
         },
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].lastConnectionTime.substring(0, 11) == "Jan 9, 2015").toBeTruthy();
+      expect(converter.convertCloudberryDevices(arr)[0].lastConnectionTime.substring(0, 11) == 'Jan 9, 2015').toBeTruthy();
     });
 
     it('when today', function () {
@@ -327,7 +324,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'UNKNOWN',
         },
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].lastConnectionTime.substring(0, 8) == "Today at").toBeTruthy();
+      expect(converter.convertCloudberryDevices(arr)[0].lastConnectionTime.substring(0, 8) == 'Today at').toBeTruthy();
     });
 
     it('when null', function () {

@@ -1,12 +1,10 @@
-/// <reference path="privacy.settings.controller.ts"/>
-
 import { PrivacySettingController } from './privacy.settings.controller';
 import testModule from './index';
 
 describe('Controller: PrivacySettingController', () => {
   let Authinfo, $controller, controller: PrivacySettingController, $q, $scope;
   let Notification, Orgservice;
-  let orgId = 'superOrg';
+  const orgId = 'superOrg';
   beforeEach(angular.mock.module(testModule));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
@@ -47,7 +45,7 @@ describe('Controller: PrivacySettingController', () => {
   }
 
   describe('init', () => {
-    let params = {
+    const params = {
       basicInfo: true,
     };
 

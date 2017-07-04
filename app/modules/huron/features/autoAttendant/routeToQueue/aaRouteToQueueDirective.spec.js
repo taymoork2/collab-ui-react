@@ -49,12 +49,11 @@ describe('Directive: aaRouteToQueue', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
-
   }));
 
   it('replaces the element with the appropriate content', function () {
     element = $compile("<aa-route-to-queue aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0' aa-queues='" + $scope.queues + "'></aa-route-to-queue>")($rootScope);
     $rootScope.$digest();
-    expect(element.html()).toContain("aaRouteToQueue");
+    expect(element.html()).toContain('aaRouteToQueue');
   });
 });

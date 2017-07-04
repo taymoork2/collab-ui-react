@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: AAMetricNameService', function () {
-
   var AAMetricNameService;
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
@@ -27,5 +26,4 @@ describe('Service: AAMetricNameService', function () {
       expect(AAMetricNameService.TIMEOUT_DIAL_BY_EXT).toEqual('aa.timeout.dialByExt');
     });
   });
-
 });

@@ -12,7 +12,7 @@ describe('Service: SharedLineService', () => {
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
-    let sharedLineUser: SharedLine = new SharedLine({
+    const sharedLineUser: SharedLine = new SharedLine({
       uuid: '0001',
       primary: true,
       user: new SharedLineUser({
@@ -28,7 +28,7 @@ describe('Service: SharedLineService', () => {
       phones: [],
     });
 
-    let sharedLinePlace: SharedLine = new SharedLine({
+    const sharedLinePlace: SharedLine = new SharedLine({
       uuid: '0002',
       primary: true,
       user: new SharedLineUser({

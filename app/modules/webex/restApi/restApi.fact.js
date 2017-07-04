@@ -9,7 +9,6 @@
     $q,
     WebExApiGatewayConstsService
   ) {
-
     var _this = this;
 
     this.sendRestApiReq = function (
@@ -17,7 +16,6 @@
       resolve,
       reject
     ) {
-
       // var funcName = "sendRestApiReq()";
       // var logMsg = "";
 
@@ -45,7 +43,6 @@
         mockCsvStatusReq,
         httpsReqObj
       ) {
-
         // var funcName = "csvApiRequest()";
         // var logMsg = "";
 
@@ -71,10 +68,9 @@
           // mock the request csv status result
 
           if (WebExApiGatewayConstsService.csvStates.authTokenError == mockCsvStatusReq) {
-
             mockResult = {
-              "errorCode": "060502",
-              "errorMessage": "Auth token is invalid.",
+              errorCode: '060502',
+              errorMessage: 'Auth token is invalid.',
             };
 
             return $q.reject(mockResult);
@@ -98,7 +94,7 @@
               totalRecords: 5,
               successRecords: 5,
               failedRecords: 0,
-              exportFileLink: "http://google.com",
+              exportFileLink: 'http://google.com',
             };
           } else if (WebExApiGatewayConstsService.csvStates.exportCompletedWithErr == mockCsvStatusReq) {
             mockResult = {
@@ -110,7 +106,7 @@
               totalRecords: 5,
               successRecords: 4,
               failedRecords: 1,
-              exportFileLink: "http://google.com",
+              exportFileLink: 'http://google.com',
             };
           } else if (WebExApiGatewayConstsService.csvStates.importInProgress == mockCsvStatusReq) {
             mockResult = {

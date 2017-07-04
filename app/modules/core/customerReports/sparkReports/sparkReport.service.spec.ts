@@ -30,7 +30,7 @@ describe('Service: Customer Reports Service', function () {
       status: 500,
     };
 
-    this.updateDates = (data: Array<any>, filter?: string, altDate?: string): Array<any> => {
+    this.updateDates = (data: any[], filter?: string, altDate?: string): any[] => {
       _.forEachRight(data, (item: any, index: number): void => {
         if (filter) {
           item.date = moment().tz(this.defaults.timezone).subtract(data.length - index, this.defaults.DAY).format(filter);
@@ -84,7 +84,7 @@ describe('Service: Customer Reports Service', function () {
         data: _.cloneDeep(this.activeData.mostActive),
       }));
 
-      this.SparkReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then((response: Array<IActiveTableBase>): void => {
+      this.SparkReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then((response: IActiveTableBase[]): void => {
         expect(response).toEqual(_.cloneDeep(this.activeData.mostActiveResponse));
       });
       this.$scope.$apply();
@@ -93,7 +93,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMostActiveUserData', function () {
       spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.reject(this.rejectError));
 
-      this.SparkReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then((response: Array<IActiveTableBase>): void => {
+      this.SparkReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then((response: IActiveTableBase[]): void => {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();
@@ -102,7 +102,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Rooms Service', function () {
     it('should getAvgRoomData', function () {
-      let q: any = this.$q;
+      const q: any = this.$q;
       spyOn(this.CommonReportService, 'getCustomerReport').and.callFake((options: ICustomerIntervalQuery): ng.IPromise<any> => {
         let data = this.updateDates(_.cloneDeep(this.roomData.groupRooms.data));
         if (options.type === 'convOneOnOne') {
@@ -113,7 +113,7 @@ describe('Service: Customer Reports Service', function () {
         return q.resolve(this.dataResponse(data));
       });
 
-      this.SparkReportService.getAvgRoomData(this.defaults.timeFilter[0]).then((response: Array<IAvgRoomData>): void => {
+      this.SparkReportService.getAvgRoomData(this.defaults.timeFilter[0]).then((response: IAvgRoomData[]): void => {
         expect(response).toEqual(this.updateDates(_.cloneDeep(this.roomData.response), this.defaults.dayFormat));
       });
       this.$scope.$apply();
@@ -122,7 +122,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getAvgRoomData', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.reject(this.rejectError));
 
-      this.SparkReportService.getAvgRoomData(this.defaults.timeFilter[0]).then((response: Array<IAvgRoomData>): void => {
+      this.SparkReportService.getAvgRoomData(this.defaults.timeFilter[0]).then((response: IAvgRoomData[]): void => {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();
@@ -131,7 +131,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('File Service', function () {
     it('should getFilesSharedData', function () {
-      let q: any = this.$q;
+      const q: any = this.$q;
       spyOn(this.CommonReportService, 'getCustomerReport').and.callFake((options) => {
         let data = this.updateDates(_.cloneDeep(this.fileData.content.data));
         if (options.type === 'contentShareSizes') {
@@ -140,7 +140,7 @@ describe('Service: Customer Reports Service', function () {
         return q.resolve(this.dataResponse(data));
       });
 
-      this.SparkReportService.getFilesSharedData(this.defaults.timeFilter[0]).then((response: Array<IFilesShared>): void => {
+      this.SparkReportService.getFilesSharedData(this.defaults.timeFilter[0]).then((response: IFilesShared[]): void => {
         expect(response).toEqual(this.updateDates(_.cloneDeep(this.fileData.response), this.defaults.dayFormat));
       });
       this.$scope.$apply();
@@ -149,7 +149,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getFilesSharedData', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.reject(this.rejectError));
 
-      this.SparkReportService.getFilesSharedData(this.defaults.timeFilter[0]).then((response: Array<IFilesShared>): void => {
+      this.SparkReportService.getFilesSharedData(this.defaults.timeFilter[0]).then((response: IFilesShared[]): void => {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();
@@ -162,7 +162,7 @@ describe('Service: Customer Reports Service', function () {
         data: this.updateDates(_.cloneDeep(this.mediaData.callQuality.data[0].data)),
       }])));
 
-      this.SparkReportService.getMediaQualityData(this.defaults.timeFilter[0]).then((response: Array<IMediaData>): void => {
+      this.SparkReportService.getMediaQualityData(this.defaults.timeFilter[0]).then((response: IMediaData[]): void => {
         expect(response).toEqual(this.updateDates(_.cloneDeep(this.mediaData.response), this.defaults.dayFormat));
       });
       this.$scope.$apply();
@@ -171,7 +171,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMediaQualityData', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.reject(this.rejectError));
 
-      this.SparkReportService.getMediaQualityData(this.defaults.timeFilter[0]).then((response: Array<IMediaData>): void => {
+      this.SparkReportService.getMediaQualityData(this.defaults.timeFilter[0]).then((response: IMediaData[]): void => {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();
@@ -200,7 +200,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Registered Endpoints Service', function () {
     it('should getDeviceData', function () {
-      const devicesData: Array<any> = _.cloneDeep(this.devicesJson.deviceData);
+      const devicesData: any[] = _.cloneDeep(this.devicesJson.deviceData);
       _.forEach(devicesData, (item: any): void => {
         item.details = this.updateDates(item.details, undefined, 'recordTime');
       });

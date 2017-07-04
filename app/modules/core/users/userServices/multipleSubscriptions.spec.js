@@ -35,7 +35,6 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
   });
 
   describe('MultipleSubscriptionsCtrl controller', function () {
-
     describe('for single subscriptions', function () {
       beforeEach(function () {
         Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.singleSub));
@@ -63,7 +62,6 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
         expect(controller.selectedSubscription).toEqual('svcid-integ-sunnyway-1a');
         expect(controller.showLicenses('svcid-integ-sunnyway-1a', false)).toEqual(true);
       });
-
     });
 
     describe('for trial subscriptions', function () {
@@ -96,7 +94,5 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
         expect(controller.showCareLicenses(getLicensesUsage.careFakeTrialSub)).toEqual(undefined);
       });
     });
-
-
   });
 });

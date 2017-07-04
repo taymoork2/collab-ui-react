@@ -7,20 +7,20 @@ describe('Controller: CdrOverviewCtrl', function () {
   var $scope, controller, $state, $stateParams, CdrService;
   var callLegs = getJSONFixture('huron/json/cdrLogs/callLegs.json');
   var cdr = getJSONFixture('huron/json/cdrLogs/cdr.json');
-  var localSessionID = "6484a26700105000a00074a02fc0a840";
-  var remoteSessionID = "46d23e9a00105000a00074a02fc0a7fe";
+  var localSessionID = '6484a26700105000a00074a02fc0a840';
+  var remoteSessionID = '46d23e9a00105000a00074a02fc0a7fe';
 
   var tableOptions = {
-    cursorcolor: "#aaa",
-    cursorborder: "0px",
-    cursorwidth: "7px",
+    cursorcolor: '#aaa',
+    cursorborder: '0px',
+    cursorwidth: '7px',
     railpadding: {
       top: 0,
       right: 3,
       left: 0,
       bottom: 0,
     },
-    autohidemode: "leave",
+    autohidemode: 'leave',
   };
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$stateParams_, _CdrService_) {
@@ -59,8 +59,8 @@ describe('Controller: CdrOverviewCtrl', function () {
     expect(controller.searchPlaceholder).toEqual('cdrLogs.searchPlaceholder');
     expect(controller.searchField).toEqual('');
     expect(controller.cdrTable).toEqual([]);
-    expect(controller.filename).toEqual("cdr.json");
-    expect(controller.jsonUrl).toContain("url");
+    expect(controller.filename).toEqual('cdr.json');
+    expect(controller.jsonUrl).toContain('url');
     expect(controller.jsonBlob).toEqual('blob');
 
     expect(controller.localSessionID).toEqual(localSessionID);
@@ -83,6 +83,6 @@ describe('Controller: CdrOverviewCtrl', function () {
   it('should not call msSaveOrOpenBlob on cdr save', function () {
     expect(CdrService.downloadInIE).not.toHaveBeenCalled();
     controller.cdrClick();
-    expect(CdrService.downloadInIE).toHaveBeenCalledWith('blob', "cdr.json");
+    expect(CdrService.downloadInIE).toHaveBeenCalledWith('blob', 'cdr.json');
   });
 });

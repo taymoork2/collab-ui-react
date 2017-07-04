@@ -13,7 +13,7 @@
           tooltip-animation="false"
           tooltip-append-to-body="true"
           class="icon icon-report action-icons"
-          ng-click="grid.appScope.downloadReport(row.entity);$event.stopPropagation();"></span>
+          ng-click="grid.appScope.isOnPrem(row.entity);$event.stopPropagation();"></span>
     <span ng-if="grid.appScope.downloadingReportId === row.entity.id"
           class="download-wait">
             <i class="icon icon-report action-icons"></i>

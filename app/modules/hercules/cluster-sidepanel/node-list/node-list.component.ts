@@ -71,7 +71,7 @@ export class NodeListComponentCtrl implements ng.IComponentController {
     // plus the connectors we're really interested in
     _.forEach(cluster.connectors, connector => {
       if (connector.connectorType === 'c_mgmt' || connector.connectorType === connectorTypeToKeep || connector.connectorType === 'cs_context' || connector.connectorType === 'cs_mgmt') {
-        let node = _.find(nodes, node => {
+        const node = _.find(nodes, node => {
           return node.hostname === connector.hostname;
         });
         node.connectors.push(connector);

@@ -17,7 +17,7 @@
       customerId: '@customerId',
       ceId: '@ceId',
     }, {
-      'update': {
+      update: {
         method: 'PUT',
         isArray: false,
       },
@@ -28,7 +28,7 @@
     return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/sites', {
       customerId: '@customerId',
     }, {
-      'update': {
+      update: {
         method: 'PUT',
         isArray: false,
       },
@@ -40,7 +40,7 @@
       customerId: '@customerId',
       ceId: '@ceId',
     }, {
-      'update': {
+      update: {
         method: 'PUT',
         isArray: false,
       },
@@ -51,7 +51,7 @@
       customerId: '@customerId',
       varname: '@varname',
     }, {
-      'update': {
+      update: {
         method: 'PUT',
         isArray: false,
       },

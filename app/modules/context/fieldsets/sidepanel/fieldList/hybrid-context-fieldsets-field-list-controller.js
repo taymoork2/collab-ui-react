@@ -9,7 +9,6 @@ require('../_fieldsets-sidepanel.scss');
 
   /* @ngInject */
   function ContextFieldsetsSidepanelFieldListCtrl($translate, fields) {
-
     var vm = this;
 
     var classificationMap = {
@@ -23,7 +22,7 @@ require('../_fieldsets-sidepanel.scss');
         var field = fields[index];
         var fieldInfo = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
         if (field.dataType) {
-          fieldInfo += ", " + _.upperFirst(field.dataType.trim());
+          fieldInfo += ', ' + _.upperFirst(field.dataType.trim());
         }
         fields[index].fieldInfo = fieldInfo.trim();
         fields[index].id = field.id.trim();

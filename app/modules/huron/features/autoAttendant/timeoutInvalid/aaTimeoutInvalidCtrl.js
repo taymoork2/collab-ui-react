@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AATimeoutInvalidCtrl($scope, $translate, AAUiModelService, AACommonService, AAMetricNameService, Analytics, AutoAttendantCeMenuModelService) {
-
     var vm = this;
 
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -121,7 +120,6 @@
           vm.selectedTimeout.childOptions = _.cloneDeep(vm.repeatOptions);
           if (entry.attempts >= 2 && entry.attempts <= 6) {
             vm.selectedTimeout.selectedChild = _.cloneDeep(vm.repeatOptions[entry.attempts - 2]);
-
           } else {
             // this case should never happens.
             vm.selectedTimeout.selectedChild = _.cloneDeep(vm.repeatOptions[0]);
@@ -133,9 +131,7 @@
 
         // which is 3, aka 4
         vm.menuEntry.attempts = 4;
-
       }
-
     }
 
     function createOptionMenu() {
@@ -163,7 +159,6 @@
       }
 
       populateOptionMenu();
-
     } // activate
 
     activate();

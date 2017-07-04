@@ -81,13 +81,13 @@ describe('Service: SharedMeetingsReportService', function () {
 
     it('should create a url for downloading a csv when getDownloadCSV is called', function () {
       this.$window.navigator.msSaveOrOpenBlob = undefined;
-      let response: string = this.SharedMeetingsReportService.getDownloadCSV(csvData);
+      const response: string = this.SharedMeetingsReportService.getDownloadCSV(csvData);
       expect(response).toContain(blob);
     });
 
     it('should return undefined when msSaveOrOpenBlob is defined', function () {
       this.$window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob');
-      let response: string = this.SharedMeetingsReportService.getDownloadCSV(csvData);
+      const response: string = this.SharedMeetingsReportService.getDownloadCSV(csvData);
       expect(response).toBeUndefined();
     });
 
@@ -120,12 +120,12 @@ describe('Service: SharedMeetingsReportService', function () {
     });
 
     it('should create or update the graph when setChartData is called', function () {
-      let chartResponse: any = _.cloneDeep(chart);
+      const chartResponse: any = _.cloneDeep(chart);
       chartResponse.dataProvider = _.cloneDeep(data.filteredData.threeMonths);
       chartResponse.validateData = jasmine.createSpy('validateData');
       spyOn(AmCharts, 'makeChart').and.returnValue(chartResponse);
 
-      let graph: any = this.SharedMeetingsReportService.setChartData(_.cloneDeep(data.filteredData.threeMonths), undefined, data.timeFilter[1]);
+      const graph: any = this.SharedMeetingsReportService.setChartData(_.cloneDeep(data.filteredData.threeMonths), undefined, data.timeFilter[1]);
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(chartResponse.validateData).not.toHaveBeenCalled();
 

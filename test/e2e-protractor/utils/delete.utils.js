@@ -75,7 +75,7 @@ exports.deleteAutoAttendant = function (aaUrl, token) {
 };
 
 exports.extractUUID = function (ceURL) {
-  var uuidPos = ceURL.lastIndexOf("/");
+  var uuidPos = ceURL.lastIndexOf('/');
   if (uuidPos === -1) {
     return '';
   }
@@ -86,7 +86,6 @@ exports.extractUUID = function (ceURL) {
 //
 // Called by deleteTestAA below.
 exports.deleteNumberAssignments = function (aaUrl, token) {
-
   var ceId = exports.extractUUID(aaUrl);
 
   var cmiUrl = config.getCmiV2ServiceUrl() + 'customers/' + helper.auth['aa-admin'].org + '/features/autoattendants/' + ceId + '/numbers';
@@ -115,7 +114,6 @@ exports.testAAImportName = 'AA for Atlas e2e Import Tests';
 // bearer - token with access to our API
 // aaUrl - the AA URL
 exports.deleteTestAA = function (bearer, aaUrl) {
-
   var aaDeleteTasks = [];
 
   aaDeleteTasks.push(exports.deleteAutoAttendant(aaUrl, bearer));
@@ -142,11 +140,9 @@ exports.deleteTestAAs = function (bearer, data) {
     if (data[i].callExperienceName === test[0] || data[i].callExperienceName === test[1]) {
       AAsToDelete.push(exports.deleteTestAA(bearer, data[i].callExperienceURL));
     }
-
   }
 
   return Promise.all(AAsToDelete);
-
 };
 
 //deleteRouteToQueue - delete queues created while testing
@@ -176,7 +172,6 @@ exports.deleteRouteToQueue = function () {
             return Promise.reject(response);
           }
         });
-
    });
 };
 
@@ -186,7 +181,6 @@ exports.deleteRouteToQueue = function () {
 //
 // Used to cleanup AA created in the test
 exports.findAndDeleteTestAA = function () {
-
   helper.getBearerToken('aa-admin')
     .then(function (bearer) {
       var options = {
@@ -211,7 +205,6 @@ exports.findAndDeleteTestAA = function () {
       return defer.promise.then(function (data) {
         return exports.deleteTestAAs(bearer, data);
       });
-
     });
 };
 
@@ -239,7 +232,7 @@ exports.deleteTestSchedule = function (aaUrl, token) {
     method: 'get',
     url: aaUrl,
     headers: {
-      'Authorization': 'Bearer ' + token,
+      Authorization: 'Bearer ' + token,
     },
   };
   request(options,

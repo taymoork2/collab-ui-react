@@ -6,16 +6,16 @@ import {
 } from './partnerReportInterfaces';
 
 describe('Service: Partner Graph Service', () => {
-  let validateService = {
+  const validateService = {
     validate: () => {},
     validateNow: () => {},
   };
 
-  let dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  let dummyActiveUserData: Array<IActiveUserData> = _.clone(dummyData.activeUser.one);
-  let dummyPopulationData: Array<IPopulationData> = _.clone(dummyData.activeUserPopulation);
-  let mediaQualityGraphData: Array<IMediaQualityData> = _.clone(dummyData.activeUser.one);
-  let callMetricsData: ICallMetricsData = _.clone(dummyData.callMetrics);
+  const dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+  const dummyActiveUserData: IActiveUserData[] = _.clone(dummyData.activeUser.one);
+  const dummyPopulationData: IPopulationData[] = _.clone(dummyData.activeUserPopulation);
+  const mediaQualityGraphData: IMediaQualityData[] = _.clone(dummyData.activeUser.one);
+  const callMetricsData: ICallMetricsData = _.clone(dummyData.callMetrics);
 
   beforeEach(function () {
     this.initModules('Core');
@@ -39,7 +39,7 @@ describe('Service: Partner Graph Service', () => {
     });
 
     it('should update graph when getActiveUsersGraph is called a second time', function () {
-      let chart = this.GraphService.getActiveUsersGraph(dummyActiveUserData, null);
+      const chart = this.GraphService.getActiveUsersGraph(dummyActiveUserData, null);
       this.GraphService.getActiveUsersGraph(dummyActiveUserData, chart);
       expect(validateService.validate).toHaveBeenCalled();
     });
@@ -64,7 +64,7 @@ describe('Service: Partner Graph Service', () => {
     });
 
     it('should update graph when getActiveUserPopulationGraph is called a second time', function () {
-      let chart = this.GraphService.getActiveUserPopulationGraph(dummyPopulationData, null);
+      const chart = this.GraphService.getActiveUserPopulationGraph(dummyPopulationData, null);
       this.GraphService.getActiveUserPopulationGraph(dummyPopulationData, chart);
       expect(validateService.validate).toHaveBeenCalled();
     });
@@ -85,7 +85,7 @@ describe('Service: Partner Graph Service', () => {
     });
 
     it('should update graph when getMediaQualityGraph is called a second time', function () {
-      let chart = this.GraphService.getMediaQualityGraph(mediaQualityGraphData, null);
+      const chart = this.GraphService.getMediaQualityGraph(mediaQualityGraphData, null);
       this.GraphService.getMediaQualityGraph(mediaQualityGraphData, chart);
       expect(validateService.validate).toHaveBeenCalled();
     });
@@ -106,7 +106,7 @@ describe('Service: Partner Graph Service', () => {
     });
 
     it('should update graph when getCallMetricsDonutChart is called a second time', function () {
-      let chart = this.GraphService.getCallMetricsDonutChart(callMetricsData, null);
+      const chart = this.GraphService.getCallMetricsDonutChart(callMetricsData, null);
       this.GraphService.getCallMetricsDonutChart(callMetricsData, chart);
       expect(validateService.validateNow).toHaveBeenCalledWith(true, false);
     });

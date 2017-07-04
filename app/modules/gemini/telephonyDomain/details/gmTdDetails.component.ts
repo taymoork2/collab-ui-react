@@ -46,7 +46,6 @@ class GmtdDetails implements ng.IComponentController {
     this.getNotes();
     this.getHistories();
     this.getRemedyTicket();
-    this.getCountries();
     const deregister = this.$scope.$on('detailWatch', (_event, data) => {
       this.isEdit = data.isEdit;
       this.notes  = data.notes || this.notes;
@@ -61,7 +60,7 @@ class GmtdDetails implements ng.IComponentController {
   }
 
   public onEditTD() {
-    let region = this.gemService.getStorage('currentTelephonyDomain').region;
+    const region = this.gemService.getStorage('currentTelephonyDomain').region;
 
     this.$modal.open({
       type: 'full',
@@ -111,13 +110,13 @@ class GmtdDetails implements ng.IComponentController {
   }
 
   private getRemedyTicket() {
-    let type = 7;
+    const type = 7;
     this.gemService.getRemedyTicket(this.customerId, type)
       .then((res) => {
-        let resArr: any = _.filter(_.get(res, 'content.data'), (item: any) => {
+        const resArr: any = _.filter(_.get(res, 'content.data'), (item: any) => {
           return item.description === this.ccaDomainId;
         });
-        let remedyTicket: any = _.first(resArr);
+        const remedyTicket: any = _.first(resArr);
         if (remedyTicket) {
           remedyTicket.createTime = moment(remedyTicket.createTime).toDate().toString();
 
@@ -125,25 +124,6 @@ class GmtdDetails implements ng.IComponentController {
           this.remedyTicketLoading = false;
         }
       });
-  }
-
-  private getCountries(): void {
-    let countryOptions: any = this.gemService.getStorage('countryOptions') || [];
-    let countryId2NameMapping: any = this.gemService.getStorage('countryId2NameMapping') || {};
-    let countryName2IdMapping: any = this.gemService.getStorage('countryName2IdMapping') || {};
-    if (countryOptions.length === 0) {
-      this.TelephonyDomainService.getCountries().then((res: any) => {
-        _.forEach(_.get(res, 'content.data'), (item: any) => {
-          countryId2NameMapping[item.countryId] = item.countryName;
-          countryName2IdMapping[item.countryName] = item.countryId;
-          countryOptions.push({ label: item.countryName, value: item.countryId });
-        });
-      });
-
-      this.gemService.setStorage('countryId2NameMapping', countryId2NameMapping);
-      this.gemService.setStorage('countryName2IdMapping', countryName2IdMapping);
-      this.gemService.setStorage('countryOptions', countryOptions);
-    }
   }
 
   public onOpenRemedyTicket() {
@@ -191,7 +171,7 @@ class GmtdDetails implements ng.IComponentController {
           item.action = _.upperFirst(item.action);
 
           if (item.action === 'Edit_td_move_site') {
-            let moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID + ' to ' + item.objectName;
+            const moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID + ' to ' + item.objectName;
             item.objectName = '';
             item.moveSiteMsg = moveSiteMsg;
             item.action = this.$translate.instant('gemini.cbgs.siteMoved');
@@ -232,7 +212,7 @@ class GmtdDetails implements ng.IComponentController {
     }
     this.TelephonyDomainService.updateTelephonyDomainStatus(this.customerId, this.ccaDomainId, telephonyDomainId, operation)
       .then((res) => {
-        let resJson: any = _.get(res, 'content.data');
+        const resJson: any = _.get(res, 'content.data');
         if (resJson.returnCode) {
           this.Notification.error('gemini.errorCode.genericError');
           this.setButtonStatus('CancelSubmission');
@@ -262,7 +242,7 @@ class GmtdDetails implements ng.IComponentController {
   }
 
   public onSeeAllPhoneNumbers() {
-    let data = this.model;
+    const data = this.model;
     data.customerId = this.customerId;
     data.ccaDomainId = this.ccaDomainId;
     data.region = data.regionId;

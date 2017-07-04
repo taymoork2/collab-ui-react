@@ -5,6 +5,7 @@ import { Notification } from 'modules/core/notifications';
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import { FilteredDeviceViewDataSource } from './filtered-deviceview-datasource';
 import { DeviceMatcher } from './device-matcher';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class DevicesController {
 
@@ -34,23 +35,25 @@ export class DevicesController {
   };
   private gridOptions: any;
 
-  constructor(private $q: ng.IQService,
-              private $state,
-              private $translate: ng.translate.ITranslateService,
-              private $templateCache,
-              private Userservice,
-              private WizardFactory,
-              private FeatureToggleService,
-              private $modal: IToolkitModalService,
-              private Notification: Notification,
-              private DeviceExportService,
-              private ServiceDescriptor,
-              $timeout: ng.ITimeoutService,
-              CsdmDataModelService: ICsdmDataModelService,
-              AccountOrgService,
-              $scope: ng.IScope,
-              CsdmHuronOrgDeviceService,
-              private Authinfo) {
+  constructor(
+    private $q: ng.IQService,
+    private $state,
+    private $translate: ng.translate.ITranslateService,
+    private $templateCache,
+    private Userservice,
+    private WizardFactory,
+    private FeatureToggleService,
+    private $modal: IToolkitModalService,
+    private Notification: Notification,
+    private DeviceExportService,
+    private ServiceDescriptorService: ServiceDescriptorService,
+    $timeout: ng.ITimeoutService,
+    CsdmDataModelService: ICsdmDataModelService,
+    AccountOrgService,
+    $scope: ng.IScope,
+    CsdmHuronOrgDeviceService,
+    private Authinfo,
+  ) {
     this.fetchAsyncSettings();
     this.filteredView = new FilteredView<IDevice>(new FilteredDeviceViewDataSource(CsdmDataModelService, $q),
       new DeviceMatcher(),
@@ -103,7 +106,7 @@ export class DevicesController {
 
     AccountOrgService.getAccount(Authinfo.getOrgId())
       .then((response) => {
-        let hasNoSuspendedLicense = !!_.find(response.data.accounts, {
+        const hasNoSuspendedLicense = !!_.find(response.data.accounts, {
           licenses: [{
             offerName: 'SD',
             status: 'SUSPENDED',
@@ -179,24 +182,24 @@ export class DevicesController {
   }
 
   private fetchAsyncSettings() {
-    let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result: boolean) => {
+    const ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result: boolean) => {
       this.showATA = result;
     });
-    let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature: boolean) => {
+    const hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature: boolean) => {
       this.csdmHybridCallFeature = feature;
     });
-    let getLoggedOnUserPromise = this.fetchDetailsForLoggedInUser();
-    let personalPromise = this.FeatureToggleService.cloudberryPersonalModeGetStatus().then((showPersonal: boolean) => {
-      this.showPersonal = !showPersonal;
+    const getLoggedOnUserPromise = this.fetchDetailsForLoggedInUser();
+    const personalPromise = this.FeatureToggleService.cloudberryPersonalModeGetStatus().then((showPersonal: boolean) => {
+      this.showPersonal = showPersonal;
     });
-    let placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then((feature: boolean) => {
+    const placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then((feature: boolean) => {
       this.csdmHybridCalendarFeature = feature;
     });
-    let anyCalendarEnabledPromise = this.ServiceDescriptor.getServices().then((services) => {
-      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter((service) => {
+    const anyCalendarEnabledPromise = this.ServiceDescriptorService.getServices().then((services) => {
+      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
-      this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter((service) => {
+      this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });
@@ -210,7 +213,7 @@ export class DevicesController {
   }
 
   private fetchDetailsForLoggedInUser() {
-    let userDetailsDeferred = this.$q.defer();
+    const userDetailsDeferred = this.$q.defer();
     this.Userservice.getUser('me', (data) => {
       if (data.success) {
         this.adminUserDetails = {
@@ -236,7 +239,7 @@ export class DevicesController {
   }
 
   public startAddDeviceFlow() {
-    let wizard = this.WizardFactory.create(this.showPersonal ? this.wizardWithPersonal() : this.wizardWithoutPersonal());
+    const wizard = this.WizardFactory.create(this.showPersonal ? this.wizardWithPersonal() : this.wizardWithoutPersonal());
     this.$state.go(wizard.state().currentStateName, {
       wizard: wizard,
     });
@@ -445,13 +448,13 @@ export class DevicesController {
     if (percent === 100) {
       this.exportProgressDialog.close();
       this.exporting = false;
-      let title = this.$translate.instant('spacesPage.export.exportCompleted');
-      let text = this.$translate.instant('spacesPage.export.deviceListReadyForDownload');
+      const title = this.$translate.instant('spacesPage.export.exportCompleted');
+      const text = this.$translate.instant('spacesPage.export.deviceListReadyForDownload');
       this.Notification.success(text, title);
     } else if (percent === -1) {
       this.exportProgressDialog.close();
       this.exporting = false;
-      let warn = this.$translate.instant('spacesPage.export.deviceExportFailedOrCancelled');
+      const warn = this.$translate.instant('spacesPage.export.deviceExportFailedOrCancelled');
       this.Notification.warning(warn);
     }
   }

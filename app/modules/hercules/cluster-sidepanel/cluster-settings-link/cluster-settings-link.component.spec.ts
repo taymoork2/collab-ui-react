@@ -35,8 +35,8 @@ describe('Component: ClusterSettingsLinkComponent  ', () => {
   }
 
   it ('will change state to hds-cluster.settings when the link is clicked', () => {
-    let clusterType = 'hds_app';
-    let clusterId = 'abcd1234';
+    const clusterType = 'hds_app';
+    const clusterId = 'abcd1234';
     initController(clusterType, clusterId);
     expect(ctrl).toBeDefined();
 

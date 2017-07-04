@@ -5,7 +5,6 @@
 'use strict';
 
 describe('Features Controller', function () {
-
   var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, CallPickupGroupService, PhoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService;
   var listOfHGs = getJSONFixture('huron/json/features/huntGroup/hgList.json');
   var hg = getJSONFixture('huron/json/features/huntGroup/oneHg.json');
@@ -14,18 +13,18 @@ describe('Features Controller', function () {
     return data;
   };
   var getHGListFailureResp = {
-    'data': 'Internal Server Error',
-    'status': 500,
-    'statusText': 'Internal Server Error',
+    data: 'Internal Server Error',
+    status: 500,
+    statusText: 'Internal Server Error',
   };
   var huntGroups = [{
-    'cardName': 'Technical Support',
-    'numbers': ['5076', '4145551244'],
-    'memberCount': 2,
-    'id': 'abcd1234-abcd-abcd-abcddef123456',
-    'featureName': 'huronHuntGroup.hg',
-    'filterValue': 'HG',
-    'toggle': 'huronHuntGroup',
+    cardName: 'Technical Support',
+    numbers: ['5076', '4145551244'],
+    memberCount: 2,
+    id: 'abcd1234-abcd-abcd-abcddef123456',
+    featureName: 'huronHuntGroup.hg',
+    filterValue: 'HG',
+    toggle: 'huronHuntGroup',
   }, {
     cardName: 'Marketing',
     numbers: ['5076', '13026824905', '4145551244', '4145551245'],
@@ -91,7 +90,6 @@ describe('Features Controller', function () {
       Log: Log,
       Notification: Notification,
     });
-
   }));
 
   //TODO: re-enable after feature toggles are removed
@@ -160,7 +158,6 @@ describe('Features Controller', function () {
       deleteFeatureType: 'HG',
     });
     expect(featureCtrl.listOfFeatures).not.toEqual(jasmine.arrayContaining([huntGroups[0]]));
-
   });
 
   //TODO : re-enable when feature toggle is removed

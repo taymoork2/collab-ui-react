@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function CareReportsService($translate, CareReportsGraphService, chartColors) {
-
     var today = true;
 
     function dummifyGraph(chartConfig) {
@@ -199,9 +198,9 @@
       valueAxes[0].title = $translate.instant('careReportsPage.taskTimeLabel');
 
       var pattern = {
-        "url": "line_pattern.png",
-        "width": 14,
-        "height": 14,
+        url: 'line_pattern.png',
+        width: 14,
+        height: 14,
       };
 
       var queueGraph = {
@@ -267,9 +266,9 @@
       valueAxes[0].title = $translate.instant('careReportsPage.tasks');
 
       var pattern = {
-        "url": "line_pattern.png",
-        "width": 14,
-        "height": 14,
+        url: 'line_pattern.png',
+        width: 14,
+        height: 14,
       };
 
       var inQueueGraph = {
@@ -330,7 +329,7 @@
       categoryAxis.startOnAxis = true;
       categoryAxis.title = categoryAxisTitle;
 
-      var legend = "";
+      var legend = '';
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = $translate.instant('careReportsPage.csatRating');

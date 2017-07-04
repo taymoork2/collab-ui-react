@@ -3,7 +3,7 @@ import testModule from '../index';
 describe('Component: gmTdDetails', () => {
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', '$state', '$modal', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService', '$modal');
+    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', '$state', '$modal', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService', '$modal');
 
     initSpies.apply(this);
     this.$stateParams.info = {
@@ -13,6 +13,8 @@ describe('Component: gmTdDetails', () => {
   });
 
   beforeAll(function () {
+    this.preData = getJSONFixture('gemini/common.json');
+
     this.preData = {
       links: [],
       content: {
@@ -130,24 +132,26 @@ describe('Component: gmTdDetails', () => {
     spyOn(this.$state, 'go');
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorResponse');
-    // spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
     spyOn(this.$modal, 'open').and.returnValue(this.fakeModal);
     spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getNotes').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.resolve());
-    spyOn(this.TelephonyDomainService, 'getCountries').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'updateTelephonyDomainStatus').and.returnValue(this.$q.resolve());
   }
 
   function initComponent() {
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
+    this.$httpBackend.flush();
+
     this.$state.current.data = {};
     this.compileComponent('gmTdDetails', { $scope: this.$scope });
     this.$scope.$apply();
   }
 
   function setParameter(key, value) {
-    let preData = {
+    const preData = {
       links: [],
       content: {
         health: { code: 200, status: 'OK' },
@@ -162,10 +166,8 @@ describe('Component: gmTdDetails', () => {
 
     it('should watch', function () {
       spyOn(this.$scope, '$on').and.callThrough();
-      let currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
-      let countries = setParameter.call(this, 'content.data.body', this.countries);
+      const currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(countries));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(currentTD));
 
       initComponent.call(this);
@@ -212,7 +214,7 @@ describe('Component: gmTdDetails', () => {
     });
 
     it('Should return correct data for TelephonyDomainService.getTelephonyDomain', function () {
-      let Element = '.gm-td-side-panel .feature-name';
+      const Element = '.gm-td-side-panel .feature-name';
       this.preData.content.data.body = this.telephonyDomain;
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.preData ));
@@ -260,9 +262,8 @@ describe('Component: gmTdDetails', () => {
 
 
     it('Should call onSeeAllPhoneNumbers when click the phone numbers section in page', function () {
-      let currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
+      const currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(this.countries));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(currentTD));
 
       initComponent.call(this);
@@ -271,10 +272,8 @@ describe('Component: gmTdDetails', () => {
     });
 
     it('OnEdit', function () {
-      let currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
-      let countries = setParameter.call(this, 'content.data.body', this.countries);
+      const currentTD = setParameter.call(this, 'content.data.body', this.telephonyDomain);
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(countries));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(currentTD));
 
       this.gemService.setStorage('currentTelephonyDomain', { region: 'US' });
@@ -333,7 +332,6 @@ describe('Component: gmTdDetails', () => {
 
     it('Should cancel submission successfully', function () {
       this.preData.content.data.body = this.telephonyDomain;
-      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(this.countries));
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.preData ));
       this.preData.content.data.returnCode = 0;
@@ -352,7 +350,6 @@ describe('Component: gmTdDetails', () => {
     it('Should open the modal dialog to confirm submission cancellation when cancel request', function () {
       this.preData.content.data.body = this.telephonyDomain;
       this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getCountries.and.returnValue(this.$q.resolve(this.countries));
       this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.preData ));
       this.preData.content.data.returnCode = 0;
       this.TelephonyDomainService.updateTelephonyDomainStatus.and.returnValue(this.$q.resolve( this.preData ));

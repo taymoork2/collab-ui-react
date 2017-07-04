@@ -18,8 +18,8 @@ describe('Directive: crServiceColumnIcon', function () {
     scope = $rootScope.$new();
     scope.mockData = getJSONFixture('core/json/customers/customer.json');
 
-    spyOn(Authinfo, 'getOrgId').and.returnValue("partner-org-id");
-    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("partner@company.com");
+    spyOn(Authinfo, 'getOrgId').and.returnValue('partner-org-id');
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
   }));
 
   function compileDirective(columnType) {

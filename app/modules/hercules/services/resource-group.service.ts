@@ -67,7 +67,7 @@ export class ResourceGroupService {
       .get<IReleaseChannelsResponse>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/channels`)
       .then(this.extractDataFromResponse)
       .then((data: IReleaseChannelsResponse) => {
-        let allowedChannels: string[] = [];
+        const allowedChannels: string[] = [];
         _.forEach(data.releaseChannels, channel => {
           if (channel.entitled) {
             allowedChannels.push(channel.channel);

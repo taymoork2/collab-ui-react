@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function DeviceUsageSplunkMetricsService(LogMetricsService) {
-
     var eventTypes = {
       fullReportDownload: 'FULLREPORTDOWNLOAD',
       timeRangeSelected: 'TIMERANGESELECTED',

@@ -1,7 +1,6 @@
 'use strict';
 
 var UtilizationPage = function () {
-
   this.overAllUtilization = element(by.model('average'));
 
   this.assertPage = function (page) {
@@ -29,7 +28,6 @@ var UtilizationPage = function () {
   this.assertAvgResourceUtilizationLsHundred = function () {
     expect(this.overAllUtilization).toBeLessThanOrEqualTo(100);
   };
-
 };
 
 module.exports = UtilizationPage;

@@ -9,11 +9,11 @@
   function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, EnterprisePrivateTrunkService, HybridServicesClusterService, HybridServicesClusterStatesService, Notification, ResourceGroupService, WizardFactory, hasCucmSupportFeatureToggle, hasEnterprisePrivateTrunkingFeatureToggle) {
     var vm = this;
     var groupsCache = [];
+    var showCucmClusters = hasCucmSupportFeatureToggle && Authinfo.isEntitled(Config.entitlements.fusion_khaos);
     vm.displayedGroups = _.cloneDeep(groupsCache);
 
     Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST);
 
-    vm.showCucmClusters = hasCucmSupportFeatureToggle && Authinfo.isEntitled(Config.entitlements.fusion_khaos);
     vm.loading = true;
     vm.backState = 'services-overview';
     vm.openAllGroups = false;
@@ -115,7 +115,7 @@
         },
         {
           targetType: 'ucm_mgmt',
-          display: vm.showCucmClusters,
+          display: showCucmClusters,
           unassigned: _.filter(response.unassigned, { targetType: 'ucm_mgmt' }),
         },
         {
@@ -163,7 +163,7 @@
           count: 0,
         });
       }
-      if (vm.showCucmClusters) {
+      if (showCucmClusters) {
         filters.push({
           name: $translate.instant('hercules.fusion.list.cucm'),
           filterValue: 'ucm_mgmt',

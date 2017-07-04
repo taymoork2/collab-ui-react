@@ -2,7 +2,7 @@
 
 /* global jasmine, browser, _ */
 
-var HttpsProxyAgent = require("https-proxy-agent");
+var HttpsProxyAgent = require('https-proxy-agent');
 var fs = require('fs');
 var appConfig = require('./config/config');
 var hostnameConfig = require('./app/config/hostname.config');
@@ -10,8 +10,6 @@ var processEnvUtil = require('./utils/processEnvUtil')();
 var args = require('yargs').argv;
 var _ = require('lodash');
 var remote = require('selenium-webdriver/remote');
-
-var gatingSuites = _.chain(appConfig.e2eSuites).omit('huron').values().value();
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
@@ -23,7 +21,6 @@ var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
 var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
-var WORKAROUND_PASS_SPEC = 'test/e2e-protractor/workaround/always_pass_spec.js';
 
 var maxInstances;
 if (process.env.SAUCE__MAX_INSTANCES) {
@@ -35,10 +32,11 @@ if (process.env.SAUCE__MAX_INSTANCES) {
 }
 
 exports.config = {
-  framework: "jasmine2",
+  framework: 'jasmine2',
 
   suites: _.extend({}, appConfig.e2eSuites, {
-    jenkins: gatingSuites,
+    jenkins: _.values(appConfig.e2eSuites),
+    huron: appConfig.functionalSuites.huron,
   }),
 
   sauceUser: process.env.SAUCE__USERNAME,
@@ -97,6 +95,8 @@ exports.config = {
     }
     global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
+
+    global.provisionerKeepCustomer = !!args.provisionerKeepCustomer;
 
     var jasmineReporters = require('jasmine-reporters');
     var SpecReporter = require('jasmine-spec-reporter');
@@ -241,11 +241,6 @@ exports.config = {
         };
         this.jasmineDone = function () {
           if (hasFailure) {
-            if (!fs.existsSync(E2E_FAIL_RETRY)) {
-              // Sauce Labs Ticket 39647 - individual spec exits with error code 100
-              // TODO: temporary - need to run more than one spec at a time
-              fs.appendFileSync(E2E_FAIL_RETRY, WORKAROUND_PASS_SPEC + NEWLINE);
-            }
             fs.appendFileSync(E2E_FAIL_RETRY, testFile + NEWLINE);
           }
         };
@@ -294,12 +289,13 @@ exports.config = {
 };
 
 function Logger() {
-  var lastLogMessage = '';
+  var lastLogMessage;
   var lastLogMessageCount = 0;
 
-  function log(message) {
+  function log() {
     if (log.verbose || args.verbose) {
-      if (lastLogMessage === message) {
+      var message = Array.prototype.slice.call(arguments);
+      if (_.isEqual(lastLogMessage, message)) {
         lastLogMessageCount++;
       } else {
         if (lastLogMessage && lastLogMessageCount) {
@@ -307,7 +303,7 @@ function Logger() {
         }
         lastLogMessage = message;
         lastLogMessageCount = 0;
-        console.log(message);
+        console.log.apply(console.log, arguments);
       }
     }
   }

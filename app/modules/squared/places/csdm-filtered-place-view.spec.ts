@@ -7,7 +7,7 @@ describe('Class: FilteredView', () => {
 
   let test: any = {};
 
-  let serverSideSearchRes = {
+  const serverSideSearchRes = {
     url1: { displayName: 'abc', devices: [{}, {}] },
     url2: { displayName: 'abcd' },
     url3: { displayName: 'abcde', devices: [{}, {}] },
@@ -31,7 +31,7 @@ describe('Class: FilteredView', () => {
     test.$rootScope = undefined;
   });
 
-  let initController = (bigOrg: boolean) => {
+  const initController = (bigOrg: boolean) => {
     spyOn(test.CsdmDataModelService, 'isBigOrg').and.returnValue(test.$q.resolve(bigOrg));
     test.controller = new FilteredView(new FilteredPlaceViewDataSource(test.CsdmDataModelService),
       new PlaceMatcher(),

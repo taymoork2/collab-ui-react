@@ -6,8 +6,8 @@
 
   /* @ngInject */
   function DummyCareReportService() {
-    var dayFormat = "MMM DD";
-    var monthFormat = "MMM";
+    var dayFormat = 'MMM DD';
+    var monthFormat = 'MMM';
     var hourFormat = 'HH:mm';
 
     return {
@@ -179,6 +179,5 @@
     function weekFormatter(time, format) {
       return momentFormatter(time.endOf('week'), format);
     }
-
   }
 })();

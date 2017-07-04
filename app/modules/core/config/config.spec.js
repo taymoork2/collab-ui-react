@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Config', function () {
-
   beforeEach(angular.mock.module('Core'));
 
   var Config, $location, tabConfig, LocalStorage;
@@ -42,7 +41,6 @@ describe('Config', function () {
   });
 
   it('should not have development states assigned to Full_Admin role in non-dev mode', function () {
-
     function getDevelopmentStates() {
       var devStates = [];
       for (var i = 0; i < tabConfig.length; i++) {

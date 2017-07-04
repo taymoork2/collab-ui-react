@@ -9,12 +9,11 @@
 
   /* @ngInject */
   function PageParam(LocalStorage) {
-
     var pageParamKey = 'pageParam';
 
     var paramData = {
-      'route': null,
-      'param': {},
+      route: null,
+      param: {},
     };
 
     var parseParam = function () {
@@ -53,6 +52,5 @@
         paramData.param = {};
       },
     };
-
   }
 })();

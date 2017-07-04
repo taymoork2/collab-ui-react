@@ -4,7 +4,8 @@ describe('Component: directoryNumberList', () => {
 
   describe('Line Display: numbers listed correctly', () => {
 
-    let directoryNumbers: Line[] = [
+    const LINE_LABEL = '.line-label';
+    const directoryNumbers: Line[] = [
       {
         uuid: '6d3f07a6-f868-4ae7-990d-286ce033834d',
         internal: '2329',
@@ -27,7 +28,12 @@ describe('Component: directoryNumberList', () => {
 
     beforeEach(function () {
       this.initModules('Huron');
-      this.injectDependencies('$scope');
+      this.injectDependencies(
+        '$scope',
+        '$q',
+        'FeatureToggleService',
+      );
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
       this.$scope.directoryNumbers = directoryNumbers;
       this.compileComponent('directoryNumberList', {
         directoryNumbers: 'directoryNumbers',
@@ -42,7 +48,7 @@ describe('Component: directoryNumberList', () => {
     });
 
     it('should create directory number link with usage type', function () {
-      let firstNumber = this.view.find('li a').first();
+      const firstNumber = this.view.find('li a').first();
 
       expect(firstNumber).toHaveAttr('ui-sref', 'test.state');
       expect(firstNumber).toContainText('2329');
@@ -51,16 +57,20 @@ describe('Component: directoryNumberList', () => {
     });
 
     it('should create directory number link with alt dn pattern', function () {
-      let lastNumber = this.view.find('li a').last();
+      const lastNumber = this.view.find('li a').last();
       expect(lastNumber).toHaveAttr('ui-sref', 'test.state');
       expect(lastNumber).toContainText('5015');
       expect(lastNumber).toContainText('common.or 7100XXXX');
+    });
+
+    it('should display line label - check the first line', function () {
+      expect(this.view.find(LINE_LABEL).get(0)).toContainText('71002329');
     });
   });
 
   describe('Line Display: show more, less lines', () => {
 
-    let directoryNumbers: Line[] = [
+    const directoryNumbers: Line[] = [
       {
         uuid: '6d3f07a6-f868-4ae7-990d-286ce033834d',
         internal: '2329',
@@ -119,7 +129,12 @@ describe('Component: directoryNumberList', () => {
 
     beforeEach(function () {
       this.initModules('Huron');
-      this.injectDependencies('$scope');
+      this.injectDependencies(
+        '$scope',
+        '$q',
+        'FeatureToggleService',
+      );
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
       this.$scope.directoryNumbers = directoryNumbers;
       this.compileComponent('directoryNumberList', {
         directoryNumbers: 'directoryNumbers',

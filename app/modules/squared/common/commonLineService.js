@@ -113,7 +113,6 @@
     }
 
     function assignMapUserList(count, externalNumberMappings, entitylist) {
-
       for (var i = 0; i < entitylist.length; i++) {
         if (i <= externalNumberMappings.length - 1) {
           if (externalNumberMappings[i].directoryNumber !== null) {
@@ -128,7 +127,6 @@
           entitylist[i].didDnMapMsg = 'usersPage.noExternalNumberAvail';
         }
       }
-
     }
 
     function isDnNotAvailable(entitylist) {
@@ -161,6 +159,5 @@
         return externalNumberPool;
       }
     }
-
   }
 })();

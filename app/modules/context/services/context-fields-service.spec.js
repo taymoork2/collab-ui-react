@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: contextFieldsService', function () {
-
   var fieldData;
   var dictionaryUrl = 'https://dictionary.produs1.ciscoccservice.com';
 
@@ -24,15 +23,15 @@ describe('Service: contextFieldsService', function () {
   describe('getfields', function () {
     it('should get fields and verify results', function () {
       fieldData = [
-        { 'classification': 'PII',
-          'dataType': 'string',
-          'searchable': 'false',
-          'publiclyAccessible': true,
-          'translations': { 'en_US': 'Agent ID' },
-          'locales': [],
-          'refUrl': '/dictionary/field/v1/id/Agent_ID',
-          'id': 'Agent_ID',
-          'lastUpdated': '2017-01-23T16:48:50.021Z' }];
+        { classification: 'PII',
+          dataType: 'string',
+          searchable: 'false',
+          publiclyAccessible: true,
+          translations: { en_US: 'Agent ID' },
+          locales: [],
+          refUrl: '/dictionary/field/v1/id/Agent_ID',
+          id: 'Agent_ID',
+          lastUpdated: '2017-01-23T16:48:50.021Z' }];
 
       this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/field/v1/search?q=id:*&maxEntries=1500').respond(200, fieldData);
       this.ContextFieldsService.getFields().then(function (response) {

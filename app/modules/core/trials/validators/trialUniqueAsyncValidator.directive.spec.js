@@ -37,7 +37,6 @@ describe('Validator: TrialUniqueAsyncValidator:', function () {
     };
     this.compileTemplate(this.element);
     this.input = this.$scope.form.something;
-
   });
 
   describe('Input validators', function () {

@@ -1,5 +1,5 @@
 import cmcUserDetailsSettings from './../index';
-import { CmcUserData } from './../cmcUserData';
+import { ICmcUserData } from './../cmc.interface';
 import { IUser } from 'modules/core/auth/user/user';
 
 describe('Component: cmcUserDetailsSettings ', () => {
@@ -17,12 +17,19 @@ describe('Component: cmcUserDetailsSettings ', () => {
       this.injectDependencies(
         'CmcService',
         '$scope',
+        '$q',
       );
 
-      spyOn(this.CmcService, 'getUserData').and.returnValue(<CmcUserData>{
+      spyOn(this.CmcService, 'getUserData').and.returnValue(<ICmcUserData>{
         entitled: true,
         mobileNumber: '+471234',
       });
+      spyOn(this.CmcService, 'preCheckOrg').and.returnValue(this.$q.resolve({
+        status: 'ok',
+      }));
+      spyOn(this.CmcService, 'preCheckUser').and.returnValue(this.$q.resolve({
+        status: 'ok',
+      }));
     });
 
     function initComponent() {
@@ -37,7 +44,7 @@ describe('Component: cmcUserDetailsSettings ', () => {
       this.controller.$onInit();
 
       // Has to title sections
-      let element = this.view.find(TITLE_ROW);
+      const element = this.view.find(TITLE_ROW);
       expect(element.get(0)).toExist();
       expect(element.get(1)).toExist();
     });
@@ -110,13 +117,35 @@ describe('Component: cmcUserDetailsSettings ', () => {
 
       this.injectDependencies(
         '$componentController',
-        'CmcService');
+        'CmcService',
+        '$q');
 
       this.controller = this.$componentController('cmcUserDetailsSettings', {
         CmcService: this.CmcService,
       }, {
         user: dummyUser(),
       });
+    });
+
+    it('handles error from user save', function(done) {
+      spyOn(this.CmcService, 'setUserData').and.returnValue(
+        this.$q.reject({
+          data: {
+            message: 'ERROR',
+          },
+        }),
+      );
+      spyOn(this.CmcService, 'getUserData').and.returnValue({
+        entitled: false,
+        mobileNumber: '111',
+      });
+      this.controller.$onInit();
+      this.controller.mobileNumber = '222';
+      this.controller.entitled = true;
+      this.controller.save();
+      expect(this.controller.oldCmcUserData.mobileNumber).toEqual('111');
+      expect(this.controller.oldCmcUserData.entitled).toBeFalsy();
+      done();
     });
 
     it('has entitlement and mobile number', function (done) {
@@ -158,11 +187,10 @@ describe('Component: cmcUserDetailsSettings ', () => {
       });
     });
 
-
   });
 
   function dummyUser(): IUser {
-    let user: IUser = <IUser> {
+    const user: IUser = <IUser> {
       meta: {
         organizationID: '1234',
       },

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Component: hsUpgradeScheduleConfiguration', function () {
-  var $scope, $q, $compile, $rootScope, HybridServicesClusterService, view;
+  var $scope, $q, $compile, $rootScope, HybridServicesClusterService, Notification, view;
 
   afterEach(function () {
     if (view) {
@@ -80,11 +80,14 @@ describe('Component: hsUpgradeScheduleConfiguration', function () {
     it('should call postponeUpgradeSchedule and then fetch latest data when postponing', function () {
       $scope.clusterId = '123';
       var controller = initController($scope);
-      controller.postpone({
+      var eventMock = {
         preventDefault: function () {},
-      });
+      };
+      controller.postpone(eventMock);
       expect(HybridServicesClusterService.postponeUpgradeSchedule.calls.count()).toBe(1);
       expect(HybridServicesClusterService.get.calls.count()).toBe(1);
+      $scope.$apply();
+      expect(Notification.success.calls.count()).toBe(1);
     });
 
     it('should set the option to "everyDay" if all days are selected', function () {
@@ -117,18 +120,20 @@ describe('Component: hsUpgradeScheduleConfiguration', function () {
     });
   }
 
-  function dependencies(_$rootScope_, _$q_, _$compile_, _HybridServicesClusterService_) {
+  function dependencies(_$rootScope_, _$q_, _$compile_, _HybridServicesClusterService_, _Notification_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $compile = _$compile_;
     $q = _$q_;
     HybridServicesClusterService = _HybridServicesClusterService_;
+    Notification = _Notification_;
     spyOn(HybridServicesClusterService, 'get').and.returnValue($q.resolve({
       upgradeSchedule: upgradeScheduleMock,
     }));
     spyOn(HybridServicesClusterService, 'postponeUpgradeSchedule').and.returnValue($q.resolve());
     spyOn(HybridServicesClusterService, 'setUpgradeSchedule').and.returnValue($q.resolve());
     spyOn(HybridServicesClusterService, 'deleteMoratoria').and.returnValue($q.resolve());
+    spyOn(Notification, 'success');
     spyOn($rootScope, '$broadcast').and.callThrough();
   }
 

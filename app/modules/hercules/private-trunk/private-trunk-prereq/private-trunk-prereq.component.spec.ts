@@ -1,5 +1,6 @@
 import privateTrunkPrereqModule from './index';
-describe('Component: PrivateTrunkPrereq component', () => {
+
+describe('Component: PrivateTrunkPrereq component', function () {
   const PRIVATE_TRUNK_PREREQ_TITLE = '#prereqTitle';
   const PRIVATE_TRUNK_PREREQ_DESC = '#prereqDesc';
   const ERROR_ICON = '.icon-error';
@@ -7,20 +8,17 @@ describe('Component: PrivateTrunkPrereq component', () => {
   const BUTTON_CLOSE = 'button.btn.btn-primary';
   const UL_DOMAINLIST = 'ul.domain-list li';
 
-  let verifiedDomain: Array<string> = [ 'verified1.ept.org', 'verified2.ept.org' ];
+  const verifiedDomain: string[] = [ 'verified1.ept.org', 'verified2.ept.org' ];
 
   beforeEach(function() {
     this.initModules(privateTrunkPrereqModule);
-    this.injectDependencies(
-      '$scope',
-      '$q',
-      'PrivateTrunkPrereqService',
-    );
+    this.injectDependencies('$scope', '$q', 'PrivateTrunkPrereqService', 'FeatureToggleService');
+
     this.getVerifiedDomainsDefer = this.$q.defer();
     spyOn(this.PrivateTrunkPrereqService, 'getVerifiedDomains').and.returnValue(this.getVerifiedDomainsDefer.promise);
-    this.compileComponent('privateTrunkPrereq', {
-    });
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
 
+    this.compileComponent('privateTrunkPrereq', { });
   });
 
   it('should have a title, description, close button', function () {
@@ -40,4 +38,13 @@ describe('Component: PrivateTrunkPrereq component', () => {
     expect(this.view.find(CHECK_ICON)).toExist();
   });
 
+  // 2017 name change
+  it('should display new help text based on atlas2017NameChangeGetStatus', function () {
+    expect(this.view.text()).toContain('servicesOverview.cards.privateTrunk.defaultTrustHelp');
+    expect(this.view.text()).not.toContain('servicesOverview.cards.privateTrunk.defaultTrustHelpNew');
+
+    this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+    this.compileComponent('privateTrunkPrereq', { });
+    expect(this.view.text()).toContain('servicesOverview.cards.privateTrunk.defaultTrustHelpNew');
+  });
 });

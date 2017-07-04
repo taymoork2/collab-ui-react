@@ -3,7 +3,6 @@
 /*global TIMEOUT, deleteTrialUtils*/
 
 describe('Remove partner trials from partner org page', function () {
-
   var accessToken;
 
   it('should login as an partner admin', function () {
@@ -16,7 +15,7 @@ describe('Remove partner trials from partner org page', function () {
     _.times(25, deleteCurrentPage);
 
     function deleteCurrentPage(i) {
-      var query = "Atlas_Test_UI";
+      var query = 'Atlas_Test_UI';
 
       it('should select trials matching "' + query + '"', function () {
         utils.sendKeys(partner.searchFilter, query + protractor.Key.ENTER);

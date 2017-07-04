@@ -15,7 +15,7 @@ describe('DomainManageDeleteCtrl', () => {
     DomainManagementService = _DomainManagementService_;
   }));
 
-  let controllerFactory = (domain, user?) => {
+  const controllerFactory = (domain, user?) => {
 
     if (!user) {
       user = { email: 'user@same.domain', domain: 'same.domain' };
@@ -28,14 +28,14 @@ describe('DomainManageDeleteCtrl', () => {
   };
 
   it('constructor should create the ctrl and set domain', () => {
-    let ctrl = controllerFactory({ text: 'test.example.com' });
+    const ctrl = controllerFactory({ text: 'test.example.com' });
     expect(ctrl.domain).toBe('test.example.com');
   });
 
   it('with a pending domain should not set showWarning if enforce is on', () => {
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = true;
-    let ctrl = controllerFactory({ text: 'test.example.com', status: 'pending' });
+    const ctrl = controllerFactory({ text: 'test.example.com', status: 'pending' });
     expect(ctrl.showWarning).toBeFalsy();
   });
 
@@ -50,7 +50,7 @@ describe('DomainManageDeleteCtrl', () => {
       status: DomainManagementService.states.verified,
     }];
 
-    let ctrl = controllerFactory({ text: 'same.domain', status: 'verified' });
+    const ctrl = controllerFactory({ text: 'same.domain', status: 'verified' });
     expect(ctrl.showWarning).toBeFalsy();
     expect(ctrl.error).toBeFalsy();
   });
@@ -66,7 +66,7 @@ describe('DomainManageDeleteCtrl', () => {
       status: DomainManagementService.states.claimed,
     }];
 
-    let ctrl = controllerFactory({ text: 'same.domain', status: 'verified' });
+    const ctrl = controllerFactory({ text: 'same.domain', status: 'verified' });
     expect(ctrl.showWarning).toBeFalsy();
     expect(ctrl.error).toBeFalsy();
   });
@@ -86,7 +86,7 @@ describe('DomainManageDeleteCtrl', () => {
       status: DomainManagementService.states.pending,
     }];
 
-    let ctrl = controllerFactory({ text: 'same.domain', status: 'verified' });
+    const ctrl = controllerFactory({ text: 'same.domain', status: 'verified' });
     expect(ctrl.showWarning).toBeFalsy();
     expect(ctrl.error).toBeFalsy();
   });
@@ -94,7 +94,7 @@ describe('DomainManageDeleteCtrl', () => {
   it('with a pending domain should not set showWarning if enforce is off', () => {
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = false;
-    let ctrl = controllerFactory({ text: 'test.example.com', status: 'pending' });
+    const ctrl = controllerFactory({ text: 'test.example.com', status: 'pending' });
     expect(ctrl.showWarning).toBeFalsy();
   });
 
@@ -112,14 +112,14 @@ describe('DomainManageDeleteCtrl', () => {
       token: '',
       status: DomainManagementService.states.verified,
     }];
-    let ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
+    const ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
     expect(ctrl.showWarning).toBeTruthy();
   });
 
   it('with a non pending domain should not set showWarning if enforce is off', () => {
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = false;
-    let ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
+    const ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
     expect(ctrl.showWarning).toBeFalsy();
   });
 
@@ -138,7 +138,7 @@ describe('DomainManageDeleteCtrl', () => {
       status: DomainManagementService.states.verified,
     }];
 
-    let ctrl = controllerFactory({ text: 'same.domain', status: DomainManagementService.states.verified });
+    const ctrl = controllerFactory({ text: 'same.domain', status: DomainManagementService.states.verified });
 
     expect(ctrl.error).toBe('domainManagement.delete.preventLockoutError');
   });
@@ -148,13 +148,13 @@ describe('DomainManageDeleteCtrl', () => {
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = false;
 
-    let ctrl = controllerFactory({ text: 'same.domain', status: 'not-pending' });
+    const ctrl = controllerFactory({ text: 'same.domain', status: 'not-pending' });
 
     expect(ctrl.error).toBeUndefined();
   });
 
   it('delete a verified domain should invoke unverifyDomain on service', () => {
-    let ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
+    const ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
     DomainManagementService.unverifyDomain = jasmine.createSpy('unverifyDomain').and.returnValue($q.resolve());
 
     ctrl.deleteDomain();
@@ -164,7 +164,7 @@ describe('DomainManageDeleteCtrl', () => {
   });
 
   it('delete a claimed domain should invoke unclaimDomain on service', () => {
-    let ctrl = controllerFactory({ text: 'test.example.com', status: 'claimed' });
+    const ctrl = controllerFactory({ text: 'test.example.com', status: 'claimed' });
     DomainManagementService.unclaimDomain = jasmine.createSpy('unclaimDomain').and.returnValue($q.resolve());
 
     ctrl.deleteDomain();
@@ -174,7 +174,7 @@ describe('DomainManageDeleteCtrl', () => {
   });
 
   it('delete a non-verified domain should invoke unclaimDomain on service', () => {
-    let ctrl = controllerFactory({ text: 'test.example.com', status: 'not-verified' });
+    const ctrl = controllerFactory({ text: 'test.example.com', status: 'not-verified' });
     DomainManagementService.unclaimDomain = jasmine.createSpy('unclaimDomain').and.returnValue($q.resolve());
 
     ctrl.deleteDomain();
@@ -184,7 +184,7 @@ describe('DomainManageDeleteCtrl', () => {
   });
 
   it('delete a proper pending domain should invoke unverifyDomain on service', () => {
-    let ctrl = controllerFactory({ text: 'test.example.com', status: 'pending' });
+    const ctrl = controllerFactory({ text: 'test.example.com', status: 'pending' });
     DomainManagementService.unclaimDomain = jasmine.createSpy('unclaimDomain').and.returnValue($q.resolve());
     DomainManagementService.unverifyDomain = jasmine.createSpy('unverifyDomain').and.returnValue($q.resolve());
 

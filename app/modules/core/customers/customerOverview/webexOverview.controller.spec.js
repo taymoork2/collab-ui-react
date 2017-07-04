@@ -64,9 +64,6 @@ describe('Controller: WebexOverviewController', function () {
       expect(site.siteUrl).toBe('webex.site.com');
       expect(site.timeZone).toBe('(GMT -10:00) Honolulu');
       expect(site.pending).toBe(true);
-
     });
-
   });
-
 });

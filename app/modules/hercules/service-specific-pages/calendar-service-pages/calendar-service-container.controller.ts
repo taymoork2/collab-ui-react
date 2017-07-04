@@ -1,13 +1,14 @@
 import { ExpresswayContainerController } from '../common-expressway-based/expressway-common-container.controller';
 import { Notification } from 'modules/core/notifications';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class CalendarServiceContainerController extends ExpresswayContainerController {
 
   public tabs: any = [{
-    title: this.$translate.instant('common.resources'),
+    title: 'common.resources',
     state: 'calendar-service.list',
   }, {
-    title: this.$translate.instant('common.settings'),
+    title: 'common.settings',
     state: 'calendar-service.settings',
   }];
 
@@ -34,14 +35,17 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
     private $stateParams: ng.ui.IStateParamsService,
     ClusterService,
     hasPartnerRegistrationFeatureToggle,
+    hasNodesViewFeatureToggle,
     Notification: Notification,
-    private $translate: ng.translate.ITranslateService,
-    ServiceDescriptor,
+    ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,
   ) {
-    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
+    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, hasNodesViewFeatureToggle, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
     this.clusterId = this.$stateParams['clusterId'];
+    if (this.$stateParams['backState']) {
+      this.backState = this.$stateParams['backState'];
+    }
   }
 
 }

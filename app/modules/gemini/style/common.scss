@@ -1,0 +1,209 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/settings/settings-foundation';
+@import '~collab-ui/scss/settings/settings-collab-ui';
+
+.gemServices {
+  .card-icon {
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 0;
+    width: 3rem;
+    height: 3rem;
+    line-height: 3rem;
+    color: $color-white;
+    text-align: center;
+    background-color: $gray-light;
+    border-radius: 50%;
+  }
+
+  .header-with-left-icon {
+    position: relative;
+    height: 3rem;
+    padding-left: 3.5rem;
+    box-sizing: border-box;
+
+    .title {
+      line-height: 3rem;
+    }
+  }
+
+  .callback-groups {
+    padding-left: 3.5rem;
+  }
+
+  .page-option-buttons {
+    position: relative;
+
+    .btn--none {
+      cursor: default;
+    }
+  }
+}
+
+.gemini-side-panel {
+  .side-panel-container {
+    padding-bottom: $ui-padding--huge;
+  }
+
+  .side-panel-sites {
+    .sites-ul {
+      .action-movesite .actions-button {
+        display: none;
+      }
+
+      li:hover {
+        background-color: rgba($gray-lightest, 0.75);
+
+        .action-movesite {
+          .actions-button {
+            padding: 0.625rem $ui-padding;
+            display: block;
+            color: $color-primary-base;
+          }
+        }
+      }
+
+      .actions-services {
+        li {
+          padding: 0.2rem $ui-padding;
+          color: $gray-dark-1;
+        }
+      }
+    }
+  }
+
+  .side-panel-country {
+    .auto-scrollbar {
+      max-height: $toast-width-sm;
+      overflow-y: auto;
+    }
+
+    .edit-country {
+      padding-bottom: $ui-padding--huge;
+    }
+  }
+
+  .side-panel-note {
+    .note-title {
+      padding: $ui-padding--large 0 $toast-padding;
+    }
+  }
+
+  .side-panel-history {
+    .side-panel-section {
+      border-bottom: none;
+    }
+
+    .history-ul {
+      list-style-type: none;
+      margin: 0;
+
+      li {
+        margin-bottom: $toastPossitionBottom;
+
+        h6 {
+          word-wrap: break-word;
+        }
+
+        small {
+          color: $gray-light-1;
+        }
+      }
+    }
+
+    .show-more {
+      a {
+        color: $color-primary-base;
+      }
+    }
+  }
+
+  .button-container {
+    top: auto;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+.gm-header {
+  .page-header__left {
+    flex-grow: 8;
+    width: 1%;
+
+    .page-header__title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.upload-file-box {
+  position: relative;
+
+  .upload-input {
+    position: absolute;
+    top: -10000rem;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+}
+
+.gm-td-header {
+  padding: .5rem 1rem;
+  font-size: .875rem;
+  color: #97989A;
+  font-weight: 500;
+
+  .status {
+    margin-bottom: 3px;
+  }
+
+  .remedyTicket {
+    color: $gray-dark;
+  }
+
+  section {
+    padding-left: 0;
+
+    div {
+      min-height: 1.75rem;
+    }
+  }
+}
+
+.new-field-modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.reveal-modal.full {
+  .modal-header {
+    -ms-flex-basis: 0;
+  }
+
+  .modal-footer {
+    -ms-flex-basis: 0;
+  }
+}
+
+.tooltip.popover {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.side-panel-defaultToll {
+  span {
+    display: inline-block;
+    max-width: 100%;
+  }
+}
+
+.spanBlock {
+  display: inline-block;
+  max-width: 100%;
+}

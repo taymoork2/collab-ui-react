@@ -8,7 +8,6 @@ require('./_organization-list.scss');
 
   /* @ngInject */
   function ListOrganizationsCtrl($scope, $rootScope, $state, $translate, Log, Config, Orgservice) {
-
     //Initialize variables
     $scope.load = true;
     $scope.page = 1;

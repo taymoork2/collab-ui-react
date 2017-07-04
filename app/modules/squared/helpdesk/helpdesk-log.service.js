@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function HelpdeskLogService($q, LogService, HelpdeskMockData, HelpdeskService) {
-
     function searchLogs(term, _searchOptions) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(findLastLog(HelpdeskMockData.logs.search));
@@ -39,10 +38,10 @@
           if (data.metadataList && data.metadataList.length > 0) {
             deferred.resolve(findLastLog(data.metadataList));
           } else {
-            deferred.reject("NoLog");
+            deferred.reject('NoLog');
           }
         } else {
-          deferred.reject("NoLog");
+          deferred.reject('NoLog');
         }
       });
       return deferred.promise;
@@ -59,7 +58,7 @@
         if (data.success) {
           deferred.resolve(data.tempURL);
         } else {
-          deferred.reject("No logfile available");
+          deferred.reject('No logfile available');
         }
       });
       return deferred.promise;
@@ -97,10 +96,8 @@
       downloadLog: downloadLog,
       cleanLogMetadata: cleanLogMetadata,
     };
-
   }
 
   angular.module('Squared')
     .service('HelpdeskLogService', HelpdeskLogService);
-
 }());

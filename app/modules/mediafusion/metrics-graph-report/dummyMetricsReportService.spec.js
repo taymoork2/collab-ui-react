@@ -49,7 +49,6 @@ describe('Controller: Dummy Metrics Reports', function () {
       expect(respomseForLastWeek[0].colorTwo).toBe(chartColors.grayLightTwo);
       expect(responseForLastMonth[0].colorTwo).toBe(chartColors.grayLightTwo);
       expect(responseForLastThreeMonth[0].colorTwo).toBe(chartColors.grayLightTwo);
-
     });
   });
 });

@@ -9,12 +9,12 @@ describe('Controller: AAScheduleModalCtrl', function () {
   var aaModel, aaUiModel, aaModelWithScheduleId, holidays, starttime, endtime, openhours, controller;
 
   var rawCeInfo = {
-    "callExperienceName": "AA1",
-    "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b",
-    "assignedResources": [{
-      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
-      "type": "directoryNumber",
-      "trigger": "incomingCall",
+    callExperienceName: 'AA1',
+    callExperienceURL: 'https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b',
+    assignedResources: [{
+      id: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
+      type: 'directoryNumber',
+      trigger: 'incomingCall',
     }],
   };
 
@@ -104,8 +104,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
       isClosedHours: true,
       isHolidays: false,
     };
-    starttime = "08:00 AM";
-    endtime = "05:00 PM";
+    starttime = '08:00 AM';
+    endtime = '05:00 PM';
 
     openhours = [];
 
@@ -183,7 +183,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
     spyOn(AACommonService, 'saveUiModel');
     AANotificationService = jasmine.createSpyObj('AANotificationService', ['success', 'error']);
     $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
-
   }));
 
   afterEach(function () {
@@ -319,7 +318,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       $scope.$apply();
       expect(controller.timeZoneForm.$setPristine).toHaveBeenCalled();
     });
-
   });
 
   describe('saveSchedule', function () {
@@ -416,7 +414,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
       expect(controller.aaModel.aaRecord.scheduleId).toBeUndefined();
       expect(controller.ui.ceInfo.scheduleId).toBeUndefined();
-
     });
 
     it('should not notify when the CE updatae fails during calendar creation', function () {
@@ -444,7 +441,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(AANotificationService.success.calls.any()).toEqual(false);
       expect($modalInstance.close.calls.any()).toEqual(false);
     });
-
   });
 
   describe('saveTimeZone', function () {
@@ -516,7 +512,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(Analytics.trackEvent).not.toHaveBeenCalled();
       expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(undefined);
     });
-
   });
 
   describe('toggleSection', function () {
@@ -783,7 +778,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       $scope.$apply();
       expect(controller.holidays.length).toEqual(0);
     });
-
   });
 
   describe('forceCheckHoliday', function () {
@@ -1082,13 +1076,13 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('exact date invalid should be false', function () {
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: true,
         date: undefined,
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: true,
         date: '',
       }];
@@ -1097,33 +1091,33 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('not exact date invalid should be false', function () {
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: false,
         month: undefined,
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: true,
         month: '',
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: false,
         month: {},
         rank: undefined,
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: true,
         month: {},
         rank: '',
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: false,
         month: {},
         rank: {},
@@ -1131,7 +1125,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       }];
       expect(controller.isHolidaysSavable()).toBeFalsy();
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: true,
         month: {},
         rank: {},
@@ -1142,7 +1136,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('allDay invalid should be false', function () {
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: true,
         date: '2016-12-25',
         allDay: false,
@@ -1163,7 +1157,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('selected, recurAnnually should be false', function () {
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: true,
         recurAnnually: false,
       }];
@@ -1173,7 +1167,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('unselected, recurAnnually should be true', function () {
       controller.holidays = [{
-        name: "Test",
+        name: 'Test',
         exactDate: false,
         recurAnnually: false,
       }];
@@ -1181,5 +1175,4 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(controller.holidays[0].recurAnnually).toBe(true);
     });
   });
-
 });

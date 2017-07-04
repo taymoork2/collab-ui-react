@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function HelpdeskCardsOrgService($translate, CloudConnectorService, Config, HybridServicesClusterService, HelpdeskHuronService, LicenseService, Notification, UCCService) {
-
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
       return new OrgCard(entitled, licenses, Config.licenseTypes.MESSAGING);
@@ -22,7 +21,7 @@
       HelpdeskHuronService.getOrgSiteInfo(org.id).then(function (site) {
         callCard.voiceMailPrefix = site.siteSteeringDigit + site.siteCode;
         if (_.isEmpty(site.steeringDigit)) {
-          callCard.outboundDialDigit = $translate.instant("helpdesk.none");
+          callCard.outboundDialDigit = $translate.instant('helpdesk.none');
         } else {
           callCard.outboundDialDigit = site.steeringDigit;
         }
@@ -31,9 +30,9 @@
       });
       HelpdeskHuronService.getTenantInfo(org.id).then(function (tenant) {
         if (_.isEmpty(tenant.regionCode)) {
-          callCard.dialing = $translate.instant("helpdesk.dialingPlan.national");
+          callCard.dialing = $translate.instant('helpdesk.dialingPlan.national');
         } else {
-          callCard.dialing = $translate.instant("helpdesk.dialingPlan.local");
+          callCard.dialing = $translate.instant('helpdesk.dialingPlan.local');
           callCard.areaCode = tenant.regionCode;
         }
       });

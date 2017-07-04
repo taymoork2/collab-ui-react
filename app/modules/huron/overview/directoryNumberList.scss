@@ -8,4 +8,10 @@ directory-number-list {
       transition: none;
     }
   }
+
+  .line-label {
+    color: $gray-light-1;
+    font-size: 12px;
+    padding-left: 15px;
+  }
 }

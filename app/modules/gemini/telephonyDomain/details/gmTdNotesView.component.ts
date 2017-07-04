@@ -24,7 +24,7 @@ class GmTdNotesView implements ng.IComponentController {
                      private $translate: ng.translate.ITranslateService,
                      private TelephonyDomainService: TelephonyDomainService,
   ) {
-    let currentTD = this.gemService.getStorage('currentTelephonyDomain');
+    const currentTD = this.gemService.getStorage('currentTelephonyDomain');
     this.customerId = currentTD.customerId;
     this.ccaDomainId = currentTD.ccaDomainId;
 
@@ -47,7 +47,7 @@ class GmTdNotesView implements ng.IComponentController {
   }
 
   public onSave(): void {
-    let postData = {
+    const postData = {
       customerID: this.customerId,
       siteID: this.ccaDomainId,
       action: GmTdNotesView.NOTE_ACTION,
@@ -55,7 +55,7 @@ class GmTdNotesView implements ng.IComponentController {
       objectName: this.newNote,
     };
 
-    let notes = _.get(postData, 'objectName');
+    const notes = _.get(postData, 'objectName');
     if (this.gemService.getByteLength(notes) > GmTdNotesView.MAX_LENGTH_NOTE) {
       this.Notification.error('gemini.cbgs.notes.errorMsg.maxLength', { maxLength: GmTdNotesView.MAX_LENGTH_NOTE });
       return;
@@ -65,7 +65,7 @@ class GmTdNotesView implements ng.IComponentController {
     this.TelephonyDomainService.postNotes(postData).then((res) => {
       this.isSubmitting = false;
 
-      let resJson: any = _.get(res, 'content.data');
+      const resJson: any = _.get(res, 'content.data');
       if (resJson.returnCode) {
         this.Notification.error(this.$translate.instant('gemini.errorCode.genericError'));
         return;

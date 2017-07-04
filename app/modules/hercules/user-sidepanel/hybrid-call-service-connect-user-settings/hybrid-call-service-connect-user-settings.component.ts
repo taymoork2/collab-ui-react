@@ -19,11 +19,11 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
   public newEntitlementValue: boolean | undefined;
 
   public voicemailFeatureToggled: boolean;
+  public userTestToolFeatureToggled: boolean;
 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
-    private $timeout: ng.ITimeoutService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification,
@@ -80,7 +80,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
   public saveData() {
     this.savingPage = true;
 
-    let entitlements: IEntitlementNameAndState[] = [{
+    const entitlements: IEntitlementNameAndState[] = [{
       entitlementName: 'squaredFusionUC',
       entitlementState: 'ACTIVE',
     }, {
@@ -97,18 +97,15 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
         }
         this.newEntitlementValue = undefined;
         this.loadingPage = true;
-        // Waiting a little bit here gives CI and USS the chance to catch up on data sent by Atlas backend
-        this.$timeout(() => {
-          this.getDataFromUSS(this.userId)
-            .then(() => {
-              this.entitlementUpdatedCallback({
-                options: {
-                  callServiceAware: this.userStatusAware,
-                  callServiceConnect: this.userStatusConnect,
-                },
-              });
+        return this.getDataFromUSS(this.userId)
+          .then(() => {
+            this.entitlementUpdatedCallback({
+              options: {
+                callServiceAware: this.userStatusAware,
+                callServiceConnect: this.userStatusConnect,
+              },
             });
-        }, 1500);
+          });
 
       })
       .catch((error) => {
@@ -162,5 +159,6 @@ export class HybridCallServiceConnectUserSettingsComponent implements ng.ICompon
     userEmailAddress: '<',
     entitlementUpdatedCallback: '&',
     voicemailFeatureToggled: '<',
+    userTestToolFeatureToggled: '<',
   };
 }

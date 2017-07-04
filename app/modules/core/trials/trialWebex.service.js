@@ -15,13 +15,14 @@
   }
 
   /* @ngInject */
-  function TrialWebexService($http, Config, UrlConfig, WebexOrderStatusResource, Notification) {
+  function TrialWebexService($http, $q, Config, UrlConfig, WebexOrderStatusResource, Notification) {
     var _trialData;
     var service = {
       getData: getData,
       reset: reset,
       validateSiteUrl: validateSiteUrl,
       getTrialStatus: getTrialStatus,
+      provisionWebexSites: provisionWebexSites,
     };
 
     return service;
@@ -59,10 +60,10 @@
           'Content-Type': 'text/plain',
         },
         data: {
-          "isTrial": true,
-          "properties": [{
-            "key": "siteUrl",
-            "value": siteUrl,
+          isTrial: true,
+          properties: [{
+            key: 'siteUrl',
+            value: siteUrl,
           }],
         },
       };
@@ -78,17 +79,26 @@
         };
         var isValid = (data.isValid === 'true');
         return {
-          'isValid': isValid && data.errorCode === '0',
-          'errorCode': errorCodes[data.errorCode] || 'invalidSite',
+          isValid: isValid && data.errorCode === '0',
+          errorCode: errorCodes[data.errorCode] || 'invalidSite',
         };
       }).catch(function (response) {
         Notification.errorResponse(response, 'trialModal.meeting.validationHttpError');
       });
     }
 
+    function provisionWebexSites(payload, subscriptionId) {
+      if (!payload || !_.isString(subscriptionId)) {
+        return $q.reject('Invalid parameters passed to provision WebEx sites');
+      }
+      var webexProvisioningUrl = UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision';
+
+      return $http.post(webexProvisioningUrl, payload);
+    }
+
     function getTrialStatus(trialId) {
       return WebexOrderStatusResource.get({
-        'trialId': trialId,
+        trialId: trialId,
       }).$promise.then(function (data) {
         var orderStatus = data.provOrderStatus !== 'PROVISIONED';
         var timeZoneId = data.timeZoneId && data.timeZoneId.toString();

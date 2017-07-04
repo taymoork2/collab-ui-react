@@ -6,7 +6,6 @@
     .factory('AACommonService', AACommonService);
 
   function AACommonService(AutoAttendantCeMenuModelService) {
-
     var aaSayMessageForm = false;
     var aaPhoneMenuOptions = false;
     var aaCallerInputStatus = false;
@@ -245,13 +244,19 @@
 
         if (isFindSessionVar && key === 'variableName') {
           if (_.has(entry, 'newVariableValue')) {
-            varNames.push(entry.newVariableValue);
+            if (!_.isEmpty(entry.newVariableValue)) {
+              varNames.push(entry.newVariableValue);
+            }
           } else {
-            varNames.push(value);
+            if (!_.isEmpty(value)) {
+              varNames.push(value);
+            }
           }
         }
         if (isFindConditionals && key === 'if') {
-          varNames.push(_.get(value, 'leftCondition', ''));
+          if (!_.isEmpty(value)) {
+            varNames.push(_.get(value, 'leftCondition', ''));
+          }
         }
 
         if (AutoAttendantCeMenuModelService.isCeMenuEntry(value)) {
@@ -259,7 +264,6 @@
         }
       });
       return varNames;
-
     }
     function collectThisCeActionValue(ui, isFindSessionVar, isFindConditionals) {
       var varNames = [];
@@ -270,9 +274,7 @@
       });
 
       return varNames;
-
     }
-
   }
 
   /**
@@ -295,12 +297,8 @@
       if (inputAction.key !== selectedKey) {
         _.pull(keys, inputAction.key);
       }
-
     });
 
     return keys;
-
   }
-
-
 })();

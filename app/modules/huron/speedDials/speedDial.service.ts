@@ -19,7 +19,7 @@ export class SpeedDialService {
     private UserServiceCommon,
     private HuronConfig) {
 
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
     this.dialService = <IDialResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:userId/features/:bulk/speeddials', {}, {
@@ -46,7 +46,7 @@ export class SpeedDialService {
   }
 
   public updateSpeedDials(_type: string, _id: string, _list: ISpeedDial[]): ng.IPromise<boolean> {
-    let data: { speedDials: ISpeedDial[] } = {
+    const data: { speedDials: ISpeedDial[] } = {
       speedDials: [],
     };
     _.each(_list, function (sd) {

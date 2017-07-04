@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function CustomVariableService(CeCustomVariableService, CeVariableDependeciesService, Authinfo) {
-
     var service = {
       listCustomVariables: listCustomVariables,
       getVariableDependencies: getVariableDependencies,

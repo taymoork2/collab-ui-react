@@ -16,5 +16,4 @@ describe('Controller: MediaServiceControllerV2', function () {
   it('controller should be defined', function () {
     expect(controller).toBeDefined();
   });
-
 });

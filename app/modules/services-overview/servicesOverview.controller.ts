@@ -15,7 +15,7 @@ import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
-import { ITProPackService }  from 'modules/core/itProPack/itProPack.service';
+import { ProPackService }  from 'modules/core/proPack/proPack.service';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 import { ICluster } from 'modules/hercules/hybrid-services.types';
@@ -23,7 +23,7 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 
 export class ServicesOverviewCtrl {
 
-  private cards: Array<ServicesOverviewCard>;
+  private cards: ServicesOverviewCard[];
 
   /* @ngInject */
   constructor(
@@ -40,7 +40,10 @@ export class ServicesOverviewCtrl {
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
-    private ITProPackService: ITProPackService,
+    private ProPackService: ProPackService,
+    private HDSService,
+    private Notification,
+
   ) {
     this.cards = [
       new ServicesOverviewMessageCard(this.Authinfo),
@@ -53,7 +56,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridCalendarCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
-      new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridDataSecurityCard(this.$state, this.Authinfo, this.Config, this.HDSService, this.HybridServicesClusterStatesService, this.Notification),
       new ServicesOverviewHybridContextCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService, this.HybridServicesClusterStatesService),
       new ServicesOverviewImpCard(this.Authinfo, this.HybridServicesClusterStatesService),
@@ -80,18 +83,14 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('hybridDataSecurityFeatureToggleEventHandler', supports);
       });
 
-    let ItPropackPromises = {
-      hasITProPackEnabled: this.ITProPackService.hasITProPackEnabled(),
-      hasITProPackPurchased: this.ITProPackService.hasITProPackPurchased(),
+    const PropackPromises = {
+      hasProPackEnabled: this.ProPackService.hasProPackEnabled(),
+      hasProPackPurchased: this.ProPackService.hasProPackPurchased(),
     };
-    this.$q.all(ItPropackPromises).then(result => {
-      this.forwardEvent('itProPackEventHandler', result);
+    this.$q.all(PropackPromises).then(result => {
+      this.forwardEvent('proPackEventHandler', result);
     });
 
-    this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
-      .then(supports => {
-        this.forwardEvent('googleCalendarFeatureToggleEventHandler', supports);
-      });
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp)
       .then(supports => {
         this.forwardEvent('atlasHybridImpFeatureToggleEventHandler', supports);
@@ -116,6 +115,11 @@ export class ServicesOverviewCtrl {
       .then(supports => {
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', supports);
       });
+
+    this.FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+    .then(supports => {
+      this.forwardEvent('hI1484FeatureToggleEventhandler', supports);
+    });
 
   }
 
@@ -145,7 +149,7 @@ export class ServicesOverviewCtrl {
     });
   }
 
-  private forwardEvent(handlerName, ...eventArgs: Array<any>) {
+  private forwardEvent(handlerName, ...eventArgs: any[]) {
     _.each(this.cards, function (card) {
       if (_.isFunction(card[handlerName])) {
         card[handlerName].apply(card, eventArgs);
@@ -156,7 +160,7 @@ export class ServicesOverviewCtrl {
   private loadHybridServicesStatuses() {
     this.HybridServicesClusterService.getAll()
       .then((clusterList) => {
-        let servicesStatuses: Array<any> = [
+        const servicesStatuses: any[] = [
           this.HybridServicesClusterService.getStatusForService('squared-fusion-mgmt', clusterList),
           this.HybridServicesClusterService.getStatusForService('squared-fusion-cal', clusterList),
           this.HybridServicesClusterService.getStatusForService('squared-fusion-uc', clusterList),
@@ -186,12 +190,12 @@ export class ServicesOverviewCtrl {
       .then(this.loadSipDestinations);
   }
 
-  private loadSipDestinations = (clusterList: Array<ICluster>) => {
+  private loadSipDestinations = (clusterList: ICluster[]) => {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
       .then((supported: boolean) => {
         if (supported) {
           this.EnterprisePrivateTrunkService.fetch()
-            .then((sipTrunkResources: Array<IPrivateTrunkResource>) => {
+            .then((sipTrunkResources: IPrivateTrunkResource[]) => {
               this.forwardEvent('sipDestinationsEventHandler', sipTrunkResources, clusterList);
             });
         }
@@ -205,7 +209,7 @@ export class ServicesOverviewCtrl {
   }
 
   private getPMRStatus() {
-    let customerAccount = this.Auth.getCustomerAccount(this.Authinfo.getOrgId());
+    const customerAccount = this.Auth.getCustomerAccount(this.Authinfo.getOrgId());
     this.forwardEvent('updatePMRStatus', customerAccount);
   }
 }

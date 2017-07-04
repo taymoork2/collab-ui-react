@@ -13,7 +13,7 @@
         menuId: '@aaMenuId',
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
-        queues: "@aaQueues",
+        queues: '@aaQueues',
       },
       controller: 'AASubmenuCtrl',
       controllerAs: 'aaSubmenu',

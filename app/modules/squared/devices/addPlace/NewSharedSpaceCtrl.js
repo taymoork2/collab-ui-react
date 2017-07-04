@@ -11,7 +11,7 @@
     vm.selected = null;
     vm.radioSelect = null;
     vm.isLoading = false;
-    vm.deviceName = (wizardData.account && wizardData.account.name) || "";
+    vm.deviceName = (wizardData.account && wizardData.account.name) || '';
     vm.isNameValid = function () {
       return vm.deviceName && vm.deviceName.length < 128;
     };

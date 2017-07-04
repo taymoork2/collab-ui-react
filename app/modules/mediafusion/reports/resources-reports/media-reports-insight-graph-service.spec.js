@@ -14,7 +14,6 @@ describe('Service: Media Reports Insight Graph Service', function () {
 
 
   vm.checkForDefined = function (ParticipantsData) {
-
     expect(ParticipantsData).toBeDefined();
   };
 

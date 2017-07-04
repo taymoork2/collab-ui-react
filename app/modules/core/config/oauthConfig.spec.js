@@ -1,13 +1,10 @@
 'use strict';
 
+var testModule = require('./oauthConfig');
+
 describe('OAuthConfig', function () {
-  beforeEach(angular.mock.module('Core'));
-
   var OAuthConfig, $location;
-
-  afterEach(function () {
-    OAuthConfig = $location = undefined;
-  });
+  beforeEach(angular.mock.module(testModule));
 
   beforeEach(inject(function (_$location_, _OAuthConfig_) {
     OAuthConfig = _OAuthConfig_;
@@ -15,34 +12,38 @@ describe('OAuthConfig', function () {
     spyOn($location, 'host');
   }));
 
+  afterEach(function () {
+    OAuthConfig = $location = undefined;
+  });
   var devHost = 'localhost';
   var prodHost = 'admin.ciscospark.com';
   var cfeHost = 'cfe-admin.ciscospark.com';
   var intHost = 'int-admin.ciscospark.com';
-  var scope = encodeURIComponent('webexsquare:admin webexsquare:billing ciscouc:admin Identity:SCIM Identity:Config Identity:Organization Identity:OAuthToken cloudMeetings:login webex-messenger:get_webextoken cloud-contact-center:admin cmc-controller:get_status compliance:spark_conversations_read contact-center-context:pod_read contact-center-context:pod_write spark-admin:people_read spark-admin:people_write spark-admin:customers_read spark-admin:customers_write spark-admin:organizations_read spark-admin:licenses_read spark-admin:logs_read spark:kms');
+  var scope = encodeURIComponent('webexsquare:admin webexsquare:billing ciscouc:admin Identity:SCIM Identity:Config Identity:Organization Identity:OAuthToken cloudMeetings:login webex-messenger:get_webextoken cloud-contact-center:admin cmc-controller:get_status compliance:spark_conversations_read contact-center-context:pod_read contact-center-context:pod_write spark-admin:people_read spark-admin:people_write spark-admin:customers_read spark-admin:customers_write spark-admin:organizations_read spark-admin:licenses_read spark-admin:logs_read spark:kms spark:applications_write spark:applications_read');
 
   var whenCalling = function (fn, arg1, arg2) {
     var hosts = {
-      'dev': devHost,
-      'cfe': cfeHost,
-      'integration': intHost,
-      'prod': prodHost,
+      dev: devHost,
+      cfe: cfeHost,
+      integration: intHost,
+      prod: prodHost,
     };
     return {
       expectUrlToBe: function (obj) {
         _.each(obj, function (expected, env) {
           var host = hosts[env];
           if (!host) {
-            throw new Error("Unknown environment " + env);
+            throw new Error('Unknown environment ' + env);
           }
+
           if (!OAuthConfig[fn]) {
-            throw new Error("Unknown method " + fn);
+            throw new Error('Unknown method ' + fn);
           }
           $location.host.and.returnValue(host);
           var actual = OAuthConfig[fn](arg1, arg2);
 
           if (expected !== actual) {
-            throw new Error("Expected " + fn + " in " + env + " to be '" + expected + "' but it was '" + actual + "'");
+            throw new Error('Expected ' + fn + ' in ' + env + " to be '" + expected + "' but it was '" + actual + "'");
           }
         });
       },
@@ -79,5 +80,14 @@ describe('OAuthConfig', function () {
   it('should return correct logout url', function () {
     var url = OAuthConfig.getLogoutUrl();
     expect(url).toBe('https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=spark&goto=https%3A%2F%2Fadmin.ciscospark.com%2F');
+  });
+
+  it('should return correct revoke access token url', function () {
+    whenCalling('getOAuthRevokeUserTokenUrl', 'random-string', 'random-string').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/tokens?username=',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/tokens?username=',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/tokens?username=',
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/tokens?username=',
+    });
   });
 });

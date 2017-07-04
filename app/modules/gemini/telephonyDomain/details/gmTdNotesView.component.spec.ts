@@ -1,9 +1,13 @@
 import testModule from '../index';
 
 describe('Component: gmTdNotesView', () => {
+  beforeAll(function () {
+    this.preData = getJSONFixture('gemini/common.json');
+  });
+
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', 'Notification', 'gemService', 'TelephonyDomainService');
+    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', 'Notification', 'gemService', 'TelephonyDomainService');
     this.mockData = {
       content: {
         data: {
@@ -46,7 +50,11 @@ describe('Component: gmTdNotesView', () => {
       domainName: 'test0328a',
     });
 
-    let notes: any[] = [];
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
+    this.$httpBackend.flush();
+
+    const notes: any[] = [];
     if (viaHttp) {
       if (httpError) {
         this.TelephonyDomainService.getNotes.and.returnValue(this.$q.reject( { status: 404 } ));

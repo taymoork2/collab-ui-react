@@ -1,8 +1,8 @@
-
 import { SupportSettingComponent } from './supportSetting.component';
 
-import notificationModule from 'modules/core/notifications';
 import featureToggleModule from 'modules/core/featureToggle';
+import proPack from 'modules/core/proPack';
+import notificationModule from 'modules/core/notifications';
 
 export default angular.module('core.settings.support', [
   require('angular-cache'),
@@ -12,8 +12,9 @@ export default angular.module('core.settings.support', [
   require('modules/core/scripts/services/userlist.service'),
   require('modules/core/scripts/services/brand.service'),
   require('modules/webex/webexClientVersions/webexClientVersion.svc'),
-  notificationModule,
   featureToggleModule,
+  proPack,
+  notificationModule,
 ])
   .component('supportSetting', new SupportSettingComponent())
   .name;

@@ -67,8 +67,8 @@
         cs-input
         ng-disabled="!$ctrl.hasVoicemail"
         type="checkbox"
-        id="ckSendToVoicemail"
-        name="ckSendToVoicemail"
+        id="ckSendToVoicemail{{$ctrl.index}}"
+        name="ckSendToVoicemail{{$ctrl.index}}"
         ng-model="$ctrl.fallbackDestination.sendToVoicemail"
         cs-input-label="{{:: 'callPark.voicemailCheckLabel' | translate}}"
         ng-click="$ctrl.onChangeSendToVoicemail()">

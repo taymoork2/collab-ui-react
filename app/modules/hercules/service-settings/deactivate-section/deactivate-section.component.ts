@@ -5,6 +5,7 @@ class DeactivateSectionCtrl implements ng.IComponentController {
   public serviceId: string;
   public localizedServiceName: string;
   public localizedConnectorName: string;
+  public nameChangeEnabled: boolean;
 
   private deactivateModalOptions: any;
   private defaultDeactivateModalOptions: any = {
@@ -22,20 +23,19 @@ class DeactivateSectionCtrl implements ng.IComponentController {
     private $modal,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
   ) {}
 
   public $onInit() {
+    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
+      this.nameChangeEnabled = toggle;
+    });
 
     this.localizedServiceName = this.$translate.instant('hercules.hybridServiceNames.' + this.serviceId);
-
-    if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc') {
-      this.localizedConnectorName = this.$translate.instant(`hercules.connectorNames.${this.serviceId}`);
-    }
-
+    this.localizedConnectorName = this.$translate.instant(`hercules.connectorNames.${this.serviceId}`);
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
-
     const { deactivateModalOptions } = changes;
 
     if (deactivateModalOptions && deactivateModalOptions.currentValue) {
@@ -51,9 +51,7 @@ class DeactivateSectionCtrl implements ng.IComponentController {
       .then(() => {
         this.$state.go('services-overview');
       });
-
   }
-
 }
 
 class DeactivateSectionComponent implements ng.IComponentOptions {

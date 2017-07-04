@@ -2,6 +2,7 @@ import { Notification } from 'modules/core/notifications';
 
 class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
   private $: any;
+  private static readonly MAX_IMPORT: number = 300;
 
   public file: string;
   public onImported: any;
@@ -57,9 +58,18 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
           return;
         }
 
+        // the `lines` value contains the header
+        if (lines.length > GmTdImportNumbersFromCsvCtrl.MAX_IMPORT + 1) {
+          this.Notification.error('gemini.tds.numbers.import.resultMsg.exceedMax',
+            { max: GmTdImportNumbersFromCsvCtrl.MAX_IMPORT });
+          this.setProgress(100);
+          this.isParsing = false;
+          return;
+        }
+
         if (_.isArray(lines) && lines.length > 1 && _.isArray(lines[0])) {
           lines.shift();
-          let items: any[] = this.getItemsFromArray(lines);
+          const items: any[] = this.getItemsFromArray(lines);
           this.onImported({ numbers: items });
         }
       } catch (ex) {
@@ -73,7 +83,7 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
   }
 
   private getItemsFromArray(items: any[]): any[] {
-    let numbers: any[] = [];
+    const numbers: any[] = [];
     let hasError: boolean = false;
     _.forEach(items, (item) => {
       if (item.length < 7) {

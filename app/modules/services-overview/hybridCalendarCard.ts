@@ -13,7 +13,7 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
     buttonClass: 'btn btn--primary',
   };
 
-  private buttons: Array<ICardButton> = [{
+  private buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.hybridCalendar.buttons.resources',
     routerState: 'calendar-service.list',
     buttonClass: 'btn-link',
@@ -23,20 +23,16 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.active) {
       return this.buttons;
     }
     return [this.setupButton];
   }
 
-  public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {
-    this.display = this.Authinfo.isFusionCal() && !(this.Authinfo.isFusionGoogleCal() && hasFeature);
-  }
-
   /* @ngInject */
   public constructor(
-    private Authinfo,
+    Authinfo,
     HybridServicesClusterStatesService: HybridServicesClusterStatesService,
   ) {
     super({
@@ -48,7 +44,6 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
       routerState: 'calendar-service.list',
       service: 'squared-fusion-cal',
     }, HybridServicesClusterStatesService);
-    // Optimistically display it (will be hidden if the org has google calendar feature toggle)
     this.display = Authinfo.isFusionCal() && !Authinfo.isFusionGoogleCal();
   }
 }

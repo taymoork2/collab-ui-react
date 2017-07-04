@@ -20,7 +20,6 @@ describe('Service: AAUtilityService', function () {
   });
 
   describe('CONSTANTS', function () {
-
     it('should test the conditionalArr service value set', function () {
       expect(AAUtilityService.CONSTANTS.js.conditionalArr).toEqual('checks');
     });
@@ -36,11 +35,9 @@ describe('Service: AAUtilityService', function () {
     it('should test the ThisExpression service value set', function () {
       expect(AAUtilityService.CONSTANTS.expressions.ThisExpression).toEqual('ThisExpression');
     });
-
   });
 
   describe('removeEscapeChars', function () {
-
     it('should remove escape characters', function () {
       var string = '\\\'test\\\'';
       var expected = '\'test\'';
@@ -64,7 +61,6 @@ describe('Service: AAUtilityService', function () {
   });
 
   describe('generateFunction', function () {
-
     it('should not fail on undefined condition', function () {
       var condition = undefined;
       var elements = ['test'];
@@ -123,7 +119,6 @@ describe('Service: AAUtilityService', function () {
   });
 
   describe('pullJSPieces', function () {
-
     it('should not fail on undefined expression', function () {
       var string = undefined;
       var expected = { };
@@ -171,7 +166,6 @@ describe('Service: AAUtilityService', function () {
   });
 
   describe('splitOnCommas', function () {
-
     it('should split the string correctly based on quotes and commas', function () {
       var string = '"test0,test1",test2, test3,test4, "test5", "test6, test7", "     ",       "test8 test9 test 10", "test11 "test12" test13"';
       var expected = ['test0,test1', 'test2', 'test3', 'test4', 'test5', 'test6, test7', '     ', 'test8 test9 test 10', 'test11 "test12" test13'];
@@ -206,11 +200,9 @@ describe('Service: AAUtilityService', function () {
       var check = AAUtilityService.splitOnCommas(string);
       expect(check).toEqual(expected);
     });
-
   });
 
   describe('countOccurences', function () {
-
     it('should test for 1 number of chars', function () {
       expect(AAUtilityService.countOccurences('The quick brown fox jumps over the lazy dog', 'z')).toEqual(1);
     });
@@ -221,7 +213,6 @@ describe('Service: AAUtilityService', function () {
   });
 
   describe('addQuotesAroundCommadQuotedValues', function () {
-
     it('should add quotes on comma', function () {
       var string = ',';
       var expected = '","';

@@ -24,7 +24,6 @@
 
     return {
       responseError: function (response) {
-
         if (hasAlreadyRetried(response)) {
           return $q.reject(response);
         }
@@ -72,5 +71,4 @@
       return response.status == 400 && responseContains(response, 'The refresh token provided is expired', 'The requested scope is invalid');
     }
   }
-
 })();

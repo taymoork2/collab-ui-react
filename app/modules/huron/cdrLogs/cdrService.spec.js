@@ -10,12 +10,12 @@ describe('Controller: CdrService', function () {
   var name = 'call0CDR0';
 
   var model = {
-    'searchUpload': 'SEARCH',
-    'startTime': '04:16:06 PM',
-    'endTime': '04:16:06 PM',
-    'startDate': '2015-09-29',
-    'endDate': '2015-09-30',
-    'hitSize': 1,
+    searchUpload: 'SEARCH',
+    startTime: '04:16:06 PM',
+    endTime: '04:16:06 PM',
+    startDate: '2015-09-29',
+    endDate: '2015-09-30',
+    hitSize: 1,
   };
 
   var formDate = function (date, time) {
@@ -30,7 +30,7 @@ describe('Controller: CdrService', function () {
     return returnDate.utc().format();
   };
 
-  describe("browsers: chrome, firefox, and misc - ", function () {
+  describe('browsers: chrome, firefox, and misc - ', function () {
     beforeEach(inject(function (_$httpBackend_, _CdrService_, _Notification_, _Authinfo_, $window) {
       CdrService = _CdrService_;
       Notification = _Notification_;
@@ -81,7 +81,7 @@ describe('Controller: CdrService', function () {
     });
   });
 
-  describe("browsers: IE 10/11 - ", function () {
+  describe('browsers: IE 10/11 - ', function () {
     var win;
 
     beforeEach(inject(function (_CdrService_, $window) {

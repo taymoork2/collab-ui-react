@@ -17,7 +17,7 @@ export class PagingNumberService {
   }
 
   public getNumberSuggestions(hint?: string): ng.IPromise<INumberData[]> {
-    let data: ISearchData = {
+    const data: ISearchData = {
       customerId: this.Authinfo.getOrgId(),
       directorynumber: '',
       order: 'pattern',
@@ -27,7 +27,7 @@ export class PagingNumberService {
     }
     return this.InternalNumberPoolService.query(data).$promise.then(
       (response) => _.map(response, function (dn: any) {
-        let numberData = <INumberData>{
+        const numberData = <INumberData>{
           extension: dn.pattern,
           extensionUUID: dn.uuid,
         };
@@ -41,8 +41,8 @@ export class PagingNumberService {
       customerId: this.Authinfo.getOrgId(),
       pagingId: uuid,
     }).$promise.then(response => {
-      let numbers =  _.map(_.get(response, 'numbers', []), 'number');
-      let numberData: INumberData = <INumberData> {
+      const numbers =  _.map(_.get(response, 'numbers', []), 'number');
+      const numberData: INumberData = <INumberData> {
         extension: undefined,
         extensionUUID: undefined,
       };

@@ -48,5 +48,4 @@ describe('Service: Common  Metrics Graph Service', function () {
       expect(CommonMetricsGraphService.getGanttGraph(dummyData, dummyData, dummyData, dummyData)).toEqual(responseData.getGanttGraph);
     });
   });
-
 });

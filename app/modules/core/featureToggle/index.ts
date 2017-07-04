@@ -1,16 +1,16 @@
 import { DirSyncService, IDirSyncService, IDirectoryConnector } from './dirSync.service';
-let FeatureToggleDirective = require('./featureToggle.directive');
-let FeatureToggleServices = require('./featureToggle.service');
+const FeatureToggleDirective = require('./featureToggle.directive');
+const FeatureToggleServices = require('./featureToggle.service');
 
 export { IDirSyncService, IDirectoryConnector };
 
-let urlConfigModule = require('modules/core/config/urlConfig');
-let authInfoModule = require('modules/core/scripts/services/authinfo');
-let authModule = require('modules/core/auth/auth');
-let orgServiceModule = require('modules/core/scripts/services/org.service');
-let telephonyConfigModule = require('modules/huron/telephony/telephonyConfig');
-let ngResourceModule = require('angular-resource');
-let ngUiRouterModule = require('angular-ui-router');
+const urlConfigModule = require('modules/core/config/urlConfig');
+const authInfoModule = require('modules/core/scripts/services/authinfo');
+const authModule = require('modules/core/auth/auth');
+const orgServiceModule = require('modules/core/scripts/services/org.service');
+const telephonyConfigModule = require('modules/huron/telephony/telephonyConfig');
+const ngResourceModule = require('angular-resource');
+const ngUiRouterModule = require('angular-ui-router');
 
 export default angular
   .module('core.featuretoggle', [

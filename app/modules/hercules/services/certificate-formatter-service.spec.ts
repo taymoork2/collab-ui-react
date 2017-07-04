@@ -11,9 +11,9 @@ describe('Service: CertificateFormatterService', () => {
   describe('formatCerts()', () => {
 
     it('should parse a valid certificate list', () => {
-      let formatted = CertificateFormatterService.formatCerts(getValidCertData());
+      const formatted = CertificateFormatterService.formatCerts(getValidCertData());
       expect(formatted.length).toBe(3);
-      let first = formatted[0];
+      const first = formatted[0];
       expect(first.emailAddress).toBe('swede@example.com');
       expect(first.commonName).toBe('snusfabrikken.swedishcompany.se');
       expect(first.organizationalUnit).toBe('Gothenburg Snus Factory');
@@ -26,8 +26,8 @@ describe('Service: CertificateFormatterService', () => {
     });
 
     it('should provide values as N/A when they are not there', () => {
-      let formatted = CertificateFormatterService.formatCerts([{}]);
-      let first = formatted[0];
+      const formatted = CertificateFormatterService.formatCerts([{}]);
+      const first = formatted[0];
       expect(first.emailAddress).toBe('N/A');
       expect(first.commonName).toBe('N/A');
       expect(first.organizationalUnit).toBe('N/A');
@@ -40,7 +40,7 @@ describe('Service: CertificateFormatterService', () => {
     });
 
     it('should handle values containing a comma', () => {
-      let formatted = CertificateFormatterService.formatCerts([{
+      const formatted = CertificateFormatterService.formatCerts([{
         decoded: {
           subjectDN: 'O="Cisco Systems, Inc."',
         },
@@ -49,7 +49,7 @@ describe('Service: CertificateFormatterService', () => {
     });
 
     it('should handle erroneous input', () => {
-      let formatted = CertificateFormatterService.formatCerts('500: internal server error');
+      const formatted = CertificateFormatterService.formatCerts('500: internal server error');
       expect(formatted.length).toBe(0);
     });
 

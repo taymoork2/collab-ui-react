@@ -15,7 +15,7 @@ describe('Service: AACeDependenciesService', function () {
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
   beforeEach(inject(function (_AACeDependenciesService_, _$httpBackend_, _HuronConfig_) {
@@ -68,5 +68,4 @@ describe('Service: AACeDependenciesService', function () {
       expect(failureSpy).toHaveBeenCalled();
     });
   });
-
 });

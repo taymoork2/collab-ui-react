@@ -2,22 +2,41 @@
 
 describe('Controller: AAAddVariableCtrl', function () {
   var controller, $controller;
-  var $rootScope, $scope;
+  var AutoAttendantCeMenuModelService, AAUiModelService;
+  var $rootScope, $scope, $window;
   var $q;
   var $modal, modal;
-  var $window;
+  var schedule = 'openHours';
+
+  var ui = {
+    openHours: {},
+  };
+
+  var uiMenu = {};
+  var menuEntry = {};
+  var index = '0';
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$modal_, _$window_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$modal_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _$window_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $controller = _$controller_;
-    $window = _$window_;
     $q = _$q_;
     $modal = _$modal_;
+    $window = _$window_;
+    $scope.schedule = schedule;
+    $scope.index = index;
+    AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AAUiModelService = _AAUiModelService_;
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
+    uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
+    ui[schedule] = uiMenu;
+    menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    uiMenu.addEntryAt(index, menuEntry);
 
+    spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
     modal = $q.defer();
   }));
 
@@ -63,19 +82,21 @@ describe('Controller: AAAddVariableCtrl', function () {
     describe('with values ', function () {
       beforeEach(function () {
         scopeElement = {
-          'insertElement': function (string) {
+          insertElement: function (string) {
             return string;
           },
         };
         dynamicElement = {
-          'scope': function () {
+          scope: function () {
             return true;
           },
+          focus: function () {},
         };
         var rangeGetter = function () {
-          return "testRange";
+          return 'testRange';
         };
         spyOn(angular, 'element').and.returnValue(dynamicElement);
+        spyOn(dynamicElement, 'focus');
         spyOn(dynamicElement, 'scope').and.returnValue(scopeElement);
         spyOn(scopeElement, 'insertElement');
         spyOn($window, 'getSelection').and.returnValue({
@@ -97,24 +118,25 @@ describe('Controller: AAAddVariableCtrl', function () {
       });
 
       it('should test the dynamicAdd', function () {
-        controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
-        expect($modal.open).toHaveBeenCalled();
         var variableSelection = {
-          label: "testlabel",
-          value: "testValue",
+          label: 'testVar',
+          value: 'testVal',
         };
         var readAsSelection = {
-          label: "testRead",
-          value: "testReadValue",
+          label: 'testRead',
+          value: 'testValRead',
         };
         var result = {
           variable: variableSelection,
           readAs: readAsSelection,
         };
+        controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
+        expect($modal.open).toHaveBeenCalled();
         modal.resolve(result);
         $scope.$apply();
         expect(dynamicElement.scope).toHaveBeenCalled();
-        expect(scopeElement.insertElement).toHaveBeenCalledWith('test', "testRange");
+        expect(dynamicElement.focus).toHaveBeenCalled();
+        expect(scopeElement.insertElement).toHaveBeenCalledWith('test', 'testRange');
       });
 
       it('should not test the dynamicAdd', function () {
@@ -123,6 +145,7 @@ describe('Controller: AAAddVariableCtrl', function () {
         modal.reject();
         $scope.$apply();
         expect(dynamicElement.scope).not.toHaveBeenCalled();
+        expect(dynamicElement.focus).toHaveBeenCalled();
         expect(scopeElement.insertElement).not.toHaveBeenCalled();
       });
     });

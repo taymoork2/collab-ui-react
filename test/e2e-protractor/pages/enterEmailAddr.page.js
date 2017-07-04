@@ -6,7 +6,7 @@ var EnterEmailAddrPage = function () {
   this.email = element(by.model('enterEmailAddrController.email'));
   this.nextButton = element(by.id('dr-enter-email-addr-next'));
   this.errorMsg = element(by.model('enterEmailAddrController.error'));
-  this.drReferrer = "digitalriver-ZGlnaXRhbHJpdmVy";
+  this.drReferrer = 'digitalriver-ZGlnaXRhbHJpdmVy';
 };
 
 module.exports = EnterEmailAddrPage;

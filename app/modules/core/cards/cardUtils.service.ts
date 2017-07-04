@@ -12,7 +12,7 @@ export class CardUtils {
 
   public resize(delay: number = 0, selector: string = CardUtils.CARD_LAYOUT): void {
     this.$timeout((): void => {
-      let masonryElements = $(selector);
+      const masonryElements = $(selector);
       if (masonryElements.length) {
         const cardlayout = new this.Masonry(masonryElements[0], {
           itemSelector: CardUtils.CARD,

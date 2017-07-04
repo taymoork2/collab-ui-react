@@ -3,7 +3,7 @@ import testModule from '../index';
 describe('Component: gmImportTd', () => {
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', 'gemService', 'Notification', 'TelephonyDomainService');
+    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', 'gemService', 'Notification', 'TelephonyDomainService');
 
     initSpies.apply(this);
   });
@@ -39,20 +39,24 @@ describe('Component: gmImportTd', () => {
     spyOn(this.Notification, 'errorResponse');
     this.$scope.close = jasmine.createSpy('close');
     this.$scope.dismiss = jasmine.createSpy('dismiss');
-    // spyOn(this.gemService, 'getCountries').and.returnValue(this.$q.resolve());
     spyOn(this.gemService, 'getStorage').and.returnValue(this.currentTelephonyDomain);
     spyOn(this.TelephonyDomainService, 'getNumbers').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getRegionDomains').and.returnValue(this.$q.resolve());
   }
 
   function initComponent() {
+    const countries = setParameter.call(this, 'content.data', this.countries);
+    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
+    this.$httpBackend.expectGET(getCountriesUrl).respond(200, countries);
+    this.$httpBackend.flush();
+
     const bindings = { dismiss: 'dismiss()', close: 'close()' };
     this.compileComponent('gmImportTd', bindings);
     this.$scope.$apply();
   }
 
   function setParameter(key, value) {
-    let preData = {
+    const preData = {
       links: [],
       content: {
         health: { code: 200, status: 'OK' },
@@ -72,7 +76,7 @@ describe('Component: gmImportTd', () => {
     });
 
     it('should return correct data when call TelephonyDomainService.getRegionDomains', function () {
-      let data = setParameter.call(this, 'content.data.body', this.regions);
+      const data = setParameter.call(this, 'content.data.body', this.regions);
       this.TelephonyDomainService.getRegionDomains.and.returnValue(this.$q.resolve(data));
 
       initComponent.apply(this);
@@ -83,12 +87,11 @@ describe('Component: gmImportTd', () => {
 
   describe('View: ', () => {
     it('should show grid data when selected one option and click select all checkbox then the Import button should be availabe', function () {
-      let domains, countries, numbers;
-      countries = setParameter.call(this, 'content.data', this.countries);
+      let domains, numbers;
       numbers = setParameter.call(this, 'content.data.body', this.numbers);
       domains = setParameter.call(this, 'content.data.body', this.regions);
 
-      this.gemService.getStorage.and.returnValue(countries);
+      this.gemService.getStorage.and.returnValue({ countryId2NameMapping: { 1: 'Albania', 2: 'Algeria' } });
       this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(numbers));
       this.TelephonyDomainService.getRegionDomains.and.returnValue(this.$q.resolve(domains));
       initComponent.call(this);

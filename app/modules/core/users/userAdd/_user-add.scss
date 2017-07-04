@@ -43,28 +43,29 @@
     padding-bottom: 20px;
   }
 
-  a {
-    .icon.icon-offset-l {
-      margin-left: 6px;
+  .icon-offset-l {
+    margin-left: 3px;
+  }
+
+  .icon-offset-l-6px {
+    margin-left: 6px;
+  }
+
+  .tooltip {
+    font-family: $brand-font-light;
+
+    .c-nub {
+      text-align: center;
+      font-size: 12px;
     }
+  }
 
-    // TODO: add a property in 'tooltip' directive to allow setting tooltip container with w/o need for '!important'
-    .tooltip[popup-class="long-msg"] {
-      width: 227px !important;
+  // TODO: add a property in 'tooltip' directive to allow setting tooltip container with w/o need for '!important'
+  .tooltip[popup-class="long-msg"] {
+    width: 227px !important;
 
-      .radius {
-        border-radius: 2px;
-      }
-      .c-nub {
-        max-width: 227px;
-        text-align: center;
-        font-size: 12px;
-        line-height: 2;
-        padding: 10px 16px 16px 14px;
-      }
-      .nub {
-        display: none;
-      }
+    .c-nub {
+      max-width: 227px;
     }
   }
 }
@@ -482,6 +483,7 @@
 .license-entity-tooltip {
   color: $color-primary-base;
   font-size: 12px;
+  cursor: pointer;
 }
 
 .license-tooltip-html {

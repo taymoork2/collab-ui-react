@@ -7,7 +7,7 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
   public data: any = {};
   public messages: Object;
   public selectPlaceholder: string;
-  public options: Array<Object> = [];
+  public options: Object[] = [];
   public selected = { label: '', value: '' };
 
   /* @ngInject */
@@ -24,7 +24,6 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
   }
 
   public $onInit() {
-    this.getCountries();
     this.getRegions();
     this.messages = {
       customerName: {
@@ -45,7 +44,7 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
   public getRegions() {
     this.TelephonyDomainService.getRegions()
       .then((res) => {
-        let optionsSource: any = _.get(res, 'content.data.body');
+        const optionsSource: any = _.get(res, 'content.data.body');
         this.options = _.map(optionsSource, (item: any) => {
           return { value: item.regionId, label: item.regionName };
         });
@@ -53,25 +52,6 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
       .catch((res) => {
         this.Notification.errorResponse(res, 'gemini.errorCode.genericError');
       });
-  }
-
-  private getCountries(): void {
-    let countryOptions: any = this.gemService.getStorage('countryOptions') || [];
-    let countryId2NameMapping: any = this.gemService.getStorage('countryId2NameMapping') || {};
-    let countryName2IdMapping: any = this.gemService.getStorage('countryName2IdMapping') || {};
-    if (countryOptions.length === 0) {
-      this.TelephonyDomainService.getCountries().then((res: any) => {
-        _.forEach(_.get(res, 'content.data'), (item: any) => {
-          countryId2NameMapping[item.countryId] = item.countryName;
-          countryName2IdMapping[item.countryName] = item.countryId;
-          countryOptions.push({ label: item.countryName, value: item.countryId });
-        });
-      });
-
-      this.gemService.setStorage('countryId2NameMapping', countryId2NameMapping);
-      this.gemService.setStorage('countryName2IdMapping', countryName2IdMapping);
-      this.gemService.setStorage('countryOptions', countryOptions);
-    }
   }
 
   public onNext() {

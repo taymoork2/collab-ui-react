@@ -39,7 +39,7 @@
         }, _.noop);
       }
 
-      angular.element(".helpdesk-details").focus();
+      angular.element('.helpdesk-details').focus();
     }
 
     function isAuthorizedForLog() {

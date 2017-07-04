@@ -27,6 +27,5 @@
         $scope.buttonLabel = $translate.instant('common.ok');
       }
     };
-
   }
 })();

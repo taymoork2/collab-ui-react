@@ -1,5 +1,6 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { HybridServiceId, StatusIndicatorCSSClass } from 'modules/hercules/hybrid-services.types';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 interface IService {
   aclAdminAccount?: string;
@@ -46,7 +47,7 @@ export class CloudConnectorService {
     private $modal: IToolkitModalService,
     private $q: ng.IQService,
     private Authinfo,
-    private ServiceDescriptor,
+    private ServiceDescriptorService: ServiceDescriptorService,
     private UrlConfig,
   ) {}
 
@@ -71,7 +72,7 @@ export class CloudConnectorService {
         return this.$http.post(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${this.serviceId}`, config);
       })
       .then(() => {
-        return this.ServiceDescriptor.enableService(this.serviceId);
+        return this.ServiceDescriptorService.enableService(this.serviceId);
       });
   }
 
@@ -139,7 +140,7 @@ export class CloudConnectorService {
     }
     return this.$http
       .delete(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${this.serviceId}`)
-      .then(() => this.ServiceDescriptor.disableService(this.serviceId));
+      .then(() => this.ServiceDescriptorService.disableService(this.serviceId));
   }
 
   public getProvisioningResultTranslationKey(provisioningResultCode: number): string {

@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function HelpdeskHttpRequestCanceller($q, $timeout) {
-
     var cancelPromises = [];
     var defaultTimeout = 30000;
 

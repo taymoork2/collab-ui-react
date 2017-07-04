@@ -154,7 +154,7 @@
           </div>
           <section ng-if="pstnNumbers.ftHuronFederatedSparkCall">
             <p translate="pstnSetup.newNumbersTabDesc"></p>
-            <pstn-selector
+            <uc-pstn-selector
               search="pstnNumbers.searchCarrierInventory(value, block, quantity, consecutive)"
               search-results="pstnNumbers.model.pstn.searchResults"
               show-advanced-order="pstnNumbers.model.pstn.showAdvancedOrder"
@@ -167,7 +167,7 @@
               simple="{{pstnNumbers.isTrial}}"
               show-no-result="pstnNumbers.model.pstn.showNoResult"
             >
-            </pstn-selector>
+            </uc-pstn-selector>
           </section>
         </cs-tab>
         <cs-tab ng-if="pstnNumbers.showTollFreeNumbers">
@@ -210,7 +210,7 @@
           </div>
           <section ng-if="pstnNumbers.ftHuronFederatedSparkCall">
             <p>{{pstnNumbers.tollFreeTitle}}</p>
-            <pstn-selector
+            <uc-pstn-selector
               search="pstnNumbers.searchCarrierTollFreeInventory(value, block, quantity, consecutive)"
               search-results="pstnNumbers.model.tollFree.searchResults"
               show-advanced-order="pstnNumbers.model.tollFree.showAdvancedOrder"
@@ -222,7 +222,7 @@
               result-change="pstnNumbers.resultChange(change)"
               valid-search="pstnNumbers.model.tollFree.areaCodeOptions"
             >
-            </pstn-selector>
+            </uc-pstn-selector>
           </section>
         </cs-tab>
         <cs-tab ng-if="pstnNumbers.showPortNumbers">

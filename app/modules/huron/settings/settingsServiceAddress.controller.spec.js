@@ -79,5 +79,4 @@ describe('Controller: SettingsServiceAddressCtrl', function () {
     expect(controller.hasValidate()).toEqual(false);
     expect(controller.hasSave()).toEqual(false);
   });
-
 });

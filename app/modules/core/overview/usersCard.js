@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($rootScope, $state, $translate, Config, DirSyncService, ModalService, Orgservice) {
+  function OverviewUsersCard($q, $rootScope, $state, $translate, Config, DirSyncService, ModalService, Orgservice) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -78,11 +78,11 @@
               $rootScope.ssoEnabled = true;
             }
           }
-          DirSyncService.refreshStatus()
-            .finally(function () {
-              card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
-              card.isUpdating = false;
-            });
+          var dirSyncPromise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
+          dirSyncPromise.finally(function () {
+            card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
+            card.isUpdating = false;
+          });
         };
 
         function goToUsersConvert(options) {

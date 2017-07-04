@@ -1,11 +1,11 @@
 import testModule from './index';
 import { SipDomainSettingController } from './sipDomainSetting.controller';
 
-describe('Controller: EnterpriseSettingsCtrl', function () {
+describe('Controller: SipDomainSettingController', function () {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$controller', '$modal', '$rootScope', '$scope', '$timeout', '$translate', '$q', '$window', 'Config',
-      'FeatureToggleService', 'Notification', 'Orgservice', 'ServiceDescriptor', 'SparkDomainManagementService', 'UrlConfig');
+      'FeatureToggleService', 'Notification', 'Orgservice', 'ServiceDescriptorService', 'SparkDomainManagementService', 'UrlConfig');
 
     this.orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
     this.domainSuffix = '.ciscospark.com';
@@ -53,7 +53,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     spyOn(this.UrlConfig, 'getSparkDomainCheckUrl').and.returnValue(this.domainSuffix);
     spyOn(this.$scope, '$emit').and.callThrough();
 
-    let AuthInfo = {
+    const AuthInfo = {
       getOrgId: 'bcd7afcd-839d-4c61-a7a8-31c6c7f016d7',
     };
 
@@ -78,7 +78,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       callback(this.orgServiceJSONFixture.getOrg, 200);
     });
 
-    spyOn(this.ServiceDescriptor, 'isServiceEnabled').and.returnValue(this.$q.resolve(true));
+    spyOn(this.ServiceDescriptorService, 'isServiceEnabled').and.returnValue(this.$q.resolve(true));
 
     this.initController = (): void => {
       this.controller = this.$controller(SipDomainSettingController, {
@@ -110,7 +110,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
 
     it('getOrg call on initialization should be called with correct parameters', function () {
-      let params = {
+      const params = {
         basicInfo: true,
       };
       this.initController();
@@ -207,7 +207,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       DISMISS_DISABLE: 'wizardNextButtonDisable',
     };
 
-    let getForm = function(): any {
+    const getForm = function(): any {
       return {
         sipDomainInput: {
           $setValidity: jasmine.createSpy('$setValidity'),
@@ -487,7 +487,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       });
 
       it('should only call toggleSipForm', function () {
-        this.ServiceDescriptor.isServiceEnabled.and.returnValue(this.$q.resolve(false));
+        this.ServiceDescriptorService.isServiceEnabled.and.returnValue(this.$q.resolve(false));
         spyOn(this.$modal, 'open');
         this.initController();
         spyOn(this.controller, 'toggleSipForm').and.callThrough();

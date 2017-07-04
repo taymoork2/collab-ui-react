@@ -18,12 +18,13 @@
     require('modules/core/l10n').default,
     'core.localize',
     'core.logmetricsservice',
+    'core.meeting-settings',
     require('modules/core/notifications').default,
     require('modules/core/users/userAdd/onboard.module'),
     'core.pageparam',
     'core.previousstate',
     'core.trackingId',
-    'core.itProPack',
+    'core.proPack',
     'core.trial',
     'core.utils',
     'csDonut',
@@ -64,7 +65,9 @@
     require('modules/core/myCompany/mySubscriptions').default,
     require('modules/core/cards').default,
     require('modules/core/customerReports/sparkReports').default,
+    require('modules/core/customerReports/webexReports').default,
     require('modules/core/partnerReports/commonReportServices').default,
+    require('modules/core/partnerReports/reportBMMPBanner').default,
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
     require('modules/core/partnerReports/reportSlider').default,
@@ -81,6 +84,7 @@
     require('modules/core/domainManagement').default,
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,
     require('modules/core/validation').default,
+    require('modules/core/customerReports').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -116,9 +120,9 @@
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
     require('modules/huron/pstn').default,
-    require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
     require('modules/huron/lines/deleteExternalNumber').default,
+    require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
   ])
   .constant('ASTParser', require('acorn'))
@@ -127,28 +131,33 @@
   angular.module('Hercules', [
     'Core',
     'Squared',
-    require('modules/core/users/userAdd/onboard.module'),
     'ngTagsInput',
-    require('modules/hercules/private-trunk/private-trunk-setup').default,
-    require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
-    require('modules/hercules/service-settings/calendar-service-setup').default,
+    require('modules/core/users/userAdd/onboard.module'),
+    require('modules/hercules/cluster-card').default,
+    require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
-    require('modules/hercules/services/hybrid-services-i18n.service').default,
-    require('modules/hercules/services/hybrid-services-cluster-states.service').default,
-    require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/hybrid-services-nodes-page').default,
+    require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
+    require('modules/hercules/private-trunk/private-trunk-setup').default,
+    require('modules/hercules/resource-group-card').default,
+    require('modules/hercules/service-settings/calendar-service-setup').default,
+    require('modules/hercules/services/cluster-service').default,
     require('modules/hercules/services/excel-service').default,
+    require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
-    require('modules/hercules/services/service-descriptor'),
+    require('modules/hercules/services/hybrid-services-i18n.service').default,
+    require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/service-descriptor.service').default,
     require('modules/hercules/services/uss-service'),
-    require('modules/hercules/services/service-descriptor'),
-    require('modules/hercules/cluster-card').default,
-    require('modules/hercules/resource-group-card').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
 
-  angular.module('Ediscovery', ['Core']);
+  angular.module('Ediscovery', [
+    'Core',
+    require('modules/ediscovery/bytes_filter'),
+  ]);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
@@ -205,11 +214,11 @@
     .name;
 
   // require all modules first
-  requireAll(require.context("modules/", true, /\.module\.(js|ts)$/));
+  requireAll(require.context('modules/', true, /\.module\.(js|ts)$/));
   // require all other app files - ignore bootstrap.js, preload.js, newrelic
-  requireAll(require.context("../", true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
+  requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
   // require all other assets
-  requireAll(require.context("../", true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
+  requireAll(require.context('../', true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
 
   function requireAll(requireContext) {
     return requireContext.keys().map(requireContext);

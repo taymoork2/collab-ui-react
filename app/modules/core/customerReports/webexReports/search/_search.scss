@@ -1,0 +1,169 @@
+@import '~collab-ui/scss/settings/colors';
+
+.gemini-side-panel {
+  .feature-arrow {
+    a {
+      color: $gray-dark-2;
+    }
+    i {
+      font-size: 12px;
+    }
+  }
+}
+
+.panel-container {
+  .side-panel-wrapper {
+    .side-panel-section {
+      .success {
+        color: $color-cta-dark;
+      }
+
+      .section-title-row {
+        a {
+          display: block;
+          margin: 0 -25px;
+          padding: 0 25px;
+          width: calc(100% + 50px);
+          height: 2.25rem;
+          line-height: 2.25rem;
+          color: $gray-dark-2;
+
+          &:hover {
+            background-color: $gray-light-4;
+
+            .pull-right {
+              color: $focus-color;
+            }
+          }
+
+          .pull-right {
+            .icon-right-arrow {
+              position: relative;
+              top: 1px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .feature-col ul {
+    margin-left: 0;
+    width: 100%;
+    overflow: hidden;
+    li {
+      width: 30%;
+      height: 40px;
+      float: left;
+      list-style: none;
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.content-container.searchList {
+  position: relative;
+  background: $white;
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
+
+  .gridStyle {
+    margin-top: 20px;
+    height: calc(100vh - 266px) !important;
+  }
+
+  .cs-datapicker-normal {
+    padding-right: 21px !important;
+
+    i.date-selected {
+      color: $gray-light-1;
+    }
+
+    .close {
+      z-index: -1;
+    }
+  }
+
+  .cs-datepicker {
+    box-sizing: border-box;
+    width: 242px;
+  }
+
+  .cs-datepicker .calendar span.day-wrapper span.day.today {
+    color: $color-primary-base;
+  }
+
+  .cs-datepicker .calendar span.day-wrapper span.day.selected-date {
+    color: $white;
+  }
+
+  .meeting-search {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 2rem;
+
+    .searchbox {
+      .searchinput {
+        > input {
+          width: 400px !important;
+          max-width: 400px !important;
+          margin-right: 30px;
+        }
+      }
+    }
+
+    .error {
+      background-color: $color-alerts-lighter;
+      border-color: $color-alerts-base;
+
+      input {
+        background-color: $color-alerts-lighter;
+      }
+    }
+  }
+
+  .search-info {
+    text-align: center;
+    padding-top: 100px;
+    color: $gray-light-2 !important;
+    position: absolute;
+    top: 132px;
+    right: 0;
+    width: 100%;
+
+    h2,
+    h4 {
+      color: $gray-light-2 !important;
+    }
+  }
+
+  .spinner-example--xlarge {
+    font-size: 5rem;
+  }
+
+  .data-span {
+    padding: 0 10px;
+    font-size: 15px;
+    line-height: 35px;
+  }
+
+  .span-flex {
+    position: relative;
+    z-index: 9;
+    display: flex;
+  }
+
+  .data-icon-i {
+    color: $gray-light-1;
+    cursor: pointer;
+    font-size: 30px;
+    line-height: 35px;
+    padding-right: 1rem;
+
+    &.icon-close {
+      font-size: 24px;
+      margin-left: 1rem;
+    }
+  }
+}

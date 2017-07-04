@@ -10,7 +10,7 @@ describe('EditCalendarService component:', () => {
       '$componentController',
       '$rootScope',
       '$httpBackend',
-      'ServiceDescriptor',
+      'ServiceDescriptorService',
       'CsdmDataModelService',
       'ResourceGroupService',
       'USSService',
@@ -36,7 +36,7 @@ describe('EditCalendarService component:', () => {
   describe('init ()', () => {
     describe('where gcal service is not enabled and exchange is enabled', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: false,
         }, {
@@ -50,7 +50,6 @@ describe('EditCalendarService component:', () => {
                 return {
                   data: {
                     account: { entitlements: ['webex-squared', 'spark'] },
-                    atlasHerculesGoogleCalendarFeatureToggle: true,
                   },
                 };
               },
@@ -70,7 +69,7 @@ describe('EditCalendarService component:', () => {
     });
     describe('with gcal service enabled and exchange enabled', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -85,7 +84,6 @@ describe('EditCalendarService component:', () => {
                 return {
                   data: {
                     account: { entitlements: ['webex-squared', 'spark'] },
-                    atlasHerculesGoogleCalendarFeatureToggle: true,
                   },
                 };
               },
@@ -105,7 +103,7 @@ describe('EditCalendarService component:', () => {
     });
     describe('with gcal service enabled and exchange disabled', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -120,7 +118,6 @@ describe('EditCalendarService component:', () => {
                 return {
                   data: {
                     account: { entitlements: ['webex-squared', 'spark'] },
-                    atlasHerculesGoogleCalendarFeatureToggle: true,
                   },
                 };
               },
@@ -146,7 +143,7 @@ describe('EditCalendarService component:', () => {
 
     describe('with editServices as given wizard function', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -174,7 +171,7 @@ describe('EditCalendarService component:', () => {
 
     describe('with normal add place function for wizard', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -203,7 +200,7 @@ describe('EditCalendarService component:', () => {
 
   describe('next', () => {
     beforeEach(() => {
-      spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+      spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
         id: FUSION_GCAL_ENTITLEMENT,
         enabled: true,
       }, {
@@ -225,7 +222,7 @@ describe('EditCalendarService component:', () => {
       state.controller.$onInit();
     });
     describe('with exchange selected', () => {
-      let email = 'test@example.com';
+      const email = 'test@example.com';
       beforeEach(() => {
         state.controller.calService = FUSION_CAL_ENTITLEMENT;
         state.controller.emailOfMailbox = email;
@@ -235,7 +232,7 @@ describe('EditCalendarService component:', () => {
         state.controller.next();
 
         expect(state.wizardData.next).toHaveBeenCalled();
-        let wizardState = state.wizardData.next.calls.mostRecent().args[0];
+        const wizardState = state.wizardData.next.calls.mostRecent().args[0];
 
         expect(wizardState.account.entitlements).toEqual(['webex-squared', 'spark', FUSION_CAL_ENTITLEMENT]);
         expect(wizardState.account.externalCalendarIdentifier).toBeDefined();
@@ -246,7 +243,7 @@ describe('EditCalendarService component:', () => {
     });
 
     describe('with google selected', () => {
-      let email = 'test2@example.com';
+      const email = 'test2@example.com';
       beforeEach(() => {
         state.controller.calService = FUSION_GCAL_ENTITLEMENT;
         state.controller.emailOfMailbox = email;
@@ -256,7 +253,7 @@ describe('EditCalendarService component:', () => {
         state.controller.next();
 
         expect(state.wizardData.next).toHaveBeenCalled();
-        let wizardState = state.wizardData.next.calls.mostRecent().args[0];
+        const wizardState = state.wizardData.next.calls.mostRecent().args[0];
 
         expect(wizardState.account.entitlements).toEqual(['webex-squared', 'spark', FUSION_GCAL_ENTITLEMENT]);
         expect(wizardState.account.externalCalendarIdentifier).toBeDefined();
@@ -283,8 +280,8 @@ describe('EditCalendarService component:', () => {
 
   describe('save', () => {
     beforeEach(() => {
-      let id = 'asvawoei0a';
-      spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+      const id = 'asvawoei0a';
+      spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
         id: FUSION_GCAL_ENTITLEMENT,
         enabled: true,
       }, {
@@ -297,7 +294,6 @@ describe('EditCalendarService component:', () => {
           return {
             data: {
               account: { entitlements: ['webex-squared', 'spark'], cisUuid: id },
-              atlasHerculesGoogleCalendarFeatureToggle: true,
             },
           };
         },
@@ -315,7 +311,7 @@ describe('EditCalendarService component:', () => {
     });
 
     describe('with exchange selected', () => {
-      let email = 'test@example.com';
+      const email = 'test@example.com';
       beforeEach(() => {
 
       });
@@ -329,7 +325,7 @@ describe('EditCalendarService component:', () => {
         test.$rootScope.$digest();
 
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
-        let wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
+        const wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
 
         expect(wizardState[1]).toEqual(['webex-squared', 'spark', FUSION_CAL_ENTITLEMENT]);
         expect(wizardState[4][0].accountGUID).toEqual(email);
@@ -338,7 +334,7 @@ describe('EditCalendarService component:', () => {
     });
 
     describe('with google selected', () => {
-      let email = 'test2@example.com';
+      const email = 'test2@example.com';
       beforeEach(() => {
 
       });
@@ -352,7 +348,7 @@ describe('EditCalendarService component:', () => {
         test.$rootScope.$digest();
 
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
-        let wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
+        const wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
         expect(wizardState[1]).toEqual(['webex-squared', 'spark', FUSION_GCAL_ENTITLEMENT]);
         expect(wizardState[4][0].accountGUID).toEqual(email);
         expect(wizardState[4][0].providerID).toEqual(FUSION_GCAL_ENTITLEMENT);

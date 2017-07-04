@@ -1,16 +1,17 @@
 'use strict';
 
 describe('controller: CbgsCtrl', function () {
-  var $q, $scope, $state, $stateParams, filter, innerFilterSpy, $timeout, $controller, controller, cbgService, Notification;
+  var $q, $scope, $state, $stateParams, filter, innerFilterSpy, $timeout, $controller, controller, cbgService, Notification, $httpBackend, UrlConfig;
   var callbackGroups = getJSONFixture('gemini/callbackGroups.json');
+  var preData = getJSONFixture('gemini/common.json');
   var currentCallbackGroup = {
-    "callbackGroupSites": [],
-    "ccaGroupId": "ff808081552e92e101552efcdb750081",
-    "customerAttribute": null,
-    "customerName": "Test-Feng",
-    "groupName": "CB_11111_Test-Feng",
-    "status": "P",
-    "totalSites": 0,
+    callbackGroupSites: [],
+    ccaGroupId: 'ff808081552e92e101552efcdb750081',
+    customerAttribute: null,
+    customerName: 'Test-Feng',
+    groupName: 'CB_11111_Test-Feng',
+    status: 'P',
+    totalSites: 0,
   };
 
   beforeEach(angular.mock.module('Core'));
@@ -20,14 +21,14 @@ describe('controller: CbgsCtrl', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $scope = $state = filter = innerFilterSpy = $timeout = $controller = controller = cbgService = Notification = undefined;
+    $q = $httpBackend = UrlConfig = $scope = $state = filter = innerFilterSpy = $timeout = $controller = controller = cbgService = Notification = undefined;
   });
 
   afterAll(function () {
     callbackGroups = currentCallbackGroup = undefined;
   });
 
-  function dependencies(_$q_, _$state_, _$timeout_, $rootScope, _$controller_, _$stateParams_, _cbgService_, _Notification_) {
+  function dependencies(_$q_, _$state_, _$httpBackend_, _UrlConfig_, _$timeout_, $rootScope, _$controller_, _$stateParams_, _cbgService_, _Notification_) {
     $q = _$q_;
     $state = _$state_;
     $timeout = _$timeout_;
@@ -36,6 +37,8 @@ describe('controller: CbgsCtrl', function () {
     $controller = _$controller_;
     $stateParams = _$stateParams_;
     Notification = _Notification_;
+    $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
   }
 
   function initSpecs() {
@@ -47,11 +50,14 @@ describe('controller: CbgsCtrl', function () {
     spyOn(cbgService, 'getCallbackGroups').and.returnValue($q.resolve());
   }
 
-
   function initController() {
     $stateParams.companyName = 'CB_11111_Test-Feng';
     $stateParams.customerId = $stateParams.customerId === '' ? $stateParams.customerId : 'ff808081552992ec0155299619cb0001';
-    controller = $controller("CbgsCtrl", { $scope: $scope, $filter: filter, $stateParams: $stateParams });
+
+    var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
+    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+
+    controller = $controller('CbgsCtrl', { $scope: $scope, $filter: filter, $stateParams: $stateParams });
   }
 
   it('should $rootScope.$on execute', function () {

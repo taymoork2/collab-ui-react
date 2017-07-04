@@ -7,26 +7,25 @@
 
   /* @ngInject */
   function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService, QueueHelperService, $q) {
-
     var vm = this;
     vm.queues = [];
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
 
     vm.options = [{
-      "label": $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      "value": "routeToUser",
+      label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+      value: 'routeToUser',
     }, {
-      "label": $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      "value": "routeToVoiceMail",
+      label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+      value: 'routeToVoiceMail',
     }, {
-      "label": $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      "value": "routeToHuntGroup",
+      label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+      value: 'routeToHuntGroup',
     }, {
-      "label": $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      "value": "goto",
+      label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
+      value: 'goto',
     }, {
-      "label": $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
-      "value": "route",
+      label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+      value: 'route',
     }];
 
     vm.selected = {
@@ -37,7 +36,6 @@
     vm.setSelects = setSelects;
 
     function setSelects() {
-
       var val;
 
       /* look for matching action in menuEntries
@@ -55,9 +53,7 @@
             return true;
           }
         }
-
       });
-
     }
 
     /**
@@ -68,11 +64,11 @@
       QueueHelperService.listQueues().then(function (aaQueueList) {
         if (aaQueueList.length > 0) {
           vm.options.push({
-            "label": $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-            "value": 'routeToQueue',
+            label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            value: 'routeToQueue',
           });
           _.each(aaQueueList, function (aaQueue) {
-            var idPos = aaQueue.queueUrl.lastIndexOf("/");
+            var idPos = aaQueue.queueUrl.lastIndexOf('/');
             vm.queues.push({
               description: aaQueue.queueName,
               id: aaQueue.queueUrl.substr(idPos + 1),
@@ -97,8 +93,8 @@
     function setUpFeatureToggles() {
       if (AACommonService.isRouteSIPAddressToggle()) {
         vm.options.push({
-          "label": $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
-          "value": 'routeToSipEndpoint',
+          label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
+          value: 'routeToSipEndpoint',
         });
       }
     }
@@ -114,5 +110,4 @@
 
     activate();
   }
-
 })();

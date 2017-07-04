@@ -4,9 +4,9 @@ describe('Controller: EdiscoveryReportsController', function () {
   beforeEach(angular.mock.module('Ediscovery'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $controller, $q, $scope, $translate, Analytics, Authinfo, controller, EdiscoveryService, TrialService;
+  var $controller, $q, $scope, $translate, Analytics, Authinfo, controller, EdiscoveryService, FeatureToggleService, TrialService;
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$translate_, _Analytics_, _Authinfo_, _EdiscoveryService_, _TrialService_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$translate_, _Analytics_, _Authinfo_, _EdiscoveryService_, _FeatureToggleService_, _TrialService_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     $translate = _$translate_;
@@ -14,18 +14,19 @@ describe('Controller: EdiscoveryReportsController', function () {
     Analytics = _Analytics_;
     Authinfo = _Authinfo_;
     EdiscoveryService = _EdiscoveryService_;
+    FeatureToggleService = _FeatureToggleService_;
     TrialService = _TrialService_;
 
     var promise = $q.resolve({
       reports: {
-        displayName: "test",
-        url: "whatever",
-        id: "12345678",
+        displayName: 'test',
+        url: 'whatever',
+        id: '12345678',
       },
       paging: {
         count: 20,
         limit: 10,
-        next: "n.a",
+        next: 'n.a',
         offset: 0,
       },
     });
@@ -33,10 +34,11 @@ describe('Controller: EdiscoveryReportsController', function () {
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
     spyOn(Authinfo, 'getOrgId');
     spyOn(EdiscoveryService, 'getReports');
+    spyOn(FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue($q.resolve(false));
     spyOn(TrialService, 'getDaysLeftForCurrentUser');
 
     EdiscoveryService.getReports.and.returnValue(promise);
-    Authinfo.getOrgId.and.returnValue("ce8d17f8-1734-4a54-8510-fae65acc505e");
+    Authinfo.getOrgId.and.returnValue('ce8d17f8-1734-4a54-8510-fae65acc505e');
 
 
     controller = $controller('EdiscoveryReportsController', {
@@ -44,7 +46,6 @@ describe('Controller: EdiscoveryReportsController', function () {
       $scope: $scope,
       EdiscoveryService: EdiscoveryService,
     });
-
   }));
 
   afterEach(function () {
@@ -56,14 +57,11 @@ describe('Controller: EdiscoveryReportsController', function () {
   });
 
   describe('Initially', function () {
-
     it('gets reports', function () {
       expect(controller.readingReports).toBeTruthy();
       $scope.$apply();
       expect(EdiscoveryService.getReports.calls.count()).toBe(1);
       expect(controller.readingReports).toBeFalsy();
     });
-
   });
-
 });

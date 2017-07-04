@@ -1,7 +1,6 @@
  'use strict';
 
  describe('Care Feature Service', function () {
-
    var $httpBackend, careFeatureService, templateId, getTemplatesUrl, deleteTemplateUrl;
    var orgId = '123';
 
@@ -18,7 +17,7 @@
 
    beforeEach(angular.mock.module('Sunlight'));
    beforeEach(angular.mock.module(function ($provide) {
-     $provide.value("Authinfo", spiedAuthinfo);
+     $provide.value('Authinfo', spiedAuthinfo);
    }));
 
    beforeEach(inject(function (_$httpBackend_, _CareFeatureList_) {
@@ -26,8 +25,8 @@
      careFeatureService = _CareFeatureList_;
      templateId = '456';
 
-     getTemplatesUrl = new RegExp(".*/organization/" + orgId + "/template" + ".*");
-     deleteTemplateUrl = new RegExp(".*/organization/" + orgId + "/template/" + templateId + ".*");
+     getTemplatesUrl = new RegExp('.*/organization/' + orgId + '/template' + '.*');
+     deleteTemplateUrl = new RegExp('.*/organization/' + orgId + '/template/' + templateId + '.*');
    }));
 
    afterEach(function () {
@@ -84,5 +83,4 @@
      });
      done();
    });
-
  });

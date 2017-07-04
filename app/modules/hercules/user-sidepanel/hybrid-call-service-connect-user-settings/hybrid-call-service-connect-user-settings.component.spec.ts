@@ -3,7 +3,7 @@ import { IUserStatus } from 'modules/hercules/services/hybrid-services-user-side
 
 describe('hybridCallServiceConnectUserSettings', () => {
 
-  let $componentController, $q, $timeout, $scope, ctrl, HybridServiceUserSidepanelHelperService;
+  let $componentController, $q, $scope, ctrl, HybridServiceUserSidepanelHelperService;
 
   beforeEach(angular.mock.module('Hercules'));
 
@@ -15,16 +15,15 @@ describe('hybridCallServiceConnectUserSettings', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$q_, $rootScope, _$timeout_, _HybridServiceUserSidepanelHelperService_) {
+  function dependencies (_$componentController_, _$q_, $rootScope, _HybridServiceUserSidepanelHelperService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = $rootScope;
-    $timeout = _$timeout_;
     HybridServiceUserSidepanelHelperService = _HybridServiceUserSidepanelHelperService_;
   }
 
   function cleanup() {
-    $componentController = ctrl = $scope = $timeout = HybridServiceUserSidepanelHelperService = undefined;
+    $componentController = ctrl = $scope = HybridServiceUserSidepanelHelperService = undefined;
   }
 
   function initSpies() {
@@ -44,7 +43,7 @@ describe('hybridCallServiceConnectUserSettings', () => {
   }
 
   it('should read the Connect status and update internal entitlement data when user is *not* entitled', () => {
-    let callServiceConnectExpectedStatus: IUserStatus = {
+    const callServiceConnectExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-ec',
       entitled: false,
       lastStateChange: 1234,
@@ -58,7 +57,7 @@ describe('hybridCallServiceConnectUserSettings', () => {
   });
 
   it('should read the Connect status and update internal entitlement data when user is entitled', () => {
-    let callServiceConnectExpectedStatus: IUserStatus = {
+    const callServiceConnectExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-ec',
       entitled: true,
       lastStateChange: 1234,
@@ -105,7 +104,7 @@ describe('hybridCallServiceConnectUserSettings', () => {
 
   it('should on save call the callback, after waiting a bit and probing USS for fresh data', () => {
 
-    let callbackSpy = jasmine.createSpy('callback');
+    const callbackSpy = jasmine.createSpy('callback');
 
     const callServiceConnectStatusBefore: IUserStatus = {
       serviceId: 'squared-fusion-uc',
@@ -127,8 +126,7 @@ describe('hybridCallServiceConnectUserSettings', () => {
     initController(callbackSpy);
 
     ctrl.saveData();
-    $timeout.flush(2000);
-    $timeout.verifyNoPendingTasks();
+    $scope.$apply();
 
     expect(HybridServiceUserSidepanelHelperService.getDataFromUSS.calls.count()).toBe(2);
     expect(callbackSpy.calls.count()).toBe(1);

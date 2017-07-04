@@ -18,7 +18,7 @@
   ) {
     $scope.loading = WebExUserSettingsFact.loading;
     // Localize the breadcrumb
-    $state.current.data.displayName = $translate.instant("webexUserSettingLabels.priviligesLable");
+    $state.current.data.displayName = $translate.instant('webexUserSettingLabels.priviligesLable');
     $rootScope.$broadcast('displayNameUpdated');
 
     $scope.webexAdvancedUrl = UrlConfig.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
@@ -26,8 +26,8 @@
     $scope.userEmailParam = $stateParams.currentUser.userName;
 
     var locale = $translate.use();
-    if (locale == "es_CO") { //latin american spanish
-      locale = "es_MX"; //mexican spanish
+    if (locale == 'es_CO') { //latin american spanish
+      locale = 'es_MX'; //mexican spanish
     }
     $scope.localeParam = locale;
 
@@ -96,7 +96,7 @@
 
     //----------------------------------------------------------------------//
 
-    $log.log("Show panel4");
+    $log.log('Show panel4');
 
     $scope.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
   } // WebExUserSettings2Ctrl()
