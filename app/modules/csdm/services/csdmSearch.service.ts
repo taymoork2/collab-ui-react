@@ -1,14 +1,15 @@
 import List = _.List;
-import { Device } from './deviceSearchConverter';
+import { Device, DeviceSearchConverter } from './deviceSearchConverter';
+import IHttpPromise = angular.IHttpPromise;
 
 export class CsdmSearchService {
 
   /* @ngInject */
-  constructor(private $http: ng.IHttpService, private UrlConfig, private Authinfo, private DeviceSearchConverter) {
+  constructor(private $http: ng.IHttpService, private UrlConfig, private Authinfo, private DeviceSearchConverter: DeviceSearchConverter) {
 
   }
 
-  public search(search: SearchObject) {
+  public search(search: SearchObject): IHttpPromise<SearchResult> {
     const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/_search';
     SearchObject.initDefaults(search);
     return this.$http.get<SearchResult>(url + this.constructSearchString(search)).then(data => this.DeviceSearchConverter.convertSearchResult(data));
@@ -18,7 +19,9 @@ export class CsdmSearchService {
     if (!searchObject) {
       return 'empty';
     }
-    const search = _.join(_.map(searchObject, (v: any, k: string) => {
+    const so = _.cloneDeep(searchObject);
+    delete so['tokenizedQuery'];
+    const search = _.join(_.map(so, (v: any, k: string) => {
       return k + '=' + v;
     }), '&');
     if (search && search.length > 0) {

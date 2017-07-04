@@ -1,11 +1,9 @@
 import {
-  Aggregation, Aggregations, CsdmSearchService, SearchObject,
+  Aggregation, Aggregations, BucketData, CsdmSearchService, SearchObject,
   SearchResult,
 } from '../services/csdmSearch.service';
-import head = require('lodash/fp/head');
-import map = require('lodash/fp/map');
-import orderBy = require('lodash/fp/orderBy');
 import { Device } from '../services/deviceSearchConverter';
+import List = _.List;
 
 export class DeviceSearch implements ng.IComponentController {
 
@@ -39,7 +37,7 @@ export class DeviceSearch implements ng.IComponentController {
     this.chartTitle = 'Total:' + data.hits.total;
   }
 
-  private updateGraph(data?: Aggregation, titleField = 'name', valueField = 'value') {
+  private updateGraph(data?: BucketHolder, titleField = 'name', valueField = 'value') {
     const chartData = {
       type: 'pie',
       startDuration: 0,
@@ -70,7 +68,17 @@ export class DeviceSearch implements ng.IComponentController {
         markerSize: 8,
       },
       labelText: '[[title]]:[[value]]',
-      dataProvider: data,
+      dataProvider: data && data.buckets || [],
+      listeners: [{
+        event: 'clickSlice',
+        method: (e) => {
+          if (data) {
+            const search = data.bucketName + ':' + e.dataItem.title;
+            this.search = (this.search ? this.search + ',' : '') + search;
+            this.searchChanged2();
+          }
+        },
+      }],
     };
     // const chartData = this.CommonMetricsGraphService.getDummyPieChart();
     this.chart = AmCharts.makeChart(this.baseChart, chartData);
@@ -82,11 +90,19 @@ export class DeviceSearch implements ng.IComponentController {
     this.searchChanged({ search: this.search });
   }
 
-  private pickAggregate(aggregations: Aggregations) {
-    return _.flowRight(
-      head,
-      map('buckets'),
-      orderBy((a: Aggregation) => a.buckets.length, 'desc'))(aggregations);
+  private pickAggregate(aggregations: Aggregations): BucketHolder {
+    return _.head(_.chain(aggregations)
+      .map((a, k) => {
+        return { bucketName: k, buckets: a.buckets };
+      })
+      .orderBy((a: Aggregation) => a.buckets.length, 'desc')
+      .value());
+    // return _.flowRight(
+    //   head,
+    //   map((a, k) => {
+    //     return { bucketName: k, buckets: a };
+    //   }),
+    //   orderBy((a: Aggregation) => a.buckets.length, 'desc'))(aggregations);
   }
 
   private performSearch(search: string) {
@@ -102,6 +118,11 @@ export class DeviceSearch implements ng.IComponentController {
       this.updateSearchResult();
     });
   }
+}
+
+class BucketHolder {
+  public bucketName: string;
+  public buckets: List<BucketData>;
 }
 
 export class DeviceSearchComponent implements ng.IComponentOptions {

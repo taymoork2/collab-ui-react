@@ -115,7 +115,7 @@ class DeviceList implements ng.IComponentController {
       'diagnosticsEvent',
       'tags',
       'state.readableState',
-      'diagnosticsEvent',
+      'sipUrl',
     ];
 
     device.diagnosticsEvent = _.map(device.diagnosticsEvents, 'type')[0];
@@ -146,9 +146,11 @@ class DeviceList implements ng.IComponentController {
           }
         });
 
-    if (attributeMatches) {
-      return device;
-    }
+    // if (attributeMatches) {
+    device.hasMatch = attributeMatches; //just for linting now.
+    //TODO always returning, might apply back the filter again but backend search for now.
+    return device;
+    // }
   }
 
   public getFilterMatchValue(device, field): string {

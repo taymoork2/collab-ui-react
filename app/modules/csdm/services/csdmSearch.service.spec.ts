@@ -34,6 +34,15 @@ describe('CsdmSearchService', () => {
     });
   });
 
+  describe('perform type and any search', () => {
+    it('should return a data object', function () {
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search?query=type:cloudberry,test&size=20&aggregates=product,connectionStatus,productFamily';
+      this.$httpBackend.expectGET(url).respond(200);
+      this.CsdmSearchService.search(SearchObject.create('product:sx10,any:test'));
+      this.$httpBackend.flush();
+    });
+  });
+
   describe('converting search string', () => {
     it('product:sx10 should give searchObjectWith product=sx10', function () {
       const s = SearchObject.create('product:sx10');
@@ -48,7 +57,13 @@ describe('CsdmSearchService', () => {
       expect(_.get(s, 'tokenizedQuery.product')).toBe('sx10');
       expect(_.get(s, 'tokenizedQuery.any')).toBe('test');
     });
-    it('product:sx10,ip:54,test should give searchObjectWith any=sx10', function () {
+    it('product:sx10,ip:54,test should give searchObjectWith product sx10 ip 54 and any=test', function () {
+      const s = SearchObject.create('product:sx10,ip:54,test');
+      expect(_.get(s, 'tokenizedQuery.product')).toBe('sx10');
+      expect(_.get(s, 'tokenizedQuery.any')).toBe('test');
+      expect(_.get(s, 'tokenizedQuery.ip')).toBe('54');
+    });
+    it('product:sx10,ip:54,any:test should give searchObjectWith product sx10 ip 54 and any=test', function () {
       const s = SearchObject.create('product:sx10,ip:54,test');
       expect(_.get(s, 'tokenizedQuery.product')).toBe('sx10');
       expect(_.get(s, 'tokenizedQuery.any')).toBe('test');

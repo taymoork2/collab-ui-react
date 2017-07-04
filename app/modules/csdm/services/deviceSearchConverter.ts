@@ -8,7 +8,7 @@ export class DeviceSearchConverter {
     this.deviceHelper = new DeviceHelper($translate);
   }
 
-  public convertSearchResult(result: IHttpPromiseCallbackArg<SearchResult>) {
+  public convertSearchResult(result: IHttpPromiseCallbackArg<SearchResult>): IHttpPromiseCallbackArg<SearchResult> {
     if (result.data && result.data.hits && result.data.hits.hits) {
       result.data.hits.hits.forEach(d => Device.convert(this.deviceHelper, d));
     }
@@ -26,6 +26,8 @@ export class Device {
   public productFamily: string;
   public ip: string;
   public state: { readableState: string };
+  private errorCodes: string[];
+  public translatedErrorCodes: { type: string, message: string }[];
 
   constructor(deviceHelper) {
     Device.init(deviceHelper, this);
@@ -39,7 +41,7 @@ export class Device {
     if (device.productFamily === 'Huron' || device.productFamily === 'ATA') {
       Device.initAsHuron(device);
     } else {
-      Device.initAsCloudberry(device);
+      Device.initAsCloudberry(deviceHelper, device);
     }
 
   }
@@ -48,8 +50,10 @@ export class Device {
     device.tags = DeviceHelper.getTags(HuronDeviceHelper.decodeHuronTags(device.description));
   }
 
-  private static initAsCloudberry(device: Device) {
+  private static initAsCloudberry(deviceHelper: DeviceHelper, device: Device) {
     device.tags = DeviceHelper.getTags(device.description);
+    device.translatedErrorCodes = _.map(device.errorCodes, code => deviceHelper.translateErrorCode(code));
+    // this.diagnosticsEvents = deviceHelper.getDiagnosticsEvents(device);
   }
 
   public static convert(deviceHelper, device: object) {

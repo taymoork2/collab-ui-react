@@ -103,6 +103,10 @@ export class DeviceHelper {
     return [];
   }
 
+  public translateErrorCode(errorCode: string) {
+    return this.diagnosticsEventTranslated({ type: errorCode });
+  }
+
   public diagnosticsEventTranslated(e) {
     if (this.isTranslatable('CsdmStatus.errorCodes.' + e.type + '.type')) {
       return {
