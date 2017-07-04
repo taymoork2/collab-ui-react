@@ -47,7 +47,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
       });
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { cluster, resourceGroup } = changes;
     // Best effort to warn the developer that one should not used both cluster and resource-group attributes
     if (cluster && cluster.currentValue && resourceGroup && resourceGroup.currentValue) {

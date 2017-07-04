@@ -29,7 +29,7 @@ class DeviceList implements ng.IComponentController {
     this.initActions();
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { deviceList } = changes;
     if (this.devicesLoaded) {
       this.devicesLoaded.then(() => {

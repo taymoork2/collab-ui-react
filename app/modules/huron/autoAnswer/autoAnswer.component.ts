@@ -25,7 +25,7 @@ export class AutoAnswerCtrl implements ng.IComponentController {
     this.autoAnswerEnabled = false;
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { autoAnswer } = changes;
     if (autoAnswer) {
       this.processPhoneListChange(autoAnswer);
@@ -53,7 +53,7 @@ export class AutoAnswerCtrl implements ng.IComponentController {
     this.change(phoneId, value, this.autoAnswerMode);
   }
 
-  private processPhoneListChange(autoAnswerChanges: ng.IChangesObject): void {
+  private processPhoneListChange(autoAnswerChanges: ng.IChangesObject<any>): void {
     if (_.isUndefined(autoAnswerChanges.currentValue) || _.isNull(autoAnswerChanges.currentValue)) {
       this.autoAnswerNoSupportedPhone = true;
       return;
@@ -79,7 +79,7 @@ export class AutoAnswerCtrl implements ng.IComponentController {
     });
   }
 
-  private setCustomSharedLineMemberWarningMsg(autoAnswerChanges: ng.IChangesObject): void {
+  private setCustomSharedLineMemberWarningMsg(autoAnswerChanges: ng.IChangesObject<any>): void {
     if (_.isUndefined(this.autoAnswerEnabledForSharedLineMemberMsg)) {
       const member: AutoAnswerMember = autoAnswerChanges.currentValue.member;
       if (member && autoAnswerChanges.currentValue.enabledForSharedLineMember) {
@@ -98,7 +98,7 @@ export class AutoAnswerCtrl implements ng.IComponentController {
     }
   }
 
-  private processAutoAnswerSelectionChange(autoAnswerChanges: ng.IChangesObject): void {
+  private processAutoAnswerSelectionChange(autoAnswerChanges: ng.IChangesObject<any>): void {
     if (autoAnswerChanges.currentValue && autoAnswerChanges.currentValue.phones) {
       const autoAnswerPhone: AutoAnswerPhone = _.find(autoAnswerChanges.currentValue.phones as AutoAnswerPhone[], AutoAnswerConst.ENABLED);
       if (autoAnswerPhone) {

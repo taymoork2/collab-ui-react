@@ -35,7 +35,7 @@ class DeactivateSectionCtrl implements ng.IComponentController {
     this.localizedConnectorName = this.$translate.instant(`hercules.connectorNames.${this.serviceId}`);
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { deactivateModalOptions } = changes;
 
     if (deactivateModalOptions && deactivateModalOptions.currentValue) {

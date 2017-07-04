@@ -92,7 +92,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     return _.isEmpty(this.privateTrunkResource.hybridDestination.address);
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { privateTrunkResource } = changes;
 
     if (!_.isUndefined(privateTrunkResource)) {
@@ -100,7 +100,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     }
   }
 
-  public setPrivateTrunkResource(privateTrunkResource: ng.IChangesObject): void {
+  public setPrivateTrunkResource(privateTrunkResource: ng.IChangesObject<any>): void {
     this.privateTrunkResource = _.cloneDeep(privateTrunkResource.currentValue);
     if (!_.isUndefined(this.privateTrunkResource) && !_.isEmpty(this.privateTrunkResource.hybridDestination.name)) {
       this.destinationRadio = DestinationRadioType.HYBRID;

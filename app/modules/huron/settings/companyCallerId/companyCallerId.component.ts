@@ -28,7 +28,7 @@ class CompanyCallerId implements ng.IComponentController {
     this.countryCode = this.PstnModel.getCountryCode();
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       companyCallerId,
       externalNumberOptions,

@@ -51,7 +51,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     }
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId, userEmailAddress,  entitlementUpdatedCallback } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;

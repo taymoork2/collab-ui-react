@@ -54,7 +54,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     }
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
 
     const { cluster, deregisterModalOptions } = changes;
 

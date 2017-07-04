@@ -18,7 +18,7 @@ class RoutingPrefixCtrl implements ng.IComponentController {
     };
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { routingPrefix } = changes;
     if (routingPrefix) {
       if (!routingPrefix.currentValue || _.isNull(routingPrefix.currentValue)) {

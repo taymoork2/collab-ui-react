@@ -13,7 +13,7 @@ class CompanyMediaOnHoldCtrl implements ng.IComponentController {
     private $scope: ng.IScope,
   ) {}
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { companyMoh } = changes;
     if (companyMoh && companyMoh.currentValue === this.companyMoh) {
       this.selected = _.find(this.companyMohOptions, { value: this.companyMoh });

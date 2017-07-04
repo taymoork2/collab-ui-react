@@ -29,7 +29,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
     private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { serviceId } = changes;
     if (serviceId && serviceId.currentValue) {
       this.init(serviceId.currentValue);

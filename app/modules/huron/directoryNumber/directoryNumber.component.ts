@@ -35,7 +35,7 @@ class DirectoryNumber implements ng.IComponentController {
     };
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       internalNumbers,
       externalNumbers,

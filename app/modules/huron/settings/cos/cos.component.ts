@@ -24,7 +24,7 @@ class ClassOfService implements ng.IComponentController {
     this.disableCos();
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { premiumNumbers } = changes;
 
     if (premiumNumbers && premiumNumbers.currentValue) {

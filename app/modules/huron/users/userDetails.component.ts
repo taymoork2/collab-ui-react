@@ -79,7 +79,7 @@ class UserDetails implements ng.IComponentController {
     this.dirsyncEnabled = _.some(details, 'dirsyncEnabled');
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { details } = changes;
     if (details && details.currentValue && _.isArray(details.currentValue)) {
       const detailChanges = <IUserDetailsFeature[]> details.currentValue;

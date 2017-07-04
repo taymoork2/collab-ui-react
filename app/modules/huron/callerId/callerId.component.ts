@@ -46,7 +46,7 @@ class CallerId implements ng.IComponentController {
     this.initCallerId();
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const {
       directLine,
       companyNumbers,

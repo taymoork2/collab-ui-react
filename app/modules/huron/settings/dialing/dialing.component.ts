@@ -33,7 +33,7 @@ class DialingSetupCtrl implements ng.IComponentController {
     this.exampleDialingBaseString = this.$translate.instant('serviceSetupModal.exampleDialing', { dialingExample: exampleDialingStringBase });
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       regionCode,
       steeringDigit,

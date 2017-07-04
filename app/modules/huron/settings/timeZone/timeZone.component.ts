@@ -18,7 +18,7 @@ class TimeZoneCtrl implements ng.IComponentController {
     this.filterPlaceholder = this.$translate.instant('serviceSetupModal.searchTimeZone');
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { timeZone } = changes;
     if (timeZone && timeZone.currentValue) {
       this.selected = _.find(this.timeZoneOptions, { id: this.timeZone });

@@ -25,7 +25,7 @@ class OutboundDialDigitCtrl implements ng.IComponentController {
     }
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       internalNumberRanges,
       steeringDigit,

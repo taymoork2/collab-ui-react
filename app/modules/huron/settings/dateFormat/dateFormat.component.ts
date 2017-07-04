@@ -9,7 +9,7 @@ class HuronDateFormatCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor() { }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { dateFormat } = changes;
     if (dateFormat && dateFormat.currentValue) {
       this.selected = _.find(this.dateFormatOptions, { value: this.dateFormat });

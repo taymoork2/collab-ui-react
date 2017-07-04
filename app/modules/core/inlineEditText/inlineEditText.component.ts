@@ -41,7 +41,7 @@ class InlineEditText implements ng.IComponentController {
     this.determineShowTextLink(this.isTextClickable);
   }
 
-  public $onChanges(changes: { isTextClickable: ng.IChangesObject }): void {
+  public $onChanges(changes: { isTextClickable: ng.IChangesObject<any> }): void {
     if (changes.isTextClickable) {
       this.determineShowTextLink(changes.isTextClickable.currentValue);
     }

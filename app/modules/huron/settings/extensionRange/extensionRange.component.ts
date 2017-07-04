@@ -30,7 +30,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
     };
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { numberRanges } = changes;
 
     if (numberRanges && numberRanges.currentValue) {

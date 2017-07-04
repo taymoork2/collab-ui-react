@@ -26,7 +26,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     this.filterPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       externalNumberOptions,
       site,

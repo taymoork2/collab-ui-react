@@ -16,7 +16,7 @@ class PreferredLanguageCtrl implements ng.IComponentController {
     this.preferredLanguagePlaceholder = this.$translate.instant('serviceSetupModal.preferredLanguagePlaceholder');
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { preferredLanguage } = changes;
     if (preferredLanguage && preferredLanguage.currentValue) {
       this.selected = _.find(this.preferredLanguageOptions, { value: this.preferredLanguage });

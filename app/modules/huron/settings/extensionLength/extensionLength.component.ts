@@ -33,7 +33,7 @@ class ExtensionLengthCtrl implements ng.IComponentController {
     this.buildHelpText();
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { extensionLength, hasVoicemailService } = changes;
 
     if (extensionLength && extensionLength.currentValue) {

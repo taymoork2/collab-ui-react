@@ -38,7 +38,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     this.getCurrentResourceGroup = this.getCurrentResourceGroup.bind(this);
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.loadCluster(clusterId.currentValue);
