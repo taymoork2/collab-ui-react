@@ -33,8 +33,10 @@
             <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V1" />
             <p class="addResourceFQDN" tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}" translate="mediaFusion.add-resource-dialog.yesInfo2"
             />
-            <p ng-if="!redirectResource.nameChangeEnabled" class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3" />
-            <p ng-if="redirectResource.nameChangeEnabled" class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3New" />
+            <p ng-if="!redirectResource.nameChangeEnabled" class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3"
+            />
+            <p ng-if="redirectResource.nameChangeEnabled" class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3New"
+            />
           </div>
           <div class="columns medium-6 inputHostNameForm">
             <input class="cs-input" ng-model="redirectResource.hostName" placeholder="{{'mediaFusion.add-resource-dialog.hostname-placeholder' | translate}} "
@@ -46,8 +48,10 @@
   </div>
   <div ng-show="redirectResource.enableRedirectToTarget">
     <h3>
-      <span ng-if="!redirectResource.nameChangeEnabled" translate="mediaFusion.add-resource-dialog.grant-registration-success-header-old-cluster" translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span>
-      <span ng-if="redirectResource.nameChangeEnabled" translate="mediaFusion.add-resource-dialog.grant-registration-success-header-old-cluster-new" translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span>
+      <span ng-if="!redirectResource.nameChangeEnabled" translate="mediaFusion.add-resource-dialog.grant-registration-success-header-old-cluster"
+        translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span>
+      <span ng-if="redirectResource.nameChangeEnabled" translate="mediaFusion.add-resource-dialog.grant-registration-success-header-old-cluster-new"
+        translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span>
     </h3>
     <br>
     <p>
@@ -68,15 +72,29 @@
           </div>
           <div class="radioDisplay">
             <input cs-input type="radio" ng-model="redirectResource.radio" id="no" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.noProceed' | translate}}"
-              cs-input-help-text="{{'mediaFusion.add-resource-dialog.noProceed-helptext' | translate}}" class="radioNoTranform">
+              class="radioNoTranform">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="myAddResourceDownloadForm">
+      <form name="myAddResourceDownloadForm">
+        <div class="cs-radio-group">
+          <div class="radioDisplay">
+            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="full" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}"
+              cs-input-help-text="{{'mediaFusion.add-resource-dialog.fullOva-helpText' | translate}}" class="radioNoTranform"
+              ng-disabled="redirectResource.radio == 1">
+          </div>
+          <div class="radioDisplay">
+            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="demo" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}"
+              cs-input-help-text="{{'mediaFusion.add-resource-dialog.demoOva-helpText' | translate}}" class="radioNoTranform"
+              ng-disabled="redirectResource.radio == 1">
           </div>
         </div>
       </form>
     </div>
   </div>
   <div ng-show="redirectResource.noProceed">
-    <a target="_self" href="https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova"
-      download="mfusion.ova" />
     <div ng-if="!redirectResource.nameChangeEnabled">
       <h4 translate="mediaFusion.add-resource-dialog.noInfo"></h4>
     </div>
@@ -85,8 +103,11 @@
     </div>
     <br>
     <br>
-    <div>
+    <div ng-show="redirectResource.ovaType == 1">
       <h4 translate="mediaFusion.add-resource-dialog.noRetryInfo"></h4>
+    </div>
+    <div ng-show="redirectResource.ovaType == 0">
+      <h4 translate="mediaFusion.add-resource-dialog.noRetryDemoInfo"></h4>
     </div>
     <div class="addResourceBodyInfo">
       <p>
