@@ -680,7 +680,7 @@
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled from",
     "placeholder-date": "Choose a Day",
-    "hostNameAndId":"Host Name / Host ID",
+    "hostNameAndId": "Host Name / Host ID",
     "siteIdAndName": "Site ID / Site Name",
     "search-info-title": "Search for a meeting",
     "placeholder-text": "Search email or meeting number",
@@ -3109,11 +3109,11 @@
         "succeedDeactivateTrialMode": "Succeeded to Deactivate Trial Mode",
         "deavtivateTrialModeDesc": "Deactivating Hybrid Data Security Service moves encryption key management and other security-related features to the cloud. Deactivating impacts user access to existing data.",
         "hdsModeGetError": "Failed to get HDS mode: ",
-        "selectGroupDesc" : "Directory Synchronization is enabled for this organization. Users in the Active Directory group {{defaultGroup}} will be part of the trial.",
+        "selectGroupDesc": "Directory Synchronization is enabled for this organization. Users in the Active Directory group {{defaultGroup}} will be part of the trial.",
         "selectGroupError": "Directory Synchronization is enabled for this organization, but we can't find a group named {{defaultGroup}} in Active Directory. To start a trial, create this group in AD and perform a synchronization.",
         "noGroupError": "To start an HDS trial, your organization needs a trial group to add users to. Something's gone wrong, and we can't find one. You can try rerunning the HDS Setup Tool (using your existing ISO configuration file) or contact Cisco Support for help.",
-        "groupSizeLimitExceeded" : "Your trial group {{defaultGroup}} has more than 250 users. To start a trial, remove some users from the group in AD and perform a synchronization.",
-        "groupSizeLimitExceededinTrail" : "Your trial group {{defaultGroup}} has more than 250 users. Your key encryption routing might not work correctly for some users. Please remove some users from the group in AD and perform a synchronization."
+        "groupSizeLimitExceeded": "Your trial group {{defaultGroup}} has more than 250 users. To start a trial, remove some users from the group in AD and perform a synchronization.",
+        "groupSizeLimitExceededinTrail": "Your trial group {{defaultGroup}} has more than 250 users. Your key encryption routing might not work correctly for some users. Please remove some users from the group in AD and perform a synchronization."
       },
       "addTrialUsers": {
         "modalTitle": "Add Users to Trial Mode",
@@ -3371,21 +3371,21 @@
     "addAnotherSite": "Add another site",
     "meetingSettings": "Meeting Settings",
     "meetingSettingsDescription": "This step of Service SetUp will help you create one or more WebEx site names. A WebEx site name is the URL people will type into their web browser in order to join the meetings that you are hosting.",
-    "meetingCenterLicensesRemaining":"Meeting Center Licenses Remaining",
+    "meetingCenterLicensesRemaining": "Meeting Center Licenses Remaining",
     "existingWebExTrialSites": "You have the following WebEx site that was part of your free trial, would you like to continue using it?",
     "setupSitesDescription": "Now it's time to choose the URL you will use for each site. This is the URL people will type into their browser in order to join a meeting that you host",
     "keepExistingWebexSites": "Keep your existing WebEx sites?",
     "selectTimeZonePlaceholder": "Select Time Zone",
     "enterSiteNamePlaceholder": "Enter a site name here",
     "enteredSiteNotValid": "The entered site is not valid. Please try another site.",
-    "enterNumberOfLicenses":"Enter number of licenses here",
+    "enterNumberOfLicenses": "Enter number of licenses here",
     "timeZoneSetTo": "Time zone set to {{label}}",
     "licenseCountEquals": "License count = {{licenseCount}}",
     "pleaseEnterSiteName": "Please enter a site name",
     "distributeYourWebExLicenses": "Distribute your licenses between sites",
     "webExServiceWillBeSetup": "Your WebEx service will be setup with the following parameters.",
     "provisioningNotice": "Please Note: Pressing the Save button below will start provisioning and you will not be able to make further changes to WebEx setup.",
-    "pleaseSelectTimeZone":"Please select a Time Zone",
+    "pleaseSelectTimeZone": "Please select a Time Zone",
     "siteName": "Site Name",
     "theseWillBeYourWebExSites": "These will be your {{siteCount}} WebEx sites",
     "thisWillBeYourWebExSite": "This will be your WebEx site",
@@ -5513,14 +5513,14 @@
         "callActivityDesc": "Provides a view of the call activity trend across the organization, showing the calls that were hosted on-premises and calls hosted on the cloud. The calls that overflowed to the cloud are represented as dots on the cloud call graph. Hover over a dot to show the number of calls that overflowed to the cloud at that instance.",
         "calldistributionOrgDesc": "Provides a view of how calls are distributed across the different on-premise clusters in the organization. This information helps an admin plan an organization’s cluster capacity. Calls that cannot be hosted on a specific on-premises cluster are redirected to another on-premise cluster. These redirects are represented as dots on the graph. Hover over a dot to show the number of calls that were redirected from that specific cluster.",
         "calldistributionClusterDesc": "Provides a view of the call activity trend on a specific cluster. This information helps an admin  plan an organization’s cluster capacity. Calls that cannot be hosted on this specific cluster are redirected to another on-premise cluster. These redirects are represented as dots on the graph. Hover over a dot to show the number of calls redirected from this specific cluster at that instance.",
-        "clusterInServiceOrgDesc": "Percentage of clusters that were  in service to host calls over the selected time period. Click any of the clusters in the Cluster Availability graph to directly navigate to the Nodes In Service graph.<br>Green: clusters that have all nodes in service.<br>Yellow: clusters that have 1 or more nodes that are not in service.<br>Red: clusters that have no available nodes in service.",
-        "clusterInServiceClusterDesc": "Percentage of nodes that are in service to host calls over the selected time period.<br>Green: node is in service.<br>Red: node is not in service.",
+        "clusterInServiceOrgDesc": "Number of clusters that were in service to host calls over the selected time period. Click any of the clusters in the Cluster Availability graph to directly navigate to the Nodes In Service graph.<br>Green: clusters that have all nodes in service.<br>Yellow: clusters that have 1 or more nodes that are not in service.<br>Red: clusters that have no available nodes in service.<br>Grey: Data not available.",
+        "clusterInServiceClusterDesc": "Number of nodes that are in service to host calls over the selected time period.<br>Green: node is in service.<br>Red: node is not in service.<br>Grey: Data not available.",
         "meetHostTypeDesc": "Provides a trend of the number of meetings in an organization, based on where the calls were hosted",
         "clientTypeDesc": "Provides usage trend of the various client types that are used in an organization"
       },
       "allOff": "All Off",
       "allOn": "All On",
-      "clusterPartiallyInService":"  Cluster Partially in Service"
+      "clusterPartiallyInService": "  Cluster Partially in Service"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -6391,25 +6391,25 @@
     }
   },
   "locations": {
-      "locationName": "Location Name",
-      "addText": "Add Location",
-      "copyTitle": "Copy Location",
-      "copyDesc": "This location will use the customized setting from the location that you copied.",
-      "deleteTitle": "Delete Location",
-      "deleteDesc": "Are you sure you want to delete location, {{locationName}}?",
-      "cannotDeleteDesc": "This location still has users and places and can not be deleted.",
-      "deleteButton": "OK, Delete it",
-      "deleteFailed": "Failed to Delete Location",
-      "makeDefault": "Make Default",
-      "copyLocation": "Duplicate",
-      "reload": "Reload",
-      "makeDefaultTitle": "Make Default",
-      "makeDefaultDesc": "Are you sure you want to make this location default?  It will be the defualt location for new users or places.",
-      "createLocation": "Create Location",
-      "cancelHeader": "Cancel Location Creation",
-      "cancelDialog": "Are you sure you wish to cancel location creation? This location will not be saved.",
-      "locationDesc": "Give this location a name to identify it.",
-      "locationSelectDesc": "Choose the physical location where this user primarily works from."
+    "locationName": "Location Name",
+    "addText": "Add Location",
+    "copyTitle": "Copy Location",
+    "copyDesc": "This location will use the customized setting from the location that you copied.",
+    "deleteTitle": "Delete Location",
+    "deleteDesc": "Are you sure you want to delete location, {{locationName}}?",
+    "cannotDeleteDesc": "This location still has users and places and can not be deleted.",
+    "deleteButton": "OK, Delete it",
+    "deleteFailed": "Failed to Delete Location",
+    "makeDefault": "Make Default",
+    "copyLocation": "Duplicate",
+    "reload": "Reload",
+    "makeDefaultTitle": "Make Default",
+    "makeDefaultDesc": "Are you sure you want to make this location default?  It will be the defualt location for new users or places.",
+    "createLocation": "Create Location",
+    "cancelHeader": "Cancel Location Creation",
+    "cancelDialog": "Are you sure you wish to cancel location creation? This location will not be saved.",
+    "locationDesc": "Give this location a name to identify it.",
+    "locationSelectDesc": "Choose the physical location where this user primarily works from."
   },
   "sunlightDetails": {
     "title": "Care",
@@ -6972,7 +6972,7 @@
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select at least one member",
     "invalidFallback": "Select a number or enter a new valid number",
-    "error" : {
+    "error": {
       "required": "This field is required",
       "minRingSecs": "The shortest ring duration is {{secs}} seconds",
       "maxRingSecs": "The longest ring duration is {{secs}} seconds"
@@ -8020,7 +8020,7 @@
         },
         "import": {
           "invalidFileType": "Invalid file type. Select a .csv file.",
-          "resultTitle" : {
+          "resultTitle": {
             "importComplete": "Import complete"
           },
           "resultMsg": {
