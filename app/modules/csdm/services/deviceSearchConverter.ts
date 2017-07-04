@@ -28,6 +28,7 @@ export class Device {
   public state: { readableState: string };
   private errorCodes: string[];
   public translatedErrorCodes: { type: string, message: string }[];
+  public product: string;
 
   constructor(deviceHelper) {
     Device.init(deviceHelper, this);
@@ -48,6 +49,7 @@ export class Device {
 
   private static initAsHuron(device: Device) {
     device.tags = DeviceHelper.getTags(HuronDeviceHelper.decodeHuronTags(device.description));
+    device.product = device.product in HuronDeviceHelper.huron_model_map ? HuronDeviceHelper.huron_model_map[device.product].displayName : DeviceHelper.getProduct(device);
   }
 
   private static initAsCloudberry(deviceHelper: DeviceHelper, device: Device) {

@@ -13,11 +13,11 @@
       class="icon icon-3x icon-circle-group"
     />
     <img ng-if="device.image" ng-src="{{device.image}}">
-    <i
-      class="overlay"
-      ng-if="device.type != 'group' && !device.needsActivation"
-      ng-class="device.cssColorClass"
-    />
+    <!--<i-->
+      <!--class="overlay"-->
+      <!--ng-if="device.type != 'group' && !device.needsActivation"-->
+      <!--ng-class="device.cssColorClass"-->
+    <!--/>-->
 
     <div class="ellipsis card-items title">
       <h4 class="ellipsis" ng-bind-html="device.displayName | highlight:lctrl.searchObject:'displayName'"></h4>
