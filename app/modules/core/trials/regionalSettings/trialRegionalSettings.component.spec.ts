@@ -1,3 +1,5 @@
+import trialRegionalSettings from './index';
+
 describe('Component: trialRegionalSettings', () => {
   const COUNTRY_SELECT = '.csSelect-container[name="defaultCountry"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
@@ -6,13 +8,14 @@ describe('Component: trialRegionalSettings', () => {
   const ERROR_MSG = 'common.invalidRequired';
 
   beforeEach(function () {
-    this.initModules('trial.regionalSettings');
-    this.injectDependencies('$scope', '$q', 'HuronCountryService', 'FeatureToggleService');
+    this.initModules(trialRegionalSettings);
+    this.injectDependencies('$scope', '$q', 'HuronCountryService', 'FeatureToggleService', 'TrialPstnService');
 
     const countryList = getJSONFixture('core/json/trials/countryList.json');
 
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     spyOn(this.HuronCountryService, 'getCountryList').and.returnValue(countryList);
+    spyOn(this.TrialPstnService, 'getCountryCode').and.returnValue('US');
     this.$scope.defaultCountry = '';
   });
 
@@ -23,6 +26,7 @@ describe('Component: trialRegionalSettings', () => {
       onChangeFn: 'onChangeFn(country)',
       showError: 'true',
       selectName: 'defaultCountry',
+      newTrial: 'true',
     });
   }
 

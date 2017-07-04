@@ -28,7 +28,10 @@ describe('Component: PstnWizardComponent', () => {
       'PstnServiceAddressService',
       'HuronCountryService',
       'FeatureToggleService',
+      '$rootScope',
     );
+
+    installPromiseMatchers();
   });
 
   function initComponent() {
@@ -49,6 +52,7 @@ describe('Component: PstnWizardComponent', () => {
     spyOn(this.PstnWizardService, 'blockByopNumberAddForPartnerAdmin');
     spyOn(this.PstnWizardService, 'blockByopNumberAddForAllAdmin');
     spyOn(this.PstnWizardService, 'isLoggedInAsPartner');
+    spyOn(this.PstnWizardService, 'placeOrder');
     this.PstnWizardService.init.and.returnValue(this.$q.resolve());
     this.PstnWizardService.initSites.and.returnValue(this.$q.resolve());
     this.PstnService.listResellerCarriersV2.and.returnValue(this.$q.reject());
@@ -137,6 +141,18 @@ describe('Component: PstnWizardComponent', () => {
       this.PstnWizardService.finalizeImport.and.returnValue(this.$q.resolve());
       this.controller.nextStep();
       expect(this.PstnWizardService.finalizeImport).toHaveBeenCalled();
+    });
+
+    it('should call refreshFn if finalizeImport is successful', function () {
+      spyOn(this.controller, 'refreshFn');
+      this.controller.step = 10;
+      this.PstnWizardService.finalizeImport.and.returnValue(this.$q.resolve());
+      this.controller.nextStep();
+      const promise = this.PstnWizardService.finalizeImport().then(() => {
+        expect(this.controller.refreshFn).toHaveBeenCalled();
+      });
+      this.$rootScope.$digest();
+      expect(promise).toBeResolved();
     });
 
     it('should see the Skip button on step 8', function () {
@@ -261,6 +277,18 @@ describe('Component: PstnWizardComponent', () => {
     it('should go to the step 5 if the toggle is not enabled', function () {
       this.controller.goToSwivelNumbers();
       expect(this.controller.step).toBe(5);
+    });
+
+    it('should call refreshFn if the order is successful', function () {
+      spyOn(this.controller, 'refreshFn');
+      this.controller.step = 6;
+      this.PstnWizardService.placeOrder.and.returnValue(this.$q.resolve());
+      this.controller.nextStep();
+      const promise = this.PstnWizardService.placeOrder().then(() => {
+        expect(this.controller.refreshFn).toHaveBeenCalled();
+      });
+      this.$rootScope.$digest();
+      expect(promise).toBeResolved();
     });
   });
 });

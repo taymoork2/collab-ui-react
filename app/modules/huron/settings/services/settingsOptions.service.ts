@@ -126,18 +126,8 @@ export class HuronSettingsOptionsService {
     return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronMOHEnable)
       .then(supportsCompanyMoh => {
         if (supportsCompanyMoh) {
-          return this.MediaOnHoldService.getMediaOnHold()
-          .then(mediaList => {
-            const mediaOptions = _.map(mediaList, media => {
-              return <IOption> {
-                label: media.displayName,
-                value: media.rhesosId,
-              };
-            });
-            mediaOptions.push(<IOption>{
-              label: 'Generic Media',
-              value: '1',
-            });
+          return this.MediaOnHoldService.getCompanyMohOptions()
+          .then(mediaOptions => {
             return mediaOptions;
           });
         } else {
