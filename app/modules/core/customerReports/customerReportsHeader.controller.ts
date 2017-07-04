@@ -7,8 +7,8 @@ class CustomerReportsHeaderCtrl {
     private Authinfo,
     private FeatureToggleService,
     private MediaServiceActivationV2,
-    private WebExApiGatewayService,
     private ProPackService,
+    private WebExApiGatewayService,
   ) {
     if (Authinfo.isCare()) {
       this.headerTabs.push({

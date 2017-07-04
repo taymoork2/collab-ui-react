@@ -10,7 +10,7 @@ xdescribe('Controller: Spark Metrics Ctrl', function () {
       qlik_reverse_proxy: 'qlik-loader',
       appname: 'basic_spark_v1__qvadmin@cisco.com',
     },
-    postAppResult: 'QRP/custportal',
+    postAppResult: '%s/custportal',
   };
 
   afterEach(function () {
@@ -18,7 +18,7 @@ xdescribe('Controller: Spark Metrics Ctrl', function () {
   });
 
   beforeEach(function () {
-    this.initModules('Core');
+    this.initModules('core.customer-reports');
     this.injectDependencies('$controller',
       '$scope',
       '$q',
