@@ -405,6 +405,7 @@
     "dirsyncToolTip": "Use DirSync to update the user's preferred language.",
     "rolesAndSecurity": "Roles and Security",
     "security": "Security",
+    "resetAccessTipForBasicPack": "To reset access for your users, contact your partner or Cisco account manager about Pro Pack.",
     "resetAccessSuccess": "{{name}}'s access reset successfully. Please allow a few hours to take effect.",
     "resetAccessFailure": "Unable to reset {{name}}'s access. Please try later.",
     "resetAccess": "Reset Access",

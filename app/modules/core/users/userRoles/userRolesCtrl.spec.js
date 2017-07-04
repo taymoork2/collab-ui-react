@@ -4,14 +4,14 @@
 //DO NOT use export KTEST__MODULAR=true, this module is not self-contrained
 
 describe('Controller: UserRolesCtrl', function () {
-  var controller, $q, $scope, $state, $rootScope, $stateParams, $translate, Auth, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Log, Notification, SessionStorage, EdiscoveryService;
+  var controller, $q, $scope, $state, $rootScope, $stateParams, $translate, Auth, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Log, Notification, ProPackService, SessionStorage, EdiscoveryService;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
 
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _SessionStorage_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _ProPackService_, _SessionStorage_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -27,6 +27,7 @@ describe('Controller: UserRolesCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
     Log = _Log_;
     Notification = _Notification_;
+    ProPackService = _ProPackService_;
     SessionStorage = _SessionStorage_;
 
     Userservice = {
@@ -52,6 +53,16 @@ describe('Controller: UserRolesCtrl', function () {
       callback({});
     });
     spyOn(FeatureToggleService, 'supports').and.returnValue({
+      then: function () {
+        return true;
+      },
+    });
+    spyOn(ProPackService, 'hasProPackEnabled').and.returnValue({
+      then: function () {
+        return true;
+      },
+    });
+    spyOn(ProPackService, 'hasProPackPurchased').and.returnValue({
       then: function () {
         return true;
       },

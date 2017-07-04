@@ -6,7 +6,7 @@ require('./_user-roles.scss');
   module.exports = UserRolesCtrl;
 
   /* @ngInject */
-  function UserRolesCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, EdiscoveryService, FeatureToggleService, Log, Notification, Orgservice, SessionStorage, Userservice) {
+  function UserRolesCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, EdiscoveryService, FeatureToggleService, Log, Notification, Orgservice, ProPackService, SessionStorage, Userservice) {
     var COMPLIANCE = 'compliance';
     $scope.currentUser = $stateParams.currentUser;
     $scope.sipAddr = '';
@@ -37,6 +37,7 @@ require('./_user-roles.scss');
     $scope.showUserDetailSection = true;
     $scope.showSecuritySection = false;
     $scope.showRolesSection = true;
+    $scope.isProPack = true;
     $scope.rolesObj = {
       adminRadioValue: 0,
     };
@@ -97,6 +98,14 @@ require('./_user-roles.scss');
         }
       }
     });
+    ProPackService.hasProPackEnabled().then(function (proPackFeatureEnabled) {
+      if (proPackFeatureEnabled) {
+        ProPackService.hasProPackPurchased().then(function (proPackagePurchased) {
+          $scope.isProPack = proPackagePurchased;
+        });
+      }
+    });
+
     initView();
 
     ///////////////////////////
