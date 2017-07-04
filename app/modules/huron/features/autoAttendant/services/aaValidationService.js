@@ -44,7 +44,6 @@
 
     var runActionInputName = 'runActionsOnInput';
     var errMissingVariableNameMsg = 'autoAttendant.callerInputMenuErrorVariableNameMissing';
-    var errCallerInputNoInputValuesEnteredMsg = 'autoAttendant.callerInputMenuErrorNoInputValuesEntered';
     var errSubMenuNoInputValuesEnteredMsg = 'autoAttendant.subMenuErrorNoInputValuesEntered';
     var errMissingIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableMissing';
     var errUnevenQuotesIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableUnevenQouotes';
@@ -256,9 +255,8 @@
 
       var action = callerInputMenu.actions[0];
       var validAction = true;
-      var atLeastOneNonBlank = false;
 
-      // special case number two - runActionsOnInput inputType === 3,4
+      // special case number two -- runActionsOnInput inputType === 3,4
       if (_.get(action, 'name', '') === runActionInputName && _.includes([AACommonService.DIGITS_RAW, AACommonService.DIGITS_CHOICE], action.inputType)) {
         if (_.isEmpty(action.variableName)) {
           validAction = false;
@@ -267,30 +265,6 @@
             at: _.indexOf(callerInputMenus, callerInputMenu) + 1,
           });
 
-        }
-
-        if (action.inputType === 4) {
-          if (!action.inputActions || action.inputActions.length === 0) {
-            validAction = false;
-            AANotificationService.error(errCallerInputNoInputValuesEnteredMsg, {
-              schedule: translatedLabel,
-              at: _.indexOf(callerInputMenus, callerInputMenu) + 1,
-            });
-          }
-
-          _.forEach(action.inputActions, function (inputItem) {
-            if (!_.isEmpty(_.get(inputItem, 'value', ''))) {
-              atLeastOneNonBlank = true;
-            }
-          });
-
-          if (!atLeastOneNonBlank) {
-            validAction = false;
-            AANotificationService.error(errCallerInputNoInputValuesEnteredMsg, {
-              schedule: translatedLabel,
-              at: _.indexOf(callerInputMenus, callerInputMenu) + 1,
-            });
-          }
         }
       }
       return validAction;
