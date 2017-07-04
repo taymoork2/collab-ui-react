@@ -39,9 +39,6 @@
     vm.localizedCannotProvionError = $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
       ConnectorName: vm.localizedConnectorName,
     });
-    vm.localizedServiceIsReady = $translate.instant('hercules.addResourceDialog.serviceIsReady', {
-      ServiceName: vm.localizedServiceName,
-    });
     vm.optionalSelectResourceGroupStep = false;
     vm.chooseClusterName = false;
     vm.validationMessages = {
