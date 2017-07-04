@@ -2,17 +2,22 @@
   'use strict';
 
   angular
-    .module('Core')
+    .module('core.customer-reports')
     .controller('WebExMetricsCtrl', WebExMetricsCtrl);
 
   /* @ngInject */
-  function WebExMetricsCtrl($scope, $stateParams, Authinfo, LocalStorage, Userservice,
+  function WebExMetricsCtrl(
     $sce,
+    $scope,
+    $stateParams,
     $timeout,
     $window,
+    Authinfo,
+    LocalStorage,
     Notification,
+    ProPackService,
     QlikService,
-    ProPackService
+    Userservice
   ) {
     var vm = this;
 
@@ -140,13 +145,14 @@
       'me',
       function (data) {
         if (data.success) {
-          var adminTrainSites = [];
+          var trainSites = [];
           if (data.emails) {
             Authinfo.setEmails(data.emails);
-            if (!_.isUndefined(data.adminTrainSiteNames)) {
-              adminTrainSites = data.adminTrainSiteNames;
-            }
-            generateWebexMetricsUrl(adminTrainSites);
+            var trainSiteNames = _.get(data, 'trainSiteNames', []);
+            var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
+            trainSites = trainSiteNames.concat(linkedTrainSiteNames);
+
+            generateWebexMetricsUrl(trainSites);
           }
         }
       }
@@ -179,9 +185,14 @@
         siteUrl: vm.webexSelected.toLowerCase(),
         email: Authinfo.getPrimaryEmail(),
       };
-      QlikService['getWebExReportQBSfor' + vm.reportView.view + 'Url'](userInfo).then(function (data) {
-        var QlikMashupChartsUrl = QlikService['getWebExReportAppfor' + vm.reportView.view + 'Url']();
 
+      var viewType = _.get(vm, 'reportView.view');
+      var getWebExReportData = _.get(QlikService, 'getWebExReportQBSfor' + viewType + 'Url');
+
+      if (!_.isFunction(getWebExReportData)) {
+        return;
+      }
+      getWebExReportData(userInfo).then(function (data) {
         vm.webexMetrics.appData = {
           ticket: data.ticket,
           appId: vm.reportView.appName,
@@ -190,7 +201,8 @@
           persistent: data.isPersistent,
           vID: data.siteId,
         };
-        vm.webexMetrics.appData.url = QlikMashupChartsUrl.replace('QRP', vm.webexMetrics.appData.qrp);
+        var QlikMashupChartsUrl = _.get(QlikService, 'getWebExReportAppfor' + viewType + 'Url')(vm.webexMetrics.appData.qrp);
+        vm.webexMetrics.appData.url = QlikMashupChartsUrl;
 
         loadUrlAndIframe(QlikMashupChartsUrl);
       })
@@ -209,7 +221,7 @@
       $scope.node = vm.webexMetrics.appData.node;
       $scope.persistent = vm.webexMetrics.appData.persistent;
       $scope.vID = vm.webexMetrics.appData.vID;
-      $scope.QlikTicket = vm.webexMetrics.appData.ticket;
+
       var parser = $window.document.createElement('a');
       parser.href = iframeUrl;
 
@@ -231,6 +243,6 @@
           vm.isIframeLoaded = true;
         });
       }
-    }; // iframeLoaded()
-  }//WebExMetricsCtrl
+    };
+  }
 })();

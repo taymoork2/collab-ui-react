@@ -30,6 +30,8 @@
       '/channels',
       '/api/v1/internals/actions/invalidateUser/invoke',
       '/releaseChannels',
+      '/qlik-gtwy/api/v1/report/',
+      '/custportal/extensions/',
     ];
 
     var allowedState = [

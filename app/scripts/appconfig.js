@@ -1748,7 +1748,6 @@
             controller: 'CustomerReportsHeaderCtrl',
             controllerAs: 'header',
             parent: 'main',
-            // abstract: true,
           })
           .state('reports.spark', {
             url: '/spark',
