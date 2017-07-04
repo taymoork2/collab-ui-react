@@ -5,52 +5,52 @@ import {
 } from '../partnerReportInterfaces';
 
 export class ReportConstants {
-  public readonly ABORT: string = 'ABORT';
+  public readonly ABORT = 'ABORT';
 
   // Media Quality and Registered Endpoint type classes
-  public readonly CUSTOMER_DATA: string = 'customer-data';
-  public readonly GOOD: string = 'good';
-  public readonly HORIZONTAL_CENTER: string = 'horizontal-center';
-  public readonly FAIR: string = 'fair';
-  public readonly POOR: string = 'poor';
-  public readonly POSITIVE: string = 'positive';
-  public readonly NEGATIVE: string = 'negative';
+  public readonly CUSTOMER_DATA = 'customer-data';
+  public readonly GOOD = 'good';
+  public readonly HORIZONTAL_CENTER = 'horizontal-center';
+  public readonly FAIR = 'fair';
+  public readonly POOR = 'poor';
+  public readonly POSITIVE = 'positive';
+  public readonly NEGATIVE = 'negative';
 
   // Numerical Constants
-  public readonly DAYS: number = 6;
-  public readonly FIXED: number = 2;
-  public readonly MONTHS: number = 2;
-  public readonly PERCENTAGE_MULTIPLIER: number = 100;
-  public readonly WEEKS: number = 3;
-  public readonly YEAR: number = 51;
-  public readonly FOUR_WEEKS: number = 48;
-  public readonly TWELVE_WEEKS: number = 40;
-  public readonly TWENTY_FOUR_WEEKS: number = 28;
+  public readonly DAYS = 6;
+  public readonly FIXED = 2;
+  public readonly MONTHS = 2;
+  public readonly PERCENTAGE_MULTIPLIER = 100;
+  public readonly WEEKS = 3;
+  public readonly YEAR = 51;
+  public readonly FOUR_WEEKS = 48;
+  public readonly TWELVE_WEEKS = 40;
+  public readonly TWENTY_FOUR_WEEKS = 28;
 
   // moment formatting helpers
-  public readonly DAY_FORMAT: string = 'MMM DD';
-  public readonly MONTH_FORMAT: string = 'MMMM';
-  public readonly TIMEZONE: string = 'Etc/GMT';
-  public readonly DAY: string = 'day';
-  public readonly WEEK: string = 'week';
-  public readonly MONTH: string = 'month';
+  public readonly DAY_FORMAT = 'MMM DD';
+  public readonly MONTH_FORMAT = 'MMMM';
+  public readonly TIMEZONE = 'Etc/GMT';
+  public readonly DAY = 'day';
+  public readonly WEEK = 'week';
+  public readonly MONTH = 'month';
 
   // Refresh/Set/Empty tracking
-  public readonly REFRESH: string = 'refresh';
-  public readonly SET: string = 'set';
-  public readonly EMPTY: string = 'empty';
-  public readonly ERROR: string = 'error';
+  public readonly REFRESH = 'refresh';
+  public readonly SET = 'set';
+  public readonly EMPTY = 'empty';
+  public readonly ERROR = 'error';
 
   // Chart Types
-  public readonly BARCHART: string = 'barchart';
-  public readonly DONUT: string = 'donut';
-  public readonly TABLE: string = 'table';
-  public readonly UNDEF: string = 'undefined';
+  public readonly BARCHART = 'barchart';
+  public readonly DONUT = 'donut';
+  public readonly TABLE = 'table';
+  public readonly UNDEF = 'undefined';
 
   // Report visibility
-  public readonly ALL: string = 'all';
-  public readonly ENGAGEMENT: string = 'engagement';
-  public readonly QUALITY: string = 'quality';
+  public readonly ALL = 'all';
+  public readonly ENGAGEMENT = 'engagement';
+  public readonly QUALITY = 'quality';
 
   // Report Filtering All/Engagement/quality
   public readonly filterArray: IFilterObject[] = [{
