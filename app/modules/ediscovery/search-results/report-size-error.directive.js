@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Ediscovery')
-    .directive('reportSizeError', reportSizeError);
+  module.exports = reportSizeError;
 
   function reportSizeError() {
     var directive = {

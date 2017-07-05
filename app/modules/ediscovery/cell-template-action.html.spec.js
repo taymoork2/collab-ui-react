@@ -1,7 +1,8 @@
 'use strict';
 
+var ediscoveryModule = require('./ediscovery.module');
 describe('cell-template-action', function () {
-  beforeEach(angular.mock.module('Ediscovery'));
+  beforeEach(angular.mock.module(ediscoveryModule));
   var $templateCache, $scope, $compile, view, html;
 
   afterEach(function () {

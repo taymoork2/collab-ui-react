@@ -4,6 +4,7 @@ require('@ciscospark/internal-plugin-search');
 (function () {
   'use strict';
 
+  module.exports = EdiscoveryReportsController;
   /* @ngInject */
   function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, Notification, ReportUtilService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
@@ -249,8 +250,4 @@ require('@ciscospark/internal-plugin-search');
       }
     }
   }
-
-  angular
-    .module('Ediscovery')
-    .controller('EdiscoveryReportsController', EdiscoveryReportsController);
 }());

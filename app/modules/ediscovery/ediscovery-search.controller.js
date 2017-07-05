@@ -1,12 +1,8 @@
-require('./ediscovery.scss');
-require('@ciscospark/internal-plugin-search');
-
-
-//TODO agendel: need to address the use of babel-polyfil which is required by spark-core.
 
 (function () {
   'use strict';
 
+  module.exports = EdiscoverySearchController;
   /* @ngInject */
   function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService,
     FeatureToggleService, ProPackService, Notification) {
@@ -634,7 +630,4 @@ require('@ciscospark/internal-plugin-search');
       return null;
     }
   }
-  angular
-    .module('Ediscovery')
-    .controller('EdiscoverySearchController', EdiscoverySearchController);
 }());

@@ -155,11 +155,6 @@
 
   angular.module('HDS', ['Core', 'Hercules']);
 
-  angular.module('Ediscovery', [
-    'Core',
-    require('modules/ediscovery/bytes_filter'),
-  ]);
-
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
   angular.module('WebExApp', [
@@ -199,7 +194,7 @@
     'DigitalRiver',
     'Huron',
     'Hercules',
-    'Ediscovery',
+    require('modules/ediscovery/ediscovery.module'),
     'Mediafusion',
     'HDS',
     'WebExApp',

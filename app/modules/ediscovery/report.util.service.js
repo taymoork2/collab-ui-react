@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+
+  module.exports = ReportUtilService;
   /* @ngInject */
   function ReportUtilService() {
     var timeoutInSeconds = 180;
@@ -60,7 +62,4 @@
       setTimeoutInSeconds: setTimeoutInSeconds,
     };
   }
-
-  angular.module('Ediscovery')
-    .service('ReportUtilService', ReportUtilService);
 }());

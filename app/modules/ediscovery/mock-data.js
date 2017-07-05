@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  module.exports = EdiscoveryMockData;
+
+  /* @ngInject */
   function EdiscoveryMockData($interval) {
     var alive = false;
     var reports = [];
@@ -114,6 +117,4 @@
       getReport: getReport,
     };
   }
-
-  angular.module('Ediscovery').service('EdiscoveryMockData', EdiscoveryMockData);
 }());
