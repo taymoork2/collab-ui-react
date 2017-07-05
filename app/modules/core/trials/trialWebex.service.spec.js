@@ -153,7 +153,7 @@ describe('Service: Webex Trial Service', function () {
     });
   });
 
-  describe('provision a webex site', function () {
+  xdescribe('provision a webex site', function () {
     it('should successfully send WebEx site for provisioning', function () {
       var subscriptionId = 'some-test-id-here';
       var payload = {

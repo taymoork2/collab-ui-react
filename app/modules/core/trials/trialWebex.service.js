@@ -6,6 +6,8 @@
     WebexOrderStatusResource: WebexOrderStatusResource,
   };
 
+  var webexProvisioningData = {};
+
   /* @ngInject */
   function WebexOrderStatusResource($resource, Authinfo, UrlConfig) {
     return $resource(UrlConfig.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId/provOrderStatus', {
@@ -23,6 +25,8 @@
       validateSiteUrl: validateSiteUrl,
       getTrialStatus: getTrialStatus,
       provisionWebexSites: provisionWebexSites,
+      setProvisioningWebexSitesData: setProvisioningWebexSitesData,
+      getProvisioningWebexSitesData: getProvisioningWebexSitesData,
     };
 
     return service;
@@ -87,10 +91,17 @@
       });
     }
 
-    function provisionWebexSites(payload, subscriptionId) {
-      if (!payload || !_.isString(subscriptionId)) {
-        return $q.reject('Invalid parameters passed to provision WebEx sites');
-      }
+    function setProvisioningWebexSitesData(webexLicenses, subscriptionId) {
+      webexProvisioningData = { webexLicencesPayload: webexLicenses, subscriptionId: subscriptionId };
+    }
+
+    function getProvisioningWebexSitesData() {
+      return webexProvisioningData;
+    }
+
+    function provisionWebexSites() {
+      var payload = _.get(webexProvisioningData, 'webexLicencesPayload');
+      var subscriptionId = _.get(webexProvisioningData, 'subscriptionId');
       var webexProvisioningUrl = UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision';
 
       return $http.post(webexProvisioningUrl, payload);

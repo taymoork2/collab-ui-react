@@ -1,12 +1,12 @@
 import './_meeting-settings.scss';
-import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexSiteDetail, IWebexLicencesPayload } from './meeting-settings.interface';
+import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload, IPendingOrderSubscription } from './meeting-settings.interface';
 
 export class MeetingSettingsCtrl {
   public siteModel: IWebExSite = {
-    name: '',
-    timeZone: '',
+    siteUrl: '',
+    timezone: '',
     centerType: 'MC',
-    licenseCount: 0,
+    quantity: 0,
   };
 
   // hardcoded till we can get this info from an API
@@ -32,20 +32,34 @@ export class MeetingSettingsCtrl {
     private Authinfo,
     private Config,
     private Notification,
-    private Orgservice,
     private TrialTimeZoneService,
     private TrialWebexService,
+    private SetupWizardService,
+    private SessionStorage,
   ) {
     this.init();
   }
 
   private init(): void {
     this.findExistingWebexTrialSites();
-    this.Orgservice.getLicensesUsage().then((subscriptions) => {
-      this.actingSubscriptionId = subscriptions[0].internalSubscriptionId;
-    });
+    this.actingSubscriptionId = this.Authinfo.getSubscriptions()[0].externalSubscriptionId;
+
+    // If user clicked back after setting WebEx sites in the meeting-settings tab, we want to preserve the entered sites
+    const webexSitesData = this.TrialWebexService.getProvisioningWebexSitesData();
+    if (!_.isEmpty(webexSitesData)) {
+      this.updateSitesArray(_.get(webexSitesData, 'webexLicencesPayload.webexProvisioningParams.webexSiteDetailsList'));
+    }
+
     this.$rootScope.$on('wizard-meeting-settings-setup-save-event', (): void => {
-      this.provisionWebexSites();
+      const webexLicenses: IWebexLicencesPayload = this.constructWebexLicensesPayload();
+      this.TrialWebexService.setProvisioningWebexSitesData(webexLicenses, this.getInternalSubscriptionId());
+      this.SetupWizardService.addProvisioningCallbacks(() => {
+        return this.TrialWebexService.provisionWebexSites().then(() => {
+          this.Notification.success('firstTimeWizard.webexProvisioningSuccess');
+        }).catch((response) => {
+          this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
+        });
+      });
     });
   }
 
@@ -53,19 +67,37 @@ export class MeetingSettingsCtrl {
     this.clearError();
   }
 
+  private updateSitesArray(sites) {
+    const sitesArray = _.map(sites, (site: any) => {
+      const timezone = this.findTimezoneObject(site.timezone);
+      return {
+        quantity: _.parseInt(site.quantity),
+        siteUrl: site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
+        timezone: timezone,
+        centerType: site.centerType,
+      };
+    });
+
+    this.sitesArray = sitesArray;
+  }
+
+  private findTimezoneObject(timezoneId) {
+    return _.find(this.timeZoneOptions, { timeZoneId: timezoneId });
+  }
+
   public onClickValidate(): void {
     this.disableValidateButton = true;
-    if (_.isEmpty(this.siteModel.name)) {
+    if (_.isEmpty(this.siteModel.siteUrl)) {
       this.showError(this.$translate.instant('firstTimeWizard.pleaseEnterSiteName'));
       return;
     }
 
-    if (_.isEmpty(this.siteModel.timeZone)) {
+    if (_.isEmpty(this.siteModel.timezone)) {
       this.showError(this.$translate.instant('firstTimeWizard.pleaseSelectTimeZone'));
       return;
     }
 
-    const siteName = this.siteModel.name.concat(this.Config.siteDomainUrl.webexUrl);
+    const siteName = this.siteModel.siteUrl.concat(this.Config.siteDomainUrl.webexUrl);
     this.validateWebexSiteUrl(siteName).then((response) => {
       if (response.isValid && (response.errorCode === 'validSite')) {
         this.sitesArray.push(_.clone(this.siteModel));
@@ -86,7 +118,7 @@ export class MeetingSettingsCtrl {
 
   public sumOfWebExLicensesAssigned() {
     const result = _.sumBy(this.sitesArray, (site: IWebExSite) => {
-      return Number(site.licenseCount);
+      return Number(site.quantity);
     });
 
     return result;
@@ -110,7 +142,7 @@ export class MeetingSettingsCtrl {
       this.sitesArray.push(site);
     } else {
       _.remove(this.sitesArray, (s) => {
-        return s.name === site.name;
+        return s.siteUrl === site.siteUrl;
       });
     }
     this.sitesArray = _.uniq(this.sitesArray);
@@ -125,8 +157,8 @@ export class MeetingSettingsCtrl {
     _.forEach(existingTrials, (trial) => {
       if (_.has(trial, 'siteUrl')) {
         this.existingSites.push({
-          name: trial.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
-          licenseCount: 0,
+          siteUrl: trial.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
+          quantity: 0,
           centerType: 'MC',
           keepExistingSite: true,
         });
@@ -150,58 +182,56 @@ export class MeetingSettingsCtrl {
   }
 
   private clearInputs(): void {
-    this.siteModel.name = '';
-    this.siteModel.timeZone = '';
+    this.siteModel.siteUrl = '';
+    this.siteModel.timezone = '';
   }
 
-  private constructWebexLicensesPayload() {
-    const webexSiteDetailsList: IWebexSiteDetail[] = [];
+  private getServiceOrderUUID(): string {
+    return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID');
+  }
+
+  private constructWebexLicensesPayload(): IWebexLicencesPayload {
+    const webexSiteDetailsList: IWebExSite[] = [];
+    const webexLicensesPayload: IWebexLicencesPayload = {
+      provisionOrder: true,
+      serviceOrderUUID: this.getServiceOrderUUID(),
+    };
+
+    if (_.isEmpty(this.sitesArray)) {
+      return webexLicensesPayload;
+    }
+
     _.forEach(this.sitesArray, (site) => {
-      const webexSiteDetail: IWebexSiteDetail = {
-        siteUrl: site.name + this.Config.siteDomainUrl.webexUrl,
-        timezone: _.get<string>(site, 'timeZone.timeZoneId'),
+      const webexSiteDetail: IWebExSite = {
+        siteUrl: site.siteUrl + this.Config.siteDomainUrl.webexUrl,
+        timezone: _.get<string>(site, 'timezone.timeZoneId'),
         centerType: site.centerType,
-        quantity: _.get<number>(site, 'licenseCount'),
+        quantity: _.get<number>(site, 'quantity'),
       };
 
       webexSiteDetailsList.push(webexSiteDetail);
     });
 
-    const webexLicensesPayload: IWebexLicencesPayload = {
-      provisionOrder: true,
-      serviceOrderUUID: null,
-      webexProvisioningParams: {
-        webexSiteDetailsList: webexSiteDetailsList,
-        audioPartnerName: 'somepartner@gmail.com',
-      },
-    };
+    _.set(webexLicensesPayload, 'webexProvisioningParams', {
+      webexSiteDetailsList: webexSiteDetailsList,
+      audioPartnerName: null,
+    });
 
     return webexLicensesPayload;
   }
 
   private getActingSubscriptionId(): string {
-    return this.actingSubscriptionId;
+    const subscriptionId = this.SessionStorage.get('subscriptionId');
+    return subscriptionId || this.actingSubscriptionId;
   }
 
-  private provisionWebexSites(): void {
-    const webexLicenses: IWebexLicencesPayload = this.constructWebexLicensesPayload();
-    const subscriptionId: string = this.getActingSubscriptionId();
-
-    this.TrialWebexService.provisionWebexSites(webexLicenses, subscriptionId)
-      .then(() => {
-        this.handleWebexProvisioningSuccess();
-      })
-      .catch((response) => {
-        this.handleWebexProvisioningError(response);
-      });
+  private getInternalSubscriptionId(): string {
+    const actingSubscription = this.getActingSubscription();
+    return _.get<string>(actingSubscription, 'subscriptionId');
   }
 
-  private handleWebexProvisioningSuccess() {
-    this.Notification.success('firstTimeWizard.webexProvisioningSuccess');
-  }
-
-  private handleWebexProvisioningError(response) {
-    this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
+  private getActingSubscription(): IPendingOrderSubscription {
+    return _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: this.getActingSubscriptionId() });
   }
 
 }
