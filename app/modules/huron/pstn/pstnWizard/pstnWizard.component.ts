@@ -415,7 +415,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.validCount = 0;
     this.invalidCount = 0;
     this.did.clearList();
-    angular.element('#' + this.tokenfieldId).tokenfield('setTokens', tmpDids);
+    (angular.element('#' + this.tokenfieldId) as any).tokenfield('setTokens', tmpDids);
   }
 
   public getInvalidTokens(): JQuery {

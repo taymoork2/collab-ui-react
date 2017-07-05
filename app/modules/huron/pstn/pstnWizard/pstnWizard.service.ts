@@ -588,7 +588,7 @@ export class PstnWizardService {
   }
 
   private getTokens(): JQuery {
-    return angular.element('#' + this.tokenfieldId).tokenfield('getTokens');
+    return (angular.element('#' + this.tokenfieldId) as any).tokenfield('getTokens');
   }
 
   private getNxxValue(model): string | null {

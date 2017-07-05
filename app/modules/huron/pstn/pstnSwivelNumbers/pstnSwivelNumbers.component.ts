@@ -161,10 +161,10 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   }
 
   private getSwivelNumberTokens(): {value, label}[] {
-    return angular.element('#' + this.tokenfieldid).tokenfield('getTokens');
+    return (angular.element('#' + this.tokenfieldid) as any).tokenfield('getTokens');
   }
 
   private setSwivelNumberTokens(tokens): void {
-    angular.element('#' + this.tokenfieldid).tokenfield('setTokens', tokens);
+    (angular.element('#' + this.tokenfieldid) as any).tokenfield('setTokens', tokens);
   }
 }
