@@ -270,7 +270,7 @@ export class PstnWizardService {
     return this.swivelOrders;
   }
 
-  private updateCustomerCarrier(): ng.IPromise<boolean> {
+  private updateCustomerCarrier(): ng.IPromise<any> {
     return this.PstnService.updateCustomerCarrier(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId())
       .then(() => this.PstnModel.setCarrierExists(true))
       .catch(response => {
