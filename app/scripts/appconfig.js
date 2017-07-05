@@ -4052,9 +4052,7 @@
             url: '/services/calendar/settings',
             views: {
               calendarServiceView: {
-                controllerAs: 'calendarSettings',
-                controller: 'CalendarSettingsController',
-                templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html',
+                template: '<calendar-service-settings-page></calendar-service-settings-page>',
               },
             },
           })
