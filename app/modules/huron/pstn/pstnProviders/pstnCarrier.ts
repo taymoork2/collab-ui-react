@@ -55,6 +55,7 @@ export interface IPstnCarrierStatic {
   countryCode: string;
   docSrc: string;
   features: any[];
+  note: string;
 }
 
 export class PstnCarrierStatic implements IPstnCarrierStatic {
@@ -64,6 +65,7 @@ export class PstnCarrierStatic implements IPstnCarrierStatic {
   public countryCode: string;
   public docSrc: string;
   public features: any[];
+  public note: string;
 
   public constructor() {
     this.name = '';
@@ -72,6 +74,7 @@ export class PstnCarrierStatic implements IPstnCarrierStatic {
     this.countryCode = '';
     this.docSrc = '';
     this.features = [];
+    this.note = '';
   }
 }
 
@@ -99,6 +102,7 @@ export class PstnCarrier {
   public logoAlt: string;
   public docSrc: string;
   public features: any[];
+  public note: string;
   public title: string;
   public selected: boolean;
   private capabilities: IPstnCarrierCapability[];
@@ -110,6 +114,7 @@ export class PstnCarrier {
     this.offers = new Array<any>();
     this.services = new Array<any>();
     this.features = new Array<any>();
+    this.note = '';
     this.title = '';
     this.selected = false;
     this.capabilities = [];
@@ -149,6 +154,7 @@ export class PstnCarrier {
     this.logoSrc = carrier.logoSrc;
     this.logoAlt = carrier.logoAlt;
     this.docSrc = carrier.docSrc;
+    this.note = carrier.note;
     carrier.features.forEach(feature => {
       this.features.push(feature);
     });
