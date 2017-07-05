@@ -1,6 +1,6 @@
 describe('placeOverview component', () => {
   let Authinfo, FeatureToggleService, CsdmDataModelService, CsdmCodeService, WizardFactory, $httpBackend, UrlConfig,
-    $state, $scope, $q, Userservice, ServiceDescriptor;
+    $state, $scope, $q, Userservice, ServiceDescriptorService;
 
   let $stateParams;
   let $componentController;
@@ -21,7 +21,7 @@ describe('placeOverview component', () => {
                      _$componentController_,
                      _CsdmCodeService_,
                      _FeatureToggleService_,
-                     _ServiceDescriptor_,
+                     _ServiceDescriptorService_,
                      _Userservice_) => {
     $q = _$q_;
     Authinfo = _Authinfo_;
@@ -36,7 +36,7 @@ describe('placeOverview component', () => {
     CsdmCodeService = _CsdmCodeService_;
     FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
   }));
 
   const initController = (stateParams, scope, $state) => {
@@ -77,7 +77,7 @@ describe('placeOverview component', () => {
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
       spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve({}));
       spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve({}));
-      spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
+      spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
       $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/' + orgId + '/upgradeChannels').respond(200);
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
       spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([]);
@@ -282,7 +282,7 @@ describe('placeOverview component', () => {
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(showHybrid));
       spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve({}));
-      spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
+      spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
       const currentUser: any = {
         success: true,
         roles: ['ciscouc.devops', 'ciscouc.devsupport'],

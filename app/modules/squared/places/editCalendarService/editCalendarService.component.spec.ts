@@ -10,7 +10,7 @@ describe('EditCalendarService component:', () => {
       '$componentController',
       '$rootScope',
       '$httpBackend',
-      'ServiceDescriptor',
+      'ServiceDescriptorService',
       'CsdmDataModelService',
       'ResourceGroupService',
       'USSService',
@@ -36,7 +36,7 @@ describe('EditCalendarService component:', () => {
   describe('init ()', () => {
     describe('where gcal service is not enabled and exchange is enabled', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: false,
         }, {
@@ -69,7 +69,7 @@ describe('EditCalendarService component:', () => {
     });
     describe('with gcal service enabled and exchange enabled', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -103,7 +103,7 @@ describe('EditCalendarService component:', () => {
     });
     describe('with gcal service enabled and exchange disabled', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -143,7 +143,7 @@ describe('EditCalendarService component:', () => {
 
     describe('with editServices as given wizard function', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -171,7 +171,7 @@ describe('EditCalendarService component:', () => {
 
     describe('with normal add place function for wizard', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -200,7 +200,7 @@ describe('EditCalendarService component:', () => {
 
   describe('next', () => {
     beforeEach(() => {
-      spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+      spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
         id: FUSION_GCAL_ENTITLEMENT,
         enabled: true,
       }, {
@@ -281,7 +281,7 @@ describe('EditCalendarService component:', () => {
   describe('save', () => {
     beforeEach(() => {
       const id = 'asvawoei0a';
-      spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+      spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
         id: FUSION_GCAL_ENTITLEMENT,
         enabled: true,
       }, {

@@ -8,7 +8,7 @@ xdescribe('Controller: WebEx Metrics Ctrl', function () {
   });
 
   beforeEach(function () {
-    this.initModules('Core');
+    this.initModules('core.customer-reports');
     this.injectDependencies('$controller',
       '$scope',
       '$q');

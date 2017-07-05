@@ -3,8 +3,6 @@ if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     return 1
 fi
 
-source ${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/markdown-helpers
-
 # keep around scratch files when processing sauce labs results
 cache_subdir=".cache"
 e2e_fail_retry_dir="${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}"
@@ -420,4 +418,17 @@ function print_e2e_test_links_from_report_file {
     grep_failed_test_entries < "$report_file" \
         | tr_result_line_to_md_list_item \
         | $SORT_CMD
+}
+
+function tr_result_line_to_md_list_item {
+    while read line; do
+        # start from index 1 (vs. 0)
+        run_num="$(echo "$line" | cut -d'|' -f1 | cut -d':' -f1 | cut -d'-' -f2 | xargs echo)"
+        run_num="$(( run_num + 1 ))"
+        spec_file="$(echo "$line" | cut -d'|' -f3 | xargs echo)"
+        spec_file="${spec_file:-"(N/A)"}"
+        url="$(echo "$line" | awk -F'|' '{print $4;}' | xargs echo)"
+        url="${url:-"(N/A)"}"
+        printf -- "- [%s (%s)](%s)\n" "$spec_file" "$run_num" "$url"
+    done
 }

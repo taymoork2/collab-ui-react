@@ -4,7 +4,7 @@ describe('Service: ServiceStateChecker', function () {
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(angular.mock.module('Hercules'));
 
-  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, USSService, ServiceDescriptor, DomainManagementService, FeatureToggleService, FmsOrgSettings, HybridServicesExtrasService, Orgservice;
+  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, USSService, ServiceDescriptorService, DomainManagementService, FeatureToggleService, FmsOrgSettings, HybridServicesExtrasService, Orgservice;
 
   var okClusterMockData = {
     id: 0,
@@ -33,7 +33,7 @@ describe('Service: ServiceStateChecker', function () {
     });
   }
 
-  beforeEach(inject(function (_$q_, _$httpBackend_, _$rootScope_, _NotificationService_, _ClusterService_, _FeatureToggleService_, _ServiceStateChecker_, _DomainManagementService_, _Orgservice_, _ServiceDescriptor_, _USSService_, _FmsOrgSettings_, _HybridServicesExtrasService_) {
+  beforeEach(inject(function (_$q_, _$httpBackend_, _$rootScope_, _NotificationService_, _ClusterService_, _FeatureToggleService_, _ServiceStateChecker_, _DomainManagementService_, _Orgservice_, _ServiceDescriptorService_, _USSService_, _FmsOrgSettings_, _HybridServicesExtrasService_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $rootScope = _$rootScope_;
@@ -43,7 +43,7 @@ describe('Service: ServiceStateChecker', function () {
     ServiceStateChecker = _ServiceStateChecker_;
     DomainManagementService = _DomainManagementService_;
     Orgservice = _Orgservice_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
     USSService = _USSService_;
     ClusterService = _ClusterService_;
     FmsOrgSettings = _FmsOrgSettings_;
@@ -57,8 +57,8 @@ describe('Service: ServiceStateChecker', function () {
     FeatureToggleService.supports = jasmine.createSpy('supports').and.returnValue($q.resolve(false));
     FmsOrgSettings.get = jasmine.createSpy('get').and.returnValue($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
     Orgservice.getOrg = jasmine.createSpy('getOrg');
-    ServiceDescriptor.isServiceEnabled = jasmine.createSpy('isServiceEnabled');
-    ServiceDescriptor.getServices = jasmine.createSpy('getServices');
+    ServiceDescriptorService.isServiceEnabled = jasmine.createSpy('isServiceEnabled');
+    ServiceDescriptorService.getServices = jasmine.createSpy('getServices');
     USSService.getOrg = jasmine.createSpy('getOrg');
     USSService.getOrgId = jasmine.createSpy('getOrgId');
     USSService.getStatusesSummary = jasmine.createSpy('getStatusesSummary');
@@ -134,8 +134,8 @@ describe('Service: ServiceStateChecker', function () {
     USSService.getOrgId.and.returnValue('orgId');
     USSService.getOrg.and.returnValue($q.resolve({}));
     ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
-    ServiceDescriptor.isServiceEnabled.and.returnValue($q.resolve(true));
-    ServiceDescriptor.getServices.and.returnValue($q.resolve(
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.getServices.and.returnValue($q.resolve(
       [{
         id: 'squared-fusion-ec',
         enabled: false, // will spawn a 'connect available' notification,
@@ -149,7 +149,7 @@ describe('Service: ServiceStateChecker', function () {
     expect(NotificationService.getNotifications()[0].id).toEqual('callServiceConnectAvailable');
 
     // this should remove the connect notifications
-    ServiceDescriptor.getServices.and.returnValue($q.resolve(
+    ServiceDescriptorService.getServices.and.returnValue($q.resolve(
       [{
         id: 'squared-fusion-ec',
         enabled: true,
@@ -165,9 +165,9 @@ describe('Service: ServiceStateChecker', function () {
   it('should add and correctly clear the domain verification', function () {
     USSService.getOrgId.and.returnValue('orgId');
     USSService.getOrg.and.returnValue($q.resolve({ sipDomain: 'example.com' }));
-    ServiceDescriptor.isServiceEnabled.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
     ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
-    ServiceDescriptor.getServices.and.returnValue($q.resolve([{
+    ServiceDescriptorService.getServices.and.returnValue($q.resolve([{
       id: 'squared-fusion-ec',
       enabled: true,
     }])
@@ -191,7 +191,7 @@ describe('Service: ServiceStateChecker', function () {
     DomainManagementService.getVerifiedDomains = jasmine.createSpy('getVerifiedDomains').and.returnValue($q.resolve([{
       domain: 'somedomain',
     }]));
-    ServiceDescriptor.getServices.and.returnValue($q.resolve(
+    ServiceDescriptorService.getServices.and.returnValue($q.resolve(
       [{
         id: 'squared-fusion-ec',
         enabled: true,
@@ -215,9 +215,9 @@ describe('Service: ServiceStateChecker', function () {
     USSService.getOrg.and.returnValue($q.resolve({
       sipDomain: 'somedomain',
     }));
-    ServiceDescriptor.isServiceEnabled.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
-    ServiceDescriptor.getServices.and.returnValue($q.resolve(
+    ServiceDescriptorService.getServices.and.returnValue($q.resolve(
       [{
         id: 'squared-fusion-ec',
         enabled: true, // will spawn a 'connect available' notification,
@@ -249,9 +249,9 @@ describe('Service: ServiceStateChecker', function () {
     USSService.getOrg.and.returnValue($q.resolve({
       sipDomain: 'somedomain',
     }));
-    ServiceDescriptor.isServiceEnabled.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
-    ServiceDescriptor.getServices.and.returnValue($q.resolve(
+    ServiceDescriptorService.getServices.and.returnValue($q.resolve(
       [{
         id: 'squared-fusion-ec',
         enabled: true,

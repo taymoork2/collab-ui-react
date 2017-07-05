@@ -7,8 +7,8 @@ class CustomerReportsHeaderCtrl {
     private Authinfo,
     private FeatureToggleService,
     private MediaServiceActivationV2,
-    private WebExApiGatewayService,
     private ProPackService,
+    private WebExApiGatewayService,
   ) {
     if (Authinfo.isCare()) {
       this.headerTabs.push({
@@ -30,12 +30,6 @@ class CustomerReportsHeaderCtrl {
         this.headerTabs.push({
           title: 'reportsPage.sparkReports',
           state: 'reports.spark',
-        });
-      }
-      if (features.webexReports) { // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
-        this.headerTabs.push({
-          title: 'customerPage.webex',
-          state: 'reports.webex_',
         });
       }
       if (features.isMfEnabled) {

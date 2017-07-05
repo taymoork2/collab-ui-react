@@ -10,7 +10,6 @@ export class ClusterDeregisterController {
   /* @ngInject */
   constructor(
     private $modalInstance,
-    private $translate: ng.translate.ITranslateService,
     private cluster: ICluster,
     private HybridServicesClusterService: HybridServicesClusterService,
     private PrivateTrunkService: PrivateTrunkService,
@@ -49,13 +48,13 @@ export class ClusterDeregisterController {
 
   private callNotification(): void {
     if (this.nameChangeEnabled) {
-      this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopupNew', {
+      this.Notification.success('hercules.renameAndDeregisterComponent.deregisterConfirmPopupNew', {
         clusterName: this.cluster.name,
-      }));
+      });
     } else {
-      this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopup', {
+      this.Notification.success('hercules.renameAndDeregisterComponent.deregisterConfirmPopup', {
         clusterName: this.cluster.name,
-      }));
+      });
     }
   }
 }

@@ -2,6 +2,7 @@ import { IFeature } from '../../../core/components/featureList/featureList.compo
 import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 import IPlace = csdm.IPlace;
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 interface IDevice {
 }
@@ -24,19 +25,21 @@ class PlaceOverview implements ng.IComponentController {
   private showDeviceSettings = false;
 
   /* @ngInject */
-  constructor(private $q: ng.IQService,
-              private $state: ng.ui.IStateService,
-              private $stateParams,
-              private $translate: ng.translate.ITranslateService,
-              private Authinfo,
-              private CsdmHuronUserDeviceService,
-              private CsdmDataModelService: ICsdmDataModelService,
-              private FeatureToggleService,
-              private ServiceDescriptor,
-              private Notification,
-              private Userservice,
-              private WizardFactory,
-              private CsdmUpgradeChannelService) {
+  constructor(
+    private $q: ng.IQService,
+    private $state: ng.ui.IStateService,
+    private $stateParams,
+    private $translate: ng.translate.ITranslateService,
+    private Authinfo,
+    private CsdmHuronUserDeviceService,
+    private CsdmDataModelService: ICsdmDataModelService,
+    private FeatureToggleService,
+    private ServiceDescriptorService: ServiceDescriptorService,
+    private Notification,
+    private Userservice,
+    private WizardFactory,
+    private CsdmUpgradeChannelService,
+  ) {
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.$stateParams.currentPlace.cisUuid);
     CsdmDataModelService.reloadItem(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
   }
@@ -90,11 +93,11 @@ class PlaceOverview implements ng.IComponentController {
     const placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
       this.csdmHybridCalendarFeature = feature;
     });
-    const anyCalendarEnabledPromise = this.ServiceDescriptor.getServices().then(services => {
-      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter(service => {
+    const anyCalendarEnabledPromise = this.ServiceDescriptorService.getServices().then(services => {
+      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
-      this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter(service => {
+      this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });
@@ -143,7 +146,7 @@ class PlaceOverview implements ng.IComponentController {
     if (this.currentPlace.type === 'cloudberry') {
       this.showPstn = this.Authinfo.isSquaredUC();
       this.actionList = [{
-        actionKey: 'usersPreview.editServices',
+        actionKey: 'common.edit',
         actionFunction: () => {
           this.editCloudberryServices();
         },

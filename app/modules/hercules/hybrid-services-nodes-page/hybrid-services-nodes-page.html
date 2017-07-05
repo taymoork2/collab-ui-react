@@ -16,11 +16,16 @@
     ></span>
     <span
       translate="hercules.nodesPage.alertBannerTime"
-      translate-value-date="{{$ctrl.nextUpgradeStartTime}}"
+      translate-values="{date: $ctrl.nextUpgradeStartTime, count: $ctrl.connectorTypesWithUpgrade.length}"
+      translate-interpolation="messageformat"
     ></span>
+    <br>
     <span
+      class="upgrade-link"
+      ng-repeat="service in $ctrl.connectorTypesWithUpgrade"
       translate="hercules.nodesPage.alertBannerLink"
-      translate-value-onclick="$ctrl.openUpgradeModal()"
+      translate-value-service="{{::'hercules.shortConnectorNameFromConnectorType.'+service|translate}}"
+      translate-value-onclick="$ctrl.openUpgradeModal(service)"
       translate-compile
     ></span>
   </cs-alert-banner>

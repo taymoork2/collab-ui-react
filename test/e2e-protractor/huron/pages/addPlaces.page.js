@@ -1,25 +1,34 @@
 export class AddPlacesPage {
   constructor() {
     this.placesTab = element(by.css('i.icon-location'));
-    this.addNewPlace = element(by.css('button.add-button'));
+    this.addNewPlace = element.all(by.css('button.add-button')).first();
     this.newPlaceInput = element(by.id('newPlace'));
     this.nxtBtn = element(by.id('next-button'));
     this.nxtBtn2 = element(by.css('[ng-click="chooseDeviceType.next()"]'));
     this.selectHuron = element(by.css('[ng-click="chooseDeviceType.huron()"]'));
+    this.selectCloudberry = element(by.css('[ng-click="chooseDeviceType.cloudberry()"]'));
+    this.sparkOnlyRadio = element(by.css('.cs-radio[for="service1"]'));
+    this.sparkPhoneRadio = element(by.css('label[for="service2"]'));
+    this.nxtBtn4 = element(by.css('[ng-click="editServices.next()"]'));
     this.addExtension = element(by.name('internalNumber'));
     this.nxtBtn3 = element(by.css('[ng-click="addLines.next()"]'));
-    this.qrCode = element(by.css('div.qrCodeSection'));
+    this.qrCode = element.all(by.css('div.qrCodeSection')).first();
     this.closeGrp = element(by.css('button.close'));
     this.searchPlaces = element(by.css('i.icon-search'));
+    this.clearSearchPlace = element(by.css('i.icon-exit-outline'));
     this.searchBar = element(by.id('searchFilter'));
     this.clickLocation = element(by.cssContainingText('.ui-grid-cell-contents', 'Naboo'));
-    this.overviewPg = element(by.cssContainingText('.ng-binding', 'Overview'));
+    this.overviewPg = element.all(by.cssContainingText('.ng-binding', 'Overview')).first();
     this.servicesSctn = element(by.cssContainingText('.section-name', 'Services'));
     this.devicesSctn = element(by.cssContainingText('.section-name', 'Devices'));
-    this.callClick = element(by.cssContainingText('.feature-label', 'Cisco Spark + Spark Call'));
-    this.callStngsPg = element(by.cssContainingText('.ng-binding', 'Call'));
+    this.callClick = element(by.cssContainingText('.feature-label', 'Cisco Spark + Cisco Spark Call'));
+    this.callStngsPg = element.all(by.cssContainingText('.ng-binding', 'Call')).first();
+    this.clickLocation2 = element(by.cssContainingText('.ui-grid-cell-contents', 'Jedha'));
+    this.clickLocation3 = element(by.cssContainingText('.ui-grid-cell-contents', 'Eadu'));
+    this.callClick2 = element(by.cssContainingText('.feature-label', 'Cisco Spark only'));
     this.prfrdLang = element(by.cssContainingText('.section-name', 'Preferred Language'));
-    this.prfrdLangDd = element(by.css('.csSelect-container[name="languageSelect"]'))
+    this.prfrdLangDd = element(by.css('.csSelect-container[name="languageSelect"]'));
+    this.prfrdLangInst = element(by.css('.description-block', 'Configure preferred language'));
     this.dirNumSct = element(by.cssContainingText('.section-name', 'Directory Numbers'));
     this.featuresSct = element(by.cssContainingText('.section-name', 'Features'));
     this.primaryClick = element(by.cssContainingText('.feature-status', 'Primary'));

@@ -1748,7 +1748,6 @@
             controller: 'CustomerReportsHeaderCtrl',
             controllerAs: 'header',
             parent: 'main',
-            // abstract: true,
           })
           .state('reports.spark', {
             url: '/spark',
@@ -2913,10 +2912,11 @@
               customerEmail: '',
               customerCommunicationLicenseIsTrial: '',
               customerRoomSystemsLicenseIsTrial: '',
+              refreshFn: function () {},
             },
             views: {
               'modal@': {
-                template: '<uc-pstn-paid-wizard class="modal-content" customer-id="$resolve.customerId" customer-communication-license-is-trial="$resolve.customerCommunicationLicenseIsTrial" customer-room-systems-license-is-trial="$resolve.customerRoomSystemsLicenseIsTrial" dismiss="$dismiss()" close="$close()"></uc-pstn-paid-wizard>',
+                template: '<uc-pstn-paid-wizard class="modal-content" customer-id="$resolve.customerId" customer-communication-license-is-trial="$resolve.customerCommunicationLicenseIsTrial" customer-room-systems-license-is-trial="$resolve.customerRoomSystemsLicenseIsTrial" dismiss="$dismiss()" close="$close()" refresh-fn="$resolve.refreshFn()"></uc-pstn-paid-wizard>',
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'pstn-numbers';
@@ -2951,6 +2951,9 @@
                   });
                 }
               },
+              refreshFn: /* @ngInject */ function ($stateParams) {
+                return $stateParams.refreshFn;
+              },
             },
           })
           .state('pstnSetup', {
@@ -2961,6 +2964,7 @@
               customerEmail: {},
               customerCommunicationLicenseIsTrial: {},
               customerRoomSystemsLicenseIsTrial: {},
+              refreshFn: function () {},
             },
             views: {
               'modal@': {
@@ -4048,9 +4052,7 @@
             url: '/services/calendar/settings',
             views: {
               calendarServiceView: {
-                controllerAs: 'calendarSettings',
-                controller: 'CalendarSettingsController',
-                templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html',
+                template: '<calendar-service-settings-page></calendar-service-settings-page>',
               },
             },
           })

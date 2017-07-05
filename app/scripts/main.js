@@ -84,6 +84,7 @@
     require('modules/core/domainManagement').default,
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,
     require('modules/core/validation').default,
+    require('modules/core/customerReports').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -147,7 +148,7 @@
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
-    require('modules/hercules/services/service-descriptor'),
+    require('modules/hercules/services/service-descriptor.service').default,
     require('modules/hercules/services/uss-service'),
   ]);
 

@@ -49,18 +49,19 @@ export function provisionCmiCustomer(partnerName, customer, site, numberRange) {
     });
 }
 
-export function provisionCustomerAndLogin(partnerName, trial, cmiCustomer, site, numberRange) {
-  return this.provisionAtlasCustomer(partnerName, trial)
+
+export function provisionCustomerAndLogin(customer) {
+  return this.provisionAtlasCustomer(customer.partner, customer.trial)
     .then(atlasCustomer => {
-      if (atlasCustomer && cmiCustomer) {
-        cmiCustomer.uuid = atlasCustomer.customerOrgId;
-        cmiCustomer.name = atlasCustomer.customerName;
-        return this.provisionCmiCustomer(partnerName, cmiCustomer, site, numberRange)
-          .then(() => loginPartner(partnerName))
-          .then(() => switchToCustomerWindow(trial.customerName));
+      if (atlasCustomer && customer.cmiCustomer) {
+        customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
+        customer.cmiCustomer.name = atlasCustomer.customerName;
+        return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange)
+          .then(() => loginPartner(customer.partner))
+          .then(() => switchToCustomerWindow(customer.name));
       } else {
-        return loginPartner(partnerName)
-          .then(() => switchToCustomerWindow(trial.customerName));
+        return loginPartner(customer.partner)
+          .then(() => switchToCustomerWindow(customer.name));
       }
     });
 }
@@ -101,7 +102,7 @@ function deleteAtlasCustomerIfFound(token, partnerName, customerName) {
     })
 }
 
-function loginPartner(partnerEmail) {
+export function loginPartner(partnerEmail) {
   return login.login(partnerEmail, '#/partner/customers');
 }
 

@@ -12,6 +12,7 @@ import customerServiceModule from 'modules/huron/customer';
 import serviceSetupModule from 'modules/huron/serviceSetup';
 import avrilServiceModule from 'modules/huron/avril';
 import terminusServiceName from 'modules/huron/pstn/terminus.service';
+import mediaOnHoldModule from 'modules/huron/media-on-hold';
 
 export default angular
   .module('huron.settings.services', [
@@ -22,6 +23,7 @@ export default angular
     serviceSetupModule,
     avrilServiceModule,
     terminusServiceName,
+    mediaOnHoldModule,
   ])
   .service('HuronSettingsService', HuronSettingsService)
   .service('HuronSettingsOptionsService', HuronSettingsOptionsService)

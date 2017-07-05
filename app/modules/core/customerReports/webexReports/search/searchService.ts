@@ -17,8 +17,13 @@ export class SearchService {
   }
 
   public getMeetings(data) {
-    const url = this.url + 'meetings';
+    const url = `${this.url}meetings`;
     return this.$http.post(url, data).then(this.extractData);
+  }
+
+  public getMeetingDetail(conferenceID) {
+    const url = `${this.url}meetings/${conferenceID}/session`;
+    return this.$http.get(url).then(this.extractData);
   }
 
   public getStatus(num) {

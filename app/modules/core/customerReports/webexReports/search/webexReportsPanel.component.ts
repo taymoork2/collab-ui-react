@@ -15,7 +15,6 @@ class WebexReportsPanel implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
   ) {
     const wm: any = this.SearchService.getStorage('webexMeeting');
-    //const wm: any = {};
     this.overview = {
       status: wm.status,
       status_: wm.status_,
@@ -29,7 +28,6 @@ class WebexReportsPanel implements ng.IComponentController {
 
   public $onInit() {
     this.getMeeting();
-
     this.$state.current.data.displayName = this.$translate.instant('common.overview');
   }
 
@@ -43,9 +41,9 @@ class WebexReportsPanel implements ng.IComponentController {
         this.loading = false;
         const data: any  = res;
 
-        data.session.startTime_ = moment(data.session.startTime).format('hh:mm:ss');
-        data.session.createTime_ = moment(data.session.createTime).format('hh:mm:ss');
-        data.session.endTime_ = data.session.endTime ? moment(data.session.endTime).format('hh:mm:ss') : '';
+        data.session.startTime_ = moment(data.session.startTime).format('MMM Do, YYYY h:mm:ss A');
+        data.session.createTime_ = moment(data.session.createTime).format('MMM Do, YYYY h:mm:ss A');
+        data.session.endTime_ = data.session.endTime ? moment(data.session.endTime).format('MMM Do, YYYY h:mm:ss A') : '';
 
         data.features_ = _.map(data.features, (val: string, key: string) => {
           const val_ = val ? 'yes' : 'no';

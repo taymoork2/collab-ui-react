@@ -1,6 +1,7 @@
 import { UCCService } from 'modules/hercules/services/ucc-service';
 import { HybridServiceUserSidepanelHelperService, IUserStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { Notification } from 'modules/core/notifications/notification.service';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 interface IOptions {
   callServiceAware: IUserStatus;
@@ -26,7 +27,7 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
     private FeatureToggleService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
-    private ServiceDescriptor,
+    private ServiceDescriptorService: ServiceDescriptorService,
     private USSService,
     private UCCService: UCCService,
   ) { }
@@ -38,7 +39,7 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
   }
 
   private isConnectSetUp() {
-    this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec')
+    this.ServiceDescriptorService.isServiceEnabled('squared-fusion-ec')
       .then((enabled: boolean) => {
         this.callServiceConnectEnabledForOrg = enabled;
       })

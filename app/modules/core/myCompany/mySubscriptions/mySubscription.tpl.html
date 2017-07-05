@@ -30,7 +30,7 @@
         <div class="columns medium-2 subscription-upgrade">
           <div class="license-quantity">
             <bmmp-subscription-upgrade-button ng-if="subscription.isOnline"
-              class="btn btn--primary upgrade-button"
+              class="upgrade-button btn btn--primary"
               bmmp-attr="mcpSub.bmmpAttr"
               widget-location="navigation-bar">
             </bmmp-subscription-upgrade-button>
@@ -56,7 +56,7 @@
             <div class="column medium-5 sub-name" ng-if="mcpSub.showSingleSub">
               <div class="container text-right">
                 <bmmp-subscription-upgrade-button ng-if="mcpSub.subscriptionDetails[0].isOnline"
-                  class="btn btn--primary upgrade-button"
+                  class="upgrade-button btn btn--primary"
                   bmmp-attr="mcpSub.bmmpAttr"
                   widget-location="navigation-bar">
                 </bmmp-subscription-upgrade-button>

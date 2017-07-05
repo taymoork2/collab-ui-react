@@ -198,6 +198,11 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onCompanyMohChanged(companyMoh: string): void {
+    this.huronSettingsData.companyMoh = companyMoh;
+    this.checkForChanges();
+  }
+
   public onPreferredLanguageChanged(preferredLanguage: string): void {
     this.huronSettingsData.site.preferredLanguage = preferredLanguage;
     this.checkForChanges();

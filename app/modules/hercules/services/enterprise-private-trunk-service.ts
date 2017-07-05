@@ -1,6 +1,9 @@
 import { IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk.service';
 import { IPrivateTrunkInfo, IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
+import { CsdmCacheUpdater } from 'modules/squared/devices/services/CsdmCacheUpdater';
+import { CsdmHubFactory, CsdmPollerFactory } from 'modules/squared/devices/services/CsdmPoller';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export interface IPrivateTrunkResourceWithStatus extends IPrivateTrunkResource {
   status: ITrunkStatus;
@@ -38,18 +41,18 @@ export class EnterprisePrivateTrunkService {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
-    private CsdmCacheUpdater,
-    private CsdmHubFactory,
-    private CsdmPoller,
+    private CsdmCacheUpdater: CsdmCacheUpdater,
+    private CsdmHubFactory: CsdmHubFactory,
+    private CsdmPoller: CsdmPollerFactory,
     private PrivateTrunkService: PrivateTrunkService,
-    private ServiceDescriptor,
+    private ServiceDescriptorService: ServiceDescriptorService,
   ) {
   }
 
   public fetch() {
-    const promises = [
+    const promises: ng.IPromise<any>[] = [
       this.PrivateTrunkService.getPrivateTrunk(),
-      this.ServiceDescriptor.getServiceStatus('ept'),
+      this.ServiceDescriptorService.getServiceStatus('ept'),
     ];
     return this.$q.all(promises)
       .then((results: [IPrivateTrunkInfo, IServiceStatus]) => {
