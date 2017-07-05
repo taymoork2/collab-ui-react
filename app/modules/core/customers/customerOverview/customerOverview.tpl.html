@@ -30,7 +30,7 @@
         </button>
       </a>
     </cs-sp-section>
-    <cs-sp-section ng-if="!customerOverview.currentCustomer.trialId">
+    <cs-sp-section ng-if="!customerOverview.currentCustomer.trialId && customerOverview.trialActions.length > 0">
       <section-title
         title-key="customerPage.trial"
         action-list="customerOverview.trialActions" as-button="true">
