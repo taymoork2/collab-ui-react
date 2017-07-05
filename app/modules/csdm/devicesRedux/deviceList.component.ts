@@ -126,7 +126,7 @@ class DeviceList implements ng.IComponentController {
           return false;
         }
         if (this.searchObject.tokenizedQuery && this.searchObject.tokenizedQuery[field]) {
-          if (0 <= this.getFilterMatchValue(device, field).toLowerCase().indexOf(this.searchObject.tokenizedQuery[field].toLowerCase())) {
+          if (0 <= this.getFilterMatchValue(device, field).toLowerCase().indexOf(this.searchObject.tokenizedQuery[field].query.toLowerCase())) {
             if (field !== 'displayName') {
               device.filterMatch = field;
             }

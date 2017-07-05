@@ -68,9 +68,12 @@ export class SearchObject {
 
   // public type?: string;
   public query?: string;  //product:sx10,faosdiv
-  public tokenizedQuery?: { [key: string]: string };
+  public tokenizedQuery: { [key: string]: { searchField: string, query: string, active: boolean } };
   public aggregates?: string;
   public size?: number;
+
+  private constructor() {
+  }
 
   public static initDefaults(object: SearchObject) {
     object.size = object.size || 20;
@@ -98,17 +101,40 @@ export class SearchObject {
         const splitted = _.split(token, ':');
         if (splitted.length === 2) {
           if (_.some(_.keys(SearchObject.SearchFields)), (a) => splitted === a) {
-            r[splitted[0]] = splitted[1];
+            r[splitted[0]] = { searchField: splitted[0], query: splitted[1], active: false };
             // return { [splitted[0]]: splitted[1] };
           } else {
-            r['any'] = splitted[1];
+            r['any'] = { searchField: 'any', query: splitted[1], active: false };
           }
-        } else {
-          r['any'] = token;
+        } else if (token.length > 0) {
+          r['any'] = { searchField: 'any', query: token, active: false };
         }
         return r;
       }, {})
       .value();
     return sobject;
+  }
+
+  public setTokenizedQuery(searchField: string, query: string, active: boolean) {
+    if (active) {
+      _.forEach(this.tokenizedQuery, (t) => t.active = false);
+    }
+    this.tokenizedQuery[searchField] = { searchField: searchField, query: query, active: active };
+    this.updateQuery();
+  }
+
+  private updateQuery() {
+    this.query = _
+      .chain(this.tokenizedQuery)
+      .map((v, k) => {
+        return (k === 'any' ? '' : k + ':') + v.query;
+      })
+      .join(',')
+      .value();
+  }
+
+  public removeToken(searchField: string) {
+    delete this.tokenizedQuery[searchField];
+    this.updateQuery();
   }
 }

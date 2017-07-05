@@ -4,8 +4,8 @@ export function highlightFilter() {
     const seachField = searchObject
       && searchObject.tokenizedQuery
       && (searchObject.tokenizedQuery[field] || searchObject.tokenizedQuery[SearchFields[SearchFields.any]]);
-    if (input && seachField) {
-      const regex = new RegExp('(' + seachField + ')', 'gi');
+    if (input && seachField && seachField.query) {
+      const regex = new RegExp('(' + seachField.query + ')', 'gi');
       return input.replace(regex, "<span class='hl'>$1</span>");
     }
     return input;

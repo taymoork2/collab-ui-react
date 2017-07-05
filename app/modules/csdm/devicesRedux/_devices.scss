@@ -278,7 +278,7 @@
   }
 
   .devices-search {
-    width: 250px;
+    min-width: 250px;
     form {
       display: flex;
       border-bottom: 1px solid #ccc;
@@ -311,6 +311,16 @@
       .clear-icon {
         color: $gray;
         cursor: pointer;
+      }
+      .bullet {
+        background-color: $gray-dark-2;
+        border-radius: 0.3rem;
+        color: white;
+        height: 29px;
+        margin: 3px 2px 0 0;
+        padding: 0 3px;
+        font-size: 0.875rem;
+        line-height: 2;
       }
 
       input[type=text] {

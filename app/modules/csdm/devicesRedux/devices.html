@@ -12,7 +12,7 @@
   </div>
 
   <div ng-if="devices.anyDevicesOrCodesLoaded">
-    <device-search search="devices.search" search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()" search-result-changed="devices.searchResultChanged(result)"></device-search>
+    <device-search search="devices.search" search-object="devices.searchObject" search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()" search-result-changed="devices.searchResultChanged(result)"></device-search>
     <device-list devices="devices.searchResult" search-object="devices.searchObject"></device-list>
     <div class="devices-content">
       <div class="row">

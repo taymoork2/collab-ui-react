@@ -8,8 +8,6 @@ export class DevicesCtrl {
   private _searchObject: SearchObject;
   /* @ngInject */
   constructor() {
-    this._searchResult = [];
-    this._searchString = '';
   }
 
   set searchResult(value: Device[]) {
@@ -36,9 +34,9 @@ export class DevicesCtrl {
 
   }
 
-  public searchChanged(search: string) {
-    this._searchString = search;
-    this._searchObject = SearchObject.create(search);
+  public searchChanged(search: SearchObject) {
+    this._searchString = search.query || '';
+    this._searchObject = search;
   }
 
   public searchResultChanged(result: Device[]) {

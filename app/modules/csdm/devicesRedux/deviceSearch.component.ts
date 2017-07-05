@@ -1,5 +1,5 @@
 import {
-  Aggregation, Aggregations, BucketData, CsdmSearchService, SearchObject,
+  Aggregation, Aggregations, BucketData, CsdmSearchService, SearchFields, SearchObject,
   SearchResult,
 } from '../services/csdmSearch.service';
 import { Device } from '../services/deviceSearchConverter';
@@ -8,21 +8,25 @@ import List = _.List;
 export class DeviceSearch implements ng.IComponentController {
 
   private searchResultChanged: any;
-  private searchChanged: any;
+  private searchChanged: (e: { search: SearchObject }) => {};
   public search: string;
   private baseChart = 'chartArea';
   private chart: any;
   public chartTitle: string;
   public searchResult: Device[];
-  public searchField;
-  public searchObject;
+  public searchField: string;
+  private currentSearchObject: SearchObject;
+  public currentBullet: Bullet;
+  public searchObject: SearchObject;
+  private currentAggregations: Aggregations;
   /* @ngInject */
   constructor(private CsdmSearchService: CsdmSearchService) {
-
+    this.currentSearchObject = SearchObject.create('');
+    this.currentBullet = new Bullet(this.currentSearchObject);
   }
 
   public $onInit(): void {
-    this.performSearch('');
+    this.performSearch(SearchObject.create(''));
   }
 
   private updateSearchResult(devices?: Device[]) {
@@ -74,7 +78,8 @@ export class DeviceSearch implements ng.IComponentController {
         method: (e) => {
           if (data) {
             const search = data.bucketName + ':' + e.dataItem.title;
-            this.search = (this.search ? this.search + ',' : '') + search;
+            this.currentBullet.text = (this.currentBullet.text ? this.currentBullet.text + ',' : '') + search;
+            // this.search = (this.search ? this.search + ',' : '') + search;
             this.searchChanged2();
           }
         },
@@ -86,29 +91,45 @@ export class DeviceSearch implements ng.IComponentController {
   }
 
   public searchChanged2() {
-    this.performSearch(this.search);
-    this.searchChanged({ search: this.search });
+    // const prev = (this.search || '');
+    // const searchField = (this.searchField || '');
+    // // if(prev.length > 0 && searchField> 0) {
+    // let s = prev;
+    // if (searchField.length > 0) {
+    //   s = prev.length > 0 ? prev + ',' + searchField : searchField;
+    // }
+    // const search = SearchObject.create(s);
+    const search = _.cloneDeep(this.currentSearchObject);
+
+    this.performSearch(search); //TODO avoid at now
+    // this.searchObject = search;
+    this.searchChanged({ search: search });
   }
 
-  private pickAggregate(aggregations: Aggregations): BucketHolder {
-    return _.head(_.chain(aggregations)
+  private pickAggregate(aggregations: Aggregations, bucketName?: string): BucketHolder {
+    const buckets = _.chain(aggregations)
       .map((a, k) => {
         return { bucketName: k, buckets: a.buckets };
       })
       .orderBy((a: Aggregation) => a.buckets.length, 'desc')
-      .value());
-    // return _.flowRight(
-    //   head,
-    //   map((a, k) => {
-    //     return { bucketName: k, buckets: a };
-    //   }),
-    //   orderBy((a: Aggregation) => a.buckets.length, 'desc'))(aggregations);
+      .value();
+
+    if (bucketName) {
+      return _.find(buckets, (bucket: BucketHolder) => bucket.bucketName === bucketName);
+    } else {
+      return _.head(buckets);
+    }
   }
 
-  private performSearch(search: string) {
-    this.CsdmSearchService.search(SearchObject.create(search)).then((response) => {
+  public showAggregate(name: string) {
+    this.updateGraph(this.pickAggregate(this.currentAggregations, name), 'key', 'docCount');
+  }
+
+  private performSearch(search: SearchObject) {
+    this.CsdmSearchService.search(search).then((response) => {
       if (response && response.data) {
-        this.updateGraph(this.pickAggregate(response.data.aggregations), 'key', 'docCount');
+        this.currentAggregations = response.data.aggregations;
+        this.updateGraph(this.pickAggregate(this.currentAggregations, 'errorCodes'), 'key', 'docCount');
         this.setChartTitle(response.data);
         this.updateSearchResult(response.data.hits.hits);
         return;
@@ -118,11 +139,88 @@ export class DeviceSearch implements ng.IComponentController {
       this.updateSearchResult();
     });
   }
+
+  public getTokens() {
+    return _.filter(this.currentSearchObject.tokenizedQuery, (t) => !t.active);
+  }
+
+  // public getFinishedTokens() {
+  //   return _.
+  //   chain(this.currentSearchObject.tokenizedQuery)
+  //     .map((v,k)=>{return {}})
+  //   _.filter(this.currentSearchObject.tokenizedQuery, (__, k) => this.currentBullet.isCurrentField(k || ''));
+  // }
 }
 
 class BucketHolder {
   public bucketName: string;
   public buckets: List<BucketData>;
+}
+
+class Bullet {
+  private _text = '';
+  public searchField = '';
+  public active = false;
+
+  get searchfieldWithPrefix() {
+    return this.searchField.length > 0 ? this.searchField + ':' : this.searchField;
+  }
+
+  get text(): string {
+    return this._text;
+  }
+
+  set text(value: string) {
+    const tokens = Bullet.createTokens(this.searchfieldWithPrefix + (value || ''));
+    const token = tokens.pop();
+    if (!token) {
+      return;
+    }
+    tokens.forEach((t) => {
+      this.searchObject.setTokenizedQuery(t.searchField, t.query, false);
+    });
+
+    if (token.valid) {
+      this._text = token.query;
+      this.searchField = token.searchField;
+      this.active = true;
+      const anyField = this.searchObject.tokenizedQuery[SearchFields[SearchFields.any]];
+      if (anyField && anyField.active && token.searchField.search(anyField.query) >= 0) {
+        this.searchObject.removeToken(anyField.searchField);
+      }
+      this.searchObject.setTokenizedQuery(token.searchField, token.query, true);
+    } else {
+      this.searchField = '';
+      this._text = token.query || '';
+      if (tokens.length === 0 || this._text.length > 0) {
+        this.searchObject.setTokenizedQuery('any', token.query, true);
+      }
+    }
+  }
+
+  constructor(private searchObject: SearchObject) {
+  }
+
+  public static createTokens(search: string) {
+    const splitted = _.split(search, ',');
+    const token = _.map(splitted, (s) => Bullet.createToken(s));
+    return token;
+  }
+
+  public static createToken(search: string): { searchField: string, query: string, valid: boolean } {
+    const splitted = _.split(search, ':');
+    if (splitted.length === 2) {
+      if (_.some(_.keys(SearchObject.SearchFields)), (a) => splitted === a) {
+        return { searchField: splitted[0], query: splitted[1], valid: true };
+      }
+      return { searchField: SearchFields[SearchFields.any], query: splitted[1], valid: false };
+    }
+    return { searchField: SearchFields[SearchFields.any], query: search, valid: false };
+  }
+
+  public isCurrentField(field: string) {
+    return (this.searchField || 'any') === (field || 'any');
+  }
 }
 
 export class DeviceSearchComponent implements ng.IComponentOptions {
