@@ -61,8 +61,8 @@
       },
     ];
 
-    var deregister = $scope.$on('selectEnable', function () {
-      vm.selectEnable = !vm.selectEnable;
+    var deregister = $scope.$on('selectEnable', function (data) {
+      vm.selectEnable = data.defaultPrevented;
     });
     $scope.$on('$destroy', deregister);  // -- by zoncao@cisco.com for site select
 
@@ -77,6 +77,8 @@
 
       if (filter === 'search') {
         return false;
+      } else {
+        vm.selectEnable = true;
       }
 
       updateIframe();
