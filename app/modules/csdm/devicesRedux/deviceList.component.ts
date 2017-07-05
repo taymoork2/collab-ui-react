@@ -1,4 +1,5 @@
 import { SearchFields, SearchObject } from '../services/csdmSearch.service';
+import { IOnChangesObject } from 'angular';
 class DeviceList implements ng.IComponentController {
   public searchObject: SearchObject;
   public devices;
@@ -26,7 +27,9 @@ class DeviceList implements ng.IComponentController {
 
   }
 
-  public $onChanges() {
+  public $onChanges(onChangesObj: IOnChangesObject) {
+    //TODO only update on device change, or wait for both, flicker at the moment
+    onChangesObj = onChangesObj;
     this.updateCodesAndDevices();
   }
 
@@ -40,19 +43,9 @@ class DeviceList implements ng.IComponentController {
   }
 
   private groups = [{
-    displayName: 'Devices with problems',
-    matches: (device) => {
-      return device.connectionStatus === 'CONNECTED_WITH_ISSUES' && !this.search;
-    },
-  }, {
-    displayName: 'Rooms',
-    matches: (device) => {
-      return device.type === 'group' || device.accountType === 'MACHINE';
-    },
-  }, {
-    displayName: 'Personal Devices',
-    matches: (device) => {
-      return (!device.hasIssues || this.search) && device.accountType !== 'MACHINE';
+    displayName: 'All Devices',
+    matches: () => {
+      return true;
     },
   }];
 
@@ -163,6 +156,10 @@ class DeviceList implements ng.IComponentController {
 
   public offsetForGroup(group) {
     return this.currentOffset[group.displayName] || this.pageSize;
+  }
+
+  public hasMore() {
+    return true;
   }
 
   public increaseOffsetForGroup(group) {

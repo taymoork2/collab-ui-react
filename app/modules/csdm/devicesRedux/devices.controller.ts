@@ -1,21 +1,20 @@
-import { SearchObject } from '../services/csdmSearch.service';
-import { Device } from '../services/deviceSearchConverter';
+import { SearchObject, SearchResult } from '../services/csdmSearch.service';
 export class DevicesCtrl {
   public anyDevicesOrCodesLoaded = true; //TODO remove
-
   private _searchString: string = '';
-  private _searchResult: Device[] = [];
+  private _searchResult: SearchResult;
   private _searchObject: SearchObject;
   /* @ngInject */
   constructor() {
+    this.searchResult = { aggregations: {}, hits: { hits: [], total: 0 } };
   }
 
-  set searchResult(value: Device[]) {
-    this._searchResult = value;
-  }
-
-  get searchResult(): Device[] {
+  get searchResult(): SearchResult {
     return this._searchResult;
+  }
+
+  set searchResult(value: SearchResult) {
+    this._searchResult = value;
   }
 
   get searchObject(): SearchObject {
@@ -34,13 +33,17 @@ export class DevicesCtrl {
 
   }
 
+  public addToSearch() {
+
+  }
+
   public searchChanged(search: SearchObject) {
     this._searchString = search.query || '';
     this._searchObject = search;
   }
 
-  public searchResultChanged(result: Device[]) {
-    this.searchResult = result;
+  public searchResultChanged(result: SearchResult) {
+    this._searchResult = result;
     // this._searchResult.splice(0, this._searchResult.length);
     // if (result && result.length) {
     //   Array.prototype.push.apply(this._searchResult, result);

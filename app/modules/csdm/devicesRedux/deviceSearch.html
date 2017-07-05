@@ -1,0 +1,32 @@
+<div class="devices-search" ng-class="{searching: dctrl.searching }">
+  <form ng-class="{
+              'active': dctrl.search || dctrl.inputActive,
+              'no-match': dctrl.search && !dctrl.groupedDevices.length
+            }">
+
+    <div class="bullets">
+      <div class="bullet" ng-repeat="token in dctrl.getTokens()" ng-dblclick="dctrl.removeBullet(token)">
+        {{token.searchField}}:{{token.query}}<i class="icon icon-close"/>
+      </div>
+    </div>
+    <div class="bullet current" ng-if="dctrl.currentBullet.searchField">{{dctrl.currentBullet.searchField}}:</div>
+    <input
+      type="text"
+      class="form-control"
+      ng-model="dctrl.currentBullet.text"
+      ng-blur="dctrl.inputActive=false"
+      ng-focus="dctrl.inputActive=true"
+      placeholder="Search for devices..."
+      ng-change="dctrl.searchChanged2()"
+      ng-model-options="{ debounce: { default: 250 } }"
+    />
+
+
+    <i
+      ng-if="dctrl.search"
+      class="fa fa-times clear-icon"
+      ng-click="dctrl.clearSearch()"
+    />
+
+  </form>
+</div>

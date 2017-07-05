@@ -12,13 +12,14 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    border-bottom: solid $gray-darkest 1px;
     .clearfix {
       flex-basis: 100%;
     }
     .graphCarousel {
       position: relative;
       //background-color: #00cc66;
-      height: 200px;
+      height: 230px;
       width: 500px;
       #chartArea {
         position: absolute;
@@ -27,6 +28,40 @@
         height: 250px;
         width: 600px;
         margin: auto;
+      }
+      .carousel {
+        .title {
+          flex-basis: 100%;
+          font-size: 1.2rem;
+        }
+        .large {
+          font-size: 2rem;
+        }
+        .selected {
+          font-size: 0.9rem;
+        }
+        .icon {
+          line-height: 1rem;
+        }
+
+        font-size: 0.6rem;
+        justify-content: center;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        position: absolute;
+        bottom: 0px;
+        margin: 0 35%;
+        width: 30%;
+      }
+    }
+    .bottom {
+      display: flex;
+      flex-basis: 100%;
+      justify-content: center;
+      font-size: 2rem;
+      i {
+        line-height: 0.8;
       }
     }
   }
@@ -279,8 +314,10 @@
 
   .devices-search {
     min-width: 250px;
+    max-width: 600px;
     form {
       display: flex;
+      flex-wrap: wrap;
       border-bottom: 1px solid #ccc;
       padding-bottom: 8px;
 
@@ -312,11 +349,19 @@
         color: $gray;
         cursor: pointer;
       }
+      .bullets {
+        display: flex;
+        flex-wrap: wrap;
+        flex-basis: 100%;
+        .current {
+          //flex: none;
+        }
+      }
       .bullet {
         background-color: $gray-dark-2;
         border-radius: 0.3rem;
         color: white;
-        height: 29px;
+        height: 1.75rem;
         margin: 3px 2px 0 0;
         padding: 0 3px;
         font-size: 0.875rem;
@@ -327,6 +372,14 @@
         border: 0;
         margin: 0;
         padding: 0;
+        width: auto;
+        flex-grow: 1;
+        flex-shrink: 1;
+      }
+      input {
+        &:focus > .devices-search form {
+          width: 650px;
+        }
       }
     }
     form.active {
@@ -350,9 +403,9 @@
       list-style-type: none;
       border-bottom: 1px solid #eee;
     }
-    searching {
-      width: 50%;
-    }
+  }
+  .searching {
+    width: 50%;
   }
 
   .button-bar {

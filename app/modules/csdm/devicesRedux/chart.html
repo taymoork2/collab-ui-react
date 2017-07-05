@@ -1,0 +1,16 @@
+<div class="graphCarousel hidden-sm hidden-xs">
+  <div id="chartTitle">{{dctrl.chartTitle}}</div>
+  <div id="chartArea"></div>
+  <div class="carousel">
+    <div class="title">{{dctrl.selectedAggregation.bucketName}}</div>
+    <i class="icon icon-chevron-left large" ng-click="dctrl.cycleAggregateLeft()"/>
+    <i class="icon icon-circle" ng-class="{selected: dctrl.selectedAggregation.bucketName === aggregate.bucketName}"
+       ng-repeat="aggregate in dctrl.currentAggregations" title="{{aggregate.bucketName}}"
+       ng-click="dctrl.showAggregate(aggregate.bucketName)"/>
+    <!--<i class="icon icon-circle" title="super" ng-click="dctrl.selectCarousel()"/>-->
+    <!--<i class="icon icon-circle" title="super" ng-click="dctrl.selectCarousel()"/>-->
+    <!--<i class="icon icon-circle"/>-->
+    <!--<i class="icon icon-circle"/>-->
+    <i class="icon icon-chevron-right large" ng-click="dctrl.cycleAggregateRight()"/>
+  </div>
+</div>

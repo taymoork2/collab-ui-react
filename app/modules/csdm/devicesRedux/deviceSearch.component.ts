@@ -1,93 +1,38 @@
 import {
-  Aggregation, Aggregations, BucketData, CsdmSearchService, SearchFields, SearchObject,
-  SearchResult,
+  CsdmSearchService, SearchFields, SearchObject, SearchResult,
 } from '../services/csdmSearch.service';
 import { Device } from '../services/deviceSearchConverter';
-import List = _.List;
 
 export class DeviceSearch implements ng.IComponentController {
 
-  private searchResultChanged: any;
-  private searchChanged: (e: { search: SearchObject }) => {};
-  public search: string;
-  private baseChart = 'chartArea';
-  private chart: any;
-  public chartTitle: string;
-  public searchResult: Device[];
   public searchField: string;
   private currentSearchObject: SearchObject;
   public currentBullet: Bullet;
   public searchObject: SearchObject;
-  private currentAggregations: Aggregations;
+  private inputActive: boolean;
+
+  //bindings
+  private searchResultChanged: (e: { result?: SearchResult }) => {};
+  private searchChanged: (e: { search: SearchObject }) => {};
+  public search: string;
+  public searchResult: Device[];
+
   /* @ngInject */
   constructor(private CsdmSearchService: CsdmSearchService) {
     this.currentSearchObject = SearchObject.create('');
     this.currentBullet = new Bullet(this.currentSearchObject);
   }
 
+  get searching(): boolean {
+    return this.inputActive || !!this.search;
+  }
+
   public $onInit(): void {
     this.performSearch(SearchObject.create(''));
   }
 
-  private updateSearchResult(devices?: Device[]) {
-    this.searchResultChanged({ result: devices });
-  }
-
-  private setChartTitle(data?: SearchResult) {
-    if (!data || !data.hits) {
-      this.chartTitle = '';
-      return;
-    }
-    this.chartTitle = 'Total:' + data.hits.total;
-  }
-
-  private updateGraph(data?: BucketHolder, titleField = 'name', valueField = 'value') {
-    const chartData = {
-      type: 'pie',
-      startDuration: 0,
-      titleField: titleField,
-      valueField: valueField,
-      // balloonText: chartOptions.balloonText,
-      outlineThickness: 0,
-      hoverAlpha: 0.5,
-      labelRadius: 1,
-      marginBottom: 40,
-      marginLeft: 40,
-      marginRight: 40,
-      marginTop: 40,
-      autoMargins: false,
-      pullOutRadius: '1%',
-      // titleField: 'name',
-      // valueField: 'value',
-      theme: 'light',
-      allLabels: [],
-      balloon: { enabled: false },
-      fontSize: 10,
-      legend: {
-        enabled: false,
-        align: 'center',
-        forceWidth: true,
-        switchable: false,
-        valueText: '',
-        markerSize: 8,
-      },
-      labelText: '[[title]]:[[value]]',
-      dataProvider: data && data.buckets || [],
-      listeners: [{
-        event: 'clickSlice',
-        method: (e) => {
-          if (data) {
-            const search = data.bucketName + ':' + e.dataItem.title;
-            this.currentBullet.text = (this.currentBullet.text ? this.currentBullet.text + ',' : '') + search;
-            // this.search = (this.search ? this.search + ',' : '') + search;
-            this.searchChanged2();
-          }
-        },
-      }],
-    };
-    // const chartData = this.CommonMetricsGraphService.getDummyPieChart();
-    this.chart = AmCharts.makeChart(this.baseChart, chartData);
-
+  private updateSearchResult(result?: SearchResult) {
+    this.searchResultChanged({ result: result });
   }
 
   public searchChanged2() {
@@ -106,36 +51,12 @@ export class DeviceSearch implements ng.IComponentController {
     this.searchChanged({ search: search });
   }
 
-  private pickAggregate(aggregations: Aggregations, bucketName?: string): BucketHolder {
-    const buckets = _.chain(aggregations)
-      .map((a, k) => {
-        return { bucketName: k, buckets: a.buckets };
-      })
-      .orderBy((a: Aggregation) => a.buckets.length, 'desc')
-      .value();
-
-    if (bucketName) {
-      return _.find(buckets, (bucket: BucketHolder) => bucket.bucketName === bucketName);
-    } else {
-      return _.head(buckets);
-    }
-  }
-
-  public showAggregate(name: string) {
-    this.updateGraph(this.pickAggregate(this.currentAggregations, name), 'key', 'docCount');
-  }
-
   private performSearch(search: SearchObject) {
     this.CsdmSearchService.search(search).then((response) => {
       if (response && response.data) {
-        this.currentAggregations = response.data.aggregations;
-        this.updateGraph(this.pickAggregate(this.currentAggregations, 'errorCodes'), 'key', 'docCount');
-        this.setChartTitle(response.data);
-        this.updateSearchResult(response.data.hits.hits);
+        this.updateSearchResult(response.data);
         return;
       }
-      this.updateGraph();
-      this.setChartTitle();
       this.updateSearchResult();
     });
   }
@@ -144,17 +65,17 @@ export class DeviceSearch implements ng.IComponentController {
     return _.filter(this.currentSearchObject.tokenizedQuery, (t) => !t.active);
   }
 
+  public removeBullet(bullet: Bullet) {
+    this.currentSearchObject.removeToken(bullet.searchField);
+    this.searchChanged2();
+  }
+
   // public getFinishedTokens() {
   //   return _.
   //   chain(this.currentSearchObject.tokenizedQuery)
   //     .map((v,k)=>{return {}})
   //   _.filter(this.currentSearchObject.tokenizedQuery, (__, k) => this.currentBullet.isCurrentField(k || ''));
   // }
-}
-
-class BucketHolder {
-  public bucketName: string;
-  public buckets: List<BucketData>;
 }
 
 class Bullet {
@@ -233,5 +154,5 @@ export class DeviceSearchComponent implements ng.IComponentOptions {
     clearSearch: '&',
   };
   public controllerAs = 'dctrl';
-  public templateUrl = 'modules/csdm/devicesRedux/deviceSearch.tpl.html';
+  public templateUrl = 'modules/csdm/devicesRedux/deviceSearch.html';
 }

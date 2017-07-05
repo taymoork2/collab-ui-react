@@ -36,7 +36,7 @@ export class CsdmSearchService {
 }
 enum Aggregate {connectionStatus, product, productFamily, activeInterface, errorCodes,
 upgradeChannel, software}
-export enum SearchFields {product, software, ip, serial, mac, any}
+export enum SearchFields {product, software, ip, serial, mac, displayName, any, connectionStatus, errorCodes}
 
 export class SearchResult {
   public aggregations: Aggregations;
@@ -46,7 +46,17 @@ export class Aggregations {
   [key: string]: Aggregation
 }
 export class Aggregation {
-  public buckets: List<BucketData>;
+
+  constructor(public buckets: List<BucketData>) {
+  }
+}
+export class NamedAggregation extends Aggregation {
+  public bucketName: string;
+
+  constructor(name, { buckets: buckets }: { buckets: List<BucketData> }) {
+    super(buckets);
+    this.bucketName = name;
+  }
 }
 
 export class BucketData {
@@ -58,11 +68,12 @@ export class SearchObject {
   public static SearchFields: { [x: string]: string } = {
     [SearchFields[SearchFields.product]]: 'Product',
     [SearchFields[SearchFields.software]]: 'Software',
-    ip: 'IP',
-    serial: 'Serial',
-    mac: 'Mac',
-    connectionStatus: 'Status',
-    displayname: 'DisplayName',
+    [SearchFields[SearchFields.ip]]: 'IP',
+    [SearchFields[SearchFields.serial]]: 'Serial',
+    [SearchFields[SearchFields.mac]]: 'Mac',
+    [SearchFields[SearchFields.connectionStatus]]: 'Status',
+    [SearchFields[SearchFields.displayName]]: 'DisplayName',
+    [SearchFields[SearchFields.errorCodes]]: 'Error',
     tags: 'Tags',
   };
 
