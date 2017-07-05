@@ -32,6 +32,8 @@
       UNKNOWN: $translate.instant('mediaFusion.metrics.clientType.unknown'),
       WINDOWS_MOBILE: $translate.instant('mediaFusion.metrics.clientType.windows'),
       Total: $translate.instant('mediaFusion.metrics.clientType.total'),
+      MAC: $translate.instant('mediaFusion.metrics.clientType.mac'),
+      WINDOWS: $translate.instant('mediaFusion.metrics.clientType.windowsDesk'),
     };
     vm.allOn = $translate.instant('mediaFusion.metrics.allOn');
     vm.allOff = $translate.instant('mediaFusion.metrics.allOff');
@@ -143,7 +145,9 @@
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
-        value.title = vm.clientTypeTranMap[value.title];
+        if (!_.isUndefined(vm.clientTypeTranMap[value.name])) {
+          value.name = vm.clientTypeTranMap[value.name];
+        }
         columnNames[value.valueField] = value.title + ' ' + vm.clientType;
       });
       for (var key in columnNames) {

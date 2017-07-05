@@ -28,6 +28,8 @@
       UNKNOWN: $translate.instant('mediaFusion.metrics.clientType.unknown'),
       WINDOWS_MOBILE: $translate.instant('mediaFusion.metrics.clientType.windows'),
       Total: $translate.instant('mediaFusion.metrics.clientType.total'),
+      MAC: $translate.instant('mediaFusion.metrics.clientType.mac'),
+      WINDOWS: $translate.instant('mediaFusion.metrics.clientType.windowsDesk'),
     };
 
     function adjustLineGraphData(activeData, returnData, startTime, endTime, graphs) {
