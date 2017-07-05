@@ -5528,7 +5528,9 @@
         "uc": "UC",
         "unknown": "Unknown",
         "windows": "Windows Mobile",
-        "total": "Total"
+        "total": "Total",
+        "mac": "MAC",
+        "windowsDesk": "Windows"
       },
       "mobile": "Mobile",
       "cardDescription": {
