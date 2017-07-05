@@ -54,7 +54,7 @@ class DeviceList implements ng.IComponentController {
 
   private initActions(): void {
     this.actionList = [{
-      actionKey: 'usersPreview.activate',
+      actionKey: 'usersPreview.generateActivationCode',
       actionFunction: () => {
         this.onGenerateCode();
       },

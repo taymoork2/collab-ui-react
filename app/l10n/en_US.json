@@ -383,7 +383,6 @@
     "devicesPreview": "Devices",
     "activateNewDevice": "Activate New Device",
     "fullAdmin": "Full Admin",
-    "activate": "Activate",
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an activation code to enable a new device for this user.",
     "generateActivationCodeTextPlace": "Generate an activation code to enable a new device for this place.",
