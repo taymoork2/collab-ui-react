@@ -5,7 +5,7 @@ export class MeetingSettingsCtrl {
   public siteModel: IWebExSite = {
     siteUrl: '',
     timezone: '',
-    centerType: 'MC',
+    centerType: 'EE',
     quantity: 0,
   };
 
