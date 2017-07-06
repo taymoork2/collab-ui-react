@@ -85,7 +85,7 @@ export class ServiceDescriptorService {
     return this.Orgservice.setOrgSettings(this.Authinfo.getOrgId(), settings);
   }
 
-  public setOneButtonToPushIntervalMinutes(bgbIntervalMinutes: number): ng.IPromise<''> {
+  public setOneButtonToPushIntervalMinutes(bgbIntervalMinutes: number | null): ng.IPromise<''> {
     const settings = {
       bgbIntervalMinutes: bgbIntervalMinutes,
     };
