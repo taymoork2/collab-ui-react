@@ -382,10 +382,10 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct sunlight push notification url', function () {
     whenCalling('getSunlightPushNotificationUrl').expectUrlToBe({
-      dev: 'https://ar.devus1.ciscoccservice.com/ar/v1/publish/taskState',
-      cfe: 'https://ar.appstaging.ciscoccservice.com/ar/v1/publish/taskState',
-      integration: 'https://ar.appstaging.ciscoccservice.com/ar/v1/publish/taskState',
-      prod: 'https://ar.produs1.ciscoccservice.com/ar/v1/publish/taskState',
+      dev: 'https://pqm.devus1.ciscoccservice.com/pqm/v1/publish/taskState',
+      cfe: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
+      integration: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
+      prod: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publish/taskState',
     });
   });
 
