@@ -38,5 +38,15 @@ export class CallSettingsPage {
     this.voicemailToEmailCheckBox = element(by.css('label[for="voicemailToEmail"]'));
     this.voicemailDisableTitle = element(by.cssContainingText('.modal-title', 'Disable Company Voicemail'));
     this.voicemailWarningDisable = element(by.css('.modal-footer .btn--negative'));
+    // Regional Settings 
+    this.cancelButton = element(by.buttonText('Cancel'));
+    this.timeZone = element(by.css('.csSelect-container[name="timeZone"] span.select-toggle'));
+    this.dateFormat = element(by.css('.csSelect-container[name="dateFormatSelect"] span.select-toggle'));
+    this.timeFormat = element(by.css('.csSelect-container[name="timeFormatSelect"] span.select-toggle'));
+    this.preferredLanguage = element(by.css('.csSelect-container[name="preferredLanguage"] span.select-toggle'));
+    // Dialing Restrictions
+    this.nationalDialing = element(by.css('label.disabled[for="DIALINGCOSTAG_NATIONAL-toggle"]'));
+    this.premiumDialing = element(by.css('label.disabled[for="DIALINGCOSTAG_PREMIUM-toggle"]'));
+    this.internationalDialing = element(by.css('label.disabled[for="DIALINGCOSTAG_INTERNATIONAL-toggle"]'));
   }
 };

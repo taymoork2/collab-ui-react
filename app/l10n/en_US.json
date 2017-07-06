@@ -4530,17 +4530,21 @@
     "emailAddress": "Signee's Email Address"
   },
   "intelepeerFeatures": {
-    "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",
-    "feature2": "Carrier Port/Transfer Fee Included",
-    "feature3": "E911 Included",
-    "feature4": "Taxes & Fees Included in Price"
+    "feature1": "Service available in U.S. 48 states",
+    "feature2": "Unlimited calling to U.S. 50 states and Canada",
+    "feature3": "Carrier Port/Transfer Fee Included",
+    "feature4": "E911 Included",
+    "feature5": "Taxes & Fees Included in Price",
+    "note": "One Voice Services Bundle is required for each Spark license enabled for PSTN calling"
   },
   "tataFeatures": {
     "feature1": "1 DID per User",
-    "feature2": "Calling To/From U.S. 50 States",
-    "feature3": "No Fees for Number Porting/Transfer",
-    "feature4": "Caller ID Name Delivery and Registration",
-    "feature5": "E911"
+    "feature2": "Service Availability from U.S. 48 States",
+    "feature3": "Includes Calling to U.S. 50 States",
+    "feature4": "No Fees for Number Porting/Transfer",
+    "feature5": "Caller ID Name Delivery and Registration",
+    "feature6": "E911",
+    "note": "One Global SIP Connect bundle is required for each Spark license enabled for PSTN calling"
   },
   "thinktelFeatures": {
     "feature1": "1 Telephone Number per User",

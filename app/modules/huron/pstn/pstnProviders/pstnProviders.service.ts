@@ -40,6 +40,7 @@ export class PstnProvidersService {
         for (let i: number = 0; i < carrier.features.length; i++) {
           carrier.features[i] = this.$translate.instant(carrier.features[i]);
         }
+        carrier.note = this.$translate.instant(carrier.note);
         pstnCarrierStatics.push(carrier);
       });
       return pstnCarrierStatics;

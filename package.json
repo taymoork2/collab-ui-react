@@ -51,7 +51,7 @@
     "@ciscospark/internal-plugin-encryption": "1.1.6",
     "@ciscospark/internal-plugin-search": "1.1.6",
     "@ciscospark/spark-core": "1.1.6",
-    "acorn": "^5.0.3",
+    "acorn": "=5.0.3",
     "angular": "~1.5.7",
     "angular-animate": "~1.5.5",
     "angular-aria": "~1.5.5",

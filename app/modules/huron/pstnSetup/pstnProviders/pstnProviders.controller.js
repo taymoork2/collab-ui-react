@@ -156,7 +156,9 @@
             $translate.instant('intelepeerFeatures.feature2'),
             $translate.instant('intelepeerFeatures.feature3'),
             $translate.instant('intelepeerFeatures.feature4'),
+            $translate.instant('intelepeerFeatures.feature5'),
           ],
+          note: $translate.instant('intelepeerFeatures.note'),
           selectFn: goToNumbers,
         });
       } else if (carrier.vendor === TATA) {
@@ -169,7 +171,9 @@
             $translate.instant('tataFeatures.feature3'),
             $translate.instant('tataFeatures.feature4'),
             $translate.instant('tataFeatures.feature5'),
+            $translate.instant('tataFeatures.feature6'),
           ],
+          note: $translate.instant('tataFeatures.note'),
           selectFn: goToNumbers,
         });
       } else if (carrier.vendor === TELSTRA) {
@@ -177,6 +181,7 @@
           logoSrc: 'images/carriers/logo_telstra.svg',
           logoAlt: 'Telstra',
           features: [],
+          note: '',
           selectFn: goToNumbers,
         });
       } else if (carrier.vendor === WESTUC) {
@@ -191,6 +196,7 @@
             $translate.instant('westucFeatures.feature5'),
             $translate.instant('westucFeatures.feature6'),
           ],
+          note: '',
           selectFn: goToNumbers,
         });
       }
