@@ -10,6 +10,7 @@ const STATE_NEW_LOCATION: string = 'STATE_NEW_LOCATION';
 class CallLocationsCtrl implements ng.IComponentController {
   public locations: ILocation[] = [];
   public pageState: string = STATE_LOADING;
+  public currentLocation: ILocation;
 
   /* @ngInject */
   constructor(
@@ -18,12 +19,13 @@ class CallLocationsCtrl implements ng.IComponentController {
     public $state: ng.ui.IStateService,
     public $modal: IToolkitModalService,
     public $q: ng.IQService,
+    private Authinfo,
     ) {
 
   }
   public $onInit(): void {
-    this.LocationsService.getLocations().then((result) => {
-      this.locations = result;
+    this.LocationsService.getLocations(this.Authinfo.getOrgId()).then((locations: ILocation[]) => {
+      this.locations = locations;
       if (this.locations.length === 0) {
         this.pageState = STATE_NEW_LOCATION;
       } else {
@@ -45,7 +47,7 @@ class CallLocationsCtrl implements ng.IComponentController {
 
   /* This function does an in-page search for the string typed in search box*/
   public searchData(searchStr: string): void {
-    this.LocationsService.getLocations().then((result) => {
+    this.LocationsService.getLocations(this.Authinfo.getOrgId()).then((result) => {
       this.locations = this.LocationsService.filterCards(result, searchStr);
     });
     this.reInstantiateMasonry();
@@ -72,7 +74,8 @@ class CallLocationsCtrl implements ng.IComponentController {
   }
 
 
-  public deleteLocation(location): void {
+  public deleteLocation(location: ILocation): void {
+    this.currentLocation = location;
     this.$modal.open({
       type: 'dialog',
       template: `<delete-location class="modal-content" uuid="${location.uuid}" user-count="${location.userCount}"  place-count="${location.placeCount}" name="${location.name}" style="margin:initial" dismiss="$dismiss()" close="$close()"></delete-location>`,

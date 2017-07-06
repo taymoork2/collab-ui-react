@@ -1,51 +1,48 @@
-import { ILocation, Location } from 'modules/call/locations/location';
-
-interface ILocationsResource extends ng.resource.IResourceClass<ng.resource.IResource<ILocation>> {
-  update: ng.resource.IResourceMethod<ng.resource.IResource<ILocation>>;
-}
+import {
+  ILocation, ILocationGetResource,
+  ILocationDetail, //LocationDetailResource, ILocationDetailResource,
+} from './location';
 
 export class LocationsService {
-  private locationsService: ILocationsResource;
-  public locations: ILocation[] = [{
-    uuid: '123',
-    name: 'Home Office',
-    routingPrefix: '8100',
-    defaultLocation: true,
-    userCount: 10,
-    placeCount: 3,
-    url: 'http://something/123',
-  },
-  {
-    uuid: '456',
-    name: 'Desk Phone',
-    routingPrefix: '8100',
-    defaultLocation: false,
-    userCount: 10,
-    placeCount: 3,
-    url: 'http://something/456',
-  }];
+  private readonly URL_LOCATION = '/customers/:customerId/locations/:locationId';
+
   /* @ngInject */
   constructor(private $q: ng.IQService,
               private $resource: ng.resource.IResourceService,
               private HuronConfig,
              // private Authinfo,
-  ) {
-    const updateAction: ng.resource.IActionDescriptor = {
-      method: 'PUT',
-    };
-    this.locationsService = <ILocationsResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
-      {
-        update: updateAction,
-      });
+  ) {}
 
+  public getLocations(customerId: string): IPromise<ILocation[]> {
+    const resource: ILocationGetResource = <ILocationGetResource>this.$resource(this.HuronConfig.getCmiV2Url() + this.URL_LOCATION, { wide: 'true' });
+    return resource.get({
+      customerId: customerId,
+    }).$promise.then(locations_ => {
+      const locations: ILocation[] = _.get<ILocation[]>(locations_, 'locations');
+      if (locations) {
+        return locations;
+      }
+      return [];
+    });
   }
-  //TODO: remove comments and use actual APIs when  API is availble
-  public getLocations(): IPromise<Location[]> {
-    // return this.locationsService.query({
-    //   customerId: this.Authinfo.getOrgId(),
-    // }).$promise;
-    return this.$q.resolve(this.locations);
-    // return this.$q.reject();
+
+  public createLocation(customerId: string, location: ILocationDetail): ng.IPromise<void> {
+    const resource = this.$resource(this.HuronConfig.getCmiV2Url() + this.URL_LOCATION);
+    return resource.save({
+      customerId: customerId,
+    }, location).$promise;
+  }
+
+  public updateLocation(customerId: string, location: ILocationDetail): string {
+    return customerId + location;
+  }
+
+  public deleteLocation(customerId, locationId): ng.IPromise<void> {
+    const resource = this.$resource(this.HuronConfig.getCmiV2Url() + this.URL_LOCATION);
+    return resource.delete({
+      customerId: customerId,
+      locationId: locationId,
+    }, location).$promise;
   }
 
   public filterCards(locations: ILocation[], filterText: string): ILocation[] {
@@ -74,39 +71,10 @@ export class LocationsService {
     });
   }
 
-  public createLocation(location): ng.IPromise<Location> {
-    // return this.locationsService.save({
-    //   customerId: this.Authinfo.getOrgId(),
-    // }, location).$promise;
-    this.locations.push(location);
-    return this.$q.resolve(location);
-  }
-
-  public deleteLocation(locationId): ng.IPromise<any> {
-    // return this.locationsService.delete({
-    //   customerId: this.Authinfo.getOrgId(),
-    //   locationId,
-    // }).$promise;
-    const index = _.findIndex(this.locations, location =>  location.uuid === locationId);
-
-    this.locations.splice(index, 1);
-    return this.$q.resolve(location);
-  }
-
   public hasLocation(name: string): ng.IPromise<boolean> {
     if (name === 'Home Office') {
       return this.$q.resolve(true);
     }
     return this.$q.resolve(false);
-  }
-
-  public updateLocation(locationId: string, params: Object) {
-    // return this.locationsService.update({
-    //   locationId
-    // }, params).$promise;
-    return this.$q.resolve({
-      locationId,
-      params,
-    });
   }
 }

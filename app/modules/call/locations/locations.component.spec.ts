@@ -1,6 +1,6 @@
 import callLocations from './index';
 
-describe('component: CallLocationsComponent', () => {
+describe('Component: CallLocationsComponent', () => {
   const STATE_RELOAD: string = 'STATE_RELOAD';
 
   beforeEach(function() {
@@ -17,7 +17,7 @@ describe('component: CallLocationsComponent', () => {
     this.compileComponent('callLocations', {});
   });
 
-  it('should handle failure if service fails', function() {
+  it('should have pageState equal STATE_RELOAD', function() {
     this.controller.$onInit();
     expect(this.controller.pageState).toBe(STATE_RELOAD);
   });
@@ -28,7 +28,7 @@ describe('component: CallLocationsComponent', () => {
   });
 });
 
-describe('component: calllocations', () => {
+describe('Component: CallLocationsComponent', () => {
   const STATE_NEW_LOCATION: string = 'STATE_NEW_LOCATION';
 
   beforeEach(function() {
@@ -45,13 +45,13 @@ describe('component: calllocations', () => {
     this.compileComponent('callLocations', {});
   });
 
-  it('should handle failure if service fails', function() {
+  it('should have pageState equal STATE_NEW_LOCATION', function() {
     this.controller.$onInit();
     expect(this.controller.pageState).toBe(STATE_NEW_LOCATION);
   });
 });
 
-describe('component: calllocations', () => {
+describe('Component: CallLocationsComponent', () => {
   const STATE_SHOW_LOCATIONS: string = 'STATE_SHOW_LOCATIONS';
   const SUCCESS_DATA = [{
     uuid: '123',
@@ -76,7 +76,7 @@ describe('component: calllocations', () => {
     this.compileComponent('callLocations', {});
   });
 
-  it('should handle failure if service fails', function() {
+  it('should have pageState equal STATE_SHOW_LOCATIONS', function() {
     this.controller.$onInit();
     expect(this.controller.pageState).toBe(STATE_SHOW_LOCATIONS);
   });

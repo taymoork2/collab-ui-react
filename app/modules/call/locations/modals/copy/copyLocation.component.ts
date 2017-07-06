@@ -13,6 +13,7 @@ class CopyLocationCtrl implements ng.IComponentController {
     public LocationsService: LocationsService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
+    private Authinfo,
   ) {}
 
   public validationMessages = {
@@ -28,7 +29,7 @@ class CopyLocationCtrl implements ng.IComponentController {
 
   public save(): void {
     this.saveInProcess = true;
-    this.LocationsService.createLocation(this.location).then(() => this.close())
+    this.LocationsService.createLocation(this.Authinfo.getOrgId(), this.location).then(() => this.close())
     .catch(error => this.Notification.errorResponse(error, 'locations.copyFailed'))
     .finally(() => this.saveInProcess = false);
   }

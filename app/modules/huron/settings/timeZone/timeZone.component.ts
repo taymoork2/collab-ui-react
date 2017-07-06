@@ -14,7 +14,7 @@ class TimeZoneCtrl implements ng.IComponentController {
   ) { }
 
   public $onInit(): void {
-    this.timeZonePlaceholder = this.$translate.instant('serviceSetupModal.preferredLanguagePlaceholder');
+    this.timeZonePlaceholder = this.$translate.instant('serviceSetupModal.timeZonePlaceholder');
     this.filterPlaceholder = this.$translate.instant('serviceSetupModal.searchTimeZone');
   }
 
