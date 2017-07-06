@@ -19,10 +19,10 @@
         <i class='icon icon-three-dots export-dots'></i>
       </a>
       <ul class="dropdown-menu dropdown-primary" ng-class="{'export-visible': $ctrl.exportMenu}">
-        <li class="export-item"><a id="{{$ctrl.exportDropdown.header.id}}" translate="{{$ctrl.exportDropdown.header.label}}"></a></li>
+        <li class="export-item"><a id="{{$ctrl.exportDropdown.header.id}}">{{::$ctrl.exportDropdown.header.label}}</a></li>
         <li ng-repeat="object in $ctrl.exportDropdown.menu" class="export-item" ng-click="$ctrl.dropdownSelect(object)">
           <a id="{{object.id}}">
-            <span translate="{{object.label}}"></span>
+            <span>{{object.label}}</span>
           </a>
         </li>
       </ul>
