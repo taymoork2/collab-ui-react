@@ -234,34 +234,35 @@
       dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
+      prod: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
     },
     SparkReportQBSforBaseUrl: {
       dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
+      prod: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
     },
     WebExReportQBSforPremiumUrl: {
       dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
+      prod: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
     },
     SparkReportQBSforPremiumUrl: {
       dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
+      prod: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
     },
     SparkReportQBSforPartnerUrl: {
       dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
+      prod: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
     },
     //for Qlik mashup application Server. Currently, it's https://sjc-ngxbts.webex.com
     //qlik_reverse_proxy is populated after an API response
+    //sjc-ngx.webex.com dfw-ngx.webex.com
     WebExReportAppforBaseUrl: {
       dev: 'https://%s/custportal/extensions/webex-report-basic/webex-report-basic.html',
       cfe: 'https://%s/custportal/extensions/webex-report-basic/webex-report-basic.html',
