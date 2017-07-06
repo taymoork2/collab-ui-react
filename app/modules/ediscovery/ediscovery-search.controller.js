@@ -1,6 +1,6 @@
 require('./ediscovery.scss');
 require('@ciscospark/internal-plugin-search');
-var Spark = require('@ciscospark/spark-core').default;
+
 
 //TODO agendel: need to address the use of babel-polyfil which is required by spark-core.
 
@@ -9,7 +9,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
   /* @ngInject */
   function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService,
-    FeatureToggleService, ProPackService, Notification, TokenService) {
+    FeatureToggleService, ProPackService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
@@ -250,7 +250,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function advancedSearch() {
       searchSetup();
-      sparkSetup();
+      spark = EdiscoveryService.setupSpark();
       vm.encryptedResult = [];
       vm.encryptedEmails = null;
       vm.unencryptedRoomIds = null;
@@ -263,6 +263,7 @@ var Spark = require('@ciscospark/spark-core').default;
         spaceSelected: vm.roomIdSelected && vm.searchModel,
         searchedWithKeyword: vm.queryModel,
       });
+
       spark.internal.mercury.connect()
         .then(function () {
           return spark.internal.encryption.kms.createUnboundKeys({
@@ -453,9 +454,26 @@ var Spark = require('@ciscospark/spark-core').default;
         if (report.state != 'COMPLETED' && report.state != 'FAILED' && report.state != 'ABORTED') {
           avalonPoller = $timeout(pollAvalonReport, 5000);
         } else {
-          EdiscoveryNotificationService.notify(report);
           disableAvalonPolling();
-          vm.isReportComplete = true;
+          var keyPromise;
+          if (report.state === 'COMPLETED' && vm.report.encryptionKeyUrl) {
+            keyPromise = EdiscoveryService.getReportKey(vm.report.encryptionKeyUrl, spark);
+          } else {
+            keyPromise = $q.resolve();
+          }
+          keyPromise.then(function (key) {
+            if (key) {
+              vm.report.reportKey = key;
+            }
+            EdiscoveryNotificationService.notify(report);
+            vm.isReportComplete = true;
+          })
+          .catch(function () {
+            Notification.error('ediscovery.encryption.unableGetPassword');
+          })
+          .finally(function () {
+            vm.isReportComplete = true;
+          });
         }
       });
     }
@@ -583,15 +601,6 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.warning = null;
       vm.searchingForRoom = true;
       vm.searchResults.keywords = [];
-    }
-
-    function sparkSetup() {
-      vm.accessToken = TokenService.getAccessToken();
-      spark = new Spark({
-        credentials: {
-          access_token: vm.accessToken,
-        },
-      });
     }
 
     function searchResults(result) {

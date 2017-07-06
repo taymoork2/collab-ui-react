@@ -441,6 +441,28 @@
           .results-spacing {
             margin-top: 16px;
           }
+
+          .search-results-key {
+            font-size: .875rem;
+            color: $gray-dark-3;
+          }
+
+          .copy {
+            a {
+              font-size: .875rem;
+            }
+
+            i {
+              color: $gray-light-1;
+              font-size: 1.5rem;
+              vertical-align: middle;
+              display: inline-block;
+            }
+          }
+
+          .copy:hover i {
+            color: $gray-base;
+          }
         }
 
         .report-error {
