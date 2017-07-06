@@ -1355,6 +1355,7 @@
     "unassigned": "Unassigned",
     "unknown": "Unknown",
     "update": "Update",
+    "upgrade": "Upgrade",
     "upload": "Upload",
     "user": "User",
     "users": "Users",
@@ -1458,7 +1459,8 @@
     "careLicenseMsgMissingText": "Message is mandatory for Care services. To enable Message,",
     "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
     "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
-    "careLicenseLinkText": "contact your partner or Cisco sales."
+    "careLicenseLinkText": "contact your partner or Cisco sales.",
+    "proPackNotification": "Unleash the full power of the Spark Control Hub with Pro Pack."
   },
   "inviteModal": {
     "title": "Service Entitlement",
