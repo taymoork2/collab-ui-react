@@ -7,6 +7,7 @@ describe('Controller: CustomerListCtrl', function () {
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
   var partnerService = getJSONFixture('core/json/partner/partner.service.json');
   var managedOrgsResponse = partnerService.managedOrgsResponse;
+  var authinfoLicenses = partnerService.authinfoLicenses;
   var orgId = 'b93b10ad-ae24-4abf-9c21-76e8b86faf01';
   var orgName = 'testOrg';
   var testOrg = {
@@ -59,6 +60,7 @@ describe('Controller: CustomerListCtrl', function () {
 
     spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
     spyOn(Authinfo, 'getOrgName').and.returnValue(orgName);
+    spyOn(Authinfo, 'getLicenses').and.returnValue(authinfoLicenses);
     spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);
 
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve(managedOrgsResponse));
@@ -172,6 +174,17 @@ describe('Controller: CustomerListCtrl', function () {
   describe('myOrg appears first in orgList', function () {
     beforeEach(initController);
 
+    function verifyPartnerOrgServiceObjects(myPartnerOrg) {
+      var expectedServiceObjects = { messaging: 'MS', sparkConferencing: 'CF', communications: 'CO', webexEEConferencing: 'EE', roomSystems: 'SD', sparkBoard: 'SB', care: 'CDC' };
+
+      _.forEach(Object.keys(expectedServiceObjects), function (serviceType) {
+        var serviceObject = myPartnerOrg[serviceType];
+        expect(serviceObject).toBeDefined();
+        expect(serviceObject.offerName).toBeDefined();
+        expect(serviceObject.offerName).toBe(expectedServiceObjects[serviceType]);
+      });
+    }
+
     it('should check if it is its own org', function () {
       expect(controller.isOwnOrg(controller.managedOrgsList[0])).toBe(true);
     });
@@ -184,6 +197,25 @@ describe('Controller: CustomerListCtrl', function () {
       expect(controller.managedOrgsList.length).toEqual(6);
       expect(controller.managedOrgsList[1].customerName).toBe('Atlas_Test_Trial_vt453w4p8d');
       expect(controller.totalOrgs).toBe(6);
+    });
+
+    it('check service objects, where isCareEnabled false, of myOrg being added to the top of manangedOrgsList', function () {
+      Authinfo.getOrgId.and.returnValue('wqeqwe21');
+      Authinfo.getLicenses.and.returnValue(authinfoLicenses);
+      initController();
+      verifyPartnerOrgServiceObjects(controller.managedOrgsList[0]);
+      // Since isCareEnabled is false, care service gets ignored. So, we expect 6 services.
+      expect(controller.managedOrgsList[0].orderedServices.servicesManagedByCurrentPartner.length).toEqual(6);
+    });
+
+    it('check service objects, where isCareEnabled true, of myOrg being added to the top of manangedOrgsList', function () {
+      Authinfo.getOrgId.and.returnValue('wqeqwe21');
+      Authinfo.getLicenses.and.returnValue(authinfoLicenses);
+      FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
+      initController();
+      verifyPartnerOrgServiceObjects(controller.managedOrgsList[0]);
+      // Since isCareEnabled is true, care service gets included. So, we expect 7 services.
+      expect(controller.managedOrgsList[0].orderedServices.servicesManagedByCurrentPartner.length).toEqual(7);
     });
 
     it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {

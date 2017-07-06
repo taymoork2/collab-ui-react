@@ -584,6 +584,19 @@ require('./_customer-list.scss');
             });
             myOrg[0].roomSystems = vm._helpers.updateServiceForOrg(myOrg[0].roomSystems, licenses, {
               licenseType: 'SHARED_DEVICES',
+              offerName: 'SD',
+            });
+            myOrg[0].sparkBoard = vm._helpers.updateServiceForOrg(myOrg[0].sparkBoard, licenses, {
+              licenseType: 'SHARED_DEVICES',
+              offerName: 'SB',
+            });
+            myOrg[0].care = vm._helpers.updateServiceForOrg(myOrg[0].care, licenses, {
+              licenseType: 'CARE',
+              offerName: 'CDC',
+            });
+            myOrg[0].advanceCare = vm._helpers.updateServiceForOrg(myOrg[0].advanceCare, licenses, {
+              licenseType: 'CARE',
+              offerName: 'CVC',
             });
             myOrg[0].conferencing = vm._helpers.updateServiceForOrg(myOrg[0].conferencing, licenses, {
               licenseType: 'CONFERENCING',
