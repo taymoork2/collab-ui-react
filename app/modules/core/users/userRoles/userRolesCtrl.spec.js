@@ -57,16 +57,8 @@ describe('Controller: UserRolesCtrl', function () {
         return true;
       },
     });
-    spyOn(ProPackService, 'hasProPackEnabled').and.returnValue({
-      then: function () {
-        return true;
-      },
-    });
-    spyOn(ProPackService, 'hasProPackPurchased').and.returnValue({
-      then: function () {
-        return true;
-      },
-    });
+    spyOn(ProPackService, 'hasProPackEnabled').and.returnValue($q.resolve(true));
+    spyOn(ProPackService, 'hasProPackPurchased').and.returnValue($q.resolve(true));
     spyOn(Auth, 'revokeUserAuthTokens').and.callFake(function () {
       return $q.resolve();
     });

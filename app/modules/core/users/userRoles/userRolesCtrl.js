@@ -37,7 +37,7 @@ require('./_user-roles.scss');
     $scope.showUserDetailSection = true;
     $scope.showSecuritySection = false;
     $scope.showRolesSection = true;
-    $scope.isProPack = true;
+    $scope.isProPack = false;
     $scope.rolesObj = {
       adminRadioValue: 0,
     };
@@ -98,14 +98,17 @@ require('./_user-roles.scss');
         }
       }
     });
-    ProPackService.hasProPackEnabled().then(function (proPackFeatureEnabled) {
-      if (proPackFeatureEnabled) {
-        ProPackService.hasProPackPurchased().then(function (proPackagePurchased) {
-          $scope.isProPack = proPackagePurchased;
-        });
-      }
-    });
-
+    ProPackService.hasProPackEnabled()
+      .then(function (proPackFeatureEnabled) {
+        if (!proPackFeatureEnabled) {
+          $scope.isProPack = true;//enable reset access button
+          return $q.reject();
+        }
+      })
+      .then(ProPackService.hasProPackPurchased)
+      .then(function (proPackagePurchased) {
+        $scope.isProPack = proPackagePurchased;
+      });
     initView();
 
     ///////////////////////////
@@ -524,6 +527,9 @@ require('./_user-roles.scss');
     }
 
     function resetAccess() {
+      if (!$scope.isProPack) {
+        return;
+      }
       $scope.resettingAccess = true;
       var userName = _.get($scope, 'currentUser.userName');
       var orgId = _.get($scope, 'currentUser.meta.organizationID');
