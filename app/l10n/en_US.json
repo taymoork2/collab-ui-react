@@ -3423,7 +3423,7 @@
     "enteredSiteNotValid": "The entered site is not valid. Please try another site.",
     "enterNumberOfLicenses": "Enter number of licenses here",
     "timeZoneSetTo": "Time zone set to {{label}}",
-    "licenseCountEquals": "License count = {{licenseCount}}",
+    "licenseCountEquals": "License count = {{quantity}}",
     "pleaseEnterSiteName": "Please enter a site name",
     "distributeYourWebExLicenses": "Distribute your licenses between sites",
     "webExServiceWillBeSetup": "Your WebEx service will be setup with the following parameters.",
