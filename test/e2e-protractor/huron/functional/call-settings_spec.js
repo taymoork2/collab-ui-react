@@ -163,6 +163,18 @@ describe('Huron Functional: call-settings', () => {
     });
   });
 
+  describe('Dialing Restrictions', () => {
+    it('national dialing should be disabled', () => {
+      utils.expectIsDisplayed(callSettings.nationalDialing);
+    });
+    it('premium dialing should be disabled', () => {
+      utils.expectIsDisplayed(callSettings.premiumDialing);
+    });
+    it('international dialing should be disabled', () => {
+      utils.expectIsDisplayed(callSettings.internationalDialing);
+    });
+  });
+
   describe('Voicemail', () => {
     describe('Activate voicemail', () => {
       it('should default to inactive', () => {
@@ -234,18 +246,6 @@ describe('Huron Functional: call-settings', () => {
           notifications.assertSuccess();
         });
       });
-    })
-  });
-  
-  describe('Dialing Restrictions', () => {
-    it('national dialing should be disabled', () => {
-      utils.expectIsDisplayed(callSettings.nationalDialing);
-    });
-    it('premium dialing should be disabled', () => {
-      utils.expectIsDisplayed(callSettings.premiumDialing);
-    });
-    it('international dialing should be disabled', () => {
-      utils.expectIsDisplayed(callSettings.internationalDialing);
     });
   });
 });
