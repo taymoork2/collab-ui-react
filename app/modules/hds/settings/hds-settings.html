@@ -44,7 +44,7 @@
             </div>
             <button class="btn btn--people"
                     ng-if="hdsSettings.groupAssigned() && hdsSettings.numTrialUsers <= 250"
-                    ng-disabled="hdsSettings.numResourceNodes <= 0"
+                    ng-disabled="hdsSettings.numResourceNodes <= 0 || hdsSettings.lock"
                     ng-click="hdsSettings.startTrial()"
                     translate="hds.resources.settings.servicePreTrialModeTitle">
             </button>
@@ -89,6 +89,7 @@
             <h5 class="sub-section__label" translate="hds.resources.settings.serviceProductionModeTitle"></h5>
             <p class="sub-section__description" translate="hds.resources.settings.serviceProdMoveDesc"></p>
             <button class="btn btn--people"
+                    ng-disabled="hdsSettings.lock"
                     ng-click="hdsSettings.moveToProduction()"
                     translate="hds.resources.settings.moveToProduction">
             </button>
@@ -109,6 +110,7 @@
             <p class="sub-section__description" translate="hds.resources.settings.deavtivateTrialModeDesc">
             </p>
             <button class="btn"
+                    ng-disabled="hdsSettings.lock"
                     ng-click="hdsSettings.deactivateTrialMode()"
                     translate="common.deactivate">
             </button>
@@ -118,6 +120,7 @@
             <p class="sub-section__description" translate="hds.resources.settings.deavtivateTrialModeDesc">
             </p>
             <button class="btn"
+                    ng-disabled="hdsSettings.lock"
                     ng-click="hdsSettings.deactivateProductionMode()"
                     translate="common.deactivate">
             </button>
