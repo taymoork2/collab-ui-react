@@ -97,17 +97,17 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
     this.writeEnableEmailSendingToUser(this.enableEmailSendingToUser);
   }
 
-  public setDefaultWebExSiteOrgLevel = function () {
-    this.ServiceDescriptor.setDefaultWebExSiteOrgLevel(this.defaultWebExSiteOrgLevel)
+  public setDefaultWebExSiteOrgLevel() {
+    this.ServiceDescriptorService.setDefaultWebExSiteOrgLevel(this.defaultWebExSiteOrgLevel)
       .then(() => this.Notification.success('hercules.settings.defaultWebExSiteOrgLevelSavingSuccess'))
       .catch(error => this.Notification.errorWithTrackingId(error, 'hercules.settings.defaultWebExSiteOrgLevelSavingError'));
-  };
+  }
 
-  public setOneButtonToPushIntervalMinutes = function () {
-    this.ServiceDescriptor.setOneButtonToPushIntervalMinutes(this.oneButtonToPushIntervalMinutes)
+  public setOneButtonToPushIntervalMinutes() {
+    this.ServiceDescriptorService.setOneButtonToPushIntervalMinutes(this.oneButtonToPushIntervalMinutes)
       .then(() => this.Notification.success('hercules.settings.oneButtonToPushIntervalMinutesSavingSuccess'))
       .catch(error => this.Notification.errorWithTrackingId(error, 'hercules.settings.oneButtonToPushIntervalMinutesSavingError'));
-  };
+  }
 }
 
 export class EmailNotificationsSectionComponent implements ng.IComponentOptions {
