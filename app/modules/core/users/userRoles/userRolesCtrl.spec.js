@@ -4,14 +4,14 @@
 //DO NOT use export KTEST__MODULAR=true, this module is not self-contrained
 
 describe('Controller: UserRolesCtrl', function () {
-  var controller, $q, $scope, $state, $rootScope, $stateParams, $translate, Auth, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Log, Notification, ProPackService, SessionStorage, EdiscoveryService;
+  var controller, $q, $scope, $state, $rootScope, $stateParams, $translate, Analytics, Auth, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Log, Notification, ProPackService, SessionStorage, EdiscoveryService;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
 
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _ProPackService_, _SessionStorage_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _ProPackService_, _SessionStorage_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -22,6 +22,7 @@ describe('Controller: UserRolesCtrl', function () {
     $translate = _$translate_;
     Config = _Config_;
     $controller = _$controller_;
+    Analytics = _Analytics_;
     Auth = _Auth_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
@@ -42,7 +43,7 @@ describe('Controller: UserRolesCtrl', function () {
     spyOn(Userservice, 'updateUserProfile').and.callFake(function () {
       return $q.resolve({ data: currentUser });
     });
-
+    spyOn(Analytics, 'trackPremiumEvent').and.returnValue($q.resolve({}));
     spyOn(Authinfo, 'getOrgId').and.returnValue('we23f24-4f3f4f-cc7af705-6583-32r3r23r');
     spyOn(Authinfo, 'getUserId').and.returnValue('cc7af705-6583-4f58-b0b6-ea75df64da7e');
 

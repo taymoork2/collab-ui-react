@@ -6,7 +6,7 @@ require('./_user-roles.scss');
   module.exports = UserRolesCtrl;
 
   /* @ngInject */
-  function UserRolesCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, EdiscoveryService, FeatureToggleService, Log, Notification, Orgservice, ProPackService, SessionStorage, Userservice) {
+  function UserRolesCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, Analytics, Auth, Authinfo, Config, EdiscoveryService, FeatureToggleService, Log, Notification, Orgservice, ProPackService, SessionStorage, Userservice) {
     var COMPLIANCE = 'compliance';
     $scope.currentUser = $stateParams.currentUser;
     $scope.sipAddr = '';
@@ -533,6 +533,7 @@ require('./_user-roles.scss');
       $scope.resettingAccess = true;
       var userName = _.get($scope, 'currentUser.userName');
       var orgId = _.get($scope, 'currentUser.meta.organizationID');
+      Analytics.trackPremiumEvent(Analytics.sections.PREMIUM.eventNames.RESET_ACCESS);
       Auth.revokeUserAuthTokens(userName, orgId)
         .then(function () {
           Notification.success('usersPreview.resetAccessSuccess', { name: userName });
