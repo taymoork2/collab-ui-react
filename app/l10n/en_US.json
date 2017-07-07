@@ -2409,7 +2409,7 @@
         "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
         "downloadExpressway": "Download Cisco Expressway software from <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a>.",
-        "downloadDemoEcp": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a> (Full capacity and used for production deployment of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> (Limited capacity, lifespan, and lower CPU requirement for demo deployment of Hybrid Media)"
+        "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a> (Full capacity and used for production deployment of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> (Limited capacity, lifespan, and lower CPU requirement for demo deployment of Hybrid Media)"
       },
       "call": {
         "domainVerification": "Domain Verification",
