@@ -20,6 +20,7 @@ class PlaceCallOverview implements ng.IComponentController {
   // Data from services
   public placeCallOverviewData: PlaceCallOverviewData;
   public displayDescription: string;
+  public wide: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -109,7 +110,7 @@ class PlaceCallOverview implements ng.IComponentController {
   }
 
   private initNumbers(): void {
-    this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid)
+    this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid, this.wide)
       .then(lines => this.directoryNumbers = lines);
   }
 

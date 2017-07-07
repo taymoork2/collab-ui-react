@@ -30,6 +30,10 @@ describe('Service: LineOverviewService', () => {
       external: null,
       siteToSite: '710012345',
       incomingCallMaximum: 2,
+      label: {
+        value: 'someuser@some.com',
+        appliesToAllSharedLines: false,
+      },
     });
     this.callerId = {
       externalCallerIdType: 'EXT_CALLER_ID_COMPANY_NUMBER',
