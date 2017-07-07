@@ -594,133 +594,130 @@
     "partnerEmail": "fakeuserunodostres+admin1@gmail.com",
     "isCIUnifiedSite": true
   }, {
-      "licenseId": "CMR_d2f1a7dd-427a-43f4-aa06-2cd827ce33b1_mypartnerorg.dmz.webex.com",
-      "offerName": "CMR",
-      "licenseType": "CMR",
-      "features": [],
-      "volume": 100,
-      "isTrial": true,
-      "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
-      "status": "ACTIVE",
-      "capacity": 200,
-      "siteUrl": "mypartnerorg.dmz.webex.com",
-      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com",
-      "isCIUnifiedSite": true
-    }, {
-      "licenseId": "ST_2a13bf32-d1db-4870-9658-7b237236e276",
-      "offerName": "ST",
-      "licenseType": "STORAGE",
-      "features": [],
-      "volume": 100,
-      "isTrial": true,
-      "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
-      "status": "ACTIVE",
-      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    }, {
-      "licenseId": "CDC_33fd0198-ea35-4ddc-b4b0-0dd08361371c",
-      "offerName": "CDC",
-      "licenseType": "CARE",
-      "features": [
-        "contact-center-context",
-        "cloud-contact-center-digital",
-        "cloud-contact-center"
-      ],
-      "volume": 15,
-      "isTrial": true,
-      "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
-      "status": "ACTIVE",
-      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    }, {
-      "licenseId": "CVC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
-      "offerName": "CVC",
-      "licenseType": "CAREVOICE",
-      "features": [
-        "contact-center-context",
-        "spark",
-        "cloud-contact-center",
-        "cloud-contact-center-inbound-voice",
-        "webex-squared"
-      ],
-      "volume": 100,
-      "isTrial": true,
-      "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
-      "status": "ACTIVE",
-      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+    "licenseId": "CMR_d2f1a7dd-427a-43f4-aa06-2cd827ce33b1_mypartnerorg.dmz.webex.com",
+    "offerName": "CMR",
+    "licenseType": "CMR",
+    "features": [],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
+    "status": "ACTIVE",
+    "capacity": 200,
+    "siteUrl": "mypartnerorg.dmz.webex.com",
+    "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
+    "partnerEmail": "fakeuserunodostres+admin1@gmail.com",
+    "isCIUnifiedSite": true
   }, {
-      "licenseId": "MS_52e3f36c-7c46-4528-a6e0-a79cc35576ab",
-      "offerName": "MS",
-      "licenseType": "MESSAGING",
-      "features": [
-        "squared-room-moderation"
-      ],
-      "volume": 100,
-      "isTrial": true,
-      "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
-      "status": "ACTIVE",
-      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    }, {
-      "licenseId": "CF_6c8e3bfe-b621-4cf8-822d-2fe93169f378",
-      "offerName": "CF",
-      "licenseType": "CONFERENCING",
-      "features": [
-        "squared-syncup"
-      ],
-      "volume": 100,
-      "isTrial": true,
-      "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
-      "status": "ACTIVE",
-      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    },
-    {
-      "licenseId": "SD_cc42fde1-7762-4d14-bed4-c7f02799c9ea",
-      "offerName": "SD",
-      "licenseType": "SHARED_DEVICES",
-      "features": [
-        "spark-room-system",
-        "ciscouc"
-      ],
-      "volume": 5,
-      "isTrial": true,
-      "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
-      "status": "ACTIVE",
-      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    },
-    {
-      "licenseId": "SB_e804e68e-1f77-414a-ac45-d6d32051d5e9",
-      "offerName": "SB",
-      "licenseType": "SHARED_DEVICES",
-      "features": [
-        "spark-room-system",
-        "ciscouc"
-      ],
-      "volume": 5,
-      "isTrial": true,
-      "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
-      "status": "ACTIVE",
-      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    },
-    {
-      "licenseId": "CO_fcf347a7-abeb-4224-9d1d-502637deabb5",
-      "offerName": "CO",
-      "licenseType": "COMMUNICATION",
-      "features": [
-        "ciscouc"
-      ],
-      "volume": 100,
-      "isTrial": true,
-      "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
-      "status": "ACTIVE",
-      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    }],
+    "licenseId": "ST_2a13bf32-d1db-4870-9658-7b237236e276",
+    "offerName": "ST",
+    "licenseType": "STORAGE",
+    "features": [],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
+    "status": "ACTIVE",
+    "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
+    "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+  }, {
+    "licenseId": "CDC_33fd0198-ea35-4ddc-b4b0-0dd08361371c",
+    "offerName": "CDC",
+    "licenseType": "CARE",
+    "features": [
+      "contact-center-context",
+      "cloud-contact-center-digital",
+      "cloud-contact-center"
+    ],
+    "volume": 15,
+    "isTrial": true,
+    "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
+    "status": "ACTIVE",
+    "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
+    "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+  }, {
+    "licenseId": "CVC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+    "offerName": "CVC",
+    "licenseType": "CAREVOICE",
+    "features": [
+      "contact-center-context",
+      "spark",
+      "cloud-contact-center",
+      "cloud-contact-center-inbound-voice",
+      "webex-squared"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
+    "status": "ACTIVE",
+    "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
+    "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+  }, {
+    "licenseId": "MS_52e3f36c-7c46-4528-a6e0-a79cc35576ab",
+    "offerName": "MS",
+    "licenseType": "MESSAGING",
+    "features": [
+      "squared-room-moderation"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
+    "status": "ACTIVE",
+    "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
+    "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+  }, {
+    "licenseId": "CF_6c8e3bfe-b621-4cf8-822d-2fe93169f378",
+    "offerName": "CF",
+    "licenseType": "CONFERENCING",
+    "features": [
+      "squared-syncup"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
+    "status": "ACTIVE",
+    "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
+    "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+  }, {
+    "licenseId": "SD_cc42fde1-7762-4d14-bed4-c7f02799c9ea",
+    "offerName": "SD",
+    "licenseType": "SHARED_DEVICES",
+    "features": [
+      "spark-room-system",
+      "ciscouc"
+    ],
+    "volume": 5,
+    "isTrial": true,
+    "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
+    "status": "ACTIVE",
+    "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
+    "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+  }, {
+    "licenseId": "SB_e804e68e-1f77-414a-ac45-d6d32051d5e9",
+    "offerName": "SB",
+    "licenseType": "SHARED_DEVICES",
+    "features": [
+      "spark-room-system",
+      "ciscouc"
+    ],
+    "volume": 5,
+    "isTrial": true,
+    "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
+    "status": "ACTIVE",
+    "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
+    "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+  }, {
+    "licenseId": "CO_fcf347a7-abeb-4224-9d1d-502637deabb5",
+    "offerName": "CO",
+    "licenseType": "COMMUNICATION",
+    "features": [
+      "ciscouc"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "8269282f-3cbd-46ee-97a2-9175c50fff96",
+    "status": "ACTIVE",
+    "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
+    "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+  }],
   "customers": [{
     "customerOrgId": "b93b10ad-ae24-4abf-9c21-76e8b86faf01",
     "startDate": "2015-08-05T00:00:00.000Z",

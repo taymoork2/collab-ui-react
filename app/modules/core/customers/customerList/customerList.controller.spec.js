@@ -175,7 +175,7 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(initController);
 
     function verifyPartnerOrgServiceObjects(myPartnerOrg) {
-      var expectedServiceObjects = { messaging: 'MS', sparkConferencing: 'CF', communications: 'CO', webexEEConferencing: 'EE', roomSystems: 'SD', sparkBoard: 'SB', care: 'CDC' };
+      var expectedServiceObjects = { messaging: 'MS', sparkConferencing: 'CF', communications: 'CO', webexEEConferencing: 'EE', roomSystems: 'SD', sparkBoard: 'SB', care: 'CDC', advanceCare: 'CVC' };
 
       _.forEach(Object.keys(expectedServiceObjects), function (serviceType) {
         var serviceObject = myPartnerOrg[serviceType];
@@ -216,6 +216,17 @@ describe('Controller: CustomerListCtrl', function () {
       verifyPartnerOrgServiceObjects(controller.managedOrgsList[0]);
       // Since isCareEnabled is true, care service gets included. So, we expect 7 services.
       expect(controller.managedOrgsList[0].orderedServices.servicesManagedByCurrentPartner.length).toEqual(7);
+    });
+
+    it('check service objects, where isCareEnabled and isAdvanceCareEnabled true, of myOrg being added to the top of manangedOrgsList', function () {
+      Authinfo.getOrgId.and.returnValue('wqeqwe21');
+      Authinfo.getLicenses.and.returnValue(authinfoLicenses);
+      FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
+      FeatureToggleService.atlasCareInboundTrialsGetStatus.and.returnValue($q.resolve(true));
+      initController();
+      verifyPartnerOrgServiceObjects(controller.managedOrgsList[0]);
+      // Since isCareEnabled and isAdvanceCareEnabled is true, care service gets included. So, we expect 8 services.
+      expect(controller.managedOrgsList[0].orderedServices.servicesManagedByCurrentPartner.length).toEqual(8);
     });
 
     it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {

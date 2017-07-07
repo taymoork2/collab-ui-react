@@ -595,7 +595,7 @@ require('./_customer-list.scss');
               offerName: 'CDC',
             });
             myOrg[0].advanceCare = vm._helpers.updateServiceForOrg(myOrg[0].advanceCare, licenses, {
-              licenseType: 'CARE',
+              licenseType: 'CAREVOICE',
               offerName: 'CVC',
             });
             myOrg[0].conferencing = vm._helpers.updateServiceForOrg(myOrg[0].conferencing, licenses, {

@@ -482,7 +482,7 @@
     // The information provided by this function will be used in displaying the service icons on the customer list page.
     function _getOrderedServices(data, options) {
       var servicesToProcess = ['messaging', 'conferencing', 'communications', 'webexEEConferencing',
-        'roomSystems', 'sparkBoard', 'care'];
+        'roomSystems', 'sparkBoard', 'care', 'advanceCare'];
       var servicesManagedByCurrentPartner = [];
       var servicesManagedByAnotherPartner = [];
 
@@ -491,7 +491,10 @@
         if (service === 'webexEEConferencing') {
           serviceToAdd = 'webex';
         }
-        if (service !== 'care' || (service === 'care' && _.get(options, 'isCareEnabled', true))) {
+        var isCareOrCareVoice = service === 'care' || service === 'advanceCare';
+        var isValidCareService = service === 'care' && _.get(options, 'isCareEnabled', true);
+        var isValidCareVoiceService = service === 'advanceCare' && _.get(options, 'isAdvanceCareEnabled', true);
+        if (!isCareOrCareVoice || isValidCareService || isValidCareVoiceService) {
           if (isServiceManagedByCurrentPartner(data[service])) {
             servicesManagedByCurrentPartner.push(serviceToAdd);
           } else {
