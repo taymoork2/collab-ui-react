@@ -6480,6 +6480,7 @@
   "locations": {
     "locationName": "Location Name",
     "addText": "Add Location",
+    "namePlaceholder": "Name the Location",
     "copyTitle": "Copy Location",
     "copyDesc": "This location will use the customized setting from the location that you copied.",
     "deleteTitle": "Delete Location",
