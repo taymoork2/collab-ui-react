@@ -64,5 +64,4 @@ describe('Service: VoicemailMessageAction', function () {
       $httpBackend.flush();
     });
   });
-
 });

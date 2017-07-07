@@ -53,5 +53,4 @@ describe('Service: ModalService', function () {
       },
     });
   });
-
 });

@@ -15,7 +15,7 @@ export class CallerIDService {
     private HuronConfig,
     private CompanyNumberService,
   ) {
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
@@ -35,7 +35,7 @@ export class CallerIDService {
   }
 
   public updateCallerId(_type: LineConsumerType, _typeId: string, _numberId: string | undefined, data: CallerIdOption) {
-    let result: any = _.cloneDeep(data);
+    const result: any = _.cloneDeep(data);
     delete result.url;
     return this.callerIDService.update({
       customerId: this.Authinfo.getOrgId(),

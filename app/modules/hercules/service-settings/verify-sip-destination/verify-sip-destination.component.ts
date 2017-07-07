@@ -8,7 +8,7 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
     private $modal,
   ) {}
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { destinationUrl } = changes;
     if (destinationUrl && destinationUrl.currentValue) {
       this.destinationUrl = destinationUrl.currentValue;

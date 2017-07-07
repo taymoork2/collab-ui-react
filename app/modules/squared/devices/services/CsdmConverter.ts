@@ -44,7 +44,7 @@ export class CsdmConverter {
 
   // Hack, these two fields should be set correctly in CSDM. Adding here until we can fix this.
   public convertDevicesForPlace(devices, type, displayName) {
-    let converted: Dictionary<IDevice> = type === 'huron' ? this.convertHuronDevices(devices) : this.convertCloudberryDevices(devices);
+    const converted: Dictionary<IDevice> = type === 'huron' ? this.convertHuronDevices(devices) : this.convertCloudberryDevices(devices);
     return _.map(converted, (device) => {
       device.accountType = 'MACHINE';
       device.displayName = displayName;
@@ -265,7 +265,7 @@ class HuronHelper {
   };
 
   public static decodeHuronTags(description) {
-    let tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+    const tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
     return tagString;
   }
 
@@ -292,7 +292,7 @@ class Helper {
   }
 
   public static getNotOkEvents(obj) {
-    let events = _.reject(this.getEvents(obj), (e) => {
+    const events = _.reject(this.getEvents(obj), (e) => {
       return e.level === 'INFO' && (e.type === 'ip' || e.type === 'software' || e.type === 'upgradeChannel');
     });
     return events;
@@ -307,7 +307,7 @@ class Helper {
   }
 
   public static getLastConnectionTime(obj) {
-    let localeData: any = moment.localeData(moment.locale());
+    const localeData: any = moment.localeData(moment.locale());
     localeData._calendar.sameElse = 'lll';
     return (obj.status && obj.status.lastStatusReceivedTime) ? moment(obj.status.lastStatusReceivedTime).calendar() : null;
   }
@@ -327,7 +327,7 @@ class Helper {
   }
 
   public getUpgradeChannel(obj): { label: string, value: string } {
-    let channel: any = _.head(_.chain(Helper.getEvents(obj))
+    const channel: any = _.head(_.chain(Helper.getEvents(obj))
       .filter({
         type: 'upgradeChannel',
         level: 'INFO',
@@ -335,7 +335,7 @@ class Helper {
       .map('description')
       .value());
 
-    let labelKey = 'CsdmStatus.upgradeChannels.' + channel;
+    const labelKey = 'CsdmStatus.upgradeChannels.' + channel;
     let label = this.$translate.instant('CsdmStatus.upgradeChannels.' + channel);
     if (label === labelKey) {
       label = channel;
@@ -348,7 +348,7 @@ class Helper {
 
   public getActiveInterface(obj): string {
     if (obj.status) {
-      let translationKey = 'CsdmStatus.activeInterface.' + (obj.status.activeInterface || '').toLowerCase();
+      const translationKey = 'CsdmStatus.activeInterface.' + (obj.status.activeInterface || '').toLowerCase();
       if (this.isTranslatable(translationKey)) {
         return this.$translate.instant(translationKey);
       }

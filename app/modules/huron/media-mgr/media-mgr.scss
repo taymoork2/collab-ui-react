@@ -25,15 +25,14 @@ media-mgr {
   }
 
   .mb-nav {
-    flex: 1;
+    flex: 0 0 94px;
     flex-direction: column;
     display: flex;
-    justify-content: space-between;
     align-items: center;
   }
 
   .mb-container {
-    flex: 9;
+    flex: 12;
     flex-direction: row;
     display: flex;
     padding-left: 0;
@@ -42,10 +41,10 @@ media-mgr {
   }
 
   .mb-panel-left {
-    flex: 4;
+    flex: 5;
     flex-direction: column;
     display: flex;
-    border-left: gray;
+    border-left: $gray-light-2;
     border-left-width: thin;
     border-left-style: solid;
     padding-left: 0;
@@ -53,10 +52,10 @@ media-mgr {
   }
 
   .mb-panel-right {
-    flex: 6;
+    flex: 7;
     flex-direction: column;
     display: flex;
-    border-left: gray;
+    border-left: $gray-light-2;
     border-left-width: thin;
     border-left-style: solid;
     padding-left: 0;
@@ -66,10 +65,9 @@ media-mgr {
   .mb-panel-header {
     display: flex;
     justify-content: space-between;
-    font-family: CiscoSans-ExtraLight;
-    font-size: 26px;
+    font-family: 'CiscoSansTT Extra Light';
     text-align: end;
-    margin: 0.5rem;
+    margin: .5rem 1rem 1.5rem .5rem;
   }
 
   .mb-panel-body {
@@ -82,7 +80,7 @@ media-mgr {
     flex: 1;
     flex-direction: column;
     display: flex;
-    border-left: gray;
+    border-left: $gray-light-2;
     border-left-width: thin;
     border-left-style: solid;
     padding-left: 0;
@@ -90,26 +88,52 @@ media-mgr {
     overflow-y: auto;
   }
 
-  .mb-title {
-    font-family: CiscoSans-ExtraLight;
+  .mb-title-centered {
+    display: flex;
+    justify-content: center;
+    font-family: 'CiscoSansTT Extra Light';
     font-size: 26px;
-    text-align: center;
-    margin: 0.5rem;
+    color: $gray-dark-2;
+    margin-top: 2.5rem;
+  }
+
+  .mb-title-spaced {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'CiscoSansTT Extra Light';
+    font-size: 26px;
+    color: $gray-dark-2;
   }
 
   .mb-desc {
-    font-family: CiscoSans-Light;
+    font-family: 'CiscoSansTT Light';
     font-size: 14px;
-    text-align: center;
+    color: $gray-dark-1;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
   }
 
-  .mb-header {
-    display: flex;
-    justify-content: space-between;
-    font-family: CiscoSans-ExtraLight;
-    font-size: 26px;
-    text-align: end;
-    margin: 0.5rem;
+  .row {
+    &:hover { background: $gray-light-4; }
+    &:focus { background: $gray-light-4; }
+  }
+
+  .active-row {
+    background: $gray-light-3;
+  }
+
+  .mb-row-seperator {
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+  }
+
+  .mb-rows-wide {
+    margin: 1rem 1.25rem;
+  }
+
+  .mb-rows-narrow {
+    margin: 1.5rem 2.25rem;
+    flex-grow: 1;
   }
 
   .mb-row-content {
@@ -119,6 +143,7 @@ media-mgr {
   }
 
   .searchbox .searchinput {
+    margin: 0;
     border: none;
   }
 
@@ -128,39 +153,34 @@ media-mgr {
   }
 
   .media-text {
-    font-family: CiscoSans-Light;
+    font-family: 'CiscoSansTT Light';
     font-size: 14px;
-    color: $color-primary-base;
-    margin-top: 0.25rem;
-    margin-left: 0.25rem;
+    color: $gray-dark-2;
+    margin: 0;
   }
 
-  .media-info {
-    font-family: CiscoSans;
+  .media-subtext {
+    font-family: 'CiscoSansTT';
     font-size: 12px;
-    color: $gray-darkest;
-    text-align: right;
-    float: right;
-    margin-right: 0.25rem;
+    color: $gray-light-1;
+    margin: 0;
+    justify-content: flex-start;
   }
 
-  .media-progress-msg {
-    font-family: CiscoSans;
-    font-size: 12px;
-    text-align: left;
-    color: $gray-darkest;
+  .nowrap {
+    width: 250px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .media-icon-alignment {
     text-align: right;
     vertical-align: middle;
-    margin-top: 0.25rem;
-    margin-right: 0.25rem;
   }
 
   .mb-br-button {
-    align-self: flex-end;
-    margin: 0.5rem;
+    margin: auto 1rem 1rem auto;
   }
 
   .icon-msg-alignment {
@@ -173,18 +193,18 @@ media-mgr {
     background: none;
     margin: 0.5rem;
     color: $gray-base;
-    &:hover,
-    &:focus,
-    &:active { color: $color-primary-base; }
   }
 
   .icon-trash {
     background: none;
     margin: 0.5rem;
-    color: $gray-base;
-    &:hover,
-    &:focus,
-    &:active { color: $color-primary-base; }
+    color: $gray-light-1;
+  }
+
+  .icon-back {
+    background: none;
+    margin: 0.5rem;
+    color: $gray-light-1;
   }
 
   .active-icon {
@@ -193,24 +213,28 @@ media-mgr {
 
   .icon-spinner {
     color: $color-primary-base;
+    margin: 0;
   }
 
   .icon-error {
     color: $color-negative-base;
+    margin: 0;
   }
 
   .icon-plus {
     color: $color-primary-base;
     text-align: right;
+    margin: 0;
   }
 
   .icon-plus-disabled {
     color: $color-primary-lighter;
-    text-align: right;
+    margin: 0;
   }
 
   .icon-exit {
     float: right;
+    margin: 0;
   }
 
   .progress-striped {

@@ -48,7 +48,6 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       $scope: $scope,
     });
     $scope.$apply();
-
   }));
 
   afterEach(function () {
@@ -61,13 +60,11 @@ describe('Controller: AAPhoneMenuCtrl', function () {
    * But Submenu and Route to Queue will be absent as we mock featuretoggle to return false;
    */
   describe('AAPhoneMenuCtrl', function () {
-
     it('feature toggle false', function () {
       var count = _.findIndex(controller.keyActions, {
-        "name": 'phoneMenuRouteQueue',
+        name: 'phoneMenuRouteQueue',
       });
       expect(count).toEqual(-1);
     });
   });
-
 });

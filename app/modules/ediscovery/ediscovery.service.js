@@ -1,9 +1,15 @@
+var Spark = require('@ciscospark/spark-core').default;
+
 (function () {
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService($document, $http, $location, $modal, $q, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, UrlConfig) {
+  function EdiscoveryService($document, $http, $location, $modal, $q, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, TokenService, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
+    var modalTypes = {
+      DOWNLOAD: 0,
+      PASSWORD: 1,
+    };
     var avalonRoomsUrlCache = CacheFactory.get('avalonRoomsUrlCache');
     if (!avalonRoomsUrlCache) {
       avalonRoomsUrlCache = new CacheFactory('avalonRoomsUrlCache', {
@@ -75,6 +81,27 @@
 
     function getAvalonRoomInfo(url) {
       return $http.get(url).then(extractData);
+    }
+
+    function getReportKey(url, spark) {
+      return spark.internal.encryption.kms.fetchKey({ uri: url })
+        .then(function (result) {
+          try {
+            return result.jwk.toJSON(true).k;
+          } catch (e) {
+            return $q.reject(result);
+          }
+        });
+    }
+
+    function setupSpark() {
+      var accessToken = TokenService.getAccessToken();
+      var spark = new Spark({
+        credentials: {
+          access_token: accessToken,
+        },
+      });
+      return spark;
     }
 
     function getReport(id) {
@@ -155,10 +182,10 @@
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
       var ed = (endDate !== null) ? moment.utc(endDate).add(1, 'days').toISOString() : null;
       return $http.post(runUrl, {
-        "roomId": roomId,
-        "responseUrl": responseUrl,
-        "startDate": sd,
-        "endDate": ed,
+        roomId: roomId,
+        responseUrl: responseUrl,
+        startDate: sd,
+        endDate: ed,
       });
     }
 
@@ -183,9 +210,12 @@
       });
     }
 
-    function openReportModal(_scope) {
+    function openReportModal(_scope, modalType) {
+      var template = (modalType && modalType === modalTypes.PASSWORD) ?
+        'modules/ediscovery/ediscovery-report-password-modal.html' :
+        'modules/ediscovery/download-report-modal.html';
       $modal.open({
-        templateUrl: 'modules/ediscovery/download-report-modal.html',
+        templateUrl: template,
         type: 'small',
         scope: _scope,
       });
@@ -210,9 +240,9 @@
           var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
           var downloadLink = angular.element(downloadContainer.children()[0]);
           downloadLink.attr({
-            'href': $window.URL.createObjectURL(file),
-            'download': fileName,
-            'target': '_blank',
+            href: $window.URL.createObjectURL(file),
+            download: fileName,
+            target: '_blank',
           });
           $document.find('body').append(downloadContainer);
           $timeout(function () {
@@ -229,6 +259,7 @@
       getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,
       getReports: getReports,
+      getReportKey: getReportKey,
       deleteReports: deleteReports,
       createReport: createReport,
       generateReport: generateReport,
@@ -238,6 +269,8 @@
       setEntitledForCompliance: setEntitledForCompliance,
       openReportModal: openReportModal,
       downloadReport: downloadReport,
+      modalTypes: modalTypes,
+      setupSpark: setupSpark,
     };
   }
 

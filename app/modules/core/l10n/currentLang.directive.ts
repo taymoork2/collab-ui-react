@@ -19,19 +19,19 @@ export class CurrentLanguageDirective implements ng.IDirective {
     $element: ng.IAugmentedJQuery,
   ) => {
 
-    let translateLanguage = () => {
+    const translateLanguage = () => {
       // return the current $translate language, or default
       const tl = this.$translate.use();
       const lang = (_.isEmpty(tl) ? this.$translate.fallbackLanguage() : tl);
       return _.kebabCase(lang);
     };
 
-    let newLang = translateLanguage();
+    const newLang = translateLanguage();
     $element.attr('lang', newLang);
 
     this.$rootScope.$on('$translateChangeSuccess', (_event, translationResp) => {
       // update lang attribute whenever language changes
-      let newLang = _.kebabCase(translationResp.language) || translateLanguage();
+      const newLang = _.kebabCase(translationResp.language) || translateLanguage();
       $element.attr('lang', newLang);
     });
 

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: HostDeregisterControllerV2', function () {
-
   beforeEach(angular.mock.module('Mediafusion'));
 
   var $rootScope, controller, connectorId, HybridServicesClusterService, $q, modalInstanceMock;
@@ -20,7 +19,6 @@ describe('Controller: HostDeregisterControllerV2', function () {
       connectorId: connectorId,
       $modalInstance: modalInstanceMock,
     });
-
   }));
 
   it('check if HostDeregisterControllerV2 is Defined', function () {
@@ -32,11 +30,9 @@ describe('Controller: HostDeregisterControllerV2', function () {
     controller.deregister();
     expect(HybridServicesClusterService.deregisterEcpNode).toHaveBeenCalled();
     expect(controller.saving).toBe(true);
-
   });
 
   it('should call deregisterEcpNode with connectorId', function () {
-
     spyOn(HybridServicesClusterService, 'deregisterEcpNode').and.returnValue($q.resolve());
     controller.deregister();
     expect(HybridServicesClusterService.deregisterEcpNode).toHaveBeenCalledWith(connectorId);

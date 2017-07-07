@@ -10,7 +10,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
   public voicemailToEmail: boolean;
   public missingDirectNumbers: boolean;
   public filterPlaceholder: string;
-  public externalNumberOptions: Array<IOption>;
+  public externalNumberOptions: IOption[];
   public dialPlanCountryCode: string;
   public onChangeFn: Function;
   public onVoicemailToEmailChangedFn: Function;
@@ -26,7 +26,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     this.filterPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       externalNumberOptions,
       site,
@@ -43,8 +43,8 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     }
 
     if (site && site.currentValue) {
-      if (!_.isUndefined(_.get(site.currentValue, 'voicemailPilotNumber')) &&
-        _.get(site.currentValue, 'voicemailPilotNumberGenerated') === 'false') {
+      if (_.get(site.currentValue, 'voicemailPilotNumber') &&
+        _.get(site.currentValue, 'voicemailPilotNumberGenerated') === false) {
         this.externalVoicemailAccess = true;
         this.selectedNumber = this.setCurrentOption(_.get<string>(site.currentValue, 'voicemailPilotNumber'), this.externalNumberOptions);
       } else {
@@ -61,7 +61,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     if (this.externalVoicemailAccess) {
       this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
     } else {
-      let pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
+      const pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
       this.onChange(pilotNumber, 'true', true);
     }
   }
@@ -101,10 +101,10 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     });
   }
 
-  private setCurrentOption(currentValue: string, existingOptions: Array<IOption>): IOption {
-    let existingOption: IOption = _.find(existingOptions, { value: currentValue });
+  private setCurrentOption(currentValue: string, existingOptions: IOption[]): IOption {
+    const existingOption: IOption = _.find(existingOptions, { value: currentValue });
     if (!existingOption) {
-      let currentExternalNumberOption: IOption = {
+      const currentExternalNumberOption: IOption = {
         value: currentValue,
         label: this.PhoneNumberService.getNationalFormat(currentValue),
       };

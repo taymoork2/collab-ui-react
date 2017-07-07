@@ -10,15 +10,20 @@ describe('Service: OnlineUpgradeService', () => {
     this.injectDependencies(
       '$httpBackend',
       '$modal',
+      '$q',
       'Authinfo',
+      'DigitalRiverService',
       'OnlineUpgradeService',
       'UrlConfig',
+      'FeatureToggleService',
     );
 
     spyOn(this.Authinfo, 'isOnline');
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue([]);
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
+    spyOn(this.DigitalRiverService, 'getDigitalRiverToken').and.returnValue(this.$q.resolve('abc+123'));
     spyOn(this.$modal, 'open').and.callThrough();
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
   });
 
   afterEach(function () {
@@ -134,13 +139,14 @@ describe('Service: OnlineUpgradeService', () => {
 
     const patchPayload = {
       action: CANCEL,
+      downgradeSubscription: true,
     };
 
     it('cancelSubscriptions() should invoke PATCH for each subscription', function () {
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/123', patchPayload).respond(200);
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/789', patchPayload).respond(200);
 
-      let cancelSubscriptionsPromise = this.OnlineUpgradeService.cancelSubscriptions();
+      const cancelSubscriptionsPromise = this.OnlineUpgradeService.cancelSubscriptions();
       this.$httpBackend.flush();
       expect(cancelSubscriptionsPromise).toBeResolved();
     });
@@ -149,7 +155,7 @@ describe('Service: OnlineUpgradeService', () => {
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/123', patchPayload).respond(200);
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/789', patchPayload).respond(500);
 
-      let cancelSubscriptionsPromise = this.OnlineUpgradeService.cancelSubscriptions();
+      const cancelSubscriptionsPromise = this.OnlineUpgradeService.cancelSubscriptions();
       this.$httpBackend.flush();
       expect(cancelSubscriptionsPromise).toBeRejected();
     });

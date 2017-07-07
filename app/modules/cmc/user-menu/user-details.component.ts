@@ -7,7 +7,7 @@ import { Notification } from 'modules/core/notifications';
 
 class CmcUserDetailsController implements ng.IComponentController {
 
-  public services: Array<IFeature>;
+  public services: IFeature[];
   public allowCmcSettings: boolean = false;
 
   private user: IUser;
@@ -40,8 +40,8 @@ class CmcUserDetailsController implements ng.IComponentController {
     this.$state.go('user-overview.' + feature.state);
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let userChanges = changes['user'];
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const userChanges = changes['user'];
     this.$log.debug('userChanges', userChanges);
     if (userChanges) {
       if (userChanges.currentValue) {
@@ -64,12 +64,22 @@ class CmcUserDetailsController implements ng.IComponentController {
           this.precheckOrg(user.meta.organizationID)
             .then((res: ICmcOrgStatusResponse) => {
               this.orgReady = (res.status === 'ok');
-              this.precheckUser(user)
-                .then((res: ICmcUserStatusResponse) => {
-                  this.userReady = (res.status === 'ok');
-                });
+              if (this.isUserCmcEntitled(user)) {
+                this.precheckUser(user)
+                  .then((res: ICmcUserStatusResponse) => {
+                    this.userReady = (res.status === 'ok');
+                  });
+              }
             });
         }
+      }).catch((error) => {
+        this.$log.debug('error', error);
+        let msg: string = 'unknown';
+        if (error.Errors && error.Errors.length > 0) {
+          msg = error.Errors[0].description;
+        }
+        this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });
+        this.services[ 0 ].actionAvailable = false;
       });
   }
 
@@ -83,6 +93,10 @@ class CmcUserDetailsController implements ng.IComponentController {
         }
         return res;
       });
+  }
+
+  private isUserCmcEntitled(user: IUser): boolean {
+    return _.includes(user.entitlements, 'cmc');
   }
 
   private precheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {

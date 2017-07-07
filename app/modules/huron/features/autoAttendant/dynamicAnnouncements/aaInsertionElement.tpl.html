@@ -2,9 +2,9 @@
   <span class="insertion-element" ng-click="aaInsertionElement.mainClickFn()">
     {{ aaInsertionElement.elementText }}
   </span>
-  <!--<span class="cancel-dynamic" ng-click="aaInsertionElement.closeClickFn">
+  <span ng-if="aaInsertionElement.elementText" class="cancel-dynamic" ng-click="aaInsertionElement.closeClickFn()">
     <a>
       <span class="icon icon-close cancel-dynamic-option" aria-label="common.delete"></span>
     </a>
-  </span>-->
+  </span>
 </span>

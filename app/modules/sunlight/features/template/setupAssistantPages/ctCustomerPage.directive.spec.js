@@ -16,7 +16,7 @@ describe('Customer Screen Directive', function () {
   beforeEach(injectScope);
 
   var fields = {
-    "field1": {
+    field1: {
       attributes: [{
         name: 'label',
         value: 'LABEL',
@@ -34,7 +34,7 @@ describe('Customer Screen Directive', function () {
         value: 'optional',
       }],
     },
-    "field2": {
+    field2: {
       attributes: [{
         name: 'label',
         value: 'LABEL2',
@@ -52,7 +52,7 @@ describe('Customer Screen Directive', function () {
         value: 'required',
       }],
     },
-    "ignoreField": {
+    ignoreField: {
       attributes: [{
         name: 'label',
         value: 'I_LABEL',
@@ -73,7 +73,7 @@ describe('Customer Screen Directive', function () {
   };
 
   var fieldsWithCustomLabels = {
-    "field1": {
+    field1: {
       attributes: [{
         name: 'clabel',
         value: 'LABEL',
@@ -131,43 +131,42 @@ describe('Customer Screen Directive', function () {
 
     it('should remove active class from previously selected element, on click of another selectable div', function () {
       $('body').append(view[0]);
-      view.find("#dummyContainerDiv").click();
-      expect(view.find("#dummyPrevSel").prop("class")).toBe('');
+      view.find('#dummyContainerDiv').click();
+      expect(view.find('#dummyPrevSel').prop('class')).toBe('');
       $('#dummyRootDiv').remove();
     });
 
     it('should select a selectable container, on click', function () {
-      view.find("#dummyContainerDiv").click();
-      expect(view.find("#dummyContainerDiv").prop("class")).toBe("ct-selectable-container active");
+      view.find('#dummyContainerDiv').click();
+      expect(view.find('#dummyContainerDiv').prop('class')).toBe('ct-selectable-container active');
     });
 
     it('should select the selectable child of a selectable element div, on click', function () {
-      view.find("#dummyElementDiv").click();
-      expect(view.find("#dummySelectableChild").prop("class")).toBe("ct-selectable-element active");
-      expect(view.find("#dummyChild").prop("class")).toBe("");
+      view.find('#dummyElementDiv').click();
+      expect(view.find('#dummySelectableChild').prop('class')).toBe('ct-selectable-element active');
+      expect(view.find('#dummyChild').prop('class')).toBe('');
     });
-
   });
 
-  describe("The ct-customer-form directive", function () {
+  describe('The ct-customer-form directive', function () {
     beforeEach(compileView);
-    it("Given the field model, should be able to render label, placeholder, required and type field correctly", function () {
-      expect(view.find("#multiField #label-field1").html()).toBe('LABEL');
-      expect(view.find("#multiField #text-field1").text()).toBe('');
-      expect(view.find("#multiField #text-field1").attr('placeholder')).toBe('HINT_TEXT');
-      expect(view.find("#multiField #opt-field1").html()).toBe('careChatTpl.optionalText');
-      expect(view.find("#multiField #label-field2").html()).toBe('LABEL2');
+    it('Given the field model, should be able to render label, placeholder, required and type field correctly', function () {
+      expect(view.find('#multiField #label-field1').html()).toBe('LABEL');
+      expect(view.find('#multiField #text-field1').text()).toBe('');
+      expect(view.find('#multiField #text-field1').attr('placeholder')).toBe('HINT_TEXT');
+      expect(view.find('#multiField #opt-field1').html()).toBe('careChatTpl.optionalText');
+      expect(view.find('#multiField #label-field2').html()).toBe('LABEL2');
     });
-    it("Given the field model, it should not paint the ignored field", function () {
-      expect(view.find("#multiFieldWithIgnore #label-ignoreField").text()).toBe('');
-      expect(view.find("#multiField #label-ignoreField").text()).toBe('I_LABEL');
-      expect(view.find("#multiFieldWithIgnore #label-field1").text()).toBe('LABEL');
+    it('Given the field model, it should not paint the ignored field', function () {
+      expect(view.find('#multiFieldWithIgnore #label-ignoreField').text()).toBe('');
+      expect(view.find('#multiField #label-ignoreField').text()).toBe('I_LABEL');
+      expect(view.find('#multiFieldWithIgnore #label-field1').text()).toBe('LABEL');
     });
-    it("Given the field model, should be able to render label, placeholder, required and type field correctly with custom params", function () {
-      expect(view.find("#multiFieldWithCustomParams #label-field1").html()).toBe('LABEL');
-      expect(view.find("#multiFieldWithCustomParams #text-field1").text()).toBe('');
-      expect(view.find("#multiFieldWithCustomParams #text-field1").attr('placeholder')).toBe('HINT_TEXT');
-      expect(view.find("#multiFieldWithCustomParams #opt-field1").html()).toBe('careChatTpl.optionalText');
+    it('Given the field model, should be able to render label, placeholder, required and type field correctly with custom params', function () {
+      expect(view.find('#multiFieldWithCustomParams #label-field1').html()).toBe('LABEL');
+      expect(view.find('#multiFieldWithCustomParams #text-field1').text()).toBe('');
+      expect(view.find('#multiFieldWithCustomParams #text-field1').attr('placeholder')).toBe('HINT_TEXT');
+      expect(view.find('#multiFieldWithCustomParams #opt-field1').html()).toBe('careChatTpl.optionalText');
     });
   });
 });

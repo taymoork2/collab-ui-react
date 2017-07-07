@@ -6,10 +6,16 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   public orgId;
   public orgName;
   public status: ICmcOrgStatusResponse;
-  public userStatuses: Array<ICmcUserStatus>;
+  public userStatuses: ICmcUserStatus[];
+  public fetchedUserStatuses: ICmcUserStatus[];
   public gridOptions;
   public userStatusesSummaryText: string;
   private statTemplate;
+  public filters: any[];
+  private searchStr: string;
+  private nextUrl: string | null;
+  private ussLimit: number = 100;
+  public gridApi;
 
   /* @ngInject */
   constructor(
@@ -20,21 +26,46 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     private $translate,
     private Notification: Notification,
     private $templateCache,
+    private $filter: ng.IFilterService,
+    private $scope: ng.IScope,
+    private $window,
   ) {
     this.orgId = this.Authinfo.getOrgId();
     this.orgName = this.Authinfo.getOrgName();
-
-
     this.statTemplate = this.$templateCache.get('modules/cmc/status/statColumn.tpl.html');
 
+    // TODO Add this and also  errors when CMC provides more info
+    // this.filters = [{
+    //   name: 'Activated',
+    //   filterValue: 'activated',
+    //   count: 0,
+    // } ];
+  }
+
+  public filterList(searchStr: string) {
+    this.$log.debug('searchStr', searchStr );
+    this.searchStr = searchStr;
+    this.$log.debug('user statuses', this.fetchedUserStatuses);
+    this.userStatuses = this.$filter('filter')(this.fetchedUserStatuses, { userName: this.searchStr });
+  }
+
+  public updateGridAtResize = () => {
+    this.gridApi.core.handleWindowResize();
+  }
+
+  public $onDestroy() {
+    angular.element(this.$window).off('resize');
   }
 
   public $onInit() {
 
     this.initGrid();
+
+    angular.element(this.$window).on('resize', _.debounce(this.updateGridAtResize, 100));
+
     this.CmcService.preCheckOrg(this.Authinfo.getOrgId())
       .then((res: ICmcOrgStatusResponse) => {
-        this.$log.info('Result from preCheckOrg:', res);
+        this.$log.debug('Result from preCheckOrg:', res);
         this.status = res;
       })
       .catch((error: any) => {
@@ -46,19 +77,25 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
         this.Notification.error('cmc.failures.preCheckFailure', { msg: msg });
       });
 
-    this.fetchUserStatuses(100).then( () => {
+    this.fetchUserStatuses(this.ussLimit).then( () => {
       this.CmcUserService.insertUserDisplayNames(this.userStatuses);
+      this.updateGridAtResize();
     });
   }
 
   private fetchUserStatuses(limit: number) {
-    return this.CmcUserService.getUsersWithCmcButMissingAware(limit)
+    return this.CmcUserService.getUsersWithCmcAndDetectMissingAware(limit, this.nextUrl)
       .then( (result: ICmcUserStatusInfoResponse) => {
-        this.userStatuses = result.userStatuses;
+        this.userStatuses = _.union(this.userStatuses, result.userStatuses);
+        this.$log.debug('userStatuses length', this.userStatuses.length);
+        this.fetchedUserStatuses = this.userStatuses;
         if (result.paging.next) {
+          this.nextUrl = result.paging.next;
+          this.$log.debug('nextUrl', this.nextUrl);
           this.userStatusesSummaryText = this.$translate.instant('cmc.statusPage.listingFirstActiveUsers', { noOfActiveUsers: this.userStatuses.length });
         } else {
           this.userStatusesSummaryText = '';
+          this.nextUrl = null;
         }
       })
       .catch((error: any) => {
@@ -72,11 +109,16 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
   }
 
   private initGrid() {
-    let columnDefs = [{
+    const columnDefs = [{
       width: '25%',
       sortable: true,
-      field: 'displayName',
-      displayName: 'User Name',
+      field: 'userName',
+      displayName: this.$translate.instant('cmc.statusPage.table.username'),
+    }, {
+      width: '20%',
+      sortable: true,
+      field: 'mobileNumber',
+      displayName: this.$translate.instant('cmc.statusPage.table.mobileNumber'),
     }, {
       width: '30%',
       sortable: true,
@@ -87,19 +129,17 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
       sort: { direction: 'asc', priority: 0 },
     }, {
       width: '25%',
-      sortable: false,
-      field: 'userId',
-      displayName: 'Id',
-    }, {
-      width: '20%',
       sortable: true,
       field: 'lastStatusUpdate',
-      displayName: 'Last Updated',
+      displayName: this.$translate.instant('cmc.statusPage.table.lastUpdated'),
     }];
 
     this.gridOptions = {
       rowHeight: 37,
       data: '$ctrl.userStatuses',
+      onRegisterApi: (gridApi) => {
+        this.onRegisterApi(gridApi);
+      },
       multiSelect: false,
       columnDefs: columnDefs,
       enableColumnMenus: false,
@@ -108,6 +148,23 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
       enableHorizontalScrollbar: 0,
       enableVerticalScrollbar: 2,
     };
+  }
+
+  // This is base for paging
+  private onRegisterApi(gridApi): void {
+    gridApi.infiniteScroll.on.needLoadMoreData(this.$scope, () => {
+      this.$log.debug('needLoadMoreData');
+      if (this.nextUrl) {
+        this.fetchUserStatuses(this.ussLimit).then( () => {
+          this.CmcUserService.insertUserDisplayNames(this.userStatuses);
+          gridApi.infiniteScroll.dataLoaded();
+        });
+      }
+    });
+    gridApi.infiniteScroll.on.needLoadMoreDataTop(this.$scope, () => {
+      this.$log.debug('needLoadMoreDataTop');
+    });
+    this.gridApi = gridApi;
   }
 }
 

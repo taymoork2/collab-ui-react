@@ -67,8 +67,8 @@
         /*
          * Color from the gradient.
          */
-        ata.selectedColor = "#049FD9";
-        ata.unselectedColor = "#EBEBEC";
+        ata.selectedColor = '#049FD9';
+        ata.unselectedColor = '#EBEBEC';
 
         /*
          * Reset values.
@@ -91,9 +91,8 @@
           huronDeviceService.setSettingsForAta(ata.device, settings).then(function () {
             ata.isLoading = false;
             $modalInstance.close();
-            Notification.success('ataSettings.saved');
+            Notification.success(ata.ataRebootWarningToggle ? 'ataSettings.savedReboot' : 'ataSettings.saved');
           });
-
         };
       }
     )

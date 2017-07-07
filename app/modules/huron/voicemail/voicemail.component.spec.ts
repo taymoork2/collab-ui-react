@@ -22,6 +22,7 @@ describe ('component: voicemail', () => {
       user: {},
     }));
     spyOn(this.HuronVoicemailService, 'isFeatureEnabledAvril').and.returnValue(this.$q.resolve(false));
+    spyOn(this.HuronVoicemailService, 'isFeatureEnabledAvrilOnly').and.returnValue(this.$q.resolve(false));
     spyOn(this.HuronUserService, 'getUserServices').and.returnValue(this.$q.resolve(
     ));
     spyOn(this.HuronUserService, 'updateUserV1').and.returnValue(this.$q.resolve(

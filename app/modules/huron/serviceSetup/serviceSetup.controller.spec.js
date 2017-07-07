@@ -6,11 +6,11 @@ describe('Controller: ServiceSetup', function () {
   var model, customer, voicemail, avrilSites, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages, countries;
   var $rootScope, PstnService, HuronCustomerService;
   var dialPlanDetailsNorthAmerica = [{
-    countryCode: "+1",
-    extensionGenerated: "false",
-    steeringDigitRequired: "true",
-    supportSiteCode: "true",
-    supportSiteSteeringDigit: "true",
+    countryCode: '+1',
+    extensionGenerated: 'false',
+    steeringDigitRequired: 'true',
+    supportSiteCode: 'true',
+    supportSiteSteeringDigit: 'true',
   }];
   var restrictions = getJSONFixture('huron/json/cos/customerCos.json');
 
@@ -39,18 +39,18 @@ describe('Controller: ServiceSetup', function () {
     FeatureToggleService = _FeatureToggleService_;
 
     customer = {
-      "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
-      "name": "Atlas_Test_JP650",
-      "servicePackage": "DEMO_STANDARD",
-      "links": [{
-        "rel": "common",
-        "href": "/api/v1/common/customers/84562afa-2f35-474f-ba0f-2def42864e12",
+      uuid: '84562afa-2f35-474f-ba0f-2def42864e12',
+      name: 'Atlas_Test_JP650',
+      servicePackage: 'DEMO_STANDARD',
+      links: [{
+        rel: 'common',
+        href: '/api/v1/common/customers/84562afa-2f35-474f-ba0f-2def42864e12',
       }, {
-        "rel": "voicemail",
-        "href": "/api/v1/voicemail/customers/84562afa-2f35-474f-ba0f-2def42864e12",
+        rel: 'voicemail',
+        href: '/api/v1/voicemail/customers/84562afa-2f35-474f-ba0f-2def42864e12',
       }, {
-        "rel": "voice",
-        "href": "/api/v1/voice/customers/84562afa-2f35-474f-ba0f-2def42864e12",
+        rel: 'voice',
+        href: '/api/v1/voice/customers/84562afa-2f35-474f-ba0f-2def42864e12',
       }],
     };
 
@@ -59,9 +59,9 @@ describe('Controller: ServiceSetup', function () {
       label: 'America/Los_Angeles',
     }];
     voicemail = {
-      name: "Simon",
-      pilotNumber: "+16506679080",
-      label: "(650) 667-9080",
+      name: 'Simon',
+      pilotNumber: '+16506679080',
+      label: '(650) 667-9080',
     };
     usertemplate = [{
       timeZone: '3',
@@ -71,7 +71,7 @@ describe('Controller: ServiceSetup', function () {
     }];
     externalNumberPool = [{
       directoryNumber: null,
-      pattern: "+14084744518",
+      pattern: '+14084744518',
       uuid: 'c0d5c7d8-306a-48db-af93-3cba6d433db0',
     }];
 
@@ -84,11 +84,16 @@ describe('Controller: ServiceSetup', function () {
     };
 
     form = {
-      '$invalid': false,
-      'ftswLocalDialingRadio': {
+      $invalid: false,
+      ftswLocalDialingRadio: {
         $setValidity: function () { },
       },
     };
+
+    $scope.wizard = {};
+    $scope.wizard.current = {};
+    $scope.wizard.current.tab = {};
+    $scope.wizard.current.tab.name = 'serviceSetup';
 
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
     languages = getJSONFixture('huron/json/settings/languages.json');
@@ -181,7 +186,7 @@ describe('Controller: ServiceSetup', function () {
           steeringDigit: '5',
           siteSteeringDigit: '6',
           siteCode: '200',
-          voicemailPilotNumber: "+16506679080",
+          voicemailPilotNumber: '+16506679080',
           timeZone: {
             id: 'America/Los_Angeles',
             label: 'America/Los_Angeles',
@@ -243,7 +248,6 @@ describe('Controller: ServiceSetup', function () {
     });
 
     describe('initController when is not first time setup', function () {
-
       it('should have customer service info', function () {
         expect(controller.hasVoicemailService).toEqual(true);
       });
@@ -254,7 +258,6 @@ describe('Controller: ServiceSetup', function () {
     });
 
     describe('deleteInternalNumberRange', function () {
-
       it('should remove from list and notify success', function () {
         var index = 0;
         var internalNumberRange = model.numberRanges[index];
@@ -923,7 +926,6 @@ describe('Controller: ServiceSetup', function () {
     });
 
     describe('initnext.updateTimezone', function () {
-
       it('should notify error if timeZone Id is not a string', function () {
         var selectedPilotNumber = {
           pattern: '+19728965000',
@@ -1097,7 +1099,7 @@ describe('Controller: ServiceSetup', function () {
           steeringDigit: '5',
           siteSteeringDigit: '6',
           siteCode: '200',
-          voicemailPilotNumber: "+911234123412341234123412341234123412341234",
+          voicemailPilotNumber: '+911234123412341234123412341234123412341234',
           timeZone: {
             id: 'America/Los_Angeles',
             label: 'America/Los_Angeles',
@@ -1117,9 +1119,9 @@ describe('Controller: ServiceSetup', function () {
         }],
       };
       voicemail = {
-        name: "Simon",
-        pilotNumber: "+911234123412341234123412341234123412341234",
-        label: "(650) 667-9080",
+        name: 'Simon',
+        pilotNumber: '+911234123412341234123412341234123412341234',
+        label: '(650) 667-9080',
       };
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(model.site));
       spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(voicemail));
@@ -1138,7 +1140,6 @@ describe('Controller: ServiceSetup', function () {
       controller.firstTimeSetup = true;
     }));
     describe('Site Create/Update and voicemail update Tests', function () {
-
       it('voicemail pilot number set to generatedVoicemailNumber', function () {
         expect(controller.model.ftswCompanyVoicemail.ftswExternalVoicemail).toEqual(false);
         expect(controller.model.site.voicemailPilotNumber).toEqual('+911234123412341234123412341234123412341234');
@@ -1194,7 +1195,7 @@ describe('Controller: ServiceSetup', function () {
           steeringDigit: '5',
           siteSteeringDigit: '6',
           siteCode: '200',
-          voicemailPilotNumber: "+6506679080",
+          voicemailPilotNumber: '+6506679080',
           timeZone: {
             id: 'America/Los_Angeles',
             label: 'America/Los_Angeles',
@@ -1214,9 +1215,9 @@ describe('Controller: ServiceSetup', function () {
         }],
       };
       voicemail = {
-        name: "Simon",
-        pilotNumber: "+6506679080",
-        label: "(650) 667-9080",
+        name: 'Simon',
+        pilotNumber: '+6506679080',
+        label: '(650) 667-9080',
       };
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(model.site));
       spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(voicemail));
@@ -1235,7 +1236,6 @@ describe('Controller: ServiceSetup', function () {
       controller.firstTimeSetup = true;
     }));
     describe('Site and voicemail update with generated Voice Mail Pilot with Feature Toggle ON Tests', function () {
-
       it('voicemail pilot number set to generatedVoicemailNumber', function () {
         expect(controller.model.site.voicemailPilotNumber).toEqual('+6506679080');
       });

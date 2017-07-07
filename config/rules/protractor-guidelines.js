@@ -17,14 +17,12 @@ module.exports = function (context) {
 
   return {
     CallExpression: function (node) {
-
       // Allow specific identifying objects or functions
       if ((node.callee.type == 'Identifier' &&
             allowedIdentifiers.indexOf(node.callee.name) > -1) ||
           (node.callee.type == 'MemberExpression' &&
             node.callee.object.type == 'Identifier' &&
             allowedIdentifiers.indexOf(node.callee.object.name) > -1)) {
-
         return;
       }
 
@@ -34,7 +32,6 @@ module.exports = function (context) {
           (node.callee.type == 'MemberExpression' &&
             node.callee.object.type == 'Identifier' &&
             node.callee.object.name == 'by')) {
-
         context.report(node, 'Should not use element locators directly in spec. Extract element locators to page objects (test/e2e-protractor/pages).');
         return;
       }
@@ -42,7 +39,6 @@ module.exports = function (context) {
       // Disallow expects
       if (node.callee.type == 'Identifier' &&
           node.callee.name == 'expect') {
-
         context.report(node, 'Should not use expect directly in spec. Use expectations from utils (test/e2e-protractor/utils/test.utils.js).');
         return;
       }
@@ -51,7 +47,6 @@ module.exports = function (context) {
       if (node.callee.type == 'MemberExpression' &&
           node.callee.object.type == 'Identifier' &&
           node.callee.object.name == 'browser') {
-
         // Allow specific browser methods
         if (node.callee.property.type == 'Identifier' &&
             allowedBrowserMethods.indexOf(node.callee.property.name) > -1) {
@@ -64,7 +59,6 @@ module.exports = function (context) {
 
       // Disallow page element functions
       if (node.callee.type == 'MemberExpression') {
-
         // Allow specific page element functions
         if (node.callee.property.type == 'Identifier' &&
             allowedPageElementMethods.indexOf(node.callee.property.name) > -1) {

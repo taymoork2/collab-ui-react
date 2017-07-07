@@ -3,16 +3,18 @@ import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { HuntGroupService } from 'modules/call/features/hunt-group';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 
 export class HuronSettingsOptions {
-  public preferredLanguageOptions: Array<IOption>;
-  public dateFormatOptions: Array<IOption>;
-  public timeFormatOptions: Array<IOption>;
-  public defaultCountryOptions: Array<IOption>;
-  public timeZoneOptions: Array<IOption>;
-  public companyCallerIdOptions: Array<IOption>;
-  public companyVoicemailOptions: Array<IOption>;
-  public emergencyServiceNumberOptions: Array<IEmergencyNumberOption>;
+  public preferredLanguageOptions: IOption[];
+  public dateFormatOptions: IOption[];
+  public timeFormatOptions: IOption[];
+  public defaultCountryOptions: IOption[];
+  public timeZoneOptions: IOption[];
+  public companyCallerIdOptions: IOption[];
+  public companyVoicemailOptions: IOption[];
+  public emergencyServiceNumberOptions: IEmergencyNumberOption[];
+  public companyMohOptions: IOption[];
   public dialPlan: IDialPlan;
   public extensionsAssigned: boolean;
 }
@@ -31,13 +33,15 @@ export class HuronSettingsOptionsService {
     private PhoneNumberService: PhoneNumberService,
     private DialPlanService: DialPlanService,
     private HuntGroupService: HuntGroupService,
+    private MediaOnHoldService: MediaOnHoldService,
+    private FeatureToggleService,
     private Authinfo,
     private DirectoryNumberService,
     private CeService,
   ) { }
 
   public getOptions(): ng.IPromise<HuronSettingsOptions> {
-    let settingsOptions = new HuronSettingsOptions();
+    const settingsOptions = new HuronSettingsOptions();
     return this.$q.all({
       dateFormatOptions: this.loadDateFormatOptions(),
       timeFormatOptions: this.loadTimeFormatOptions(),
@@ -47,46 +51,48 @@ export class HuronSettingsOptionsService {
       companyCallerIdOptions: this.loadCompanyCallerIdNumbers(undefined),
       companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined),
       emergencyServiceNumbers: this.loadEmergencyServiceNumbers(undefined),
+      companyMohOptions: this.loadCompanyMohOptions(),
       dialPlan: this.loadDialPlan(),
       extensionsAssigned: this.areExtensionsAssigned(),
     }).then(response => {
-      settingsOptions.dateFormatOptions = _.get<Array<IOption>>(response, 'dateFormatOptions');
-      settingsOptions.timeFormatOptions = _.get<Array<IOption>>(response, 'timeFormatOptions');
-      settingsOptions.defaultCountryOptions = _.get<Array<IOption>>(response, 'defaultCountryOptions');
-      settingsOptions.preferredLanguageOptions = _.get<Array<IOption>>(response, 'preferredLanguageOptions');
-      settingsOptions.timeZoneOptions = _.get<Array<IOption>>(response, 'timeZoneOptions');
-      settingsOptions.companyCallerIdOptions = _.get<Array<IOption>>(response, 'companyCallerIdOptions');
-      settingsOptions.companyVoicemailOptions = _.get<Array<IOption>>(response, 'companyVoicemailOptions');
-      settingsOptions.emergencyServiceNumberOptions = _.get<Array<IEmergencyNumberOption>>(response, 'emergencyServiceNumbers');
+      settingsOptions.dateFormatOptions = _.get<IOption[]>(response, 'dateFormatOptions');
+      settingsOptions.timeFormatOptions = _.get<IOption[]>(response, 'timeFormatOptions');
+      settingsOptions.defaultCountryOptions = _.get<IOption[]>(response, 'defaultCountryOptions');
+      settingsOptions.preferredLanguageOptions = _.get<IOption[]>(response, 'preferredLanguageOptions');
+      settingsOptions.timeZoneOptions = _.get<IOption[]>(response, 'timeZoneOptions');
+      settingsOptions.companyCallerIdOptions = _.get<IOption[]>(response, 'companyCallerIdOptions');
+      settingsOptions.companyVoicemailOptions = _.get<IOption[]>(response, 'companyVoicemailOptions');
+      settingsOptions.emergencyServiceNumberOptions = _.get<IEmergencyNumberOption[]>(response, 'emergencyServiceNumbers');
+      settingsOptions.companyMohOptions = _.get<IOption[]>(response, 'companyMohOptions', []);
       settingsOptions.dialPlan = _.get<IDialPlan>(response, 'dialPlan');
       settingsOptions.extensionsAssigned = _.get<boolean>(response, 'extensionsAssigned');
       return settingsOptions;
     });
   }
 
-  private loadDateFormatOptions(): ng.IPromise<Array<IOption>> {
+  private loadDateFormatOptions(): ng.IPromise<IOption[]> {
     return this.ServiceSetup.getDateFormats();
   }
 
-  private loadTimeFormatOptions(): ng.IPromise<Array<IOption>> {
+  private loadTimeFormatOptions(): ng.IPromise<IOption[]> {
     return this.ServiceSetup.getTimeFormats();
   }
 
-  private loadDefaultCountryOptions(): ng.IPromise<Array<IOption>> {
+  private loadDefaultCountryOptions(): ng.IPromise<IOption[]> {
     return this.ServiceSetup.getSiteCountries()
       .then(countries => {
         return _.sortBy(this.ServiceSetup.getTranslatedSiteCountries(countries), 'label');
       });
   }
 
-  private loadPreferredLanguageOptions(): ng.IPromise<Array<IOption>> {
+  private loadPreferredLanguageOptions(): ng.IPromise<IOption[]> {
     return this.ServiceSetup.getSiteLanguages()
     .then(languages => {
       return _.sortBy(this.ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
     });
   }
 
-  public loadCompanyCallerIdNumbers(filter: string | undefined): ng.IPromise<Array<IOption>> {
+  public loadCompanyCallerIdNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
     return this.NumberService.getNumberList(filter, NumberType.EXTERNAL)
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
@@ -98,7 +104,7 @@ export class HuronSettingsOptionsService {
       });
   }
 
-  public loadCompanyVoicemailNumbers(filter: string | undefined): ng.IPromise<Array<IOption>> {
+  public loadCompanyVoicemailNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
     return this.NumberService.getNumberList(filter, NumberType.EXTERNAL, false)
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
@@ -110,13 +116,27 @@ export class HuronSettingsOptionsService {
       });
   }
 
-  private loadTimeZoneOptions(): ng.IPromise<Array<IOption>> {
+  private loadTimeZoneOptions(): ng.IPromise<IOption[]> {
     return this.ServiceSetup.getTimeZones().then(timezones => {
       return this.ServiceSetup.getTranslatedTimeZones(timezones);
     });
   }
 
-  public loadEmergencyServiceNumbers(filter: string | undefined): ng.IPromise<Array<IEmergencyNumberOption>> {
+  private loadCompanyMohOptions(): ng.IPromise<IOption[]> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronMOHEnable)
+      .then(supportsCompanyMoh => {
+        if (supportsCompanyMoh) {
+          return this.MediaOnHoldService.getCompanyMohOptions()
+          .then(mediaOptions => {
+            return mediaOptions;
+          });
+        } else {
+          return this.$q.resolve([]);
+        }
+      });
+  }
+
+  public loadEmergencyServiceNumbers(filter: string | undefined): ng.IPromise<IEmergencyNumberOption[]> {
     return this.NumberService.getNumberList(filter, NumberType.EXTERNAL, true)
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {

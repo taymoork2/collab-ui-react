@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function InternationalDialing(Authinfo, UserCosRestrictionServiceV2, FeatureToggleService) {
-
     var disableInternationalDialing;
 
     var internationalDialing = {
@@ -72,6 +71,5 @@
       return FeatureToggleService.supports(FeatureToggleService.features.huronInternationalDialingTrialOverride)
         .then(getLicenseCommunicationIsTrial);
     }
-
   }
 })();

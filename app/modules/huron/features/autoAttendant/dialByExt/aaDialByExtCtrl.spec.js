@@ -40,7 +40,6 @@ describe('Controller: AADialByExtCtrl', function () {
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.keyIndex = keyIndex;
-
   }));
 
   afterEach(function () {
@@ -77,7 +76,6 @@ describe('Controller: AADialByExtCtrl', function () {
     }));
 
     describe('activate', function () {
-
       it('should be able to create new AA entry', function () {
         expect(controller).toBeDefined();
         expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
@@ -109,7 +107,6 @@ describe('Controller: AADialByExtCtrl', function () {
 
     describe('activate', function () {
       it('should read an existing entry', function () {
-
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionOnInput', '');
         var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
@@ -129,7 +126,6 @@ describe('Controller: AADialByExtCtrl', function () {
 
     describe('saveUiModel', function () {
       it('should write UI entry back into UI model', function () {
-
         var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
         var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(actionEntry);
@@ -165,18 +161,16 @@ describe('Controller: AADialByExtCtrl', function () {
     }));
 
     it('should initialize values for new Dial by Extension', function () {
-
       expect(controller).toBeDefined();
 
       expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
-
     });
 
     it('should write voice and language to the model', function () {
       var voiceOption = {};
-      voiceOption.value = "Claire";
+      voiceOption.value = 'Claire';
       var languageOption = {};
-      languageOption.value = "PigLatin";
+      languageOption.value = 'PigLatin';
 
       expect(controller).toBeDefined();
 
@@ -194,18 +188,15 @@ describe('Controller: AADialByExtCtrl', function () {
     });
 
     it('should set min and max number of characters to zero', function () {
-
       expect(controller).toBeDefined();
 
       $scope.$apply();
 
       expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
       expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(0);
-
     });
 
     it('should fetch message label', function () {
-
       expect(controller).toBeDefined();
 
       var label = controller.getMessageLabel();
@@ -213,7 +204,6 @@ describe('Controller: AADialByExtCtrl', function () {
 
       expect(label).toEqual('autoAttendant.sayMessage');
     });
-
   });
 
   describe('create a RUNACTIONONINPUT from Dial By Extension', function () {
@@ -244,17 +234,14 @@ describe('Controller: AADialByExtCtrl', function () {
     }));
 
     it('should alter action type from dummy to runActionsOnInput', function () {
-
       expect(controller).toBeDefined();
 
       expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
       expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
       expect(controller.menuEntry.getVoice()).toEqual('Claire');
-
     });
 
     it('should set default language', function () {
-
       expect(controller).toBeDefined();
 
       controller.voiceBackup = {};
@@ -263,10 +250,8 @@ describe('Controller: AADialByExtCtrl', function () {
       controller.setVoiceOptions();
       expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
       expect(controller.voiceOption.value).toEqual('Vanessa');
-
     });
     it('should find language', function () {
-
       expect(controller).toBeDefined();
 
       controller.voiceBackup = {};
@@ -274,7 +259,6 @@ describe('Controller: AADialByExtCtrl', function () {
       controller.setVoiceOptions();
       expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
       expect(controller.languageOption.value).toEqual('nl_NL');
-
     });
   });
 });

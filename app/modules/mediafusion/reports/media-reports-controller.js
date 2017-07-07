@@ -272,7 +272,6 @@
           deferred.resolve(vm.Map);
           vm.clusterId = vm.clusterOptions[0];
           vm.clusterSelected = vm.clusterOptions[0];
-
         }).catch(function (err) {
           Notification.errorWithTrackingId(err, vm.errorData);
         });
@@ -366,6 +365,9 @@
           return undefined;
         } else {
           vm.cardIndicator = response.data.dataProvider[0].value;
+          if (vm.cardIndicator > 0) {
+            vm.cardIndicator = '+' + vm.cardIndicator;
+          }
         }
       });
     }
@@ -747,7 +749,7 @@
       vm.clusterUnavailablityFlag = false;
       _.each(vm.availabilityChart.dataProvider, function (cluster) {
         if (!vm.clusterUnavailablityFlag) {
-          if (cluster.segments[cluster.segments.length - 1].availability === "Unavailable") {
+          if (cluster.segments[cluster.segments.length - 1].availability === 'Unavailable') {
             vm.clusterUnavailablityFlag = true;
           } else {
             vm.clusterUnavailablityFlag = false;
@@ -755,6 +757,5 @@
         }
       });
     }
-
   }
 })();

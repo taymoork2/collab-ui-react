@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: AATypeSelectCtrl', function () {
-
   beforeEach(angular.mock.module('Huron'));
 
   var $scope, $state, $timeout;
@@ -26,7 +25,7 @@ describe('Controller: AATypeSelectCtrl', function () {
     });
   }));
 
-  it("ok function call results in closing the Modal with the value chosen when item is 1", function () {
+  it('ok function call results in closing the Modal with the value chosen when item is 1', function () {
     var item = {
       name: 'Basic',
     };
@@ -40,7 +39,7 @@ describe('Controller: AATypeSelectCtrl', function () {
     expect(modalFake.close).toHaveBeenCalledWith(item);
   });
 
-  it("ok function call results in closing the Modal with the value chosen when item is 2", function () {
+  it('ok function call results in closing the Modal with the value chosen when item is 2', function () {
     var item = {
       name: 'Custom',
     };
@@ -54,8 +53,8 @@ describe('Controller: AATypeSelectCtrl', function () {
     expect(modalFake.close).toHaveBeenCalledWith(item);
   });
 
-  it("cancel function call results in dismissing the Modal.", function () {
+  it('cancel function call results in dismissing the Modal.', function () {
     $scope.cancel();
-    expect(modalFake.dismiss).toHaveBeenCalledWith("cancel");
+    expect(modalFake.dismiss).toHaveBeenCalledWith('cancel');
   });
 });

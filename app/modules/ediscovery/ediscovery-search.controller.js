@@ -1,13 +1,15 @@
 require('./ediscovery.scss');
-require('@ciscospark/plugin-search');
-var Spark = require('@ciscospark/spark-core').default;
+require('@ciscospark/internal-plugin-search');
+
+
+//TODO agendel: need to address the use of babel-polyfil which is required by spark-core.
 
 (function () {
   'use strict';
 
   /* @ngInject */
   function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService,
-    FeatureToggleService, ITProPackService, Notification, TokenService) {
+    FeatureToggleService, ProPackService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
@@ -17,6 +19,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     /* Search Page Functions */
     vm.showHover = showHover;
+    vm.getProPackTooltip = getProPackTooltip;
     vm.searchByLimit = searchByLimit;
     vm.searchByParameters = searchByParameters;
     vm.advancedSearch = advancedSearch;
@@ -45,8 +48,8 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.currentReportId = null;
     vm.ongoingSearch = false;
     vm.ediscoveryToggle = false;
-    vm.itProPackPurchased = false;
-    vm.itProPackEnabled = false;
+    vm.proPackPurchased = false;
+    vm.proPackEnabled = false;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchEmailPlaceholder');
@@ -96,16 +99,16 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.warning = null;
 
       $q.all([
-        ITProPackService.hasITProPackEnabled(),
-        ITProPackService.hasITProPackPurchased(),
+        ProPackService.hasProPackEnabled(),
+        ProPackService.hasProPackPurchased(),
         FeatureToggleService.atlasEdiscoveryGetStatus(),
         FeatureToggleService.atlasEdiscoveryIPSettingGetStatus(),
       ]).then(function (toggles) {
-        vm.itProPackEnabled = toggles[0];
-        vm.itProPackPurchased = toggles[1];
+        vm.proPackEnabled = toggles[0];
+        vm.proPackPurchased = toggles[1];
         vm.ediscoveryToggle = toggles[2];
         vm.ediscoveryIPSettingToggle = toggles[3];
-        if (!vm.itProPackPurchased) {
+        if (!vm.proPackPurchased) {
           vm.firstEnabledDate = moment().subtract(90, 'days').format('YYYY-MM-DD');
         }
       });
@@ -170,7 +173,7 @@ var Spark = require('@ciscospark/spark-core').default;
         errors.push($translate.instant('ediscovery.dateError.StartDateCannotBeInTheFuture'));
       }
 
-      if (moment(start).isBefore(ninetyDayLimit) && !vm.itProPackPurchased) {
+      if (moment(start).isBefore(ninetyDayLimit) && !vm.proPackPurchased) {
         errors.push($translate.instant('ediscovery.dateError.InvalidDateRange'));
       }
 
@@ -179,7 +182,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function dateWarnings(end) {
       var warnings = [];
-      if (end !== moment().endOf('day').format('YYYY-MM-DD') && !vm.itProPackPurchased) {
+      if (end !== moment().endOf('day').format('YYYY-MM-DD') && !vm.proPackPurchased) {
         warnings.push($translate.instant('ediscovery.dateError.InvalidEndDate'));
       }
       return warnings;
@@ -219,7 +222,11 @@ var Spark = require('@ciscospark/spark-core').default;
 
     /* Search Page Functions */
     function showHover() {
-      return vm.itProPackEnabled && !vm.itProPackPurchased;
+      return vm.proPackEnabled && !vm.proPackPurchased;
+    }
+
+    function getProPackTooltip() {
+      return (showHover()) ? $translate.instant('ediscovery.searchParameters.dateRangeTooltip') : '';
     }
 
     function searchByLimit() {
@@ -243,15 +250,23 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function advancedSearch() {
       searchSetup();
-      sparkSetup();
+      spark = EdiscoveryService.setupSpark();
       vm.encryptedResult = [];
       vm.encryptedEmails = null;
       vm.unencryptedRoomIds = null;
       vm.emailSelected = _.eq(vm.searchByOptions[0], vm.searchBySelected);
       vm.roomIdSelected = _.eq(vm.searchByOptions[1], vm.searchBySelected);
-      spark.mercury.connect()
+
+      Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.INITIAL_SEARCH, {
+        trackingId: 'N/A',
+        emailSelected: vm.emailSelected && vm.searchModel,
+        spaceSelected: vm.roomIdSelected && vm.searchModel,
+        searchedWithKeyword: vm.queryModel,
+      });
+
+      spark.internal.mercury.connect()
         .then(function () {
-          return spark.encryption.kms.createUnboundKeys({
+          return spark.internal.encryption.kms.createUnboundKeys({
             count: 1,
           });
         })
@@ -264,7 +279,7 @@ var Spark = require('@ciscospark/spark-core').default;
         .then(function (keyword) {
           vm.encryptedEmails = vm.emailSelected ? keyword : null;
           vm.unencryptedRoomIds = vm.roomIdSelected ? splitWords(keyword) : null;
-          return _.isNull(vm.queryModel) ? null : spark.encryption.encryptText(vm.encryptedResult, vm.queryModel);
+          return _.isNull(vm.queryModel) ? null : spark.internal.encryption.encryptText(vm.encryptedResult, vm.queryModel);
         })
         .then(function (query) {
           vm.encryptedQuery = query;
@@ -291,14 +306,18 @@ var Spark = require('@ciscospark/spark-core').default;
                   vm.isReportMaxRooms = true;
                   vm.isReport = false;
                 }
-                Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.INITIAL_SEARCH);
               }
             })
             .catch(function (err) {
               vm.error = $translate.instant('ediscovery.searchErrors.requestFailed', {
                 trackingId: err.data.trackingId,
               });
-              Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.SEARCH_ERROR, err.data.trackingId);
+              Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.SEARCH_ERROR, {
+                trackingId: err.data.trackingId,
+                emailSelected: vm.emailSelected && vm.searchModel,
+                spaceSelected: vm.roomIdSelected && vm.searchModel,
+                searchedWithKeyword: vm.queryModel,
+              });
               resetSearchPageToInitialState();
             })
             .finally(function () {
@@ -312,6 +331,7 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.isReport = false;
       vm.isReportGenerating = true;
       disableAvalonPolling();
+      Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.GENERATE_REPORT, {});
       vm.report = {
         displayName: vm.searchCriteria.displayName,
         state: 'INIT',
@@ -338,7 +358,6 @@ var Spark = require('@ciscospark/spark-core').default;
               startDate: formatDate('api', getStartDate()),
               endDate: formatDate('api', getEndDate(), true),
             };
-            Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.GENERATE_REPORT);
             generateReport(reportParams);
           } else {
             runReport(res.runUrl, res.url);
@@ -371,17 +390,17 @@ var Spark = require('@ciscospark/spark-core').default;
           var status = err && err.status ? err.status : 500;
           switch (status) {
             case 400:
-              vm.error = $translate.instant("ediscovery.search.invalidRoomId", {
+              vm.error = $translate.instant('ediscovery.search.invalidRoomId', {
                 roomId: roomId,
               });
               break;
             case 404:
-              vm.error = $translate.instant("ediscovery.search.roomNotFound", {
+              vm.error = $translate.instant('ediscovery.search.roomNotFound', {
                 roomId: roomId,
               });
               break;
             default:
-              vm.error = $translate.instant("ediscovery.search.roomNotFound", {
+              vm.error = $translate.instant('ediscovery.search.roomNotFound', {
                 roomId: roomId,
               });
               Notification.error('ediscovery.search.roomLookupError');
@@ -398,8 +417,8 @@ var Spark = require('@ciscospark/spark-core').default;
         .catch(function () {
           Notification.error('ediscovery.search.runFailed');
           EdiscoveryService.patchReport(vm.currentReportId, {
-            state: "FAILED",
-            failureReason: "UNEXPECTED_FAILURE",
+            state: 'FAILED',
+            failureReason: 'UNEXPECTED_FAILURE',
           });
         }).finally(function () {
           enableAvalonPolling();
@@ -435,9 +454,26 @@ var Spark = require('@ciscospark/spark-core').default;
         if (report.state != 'COMPLETED' && report.state != 'FAILED' && report.state != 'ABORTED') {
           avalonPoller = $timeout(pollAvalonReport, 5000);
         } else {
-          EdiscoveryNotificationService.notify(report);
           disableAvalonPolling();
-          vm.isReportComplete = true;
+          var keyPromise;
+          if (report.state === 'COMPLETED' && vm.report.encryptionKeyUrl) {
+            keyPromise = EdiscoveryService.getReportKey(vm.report.encryptionKeyUrl, spark);
+          } else {
+            keyPromise = $q.resolve();
+          }
+          keyPromise.then(function (key) {
+            if (key) {
+              vm.report.reportKey = key;
+            }
+            EdiscoveryNotificationService.notify(report);
+            vm.isReportComplete = true;
+          })
+          .catch(function () {
+            Notification.error('ediscovery.encryption.unableGetPassword');
+          })
+          .finally(function () {
+            vm.isReportComplete = true;
+          });
         }
       });
     }
@@ -567,15 +603,6 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.searchResults.keywords = [];
     }
 
-    function sparkSetup() {
-      vm.accessToken = TokenService.getAccessToken();
-      spark = new Spark({
-        credentials: {
-          access_token: vm.accessToken,
-        },
-      });
-    }
-
     function searchResults(result) {
       var keywords = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? vm.unencryptedEmails : vm.unencryptedRoomIds;
       keywords = keywords || [$translate.instant('ediscovery.searchResults.notApplicable')];
@@ -600,13 +627,12 @@ var Spark = require('@ciscospark/spark-core').default;
       var emails = splitWords(_emails);
       if (emails) {
         var promises = emails.map(function (s) {
-          return spark.encryption.encryptText(vm.encryptedResult, s);
+          return spark.internal.encryption.encryptText(vm.encryptedResult, s);
         });
         return $q.all(promises);
       }
       return null;
     }
-
   }
   angular
     .module('Ediscovery')

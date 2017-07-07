@@ -1,7 +1,6 @@
 /* @ngInject */
 module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate, $timeout,
   Authinfo, Notification, Log, UserListService, WebexClientVersion, BrandService, Orgservice) {
-
   var brand = this;
   var orgId = Authinfo.getOrgId();
   var isDirectCustomer = Authinfo.isDirectCustomer();
@@ -14,11 +13,11 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
   brand.allowCustomerLogos = false;
   brand.progress = 0;
   brand.logoCriteria = {
-    'pattern': '.png',
-    'width': {
+    pattern: '.png',
+    width: {
       min: '100',
     },
-    'size': {
+    size: {
       max: '1MB',
     },
   };
@@ -44,7 +43,6 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
         var currentPartner = data.partners[partner];
         if (!isPartner && currentPartner.userName.indexOf('@cisco.com') === -1) {
           brand.partner = currentPartner;
-
         } else if (currentPartner.userName.indexOf('@cisco.com') > -1) {
           brand.rep = currentPartner;
         }
@@ -70,11 +68,9 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
         if (!_.isUndefined(settings.logoUrl)) {
           brand.logoUrl = settings.logoUrl;
         }
-
       } else {
         Log.debug('Get existing org failed. Status: ' + status);
       }
-
     }, orgId, params);
 
     BrandService.getLogoUrl(orgId).then(function (logoUrl) {
@@ -85,8 +81,8 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
   };
 
   brand.initWbxClientVersions = function () {
-    var funcName = "brand.initWbxClientVersions()";
-    var logMsg = "";
+    var funcName = 'brand.initWbxClientVersions()';
+    var logMsg = '';
 
     WebexClientVersion.getWbxClientVersions().then(function (webexClientVersions) {
       if (null != webexClientVersions) {
@@ -123,16 +119,15 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
                 (!validClientVersion) &&
                 (wbxclientversion == clientVersion)
               ) {
-
                 validClientVersion = true;
               }
             }
           );
 
           if (!validClientVersion) {
-            logMsg = funcName + "\n" +
-              "ERROR" + "\n" +
-              "selected clientversion=" + clientVersion + " is invalid.";
+            logMsg = funcName + '\n' +
+              'ERROR' + '\n' +
+              'selected clientversion=' + clientVersion + ' is invalid.';
             $log.log(logMsg);
 
             brand.wbxclientVersionInvalid = true;
@@ -149,10 +144,10 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
         brand.useLatestWbxVersion = useLatest;
 
         if (updateDb) {
-          logMsg = funcName + "\n" +
-            "Updating d/b" + "\n" +
-            "clientVersion=" + clientVersion + "\n" +
-            "useLatest=" + useLatest;
+          logMsg = funcName + '\n' +
+            'Updating d/b' + '\n' +
+            'clientVersion=' + clientVersion + '\n' +
+            'useLatest=' + useLatest;
           $log.log(logMsg);
 
           WebexClientVersion.postOrPutTemplate(
@@ -168,7 +163,7 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
   brand.init();
 
   function toggleWebexSelectLatestVersionAlways(useLatest) {
-    $log.log("webex use latest version toggled to " + useLatest);
+    $log.log('webex use latest version toggled to ' + useLatest);
 
     brand.useLatestWbxVersion = useLatest;
 
@@ -188,7 +183,7 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
   }
 
   function wbxclientversionselectchanged(wbxclientversionselected) {
-    $log.log("New version selected is " + wbxclientversionselected);
+    $log.log('New version selected is ' + wbxclientversionselected);
 
     brand.wbxclientVersionInvalid = false;
     brand.wbxclientVersionInvalidError = '';
@@ -210,15 +205,15 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
   brand.wbxclientversionselectchanged = _.debounce(
     wbxclientversionselectchanged,
     2000, {
-      'leading': true,
-      'trailing': false,
+      leading: true,
+      trailing: false,
     });
 
   brand.toggleWebexSelectLatestVersionAlways = _.debounce(
     toggleWebexSelectLatestVersionAlways,
     100, {
-      'leading': true,
-      'trailing': false,
+      leading: true,
+      trailing: false,
     });
 
   brand.upload = function (file) {
@@ -246,8 +241,8 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
       BrandService.useCustomLogo(orgId);
     }
   }, 2000, {
-    'leading': true,
-    'trailing': false,
+    leading: true,
+    trailing: false,
   });
 
   brand.toggleAllowCustomerLogos = _.debounce(function (value) {
@@ -257,8 +252,8 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
       BrandService.disableCustomerLogos(orgId);
     }
   }, 2000, {
-    'leading': true,
-    'trailing': false,
+    leading: true,
+    trailing: false,
   });
 
   // Add branding example static page

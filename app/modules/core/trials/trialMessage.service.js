@@ -25,9 +25,9 @@
 
     function _makeTrial() {
       var defaults = {
-        'type': Config.offerTypes.message,
-        'enabled': false,
-        'details': {},
+        type: Config.offerTypes.message,
+        enabled: false,
+        details: {},
       };
 
       _trialData = _.cloneDeep(defaults);

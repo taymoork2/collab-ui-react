@@ -3,7 +3,7 @@
 describe('Service: Utilization Resource GraphService', function () {
   var UtilizationResourceGraphService;
   var allClusters = 'mediaFusion.metrics.allclusters';
-  var clusterId = "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3";
+  var clusterId = '615209ed-98a3-4ab3-a1aa-033e5a0c1dc3';
 
   var validateService = {
     validate: function () {},
@@ -11,7 +11,7 @@ describe('Service: Utilization Resource GraphService', function () {
 
   var utilizationChart = {
     dataProvider: [],
-    startDuration: "",
+    startDuration: '',
     balloon: {
       enabled: false,
     },
@@ -26,8 +26,8 @@ describe('Service: Utilization Resource GraphService', function () {
   };
 
   var daterange = {
-    label: "Last 24 Hours",
-    value: "0",
+    label: 'Last 24 Hours',
+    value: '0',
   };
   var clusterNameMapping = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
   var IdMap = _.cloneDeep(clusterNameMapping.clusterIdToNameMap);
@@ -47,23 +47,19 @@ describe('Service: Utilization Resource GraphService', function () {
   });
 
   it('setUtilizationGraph should return an amchart object successfully', function () {
-
     var setUtilizationGraphResponse = UtilizationResourceGraphService.setUtilizationGraph(UtilizationGraphData, utilizationChart, allClusters, allClusters, daterange, IdMap);
     expect(setUtilizationGraphResponse.graphs.length).toBe(10);
     expect(setUtilizationGraphResponse.dataProvider).toEqual(UtilizationData.utilizationresponse);
   });
 
   it('setUtilizationGraph should return an amchart object successfully when particular cluster is selected', function () {
-
     var setUtilizationGraphResponse = UtilizationResourceGraphService.setUtilizationGraph(UtilizationGraphData, utilizationChart, allClusters, clusterId, daterange, IdMap);
     expect(setUtilizationGraphResponse.graphs.length).toBe(10);
     expect(setUtilizationGraphResponse.dataProvider).toEqual(UtilizationData.utilizationresponse);
   });
 
   it('Avg Utilization legend should follow rest of the clusters', function () {
-
     var setUtilizationGraphResponse = UtilizationResourceGraphService.setUtilizationGraph(UtilizationGraphData, utilizationChart, allClusters, clusterId, daterange, IdMap);
     expect(setUtilizationGraphResponse.graphs[0].valueField).not.toEqual('average_util');
   });
-
 });

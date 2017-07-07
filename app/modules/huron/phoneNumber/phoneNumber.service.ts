@@ -168,7 +168,7 @@ export class PhoneNumberService {
     }
   }
 
-  public getExampleNumbers(regionCode: string): Array<string> {
+  public getExampleNumbers(regionCode: string): string[] {
     return this.exampleNumbers[regionCode];
   }
 

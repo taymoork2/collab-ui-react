@@ -51,7 +51,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     }
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId, userEmailAddress,  entitlementUpdatedCallback } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
@@ -143,7 +143,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
     this.savingPage = true;
 
-    let entitlements: IEntitlementNameAndState[] = [{
+    const entitlements: IEntitlementNameAndState[] = [{
       entitlementName: 'squaredFusionUC',
       entitlementState: this.newEntitlementValue === true ? 'ACTIVE' : 'INACTIVE',
     }];

@@ -4,7 +4,6 @@
   angular.module('Mediafusion').service('UtilizationResourceGraphService', UtilizationResourceGraphService);
   /* @ngInject */
   function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
-
     var vm = this;
     vm.utilizationdiv = 'utilizationdiv';
     vm.exportDiv = 'utilization-export-div';
@@ -137,7 +136,7 @@
       }
 
       var columnNames = {
-        'time': vm.timeStamp,
+        time: vm.timeStamp,
       };
       var exportFields = [];
       _.each(graphs, function (value) {
@@ -155,9 +154,9 @@
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
       if (!isDummy && clusterSelected === vm.allClusters) {
         graphs.push({
-          'title': vm.allOff,
-          'id': 'none',
-          'lineColor': 'transparent',
+          title: vm.allOff,
+          id: 'none',
+          lineColor: 'transparent',
         });
       }
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
@@ -169,11 +168,11 @@
       chartData.legend.useGraphSettings = true;
 
       chartData.legend.listeners = [{
-        'event': 'hideItem',
-        "method": legendHandler,
+        event: 'hideItem',
+        method: legendHandler,
       }, {
-        'event': 'showItem',
-        'method': legendHandler,
+        event: 'showItem',
+        method: legendHandler,
       }];
 
 

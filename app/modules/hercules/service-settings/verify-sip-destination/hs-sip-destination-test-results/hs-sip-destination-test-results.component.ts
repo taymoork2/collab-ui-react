@@ -10,7 +10,7 @@ class SipDestinationTestResultsComponentCtrl implements ng.IComponentController 
   constructor(
   ) {}
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { testResultNumbers } = changes;
     if (testResultNumbers && testResultNumbers.currentValue) {
       this.testResultNumbers = testResultNumbers.currentValue;

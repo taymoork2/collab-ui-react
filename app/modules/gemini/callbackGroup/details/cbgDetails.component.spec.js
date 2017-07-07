@@ -64,16 +64,16 @@ describe('Component: CbgDetails', function () {
 
   function setMockData(key, val) {
     preData.common = {
-      'links': [],
-      'content': {
-        'data': {
-          'body': '',
-          'returnCode': 0,
-          'trackId': '',
+      links: [],
+      content: {
+        data: {
+          body: '',
+          returnCode: 0,
+          trackId: '',
         },
-        'health': {
-          'code': 200,
-          'status': 'OK',
+        health: {
+          code: 200,
+          status: 'OK',
         },
       },
     };
@@ -94,7 +94,7 @@ describe('Component: CbgDetails', function () {
       cbgService.getHistories.and.returnValue($q.resolve(obj.Histories));
       gemService.getRemedyTicket.and.returnValue($q.resolve(obj.RemedyTicket));
       if (catchStatus) {
-        cbgService.getOneCallbackGroup.and.returnValue($q.reject({ 'status': 404 }));
+        cbgService.getOneCallbackGroup.and.returnValue($q.reject({ status: 404 }));
       } else {
         cbgService.getOneCallbackGroup.and.returnValue($q.resolve(obj.CurrentCallbackGroup));
       }
@@ -170,7 +170,7 @@ describe('Component: CbgDetails', function () {
     });
 
     it('must throw Notification.errorResponse', function () {
-      cbgService.updateCallbackGroupStatus.and.returnValue($q.reject({ 'status': 404 }));
+      cbgService.updateCallbackGroupStatus.and.returnValue($q.reject({ status: 404 }));
       ctrl.onCancelSubmission();
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();

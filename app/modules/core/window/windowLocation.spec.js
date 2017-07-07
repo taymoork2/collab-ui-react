@@ -23,5 +23,4 @@ describe('Window Location', function () {
     WindowLocation.set('foo');
     expect($window.location.href).toBe('foo');
   });
-
 });

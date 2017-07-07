@@ -2,7 +2,7 @@
 
 describe('Controller: ResetDeviceController', function () {
   var $httpBackend, controller, Notification;
-  var url = "http://dummyUrl";
+  var url = 'http://dummyUrl';
   var fakeModal;
 
   beforeEach(angular.mock.module('Squared'));

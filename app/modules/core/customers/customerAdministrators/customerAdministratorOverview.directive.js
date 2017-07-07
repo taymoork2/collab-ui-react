@@ -17,5 +17,4 @@ require('./_customer-admin.scss');
 
     return directive;
   }
-
 })();

@@ -41,7 +41,7 @@ class InlineEditText implements ng.IComponentController {
     this.determineShowTextLink(this.isTextClickable);
   }
 
-  public $onChanges(changes: { isTextClickable: ng.IChangesObject }): void {
+  public $onChanges(changes: { isTextClickable: ng.IChangesObject<any> }): void {
     if (changes.isTextClickable) {
       this.determineShowTextLink(changes.isTextClickable.currentValue);
     }
@@ -75,7 +75,7 @@ class InlineEditText implements ng.IComponentController {
 
   public save(): void {
     this.saveInProgress = true;
-    let newValue = this.form.$valid ? this.newValue : this.form.editInput.$viewValue;
+    const newValue = this.form.$valid ? this.newValue : this.form.editInput.$viewValue;
     this.$q.resolve(this.onSave({
       newValue: newValue,
     }))

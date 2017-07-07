@@ -15,7 +15,7 @@ export class UserPreferencesService {
   public static USER_PREF_TOS: string = 'SparkTOSAccept';
   public static DELETE_OP = 'delete';
 
-  public allPrefs: Array<string> = [
+  public allPrefs: string[] = [
     UserPreferencesService.USER_PREF_LAUNCH,
     UserPreferencesService.USER_PREF_TOS,
   ];
@@ -34,11 +34,11 @@ export class UserPreferencesService {
 
   public setUserPreferences(user: IUser, prefId: string, value: boolean): ng.IPromise<IUser> {
 
-    let updateUserPreferences: Array<Object> = [];
+    const updateUserPreferences: Object[] = [];
 
     // set status of each preference
     _.forEach(this.allPrefs, (pref) => {
-      let preference: IPreferenceOperation = {
+      const preference: IPreferenceOperation = {
         value: pref,
       };
 
@@ -56,7 +56,7 @@ export class UserPreferencesService {
       updateUserPreferences.push(preference);
     });
 
-    let body: Object = {};
+    const body: Object = {};
     body[KEY_SCHEMAS] = user.schemas;
     body[KEY_USER_PREF] = updateUserPreferences;
     return this.$http.patch<IUser>(user.meta.location, body)

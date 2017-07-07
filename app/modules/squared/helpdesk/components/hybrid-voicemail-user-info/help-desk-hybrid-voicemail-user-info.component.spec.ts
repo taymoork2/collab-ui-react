@@ -34,8 +34,8 @@ describe('helpDeskHybridVoicemailUserInfo', () => {
 
   it('should read the voicemail APIs and populate the required user info: ', () => {
 
-    let entitled = true;
-    let controller = initController('1234', '5678', entitled);
+    const entitled = true;
+    const controller = initController('1234', '5678', entitled);
     controller.$onInit();
     test.$rootScope.$apply();
 
@@ -47,8 +47,8 @@ describe('helpDeskHybridVoicemailUserInfo', () => {
 
   it('should not show the section if the user is not entitled, and not call the voicemail APIs', () => {
 
-    let entitled = false;
-    let controller = initController('1234', '5678', entitled);
+    const entitled = false;
+    const controller = initController('1234', '5678', entitled);
     controller.$onInit();
     test.$rootScope.$apply();
 
@@ -59,14 +59,14 @@ describe('helpDeskHybridVoicemailUserInfo', () => {
 
   it('should show a message if the org is not enabled, and not call the getUserVoicemailInfo API', () => {
 
-    let entitled = true;
+    const entitled = true;
     test.UCCService.getOrgVoicemailConfiguration.and.returnValue(test.$q.resolve({
       voicemailOrgEnableInfo: {
         orgHybridVoicemailEnabled: false,
       },
     }));
 
-    let controller = initController('1234', '5678', entitled);
+    const controller = initController('1234', '5678', entitled);
     controller.$onInit();
     test.$rootScope.$apply();
 

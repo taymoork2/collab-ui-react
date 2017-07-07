@@ -22,7 +22,7 @@ describe('Service: MyCompanyOrdersService', () => {
     } ],
     );
 
-    let purchaseOrdersList: IOrderDetail[] = [{
+    const purchaseOrdersList: IOrderDetail[] = [{
       externalOrderId: '123',
       orderDate: new Date(),
       status: 'COMPLETED',
@@ -30,7 +30,7 @@ describe('Service: MyCompanyOrdersService', () => {
       productDescriptionList: [],
     }];
 
-    let purchaseOrdersResponse: IOrderList = {
+    const purchaseOrdersResponse: IOrderList = {
       commerceOrderList: purchaseOrdersList,
     };
 

@@ -226,7 +226,9 @@
         el.innerHTML = html;
         $compile(el)(scope);
         var frag = $window.document.createDocumentFragment();
-        frag.appendChild(el.firstChild);
+        if (!_.isNull(el.firstChild)) {
+          frag.appendChild(el.firstChild);
+        }
         range.insertNode(frag);
       }
     }

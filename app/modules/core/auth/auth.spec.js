@@ -35,7 +35,6 @@ describe('Auth Service', function () {
         ],
       },
     };
-
   }));
 
   afterEach(function () {
@@ -518,7 +517,6 @@ describe('Auth Service', function () {
     });
 
     describe('given user is full admin', function () {
-
       beforeEach(function () {
         UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
         $httpBackend
@@ -531,7 +529,6 @@ describe('Auth Service', function () {
         $httpBackend
           .expectGET('path/organizations/1337?disableCache=true&basicInfo=true')
           .respond(200, this.orgInfo.orgSettingsWithDomain);
-
       });
 
       it('services should be fetched', function () {
@@ -565,11 +562,9 @@ describe('Auth Service', function () {
         var result = Authinfo.initialize.calls.argsFor(0)[0];
         expect(result.services[0]).toBe('foo');
       });
-
     });
 
     describe('given user is not admin', function () {
-
       beforeEach(function () {
         UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
         $httpBackend
@@ -625,11 +620,9 @@ describe('Auth Service', function () {
         $httpBackend.flush();
         expect(Authinfo.updateAccountInfo.calls.count()).toBe(1);
       });
-
     });
 
     describe('given admin has read only role', function () {
-
       beforeEach(function () {
         UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
         $httpBackend
@@ -668,7 +661,6 @@ describe('Auth Service', function () {
         $httpBackend.flush();
         expect(Authinfo.updateAccountInfo.calls.count()).toBe(1);
       });
-
     });
 
     it('will add some webex stuff given some condition && when no roles specified', function (done) {
@@ -826,7 +818,27 @@ describe('Auth Service', function () {
       expect(result.services.length).toBe(0);
     });
   });
+  describe('Revoke Access Token', function () {
+    beforeEach(function () {
+      OAuthConfig.getOAuthRevokeUserTokenUrl = jasmine.createSpy('getOAuthRevokeUserTokenUrl').and.returnValue('http://www.example.com/idb/oauth2/v1/tokens?username=');
+    });
 
+    it('revoke user token should be forbidden', function () {
+      $httpBackend
+        .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com&orgid=eca72332-dc0a-4da6-a8a1-eaaad58d2dc9')
+        .respond(403, {});
+      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com', 'eca72332-dc0a-4da6-a8a1-eaaad58d2dc9');
+      expect(promise).toBeRejected();
+    });
+
+    it('revoke user token should be success', function () {
+      $httpBackend
+        .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com&orgid=eca72332-dc0a-4da6-a8a1-eaaad58d2dc9')
+        .respond(204, {});
+      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com', 'eca72332-dc0a-4da6-a8a1-eaaad58d2dc9');
+      expect(promise).toBeResolved();
+    });
+  });
   // helpers
 
   function stubCredentials() {
@@ -842,5 +854,4 @@ describe('Auth Service', function () {
       status: status,
     });
   }
-
 });

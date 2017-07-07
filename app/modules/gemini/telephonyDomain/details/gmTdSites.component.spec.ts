@@ -76,14 +76,14 @@ describe('Component: gmTdSites', () => {
 
   describe('Click event', function () {
     it('Should move site successfully when click move site link', function () {
-      let moveSiteResponse = this.preData.common;
+      const moveSiteResponse = this.preData.common;
       moveSiteResponse.content.data.returnCode = 0;
 
-      let site = {
+      const site = {
         siteId: '858622',
         siteUrl: 'xiaoyuantest1.webex.com',
       };
-      let targetTd = {
+      const targetTd = {
         targetCcaDomainId: '8a607bdb59baadf5015aaba2d1731b47',
         targetDomainName: 'TD001',
       };
@@ -96,14 +96,14 @@ describe('Component: gmTdSites', () => {
     });
 
     it('Should move site failed when click move site link', function () {
-      let moveSiteResponse = this.preData.common;
+      const moveSiteResponse = this.preData.common;
       moveSiteResponse.content.data.returnCode = 500;
 
-      let site = {
+      const site = {
         siteId: '858622',
         siteUrl: 'xiaoyuantest1.webex.com',
       };
-      let targetTd = {
+      const targetTd = {
         targetCcaDomainId: '8a607bdb59baadf5015aaba2d1731b47',
         targetDomainName: 'TD001',
       };

@@ -28,14 +28,14 @@ describe('Controller: DevicesCtrlHuron', function () {
     $controller = _$controller_;
 
     $stateParams.currentUser = {
-      "userName": "pregoldtx1sl+2callwaiting1@gmail.com",
-      "entitlements": [
-        "squared-room-moderation",
-        "webex-messenger",
-        "ciscouc",
-        "squared-call-initiation",
-        "webex-squared",
-        "squared-syncup",
+      userName: 'pregoldtx1sl+2callwaiting1@gmail.com',
+      entitlements: [
+        'squared-room-moderation',
+        'webex-messenger',
+        'ciscouc',
+        'squared-call-initiation',
+        'webex-squared',
+        'squared-syncup',
       ],
     };
 
@@ -49,7 +49,6 @@ describe('Controller: DevicesCtrlHuron', function () {
     spyOn(CsdmUpgradeChannelService, 'getUpgradeChannelsPromise').and.returnValue($q.resolve([]));
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/upgradeChannels').respond(200, []);
-
   }));
 
   afterEach(function () {
@@ -135,7 +134,7 @@ describe('Controller: DevicesCtrlHuron', function () {
       it('should still call activate when Huron entitlement is removed', function () {
         CsdmDataModelService.reloadDevicesForUser.calls.reset();
 
-        $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
+        $stateParams.currentUser.entitlements = ['squared-room-moderation', 'webex-messenger', 'squared-call-initiation', 'webex-squared', 'squared-syncup'];
         $scope.$broadcast('entitlementsUpdated');
         $scope.$apply();
 
@@ -155,7 +154,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     describe('sets the correct type on reloadDevicesForUser()', function () {
       it('should use type "all" when both huron, cloudberry and personal mode are enabled', function () {
         spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
-        $stateParams.currentUser.entitlements = ["ciscouc"];
+        $stateParams.currentUser.entitlements = ['ciscouc'];
         Authinfo.isDeviceMgmt.and.returnValue(true);
         initController();
 
@@ -164,7 +163,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
       it('should use type "huron" when both huron and cloudberry are enabled but personal mode is not', function () {
         spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(false));
-        $stateParams.currentUser.entitlements = ["ciscouc"];
+        $stateParams.currentUser.entitlements = ['ciscouc'];
         Authinfo.isDeviceMgmt.and.returnValue(true);
         initController();
 
@@ -173,7 +172,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
       it('should use type "huron" when both huron and personal mode are enabled but cloudberry is not', function () {
         spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
-        $stateParams.currentUser.entitlements = ["ciscouc"];
+        $stateParams.currentUser.entitlements = ['ciscouc'];
         Authinfo.isDeviceMgmt.and.returnValue(false);
         initController();
 
@@ -182,7 +181,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
       it('should use type "huron" when only huron is enabled', function () {
         spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(false));
-        $stateParams.currentUser.entitlements = ["ciscouc"];
+        $stateParams.currentUser.entitlements = ['ciscouc'];
         Authinfo.isDeviceMgmt.and.returnValue(false);
         initController();
 
@@ -337,6 +336,5 @@ describe('Controller: DevicesCtrlHuron', function () {
         expect(wizardState.recipient.organizationId).toBe(orgId);
       });
     });
-
   });
 });

@@ -19,7 +19,7 @@
     vm.onAgreeClick = onAgreeClick;
     vm.orgData = null;
     vm.pstnCarrierStatics = [];
-    vm.carrier = { 'logoSrc': '', 'logoAlt': '' };
+    vm.carrier = { logoSrc: '', logoAlt: '' };
     vm.isTrial = false;
     vm.loading = false;
     vm.initComplete = false;
@@ -66,7 +66,7 @@
     function getToSInfo() {
       PstnService.getCustomerV2(vm.orgData.id).then(function (customer) {
         if (customer.trial) {
-          var carriers = [{ 'uuid': customer.pstnCarrierId }];
+          var carriers = [{ uuid: customer.pstnCarrierId }];
           vm.isTrial = true;
           PstnService.getCarrierDetails(carriers).then(function (carrier) {
             loadCarrier(carrier[0]);
@@ -110,6 +110,5 @@
           vm.loading = false;
         });
     }
-
   }
 })();

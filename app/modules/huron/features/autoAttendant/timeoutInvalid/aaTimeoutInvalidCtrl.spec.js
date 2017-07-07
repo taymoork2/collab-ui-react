@@ -39,7 +39,6 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       $scope: $scope,
     });
     $scope.$apply();
-
   }));
 
   describe('createOptionMenu', function () {
@@ -56,7 +55,6 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
   });
 
   describe('populateOptionMenu', function () {
-
     it('should read the CeMenu with attempts 1 and set UI to Continue-To-Next-Step (Timeout/Invalid)', function () {
       controller.menuEntry.attempts = 1;
       controller.selectedTimeout = [];
@@ -101,7 +99,6 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
 
       expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });
-
   });
 
   describe('timeoutInvalidChanged', function () {
@@ -109,9 +106,9 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       // phone menu at entry 0
       controller.uiMenu = {};
       controller.uiMenu.entries = [{
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
       }];
       $scope.index = 0;
       controller.menuEntry = controller.uiMenu.entries[$scope.index];
@@ -124,9 +121,9 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       // phone menu at entry 0
       controller.uiMenu = {};
       controller.uiMenu.entries = [{
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
       }];
       $scope.index = 0;
       controller.menuEntry = controller.uiMenu.entries[$scope.index];
@@ -142,9 +139,9 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       // phone menu at entry 0
       controller.uiMenu = {};
       controller.uiMenu.entries = [{
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": [],
+        type: 'MENU_OPTION',
+        entries: [],
+        headers: [],
       }];
       $scope.index = 0;
       controller.menuEntry = controller.uiMenu.entries[$scope.index];
@@ -155,7 +152,5 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       controller.timeoutInvalidChanged();
       expect(controller.uiMenu.entries[0].attempts).toEqual(6);
     });
-
   });
-
 });

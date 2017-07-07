@@ -7,8 +7,7 @@
 
   /* @ngInject */
   function DeviceUsageMockData($log, $timeout) {
-
-    var apiDataFormat = "YYYYMMDD";
+    var apiDataFormat = 'YYYYMMDD';
 
     var cachedRawData;
 
@@ -29,12 +28,12 @@
 
     function deviceDaySample(date, accountId, deviceCategory) {
       return {
-        'callCount': _.random(1, maxCallsPrDay),
-        'date': Number(date),
-        'accountId': accountId,
-        'pairedCount': _.random(0, maxPairedCallsPrDay),
-        'deviceCategory': deviceCategory,
-        'totalDuration': secondsFromMinutes(_.random(1, 300)),
+        callCount: _.random(1, maxCallsPrDay),
+        date: Number(date),
+        accountId: accountId,
+        pairedCount: _.random(0, maxPairedCallsPrDay),
+        deviceCategory: deviceCategory,
+        totalDuration: secondsFromMinutes(_.random(1, 300)),
       };
     }
 
@@ -42,16 +41,16 @@
       var now = moment();
       var start = moment(now).subtract(no, unit);
       var allSamples = assembleRawData(start, now);
-      $log.info("Created ", allSamples.length, " device usage mock samples.");
-      $log.info("start date:", start);
-      $log.info("end date:", now);
+      $log.info('Created ', allSamples.length, ' device usage mock samples.');
+      $log.info('start date:', start);
+      $log.info('end date:', now);
       return allSamples;
     }
 
     function getRawData(startDate, endDate) {
       if (_.isEmpty(cachedRawData)) {
-        cachedRawData = createSamples(6, "months");
-        $log.info("cachedData", cachedRawData);
+        cachedRawData = createSamples(6, 'months');
+        $log.info('cachedData', cachedRawData);
       }
 
       startDate = moment(startDate, apiDataFormat);
@@ -61,7 +60,7 @@
         var registeredDate = moment(sample.date, apiDataFormat);
         return ((registeredDate.isBefore(endDate) && registeredDate.isAfter(startDate)) || registeredDate.isSame(endDate) || registeredDate.isSame(startDate));
       });
-      $log.info("Raw data after range filtering", rawDataWithinRange);
+      $log.info('Raw data after range filtering', rawDataWithinRange);
 
       return _.cloneDeep(rawDataWithinRange);
     }
@@ -82,9 +81,9 @@
         for (var i = 0; i < noOfActiveDevicesToday; i++) {
           var accountId = existingUniqueDeviceIds[i];
           //data.push(deviceDaySample(time, accountId, "ce"));
-          data.push(deviceDaySample(time, accountId, "sparkboard"));
+          data.push(deviceDaySample(time, accountId, 'sparkboard'));
         }
-        start.add(1, "days");
+        start.add(1, 'days');
       }
       return data;
     }
@@ -92,7 +91,7 @@
     function createSetOfUniqueDeviceIds(noOfUniqueDevices) {
       var devices = [];
       _.times(noOfUniqueDevices, function (index) {
-        devices.push("1111-" + index);
+        devices.push('1111-' + index);
       });
       return devices;
     }

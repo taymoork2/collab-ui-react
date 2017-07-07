@@ -14,9 +14,9 @@
     vm.uploadDuration = '';
     vm.fileLengthLowerLimit = 12;
     vm.fileLengthUpperLimit = 15;
-    vm.WAIT = "WAIT";
-    vm.DOWNLOAD = "DOWNLOAD";
-    vm.UPLOADED = "UPLOADED";
+    vm.WAIT = 'WAIT';
+    vm.DOWNLOAD = 'DOWNLOAD';
+    vm.UPLOADED = 'UPLOADED';
     vm.state = vm.WAIT;
     vm.menuEntry = {};
     vm.dialogModalTypes = {
@@ -108,7 +108,7 @@
         metrics.durationInSeconds = durationInSeconds;
         AACommonService.setIsValid(uniqueCtrlIdentifier, false);
         vm.uploadFile = file.name;
-        vm.uploadDate = moment().format("MM/DD/YYYY");
+        vm.uploadDate = moment().format('MM/DD/YYYY');
         vm.uploadDuration = '(' + moment.utc(durationInSeconds * 1000).format('mm:ss') + ')';
         vm.state = vm.DOWNLOAD;
         vm.progress = 0;
@@ -251,7 +251,6 @@
         //ok to delete at this point all the unsaved uploads
         AAMediaUploadService.clearResourcesExcept(uniqueCtrlIdentifier, 0);
         setUpEntry(vm.actionEntry);
-
       } else {
         //this case only occurs with a single saved action
         //in the queue for deletion, so we can't delete it until save occurs
@@ -502,7 +501,6 @@
       if (savedActionEntry.description.length > 0) {
         AAMediaUploadService.notifyAsSaved(uniqueCtrlIdentifier, true);
       }
-
     }
 
     function isSquishable() {
@@ -524,7 +522,6 @@
         }
       }
       return n;
-
     }
 
     function determineSquishability() {
@@ -543,7 +540,5 @@
     }
 
     activate();
-
   }
-
 })();

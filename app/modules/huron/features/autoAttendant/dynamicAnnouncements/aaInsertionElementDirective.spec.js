@@ -23,5 +23,4 @@ describe('Directive: aaInsertionElement', function () {
     $rootScope.$digest();
     expect(element.html()).toContain('<span class="insertion-element');
   });
-
 });

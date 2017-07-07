@@ -1,5 +1,5 @@
 <div class="meeting-settings">
-  <div class="distribute-licenses-heading">
+  <div ng-init="meetingCtrl.enableOrDisableNext()" class="distribute-licenses-heading">
     <h4 translate="firstTimeWizard.distributeYourWebExLicenses"></h4>
   </div>
   <div class="row element-spacing">
@@ -25,7 +25,8 @@
         name="site-license-count{{$index}}"
         cs-input-size="medium-12"
         placeholder="{{::'firstTimeWizard.enterNumberOfLicenses' | translate}}"
-        ng-model="site.licenseCount">
+        ng-change="meetingCtrl.enableOrDisableNext()"
+        ng-model="site.quantity">
     </div>
   </div>
   <div class="row">

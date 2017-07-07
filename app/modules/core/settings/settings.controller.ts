@@ -1,4 +1,3 @@
-
 import { SettingSection } from './settingSection';
 import { AuthenticationSetting } from './authentication/authenticationSetting.component';
 import { BrandingSetting } from './branding/brandingSetting.component';
@@ -9,6 +8,7 @@ import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';
 import { DirSyncSetting } from './dirsync/dirSyncSetting.component';
+import { DeviceBrandingSetting } from './deviceBranding/device-branding-setting.component';
 
 export class SettingsCtrl {
 
@@ -18,6 +18,7 @@ export class SettingsCtrl {
   public sipDomain: SettingSection;
   public authentication: SettingSection;
   public branding: SettingSection;
+  public deviceBranding: SettingSection;
   public support: SettingSection;
   public retention: SettingSection;
   public dirsync: SettingSection;
@@ -38,7 +39,7 @@ export class SettingsCtrl {
     private Authinfo,
     private Orgservice,
     private FeatureToggleService,
-    private ITProPackService,
+    private ProPackService,
   ) {
   }
 
@@ -64,9 +65,12 @@ export class SettingsCtrl {
       this.sipDomain = new SipDomainSetting();
       this.dirsync = new DirSyncSetting();
       this.initRetention();
-    }
 
-    let settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
+    }
+    //TODO temporary adding device branding
+    this.initDeviceBranding();
+
+    const settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
     if (!_.isNull(settingsToShow)) {
       // scroll the selected settings section in to view.
       this.$timeout(() => {
@@ -86,10 +90,10 @@ export class SettingsCtrl {
   }
 
   public scrollIntoView(settingsToShow: string): void {
-    let settingElement = $(`setting-section[setting="settingsCtrl.${settingsToShow}"]`);
+    const settingElement = $(`setting-section[setting="settingsCtrl.${settingsToShow}"]`);
     if (_.isElement(settingElement[0])) {
       settingElement[0].scrollIntoView({ behavior: 'instant' });
-      let body = $('body');
+      const body = $('body');
       body.scrollTop(body.scrollTop() - $('.settings').offset().top);
     }
   }
@@ -98,7 +102,7 @@ export class SettingsCtrl {
     if (this.Authinfo.isPartner() || this.Authinfo.isDirectCustomer()) {
       this.branding = new BrandingSetting();
     } else if (this.Authinfo.isCustomerAdmin()) {
-      let params = {
+      const params = {
         basicInfo: true,
       };
       this.Orgservice.getOrg(_.noop, null, params).then(response => {
@@ -109,10 +113,18 @@ export class SettingsCtrl {
     }
   }
 
+  private initDeviceBranding() {
+    this.FeatureToggleService.csdmDeviceBrandingGetStatus().then((toggle) => {
+      if (toggle) {
+        this.deviceBranding = new DeviceBrandingSetting();
+      }
+    });
+  }
+
   private initSecurity() {
-    let promises = {
+    const promises = {
       pinSettingsToggle: this.FeatureToggleService.atlasPinSettingsGetStatus(),
-      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
     };
     this.$q.all(promises).then((result) => {
       if (result.pinSettingsToggle) {
@@ -122,9 +134,9 @@ export class SettingsCtrl {
   }
 
   private initRetention() {
-    let promises = {
+    const promises = {
       retentionToggle: this.FeatureToggleService.atlasDataRetentionSettingsGetStatus(),
-      proPackPurchased: this.ITProPackService.hasITProPackPurchasedOrNotEnabled(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
     };
 
     this.$q.all(promises).then((result) => {

@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptor) {
+      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService) {
         var vm = this;
 
         vm.data = [];
@@ -50,18 +50,15 @@ require('../devices/_devices.scss');
           var placeCalendarPromise = FeatureToggleService.csdmPlaceCalendarGetStatus().then(function (feature) {
             vm.csdmHybridCalendarFeature = feature;
           });
-          var gcalFeaturePromise = FeatureToggleService.atlasHerculesGoogleCalendarGetStatus().then(function (feature) {
-            vm.atlasHerculesGoogleCalendarFeatureToggle = feature;
-          });
-          var anyCalendarEnabledPromise = ServiceDescriptor.getServices().then(function (services) {
-            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+          var anyCalendarEnabledPromise = ServiceDescriptorService.getServices().then(function (services) {
+            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
             }).some().value();
-            vm.hybridCallEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+            vm.hybridCallEnabledOnOrg = _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-uc';
             }).some().value();
           });
-          $q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          $q.all([ataPromise, hybridPromise, placeCalendarPromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -157,14 +154,13 @@ require('../devices/_devices.scss');
         vm.startAddPlaceFlow = function () {
           var wizardState = {
             data: {
-              function: "addPlace",
+              function: 'addPlace',
               showATA: vm.showATA,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
               hybridCallEnabledOnOrg: vm.hybridCallEnabledOnOrg,
-              atlasHerculesGoogleCalendarFeatureToggle: vm.atlasHerculesGoogleCalendarFeatureToggle,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),

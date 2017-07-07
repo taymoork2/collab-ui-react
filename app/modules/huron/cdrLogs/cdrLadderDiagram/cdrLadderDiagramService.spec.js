@@ -102,5 +102,4 @@ describe('Controller: CdrLadderDiagramService', function () {
 
     $httpBackend.flush();
   });
-
 });

@@ -5,7 +5,7 @@
     .controller('PstnNumbersCtrl', PstnNumbersCtrl);
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnModel, PstnService, PhoneNumberService, PstnSetupStatesService, ValidationService, FeatureToggleService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnModel, PstnService, PhoneNumberService, PstnAreaService, ValidationService, FeatureToggleService) {
     var vm = this;
 
     vm.provider = PstnModel.getProvider();
@@ -120,15 +120,15 @@
     init();
 
     function init() {
-      PstnSetupStatesService.getLocation(PstnModel.getCountryCode()).then(function (location) {
+      PstnAreaService.getCountryAreas(PstnModel.getCountryCode()).then(function (location) {
         vm.model.pstn.quantity = null;
-        vm.locationLabel = location.type;
+        vm.locationLabel = location.typeName;
         vm.model.pstn.states = location.areas;
         if (_.get(PstnModel.getServiceAddress(), 'state')) {
           vm.model.pstn.state = {
             abbreviation: PstnModel.getServiceAddress().state,
             name: _.result(_.find(vm.model.pstn.states, {
-              'abbreviation': PstnModel.getServiceAddress().state,
+              abbreviation: PstnModel.getServiceAddress().state,
             }), 'name'),
           };
         }
@@ -413,7 +413,6 @@
             } else {
               vm.model.pstn.showAdvancedOrder = true;
             }
-
           } else if (vm.model.pstn.isSingleResult) {
             if (areaCode && areaCode.length > MIN_VALID_CODE) {
               vm.model.pstn.searchResults = _.flatten(numberRanges).filter(function (number) {

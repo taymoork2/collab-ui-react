@@ -60,41 +60,8 @@ describe('Controller: WizardCtrl', function () {
       name: 'testSSO',
       template: 'modules/core/setupWizard/enterprise.testSSO.tpl.html',
     }],
-  }, {
-    name: 'addUsers',
-    label: 'firstTimeWizard.addUsers',
-    description: 'firstTimeWizard.addUsersSubDescription',
-    icon: 'icon-add-users',
-    title: 'firstTimeWizard.addUsers',
-    controller: 'AddUserCtrl',
-    subTabs: [{
-      name: 'simple',
-      title: 'firstTimeWizard.simple',
-      steps: [{
-        name: 'init',
-        template: 'modules/core/setupWizard/addUsers.init.tpl.html',
-      }, {
-        name: 'manualEntry',
-        template: 'modules/core/setupWizard/addUsers.manualEntry.tpl.html',
-      }],
-    }, {
-      name: 'advanced',
-      title: 'firstTimeWizard.advanced',
-      steps: [{
-        name: 'init',
-        template: 'modules/core/setupWizard/addUsers.init.tpl.html',
-      }, {
-        name: 'domainEntry',
-        template: 'modules/core/setupWizard/addUsers.domainEntry.tpl.html',
-      }, {
-        name: 'installConnector',
-        template: 'modules/core/setupWizard/addUsers.installConnector.tpl.html',
-      }, {
-        name: 'syncStatus',
-        template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html',
-      }],
-    }],
-  }];
+  },
+  ];
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_,
     $stateParams, _Userservice_, _FeatureToggleService_, _ServiceSetup_, _Authinfo_) {
@@ -137,15 +104,13 @@ describe('Controller: WizardCtrl', function () {
     it('should be created successfully', function () {
       expect(controller).toBeDefined();
     });
-
   });
 
   describe('loadoverview', function () {
     it('should call state go', function () {
       controller.loadOverview();
       $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith("overview");
+      expect($state.go).toHaveBeenCalledWith('overview');
     });
-
   });
 });

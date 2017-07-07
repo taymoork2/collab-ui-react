@@ -92,8 +92,6 @@
         $timeout.cancel(promise);
       });
     };
-
-
   }
 })();
 

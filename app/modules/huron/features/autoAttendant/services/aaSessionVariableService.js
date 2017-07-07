@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AASessionVariableService(CustomVariableService, $q) {
-
     var service = {
       getSessionVariables: getSessionVariables,
     };

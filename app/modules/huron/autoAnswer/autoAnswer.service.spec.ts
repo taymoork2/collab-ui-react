@@ -50,9 +50,9 @@ describe('Service: AutoAnswerService', () => {
   });
 
   it('should update AutoAnswer when set to a different phone', function () {
-    let updatedAutoAnswerPhones: Array<AutoAnswerPhone> = _.cloneDeep(this.autoAnswerData.phones);
+    const updatedAutoAnswerPhones: AutoAnswerPhone[] = _.cloneDeep(this.autoAnswerData.phones);
     this.AutoAnswerService.setAutoAnswer(updatedAutoAnswerPhones, this.autoAnswerData.phones[1].uuid, true, AutoAnswerConst.SPEAKERPHONE);
-    let updatePayload: ISetAutoAnswer = {
+    const updatePayload: ISetAutoAnswer = {
       phoneUuid: updatedAutoAnswerPhones[1].uuid,
       enabled: true,
       mode: updatedAutoAnswerPhones[1].mode,
@@ -67,9 +67,9 @@ describe('Service: AutoAnswerService', () => {
   });
 
   it('should update AutoAnswer when set to a different mode', function () {
-    let updatedAutoAnswerPhones: Array<AutoAnswerPhone> = _.cloneDeep(this.autoAnswerData.phones);
+    const updatedAutoAnswerPhones: AutoAnswerPhone[] = _.cloneDeep(this.autoAnswerData.phones);
     this.AutoAnswerService.setAutoAnswer(updatedAutoAnswerPhones, this.autoAnswerData.phones[0].uuid, true, AutoAnswerConst.HEADSET);
-    let updatePayload: ISetAutoAnswer = {
+    const updatePayload: ISetAutoAnswer = {
       phoneUuid: updatedAutoAnswerPhones[0].uuid,
       enabled: true,
       mode: updatedAutoAnswerPhones[0].mode,
@@ -84,9 +84,9 @@ describe('Service: AutoAnswerService', () => {
   });
 
   it('should update AutoAnswer when set to a disabled', function () {
-    let updatedAutoAnswerPhones: Array<AutoAnswerPhone> = _.cloneDeep(this.autoAnswerData.phones);
+    const updatedAutoAnswerPhones: AutoAnswerPhone[] = _.cloneDeep(this.autoAnswerData.phones);
     this.AutoAnswerService.setAutoAnswer(updatedAutoAnswerPhones, this.autoAnswerData.phones[0].uuid, false, undefined);
-    let updatePayload: ISetAutoAnswer = {
+    const updatePayload: ISetAutoAnswer = {
       phoneUuid: updatedAutoAnswerPhones[0].uuid,
       enabled: false,
       mode: undefined,
@@ -108,9 +108,9 @@ describe('Service: AutoAnswerService', () => {
       expect(response).toEqual(this.autoAnswerNoEnabledPhoneData);
     });
 
-    let updatedAutoAnswerPhones: Array<AutoAnswerPhone> = _.cloneDeep(this.autoAnswerNoEnabledPhoneData.phones);
+    const updatedAutoAnswerPhones: AutoAnswerPhone[] = _.cloneDeep(this.autoAnswerNoEnabledPhoneData.phones);
     this.AutoAnswerService.setAutoAnswer(updatedAutoAnswerPhones, this.autoAnswerNoEnabledPhoneData.phones[1].uuid, true, AutoAnswerConst.SPEAKERPHONE);
-    let updatePayload: ISetAutoAnswer = {
+    const updatePayload: ISetAutoAnswer = {
       phoneUuid: updatedAutoAnswerPhones[1].uuid,
       enabled: true,
       mode: updatedAutoAnswerPhones[1].mode,

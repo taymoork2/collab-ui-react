@@ -18,74 +18,74 @@
     //ok, we need a unique global self.
     //the above self is overloaded in places.
 
-    var common_reports_pageids = ["meetings_in_progess",
-      "meeting_usage",
-      "recording_usage",
-      "storage_utilization",
-      "inactive_user",
+    var common_reports_pageids = ['meetings_in_progess',
+      'meeting_usage',
+      'recording_usage',
+      'storage_utilization',
+      'inactive_user',
     ];
 
-    var event_center_pageids = ["event_center_overview",
-      "event_center_site_summary",
-      "event_center_scheduled_events",
-      "event_center_held_events",
-      "event_center_report_template",
+    var event_center_pageids = ['event_center_overview',
+      'event_center_site_summary',
+      'event_center_scheduled_events',
+      'event_center_held_events',
+      'event_center_report_template',
     ];
 
-    var support_center_pageids = ["support_center_support_sessions",
-      "support_center_call_volume",
-      "support_center_csr_activity",
-      "support_center_url_referral",
-      "support_center_allocation_queue",
+    var support_center_pageids = ['support_center_support_sessions',
+      'support_center_call_volume',
+      'support_center_csr_activity',
+      'support_center_url_referral',
+      'support_center_allocation_queue',
     ];
 
-    var training_center_pageids = ["training_usage",
-      "registration",
-      "recording",
-      "coupon",
-      "attendee",
+    var training_center_pageids = ['training_usage',
+      'registration',
+      'recording',
+      'coupon',
+      'attendee',
     ];
 
-    var remote_access_pageids = ["remote_access_computer_usage",
-      "remote_access_csrs_usage", "remote_access_computer_tracking",
+    var remote_access_pageids = ['remote_access_computer_usage',
+      'remote_access_csrs_usage', 'remote_access_computer_tracking',
     ];
 
     //This can be used for translations
     //Actually reverse mapping should be used for
     //translations.
     var pageid_to_navItemId_mapping = {
-      "meeting_in_progess": "meetings_in_progress",
-      "meeting_usage": "meeting_usage",
-      "recording_usage": "recording_storage_usage",
-      "storage_utilization": "storage_utilization_by_user",
-      "inactive_user": "inactive_user",
-      "event_center_overview": "ec_report_summary",
-      "event_center_scheduled_events": "ec_scheduled_events",
-      "event_center_held_events": "ec_held_events",
-      "event_center_report_template": "ec_report_templates",
-      "event_center_site_summary": "ec_site_summary",
-      "support_center_call_volume": "sc_call_volume",
-      "remote_access_computer_tracking": "sc_computer_tracking",
-      "remote_access_computer_usage": "sc_computer_usage",
-      "support_center_csr_activity": "sc_csr_activity",
-      "support_center_allocation_queue": "sc_allocation_queue",
-      "support_center_url_referral": "sc_url_referral",
-      "remote_access_csrs_usage": "sc_csrs_usage_report",
-      "support_center_support_sessions": "sc_session_query_tool",
-      "coupon": "tc_coupon_usage",
-      "recording": "tc_recorded_session_access_report",
-      "registration": "tc_registration_report",
-      "attendee": "tc_training_report_attendee",
-      "training_usage": "tc_usage",
+      meeting_in_progess: 'meetings_in_progress',
+      meeting_usage: 'meeting_usage',
+      recording_usage: 'recording_storage_usage',
+      storage_utilization: 'storage_utilization_by_user',
+      inactive_user: 'inactive_user',
+      event_center_overview: 'ec_report_summary',
+      event_center_scheduled_events: 'ec_scheduled_events',
+      event_center_held_events: 'ec_held_events',
+      event_center_report_template: 'ec_report_templates',
+      event_center_site_summary: 'ec_site_summary',
+      support_center_call_volume: 'sc_call_volume',
+      remote_access_computer_tracking: 'sc_computer_tracking',
+      remote_access_computer_usage: 'sc_computer_usage',
+      support_center_csr_activity: 'sc_csr_activity',
+      support_center_allocation_queue: 'sc_allocation_queue',
+      support_center_url_referral: 'sc_url_referral',
+      remote_access_csrs_usage: 'sc_csrs_usage_report',
+      support_center_support_sessions: 'sc_session_query_tool',
+      coupon: 'tc_coupon_usage',
+      recording: 'tc_recorded_session_access_report',
+      registration: 'tc_registration_report',
+      attendee: 'tc_training_report_attendee',
+      training_usage: 'tc_usage',
     };
 
     //All card names are hard coded in all languages except for the commom
     //reports tag.
     var card_name_translations = {
-      "training_center": "Training Center",
-      "support_center": "Support Center",
-      "event_center": "Event Center",
-      "remote_access": "Remote Access",
+      training_center: 'Training Center',
+      support_center: 'Support Center',
+      event_center: 'Event Center',
+      remote_access: 'Remote Access',
     };
 
     /*
@@ -94,8 +94,8 @@
     ];
     */
 
-    var pinnnedItems = ["meeting_in_progess", "training_usage", "event_center_overview",
-      "support_center_support_sessions", "remote_access_computer_usage",
+    var pinnnedItems = ['meeting_in_progess', 'training_usage', 'event_center_overview',
+      'support_center_support_sessions', 'remote_access_computer_usage',
     ];
 
     this.reverseMapping = function (mapping) {
@@ -121,7 +121,6 @@
       categoryName,
       ns1_siteAdminNavUrl
     ) {
-
       var siteAdminNavUrls = null;
 
       if (ns1_siteAdminNavUrl.length) {
@@ -147,16 +146,16 @@
     var UIsref = function (theUrl, rid, siteUrl) {
       this.siteUrl = siteUrl;
       this.reportPageId = rid;
-      this.reportPageId_translated = $translate.instant("webexSiteReports." +
+      this.reportPageId_translated = $translate.instant('webexSiteReports.' +
         rid);
       this.reportPageIframeUrl = theUrl;
       this.modifiedUrl = this.reportPageIframeUrl;
       this.toUIsrefString = function () {
-        return "webex-reports-iframe({" +
-          "  siteUrl:" + "'" + this.siteUrl + "'" + "," +
-          "  reportPageId:" + "'" + this.reportPageId + "'" + "," +
-          "  reportPageIframeUrl:" + "'" + this.reportPageIframeUrl + "'" +
-          "})";
+        return 'webex-reports-iframe({' +
+          '  siteUrl:' + "'" + this.siteUrl + "'" + ',' +
+          '  reportPageId:' + "'" + this.reportPageId + "'" + ',' +
+          '  reportPageIframeUrl:' + "'" + this.reportPageIframeUrl + "'" +
+          '})';
       };
       this.uisrefString = this.toUIsrefString();
       //that is always the first link if it appears with other links in a card
@@ -196,9 +195,9 @@
         //only translate common reports
 
         var name = sec_name.toLowerCase();
-        var isCommonReport = (name == "common_reports");
+        var isCommonReport = (name == 'common_reports');
         if (isCommonReport) {
-          translated_name = $translate.instant("webexSiteReports." + self.section_name);
+          translated_name = $translate.instant('webexSiteReports.' + self.section_name);
         } else {
           translated_name = card_name_translations[sec_name];
         }
@@ -209,7 +208,7 @@
       //We have to rewrite this with the actual uirefs with proper reportids
       //right now I've hardcoded as reportID.
       this.uisrefs = self.report_links.map(function (thelink) {
-        return new UIsref(thelink, "ReportID", self.site_url);
+        return new UIsref(thelink, 'ReportID', self.site_url);
       });
       this.isEmpty = function () {
         return (_.isUndefined(self.uisrefs)) || (self.uisrefs.length === 0);
@@ -232,7 +231,7 @@
         var theComparator = function (aRef, bRef) {
           var atranslatedString = aRef.reportPageId_translated;
           var btranslatedString = bRef.reportPageId_translated;
-          var loc = _.replace($translate.use(), "_", "-");
+          var loc = _.replace($translate.use(), '_', '-');
           var compareResult = atranslatedString.localeCompare(btranslatedString, loc);
           return compareResult;
         };
@@ -249,7 +248,6 @@
           self.uisrefs = pinnedA.concat(notPinnedA);
         }
       };
-
     };
 
     this.ReportsSection = ReportsSection;
@@ -276,11 +274,11 @@
       // $log.log(logMsg);
 
       //get the reports list, for now hard code.
-      var common_reports = new ReportsSection("common_reports", siteUrl, ["/x/y/z", "/u/io/p"], "CommonReports");
-      var event_center = new ReportsSection("event_center", siteUrl, ["/u/y/z", "www.yahoo.com"], "EC", "en");
-      var support_center = new ReportsSection("support_center", siteUrl, ["/u/y/z", "www.yahoo.com"], "SC", "en");
-      var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"], "TC", "en");
-      var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"], "RA", "en");
+      var common_reports = new ReportsSection('common_reports', siteUrl, ['/x/y/z', '/u/io/p'], 'CommonReports');
+      var event_center = new ReportsSection('event_center', siteUrl, ['/u/y/z', 'www.yahoo.com'], 'EC', 'en');
+      var support_center = new ReportsSection('support_center', siteUrl, ['/u/y/z', 'www.yahoo.com'], 'SC', 'en');
+      var training_center = new ReportsSection('training_center', siteUrl, ['/u/y/z', 'www.yahoo.com'], 'TC', 'en');
+      var remote_access = new ReportsSection('remote_access', siteUrl, ['/u/y/z', 'www.yahoo.com'], 'RA', 'en');
 
       if (!_.isUndefined(mapJson)) {
         //use the above 5 lists to gather all the UISrefs
@@ -332,19 +330,19 @@
 
       var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
         siteUrl,
-        "icon icon-circle-group",
-        "icon icon-circle-clock"
+        'icon icon-circle-group',
+        'icon icon-circle-clock'
       );
 
       infoCardObj.iframeLinkObj1.iframePageObj = {
-        id: "infoCardMeetingInProgress",
-        label: $translate.instant("webexSiteReports.meeting_in_progess"),
+        id: 'infoCardMeetingInProgress',
+        label: $translate.instant('webexSiteReports.meeting_in_progess'),
         uiSref: null,
       };
 
       infoCardObj.iframeLinkObj2.iframePageObj = {
-        id: "infoCardMeetingUsage",
-        label: $translate.instant("webexSiteReports.meeting_usage"),
+        id: 'infoCardMeetingUsage',
+        label: $translate.instant('webexSiteReports.meeting_usage'),
         uiSref: null,
       };
 
@@ -352,7 +350,7 @@
         viewReady: false,
         hasLoadError: false,
         sessionTicketError: false,
-        cardsSectionId: siteUrl + "-" + "cardsSection",
+        cardsSectionId: siteUrl + '-' + 'cardsSection',
         siteUrl: siteUrl,
         siteName: siteName,
         infoCardObj: infoCardObj,
@@ -364,7 +362,7 @@
           // var funcName = "initReportsObject().getSessionTicketSuccess()";
           // var logMsg = "";
 
-          WebExXmlApiInfoSvc.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
+          WebExXmlApiInfoSvc.xmlApiUrl = 'https://' + siteUrl + '/WBXService/XMLService';
           WebExXmlApiInfoSvc.webexSiteName = siteName;
           WebExXmlApiInfoSvc.webexAdminID = Authinfo.getPrimaryEmail();
           WebExXmlApiInfoSvc.webexAdminSessionTicket = sessionTicket;
@@ -373,8 +371,8 @@
 
           navInfoDef.then(
             function getNaviationInfoSuccess(result) {
-              var funcName = "initReportsObject().getNaviationInfoSuccess()";
-              var logMsg = "";
+              var funcName = 'initReportsObject().getNaviationInfoSuccess()';
+              var logMsg = '';
 
               // start of replacing "result" with something we want to test
               /*
@@ -395,18 +393,17 @@
               // end of replace
 
               var reportPagesInfoJson = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
-              reportsObject["mapJson"] = reportPagesInfoJson;
+              reportsObject['mapJson'] = reportPagesInfoJson;
 
               if (
-                ("" !== reportPagesInfoJson.errId) ||
-                ("" !== reportPagesInfoJson.errReason)
+                ('' !== reportPagesInfoJson.errId) ||
+                ('' !== reportPagesInfoJson.errReason)
               ) {
-
                 reportsObject.hasLoadError = true;
               } else if (_.isUndefined(reportPagesInfoJson.bodyJson.ns1_siteAdminNavUrl)) {
-                logMsg = funcName + "\n" +
-                  "ERROR: ns1_siteAdminNavUrl is undefined" + "\n" +
-                  "siteUrl=" + siteUrl;
+                logMsg = funcName + '\n' +
+                  'ERROR: ns1_siteAdminNavUrl is undefined' + '\n' +
+                  'siteUrl=' + siteUrl;
                 Log.error(logMsg);
 
                 reportsObject.hasLoadError = true;
@@ -414,25 +411,25 @@
               } else {
                 var ns1_siteAdminNavUrl = reportPagesInfoJson.bodyJson.ns1_siteAdminNavUrl;
 
-                logMsg = funcName + ": " + "ns1_siteAdminNavUrl=" + "\n" +
+                logMsg = funcName + ': ' + 'ns1_siteAdminNavUrl=' + '\n' +
                   JSON.stringify(ns1_siteAdminNavUrl);
                 Log.debug(logMsg);
 
                 var rpts = self.getReports(siteUrl, reportPagesInfoJson);
-                reportsObject["reports"] = rpts;
+                reportsObject['reports'] = rpts;
 
                 var i = 0;
                 var j = 0;
                 var reportPageId = null;
 
                 for (i = 0; i < rpts.sections.length; i++) {
-                  if (rpts.sections[i].section_name === "common_reports") {
+                  if (rpts.sections[i].section_name === 'common_reports') {
                     for (j = rpts.sections[i].uisrefs.length - 1; j >= 0; j--) {
                       reportPageId = rpts.sections[i].uisrefs[j].reportPageId;
 
-                      if (reportPageId === "meetings_in_progress") {
+                      if (reportPageId === 'meetings_in_progress') {
                         reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
-                      } else if (reportPageId === "meeting_usage") {
+                      } else if (reportPageId === 'meeting_usage') {
                         reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
                       }
 
@@ -440,13 +437,12 @@
                       // once useage reports is fixed for MCOnline sites, we can remove this short-term fix
                       if (reportsObject.isMCOnlineSite) {
                         if (
-                          ("meeting_usage" == reportPageId) ||
-                          ("recording_usage" == reportPageId) ||
-                          ("storage_utilization" == reportPageId)
+                          ('meeting_usage' == reportPageId) ||
+                          ('recording_usage' == reportPageId) ||
+                          ('storage_utilization' == reportPageId)
                         ) {
-
-                          logMsg = funcName + "\n" +
-                            "WARN: hide reportPageId=" + reportPageId;
+                          logMsg = funcName + '\n' +
+                            'WARN: hide reportPageId=' + reportPageId;
                           $log.log(logMsg);
 
                           rpts.sections[i].uisrefs.splice(j, 1);
@@ -456,7 +452,7 @@
                   }
                 }
 
-                reportsObject["viewReady"] = true;
+                reportsObject['viewReady'] = true;
               }
             }, // getNaviationInfoSuccess()
 
@@ -470,14 +466,14 @@
         }, // getSessionTicketSuccess()
 
         function getSessionTicketError(errId) {
-          var funcName = "initReportsObject().getSessionTicketError()";
-          var logMsg = "";
+          var funcName = 'initReportsObject().getSessionTicketError()';
+          var logMsg = '';
 
-          logMsg = funcName + ": " + "errId=" + errId;
+          logMsg = funcName + ': ' + 'errId=' + errId;
           Log.debug(logMsg);
 
-          reportsObject["sessionTicketError"] = true;
-          reportsObject["hasLoadError"] = true;
+          reportsObject['sessionTicketError'] = true;
+          reportsObject['hasLoadError'] = true;
         } // getSessionTicketError()
       ); // _this.getSessionTicket().then()
 
@@ -493,6 +489,5 @@
         reportPagesInfoXml: reportPagesInfoXml,
       });
     };
-
   } //end top level service function
 })();

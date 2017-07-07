@@ -35,16 +35,16 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private phoneNumber2RowsMapping: any = {};
   private dnisId2SubmittedNumberMapping: any = {};
   private dnisId2ImportedNumberMapping: any = {};
-  private gridData: Array<any> = [];
-  private deleteTelephonyNumberData: Array<any> = [];
-  private submitTelephonyAllData: Array<any> = [];
-  private tollTypeOptions: Array<any> = [];
-  private callTypeOptions: Array<any> = [];
-  private defaultNumberOptions: Array<any> = [];
-  private globalDisplayOptions: Array<any> = [];
-  private _countryOptions: Array<any> = [];
-  private countryOptions: Array<any> = [];
-  private isHiddenOptions: Array<any> = [];
+  private gridData: any[] = [];
+  private deleteTelephonyNumberData: any[] = [];
+  private submitTelephonyAllData: any[] = [];
+  private tollTypeOptions: any[] = [];
+  private callTypeOptions: any[] = [];
+  private defaultNumberOptions: any[] = [];
+  private globalDisplayOptions: any[] = [];
+  private _countryOptions: any[] = [];
+  private countryOptions: any[] = [];
+  private isHiddenOptions: any[] = [];
   private phoneAndLabelLength: number = 0;
 
   /* @ngInject */
@@ -122,13 +122,13 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
     this.loading = true;
     this.TelephonyDomainService.getNumbers(this.customerId, this.ccaDomainId).then((res) => {
-      let resJson: any = _.get(res, 'content.data');
+      const resJson: any = _.get(res, 'content.data');
       if (resJson.returnCode) {
         this.Notification.notify(this.gemService.showError(resJson.returnCode));
         return;
       }
 
-      let data = resJson.body;
+      const data = resJson.body;
       _.forEach(data, (item: any) => {
         if (_.toNumber(item.compareToSuperadminPhoneNumberStatus) === this.constObject.DATA_STATUS.DELETED) {
           return true;
@@ -174,7 +174,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     if (row.entity.duplicatedRowValidation.invalid) {
       row.entity.duplicatedRowValidation.invalid = false;
 
-      let rows = this.phoneEntity2RowsMapping[phone + '_' + label + '_' + dnisNumber];
+      const rows = this.phoneEntity2RowsMapping[phone + '_' + label + '_' + dnisNumber];
       _.forEach(rows, (r, k) => {
         if (r.uid === row.uid) {
           rows.splice(k, 1);
@@ -189,13 +189,13 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   public changeAccessNumber(row) {
-    let preValue = row.entity.dnisNumber;
+    const preValue = row.entity.dnisNumber;
 
-    let accessNumber = _.trim(_.replace(row.entity.dnisNumberFormat, '+', ''));
+    const accessNumber = _.trim(_.replace(row.entity.dnisNumberFormat, '+', ''));
     row.entity.dnisNumber = accessNumber;
 
     if (!accessNumber.length || row.entity.validation.dnisNumberFormat.invalid) {
-      let val = { label: this.constObject.SELECT_TYPE, value: '' };
+      const val = { label: this.constObject.SELECT_TYPE, value: '' };
       this.resetTollType(row, val, true);
       this.resetCallType(row, val, true);
     } else if (preValue !== accessNumber) {
@@ -216,7 +216,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }
 
     this.TelephonyDomainService.getAccessNumberInfo(accessNumber).then((res: any) => {
-      let returnCode = _.get(res, 'content.data.returnCode');
+      const returnCode = _.get(res, 'content.data.returnCode');
       if (returnCode) {
         this.Notification.notify(this.gemService.showError(returnCode));
         return;
@@ -231,7 +231,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
         accessNumberEntity.callType = row.entity.callType;
 
         if (this.isEdit && this.ccaDomainId !== '' && this.telephonyDomainId === '') {
-          let dnisRows = this.accessNumber2RowsMapping[row.entity.dnisNumber];
+          const dnisRows = this.accessNumber2RowsMapping[row.entity.dnisNumber];
           accessNumberEntity.tollType = dnisRows ? dnisRows[0].entity.tollType : row.entity.tollType;
           accessNumberEntity.callType = dnisRows ? dnisRows[0].entity.callType : row.entity.callType;
         }
@@ -251,11 +251,11 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   private resetAccessNumberAttribute(row, accessNumberEntity, type) {
-    let status = accessNumberEntity.status;
+    const status = accessNumberEntity.status;
 
-    let disabled = status > 0;
-    let accessNumber = accessNumberEntity.number;
-    let rows = this.accessNumber2RowsMapping[accessNumber];
+    const disabled = status > 0;
+    const accessNumber = accessNumberEntity.number;
+    const rows = this.accessNumber2RowsMapping[accessNumber];
     if (rows && rows.length > 0) {
       _.forEach(rows, (row) => {
         if (row.entity.dnisNumber === accessNumber) {
@@ -299,8 +299,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   public changeTollType(row) {
-    let accessNumber = row.entity.dnisNumber;
-    let accessNumberEntity = this.accessNumber2EntityMapping[accessNumber];
+    const accessNumber = row.entity.dnisNumber;
+    const accessNumberEntity = this.accessNumber2EntityMapping[accessNumber];
     if (accessNumberEntity && accessNumberEntity.status === DNIS_TYPE.NEW) {
       accessNumberEntity.tollType = row.entity.tollType;
     }
@@ -309,8 +309,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   public changeCallType(row) {
-    let accessNumber = row.entity.dnisNumber;
-    let accessNumberEntity = this.accessNumber2EntityMapping[accessNumber];
+    const accessNumber = row.entity.dnisNumber;
+    const accessNumberEntity = this.accessNumber2EntityMapping[accessNumber];
     if (accessNumberEntity && accessNumberEntity.status === DNIS_TYPE.NEW) {
       accessNumberEntity.callType = row.entity.callType;
     }
@@ -322,7 +322,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     this.resetDefaultNumberValidation(row);
     this.resetGlobalDisplayValidation(row);
 
-    let defaultNumber = row.entity.defaultNumber;
+    const defaultNumber = row.entity.defaultNumber;
     if (defaultNumber.value === '0') {
       row.entity.isHnDisabled = false; // enable hiddenOnClinet
       row.entity.gldsDisabled = true; // disable globalListDisplay
@@ -355,20 +355,20 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private resetDefaultNumberValidation(row) {
     row.entity.defaultNumberValidation = { invalid: false, message: '', show: false };
 
-    let rows_0 = this.defaultNumber2RowsMapping[row.entity.tollType.value + '_0'] || [];
-    let rows_1 = this.defaultNumber2RowsMapping[row.entity.tollType.value + '_1'] || [];
-    let rows = _.concat(rows_0, rows_1);
+    const rows_0 = this.defaultNumber2RowsMapping[row.entity.tollType.value + '_0'] || [];
+    const rows_1 = this.defaultNumber2RowsMapping[row.entity.tollType.value + '_1'] || [];
+    const rows = _.concat(rows_0, rows_1);
     _.forEach(rows, (row) => {
       row.entity.defaultNumberValidation = { invalid: false, message: '', show: false };
     });
   }
 
   private resetDefaultNumber(row) {
-    let oldOptions = row.entity.defaultNumberOptions;
-    let newOptions = [{ label: '', value: '0' }];
+    const oldOptions = row.entity.defaultNumberOptions;
+    const newOptions = [{ label: '', value: '0' }];
 
-    let tollType = row.entity.tollType.value;
-    let label = (tollType === this.constObject.CCA_TOLL ? this.constObject.DEFAULT_TOLL : (tollType === this.constObject.CCA_TOLL_FREE ? this.constObject.DEFAULT_TOLL_FREE : ''));
+    const tollType = row.entity.tollType.value;
+    const label = (tollType === this.constObject.CCA_TOLL ? this.constObject.DEFAULT_TOLL : (tollType === this.constObject.CCA_TOLL_FREE ? this.constObject.DEFAULT_TOLL_FREE : ''));
     if (!_.isEmpty(label)) {
       newOptions.push({ label: label, value: '1' });
     }
@@ -397,8 +397,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   public changeHiddenOnClient(row) {
-    let phone = row.entity.phone;
-    let rows = this.phoneNumber2RowsMapping[phone];
+    const phone = row.entity.phone;
+    const rows = this.phoneNumber2RowsMapping[phone];
     _.forEach(rows, (row) => {
       row.entity.phnNumDisplayValidation = { invalid: false, message: '', show: false };
     });
@@ -434,9 +434,9 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       type: 'default',
       template: '<gm-import-td dismiss="$dismiss()" close="$close()" class="new-field-modal"></gm-import-td>',
     }).result.then(() => {
-      let data = this.gemService.getStorage('currentTelephonyDomain');
+      const data = this.gemService.getStorage('currentTelephonyDomain');
 
-      let numbers = _.get(data, 'importTDNumbers', []);
+      const numbers = _.get(data, 'importTDNumbers', []);
       _.forEach(numbers, (item: any) => {
         if (!this.dnisId2ImportedNumberMapping[item.dnisId]) {
           delete item.defaultNumber;
@@ -459,7 +459,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
     this.$timeout(() => {
       _.forEach(numbers, (item) => {
-        let formattedItem = _.assignIn({}, item, {
+        const formattedItem = _.assignIn({}, item, {
           dataType: DATA_TYPE.IMPORT_CSV,
           typeDisabled: false,
           country: item.country.replace(/,/g, '#@#'),
@@ -484,8 +484,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   public submitTD() {
     let result = 0;
 
-    let allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
-    let mappings = {
+    const allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
+    const mappings = {
       phoneAndLabelLength: this.phoneAndLabelLength = 0,
       defaultNumber2RowsMapping: this.defaultNumber2RowsMapping = {},
       globalDisplay2RowsMapping: this.globalDisplay2RowsMapping = {},
@@ -501,7 +501,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   private setSubmitTelephonyDomainData() {
-    let telephonyDomain = {
+    const telephonyDomain = {
       step : _.isEmpty(this.ccaDomainId) ? 'addTelephonyDomainStep' : 'updateTelephonyDomainStep',
       resource: 'TelephonyDomainResource.' + (_.isEmpty(this.ccaDomainId) ? 'addTelephonyDomain' : 'updateTelephonyDomain'),
       params : {
@@ -532,8 +532,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }
 
     _.forEach(this.deleteTelephonyNumberData, (row) => {
-      let body = this.setSubmitTelephonyNumberBody(row);
-      let telephonyNumber = {
+      const body = this.setSubmitTelephonyNumberBody(row);
+      const telephonyNumber = {
         step: 'deletePhoneNumberStep' + row.entity.dnisId,
         resource: 'TelephonyDomainResource.deletePhoneNumberByTelephonyDomain',
         params: {
@@ -549,14 +549,15 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   }
 
   private setNewAddTelephonyNumberData() {
-    let allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
+    const allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
     const newRows: any = _.filter(allRows, (row: any) => {
       return row.entity.dataType !== DATA_TYPE.SUBMITTED;
     });
 
     _.forEach(newRows, (row) => {
-      let body = this.setSubmitTelephonyNumberBody(row);
-      let telephonyNumber = {
+      const body = this.setSubmitTelephonyNumberBody(row);
+      /* tslint:disable no-invalid-template-strings */
+      const telephonyNumber = {
         step: 'addPhoneNumberStep',
         resource: 'TelephonyDomainResource.addPhoneNumberByTelephonyDomain',
         params: {
@@ -575,7 +576,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       return;
     }
 
-    let allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
+    const allRows = this.$scope.gridApi.core.getVisibleRows(this.$scope.gridApi.grid);
     const submittedRows = _.filter(allRows, (row: any) => {
       return row.entity.dataType === DATA_TYPE.SUBMITTED;
     });
@@ -592,15 +593,15 @@ class GmTdNumbersCtrl implements ng.IComponentController {
           resource = 'TelephonyDomainResource.remainPhoneNumberByTelephonyDomain';
         }
 
-        let body = this.setSubmitTelephonyNumberBody(row);
-        let telephonyNumber = { step: step, resource: resource, params: params, body: body };
+        const body = this.setSubmitTelephonyNumberBody(row);
+        const telephonyNumber = { step: step, resource: resource, params: params, body: body };
         this.submitTelephonyAllData.push(telephonyNumber);
       }
     });
   }
 
   private setSubmitTelephonyNumberBody(row) {
-    let body = {
+    const body = {
       dnisId: row.entity.dataType === DATA_TYPE.SUBMITTED ? row.entity.dnisId : '',
       ccaDomainId: this.ccaDomainId,
       spCustomerId: this.customerId,
@@ -622,7 +623,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private isSamePhoneNumber(row) {
     let result = true;
 
-    let originNumber = this.dnisId2SubmittedNumberMapping[row.entity.dnisId];
+    const originNumber = this.dnisId2SubmittedNumberMapping[row.entity.dnisId];
     _.forEach(row.entity.validation, (v: any, k: any) => {
       if (v && !_.isEqual(row.entity[k], originNumber[k])) {
         result = false;
@@ -659,8 +660,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     this.$scope.$emit('detailWatch', { isEdit: false });
     this.submitLoading = true;
     this.TelephonyDomainService.postTelephonyDomain(this.customerId, this.submitTelephonyAllData).then((res: any) => {
-      let returnCode = _.get(res, 'content.data.code');
-      let returnMessage = _.get(res, 'content.data.message', '');
+      const returnCode = _.get(res, 'content.data.code');
+      const returnMessage = _.get(res, 'content.data.message', '');
 
       if (returnCode <= 5001) {
         this.Notification.success('gemini.tds.submit.returnCode.' + returnCode);
@@ -682,7 +683,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       return;
     }
 
-    let region = this.currentTD.region;
+    const region = this.currentTD.region;
     this.$modal.open({
       type: 'full',
       template: '<gm-td-modal-request dismiss="$dismiss()" close="$close()" class="new-field-modal"></gm-td-modal-request>',

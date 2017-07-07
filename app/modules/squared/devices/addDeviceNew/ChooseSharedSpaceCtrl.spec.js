@@ -19,7 +19,6 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
   }));
 
   function initController() {
-
     controller = $controller('ChooseSharedSpaceCtrl', {
       $scope: $scope,
       $state: $state,

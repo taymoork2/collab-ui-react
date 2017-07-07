@@ -35,7 +35,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
           this.memberList = _.reject(members, mem => _.some(this.selectedMembers, member =>
           member.member.uuid === mem.uuid ));
           this.errorMemberInput = (this.memberList && this.memberList.length === 0);
-          let scope = this;
+          const scope = this;
           _.forEach(members, function(member) {
             scope.CallPickupGroupService.areAllLinesInPickupGroup(member)
             .then(
@@ -49,11 +49,11 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   }
 
   public selectMember(member: Member): void {
-    let scope = this;
-    let isValid = this.CallPickupGroupService.verifyLineSelected(this.selectedMembers);
+    const scope = this;
+    const isValid = this.CallPickupGroupService.verifyLineSelected(this.selectedMembers);
     this.memberName = '';
     if (this.selectedMembers.length < this.maxMembersAllowed) {
-      let memberData: IMember = {
+      const memberData: IMember = {
         member: member,
         picturePath: '',
         checkboxes: [],
@@ -84,13 +84,13 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   }
 
   private getActiveMember(): any {
-    let scope = this.$element.find('li.active').scope();
+    const scope = this.$element.find('li.active').scope();
     return scope['match']['model'];
   }
 
   public isActiveMemberDisabled(): boolean {
-    let model = this.getActiveMember();
-    let disabled = model['disabled'];
+    const model = this.getActiveMember();
+    const disabled = model['disabled'];
     return disabled;
   }
 
@@ -99,8 +99,8 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       return;
     }
 
-    let modalScope = this.$scope.$new();
-    let member = this.getActiveMember();
+    const modalScope = this.$scope.$new();
+    const member = this.getActiveMember();
 
     evt.stopPropagation();
 
@@ -125,7 +125,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   }
 
   private updateExistingCallPickup(action: string) {
-    let scope = this;
+    const scope = this;
     let newSaveNumbers: any[];
     if (action === 'remove') {
       newSaveNumbers = [];
@@ -150,9 +150,9 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   }
 
   public updateNumbers(member: IMember): void {
-    let scope = this;
+    const scope = this;
     _.forEach( member.checkboxes, function(checkbox){
-      let internalNumber = checkbox.label.split('&')[0].trim();
+      const internalNumber = checkbox.label.split('&')[0].trim();
       if (checkbox.value === false) {
         _.remove( member.saveNumbers, function(number) {
           return number.internalNumber === internalNumber;
@@ -161,7 +161,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
           scope.updateExistingCallPickup('remove');
         }
       } else if (!_.findKey(member.saveNumbers, { internalNumber: internalNumber.trim() })) {
-        let saveNumber: ICallPickupNumbers = {
+        const saveNumber: ICallPickupNumbers = {
           uuid: checkbox.numberUuid,
           internalNumber: checkbox.label.split('&')[0].trim(),
         };
@@ -185,7 +185,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   }
 
   public getMembersPictures(member): string {
-    let index = _.findIndex(this.selectedMembers, mem => mem.member.uuid === member.uuid);
+    const index = _.findIndex(this.selectedMembers, mem => mem.member.uuid === member.uuid);
     if (index !== -1) {
       return this.selectedMembers[index].picturePath;
     } else {

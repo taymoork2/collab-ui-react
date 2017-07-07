@@ -1,12 +1,10 @@
-/// <reference path="settings.controller.ts"/>
-
 import testModule from './index';
 
 describe('SettingsCtrl', function () {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$rootScope', '$scope', '$stateParams', '$controller', '$q', '$timeout', 'Authinfo', 'FeatureToggleService', 'ITProPackService', 'Orgservice');
+    this.injectDependencies('$rootScope', '$scope', '$stateParams', '$controller', '$q', '$timeout', 'Authinfo', 'FeatureToggleService', 'ProPackService', 'Orgservice');
 
     spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.reject());
     spyOn(this.Authinfo, 'isPartner').and.returnValue(false);
@@ -15,8 +13,9 @@ describe('SettingsCtrl', function () {
 
 
     spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'csdmDeviceBrandingGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue(this.$q.resolve(true));
-    spyOn(this.ITProPackService, 'hasITProPackPurchasedOrNotEnabled');
+    spyOn(this.ProPackService, 'hasProPackPurchasedOrNotEnabled');
   });
 
   function initController(injectors) {
@@ -129,10 +128,10 @@ describe('SettingsCtrl', function () {
   });
 
   describe('with save\cancel buttons', function () {
-    let ACTIVATE_SAVE_BUTTONS: string = 'settings-control-activate-footer';
-    let REMOVE_SAVE_BUTTONS: string = 'settings-control-remove-footer';
-    let SAVE_BROADCAST: string = 'settings-control-save';
-    let CANCEL_BROADCAST: string = 'settings-control-cancel';
+    const ACTIVATE_SAVE_BUTTONS: string = 'settings-control-activate-footer';
+    const REMOVE_SAVE_BUTTONS: string = 'settings-control-remove-footer';
+    const SAVE_BROADCAST: string = 'settings-control-save';
+    const CANCEL_BROADCAST: string = 'settings-control-cancel';
 
     beforeEach(function () {
       spyOn(this.$scope, '$emit').and.callThrough();

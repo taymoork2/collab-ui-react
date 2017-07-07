@@ -129,7 +129,7 @@ describe('orgService', function () {
 
   it('should successfully get an admin organization for a given orgId', function () {
     var callback = jasmine.createSpy('callback');
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '?disableCache=false').respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
@@ -141,7 +141,7 @@ describe('orgService', function () {
       disableCache: true,
     };
     var callback = jasmine.createSpy('callback');
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=true").respond(200, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId(), params);
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
@@ -150,7 +150,7 @@ describe('orgService', function () {
 
   it('should fail to get an admin organization for a given orgId', function () {
     var callback = jasmine.createSpy('callback');
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '?disableCache=false').respond(500, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
@@ -159,7 +159,7 @@ describe('orgService', function () {
 
   it('should successfully get an admin organization for getOrgId provided by Authinfo', function () {
     var callback = jasmine.createSpy('callback');
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '?disableCache=false').respond(200, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
@@ -168,7 +168,7 @@ describe('orgService', function () {
 
   it('should fail to get an admin organization for getOrgId provided by Authinfo', function () {
     var callback = jasmine.createSpy('callback');
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '?disableCache=false').respond(500, {});
     Orgservice.getAdminOrg(callback, Authinfo.getOrgId());
     httpBackend.flush();
     expect(callback.calls.count()).toBe(1);
@@ -176,8 +176,7 @@ describe('orgService', function () {
   });
 
   it('should successfully get an admin organization for a given orgId as when called as a promise', function () {
-
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '?disableCache=false').respond(200, {});
     var promise = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
     httpBackend.flush();
     promise.then(function (data) {
@@ -186,8 +185,7 @@ describe('orgService', function () {
   });
 
   it('should fail to get an admin organization for getOrgId provided by Authinfo when called as a promise', function () {
-
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '?disableCache=false').respond(500, {});
     var promise = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
     httpBackend.flush();
     promise.then(function (data) {
@@ -436,7 +434,6 @@ describe('orgService', function () {
         expect(promise).toBeResolved();
       });
     }
-
   });
 
   it('should fail to set organization settings', function () {
@@ -457,17 +454,17 @@ describe('orgService', function () {
   it('should overwrite current settings with new settings', function () {
     var callback = jasmine.createSpy('callback');
     var currentSettings = {
-      'orgSettings': ['{"reportingSiteUrl": "http://example.com", "isCiscoSupport": true}'],
+      orgSettings: ['{"reportingSiteUrl": "http://example.com", "isCiscoSupport": true}'],
     };
     var settings = {
-      'reportingSiteUrl': 'https://helpMeRhonda.ciscospark.com',
+      reportingSiteUrl: 'https://helpMeRhonda.ciscospark.com',
     };
     httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, currentSettings);
 
     // Assert PATCH data overwrites current reporting url with new reporting url
     httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', {
-      'reportingSiteUrl': 'https://helpMeRhonda.ciscospark.com',
-      'isCiscoSupport': true,
+      reportingSiteUrl: 'https://helpMeRhonda.ciscospark.com',
+      isCiscoSupport: true,
     }).respond(200, {});
 
     var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), settings, callback);
@@ -609,9 +606,7 @@ describe('orgService', function () {
   });
 
   describe('isTestOrg ', function () {
-
     it('should call the correct adminService URL', function () {
-
       var orgId = 'JoseM';
       httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '?basicInfo=true&disableCache=false').respond(200, {});
       Orgservice.isTestOrg(orgId);
@@ -619,7 +614,6 @@ describe('orgService', function () {
     });
 
     it('should default to the current orgId if none is provided', function () {
-
       httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId + '?basicInfo=true&disableCache=false').respond(200, {});
       Orgservice.isTestOrg();
       httpBackend.flush();
@@ -645,7 +639,5 @@ describe('orgService', function () {
       httpBackend.verifyNoOutstandingExpectation();
       httpBackend.verifyNoOutstandingRequest();
     });
-
   });
-
 });

@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AAConfigEnvMetricService(Config, Analytics) {
-
     var service = {
       trackProdNotifications: trackProdNotifications,
     };
@@ -19,7 +18,7 @@
     //track production messages sent from the ui to the analytics service
     function trackProdNotifications(metric, properties) {
       if (Config.isProd()) {
-        Analytics.trackEvent(metric + ".prod", properties);
+        Analytics.trackEvent(metric + '.prod', properties);
       }
     }
   }

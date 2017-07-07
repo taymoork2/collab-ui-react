@@ -139,10 +139,11 @@ describe('Component: cmcUserDetails ', () => {
   });
 
   function dummyUser(): IUser {
-    let user: IUser = <IUser> {
+    const user: IUser = <IUser> {
       meta: {
         organizationID: '1234',
       },
+      entitlements: ['cmc'],
     };
     return user;
   }

@@ -5,7 +5,7 @@ var csvDownloadModule = require('modules/core/csvDownload').default;
 
 describe('assignServices', function () {
   var $scope, $state, $previousState, $httpBackend, $q;
-  var view, authinfo, csvDownloadService, Orgservice;
+  var view, authinfo, csvDownloadService, CloudConnectorService, Orgservice;
 
   var orgid = '1';
 
@@ -59,8 +59,7 @@ describe('assignServices', function () {
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
     $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_,
-    _Orgservice_, _$previousState_) {
-
+    _Orgservice_, _$previousState_, _CloudConnectorService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $previousState = _$previousState_;
@@ -71,6 +70,7 @@ describe('assignServices', function () {
     Orgservice = _Orgservice_;
     authinfo = _Authinfo_;
     csvDownloadService = _CsvDownloadService_;
+    CloudConnectorService = _CloudConnectorService_;
 
     var headers = getJSONFixture('core/json/users/headers.json');
     var accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
@@ -124,6 +124,8 @@ describe('assignServices', function () {
     spyOn(_Orgservice_, 'getUnlicensedUsers');
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve(getLicensesUsage));
 
+    spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ setup: true }));
+
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
         return $q.resolve(headers);
@@ -136,13 +138,13 @@ describe('assignServices', function () {
     $httpBackend
       .whenGET('https://cmi.huron-int.com/api/v1/voice/customers/1/sites')
       .respond([{
-        "mediaTraversalMode": "TURNOnly",
-        "siteSteeringDigit": "8",
-        "vmCluster": null,
-        "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
-        "steeringDigit": "9",
-        "timeZone": "America/Los_Angeles",
-        "voicemailPilotNumberGenerated": "false",
+        mediaTraversalMode: 'TURNOnly',
+        siteSteeringDigit: '8',
+        vmCluster: null,
+        uuid: '70b8d459-7f58-487a-afc8-02c0a82d53ca',
+        steeringDigit: '9',
+        timeZone: 'America/Los_Angeles',
+        voicemailPilotNumberGenerated: 'false',
       }]);
 
     $httpBackend
@@ -178,7 +180,7 @@ describe('assignServices', function () {
       $state: $state,
     });
 
-    var html = $templateCache.get("modules/core/users/userAdd/assignServices.tpl.html");
+    var html = $templateCache.get('modules/core/users/userAdd/assignServices.tpl.html');
     view = $compile(angular.element('<div>').append(html))($scope);
     $scope.$apply();
 

@@ -1,5 +1,7 @@
 'use strict';
 
+import { SWIVEL } from './pstn.const';
+
 describe('Service: PstnService', function () {
 
   let suite: any = {};
@@ -8,19 +10,20 @@ describe('Service: PstnService', function () {
   suite.carrierId = '4f5f5bf7-0034-4ade-8b1c-db63777f062c';
   suite.orderId = '29c63c1f-83b0-42b9-98ee-85624e4c7409';
   suite.reservationId = '061762cc-0f01-42aa-802c-97c293189476';
+  suite.userId = 'bc847524-4f88-11e7-b114-b2f933d5fe66';
 
   let customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   let customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
   let customerOrderList = getJSONFixture('huron/json/pstnSetup/customerOrderList.json');
   let customerV2Order = getJSONFixture('huron/json/pstnSetup/customerV2Order.json');
-  let customerBlockOrder = getJSONFixture('huron/json/pstnSetup/customerBlockOrder.json');
+  const customerBlockOrder = getJSONFixture('huron/json/pstnSetup/customerBlockOrder.json');
   let carrierIntelepeer = getJSONFixture('huron/json/pstnSetup/carrierIntelepeer.json');
   let resellerCarrierList = getJSONFixture('huron/json/pstnSetup/resellerCarrierList.json');
 
   let orders = getJSONFixture('huron/json/orderManagement/orderManagement.json');
-  let pstnNumberOrder = getJSONFixture('huron/json/orderManagement/pstnNumberOrder.json');
-  let pstnBlockOrder = getJSONFixture('huron/json/orderManagement/pstnBlockOrder.json');
-  let pstnPortOrder = getJSONFixture('huron/json/orderManagement/pstnPortOrder.json');
+  const pstnNumberOrder = getJSONFixture('huron/json/orderManagement/pstnNumberOrder.json');
+  const pstnBlockOrder = getJSONFixture('huron/json/orderManagement/pstnBlockOrder.json');
+  const pstnPortOrder = getJSONFixture('huron/json/orderManagement/pstnPortOrder.json');
   let acceptedOrder = getJSONFixture('huron/json/orderManagement/acceptedOrders.json');
   let pendingOrder = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbers.json'));
 
@@ -60,7 +63,7 @@ describe('Service: PstnService', function () {
     createdBy: 'CUSTOMER',
   };
 
-  let TollFreeBlockOrderPayload: any = {
+  const TollFreeBlockOrderPayload: any = {
     npa: '800',
     quantity: '20',
     numberType: 'TOLLFREE',
@@ -91,17 +94,21 @@ describe('Service: PstnService', function () {
     numbers: onlyPstnNumbers,
   };
 
-  let swivelOrderPayload: any = {
+  const swivelOrderPayload: any = {
     numbers: onlyPstnNumbers.concat(onlyTollFreeNumbers),
   };
 
-  let swivelOrderV2DidPayload: any = {
+  const swivelOrderV2DidPayload: any = {
     numbers: onlyPstnNumbers,
     numberType: 'DID',
     createdBy: 'PARTNER',
   };
 
-  let swivelOrderV2TfnPayload: any = {
+  const e911SigneePayload = {
+    e911Signee: suite.userId,
+  };
+
+  const swivelOrderV2TfnPayload: any = {
     numbers: onlyTollFreeNumbers,
     numberType: 'TOLLFREE',
     createdBy: 'PARTNER',
@@ -127,6 +134,7 @@ describe('Service: PstnService', function () {
       'PhoneNumberService',
      );
     spyOn(this.Authinfo, 'getCallPartnerOrgId').and.returnValue(suite.partnerId);
+    spyOn(this.Authinfo, 'getUserId').and.returnValue(suite.userId);
     spyOn(this.Authinfo, 'isPartner');
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve());
   });
@@ -188,7 +196,7 @@ describe('Service: PstnService', function () {
 
   it('should create a customer with a reseller', function () {
     this.PstnModel.setResellerExists(true);
-    let customerResellerPayload = _.cloneDeep(customerPayload);
+    const customerResellerPayload = _.cloneDeep(customerPayload);
     customerResellerPayload.resellerId = suite.partnerId;
 
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers', customerResellerPayload).respond(201);
@@ -219,7 +227,7 @@ describe('Service: PstnService', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/resellers/' + suite.partnerId + '/carriers').respond(resellerCarrierList);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(carrierIntelepeer);
 
-    let promise = this.PstnService.listResellerCarriers();
+    const promise = this.PstnService.listResellerCarriers();
     promise.then(function (carrierList) {
       expect(carrierList).toContain(jasmine.objectContaining({
         vendor: 'INTELEPEER',
@@ -231,7 +239,7 @@ describe('Service: PstnService', function () {
   it('should retrieve a customer\'s carrier', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers').respond(customerCarrierList);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(carrierIntelepeer);
-    let promise = this.PstnService.listCustomerCarriers(suite.customerId);
+    const promise = this.PstnService.listCustomerCarriers(suite.customerId);
     promise.then(function (carrierList) {
       expect(carrierList).toContain(jasmine.objectContaining({
         vendor: 'INTELEPEER',
@@ -245,8 +253,8 @@ describe('Service: PstnService', function () {
     this.Authinfo.isPartner.and.returnValue(false);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderV2PstnPayload).respond(201);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderTfnPayload).respond(201);
-    let portOrderData = _.cloneDeep(portOrderPayload);
-    let promise = this.PstnService.portNumbers(suite.customerId, suite.carrierId, portOrderData.numbers);
+    const portOrderData = _.cloneDeep(portOrderPayload);
+    const promise = this.PstnService.portNumbers(suite.customerId, suite.carrierId, portOrderData.numbers);
     //verify the logic to split the ports
     promise.then(function () {
       expect(portOrderData.numbers.length).toEqual(1);
@@ -277,7 +285,7 @@ describe('Service: PstnService', function () {
   it('should list pending orders', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders?status=PENDING&type=PSTN').respond(customerOrderList);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders?status=PENDING&type=PORT').respond([]);
-    let promise = this.PstnService.listPendingOrders(suite.customerId);
+    const promise = this.PstnService.listPendingOrders(suite.customerId);
     promise.then(function (orderList) {
       expect(angular.equals(orderList, customerOrderList)).toEqual(true);
     });
@@ -286,7 +294,7 @@ describe('Service: PstnService', function () {
 
   it('should get a single order', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + suite.orderId).respond(customerV2Order);
-    let promise = this.PstnService.getOrder(suite.customerId, suite.orderId);
+    const promise = this.PstnService.getOrder(suite.customerId, suite.orderId);
     promise.then(function (order) {
       expect(angular.equals(order, customerV2Order)).toEqual(true);
     });
@@ -298,7 +306,7 @@ describe('Service: PstnService', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders?status=PENDING&type=PORT').respond([]);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + '29c63c1f-83b0-42b9-98ee-85624e4c7408').respond(customerV2Order);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + '29c63c1f-83b0-42b9-98ee-85624e4c7409').respond(customerBlockOrder);
-    let promise = this.PstnService.listPendingNumbers(suite.customerId);
+    const promise = this.PstnService.listPendingNumbers(suite.customerId);
     promise.then(function (numbers) {
       expect(numbers).toContain(jasmine.objectContaining({
         pattern: '5125934450',
@@ -316,7 +324,7 @@ describe('Service: PstnService', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + 'f950f0d4-bde8-4b0d-8762-d306655f24ed').respond(pstnNumberOrder);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + '8b443bec-c535-4c2d-bebb-6293122d825a').respond(pstnBlockOrder);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + '62afd8be-087c-4987-b459-badc33cf964f').respond(pstnPortOrder);
-    let promise = this.PstnService.getFormattedNumberOrders(suite.customerId);
+    const promise = this.PstnService.getFormattedNumberOrders(suite.customerId);
     promise.then(function (numbers) {
       expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[0]));
       expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[1]));
@@ -325,24 +333,24 @@ describe('Service: PstnService', function () {
   });
 
   it('should get translated order status message', function () {
-    let translated = this.PstnService.translateStatusMessage(pendingOrder[0]);
+    const translated = this.PstnService.translateStatusMessage(pendingOrder[0]);
     expect(translated).toEqual('pstnSetup.orderStatus.trialStatus');
   });
 
   it('should get original order status message since it does not exist in translations', function () {
-    let translated = this.PstnService.translateStatusMessage({
+    const translated = this.PstnService.translateStatusMessage({
       statusMessage: 'This should not be translated',
     });
     expect(translated).toEqual('This should not be translated');
   });
 
   it('should not get translated order status message since status is None', function () {
-    let translated = this.PstnService.translateStatusMessage(orders[3]);
+    const translated = this.PstnService.translateStatusMessage(orders[3]);
     expect(translated).toEqual(undefined);
   });
 
   it('should displayBatchIdOnly order status message since status includes Batch id = None', function () {
-    let translated = this.PstnService.translateStatusMessage(orders[5]);
+    const translated = this.PstnService.translateStatusMessage(orders[5]);
     expect(translated).toEqual('370827,370829');
   });
 
@@ -351,11 +359,31 @@ describe('Service: PstnService', function () {
     this.Authinfo.isPartner.and.returnValue(true);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders', swivelOrderV2DidPayload).respond(201);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders', swivelOrderV2TfnPayload).respond(201);
-    let swivelOrderData = _.cloneDeep(swivelOrderPayload);
-    let promise = this.PstnService.orderNumbersV2Swivel(suite.customerId, swivelOrderData.numbers);
+    const swivelOrderData = _.cloneDeep(swivelOrderPayload);
+    const promise = this.PstnService.orderNumbersV2Swivel(suite.customerId, swivelOrderData.numbers);
     promise.then(function () {
       expect(swivelOrderData.numbers.length).toEqual(2);
       expect(swivelOrderData.numbers.sort()).toEqual(onlyPstnNumbers.sort());
+    });
+    this.$httpBackend.flush();
+  });
+
+  it('should update the e911Signee', function () {
+    this.$httpBackend.expectPUT(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId, e911SigneePayload).respond(200);
+
+    this.PstnService.updateCustomerE911Signee(suite.customerId);
+    this.$httpBackend.flush();
+  });
+
+  it('should return byop customer esa disclaimer status', function () {
+    const byopCustomer = { pstnCarrierId: suite.carrierId };
+    const swivelCarrier = { apiImplementation: SWIVEL };
+
+    this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId).respond(byopCustomer);
+    this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(swivelCarrier);
+    const promise = this.PstnService.isSwivelCustomerAndEsaUnsigned(suite.customerId);
+    promise.then(function (result) {
+      expect(result).toBe(true);
     });
     this.$httpBackend.flush();
   });

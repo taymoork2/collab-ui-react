@@ -150,7 +150,7 @@ describe('Component: sectionTitle', () => {
     });
 
     it('should have a dropdown action', function () {
-      let actionSelector = 'ul.dropdown-menu li a';
+      const actionSelector = 'ul.dropdown-menu li a';
       expect(this.view).toContainElement(actionSelector);
       expect(this.view.find(actionSelector)).toContainText('action.key');
       this.view.find(actionSelector).click();
@@ -158,7 +158,7 @@ describe('Component: sectionTitle', () => {
     });
 
     it('should hide the actions if showActions is false', function () {
-      let actionSelector = 'ul.dropdown-menu li a';
+      const actionSelector = 'ul.dropdown-menu li a';
       // this.$scope.showActions is undefined
       expect(this.view).toContainElement(actionSelector);
 
@@ -169,6 +169,26 @@ describe('Component: sectionTitle', () => {
       this.$scope.showActions = true;
       this.$scope.$apply();
       expect(this.view).toContainElement(actionSelector);
+    });
+  });
+
+  describe('with an action', () => {
+    beforeEach(function () {
+      this.$scope.actionSpy = jasmine.createSpy('actionFunction');
+      this.compileComponent('sectionTitle', {
+        titleKey: 'custom.key',
+        onActionClick: 'actionSpy()',
+      });
+    });
+
+    it('should have a section title', function () {
+      expect(this.view.find('.section-title-row .section-name')).toHaveText('custom.key');
+    });
+
+    it('should have an arrow icon and execute action', function () {
+      expect(this.view).toContainElement('.icon-arrow-next');
+      this.view.find('.icon-arrow-next').click();
+      expect(this.$scope.actionSpy).toHaveBeenCalled();
     });
   });
 });

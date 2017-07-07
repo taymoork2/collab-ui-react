@@ -1,20 +1,21 @@
 'use strict';
 
 describe('Directive: hrServiceAddress', function () {
-  let $q, $httpBackend, $compile, $scope, PstnSetupStatesService, HuronCountryService;
-  let SEARCH_BUTTON = '.search-custom';
-  let HIDE = 'ng-hide';
+  let $q, $httpBackend, $compile, $scope, PstnAreaService, HuronCountryService;
+  const SEARCH_BUTTON = '.search-custom';
+  const HIDE = 'ng-hide';
   let element;
 
-  let location = {
-    type: 'State',
+  const location = {
+    zipName: 'Zip Code',
+    typeName: 'State',
     areas: [{
       name: 'Texas',
       abbreviation: 'TX',
     }],
   };
 
-  let countries = [{
+  const countries = [{
     id: 'US',
     name: 'United States',
   }];
@@ -28,12 +29,12 @@ describe('Directive: hrServiceAddress', function () {
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$q_, _$httpBackend_, _$compile_, $rootScope, _PstnSetupStatesService_, _HuronCountryService_) {
+  beforeEach(inject(function (_$q_, _$httpBackend_, _$compile_, $rootScope, _PstnAreaService_, _HuronCountryService_) {
     $q = _$q_;
     $httpBackend = _$httpBackend_;
     $compile = _$compile_;
     $scope = $rootScope.$new();
-    PstnSetupStatesService = _PstnSetupStatesService_;
+    PstnAreaService = _PstnAreaService_;
     HuronCountryService = _HuronCountryService_;
 
     $scope.myAddress = {
@@ -44,7 +45,7 @@ describe('Directive: hrServiceAddress', function () {
     };
 
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
-    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
+    spyOn(PstnAreaService, 'getCountryAreas').and.returnValue($q.resolve(location));
     spyOn(HuronCountryService, 'getCountryList').and.returnValue($q.resolve(countries));
   }));
 

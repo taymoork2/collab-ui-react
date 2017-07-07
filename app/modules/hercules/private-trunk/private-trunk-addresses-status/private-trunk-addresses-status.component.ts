@@ -15,7 +15,7 @@ class PrivateTrunkAddressesStatusComponentCtrl implements ng.IComponentControlle
   public $onInit() {
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { destinationList } = changes;
     if (destinationList && destinationList.currentValue) {
       this.destinationList = destinationList.currentValue;

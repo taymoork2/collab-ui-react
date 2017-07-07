@@ -3,13 +3,11 @@
 /* global LONG_TIMEOUT */
 
 describe('GSS-(Global Service Status) Management', function () {
-
   it('should login as GSS test admin', function () {
     login.login('gss-testAdmin');
   }, LONG_TIMEOUT);
 
   xdescribe('Incident page', function () {
-
     it('should display new incident button', function () {
       gssIncident.clickIncident();
       utils.expectIsDisplayed(gssIncident.newIncidentBtn);
@@ -99,7 +97,6 @@ describe('GSS-(Global Service Status) Management', function () {
         notifications.assertSuccess(gssIncident.deleteSuccessAlertMsg);
       });
     });
-
   });
 
   describe('Login out', function () {

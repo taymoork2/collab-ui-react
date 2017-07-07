@@ -32,7 +32,12 @@ module.exports = csp({
       'http://127.0.0.1:8000',
       'https://ds2-qlikdemo',
       'https://ds2-win2012-01',
+      'https://qlik-loader',
+      'https://10.29.42.18:4244',
       'https://10.29.42.18',
+      'https://*.webex.com',  //Qlik sense sites used for Spark/WebEx Metrics
+      'https://*.webex.com:4244',
+      'https://*.webex.com:4248',
     ],
     objectSrc: [
       'http://www.cisco.com', // Terms of Service
@@ -74,7 +79,9 @@ module.exports = csp({
       'https://*.clouddrive.com', // CSV download
       'https://*.amazonaws.com', // MOH Media
       'https://bam.nr-data.net', // New Relic Browser
-      'https://10.194.245.72:8443',
+      'https://10.224.166.46:8443',
+      'http://rpbtqlkhsn002.webex.com:8080',
+      'https://rpbtqlkhsn006.webex.com',
     ],
     fontSrc: [
       '\'self\'',

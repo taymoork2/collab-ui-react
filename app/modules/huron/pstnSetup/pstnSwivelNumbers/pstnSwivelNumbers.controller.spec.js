@@ -32,5 +32,4 @@ describe('Controller: PstnSwivelNumbersCtrl', function () {
   it('should initialize', function () {
     expect(controller).toBeDefined();
   });
-
 });

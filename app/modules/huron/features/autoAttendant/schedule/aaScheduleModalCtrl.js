@@ -10,7 +10,6 @@
   function AAScheduleModalCtrl($modal, $modalInstance, $translate, Analytics, AAMetricNameService, sectionToToggle, AANotificationService, AACalendarService,
     AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService,
     $timeout) {
-
     /*jshint validthis: true */
     var vm = this;
 
@@ -78,7 +77,6 @@
           vm.openhours[index].endtime = '05:00 PM';
         }
       });
-
     }
 
     //check each hours form that exist in the DOM for validity
@@ -107,7 +105,7 @@
     //with a single toaster error message, otherwise, return no error found
     function isDayEmpty(index) {
       var atLeastOneDaySet = _.find(vm.openhours[index].days, {
-        'active': true,
+        active: true,
       });
       if (_.isUndefined(atLeastOneDaySet)) {
         AANotificationService.error('autoAttendant.openHoursDaySelect');
@@ -197,7 +195,6 @@
             holiday.endtime = '05:00 PM';
           }
         });
-
       } else {
         vm.forceCheckHoliday();
       }
@@ -243,8 +240,8 @@
         if (endTime === '12:00 AM') {
           return false;
         }
-        var start = moment(startTime, "hh:mm A");
-        var end = moment(endTime, "hh:mm A");
+        var start = moment(startTime, 'hh:mm A');
+        var end = moment(endTime, 'hh:mm A');
         return start.isSame(end) || start.isAfter(end);
       }
     }
@@ -406,7 +403,7 @@
         // save calendar to CES
         var calName = vm.aaModel.aaRecord.callExperienceName;
         var savePromise;
-        var notifyName = "Calendar for " + vm.aaModel.aaRecord.callExperienceName;
+        var notifyName = 'Calendar for ' + vm.aaModel.aaRecord.callExperienceName;
 
         vm.ui.isHolidays = vm.holidays.length > 0;
         vm.ui.isClosedHours = (vm.openhours.length || (vm.holidayBehavior && vm.holidays.length));
@@ -543,7 +540,6 @@
     }
 
     function updateSchedule(calName) {
-
       return AACalendarService.updateCalendar(vm.aaModel.aaRecord.scheduleId, calName, vm.calendar)
         .then(function () {
           return updateCE(vm.aaModel.aaRecord.callExperienceName, false);

@@ -38,7 +38,7 @@ describe('DirSyncService', () => {
   describe('refreshStatus', () => {
 
     it('should fetch DirSync status and connector list from backend', function () {
-      let testConnectors = [{ name: 'test', isInService: true }];
+      const testConnectors = [{ name: 'test', isInService: true }];
 
       this.$httpBackend.expectGET(DIR_SYNC_REGEX).respond(200, { serviceMode: 'ENABLED' });
       this.$httpBackend.expectGET(DIR_SYNC_CONNECTORS_REGEX).respond(200, { connectors: testConnectors });
@@ -46,6 +46,17 @@ describe('DirSyncService', () => {
       expect(this.DirSyncService.refreshStatus()).toBeResolved();
       expect(this.DirSyncService.isDirSyncEnabled()).toBeTruthy();
       expect(this.DirSyncService.getConnectors()).toEqual(testConnectors);
+      expect(this.DirSyncService.requiresRefresh()).toBeFalsy(); // found all data
+    });
+
+    it('should assume dirsync is off if GET on /dirsync responds 400', function () {
+      this.$httpBackend.expectGET(DIR_SYNC_REGEX).respond(400);
+
+      expect(this.DirSyncService.refreshStatus()).toBeResolved();
+      // make sure we have defaults
+      expect(this.DirSyncService.isDirSyncEnabled()).toBeFalsy();
+      expect(this.DirSyncService.getConnectors()).toEqual([]);
+      expect(this.DirSyncService.requiresRefresh()).toBeFalsy(); // found all data
     });
 
     it('should use default properties if GET on /dirsync fails', function () {
@@ -55,6 +66,7 @@ describe('DirSyncService', () => {
       // make sure we have defaults
       expect(this.DirSyncService.isDirSyncEnabled()).toBeFalsy();
       expect(this.DirSyncService.getConnectors()).toEqual([]);
+      expect(this.DirSyncService.requiresRefresh()).toBeTruthy(); // did not find all data
     });
 
     it('should use default properties for connectors if GET on /dirsync/connector fails', function () {
@@ -64,6 +76,7 @@ describe('DirSyncService', () => {
       expect(this.DirSyncService.refreshStatus()).toBeResolved();
       expect(this.DirSyncService.isDirSyncEnabled()).toBeTruthy();
       expect(this.DirSyncService.getConnectors()).toEqual([]);
+      expect(this.DirSyncService.requiresRefresh()).toBeTruthy(); // did not find all data
     });
 
     it('should fetch DirSync status from Org if NOT a full admin user', function () {
@@ -74,6 +87,7 @@ describe('DirSyncService', () => {
       expect(this.DirSyncService.refreshStatus()).toBeResolved();
       expect(this.DirSyncService.isDirSyncEnabled()).toBeTruthy();
       expect(this.DirSyncService.getConnectors()).toEqual([]);
+      expect(this.DirSyncService.requiresRefresh()).toBeTruthy(); // did not find all data
     });
 
   });
@@ -116,7 +130,7 @@ describe('DirSyncService', () => {
 
       expect(this.DirSyncService.refreshStatus()).toBeResolved();
 
-      let connectors = this.DirSyncService.getConnectors();
+      const connectors = this.DirSyncService.getConnectors();
       expect(connectors).toHaveLength(2);
       expect(connectors[0].name).toEqual('Connector One');
       expect(connectors[0].isInService).toBeFalsy();
@@ -126,13 +140,13 @@ describe('DirSyncService', () => {
 
     it('should handle deregiserConnector success', function () {
       this.$httpBackend.expectDELETE(DIR_SYNC_CONNECTORS_REGEX).respond(204);
-      let promise = this.DirSyncService.deregisterConnector('test-connector');
+      const promise = this.DirSyncService.deregisterConnector('test-connector');
       expect(promise).toBeResolved();
     });
 
     it('should handle deregiserConnector failure', function () {
       this.$httpBackend.expectDELETE(DIR_SYNC_CONNECTORS_REGEX).respond(304);
-      let promise = this.DirSyncService.deregisterConnector('test-connector');
+      const promise = this.DirSyncService.deregisterConnector('test-connector');
       expect(promise).toBeRejected();
     });
 
@@ -141,13 +155,13 @@ describe('DirSyncService', () => {
   describe('Disable Dir Sync', () => {
     it('should handle disableSync success', function () {
       this.$httpBackend.expectPATCH(DIR_SYNC_MODE_REGEX).respond(204);
-      let promise = this.DirSyncService.disableSync();
+      const promise = this.DirSyncService.disableSync();
       expect(promise).toBeResolved();
     });
 
     it('should handle disableSync failure', function () {
       this.$httpBackend.expectPATCH(DIR_SYNC_MODE_REGEX).respond(304);
-      let promise = this.DirSyncService.disableSync();
+      const promise = this.DirSyncService.disableSync();
       expect(promise).toBeRejected();
     });
 
@@ -155,7 +169,7 @@ describe('DirSyncService', () => {
 
   describe('check whether the org has dirsync attribute', () => {
     it('should handle org with dirsyncEnabled as true and with out dirsync attribute', function () {
-      let orgWithoutDirSyncAttributes = {
+      const orgWithoutDirSyncAttributes = {
         isTestOrg: true,
         dirsyncEnabled: true,
       };
@@ -163,7 +177,7 @@ describe('DirSyncService', () => {
     });
 
     it('should handle org with dirsyncEnabled as false', function () {
-      let orgWithdirsyncEnabled = {
+      const orgWithdirsyncEnabled = {
         isTestOrg: true,
         dirsyncEnabled: false,
       };
@@ -171,7 +185,7 @@ describe('DirSyncService', () => {
     });
 
     it('should handle org with dirsyncEnabled as true and preferred language attribute present', function () {
-      let orgWithDirSyncAttributes = {
+      const orgWithDirSyncAttributes = {
         isTestOrg: true,
         dirsyncEnabled: true,
         dirsyncAttributes: {
@@ -187,7 +201,7 @@ describe('DirSyncService', () => {
     });
 
     it('should handle org with dirsyncEnabled as true and preferred language attribute not present', function () {
-      let orgWithDirSyncAttributes = {
+      const orgWithDirSyncAttributes = {
         isTestOrg: true,
         dirsyncEnabled: true,
         dirsyncAttributes: {

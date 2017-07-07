@@ -8,7 +8,6 @@
   /* @ngInject */
 
   function AACallerInputCtrl($scope, $translate, CustomVariableService, AAModelService, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
-
     var vm = this;
 
     var myId;
@@ -28,7 +27,7 @@
     var runActionName = 'runActionsOnInput';
 
     var properties = {
-      LABEL: "label",
+      LABEL: 'label',
     };
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     var INPUT_DIGIT_MAX_LENGTH = 20;
@@ -57,6 +56,7 @@
     vm.voiceOption = voiceOption;
     vm.voiceBackup = voiceOption;
     vm.voicePlaceholder = selectPlaceholder;
+
     vm.voiceOptions = [];
     vm.inputActions = [];
     vm.convertDigitState = false;
@@ -91,11 +91,10 @@
       setAvailableKeys();
 
       AACommonService.setCallerInputStatus(true);
-
     }
 
     $scope.$on(
-      "$destroy",
+      '$destroy',
       function () {
         AACommonService.setIsValid(myId, true);
       }
@@ -106,17 +105,14 @@
       vm.inputActions[index].key = whichKey;
       setAvailableKeys();
       AACommonService.setCallerInputStatus(true);
-
     }
     //the user enteres a char into the key input area
     function keyInputChanged(keyIndex, whichKey) {
-
       AACommonService.setIsValid(myId, whichKey.value);
 
       vm.inputActions[keyIndex].value = whichKey.value;
 
       AACommonService.setCallerInputStatus(true);
-
     }
 
     function addKeyAction() {
@@ -130,7 +126,6 @@
 
       setAvailableKeys();
       AACommonService.setCallerInputStatus(true);
-
     }
 
     // determine which keys are still available.
@@ -160,7 +155,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value,
+        value: vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
@@ -181,7 +176,6 @@
     * say-message keys.
     */
     function saveNameInput() {
-
       // if invalid (from html, too short or too long nameInput is undefined
       AACommonService.setIsValid(myId, vm.nameInput);
 
@@ -203,7 +197,6 @@
       }
 
       AACommonService.setCallerInputStatus(true);
-
     }
 
     function createCallerInputAction() {
@@ -218,7 +211,6 @@
       action.variableName = '';
 
       return action;
-
     }
 
     function getAction(menuEntry) {
@@ -231,7 +223,6 @@
       }
 
       return undefined;
-
     }
 
     function setActionMinMax(action) {
@@ -252,7 +243,6 @@
     }
 
     function populateMenu() {
-
       vm.nameInput = vm.actionEntry.variableName;
 
       // make it look like 1..20, drop the starting zero
@@ -283,7 +273,6 @@
       setAvailableKeys();
 
       AACommonService.setCallerInputStatus(false);
-
     }
     // update the list of available keys for each action
     function setAvailableKeys() {
@@ -312,7 +301,7 @@
     }
 
     function activate() {
-      myId = $scope.schedule + "-" + $scope.index + "-" + AACommonService.getUniqueId();
+      myId = $scope.schedule + '-' + $scope.index + '-' + AACommonService.getUniqueId();
 
       ui = AAUiModelService.getUiModel();
 
@@ -324,6 +313,5 @@
     }
 
     activate();
-
   }
 })();

@@ -102,12 +102,12 @@ class PstnSelectorCtrl implements ng.IComponentController {
     if (_.isString(telephoneNumber)) {
       return this.PhoneNumberService.getNationalFormat(telephoneNumber);
     } else {
-      let firstNumber = this.PhoneNumberService.getNationalFormat(_.head<string>(telephoneNumber));
-      let lastNumber = this.PhoneNumberService.getNationalFormat(_.last<string>(telephoneNumber));
+      const firstNumber = this.PhoneNumberService.getNationalFormat(_.head<string>(telephoneNumber));
+      const lastNumber = this.PhoneNumberService.getNationalFormat(_.last<string>(telephoneNumber));
       if (this.isConsecutiveArray(telephoneNumber)) {
         return firstNumber + ' - ' + _.last(lastNumber.split('-'));
       } else {
-        let commonNumber = this.getLongestCommonSubstring(firstNumber, lastNumber);
+        const commonNumber = this.getLongestCommonSubstring(firstNumber, lastNumber);
         return commonNumber + _.repeat('X', firstNumber.length - commonNumber.length);
       }
     }
@@ -118,7 +118,7 @@ class PstnSelectorCtrl implements ng.IComponentController {
       return '';
     }
     let i = 0;
-    let length = x.length;
+    const length = x.length;
     while (i < length && x.charAt(i) === y.charAt(i)) {
       i++;
     }

@@ -147,10 +147,10 @@
       prod: 'https://notifs.produs1.ciscoccservice.com/notifs/v1/publish',
     },
     SunlightPushNotificationUrl: {
-      dev: 'https://ar.devus1.ciscoccservice.com/ar/v1/publish/taskState',
-      cfe: 'https://ar.appstaging.ciscoccservice.com/ar/v1/publish/taskState',
-      integration: 'https://ar.appstaging.ciscoccservice.com/ar/v1/publish/taskState',
-      prod: 'https://ar.produs1.ciscoccservice.com/ar/v1/publish/taskState',
+      dev: 'https://pqm.devus1.ciscoccservice.com/pqm/v1/publish/taskState',
+      cfe: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
+      integration: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
+      prod: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publish/taskState',
     },
     CcfsUrl: {
       dev: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightdev&callbackUrl=',
@@ -173,7 +173,7 @@
     GeminiUrl: {
       dev: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
       cfe: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
-      integration: 'https://ccaportalbts.webex.com/ccaportal/api/v2/',
+      integration: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
       prod: 'https://ccaportal.webex.com/ccaportal/api/v2/',
     },
     GssUrl: {
@@ -230,17 +230,68 @@
       integration: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
-    WebexMetricsUrl: {
-      dev: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
-      cfe: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
-      integration: 'https://10.194.245.72:8443/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/basic_webex_v1',
-      prod: '',
+    WebExReportQBSforBaseUrl: {
+      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
+      prod: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
     },
-    SparkMetricsUrl: {
-      dev: 'https://ds2-win2012-01/',
-      cfe: 'https://ds2-win2012-01/',
-      integration: 'https://ds2-win2012-01/',
-      prod: '',
+    SparkReportQBSforBaseUrl: {
+      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
+      prod: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
+    },
+    WebExReportQBSforPremiumUrl: {
+      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
+      prod: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
+    },
+    SparkReportQBSforPremiumUrl: {
+      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
+      prod: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
+    },
+    SparkReportQBSforPartnerUrl: {
+      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
+      prod: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
+    },
+    //for Qlik mashup application Server. Currently, it's https://sjc-ngxbts.webex.com
+    //qlik_reverse_proxy is populated after an API response
+    //sjc-ngx.webex.com dfw-ngx.webex.com
+    WebExReportAppforBaseUrl: {
+      dev: 'https://%s/custportal/extensions/webex-report-basic/webex-report-basic.html',
+      cfe: 'https://%s/custportal/extensions/webex-report-basic/webex-report-basic.html',
+      integration: 'https://%s/custportal/extensions/webex-report-basic/webex-report-basic.html',
+      prod: 'https://%s/custportal/extensions/webex-report-basic/webex-report-basic.html',
+    },
+    SparkReportAppforBaseUrl: {
+      dev: 'https://%s/custportal/extensions/spark-report-basic/spark-report-basic.html',
+      cfe: 'https://%s/custportal/extensions/spark-report-basic/spark-report-basic.html',
+      integration: 'https://%s/custportal/extensions/spark-report-basic/spark-report-basic.html',
+      prod: 'https://%s/custportal/extensions/spark-report-basic/spark-report-basic.html',
+    },
+    WebExReportAppforPremiumUrl: {
+      dev: 'https://%s/custportal/extensions/webex-report-premium/webex-report-premium.html',
+      cfe: 'https://%s/custportal/extensions/webex-report-premium/webex-report-premium.html',
+      integration: 'https://%s/custportal/extensions/webex-report-premium/webex-report-premium.html',
+      prod: 'https://%s/custportal/extensions/webex-report-premium/webex-report-premium.html',
+    },
+    SparkReportAppforPremiumUrl: {
+      dev: 'https://%s/custportal/extensions/spark-report-premium/spark-report-premium.html',
+      cfe: 'https://%s/custportal/extensions/spark-report-premium/spark-report-premium.html',
+      integration: 'https://%s/custportal/extensions/spark-report-premium/spark-report-premium.html',
+      prod: 'https://%s/custportal/extensions/spark-report-premium/spark-report-premium.html',
+    },
+    SparkReportAppforPartnerUrl: {
+      dev: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
+      cfe: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
+      integration: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
+      prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
     // urls same for all environments
 
@@ -279,5 +330,4 @@
       return service;
     }, {});
   }
-
 }());

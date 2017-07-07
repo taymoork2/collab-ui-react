@@ -11,7 +11,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
   public static restrictedChannels: string[] = ['beta', 'alpha', 'latest'];
 
   public releaseChannelSelected: ISelectOption;
-  public releaseChannelOptions: Array<ISelectOption> = [{
+  public releaseChannelOptions: ISelectOption[] = [{
     label: this.$translate.instant('hercules.fusion.add-resource-group.release-channel.stable'),
     value: 'stable',
   }];
@@ -47,8 +47,8 @@ class ReleaseChannelSectionController implements ng.IComponentController {
       });
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let { cluster, resourceGroup } = changes;
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const { cluster, resourceGroup } = changes;
     // Best effort to warn the developer that one should not used both cluster and resource-group attributes
     if (cluster && cluster.currentValue && resourceGroup && resourceGroup.currentValue) {
       this.$log.error('You cannot use the cluster and group attributes at the same time');

@@ -1,7 +1,7 @@
 class HuntGroupMaxWaitTimeCtrl implements ng.IComponentController {
   public maxWaitMins: string;
   public onChangeFn: Function;
-  public options: Array<number> = [1, 2, 3];
+  public options: number[] = [1, 2, 3];
   public isHuntGroupFallbackTimer: boolean;
   public isError: boolean;
   public errorMsg: string;
@@ -20,7 +20,7 @@ class HuntGroupMaxWaitTimeCtrl implements ng.IComponentController {
     });
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { maxWaitMins, options } = changes;
 
     if (maxWaitMins && maxWaitMins.currentValue && this.validate(maxWaitMins.currentValue)) {

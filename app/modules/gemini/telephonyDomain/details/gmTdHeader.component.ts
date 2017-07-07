@@ -28,7 +28,7 @@ class GmTdHeaderCtrl implements ng.IComponentController {
     }
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     if (changes.tdBaseInfo) {
       this.model = this.tdBaseInfo;
     }
@@ -41,13 +41,13 @@ class GmTdHeaderCtrl implements ng.IComponentController {
       return;
     }
 
-    let type = 7;
+    const type = 7;
     this.gemService.getRemedyTicket(this.customerId, type)
       .then((res) => {
-        let resArr: any = _.filter(_.get(res, 'content.data'), (item: any) => {
+        const resArr: any = _.filter(_.get(res, 'content.data'), (item: any) => {
           return item.description === this.ccaDomainId;
         });
-        let remedyTicket: any = _.first(resArr);
+        const remedyTicket: any = _.first(resArr);
         if (remedyTicket) {
           remedyTicket.createTime = moment(remedyTicket.createTime).toDate().toString();
 

@@ -3,7 +3,7 @@ describe('Class: FilteredView', () => {
 
   let test: any = {};
 
-  let serverSideSearchRes = {
+  const serverSideSearchRes = {
     url1: { displayName: 'abc', devices: [{}, {}] },
     url2: { displayName: 'abcd' },
     url3: { displayName: 'abcde', devices: [{}, {}] },
@@ -26,7 +26,7 @@ describe('Class: FilteredView', () => {
     test.$rootScope = undefined;
   });
 
-  let initController = (searchOnly: boolean) => {
+  const initController = (searchOnly: boolean) => {
     test.mockDataSource = {
       getAll: () => {
         throw Error('getAll should only be called when mocked in tests');

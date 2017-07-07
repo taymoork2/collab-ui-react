@@ -45,7 +45,7 @@ export class DialingService {
     private FeatureToggleService,
     private $state: ng.ui.IStateService) {
 
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
@@ -120,7 +120,7 @@ export class DialingService {
   }
 
   public setDialing(item: IOption, type: string, typeId: string, dialingType: string): ng.IPromise<any> {
-    let cosType: ICOSRestriction = {
+    const cosType: ICOSRestriction = {
       restriction: dialingType,
       blocked: false,
     };
@@ -176,7 +176,7 @@ export class DialingService {
   }
 
   public setInternationalDialing: (item: IOption, type: string, typeId: string) => ng.IPromise<any> = (item, type, typeId) => {
-    let deferred = this.$q.defer();
+    const deferred = this.$q.defer();
     this.setDialing(item, type, typeId, DialingType.INTERNATIONAL).then(() => {
       this.$state.go(_.get<string>(this.$state, '$current.parent.name'));
       deferred.resolve(true);
@@ -194,7 +194,7 @@ export class DialingService {
   }
 
   public setLocalDialing: (item: IOption, type: string, typeId: string) => ng.IPromise<any> = (item, type, typeId) => {
-    let deferred = this.$q.defer();
+    const deferred = this.$q.defer();
     this.setDialing(item, type, typeId, DialingType.LOCAL).then(() => {
       this.$state.go(_.get<string>(this.$state, '$current.parent.name'));
       deferred.resolve(true);

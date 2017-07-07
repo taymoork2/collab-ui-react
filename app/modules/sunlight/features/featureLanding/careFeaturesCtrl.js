@@ -227,12 +227,10 @@
       if (listOfAllFeatures.length === 0) {
         vm.pageState = pageStates.newFeature;
       }
-
     });
 
     function purchaseLink() {
       $state.go('my-company.subscriptions');
     }
   }
-
 })();

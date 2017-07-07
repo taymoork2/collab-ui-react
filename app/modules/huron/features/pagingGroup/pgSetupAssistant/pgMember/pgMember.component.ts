@@ -20,7 +20,7 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
   public selectMembers(member: Member): void {
     if (member) {
       this.memberName = '';
-      let memberWithPicture: IMemberWithPicture = {
+      const memberWithPicture: IMemberWithPicture = {
         member: member,
         picturePath: '',
       };
@@ -40,7 +40,7 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
   }
 
   public getMembersPictures(member: Member): string {
-    let index = _.findIndex(this.selectedMembers, function (mem) {
+    const index = _.findIndex(this.selectedMembers, function (mem) {
       return (mem.member.uuid === member.uuid);
     });
     if (index !== -1) {
@@ -75,7 +75,7 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
     return this.FeatureMemberService.getUserName(member);
   }
 
-  public fetchMembers(): ng.IPromise<Array<Member>> {
+  public fetchMembers(): ng.IPromise<Member[]> {
     return this.FeatureMemberService.getMemberSuggestions(this.memberName).then(
       (data: Member[]) => {
         this.availableMembers = _.reject(data, (mem) => {
@@ -84,7 +84,7 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
           });
         });
 
-        let promises: Array<ng.IPromise<any>> = [];
+        const promises: ng.IPromise<any>[] = [];
         _.forEach(this.availableMembers, (item: any): void => {
           // If Place is a room device type, remove from availableMembers
           if (item.type === USER_PLACE) {

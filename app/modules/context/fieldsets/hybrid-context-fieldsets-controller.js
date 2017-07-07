@@ -87,7 +87,6 @@ require('../fields/_fields-list.scss');
     }
 
     function processFieldset(fieldset) {
-
       if (fieldset.lastUpdated) {
         fieldset.lastUpdatedUI = moment(fieldset.lastUpdated).format('LL');
       }
@@ -145,7 +144,6 @@ require('../fields/_fields-list.scss');
           vm.gridRefresh = false;
           vm.load = false;
         });
-
     }
 
     function checkFieldsetsLimit() {

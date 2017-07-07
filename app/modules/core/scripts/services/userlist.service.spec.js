@@ -630,6 +630,4 @@ describe('User List Service', function () {
       });
     });
   });
-
-
 });

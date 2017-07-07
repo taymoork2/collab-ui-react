@@ -66,8 +66,8 @@ describe('Service: AACalendarService', function () {
   beforeEach(inject(function (_AAICalService_, _ical_) {
     AAICalService = _AAICalService_;
     ical = _ical_;
-    starttime = "08:00 AM";
-    endtime = "05:00 PM";
+    starttime = '08:00 AM';
+    endtime = '05:00 PM';
   }));
 
   describe('createCalendar', function () {
@@ -480,23 +480,22 @@ describe('Service: AACalendarService', function () {
       var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
 
       expect(rangeFromCalendar.length).toEqual(6);
-      expect(rangeFromCalendar[0].name).toEqual("Christmas");
-      expect(rangeFromCalendar[1].name).toEqual("Last Tuesday of Jan");
-      expect(rangeFromCalendar[2].name).toEqual("Thanksgiving");
-      expect(rangeFromCalendar[3].name).toEqual("First day of Feb");
-      expect(rangeFromCalendar[4].name).toEqual("Second Wed of Feb");
-      expect(rangeFromCalendar[5].name).toEqual("Feb 10th");
+      expect(rangeFromCalendar[0].name).toEqual('Christmas');
+      expect(rangeFromCalendar[1].name).toEqual('Last Tuesday of Jan');
+      expect(rangeFromCalendar[2].name).toEqual('Thanksgiving');
+      expect(rangeFromCalendar[3].name).toEqual('First day of Feb');
+      expect(rangeFromCalendar[4].name).toEqual('Second Wed of Feb');
+      expect(rangeFromCalendar[5].name).toEqual('Feb 10th');
 
       jasmine.clock().mockDate(new Date(2017, 0, 9));
       rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
 
-      expect(rangeFromCalendar[0].name).toEqual("Christmas");
-      expect(rangeFromCalendar[1].name).toEqual("Last Tuesday of Jan");
-      expect(rangeFromCalendar[2].name).toEqual("First day of Feb");
-      expect(rangeFromCalendar[3].name).toEqual("Second Wed of Feb");
-      expect(rangeFromCalendar[4].name).toEqual("Feb 10th");
-      expect(rangeFromCalendar[5].name).toEqual("Thanksgiving");
-
+      expect(rangeFromCalendar[0].name).toEqual('Christmas');
+      expect(rangeFromCalendar[1].name).toEqual('Last Tuesday of Jan');
+      expect(rangeFromCalendar[2].name).toEqual('First day of Feb');
+      expect(rangeFromCalendar[3].name).toEqual('Second Wed of Feb');
+      expect(rangeFromCalendar[4].name).toEqual('Feb 10th');
+      expect(rangeFromCalendar[5].name).toEqual('Thanksgiving');
     });
   });
 });

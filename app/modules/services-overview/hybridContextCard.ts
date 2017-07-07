@@ -13,7 +13,7 @@ export class ServicesOverviewHybridContextCard extends ServicesOverviewHybridCar
     buttonClass: 'btn btn--primary',
   };
 
-  private buttons: Array<ICardButton> = [{
+  private buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.hybridContext.buttons.resources',
     routerState: 'context-resources',
     buttonClass: 'btn-link',
@@ -27,7 +27,7 @@ export class ServicesOverviewHybridContextCard extends ServicesOverviewHybridCar
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.active) {
       return this.buttons;
     }

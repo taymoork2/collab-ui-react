@@ -13,6 +13,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     productInstanceId: productInstanceId,
     subscriptionId: onlineIntSubId,
     name: productName,
+    autoBilling: false,
   }];
 
   beforeEach(function () {
@@ -25,20 +26,23 @@ describe('Controller: MySubscriptionCtrl', function () {
       '$window',
       '$q',
       'Authinfo',
+      'Config',
       'DigitalRiverService',
       'FeatureToggleService',
       'OnlineUpgradeService',
       'Orgservice',
-      'ServiceDescriptor',
+      'ProPackService',
+      'ServiceDescriptorService',
       'SharedMeetingsReportService',
       'WebExUtilsFact');
 
     this.data = _.cloneDeep(getJSONFixture('core/json/myCompany/subscriptionData.json'));
     this.siteUrl = 'siteUrl';
 
-    spyOn(this.ServiceDescriptor, 'getServices').and.returnValue(this.$q.resolve(this.data.servicesResponse));
+    spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve(this.data.servicesResponse));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');
     spyOn(this.DigitalRiverService, 'getDigitalRiverToken');
     spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.$q.resolve(drUrlResponse));
@@ -55,7 +59,7 @@ describe('Controller: MySubscriptionCtrl', function () {
         $translate: this.$translate,
         $window: this.$window,
         Orgservice: this.Orgservice,
-        ServiceDescriptor: this.ServiceDescriptor,
+        ServiceDescriptorService: this.ServiceDescriptorService,
         Authinfo: this.Authinfo,
         WebExUtilsFact: this.WebExUtilsFact,
       });
@@ -82,6 +86,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for online orgs', function () {
     this.data.subscriptionsResponse[0].internalSubscriptionId = onlineIntSubId;
+    this.data.subscriptionsResponse[0].endDate = 'subEndDate';
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsResponse));
     this.data.subscriptionsFormatted[0].isOnline = true;
     this.data.subscriptionsFormatted[0].productInstanceId = productInstanceId;
@@ -89,6 +94,8 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.subscriptionsFormatted[0].changeplanOverride = '';
     this.data.subscriptionsFormatted[0].internalSubscriptionId = onlineIntSubId;
     this.data.subscriptionsFormatted[0].quantity = 100;
+    this.data.subscriptionsFormatted[0].endDate = 'subscriptions.expired';
+    this.data.subscriptionsFormatted[0].badge = 'alert';
     this.startController();
 
     expect(this.controller.hybridServices).toEqual(this.data.servicesFormatted);
@@ -118,6 +125,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for online trial orgs', function () {
     this.data.subscriptionsTrialResponse[0].internalSubscriptionId = onlineIntSubId;
+    this.data.subscriptionsTrialResponse[0].endDate = 'subEndDate';
     this.$httpBackend.whenGET(trialUrl).respond(this.$q.resolve(trialUrlResponse));
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
     this.data.trialSubscriptionData[0].isOnline = true;
@@ -126,6 +134,8 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.trialSubscriptionData[0].name = productName;
     this.data.trialSubscriptionData[0].internalSubscriptionId = onlineIntSubId;
     this.data.trialSubscriptionData[0].quantity = 100;
+    this.data.trialSubscriptionData[0].endDate = 'subscriptions.expired';
+    this.data.trialSubscriptionData[0].badge = 'alert';
 
     this.startController();
     this.$httpBackend.flush();
@@ -140,36 +150,23 @@ describe('Controller: MySubscriptionCtrl', function () {
   });
 
   describe('Tests for Named User Licenses : ', function () {
-    let dataWithNamedUserLicense = { offers: [{ licenseModel: 'hosts' }] };
     beforeEach(function () {
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
-      this.startController();
-    });
-
-    it('The isSharedMeetingsLicense() function should return false for a service that does not have shared Licenses ', function () {
-      expect(this.controller.isSharedMeetingsLicense(dataWithNamedUserLicense.offers[0])).toEqual(false);
-    });
-
-    it('The determineLicenseType() function should return licenseType Named User License string', function () {
-      let result = this.controller.determineLicenseType(dataWithNamedUserLicense.offers[0]);
-      expect(result).toEqual('firstTimeWizard.namedLicenses');
     });
   });
 
   describe('Tests for Shared Meeting Licenses : ', function () {
-    let dataWithSharedMeetingsLicense = { offers: [{ licenseModel: 'Cloud Shared Meeting' }] };
-    beforeEach(function () {
+    it('The isSharedMeetingsLicense should return false for a service that does not have shared Licenses ', function () {
       spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
       this.startController();
+      expect(this.controller.isSharedMeetingsLicense).toBeFalsy();
     });
 
-    it('The isSharedMeetingsLicense() function should return true for a service that has shared licenses', function () {
-      expect(this.controller.isSharedMeetingsLicense(dataWithSharedMeetingsLicense.offers[0])).toEqual(true);
-    });
-
-    it('The determineLicenseType() function should return licenseType Shared Meeting License string', function () {
-      let result = this.controller.determineLicenseType(dataWithSharedMeetingsLicense.offers[0]);
-      expect(result).toEqual('firstTimeWizard.sharedLicenses');
+    it('The isSharedMeetingsLicense should return true for a service that has shared licenses', function () {
+      const subscriptionsTrialResponse = _.cloneDeep(this.data.subscriptionsTrialResponse);
+      subscriptionsTrialResponse[0].licenses[0].licenseModel = this.Config.licenseModel.cloudSharedMeeting;
+      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(subscriptionsTrialResponse));
+      this.startController();
+      expect(this.controller.isSharedMeetingsLicense).toBeTruthy();
     });
   });
 
@@ -177,23 +174,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     beforeEach(function () {
       spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
       this.startController();
-    });
-
-    it('launchSharedMeetingsLicenseUsageReport - should open a modal when the shared meeting report is launched', function () {
-      this.controller.launchSharedMeetingsLicenseUsageReport(this.siteUrl);
-      expect(this.SharedMeetingsReportService.openModal).toHaveBeenCalledWith(this.siteUrl);
-    });
-
-    it('hideUsage - should return true only if isCI is defined and false', function () {
-      expect(this.controller.hideUsage({ isCI: false })).toBeTruthy();
-      expect(this.controller.hideUsage({ isCI: true })).toBeFalsy();
-      expect(this.controller.hideUsage({})).toBeFalsy();
-    });
-
-    it('nonCISignIn - should open new page', function () {
-      this.controller.nonCISignIn({ siteUrl: this.siteUrl });
-      expect(this.$window.open).toHaveBeenCalledWith(this.siteUrl, '_blank');
-      expect(this.WebExUtilsFact.getSiteAdminUrl).toHaveBeenCalledWith(this.siteUrl);
     });
 
     it('showCategory - should only display a licenseCategory that has offers', function () {

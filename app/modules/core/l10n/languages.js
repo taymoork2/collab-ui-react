@@ -89,7 +89,6 @@
 
   /* @ngInject */
   function LanguagesProvider($windowProvider) {
-
     this.$get = $get;
     this.getFallbackLanguage = getFallbackLanguage;
     this.getPreferredLanguage = getPreferredLanguage;

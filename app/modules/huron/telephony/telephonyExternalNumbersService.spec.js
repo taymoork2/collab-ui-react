@@ -12,7 +12,7 @@ describe('Service: ExternalNumberPool', function () {
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
+    $provide.value('Authinfo', authInfo);
   }));
 
   beforeEach(
@@ -202,5 +202,4 @@ describe('Service: ExternalNumberPool', function () {
       expect(ExternalNumberPool.queryExternalNumberPools).toBeDefined();
     });
   });
-
 });

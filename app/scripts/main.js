@@ -19,12 +19,13 @@
     'core.localize',
     'core.logmetricsservice',
     'core.meeting-settings',
+    require('modules/core/setupWizard/setup-wizard.service').default,
     require('modules/core/notifications').default,
     require('modules/core/users/userAdd/onboard.module'),
     'core.pageparam',
     'core.previousstate',
     'core.trackingId',
-    'core.itProPack',
+    'core.proPack',
     'core.trial',
     'core.utils',
     'csDonut',
@@ -48,6 +49,7 @@
     'toaster',
     'rzModule',
     'dragularModule',
+    require('modules/bmmp/learn-more-banner').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
     require('modules/core/featureToggle').default,
@@ -65,6 +67,7 @@
     require('modules/core/myCompany/mySubscriptions').default,
     require('modules/core/cards').default,
     require('modules/core/customerReports/sparkReports').default,
+    require('modules/core/customerReports/webexReports').default,
     require('modules/core/partnerReports/commonReportServices').default,
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
@@ -82,6 +85,7 @@
     require('modules/core/domainManagement').default,
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,
     require('modules/core/validation').default,
+    require('modules/core/customerReports').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -145,13 +149,16 @@
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
-    require('modules/hercules/services/service-descriptor'),
+    require('modules/hercules/services/service-descriptor.service').default,
     require('modules/hercules/services/uss-service'),
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
 
-  angular.module('Ediscovery', ['Core']);
+  angular.module('Ediscovery', [
+    'Core',
+    require('modules/ediscovery/bytes_filter'),
+  ]);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 

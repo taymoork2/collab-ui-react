@@ -47,9 +47,9 @@
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
       chartData.allLabels = [{
-        'text': totalMeets,
-        'align': 'center',
-        'y': 63,
+        text: totalMeets,
+        align: 'center',
+        y: 63,
       }];
       var chart = AmCharts.makeChart(vm.numberOfMeetsOnPremisesChartDiv, chartData, 0);
       return chart;
@@ -63,17 +63,17 @@
       total = formatTotal(total);
       var secondHeading = isAllCluster ? vm.overflowHeading : vm.redirectHeading;
       dataProvider = [{
-        'name': vm.onPremiseHeading,
-        'color': '#22D5A3',
-        'value': callsOnPremise,
+        name: vm.onPremiseHeading,
+        color: '#22D5A3',
+        value: callsOnPremise,
       }, {
-        'name': secondHeading,
-        'color': '#1FBBCA',
-        'value': callsOverflow,
+        name: secondHeading,
+        color: '#1FBBCA',
+        value: callsOverflow,
       }, {
-        'name': vm.cloudCallHeading,
-        'color': '#FD713E',
-        'value': cloudCalls,
+        name: vm.cloudCallHeading,
+        color: '#FD713E',
+        value: cloudCalls,
       }];
       data['dataProvider'] = dataProvider;
       data = formatData(data.dataProvider);
@@ -81,9 +81,9 @@
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
       chartData.allLabels = [{
-        'text': total,
-        'align': 'center',
-        'y': 63,
+        text: total,
+        align: 'center',
+        y: 63,
       }];
       var chart = AmCharts.makeChart(vm.totalParticipantsChartDiv, chartData, 0);
       return chart;
@@ -106,9 +106,9 @@
       chartData.labelText = '[[name]]';
       if (isAllZero) {
         chartData.allLabels = [{
-          'text': 0,
-          'align': 'center',
-          'y': 63,
+          text: 0,
+          align: 'center',
+          y: 63,
         }];
       }
       var chart = AmCharts.makeChart(vm.totalParticipantsChartDiv, chartData, 0);
@@ -130,7 +130,10 @@
     function formatClientTypePieData(data) {
       var totalValue = 0;
       var newData = [];
-      var desktopList = [$translate.instant('mediaFusion.metrics.clientType.desktop')];
+      var desktopList = [$translate.instant('mediaFusion.metrics.clientType.desktop'),
+        $translate.instant('mediaFusion.metrics.clientType.mac'),
+        $translate.instant('mediaFusion.metrics.clientType.windowsDesk'),
+      ];
       var desktopPercentage = 0;
       var desktopValue = 0;
       var mobileList = [$translate.instant('mediaFusion.metrics.clientType.android'),
@@ -175,39 +178,38 @@
 
       if (desktopValue > 0) {
         newData.push({
-          'name': $translate.instant('mediaFusion.metrics.clientType.desktop'),
-          'value': desktopValue,
-          'percentage': _.round(desktopPercentage, 2),
-          'color': "#23C1E2",
+          name: $translate.instant('mediaFusion.metrics.clientType.desktop'),
+          value: desktopValue,
+          percentage: _.round(desktopPercentage, 2),
+          color: '#23C1E2',
         });
       }
       if (mobileValue > 0) {
         newData.push({
-          'name': $translate.instant('mediaFusion.metrics.mobile'),
-          'value': mobileValue,
-          'percentage': _.round(mobilePercentage, 2),
-          'color': "#FEB32B",
+          name: $translate.instant('mediaFusion.metrics.mobile'),
+          value: mobileValue,
+          percentage: _.round(mobilePercentage, 2),
+          color: '#FEB32B',
         });
       }
       if (tpValue > 0) {
         newData.push({
-          'name': $translate.instant('mediaFusion.metrics.clientType.tp'),
-          'value': tpValue,
-          'percentage': _.round(tpPercentage, 2),
-          'color': "#D349D5",
+          name: $translate.instant('mediaFusion.metrics.clientType.tp'),
+          value: tpValue,
+          percentage: _.round(tpPercentage, 2),
+          color: '#D349D5',
         });
       }
       if (othersValue > 0) {
         newData.push({
-          'name': vm.othersHeading,
-          'value': othersValue,
-          'percentage': _.round(othersPercentage, 2),
-          'color': "#FD416A",
+          name: vm.othersHeading,
+          value: othersValue,
+          percentage: _.round(othersPercentage, 2),
+          color: '#FD416A',
         });
       }
 
       return newData;
-
     }
 
     function formatTotal(value) {

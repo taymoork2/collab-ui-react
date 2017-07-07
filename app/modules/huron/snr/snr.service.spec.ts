@@ -11,7 +11,7 @@ describe('Service: SnrService', () => {
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
-    let getSnrEmpty = [];
+    const getSnrEmpty = [];
 
     this.getSnrEmpty = getSnrEmpty;
   });

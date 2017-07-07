@@ -34,12 +34,10 @@
           type: vm.radioSelect,
         },
       }, vm.radioSelect);
-
     };
 
     vm.back = function () {
       $stateParams.wizard.back();
     };
-
   }
 })();

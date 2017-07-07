@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AAAddVariableCtrl($scope, $modal, AADynaAnnounceService, AAUiModelService, AACommonService) {
-
     var vm = this;
 
     var CONSTANTS = {};
@@ -33,16 +32,17 @@
 
     function dynamicAdd(id, dynamicElement) {
       if (id && dynamicElement) {
+        angular.element(CONSTANTS.idSelectorPrefix.concat(id)).focus();
         range = AADynaAnnounceService.getRange();
         openDynamicAnnouncements()
           .result
           .then(function (result) {
             vm.variableSelection = result.variable;
             vm.readAsSelection = result.readAs;
-            var elementHtml = dynamicElement.replace("DynamicText", vm.variableSelection.value);
-            elementHtml = elementHtml.replace("ReadAs", vm.readAsSelection.value);
+            var elementHtml = dynamicElement.replace('DynamicText', vm.variableSelection.value);
+            elementHtml = elementHtml.replace('ReadAs', vm.readAsSelection.value);
             var myId = id + Date.now();
-            elementHtml = elementHtml.replace("Id", myId);
+            elementHtml = elementHtml.replace('Id', myId);
             dispatchElementInsertion(id, elementHtml, range);
           }, function () {
             cancelledDynamicModal();
@@ -56,7 +56,7 @@
     function modalClosed() {
       var dynamicList = range.endContainer.ownerDocument.activeElement;
       finalList = [];
-      if (dynamicList.className.includes("dynamic-prompt")) {
+      if (dynamicList.className.includes('dynamic-prompt')) {
         vm.menuEntry.dynamicList = createDynamicList(dynamicList);
         AACommonService.setSayMessageStatus(true);
       }
@@ -81,10 +81,10 @@
           opt = {
             say: {
               value: node.nodeValue,
-              voice: "",
+              voice: '',
             },
             isDynamic: false,
-            htmlModel: "",
+            htmlModel: '',
           };
         } else if (node.nodeName === 'SPAN' || node.nodeName === 'AA-INSERTION-ELEMENT') {
           var attributes;
@@ -93,11 +93,11 @@
           } else {
             attributes = node.attributes;
           }
-          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + '"></aa-insertion-element>';
+          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"></aa-insertion-element>';
           opt = {
             say: {
               value: attributes[0].value,
-              voice: "",
+              voice: '',
               as: attributes[1].value,
             },
             isDynamic: true,
@@ -155,6 +155,5 @@
     }
 
     activate();
-
   }
 })();

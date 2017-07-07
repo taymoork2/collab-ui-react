@@ -22,6 +22,7 @@ export class HybridServicesExtrasService {
   ) {
     this.extractDataAndTranslateAlarms = this.extractDataAndTranslateAlarms.bind(this);
     this.extractDataFromResponse = this.extractDataFromResponse.bind(this);
+    this.notifyReadOnlyLaunch = this.notifyReadOnlyLaunch.bind(this);
   }
 
   public addPreregisteredClusterToAllowList(hostname: string, clusterId: string): ng.IPromise<any> {
@@ -53,6 +54,11 @@ export class HybridServicesExtrasService {
       .then((data) => {
         return _.get(data, 'releaseNotes', '');
       });
+  }
+
+  public notifyReadOnlyLaunch(): ng.IPromise<any> {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/internals/actions/invalidateUser/invoke`;
+    return this.$http.post(url, null);
   }
 
   private convertToTranslateReplacements(alarmReplacementValues: IAlarmReplacementValues[]) {
@@ -95,7 +101,7 @@ export class HybridServicesExtrasService {
   private translateWithFallback(alarmKey: string, fallback: string, translateReplacements: any) {
     const translationKey = `hercules.serviceAlarms.${alarmKey}`;
     const translation = this.$translate.instant(translationKey, translateReplacements);
-    return translation === translationKey ? fallback : translation;
+    return _.includes(translation, translationKey) ? fallback : translation;
   }
 }
 

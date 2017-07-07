@@ -9,10 +9,10 @@
   function aaKeypress(Notification) {
     return function (scope, element) {
       var charsNotAllowed = [{
-        'keyCode': 60,
+        keyCode: 60,
         char: '<',
       }, {
-        'keyCode': 62,
+        keyCode: 62,
         char: '>',
       }];
 
@@ -20,18 +20,15 @@
         var keyCode = event.keyCode;
 
         if (_.indexOf(_.map(charsNotAllowed, 'keyCode'), keyCode) >= 0) {
-
           scope.$apply(Notification.error(
             'autoAttendant.sayMessageInvalidChar', {
               char: _.find(charsNotAllowed, {
-                'keyCode': keyCode,
+                keyCode: keyCode,
               }).char,
             }));
 
           event.preventDefault();
-
         }
-
       });
     };
   }

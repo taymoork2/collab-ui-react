@@ -21,49 +21,49 @@ describe('Controller: AARouteToHGCtrl', function () {
   var huntGroups = [{
     name: 'Olegs Hunt Group',
     numbers: [{
-      'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
-      'number': '987654321',
-      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE',
+      uuid: '15098786-2413-42af-87f4-2ab9b1382885',
+      number: '987654321',
+      type: 'NUMBER_FORMAT_ENTERPRISE_LINE',
     }],
     number: '987654321',
     uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
   }, {
     name: 'Test Hunt Group',
     numbers: [{
-      'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
-      'number': '987654321',
-      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE',
+      uuid: '15098786-2413-42af-87f4-2ab9b1382885',
+      number: '987654321',
+      type: 'NUMBER_FORMAT_ENTERPRISE_LINE',
     }],
     number: '987654321',
     uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
   }, {
     name: 'AA Hunt Group',
     numbers: [{
-      'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
-      'number': '987654321',
-      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE',
+      uuid: '15098786-2413-42af-87f4-2ab9b1382885',
+      number: '987654321',
+      type: 'NUMBER_FORMAT_ENTERPRISE_LINE',
     }],
     number: '987654321',
     uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
   }, {
     name: 'Super Hunt Group',
     numbers: [{
-      'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
-      'number': '987654321',
-      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE',
+      uuid: '15098786-2413-42af-87f4-2ab9b1382885',
+      number: '987654321',
+      type: 'NUMBER_FORMAT_ENTERPRISE_LINE',
     }],
     number: '987654321',
     uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
   }];
 
   var sortedOptions = [{
-    'description': huntGroups[2].name.concat(' (').concat(huntGroups[2].number).concat(')'),
+    description: huntGroups[2].name.concat(' (').concat(huntGroups[2].number).concat(')'),
   }, {
-    'description': huntGroups[0].name.concat(' (').concat(huntGroups[0].number).concat(')'),
+    description: huntGroups[0].name.concat(' (').concat(huntGroups[0].number).concat(')'),
   }, {
-    'description': huntGroups[3].name.concat(' (').concat(huntGroups[3].number).concat(')'),
+    description: huntGroups[3].name.concat(' (').concat(huntGroups[3].number).concat(')'),
   }, {
-    'description': huntGroups[1].name.concat(' (').concat(huntGroups[1].number).concat(')'),
+    description: huntGroups[1].name.concat(' (').concat(huntGroups[1].number).concat(')'),
   }];
 
   var schedule = 'openHours';
@@ -133,22 +133,18 @@ describe('Controller: AARouteToHGCtrl', function () {
 
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
       aaUiModel[schedule].entries[0].actions[0] = action;
-
     });
 
     it('should create a HG conditional action with then clause', function () {
-
       var controller = $controller('AARouteToHGCtrl', {
         $scope: $scope,
       });
 
       expect(controller.menuEntry.actions[0].then).toBeDefined();
       expect(controller.menuEntry.actions[0].then.name).toEqual('routeToHuntGroup');
-
     });
 
     it('should create a HG condition action with then clause', function () {
-
       aaUiModel[schedule].entries[0].actions[0] = undefined;
 
       var controller = $controller('AARouteToHGCtrl', {
@@ -158,11 +154,9 @@ describe('Controller: AARouteToHGCtrl', function () {
       expect(controller.menuEntry.actions[0].name).toEqual('conditional');
       expect(controller.menuEntry.actions[0].then).toBeDefined();
       expect(controller.menuEntry.actions[0].then.name).toEqual('routeToHuntGroup');
-
     });
 
     it('should change an action from routetoQueue to route to HG', function () {
-
       aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
 
       var controller = $controller('AARouteToHGCtrl', {
@@ -172,23 +166,18 @@ describe('Controller: AARouteToHGCtrl', function () {
       expect(controller.menuEntry.actions[0].name).toEqual('conditional');
       expect(controller.menuEntry.actions[0].then).toBeDefined();
       expect(controller.menuEntry.actions[0].then.name).toEqual('routeToHuntGroup');
-
     });
-
   });
 
   describe('fromRouteCall overwrite', function () {
     beforeEach(function () {
-
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
 
       aaUiModel[schedule].entries[0].addAction(action);
-
     });
 
     it('should be able to create new HG entry from Route Call', function () {
-
       $scope.fromRouteCall = true;
 
       var controller = $controller('AARouteToHGCtrl', {
@@ -199,7 +188,6 @@ describe('Controller: AARouteToHGCtrl', function () {
 
       expect(controller.menuEntry.actions[0].name).toEqual('routeToHuntGroup');
       expect(controller.menuEntry.actions[0].value).toEqual('');
-
     });
   });
 
@@ -210,17 +198,15 @@ describe('Controller: AARouteToHGCtrl', function () {
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
       aaUiModel[schedule].entries[0].actions = [];
-
     });
     it('should populate the ui from the menuEntry', function () {
-
       var controller = $controller('AARouteToHGCtrl', {
         $scope: $scope,
       });
 
       controller.hgSelected = {
         name: "Oleg's Call Experience 1",
-        id: "c16a6027-caef-4429-b3af-9d61ddc7964b",
+        id: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
       };
 
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToHuntgroup', 'myId');
@@ -232,11 +218,9 @@ describe('Controller: AARouteToHGCtrl', function () {
       $scope.$apply();
 
       expect(controller.hgSelected.id).toEqual('myId');
-
     });
 
     it('should be able to create new HG entry from Route Call', function () {
-
       var controller = $controller('AARouteToHGCtrl', {
         $scope: $scope,
       });
@@ -245,17 +229,15 @@ describe('Controller: AARouteToHGCtrl', function () {
 
       expect(controller.menuEntry.actions[0].name).toEqual('routeToHuntGroup');
       expect(controller.menuEntry.actions[0].value).toEqual('');
-
     });
 
     it('should be able to change update via saveUIModel', function () {
-
       var controller = $controller('AARouteToHGCtrl', {
         $scope: $scope,
       });
       controller.hgSelected = {
         name: "Oleg's Call Experience 1",
-        id: "c16a6027-caef-4429-b3af-9d61ddc7964b",
+        id: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
       };
 
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToHuntgroup', 'fobar');
@@ -268,13 +250,10 @@ describe('Controller: AARouteToHGCtrl', function () {
 
       expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
     });
-
   });
 
   describe('AARouteToHG', function () {
-
     it('should be able to create new HG entry', function () {
-
       var controller = $controller('AARouteToHGCtrl', {
         $scope: $scope,
       });
@@ -282,11 +261,9 @@ describe('Controller: AARouteToHGCtrl', function () {
       expect(controller).toBeDefined();
       expect(controller.menuKeyEntry.actions[0].name).toEqual('routeToHuntGroup');
       expect(controller.menuKeyEntry.actions[0].value).toEqual('');
-
     });
 
     it('should initialize the options list and check for sorted list', function () {
-
       var controller = $controller('AARouteToHGCtrl', {
         $scope: $scope,
       });
@@ -297,7 +274,6 @@ describe('Controller: AARouteToHGCtrl', function () {
       for (var i = 0; i < sortedOptions.length; i++) {
         expect(controller.huntGroups[i].description).toEqual(sortedOptions[i].description);
       }
-
     });
 
     describe('activate', function () {
@@ -319,7 +295,6 @@ describe('Controller: AARouteToHGCtrl', function () {
 
     describe('fromNewStep_Queue_Fallback', function () {
       it('should be able to create new route entry from Queue Fallback in New Step', function () {
-
         var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
         var fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
         fallback.addAction(disconnect);

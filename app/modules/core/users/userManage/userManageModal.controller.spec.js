@@ -1,7 +1,6 @@
 'use strict';
 
 describe('UserManageModalPickerController', function () {
-
   ///////////////////
 
   function init() {
@@ -40,5 +39,4 @@ describe('UserManageModalPickerController', function () {
     initController.apply(this);
     expect(this.$state.go).toHaveBeenCalledWith('users.manage.activedir');
   });
-
 });

@@ -52,7 +52,6 @@
           } else {
             return $q.reject($translate.instant('directoryNumberPanel.unassignedNumberError'));
           }
-
         })
         .then(function () {
           return assignedLine;
@@ -74,7 +73,7 @@
           }
 
           var directoryNumber = {
-            'pattern': dnPattern,
+            pattern: dnPattern,
           };
           return copyFromUlt(directoryNumber, dnUsage, userUuid);
         });
@@ -95,19 +94,19 @@
 
     function copyFromUlt(directoryNumber, dnUsage, userUuid) {
       var copyFromUltData = {
-        'pattern': directoryNumber.pattern,
-        'hasVoicemail': true,
-        'user': {
-          'uuid': userUuid,
+        pattern: directoryNumber.pattern,
+        hasVoicemail: true,
+        user: {
+          uuid: userUuid,
         },
-        'dnUsage': dnUsage,
+        dnUsage: dnUsage,
       };
 
       return DirectoryNumberCopyService.save({
         customerId: Authinfo.getOrgId(),
         ultId: lineTemplate.uuid,
       }, copyFromUltData, function (data, headers) {
-        data.uuid = headers('location').split("/").pop();
+        data.uuid = headers('location').split('/').pop();
         return data;
       }).$promise;
     }

@@ -3,7 +3,8 @@
      name="webexMetricsIframeLoading"
      align="center">
     <br/>
-    <i class="icon icon-spinner icon-2x"></i>
+    <i ng-hide="nav.isNoData" class="icon icon-spinner icon-2x"></i>
+    <div ng-show="nav.isNoData" translate="reportsPage.noData"></div>
 </div>
 
 <div ng-show="nav.isIframeLoaded"
@@ -13,8 +14,44 @@
             name="webexMetricsIframeContainer"
             onLoad="iframeLoaded('#webexMetricsIframeContainer')"
             i-frame-resizable="iframeContainer"
-            src="https://10.29.42.18/extensions/webex-report/webex-report.html"
             ng-style="{'width': '100%', 'height': iframeHeight }"
             frameborder="0">
     </iframe>
 </div>
+<form id="iframeForm"
+      name="iframeForm"
+      action={{trustIframeUrl}}
+      method="get"
+      target="webexMetricsIframeContainer">
+
+    <input id="appid"
+           name="appid"
+           type="hidden"
+           value={{appId}} />
+
+    <input id="QlikTicket"
+           name="QlikTicket"
+           type="hidden"
+           value={{QlikTicket}} />
+
+    <input id="persistent"
+           name="persistent"
+           type="hidden"
+           value={{persistent}} />
+
+    <input id="vID"
+           name="vID"
+           type="hidden"
+           value={{vID}} />
+
+    <input id="node"
+           name="node"
+           type="hidden"
+           value={{node}} />
+
+    <button id="submitFormBtn"
+            type="submit"
+            hidden
+            onclick="this.parentElement.submit();">
+    </button>
+</form>

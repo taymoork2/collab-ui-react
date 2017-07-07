@@ -23,7 +23,6 @@
     }
 
     describe('Initialization Tests', function () {
-
       it('addUser should see savingEmail as true for valid emailTrialUsers', function () {
         initController();
         var emails = [{
@@ -37,7 +36,7 @@
 
       it('addUser should see savingEmail as false for invalid emailTrialUsers', function () {
         var emails = [{
-          "text": "abc",
+          text: 'abc',
         }];
         ctrl.savingEmail = false;
         ctrl.emailTrialUsers = emails;
@@ -55,9 +54,6 @@
         ctrl.removeUser();
         expect(ctrl.savingEmail).toBe(true);
       });
-
     });
   });
-
-
 })();

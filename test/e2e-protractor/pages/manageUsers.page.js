@@ -90,7 +90,6 @@ var manageUsersPage = function () {
     errorUsers: element(by.css('.error-users .total')),
     uploadComplete: element(by.css('.user-csv-results .upload-complete .progressbar-label span.progressbar-label:first-child')),
   };
-
 };
 
 module.exports = manageUsersPage;

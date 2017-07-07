@@ -19,7 +19,6 @@
       };
 
       var listUsers = function (startIndex, sortBy, sortOrder, type) {
-
         UserListService.listUsers(startIndex, paginator.perPage, sortBy, sortOrder, function (data, status) {
           if (data.success) {
             Log.debug(data.Resources);

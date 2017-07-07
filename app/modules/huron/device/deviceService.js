@@ -36,7 +36,7 @@
         return _.uniq(tags);
       } catch (e) {
         try {
-          tags = JSON.parse("[\"" + description + "\"]");
+          tags = JSON.parse('["' + description + '"]');
           return _.uniq(tags);
         } catch (e) {
           return [];
@@ -109,7 +109,6 @@
               this.deviceStatus.progressStatus = false;
               this.deviceStatus.isValid = false;
             }.bind(device));
-
           }
           return deviceList;
         });
@@ -138,8 +137,7 @@
 
     function setCurrentDevice(device) {
       currentDevice = device;
-      $rootScope.$broadcast("currentDeviceChanged");
+      $rootScope.$broadcast('currentDeviceChanged');
     }
-
   }
 })();

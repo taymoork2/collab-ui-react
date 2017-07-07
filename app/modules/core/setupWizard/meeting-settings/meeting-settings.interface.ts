@@ -1,7 +1,15 @@
 export interface IWebExSite {
-  name: string;
-  timeZone?: string;
-  licenseCount?: number;
+  siteUrl: string;
+  timezone?: string | object;
+  centerType: string;
+  quantity?: number;
+}
+
+export interface IWebexSiteDetail {
+  siteUrl: string;
+  timezone: string;
+  centerType: string;
+  quantity: number;
 }
 
 export interface ISiteNameError {
@@ -16,7 +24,7 @@ export interface IConferenceService {
 }
 
 export interface IConferenceLicense {
-  features: Array<string>;
+  features: string[];
   isTrial: boolean;
   trialId: string;
   licenseId: string;
@@ -31,4 +39,32 @@ export interface IConferenceLicense {
 
 export interface IExistingTrialSites extends IWebExSite {
   keepExistingSite: boolean;
+}
+
+export interface IWebexLicencesPayload {
+  provisionOrder: boolean;
+  serviceOrderUUID: string | null;
+  webexProvisioningParams?: IWebexProvisioningParams;
+}
+
+export interface IWebexProvisioningParams {
+  webexSiteDetailsList: IWebexSiteDetail[];
+  audioPartnerName: string | null;
+}
+
+export interface IWebExProvisioningData {
+  webexLicencesPayload: IWebexLicencesPayload;
+  subscriptionId: string;
+}
+
+export interface IPendingOrderSubscription {
+  duration?: number;
+  externalSubscriptionId?: string;
+  gracePeriod?: number;
+  licenses?: any;
+  orderingTool?: string;
+  pendingServiceOrderUUID?: string | undefined;
+  status?: string;
+  subscriptionId?: string;
+  trialDuration?: number;
 }

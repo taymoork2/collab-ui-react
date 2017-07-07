@@ -8,7 +8,7 @@ describe('Controller: SupportCtrl', function () {
 
   var controller, Authinfo, Userservice, currentUser, Config,
     $scope, $httpBackend, WindowLocation, UrlConfig, Notification;
-  var roles = ["ciscouc.devsupport", "atlas-portal.support"];
+  var roles = ['ciscouc.devsupport', 'atlas-portal.support'];
 
   beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_, _Config_, _WindowLocation_, _UrlConfig_, _$httpBackend_, _Notification_) {
     Userservice = _Userservice_;
@@ -69,7 +69,6 @@ describe('Controller: SupportCtrl', function () {
   });
 
   describe('getCallflowCharts', function () {
-
     var windowUrl, expectedUrl;
 
     beforeEach(function () {
@@ -90,7 +89,6 @@ describe('Controller: SupportCtrl', function () {
     });
 
     it('should change WindowLocation on success', function () {
-
       var result = {
         resultsUrl: 'http://sample.org',
       };
@@ -107,11 +105,9 @@ describe('Controller: SupportCtrl', function () {
 
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
-
     });
 
     it('should notify on error', function () {
-
       $httpBackend.expectGET(expectedUrl).respond(503, 'error');
 
       $scope.getCallflowCharts('aa', 'bb', '-NA-', '-NA-', 'logfilename', true);
@@ -123,9 +119,6 @@ describe('Controller: SupportCtrl', function () {
 
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
-
     });
-
   });
-
 });

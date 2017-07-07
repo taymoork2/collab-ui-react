@@ -49,7 +49,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
     this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId, resourceGroupId, serviceId } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
@@ -105,7 +105,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
 
   private setSelectedResourceGroup(resourceGroupId) {
 
-    let selectedGroup = _.find(this.options, (group: IResourceGroupOptionPair) => {
+    const selectedGroup = _.find(this.options, (group: IResourceGroupOptionPair) => {
       return group.value === resourceGroupId;
     });
 
@@ -123,7 +123,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   public setResourceGroupOnUser(resourceGroupId) {
 
     this.saving = true;
-    let props = {
+    const props = {
       userId: this.userId,
       resourceGroups: {},
     };

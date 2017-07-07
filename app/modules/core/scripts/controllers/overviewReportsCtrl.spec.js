@@ -45,7 +45,7 @@ describe('Controller: Overview Reports', function () {
       spyOn($scope, '$on').and.callThrough();
       spyOn(AmCharts, 'makeChart').and.callFake(function (div, data) {
         return {
-          'dataProvider': data,
+          dataProvider: data,
           validateData: validateService.validate,
         };
       });

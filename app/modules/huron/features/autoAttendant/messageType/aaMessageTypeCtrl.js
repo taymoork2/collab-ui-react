@@ -6,17 +6,16 @@
 
   /* @ngInject */
   function AAMessageTypeCtrl($scope, $translate, AADynaAnnounceService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService/*, $window*/) {
-
     var vm = this;
     var conditional = 'conditional';
 
     var finalList = [];
     var properties = {
-      NAME: ["play", "say", "runActionsOnInput", "dynamic"],
-      REPEAT_NAME: "repeatActionsOnInput",
-      LABEL: "label",
-      VALUE: "value",
-      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT",
+      NAME: ['play', 'say', 'runActionsOnInput', 'dynamic'],
+      REPEAT_NAME: 'repeatActionsOnInput',
+      LABEL: 'label',
+      VALUE: 'value',
+      HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT',
     };
 
     var messageType = {
@@ -47,13 +46,13 @@
     };
 
     vm.messageOptions = [{
-      "label": $translate.instant('autoAttendant.uploadedFile'),
-      "value": "uploadFile",
-      "action": "play",
+      label: $translate.instant('autoAttendant.uploadedFile'),
+      value: 'uploadFile',
+      action: 'play',
     }, {
-      "label": $translate.instant('autoAttendant.actionSayMessage'),
-      "value": "sayMessage",
-      "action": "say",
+      label: $translate.instant('autoAttendant.actionSayMessage'),
+      value: 'sayMessage',
+      action: 'say',
     }];
 
     vm.messageType = messageType.ACTION;
@@ -102,18 +101,25 @@
       if (vm.messageOption.value === vm.messageOptions[actionType.SAY].value) {
         action.description = '';
         if (action.name === vm.messageOptions[actionType.PLAY].action) {
-          if (isDynamicToggle) {
-            action.name = "dynamic";
+          if (isDynamicToggle()) {
+            action.name = 'dynamic';
             vm.dynamicValues = [];
+            vm.menuEntry.dynamicList = [{
+              say: {
+                value: '',
+                voice: '',
+              },
+              isDynamic: false,
+              htmlModel: '',
+            }];
           } else {
             action.name = vm.messageOptions[actionType.SAY].action;
           }
-          AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
         }
       }
 
       if (vm.messageOption.value === vm.messageOptions[actionType.PLAY].value) {
-        if (action.name === vm.messageOptions[actionType.SAY].action || action.name === "dynamic") {
+        if (action.name === vm.messageOptions[actionType.SAY].action || action.name === 'dynamic') {
           action.name = vm.messageOptions[actionType.PLAY].action;
         }
       }
@@ -134,13 +140,18 @@
       var dynamicList = range.endContainer.ownerDocument.activeElement;
       if (dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex}}')) {
         vm.menuEntry.dynamicList = createDynamicList(dynamicList);
-        if (_.isEmpty(vm.menuEntry.dynamicList)) {
-          AACommonService.setSayMessageStatus(false);
-          AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
-        } else {
-          AACommonService.setSayMessageStatus(true);
-          AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
+        if (_.isEmpty(finalList)) {
+          finalList.push({
+            say: {
+              value: '',
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          });
+          vm.menuEntry.dynamicList = finalList;
         }
+        AACommonService.setSayMessageStatus(true);
       }
     }
 
@@ -155,6 +166,7 @@
             say: {
               value: '',
               voice: '',
+              as: '',
             },
             isDynamic: true,
             htmlModel: encodeURIComponent('<br>'),
@@ -175,11 +187,11 @@
           } else {
             attributes = node.attributes;
           }
-          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + '"></aa-insertion-element>';
+          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"></aa-insertion-element>';
           opt = {
             say: {
               value: attributes[0].value,
-              voice: "",
+              voice: '',
               as: attributes[1].value,
             },
             isDynamic: true,
@@ -260,8 +272,8 @@
       var sourceMenu;
       var queueAction;
 
-      holdActionDesc = "";
-      holdActionValue = "";
+      holdActionDesc = '';
+      holdActionValue = '';
 
       switch (vm.messageType) {
         case messageType.MENUHEADER:
@@ -291,11 +303,9 @@
                   vm.actionEntry = keyAction;
                 }
               }
-
             }
 
             break;
-
           }
         case messageType.ACTION:
           {
@@ -341,7 +351,5 @@
     }
 
     activate();
-
   }
-
 })();

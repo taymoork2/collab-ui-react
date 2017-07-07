@@ -29,10 +29,8 @@ describe('Controller: HelpdeskOrgController', function () {
   });
 
   describe('Org controller trials', function () {
-
     beforeEach(function () {
-
-      $stateParams.id = "whatever";
+      $stateParams.id = 'whatever';
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
@@ -65,7 +63,6 @@ describe('Controller: HelpdeskOrgController', function () {
       var orgSettings = undefined;
       expect(orgController.isTrials(orgSettings)).toBeFalsy();
     });
-
   });
 
   describe('Org controller error notification', function () {
@@ -94,7 +91,6 @@ describe('Controller: HelpdeskOrgController', function () {
       expect(Notification.errorResponse).toHaveBeenCalled();
       expect(Notification.errorResponse).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
     });
-
   });
 
   describe('read only access', function () {
@@ -106,21 +102,21 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskHuronService, 'getTenantInfo').and.returnValue(q.resolve({}));
 
       spyOn(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.and.returnValue("ce8d17f8-1734-4a54-8510-fae65acc505e");
+      Authinfo.getOrgId.and.returnValue('ce8d17f8-1734-4a54-8510-fae65acc505e');
 
-      spyOn(HelpdeskService, 'getOrgDisplayName').and.returnValue(q.resolve("Marvel"));
+      spyOn(HelpdeskService, 'getOrgDisplayName').and.returnValue(q.resolve('Marvel'));
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(false));
     });
 
     it('sets cardsAvailable and adminUsersAvailable to true when data has been collected', function () {
       spyOn(HelpdeskService, 'getOrg');
       HelpdeskService.getOrg.and.returnValue(q.resolve({
-        "id": "whatever",
-        "displayName": "Marvel",
-        "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        id: 'whatever',
+        displayName: 'Marvel',
+        managedBy: [{
+          orgId: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
+        orgSettings: ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       }));
 
       orgController = $controller('HelpdeskOrgController', {
@@ -144,12 +140,12 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
-        "id": "whatever",
-        "displayName": "Marvel",
-        "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        id: 'whatever',
+        displayName: 'Marvel',
+        managedBy: [{
+          orgId: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
+        orgSettings: ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
@@ -157,19 +153,19 @@ describe('Controller: HelpdeskOrgController', function () {
 
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
-        "steeringDigit": "7",
-        "siteSteeringDigit": "4",
-        "siteCode": "100",
-        "mediaTraversalMode": "TURNOnly",
-        "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
+        steeringDigit: '7',
+        siteSteeringDigit: '4',
+        siteCode: '100',
+        mediaTraversalMode: 'TURNOnly',
+        uuid: '7b9ad03e-8c78-4ffa-8680-df50664bcce4',
       });
       HelpdeskHuronService.getOrgSiteInfo.and.returnValue(deferredSiteInfoResult.promise);
 
       var deferredTenantInfoResult = q.defer();
       deferredTenantInfoResult.resolve({
-        "name": "SomeTestCustomer",
-        "regionCode": "940",
-        "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
+        name: 'SomeTestCustomer',
+        regionCode: '940',
+        uuid: '7b9ad03e-8c78-4ffa-8680-df50664bcce4',
       });
       HelpdeskHuronService.getTenantInfo.and.returnValue(deferredTenantInfoResult.promise);
 
@@ -184,21 +180,21 @@ describe('Controller: HelpdeskOrgController', function () {
         Authinfo: Authinfo,
       });
       $scope.$apply();
-      expect(orgController.callCard.voiceMailPrefix).toBe("4100");
-      expect(orgController.callCard.outboundDialDigit).toBe("7");
-      expect(orgController.callCard.dialing).toEqual("helpdesk.dialingPlan.local");
+      expect(orgController.callCard.voiceMailPrefix).toBe('4100');
+      expect(orgController.callCard.outboundDialDigit).toBe('7');
+      expect(orgController.callCard.dialing).toEqual('helpdesk.dialingPlan.local');
     });
 
     it('call card elements should be equal to data from Site and Tenant API calls', function () {
       spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
-        "id": "whatever",
-        "displayName": "Marvel",
-        "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        id: 'whatever',
+        displayName: 'Marvel',
+        managedBy: [{
+          orgId: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
+        orgSettings: ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
@@ -206,16 +202,16 @@ describe('Controller: HelpdeskOrgController', function () {
 
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
-        "steeringDigit": "7",
-        "siteSteeringDigit": "4",
-        "siteCode": "100",
+        steeringDigit: '7',
+        siteSteeringDigit: '4',
+        siteCode: '100',
       });
       HelpdeskHuronService.getOrgSiteInfo.and.returnValue(deferredSiteInfoResult.promise);
 
       var deferredTenantInfoResult = q.defer();
       deferredTenantInfoResult.resolve({
-        "name": "SomeTestCustomer",
-        "regionCode": "",
+        name: 'SomeTestCustomer',
+        regionCode: '',
       });
       HelpdeskHuronService.getTenantInfo.and.returnValue(deferredTenantInfoResult.promise);
 
@@ -230,21 +226,21 @@ describe('Controller: HelpdeskOrgController', function () {
         Authinfo: Authinfo,
       });
       $scope.$apply();
-      expect(orgController.callCard.voiceMailPrefix).toBe("4100");
-      expect(orgController.callCard.outboundDialDigit).toBe("7");
-      expect(orgController.callCard.dialing).toEqual("helpdesk.dialingPlan.national");
+      expect(orgController.callCard.voiceMailPrefix).toBe('4100');
+      expect(orgController.callCard.outboundDialDigit).toBe('7');
+      expect(orgController.callCard.dialing).toEqual('helpdesk.dialingPlan.national');
     });
 
     it('extended information feature toggle is default false', function () {
       spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
-        "id": "whatever",
-        "displayName": "Marvel",
-        "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        id: 'whatever',
+        displayName: 'Marvel',
+        managedBy: [{
+          orgId: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
+        orgSettings: ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
@@ -266,12 +262,12 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
-        "id": "whatever",
-        "displayName": "Marvel",
-        "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        id: 'whatever',
+        displayName: 'Marvel',
+        managedBy: [{
+          orgId: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
+        orgSettings: ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
@@ -295,12 +291,12 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
-        "id": "whatever",
-        "displayName": "Marvel",
-        "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        id: 'whatever',
+        displayName: 'Marvel',
+        managedBy: [{
+          orgId: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
+        orgSettings: ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
@@ -321,12 +317,12 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
-        "id": "whatever",
-        "displayName": "Marvel",
-        "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        id: 'whatever',
+        displayName: 'Marvel',
+        managedBy: [{
+          orgId: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": false}'],
+        orgSettings: ['{"isEFT":true, "allowReadOnlyAccess": false}'],
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
@@ -346,12 +342,12 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
-        "id": "whatever",
-        "displayName": "Marvel",
-        "managedBy": [{
-          "orgId": "d5235404-6637-4050-9978-e3d0f4338c36",
+        id: 'whatever',
+        displayName: 'Marvel',
+        managedBy: [{
+          orgId: 'd5235404-6637-4050-9978-e3d0f4338c36',
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
+        orgSettings: ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
@@ -372,12 +368,12 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
-        "id": "whatever",
-        "displayName": "Marvel",
-        "managedBy": [{
-          "orgId": "d5235404-6637-4050-9978-e3d0f4338c36",
+        id: 'whatever',
+        displayName: 'Marvel',
+        managedBy: [{
+          orgId: 'd5235404-6637-4050-9978-e3d0f4338c36',
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": false}'],
+        orgSettings: ['{"isEFT":true, "allowReadOnlyAccess": false}'],
       });
       HelpdeskService.getOrg.and.returnValue(deferredOrgLookupResult.promise);
 
@@ -392,7 +388,6 @@ describe('Controller: HelpdeskOrgController', function () {
       $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeFalsy();
     });
-
   });
 
   describe('service Order System', function () {
@@ -400,20 +395,20 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskService, 'usersWithRole').and.returnValue(q.resolve({}));
       spyOn(LicenseService, 'getLicensesInOrg').and.returnValue(q.resolve({}));
       spyOn(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.and.returnValue("ce8d17f8-1734-4a54-8510-fae65acc505e");
-      spyOn(HelpdeskService, 'getOrgDisplayName').and.returnValue(q.resolve("Marvel"));
+      Authinfo.getOrgId.and.returnValue('ce8d17f8-1734-4a54-8510-fae65acc505e');
+      spyOn(HelpdeskService, 'getOrgDisplayName').and.returnValue(q.resolve('Marvel'));
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.resolve(false));
       spyOn(HelpdeskHuronService, 'getOrgSiteInfo').and.returnValue(q.resolve({}));
       spyOn(HelpdeskHuronService, 'getTenantInfo').and.returnValue(q.resolve({}));
 
       spyOn(HelpdeskService, 'getOrg');
       HelpdeskService.getOrg.and.returnValue(q.resolve({
-        "id": "whatever",
-        "displayName": "Marvel",
-        "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        id: 'whatever',
+        displayName: 'Marvel',
+        managedBy: [{
+          orgId: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
         }],
-        "orgSettings": ['{}'],
+        orgSettings: ['{}'],
       }));
 
       orgController = $controller('HelpdeskOrgController', {
@@ -424,37 +419,36 @@ describe('Controller: HelpdeskOrgController', function () {
         Config: Config,
         $stateParams: $stateParams,
       });
-
     });
 
     it('shows name based on one known orderingTool code', function () {
-      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ "orderingTool": "APP_DIRECT" }, { "orderingTool": "Ibm" }]));
+      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ orderingTool: 'APP_DIRECT' }, { orderingTool: 'Ibm' }]));
       $scope.$apply();
-      orgController.findServiceOrders("12345");
+      orgController.findServiceOrders('12345');
       expect(orgController.orderSystems.length).toBe(2);
-      expect(orgController.orderSystems).toEqual(["Partner Marketplace", "Partner Marketplace"]);
+      expect(orgController.orderSystems).toEqual(['Partner Marketplace', 'Partner Marketplace']);
     });
 
     it('shows names based on two known orderingTool codes', function () {
-      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ "orderingTool": "DIGITAL_RIVER" }, { "orderingTool": "CCW" }, { "orderingTool": "CCW_CSB" }]));
+      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ orderingTool: 'DIGITAL_RIVER' }, { orderingTool: 'CCW' }, { orderingTool: 'CCW_CSB' }]));
       $scope.$apply();
-      orgController.findServiceOrders("12345");
+      orgController.findServiceOrders('12345');
       expect(orgController.orderSystems.length).toBe(3);
-      expect(orgController.orderSystems).toEqual(["Cisco Online Marketplace", "Cisco Commerce", "Cisco Commerce"]);
+      expect(orgController.orderSystems).toEqual(['Cisco Online Marketplace', 'Cisco Commerce', 'Cisco Commerce']);
     });
 
     it('shows actual value from service order if unknown orderingTool code', function () {
-      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ "orderingTool": "ABCD" }]));
+      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ orderingTool: 'ABCD' }]));
       $scope.$apply();
-      orgController.findServiceOrders("12345");
+      orgController.findServiceOrders('12345');
       expect(orgController.orderSystems.length).toBe(1);
-      expect(orgController.orderSystems).toEqual(["ABCD"]);
+      expect(orgController.orderSystems).toEqual(['ABCD']);
     });
 
     it('shows empty if empty orderingTool list', function () {
       spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{}]));
       $scope.$apply();
-      orgController.findServiceOrders("12345");
+      orgController.findServiceOrders('12345');
       expect(orgController.orderSystems).toEqual([undefined]);
     });
   });
@@ -468,7 +462,7 @@ describe('Controller: HelpdeskOrgController', function () {
       spyOn(HelpdeskService, 'getOrg').and.returnValue(q.reject());
       spyOn(FeatureToggleService, 'supports').and.returnValue(q.reject());
 
-      $stateParams.id = "whatever";
+      $stateParams.id = 'whatever';
       orgController = $controller('HelpdeskOrgController', {
         $scope: $scope,
         $stateParams: $stateParams,

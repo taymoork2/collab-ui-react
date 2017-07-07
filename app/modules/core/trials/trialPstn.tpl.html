@@ -19,7 +19,15 @@
           <h4 class="section__title" translate="trialModal.pstn.pstnProvider"></h4>
         </div>
         <div class="section__content">
-          <formly-form model="pstnTrial.pstn.providerSelection" fields="pstnTrial.pstnProviderField"></formly-form>
+          <div class="medium-12">
+            <cs-select
+              ng-model="pstnTrial.trialData.details.pstnProvider"
+              options="pstnTrial.pstnProviderList"
+              name="trialPstnProviderList"
+              onChange="pstnTrial.changePstnProviderImplementation()"
+              labelfield="name">
+            </cs-select>
+          </div>
         </div>
       </div>
     </div>
@@ -58,6 +66,47 @@
         <div class="section__content">
           <formly-form ng-if="!pstnTrial.ftHuronFederatedSparkCall" class="collapse-both" model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
             </formly-form>
+          <input
+            cs-input
+            type="text"
+            id="trial--pstn--companyName"
+            name="trialPstnCompanyName"
+            ng-model="pstnTrial.trialData.details.pstnContractInfo.companyName"
+            cs-input-group-size="medium-12"
+            cs-input-label="{{:: 'trialModal.pstn.company' | translate}}"
+            cs-input-messages="pstnTrial.errorMessages"
+            ng-required="true">
+          <input
+            cs-input
+            type="text"
+            id="trial--pstn--firstName"
+            name="trialPstnFirstName"
+            ng-model="pstnTrial.trialData.details.pstnContractInfo.firstName"
+            cs-input-group-size="medium-12"
+            cs-input-label="{{:: 'trialModal.pstn.firstName' | translate}}"
+            cs-input-messages="pstnTrial.errorMessages"
+            ng-required="true">
+          <input
+            cs-input
+            type="text"
+            id="trial--pstn--lastName"
+            name="trialPstnLastName"
+            ng-model="pstnTrial.trialData.details.pstnContractInfo.lastName"
+            cs-input-group-size="medium-12"
+            cs-input-label="{{:: 'trialModal.pstn.lastName' | translate}}"
+            cs-input-messages="pstnTrial.errorMessages"
+            ng-required="true">
+          <input
+            cs-input
+            type="email"
+            id="trial--pstn--emailAddress"
+            name="trialPstnEmailAddress"
+            ng-model="pstnTrial.trialData.details.pstnContractInfo.emailAddress"
+            cs-input-group-size="medium-12"
+            cs-input-label="{{:: 'trialModal.pstn.email' | translate}}"
+            cs-input-messages="pstnTrial.errorMessages"
+            ng-required="true">
+
           <uc-pstn-contact-info ng-if="pstnTrial.ftHuronFederatedSparkCall" contact="pstnTrial.trialData.details.pstnContractInfo"></uc-pstn-contact-info>
         </div>
       </div>

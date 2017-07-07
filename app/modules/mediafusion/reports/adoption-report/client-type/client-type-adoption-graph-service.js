@@ -4,7 +4,6 @@
   angular.module('Mediafusion').service('ClientTypeAdoptionGraphService', ClientTypeAdoptionGraphService);
   /* @ngInject */
   function ClientTypeAdoptionGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
-
     var vm = this;
     vm.clientTypediv = 'clientTypediv';
     vm.exportDiv = 'client-type-div';
@@ -19,20 +18,22 @@
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
     vm.clients = $translate.instant('mediaFusion.metrics.clients');
     vm.clientTypeTranMap = {
-      'ANDROID': $translate.instant('mediaFusion.metrics.clientType.android'),
-      'BLACKBERRY': $translate.instant('mediaFusion.metrics.clientType.blackberry'),
-      'DESKTOP': $translate.instant('mediaFusion.metrics.clientType.desktop'),
-      'IPAD': $translate.instant('mediaFusion.metrics.clientType.ipad'),
-      'IPHONE': $translate.instant('mediaFusion.metrics.clientType.iphone'),
-      'JABBER': $translate.instant('mediaFusion.metrics.clientType.jabber'),
-      'SIP': $translate.instant('mediaFusion.metrics.clientType.sip'),
-      'SPARK_BOARD': $translate.instant('mediaFusion.metrics.clientType.board'),
-      'TEST': $translate.instant('mediaFusion.metrics.clientType.test'),
-      'TP_ENDPOINT': $translate.instant('mediaFusion.metrics.clientType.tp'),
-      'UC': $translate.instant('mediaFusion.metrics.clientType.uc'),
-      'UNKNOWN': $translate.instant('mediaFusion.metrics.clientType.unknown'),
-      'WINDOWS_MOBILE': $translate.instant('mediaFusion.metrics.clientType.windows'),
-      'Total': $translate.instant('mediaFusion.metrics.clientType.total'),
+      ANDROID: $translate.instant('mediaFusion.metrics.clientType.android'),
+      BLACKBERRY: $translate.instant('mediaFusion.metrics.clientType.blackberry'),
+      DESKTOP: $translate.instant('mediaFusion.metrics.clientType.desktop'),
+      IPAD: $translate.instant('mediaFusion.metrics.clientType.ipad'),
+      IPHONE: $translate.instant('mediaFusion.metrics.clientType.iphone'),
+      JABBER: $translate.instant('mediaFusion.metrics.clientType.jabber'),
+      SIP: $translate.instant('mediaFusion.metrics.clientType.sip'),
+      SPARK_BOARD: $translate.instant('mediaFusion.metrics.clientType.board'),
+      TEST: $translate.instant('mediaFusion.metrics.clientType.test'),
+      TP_ENDPOINT: $translate.instant('mediaFusion.metrics.clientType.tp'),
+      UC: $translate.instant('mediaFusion.metrics.clientType.uc'),
+      UNKNOWN: $translate.instant('mediaFusion.metrics.clientType.unknown'),
+      WINDOWS_MOBILE: $translate.instant('mediaFusion.metrics.clientType.windows'),
+      Total: $translate.instant('mediaFusion.metrics.clientType.total'),
+      MAC: $translate.instant('mediaFusion.metrics.clientType.mac'),
+      WINDOWS: $translate.instant('mediaFusion.metrics.clientType.windowsDesk'),
     };
     vm.allOn = $translate.instant('mediaFusion.metrics.allOn');
     vm.allOff = $translate.instant('mediaFusion.metrics.allOff');
@@ -140,11 +141,13 @@
       }
 
       var columnNames = {
-        'time': vm.timeStamp,
+        time: vm.timeStamp,
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
-        value.title = vm.clientTypeTranMap[value.title];
+        if (!_.isUndefined(vm.clientTypeTranMap[value.name])) {
+          value.name = vm.clientTypeTranMap[value.name];
+        }
         columnNames[value.valueField] = value.title + ' ' + vm.clientType;
       });
       for (var key in columnNames) {
@@ -155,9 +158,9 @@
 
       if (!isDummy) {
         graphs.push({
-          'title': vm.allOff,
-          'id': 'none',
-          'lineColor': 'transparent',
+          title: vm.allOff,
+          id: 'none',
+          lineColor: 'transparent',
         });
       }
 
@@ -170,11 +173,11 @@
       chartData.legend.useGraphSettings = true;
 
       chartData.legend.listeners = [{
-        'event': 'hideItem',
-        "method": legendHandler,
+        event: 'hideItem',
+        method: legendHandler,
       }, {
-        'event': 'showItem',
-        'method': legendHandler,
+        event: 'showItem',
+        method: legendHandler,
       }];
 
       var chart = AmCharts.makeChart(vm.clientTypediv, chartData);
@@ -227,6 +230,5 @@
         });
       }
     }
-
   }
 })();

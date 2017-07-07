@@ -194,14 +194,14 @@ describe('HybridServiceClusterList controller', () => {
 
   describe('grid options', () => {
 
-    let gridApiMock = {
+    const gridApiMock = {
       selection: {
         on: {
           rowSelectionChanged: function() {},
         },
       },
     };
-    let clusterId = '1917';
+    const clusterId = '1917';
 
     beforeEach(function initSpies() {
       spyOn($state, 'go');
@@ -344,10 +344,9 @@ describe('HybridServiceClusterList template', () => {
     }
   });
 
-  it('should build the ui-grid table and pass data to it', function () {
+  it('should display the spinner', function () {
     expect(this.view.find('div.hercules-clusters-list').length).toBe(1);
-    expect(this.view.find('div.ui-grid').length).toBe(1);
-    expect(this.view.find('div.ui-grid').attr('ui-grid')).toBe('$ctrl.clusterListGridOptions');
+    expect(this.view.find('div.loading-list').length).toBe(1);
   });
 
 

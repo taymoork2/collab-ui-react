@@ -1,10 +1,10 @@
 describe('Component: pgSetupAssistant', () => {
 
-  let saveFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
-  let pg = getJSONFixture('huron/json/features/pagingGroup/pg.json');
-  let pgWithEmptyInit = getJSONFixture('huron/json/features/pagingGroup/pgWithEmptyInitiators.json');
-  let pgWithMembersAndInitiators = getJSONFixture('huron/json/features/pagingGroup/pgWithMembersAndInitiators.json');
-  let members = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
+  const saveFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
+  const pg = getJSONFixture('huron/json/features/pagingGroup/pg.json');
+  const pgWithEmptyInit = getJSONFixture('huron/json/features/pagingGroup/pgWithEmptyInitiators.json');
+  const pgWithMembersAndInitiators = getJSONFixture('huron/json/features/pagingGroup/pgWithMembersAndInitiators.json');
+  const members = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
 
   beforeEach(function () {
     this.initModules('huron.paging-group.setup-assistant');
@@ -107,7 +107,7 @@ describe('Component: pgSetupAssistant', () => {
 
     it('index = 1, number defined, isValid undefined should return false', function () {
       this.controller.index = 1;
-      let numberData = {
+      const numberData = {
         extension: pg.extension,
         extensionUUID: pg.extensionUUID,
       };
@@ -118,7 +118,7 @@ describe('Component: pgSetupAssistant', () => {
 
     it('index = 1, number defined, isValid false should return false', function () {
       this.controller.index = 1;
-      let numberData = {
+      const numberData = {
         extension: pg.extension,
         extensionUUID: pg.extensionUUID,
       };
@@ -129,7 +129,7 @@ describe('Component: pgSetupAssistant', () => {
 
     it('index = 1, number defined, isValid true should return true', function () {
       this.controller.index = 1;
-      let numberData = {
+      const numberData = {
         extension: pg.extension,
         extensionUUID: pg.extensionUUID,
       };
@@ -265,7 +265,7 @@ describe('Component: pgSetupAssistant', () => {
     beforeEach(initComponent);
 
     it('should change number and isNumberValid', function () {
-      let number: string =  pg.extension;
+      const number: string =  pg.extension;
       this.controller.onUpdateNumber(number, true);
       expect(this.controller.number).toEqual(number);
       expect(this.controller.isNumberValid).toBeTruthy();
@@ -294,14 +294,14 @@ describe('Component: pgSetupAssistant', () => {
     beforeEach(initComponent);
 
     it('should save with error if partial members saved', function () {
-      let mem1 = _.cloneDeep(members[0]);
-      let memWithPic = {
+      const mem1 = _.cloneDeep(members[0]);
+      const memWithPic = {
         member: mem1,
         picturePath: '',
       };
       this.savePagingGroupDefer.resolve(_.cloneDeep(pg));
       this.controller.name = pg.name;
-      let numberData = {
+      const numberData = {
         extension: pg.extension,
         extensionUUID: pg.extensionUUID,
       };
@@ -316,14 +316,14 @@ describe('Component: pgSetupAssistant', () => {
     });
 
     it('should save with error if partial initiators saved', function () {
-      let mem1 = _.cloneDeep(members[0]);
-      let memWithPic = {
+      const mem1 = _.cloneDeep(members[0]);
+      const memWithPic = {
         member: mem1,
         picturePath: '',
       };
       this.savePagingGroupDefer.resolve(_.cloneDeep(pgWithEmptyInit));
       this.controller.name = pg.name;
-      let numberData = {
+      const numberData = {
         extension: pg.extension,
         extensionUUID: pg.extensionUUID,
       };
@@ -338,19 +338,19 @@ describe('Component: pgSetupAssistant', () => {
     });
 
     it('should save with success', function () {
-      let mem1 = _.cloneDeep(members[0]);
-      let memWithPic1 = {
+      const mem1 = _.cloneDeep(members[0]);
+      const memWithPic1 = {
         member: mem1,
         picturePath: '',
       };
-      let mem2 = _.cloneDeep(members[1]);
-      let memWithPic2 = {
+      const mem2 = _.cloneDeep(members[1]);
+      const memWithPic2 = {
         member: mem2,
         picturePath: '',
       };
       this.savePagingGroupDefer.resolve(_.cloneDeep(pgWithMembersAndInitiators));
       this.controller.name = pgWithMembersAndInitiators.name;
-      let numberData = {
+      const numberData = {
         extension: '3223',
         extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f432',
       };
@@ -369,7 +369,7 @@ describe('Component: pgSetupAssistant', () => {
     it('should save with failure', function () {
       this.savePagingGroupDefer.reject(saveFailureResp);
       this.controller.name = pg.name;
-      let numberData = {
+      const numberData = {
         extension: pg.extension,
         extensionUUID: pg.extensionUUID,
       };
@@ -383,7 +383,7 @@ describe('Component: pgSetupAssistant', () => {
     it('should save with failure no error', function () {
       this.savePagingGroupDefer.reject();
       this.controller.name = pg.name;
-      let numberData = {
+      const numberData = {
         extension: pg.extension,
         extensionUUID: pg.extensionUUID,
       };

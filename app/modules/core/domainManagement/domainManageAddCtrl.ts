@@ -18,7 +18,7 @@ export class DomainManageAddCtrl {
       return;
     }
     this._adding = true;
-    let startAdd = moment();
+    const startAdd = moment();
     this.DomainManagementService.addDomain(this.domainToAdd).then(
       () => {
         this.recordMetrics({
@@ -88,8 +88,8 @@ export class DomainManageAddCtrl {
   }
 
   get intDomain() {
-    let encodedDomain = this.encodedDomain;
-    let domain = (this.domain || '').toLowerCase();
+    const encodedDomain = this.encodedDomain;
+    const domain = (this.domain || '').toLowerCase();
     return {
       show: encodedDomain !== domain,
       text: this.$translate.instant('domainManagement.add.encodedIDN', { domain: encodedDomain }),
@@ -119,7 +119,7 @@ export class DomainManageAddCtrl {
 
   //gui valid
   public validate(): any {
-    let domain = this.domainToAdd;
+    const domain = this.domainToAdd;
 
     if (domain.length < 3) {
       return { valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomain' };
@@ -137,7 +137,7 @@ export class DomainManageAddCtrl {
   }
 
   get isValid() {
-    let validation = this.validate();
+    const validation = this.validate();
     return validation && validation.valid;
   }
 

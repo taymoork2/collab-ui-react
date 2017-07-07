@@ -7,7 +7,7 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtilsService, ServiceDescriptor, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
+  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtilsService, ServiceDescriptorService, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -24,6 +24,18 @@
       return vm.user;
     };
 
+    // The old behavior when updating entitlements from a child sidepanel like Call Aware or Calendar was to update $scope.currentUser.entitlements
+    // which would trigger a refresh in this view automatically. It's not longer working following the rewrite to TS / components, so this view has
+    // stale data. Forcing the 2-way binding to happen fake a new init of the controller fixes the issue. Waiting a proper rewrite…
+    $scope.$watch(function () {
+      return vm.getUser();
+    }, function (user) {
+      // init-like controller
+      vm.getUser().entitlements = user.entitlements;
+      vm.extensions = getExtensions();
+      checkEntitlements(enforceLicenseCheck);
+    }, true);
+
     var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'spark-hybrid-impinterop'];
     var extensionCallEntitlements = ['squared-fusion-uc', 'squared-fusion-ec'];
     var stopDelayedUpdates = false;
@@ -36,10 +48,6 @@
     vm.isUser = !vm.isPlace;
     vm.isInvitePending = vm.getUser() && vm.isUser ? Userservice.isInvitePending(vm.getUser()) : false;
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
-      .then(function (supported) {
-        vm.atlasHerculesGoogleCalendarFeatureToggle = supported;
-      });
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp)
       .then(function (supported) {
         vm.atlasHybridImpFeatureToggle = supported;
@@ -113,10 +121,10 @@
         return;
       }
       // Filter out extensions that are not enabled in FMS
-      ServiceDescriptor.getServices().then(function (services) {
+      ServiceDescriptorService.getServices().then(function (services) {
         if (services) {
           _.forEach(vm.extensions, function (extension) {
-            extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
+            extension.enabled = ServiceDescriptorService.filterEnabledServices(services).some(function (service) {
               return extension.id === service.id && extension.id !== 'squared-fusion-gcal';
             });
             extension.isSetup = extension.enabled;
@@ -131,7 +139,7 @@
           });
           var calServiceExchange = getExtension('squared-fusion-cal') || {};
           var calServiceGoogle = getExtension('squared-fusion-gcal');
-          if (calServiceGoogle && vm.atlasHerculesGoogleCalendarFeatureToggle) {
+          if (calServiceGoogle) {
             CloudConnectorService.getService()
               .then(function (service) {
                 var isSetup = service.setup;

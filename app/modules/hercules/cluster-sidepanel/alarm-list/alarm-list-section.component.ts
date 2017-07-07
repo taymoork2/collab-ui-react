@@ -18,7 +18,7 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
   ) {}
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { alarms } = changes;
     if (alarms && alarms.currentValue) {
       this.alarms = this.sortAlarmsBySeverity(alarms.currentValue);

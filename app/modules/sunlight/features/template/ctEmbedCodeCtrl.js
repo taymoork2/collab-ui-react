@@ -32,14 +32,14 @@
     function downloadEmbedCode($event) {
       var anchorElement = $window.document.getElementById('downloadChatCodeTxt');
       var blob = new $window.Blob([vm.embedCodeSnippet], {
-        type: "text/plain;charset=utf-8;",
+        type: 'text/plain;charset=utf-8;',
       });
       if ($window.navigator.msSaveOrOpenBlob) {
-        $window.navigator.msSaveBlob(blob, "Chat_Code_Snippet");
+        $window.navigator.msSaveBlob(blob, 'Chat_Code_Snippet');
         $event.preventDefault();
       } else {
         anchorElement.setAttribute('href', $window.URL.createObjectURL(blob));
-        anchorElement.setAttribute('download', "Chat_Code_Snippet");
+        anchorElement.setAttribute('download', 'Chat_Code_Snippet');
       }
     }
   }

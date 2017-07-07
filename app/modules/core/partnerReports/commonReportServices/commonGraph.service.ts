@@ -133,7 +133,7 @@ export class CommonGraphService {
     }
   }
 
-  public getBaseSerialGraph(data: Array<any>, startDuration: number, valueAxes: Array<any>, graphs: Array<any>, categoryField: string, catAxis: any): any {
+  public getBaseSerialGraph(data: any[], startDuration: number, valueAxes: any[], graphs: any[], categoryField: string, catAxis: any): any {
     return _.cloneDeep({
       type: 'serial',
       startEffect: 'easeOutSine',
@@ -153,7 +153,7 @@ export class CommonGraphService {
     });
   }
 
-  public getBasePieChart(data: Array<any>, balloonText: string, innerRadius: string, radius: string, labelText: string, labelsEnabled: boolean, titleField: string, valueField: string, colorField: string, labelColorField: string): any {
+  public getBasePieChart(data: any[], balloonText: string, innerRadius: string, radius: string, labelText: string, labelsEnabled: boolean, titleField: string, valueField: string, colorField: string, labelColorField: string): any {
     return _.cloneDeep({
       type: 'pie',
       balloon: this.getBaseVariable('balloon'),

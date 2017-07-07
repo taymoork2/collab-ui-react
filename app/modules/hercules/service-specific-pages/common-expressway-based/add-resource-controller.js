@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, $modal, $state, ResourceGroupService) {
+  function AddResourceController($modal, $modalInstance, $q, $state, $translate, $window, connectorType, FeatureToggleService, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, ProPackService, Notification, ResourceGroupService, serviceId) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -39,16 +39,28 @@
     vm.localizedCannotProvionError = $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
       ConnectorName: vm.localizedConnectorName,
     });
-    vm.localizedServiceIsReady = $translate.instant('hercules.addResourceDialog.serviceIsReady', {
-      ServiceName: vm.localizedServiceName,
-    });
     vm.optionalSelectResourceGroupStep = false;
     vm.chooseClusterName = false;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
     };
     vm.clustername = '';
-    vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptext');
+
+    vm.nameChangeEnabled = false;
+    $q.all({
+      nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+      proPackEnabled: ProPackService.hasProPackPurchased(),
+    }).then(function (toggles) {
+      vm.nameChangeEnabled = toggles.nameChangeEnabled;
+      if (vm.nameChangeEnabled) {
+        vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptextNew', {
+          appTitle: toggles.proPackEnabled ? $translate.instant('loginPage.titlePro') : $translate.instant('loginPage.titleNew'),
+        });
+      } else {
+        vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptext');
+      }
+    });
+
     vm.localizedClusternameWatermark = $translate.instant('hercules.addResourceDialog.clusternameWatermark');
 
     vm.selectedCluster = '';
@@ -90,7 +102,7 @@
 
     function warning() {
       if (_.some(vm.connectors, function (connector) {
-        vm.warningMessage = $translate.instant('hercules.addResourceDialog.hostnameRegistered');
+        vm.warningMessage = vm.nameChangeEnabled ? $translate.instant('hercules.addResourceDialog.hostnameRegisteredNew') : $translate.instant('hercules.addResourceDialog.hostnameRegistered');
         return connector.toLowerCase() === vm.hostname.toLowerCase();
       })
         ) {
@@ -162,7 +174,6 @@
             provisionedConnectors: _.map(cluster.provisioning, 'connectorType'),
             connectorsHostname: cluster.connectors,
           });
-
         }
       });
       return allExpressways;
@@ -296,7 +307,7 @@
 
     vm.completeAddResourceModal = function () {
       $modalInstance.close();
-      $window.open("https://" + encodeURIComponent(vm.hostname) + "/fusionregistration");
+      $window.open('https://' + encodeURIComponent(vm.hostname) + '/fusionregistration');
     };
 
     vm.back = function () {
@@ -331,6 +342,5 @@
         vm.gettingResourceGroupInput = false;
       }
     };
-
   }
 }());

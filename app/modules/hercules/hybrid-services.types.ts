@@ -22,6 +22,7 @@ export interface IFMSOrganization {
   id: string;
   resourceGroups: IResourceGroup[];
   url: string;
+  servicesUrl: string;
 }
 
 export interface IResourceGroup {
@@ -129,9 +130,9 @@ export interface IConnector {
 }
 
 export interface IConnectorStatus {
-  clusterSerials?: any[];
+  clusterSerials?: string[];
   initialized?: boolean;
-  maintenanceMode?: ConnectorMaintenanceMode;
+  maintenanceMode: ConnectorMaintenanceMode;
   operational: boolean;
   userCapacity?: number;
   services: {
@@ -184,8 +185,8 @@ export interface IConnectorAlarm {
   description: string;
   solution: string;
   solutionReplacementValues: {
-    text: string,
-    link: string,
+    text: string;
+    link: string;
   }[];
 }
 

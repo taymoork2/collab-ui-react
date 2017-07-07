@@ -1,7 +1,7 @@
 
 export interface IDirSyncService {
   isDirSyncEnabled(): boolean;
-  getConnectors(): Array<IDirectoryConnector>;
+  getConnectors(): IDirectoryConnector[];
   requiresRefresh(): boolean;
 
   refreshStatus(): ng.IPromise<void>;
@@ -20,12 +20,12 @@ export interface IDirSyncInfo {
   incrSyncInterval?: number;
   serviceMode: string;
   fullSyncEnabled?: boolean;
-  attrMappings?: Array<Object>;
-  domains?: Array<Object>;
+  attrMappings?: Object[];
+  domains?: Object[];
 }
 
 interface IDirectoryConnectors extends ng.resource.IResource<IDirectoryConnectors> {
-  connectors: Array<IDirectoryConnector>;
+  connectors: IDirectoryConnector[];
 }
 
 interface IDirectoryConnectorsResource extends ng.resource.IResourceClass<IDirectoryConnectors> {
@@ -45,6 +45,7 @@ interface IDirSyncModeResource extends ng.resource.IResourceClass<ng.resource.IR
 export class DirSyncService implements IDirSyncService {
   private readonly MODE_ENABLED = 'ENABLED';
   private readonly DIRSYNCATTRIBUTES_USER = 'dirsyncAttributes.user';
+  private static readonly BAD_REQUEST = 400;
 
   private connectorsResource: IDirectoryConnectorsResource;
   private dirConnectors: IDirectoryConnectors;
@@ -85,7 +86,7 @@ export class DirSyncService implements IDirSyncService {
   /**
    * Promise resolve with list of IDirectoryConnectors available
    */
-  public getConnectors(): Array<IDirectoryConnector> {
+  public getConnectors(): IDirectoryConnector[] {
     return _.get(this.dirConnectors, 'connectors', []);
   }
 
@@ -104,47 +105,50 @@ export class DirSyncService implements IDirSyncService {
       // get status from the Management API
       dsPromise = this.managementApiResource.get({ customerId: this.Authinfo.getOrgId() }).$promise
         .then((orgInfo: IDirSyncInfo) => {
-          this.dirSyncEnabled = (_.isEqual(_.get(orgInfo, 'serviceMode', false), this.MODE_ENABLED));
+          this.dirSyncEnabled = _.isEqual(_.get(orgInfo, 'serviceMode', false), this.MODE_ENABLED);
         });
     } else {
       // get status from the CI org api
-      dsPromise = this.$q<void>( (resolve, reject) => {
-        this.Orgservice.getOrg( (data: IDirSyncInfo, status: Number) => {
-          if ( status === 200 ) {
-            this.dirSyncEnabled = _.get(data, 'dirsyncEnabled', false);
-            resolve();
-          } else {
-            reject();
-          }
-        }, null, { basicInfo: true });
-      });
+      dsPromise = this.Orgservice.getOrg(_.noop, null, { basicInfo: true })
+        .then((response) => {
+          this.dirSyncEnabled = _.get(response, 'data.dirsyncEnabled', false);
+        });
     }
 
     return dsPromise
+      .catch((response) => {
+        if (_.get(response, 'status') !== DirSyncService.BAD_REQUEST) {
+          return this.$q.reject(response);
+        }
+        this.dirSyncEnabled = false;
+      })
       .then(() => {
+        if (this.dirSyncEnabled) {
         // fetch Directory Connector list
-        return this.connectorsResource.get({ customerId: this.Authinfo.getOrgId() }).$promise
-          .then((connectors) => {
-            this.dirConnectors = connectors;
-          });
+          return this.connectorsResource.get({ customerId: this.Authinfo.getOrgId() }).$promise
+            .then((connectors) => {
+              this.dirConnectors = connectors;
+            });
+        }
       })
       .then(() => { this.requireRefresh = false; })
-      .catch(_.noop) // squelch errors
-      .finally(() => this.$q.resolve());
+      .catch(_.noop); // squelch errors
   }
 
   /**
    * Disable Directory Syncronization
    */
   public disableSync(): ng.IPromise<any> {
-    return this.dirSyncModeResource.disable({ customerId: this.Authinfo.getOrgId() }).$promise;
+    return this.dirSyncModeResource.disable({ customerId: this.Authinfo.getOrgId() }).$promise
+      .finally(() => this.requireRefresh = true);
   }
 
   /**
    * Deregister a Directory Connector
    */
   public deregisterConnector(connector: IDirectoryConnector): ng.IPromise<any> {
-    return this.connectorsResource.delete({ customerId: this.Authinfo.getOrgId(), name: connector.name }).$promise;
+    return this.connectorsResource.delete({ customerId: this.Authinfo.getOrgId(), name: connector.name }).$promise
+      .finally(() => this.requireRefresh = true);
   }
 
   public isUserAttributeSynced(orgInfo: any, attribute: string): boolean {
@@ -152,7 +156,7 @@ export class DirSyncService implements IDirSyncService {
     let ciDirsyncEnabled = false;
     if (!_.isEmpty(orgInfo)) {
       ciDirsyncEnabled = <boolean> _.get(orgInfo, 'dirsyncEnabled');
-      let userAttributes: any = _.get(orgInfo, this.DIRSYNCATTRIBUTES_USER);
+      const userAttributes: any = _.get(orgInfo, this.DIRSYNCATTRIBUTES_USER);
       if (!_.isEmpty(userAttributes)) {
         attributeFound = _.includes(userAttributes, attribute);
       }

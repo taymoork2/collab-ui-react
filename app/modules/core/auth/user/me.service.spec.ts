@@ -2,11 +2,11 @@ import testModule from './index';
 
 describe('Me Service', () => {
 
-  let meData = {
+  const meData = {
     userName: 'testuser@example.com',
   };
 
-  let meResponse = { data: meData, status: 200, statusText: 'OK' };
+  const meResponse = { data: meData, status: 200, statusText: 'OK' };
 
   beforeEach(function () {
     this.initModules(testModule);

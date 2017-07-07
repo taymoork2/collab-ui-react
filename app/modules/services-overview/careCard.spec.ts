@@ -12,7 +12,7 @@ describe('ServicesOverviewCareCard', () => {
   });
 
   it('should get button list', () => {
-    let buttons = careCard.getButtons();
+    const buttons = careCard.getButtons();
     expect(buttons.length).toEqual(2);
     expect(buttons[0].name).toMatch('features');
     expect(buttons[1].name).toMatch('settings');

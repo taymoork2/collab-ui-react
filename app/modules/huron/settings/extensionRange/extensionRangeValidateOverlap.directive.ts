@@ -16,10 +16,10 @@ export class ExtensionRangeOverlapValidator implements ng.IDirective {
       }
 
       let result = true;
-      let beginNumber = _.toSafeInteger(_.get(scope, 'range.beginNumber'));
-      let endNumber = _.toSafeInteger(modelValue);
+      const beginNumber = _.toSafeInteger(_.get(scope, 'range.beginNumber'));
+      const endNumber = _.toSafeInteger(modelValue);
 
-      let numberRanges = _.get<Array<IExtensionRange>>(scope.$parent, '$ctrl.numberRanges');
+      const numberRanges = _.get<IExtensionRange[]>(scope.$parent, '$ctrl.numberRanges');
 
       _.forEach(numberRanges, range => {
         if (Math.max(beginNumber, _.toSafeInteger(range.beginNumber)) <= Math.min(endNumber, _.toSafeInteger(range.endNumber))) {

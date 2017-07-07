@@ -12,18 +12,16 @@
     WebExUtilsFact,
     Log
   ) {
-
     var _this = this;
 
     this.getWebExCsv = function (
       fileDownloadUrl
     ) {
+      var funcName = 'WebExCsvDownloadService.getWebExCsv()';
+      var logMsg = '';
 
-      var funcName = "WebExCsvDownloadService.getWebExCsv()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "fileDownloadUrl=" + fileDownloadUrl;
+      logMsg = funcName + '\n' +
+        'fileDownloadUrl=' + fileDownloadUrl;
       Log.debug(logMsg);
 
       var webexCsvResource = $resource(fileDownloadUrl, {}, {
@@ -48,25 +46,24 @@
       data,
       fileName
     ) {
+      var funcName = 'webexCreateObjectUrl()';
+      var logMsg = '';
 
-      var funcName = "webexCreateObjectUrl()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "data.length=" + data.length + "\n" +
-        "fileName=" + fileName;
+      logMsg = funcName + '\n' +
+        'data.length=' + data.length + '\n' +
+        'fileName=' + fileName;
       Log.debug(logMsg);
 
-      logMsg = funcName + "\n" +
-        "data=" + JSON.stringify(data);
+      logMsg = funcName + '\n' +
+        'data=' + JSON.stringify(data);
       Log.debug(logMsg);
 
       var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
       var newData = new Uint8Array(intBytes);
       var blob = _this.getNewBlob(newData);
 
-      logMsg = funcName + "\n" +
-        "intBytes=" + intBytes;
+      logMsg = funcName + '\n' +
+        'intBytes=' + intBytes;
       Log.debug(logMsg);
 
       // IE download option since IE won't download the created url
@@ -91,13 +88,13 @@
     }; // getNewBlob()
 
     this.isWindowsIE = function () {
-      var funcName = "isWindowsIE()";
-      var logMsg = "";
+      var funcName = 'isWindowsIE()';
+      var logMsg = '';
 
       var result = !!$window.navigator.msSaveOrOpenBlob;
 
-      logMsg = funcName + "\n" +
-        "result=" + result;
+      logMsg = funcName + '\n' +
+        'result=' + result;
       Log.debug(logMsg);
 
       return result;
@@ -107,7 +104,6 @@
       blob,
       fileName
     ) {
-
       $window.navigator.msSaveOrOpenBlob(
         blob,
         fileName

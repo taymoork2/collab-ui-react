@@ -31,6 +31,5 @@ var EnterpriseResourcePage = function () {
   this.clearFilterValues = function () {
     element(by.model('filterText')).clear();
   };
-
 };
 module.exports = EnterpriseResourcePage;

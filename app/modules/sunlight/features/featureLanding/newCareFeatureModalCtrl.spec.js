@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: NewCareFeatureModalCtrl', function () {
-
   beforeEach(angular.mock.module('Sunlight'));
 
   var $scope, Authinfo, $q;
@@ -29,18 +28,18 @@ describe('Controller: NewCareFeatureModalCtrl', function () {
     Authinfo = undefined;
   });
 
-  it("ok function call results in closing the care new feature Modal with the value chosen.", function () {
-    var code = "Ch";
+  it('ok function call results in closing the care new feature Modal with the value chosen.', function () {
+    var code = 'Ch';
     $scope.ok(code);
     expect(modalFake.close).toHaveBeenCalledWith(code);
   });
 
-  it("cancel function call results in dismissing the care new feature Modal.", function () {
+  it('cancel function call results in dismissing the care new feature Modal.', function () {
     $scope.cancel();
-    expect(modalFake.dismiss).toHaveBeenCalledWith("cancel");
+    expect(modalFake.dismiss).toHaveBeenCalledWith('cancel');
   });
 
-  it("feature list to have care - chat, callback and chatPlusCallback", function () {
+  it('feature list to have care - chat, callback and chatPlusCallback', function () {
     expect($scope.features.length).toEqual(3);
   });
 });

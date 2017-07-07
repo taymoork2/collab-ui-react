@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function HelpdeskHuronService(HelpdeskService, $http, $q, HelpdeskMockData, UserServiceCommonV2, HuronConfig, UserEndpointService, SipEndpointService) {
-
     function getDevices(userId, orgId) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(massageDevices(HelpdeskMockData.huronDevicesForUser));
@@ -55,21 +54,21 @@
       }
       if (!ownerUserId) {
         return $http
-          .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + "/directorynumbers")
+          .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + '/directorynumbers')
           .then(extractData);
       }
       return $http
-        .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + "/directorynumbers")
+        .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + '/directorynumbers')
         .then(function (res) {
           var deviceNumbers = res.data;
-          $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/users/' + ownerUserId + "/directorynumbers")
+          $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/users/' + ownerUserId + '/directorynumbers')
             .then(function (res) {
               _.each(res.data, function (directoryNumber) {
                 var matchingDeviceNumber = _.find(deviceNumbers, function (deviceNumber) {
                   return deviceNumber.directoryNumber.uuid === directoryNumber.directoryNumber.uuid;
                 });
                 if (matchingDeviceNumber && directoryNumber.dnUsage) {
-                  matchingDeviceNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : '';
+                  matchingDeviceNumber.dnUsage = directoryNumber.dnUsage === 'Primary' ? 'primary' : '';
                   matchingDeviceNumber.sortOrder = getNumberSortOrder(matchingDeviceNumber.dnUsage);
                   getUsersUsingNumber(orgId, matchingDeviceNumber.directoryNumber.uuid).then(function (userNumberAssociations) {
                     if (userNumberAssociations.length > 1) {
@@ -107,14 +106,14 @@
         userId: userId,
       }).$promise.then(function (res) {
         var userNumbers = extractNumbers(res);
-        $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/users/' + userId + "/directorynumbers")
+        $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/users/' + userId + '/directorynumbers')
           .then(function (res) {
             _.each(res.data, function (directoryNumber) {
               var matchingUserNumber = _.find(userNumbers, function (userNumber) {
                 return userNumber.uuid === directoryNumber.directoryNumber.uuid;
               });
               if (matchingUserNumber && directoryNumber.dnUsage) {
-                matchingUserNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : '';
+                matchingUserNumber.dnUsage = directoryNumber.dnUsage === 'Primary' ? 'primary' : '';
                 matchingUserNumber.sortOrder = getNumberSortOrder(matchingUserNumber.dnUsage);
                 getUsersUsingNumber(orgId, matchingUserNumber.uuid).then(function (userNumberAssociations) {
                   if (userNumberAssociations.length > 1) {
@@ -306,10 +305,10 @@
       }
       device.deviceStatus.statusKey = 'common.' + angular.lowercase(device.deviceStatus.status);
       switch (device.deviceStatus.status) {
-        case "Online":
+        case 'Online':
           device.deviceStatus.cssColorClass = 'helpdesk-green';
           break;
-        case "Unknown":
+        case 'Unknown':
           device.deviceStatus.cssColorClass = 'helpdesk-grey';
           break;
         default:

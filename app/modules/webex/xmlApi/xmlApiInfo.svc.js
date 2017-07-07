@@ -3,10 +3,10 @@
 
   function WebExXmlApiInfoSvc() {
     return {
-      xmlApiUrl: "",
-      webexAdminID: "",
-      webexSessionTicket: "",
-      webexUserId: "",
+      xmlApiUrl: '',
+      webexAdminID: '',
+      webexSessionTicket: '',
+      webexUserId: '',
     }; // return
   } // WebExXmlApiInfo()
 

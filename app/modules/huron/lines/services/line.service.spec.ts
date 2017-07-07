@@ -11,7 +11,7 @@ describe('Service: LineService', () => {
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
-    let getLineResponse: Line = {
+    const getLineResponse: Line = {
       uuid: '0000000',
       primary: true,
       shared: false,
@@ -21,13 +21,13 @@ describe('Service: LineService', () => {
       incomingCallMaximum: 2,
     };
 
-    let createLinePayload: any = {
+    const createLinePayload: any = {
       internal: '12345',
       external: '+99999',
       incomingCallMaximum: 2,
     };
 
-    let updateLinePayload: any = {
+    const updateLinePayload: any = {
       internal: '54321',
       external: '+98765',
       incomingCallMaximum: 8,

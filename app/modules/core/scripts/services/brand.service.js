@@ -15,16 +15,15 @@
 
   /* @ngInject */
   function BrandService($http, $q, Log, Notification, Orgservice, Upload, UrlConfig) {
-
     var service = {
-      'getSettings': getSettings,
-      'getLogoUrl': getLogoUrl,
-      'usePartnerLogo': usePartnerLogo,
-      'useCustomLogo': useCustomLogo,
-      'enableCustomerLogos': enableCustomerLogos,
-      'disableCustomerLogos': disableCustomerLogos,
-      'resetCdnLogo': resetCdnLogo,
-      'upload': upload,
+      getSettings: getSettings,
+      getLogoUrl: getLogoUrl,
+      usePartnerLogo: usePartnerLogo,
+      useCustomLogo: useCustomLogo,
+      enableCustomerLogos: enableCustomerLogos,
+      disableCustomerLogos: disableCustomerLogos,
+      resetCdnLogo: resetCdnLogo,
+      upload: upload,
     };
     return service;
 
@@ -41,9 +40,9 @@
             var settings = data.orgSettings;
             if (!_.isEmpty(settings)) {
               resolve({
-                'usePartnerLogo': settings.usePartnerLogo,
-                'allowCustomerLogos': settings.allowCustomerLogos,
-                'logoUrl': settings.logoUrl,
+                usePartnerLogo: settings.usePartnerLogo,
+                allowCustomerLogos: settings.allowCustomerLogos,
+                logoUrl: settings.logoUrl,
               });
             } else {
               reject();
@@ -66,7 +65,7 @@
 
     function usePartnerLogo(orgId) {
       var settings = {
-        'usePartnerLogo': true,
+        usePartnerLogo: true,
       };
 
       return setOrgSetting(orgId, settings);
@@ -74,7 +73,7 @@
 
     function useCustomLogo(orgId) {
       var settings = {
-        'usePartnerLogo': false,
+        usePartnerLogo: false,
       };
 
       return setOrgSetting(orgId, settings);
@@ -82,7 +81,7 @@
 
     function enableCustomerLogos(orgId) {
       var settings = {
-        'allowCustomerLogos': true,
+        allowCustomerLogos: true,
       };
 
       return setOrgSetting(orgId, settings);
@@ -90,7 +89,7 @@
 
     function disableCustomerLogos(orgId) {
       var settings = {
-        'allowCustomerLogos': false,
+        allowCustomerLogos: false,
       };
 
       return setOrgSetting(orgId, settings);

@@ -11,7 +11,6 @@
 
   function AANumberAssignmentService($q, AssignAutoAttendantService, TelephonyInfoService,
     ExternalNumberPool, PhoneNumberService) {
-
     var service = {
       setAANumberAssignment: setAANumberAssignment,
       getAANumberAssignments: getAANumberAssignments,
@@ -20,11 +19,11 @@
       checkAANumberAssignments: checkAANumberAssignments,
       formatAAE164ResourcesBasedOnCMI: formatAAE164ResourcesBasedOnCMI,
       formatAAExtensionResourcesBasedOnCMI: formatAAExtensionResourcesBasedOnCMI,
-      NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
-      NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION",
-      NUMBER_FORMAT_ENTERPRISE_LINE: "NUMBER_FORMAT_ENTERPRISE_LINE",
-      DIRECTORY_NUMBER: "directoryNumber",
-      EXTERNAL_NUMBER: "externalNumber",
+      NUMBER_FORMAT_DIRECT_LINE: 'NUMBER_FORMAT_DIRECT_LINE',
+      NUMBER_FORMAT_EXTENSION: 'NUMBER_FORMAT_EXTENSION',
+      NUMBER_FORMAT_ENTERPRISE_LINE: 'NUMBER_FORMAT_ENTERPRISE_LINE',
+      DIRECTORY_NUMBER: 'directoryNumber',
+      EXTERNAL_NUMBER: 'externalNumber',
     };
 
     var numberFormatMapping = [];
@@ -36,7 +35,6 @@
 
     // Get the assigned numbers for an AA
     function getAANumberAssignments(customerId, cesId) {
-
       return AssignAutoAttendantService.get({
         customerId: customerId,
         cesId: cesId,
@@ -50,21 +48,18 @@
           return $q.reject(response);
         }
       );
-
     }
 
     // Check the consistency of assigned numbers for an AA against the passed-in resources
     function checkAANumberAssignments(customerId, cesId, resources, onlyResources, onlyCMI) {
-
       return getAANumberAssignments(customerId, cesId).then(
         function (cmiAssignedNumbers) {
-
           // success
           // find differences between lists
 
           // we only want to scan for external and extension numbers (NUMBER_FORMAT_DIRECT_LINE and NUMBER_FORMAT_EXTENSION) only
 
-          var CMInums = _.map(_.reject(cmiAssignedNumbers, { 'type': service.NUMBER_FORMAT_ENTERPRISE_LINE }), function (n) {
+          var CMInums = _.map(_.reject(cmiAssignedNumbers, { type: service.NUMBER_FORMAT_ENTERPRISE_LINE }), function (n) {
             return _.replace(n.number, '+', '');
           });
 
@@ -91,7 +86,6 @@
           return $q.reject(response);
         }
       );
-
     }
 
     function formatAAE164Resource(res, extNum) {
@@ -102,7 +96,6 @@
           extNum = _.find(extNum, function (obj) {
             return _.replace(obj.pattern, /\D/g, '') === num;
           });
-
         }
 
         if (extNum) {
@@ -125,16 +118,13 @@
 
     // Format AA E164 resources based on entries in CMI external number list
     function formatAAE164ResourcesBasedOnCMI(resources) {
-
       var formattedResources = _.map(resources, function (res) {
-
         return TelephonyInfoService.loadExternalNumberPool(
           _.get(res, 'number', '').replace(/\D/g, ''),
           ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES
         ).then(function (extNums) {
           return formatAAE164Resource(res, extNums);
         });
-
       });
 
       return $q.all(formattedResources).then(function (value) {
@@ -144,7 +134,6 @@
           // if any promise fails, we want to fail (with the details) so further promises don't execute (save fails)
           return $q.reject(response);
         });
-
     }
 
     // endsWith works on the browsers (ECMA6), but not phantomjs, so here is an implemenation
@@ -154,9 +143,7 @@
 
     // Format AA extension resources based on entries in CMI assignment (when ESN #'s get derived)
     function formatAAExtensionResourcesBasedOnCMI(orgId, cesId, resources) {
-
       return getAANumberAssignments(orgId, cesId).then(function (cmiAssignedNumbers) {
-
         var inCMIAssignedList = function (obj) {
           return obj.type === service.NUMBER_FORMAT_ENTERPRISE_LINE && resources[i].getNumber() && endsWith(_.replace(obj.number, /\D/g, ''), resources[i].getNumber());
         };
@@ -166,7 +153,6 @@
         var i = 0;
         for (i = 0; i < resources.length; i++) {
           if (resources[i].getType() === service.DIRECTORY_NUMBER) {
-
             // if we don't have an id, get it from CMI
             if (!resources[i].id) {
               // find it in CMI assigned list
@@ -193,10 +179,8 @@
                   resources[i].setNumber(resources[i].getId());
                 }
               }
-
             }
           }
-
         }
         function isOurNumber(cmiNumber, resource) {
           // if numbers match and the types match
@@ -209,7 +193,6 @@
          * the UUID from CMI
          */
         _.find(resources, function (resource) {
-
           var cmiNumber = _.find(cmiAssignedNumbers, function (cmiNumber) {
             return isOurNumber(cmiNumber, resource);
           });
@@ -221,9 +204,7 @@
         });
 
         return resources;
-
       });
-
     }
 
     // Set the numbers for an AA
@@ -231,7 +212,6 @@
       var numObjList = [];
 
       for (var i = 0; i < resources.length; i++) {
-
         var numType = service.NUMBER_FORMAT_DIRECT_LINE;
         var number = resources[i].getNumber();
         if (resources[i].getType() === service.DIRECTORY_NUMBER) {
@@ -241,12 +221,11 @@
         }
 
         var numObj = {
-          "number": number,
-          "type": numType,
+          number: number,
+          type: numType,
         };
 
         numObjList.push(numObj);
-
       }
 
       var data = {
@@ -266,17 +245,14 @@
           return $q.reject(response);
         }
       );
-
     }
 
     // Set the numbers for an AA and return a list of the working and failed resources
     // Note this method does multiple saves to determine good and bad numbers
     // This also means it resolves promises sequentially and will take a little more time
     function setAANumberAssignmentWithErrorDetail(customerId, cesId, resources) {
-
       // For an empty list, we're done, just ensure CMI has no numbers set
       if (resources.length === 0) {
-
         return setAANumberAssignment(customerId, cesId, resources).then(function () {
           return {
             workingResources: [],
@@ -289,9 +265,7 @@
           }
 
         );
-
       } else {
-
         // With one element removed, we're going to first recursively save the rest of the list
         // and then try to save those saved numbers, minus the failing ones, with our single additional element
         // if it saves successfully, we are done, as all good numbers plus our saved.
@@ -320,21 +294,16 @@
                 restOfListResponse.failedResources.push(myResource);
                 return restOfListResponse;
               });
-
           });
       }
     }
 
     // Delete the assigned numbers for an AA
     function deleteAANumberAssignments(customerId, cesId) {
-
       return AssignAutoAttendantService.delete({
         customerId: customerId,
         cesId: cesId,
       }).$promise;
-
     }
-
   }
-
 })();

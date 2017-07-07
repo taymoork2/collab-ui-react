@@ -67,7 +67,8 @@
     </div>
     <div class="sub-section" ng-if="callServiceSettings.squaredFusionEc">
       <p class="sub-section__label" translate="hercules.settings.call.certificatesHeading"></p>
-      <p translate="hercules.settings.call.certificates"></p>
+      <p ng-if="!callServiceSettings.nameChangeEngaged" translate="hercules.settings.call.certificates"></p>
+      <p ng-if="callServiceSettings.nameChangeEngaged" translate="hercules.settings.call.certificatesNew"></p>
       <div ng-if="callServiceSettings.certificates.length == 0">
         <p><em translate="hercules.settings.call.noUploadedCertificate"></em></p>
       </div>

@@ -7,9 +7,9 @@ import { PhoneNumberService } from 'modules/huron/phoneNumber';
 class CallFeatureMembersCtrl implements ng.IComponentController {
   public static readonly DISPLAYED_MEMBER_SIZE: number = 10;
 
-  public members: Array<CallFeatureMember>;
-  public displayedMembers: Array<CallFeatureMember> = [];
-  public filterBy: Array<string>;
+  public members: CallFeatureMember[];
+  public displayedMembers: CallFeatureMember[] = [];
+  public filterBy: string[];
   public memberHintKey: string;
   public memberHint: string;
   public memberItemType: string;
@@ -40,19 +40,19 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
     this.removeStr = this.$translate.instant(this.removeKey);
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let memberChanges = changes['members'];
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const memberChanges = changes['members'];
     if (memberChanges && memberChanges.currentValue) {
       this.processMemberChanges(memberChanges);
     }
   }
 
-  private processMemberChanges(memberChanges: ng.IChangesObject): void {
+  private processMemberChanges(memberChanges: ng.IChangesObject<any>): void {
     this.reordering = false;
     this.displayedMembers = _.take<CallFeatureMember>(memberChanges.currentValue, CallFeatureMembersCtrl.DISPLAYED_MEMBER_SIZE);
   }
 
-  public getMemberList(value: string): ng.IPromise<Array<CallFeatureMember>> {
+  public getMemberList(value: string): ng.IPromise<CallFeatureMember[]> {
     return this.MemberService.getMemberList(value, true).then( members => {
       return this.convertMemberToCallFeatureMember(members);
     });
@@ -84,7 +84,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
     }
   }
 
-  private convertMemberToCallFeatureMember(members: Array<Member>): Array<CallFeatureMember> {
+  private convertMemberToCallFeatureMember(members: Member[]): CallFeatureMember[] {
     switch (this.memberItemType) {
       case 'number':
         return this.convertAsNumbers(members);
@@ -93,10 +93,10 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
     }
   }
 
-  private convertAsMembers(members: Array<Member>): Array<CallFeatureMember> {
-    let filteredMembers = _.filter(members, number => this.isNewMember(number.uuid || ''));
+  private convertAsMembers(members: Member[]): CallFeatureMember[] {
+    const filteredMembers = _.filter(members, number => this.isNewMember(number.uuid || ''));
     return _.map(filteredMembers, member => {
-      let primaryNumber = this.getPrimaryNumber(member);
+      const primaryNumber = this.getPrimaryNumber(member);
       return new CallFeatureMember({
         uuid: member.uuid || '',
         name: this.formatDisplayName(member),
@@ -112,10 +112,10 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
     });
   }
 
-  private convertAsNumbers(members: Array<Member>): Array<CallFeatureMember> {
-    let convertedMembers: Array<CallFeatureMember>  = [];
+  private convertAsNumbers(members: Member[]): CallFeatureMember[] {
+    let convertedMembers: CallFeatureMember[]  = [];
     _.forEach(members, member => {
-      let filteredNumbers = _.filter(member.numbers, number => this.isNewMember(number.uuid || ''));
+      const filteredNumbers = _.filter(member.numbers, number => this.isNewMember(number.uuid || ''));
       convertedMembers = _.concat(convertedMembers, _.map(filteredNumbers, (number, index) => {
         return new CallFeatureMember({
           uuid: number.uuid || '',
@@ -142,7 +142,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
 
   private formatNumber(number: Line, includeExternal: boolean = false): string {
     let formattedNumber = _.get<Line, string>(number, 'internal', '');
-    let externalNumber = _.get<Line, string | undefined>(number, 'external');
+    const externalNumber = _.get<Line, string | undefined>(number, 'external');
 
     if (includeExternal && externalNumber) {
       formattedNumber += ' ' + this.$translate.instant('common.and') + ' ' + this.PhoneNumberService.getNationalFormat(externalNumber);
@@ -165,7 +165,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   }
 
   public onUpdateCardMember(id: string, data: any): void {
-    let member = _.find(this.members, ['memberUuid', id]);
+    const member = _.find(this.members, ['memberUuid', id]);
     if (data) {
       member.uuid = _.get<string>(data, 'value');
     }
@@ -179,14 +179,14 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
     this.onMembersChanged(this.members);
   }
 
-  private onMembersChanged(members: Array<CallFeatureMember>): void {
+  private onMembersChanged(members: CallFeatureMember[]): void {
     this.onChangeFn({
       members: _.cloneDeep(members),
     });
   }
 
   private isNewMember(uuid: string): boolean {
-    let existingMembers = _.find(this.members, (member) => {
+    const existingMembers = _.find(this.members, (member) => {
       return member.uuid === uuid;
     });
     return _.isUndefined(existingMembers);

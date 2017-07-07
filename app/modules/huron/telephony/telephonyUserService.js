@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, LogMetricsService, Notification, CallerId) {
-
     function deleteUser(uuid) {
       return UserServiceCommon.remove({
         customerId: Authinfo.getOrgId(),
@@ -17,7 +16,7 @@
 
     function acquireOTP(userName) {
       var otpRequest = {
-        'userName': userName,
+        userName: userName,
       };
 
       return IdentityOTPService.save({}, otpRequest).$promise;
@@ -57,15 +56,14 @@
     }
 
     function sendWelcomeEmail(userName, lastName, uuid, customerId) {
-
       var emailInfo = {
-        'email': userName,
-        'firstName': lastName,
-        'phoneNumber': null,
-        'oneTimePassword': null,
-        'expiresOn': null,
-        'userId': uuid,
-        'customerId': customerId,
+        email: userName,
+        firstName: lastName,
+        phoneNumber: null,
+        oneTimePassword: null,
+        expiresOn: null,
+        userId: uuid,
+        customerId: customerId,
       };
       return UserDirectoryNumberService.query({
         customerId: customerId,
@@ -75,7 +73,7 @@
           if (userDnInfo && userDnInfo[0] && userDnInfo[0].directoryNumber && userDnInfo[0].directoryNumber.pattern) {
             emailInfo.phoneNumber = userDnInfo[0].directoryNumber.pattern;
           } else {
-            emailInfo.phoneNumber = "1111";
+            emailInfo.phoneNumber = '1111';
           }
         })
         .then(function () {
@@ -126,8 +124,8 @@
 
     function updateDtmfAccessId(uuid, dtmfAccessId) {
       var payload = {
-        'voicemail': {
-          'dtmfAccessId': dtmfAccessId,
+        voicemail: {
+          dtmfAccessId: dtmfAccessId,
         },
       };
 
@@ -145,6 +143,5 @@
       updateDtmfAccessId: updateDtmfAccessId,
       sendWelcomeEmail: sendWelcomeEmail,
     };
-
   }
 })();

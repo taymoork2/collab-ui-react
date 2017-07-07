@@ -7,11 +7,11 @@
     .controller('hybridServicesPanelCtrl', hybridServicesPanelCtrl);
 
   /* @ngInject */
-  function hybridServicesPanelCtrl(OnboardService, ServiceDescriptor, CloudConnectorService, Authinfo, $q, FeatureToggleService, $translate) {
+  function hybridServicesPanelCtrl(Authinfo, OnboardService, ServiceDescriptorService, CloudConnectorService, $q, $translate) {
     var vm = this;
     vm.isEnabled = false;
     vm.entitlements = [];
-    vm.hasGoogleCalendarFeature = false;
+    vm.showCalendarChoice = Authinfo.isFusionGoogleCal();
     vm.services = {
       calendarEntitled: false,
       selectedCalendarType: null,
@@ -53,22 +53,14 @@
     vm.setEntitlements = setEntitlements;
     vm.hasHuronCallEntitlement = hasHuronCallEntitlement;
 
-    if (Authinfo.isEntitled('squared-fusion-gcal')) {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
-        .then(function (hasGoogleCalendarFeatureToggle) {
-          vm.hasGoogleCalendarFeature = hasGoogleCalendarFeatureToggle;
-          init();
-        });
-    } else {
-      init();
-    }
+    init();
 
     ////////////////
 
     function init() {
       $q.all({
-        servicesFromFms: ServiceDescriptor.getServices(),
-        gcalService: vm.hasGoogleCalendarFeature ? CloudConnectorService.getService() : $q.resolve({}),
+        servicesFromFms: ServiceDescriptorService.getServices(),
+        gcalService: CloudConnectorService.getService(),
       }).then(function (response) {
         vm.services.calendarExchange = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-cal');
         vm.services.callServiceAware = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-uc');
@@ -106,15 +98,15 @@
       }
       if (!_.isUndefined(vm.updateEntitlements)) {
         vm.updateEntitlements({
-          'entitlements': vm.entitlements,
+          entitlements: vm.entitlements,
         });
       }
     }
 
     function getServiceIfEnabled(services, id) {
       var service = _.find(services, {
-        'id': id,
-        'enabled': true,
+        id: id,
+        enabled: true,
       });
       if (service) {
         service.entitled = false;
@@ -134,7 +126,7 @@
     return {
       restrict: 'E',
       scope: {
-        'updateEntitlements': '&bindEntitlements',
+        updateEntitlements: '&bindEntitlements',
       },
       bindToController: true,
       controllerAs: 'hybridServicesPanelCtrl',

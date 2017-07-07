@@ -24,7 +24,7 @@ describe('Service: TelephonyDomainService', () => {
   });
 
   function setData(key, value) {
-    let preData = { links: [], content: { health: { code: 200, status: 'OK' }, data: { body: [], returnCode: 0, trackId: '' } } };
+    const preData = { links: [], content: { health: { code: 200, status: 'OK' }, data: { body: [], returnCode: 0, trackId: '' } } };
     return _.set(preData, key, value);
   }
 
@@ -222,7 +222,7 @@ describe('Service: TelephonyDomainService', () => {
         isHidden: 'false',
         countryId: '#3',
       }]);
-      let countries = { countryId2NameMapping: { '#1': 'Country #1', '#2': 'Country #1', '#3': 'Country #1' } };
+      const countries = { countryId2NameMapping: { '#1': 'Country #1', '#2': 'Country #1', '#3': 'Country #1' } };
       this.gemService.setStorage('gmCountry', countries);
       this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(mockData));
       this.TelephonyDomainService.exportNumbersToCSV(this.customerId, this.ccaDomainId).then((res) => {

@@ -68,7 +68,7 @@ export class CsvDownloadService {
       // old-style bulk export for large datasets that aren't Cisco and not using new export system
       this.canceler = this.UserListService.exportCSV()
         .then((csvData) => {
-          let csvString = ($ as any).csv.fromObjects(csvData, { headers: false });
+          const csvString = ($ as any).csv.fromObjects(csvData, { headers: false });
           return this.createObjectUrl(csvString, csvType, fileName);
         });
       return this.canceler;
@@ -94,8 +94,8 @@ export class CsvDownloadService {
 
   /* Creates the data URL for downloading the blob of data */
   public createObjectUrl(data: any, type: string, fileName: string) {
-    let blob = new this.$window.Blob([data], { type: 'text/plain' });
-    let oUrl = (this.$window.URL || this.$window.webkitURL).createObjectURL(blob);
+    const blob = new this.$window.Blob([data], { type: 'text/plain' });
+    const oUrl = (this.$window.URL || this.$window.webkitURL).createObjectURL(blob);
     if (type === CsvDownloadTypes.TYPE_TEMPLATE) {
       this.templateBlob = blob;
       this.setObjectUrlTemplate(oUrl);
@@ -169,7 +169,7 @@ export class CsvDownloadService {
       responseType: 'blob',
     })
       .then((response) => {
-        let promise = this.ExtractTarService.extractFile(<Blob>response.data, context.checksum);
+        const promise = this.ExtractTarService.extractFile(<Blob>response.data, context.checksum);
         return promise;
         //return this.$q.race([defer.promise, this.canceler.promise]);
       });
@@ -219,7 +219,7 @@ export class CsvDownloadService {
 
   // Request the backend compile a CSV of the requested data and then save it locally.
   private newExportUserCsv(fileName: string): ng.IPromise<any> {
-    let req: ng.IRequestConfig = {
+    const req: ng.IRequestConfig = {
       url: this.Utils.sprintf(this.userExportUrl(), [CsvDownloadTypes.TYPE_REPORT]),
       method: 'POST',
       data: null,
@@ -227,7 +227,7 @@ export class CsvDownloadService {
     return this.$http(req)
       .then((response: any) => {
         if (response.status === 202) {
-          let location = response.data.location;
+          const location = response.data.location;
           return this.getUserReport(location)
             .then((csvData) => {
               // at this point, we should have the CSV data downloaded and extracted, ready
@@ -252,7 +252,7 @@ export class CsvDownloadService {
     } else {
       // old export API
       // todo - remove this once we remove feature toggle!
-      let url = this.Utils.sprintf(this.userExportUrl(), [CsvDownloadTypes.TYPE_EXPORT]);
+      const url = this.Utils.sprintf(this.userExportUrl(), [CsvDownloadTypes.TYPE_EXPORT]);
       this.canceler = this.$q.defer();
       return this.$http.get(url, { timeout: this.canceler.promise })
         .then((csvData) => {
@@ -266,8 +266,8 @@ export class CsvDownloadService {
 
   private exportErrorCsv(fileName): ng.IPromise<any> {
     return this.$q((resolve) => {
-      let csvErrorArray = this.UserCsvService.getCsvStat().userErrorArray;
-      let csvString = ($ as any).csv.fromObjects(_.union([{
+      const csvErrorArray = this.UserCsvService.getCsvStat().userErrorArray;
+      const csvString = ($ as any).csv.fromObjects(_.union([{
         row: 'Row Number',
         email: 'User ID/Email',
         error: 'Error Message',
@@ -280,7 +280,7 @@ export class CsvDownloadService {
   }
 
   private exportDataCsv(csvType, fileName): ng.IPromise<any> {
-    let url = this.Utils.sprintf(this.userExportUrl(), [csvType]);
+    const url = this.Utils.sprintf(this.userExportUrl(), [csvType]);
     return this.$http.get(url)
       .then((csvData) => {
         if (csvType === CsvDownloadTypes.TYPE_HEADERS) {

@@ -19,7 +19,7 @@ export function callFeatureMemberNumberFormatterFilter($translate, PhoneNumberSe
 
   function filter(number: Line, includeExternal: boolean = false): string {
     let formattedNumber = _.get(number, 'internal', '');
-    let externalNumber = _.get(number, 'external');
+    const externalNumber = _.get(number, 'external');
 
     if (includeExternal && externalNumber) {
       formattedNumber += ' ' + $translate.instant('common.and') + ' ' + PhoneNumberService.getNationalFormat(externalNumber);

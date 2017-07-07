@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Component: fields sidepanel', function () {
-
   var Analytics, ContextFieldsService, ContextFieldsetsService, ModalService, Notification, ctrl, $componentCtrl, $state, $q, $rootScope, field;
   var deleteFieldSpy, membershipReturnSpy, modalSpy;
 
@@ -162,10 +161,9 @@ describe('Component: fields sidepanel', function () {
    * in the UI.
    */
   describe('field-edit feature is present', function () {
-
     var field = {
       publiclyAccessibleUI: false,
-      translations: { 'english': 'First Name', 'french': 'Prénom' },
+      translations: { english: 'First Name', french: 'Prénom' },
       id: 'aaa_test',
       lastUpdatedUI: '2017-01-26T18:42:42.124Z',
       description: 'a description',

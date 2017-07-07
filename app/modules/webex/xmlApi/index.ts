@@ -1,10 +1,10 @@
-let WebExXmlApiFact = require('./xmlApi.fact');
-let WebExXmlApiConstsSvc = require('./xmlApiConsts.svc');
-let WebExXmlApiInfoSvc = require('./xmlApiInfo.svc');
+const WebExXmlApiFact = require('./xmlApi.fact');
+const WebExXmlApiConstsSvc = require('./xmlApiConsts.svc');
+const WebExXmlApiInfoSvc = require('./xmlApiInfo.svc');
 
-let authModule = require('modules/core/auth/auth');
-let tokenModule = require('modules/core/auth/token.service');
-let authInfoModule = require('modules/core/scripts/services/authinfo');
+const authModule = require('modules/core/auth/auth');
+const tokenModule = require('modules/core/auth/token.service');
+const authInfoModule = require('modules/core/scripts/services/authinfo');
 
 export default angular
   .module('webex.xmlApi', [

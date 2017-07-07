@@ -54,7 +54,7 @@ describe('Component: gmTdNotesView', () => {
     this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
     this.$httpBackend.flush();
 
-    let notes: any[] = [];
+    const notes: any[] = [];
     if (viaHttp) {
       if (httpError) {
         this.TelephonyDomainService.getNotes.and.returnValue(this.$q.reject( { status: 404 } ));

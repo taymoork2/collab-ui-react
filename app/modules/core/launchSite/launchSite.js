@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function LaunchSiteCtrl($scope, $sce, $timeout) {
-
     $scope.trustSrc = function (src) {
       return $sce.trustAsResourceUrl(src);
     };
@@ -23,7 +22,6 @@
         angular.element(id).trigger('click');
       }, 0);
     };
-
   }
 
   function launchSite() {

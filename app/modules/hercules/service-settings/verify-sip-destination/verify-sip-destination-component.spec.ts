@@ -47,7 +47,7 @@ describe('Component: VerifySipDestinationComponent ', () => {
 
     it ('should on call the onDestinationSave() callback once when the user clicks save', () => {
 
-      let onDestinationSave = jasmine.createSpy('onDestinationSave');
+      const onDestinationSave = jasmine.createSpy('onDestinationSave');
 
       ctrl = initController($modal, onDestinationSave);
 
@@ -58,7 +58,7 @@ describe('Component: VerifySipDestinationComponent ', () => {
 
     it ('should not call the onDestinationSave() callback unless the user clicks save', () => {
 
-      let onDestinationSave = jasmine.createSpy('onDestinationSave');
+      const onDestinationSave = jasmine.createSpy('onDestinationSave');
 
       ctrl = initController($modal, onDestinationSave);
 

@@ -1,9 +1,9 @@
-let WebExUtilsFact = require('./webExUtils.fact');
-let iFrameResizableDirective = require('./iFrameResizeable.directive');
+const WebExUtilsFact = require('./webExUtils.fact');
+const iFrameResizableDirective = require('./iFrameResizeable.directive');
 
 import xmlApiModule from 'modules/webex/xmlApi';
-let authModule = require('modules/core/auth/auth');
-let authInfoModule = require('modules/core/scripts/services/authinfo');
+const authModule = require('modules/core/auth/auth');
+const authInfoModule = require('modules/core/scripts/services/authinfo');
 
 export default angular
   .module('webex.utils', [

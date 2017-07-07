@@ -29,7 +29,7 @@ export interface ICmcUserData {
 }
 
 export interface ICmcUser extends IUser {
-  phoneNumbers?: Array<any>;
+  phoneNumbers?: any[];
 }
 
 export interface ICmcOrgStatusResponse extends ICmcStatusResponse {
@@ -49,10 +49,12 @@ export interface ICmcUserStatus {
   lastStatusUpdate?: string;
   lastStateChange?: string;
   entitled?: string;
+  displayName?: string;
+  userName?: string;
 }
 
 export interface ICmcUserStatusInfoResponse {
-  userStatuses: Array<ICmcUserStatus>;
+  userStatuses: ICmcUserStatus[];
   paging: {
     next: string;
   };

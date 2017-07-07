@@ -54,7 +54,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
   }
 
   it('should read the Aware status and update internal entitlement data when user is *not* entitled', () => {
-    let callServiceAwareExpectedStatus: IUserStatus = {
+    const callServiceAwareExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-uc',
       entitled: false,
       lastStateChange: 1234,
@@ -68,7 +68,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
   });
 
   it('should read the Aware status and update internal entitlement data when user is entitled', () => {
-    let callServiceAwareExpectedStatus: IUserStatus = {
+    const callServiceAwareExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-uc',
       entitled: true,
       lastStateChange: 1234,
@@ -84,7 +84,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
 
   it('should get and store the directory URI from UCCService, and then do a check for verified domains', () => {
     const expectedDirectoryURI = 'manchester@example.org';
-    let callServiceAwareExpectedStatus: IUserStatus = {
+    const callServiceAwareExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-uc',
       entitled: true,
       lastStateChange: 1234,
@@ -115,7 +115,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
       connectors: [expectedConnector],
     };
 
-    let callServiceAwareExpectedStatus: IUserStatus = {
+    const callServiceAwareExpectedStatus: IUserStatus = {
       connectorId: connectorId,
       clusterId: clusterId,
       serviceId: 'squared-fusion-uc',
@@ -136,13 +136,13 @@ describe('hybridCallServiceAwareUserSettings', () => {
 
   it('should display a popup confirmation on save if Call Service Connect is enabled for the user', () => {
 
-    let callServiceAwareExpectedStatus: IUserStatus = {
+    const callServiceAwareExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-uc',
       entitled: true,
       lastStateChange: 1234,
       lastStateChangeText: 'something',
     };
-    let callServiceConnectExpectedStatus: IUserStatus = {
+    const callServiceConnectExpectedStatus: IUserStatus = {
       serviceId: 'squared-fusion-ec',
       entitled: true,
       lastStateChange: 1234,
@@ -222,7 +222,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
 
   it('should on save call the callback, after waiting a bit and probing USS for fresh data', () => {
 
-    let callbackSpy = jasmine.createSpy('callback');
+    const callbackSpy = jasmine.createSpy('callback');
 
     const callServiceAwareStatusBefore: IUserStatus = {
       serviceId: 'squared-fusion-uc',

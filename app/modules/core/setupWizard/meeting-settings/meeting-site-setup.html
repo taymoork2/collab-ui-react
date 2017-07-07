@@ -11,8 +11,8 @@
         <i class="icon icon-check verified-check"></i>
       </div>
       <div class="col-lg-5">
-        <b><div>{{site.name}}.webex.com</div></b>
-        <div ng-if="site.timeZone" class="time-zone" translate-values="{label: site.timeZone.label}" translate="firstTimeWizard.timeZoneSetTo"></div>
+        <b><div>{{site.siteUrl}}.webex.com</div></b>
+        <div ng-if="site.timezone" class="time-zone" translate-values="{label: site.timezone.label}" translate="firstTimeWizard.timeZoneSetTo"></div>
       </div>
       <div class="col-lg-1">
         <i class="icon icon-delete delete-site" ng-click="meetingCtrl.removeSite($index)"></i>
@@ -20,7 +20,7 @@
     </div>
   </div>
   <div class="site-preview">
-    <b><div ng-if="meetingCtrl.siteModel.name !== ''">{{meetingCtrl.siteModel.name}}.webex.com</div></b>
+    <b><div ng-if="meetingCtrl.siteModel.siteUrl !== ''">{{meetingCtrl.siteModel.siteUrl}}.webex.com</div></b>
   </div>
   <div class="element-spacing">
     <!-- TODO (shrazzac): refactor label elements into one using ng-pluralize -->
@@ -37,7 +37,7 @@
             cs-input-size="medium-12"
             placeholder="{{::'firstTimeWizard.enterSiteNamePlaceholder' | translate}}"
             ng-change="meetingCtrl.clearError()"
-            ng-model="meetingCtrl.siteModel.name">
+            ng-model="meetingCtrl.siteModel.siteUrl">
           <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="meetingCtrl.error.isError">
             <div class="message">{{meetingCtrl.error.errorMsg}}</div>
           </div>
@@ -47,7 +47,7 @@
         <cs-select
           id="selectTimeZone"
           name="selectTimeZone"
-          ng-model="meetingCtrl.siteModel.timeZone"
+          ng-model="meetingCtrl.siteModel.timezone"
           options="meetingCtrl.timeZoneOptions"
           placeholder="meetingCtrl.selectTimeZonePlaceholder"
           ng-change="meetingCtrl.clearError()">

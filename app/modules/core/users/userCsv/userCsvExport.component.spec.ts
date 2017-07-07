@@ -48,7 +48,7 @@ describe('crUserCsvExport Component', () => {
     spyOn(this.$rootScope, '$emit');
     spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.resolve({}));
 
-    let meUrl = _.replace((this.UrlConfig.getScimUrl(null) + '/me'), 'scim//', 'scim/');
+    const meUrl = _.replace((this.UrlConfig.getScimUrl(null) + '/me'), 'scim//', 'scim/');
     this.getUserMe = getJSONFixture('core/json/users/me.json');
     this.$httpBackend.whenGET(meUrl).respond(200, this.getUserMe);
 
@@ -277,7 +277,7 @@ describe('crUserCsvExport Component', () => {
     beforeEach(function () {
       this.$scope.onTestExportDownloadStatus = jasmine.createSpy('onTestExportDownloadStatus');
 
-      let bindings = {
+      const bindings = {
         asLink: 'true',
         onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)',
       };
@@ -327,7 +327,7 @@ describe('crUserCsvExport Component', () => {
 
     it('should register/unregister event handlers over lifecycle', function () {
 
-      let listeners = this.$rootScope.$$listeners;
+      const listeners = this.$rootScope.$$listeners;
 
       // event handlers should be registered on rootScope
       expect(_.isFunction(listeners['csv-download-request-started'][0])).toBeTruthy();

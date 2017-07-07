@@ -7,9 +7,8 @@
 
   /* @ngInject */
   function AABuilderLaneCtrl($scope, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar) {
-
     var vm = this;
-    vm.schedule = "";
+    vm.schedule = '';
     vm.entries = [];
     vm.templateName = $stateParams.aaTemplate;
     vm.addAction = addAction;
@@ -25,7 +24,7 @@
       AACommonService.setActionStatus(true);
 
       // scroll to the added new step/action form
-      AAScrollBar.scrollBuilderToTarget("#newStepForm" + vm.schedule + (index + 1));
+      AAScrollBar.scrollBuilderToTarget('#newStepForm' + vm.schedule + (index + 1));
     }
 
     function activate() {

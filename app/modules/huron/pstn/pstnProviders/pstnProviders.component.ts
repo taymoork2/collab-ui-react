@@ -15,7 +15,7 @@ export class PstnProvidersComponent implements ng.IComponentOptions {
 
 export class PstnProvidersCtrl implements ng.IComponentController {
   public show: boolean = false;
-  public pstnCarriers: Array<PstnCarrier>;
+  public pstnCarriers: PstnCarrier[];
   private onChangeFn: Function;
   private onReadyFn: Function;
 
@@ -26,9 +26,12 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.PstnProvidersService.getCarriers().then((pstnCarriers: Array<PstnCarrier>) => {
+    this.PstnProvidersService.getCarriers().then((pstnCarriers: PstnCarrier[]) => {
       if (_.isArray(pstnCarriers)) {
         this.pstnCarriers = pstnCarriers;
+        this.pstnCarriers.forEach( (pstnCarrier: PstnCarrier) => {
+          pstnCarrier.selected = false;
+        });
         this.show = true;
         this.onReadyFn();
       }

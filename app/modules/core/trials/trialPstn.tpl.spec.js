@@ -1,12 +1,13 @@
 'use strict';
 
 describe('Template: trialPstn.tpl.spec.js:', function () {
-  var $q, $compile, $controller, $scope, $templateCache, Analytics, Orgservice, PstnSetupStatesService, FeatureToggleService, PstnService;
+  var $q, $compile, $controller, $scope, $templateCache, Analytics, Orgservice, PstnAreaService, FeatureToggleService, PstnService;
   var view;
   var skipBtn, backBtn;
 
   var location = {
-    type: 'State',
+    zipName: 'Zip Code',
+    typeName: 'State',
     areas: [{
       name: 'Texas',
       abbreviation: 'TX',
@@ -17,7 +18,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     if (view) {
       view.remove();
     }
-    $q = $compile = $controller = $scope = $templateCache = Analytics = Orgservice = PstnSetupStatesService = FeatureToggleService = PstnService = undefined;
+    $q = $compile = $controller = $scope = $templateCache = Analytics = Orgservice = PstnAreaService = FeatureToggleService = PstnService = undefined;
     view = skipBtn = backBtn = undefined;
   });
 
@@ -26,20 +27,22 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
   beforeEach(compileView);
 
 
-  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Analytics_, _Orgservice_, _PstnSetupStatesService_, _FeatureToggleService_, _PstnService_) {
+  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Analytics_, _Orgservice_, _PstnAreaService_, _FeatureToggleService_, _PstnService_) {
     $q = _$q_;
     $compile = _$compile_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
     $templateCache = _$templateCache_;
-    PstnSetupStatesService = _PstnSetupStatesService_;
+    PstnAreaService = _PstnAreaService_;
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
     Analytics = _Analytics_;
     PstnService = _PstnService_;
 
-    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(PstnAreaService, 'getCountryAreas').and.returnValue($q.resolve(location));
+    spyOn(FeatureToggleService, 'huronSupportThinktelGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'huronFederatedSparkCallGetStatus').and.returnValue($q.resolve(true));
+
     spyOn(Analytics, 'trackTrialSteps');
     spyOn(PstnService, 'getResellerV2').and.returnValue($q.resolve());
   }

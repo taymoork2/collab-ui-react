@@ -42,7 +42,7 @@ describe('Partner Reports', function () {
       // active users
       utils.expectIsDisplayed(reports.activeHeader);
       utils.expectIsDisplayed(reports.activeDescription);
-      utils.expectTextToBeSet(reports.activeDescription, lowerTime[0]);
+      utils.waitForText(reports.activeDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.activeUsersChart);
 
       // most active users
@@ -59,14 +59,14 @@ describe('Partner Reports', function () {
       // registered endpoints
       utils.expectIsDisplayed(reports.endpointsHeader);
       utils.expectIsDisplayed(reports.endpointDescription);
-      utils.expectTextToBeSet(reports.endpointDescription, lowerTime[0]);
+      utils.waitForText(reports.endpointDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.registeredEndpointsTable);
       reports.confirmCustomerInTable(e2eCustomer, reports.registeredEndpointsTable, true);
 
       // call metrics
       utils.expectIsDisplayed(reports.metricsHeader);
       utils.expectIsDisplayed(reports.metricsDescription);
-      utils.expectTextToBeSet(reports.metricsDescription, lowerTime[0]);
+      utils.waitForText(reports.metricsDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.callMetricsGraph);
 
       // device media quality
@@ -130,7 +130,7 @@ describe('Partner Reports', function () {
       // active users
       utils.expectIsDisplayed(reports.activeHeader);
       utils.expectIsDisplayed(reports.activeDescription);
-      utils.expectTextToBeSet(reports.activeDescription, lowerTime[1]);
+      utils.waitForText(reports.activeDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.activeUsersChart);
 
       // most active users
@@ -146,14 +146,14 @@ describe('Partner Reports', function () {
       // registered endpoints
       utils.expectIsDisplayed(reports.endpointsHeader);
       utils.expectIsDisplayed(reports.endpointDescription);
-      utils.expectTextToBeSet(reports.endpointDescription, lowerTime[1]);
+      utils.waitForText(reports.endpointDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.registeredEndpointsTable);
       reports.confirmCustomerInTable(e2eCustomer, reports.registeredEndpointsTable, true);
 
       // call metrics
       utils.expectIsDisplayed(reports.metricsHeader);
       utils.expectIsDisplayed(reports.metricsDescription);
-      utils.expectTextToBeSet(reports.metricsDescription, lowerTime[1]);
+      utils.waitForText(reports.metricsDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.callMetricsGraph);
 
       // device media quality

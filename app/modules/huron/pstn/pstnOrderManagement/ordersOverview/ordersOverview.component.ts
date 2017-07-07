@@ -11,8 +11,8 @@ export class OrdersOverviewComponent implements ng.IComponentOptions {
 export class OrdersOverviewCtrl implements ng.IComponentController {
   public currentCustomer: any;
   public loading: boolean = true;
-  private orders: Array<any> = [];
-  private ordersWithDuplicates: Array<any> = [];
+  private orders: any[] = [];
+  private ordersWithDuplicates: any[] = [];
   private PENDING = this.$translate.instant('pstnOrderOverview.inProgress');
   public isPartner: boolean;
   public isCarrierByopstn: boolean;
@@ -44,14 +44,10 @@ export class OrdersOverviewCtrl implements ng.IComponentController {
   }
 
   public condenseOrderBatches(): any {
-    let finalOrders: Array<any> = [];
+    const finalOrders: any[] = [];
     let orderIndex =  -1;
     _.forEach(this.ordersWithDuplicates, (order) => {
-      if (!this.isCarrierByopstn) {
-        orderIndex = _.findIndex(finalOrders, { carrierOrderId: order.carrierOrderId });
-      } else {
-        orderIndex = _.findIndex(finalOrders, { formattedDate: order.formattedDate });
-      }
+      orderIndex = _.findIndex(finalOrders, { carrierOrderId: order.carrierOrderId });
       if (orderIndex === -1) {
         finalOrders.push(order);
       } else {

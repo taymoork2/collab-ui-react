@@ -11,10 +11,10 @@ var HuntGroup = function () {
   this.beginNumber = this.pattern + 1;
   this.endNumber = this.pattern + 3;
   this.pilotNumber = this.pattern;
-  this.member1 = "e2e-hg-member1@gmail.com";
-  this.member2 = "e2e-hg-member2@gmail.com";
-  this.member1Search = "e2e-hg-member1";
-  this.member2Search = "e2e-hg-member2";
+  this.member1 = 'e2e-hg-member1@gmail.com';
+  this.member2 = 'e2e-hg-member2@gmail.com';
+  this.member1Search = 'e2e-hg-member1';
+  this.member2Search = 'e2e-hg-member2';
 
   this.serviceTab = element(by.css('.servicesTab'));
   this.communicationsPage = element(by.css('.servicesTab li [href="#hurondetails/settings"]'));
@@ -82,7 +82,6 @@ var HuntGroup = function () {
   this.fallbackWarningText = element(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackWarning()"] span.message'));
   this.searchFallbackMember = element(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackLookup()"].warning-typeahead input'));
   this.addFallbackMember = element(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackLookup()"] li:first-child a:last-child'));
-
 };
 
 module.exports = HuntGroup;

@@ -46,14 +46,14 @@ export class SparkLineReportService {
     }
     this.activeDeferred = this.$q.defer();
 
-    let returnData: IActiveUserWrapper = {
+    const returnData: IActiveUserWrapper = {
       graphData: [],
       isActiveUsers: false,
     };
 
-    let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'activeUsers', undefined);
+    const options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'activeUsers', undefined);
     return this.CommonReportService.getCustomerActiveUserData(options, this.activeDeferred).then((response: any): IActiveUserWrapper => {
-      let data = _.get(response, 'data.data');
+      const data = _.get(response, 'data.data');
       if (data) {
         return this.adjustActiveData(data, filter, returnData);
       } else {
@@ -66,21 +66,21 @@ export class SparkLineReportService {
 
   private adjustActiveData(activeData: any, filter: ITimespan, returnData: IActiveUserWrapper): IActiveUserWrapper {
     let emptyGraph: boolean = true;
-    let graphItem: IActiveUserData = {
+    const graphItem: IActiveUserData = {
       date: '',
       totalRegisteredUsers: 0,
       activeUsers: 0,
       percentage: 0,
       balloon: true,
     };
-    let returnGraph: Array<IActiveUserData> = this.CommonReportService.getReturnLineGraph(filter, graphItem);
+    const returnGraph: IActiveUserData[] = this.CommonReportService.getReturnLineGraph(filter, graphItem);
 
     _.forEach(activeData, (item: any): void => {
-      let date: string = this.CommonReportService.getModifiedLineDate(item.date);
-      let details: any = _.get(item, 'details[0]');
+      const date: string = this.CommonReportService.getModifiedLineDate(item.date);
+      const details: any = _.get(item, 'details[0]');
 
       if (details) {
-        let activeUsers: number = _.toInteger(details.combinedActiveUsers);
+        const activeUsers: number = _.toInteger(details.combinedActiveUsers);
         let totalRegisteredUsers: number = _.toInteger(details.totalSparkEntitled);
         // totalRegisteredUsers should never be less than the number of activeUsers
         if (totalRegisteredUsers < activeUsers) {
@@ -108,21 +108,21 @@ export class SparkLineReportService {
   }
 
   // Most Active User Data
-  public getMostActiveUserData(filter: ITimespan): ng.IPromise<Array<IActiveTableBase>> {
+  public getMostActiveUserData(filter: ITimespan): ng.IPromise<IActiveTableBase[]> {
     // cancel any currently running jobs
     if (this.mostActiveDeferred) {
       this.mostActiveDeferred.resolve(this.ReportConstants.ABORT);
     }
     this.mostActiveDeferred = this.$q.defer();
 
-    let deferred: ng.IDeferred<Array<IActiveTableBase>> = this.$q.defer();
-    let responseArray: Array<IActiveTableBase> = [];
-    let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'mostActive');
+    const deferred: ng.IDeferred<IActiveTableBase[]> = this.$q.defer();
+    const responseArray: IActiveTableBase[] = [];
+    const options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'mostActive');
     this.CommonReportService.getCustomerActiveUserData(options, this.mostActiveDeferred).then((response: any): void => {
-      let responseData: any = _.get(response, 'data.data');
+      const responseData: any = _.get(response, 'data.data');
       if (responseData) {
         _.forEach(responseData, (item: any): void => {
-          let details: any = _.get(item, 'details', undefined);
+          const details: any = _.get(item, 'details', undefined);
           if (details) {
             responseArray.push({
               numCalls: _.toInteger(details.sparkCalls) + _.toInteger(item.details.sparkUcCalls),
@@ -160,26 +160,26 @@ export class SparkLineReportService {
       totalRooms: 0,
     };
 
-    let returnItem: IConversationWrapper = {
+    const returnItem: IConversationWrapper = {
       array: this.CommonReportService.getReturnLineGraph(filter, graphItem),
       hasFiles: false,
       hasRooms: false,
     };
 
-    let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'conversations', this.SIMPLE_COUNT);
+    const options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'conversations', this.SIMPLE_COUNT);
     options.cache = false;
     return this.CommonReportService.getCustomerAltReportByType(options, this.activeDeferred).then((response: any): IConversationWrapper => {
-      let data: Array<any> = _.get(response, 'data.data', []);
+      const data: any[] = _.get(response, 'data.data', []);
 
       _.forEach(data, (item: any): void => {
-        let date: string = this.CommonReportService.getModifiedLineDate(item.date);
-        let details: any = _.get(item, 'details');
+        const date: string = this.CommonReportService.getModifiedLineDate(item.date);
+        const details: any = _.get(item, 'details');
 
         if (details) {
           _.forEach(returnItem.array, (graphItem: IConversation): void => {
             if (graphItem.date === date) {
-              let totalRooms: number = _.toInteger(details.numRoomsCreated);
-              let contentShared: number = _.toInteger(details.numSharedCount);
+              const totalRooms: number = _.toInteger(details.numRoomsCreated);
+              const contentShared: number = _.toInteger(details.numSharedCount);
 
               if (totalRooms > 0) {
                 graphItem.avgRooms = parseFloat(details.avgRoomsPerUser).toFixed(this.ReportConstants.FIXED);
@@ -206,19 +206,19 @@ export class SparkLineReportService {
   }
 
   // Media Quality Data
-  public getMediaQualityData(filter: ITimespan): ng.IHttpPromise<Array<IMediaData>> {
+  public getMediaQualityData(filter: ITimespan): ng.IHttpPromise<IMediaData[]> {
     // cancel any currently running jobs
     if (this.mediaDeferred) {
       this.mediaDeferred.resolve(this.ReportConstants.ABORT);
     }
     this.mediaDeferred = this.$q.defer();
 
-    let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'callQuality', this.SIMPLE_COUNT);
+    const options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'callQuality', this.SIMPLE_COUNT);
     options.cache = false;
-    return this.CommonReportService.getCustomerAltReportByType(options, this.mediaDeferred).then((response: any): Array<IMediaData> => {
-      let data: any = _.get(response, 'data.data', []);
+    return this.CommonReportService.getCustomerAltReportByType(options, this.mediaDeferred).then((response: any): IMediaData[] => {
+      const data: any = _.get(response, 'data.data', []);
       let emptyGraph: boolean = true;
-      let graphItem: IMediaData = {
+      const graphItem: IMediaData = {
         date: '',
         totalDurationSum: 0,
         goodQualityDurationSum: 0,
@@ -237,7 +237,7 @@ export class SparkLineReportService {
         partialVideoSum: 0,
         balloon: true,
       };
-      let graph: Array<IMediaData> = this.CommonReportService.getReturnLineGraph(filter, graphItem);
+      const graph: IMediaData[] = this.CommonReportService.getReturnLineGraph(filter, graphItem);
 
       _.forEach(data, (item: any): void => {
         const details: any = _.get(item, 'details');
@@ -283,21 +283,21 @@ export class SparkLineReportService {
       } else {
         return graph;
       }
-    }, (error): Array<IMediaData> => {
+    }, (error): IMediaData[] => {
       return this.CommonReportService.returnErrorCheck(error, 'mediaQuality.customerError', []);
     });
   }
 
   // Call Metrics Services
-  public getMetricsData(filter: ITimespan): ng.IHttpPromise<Array<IMetricsData>> {
+  public getMetricsData(filter: ITimespan): ng.IHttpPromise<IMetricsData[]> {
     // cancel any currently running jobs
     if (this.metricsDeferred) {
       this.metricsDeferred.resolve(this.ReportConstants.ABORT);
     }
     this.metricsDeferred = this.$q.defer();
 
-    let responseArray: Array<IMetricsData> = [];
-    let defaultMetrics: IMetricsData = {
+    const responseArray: IMetricsData[] = [];
+    const defaultMetrics: IMetricsData = {
       dataProvider: [{
         callCondition: this.$translate.instant('callMetrics.audioCalls'),
         numCalls: 0,
@@ -313,20 +313,20 @@ export class SparkLineReportService {
       dummy: false,
     };
 
-    let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'callMetrics', this.SIMPLE_COUNT);
+    const options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'callMetrics', this.SIMPLE_COUNT);
     options.cache = false;
-    return this.CommonReportService.getCustomerAltReportByType(options, this.metricsDeferred).then((response: any): Array<IMetricsData> => {
-      let data: Array<any> = _.get(response, 'data.data', []);
+    return this.CommonReportService.getCustomerAltReportByType(options, this.metricsDeferred).then((response: any): IMetricsData[] => {
+      const data: any[] = _.get(response, 'data.data', []);
       _.forEach(data, (dataItem: any): void => {
-        let returnItem: IMetricsData = _.cloneDeep(defaultMetrics);
-        let details: any = _.get(dataItem, 'details', undefined);
+        const returnItem: IMetricsData = _.cloneDeep(defaultMetrics);
+        const details: any = _.get(dataItem, 'details', undefined);
 
         if (details) {
-          let totalCalls: number = _.toInteger(details.totalCalls);
+          const totalCalls: number = _.toInteger(details.totalCalls);
           if (totalCalls > 0) {
-            let audioCalls: number = _.toInteger(details.sparkUcAudioCalls);
-            let successfulCalls: number = _.toInteger(details.totalSuccessfulCalls);
-            let videoCalls: number = _.toInteger(details.sparkUcVideoCalls) + _.toInteger(details.sparkVideoCalls);
+            const audioCalls: number = _.toInteger(details.sparkUcAudioCalls);
+            const successfulCalls: number = _.toInteger(details.totalSuccessfulCalls);
+            const videoCalls: number = _.toInteger(details.sparkUcVideoCalls) + _.toInteger(details.sparkVideoCalls);
 
             returnItem.dataProvider[0].numCalls = audioCalls;
             returnItem.dataProvider[0].percentage = this.CommonReportService.getPercentage(audioCalls, successfulCalls);
@@ -355,7 +355,7 @@ export class SparkLineReportService {
       this.deviceDeferred.resolve(this.ReportConstants.ABORT);
     }
     this.deviceDeferred = this.$q.defer();
-    let deviceArray: IEndpointContainer = {
+    const deviceArray: IEndpointContainer = {
       graphData: [{
         deviceType: this.ReportConstants.DEFAULT_ENDPOINT.label,
         graph: [],
@@ -365,7 +365,7 @@ export class SparkLineReportService {
       filterArray: [this.ReportConstants.DEFAULT_ENDPOINT],
     };
 
-    let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'devicecountsbytype', undefined);
+    const options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'devicecountsbytype', undefined);
     options.cache = false;
     return this.CommonReportService.getCustomerAltReportByType(options, this.deviceDeferred).then((response: any): IEndpointContainer => {
       return this.analyzeDeviceData(response, filter, deviceArray);
@@ -375,12 +375,12 @@ export class SparkLineReportService {
   }
 
   private analyzeDeviceData(response: any, filter: ITimespan, deviceArray: IEndpointContainer): IEndpointContainer {
-    let data: Array<any> = _.get(response, 'data.data', []);
-    let graphItem: IEndpointData = {
+    const data: any[] = _.get(response, 'data.data', []);
+    const graphItem: IEndpointData = {
       date: '',
       totalRegisteredDevices: 0,
     };
-    let defaultGraph: Array<IEndpointData> = this.CommonReportService.getReturnLineGraph(filter, graphItem);
+    const defaultGraph: IEndpointData[] = this.CommonReportService.getReturnLineGraph(filter, graphItem);
     deviceArray.graphData[0].graph = _.cloneDeep(defaultGraph);
 
     _.forEach(data, (item: any, index: number): void => {
@@ -388,7 +388,7 @@ export class SparkLineReportService {
         value: (index + 1),
         label: item.deviceType,
       });
-      let tempGraph: IEndpointWrapper = {
+      const tempGraph: IEndpointWrapper = {
         deviceType: item.deviceType,
         graph: _.cloneDeep(defaultGraph),
         emptyGraph: true,
@@ -396,8 +396,8 @@ export class SparkLineReportService {
       };
 
       _.forEach(item.details, (detail: string, date: string): void => {
-        let registeredDevices: number = _.toInteger(detail);
-        let modifiedDate: string = this.CommonReportService.getModifiedDate(date, filter);
+        const registeredDevices: number = _.toInteger(detail);
+        const modifiedDate: string = this.CommonReportService.getModifiedDate(date, filter);
 
         _.forEach(tempGraph.graph, (graphPoint: IEndpointData, index: number): void => {
           if (graphPoint.date === modifiedDate && (registeredDevices > 0)) {

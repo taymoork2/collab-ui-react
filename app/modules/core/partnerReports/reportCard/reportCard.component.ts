@@ -15,7 +15,7 @@ class ReportCardCtrl {
   // overall Report Variables
   public options: IReportCard;
   public dropdown: IReportDropdown;
-  public labels: Array<IReportLabel>;
+  public labels: IReportLabel[];
   public show: boolean = true;
   public time: ITimespan;
   public lowerTooltip: IReportTooltip;
@@ -28,7 +28,7 @@ class ReportCardCtrl {
   public secondaryOptions: ISecondaryReport;
 
   public currentPage: number = 1;
-  public pagingButtons: Array<number> = [1, 2, 3];
+  public pagingButtons: number[] = [1, 2, 3];
   public secondaryReport: boolean = false;
   public totalPages: number = 0;
   public resizePage: Function;
@@ -170,7 +170,7 @@ class ReportCardCtrl {
 
   private setSortOptions(): void {
     if (this.secondaryOptions && this.secondaryOptions.sortOptions) {
-      let sortOptions: Array<IReportSortOption> = this.secondaryOptions.sortOptions;
+      const sortOptions: IReportSortOption[] = this.secondaryOptions.sortOptions;
       this.predicate = sortOptions[sortOptions.length - 1];
       this.reverse = this.predicate.direction;
     }
@@ -200,10 +200,10 @@ class ReportCardCtrl {
     return this.reverse;
   }
 
-  public getTable(): Array<any> {
-    let returnArray: Array<any> = [];
+  public getTable(): any[] {
+    const returnArray: any[] = [];
     _.forEach(this.secondaryOptions.table.data, (item: any): void => {
-      let userName = item.userName;
+      const userName = item.userName;
       if (this.searchField === undefined || this.searchField === '' || (userName && (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(this.searchField.toLowerCase().replace(/_/g, ' ')) > -1)) {
         returnArray.push(item);
       }
@@ -250,7 +250,7 @@ class ReportCardCtrl {
 
   public secondaryReportSort(selected: number): void {
     if (this.secondaryOptions) {
-      let sortOptions: Array<IReportSortOption> = this.secondaryOptions.sortOptions;
+      const sortOptions: IReportSortOption[] = this.secondaryOptions.sortOptions;
       if (sortOptions && this.predicate === sortOptions[selected]) {
         this.reverse = !this.reverse;
       } else if (sortOptions) {

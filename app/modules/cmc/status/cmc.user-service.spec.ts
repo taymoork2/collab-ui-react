@@ -23,7 +23,7 @@ describe('CmcUserService', () => {
 
   it('should use uss to find users with cmc entitlement', function () {
 
-    let userStatusInfoResponse: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse>{
+    const userStatusInfoResponse: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse>{
       userStatuses: [
         { userId: '1', state: 'a' },
         { userId: '2', state: 'b' },
@@ -31,7 +31,7 @@ describe('CmcUserService', () => {
       ],
     };
 
-    let orgId = this.Authinfo.getOrgId();
+    const orgId = this.Authinfo.getOrgId();
     this.$httpBackend
       .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?limit=100&entitled=true&serviceId=cmc')
       .respond(userStatusInfoResponse);
@@ -45,9 +45,9 @@ describe('CmcUserService', () => {
 
   it('should list cmc users containing call aware status', function () {
 
-    let orgId = this.Authinfo.getOrgId();
+    const orgId = this.Authinfo.getOrgId();
 
-    let usersWithCmcResponse: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse>{
+    const usersWithCmcResponse: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse>{
       userStatuses: [
         { userId: '1', state: 'a' },
         { userId: '2', state: 'b' },
@@ -58,54 +58,55 @@ describe('CmcUserService', () => {
       .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?limit=100&entitled=true&serviceId=cmc')
       .respond(usersWithCmcResponse);
 
-    let userWithAwareResponse = <ICmcUserStatusInfoResponse>{
+    const userWithAwareResponse = <ICmcUserStatusInfoResponse>{
       userStatuses: [
         { userId: '1', state: 'a' },
         { userId: '3', state: 'c' },
         { userId: '4', state: 'c' },
       ],
     };
+
     this.$httpBackend
-      .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?limit=100&entitled=true&serviceId=squared-fusion-uc')
+      .when('GET', this.UrlConfig.getUssUrl() + 'uss/api/v1/orgs/' + orgId + '/userStatuses?serviceId=squared-fusion-uc&userId=1,2,3')
       .respond(userWithAwareResponse);
 
-    let expectedResult: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse> {
+    const expectedResult: ICmcUserStatusInfoResponse = <ICmcUserStatusInfoResponse> {
       userStatuses: [
         { userId: '1', state: '' },
         { userId: '2', state: 'cmc.statusPage.callServiceAwareNotEntitled' },
         { userId: '3', state: '' },
       ],
     };
-    this.CmcUserService.getUsersWithCmcButMissingAware(100).then((result) => {
+    this.CmcUserService.getUsersWithCmcAndDetectMissingAware(100).then((result) => {
       expect(result).toEqual(expectedResult);
     });
 
     this.$httpBackend.flush();
   });
 
-  it('should insert display name to user statuses', function () {
+  it('should fetch name/info from CI and insert to user statuses', function () {
 
-    let orgId = this.Authinfo.getOrgId();
-
-    let nameResolvedUsers = [
-      { id: '1', displayName: 'helge' },
-      { id: '3', displayName: 'anders' },
-    ];
+    const orgId = this.Authinfo.getOrgId();
 
     this.$httpBackend
-      .when('GET', this.UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/reports/devices?accountIds=1,2,3')
-      .respond(nameResolvedUsers);
+      .when('GET', encodeURI(this.UrlConfig.getScimUrl(orgId) + '?filter=id eq 1 or id eq 2 or id eq 3'))
+      .respond({
+        Resources: [
+          { id: '1', userName: 'helge', phoneNumbers: [{ type: 'mobile', value: '+4711111111' }] },
+          { id: '3', userName: 'anders', phoneNumbers: [{ type: 'mobile', value: '+4733333333' }] },
+        ],
+      });
 
-    let userStatuses: Array<ICmcUserStatus> = <Array<ICmcUserStatus>> [
+    const userStatuses: ICmcUserStatus[] = <ICmcUserStatus[]> [
       { userId: '1', state: 'a' },
       { userId: '2', state: 'b' },
       { userId: '3', state: 'c' },
     ];
 
-    let expectedResult: Array<ICmcUserStatus> = <Array<ICmcUserStatus>> [
-      { userId: '1', state: 'a', displayName: 'helge' },
+    const expectedResult: ICmcUserStatus[] = <ICmcUserStatus[]> [
+      { userId: '1', state: 'a', userName: 'helge', mobileNumber: '+4711111111' },
       { userId: '2', state: 'b' },
-      { userId: '3', state: 'c', displayName: 'anders' },
+      { userId: '3', state: 'c', userName: 'anders', mobileNumber: '+4733333333' },
     ];
 
     this.CmcUserService.insertUserDisplayNames(userStatuses).then((result) => {

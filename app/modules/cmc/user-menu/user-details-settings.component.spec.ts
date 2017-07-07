@@ -44,7 +44,7 @@ describe('Component: cmcUserDetailsSettings ', () => {
       this.controller.$onInit();
 
       // Has to title sections
-      let element = this.view.find(TITLE_ROW);
+      const element = this.view.find(TITLE_ROW);
       expect(element.get(0)).toExist();
       expect(element.get(1)).toExist();
     });
@@ -190,7 +190,7 @@ describe('Component: cmcUserDetailsSettings ', () => {
   });
 
   function dummyUser(): IUser {
-    let user: IUser = <IUser> {
+    const user: IUser = <IUser> {
       meta: {
         organizationID: '1234',
       },

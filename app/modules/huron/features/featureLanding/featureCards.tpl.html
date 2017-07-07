@@ -21,7 +21,7 @@
           </div>
           <div class="card-section" ng-if="huronFeature.filterValue === 'CP'">
             <span class="card-section-num">
-              <span ng-if="huronFeature.endRange === huronFeature.startRange">{{ ::huronFeature.startRange }}</span><span ng-if="huronFeature.endRange !== huronFeature.startRange"> {{ ::(huronFeature.endRange - huronFeature.startRange)+ ' '+ ('huronHuntGroup.numbers' | translate) }}</span>
+              <span ng-if="huronFeature.endRange === huronFeature.startRange">{{ ::huronFeature.startRange }}</span><span ng-if="huronFeature.endRange !== huronFeature.startRange"> {{ ::(huronFeature.endRange - huronFeature.startRange + 1)+ ' '+ ('huronHuntGroup.numbers' | translate) }}</span>
             </span>
           </div>
           <div class="card-section" ng-if="huronFeature.filterValue === 'PG'">

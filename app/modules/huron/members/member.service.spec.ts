@@ -11,7 +11,7 @@ describe('Service: MemberService', () => {
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
-    let membersList = {
+    const membersList = {
       members: [
         new Member({
           uuid: '0001',

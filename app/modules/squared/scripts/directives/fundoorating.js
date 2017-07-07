@@ -19,7 +19,6 @@
         onRatingSelected: '&',
       },
       link: function (scope) {
-
         var updateStars = function () {
           scope.stars = [];
           for (var i = 0; i < scope.max; i++) {

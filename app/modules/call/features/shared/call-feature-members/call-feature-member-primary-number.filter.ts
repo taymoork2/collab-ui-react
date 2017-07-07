@@ -14,12 +14,12 @@ import { Line } from 'modules/huron/lines/services';
 export function callFeatureMemberPrimaryNumberFilter($translate, PhoneNumberService) {
   return filter;
 
-  function filter(numbers: Array<Line>, includeExternal: boolean = false): string {
-    let number: Line = _.find<Line>(numbers, (item) => {
+  function filter(numbers: Line[], includeExternal: boolean = false): string {
+    const number: Line = _.find<Line>(numbers, (item) => {
       return item.primary === true;
     });
     let filteredNumber = _.get(number, 'internal', '');
-    let externalNumber = _.get(number, 'external');
+    const externalNumber = _.get(number, 'external');
 
     if (includeExternal && externalNumber) {
       filteredNumber += ' ' + $translate.instant('common.and') + ' ' + PhoneNumberService.getNationalFormat(externalNumber);

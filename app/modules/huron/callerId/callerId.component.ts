@@ -46,7 +46,7 @@ class CallerId implements ng.IComponentController {
     this.initCallerId();
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const {
       directLine,
       companyNumbers,
@@ -77,7 +77,7 @@ class CallerId implements ng.IComponentController {
       }
     }
     if (directLine && (typeof changes.directLine.previousValue !== 'object' || changes.directLine.previousValue === null)) {
-      let data = this.changeDirectLine(<string>_.get(changes, 'directLine.currentValue'), this.callerIdSelected);
+      const data = this.changeDirectLine(<string>_.get(changes, 'directLine.currentValue'), this.callerIdSelected);
       this.callerIdOptions = data.options;
       this.callerIdSelected = data.selected;
       this.onChange();
@@ -99,7 +99,7 @@ class CallerId implements ng.IComponentController {
   }
 
   public getSelected(selected: string): CallerIdConfig | any {
-    let selectedArray = this.options.filter(option => {
+    const selectedArray = this.options.filter(option => {
       return selected === option.value.externalCallerIdType;
     });
     if (selectedArray.length) {
@@ -143,7 +143,7 @@ class CallerId implements ng.IComponentController {
     };
   }
   public changeDirectLine(directLine: string, selected: CallerIdOption | any): {options: IOption[], selected: IOption} {
-    let directLineArray = _.filter(this.options, this.hasOption(CallerId.DIRECT_LINE_TYPE.name));
+    const directLineArray = _.filter(this.options, this.hasOption(CallerId.DIRECT_LINE_TYPE.name));
     if (directLineArray.length) {
       this.options.splice(this.options.indexOf(directLineArray[0]), 1);
     }
@@ -156,7 +156,7 @@ class CallerId implements ng.IComponentController {
     } else if (_.get(selected, 'label') === CallerId.DIRECT_LINE_TYPE.name) {
       selected = this.blockOption;
     }
-    let _selected = _.cloneDeep(selected);
+    const _selected = _.cloneDeep(selected);
     if (_.get(selected, 'value.externalCallerIdType')) {
       _selected.value = selected.value.externalCallerIdType;
     }
@@ -169,7 +169,7 @@ class CallerId implements ng.IComponentController {
   public getOptions(): IOption[] {
     let options: IOption[] = [];
     if (this.options) {
-      let _callerIdOptions = _.cloneDeep(this.options);
+      const _callerIdOptions = _.cloneDeep(this.options);
       options = <IOption[]>_callerIdOptions.map((option) => {
         return {
           label: option.label,
@@ -202,7 +202,7 @@ class CallerId implements ng.IComponentController {
         selected = this.blockOption;
         break;
     }
-    let _selected = {
+    const _selected = {
       value: selected.value.externalCallerIdType,
       label: selected.label,
     };

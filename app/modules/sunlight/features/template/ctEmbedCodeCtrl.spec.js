@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Chat template embed code control', function () {
-
   var controller, $scope, CTService, createController, mockWindow, anchorElem, fakeCodeSnippet, SunlightConfigService, q;
 
   beforeEach(angular.mock.module('Sunlight'));
@@ -56,8 +55,8 @@ describe('Chat template embed code control', function () {
   it('should return null data when the org has no verified domains', function () {
     spyOn(SunlightConfigService, 'getChatConfig').and.callFake(function () {
       var data = {
-        "allowedOrigins": [
-          ".*",
+        allowedOrigins: [
+          '.*',
         ],
       };
       return q.resolve({ data: data });
@@ -73,9 +72,9 @@ describe('Chat template embed code control', function () {
   it('should return data when the org has verified domains', function () {
     spyOn(SunlightConfigService, 'getChatConfig').and.callFake(function () {
       var data = {
-        "allowedOrigins": [
-          "ciscoccservice.com",
-          "cisco.com",
+        allowedOrigins: [
+          'ciscoccservice.com',
+          'cisco.com',
         ],
       };
       return q.resolve({ data: data });
@@ -99,5 +98,4 @@ describe('Chat template embed code control', function () {
     expect(result.error).toBe(true);
     expect(result.warn).toBe(false);
   });
-
 });

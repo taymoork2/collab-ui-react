@@ -5,7 +5,7 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
     return undefined;
   }
 
-  private _buttons: Array<ICardButton> = [{
+  private _buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.care.buttons.features',
     routerState: 'care.Features',
     buttonClass: 'btn-link',
@@ -15,7 +15,7 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.active) {
       return this._buttons;
     }

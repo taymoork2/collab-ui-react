@@ -36,7 +36,6 @@
     }
 
     $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
-
       if (typeof to.authenticate === 'undefined' || to.authenticate) {
         if (Authinfo.isInitialized()) {
           if (!Authinfo.isAllowedState(to.name)) {

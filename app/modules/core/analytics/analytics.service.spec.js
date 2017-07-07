@@ -153,12 +153,10 @@ describe('Service: Analytics', function () {
       this.$scope.$apply();
       expect(result.length).toBe(2);
       expect(result).toContain({ model: 'CISCO_8865', qty: 3 });
-
     });
   });
 
   describe('when tracking Add Users steps', function () {
-
     it('should call _track when trackAddUsers is called', function () {
       this.Analytics.trackAddUsers(this.Analytics.eventNames.START, {});
       this.$scope.$apply();
@@ -171,7 +169,6 @@ describe('Service: Analytics', function () {
       expect(this.Analytics._track).toHaveBeenCalled();
       var props = this.Analytics._track.calls.mostRecent().args[1];
       expect(props.cisco_isPartner).toEqual('true');
-
     });
     it('should add additional properties if passed in', function () {
       this.Analytics.trackAddUsers(this.Analytics.eventNames.START, null, { someProp: 'test' });
@@ -179,7 +176,6 @@ describe('Service: Analytics', function () {
       expect(this.Analytics._track).toHaveBeenCalled();
       var props = this.Analytics._track.calls.mostRecent().args[1];
       expect(props.cisco_someProp).toEqual('test');
-
     });
   });
 
@@ -194,7 +190,6 @@ describe('Service: Analytics', function () {
       expect(result).toBe('trial');
     });
     it('should return active when has licenses and no trial', function () {
-
       var licenseList = _.map(customerData.licenseList,
         function (license) {
           license.isTrial = false;

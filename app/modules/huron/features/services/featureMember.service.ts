@@ -22,9 +22,9 @@ export class FeatureMemberService {
   ) {}
 
   public getMemberPicture(memberId: string): ng.IPromise<IFeatureMemberPicture> {
-    let scimUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + memberId;
+    const scimUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + memberId;
     return this.$http.get(scimUrl, {}).then((response) => {
-      let memberPicture = <IFeatureMemberPicture>{
+      const memberPicture = <IFeatureMemberPicture>{
         memberUuid: memberId,
         thumbnailSrc: _.get(_.find(_.get(response, 'data.photos', []), { type: 'thumbnail' }), 'value', ''),
       };
@@ -33,7 +33,7 @@ export class FeatureMemberService {
   }
 
   public getUser(memberId: string): ng.IPromise<string> {
-    let scimUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + memberId;
+    const scimUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + memberId;
     return this.$http.get(scimUrl, {}).then((response) => {
       return _.get(response, 'data');
     });
@@ -44,8 +44,8 @@ export class FeatureMemberService {
   }
 
   public getFullNameFromUser(user: any): string {
-    let givenName = this.getFirstNameFromUser(user);
-    let familyName = this.getLastNameFromUser(user);
+    const givenName = this.getFirstNameFromUser(user);
+    const familyName = this.getLastNameFromUser(user);
     if (givenName && familyName) {
       return givenName + ' ' + familyName;
     }
@@ -69,7 +69,7 @@ export class FeatureMemberService {
   }
 
   public getPlace(memberId: string): ng.IPromise<any> {
-    let cmiV2Url = this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/' + memberId;
+    const cmiV2Url = this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/' + memberId;
     return this.$http.get(cmiV2Url, {}).then((response) => {
       return _.get(response, 'data');
     });
@@ -105,7 +105,7 @@ export class FeatureMemberService {
     let name = '';
 
     if (member.type === USER_REAL_USER || member.type === MemberTypeConst.USER) {
-      let firstLastName = this.getFirstLastName(member);
+      const firstLastName = this.getFirstLastName(member);
       if (firstLastName !== '') {
         name = (firstLastName + ' (' + this.getUserName(member) + ')');
       } else {
@@ -151,7 +151,7 @@ export class FeatureMemberService {
   }
 
   public getMachineAcct(uuid: string): ng.IPromise<any> {
-    let domainMgmtUrl = this.UrlConfig.getDomainManagementUrl(this.Authinfo.getOrgId()) + 'Machines/' + uuid;
+    const domainMgmtUrl = this.UrlConfig.getDomainManagementUrl(this.Authinfo.getOrgId()) + 'Machines/' + uuid;
 
     return this.$http.get(domainMgmtUrl, {}).then((response) => {
       return _.get(response, 'data');

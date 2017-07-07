@@ -13,7 +13,7 @@ describe('CloudConnectorService', () => {
   }));
 
   function mockDependencies($provide) {
-    let Authinfo = {
+    const Authinfo = {
       getOrgId: jasmine.createSpy('Authinfo.getOrgId').and.returnValue('myOrgId'),
       isFusionGoogleCal: jasmine.createSpy('Authinfo.isFusionGoogleCal').and.returnValue(true),
     };
@@ -44,12 +44,12 @@ describe('CloudConnectorService', () => {
     });
 
     it('should post the service account, ACL account, and private key to the correct API', () => {
-      let inputData = {
+      const inputData = {
         apiClientId: '123',
         testEmailAccount: 'test@example.org',
         aclAdminAccount: 'acl@example.org',
       };
-      let dataToBeSentToServer = {
+      const dataToBeSentToServer = {
         apiClientId: '123',
         testEmailAccount: 'test@example.org',
         aclAdminAccount: 'acl@example.org',
@@ -87,14 +87,14 @@ describe('CloudConnectorService', () => {
   describe(' error handling ', () => {
 
     it('should map a valid error code to a translation key', () => {
-      let errorCode = 1;
-      let returnedTranslationKey = CloudConnectorService.getProvisioningResultTranslationKey(errorCode);
+      const errorCode = 1;
+      const returnedTranslationKey = CloudConnectorService.getProvisioningResultTranslationKey(errorCode);
       expect(returnedTranslationKey).toBe('hercules.settings.googleCalendar.provisioningResults.INVALID_API_ACCESS_KEY');
     });
 
     it('should default to the general error if the error code is not in the enum', () => {
-      let errorCode = 1913;
-      let returnedTranslationKey = CloudConnectorService.getProvisioningResultTranslationKey(errorCode);
+      const errorCode = 1913;
+      const returnedTranslationKey = CloudConnectorService.getProvisioningResultTranslationKey(errorCode);
       expect(returnedTranslationKey).toBe('hercules.settings.googleCalendar.provisioningResults.GENERAL_ERROR');
     });
 

@@ -14,7 +14,9 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   public orgReady: boolean = false;
   public userReady: boolean = false;
 
-  public issues: ICmcIssue[];  public messages = {
+  public issues: ICmcIssue[] | null = null;
+  private orgIssues: ICmcIssue[] | null;
+  public messages = {
     pattern: 'Invalid Mobile Number',
   };
   private oldCmcUserData: ICmcUserData;
@@ -36,11 +38,17 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     };
 
     this.$log.warn('Current user:', this.user);
-    this.validateOrgAndUserContent(this.user);
+    if (this.isUserCmcEntitled(this.user)) {
+      this.validateOrgAndUserContent(this.user);
+    }
+  }
+
+  private isUserCmcEntitled(user: ICmcUser): boolean {
+    return _.includes(user.entitlements, 'cmc');
   }
 
   private extractCmcData() {
-    let persistedCmcData: ICmcUserData = this.CmcService.getUserData(this.user);
+    const persistedCmcData: ICmcUserData = this.CmcService.getUserData(this.user);
     this.entitled = persistedCmcData.entitled;
     this.mobileNumber = persistedCmcData.mobileNumber;
   }
@@ -49,7 +57,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   //      Are we sure that we handle things correctly when user changes
   //      while we're in the cmc settings page for the user.
   //      For example in the middle of a save dialog...
-  // public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  // public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
   //   let userChanges = changes['user'];
   //   this.$log.warn('user changed unexpectedly:', userChanges);
   //   if (userChanges) {
@@ -61,7 +69,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   // }
 
   public save(): void {
-    let newData: ICmcUserData = {
+    const newData: ICmcUserData = {
       mobileNumber: this.mobileNumber,
       entitled: this.entitled,
     };
@@ -83,23 +91,36 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     this.entitled = this.oldCmcUserData.entitled;
     this.mobileNumber = this.oldCmcUserData.mobileNumber;
     this.validDataChange = false;
+    this.issues = this.orgIssues;
   }
 
   public dataChanged() {
-    let valid: boolean = this.validate();
+    const valid: boolean = this.validate();
     this.$log.debug('invalid', !valid, this.mobileChanged(), this.enableChanged());
     this.invalid = !valid && (this.mobileChanged() || this.enableChanged());
     this.validDataChange = valid;
     this.invalidMessage = this.getInvalidMessage();
+    if (!this.invalid && this.entitled) {
+      this.validateOrgAndUserContent(this.user);
+    } else {
+      this.orgIssues = this.issues;
+      this.issues = null;
+    }
   }
 
   public entitle(toggleValue) {
     this.entitled = toggleValue;
-    let valid: boolean = this.validate();
+    const valid: boolean = this.validate();
     this.$log.debug('invalid', !valid, this.mobileChanged(), this.enableChanged());
     this.invalid = !valid && (this.mobileChanged() || this.enableChanged());
     this.validDataChange = valid;
     this.invalidMessage = this.getInvalidMessage();
+    if (!this.invalid && toggleValue) {
+      this.validateOrgAndUserContent(this.user);
+    } else {
+      this.orgIssues = this.issues;
+      this.issues = null;
+    }
   }
 
   public validateOrgAndUserContent(user: IUser) {
@@ -109,18 +130,23 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     this.precheckOrg(user.meta.organizationID)
       .then((res: ICmcOrgStatusResponse) => {
         this.orgReady = (res.status === 'ok');
+        this.precheckUser(user)
+          .then((res: ICmcUserStatusResponse) => {
+            this.userReady = (res.status === 'ok');
+          });
       });
-    this.precheckUser(user)
-      .then((res: ICmcUserStatusResponse) => {
-        this.userReady = (res.status === 'ok');
-      });
+    // this.precheckUser(user)
+    //   .then((res: ICmcUserStatusResponse) => {
+    //     console.warn('res', res);
+    //     this.userReady = (res.status === 'ok');
+    //   });
   }
 
   private precheckUser(user: IUser): ng.IPromise<ICmcUserStatusResponse> {
     return this.CmcService.preCheckUser(user)
       .then((res: ICmcUserStatusResponse) => {
         this.$log.debug('precheckUser:', res);
-        if (res.status === 'error' && res.issues) {
+        if (res.status === 'error' && res.issues && this.issues) {
           this.issues.push(res.issues[ 0 ]);
         }
         return res;
@@ -131,7 +157,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     return this.CmcService.preCheckOrg(orgId)
       .then((res: ICmcOrgStatusResponse) => {
         this.$log.debug('precheckOrg', res);
-        if (res.status === 'error' && res.issues) {
+        if (res.status === 'error' && res.issues && this.issues) {
           this.issues.push(res.issues[ 0 ]);
         }
         return res;
@@ -152,9 +178,9 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   }
 
   private validate(): boolean {
-    let check1: boolean = (!_.isNil(this.mobileNumber) && this.mobileNumber.length === 0) && !this.entitled && (this.mobileChanged() || this.enableChanged());
-    let check2: boolean = !_.isNil(this.mobileNumber) && this.isE164() && (this.mobileChanged() || this.enableChanged());
-    let check3: boolean = !_.isNil(this.mobileNumber) && this.isE164() && this.mobileChanged() && !this.entitled;
+    const check1: boolean = (!_.isNil(this.mobileNumber) && this.mobileNumber.length === 0) && !this.entitled && (this.mobileChanged() || this.enableChanged());
+    const check2: boolean = !_.isNil(this.mobileNumber) && this.isE164() && (this.mobileChanged() || this.enableChanged());
+    const check3: boolean = !_.isNil(this.mobileNumber) && this.isE164() && this.mobileChanged() && !this.entitled;
     return check1 || check2 || check3;
   }
 

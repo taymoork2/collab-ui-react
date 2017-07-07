@@ -462,8 +462,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       cisUuid = 'testId';
       userCisUuid = '09u0testId';
       userOrgId = '01gyq8awg-orgId';
-      deviceName = "name";
-      deviceOrgId = "05oaj2fdj-orgId";
+      deviceName = 'name';
+      deviceOrgId = '05oaj2fdj-orgId';
       activationCode = '1234567887654321';
       expiryTime = '1337-01-01T13:37:00.000Z';
       directoryNumber = '1234';
@@ -659,7 +659,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     });
 
     describe('of type cloudberry', function () {
-
       describe('with new place', function () {
         beforeEach(function () {
           stateParams.wizard = cloudberryNewPlace;
@@ -682,7 +681,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         describe('sending an activation email', function () {
-
           it('should send it to selected user and notify success', function () {
             $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/placeactivationcode/roomdevice').respond(200);
             spyOn(CsdmEmailService, 'sendCloudberryEmail').and.callThrough();
@@ -747,7 +745,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         describe('sending an activation email', function () {
-
           it('should send it to selected user and notify success', function () {
             $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/placeactivationcode/roomdevice').respond(200);
             spyOn(CsdmEmailService, 'sendCloudberryEmail').and.callThrough();
@@ -773,7 +770,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     });
 
     describe('of type huron', function () {
-
       describe('with new place', function () {
         var newPlace;
         beforeEach(function () {
@@ -800,7 +796,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         describe('sending an activation email', function () {
-
           it('should send it to selected user and notify success', function () {
             $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/placeactivationcode/deskphone').respond(200);
             spyOn(CsdmEmailService, 'sendHuronEmail').and.callThrough();
@@ -843,7 +838,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         describe('sending an activation email', function () {
-
           it('should send it to selected user and notify success', function () {
             $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/placeactivationcode/deskphone').respond(200);
             spyOn(CsdmEmailService, 'sendHuronEmail').and.callThrough();

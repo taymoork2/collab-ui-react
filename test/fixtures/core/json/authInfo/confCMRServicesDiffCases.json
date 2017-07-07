@@ -1,0 +1,69 @@
+{
+  "conf": [
+    {
+      "label": "Enterprise Edition 200",
+      "value": 1,
+      "name": "confRadio",
+      "license": {
+        "licenseId": "EE_348506b4-f827-4f8b-92fc-aea191241a81_jp88000.webex.com",
+        "offerName": "EE",
+        "licenseType": "CONFERENCING",
+        "features": [
+          "cloudmeetings"
+        ],
+        "volume": 100,
+        "isTrial": true,
+        "trialId": "5dd04fdb-9931-42bc-bd26-a38779fff099",
+        "status": "ACTIVE",
+        "capacity": 200,
+        "siteUrl": "jp-test-org.webex.com",
+        "partnerOrgId": "4e2befa3-9d82-4fdf-ad31-bb862133f078",
+        "partnerEmail": "admin@squareduc-partner.com",
+        "isCIUnifiedSite": true
+      },
+      "isCustomerPartner": false
+    }, {
+      "label": "Meeting 25 Party",
+      "value": 1,
+      "name": "confRadio",
+      "license": {
+        "licenseId": "CF_10738142-74bc-4313-b6ee-de6fa1395799",
+        "offerName": "CF",
+        "licenseType": "CONFERENCING",
+        "features": [
+          "squared-syncup"
+        ],
+        "volume": 100,
+        "isTrial": true,
+        "trialId": "5dd04fdb-9931-42bc-bd26-a38779fff099",
+        "status": "ACTIVE",
+        "partnerOrgId": "4e2befa3-9d82-4fdf-ad31-bb862133f078",
+        "partnerEmail": "admin@squareduc-partner.com"
+      },
+      "isCustomerPartner": false
+    }
+  ],
+  "cmr": [
+    {
+      "label": "Collaboration Meeting Rooms",
+      "value": 1,
+      "name": "cmrRadio",
+      "license": {
+        "licenseId": "CMR_4b982113-0548-4409-8604-ab22f2aa30cd_jp88000.webex.com",
+        "offerName": "CMR",
+        "licenseType": "CMR",
+        "features": [],
+        "volume": 100,
+        "isTrial": true,
+        "trialId": "5dd04fdb-9931-42bc-bd26-a38779fff099",
+        "status": "ACTIVE",
+        "capacity": 200,
+        "siteUrl": "JP-TEST-ORG.webex.com",
+        "partnerOrgId": "4e2befa3-9d82-4fdf-ad31-bb862133f078",
+        "partnerEmail": "admin@squareduc-partner.com",
+        "isCIUnifiedSite": true
+      },
+      "isCustomerPartner": false
+    }
+  ]
+}

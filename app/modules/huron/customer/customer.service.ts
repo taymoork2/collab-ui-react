@@ -19,7 +19,7 @@ export class HuronCustomerService {
     private HuronConfig,
   ) {
 
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 

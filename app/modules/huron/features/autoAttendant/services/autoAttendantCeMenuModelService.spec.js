@@ -15,15 +15,15 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var ceMenuFull;
 
   var ceWelcome2 = {
-    "callExperienceName": "AA Welcome",
-    "assignedResources": [{
-      "trigger": "incomingCall",
-      "type": "directoryNumber",
-      "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3",
+    callExperienceName: 'AA Welcome',
+    assignedResources: [{
+      trigger: 'incomingCall',
+      type: 'directoryNumber',
+      id: 'e7d68d8c-9e92-4330-a881-5fc9ace1f7d3',
     }],
-    "defaultActionSet": "openHours",
-    "scheduleEventTypeMap": {
-      "open": "openHours",
+    defaultActionSet: 'openHours',
+    scheduleEventTypeMap: {
+      open: 'openHours',
     },
     actionSets: [{
       name: 'openHours',
@@ -119,8 +119,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     it('should be able to update a ceRecord with submenu that has a Go Back', function () {
       var _ceRecord = _.cloneDeep(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Combined';
-      _ceRecord.assignedResources[0]['id'] = "81005005";
-      _ceRecord.assignedResources[0]['number'] = "5005";
+      _ceRecord.assignedResources[0]['id'] = '81005005';
+      _ceRecord.assignedResources[0]['number'] = '5005';
       _ceRecord.defaultActionSet = 'openHours';
 
       var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(submenu.ceCombinedInputWithSubmenuGoBack, 'openHours');
@@ -131,8 +131,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     it('should be able to update a ceRecord with submenu that has a DialByExt', function () {
       var _ceRecord = _.cloneDeep(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Combined';
-      _ceRecord.assignedResources[0]['id'] = "81005005";
-      _ceRecord.assignedResources[0]['number'] = "5005";
+      _ceRecord.assignedResources[0]['id'] = '81005005';
+      _ceRecord.assignedResources[0]['number'] = '5005';
       _ceRecord.defaultActionSet = 'openHours';
 
       var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(submenu.ceCombinedInputWithSubmenuDialByExt, 'openHours');
@@ -145,9 +145,9 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     it('should be able to update an ceRecord with welcomeMenu (no description in goto case)', function () {
       var _ceRecord = _.cloneDeep(ceInfos[0]);
 
-      _ceRecord.defaultActionSet = "openHours";
+      _ceRecord.defaultActionSet = 'openHours';
       _ceRecord.scheduleEventTypeMap = {
-        open: "openHours",
+        open: 'openHours',
       };
       _ceRecord.callExperienceName = 'AA Welcome';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeNoDescription, 'openHours');
@@ -156,16 +156,15 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(angular.equals(_ceRecord, ceWelcomeNoDescriptionTemp)).toBe(true);
 
       expect(success).toBe(true);
-
     });
   });
 
   describe('updateMenu', function () {
     it('should be able to update an ceRecord with customMenu', function () {
       var _ceRecord = _.cloneDeep(ceInfos[0]);
-      _ceRecord.defaultActionSet = "openHours";
+      _ceRecord.defaultActionSet = 'openHours';
       _ceRecord.scheduleEventTypeMap = {
-        open: "openHours",
+        open: 'openHours',
       };
       _ceRecord.callExperienceName = 'AA Custom';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
@@ -180,16 +179,15 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
       expect(customMenuSuccess).toBe(true);
       expect(angular.equals(_ceRecord, ceCustom)).toBe(true);
-
     });
 
     it('should be able to update an ceRecord with ceWelcomeMenu', function () {
       var action;
 
       var _ceRecord = _.cloneDeep(ceInfos[0]);
-      _ceRecord.defaultActionSet = "openHours";
+      _ceRecord.defaultActionSet = 'openHours';
       _ceRecord.scheduleEventTypeMap = {
-        open: "openHours",
+        open: 'openHours',
       };
       ceWelcome = wmenu.ceWelcome;
 
@@ -217,7 +215,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
           expect(_.get(action.if, 'leftCondition', '')).toEqual('Original-Caller-Number');
           expect(_.get(action.if, 'rightCondition', '')).toEqual('12069998765');
         }
-
       }
 
       // conversely _ceRecord should hold the encode URI
@@ -243,9 +240,9 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('updateMenu', function () {
     it('should be able to update an ceRecord with optionMenu', function () {
       var _ceRecord = _.cloneDeep(ceInfos[0]);
-      _ceRecord.defaultActionSet = "openHours";
+      _ceRecord.defaultActionSet = 'openHours';
       _ceRecord.scheduleEventTypeMap = {
-        open: "openHours",
+        open: 'openHours',
       };
       _ceRecord.callExperienceName = 'AA Option';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
@@ -264,9 +261,9 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('updateMenu', function () {
     it('should be able to update a ceRecord with sorted keys in optionMenu', function () {
       var _ceRecord = _.cloneDeep(ceInfos[0]);
-      _ceRecord.defaultActionSet = "openHours";
+      _ceRecord.defaultActionSet = 'openHours';
       _ceRecord.scheduleEventTypeMap = {
-        open: "openHours",
+        open: 'openHours',
       };
       _ceRecord.callExperienceName = 'AA Option';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
@@ -374,7 +371,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
   describe('newCeActionEntry', function () {
     it('should have get and set methods defined for each attribute and be cloned successfully', function () {
-
       // check setter and getter
       var _action = AutoAttendantCeMenuModelService.newCeActionEntry('name', 'value');
       _action.setDescription('description');
@@ -401,7 +397,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
   describe('newCeMenuEntry', function () {
     it('should have get and set methods defined for each attribute and be cloned successfully', function () {
-
       // check setter and getter
       var _menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       _menuEntry.setDescription('menu entry');

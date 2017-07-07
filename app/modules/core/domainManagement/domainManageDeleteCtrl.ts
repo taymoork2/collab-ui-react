@@ -32,7 +32,7 @@ export class DomainManageDeleteCtrl {
   }
 
   public deleteDomain() {
-    let start = moment();
+    const start = moment();
     if (this._domainToDelete.status === this.DomainManagementService.states.verified || this._domainToDelete.status === this.DomainManagementService.states.pending) {
       this.DomainManagementService.unverifyDomain(this._domainToDelete.text).then(
         () => {

@@ -62,6 +62,5 @@ var IncidentPage = function () {
     utils.click(this.incidentTabLink);
     navigation.expectCurrentUrl('/gss/incidents');
   }
-
 };
 module.exports = IncidentPage;

@@ -73,6 +73,5 @@ require('modules/squared/processOrder/_countrySelectModal.scss');
           vm.isProcessing = false;
         });
     }
-
   }
 })();

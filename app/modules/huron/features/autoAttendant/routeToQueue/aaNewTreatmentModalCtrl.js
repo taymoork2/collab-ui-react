@@ -11,7 +11,7 @@
     var conditional = 'conditional';
 
     var properties = {
-      LABEL: "label",
+      LABEL: 'label',
     };
 
     vm.showLanguageAndVoiceOptions = false;
@@ -209,7 +209,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value,
+        value: vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {

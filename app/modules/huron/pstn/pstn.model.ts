@@ -6,6 +6,20 @@ export interface IOrder {
   data: any;
 }
 
+export interface IAuthLicense {
+  licenseId: string;
+  offerName: string;
+  licenseType: string;
+  features: string[];
+  isTrial: boolean;
+  trialId: string;
+  status: string;
+  partnerEmail: string;
+}
+
+export interface IAuthCustomer {
+  licenses: IAuthLicense[];
+}
 
 export class PstnModel {
   private customerId: string;
@@ -19,12 +33,14 @@ export class PstnModel {
   private carrierExists: boolean;
   private siteExists: boolean;
   private provider: PstnCarrier = new PstnCarrier();
-  private numbers: Array<Object>;
-  private orders: Array<IOrder>;
-  private carriers: Array<PstnCarrier>;
+  private numbers: Object[];
+  private orders: IOrder[];
+  private carriers: PstnCarrier[];
   private singleCarrierReseller: boolean;
   private isTrial: boolean;
   private countryCode: string;
+  private esaSigned: boolean;
+  private esaDisclaimerAgreed: boolean;
 
   public constructor() {
     this.clear();
@@ -48,6 +64,8 @@ export class PstnModel {
     this.singleCarrierReseller = false;
     this.isTrial = true;
     this.countryCode = 'US';
+    this.esaSigned = false;
+    this.esaDisclaimerAgreed = false;
   }
 
   public clearProviderSpecificData(): void {
@@ -57,6 +75,11 @@ export class PstnModel {
     this.siteExists = false;
     this.carrierExists = false;
     this.carrierExists = false;
+    this.numbers = [];
+    this.orders = [];
+  }
+
+  public clearSwivelNumbers(): void {
     this.numbers = [];
     this.orders = [];
   }
@@ -117,6 +140,14 @@ export class PstnModel {
     return this.customerExists;
   }
 
+  public isEsaSigned(): boolean {
+    return this.esaSigned;
+  }
+
+  public setEsaSigned(_esaSigned: boolean): void {
+    this.esaSigned = _esaSigned;
+  }
+
   public setResellerExists(_resellerExists: boolean): void {
     this.resellerExists = _resellerExists;
   }
@@ -153,23 +184,23 @@ export class PstnModel {
     return _.isObject(this.provider) ? this.provider.uuid : '';
   }
 
-  public setNumbers(_numbers: Array<Object>): void {
+  public setNumbers(_numbers: Object[]): void {
     this.numbers = _numbers;
   }
 
-  public getNumbers(): Array<Object> {
+  public getNumbers(): Object[] {
     return this.numbers;
   }
 
-  public setOrders(_orders: Array<IOrder>): void {
+  public setOrders(_orders: IOrder[]): void {
     this.orders = _orders;
   }
 
-  public getOrders(): Array<IOrder> {
+  public getOrders(): IOrder[] {
     return _.cloneDeep(this.orders);
   }
 
-  public setCarriers(_carriers: Array<PstnCarrier>): void {
+  public setCarriers(_carriers: PstnCarrier[]): void {
     if (_.isArray(_carriers) && _carriers.length > 0) {
       this.carrierExists = true;
       this.carriers = _carriers;
@@ -179,7 +210,7 @@ export class PstnModel {
     }
   }
 
-  public getCarriers(): Array<PstnCarrier> {
+  public getCarriers(): PstnCarrier[] {
     return this.carriers;
   }
 
@@ -207,6 +238,13 @@ export class PstnModel {
     this.countryCode = _countryCode;
   }
 
+  public isEsaDisclaimerAgreed(): boolean {
+    return this.esaDisclaimerAgreed;
+  }
+
+  public setEsaDisclaimerAgreed(_esaDisclaimerAgreed: boolean): void {
+    this.esaDisclaimerAgreed = _esaDisclaimerAgreed;
+  }
 }
 
 export default angular.module('huron.pstn.pstn-model', [

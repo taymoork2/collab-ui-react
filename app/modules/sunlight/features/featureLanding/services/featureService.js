@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function CareFeatureList(Authinfo, ConfigTemplateService) {
-
     var service = {
       getChatTemplates: getChatTemplates,
       getCallbackTemplates: getCallbackTemplates,
@@ -89,8 +88,6 @@
         return tpl;
       });
       return orderByCardName(formattedList);
-
     }
-
   }
 })();

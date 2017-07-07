@@ -47,7 +47,7 @@ require('./_user-add.scss');
     $scope.messagingLicenseAvailability = 0;
     $scope.communicationsLicenseAvailability = 0;
     $scope.conferencingLicenseAvailability = 0;
-    $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
+    $scope.dirSyncConnectorDownload = 'https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip';
 
     var isFTW = false;
     $scope.isReset = false;
@@ -149,14 +149,13 @@ require('./_user-add.scss');
       if ($scope[licenseNamePrefix + 'LicenseAvailability'] < $scope.currentUserCount) {
         $scope.licenseCheckModal();
       }
-
     };
 
     $scope.licenseCheckModal = function () {
       if (Authinfo.isOnline()) {
         $modal.open({
-          type: "dialog",
-          templateUrl: "modules/core/users/userAdd/licenseErrorModal.tpl.html",
+          type: 'dialog',
+          templateUrl: 'modules/core/users/userAdd/licenseErrorModal.tpl.html',
         }).result.then(function () {
           $previousState.forget('modalMemo');
           $state.go('my-company.subscriptions');
@@ -323,7 +322,6 @@ require('./_user-add.scss');
           $scope.usrlist[i].didDnMapMsg = 'usersPage.noExternalNumberAvail';
         }
       }
-
     }
 
     function checkDidDnDupes() {
@@ -373,7 +371,6 @@ require('./_user-add.scss');
       for (var licenseId in $scope.cmrLicensesForMetric) {
         if ($scope.cmrLicensesForMetric[licenseId]) {
           Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX, $state.current.name, Authinfo.getOrgId(), { licenseId: licenseId });
-
         }
       }
       if (shouldAddCallService()) {
@@ -400,7 +397,7 @@ require('./_user-add.scss');
         var indexOfDnColumn = _.findIndex($scope.addDnGridOptions.columnDefs, {
           field: 'internalExtension',
         });
-        if (response.extensionGenerated === "true") {
+        if (response.extensionGenerated === 'true') {
           $scope.showExtensions = false;
           $scope.addDnGridOptions.columnDefs[indexOfDidColumn].visible = false;
           $scope.addDnGridOptions.columnDefs[indexOfDnColumn].displayName = $translate.instant('usersPage.directLineHeader');
@@ -419,7 +416,7 @@ require('./_user-add.scss');
       if ($scope.showExtensions === false) {
         var dnLength = rowEntity.assignedDn.pattern.length;
         // if the internalNumber was changed, find a matching DID and set the externalNumber to match
-        if (modifiedFieldName === "internalNumber") {
+        if (modifiedFieldName === 'internalNumber') {
           var matchingDid = _.find($scope.externalNumberPool, function (extNum) {
             return extNum.pattern.substr(-dnLength) === rowEntity.assignedDn.pattern;
           });
@@ -428,7 +425,7 @@ require('./_user-add.scss');
           }
         }
         // if the externalNumber was changed, find a matching DN and set the internalNumber to match
-        if (modifiedFieldName === "externalNumber") {
+        if (modifiedFieldName === 'externalNumber') {
           var matchingDn = _.find($scope.internalNumberPool, {
             pattern: rowEntity.externalNumber.pattern.substr(-dnLength),
           });
@@ -555,7 +552,6 @@ require('./_user-add.scss');
 
     function populateConf() {
       if (userLicenseIds) {
-
         _.forEach(userLicenseIds, function (userLicenseId) {
           _.forEach($scope.allLicenses, function (siteObj) {
             if (siteObj.siteUrl === '' && !siteObj.confModel) {
@@ -691,11 +687,11 @@ require('./_user-add.scss');
       $scope.advancedLicenses = [];
 
       var formatLicense = function (site) {
-        var confMatches = _.filter(confFeatures, {
-          siteUrl: site,
+        var confMatches = _.filter(confFeatures, function (o) {
+          return _.toUpper(o.siteUrl) === _.toUpper(site);
         });
-        var cmrMatches = _.filter(cmrFeatures, {
-          siteUrl: site,
+        var cmrMatches = _.filter(cmrFeatures, function (o) {
+          return _.toUpper(o.siteUrl) === _.toUpper(site);
         });
         var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
         return {
@@ -1055,7 +1051,6 @@ require('./_user-add.scss');
           .remove(undefined)
           .value()
         );
-
       });
 
       return idList;
@@ -1216,8 +1211,8 @@ require('./_user-add.scss');
       } else if ($scope.currentUser) {
         usersList = [];
         var userObj = {
-          'address': $scope.currentUser.userName,
-          'name': $scope.currentUser.name,
+          address: $scope.currentUser.userName,
+          name: $scope.currentUser.name,
         };
         users.push(userObj);
         usersList.push(users);
@@ -1290,7 +1285,7 @@ require('./_user-add.scss');
 
     $scope.invalidcount = 0;
     $scope.invalidDirSyncUsersCount = 0;
-    $scope.tokenfieldid = "usersfield";
+    $scope.tokenfieldid = 'usersfield';
     $scope.tokenplaceholder = $translate.instant('usersPage.userInput');
     $scope.tokenoptions = {
       delimiter: [',', ';'],
@@ -1387,9 +1382,9 @@ require('./_user-add.scss');
     }
 
     function getEmailAddress(input) {
-      var retString = "";
-      input.split(" ").forEach(function (str) {
-        if (str.indexOf("@") >= 0) {
+      var retString = '';
+      input.split(' ').forEach(function (str) {
+        if (str.indexOf('@') >= 0) {
           retString = str;
         }
       });
@@ -1425,7 +1420,6 @@ require('./_user-add.scss');
       // break when we do this.
       var start = $(angular.element('.tokenfield input[type=text]')[0]);
       if (start.length > 0) {
-
         var tokens = start.siblings('.token');
         tokens.sort(function (a, b) {
           var ainvalid = $(a).hasClass('invalid');
@@ -1688,7 +1682,6 @@ require('./_user-add.scss');
           }
 
           $scope.results.resultList.push(userResult);
-
         });
 
         if ($scope.numAddedUsers > 0) {
@@ -1719,8 +1712,6 @@ require('./_user-add.scss');
             $state.go('users.add.results');
           }
         }
-
-
       };
 
       var errorCallback = function (response) {
@@ -1883,7 +1874,6 @@ require('./_user-add.scss');
             Notification.notify($scope.results.errors, 'error');
           }
         }
-
       } else {
         Log.warn('Could not entitle the user', data);
         var error = null;
@@ -1935,7 +1925,6 @@ require('./_user-add.scss');
           LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, $scope.numUpdatedUsers, migratedata);
         }
       }
-
     }
 
     //radio group
@@ -2073,7 +2062,6 @@ require('./_user-add.scss');
         } else if (changedKey === 'ciscoUC') {
           $scope.$emit('wizardNextText', 'finish');
         }
-
       });
     };
 
@@ -2141,8 +2129,8 @@ require('./_user-add.scss');
         $scope.usrlist = [];
         _.forEach($scope.convertSelectedList, function (selectedUser) {
           var user = {};
-          var givenName = "";
-          var familyName = "";
+          var givenName = '';
+          var familyName = '';
           if (!_.isUndefined(selectedUser.name)) {
             if (!_.isUndefined(selectedUser.name.givenName)) {
               givenName = selectedUser.name.givenName;
@@ -2188,7 +2176,7 @@ require('./_user-add.scss');
             $scope.results.errors.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
           } else {
             var user = {
-              'address': data.userResponse[i].email,
+              address: data.userResponse[i].email,
             };
             var userArray = batch.filter(match);
             user.assignedDn = userArray[0].assignedDn;
@@ -2310,9 +2298,9 @@ require('./_user-add.scss');
         eType = LogMetricsService.getEventType('bulkDirSyncUsers');
       }
       var data = {
-        'newUsersCount': $scope.model.numNewUsers || 0,
-        'updatedUsersCount': $scope.model.numExistingUsers || 0,
-        'errorUsersCount': _.isArray($scope.model.userErrorArray) ? $scope.model.userErrorArray.length : 0,
+        newUsersCount: $scope.model.numNewUsers || 0,
+        updatedUsersCount: $scope.model.numExistingUsers || 0,
+        errorUsersCount: _.isArray($scope.model.userErrorArray) ? $scope.model.userErrorArray.length : 0,
       };
       LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
     }
@@ -2559,6 +2547,5 @@ require('./_user-add.scss');
         $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
       }
     }
-
   }
 })();

@@ -3,7 +3,7 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 class TimeZoneCtrl implements ng.IComponentController {
   public timeZone: string;
   public selected: IOption;
-  public timeZoneOptions: Array<IOption>;
+  public timeZoneOptions: IOption[];
   public onChangeFn: Function;
   public timeZonePlaceholder: string;
   public filterPlaceholder: string;
@@ -14,11 +14,11 @@ class TimeZoneCtrl implements ng.IComponentController {
   ) { }
 
   public $onInit(): void {
-    this.timeZonePlaceholder = this.$translate.instant('serviceSetupModal.preferredLanguagePlaceholder');
+    this.timeZonePlaceholder = this.$translate.instant('serviceSetupModal.timeZonePlaceholder');
     this.filterPlaceholder = this.$translate.instant('serviceSetupModal.searchTimeZone');
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { timeZone } = changes;
     if (timeZone && timeZone.currentValue) {
       this.selected = _.find(this.timeZoneOptions, { id: this.timeZone });

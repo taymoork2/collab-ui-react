@@ -16,10 +16,10 @@
     }));
     it('MediaClusterServiceV2 getAll should be called for updateClusterLists', function () {
       var clusters = [{
-        "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-        "name": "MFA_TEST2",
-        "targetType": 'mf_mgmt',
-        "connectors": [{
+        id: 'a050fcc7-9ade-4790-a06d-cca596910421',
+        name: 'MFA_TEST2',
+        targetType: 'mf_mgmt',
+        connectors: [{
           state: 'running',
           hostname: 'doesnothavecalendar.example.org',
         }],
@@ -34,7 +34,7 @@
     it('MediaClusterServiceV2 createClusterV2 should be called for addRedirectTargetClicked', function () {
       spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.resolve({
         data: {
-          id: "12345",
+          id: '12345',
         },
       }));
       httpBackend.when('POST', 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/orgId/clusters/12345/allowedRegistrationHosts').respond({});
@@ -60,6 +60,5 @@
       spyOn(MediaServiceActivationV2, 'enableMediaService');
       AddResourceCommonServiceV2.redirectPopUpAndClose('hostName', 'enteredCluster', 'clusterId', true);
       expect(MediaServiceActivationV2.enableMediaService).toHaveBeenCalled();
-
     });
   });

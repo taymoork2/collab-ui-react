@@ -5,13 +5,13 @@ describe('controller: CbgsCtrl', function () {
   var callbackGroups = getJSONFixture('gemini/callbackGroups.json');
   var preData = getJSONFixture('gemini/common.json');
   var currentCallbackGroup = {
-    "callbackGroupSites": [],
-    "ccaGroupId": "ff808081552e92e101552efcdb750081",
-    "customerAttribute": null,
-    "customerName": "Test-Feng",
-    "groupName": "CB_11111_Test-Feng",
-    "status": "P",
-    "totalSites": 0,
+    callbackGroupSites: [],
+    ccaGroupId: 'ff808081552e92e101552efcdb750081',
+    customerAttribute: null,
+    customerName: 'Test-Feng',
+    groupName: 'CB_11111_Test-Feng',
+    status: 'P',
+    totalSites: 0,
   };
 
   beforeEach(angular.mock.module('Core'));
@@ -57,7 +57,7 @@ describe('controller: CbgsCtrl', function () {
     var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
     $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
 
-    controller = $controller("CbgsCtrl", { $scope: $scope, $filter: filter, $stateParams: $stateParams });
+    controller = $controller('CbgsCtrl', { $scope: $scope, $filter: filter, $stateParams: $stateParams });
   }
 
   it('should $rootScope.$on execute', function () {

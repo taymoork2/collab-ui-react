@@ -19,7 +19,7 @@ export class NumberService {
     this.numberResource = <INumberResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers');
   }
 
-  public getNumberList(number?: string, type?: NumberType, assigned?: boolean, order?: NumberOrder, limit?: number, offset?: number): ng.IPromise<Array<INumber>> {
+  public getNumberList(number?: string, type?: NumberType, assigned?: boolean, order?: NumberOrder, limit?: number, offset?: number): ng.IPromise<INumber[]> {
     return this.numberResource.get({
       customerId: this.Authinfo.getOrgId(),
       number: number,

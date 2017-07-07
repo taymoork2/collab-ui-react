@@ -7,6 +7,7 @@ describe('ServiceOverviewCtrl', () => {
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('HDS'));
 
   beforeEach(inject(dependencies));
   beforeEach(() => {

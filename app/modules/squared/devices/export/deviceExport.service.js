@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function DeviceExportService($q, $document, $window, $log, $timeout, $http, Authinfo, UrlConfig) {
-
     function exportDevices(statusCallback) {
       var urlBase = UrlConfig.getCsdmServiceUrl();
       var url = urlBase + '/organization/' + Authinfo.getOrgId() + '/devices?checkOnline=false&checkDisplayName=false&type=all';
@@ -21,7 +20,7 @@
       return $http.get(url, {
         responseType: 'arraybuffer',
         headers: {
-          'Accept': 'text/csv',
+          Accept: 'text/csv',
         },
         timeout: exportCanceler.promise,
       }).then(function (response) {
@@ -40,9 +39,9 @@
           var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
           var downloadLink = angular.element(downloadContainer.children()[0]);
           downloadLink.attr({
-            'href': $window.URL.createObjectURL(file),
-            'download': fileName,
-            'target': '_blank',
+            href: $window.URL.createObjectURL(file),
+            download: fileName,
+            target: '_blank',
           });
           $document.find('body').append(downloadContainer);
           $timeout(function () {
@@ -52,13 +51,13 @@
         }
         statusCallback(100);
       }).catch(function (error) {
-        $log.warn("Device export was not successful, reason:", error);
+        $log.warn('Device export was not successful, reason:', error);
         statusCallback(-1);
       });
     }
 
     function cancelExport() {
-      exportCanceler.resolve("cancelled");
+      exportCanceler.resolve('cancelled');
     }
 
     return {

@@ -7,7 +7,6 @@
 
   /*@ngInject*/
   function CallServicePlaceSettingsCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, HybridServicesClusterService, UriVerificationService, DomainManagementService, $translate, ResourceGroupService, UCCService, HybridServicesI18NService) {
-
     $scope.userId = $stateParams.currentUserId;
 
     $scope.saveLoading = false;
@@ -241,7 +240,7 @@
       $scope.savingAwareEntitlement = $scope.callServiceAware.currentUserEntitled !== $scope.callServiceAware.entitled;
       $scope.savingConnectEntitlement = $scope.callServiceConnect.currentUserEntitled !== $scope.callServiceConnect.entitled;
       var user = [{
-        'address': $scope.currentUser.userName,
+        address: $scope.currentUser.userName,
       }];
       var entitlements = [{
         entitlementName: $scope.callServiceAware.name,
@@ -298,7 +297,6 @@
           if (userStatus !== 200) {
             Notification.notify([entitleResult.msg], entitleResult.type);
           }
-
         } else {
           entitleResult = {
             msg: $translate.instant('hercules.userSidepanel.not-updated', {
@@ -379,5 +377,4 @@
       $scope.showButtons = entitlementHasChanged();
     };
   }
-
 }());

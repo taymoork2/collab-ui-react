@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: AATrackChangeService', function () {
-
   var AATrackChangeService;
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -21,5 +20,4 @@ describe('Service: AATrackChangeService', function () {
       expect(AATrackChangeService.isChanged('aaName', 'AA3')).toBe(true);
     });
   });
-
 });

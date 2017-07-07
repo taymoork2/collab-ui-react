@@ -10,5 +10,4 @@
     var vm = this;
     vm.domains = $stateParams.webexDomains;
   }
-
 })();

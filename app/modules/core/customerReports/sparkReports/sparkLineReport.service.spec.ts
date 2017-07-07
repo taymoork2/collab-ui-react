@@ -25,7 +25,7 @@ describe('Service: Customer Reports Service', function () {
       status: 500,
     };
 
-    this.updateDates = (data: Array<any>, filter?: string, altDate?: string): Array<any> => {
+    this.updateDates = (data: any[], filter?: string, altDate?: string): any[] => {
       _.forEachRight(data, (item: any, index: number): void => {
         if (filter) {
           item.date = moment().tz(this.defaults.timezone).subtract(data.length - index, this.defaults.DAY).format(filter);
@@ -77,7 +77,7 @@ describe('Service: Customer Reports Service', function () {
         data: _.cloneDeep(this.activeData.mostActive),
       }));
 
-      this.SparkLineReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then((response: Array<IActiveTableBase>): void => {
+      this.SparkLineReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then((response: IActiveTableBase[]): void => {
         expect(response).toEqual(_.cloneDeep(this.activeData.mostActiveResponse));
       });
       this.$scope.$apply();
@@ -86,7 +86,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMostActiveUserData', function () {
       spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.reject(this.rejectError));
 
-      this.SparkLineReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then((response: Array<IActiveTableBase>): void => {
+      this.SparkLineReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then((response: IActiveTableBase[]): void => {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();
@@ -125,7 +125,7 @@ describe('Service: Customer Reports Service', function () {
     it('should getMediaQualityData', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.resolve(this.dataResponse(this.updateDates(_.cloneDeep(this.mediaData.callQuality.data[0].data)))));
 
-      this.SparkLineReportService.getMediaQualityData(this.defaults.timeFilter[0]).then((response: Array<IMediaData>): void => {
+      this.SparkLineReportService.getMediaQualityData(this.defaults.timeFilter[0]).then((response: IMediaData[]): void => {
         expect(response).toEqual(this.updateDates(_.cloneDeep(this.mediaData.lineResponse), this.defaults.dayFormat));
       });
       this.$scope.$apply();
@@ -134,7 +134,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMediaQualityData', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(this.rejectError));
 
-      this.SparkLineReportService.getMediaQualityData(this.defaults.timeFilter[0]).then((response: Array<IMediaData>): void => {
+      this.SparkLineReportService.getMediaQualityData(this.defaults.timeFilter[0]).then((response: IMediaData[]): void => {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();
@@ -147,12 +147,12 @@ describe('Service: Customer Reports Service', function () {
         data: _.cloneDeep(this.metricsData.lineData),
       })));
 
-      const lineResponse: Array<IMetricsData> = [];
+      const lineResponse: IMetricsData[] = [];
       for (let i = 0; i < 7; i++) {
         lineResponse.push(_.cloneDeep(this.metricsData.lineResponse));
       }
 
-      this.SparkLineReportService.getMetricsData(this.defaults.timeFilter[0]).then((response: Array<IMetricsData>): void => {
+      this.SparkLineReportService.getMetricsData(this.defaults.timeFilter[0]).then((response: IMetricsData[]): void => {
         expect(response).toEqual(lineResponse);
       });
       this.$scope.$apply();
@@ -161,7 +161,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMetricsData', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(this.rejectError));
 
-      this.SparkLineReportService.getMetricsData(this.defaults.timeFilter[0]).then((response: Array<IMetricsData>): void => {
+      this.SparkLineReportService.getMetricsData(this.defaults.timeFilter[0]).then((response: IMetricsData[]): void => {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();
@@ -186,7 +186,7 @@ describe('Service: Customer Reports Service', function () {
 
       _.forEach(devicesData, (item: any, index: number): void => {
         item.details = {};
-        const graph: Array<IEndpointData> = [];
+        const graph: IEndpointData[] = [];
         for (let i = 1; i <= 7; i++) {
           const date: string = moment().tz(this.defaults.timezone).subtract(i, this.defaults.DAY).format();
           item.details[date] = 5 * i;

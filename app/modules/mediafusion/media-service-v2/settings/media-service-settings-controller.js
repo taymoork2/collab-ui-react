@@ -63,9 +63,9 @@
             targetType: 'mf_mgmt',
           });
           var payLoad = {
-            'type': 'mf.group',
-            'name': 'videoQualityPropertySet',
-            'properties': {
+            type: 'mf.group',
+            name: 'videoQualityPropertySet',
+            properties: {
               'mf.videoQuality': 'false',
             },
           };
@@ -74,7 +74,7 @@
             .then(function (response) {
               vm.videoPropertySetId = response.data.id;
               var clusterPayload = {
-                'assignedClusters': _.map(vm.clusters, 'id'),
+                assignedClusters: _.map(vm.clusters, 'id'),
               };
               // Assign it the property set with cluster list
               MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySetId, clusterPayload)
@@ -93,7 +93,7 @@
       Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
       //Setting the value for video quality in all clusters using Tag.
       var payLoad = {
-        'properties': {
+        properties: {
           'mf.videoQuality': vm.enableVideoQuality,
         },
       };
@@ -111,7 +111,6 @@
       } else {
         updatePropertySet(vm.videoPropertySetId, payLoad);
       }
-
     }
 
     function updatePropertySet(id, payLoad) {

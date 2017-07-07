@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var testModule = require('./index').default;
 
@@ -24,7 +24,7 @@ describe(' sunlightReportService', function () {
 
   beforeEach(angular.mock.module(testModule));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
 
   beforeEach(inject(function (_SunlightReportService_, _$httpBackend_) {
@@ -87,11 +87,11 @@ describe(' sunlightReportService', function () {
 
   it('should get and snapshot stats for org for given fifteen minutes viewType and time range', function () {
     var config = {
-      "params": {
-        "viewType": 'fifteen_minutes',
-        "mediaType": 'chat',
-        "startTime": '1465381084699',
-        "endTime": '1467973084699',
+      params: {
+        viewType: 'fifteen_minutes',
+        mediaType: 'chat',
+        startTime: '1465381084699',
+        endTime: '1467973084699',
       },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
@@ -115,11 +115,11 @@ describe(' sunlightReportService', function () {
 
   it('should get stats for org for given hourly viewType and time range', function () {
     var config = {
-      "params": {
-        "viewType": 'hourly',
-        "mediaType": 'chat',
-        "startTime": '1465381084699',
-        "endTime": '1467973084699',
+      params: {
+        viewType: 'hourly',
+        mediaType: 'chat',
+        startTime: '1465381084699',
+        endTime: '1467973084699',
       },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
@@ -137,11 +137,11 @@ describe(' sunlightReportService', function () {
 
   it('should get stats for org for given daily viewType and time range', function () {
     var config = {
-      "params": {
-        "viewType": 'daily',
-        "mediaType": 'chat',
-        "startTime": '1465381084699',
-        "endTime": '1467973084699',
+      params: {
+        viewType: 'daily',
+        mediaType: 'chat',
+        startTime: '1465381084699',
+        endTime: '1467973084699',
       },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
@@ -149,7 +149,6 @@ describe(' sunlightReportService', function () {
       expect(response.data.metadata.jobName).toBe('org_stats_daily');
     });
     $httpBackend.flush();
-
   });
 
   it('should get overview data with daily aggregation', function () {
@@ -170,11 +169,11 @@ describe(' sunlightReportService', function () {
 
   it('should get stats for org for given weekly viewType and time range', function () {
     var config = {
-      "params": {
-        "viewType": 'weekly',
-        "mediaType": 'chat',
-        "startTime": '1465381084699',
-        "endTime": '1467973084699',
+      params: {
+        viewType: 'weekly',
+        mediaType: 'chat',
+        startTime: '1465381084699',
+        endTime: '1467973084699',
       },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
@@ -182,7 +181,6 @@ describe(' sunlightReportService', function () {
       expect(response.data.metadata.jobName).toBe('org_stats_weekly');
     });
     $httpBackend.flush();
-
   });
 
   it('should get ReportingData for org for time selected last week for mediaType chat', function () {
@@ -277,7 +275,6 @@ describe(' sunlightReportService', function () {
   });
 
   xit('should get snapshot ReportingData for org for time selected today for mediaType chat', function () {
-
     sunlightReportService.getReportingData('org_snapshot_stats', 0, 'chat').then(function (response) {
       var startTimeStamp = moment().startOf('day');
       var endTimeStamp = moment().add(1, 'hours').startOf('hour');
@@ -306,5 +303,4 @@ describe(' sunlightReportService', function () {
     });
     $httpBackend.flush();
   });
-
 });

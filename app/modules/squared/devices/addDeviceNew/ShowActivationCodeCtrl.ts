@@ -181,7 +181,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
   }
 
   public generateQRCode() {
-    let qrImage = require('qr-image');
+    const qrImage = require('qr-image');
     this.qrCode = qrImage.imageSync(this.activationCode, {
       ec_level: 'L',
       size: 14,
@@ -191,7 +191,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
   }
 
   public getExternalLinkedAccounts() {
-    let extLinkedAcc: IExternalLinkedAccount[] = [];
+    const extLinkedAcc: IExternalLinkedAccount[] = [];
     if (this.wizardData.account.externalCalendarIdentifier) {
       _.forEach(this.wizardData.account.externalCalendarIdentifier, (acc) => {
         extLinkedAcc.push(acc);
@@ -283,19 +283,19 @@ class ShowActivationCodeCtrl extends WizardCtrl {
 
   public searchUser(searchString) {
     if (searchString.length >= 3) {
-      let deferredCustomerOrg: IDeferred<IRecipientUser[]> = this.$q.defer();
-      let deferredAdmin: IDeferred<IRecipientUser[]> = this.$q.defer();
-      let transformResults = (deferred) => {
+      const deferredCustomerOrg: IDeferred<IRecipientUser[]> = this.$q.defer();
+      const deferredAdmin: IDeferred<IRecipientUser[]> = this.$q.defer();
+      const transformResults = (deferred) => {
         return (data) => {
-          let userList: IRecipientUser[] = data.Resources.map((r) => {
-            let firstName = r.name && r.name.givenName;
-            let lastName = r.name && r.name.familyName;
+          const userList: IRecipientUser[] = data.Resources.map((r) => {
+            const firstName = r.name && r.name.givenName;
+            const lastName = r.name && r.name.familyName;
             return this.extractUserObject(firstName, lastName, r.displayName, r.userName, r.id, r.meta.organizationID);
           });
           deferred.resolve(userList);
         };
       };
-      let searchMatchesAdmin = () => {
+      const searchMatchesAdmin = () => {
         return _.startsWith(this.wizardData.admin.userName, searchString) ||
           _.startsWith(this.wizardData.admin.firstName, searchString) ||
           _.startsWith(this.wizardData.admin.lastName, searchString) ||
@@ -369,7 +369,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
   }
 
   public sendActivationCodeEmail() {
-    let onEmailSent =  () => {
+    const onEmailSent =  () => {
       this.Notification.notify(
         [this.$translate.instant('generateActivationCodeModal.emailSuccess', {
           address: this.selectedUser.email,
@@ -378,7 +378,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
         this.$translate.instant('generateActivationCodeModal.emailSuccessTitle'),
       );
     };
-    let onEmailSendFailure = (error) => {
+    const onEmailSendFailure = (error) => {
       this.Notification.errorResponse(error,
         'generateActivationCodeModal.emailError',
         {
@@ -387,7 +387,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
     };
 
     if (this.account.deviceType === 'huron' && this.account.type === 'personal') {
-      let emailInfo = {
+      const emailInfo = {
         email: this.selectedUser.email,
         firstName: this.selectedUser.firstName,
         oneTimePassword: this.activationCode,
@@ -397,7 +397,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
       };
       this.ActivationCodeEmailService.save({}, emailInfo, onEmailSent, onEmailSendFailure);
     } else {
-      let cbEmailInfo = {
+      const cbEmailInfo = {
         toCustomerId: this.selectedUser.orgId,
         toUserId: this.selectedUser.cisUuid,
         subjectCustomerId: this.wizardData.account.organizationId,

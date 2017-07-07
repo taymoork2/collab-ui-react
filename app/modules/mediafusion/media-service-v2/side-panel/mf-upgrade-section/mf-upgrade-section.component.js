@@ -92,7 +92,5 @@
         $timeout.cancel(promise);
       });
     };
-
-
   }
 })();

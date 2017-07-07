@@ -3,7 +3,7 @@ import { NumberService, INumber } from 'modules/huron/numbers';
 
 const NUMBER_FORMAT_ENTERPRISE_LINE = 'NUMBER_FORMAT_ENTERPRISE_LINE';
 class HuntGroupNumbersCtrl implements ng.IComponentController {
-  public numbers: Array<HuntGroupNumber>;
+  public numbers: HuntGroupNumber[];
   public isNew: boolean;
   public onChangeFn: Function;
   public onKeyPressFn: Function;
@@ -15,9 +15,9 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
     private NumberService: NumberService,
   ) {}
 
-  public getNumberList(value: string): ng.IPromise<Array<INumber>> {
+  public getNumberList(value: string): ng.IPromise<INumber[]> {
     return this.NumberService.getNumberList(value, undefined, false).then( numbers => {
-      let filteredNumbers = _.filter(numbers, (number) => {
+      const filteredNumbers = _.filter(numbers, (number) => {
         return this.isNewNumber(number.uuid);
       });
       if (filteredNumbers.length === 0) {
@@ -46,14 +46,14 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
     this.onNumbersChanged(this.numbers);
   }
 
-  public onNumbersChanged(numbers: Array<HuntGroupNumber>): void {
+  public onNumbersChanged(numbers: HuntGroupNumber[]): void {
     this.onChangeFn({
       numbers: _.cloneDeep(numbers),
     });
   }
 
   private isNewNumber(uuid: string): boolean {
-    let existingNumbers = _.find(this.numbers, (number) => {
+    const existingNumbers = _.find(this.numbers, (number) => {
       return number.uuid === uuid;
     });
     return _.isUndefined(existingNumbers);

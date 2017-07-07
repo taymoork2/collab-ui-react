@@ -7,7 +7,7 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
   public data: any = {};
   public messages: Object;
   public selectPlaceholder: string;
-  public options: Array<Object> = [];
+  public options: Object[] = [];
   public selected = { label: '', value: '' };
 
   /* @ngInject */
@@ -44,7 +44,7 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
   public getRegions() {
     this.TelephonyDomainService.getRegions()
       .then((res) => {
-        let optionsSource: any = _.get(res, 'content.data.body');
+        const optionsSource: any = _.get(res, 'content.data.body');
         this.options = _.map(optionsSource, (item: any) => {
           return { value: item.regionId, label: item.regionName };
         });

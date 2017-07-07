@@ -1,5 +1,4 @@
 describe('OverviewCareCard', function () {
-
   var OverviewCareCard, $rootScope;
   var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
 
@@ -56,14 +55,14 @@ describe('OverviewCareCard', function () {
     $rootScope.$apply();
     card.licenseEventHandler([
       {
-        licenseId: "CDC_ff9406ba-c9e1-4def-b4e3-e33fdcadea32",
-        offerName: "CDC",
-        licenseType: "CARE",
+        licenseId: 'CDC_ff9406ba-c9e1-4def-b4e3-e33fdcadea32',
+        offerName: 'CDC',
+        licenseType: 'CARE',
         volume: 50,
         isTrial: false,
-        trialId: "a8ef58a7-8c5d-4674-93e4-08d2b36f4f95",
-        status: "ACTIVE",
-        partnerEmail: "admin@fancy-lawyer.com",
+        trialId: 'a8ef58a7-8c5d-4674-93e4-08d2b36f4f95',
+        status: 'ACTIVE',
+        partnerEmail: 'admin@fancy-lawyer.com',
       },
     ]);
     expect(card.enabled).toBe(true);
@@ -76,14 +75,14 @@ describe('OverviewCareCard', function () {
     $rootScope.$apply();
     card.licenseEventHandler([
       {
-        licenseId: "CDC_ff9406ba-c9e1-4def-b4e3-e33fdcadea32",
-        offerName: "CDC",
-        licenseType: "CARE",
+        licenseId: 'CDC_ff9406ba-c9e1-4def-b4e3-e33fdcadea32',
+        offerName: 'CDC',
+        licenseType: 'CARE',
         volume: 50,
         isTrial: true,
-        trialId: "a8ef58a7-8c5d-4674-93e4-08d2b36f4f95",
-        status: "ACTIVE",
-        partnerEmail: "admin@fancy-lawyer.com",
+        trialId: 'a8ef58a7-8c5d-4674-93e4-08d2b36f4f95',
+        status: 'ACTIVE',
+        partnerEmail: 'admin@fancy-lawyer.com',
       },
     ]);
     expect(card.enabled).toBe(true);
@@ -96,8 +95,8 @@ describe('OverviewCareCard', function () {
     $rootScope.$apply();
     card.licenseEventHandler([]);
     card.orgEventHandler({
-      id: "b1de2d84-c9b1-485b-9698-b35e95c6107f",
-      displayName: "Sunlight",
+      id: 'b1de2d84-c9b1-485b-9698-b35e95c6107f',
+      displayName: 'Sunlight',
       isTestOrg: true,
       licenses: [],
       success: true,

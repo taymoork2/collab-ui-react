@@ -1,6 +1,6 @@
 <div class="app-container">
   <div ng-controller="HeaderCtrl as headerCtrl">
-    <cs-header navstyle="{{headerCtrl.navStyle}}" headertitle="{{headerCtrl.headerTitle}}" icon="{{headerCtrl.icon}}" show-read-only role="banner">
+    <cs-header ng-if="headerCtrl.headerTitle" navstyle="{{headerCtrl.navStyle}}" headertitle="{{headerCtrl.headerTitle}}" icon="{{headerCtrl.icon}}" show-read-only role="banner">
       <cs-header-left>
         <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="headerCtrl.showOrgName()">
           <div class="top-bar-title" title="{{orgname}}">{{orgname}}</div>
@@ -16,6 +16,7 @@
         <cr-user-info ng-if="headerCtrl.showUserDropDown()"></cr-user-info>
       </cs-header-right>
     </cs-header>
+    <learn-more-banner location="overview"></learn-more-banner>
   </div>
 
   <div class="wrapper">

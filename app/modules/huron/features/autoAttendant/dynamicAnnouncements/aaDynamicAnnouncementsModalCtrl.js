@@ -82,8 +82,8 @@
     }
 
     function activate() {
-      vm.readAsSelection = _.find(vm.readAsOptions, { 'value': readAsSelection });
-      vm.variableSelection = _.find(vm.variableOptions, { 'value': variableSelection });
+      vm.readAsSelection = _.find(vm.readAsOptions, { value: readAsSelection });
+      vm.variableSelection = _.find(vm.variableOptions, { value: variableSelection });
       if (_.isUndefined(vm.readAsSelection)) {
         vm.readAsSelection = vm.readAsOptions[3];
       }

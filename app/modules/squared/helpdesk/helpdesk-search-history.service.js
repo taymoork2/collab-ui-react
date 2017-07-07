@@ -44,5 +44,4 @@
 
   angular.module('Squared')
     .service('HelpdeskSearchHistoryService', HelpdeskSearchHistoryService);
-
 }());

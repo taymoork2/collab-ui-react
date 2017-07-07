@@ -12,7 +12,7 @@ describe('Service: HuronAssignedLine', function () {
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
+    $provide.value('Authinfo', authInfo);
   }));
 
   beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _HuronAssignedLine_) {
@@ -26,7 +26,7 @@ describe('Service: HuronAssignedLine', function () {
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/directorynumbers/copy').respond(directoryNumbersCopy);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=').respond(internalNumbers);
     $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/directorynumbers/copy/b75952c0-2b37-4b33-a548-2641d7c233a7').respond(201, {}, {
-      'location': '123456',
+      location: '123456',
     });
   }));
 
@@ -74,5 +74,4 @@ describe('Service: HuronAssignedLine', function () {
       $httpBackend.flush();
     });
   });
-
 });

@@ -35,8 +35,8 @@ describe('DomainManagementService', () => {
   });
 
   it('should produce a list of domains with tokens for the pending.', done => {
-    let orgId = 'mockOrgId';
-    let scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
+    const orgId = 'mockOrgId';
+    const scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
 
     $httpBackend
       .expectGET(scomUrl)
@@ -70,7 +70,7 @@ describe('DomainManagementService', () => {
      });*/
 
     DomainManagementService.getVerifiedDomains().then(data => {
-      let expectedRes = [{
+      const expectedRes = [{
         text: 'claimed1.grodum.org',
         token: '',
         status: DomainManagementService.states.claimed,
@@ -107,16 +107,16 @@ describe('DomainManagementService', () => {
   });
 
   it('add domain should invoke token api and put domain in list', () => {
-    let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/GetToken/invoke';
-    let domain = 'super.example.com';
-    let token = 'mock-token';
+    const url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/GetToken/invoke';
+    const domain = 'super.example.com';
+    const token = 'mock-token';
     $httpBackend.expectPOST(url, () => {
       return true;
     }).respond({ token: token });
 
     DomainManagementService.addDomain(domain).then(() => {
-      let list = DomainManagementService.domainList;
-      let addedDomain: any = _.find(list, { text: domain });
+      const list = DomainManagementService.domainList;
+      const addedDomain: any = _.find(list, { text: domain });
       expect(addedDomain).not.toBeNull();
       expect(addedDomain.status).toBe('pending');
       expect(addedDomain.token).toBe(token);
@@ -128,9 +128,9 @@ describe('DomainManagementService', () => {
   });
 
   it('verify domain should invoke verify api and update domain status in list', () => {
-    let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Verify/invoke';
-    let domain = 'super.example.com';
-    let token = 'mock-token';
+    const url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Verify/invoke';
+    const domain = 'super.example.com';
+    const token = 'mock-token';
 
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({ text: domain, status: 'pending', token: token });
@@ -143,8 +143,8 @@ describe('DomainManagementService', () => {
     }).respond({});
 
     DomainManagementService.verifyDomain(domain).then(() => {
-      let list = DomainManagementService.domainList;
-      let addedDomain: any = _.find(list, { text: domain });
+      const list = DomainManagementService.domainList;
+      const addedDomain: any = _.find(list, { text: domain });
       expect(addedDomain).not.toBeNull();
       expect(addedDomain.status).toBe('verified');
     }, err => {
@@ -156,8 +156,8 @@ describe('DomainManagementService', () => {
 
   it('verify empty domain should immediately reject', () => {
 
-    let domain = undefined;
-    let token = 'mock-token';
+    const domain = undefined;
+    const token = 'mock-token';
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({ text: domain, status: 'pending', token: token });
 
@@ -170,9 +170,9 @@ describe('DomainManagementService', () => {
   });
 
   it('verify domain with failing verify should set error on reject', () => {
-    let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Verify/invoke';
-    let domain = 'super.example.com';
-    let token = 'mock-token';
+    const url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Verify/invoke';
+    const domain = 'super.example.com';
+    const token = 'mock-token';
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({ text: domain, status: 'pending', token: token });
     $httpBackend.expectPOST(url, (data: any) => {
@@ -192,8 +192,8 @@ describe('DomainManagementService', () => {
   });
 
   it('delete pending should invoke api with removePending flag', () => {
-    let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
-    let domain = 'super-domain.com';
+    const url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
+    const domain = 'super-domain.com';
 
     $httpBackend
       .expectPOST(url, (data: any) => {
@@ -226,7 +226,7 @@ describe('DomainManagementService', () => {
   });
 
   it('when delete empty domain, service should immediately reject', () => {
-    let domain = false;
+    const domain = false;
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({ text: false, status: 'pending' });
     DomainManagementService.unverifyDomain(domain).then(() => {
@@ -239,8 +239,8 @@ describe('DomainManagementService', () => {
   });
 
   it('when delete pending and api fails error should be returned with a reject', () => {
-    let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
-    let domain = 'super-domain.com';
+    const url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
+    const domain = 'super-domain.com';
 
     $httpBackend
       .expectPOST(url, (data: any) => {
@@ -268,8 +268,8 @@ describe('DomainManagementService', () => {
   });
 
   it('delete verified should invoke api with false removePending flag', () => {
-    let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
-    let domain = 'super-domain.com';
+    const url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
+    const domain = 'super-domain.com';
 
     $httpBackend
       .expectPOST(url, (data: any) => {
@@ -357,7 +357,7 @@ describe('Syncing verified domains with care', function () {
     $httpBackend.flush();
   });
   it('when the org has verified domains', function () {
-    let domain = 'verified1.grodum.org';
+    const domain = 'verified1.grodum.org';
 
     $httpBackend.expectGET(scomUrl)
       .respond({ verifiedDomains : [domain] });

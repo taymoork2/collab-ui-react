@@ -61,7 +61,6 @@ describe('Controller: PlanReviewCtrl', function () {
       return [200, data, {}];
     });
     $httpBackend.flush();
-
   }));
 
   afterEach(function () {
@@ -86,7 +85,7 @@ describe('Controller: PlanReviewCtrl', function () {
     it('should have Care service info populated', function () {
       expect(controller.careServices.services).toBeDefined();
       expect(controller.trialExists).toEqual(true);
-      expect(controller.trialId).toEqual("33e66606-b1b8-4794-a7c5-5bfc5046380f");
+      expect(controller.trialId).toEqual('33e66606-b1b8-4794-a7c5-5bfc5046380f');
       expect(controller.careServices.isNewTrial).toEqual(false);
     });
   });
@@ -216,7 +215,6 @@ describe('Controller: PlanReviewCtrl', function () {
       var result = controller.getUserServiceRowClass(false);
       expect(result).toEqual('user-service-1');
     });
-
   });
 
   xdescribe('getUserServiceRowClass should return the correct class names', function () {
@@ -230,22 +228,19 @@ describe('Controller: PlanReviewCtrl', function () {
       var result = controller.getUserServiceRowClass(false);
       expect(result).toEqual('user-service-1');
     });
-
   });
 
   describe('isCIEnabled function should return true/false for CI/non-CI sites in plan review page', function () {
     it('can correctly determine CI sites and display the quantity in plan review panel', function () {
-      var fakeSiteUrl = "sjsite04.webex.com";
+      var fakeSiteUrl = 'sjsite04.webex.com';
       var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
       expect(searchResult).toBe(true);
     });
 
     it('can correctly determine non-CI sites and display the cross launch link in plan review panel', function () {
-      var fakeSiteUrl = "sitetransfer2.eng.webex.com";
+      var fakeSiteUrl = 'sitetransfer2.eng.webex.com';
       var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
       expect(searchResult).toBe(false);
     });
-
   });
-
 });

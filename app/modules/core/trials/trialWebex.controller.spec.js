@@ -23,20 +23,20 @@ describe('Controller: Trial Webex', function () {
 
     this.trialData = getJSONFixture('core/json/trials/trialData.json');
     this.timeZoneData = [
-      { 'label': '(GMT +07:00) Jakarta' },
-      { 'label': '(GMT +04:00) Yerevan' },
-      { 'label': '(GMT +00:00) Reykjavik' },
-      { 'label': '(GMT -01:00) Azores' },
-      { 'label': '(GMT +02:00) Bucharest' },
-      { 'label': '(GMT -05:00) Toronto' },
+      { label: '(GMT +07:00) Jakarta' },
+      { label: '(GMT +04:00) Yerevan' },
+      { label: '(GMT +00:00) Reykjavik' },
+      { label: '(GMT -01:00) Azores' },
+      { label: '(GMT +02:00) Bucharest' },
+      { label: '(GMT -05:00) Toronto' },
     ];
     this.sortedTimeZoneData = [
-      { 'label': '(GMT -05:00) Toronto' },
-      { 'label': '(GMT -01:00) Azores' },
-      { 'label': '(GMT +00:00) Reykjavik' },
-      { 'label': '(GMT +02:00) Bucharest' },
-      { 'label': '(GMT +04:00) Yerevan' },
-      { 'label': '(GMT +07:00) Jakarta' },
+      { label: '(GMT -05:00) Toronto' },
+      { label: '(GMT -01:00) Azores' },
+      { label: '(GMT +00:00) Reykjavik' },
+      { label: '(GMT +02:00) Bucharest' },
+      { label: '(GMT +04:00) Yerevan' },
+      { label: '(GMT +07:00) Jakarta' },
     ];
 
     spyOn(this.TrialWebexService, 'getData').and.returnValue(this.trialData.enabled.trials.webexTrial);
@@ -76,7 +76,6 @@ describe('Controller: Trial Webex', function () {
   });
 
   it('should reject siteUrl validation when invalid', function (done) {
-
     this.controller.validateSiteUrl('invalid.test.com', 'invalid.test.com')
       .then(function () {
         done.fail('validation promise was resolved');
@@ -99,5 +98,4 @@ describe('Controller: Trial Webex', function () {
     var result = this.controller.getTimeZones();
     expect(result).toEqual(this.sortedTimeZoneData);
   });
-
 });

@@ -2,7 +2,7 @@ import pstnProviders from './index';
 import { PstnCarrier } from './pstnCarrier';
 
 describe('Component: PstnProvidersComponent', () => {
-  let pstnCarriers: Array<PstnCarrier>;
+  let pstnCarriers: PstnCarrier[];
 
   beforeEach( function () {
     this.initModules(pstnProviders);
@@ -27,6 +27,12 @@ describe('Component: PstnProvidersComponent', () => {
 
   it('should initialize correctly', function () {
     expect(this.controller.show).toEqual(true);
+  });
+
+  it('should initialize with no selected providers', function () {
+    this.controller.pstnCarriers.forEach( (pstnCarrier: PstnCarrier) => {
+      expect(pstnCarrier.selected).toEqual(false);
+    });
   });
 
   it('should set a provider', function () {

@@ -3,14 +3,12 @@
 /* global LONG_TIMEOUT */
 
 describe('GSS-(Global Service Status) Management', function () {
-
   it('should login as GSS test admin', function () {
     login.login('gss-testAdmin');
   }, LONG_TIMEOUT);
 
   //It will be ignored when push it to Jenkins. (We are not currently running this because the pages are behind feature toggle and sometime feature toggle doesn't loads fast. We will enable them when we remove feature toggle.)
   xdescribe('Component page', function () {
-
     it('should navigate to component page', function () {
       utils.expectIsDisplayed(navigation.gssTab);
       gssComponent.clickComponent();
@@ -62,10 +60,8 @@ describe('GSS-(Global Service Status) Management', function () {
   });
 
   describe('Login out', function () {
-
     it('should login out', function () {
       navigation.logout();
     });
-
   });
 });

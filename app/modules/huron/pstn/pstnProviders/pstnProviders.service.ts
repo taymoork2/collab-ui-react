@@ -24,22 +24,23 @@ export class PstnProvidersService {
     if (this.PstnModel.isCarrierExists()) {
       return this.$q.resolve(this.PstnModel.getCarriers());
     }
-    return this.getCarriersStatic().then((pstnCarrierStatics: Array<IPstnCarrierStatic>) => {
-      return this.getCarriersNetwork(pstnCarrierStatics).then( (pstnCarriers: Array<PstnCarrier>) => {
+    return this.getCarriersStatic().then((pstnCarrierStatics: IPstnCarrierStatic[]) => {
+      return this.getCarriersNetwork(pstnCarrierStatics).then( (pstnCarriers: PstnCarrier[]) => {
         return pstnCarriers;
       });
     });
   }
 
   //Get all static carrier informantion
-  public getCarriersStatic(): ng.IPromise<Array<any>> {
+  public getCarriersStatic(): ng.IPromise<any[]> {
     return this.getCarriersJson().query().$promise.then(carriers => {
-      let pstnCarrierStatics: Array<IPstnCarrierStatic> = new Array<IPstnCarrierStatic>();
+      const pstnCarrierStatics: IPstnCarrierStatic[] = new Array<IPstnCarrierStatic>();
       carriers.forEach((carrier: IPstnCarrierStatic) => {
         //translate the feature strings
         for (let i: number = 0; i < carrier.features.length; i++) {
           carrier.features[i] = this.$translate.instant(carrier.features[i]);
         }
+        carrier.note = this.$translate.instant(carrier.note);
         pstnCarrierStatics.push(carrier);
       });
       return pstnCarrierStatics;
@@ -58,8 +59,8 @@ export class PstnProvidersService {
   }
 
   //Get array of carriers from Terminus service
-  private getCarriersNetwork(pstnCarrierStatics: Array<IPstnCarrierStatic>): ng.IPromise<Array<any>> {
-    let pstnCarriers: Array<PstnCarrier> = new Array<PstnCarrier>();
+  private getCarriersNetwork(pstnCarrierStatics: IPstnCarrierStatic[]): ng.IPromise<any[]> {
+    const pstnCarriers: PstnCarrier[] = new Array<PstnCarrier>();
     if (this.PstnModel.isCustomerExists()) {
       //Get Customer Carriers (Most likely there is only 1, the previous selected carrier)
       return this.PstnService.listCustomerCarriers(this.PstnModel.getCustomerId()).then ( carriers => {
@@ -96,10 +97,10 @@ export class PstnProvidersService {
   }
 
   private getCarriersNetworkDefault(
-    pstnCarriers: Array<PstnCarrier>,
-    pstnCarrierStatics: Array<IPstnCarrierStatic>,
-  ): ng.IPromise<Array<any>> {
-    return this.PstnService.listDefaultCarriersV2().then ( (carriers: Array<IPstnCarrierGet>) => {
+    pstnCarriers: PstnCarrier[],
+    pstnCarrierStatics: IPstnCarrierStatic[],
+  ): ng.IPromise<any[]> {
+    return this.PstnService.listDefaultCarriersV2().then ( (carriers: IPstnCarrierGet[]) => {
       carriers.forEach( (carrier: IPstnCarrierGet) => {
         this.addCarrier(carrier, pstnCarriers, pstnCarrierStatics);
       });
@@ -110,32 +111,32 @@ export class PstnProvidersService {
 
   private addCarrier(
     carrier: IPstnCarrierGet,
-    pstnCarriers: Array<PstnCarrier>,
-    pstnCarrierStatics: Array<IPstnCarrierStatic>,
+    pstnCarriers: PstnCarrier[],
+    pstnCarrierStatics: IPstnCarrierStatic[],
   ): void {
-    let size: number = pstnCarriers.push(new PstnCarrier());
-    let pstnCarrier: PstnCarrier = pstnCarriers[size - 1];
+    const size: number = pstnCarriers.push(new PstnCarrier());
+    const pstnCarrier: PstnCarrier = pstnCarriers[size - 1];
 
     //Save the Network info in the 'pstnCarrier' object
     pstnCarrier.setPstnCarrierGet(carrier);
     // Add static carrier information if match on vendor name and country code
-    let pstnCarrierStatic: IPstnCarrierStatic[] = _(pstnCarrierStatics)
+    const pstnCarrierStatic: IPstnCarrierStatic[] = _(pstnCarrierStatics)
         .filter((c: IPstnCarrierStatic) =>
           c.countryCode === carrier.country && c.name ===  carrier.vendor).value();
     if (pstnCarrierStatic.length > 0) {
       pstnCarrier.setPstnCarrierStatic(pstnCarrierStatic[0]);
     } else {
       // If vendor is present, update default with vendor logo
-      let pstnCarrierVendorMatch: IPstnCarrierStatic[] = _(pstnCarrierStatics)
+      const pstnCarrierVendorMatch: IPstnCarrierStatic[] = _(pstnCarrierStatics)
         .filter((c: IPstnCarrierStatic) => c.name ===  carrier.vendor).value();
       if (pstnCarrierVendorMatch.length > 0) {
-        let pstnCarrierStaticContent: IPstnCarrierStatic = new PstnCarrierStatic();
+        const pstnCarrierStaticContent: IPstnCarrierStatic = new PstnCarrierStatic();
         pstnCarrierStaticContent.logoSrc = pstnCarrierVendorMatch[0].logoSrc;
         pstnCarrier.setPstnCarrierStatic(pstnCarrierStaticContent);
       }
     }
     //Get and add carrier capabilities
-    this.PstnService.getCarrierCapabilities(carrier.uuid).then( (capabilities: Array<IPstnCarrierCapability>) => {
+    this.PstnService.getCarrierCapabilities(carrier.uuid).then( (capabilities: IPstnCarrierCapability[]) => {
       pstnCarrier.setCapabilities(capabilities);
     });
   }

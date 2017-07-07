@@ -7,11 +7,10 @@
 
   /* @ngInject */
   function HuronCustomer(Authinfo, CustomerCommonService, CustomerVoiceCmiService, PstnService, $q) {
-
     var customerPayload = {
-      'uuid': null,
-      'name': null,
-      'servicePackage': 'VOICE_ONLY',
+      uuid: null,
+      name: null,
+      servicePackage: 'VOICE_ONLY',
     };
 
     var service = {
@@ -90,7 +89,7 @@
       var customer = _.cloneDeep(customerPayload);
       customer.uuid = undefined;
       customer.name = name;
-      customer.voicemail = undefined;
+      customer.servicePackage = undefined;
 
       return CustomerCommonService.update({
         customerId: uuid || Authinfo.getOrgId(),

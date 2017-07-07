@@ -6,7 +6,7 @@ import {
 
 describe('Service: Dummy Reports', () => {
   const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
-  const timeFilter: Array<ITimespan> = _.clone(defaults.timeFilter);
+  const timeFilter: ITimespan[] = _.clone(defaults.timeFilter);
   const customer: IReportsCustomer = {
     value: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
     label: 'Test Org One',
@@ -15,12 +15,12 @@ describe('Service: Dummy Reports', () => {
   };
 
   const dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  let endpointData: IEndpointData = _.cloneDeep(_.clone(dummyData.endpoints));
+  const endpointData: IEndpointData = _.cloneDeep(_.clone(dummyData.endpoints));
   endpointData[0][0].splitClasses = undefined;
   endpointData[0][2].splitClasses = undefined;
   endpointData[0][3].splitClasses = undefined;
 
-  let updateDates = function (data: Array<any>, filter: ITimespan) {
+  const updateDates = function (data: any[], filter: ITimespan) {
     if (filter.value === 0) {
       for (let i = 6; i >= 0; i--) {
         data[i].date = moment().subtract(7 - i, 'day').format(defaults.dayFormat);

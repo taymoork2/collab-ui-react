@@ -9,5 +9,4 @@ describe('Directive: car featureCards', function () {
   it('replaces the element with the appropriate content', function () {
     expect(this.view.html()).toContain('cs-card-block');
   });
-
 });

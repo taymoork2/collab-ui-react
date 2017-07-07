@@ -30,7 +30,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
     };
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { numberRanges } = changes;
 
     if (numberRanges && numberRanges.currentValue) {
@@ -66,7 +66,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
   }
 
   public removeExtensionRange(internalNumberRange): void {
-    let index = _.findIndex(this.numberRanges, {
+    const index = _.findIndex(this.numberRanges, {
       beginNumber: internalNumberRange.beginNumber,
       endNumber: internalNumberRange.endNumber,
     });

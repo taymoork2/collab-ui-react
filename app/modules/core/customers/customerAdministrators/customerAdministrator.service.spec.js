@@ -46,13 +46,11 @@ describe('Service: CustomerAdministratorService', function () {
   });
 
   describe('addCustomerAdmin()', function () {
-
     var user = {
       userName: 'tester',
     };
 
     it('should reject if customerOrgId is invalid', function () {
-
       var rejectCalled = false;
       CustomerAdministratorService.addCustomerAdmin(user, null)
         .then(function () {
@@ -85,7 +83,6 @@ describe('Service: CustomerAdministratorService', function () {
     });
 
     it('should succeed with valid data', function () {
-
       var user = {
         userName: 'test user',
         roles: [],
@@ -111,7 +108,6 @@ describe('Service: CustomerAdministratorService', function () {
 
       $httpBackend.flush();
     });
-
   });
 
   describe('getCustomerAdmins():', function () {
@@ -130,7 +126,6 @@ describe('Service: CustomerAdministratorService', function () {
   });
 
   describe('removeCustomerAdmin():', function () {
-
     it('should call through to "UserRoleService.disableFullAdmin()"', function () {
       var fakeUser = {
         userName: 'fake-userName',
@@ -158,7 +153,6 @@ describe('Service: CustomerAdministratorService', function () {
       $rootScope.$digest();
       expect(UserRoleService.disableFullAdmin).not.toHaveBeenCalledWith('fake-userName', customerId);
     });
-
   });
 
   describe('needsSalesAdminRoleForPartnerOrg():', function () {

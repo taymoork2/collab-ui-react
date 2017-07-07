@@ -10,7 +10,7 @@ class ExternalTransferCtrl implements ng.IComponentController {
   private on: string;
   private off: string;
   private default: string;
-  public options: Array<string>;
+  public options: string[];
   public memberType: string;
   public memberId: string;
   public selected: string;
@@ -45,11 +45,11 @@ class ExternalTransferCtrl implements ng.IComponentController {
       defaultSetting: this.ExternalTransferService.getDefaultSetting(this.memberId, this.memberType),
     }).then(
       response => {
-        let orgExtTransfer = _.get(response, 'orgSetting')['allowExternalTransfer'];
+        const orgExtTransfer = _.get(response, 'orgSetting')['allowExternalTransfer'];
         this.orgSetting = this.$translate.instant('serviceSetupModal.externalTransfer.orgSetting', {
           state: this.getSetting(orgExtTransfer),
         });
-        let userExtTransfer: string = <string>_.get(response, 'defaultSetting');
+        const userExtTransfer: string = <string>_.get(response, 'defaultSetting');
         switch (userExtTransfer) {
           case this.default:
             this.selected = this.orgSetting;

@@ -11,7 +11,6 @@
     WebExCsvDownloadService,
     Notification
   ) {
-
     /*jshint validthis: true */
     var vm = this;
 
@@ -47,7 +46,6 @@
     $timeout,
     WebExCsvDownloadService
   ) {
-
     var directive = {
       restrict: 'E',
       templateUrl: 'modules/webex/csvDownload/webexCsvDownload.tpl.html',
@@ -70,7 +68,6 @@
       element,
       attrs
     ) {
-
       // disable the button when download starts
       scope.$on('download-start', function () {
         scope.webexCsvDownload.downloading = true;

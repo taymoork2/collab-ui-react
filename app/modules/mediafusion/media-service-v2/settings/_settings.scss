@@ -32,7 +32,17 @@
   line-height: 1.5;
   color: #6a6b6c !important;
 }
+.media-modal-spinner {
+  position: relative;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+}
 
+.media-modal-position {
+  position: absolute;
+  top: 50%;
+}
 .media-cluster-list {
   line-height: 1.71;
 }

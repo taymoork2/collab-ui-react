@@ -247,7 +247,7 @@ describe('Service: ExternalNumberService', function () {
 
   describe('isTerminus customer function', function () {
     it('should return true for existing Terminus customer', function () {
-      var carrierInfo = { "apiImplementation": "INTELEPEER" };
+      var carrierInfo = { apiImplementation: 'INTELEPEER' };
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers/' + carrierId).respond(carrierInfo);
       ExternalNumberService.isTerminusCustomer(customerId).then(function (response) {
         expect(response).toBe(true);
@@ -285,5 +285,4 @@ describe('Service: ExternalNumberService', function () {
       });
     });
   });
-
 });

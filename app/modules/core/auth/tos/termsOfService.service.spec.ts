@@ -35,7 +35,7 @@ describe('TOSService', () => {
 
     it('should return true if user has the ToS preference set', function () {
       this.UserPreferencesService.hasPreference = jasmine.createSpy('hasPreference').and.returnValue(true);
-      let promise = this.TOSService.hasAcceptedTOS()
+      const promise = this.TOSService.hasAcceptedTOS()
         .then((acceptedToS) => {
           expect(acceptedToS).toBeTruthy();
         });
@@ -45,7 +45,7 @@ describe('TOSService', () => {
 
     it('should return false if user does not have the ToS preference set', function () {
       this.UserPreferencesService.hasPreference = jasmine.createSpy('hasPreference').and.returnValue(false);
-      let promise = this.TOSService.hasAcceptedTOS()
+      const promise = this.TOSService.hasAcceptedTOS()
         .then((acceptedToS) => {
           expect(acceptedToS).toBeFalsy();
         });
@@ -56,7 +56,7 @@ describe('TOSService', () => {
     it('should return true if user does not have the ToS preference set, but is a partner admin', function () {
       spyOn(this.Authinfo, 'isPartnerAdmin').and.returnValue(true);
       this.UserPreferencesService.hasPreference = jasmine.createSpy('hasPreference').and.returnValue(false);
-      let promise = this.TOSService.hasAcceptedTOS()
+      const promise = this.TOSService.hasAcceptedTOS()
         .then((acceptedToS) => {
           expect(acceptedToS).toBeTruthy();
         });
@@ -92,12 +92,12 @@ describe('TOSService', () => {
     it('should dismiss open modal once user updated', function () {
       spyOn(this.UserPreferencesService, 'setUserPreferences').and.returnValue(this.$q.resolve());
 
-      let ap = this.TOSService.hasAcceptedTOS();
+      const ap = this.TOSService.hasAcceptedTOS();
       this.$rootScope.$digest();
       expect(ap).toBeResolvedWith(false);
 
       this.TOSService.openTOSModal();
-      let promise = this.TOSService.acceptTOS()
+      const promise = this.TOSService.acceptTOS()
         .finally(() => {
           expect(this.mockTosModal.dismiss).toHaveBeenCalled();
         });
@@ -107,12 +107,12 @@ describe('TOSService', () => {
     it('should reject acceptTOS promise if user update failed', function () {
       spyOn(this.UserPreferencesService, 'setUserPreferences').and.returnValue(this.$q.reject());
 
-      let ap = this.TOSService.hasAcceptedTOS();
+      const ap = this.TOSService.hasAcceptedTOS();
       this.$rootScope.$digest();
       expect(ap).toBeResolvedWith(false);
 
       this.TOSService.openTOSModal();
-      let promise = this.TOSService.acceptTOS()
+      const promise = this.TOSService.acceptTOS()
         .finally(() => {
           expect(this.mockTosModal.dismiss).not.toHaveBeenCalled();
         });

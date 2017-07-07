@@ -43,6 +43,6 @@ describe('Directive: aaScheduleInfo', function () {
   it('replaces the element with the appropriate content', function () {
     element = $compile("<aa-schedule-info schedule='openHours'> </aa-schedule-info>")($rootScope);
     $rootScope.$digest();
-    expect(element.html()).toContain("aa-panel");
+    expect(element.html()).toContain('aa-panel');
   });
 });

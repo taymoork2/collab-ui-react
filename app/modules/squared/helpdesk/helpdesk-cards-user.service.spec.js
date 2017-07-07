@@ -41,7 +41,6 @@ describe('HelpdeskCardsService', function () {
   }
 
   describe('User Cards', function () {
-
     it('handle card for undefined or empty user', function () {
       var messageCard = HelpdeskCardsUserService.getMessageCardForUser(null);
       expect(messageCard).toEqual(emptyCard());
@@ -225,7 +224,5 @@ describe('HelpdeskCardsService', function () {
       expect(card.uc.entitled).toBeTruthy();
       expect(card.ec.entitled).toBeTruthy();
     });
-
   });
-
 });

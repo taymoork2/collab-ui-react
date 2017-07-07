@@ -3,14 +3,13 @@
 
   /* @ngInject */
   function DisableIfReadOnlyAdmin(Authinfo) {
-
     function link(scope, element, attributes) {
       if (Authinfo.isReadOnlyAdmin()) {
         var eventHandler = attributes.disableIfReadOnlyAdmin;
         if (eventHandler) {
           scope[eventHandler] = _.noop;
         }
-        element.prop("disabled", true);
+        element.prop('disabled', true);
       }
     }
 
@@ -19,12 +18,10 @@
       link: link,
       priority: 100,
     };
-
   }
 
   /* @ngInject */
   function HideIfReadOnlyAdmin(Authinfo) {
-
     function link(scope, element) {
       if (Authinfo.isReadOnlyAdmin()) {
         element.hide();
@@ -36,7 +33,6 @@
       link: link,
       priority: 100,
     };
-
   }
 
   angular.module('Core').directive('disableIfReadOnlyAdmin', DisableIfReadOnlyAdmin);

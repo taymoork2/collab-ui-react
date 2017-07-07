@@ -1,7 +1,6 @@
 'use strict';
 
 describe('ReportsService', function () {
-
   ///////////////////
 
   function init() {
@@ -13,14 +12,12 @@ describe('ReportsService', function () {
 
   ///////////////////
 
-  describe("healthMonitor", function () {
-
+  describe('healthMonitor', function () {
     it('should have function defined', function () {
       expect(_.isFunction(this.ReportsService.healthMonitor)).toBeTruthy();
     });
 
     it('should handle successful http call with object result data', function () {
-
       this.$httpBackend.expectGET(this.UrlConfig.getHealthCheckServiceUrl())
         .respond(200, { fakeData: true });
 
@@ -34,11 +31,9 @@ describe('ReportsService', function () {
       this.$httpBackend.flush();
       this.$httpBackend.verifyNoOutstandingExpectation();
       this.$httpBackend.verifyNoOutstandingRequest();
-
     });
 
     it('should handle successful http call but with non-object data', function () {
-
       this.$httpBackend.expectGET(this.UrlConfig.getHealthCheckServiceUrl())
         .respond(200, 'Not an object');
 
@@ -51,12 +46,10 @@ describe('ReportsService', function () {
       this.$httpBackend.flush();
       this.$httpBackend.verifyNoOutstandingExpectation();
       this.$httpBackend.verifyNoOutstandingRequest();
-
     });
 
 
     it('should handle failed http call', function () {
-
       this.$httpBackend.expectGET(this.UrlConfig.getHealthCheckServiceUrl())
         .respond(503, 'Service unavailable');
 
@@ -69,9 +62,6 @@ describe('ReportsService', function () {
       this.$httpBackend.flush();
       this.$httpBackend.verifyNoOutstandingExpectation();
       this.$httpBackend.verifyNoOutstandingRequest();
-
     });
-
   });
-
 });

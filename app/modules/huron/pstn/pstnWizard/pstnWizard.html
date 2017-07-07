@@ -149,19 +149,74 @@
       </div>
     </div>
   </div>
+  <div ng-if="$ctrl.step == 8" >
+    <div class="flex-container">
+      <uc-esa-disclaimer-msg></uc-esa-disclaimer-msg>
+    </div>
+  </div>
+  <div ng-if="$ctrl.step == 9" >
+    <div ng-if="$ctrl.blockByopNumberAddForPartnerAdmin" class="adding-phone-number-blocked">
+      <div><i class="icon icon-warning"></i></div><div><h1 class="h4" translate="pstnSetup.addByopNumberBlocked.title"></h1></div>
+      <div class="clearfix"></div>
+      <p id='addByopNumberBlockedMessageMain' translate="pstnSetup.addByopNumberBlocked.messageMain"></p>
+      <p translate="pstnSetup.addByopNumberBlocked.messageSkip"></p>
+    </div>
+    <uc-pstn-swivel-numbers
+      ng-if="!$ctrl.blockByopNumberAddForPartnerAdmin"
+      numbers="$ctrl.swivelNumbers"
+      acknowledge="$ctrl.emergencyAcknowledge"
+      on-change="$ctrl.onSwivelChange(numbers, invalidCount)"
+      on-acknowledge="$ctrl.onAcknowledge(value)">
+    </uc-pstn-swivel-numbers>
+  </div>
+  <div ng-if="$ctrl.step == 10" class="pstn-review swivel-pstn-review">
+    <div class="review-container">
+      <i class="icon icon-circle-call"></i>
+      <h1 class="title" translate="pstnSetup.reviewSummary"></h1>
+      <div class="review-details">
+        <div class="swivel-package-details">
+          <div class="package-detail-label">
+            <div translate="pstnSetup.pstnMethod"></div>
+            <div class="detail-text" translate="pstnSetup.privatePstnTrunk" ></div>
+            <div translate="pstnSetup.numbersTitle"></div>
+            <div class="detail-text" translate="pstnSetup.importNumbersTitle" translate-value-count="{{::$ctrl.swivelNumbers.length}}" translate-interpolation="messageformat"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="$ctrl.step == 11" class="pstn-next-steps">
+    <div class="flex-container swivel-pstn-next-steps">
+      <i class="icon icon-check-mark-success"></i>
+      <h3 translate="pstnSetup.thankYou"></h3>
+      <h2 ng-if="$ctrl.swivelNumbers.length === 0" translate="pstnSetup.privatePstnFinalized"></h2>
+      <h2 ng-if="$ctrl.swivelNumbers.length !== 0" translate="pstnSetup.privatePstnNumbersImported" translate-value-count="{{::$ctrl.swivelNumbers.length}}" translate-interpolation="messageformat"></h2>
+      <div ng-if="$ctrl.swivelNumbers.length !== 0">
+        <button ng-if="$ctrl.loggedInPartnerPortal" class="left btn btn--people" ng-click="$ctrl.launchCustomerPortal()" translate="pstnSetup.launchPortal">
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- footer -->
 <div class="modal-footer trials" ng-if="$ctrl.showButtons">
-  <button ng-hide="$ctrl.hideBackBtn()" class="btn with-slim-offset offset-l"
+  <button ng-show="$ctrl.showSkipBtn()" class="skip-btn btn btn--link btn--none no-animate"
+    ng-click="$ctrl.onSkip()"
+    translate="trialModal.skip">
+  </button>
+  <button ng-hide="$ctrl.hideBackBtn()" class="btn with-slim-offset offset-l no-animate"
     ng-click="$ctrl.previousStep()"
     translate="common.back">
   </button>
   <button id="wizardBtn" class="btn btn--primary" type="button" cs-btn loading="$ctrl.placeOrderLoad"
     ng-click="$ctrl.nextStep()" ng-disabled="$ctrl.nextDisabled()">
     <span ng-if="$ctrl.step == 6" translate="pstnSetup.placeOrder"></span>
-    <span ng-if="$ctrl.step == 7" translate="common.done"></span>
-    <span ng-if="!($ctrl.step == 6 || $ctrl.step == 7)" translate="common.next"></span>
+    <span ng-if="$ctrl.step == 7 || $ctrl.step == 11" translate="common.done"></span>
+    <span ng-if="!($ctrl.step == 6 || $ctrl.step == 7 || $ctrl.step == 8 || $ctrl.step == 10 || $ctrl.step == 11)" translate="common.next"></span>
+    <span ng-if="$ctrl.step == 8" translate="common.agree"></span>
+    <span ng-if="$ctrl.step == 10 && $ctrl.swivelNumbers.length === 0" translate="pstnSetup.finalizePstn"></span>
+    <span ng-if="$ctrl.step == 10 && $ctrl.swivelNumbers.length !== 0" translate="pstnSetup.importNumbers"></span>
   </button>
 </div>
 

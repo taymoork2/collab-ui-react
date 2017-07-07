@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: DeviceUsageCtrl', function () {
-
   beforeEach(angular.mock.module('Core'));
   var DeviceUsageService, DeviceUsageGraphService, DeviceUsageSplunkMetricsService, DeviceUsageExportService, DeviceUsageModelService;
   var $controller;
@@ -35,11 +34,9 @@ describe('Controller: DeviceUsageCtrl', function () {
 
     spyOn(DeviceUsageModelService, 'getModelsForRange');
     DeviceUsageModelService.getModelsForRange.and.returnValue($q.resolve([]));
-
   }));
 
   describe('Normal initialization fetching device data', function () {
-
     beforeEach(function () {
       controller = $controller('DeviceUsageCtrl', {
         DeviceUsageService: DeviceUsageService,
@@ -80,18 +77,52 @@ describe('Controller: DeviceUsageCtrl', function () {
       done();
     });
 
+    it('extractStats timeout show show notification and show blank results', function (done) {
+      spyOn(DeviceUsageService, 'getDataForRange');
+      spyOn(DeviceUsageService, 'extractStats');
+      spyOn(DeviceUsageService, 'resolveDeviceData');
+
+      spyOn(Notification, 'error');
+
+      var deviceData = {
+        reportItems: [
+          { totalDuration: 42 },
+        ],
+        missingDays: false,
+      };
+      DeviceUsageService.getDataForRange.and.returnValue($q.resolve(deviceData));
+      DeviceUsageService.extractStats.and.returnValue($q.reject({
+        timedout: true,
+      }));
+      DeviceUsageService.resolveDeviceData.and.returnValue($q.resolve([]));
+
+      expect(controller.waitingForDeviceMetrics).toBe(true);
+      controller.init();
+      expect(controller.timeSelected.value).toBe(0);
+      $scope.$apply();
+      expect(Notification.error).toHaveBeenCalled();
+      expect(controller.waitingForDeviceMetrics).toBe(false);
+      expect(controller.waitForLeast).toBe(false);
+      expect(controller.waitForMost).toBe(false);
+      expect(controller.totalDuration).toEqual('-');
+      expect(controller.noOfDevices).toEqual('-');
+      expect(controller.noOfCalls).toEqual('-');
+
+      done();
+    });
+
     it('adds people count to the least and most used devices', function (done) {
       var peopleCountData = {
-        '3333': [
+        3333: [
           { accountId: '3333', peopleCountAvg: 33 },
         ],
-        '1111': [
+        1111: [
           { accountId: '1111', peopleCountAvg: 11 },
         ],
-        '4444': [
+        4444: [
           { accountId: '4444', peopleCountAvg: 44 },
         ],
-        '2222': [
+        2222: [
           { accountId: '2222', peopleCountAvg: 22 },
         ],
       };
@@ -124,7 +155,6 @@ describe('Controller: DeviceUsageCtrl', function () {
       var fakeModal;
 
       beforeEach(function () {
-
         fakeModal = {
           result: {
             then: function (okCallback, cancelCallback) {
@@ -191,9 +221,7 @@ describe('Controller: DeviceUsageCtrl', function () {
         expect(controller.exporting).toBeFalsy();
         expect(splunkService.calls.count()).toBe(0);
       });
-
     });
-
   });
 
   var amchartMock = function () {

@@ -7,7 +7,7 @@
   <cs-sp-container>
     <div class="warning" ng-show="$ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.reordering">
       <div class="cs-input__messages">
-        <div class="message limit-reach-warning" translate="speedDial.limitSpeedDialReach"></div>
+        <div class="message limit-reach-warning" translate="speedDial.limitSpeedDialsReach"></div>
       </div>
     </div>
     <cs-sp-section>
@@ -62,7 +62,7 @@
                     on-change-fn="$ctrl.setSpeedDial(model)">
                 </cs-call-destination>
               </div>
-              <div cr-feature-toggle feature-show="huronBlfPickup" ng-if="$ctrl.isValid">
+              <div ng-if="$ctrl.isValid">
                 <input
                   cs-input
                   type="checkbox"

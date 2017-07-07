@@ -17,7 +17,7 @@ describe('Component: HybridVoicemailCtrl ', () => {
 
   it('should show Success notification when HybridVoiceMail is disabled', () => {
     spyOn(Notification, 'success');
-    let ctrl = $componentController('hybridVoicemailSettings', {
+    const ctrl = $componentController('hybridVoicemailSettings', {
       UCCService: {
         enableHybridVoicemail: jasmine.createSpy('enableHybridVoicemail').and.returnValue($q.resolve( { voicemailOrgEnableInfo: { orgVoicemailStatus: 'HYBRID_PARTIAL' } } )),
         mapStatusToCss: jasmine.createSpy('mapStatusToCss').and.returnValue(''),
@@ -31,7 +31,7 @@ describe('Component: HybridVoicemailCtrl ', () => {
 
   it('should show Success notification when HybridVoiceMail is enabled', () => {
     spyOn(Notification, 'success');
-    let ctrl = $componentController('hybridVoicemailSettings', {
+    const ctrl = $componentController('hybridVoicemailSettings', {
       UCCService: {
         disableHybridVoicemail: jasmine.createSpy('disableHybridVoicemail').and.returnValue($q.resolve( { voicemailOrgEnableInfo: { orgVoicemailStatus: 'HYBRID_SUCCESS' } } )),
         mapStatusToCss: jasmine.createSpy('mapStatusToCss').and.returnValue(''),

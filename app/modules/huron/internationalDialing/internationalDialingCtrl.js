@@ -33,8 +33,8 @@
       key: 'internationalDialingEnabled',
       type: 'select',
       templateOptions: {
-        labelfield: "label",
-        valuefield: "value",
+        labelfield: 'label',
+        valuefield: 'value',
         options: vm.validInternationalDialingOptions,
       },
     }];
@@ -84,9 +84,9 @@
           vm.model.internationalDialingUuid = cosRestriction.user[0].uuid;
         }
         if (custRestriction) {
-          cbUseGlobal.label = $translate.instant('internationalDialingPanel.useGlobal') + "(" + $translate.instant('internationalDialingPanel.off') + ")";
+          cbUseGlobal.label = $translate.instant('internationalDialingPanel.useGlobal') + '(' + $translate.instant('internationalDialingPanel.off') + ')';
         } else {
-          cbUseGlobal.label = $translate.instant('internationalDialingPanel.useGlobal') + "(" + $translate.instant('internationalDialingPanel.on') + ")";
+          cbUseGlobal.label = $translate.instant('internationalDialingPanel.useGlobal') + '(' + $translate.instant('internationalDialingPanel.on') + ')';
         }
         if (!overRide) {
           vm.model.internationalDialingEnabled = cbUseGlobal;
@@ -112,7 +112,7 @@
         blocked: false,
       };
 
-      if (vm.model.internationalDialingEnabled.value === "0") {
+      if (vm.model.internationalDialingEnabled.value === '0') {
         cosType.blocked = true;
       } else {
         cosType.blocked = false;

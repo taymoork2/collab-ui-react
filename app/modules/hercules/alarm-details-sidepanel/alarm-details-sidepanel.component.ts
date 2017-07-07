@@ -21,7 +21,7 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
     this.$rootScope.$broadcast('displayNameUpdated');
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { alarm } = changes;
     if (alarm && alarm.currentValue) {
       this.init(alarm.currentValue);

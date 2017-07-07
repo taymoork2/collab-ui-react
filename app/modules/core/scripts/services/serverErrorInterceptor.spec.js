@@ -55,5 +55,4 @@ describe('ServerErrorInterceptor', function () {
 
     expect($log.error.calls.count()).toBe(0);
   });
-
 });

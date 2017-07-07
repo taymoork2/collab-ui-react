@@ -17,19 +17,19 @@ class LineOverview implements ng.IComponentController {
   private consumerType: LineConsumerType;
   public form: ng.IFormController;
   public saveInProcess: boolean = false;
-  public actionList: Array<IActionItem>;
+  public actionList: IActionItem[];
   public showActions: boolean = false;
   public deleteConfirmation: string;
   public deleteSharedLineMessage: string;
 
   // Directory Number properties
   public esnPrefix: string;
-  public internalNumbers: Array<string>;
-  public externalNumbers: Array<string>;
+  public internalNumbers: string[];
+  public externalNumbers: string[];
   public showExtensions: boolean;
 
   //SharedLine Properties
-  public newSharedLineMembers: Array<Member> = [];
+  public newSharedLineMembers: Member[] = [];
 
   // Data from services
   public lineOverviewData: LineOverviewData;
@@ -166,7 +166,7 @@ class LineOverview implements ng.IComponentController {
       scope: this.$scope,
       type: 'dialog',
     }).result.then( () => {
-      let redirect: boolean = _.isEqual(this.ownerId, _.get(sharedLine, 'place.uuid')) || _.isEqual(this.ownerId, _.get(sharedLine, 'user.uuid'));
+      const redirect: boolean = _.isEqual(this.ownerId, _.get(sharedLine, 'place.uuid')) || _.isEqual(this.ownerId, _.get(sharedLine, 'user.uuid'));
       return this.SharedLineService.deleteSharedLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, sharedLine.uuid)
       .then( () => {
         this.$scope.$emit(LINE_CHANGE);
@@ -182,7 +182,7 @@ class LineOverview implements ng.IComponentController {
   }
 
   public onCancel(): void {
-    let uuid = _.get(this, 'lineOverviewData.line.uuid');
+    const uuid = _.get(this, 'lineOverviewData.line.uuid');
     if (!uuid) {
       this.$state.go(this.$state.$current.parent.name);
     } else {
@@ -251,8 +251,8 @@ class LineOverview implements ng.IComponentController {
   }
 
   public deleteSharedLines() {
-    let promises: Array<ng.IPromise<any>> = [];
-    let lines: SharedLine[] = _.reject(this.lineOverviewData.sharedLines, (member) => {
+    const promises: ng.IPromise<any>[] = [];
+    const lines: SharedLine[] = _.reject(this.lineOverviewData.sharedLines, (member) => {
       return _.get(member, 'primary') || _.get(member, 'uuid') === this.ownerId;
     });
     _.forEach(lines, (member) => {

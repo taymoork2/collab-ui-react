@@ -110,5 +110,4 @@
     .module('core.tabconfig', [])
     .value('tabConfig', tabs)
     .name;
-
 }());

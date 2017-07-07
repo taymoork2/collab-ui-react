@@ -2,7 +2,7 @@ import hybridCallServiceAggregatedSection from './index';
 
 describe('HybridCallServiceAggregatedSectionComponent', () => {
 
-  let $componentController, $httpBackend, $q, $state, $scope, ctrl, FeatureToggleService, HybridServiceUserSidepanelHelperService, ServiceDescriptor, UCCService;
+  let $componentController, $httpBackend, $q, $state, $scope, ctrl, FeatureToggleService, HybridServiceUserSidepanelHelperService, ServiceDescriptorService, UCCService;
 
   beforeEach(angular.mock.module('Hercules'));
 
@@ -14,7 +14,7 @@ describe('HybridCallServiceAggregatedSectionComponent', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$httpBackend_, _$q_, _$state_, $rootScope, _FeatureToggleService_, _HybridServiceUserSidepanelHelperService_, _ServiceDescriptor_, _UCCService_) {
+  function dependencies (_$componentController_, _$httpBackend_, _$q_, _$state_, $rootScope, _FeatureToggleService_, _HybridServiceUserSidepanelHelperService_, _ServiceDescriptorService_, _UCCService_) {
     $componentController = _$componentController_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -22,12 +22,12 @@ describe('HybridCallServiceAggregatedSectionComponent', () => {
     $state = _$state_;
     FeatureToggleService = _FeatureToggleService_;
     HybridServiceUserSidepanelHelperService = _HybridServiceUserSidepanelHelperService_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
     UCCService = _UCCService_;
   }
 
   function cleanup() {
-    $componentController = $httpBackend = $q = $state = $scope = ctrl = FeatureToggleService = HybridServiceUserSidepanelHelperService = ServiceDescriptor = UCCService = undefined;
+    $componentController = $httpBackend = $q = $state = $scope = ctrl = FeatureToggleService = HybridServiceUserSidepanelHelperService = ServiceDescriptorService = UCCService = undefined;
   }
 
   function initSpies() {
@@ -38,7 +38,7 @@ describe('HybridCallServiceAggregatedSectionComponent', () => {
         orgHybridVoicemailEnabled: true,
       },
     }));
-    spyOn(ServiceDescriptor, 'isServiceEnabled').and.returnValue($q.resolve({}));
+    spyOn(ServiceDescriptorService, 'isServiceEnabled').and.returnValue($q.resolve({}));
     $httpBackend.expectGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
   }
 
@@ -87,14 +87,14 @@ describe('HybridCallServiceAggregatedSectionComponent', () => {
 
   it('should call FMS to get the Call Service Connect setup status', () => {
 
-    ServiceDescriptor.isServiceEnabled.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     initController();
     ctrl.$onInit();
     $scope.$apply();
 
-    expect(ServiceDescriptor.isServiceEnabled).toHaveBeenCalledWith('squared-fusion-ec');
-    expect(ServiceDescriptor.isServiceEnabled.calls.count()).toBe(1);
+    expect(ServiceDescriptorService.isServiceEnabled).toHaveBeenCalledWith('squared-fusion-ec');
+    expect(ServiceDescriptorService.isServiceEnabled.calls.count()).toBe(1);
     expect(ctrl.callServiceConnectEnabledForOrg).toBe(true);
   });
 

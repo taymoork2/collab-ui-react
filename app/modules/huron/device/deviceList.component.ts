@@ -9,7 +9,7 @@ class DeviceList implements ng.IComponentController {
   public multipleOtp: boolean;
   public onGenerateFn: Function;
   public onShowDeviceDetailFn: Function;
-  public actionList: Array<IActionItem>;
+  public actionList: IActionItem[];
   public showActions: boolean = false;
   public showGenerateButton: boolean = false;
   public generateCodeText: string;
@@ -29,7 +29,7 @@ class DeviceList implements ng.IComponentController {
     this.initActions();
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { deviceList } = changes;
     if (this.devicesLoaded) {
       this.devicesLoaded.then(() => {

@@ -28,7 +28,7 @@ class GmTdSites implements ng.IComponentController {
     this.filterCurrentTD();
 
     _.forEach(this.sites, (item) => {
-      let resArr = _.words(item.siteUrl, /^[a-z][\w]+/g);
+      const resArr = _.words(item.siteUrl, /^[a-z][\w]+/g);
       item.globalSite = 'https://' + _.trim(item.siteUrl) + '/' + _.trim(resArr[0]) + '/globalcallin.php';
     });
 
@@ -47,7 +47,7 @@ class GmTdSites implements ng.IComponentController {
   private moveSite(site, targetTd) {
     this.showLoading = true;
 
-    let data = {
+    const data = {
       siteId: site.siteId,
       siteUrl: site.siteUrl,
       spCustomerId: this.customerId,
@@ -59,7 +59,7 @@ class GmTdSites implements ng.IComponentController {
     this.TelephonyDomainService.moveSite(data).then((res) => {
       this.showLoading = false;
 
-      let resJson: any = _.get(res.content, 'data');
+      const resJson: any = _.get(res.content, 'data');
       if (resJson.returnCode) {
         this.Notification.notify(this.gemService.showError(resJson.returnCode));
         return;
@@ -77,10 +77,10 @@ class GmTdSites implements ng.IComponentController {
 
   private filterCurrentTD(): void {
     if (this.tds.length) {
-      let curCcaDomainId = this.curTd.ccaDomainId;
-      let curPrimaryBridgeId = this.curTd.primaryBridgeId;
-      let curBackupBridgeId = this.curTd.backupBridgeId;
-      let curWebDomainId = this.curTd.webDomainId;
+      const curCcaDomainId = this.curTd.ccaDomainId;
+      const curPrimaryBridgeId = this.curTd.primaryBridgeId;
+      const curBackupBridgeId = this.curTd.backupBridgeId;
+      const curWebDomainId = this.curTd.webDomainId;
 
       _.remove(this.tds, (obj: any) => {
         return (obj.ccaDomainId === curCcaDomainId) || (obj.primaryBridgeId !== curPrimaryBridgeId)

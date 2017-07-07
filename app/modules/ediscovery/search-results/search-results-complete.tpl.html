@@ -8,8 +8,8 @@
   <span class="result-title results-spacing" translate="ediscovery.searchResults.totalReportSize"></span>
   <br>
   <h6>{{ediscoverySearchCtrl.searchResults.totalSize}}</h6>
-  <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeDownloaded">
-    <div class="columns small-12 medium-12 large-12 results-spacing">
+  <div ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeDownloaded">
+    <div class="results-spacing">
       <button cs-btn
               class="btn btn--primary"
               loading="ediscoverySearchCtrl.downloadingReport"
@@ -24,6 +24,16 @@
       <!-- <div>
         <span translate="ediscovery.searchResults.downloadContent"></span>
       </div> -->
+      <div ng-if="ediscoverySearchCtrl.report.reportKey">
+        <div class="results-spacing" translate="ediscovery.encryption.instructionsShort"/>
+        <div class="results-spacing search-results-key">{{ediscoverySearchCtrl.report.reportKey}}</div>
+        <div class="results-spacing copy">
+          <div ngclipboard data-clipboard-text="{{ediscoverySearchCtrl.report.reportKey}}">
+            <i class="icon icon-clipboard"></i>
+            <a href="" translate="common.copyToClipboard"></a>
+          </div>
+        </div>
+      </div>
       <div class="expiry-info">
         <i class="icon icon-warning"></i>
         <span translate="ediscovery.searchResults.expiryInfo"></span>

@@ -25,7 +25,7 @@ export class AutoAnswerCtrl implements ng.IComponentController {
     this.autoAnswerEnabled = false;
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { autoAnswer } = changes;
     if (autoAnswer) {
       this.processPhoneListChange(autoAnswer);
@@ -53,24 +53,24 @@ export class AutoAnswerCtrl implements ng.IComponentController {
     this.change(phoneId, value, this.autoAnswerMode);
   }
 
-  private processPhoneListChange(autoAnswerChanges: ng.IChangesObject): void {
+  private processPhoneListChange(autoAnswerChanges: ng.IChangesObject<any>): void {
     if (_.isUndefined(autoAnswerChanges.currentValue) || _.isNull(autoAnswerChanges.currentValue)) {
       this.autoAnswerNoSupportedPhone = true;
       return;
     }
 
-    let _phoneList: Array<AutoAnswerPhone> = autoAnswerChanges.currentValue.phones;
+    const _phoneList: AutoAnswerPhone[] = autoAnswerChanges.currentValue.phones;
     if (_.isUndefined(_phoneList) || _.isNull(_phoneList) || _phoneList.length === 0) {
       this.autoAnswerNoSupportedPhone = true;
       return;
     }
 
     if (_.isUndefined(this.autoAnswerPhoneOptions)) {
-      this.convertAutoAnswerPhonesToOptionsArray(_phoneList as Array<AutoAnswerPhone>);
+      this.convertAutoAnswerPhonesToOptionsArray(_phoneList as AutoAnswerPhone[]);
     }
   }
 
-  private convertAutoAnswerPhonesToOptionsArray(autoAnswerPhones: Array<AutoAnswerPhone>): void {
+  private convertAutoAnswerPhonesToOptionsArray(autoAnswerPhones: AutoAnswerPhone[]): void {
     this.autoAnswerPhoneOptions = _.map(autoAnswerPhones, (phone) => {
       return {
         label: phone.description,
@@ -79,14 +79,14 @@ export class AutoAnswerCtrl implements ng.IComponentController {
     });
   }
 
-  private setCustomSharedLineMemberWarningMsg(autoAnswerChanges: ng.IChangesObject): void {
+  private setCustomSharedLineMemberWarningMsg(autoAnswerChanges: ng.IChangesObject<any>): void {
     if (_.isUndefined(this.autoAnswerEnabledForSharedLineMemberMsg)) {
-      let member: AutoAnswerMember = autoAnswerChanges.currentValue.member;
+      const member: AutoAnswerMember = autoAnswerChanges.currentValue.member;
       if (member && autoAnswerChanges.currentValue.enabledForSharedLineMember) {
-        let _ownerType = (autoAnswerChanges.currentValue.ownerType === LineConsumerType.USERS) ? MemberType.USER_REAL_USER : MemberType.USER_PLACE;
-        let _shareMemberType = (member.type === MemberTypeConst.USER) ? MemberType.USER_REAL_USER : MemberType.USER_PLACE;
-        let _memberName = (member.type === MemberTypeConst.USER) ? (member.firstName + ' ' + member.lastName) : member.displayName;
-        let _memberInfo = {
+        const _ownerType = (autoAnswerChanges.currentValue.ownerType === LineConsumerType.USERS) ? MemberType.USER_REAL_USER : MemberType.USER_PLACE;
+        const _shareMemberType = (member.type === MemberTypeConst.USER) ? MemberType.USER_REAL_USER : MemberType.USER_PLACE;
+        const _memberName = (member.type === MemberTypeConst.USER) ? (member.firstName + ' ' + member.lastName) : member.displayName;
+        const _memberInfo = {
           ownerType: _ownerType,
           type: _shareMemberType,
           name: (_memberName && _.trim(_memberName)) ? _memberName : member.userName };
@@ -98,9 +98,9 @@ export class AutoAnswerCtrl implements ng.IComponentController {
     }
   }
 
-  private processAutoAnswerSelectionChange(autoAnswerChanges: ng.IChangesObject): void {
+  private processAutoAnswerSelectionChange(autoAnswerChanges: ng.IChangesObject<any>): void {
     if (autoAnswerChanges.currentValue && autoAnswerChanges.currentValue.phones) {
-      let autoAnswerPhone: AutoAnswerPhone = _.find(autoAnswerChanges.currentValue.phones as Array<AutoAnswerPhone>, AutoAnswerConst.ENABLED);
+      const autoAnswerPhone: AutoAnswerPhone = _.find(autoAnswerChanges.currentValue.phones as AutoAnswerPhone[], AutoAnswerConst.ENABLED);
       if (autoAnswerPhone) {
         this.autoAnswerEnabled = true;
         this.autoAnswerPhoneSelected = _.find(this.autoAnswerPhoneOptions!, { value: autoAnswerPhone.uuid });

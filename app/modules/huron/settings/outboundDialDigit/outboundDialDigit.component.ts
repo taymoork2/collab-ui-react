@@ -4,10 +4,10 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 class OutboundDialDigitCtrl implements ng.IComponentController {
   public selected: IOption;
   public steeringDigit: string;
-  public internalNumberRanges: Array<IExtensionRange>;
+  public internalNumberRanges: IExtensionRange[];
   public onChangeFn: Function;
 
-  public steeringDigitOptions: Array<IOption> = [];
+  public steeringDigitOptions: IOption[] = [];
 
   /* @ngInject */
   constructor(
@@ -25,7 +25,7 @@ class OutboundDialDigitCtrl implements ng.IComponentController {
     }
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       internalNumberRanges,
       steeringDigit,
@@ -47,7 +47,7 @@ class OutboundDialDigitCtrl implements ng.IComponentController {
   }
 
   public steeringDigitConflict(): boolean {
-    let test = _.find(this.internalNumberRanges, range => {
+    const test = _.find(this.internalNumberRanges, range => {
       return (_.startsWith(range.beginNumber, this.steeringDigit)) ||
         _.startsWith(range.endNumber, this.steeringDigit);
     });

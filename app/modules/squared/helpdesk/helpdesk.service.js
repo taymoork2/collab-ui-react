@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptorService, UrlConfig, USSService, HybridServicesExtrasService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     var service = {
@@ -207,9 +207,9 @@
     function resendAdminEmail(orderUUID, toCustomer) {
       var url;
       if (toCustomer) {
-        url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendcustomeradminemail/invoke";
+        url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendcustomeradminemail/invoke';
       } else {
-        url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendpartneradminemail/invoke";
+        url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendpartneradminemail/invoke';
       }
       return $http.post(url).then(extractData);
     }
@@ -230,9 +230,9 @@
       };
 
       if (toCustomer) {
-        url = urlBase + "helpdesk/orders/" + orderUUID + "/customerAdminEmail";
+        url = urlBase + 'helpdesk/orders/' + orderUUID + '/customerAdminEmail';
       } else {
-        url = urlBase + "helpdesk/orders/" + orderUUID + "/partnerAdminEmail";
+        url = urlBase + 'helpdesk/orders/' + orderUUID + '/partnerAdminEmail';
       }
       return $http.post(url, payload).then(extractData);
     }
@@ -289,7 +289,7 @@
       if (useMock()) {
         return deferredResolve(filterRelevantServices(HelpdeskMockData.hybridServices));
       }
-      return ServiceDescriptor.getServices(orgId).then(filterRelevantServices);
+      return ServiceDescriptorService.getServices(orgId).then(filterRelevantServices);
     }
 
     var filterRelevantServices = function (services) {
@@ -405,7 +405,6 @@
             }, _.noop);
           });
         }
-
       }
     }
 
@@ -497,7 +496,10 @@
     function elevateToReadonlyAdmin(orgId) {
       return $http
         .post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke')
-        .then(USSService.notifyReadOnlyLaunch);
+        .then(USSService.notifyReadOnlyLaunch)
+        .catch(angular.noop)
+        .then(HybridServicesExtrasService.notifyReadOnlyLaunch)
+        .catch(angular.noop);
     }
 
     function getHybridStatusesForUser(userId, orgId) {

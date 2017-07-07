@@ -23,7 +23,6 @@ describe('App Config', function () {
   }));
 
   describe('$compile', function () {
-
     function getCompiledLink(url) {
       $scope.myUrl = url;
       var template = angular.element('<a ng-href="{{myUrl}}"></a>');
@@ -63,6 +62,5 @@ describe('App Config', function () {
     it('should not compile custom href', function () {
       expect(getCompiledLink('custom:stuff')).toContain('unsafe');
     });
-
   });
 });

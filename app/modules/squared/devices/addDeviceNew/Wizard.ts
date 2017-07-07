@@ -26,7 +26,7 @@ class Wizard {
   public next: (data, nextOption) => {};
 
   public newNext($state, data, nextOption) {
-    let next = this.wizardState.wizardState[this.wizardState.currentStateName].next || this.wizardState.wizardState[this.wizardState.currentStateName].nextOptions[nextOption];
+    const next = this.wizardState.wizardState[this.wizardState.currentStateName].next || this.wizardState.wizardState[this.wizardState.currentStateName].nextOptions[nextOption];
     this.wizardState.history.push(this.wizardState.currentStateName);
     this.wizardState.currentStateName = next;
     _.merge(this.wizardState.data, data);
@@ -39,7 +39,7 @@ class Wizard {
   public back: () => {};
 
   public newBack($state) {
-    let nav = this.wizardState.history.pop();
+    const nav = this.wizardState.history.pop();
     this.wizardState.currentStateName = nav;
     $state.go(nav, {
       wizard: this,

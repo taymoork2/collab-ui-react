@@ -26,9 +26,9 @@ describe('Component: cmcDetailsStatus ', () => {
 
       it('shows all users', function (done) {
 
-        let someUsers = createSomeUserStatuses(10);
+        const someUsers = createSomeUserStatuses(10);
 
-        spyOn(this.CmcUserService, 'getUsersWithCmcButMissingAware').and.returnValue(
+        spyOn(this.CmcUserService, 'getUsersWithCmcAndDetectMissingAware').and.returnValue(
           this.$q.resolve({
             userStatuses: someUsers,
             paging: {
@@ -47,9 +47,9 @@ describe('Component: cmcDetailsStatus ', () => {
 
       it('shows only first page of many users', function (done) {
 
-        let someUsers = createSomeUserStatuses(10);
+        const someUsers = createSomeUserStatuses(10);
 
-        spyOn(this.CmcUserService, 'getUsersWithCmcButMissingAware').and.returnValue(
+        spyOn(this.CmcUserService, 'getUsersWithCmcAndDetectMissingAware').and.returnValue(
           this.$q.resolve({
             userStatuses: someUsers,
             paging: {
@@ -71,7 +71,7 @@ describe('Component: cmcDetailsStatus ', () => {
 
         spyOn(this.Notification, 'error').and.callThrough();
 
-        spyOn(this.CmcUserService, 'getUsersWithCmcButMissingAware').and.returnValue(
+        spyOn(this.CmcUserService, 'getUsersWithCmcAndDetectMissingAware').and.returnValue(
           this.$q.reject({ data: { message: 'request failed' } } ),
         );
 
@@ -88,8 +88,8 @@ describe('Component: cmcDetailsStatus ', () => {
     });
   });
 
-  function createSomeUserStatuses(noOfUsers: number): Array<ICmcUserStatus> {
-    let userStatuses: Array<ICmcUserStatus> = new Array<ICmcUserStatus>();
+  function createSomeUserStatuses(noOfUsers: number): ICmcUserStatus[] {
+    const userStatuses: ICmcUserStatus[] = new Array<ICmcUserStatus>();
     _.times(noOfUsers, function (n) {
       userStatuses.push({
         userId: n.toString(),

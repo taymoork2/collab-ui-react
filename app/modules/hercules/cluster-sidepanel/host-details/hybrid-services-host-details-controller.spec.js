@@ -1,5 +1,4 @@
 describe('HybridServicesHostDetailsController: ', function () {
-
   var $controller, $modal, $rootScope, $scope, $stateParams, controller, ClusterService, HybridServicesClusterStatesService;
 
   beforeEach(angular.mock.module('Hercules'));
@@ -56,7 +55,6 @@ describe('HybridServicesHostDetailsController: ', function () {
       hasNodesViewFeatureToggle: false,
     });
     $scope.$apply();
-
   }));
 
   it('should open the correct modal window when showReassignHostDialog() is called', function () {
@@ -101,5 +99,4 @@ describe('HybridServicesHostDetailsController: ', function () {
     controller.host.connectorType = 'hds_app';
     expect(controller.actions.length).toBe(2);
   });
-
 });

@@ -1,9 +1,7 @@
 'use strict';
 
 describe('Spark Care Partner flow', function () {
-
   describe('Add/Edit Partner Trial', function () {
-
     it('should login as care partner', function () {
       login.login('partner-admin', '#/partner/customers');
     });

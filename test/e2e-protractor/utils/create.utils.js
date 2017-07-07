@@ -19,8 +19,8 @@ exports.createRouteToQueue = function () {
           'Authorization': 'Bearer ' + bearer,
         },
         body: JSON.stringify({
-          'queueName': 'Sunlight 1',
-          'handlerUrl': ['http://127.0.0.1:8202/vmrest1/webresources/user/send2', 'http://sunlight URL2'],
+          queueName: 'Sunlight 1',
+          handlerUrl: ['http://127.0.0.1:8202/vmrest1/webresources/user/send2', 'http://sunlight URL2'],
         }),
       };
 
@@ -28,6 +28,5 @@ exports.createRouteToQueue = function () {
       .then(function () {
         return 200;
       });
-
     });
 };

@@ -6,7 +6,7 @@ export class CsdmCacheUpdater {
   public updateSingle(currentObj, updatedObj, mergeOnly) {
     if (!mergeOnly) {
       _.forEach(currentObj, (...args) => {
-        let [, key] = args;
+        const [, key] = args;
         delete currentObj[key];
       });
     }

@@ -5,7 +5,7 @@ describe('Component: lineOverview', () => {
   const BUTTON_SAVE = '.button-container .btn--primary';
   const BUTTON_CANCEL = '.button-container button:not(.btn--primary)';
 
-  let existingLinePrimary: Line = {
+  const existingLinePrimary: Line = {
     uuid: '0001',
     internal: '1234',
     external: '+5555551212',
@@ -15,7 +15,7 @@ describe('Component: lineOverview', () => {
     shared: false,
   };
 
-  let existingLineNonPrimary: Line = {
+  const existingLineNonPrimary: Line = {
     uuid: '0002',
     internal: '6789',
     external: '+5555551313',
@@ -25,9 +25,9 @@ describe('Component: lineOverview', () => {
     shared: false,
   };
 
-  let esnPrefix: string = '7100';
-  let internalNumbers: Array<string> = ['1234', '5678'];
-  let externalNumbers: Array<string> = ['+5555551212', '+5555551313'];
+  const esnPrefix: string = '7100';
+  const internalNumbers: string[] = ['1234', '5678'];
+  const externalNumbers: string[] = ['+5555551212', '+5555551313'];
 
   beforeEach(angular.mock.module('Squared'));
 

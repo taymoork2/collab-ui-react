@@ -1,0 +1,52 @@
+<div class="columns subscription-header" ng-class="{ 'medium-2': !($ctrl.isProPackPurchased && $ctrl.subscription.proPack), 'medium-3 pro-pack-view': $ctrl.isProPackPurchased && $ctrl.subscription.proPack }">
+  <div class="icon-container" ng-click="$ctrl.toggleView()" ng-class="{'icon-container-down': $ctrl.getView()}">
+    <i class="icon icon-right-arrow-contained"></i>
+  </div>
+  <h5 class="sub-name medium-2">
+    {{::$ctrl.subscription.name}}
+    <div class="subscription-badge" ng-if="subscription.isOnline">
+      <span class="badge ng-scope" ng-class="subscription.badge">{{::subscription.endDate}}</span>
+    </div>
+  </h5>
+
+  <div class="pro-pack-column" ng-if="$ctrl.isProPackPurchased && $ctrl.subscription.proPack">
+    <div class="detail" ng-class="{'tooltip-present': !$ctrl.getView()}" tooltip-html-unsafe="{{::$ctrl.subscription.proPack.tooltip}}" tooltip-enable="!$ctrl.getView() && $ctrl.subscription.proPack.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">
+      <i class="icon icon-certified icon-detail"></i>
+      <span class="h6">{{::$ctrl.getLicenseName($ctrl.subscription.proPack.offerName)}}</span>
+      <div class="detail-break match-icon" ng-if="$ctrl.getView()">
+        <span class="h6" translate="subscriptions.usage"></span>
+        <span class="h6" ng-class="{'warning': $ctrl.getWarning($ctrl.subscription.proPack) }">{{$ctrl.getUsage($ctrl.subscription.proPack)}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="columns subscription-column" ng-class="{ 'medium-8': !($ctrl.isProPackPurchased && $ctrl.subscription.proPack), 'medium-7': $ctrl.isProPackPurchased && $ctrl.subscription.proPack }">
+  <div ng-repeat="license in $ctrl.subscription.licenses" class="detail" ng-if="($index < 3) || $ctrl.getView()" ng-class="{'tooltip-present': !$ctrl.getView()}" tooltip-html-unsafe="{{::license.tooltip}}" tooltip-enable="!$ctrl.getView() && license.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">
+    <i class="icon {{::license.class}} icon-detail" ng-if="license.class"></i>
+    <span class="h6">{{::$ctrl.getLicenseName(license.offerName)}}</span>
+    <div class="detail-break" ng-class="{'match-icon': license.class}" ng-if="$ctrl.getView() && $ctrl.isUsage(license)">
+      <span class="h6" translate="subscriptions.usage"></span>
+      <span class="h6" ng-class="{'warning': $ctrl.getWarning(license)}">{{$ctrl.getUsage(license)}}</span>
+    </div>
+    <div class="detail-break" ng-class="{'match-icon': license.class}" ng-if="$ctrl.getView() && $ctrl.isTotalUsage(license)">
+      <span class="h6" translate="subscriptions.licenses"></span>
+      <span class="h6">{{::license.volume}}</span>
+    </div>
+  </div>
+</div>
+<div class="columns medium-2 subscription-upgrade">
+  <div class="license-quantity">
+    <bmmp-subscription-upgrade-button ng-if="$ctrl.subscription.isOnline"
+      class="btn btn--primary upgrade-button"
+      bmmp-attr="$ctrl.bmmpAttr"
+      widget-location="navigation-bar">
+    </bmmp-subscription-upgrade-button>
+    <span translate="common.quantity"></span>
+    <span>: {{$ctrl.getQuantity()}}</span>
+  </div>
+  <div ng-class="{'online-subscription-id': $ctrl.subscription.isOnline}" class="subscription-id h6" ng-if="$ctrl.getView()">
+    <span translate="subscriptions.subscription"></span>
+    <span>{{::$ctrl.subscription.subscriptionId}}</span>
+    <div>{{::$ctrl.subscription.endDate}}</div>
+  </div>
+</div>

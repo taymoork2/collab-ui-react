@@ -28,7 +28,6 @@ function post(url, body) {
     } else {
       defer.reject();
     }
-
   }
 
   request(options, callback);
@@ -50,26 +49,25 @@ var WebExPage = function () {
     accessToken,
     siteUrl
   ) {
+    xmlApiUrl = 'https://' + siteUrl + '/WBXService/XMLService';
 
-    xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
-
-    var dotIndex = siteUrl.indexOf(".");
+    var dotIndex = siteUrl.indexOf('.');
     var wbxSiteName = siteUrl.slice(0, dotIndex);
 
-    sessionTicketRequest = "" +
-      "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
-      "    <header>\n" +
-      "        <securityContext>\n" +
-      "            <siteName>" + wbxSiteName + "</siteName> \n" +
-      "            <webExID>" + webexAdminID + "</webExID>\n" +
-      "        </securityContext>\n" +
-      "    </header>\n" +
-      "    <body>\n" +
-      "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.AuthenticateUser\">\n" +
-      "            <accessToken>" + accessToken + "</accessToken>\n" +
-      "        </bodyContent>\n" +
-      "    </body>\n" +
-      "</serv:message>\n";
+    sessionTicketRequest = '' +
+      '<serv:message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n' +
+      '    <header>\n' +
+      '        <securityContext>\n' +
+      '            <siteName>' + wbxSiteName + '</siteName> \n' +
+      '            <webExID>' + webexAdminID + '</webExID>\n' +
+      '        </securityContext>\n' +
+      '    </header>\n' +
+      '    <body>\n' +
+      '        <bodyContent xsi:type="java:com.webex.service.binding.user.AuthenticateUser">\n' +
+      '            <accessToken>' + accessToken + '</accessToken>\n' +
+      '        </bodyContent>\n' +
+      '    </body>\n' +
+      '</serv:message>\n';
 
     var flow = protractor.promise.controlFlow();
     return flow.execute(this.initPost);
@@ -82,7 +80,6 @@ var WebExPage = function () {
     adminPassword,
     testSiteUrl
   ) {
-
     switch (loginType) {
       case 1:
         login.loginUsingIntegrationBackend(adminId);

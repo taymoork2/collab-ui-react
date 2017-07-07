@@ -5,7 +5,6 @@ var testuser = 'fakegmuser+test@gmail.com';
 var emailParams = '&forward=YWRtaW5UZXN0VXNlckB3eDIuZXhhbXBsZS5jb20&pwdResetSuccess=true';
 
 describe('Downloads page', function () {
-
   describe('with email parameter and reset/admin email params', function () {
     it('should display email account', function () {
       navigation.navigateTo('#/downloads?email=' + encodeURIComponent(testuser) + emailParams);

@@ -48,7 +48,7 @@ class CallForwardCtrl implements ng.IComponentController {
     };
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { callForward } = changes;
 
     if (callForward && callForward.currentValue) {
@@ -57,12 +57,12 @@ class CallForwardCtrl implements ng.IComponentController {
     }
   }
 
-  private processForwardOptionsChange(callForwardChanges: ng.IChangesObject) {
-    let all = callForwardChanges.currentValue.callForwardAll;
+  private processForwardOptionsChange(callForwardChanges: ng.IChangesObject<any>) {
+    const all = callForwardChanges.currentValue.callForwardAll;
     if (all.destination) {
       this.addForwardOption(all.destination);
     }
-    let busy = callForwardChanges.currentValue.callForwardBusy;
+    const busy = callForwardChanges.currentValue.callForwardBusy;
     if (busy.internalDestination) {
       this.addForwardOption(busy.internalDestination);
     }
@@ -72,24 +72,24 @@ class CallForwardCtrl implements ng.IComponentController {
     }
   }
 
-  private processCallForwardChanges(callForwardChanges: ng.IChangesObject) {
+  private processCallForwardChanges(callForwardChanges: ng.IChangesObject<any>) {
     let forward: any = callForwardChanges.currentValue.callForwardAll;
     let number: string = forward.destination;
-    let all = {
+    const all = {
       destination: number,
       voicemail: forward.voicemailEnabled,
     };
     forward = callForwardChanges.currentValue.callForwardBusy;
     number = forward.internalDestination;
 
-    let internal = {
+    const internal = {
       destination: number,
       voicemail: forward.internalVoicemailEnabled,
     };
     forward = callForwardChanges.currentValue.callForwardBusy;
     number = forward.externalDestination;
 
-    let external = {
+    const external = {
       destination: number,
       voicemail: forward.externalVoicemailEnabled,
     };
@@ -118,7 +118,7 @@ class CallForwardCtrl implements ng.IComponentController {
   }
 
   public onCallFwdAllChange(destination: any): void {
-    let callForwardAll: CallForwardAll = new CallForwardAll();
+    const callForwardAll: CallForwardAll = new CallForwardAll();
     callForwardAll.destination = destination || null;
     this.callForward.callForwardAll = callForwardAll;
     this.callForward.callForwardBusy = new CallForwardBusy();
@@ -126,7 +126,7 @@ class CallForwardCtrl implements ng.IComponentController {
   }
 
   public onVoicemailAll(): void {
-    let callForwardAll: CallForwardAll = new CallForwardAll();
+    const callForwardAll: CallForwardAll = new CallForwardAll();
     callForwardAll.voicemailEnabled = this.forwardAll.voicemail;
     this.callForward.callForwardAll = callForwardAll;
     this.callForward.callForwardBusy = new CallForwardBusy();
@@ -134,7 +134,7 @@ class CallForwardCtrl implements ng.IComponentController {
   }
 
   public onCallFwdBusyChange(destination: any): void {
-    let callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
+    const callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
     callForwardBusy.internalDestination = destination || null;
     this.callForward.callForwardAll = new CallForwardAll();
     this.callForward.callForwardBusy = callForwardBusy;
@@ -142,7 +142,7 @@ class CallForwardCtrl implements ng.IComponentController {
   }
 
   public onVoicemailBusy(): void {
-    let callForwardBusy: CallForwardBusy =  _.cloneDeep(this.callForward.callForwardBusy);
+    const callForwardBusy: CallForwardBusy =  _.cloneDeep(this.callForward.callForwardBusy);
     callForwardBusy.internalVoicemailEnabled = this.busyInternal.voicemail;
     if (callForwardBusy.internalVoicemailEnabled) {
       callForwardBusy.internalDestination = null;
@@ -153,7 +153,7 @@ class CallForwardCtrl implements ng.IComponentController {
   }
 
   public onCallFwdBusyExternalChange(destination: any): void {
-    let callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
+    const callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
     if (this.forwardExternalCallsDifferently) {
       callForwardBusy.externalDestination = destination || null;
     }
@@ -163,7 +163,7 @@ class CallForwardCtrl implements ng.IComponentController {
   }
 
   public onVoicemailBusyExternal(): void {
-    let callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
+    const callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
     callForwardBusy.externalVoicemailEnabled = this.busyExternal.voicemail;
     if (callForwardBusy.externalVoicemailEnabled) {
       callForwardBusy.externalDestination = null;
@@ -174,7 +174,7 @@ class CallForwardCtrl implements ng.IComponentController {
   }
 
   public onCallForwardBusyDifferentlyChange(): void {
-    let callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
+    const callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
     if (!this.forwardExternalCallsDifferently) {
       callForwardBusy.externalDestination = callForwardBusy.internalDestination;
       callForwardBusy.externalVoicemailEnabled = callForwardBusy.internalVoicemailEnabled;
@@ -204,7 +204,7 @@ class CallForwardCtrl implements ng.IComponentController {
       this.isError = true;
     }
 
-    let callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
+    const callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
     callForwardBusy.ringDurationTimer = this.callForwardTimer;
     this.callForward.callForwardAll = new CallForwardAll();
     this.callForward.callForwardBusy = callForwardBusy;

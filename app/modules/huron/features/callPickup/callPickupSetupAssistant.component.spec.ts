@@ -1,13 +1,13 @@
 describe('Component: callPickupSetupAssistant', () => {
 
-  let member = getJSONFixture('huron/json/features/callPickup/member.json');
-  let members = [member];
-  let updateCallPickup = getJSONFixture('huron/json/features/callPickup/callPickup.json');
-  let callpickupgroup = getJSONFixture('huron/json/features/callPickup/callPickupGroup.json');
-  let pickup = getJSONFixture('huron/json/features/callPickup/pickup.json');
-  let saveFailureResp = getJSONFixture('huron/json/features/callPickup/errorResponse.json');
-  let updateFailureResp = getJSONFixture('huron/json/features/callPickup/errorResponse.json');
-  let saveNumbers = ['a0a2ee69-82f4-43d1-8d1d-c0d47c65a975', 'a0a2ee69-82f4-43d1-8d1d-c0d47c65a976'];
+  const member = getJSONFixture('huron/json/features/callPickup/member.json');
+  const members = [member];
+  const updateCallPickup = getJSONFixture('huron/json/features/callPickup/callPickup.json');
+  const callpickupgroup = getJSONFixture('huron/json/features/callPickup/callPickupGroup.json');
+  const pickup = getJSONFixture('huron/json/features/callPickup/pickup.json');
+  const saveFailureResp = getJSONFixture('huron/json/features/callPickup/errorResponse.json');
+  const updateFailureResp = getJSONFixture('huron/json/features/callPickup/errorResponse.json');
+  const saveNumbers = ['a0a2ee69-82f4-43d1-8d1d-c0d47c65a975', 'a0a2ee69-82f4-43d1-8d1d-c0d47c65a976'];
   beforeEach(function () {
     this.initModules('huron.call-pickup.setup-assistant');
     this.injectDependencies(
@@ -198,7 +198,7 @@ describe('Component: callPickupSetupAssistant', () => {
     });
 
     it('should add class save-call-feature on last page', function () {
-      let arrowButton = 'button.btn--circle.btn--primary.btn--right';
+      const arrowButton = 'button.btn--circle.btn--primary.btn--right';
       spyOn(this.controller, 'getLastIndex').and.returnValue(1);
       this.controller.index = 0;
       this.controller.nextPage();
@@ -266,7 +266,7 @@ describe('Component: callPickupSetupAssistant', () => {
     beforeEach(initComponent);
 
     it('should change notification settings', function () {
-      let originalCP = this.controller.callPickup;
+      const originalCP = this.controller.callPickup;
       this.controller.setNotifications(true, true, true);
       expect(this.controller.callPickup.playSound).toEqual(true);
       expect(this.controller.callPickup.displayCalledPartyId).toEqual(true);
@@ -289,7 +289,7 @@ describe('Component: callPickupSetupAssistant', () => {
     beforeEach(initComponent);
 
     it('should change name and isNameValid', function () {
-      let originalCP = this.controller.callPickup;
+      const originalCP = this.controller.callPickup;
       this.controller.setCallPickupName('test', true);
       expect(this.controller.callPickup.name).toEqual('test');
       expect(this.controller.isNameValid).toBeTruthy();

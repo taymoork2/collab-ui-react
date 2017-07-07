@@ -9,7 +9,7 @@ describe('Directive: aaBuilderActions', function () {
   });
 
   it('replaces the element with the appropriate content', function () {
-    expect(this.view.html()).toContain("aa-panel");
-    expect(this.view.html()).toContain("aa-add-step-icon");
+    expect(this.view.html()).toContain('aa-panel');
+    expect(this.view.html()).toContain('aa-add-step-icon');
   });
 });

@@ -3,9 +3,9 @@
 describe('Directive Controller: hybridServicesPanelCtrl', function () {
   beforeEach(angular.mock.module('Hercules'));
 
-  var vm, $scope, $rootScope, $controller, $q, FeatureToggleService, $translate, OnboardService, ServiceDescriptor, CloudConnectorService, Authinfo;
+  var vm, $scope, $rootScope, $controller, $q, FeatureToggleService, $translate, OnboardService, ServiceDescriptorService, CloudConnectorService, Authinfo;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _OnboardService_, _ServiceDescriptor_, _CloudConnectorService_, _Authinfo_, _$q_, _FeatureToggleService_, _$translate_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _OnboardService_, _ServiceDescriptorService_, _CloudConnectorService_, _Authinfo_, _$q_, _FeatureToggleService_, _$translate_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -13,14 +13,14 @@ describe('Directive Controller: hybridServicesPanelCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
     $translate = _$translate_;
     OnboardService = _OnboardService_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
     CloudConnectorService = _CloudConnectorService_;
     Authinfo = _Authinfo_;
 
     OnboardService.huronCallEntitlement = false;
     spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ setup: false }));
     spyOn(Authinfo, 'isEntitled').and.returnValue(false);
-    spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
+    spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
   }));
 
@@ -31,7 +31,7 @@ describe('Directive Controller: hybridServicesPanelCtrl', function () {
       $translate: $translate,
       OnboardService: OnboardService,
       FeatureToggleService: FeatureToggleService,
-      ServiceDescriptor: ServiceDescriptor,
+      ServiceDescriptorService: ServiceDescriptorService,
       Authinfo: Authinfo,
       CloudConnectorService: CloudConnectorService,
     });
@@ -47,7 +47,7 @@ describe('Directive Controller: hybridServicesPanelCtrl', function () {
     _.forEach(disabledServiceIds, function (serviceId) {
       servicesResponse.push({ id: serviceId, enabled: false });
     });
-    ServiceDescriptor.getServices.and.returnValue($q.resolve(servicesResponse));
+    ServiceDescriptorService.getServices.and.returnValue($q.resolve(servicesResponse));
     if (_.includes(enabledServiceIds, 'squared-fusion-gcal' || _.includes(disabledServiceIds, 'squared-fusion-gcal'))) {
       CloudConnectorService.getService.and.returnValue($q.resolve({ setup: _.includes(enabledServiceIds, 'squared-fusion-gcal') }));
       Authinfo.isEntitled.and.returnValue(true);
@@ -212,5 +212,4 @@ describe('Directive Controller: hybridServicesPanelCtrl', function () {
     expect(vm.services.callServiceConnect.entitled).toBeFalsy();
     expect(vm.entitlements.length).toBe(0);
   });
-
 });

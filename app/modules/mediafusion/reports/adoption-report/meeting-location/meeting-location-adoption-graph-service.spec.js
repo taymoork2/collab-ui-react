@@ -10,7 +10,7 @@ describe('Service: Meeting Location Adoption GraphService', function () {
 
   var meetingLocationChart = {
     dataProvider: [],
-    startDuration: "",
+    startDuration: '',
     balloon: {
       enabled: false,
     },
@@ -25,8 +25,8 @@ describe('Service: Meeting Location Adoption GraphService', function () {
   };
 
   var daterange = {
-    label: "Last 24 Hours",
-    value: "0",
+    label: 'Last 24 Hours',
+    value: '0',
   };
   var meetingLocationGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/meetingLocationGraphData.json');
 
@@ -43,10 +43,8 @@ describe('Service: Meeting Location Adoption GraphService', function () {
   });
 
   it('setMeetingLocationGraph should return an amchart object successfully', function () {
-
     var setMeetingLocationResponse = MeetingLocationAdoptionGraphService.setMeetingLocationGraph(meetingLocationGraphData, meetingLocationChart, daterange);
     expect(setMeetingLocationResponse.graphs.length).toBe(5);
     expect(setMeetingLocationResponse.dataProvider).toEqual(meetingLocationGraphData.meetinglocationresponse);
   });
-
 });

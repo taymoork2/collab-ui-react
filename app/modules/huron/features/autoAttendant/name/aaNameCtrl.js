@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AutoAttendantNameBuilderCtrl($scope, $rootScope, AAUiModelService, AAValidationService) {
-
     var vm = this;
 
     vm.ui = {};
@@ -26,7 +25,6 @@
     /////////////////////
 
     function saveAARecord() {
-
       if (!AAValidationService.isNameValidationSuccess(vm.name, '') || !canCreateAA) {
         return;
       }
@@ -48,9 +46,7 @@
     }
 
     function activate() {
-
       vm.ui = AAUiModelService.getUiModel();
-
     }
 
     function previousButton() {
@@ -83,6 +79,5 @@
     }
 
     activate();
-
   }
 })();

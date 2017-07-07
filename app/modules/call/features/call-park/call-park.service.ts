@@ -26,8 +26,8 @@ export class CallParkService {
   private callParkResource: ICallParkResource;
   private callParkRangeResource: ICallParkRangeResource;
   private callParkDataCopy: CallPark;
-  private callParkProperties: Array<string> = ['uuid', 'name', 'startRange', 'endRange', 'members', 'fallbackTimer'];
-  private fallbackDestProperties: Array<string> = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail'];
+  private callParkProperties: string[] = ['uuid', 'name', 'startRange', 'endRange', 'members', 'fallbackTimer'];
+  private fallbackDestProperties: string[] = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail'];
 
   /* @ngInject */
   constructor(
@@ -38,11 +38,11 @@ export class CallParkService {
     private FeatureMemberService: FeatureMemberService,
   ) {
 
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
-    let saveAction: ng.resource.IActionDescriptor = {
+    const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
       headers: {
         'Access-Control-Expose-Headers': 'Location',
@@ -58,12 +58,12 @@ export class CallParkService {
     this.callParkRangeResource = <ICallParkRangeResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/callparks/ranges/:startRange');
   }
 
-  public getCallParkList(): ng.IPromise<Array<ICallParkListItem>> {
+  public getCallParkList(): ng.IPromise<ICallParkListItem[]> {
     return this.callParkResource.get({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
     .then( callParks => {
-      return _.get<Array<ICallParkListItem>>(callParks, 'callparks');
+      return _.get<ICallParkListItem[]>(callParks, 'callparks');
     });
   }
 
@@ -76,10 +76,10 @@ export class CallParkService {
         callParkId: callParkId,
       }).$promise
       .then( (callParkResource) => {
-        let callPark = new CallPark(_.pick<CallPark, CallPark>(callParkResource, this.callParkProperties));
+        const callPark = new CallPark(_.pick<CallPark, CallPark>(callParkResource, this.callParkProperties));
         callPark.fallbackDestination = new FallbackDestination(_.pick<FallbackDestination, FallbackDestination>(callParkResource.fallbackDestination, this.fallbackDestProperties));
 
-        let callParkMembers: Array<CallFeatureMember> = _.map(callParkResource.members, member => {
+        const callParkMembers: CallFeatureMember[] = _.map(callParkResource.members, member => {
           return new CallFeatureMember({
             uuid: _.get<string>(member, 'memberUuid'),
             name: _.get<string>(member, 'memberName'),
@@ -93,7 +93,7 @@ export class CallParkService {
             thumbnailSrc: undefined,
           });
         });
-        let promises: Array<ng.IPromise<CallFeatureMember>> = [];
+        const promises: ng.IPromise<CallFeatureMember>[] = [];
         _.forEach(callParkMembers, member => {
           promises.push(this.FeatureMemberService.getMemberPicture(member.uuid)
             .then(response => {
@@ -172,22 +172,22 @@ export class CallParkService {
     }).$promise;
   }
 
-  public getRangeList(): ng.IPromise<Array<ICallParkRangeItem>> {
+  public getRangeList(): ng.IPromise<ICallParkRangeItem[]> {
     return this.callParkRangeResource.get({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
     .then( ranges => {
-      return _.get<Array<ICallParkRangeItem>>(ranges, 'ranges', []);
+      return _.get<ICallParkRangeItem[]>(ranges, 'ranges', []);
     });
   }
 
-  public getEndRange(startRange: string): ng.IPromise<Array<string>> {
+  public getEndRange(startRange: string): ng.IPromise<string[]> {
     return this.callParkRangeResource.get({
       customerId: this.Authinfo.getOrgId(),
       startRange: startRange,
     }).$promise
     .then( endRanges => {
-      return _.get<Array<string>>(endRanges, 'endRange', []);
+      return _.get<string[]>(endRanges, 'endRange', []);
     });
   }
 

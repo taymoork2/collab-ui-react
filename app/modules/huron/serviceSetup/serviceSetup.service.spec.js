@@ -10,7 +10,7 @@ describe('Service: ServiceSetup', function () {
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
 
@@ -154,7 +154,6 @@ describe('Service: ServiceSetup', function () {
   });
 
   describe('getMediaOnHoldList', function () {
-
     beforeEach(function () {
       $httpBackend.expectGET(HuronConfig.getMmsUrl() + '/organizations/1/mohPrompts').respond(201);
     });
@@ -163,12 +162,11 @@ describe('Service: ServiceSetup', function () {
       ServiceSetup.getMediaOnHoldList();
       $httpBackend.flush();
     });
-
   });
 
   describe('setCompanyMediaOnHold', function () {
     var media = {
-      mediaId: "dfba718d-f891-469d-8f2e-111848c34ff5",
+      mediaId: 'dfba718d-f891-469d-8f2e-111848c34ff5',
     };
 
     beforeEach(function () {
@@ -244,7 +242,6 @@ describe('Service: ServiceSetup', function () {
     it('should update timezone', function () {
       ServiceSetup.listVoicemailTimezone().then(function (response) {
         expect(angular.equals(response, usertemplate)).toBe(true);
-
       });
       $httpBackend.flush();
     });
@@ -276,7 +273,7 @@ describe('Service: ServiceSetup', function () {
 
     beforeEach(function () {
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberranges').respond(201, {}, {
-        'location': 'http://some/url/123456',
+        location: 'http://some/url/123456',
       });
     });
 
@@ -404,7 +401,7 @@ describe('Service: ServiceSetup', function () {
       ServiceSetup.getSiteLanguages().then(function (response) {
         expect(response).toBeDefined();
         expect(response.length).toBe(4);
-        var filteredLanguage = _.find(response, { 'value': 'es_ES' });
+        var filteredLanguage = _.find(response, { value: 'es_ES' });
         expect(filteredLanguage).toBeDefined();
         var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
         expect(translatedLanguages).toBeDefined();
@@ -418,7 +415,7 @@ describe('Service: ServiceSetup', function () {
       ServiceSetup.getSiteLanguages().then(function (response) {
         expect(response).toBeDefined();
         expect(response.length).toBe(2);
-        var filteredLanguage = _.find(response, { 'value': 'es_ES' });
+        var filteredLanguage = _.find(response, { value: 'es_ES' });
         expect(filteredLanguage).not.toBeDefined();
         var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
         expect(translatedLanguages).toBeDefined();
@@ -456,5 +453,4 @@ describe('Service: ServiceSetup', function () {
       expect(genNumber.length).toEqual(40);
     });
   });
-
 });

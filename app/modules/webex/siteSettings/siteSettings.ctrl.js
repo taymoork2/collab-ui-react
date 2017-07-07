@@ -10,7 +10,6 @@
     Authinfo,
     WebExSiteSettingsFact
   ) {
-
     $scope.siteUrl = $stateParams.siteUrl;
     $scope.adminEmailParam = Authinfo.getPrimaryEmail();
 

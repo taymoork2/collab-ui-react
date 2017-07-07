@@ -60,16 +60,16 @@ describe('Service: UserOverviewService', () => {
 
       it('should reject if getUser has an error', function () {
         this.$httpBackend.expectGET(/.*\/badf00d.*/g).respond(404);
-        let promise = this.UserOverviewService.getUser('badf00d');
+        const promise = this.UserOverviewService.getUser('badf00d');
         this.$httpBackend.flush();
         expect(promise).toBeRejected();
       });
 
       it('should parse valid user result into user and sqEntitlements', function () {
 
-        let promise = this.UserOverviewService.getUser('userid')
+        const promise = this.UserOverviewService.getUser('userid')
           .then((userData) => {
-            let expectedUser = _.merge(this.updatedUser, {
+            const expectedUser = _.merge(this.updatedUser, {
               pendingStatus: true,
             });
             expect(userData.user).toEqual(jasmine.objectContaining(expectedUser));
@@ -98,7 +98,7 @@ describe('Service: UserOverviewService', () => {
 
         expect(this.updatedUser.trainSiteName).not.toBeDefined();
 
-        let promise = this.UserOverviewService.getUser('userid')
+        const promise = this.UserOverviewService.getUser('userid')
           .then((userData) => {
             expect(userData.trainSiteName).toHaveLength(0);
           });
@@ -113,7 +113,7 @@ describe('Service: UserOverviewService', () => {
         this.updatedUser.trainSiteNames = ['testSite'];
         this.isCIEnabledSiteSpy.and.returnValue(true);
 
-        let promise = this.UserOverviewService.getUser('userid');
+        const promise = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
         expect(promise).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
@@ -128,7 +128,7 @@ describe('Service: UserOverviewService', () => {
         this.updatedUser.trainSiteNames = ['testSite'];
         this.isCIEnabledSiteSpy.and.returnValue(false);
 
-        let promise = this.UserOverviewService.getUser('userid');
+        const promise = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
         expect(promise).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
@@ -153,7 +153,7 @@ describe('Service: UserOverviewService', () => {
         // reject call to Auth.IsOnlineOrg()
         this.$httpBackend.expectGET(/.*\/userid.*/g).respond(400);
 
-        let promise = this.UserOverviewService.getUser('userid');
+        const promise = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
         expect(promise).toBeRejected();
       });
@@ -162,7 +162,7 @@ describe('Service: UserOverviewService', () => {
         // if no entitlements, the  user is always pending
         this.updatedUser.entitlements = [];
 
-        let promise = this.UserOverviewService.getUser('userid');
+        const promise = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
         expect(promise).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
@@ -176,7 +176,7 @@ describe('Service: UserOverviewService', () => {
         _.remove(this.updatedUser.entitlements, (n) => { return n === 'ciscouc'; });
         this.updatedUser.userSettings = [];
 
-        let promise = this.UserOverviewService.getUser('userid');
+        const promise = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
         expect(promise).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
@@ -191,7 +191,7 @@ describe('Service: UserOverviewService', () => {
         // set this to mark an active user
         this.updatedUser.userSettings = ['{ spark.signUpDate: 1470262687261 }'];
 
-        let promise = this.UserOverviewService.getUser('userid');
+        const promise = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
         expect(promise).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
@@ -208,7 +208,7 @@ describe('Service: UserOverviewService', () => {
 
         // test when isOnlineOrg is true
         this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(true));
-        let promise1 = this.UserOverviewService.getUser('userid');
+        const promise1 = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
         expect(promise1).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
@@ -218,7 +218,7 @@ describe('Service: UserOverviewService', () => {
 
         // test when isOnlineOrg is false
         this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(false));
-        let promise2 = this.UserOverviewService.getUser('userid');
+        const promise2 = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
         expect(promise2).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
@@ -233,7 +233,7 @@ describe('Service: UserOverviewService', () => {
         this.updatedUser.userSettings = [];
         this.updatedUser.entitlements.push('ciscouc');
 
-        let promise = this.UserOverviewService.getUser('userid');
+        const promise = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
         expect(promise).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
@@ -258,7 +258,7 @@ describe('Service: UserOverviewService', () => {
       });
 
       it('should not set invitations if entitlements exist for user', function () {
-        let promise = this.UserOverviewService.getUser('userid')
+        const promise = this.UserOverviewService.getUser('userid')
           .then((userData) => {
             expect(userData.user.entitlements).not.toHaveLength(0);
             expect(userData.user.invitations).not.toBeDefined();
@@ -270,7 +270,7 @@ describe('Service: UserOverviewService', () => {
       it('should set invitations object from Casandra effectiveLicenses', function () {
         this.updatedUser.entitlements = [];
         this.updatedUser.roles = [this.Config.backend_roles.spark_synckms, this.Config.backend_roles.ciscouc_ces];
-        let promise = this.UserOverviewService.getUser('userid')
+        const promise = this.UserOverviewService.getUser('userid')
           .then((userData) => {
             expect(userData.user.entitlements).toHaveLength(0);
             expect(userData.user.invitations).toBeDefined();
@@ -286,16 +286,16 @@ describe('Service: UserOverviewService', () => {
       it('should not fail if user has no invitations', function () {
         this.updatedUser.entitlements = undefined;
         this.invitationsGetSpy.respond(404);
-        let promise = this.UserOverviewService.getUser('userid');
+        const promise = this.UserOverviewService.getUser('userid');
         expect(promise).toBeResolved();
       });
     });
 
     describe('getUserPreferredLanguage()', () => {
       it('should get user preferred language from languages list', function () {
-        let languageCode = 'en_US';
-        let languageLabel = 'English (United States)';
-        let promise = this.UserOverviewService.getUserPreferredLanguage(languageCode)
+        const languageCode = 'en_US';
+        const languageLabel = 'English (United States)';
+        const promise = this.UserOverviewService.getUserPreferredLanguage(languageCode)
           .then(userLanguageDetails => {
             expect(userLanguageDetails).toBeDefined();
             expect(userLanguageDetails.language.value).toEqual(languageCode);

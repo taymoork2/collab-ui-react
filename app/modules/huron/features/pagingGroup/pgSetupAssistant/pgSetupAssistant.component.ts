@@ -58,11 +58,11 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
       case 1:
         return !(this.number === undefined) && this.isNumberValid;
       case 2:
-        let memberDefined: boolean = this.selectedMembers && this.selectedMembers.length !== 0;
+        const memberDefined: boolean = this.selectedMembers && this.selectedMembers.length !== 0;
         return memberDefined;
       case 3:
-        let initiatorDefined: boolean = (this.initiatorType === CUSTOM) ? (this.selectedInitiators.length > 0) : (this.initiatorType !== null);
-        let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
+        const initiatorDefined: boolean = (this.initiatorType === CUSTOM) ? (this.selectedInitiators.length > 0) : (this.initiatorType !== null);
+        const helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
         if (initiatorDefined) {
           //Show helpText
           helpText.addClass('active');
@@ -83,10 +83,10 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     this.$timeout(() => {
       if (this.index === this.lastIndex) {
         //Change the green arrow button to a blue one
-        let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
+        const arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
         arrowButton.removeClass('save-call-feature');
         //Hide helpText
-        let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
+        const helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
         helpText.removeClass('active');
         helpText.removeClass('enabled');
       }
@@ -100,7 +100,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
       this.index++;
       if (this.index === this.lastIndex) {
         //Change the blue arrow button to a green one
-        let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
+        const arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
         arrowButton.addClass('save-call-feature');
       } else if (this.index === this.lastIndex + 1) {
         this.savePagingGroup();
@@ -162,11 +162,11 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   }
 
   public savePagingGroup(): void {
-    let members: IMemberData[] = [];
-    let initiators: IInitiatorData[] = [];
+    const members: IMemberData[] = [];
+    const initiators: IInitiatorData[] = [];
 
     _.forEach(this.selectedMembers, function (mem) {
-      let member: IMemberData = <IMemberData> {
+      const member: IMemberData = <IMemberData> {
         memberId: mem.member.uuid,
         type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
       };
@@ -176,7 +176,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     //populate the paging group initiators
     if (this.initiatorType === CUSTOM) {
       _.forEach(this.selectedInitiators, function (mem) {
-        let initiator: IInitiatorData = <IInitiatorData> {
+        const initiator: IInitiatorData = <IInitiatorData> {
           initiatorId: mem.member.uuid,
           type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
         };
@@ -184,7 +184,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
       });
     }
 
-    let pg: IPagingGroup = <IPagingGroup>{
+    const pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
       extension: this.number.extension,
       members: members,
@@ -212,7 +212,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   }
 
   public compareMembers(pg, data): void {
-    let result: Array<String> = [];
+    let result: String[] = [];
     if (data.members !== undefined) {
       if ((data.members.length === pg.members.length) && ((data.initiatorType === CUSTOM) ? (data.initiators.length === pg.initiators.length) : true)) {
         this.Notification.success('pagingGroup.successSave', { pagingGroupName: data.name });

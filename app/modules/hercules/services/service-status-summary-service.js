@@ -6,10 +6,9 @@
     .service('ServiceStatusSummaryService', ServiceStatusSummaryService);
 
   function ServiceStatusSummaryService() {
-
     // TODO: Dont run it for each rendering. Make it a part of i.e. converter-service instead...
     var clusterAggregatedStatus = function (service_id, cluster) {
-      var clusterStatus = "Unknown";
+      var clusterStatus = 'Unknown';
 
       var service = _.find(cluster.services, {
         service_type: service_id,
@@ -32,21 +31,21 @@
 
       var nrOfConnectors = service.connectors.length || 0;
       if (nrOfConnectorsWithAlarm(service) > 0) {
-        clusterStatus = "alarm";
-      } else if (nfOfConnectorsInState(service, "running") === nrOfConnectors) {
-        clusterStatus = "running";
-      } else if (nfOfConnectorsInState(service, "disabled") > 0) {
-        clusterStatus = "disabled";
-      } else if (nfOfConnectorsInState(service, "not_configured") > 0) {
-        clusterStatus = "not_configured";
-      } else if (nfOfConnectorsInState(service, "uninstalling") > 0 || nfOfConnectorsInState(service, "downloading") > 0 || nfOfConnectorsInState(service, "installing") > 0) {
-        clusterStatus = "installing";
-      } else if (nfOfConnectorsInState(service, "stopped") > 0) {
-        clusterStatus = "stopped";
-      } else if (nfOfConnectorsInState(service, "offline") > 0) {
-        clusterStatus = "offline";
-      } else if (nfOfConnectorsInState(service, "not_installed") > 0) {
-        clusterStatus = "not_installed";
+        clusterStatus = 'alarm';
+      } else if (nfOfConnectorsInState(service, 'running') === nrOfConnectors) {
+        clusterStatus = 'running';
+      } else if (nfOfConnectorsInState(service, 'disabled') > 0) {
+        clusterStatus = 'disabled';
+      } else if (nfOfConnectorsInState(service, 'not_configured') > 0) {
+        clusterStatus = 'not_configured';
+      } else if (nfOfConnectorsInState(service, 'uninstalling') > 0 || nfOfConnectorsInState(service, 'downloading') > 0 || nfOfConnectorsInState(service, 'installing') > 0) {
+        clusterStatus = 'installing';
+      } else if (nfOfConnectorsInState(service, 'stopped') > 0) {
+        clusterStatus = 'stopped';
+      } else if (nfOfConnectorsInState(service, 'offline') > 0) {
+        clusterStatus = 'offline';
+      } else if (nfOfConnectorsInState(service, 'not_installed') > 0) {
+        clusterStatus = 'not_installed';
       }
       return clusterStatus;
     };
@@ -90,7 +89,7 @@
     //};
 
     var softwareVersion = function (serviceType, cluster) {
-      return serviceFromCluster(serviceType, cluster).software_upgrade_available ? serviceFromCluster(serviceType, cluster).not_approved_package.version : "?";
+      return serviceFromCluster(serviceType, cluster).software_upgrade_available ? serviceFromCluster(serviceType, cluster).not_approved_package.version : '?';
     };
 
     return {
@@ -101,5 +100,4 @@
       softwareVersion: softwareVersion,
     };
   }
-
 }());

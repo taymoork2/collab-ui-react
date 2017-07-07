@@ -68,7 +68,7 @@ export class CsdmPlaceService {
       machineType: machineType,
       extLinkedAccts: externalLinkedAccounts,
     }).then((res) => {
-      let convertedPlace = this.CsdmConverter.convertPlace(res.data);
+      const convertedPlace = this.CsdmConverter.convertPlace(res.data);
       // TODO: Don't need to set these here when CSDM returns the lines on place creation
       convertedPlace.directoryNumber = convertedPlace.directoryNumber || directoryNumber;
       convertedPlace.externalNumber = convertedPlace.externalNumber || externalNumber;

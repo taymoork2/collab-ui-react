@@ -11,7 +11,7 @@ describe('Service: SpeedDialService', () => {
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
-    let getSpeedDialResponseEmpty = {
+    const getSpeedDialResponseEmpty = {
       speedDials: [],
     };
 
@@ -42,8 +42,8 @@ describe('Service: SpeedDialService', () => {
   });
 
   it('getUserName', function () {
-    let successSpy = jasmine.createSpy('success');
-    let failureSpy = jasmine.createSpy('failure');
+    const successSpy = jasmine.createSpy('success');
+    const failureSpy = jasmine.createSpy('failure');
     this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/common/customers/' + this.Authinfo.getOrgId() + '/users/1').respond(200);
     this.SpeedDialService.getUserName(1).then(
       successSpy,

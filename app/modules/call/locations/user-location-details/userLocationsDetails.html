@@ -1,0 +1,29 @@
+<form novalidate name="$ctrl.form" novalidate role="form">
+  <cs-sp-buttons ng-show="$ctrl.form.$dirty">
+    <button class="btn btn--primary" ng-click="$ctrl.save()" ng-disabled="$ctrl.form.$invalid" type="submit" translate="common.save"></button>
+    <button ng-click="$ctrl.reset()" translate="common.cancel"></button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <cs-sp-section class="userLocation-panel">
+      <div class="section-title-row">
+        <span class="section-name" translate="usersPreview.location"></span>
+      </div>
+      <p class="snr-description" translate="locations.locationSelectDesc"></p>
+      <div class="large-8">
+      <cs-select
+        name="location"
+        ng-model="$ctrl.selectedLocation"
+        options="$ctrl.locationOptions"
+        labelfield="name"
+        valuefield="value"
+        placeholder="$ctrl.locationName"
+        input-placeholder="sel.inputPlaceholder"
+        required="true"
+        filter="true"
+        on-change-fn="$ctrl.onLocationChanged()"
+        refresh-data-fn="sel.getoptions(filter)">
+      </cs-select>
+    </div>
+    </cs-sp-section>
+  </cs-sp-container>
+</form>
