@@ -47,8 +47,7 @@
           } else {
             vm.validation = false;
             Notification.error('trialModal.pstn.error.noAddress');
-            Analytics.trackTrialSteps(Analytics.eventNames.VALIDATION_ERROR, vm.parentTrialData, { 'value': vm.trial.details.emergAddr, 'error': $translate.instant('trialModal.pstn.error.noAddress') });
-
+            Analytics.trackTrialSteps(Analytics.eventNames.VALIDATION_ERROR, vm.parentTrialData, { value: vm.trial.details.emergAddr, error: $translate.instant('trialModal.pstn.error.noAddress') });
           }
         })
         .finally(function () {

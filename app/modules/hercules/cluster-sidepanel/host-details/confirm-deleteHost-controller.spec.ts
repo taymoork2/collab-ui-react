@@ -38,8 +38,8 @@ describe('Controller: ConfirmDeleteHostController ', () => {
   };
 
   it('must call ClusterService.deleteHost with the correct connectorType ("calendar-service-list"), to set correct state, and then pop a green Notification', () => {
-    let hostSerial: string = '5678';
-    let connectorType: string = 'c_cal';
+    const hostSerial: string = '5678';
+    const connectorType: string = 'c_cal';
     initController(hostSerial, connectorType);
     controller.removeHost();
     $scope.$apply();
@@ -49,8 +49,8 @@ describe('Controller: ConfirmDeleteHostController ', () => {
   });
 
   it('must call ClusterService.deleteHost with the correct connectorType ("call-service-list") to set correct state, and then pop a green Notification', () => {
-    let hostSerial: string = '5678';
-    let connectorType: string = 'c_ucmc';
+    const hostSerial: string = '5678';
+    const connectorType: string = 'c_ucmc';
     initController(hostSerial, connectorType);
     controller.removeHost();
     $scope.$apply();

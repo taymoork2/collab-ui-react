@@ -3,7 +3,6 @@
 var testModule = require('./index').default;
 
 describe('Template: branding', function () {
-
   var $scope, $controller, controller, $q, $templateCache, $compile, view;
   var Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion, Authinfo;
 
@@ -55,9 +54,10 @@ describe('Template: branding', function () {
     });
     spyOn(BrandService, 'getLogoUrl').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.resolve(["x", "y"]));
+    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.resolve(['version-1', 'version-2']));
     spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.resolve());
     spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'postOrPutTemplate').and.returnValue($q.resolve());
     spyOn(Authinfo, 'isPartner');
   }
 
@@ -87,7 +87,6 @@ describe('Template: branding', function () {
     beforeEach(compileView);
     it('Partner logo radio should not exist', verifyRadioNotExist(PARTNER_LOGO_RADIO));
     it('Custom logo radio should not exist', verifyRadioNotExist(CUSTOM_LOGO_RADIO));
-
   });
 
   describe('Partner Admin', function () {
@@ -139,5 +138,4 @@ describe('Template: branding', function () {
       expect(radio).not.toExist();
     };
   }
-
 });

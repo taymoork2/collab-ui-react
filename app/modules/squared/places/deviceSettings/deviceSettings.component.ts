@@ -12,7 +12,7 @@ class DeviceSettings implements ng.IComponentController {
   private unsupportedDeviceTypeForUpgradeChannel: string;
 
   private shouldShowGuiSettings;
-  private guiSettingsEnabled;
+  private _guiSettingsEnabled;
   private updatingGuiSettings;
   private unsupportedDeviceTypeForGuiSettings: string;
 
@@ -44,11 +44,16 @@ class DeviceSettings implements ng.IComponentController {
       });
   }
 
-  public onSaveGuiSettings() {
+  get guiSettingsEnabled(): boolean {
+    return this._guiSettingsEnabled;
+  }
+
+  set guiSettingsEnabled(newSetting: boolean) {
     this.updatingGuiSettings = true;
-    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'gui_settings', this.guiSettingsEnabled)
+    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'gui_settings_enabled', newSetting)
       .then(() => {
         this.Notification.success('deviceSettings.guiSettingsUpdated');
+        this._guiSettingsEnabled = newSetting;
       })
       .catch(error => {
         this.Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
@@ -62,7 +67,7 @@ class DeviceSettings implements ng.IComponentController {
   private fetchAsyncSettings(): void {
     this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(placeUpgradeChannel => {
       if (placeUpgradeChannel) {
-        let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
+        const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
         if (firstUnsupportedDevice) {
           this.unsupportedDeviceTypeForUpgradeChannel = firstUnsupportedDevice.product;
         }
@@ -80,7 +85,7 @@ class DeviceSettings implements ng.IComponentController {
 
     this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(placeGuiSettings => {
       if (placeGuiSettings) {
-        let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
+        const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
         if (firstUnsupportedDevice) {
           this.unsupportedDeviceTypeForGuiSettings = firstUnsupportedDevice.product;
         }
@@ -101,15 +106,15 @@ class DeviceSettings implements ng.IComponentController {
   }
 
   private resetGuiSettingsEnabled() {
-    this.CsdmConfigurationService.getRuleForPlace(this.ownerId, 'gui_settings').then(rule => {
-      this.guiSettingsEnabled = rule.value;
+    this.CsdmConfigurationService.getRuleForPlace(this.ownerId, 'gui_settings_enabled').then(rule => {
+      this._guiSettingsEnabled = rule.value;
     }).catch(() => {
-      this.guiSettingsEnabled = true;
+      this._guiSettingsEnabled = true;
     });
   }
 
   private getUpgradeChannelObject(channel) {
-    let labelKey = 'CsdmStatus.upgradeChannels.' + channel;
+    const labelKey = 'CsdmStatus.upgradeChannels.' + channel;
     let label = this.$translate.instant('CsdmStatus.upgradeChannels.' + channel);
     if (label === labelKey) {
       label = channel;

@@ -16,33 +16,32 @@
     $http,
     UrlConfig
   ) {
-
     var self = this;
 
     this.relativeUrls = {
-      'clientVersions': 'clientversions', //get
-      'getTemplate': 'partnertemplate/${partnerId}',
-      'postTemplate': 'partnertemplate',
-      'putTemplate': 'partnertemplate/${partnerTemplateId}',
+      clientVersions: 'clientversions', //get
+      getTemplate: 'partnertemplate/${partnerId}',
+      postTemplate: 'partnertemplate',
+      putTemplate: 'partnertemplate/${partnerTemplateId}',
     };
 
     this.getVersionJson = function (partnerTemplate, partnerId, version, useLatest) {
       return {
-        'partnerTemplateId': partnerTemplate,
-        'partnerId': partnerId,
-        'clientVersion': version,
-        'useLatest': useLatest,
+        partnerTemplateId: partnerTemplate,
+        partnerId: partnerId,
+        clientVersion: version,
+        useLatest: useLatest,
       };
     };
 
     //reference http://www.codelord.net/2015/09/24/$q-dot-defer-youre-doing-it-wrong/
 
     this.toggleWebexSelectLatestVersionAlways = function () {
-      $log.info("Togging");
+      $log.info('Togging');
     };
 
     this.getToggle_webexSelectLatestVersionAlways = function () {
-      var selectLatest = "latest_version";
+      var selectLatest = 'latest_version';
       return $q.resolve(selectLatest);
     };
 
@@ -51,7 +50,7 @@
         partnerid using the orgid.
     */
     this.getPartnerIdGivenOrgId = function (orgId) {
-      var url = this.getAdminServiceUrl() + "partners/" + orgId;
+      var url = this.getAdminServiceUrl() + 'partners/' + orgId;
       var prom = $http.get(url);
       return prom;
     };
@@ -87,7 +86,6 @@
         return response.data.clientVersions;
       };
       return self.getResult('clientVersions', cr);
-
     }; //getWbxClientVersions
 
     this.getTotalUrl = function (name, orgId, partnerTemplate) {
@@ -95,11 +93,11 @@
       var url = self.getAdminServiceUrl() + relativeUrl;
 
       if (!_.isUndefined(orgId)) {
-        url = _.replace(url, "${partnerId}", orgId);
+        url = _.replace(url, '${partnerId}', orgId);
       }
 
       if (!_.isUndefined(partnerTemplate)) {
-        url = _.replace(url, "${partnerTemplateId}", partnerTemplate);
+        url = _.replace(url, '${partnerTemplateId}', partnerTemplate);
       }
 
       return url;
@@ -117,7 +115,7 @@
     };
 
     this.postTemplate = function (orgId, useLatest, selectedVersion) {
-      var j = self.getVersionJson("", orgId, selectedVersion, useLatest);
+      var j = self.getVersionJson('', orgId, selectedVersion, useLatest);
       return self.post('postTemplate', j, orgId);
     };
 
@@ -133,7 +131,7 @@
 
       return ge(orgId).then(function (resp) {
         var pt = resp.data.partnerTemplateId;
-        if (pt === "") {
+        if (pt === '') {
           //post
           po(orgId, useLatest, selectedVersion).then(function (resp) {
             return resp;
@@ -144,7 +142,6 @@
           }).catch(function () {});
         }
       }); //end return
-
     };
 
     this.getResult = function (name, convertResponse, orgId) {
@@ -158,7 +155,7 @@
     };
 
     this.post = function (name, json, partnerTemplate) {
-      var url = self.getTotalUrl(name, "", partnerTemplate);
+      var url = self.getTotalUrl(name, '', partnerTemplate);
       return $http.post(url, json).then(function (response) {
         return response;
       }).catch(function (error) {
@@ -176,7 +173,7 @@
     };
 
     this.getTestData = function () {
-      return "testData";
+      return 'testData';
     };
   }
 })();

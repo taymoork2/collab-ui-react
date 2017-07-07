@@ -39,7 +39,6 @@ var SSOWizardPage = function () {
   this.expectSSOSucceeded = function () {
     return expect($('.message-box__title').getText()).toContain('Single Sign-on succeeded.');
   };
-
 };
 
 module.exports = SSOWizardPage;

@@ -50,7 +50,7 @@ export class Hub {
   }
 
   public on = (event, listener, opts) => {
-    let subscription = new Subscription(event, listener, this.channels, (subscription) => {
+    const subscription = new Subscription(event, listener, this.channels, (subscription) => {
       this.emitListenerRemoved(subscription);
     });
     this.channels[event] = this.channels[event] || [];
@@ -119,7 +119,7 @@ class CsdmPollerInstance {
   }
 
   private poll() {
-    let notifyAll = (err, data) => {
+    const notifyAll = (err, data) => {
       this.hub.emit('data', {
         error: err,
         data: data,

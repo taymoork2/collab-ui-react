@@ -1,25 +1,37 @@
 require('./ediscovery.scss');
+require('@ciscospark/internal-plugin-search');
 
 (function () {
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService, Notification, ReportUtilService, uiGridConstants) {
+  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, Notification, ReportUtilService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
-      $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
+      $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
     var vm = this;
+    var spark;
 
     vm.readingReports = true;
     vm.concat = false;
     vm.moreReports = false;
 
+    $scope.isOnPrem = isOnPrem;
     $scope.downloadReport = downloadReport;
-    $scope.downloadingReportId = undefined;
+    $scope.downloadReportModal = downloadReportModal;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
     $scope.viewReport = viewReport;
+    $scope.getKeyTooltip = getKeyTooltip;
+    $scope.getKey = getKey;
+    $scope.isUserReportCreator = isUserReportCreator;
+
+    $scope.reportHeader = '';
+    $scope.ipAddressModel = null;
+    $scope.ediscoveryIPSettingToggle = false;
+    $scope.report = null;
+    $scope.downloadingReportId = undefined;
     $scope.oldOffset = 0;
     $scope.offset = 0;
     $scope.limit = 10;
@@ -28,6 +40,10 @@ require('./ediscovery.scss');
     var avalonPoller = $interval(pollAvalonReport, 5000);
     var avalonPollerCancelled = false;
     var avalonRefreshPoller = null;
+
+    FeatureToggleService.atlasEdiscoveryIPSettingGetStatus().then(function (result) {
+      $scope.ediscoveryIPSettingToggle = result;
+    });
 
     function cancelAvalonPoller() {
       $interval.cancel(avalonPoller);
@@ -40,8 +56,25 @@ require('./ediscovery.scss');
     });
 
     vm.reports = [];
+    spark = EdiscoveryService.setupSpark();
 
     pollAvalonReport();
+
+    function isOnPrem(report) {
+      $scope.reportHeader = $translate.instant('ediscovery.reportsList.modalHeader', {
+        name: report.displayName,
+      });
+      $scope.modalPlaceholder = $translate.instant('ediscovery.reportsList.modalPlaceholder');
+      $scope.report = report;
+      var onPrem = $scope.ediscoveryIPSettingToggle ? EdiscoveryService.openReportModal($scope) : downloadReport(report);
+      return onPrem;
+    }
+
+    function downloadReportModal() {
+      var downloadUrl = _.get($scope.report, 'downloadUrl');
+      $scope.report.downloadUrl = _.replace(downloadUrl, downloadUrl.split('/')[2], $scope.ipAddressModel);
+      downloadReport($scope.report);
+    }
 
     function downloadReport(report) {
       $scope.downloadingReportId = report.id;
@@ -51,6 +84,9 @@ require('./ediscovery.scss');
         })
         .finally(function () {
           $scope.downloadingReportId = undefined;
+          if (report.encryptionKeyUrl) {
+            getKey(report);
+          }
         });
     }
 
@@ -60,7 +96,7 @@ require('./ediscovery.scss');
       }
       $scope.reportsBeingCancelled[id] = true;
       EdiscoveryService.patchReport(id, {
-        state: "ABORTED",
+        state: 'ABORTED',
       }).then(function () {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
           Notification.success('ediscovery.searchResults.reportCancelled');
@@ -121,31 +157,31 @@ require('./ediscovery.scss');
       },
       columnDefs: [{
         field: 'displayName',
-        displayName: $translate.instant("ediscovery.reportsList.name"),
+        displayName: $translate.instant('ediscovery.reportsList.name'),
         sortable: true,
         cellTemplate: 'modules/ediscovery/cell-template-name.html',
         width: '*',
       }, {
         field: 'createdTime',
-        displayName: $translate.instant("ediscovery.reportsList.dateGenerated"),
+        displayName: $translate.instant('ediscovery.reportsList.dateGenerated'),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
         width: '*',
       }, {
         field: 'size',
-        displayName: $translate.instant("ediscovery.reportsList.size"),
+        displayName: $translate.instant('ediscovery.reportsList.size'),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-size.html',
         width: '110',
       }, {
         field: 'state',
-        displayName: $translate.instant("ediscovery.reportsList.status"),
+        displayName: $translate.instant('ediscovery.reportsList.status'),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-state.html',
         width: '*',
       }, {
         field: 'actions',
-        displayName: $translate.instant("ediscovery.reportsList.actions"),
+        displayName: $translate.instant('ediscovery.reportsList.actions'),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-action.html',
         width: '160',
@@ -182,6 +218,35 @@ require('./ediscovery.scss');
       $state.go('ediscovery.search', {
         report: report,
       });
+    }
+
+    //agendel 6/29/17: currently backend only displays the reports where this condition is true.
+    // leaving this code in since requrements are not certain
+    function isUserReportCreator(report) {
+      return Authinfo.getUserId() === report.createdByUserId;
+    }
+
+    //agendel 6/29/17: see note above. Given current backend the tooltip will never show
+    function getKeyTooltip(report) {
+      if (isUserReportCreator(report)) {
+        return '';
+      } else {
+        return report.createdByUserId;
+      }
+    }
+
+    function getKey(report) {
+      if (isUserReportCreator(report)) {
+        EdiscoveryService.getReportKey(report.encryptionKeyUrl, spark)
+        .then(function (key) {
+          $scope.reportName = report.displayName;
+          $scope.reportKey = key;
+          EdiscoveryService.openReportModal($scope, EdiscoveryService.modalTypes.PASSWORD);
+        })
+        .catch(function () {
+          Notification.error('ediscovery.encryption.unableGetPassword');
+        });
+      }
     }
   }
 

@@ -41,8 +41,8 @@ export class ScrollIndicatorController {
         this._endOfContent = this.$element.find(ScrollIndicatorController.LAST_VISIBLE_ELEMENT_SELECTOR)[0];
       } else {
         // if the eoc tag is not in the clinet bounding rect, then we have content that is not visible
-        let eocRect = this._endOfContent.getBoundingClientRect();
-        let parentRect = this.$element[0].getBoundingClientRect();
+        const eocRect = this._endOfContent.getBoundingClientRect();
+        const parentRect = this.$element[0].getBoundingClientRect();
         this.moreContent = !this.pointInRect(eocRect, parentRect);
       }
     }, ScrollIndicatorController.MORE_CONTENT_CHECK_INTERVAL);

@@ -149,7 +149,6 @@
             vm.remedyTicketLoading = false;
           }
         });
-
     }
 
     function getHistories() {

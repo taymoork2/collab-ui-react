@@ -10,7 +10,7 @@ class ConfirmAtaRebootController {
     private setting: ISetting,
   ) {}
 
-  public getHeaderText() {
+  public getHeaderText() {
     return this.$translate.instant('ataSettings.confirmRebootHeader', { settingName: this.setting.name });
   }
 

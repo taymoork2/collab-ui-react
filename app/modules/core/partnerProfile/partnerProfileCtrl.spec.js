@@ -1,138 +1,135 @@
 'use strict';
 
 describe('Controller: PartnerProfileCtrl', function () {
-  var $scope, $controller, $q;
-  var Notification, Orgservice, UserListService, FeatureToggleService;
+  beforeEach(function () {
+    this.initModules('Core', 'WebExApp');
+    this.injectDependencies(
+      '$controller',
+      '$q',
+      '$scope',
+      'Authinfo',
+      'BrandService',
+      'FeatureToggleService',
+      'ProPackService',
+      'Notification',
+      'Orgservice',
+      'WebexClientVersion',
+      'UserListService'
+    );
 
-  afterEach(function () {
-    $scope = $controller = $q = undefined;
-    Notification = Orgservice = UserListService = FeatureToggleService = undefined;
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.Notification, 'success');
+    spyOn(this.Notification, 'error');
+    spyOn(this.Notification, 'errorResponse');
+    spyOn(this.Orgservice, 'setOrgSettings').and.returnValue(this.$q.resolve());
+    spyOn(this.UserListService, 'listPartners');
+    spyOn(this.Orgservice, 'getOrg');
+
+    this.initController = function () {
+      this.$controller('PartnerProfileCtrl', {
+        $scope: this.$scope,
+      });
+      this.$scope.$apply();
+    };
+    this.initController();
   });
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('WebExApp'));
-  beforeEach(inject(dependencies));
-  beforeEach(initSpies);
-  beforeEach(initController);
-
-  function dependencies($rootScope, _$controller_, _$q_, _Notification_, _Orgservice_, _UserListService_, _FeatureToggleService_) {
-    $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $q = _$q_;
-    Notification = _Notification_;
-    Orgservice = _Orgservice_;
-    UserListService = _UserListService_;
-    FeatureToggleService = _FeatureToggleService_;
-  }
-
-  function initSpies() {
-    spyOn(Notification, 'success');
-    spyOn(Notification, 'error');
-    spyOn(Notification, 'errorResponse');
-    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve());
-    spyOn(UserListService, 'listPartners');
-    spyOn(Orgservice, 'getOrg');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
-  }
-
-  function initController() {
-    $controller('PartnerProfileCtrl', {
-      $scope: $scope,
-    });
-    $scope.$apply();
-  }
-
   describe('validation()', function () {
-
     describe('saving org settings data', function () {
-
       it('saves data via Orgservice', function () {
-        $scope.problemSiteRadioValue = $scope.problemSiteInfo.cisco;
-        $scope.helpSiteRadioValue = $scope.helpSiteInfo.cisco;
-        $scope.problemSiteRadioValue = $scope.problemSiteInfo.ext;
-        $scope.supportUrl = 'supportUrl';
-        $scope.supportText = 'this is support text';
-        $scope.helpSiteRadioValue = $scope.helpSiteInfo.ext;
-        $scope.helpUrl = 'helpUrl';
-        $scope.validation();
-        var expectedOrgSettings = {
+        this.$scope.problemSiteRadioValue = this.$scope.problemSiteInfo.cisco;
+        this.$scope.helpSiteRadioValue = this.$scope.helpSiteInfo.cisco;
+        this.$scope.problemSiteRadioValue = this.$scope.problemSiteInfo.ext;
+        this.$scope.supportUrl = 'supportUrl';
+        this.$scope.supportText = 'this is support text';
+        this.$scope.helpSiteRadioValue = this.$scope.helpSiteInfo.ext;
+        this.$scope.helpUrl = 'helpUrl';
+        this.$scope.validation();
+
+        expect(this.Orgservice.setOrgSettings).toHaveBeenCalledWith(null, {
           reportingSiteUrl: 'supportUrl',
           reportingSiteDesc: 'this is support text',
           helpUrl: 'helpUrl',
           isCiscoHelp: false,
           isCiscoSupport: false,
-        };
-        expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettings);
+        });
       });
-
     });
 
     describe('should save successfully', function () {
-      afterEach(saveAndNotifySuccess);
+      afterEach(function () {
+        this.$scope.validation();
+        expect(this.$scope.orgProfileSaveLoad).toEqual(true);
+        this.$scope.$apply();
+        expect(this.$scope.orgProfileSaveLoad).toEqual(false);
+        expect(this.Notification.success).toHaveBeenCalledWith('partnerProfile.processing');
+      });
 
       it('with default cisco options', function () {
-        $scope.problemSiteRadioValue = $scope.problemSiteInfo.cisco;
-        $scope.helpSiteRadioValue = $scope.helpSiteInfo.cisco;
+        this.$scope.problemSiteRadioValue = this.$scope.problemSiteInfo.cisco;
+        this.$scope.helpSiteRadioValue = this.$scope.helpSiteInfo.cisco;
       });
 
       it('with custom problem site', function () {
-        $scope.problemSiteRadioValue = $scope.problemSiteInfo.ext;
-        $scope.supportUrl = 'supportUrl';
+        this.$scope.problemSiteRadioValue = this.$scope.problemSiteInfo.ext;
+        this.$scope.supportUrl = 'supportUrl';
       });
 
       it('with custom help site', function () {
-        $scope.helpSiteRadioValue = $scope.helpSiteInfo.ext;
-        $scope.helpUrl = 'helpUrl';
+        this.$scope.helpSiteRadioValue = this.$scope.helpSiteInfo.ext;
+        this.$scope.helpUrl = 'helpUrl';
       });
-
-      function saveAndNotifySuccess() {
-        $scope.validation();
-        expect($scope.orgProfileSaveLoad).toEqual(true);
-        $scope.$apply();
-        expect($scope.orgProfileSaveLoad).toEqual(false);
-        expect(Notification.success).toHaveBeenCalledWith('partnerProfile.processing');
-      }
     });
 
     describe('should notify error response', function () {
-      beforeEach(initSpyFailure);
+      beforeEach(function () {
+        this.Orgservice.setOrgSettings.and.returnValue(this.$q.reject({}));
+      });
 
-      it('when update fails', saveAndNotifyErrorResponse);
-
-      function initSpyFailure() {
-        Orgservice.setOrgSettings.and.returnValue($q.reject({}));
-      }
-
-      function saveAndNotifyErrorResponse() {
-        $scope.validation();
-        expect($scope.orgProfileSaveLoad).toEqual(true);
-        $scope.$apply();
-        expect($scope.orgProfileSaveLoad).toEqual(false);
-        expect(Notification.errorResponse).toHaveBeenCalled();
-      }
+      it('when update fails', function () {
+        this.$scope.validation();
+        expect(this.$scope.orgProfileSaveLoad).toEqual(true);
+        this.$scope.$apply();
+        expect(this.$scope.orgProfileSaveLoad).toEqual(false);
+        expect(this.Notification.errorResponse).toHaveBeenCalled();
+      });
     });
 
     describe('should notify validation error', function () {
-      afterEach(saveAndNotifyError);
+      afterEach(function () {
+        this.$scope.validation();
+        this.$scope.$apply();
+        expect(this.Notification.error).toHaveBeenCalledWith('partnerProfile.orgSettingsError');
+      });
 
       it('when picking a custom problem site without a value', function () {
-        $scope.problemSiteRadioValue = $scope.problemSiteInfo.ext;
-        $scope.supportUrl = '';
+        this.$scope.problemSiteRadioValue = this.$scope.problemSiteInfo.ext;
+        this.$scope.supportUrl = '';
       });
 
       it('when picking a custom help site without a value', function () {
-        $scope.helpSiteRadioValue = $scope.helpSiteInfo.ext;
-        $scope.helpUrl = '';
+        this.$scope.helpSiteRadioValue = this.$scope.helpSiteInfo.ext;
+        this.$scope.helpUrl = '';
+      });
+    });
+
+    describe('2017 name update', function () {
+      it('nameChangeEnabled should depend on atlas2017NameChangeGetStatus', function () {
+        expect(this.$scope.nameChangeEnabled).toBeFalsy();
+
+        this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+        this.initController();
+        expect(this.$scope.nameChangeEnabled).toBeTruthy();
       });
 
-      function saveAndNotifyError() {
-        $scope.validation();
-        $scope.$apply();
-        expect(Notification.error).toHaveBeenCalledWith('partnerProfile.orgSettingsError');
-      }
+      it('getAppTitle should depend on hasProPackPurchased', function () {
+        expect(this.$scope.getAppTitle()).toEqual('loginPage.titleNew');
+
+        this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
+        this.initController();
+        expect(this.$scope.getAppTitle()).toEqual('loginPage.titlePro');
+      });
     });
   });
-
 });

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
-
   beforeEach(function () {
     this.initModules('Core');
 
@@ -152,7 +151,6 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have 5 tabs', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
-
   });
 
   describe('When Authinfo.isCSB is disabled', function () {
@@ -161,10 +159,9 @@ describe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have 6 tabs', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 5 tabs', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
-
   });
 
   describe('When Authinfo.isCare is enabled and addUsers too', function () {
@@ -174,8 +171,8 @@ describe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have the 7 steps', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
+    it('the wizard should have the 6 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
     });
 
     it('careSettings should have a single substep', function () {
@@ -209,13 +206,19 @@ describe('SetupWizardCtrl', function () {
   describe('When there are only shared device licenses', function () {
     beforeEach(function () {
       this.Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue(this.$q.resolve(this.usageOnlySharedDevicesFixture));
-
-      this.initController();
     });
 
-    it('the wizard should have 4 tabs', function () {
+    it('the wizard should have 4 tabs and no SSO setup if FTW', function () {
+      _.set(this.$state, 'current.data.firstTimeSetup', true);
+
+      this.initController();
       this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
+    });
+    it('the wizard should have 4 tabs and SSO setup if accessed through settings', function () {
+      this.initController();
+      this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
+      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
   });
 
@@ -236,7 +239,7 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have a lot of settings', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
       this.expectSubStepOrder('planReview', ['init']);
-      this.expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['setup', 'init']);
       this.expectSubStepOrder('messagingSetup', ['setup']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);
@@ -268,78 +271,6 @@ describe('SetupWizardCtrl', function () {
     this.$scope.$apply();
     this.expectStepOrder(['enterpriseSettings']);
     this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
-  });
-
-  describe('atlasFTSWRemoveUsersSSO feature test', function () {
-    beforeEach(function () {
-      this.Authinfo.isCSB.and.returnValue(false); // why isn't this default for testing?
-    });
-
-    describe('firstTimeSetup is false', function () {
-      describe('does not support consolidated first time setup wizard', function () {
-        beforeEach(initController);
-
-        it('the wizard should have 6 tabs', function () {
-          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
-        });
-
-        it('enterpriseSettings should have all steps', function () {
-          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-        });
-      });
-
-      describe('supports consolidated first time setup wizard', function () {
-        beforeEach(function () {
-          this.enabledFeatureToggles = [
-            this.FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
-          ];
-          this.initController();
-        });
-
-        it('the wizard should not have addUsers tab', function () {
-          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
-        });
-
-        it('enterpriseSettings should still have all steps', function () {
-          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-        });
-      });
-    });
-
-    describe('firstTimeSetup is true', function () {
-      beforeEach(function () {
-        _.set(this.$state, 'current.data.firstTimeSetup', true);
-      });
-
-      describe('does not support consolidated first time setup wizard', function () {
-        beforeEach(initController);
-
-        it('the wizard should have 6 tabs', function () {
-          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
-        });
-
-        it('enterpriseSettings should have all steps', function () {
-          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-        });
-      });
-
-      describe('supports consolidated first time setup wizard', function () {
-        beforeEach(function () {
-          this.enabledFeatureToggles = [
-            this.FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
-          ];
-          this.initController();
-        });
-
-        it('the wizard should not have addUsers tab', function () {
-          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
-        });
-
-        it('enterpriseSettings should only have sip uri step', function () {
-          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
-        });
-      });
-    });
   });
 
   describe('stateParams with onlyShowSingleTab and numberOfSteps', function () {

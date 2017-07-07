@@ -16,7 +16,7 @@ require('./_user-redirect.scss');
     $timeout(redirect, vm.loadingDelay);
 
     function redirect() {
-      WindowLocation.set("https://marketplace.telstra.com/");
+      WindowLocation.set('https://marketplace.telstra.com/');
     }
 
     Utils.checkForIeWorkaround();

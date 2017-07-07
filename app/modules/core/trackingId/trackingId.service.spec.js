@@ -4,7 +4,7 @@
   describe('TrackingId', function () {
     beforeEach(angular.mock.module('Core'));
 
-    var SEPARATOR = "_";
+    var SEPARATOR = '_';
     var TrackingId, $http;
 
     afterEach(function () {
@@ -88,6 +88,5 @@
         expect(trackingId.split(SEPARATOR).length).toEqual(2);
       });
     });
-
   });
 })();

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Features Controller', function () {
-
   var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, PhoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, CallPickupGroupService, PagingGroupService;
   var listOfCPs = getJSONFixture('huron/json/features/callPark/cpList.json');
   var emptyListOfCPs = {
@@ -11,37 +10,37 @@ describe('Features Controller', function () {
     return data;
   };
   var getCPListFailureResp = {
-    'data': 'Internal Server Error',
-    'status': 500,
-    'statusText': 'Internal Server Error',
+    data: 'Internal Server Error',
+    status: 500,
+    statusText: 'Internal Server Error',
   };
   var callParks = {
-    "callparks": [{
-      "id": "bbcd1234-abcd-abcd-abcddef123456",
-      "cardName": "Marketing",
-      "startRange": "5010",
-      "endRange": "5012",
-      "memberCount": 3,
-      "featureName": "huronFeatureDetails.cp",
-      "filterValue": "CP",
+    callparks: [{
+      id: 'bbcd1234-abcd-abcd-abcddef123456',
+      cardName: 'Marketing',
+      startRange: '5010',
+      endRange: '5012',
+      memberCount: 3,
+      featureName: 'huronFeatureDetails.cp',
+      filterValue: 'CP',
     }, {
-      "id": "abcd1234-abcd-abcd-abcddef123456",
-      "cardName": "Technical Support",
-      "startRange": "5010",
-      "endRange": "5010",
-      "memberCount": 2,
-      "featureName": "huronFeatureDetails.cp",
-      "filterValue": "CP",
+      id: 'abcd1234-abcd-abcd-abcddef123456',
+      cardName: 'Technical Support',
+      startRange: '5010',
+      endRange: '5010',
+      memberCount: 2,
+      featureName: 'huronFeatureDetails.cp',
+      filterValue: 'CP',
     }],
   };
 
   var singlePark = {
-    "callparks": [{
-      "uuid": "abcd1234-abcd-abcd-abcddef123456",
-      "name": "Technical Support",
-      "startRange": "5010",
-      "endRange": "5010",
-      "memberCount": 2,
+    callparks: [{
+      uuid: 'abcd1234-abcd-abcd-abcddef123456',
+      name: 'Technical Support',
+      startRange: '5010',
+      endRange: '5010',
+      memberCount: 2,
     }],
   };
 
@@ -101,7 +100,6 @@ describe('Features Controller', function () {
       Log: Log,
       Notification: Notification,
     });
-
   }));
 
   //TODO: re-enable after feature toggles are removed

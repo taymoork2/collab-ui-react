@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: LaunchSiteCtrl', function () {
-
   // load the controller's module
   beforeEach(angular.mock.module('Core'));
 

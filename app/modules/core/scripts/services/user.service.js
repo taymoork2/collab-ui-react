@@ -108,16 +108,16 @@
 
     function addUsers(usersDataArray, entitlements, callback) {
       var userData = {
-        'users': [],
+        users: [],
       };
 
       _.forEach(usersDataArray, function (userInfo) {
         var userEmail = _.trim(userInfo.address);
         var userName = _.trim(userInfo.name);
         var user = {
-          'email': null,
-          'name': null,
-          'userEntitlements': entitlements,
+          email: null,
+          name: null,
+          userEntitlements: entitlements,
         };
         if (userEmail.length > 0) {
           user.email = userEmail;
@@ -129,7 +129,6 @@
       });
 
       if (userData.users.length > 0) {
-
         $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users', userData)
           .then(function (response) {
             var data = response.data;
@@ -239,7 +238,7 @@
       }
 
       var userData = {
-        'inviteList': [],
+        inviteList: [],
       };
 
       _.forEach(usersDataArray, function (userInfo) {
@@ -251,9 +250,9 @@
         }
 
         var user = {
-          'email': userEmail,
-          'displayName': userName,
-          'userEntitlements': null,
+          email: userEmail,
+          displayName: userName,
+          userEntitlements: null,
         };
         if (entitlements) {
           user['userEntitlements'] = entitlements;
@@ -264,7 +263,6 @@
       });
 
       if (userData.inviteList.length > 0) {
-
         $http.post(apiUrl, userData)
           .then(function (response) {
             var data = response.data;
@@ -286,8 +284,8 @@
 
     function sendEmail(userEmail, adminEmail, callback) {
       var requestBody = {
-        'recipientEmail': userEmail,
-        'adminEmail': adminEmail,
+        recipientEmail: userEmail,
+        adminEmail: adminEmail,
       };
       $http.post(userUrl + 'user/mail/provisioning', requestBody)
         .then(function (response) {
@@ -322,10 +320,10 @@
       var patchUrl = userUrl + '/organization/' + Authinfo.getOrgId() + '/users/roles';
 
       var requestBody = {
-        'users': [{
-          'userRoles': roles,
-          'email': email,
-          'name': name,
+        users: [{
+          userRoles: roles,
+          email: email,
+          name: name,
         }],
       };
 
@@ -338,12 +336,12 @@
 
     function migrateUsers(users, callback) {
       var requestBody = {
-        'users': [],
+        users: [],
       };
 
       for (var x in users) {
         var user = {
-          'email': users[x].userName,
+          email: users[x].userName,
         };
         requestBody.users.push(user);
       }
@@ -399,7 +397,7 @@
       var licenses = (!_.isUndefined(thisParams) && _.isArray(thisParams.licenses)) ? thisParams.licenses : undefined;
       var entitlements = (!_.isUndefined(thisParams) && _.isArray(thisParams.entitlements)) ? thisParams.entitlements : undefined;
       var userPayload = {
-        'users': [],
+        users: [],
       };
 
       _.forEach(users, function (userData) {
@@ -408,13 +406,13 @@
         var displayName = userData.displayName;
 
         var user = {
-          'email': null,
-          'name': {
-            'givenName': null,
-            'familyName': null,
+          email: null,
+          name: {
+            givenName: null,
+            familyName: null,
           },
-          'userEntitlements': null,
-          'licenses': null,
+          userEntitlements: null,
+          licenses: null,
         };
 
         if (userEmail.length > 0) {
@@ -458,8 +456,8 @@
         }
       }
       return {
-        'givenName': givenName,
-        'familyName': familyName,
+        givenName: givenName,
+        familyName: familyName,
       };
     }
 
@@ -633,8 +631,8 @@
 
     function sendSparkWelcomeEmail(userEmail, userName) {
       var userData = [{
-        'address': userEmail,
-        'name': userName,
+        address: userEmail,
+        name: userName,
       }];
 
       return $q(function (resolve, reject) {
@@ -717,5 +715,4 @@
       }
     }
   }
-
 })();

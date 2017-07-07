@@ -33,7 +33,6 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
-    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private DomainManagementService: DomainManagementService,
     private HybridServicesClusterService: HybridServicesClusterService,
@@ -52,7 +51,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     }
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId, userEmailAddress,  entitlementUpdatedCallback } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
@@ -144,7 +143,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
     this.savingPage = true;
 
-    let entitlements: IEntitlementNameAndState[] = [{
+    const entitlements: IEntitlementNameAndState[] = [{
       entitlementName: 'squaredFusionUC',
       entitlementState: this.newEntitlementValue === true ? 'ACTIVE' : 'INACTIVE',
     }];
@@ -161,18 +160,15 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
         this.userIsCurrentlyEntitled = !!this.newEntitlementValue;
         this.newEntitlementValue = undefined;
         this.loadingPage = true;
-        // Waiting a little bit here gives CI and USS the chance to catch up on data sent by Atlas backend
-        this.$timeout(() => {
-          this.getDataFromUSS(this.userId)
-            .then(() => {
-              this.entitlementUpdatedCallback({
-                options: {
-                  callServiceAware: this.userStatusAware,
-                  callServiceConnect: this.userStatusConnect,
-                },
-              });
+        return this.getDataFromUSS(this.userId)
+          .then(() => {
+            this.entitlementUpdatedCallback({
+              options: {
+                callServiceAware: this.userStatusAware,
+                callServiceConnect: this.userStatusConnect,
+              },
             });
-        }, 1500);
+          });
       })
       .catch((error) => {
         this.Notification.error('hercules.userSidepanel.not-updated-specific', {

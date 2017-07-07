@@ -1,5 +1,5 @@
 <div class="sq-devices-page">
-  <cs-page-header title-name="{{::'spacesPage.title' | translate}}"></cs-page-header>
+  <cs-page-header title-name="spacesPage.title"></cs-page-header>
   <cs-page-sub-header ng-hide="sc.filteredView.isInState(sc.filteredView.emptydatasource)">
     <cs-page-sub-header-left>
       <cs-searchfilter filters="sc.filteredView.getFilters()"
@@ -33,7 +33,7 @@
         <p>{{sc.licenseError}}</p>
       </cs-accordion-group>
     </cs-accordion>
-    <div ng-if="sc.filteredView.isInState(sc.filteredView.searching)">
+    <div ng-if="sc.filteredView.isInState(sc.filteredView.initializing) || sc.filteredView.isInState(sc.filteredView.searching)">
       <div class="message-container">
         <div class="empty-devices-content">
           <div class="grid-refresh">

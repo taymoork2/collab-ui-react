@@ -151,11 +151,11 @@
       createInternalNumberRange: function (internalNumberRange) {
         if (_.isUndefined(internalNumberRange.uuid)) {
           internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
-          internalNumberRange.patternUsage = "Device";
+          internalNumberRange.patternUsage = 'Device';
           return InternalNumberRangeService.save({
             customerId: Authinfo.getOrgId(),
           }, internalNumberRange, function (data, headers) {
-            internalNumberRange.uuid = headers('location').split("/").pop();
+            internalNumberRange.uuid = headers('location').split('/').pop();
           }).$promise;
         } else {
           return $q.resolve();
@@ -165,12 +165,12 @@
       updateInternalNumberRange: function (internalNumberRange) {
         if (!_.isUndefined(internalNumberRange.uuid)) {
           internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
-          internalNumberRange.patternUsage = "Device";
+          internalNumberRange.patternUsage = 'Device';
           return InternalNumberRangeService.save({
             customerId: Authinfo.getOrgId(),
             internalNumberRangeId: internalNumberRange.uuid,
           }, internalNumberRange, function (data, headers) {
-            internalNumberRange.uuid = headers('location').split("/").pop();
+            internalNumberRange.uuid = headers('location').split('/').pop();
           }).$promise;
         } else {
           return $q.resolve();
@@ -286,13 +286,13 @@
       },
 
       generateVoiceMailNumber: function (customerId, countrycode) {
-        var customerUuid = _.replace(customerId, /-/g, "");
+        var customerUuid = _.replace(customerId, /-/g, '');
         var str = '';
         for (var i = 0; i < customerUuid.length; i++) {
           var hextodec = parseInt(customerUuid[i], 16).toString(10);
-          str += parseInt(hextodec, 10) >= 10 ? hextodec : "0" + hextodec;
+          str += parseInt(hextodec, 10) >= 10 ? hextodec : '0' + hextodec;
         }
-        str = countrycode + _.replace(str, /^0+/, "");
+        str = countrycode + _.replace(str, /^0+/, '');
         var generatedVoicemailNumber = $filter('limitTo')(str, 40, 0);
         return generatedVoicemailNumber;
       },

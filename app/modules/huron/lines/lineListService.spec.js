@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: LineListService', function () {
-
   var $httpBackend, $q, $scope, ExternalNumberService, HuronConfig, LineListService, PstnService;
   var lines = getJSONFixture('huron/json/lines/numbers.json');
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
@@ -40,7 +39,6 @@ describe('Service: LineListService', function () {
   }));
 
   describe('getLineList', function () {
-
     it('should have the right carrierInfo', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'all').then(function (response) {
@@ -156,7 +154,5 @@ describe('Service: LineListService', function () {
           expect(response.length).toBe(linesExport.length);
         });
     });
-
   });
-
 });

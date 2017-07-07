@@ -13,7 +13,7 @@ export class CmcServiceMock {
 
   public mockOrgStatus(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
     this.$log.debug('orgId', orgId);
-    let errorMock = {
+    const errorMock = {
       data : {
         message: 'Invalid OrgId',
         errors: [
@@ -24,7 +24,7 @@ export class CmcServiceMock {
         trackingId: 'CMC_e7a4c176-0ffa-4de0-9534-88d9ccfc7c71',
       }};
 
-    let okMock: ICmcOrgStatusResponse = {
+    const okMock: ICmcOrgStatusResponse = {
       status: 'ok',
       details: {
         providers: {
@@ -49,7 +49,7 @@ export class CmcServiceMock {
       },
     };
 
-    let nokMock: ICmcOrgStatusResponse = {
+    const nokMock: ICmcOrgStatusResponse = {
       status: 'error',
       details: {
         providers: {

@@ -7,14 +7,13 @@
 
   /* @ngInject */
   function AAScheduleInfoCtrl($scope, AAICalService, AACalendarService, AAModelService, AAUiModelService, $translate) {
-
     var vm = this;
     /* schedule model  */
     vm.dayGroup = [{
       label: '',
       hours: [],
     }];
-    vm.schedule = "";
+    vm.schedule = '';
     vm.openHours = [];
     vm.holidays = [];
     vm.laneTitle = '';
@@ -50,8 +49,8 @@
           starttime: 0,
           endtime: 0,
         };
-        dayhour.starttime = moment(hour.starttime, "hh:mm A").set(consolidateDate);
-        dayhour.endtime = moment(hour.endtime, "hh:mm A").set(consolidateDate);
+        dayhour.starttime = moment(hour.starttime, 'hh:mm A').set(consolidateDate);
+        dayhour.endtime = moment(hour.endtime, 'hh:mm A').set(consolidateDate);
         if (hour.endtime === '12:00 AM') {
           dayhour.endtime.add(1, 'day');
         }
@@ -184,7 +183,6 @@
     }
 
     function prepareDayHourReport() {
-
       //Groups the days together in a range if the hours are same.
       vm.dayGroup = [];
       var indices = [];
@@ -227,9 +225,7 @@
             vm.dayGroup.push(range);
           }
         }
-
       });
-
     }
 
     function populateHours() {

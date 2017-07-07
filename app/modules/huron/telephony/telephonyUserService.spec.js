@@ -9,7 +9,7 @@ describe('Service: HuronUser', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
+    $provide.value('Authinfo', Authinfo);
   }));
 
   beforeEach(inject(function (_$httpBackend_, _HuronUser_, _HuronConfig_) {
@@ -32,8 +32,8 @@ describe('Service: HuronUser', function () {
 
     it('should default to empty firstName, lastName', function () {
       $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/common/customers/' + Authinfo.getOrgId() + '/users/' + userUuid, {
-        'firstName': '',
-        'lastName': '',
+        firstName: '',
+        lastName: '',
       }).respond(200);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       HuronUser.update(userUuid, userData);
@@ -47,8 +47,8 @@ describe('Service: HuronUser', function () {
       };
 
       $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/common/customers/' + Authinfo.getOrgId() + '/users/' + userUuid, {
-        'firstName': userData.name.givenName,
-        'lastName': userData.name.familyName,
+        firstName: userData.name.givenName,
+        lastName: userData.name.familyName,
       }).respond(200);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       HuronUser.update(userUuid, userData);
@@ -61,14 +61,14 @@ describe('Service: HuronUser', function () {
     beforeEach(function () {
       userUuid = '123';
       userData = {
-        'email': 'test@gmail.com',
+        email: 'test@gmail.com',
       };
     });
 
     it('should default to empty firstName, lastName', function () {
       $httpBackend.expectPOST(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users', {
-        'uuid': userUuid,
-        'userName': userData.email,
+        uuid: userUuid,
+        userName: userData.email,
       }).respond(201);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/identity/users/otp').respond(201);
@@ -84,10 +84,10 @@ describe('Service: HuronUser', function () {
       };
 
       $httpBackend.expectPOST(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users', {
-        'uuid': userUuid,
-        'userName': userData.email,
-        'firstName': userData.name.givenName,
-        'lastName': userData.name.familyName,
+        uuid: userUuid,
+        userName: userData.email,
+        firstName: userData.name.givenName,
+        lastName: userData.name.familyName,
       }).respond(201);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/identity/users/otp').respond(201);
@@ -96,5 +96,4 @@ describe('Service: HuronUser', function () {
       $httpBackend.flush();
     });
   });
-
 });

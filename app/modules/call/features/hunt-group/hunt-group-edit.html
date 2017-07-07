@@ -74,7 +74,7 @@
             on-change-fn="$ctrl.setMaxWaitMins(minutes)">
           </uc-hunt-group-max-wait-time>
         </div>
-        <div class="sub-section">
+        <div ng-if="!$ctrl.isHi1487Supported" class="sub-section">
           <h5 class="sub-section__title" translate="huronHuntGroup.fallbackLabel"></h5>
           <p class="sub-section__description" translate="huronHuntGroup.fallbackDesc"></p>
           <uc-fallback-destination
@@ -116,7 +116,8 @@
           <div>
             <uc-hunt-group-calls-to-spark-app
               send-to-app="$ctrl.huntGroup.sendToApp"
-              on-change-fn="$ctrl.setHuntGroupSendToApp()">
+              on-change-fn="$ctrl.setHuntGroupSendToApp()"
+              destination-rule="$ctrl.huntGroup.destinationRule">
             </uc-hunt-group-calls-to-spark-app>
           </div>
         </div>

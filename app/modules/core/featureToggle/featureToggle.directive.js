@@ -45,5 +45,4 @@
       ngIf.link.apply(ngIf, arguments);
     }
   }
-
 })();

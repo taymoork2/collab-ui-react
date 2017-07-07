@@ -21,7 +21,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
   describe(webExCommon.testInfo.describeText, function () {
     var setup = false;
 
-    if (webExCommon.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == 'T31') {
       beforeAll(function () {
         var promise = webEx.setup(
           1,
@@ -63,7 +63,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       }); // beforeAll()
     }
 
-    if (webExCommon.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == 'T31') {
       it('should login as ' + webExCommon.BTS6.testAdminUsername + ' and navigate to Users page', function () {
         navigation.clickUsers();
       });
@@ -87,7 +87,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       utils.click(users.conferencingService);
     });
 
-    if (webExCommon.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == 'T31') {
       it('should allow click on site name ' + webExCommon.BTS6.siteElement + ' in panel 2', function () {
         if (setup) {
           utils.wait(webExCommon.BTS6.siteElement);
@@ -141,7 +141,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       }
     });
 
-    if (webExCommon.testInfo.testType == "T30") {
+    if (webExCommon.testInfo.testType == 'T30') {
       it('should allow edit and save in panel 3', function () {
         if (setup) {
           utils.wait(webExUserSettings.mcAuoCheckbox);

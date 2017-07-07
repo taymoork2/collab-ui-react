@@ -5,7 +5,6 @@
 'use strict';
 
 var HuronFeaturesPage = function () {
-
   this.featuresList = element.all(by.css('.cs-card'));
   this.huntGroups = element.all(by.css('.cs-card.alerts'));
   this.autoAttendants = element.all(by.css('.cs-card.primary'));

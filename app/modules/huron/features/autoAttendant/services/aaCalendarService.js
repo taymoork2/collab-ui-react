@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AACalendarService($q, calendarService, Authinfo) {
-
     var service = {
       listCalendars: listCalendars,
       readCalendar: readCalendar,
@@ -35,7 +34,6 @@
     }
 
     function createCalendar(calendarName, iCalendarDefinition) {
-
       var data = {
         scheduleData: iCalendarDefinition,
         scheduleName: calendarName,
@@ -49,7 +47,6 @@
     }
 
     function updateCalendar(aCalendarId, calendarName, iCalendarDefinition) {
-
       var data = {
         scheduleData: iCalendarDefinition,
         scheduleName: calendarName,
@@ -68,7 +65,6 @@
         customerId: Authinfo.getOrgId(),
         scheduleId: aCalendarId,
       }).$promise;
-
     }
 
     function readCalendarHelper(scheduleId, calName) {
@@ -98,6 +94,5 @@
     function updateCalendarName(scheduleId, calName) {
       return readCalendarHelper(scheduleId, calName).then(updateCalendarHelper);
     }
-
   }
 })();

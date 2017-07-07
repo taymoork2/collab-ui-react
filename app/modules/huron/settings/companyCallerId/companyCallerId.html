@@ -1,5 +1,5 @@
 <div ng-form="companyCallerIdForm">
-  <label class="control-label" translate="companyCallerId.companyCallerId"></label>
+  <label class="control-label">{{$ctrl.label}}</label>
   <cs-toggle-switch
     ng-model="$ctrl.companyCallerIdEnabled"
     toggle-id="companyCallerIdToggle"
@@ -27,6 +27,7 @@
         on-change-fn="$ctrl.onCompanyCallerIdNumberChanged(value)"
         required="true"
         combo="true"
+        country-code="{{$ctrl.countryCode}}"
         searchable-combo="true"
         validate-caller-id-phone-number>
       </cs-select>

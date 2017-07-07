@@ -1,5 +1,5 @@
 import cmcUserDetailsSettings from './../index';
-import { CmcUserData } from './../cmcUserData';
+import { ICmcUserData } from './../cmc.interface';
 import { IUser } from 'modules/core/auth/user/user';
 
 describe('Component: cmcUserDetailsSettings ', () => {
@@ -20,10 +20,16 @@ describe('Component: cmcUserDetailsSettings ', () => {
         '$q',
       );
 
-      spyOn(this.CmcService, 'getUserData').and.returnValue(<CmcUserData>{
+      spyOn(this.CmcService, 'getUserData').and.returnValue(<ICmcUserData>{
         entitled: true,
         mobileNumber: '+471234',
       });
+      spyOn(this.CmcService, 'preCheckOrg').and.returnValue(this.$q.resolve({
+        status: 'ok',
+      }));
+      spyOn(this.CmcService, 'preCheckUser').and.returnValue(this.$q.resolve({
+        status: 'ok',
+      }));
     });
 
     function initComponent() {
@@ -38,7 +44,7 @@ describe('Component: cmcUserDetailsSettings ', () => {
       this.controller.$onInit();
 
       // Has to title sections
-      let element = this.view.find(TITLE_ROW);
+      const element = this.view.find(TITLE_ROW);
       expect(element.get(0)).toExist();
       expect(element.get(1)).toExist();
     });
@@ -184,7 +190,7 @@ describe('Component: cmcUserDetailsSettings ', () => {
   });
 
   function dummyUser(): IUser {
-    let user: IUser = <IUser> {
+    const user: IUser = <IUser> {
       meta: {
         organizationID: '1234',
       },

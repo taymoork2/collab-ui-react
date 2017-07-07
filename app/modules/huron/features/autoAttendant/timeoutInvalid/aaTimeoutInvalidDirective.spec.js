@@ -41,13 +41,12 @@ describe('Directive: aaTimeOutInvalid', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
-
   }));
 
   it('replaces the element with the appropriate content', function () {
     element = $compile("<aa-timeout-invalid aa-schedule='openHours' aa-menu-id='menu1' aa-index='0'></aa-timeout-invalid")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("aaTimeoutInvalid");
+    expect(element.html()).toContain('aaTimeoutInvalid');
   });
 });

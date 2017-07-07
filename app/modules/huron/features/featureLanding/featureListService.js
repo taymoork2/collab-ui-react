@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function HuronFeaturesListService() {
-
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
@@ -68,13 +67,11 @@
           });
           formattedList[refCardIndex].referenceNames.push(formattedList[cardToUpdateIndex].cardName);
           formattedList[refCardIndex].hasReferences = true;
-
         });
 
         formattedList[cardToUpdateIndex].dependsNames.sort(function (a, b) {
           return a.localeCompare(b);
         });
-
       });
       return orderByCardName(formattedList);
     }
@@ -99,6 +96,7 @@
       var formattedList = [];
       _.forEach(data, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
+        _.remove(huntGroup.numbers, { type: 'NUMBER_FORMAT_ENTERPRISE_LINE' });
         formattedCard.numbers = _.map(huntGroup.numbers, 'number');
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.id = huntGroup.uuid;

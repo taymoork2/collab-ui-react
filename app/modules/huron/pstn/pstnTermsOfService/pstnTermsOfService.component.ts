@@ -30,7 +30,7 @@ export class PstnTermsOfServiceCtrl implements ng.IComponentController {
   public lastName: string = '';
   public email: string = '';
   public tosAccepted: boolean = true;
-  public pstnCarriers: Array<PstnCarrier> = [];
+  public pstnCarriers: PstnCarrier[] = [];
   public carrier: PstnCarrier = new PstnCarrier();
   public isTrial: boolean = false;
   public loading: boolean = false;
@@ -52,10 +52,10 @@ export class PstnTermsOfServiceCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    let params = {
+    const params = {
       basicInfo: true,
     };
-    this.PstnProvidersService.getCarriersStatic().then((carriers: Array<PstnCarrier>) => {
+    this.PstnProvidersService.getCarriersStatic().then((carriers: PstnCarrier[]) => {
       this.pstnCarriers = carriers;
       this.Orgservice.getOrg(
         (data, status) => {
@@ -84,7 +84,7 @@ export class PstnTermsOfServiceCtrl implements ng.IComponentController {
   private getToSInfo(): void {
     this.PstnService.getCustomerV2(this.orgData.id).then((customer) => {
       if (customer.trial) {
-        let carriers = [{ uuid: customer.pstnCarrierId }];
+        const carriers = [{ uuid: customer.pstnCarrierId }];
         this.isTrial = true;
         this.PstnService.getCarrierDetails(carriers).then((carrier) => {
           this.loadCarrier(carrier[0]);

@@ -14,7 +14,7 @@ describe('DomainManagementVerifyCtrl', () => {
     DomainManagementService = _DomainManagementService_;
   }));
 
-  let domainManagementVerifyCtrlFactory = (domainManageService, user, domain, mockToken = true) => {
+  const domainManagementVerifyCtrlFactory = (domainManageService, user, domain, mockToken = true) => {
 
     if (mockToken) {
       domainManageService.getToken = jasmine.createSpy('getToken').and.returnValue($q.resolve());
@@ -33,7 +33,8 @@ describe('DomainManagementVerifyCtrl', () => {
   };
 
   it('should return domain provided through state as domain property', () => {
-    let ctrl, domain = { text: 'anydomain.com' };
+    let ctrl;
+    const domain = { text: 'anydomain.com' };
     ctrl = domainManagementVerifyCtrlFactory(
       DomainManagementService,
       {
@@ -49,9 +50,9 @@ describe('DomainManagementVerifyCtrl', () => {
 
   it('should return error from verify as error property', () => {
     let ctrl;
-    let domain = { text: 'anydomain.com' };
-    let user = { isLoaded: true, domain: 'example.com' };
-    let deferred = $q.defer();
+    const domain = { text: 'anydomain.com' };
+    const user = { isLoaded: true, domain: 'example.com' };
+    const deferred = $q.defer();
 
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList = [{ text: 'superdomain.com', status: 'verified' }];
@@ -76,7 +77,8 @@ describe('DomainManagementVerifyCtrl', () => {
   });
 
   it('should record metrics on learnMore click', () => {
-    let ctrl, domain = { text: 'anydomain.com' };
+    let ctrl;
+    const domain = { text: 'anydomain.com' };
     ctrl = domainManagementVerifyCtrlFactory(
       DomainManagementService,
       {
@@ -95,7 +97,8 @@ describe('DomainManagementVerifyCtrl', () => {
   describe('with no previous domains verified', () => {
 
     it('should deny domains other than user domain', () => {
-      let ctrl, domain = { text: 'anydomain.com' };
+      let ctrl;
+      const domain = { text: 'anydomain.com' };
       ctrl = domainManagementVerifyCtrlFactory(
         DomainManagementService,
         {
@@ -110,7 +113,8 @@ describe('DomainManagementVerifyCtrl', () => {
     });
 
     it('should allow verify of same domain as user if has token', () => {
-      let ctrl, domain = { text: 'example.com', token: 'thetoken' };
+      let ctrl;
+      const domain = { text: 'example.com', token: 'thetoken' };
       ctrl = domainManagementVerifyCtrlFactory(
         DomainManagementService,
         {
@@ -125,7 +129,8 @@ describe('DomainManagementVerifyCtrl', () => {
     });
 
     it('should not allow verify of same domain as user if no token', () => {
-      let ctrl, domain = { text: 'example.com' };
+      let ctrl;
+      const domain = { text: 'example.com' };
       ctrl = domainManagementVerifyCtrlFactory(
         DomainManagementService,
         {
@@ -141,7 +146,8 @@ describe('DomainManagementVerifyCtrl', () => {
   });
 
   describe('with previous domains verified', () => {
-    let ctrl, domain = { text: 'anydomain.com', token: 'sometoken' };
+    let ctrl;
+    const domain = { text: 'anydomain.com', token: 'sometoken' };
     beforeEach(() => {
 
       spyOn(DomainManagementService, 'domainList').and.returnValue([{ text: 'verifieddomain.com', status: 'verified' }]);

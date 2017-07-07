@@ -1,0 +1,23 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$ctrl.onDismissClick()">
+      <span class="sr-only" translate='common.close'></span>
+    </button>
+    <h3 class="modal-title" translate="pstnSetup.setupService"></h3>
+  </div>
+
+  <div class="modal-body">
+    <uc-esa-disclaimer-msg></uc-esa-disclaimer-msg>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      class="btn"
+      ng-click="$ctrl.onDismissClick()"
+      translate="common.cancel"></button>
+    <button
+      cs-btn
+      class="btn btn--primary"
+      ng-click="$ctrl.onAgreeClick()"><span translate="common.agree"></span></button>
+  </div>
+</div>

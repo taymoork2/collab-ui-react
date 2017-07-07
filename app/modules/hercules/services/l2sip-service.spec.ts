@@ -3,7 +3,7 @@ import { L2SipService } from './l2sip-service';
 describe('L2SIP Service', () => {
 
   let service: L2SipService;
-  let sipDestination = 'manunited.example.org';
+  const sipDestination = 'manunited.example.org';
   let validateTls: boolean;
   let $httpBackend;
 
@@ -34,6 +34,26 @@ describe('L2SIP Service', () => {
 
       $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/l2sip/api/v1/test/dns?name=${sipDestination}&validateTls=true`).respond('200');
       service.verifySipDestination(sipDestination);
+      $httpBackend.flush();
+
+    });
+
+  });
+
+  describe('userTestCall', () => {
+
+    afterEach( () => {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should use the user test tool API with the correct caller and callee userIds', () => {
+
+      const caller = '1234';
+      const callee = '5678';
+
+      $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/l2sip/api/v1/test/users?caller=${caller}&called=${callee}`).respond('200');
+      service.userTestCall(caller, callee);
       $httpBackend.flush();
 
     });

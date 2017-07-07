@@ -9,10 +9,10 @@ class HuntGroupFallbackDestinationCtrl implements ng.IComponentController {
   public onChangeDestinationRuleFn: Function;
   public onChangeDestinationFn: Function;
   public onChangeAlternateFn: Function;
-  public options: Array<number> = [2, 5, 10, 30, 60];
+  public options: number[] = [2, 5, 10, 30, 60];
   public fallbackDestForm: ng.IFormController;
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { destinationRule, fallbackDestination, alternateDestination } = changes;
 
     if (destinationRule && destinationRule.currentValue) {
@@ -43,14 +43,14 @@ class HuntGroupFallbackDestinationCtrl implements ng.IComponentController {
   }
 
   public setHuntGroupAlternateDestination(destination: FallbackDestination): void {
-    this.alternateDestination.number = destination.number;
+    this.alternateDestination = destination;
     this.onChangeAlternateFn({
       alternateDestination: this.alternateDestination,
     });
   }
 
-  public setTimerMins(timer: number): void {
-    this.alternateDestination.timer = timer;
+  public setTimerMins(minutes: number): void {
+    this.alternateDestination.timer = minutes;
     this.onChangeAlternateFn({
       alternateDestination: this.alternateDestination,
     });
@@ -66,7 +66,7 @@ export class HuntGroupFallbackDestinationComponent implements ng.IComponentOptio
     fallbackDestination: '<',
     alternateDestination: '<',
     onChangeDestinationRuleFn: '&',
-    onChangedestinationFn: '&',
+    onChangeDestinationFn: '&',
     onChangeAlternateFn: '&',
   };
 }

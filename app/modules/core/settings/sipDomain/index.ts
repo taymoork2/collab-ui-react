@@ -11,7 +11,7 @@ export default angular.module('core.settings.sipDomain', [
   require('scripts/app.templates'),
   require('collab-ui-ng').default,
   require('modules/core/config/config'),
-  require('modules/hercules/services/service-descriptor'),
+  require('modules/hercules/services/service-descriptor.service').default,
   require('modules/core/scripts/services/sparkDomainManagement.service'),
   notificationModule,
   featureToggleModule,

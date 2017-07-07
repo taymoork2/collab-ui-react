@@ -1,0 +1,9 @@
+<div class="meeting-settings">
+  <h4 translate="firstTimeWizard.webExServiceWillBeSetup"></h4>
+  <div class="row element-spacing" ng-repeat="site in meetingCtrl.sitesArray">
+    <div class="site-heading">{{site.siteUrl}}.webex.com</div>
+    <p ng-if="site.timezone" class="time-zone" translate-values="{label: site.timezone.label}" translate="firstTimeWizard.timeZoneSetTo"></p>
+    <p ng-if="site.quantity" class="time-zone" translate-values="{quantity: site.quantity}" translate="firstTimeWizard.licenseCountEquals"></p>
+  </div>
+  <p class="notice element-spacing" translate="firstTimeWizard.provisioningNotice"></p>
+</div>

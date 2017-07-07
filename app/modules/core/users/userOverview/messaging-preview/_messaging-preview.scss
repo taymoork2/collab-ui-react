@@ -1,0 +1,26 @@
+@import '~collab-ui/scss/settings/typography';
+
+.user-entitlements-body {
+  .user-entitlement__checkbox {
+    float: left;
+  }
+
+  .user-entitlement__tooltip {
+    float: left;
+    margin-left: 6px;
+    font-family: $brand-font-light;
+    font-size: 12px;
+    line-height: 1.25rem;
+    color: $color-primary-base;
+    cursor: pointer;
+
+    .c-nub {
+      text-align: center;
+      font-size: 12px;
+    }
+  }
+
+  .entitle-save-btn {
+    margin-top: 40px;
+  }
+}

@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AAUiScheduleService($q, AutoAttendantCeInfoModelService, AACalendarService, AAICalService) {
-
     var service = {
       create8To5Schedule: create8To5Schedule,
     };
@@ -18,13 +17,13 @@
 
     function getRange8To5() {
       var calendar = AAICalService.createCalendar();
-      var _starttime = "08:00 AM";
-      var _endtime = "05:00 PM";
+      var _starttime = '08:00 AM';
+      var _endtime = '05:00 PM';
       var openhours = AAICalService.getDefaultRange();
       openhours.starttime = _starttime;
       openhours.endtime = _endtime;
       _.each(openhours.days, function (day) {
-        if (day.abbr != "SU" && day.abbr != "SA") {
+        if (day.abbr != 'SU' && day.abbr != 'SA') {
           day.active = true;
         }
       });

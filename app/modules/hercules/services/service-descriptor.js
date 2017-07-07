@@ -2,7 +2,7 @@
   'use strict';
 
   module.exports = angular
-    .module('Hercules.serviceDescriptor', [
+    .module('hercules.serviceDescriptor', [
       require('modules/core/config/urlConfig'),
       require('modules/core/scripts/services/authinfo'),
       require('modules/core/scripts/services/org.service'),
@@ -12,7 +12,6 @@
 
   /* @ngInject */
   function ServiceDescriptor($http, UrlConfig, Authinfo, Orgservice) {
-
     function getServiceStatus(serviceId, orgId) {
       return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/services/' + serviceId + '/status')
         .then(function (response) {

@@ -17,7 +17,7 @@ describe('Controller: DidAddCtrl', function () {
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
+    $provide.value('Authinfo', authInfo);
   }));
 
   var stateParams = {
@@ -55,11 +55,11 @@ describe('Controller: DidAddCtrl', function () {
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
-      'pattern': '+12145559991',
-      'uuid': '12145559991-id',
+      pattern: '+12145559991',
+      uuid: '12145559991-id',
     }, {
-      'pattern': '+12145558881',
-      'uuid': '12145558881-id',
+      pattern: '+12145558881',
+      uuid: '12145558881-id',
     }]);
 
     $httpBackend.whenGET(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/dialplans').respond(customerVoiceNorthAmerica);
@@ -79,8 +79,8 @@ describe('Controller: DidAddCtrl', function () {
     $rootScope.$apply();
     $timeout.flush();
 
-    spyOn(Notification, "success");
-    spyOn(Notification, "error");
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
     spyOn($window, 'open');
     spyOn($state, 'href').and.callThrough();
   }));
@@ -131,7 +131,6 @@ describe('Controller: DidAddCtrl', function () {
           expect(controller.submitBtnStatus).toBeTruthy();
           controller.tokenmethods.createdtoken(element);
           expect(controller.submitBtnStatus).toBeFalsy();
-
         });
       });
 
@@ -143,19 +142,19 @@ describe('Controller: DidAddCtrl', function () {
         describe('Added DIDs', function () {
           beforeEach(function () {
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145559999',
+              pattern: '+12145559999',
             }).respond(201);
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145558888',
+              pattern: '+12145558888',
             }).respond(201);
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145557777',
+              pattern: '+12145557777',
             }).respond(201);
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145556666',
+              pattern: '+12145556666',
             }).respond(201);
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145555555',
+              pattern: '+12145555555',
             }).respond(201);
             controller.submit();
             $httpBackend.flush();
@@ -168,14 +167,13 @@ describe('Controller: DidAddCtrl', function () {
           it('should have a existCount of 0', function () {
             expect(controller.unchangedCount).toEqual(0);
           });
-
         });
 
         describe('Edited DIDs', function () {
           beforeEach(function () {
             controller.unsavedTokens = '+12145559991,+12145558888';
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
-              'pattern': '+12145558888',
+              pattern: '+12145558888',
             }).respond(201);
             controller.submit();
             $httpBackend.flush();
@@ -188,7 +186,6 @@ describe('Controller: DidAddCtrl', function () {
           it('should have a existCount of 1', function () {
             expect(controller.unchangedCount).toEqual(1);
           });
-
         });
 
         describe('Existing DIDs', function () {
@@ -204,9 +201,7 @@ describe('Controller: DidAddCtrl', function () {
           it('should have a existCount of 1', function () {
             expect(controller.unchangedCount).toEqual(1);
           });
-
         });
-
       });
 
       describe('sendEmail function', function () {
@@ -228,7 +223,6 @@ describe('Controller: DidAddCtrl', function () {
           expect(Notification.error.calls.count()).toEqual(1);
         });
       });
-
     });
   });
 });

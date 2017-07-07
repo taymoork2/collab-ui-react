@@ -1,7 +1,7 @@
 import bulkEnableVmModule from './index';
 describe('Component: bulkEnableVm', () => {
-  let commonUsers = getJSONFixture('huron/json/settings/bulkEnableVm/commonusers.json');
-  let services = ['VOICE', 'COMMON'];
+  const commonUsers = getJSONFixture('huron/json/settings/bulkEnableVm/commonusers.json');
+  const services = ['VOICE', 'COMMON'];
   beforeEach(function () {
     this.initModules(bulkEnableVmModule);
     this.injectDependencies('$scope', 'BulkEnableVmService', 'Authinfo',
@@ -67,7 +67,7 @@ describe('Component: bulkEnableVm', () => {
 
     describe('Voicemail enable with 503 returned for user update', () => {
       beforeEach(function () {
-        let error = {
+        const error = {
           status: 503,
           statusText: 'User Not Found',
           config: { headers: { TrackingID: 'Atlas_122ea2dafea3444555_Service Unavailable' } },
@@ -89,7 +89,7 @@ describe('Component: bulkEnableVm', () => {
 
     describe('Voicemail enable with 404 returned for user service GET', () => {
       beforeEach(function () {
-        let error = {
+        const error = {
           status: 404,
           statusText: 'User Not Found',
           config: { headers: { TrackingID: 'Atlas_122ea2dafea3444555_Service Unavailable' } },
@@ -111,7 +111,7 @@ describe('Component: bulkEnableVm', () => {
 
     describe('Voicemail enable with 404 returned for user Update', () => {
       beforeEach(function () {
-        let error = {
+        const error = {
           status: 404,
           statusText: 'User Not Found',
           config: { headers: { TrackingID: 'Atlas_122ea2dafea3444555_Service Unavailable' } },
@@ -237,7 +237,7 @@ describe('Component: bulkEnableVm', () => {
         expect(this.view.find('span#headerErrorMessage')).toExist();
 
         // verify table data
-        let errorRecords = this.view.find('div#errorList').find('.row');
+        const errorRecords = this.view.find('div#errorList').find('.row');
         expect(errorRecords.length).toBe(2);
         _.forEach(errorRecords, (element, index: number) => {
           expect(element.getElementsByClassName('columns small-4 center error-row')[0]).toHaveText('testUserId' + (index + 1));

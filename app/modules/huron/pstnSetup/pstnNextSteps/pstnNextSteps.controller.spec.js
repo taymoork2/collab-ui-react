@@ -35,14 +35,11 @@ describe('Controller: PstnNextStepsCtrl', function () {
 
   describe('nextSteps', function () {
     beforeEach(function () {
-
       controller.launchCustomerPortal();
-
     });
     it('should create proper url', function () {
-      expect($state.href).toHaveBeenCalledWith('login_swap', {
+      expect($state.href).toHaveBeenCalledWith('login', {
         customerOrgId: customer.uuid,
-        customerOrgName: customer.name,
       });
     });
 
@@ -50,5 +47,4 @@ describe('Controller: PstnNextStepsCtrl', function () {
       expect($window.open).toHaveBeenCalled();
     });
   });
-
 });

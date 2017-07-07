@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Chat Template Service', function () {
-
   var $httpBackend, $q, BrandService, CTService, logoUrlDeferred, orgSettingsDeferred;
   var orgId = 'a-b-c-d';
   var logoUrl = 'https://www.example.com/logo.png';
@@ -9,7 +8,7 @@ describe('Chat Template Service', function () {
   var appName = 'testApp.ciscoservice.com';
   var templateId = 'abcd';
   var orgSettings = {
-    'logoUrl': logoUrl,
+    logoUrl: logoUrl,
   };
 
   var spiedUrlConfig = {
@@ -22,8 +21,8 @@ describe('Chat Template Service', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("UrlConfig", spiedUrlConfig);
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('UrlConfig', spiedUrlConfig);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
 
   beforeEach(inject(function (_$q_, _$httpBackend_, _BrandService_, _CTService_) {

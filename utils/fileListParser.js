@@ -14,7 +14,7 @@ function toList(filePath) {
   var listItems = [];
 
   try {
-    listItems = fs.readFileSync(filePath, "utf8");
+    listItems = fs.readFileSync(filePath, 'utf8');
     listItems = listItems.split(/\r?\n/);
     listItems = listItems.filter(function (line) {
       return line.trim() !== '';

@@ -5,7 +5,7 @@
     .module('uc.autoattendant')
     .directive('dynamicPrompt', DynamicPrompt);
 
-  function DynamicPrompt($sce, $window, $compile) {
+  function DynamicPrompt($sce, $window, $compile, AADynaAnnounceService) {
     var CONSTANTS = {};
     CONSTANTS.read = 'blur keyup change';
     CONSTANTS.defaultElementParentType = 'span';
@@ -216,6 +216,9 @@
 
     function addHtmlAtCaret(element, scope, parentElementType, html, range) {
       element.focus();
+      if (_.isUndefined(range)) {
+        range = AADynaAnnounceService.getRange();
+      }
       if (range) {
         range.deleteContents();
         var el = $window.document.createElement(parentElementType);
@@ -223,7 +226,9 @@
         el.innerHTML = html;
         $compile(el)(scope);
         var frag = $window.document.createDocumentFragment();
-        frag.appendChild(el.firstChild);
+        if (!_.isNull(el.firstChild)) {
+          frag.appendChild(el.firstChild);
+        }
         range.insertNode(frag);
       }
     }

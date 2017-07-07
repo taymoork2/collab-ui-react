@@ -13,7 +13,6 @@
   /* @ngInject */
   function CallerId(Authinfo, $q, CompanyNumberService, UserDirectoryNumberService, DirectoryNumberUserService, DirectoryNumber,
     UserEndpointService, SipEndpointDirectoryNumberService) {
-
     var callerIdOptions = [];
     var userDnList = [];
     // The following do not need to be localized
@@ -203,8 +202,8 @@
 
             // Get all the users of the line to decide if this line is a shared line
           promise = DirectoryNumberUserService.query({
-            'customerId': Authinfo.getOrgId(),
-            'directoryNumberId': userLine.uuid,
+            customerId: Authinfo.getOrgId(),
+            directoryNumberId: userLine.uuid,
           }).$promise
               .then(function (dnUserInfo) {
                 dnUserInfo.forEach(function (dnUser) {
@@ -260,6 +259,5 @@
         endpointDnAssnId: endpointDnAssnId,
       }, data).$promise;
     }
-
   }
 })();

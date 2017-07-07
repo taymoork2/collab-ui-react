@@ -5,38 +5,38 @@ describe('Service: AdoptionCardService', function () {
   var AdoptionCardService;
   var dummyData = {
     dataProvider: [{
-      'name': 'mediaFusion.metrics.clientType.android',
-      'value': 11684,
+      name: 'mediaFusion.metrics.clientType.android',
+      value: 11684,
     }, {
-      'name': 'mediaFusion.metrics.clientType.DES',
-      'value': 1,
+      name: 'mediaFusion.metrics.clientType.DES',
+      value: 1,
     }, {
-      'name': 'mediaFusion.metrics.clientType.desktop',
-      'value': 225394,
+      name: 'mediaFusion.metrics.clientType.desktop',
+      value: 225394,
     }, {
-      'name': 'mediaFusion.metrics.clientType.ipad',
-      'value': 4444,
+      name: 'mediaFusion.metrics.clientType.ipad',
+      value: 4444,
     }, {
-      'name': 'mediaFusion.metrics.clientType.iphone',
-      'value': 77276,
+      name: 'mediaFusion.metrics.clientType.iphone',
+      value: 77276,
     }, {
-      'name': 'mediaFusion.metrics.clientType.jabber',
-      'value': 119,
+      name: 'mediaFusion.metrics.clientType.jabber',
+      value: 119,
     }, {
-      'name': 'mediaFusion.metrics.clientType.sip',
-      'value': 230012,
+      name: 'mediaFusion.metrics.clientType.sip',
+      value: 230012,
     }, {
-      'name': 'mediaFusion.metrics.clientType.board',
-      'value': 19231,
+      name: 'mediaFusion.metrics.clientType.board',
+      value: 19231,
     }, {
-      'name': 'mediaFusion.metrics.clientType.tp',
-      'value': 132537,
+      name: 'mediaFusion.metrics.clientType.tp',
+      value: 132537,
     }, {
-      'name': 'mediaFusion.metrics.clientType.uc',
-      'value': 2,
+      name: 'mediaFusion.metrics.clientType.uc',
+      value: 2,
     }, {
-      'name': 'mediaFusion.metrics.clientType.Unknown',
-      'value': 1294,
+      name: 'mediaFusion.metrics.clientType.Unknown',
+      value: 1294,
     }],
   };
   var mobileHeading = 'mediaFusion.metrics.mobile';
@@ -139,6 +139,4 @@ describe('Service: AdoptionCardService', function () {
     expect(totalPercentage).toBeGreaterThan(99);
     expect(totalPercentage).toBeLessThan(102);
   });
-
-
 });

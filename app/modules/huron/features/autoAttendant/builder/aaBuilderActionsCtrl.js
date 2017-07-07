@@ -6,10 +6,10 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, $modal, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, CustomVariableService) {
-
+  function AABuilderActionsCtrl($rootScope, $scope, $translate, $controller, $modal, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, CustomVariableService) {
     var vm = this;
-    var appendSpecialCharHelp = "<br><br>" + $translate.instant('autoAttendant.sayMessageSpecialChar');
+    var appendSpecialCharHelp = '<br><br>' + $translate.instant('autoAttendant.sayMessageSpecialChar');
+    var appendRouteToPhoneNumberHelp = '<br><br>' + $translate.instant('autoAttendant.routeToPhoneNumberHelp');
 
     vm.options = [{
       title: $translate.instant('autoAttendant.actionSayMessage'),
@@ -19,13 +19,13 @@
       help: $translate.instant('autoAttendant.sayMessageHelp') + appendSpecialCharHelp,
       metric: 'Say-Message-Title',
       showHelpLink: true,
-      actions: ['play', 'say'],
+      actions: ['play', 'say', 'dynamic'],
     }, {
       title: $translate.instant('autoAttendant.actionPhoneMenu'),
       controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
       url: 'modules/huron/features/autoAttendant/phoneMenu/aaPhoneMenu.tpl.html',
       hint: $translate.instant('autoAttendant.actionPhoneMenuHint'),
-      help: $translate.instant('autoAttendant.phoneMenuHelp') + appendSpecialCharHelp,
+      help: $translate.instant('autoAttendant.phoneMenuHelp') + appendSpecialCharHelp + appendRouteToPhoneNumberHelp,
       metric: 'Phone-Menu-Title',
       showHelpLink: true,
       actions: ['runActionsOnInput'],
@@ -60,10 +60,10 @@
       actions: ['conditional'],
     }];
 
-    vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
-    vm.option = ""; // no default option
-    vm.schedule = "";
-    vm.selectHint = "";
+    vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
+    vm.option = ''; // no default option
+    vm.schedule = '';
+    vm.selectHint = '';
 
     vm.getOptionController = getOptionController;
     vm.selectOption = selectOption;
@@ -89,14 +89,14 @@
         _.each(vm.options, function (option, index) {
           if (option.title && option.hint) {
             vm.selectHint = vm.selectHint
-              .concat("<i>")
+              .concat('<i>')
               .concat(option.title)
-              .concat("</i>")
-              .concat(" - ")
+              .concat('</i>')
+              .concat(' - ')
               .concat(option.hint)
-              .concat("<br>");
+              .concat('<br>');
             if (index < vm.options.length - 1) {
-              vm.selectHint = vm.selectHint.concat("<br>");
+              vm.selectHint = vm.selectHint.concat('<br>');
             }
           }
         });
@@ -145,7 +145,6 @@
     }
 
     function checkVarNameDependencies(varNameToCheck) {
-
       // flag as we need to alert if the current Ce uses this variable.
       // Current Ce will not be returned in list of dependant Ce
       var thisCeHasVar = AACommonService.collectThisCeActionValue(vm.ui, true, true).filter(function (value) {
@@ -164,7 +163,6 @@
     }
 
     function removeAction(index) {
-
       var uiMenu = vm.ui[vm.schedule];
       var entryI = uiMenu.entries[index];
       if (AutoAttendantCeMenuModelService.isCeMenu(entryI)) {
@@ -175,9 +173,9 @@
         checkVarNameDependencies(entryI.actions[0].variableName).then(function (okToDelete) {
           if (okToDelete) {
             deleteMenu(uiMenu, index);
+            $rootScope.$broadcast('CE Updated');
           }
         });
-
       } else {
         deleteMenu(uiMenu, index);
       }
@@ -186,7 +184,7 @@
     function setOption() {
       if ($scope.index >= 0) {
         var menuEntry = vm.ui[vm.schedule].getEntryAt($scope.index);
-        if (menuEntry.type == "MENU_OPTION") {
+        if (menuEntry.type == 'MENU_OPTION') {
           vm.option = vm.options[PHONE_MENU_INDEX];
         } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
           var matchType = function (action) {
@@ -236,7 +234,6 @@
     }
 
     function activate() {
-
       setFeatureToggledActions();
       vm.index = $scope.index;
       vm.schedule = $scope.schedule;

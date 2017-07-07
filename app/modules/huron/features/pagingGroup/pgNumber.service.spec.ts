@@ -2,7 +2,7 @@ import { INumberData } from 'modules/huron/features/pagingGroup/pagingGroup';
 
 describe('Component: pgNumber service', () => {
 
-  let successResponse1 = [
+  const successResponse1 = [
     {
       uuid: '22a2dc30-041f-4d25-9351-325eb1db7f79',
       pattern: '2222',
@@ -12,7 +12,7 @@ describe('Component: pgNumber service', () => {
       pattern: '3333',
     }];
 
-  let successResponse2 = {
+  const successResponse2 = {
     numbers: [{
       number: '2222',
       uuid: '22a2dc30-041f-4d25-9351-325eb1db7f79',
@@ -20,7 +20,7 @@ describe('Component: pgNumber service', () => {
     }],
   };
 
-  let numberData = <INumberData> {
+  const numberData = <INumberData> {
     extension: '2222',
     extensionUUID: '22a2dc30-041f-4d25-9351-325eb1db7f79',
   };
@@ -49,7 +49,7 @@ describe('Component: pgNumber service', () => {
     this.$httpBackend.whenGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/internalnumberpools?directorynumber=&order=pattern&pattern=%25222%25').respond(200, successResponse1);
 
     this.PagingNumberService.getNumberSuggestions('222').then(function (response) {
-      let numberData2 = <INumberData> {
+      const numberData2 = <INumberData> {
         extension: '3333',
         extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f432',
       };
@@ -58,11 +58,11 @@ describe('Component: pgNumber service', () => {
   });
 
   it('should get the extension based on number uuid', function () {
-    let numberData3 = <INumberData> {
+    const numberData3 = <INumberData> {
       extension: '2222',
       extensionUUID: undefined,
     };
-    let groupId: string = 'abcd1234-abcd-abcd-abcddef123456';
+    const groupId: string = 'abcd1234-abcd-abcd-abcddef123456';
     this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/paging/' + groupId + '/numbers').respond(200, successResponse2);
     this.PagingNumberService.getNumberExtension(groupId).then(function (response) {
       expect(response).toEqual(numberData3);

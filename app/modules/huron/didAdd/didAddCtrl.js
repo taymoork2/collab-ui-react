@@ -83,7 +83,7 @@
       }
       // add to service after validation/duplicate checks
       DidService.addDid(e.attrs.value);
-      setPlaceholderText("");
+      setPlaceholderText('');
       vm.submitBtnStatus = vm.checkForInvalidTokens() && vm.checkForDuplicates();
     }
 
@@ -93,7 +93,7 @@
       $timeout(reinitTokens);
 
       //If this is the last token, put back placeholder text.
-      var tokenElement = $("div", ".did-input").children(".token");
+      var tokenElement = $('div', '.did-input').children('.token');
       if (tokenElement.length === 0) {
         setPlaceholderText(vm.tokenplacehoder);
       }
@@ -156,7 +156,7 @@
                   Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
                 }
                 setDidValidationCountry({
-                  country: "us",
+                  country: 'us',
                 });
               });
           })
@@ -177,7 +177,7 @@
               Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
             }
             setDidValidationCountry({
-              country: "us",
+              country: 'us',
             });
           }).then(reinitTokens);
       }
@@ -268,7 +268,7 @@
         if (errors.length > 0) {
           var errorMsgs = [];
           _.forEach(errors, function (error) {
-            errorMsgs.push("Number: " + error.pattern + " " + error.message);
+            errorMsgs.push('Number: ' + error.pattern + ' ' + error.message);
           });
           Notification.notify(errorMsgs, 'error');
         }
@@ -291,9 +291,9 @@
 
     function sendEmail() {
       var emailInfo = {
-        'email': vm.currentOrg.customerEmail,
-        'customerName': vm.currentOrg.customerName,
-        'partnerName': Authinfo.getOrgName(),
+        email: vm.currentOrg.customerEmail,
+        customerName: vm.currentOrg.customerName,
+        partnerName: Authinfo.getOrgName(),
       };
       DidAddEmailService.save({}, emailInfo, function () {
         Notification.success('didManageModal.emailSuccessText');
@@ -307,6 +307,5 @@
     if ($state.modal) {
       $state.modal.result.finally(DidService.clearDidList);
     }
-
   }
 })();

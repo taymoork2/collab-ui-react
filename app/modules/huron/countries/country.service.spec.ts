@@ -10,7 +10,7 @@ describe('Service: HuronCountryService', () => {
 
     spyOn(this.HuronCountryService, 'fetchCountryList').and.callThrough();
     spyOn(this.Authinfo, 'getUserOrgId').and.returnValue('123');
-    let countryList = {
+    const countryList = {
       countries: [
         {
           id: 'GB',

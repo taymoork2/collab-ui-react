@@ -10,11 +10,13 @@ var config = {
   e2eReports: e2e + '/reports',
   e2eSuites: {
     hercules: e2e + '/hercules/**/*_spec.js',
-    huron: e2e + '/huron/**/*_spec.js',
     mediafusion: e2e + '/mediafusion/**/*_spec.js',
     squared: e2e + '/squared/**/*_spec.js',
     sunlight: e2e + '/sunlight/**/*_spec.js',
     webex: e2e + '/webex/**/*_spec.js',
+  },
+  functionalSuites: {
+    huron: e2e + '/huron/functional/**/*_spec.js',
   },
 };
 

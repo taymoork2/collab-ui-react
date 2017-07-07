@@ -1,7 +1,7 @@
 describe('Component: EmergencyServicesCtrl', () => {
-  let FORM_SECTION = '.cs-form__section';
-  let SPINNER = '.icon-spinner';
-  let address = {
+  const FORM_SECTION = '.cs-form__section';
+  const SPINNER = '.icon-spinner';
+  const address = {
     streetAddress: '111 Street',
     unit: '',
     city: 'ABC',

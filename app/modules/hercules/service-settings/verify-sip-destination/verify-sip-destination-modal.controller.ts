@@ -11,11 +11,10 @@ class VerifySipDestinationModalController {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
     private L2SipService: L2SipService,
     public destinationUrl: string,
   ) {
-    this. verifySipDestination();
+    this.verifySipDestination();
   }
 
   public verifySipDestination(): void {
@@ -35,21 +34,6 @@ class VerifySipDestinationModalController {
       .filter((step: VerificationStep) => step.severity === level)
       .size()
       .value();
-  }
-
-  public severityToIcon(severity): string {
-    switch (severity) {
-      case 'Error':
-        return 'icon-error';
-      case 'Warn':
-        return 'icon-warning';
-      default:
-        return 'icon-checkbox';
-    }
-  }
-
-  public localizeType(type: string): string {
-    return this.$translate.instant(`hercules.settings.verifySipDestination.types.${type}`);
   }
 
 }

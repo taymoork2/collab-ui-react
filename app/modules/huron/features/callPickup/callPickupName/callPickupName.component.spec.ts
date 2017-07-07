@@ -1,6 +1,6 @@
 describe('Component: callPickupName', () => {
   const NAME_INPUT = 'input#nameInput';
-  let pickupList = getJSONFixture('huron/json/features/callPickup/pickupList.json');
+  const pickupList = getJSONFixture('huron/json/features/callPickup/pickupList.json');
   beforeEach(function () {
     this.initModules('huron.call-pickup.name');
     this.injectDependencies(

@@ -3,31 +3,31 @@
 describe('Service: Cotext Discovery factory', function () {
   var contextDiscoveryUrl;
   var discoveryData = [
-    { 'service': 'context',
-      'endpoints': [{ 'priority': 1, 'location': 'https://context-service.produs1.ciscoccservice.com' }],
-      'lastUpdated': '2015-10-19T14:29:08.216Z' },
-    { 'service': 'dictionary',
-      'endpoints': [{ 'priority': 1, 'location': 'https://dictionary.produs1.ciscoccservice.com' }],
-      'lastUpdated': '2015-10-19T14:29:08.216Z' },
-    { 'service': 'management',
-      'endpoints': [{ 'priority': 1, 'location': 'https://management.produs1.ciscoccservice.com' }],
-      'lastUpdated': '2015-10-19T14:29:08.216Z' }];
+    { service: 'context',
+      endpoints: [{ priority: 1, location: 'https://context-service.produs1.ciscoccservice.com' }],
+      lastUpdated: '2015-10-19T14:29:08.216Z' },
+    { service: 'dictionary',
+      endpoints: [{ priority: 1, location: 'https://dictionary.produs1.ciscoccservice.com' }],
+      lastUpdated: '2015-10-19T14:29:08.216Z' },
+    { service: 'management',
+      endpoints: [{ priority: 1, location: 'https://management.produs1.ciscoccservice.com' }],
+      lastUpdated: '2015-10-19T14:29:08.216Z' }];
 
   var badDiscoveryData = [
-    { 'service': 'dictionary',
-      'endpoints': [{ 'priority': 1, 'location': 'https://dictionary.produs1.ciscoccservice.com' }],
-      'lastUpdated': '2015-10-19T14:29:08.216Z' },
-    { 'service': 'eventing',
-      'endpoints': [{ 'priority': 1, 'location': 'https://eventing.produs1.ciscoccservice.com' }],
-      'lastUpdated': '2015-10-19T14:29:08.216Z' }];
+    { service: 'dictionary',
+      endpoints: [{ priority: 1, location: 'https://dictionary.produs1.ciscoccservice.com' }],
+      lastUpdated: '2015-10-19T14:29:08.216Z' },
+    { service: 'eventing',
+      endpoints: [{ priority: 1, location: 'https://eventing.produs1.ciscoccservice.com' }],
+      lastUpdated: '2015-10-19T14:29:08.216Z' }];
 
   var anotherDiscoveryData = [
-    { 'service': 'dictionary',
-      'endpoints': [{ 'priority': 1, 'location': 'https://another-dictionary.produs2.ciscoccservice.com' }],
-      'lastUpdated': '2015-10-19T14:29:08.216Z' },
-    { 'service': 'management',
-      'endpoints': [{ 'priority': 1, 'location': 'https://management.produs2.ciscoccservice.com' }],
-      'lastUpdated': '2015-10-19T14:29:08.216Z' }];
+    { service: 'dictionary',
+      endpoints: [{ priority: 1, location: 'https://another-dictionary.produs2.ciscoccservice.com' }],
+      lastUpdated: '2015-10-19T14:29:08.216Z' },
+    { service: 'management',
+      endpoints: [{ priority: 1, location: 'https://management.produs2.ciscoccservice.com' }],
+      lastUpdated: '2015-10-19T14:29:08.216Z' }];
 
   beforeEach(function () {
     this.initModules('Context');
@@ -108,5 +108,4 @@ describe('Service: Cotext Discovery factory', function () {
     expect(promise).toBeResolvedWith('https://dictionary.produs1.ciscoccservice.com');
     //no need to flush http reponse, since get on it was not invoked
   });
-
 });

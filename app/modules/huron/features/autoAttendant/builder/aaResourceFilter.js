@@ -10,11 +10,11 @@
   function preferredAAResource() {
     return function (ceInfo) {
       if (_.isUndefined(ceInfo)) {
-        return "";
+        return '';
       }
       var resources = ceInfo.getResources();
       if (!_.isArray(resources) || _.isUndefined(resources[0])) {
-        return "";
+        return '';
       }
       // todo: priority for display is (1) E164 number, (2) extension, (3) from another AA
       // for now returns first number
@@ -26,21 +26,20 @@
   function moreAAResources($translate) {
     return function (ceInfo) {
       if (_.isUndefined(ceInfo)) {
-        return "";
+        return '';
       }
       var resources = ceInfo.getResources();
       if (!_.isArray(resources) || _.isUndefined(resources[0])) {
-        return "";
+        return '';
       }
 
       if (resources.length > 1) {
-
         return $translate.instant('autoAttendant.resourceCountPlusMore', {
           count: resources.length - 1,
         });
       }
 
-      return "";
+      return '';
     };
   }
 
@@ -48,11 +47,11 @@
   function allAAResources() {
     return function (ceInfo) {
       if (_.isUndefined(ceInfo)) {
-        return "";
+        return '';
       }
       var resources = ceInfo.getResources();
       if (!_.isArray(resources) || _.isUndefined(resources[0])) {
-        return "";
+        return '';
       }
 
       if (resources.length > 0) {
@@ -60,7 +59,7 @@
         return resourcesHtml;
       }
 
-      return "";
+      return '';
     };
   }
 })();

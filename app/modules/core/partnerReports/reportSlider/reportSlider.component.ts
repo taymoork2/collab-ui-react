@@ -6,7 +6,7 @@ import {
 } from '../partnerReportInterfaces';
 
 class ReportSliderCtrl {
-  public options: Array<ITimespan>;
+  public options: ITimespan[];
   public updateFunctions: ITimeSliderFunctions;
   public selected: ITimespan;
 
@@ -17,7 +17,7 @@ class ReportSliderCtrl {
     private CommonReportService: CommonReportService,
     private ReportConstants: ReportConstants,
   ) {
-    let vm = this;
+    const vm = this;
     this.translateSlider = (index: number): string => {
       return vm.dateArray[index].date;
     };
@@ -37,7 +37,7 @@ class ReportSliderCtrl {
   public startDate: boolean = false;
   public endDate: boolean = false;
   public optionPicker: boolean = false;
-  public readonly dateArray: Array<any> = this.CommonReportService.getReturnLineGraph(this.ReportConstants.THREE_MONTH_FILTER, { date: '' });
+  public readonly dateArray: any[] = this.CommonReportService.getReturnLineGraph(this.ReportConstants.THREE_MONTH_FILTER, { date: '' });
   public ceil: number = this.ReportConstants.YEAR;
   public floor: number = 0;
   private _min: number = this.ReportConstants.TWENTY_FOUR_WEEKS;

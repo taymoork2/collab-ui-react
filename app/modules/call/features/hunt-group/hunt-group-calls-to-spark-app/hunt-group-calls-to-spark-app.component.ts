@@ -1,6 +1,16 @@
 class HuntGroupCallsToSparkAppCtrl implements ng.IComponentController {
   public sendToApp: boolean;
   public onChangeFn: Function;
+  public destinationRule: string;
+  public isToggleDisabled: boolean = false;
+
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const { destinationRule } = changes;
+    if (destinationRule && destinationRule.currentValue) {
+      this.destinationRule = destinationRule.currentValue;
+      this.isToggleDisabled = this.destinationRule === 'TYPEFALLBACKRULE_AUTOMATIC' ? true : false;
+    }
+  }
 
   public onCallsToSparkAppChange(): void {
     this.onChangeFn();
@@ -13,5 +23,6 @@ export class HuntGroupCallsToSparkAppComponent implements ng.IComponentOptions {
   public bindings = {
     sendToApp: '<',
     onChangeFn: '&',
+    destinationRule: '<',
   };
 }

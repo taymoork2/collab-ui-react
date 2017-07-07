@@ -19,7 +19,6 @@ describe('Controller: ConfirmCertificateDeleteController', function () {
     };
     spyOn(modalInstanceMock, 'close');
     spyOn(Notification, 'errorWithTrackingId');
-
   });
 
   function initController() {
@@ -44,6 +43,5 @@ describe('Controller: ConfirmCertificateDeleteController', function () {
     $scope.$apply();
     expect(Notification.errorWithTrackingId.calls.count()).toBe(0);
     expect(modalInstanceMock.close.calls.count()).toBe(1);
-
   });
 });

@@ -29,6 +29,12 @@ export class L2SipService {
       .then(this.extractData);
   }
 
+  public userTestCall(caller: string, callee: string): ng.IPromise<ISipDestinationSteps> {
+    return this.$http
+      .get(`${this.l2sipUrl}/test/users?caller=${caller}&called=${callee}`)
+      .then(this.extractData);
+  }
+
 }
 angular
   .module('Hercules')

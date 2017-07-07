@@ -246,7 +246,6 @@ require('./_customer-list.scss');
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
       onRegisterApi: function (gridApi) {
-
         vm.gridApi = gridApi;
 
         vm.gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
@@ -258,7 +257,6 @@ require('./_customer-list.scss');
         });
 
         gridApi.grid.registerRowsProcessor(rowFilter, 150);
-
       },
       multiFields: {
         meeting: [{
@@ -332,7 +330,6 @@ require('./_customer-list.scss');
         .then(function (isTestOrg) {
           vm.isTestOrg = isTestOrg;
         });
-
     }
 
     function getSubfields(entry, name) {
@@ -524,7 +521,6 @@ require('./_customer-list.scss');
         };
 
         row.visible = _.every(isVisibleFlags);
-
       });
       var visibleRowsData = _.chain(rows).filter({ visible: true }).map(function (row) { return row.entity; }).value();
 
@@ -723,9 +719,8 @@ require('./_customer-list.scss');
     function launchCustomerPortal(trial) {
       var customer = trial;
 
-      $window.open($state.href('login_swap', {
+      $window.open($state.href('login', {
         customerOrgId: customer.customerOrgId,
-        customerOrgName: customer.customerName,
       }));
     }
 

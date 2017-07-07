@@ -2,7 +2,8 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 
 class HybridServicesClusterPageCtrl implements ng.IComponentController {
   public tabs: { title: string, state: string }[] = [];
-  public localizedTitle: string;
+  public title: string;
+  public titleValues: object;
   public backUrl: string = 'cluster-list';
   public hasNodesViewFeatureToggle: boolean;
 
@@ -10,11 +11,10 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
   constructor(
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
-    private $translate: ng.translate.ITranslateService,
     private HybridServicesClusterService: HybridServicesClusterService,
   ) {}
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.init(clusterId.currentValue);
@@ -22,9 +22,10 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
   }
 
   private updateName(name: string): void {
-    this.localizedTitle = this.$translate.instant('hercules.expresswayClusterSettings.pageTitle', {
+    this.title = 'hercules.expresswayClusterSettings.pageTitle';
+    this.titleValues = {
       clusterName: name,
-    });
+    };
   }
 
   private init(id) {
@@ -51,10 +52,10 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
         // Don't show any tabs if the "Nodes" one is not available. Only the "Settings" tab would be weird
         if (this.hasNodesViewFeatureToggle) {
           this.tabs = [{
-            title: this.$translate.instant('common.nodes'),
+            title: 'common.nodes',
             state: `${route}-cluster.nodes`,
           }, {
-            title: this.$translate.instant('common.settings'),
+            title: 'common.settings',
             state: `${route}-cluster.settings`,
           }];
         }

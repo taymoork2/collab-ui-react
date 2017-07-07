@@ -1,0 +1,18 @@
+@import '~collab-ui/scss/settings/colors';
+
+.custSubHeader {
+
+  .nav li a {
+    font-size: 1rem;
+  }
+
+  .nav-tabs li a,
+  .nav-tabs li.active a {
+    border-bottom: 0;
+  }
+}
+
+.metricsContent {
+  overflow: hidden;
+  padding: 0;
+}

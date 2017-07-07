@@ -1,7 +1,6 @@
 'use strict'
 
 var GSSDashboardPage = function () {
-
   this.serviceSelector = element(by.css('.service-selector'));
   this.tabLink = element(by.css('a[href="#/gss/dashboard"]'));
   this.incidentBlock = element(by.css('.status-dashboard')).element(by.css('.incident-section'));
@@ -17,7 +16,6 @@ var GSSDashboardPage = function () {
     navigation.clickGSSTab();
     navigation.expectCurrentUrl('/gss/dashboard');
   }
-
 }
 
 module.exports = GSSDashboardPage;

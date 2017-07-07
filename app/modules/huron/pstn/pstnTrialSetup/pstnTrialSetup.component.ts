@@ -19,7 +19,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   public providerSelected: boolean;
   public invalidCount = 0;
   public SWIVEL: string;
-  public searchResults: Array<any>;
+  public searchResults: any[];
   public paginateOptions = new PaginateOptions();
   public showNoResult: boolean;
   public maxSelection = 10;
@@ -32,6 +32,8 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   public readOnly: boolean = false;
   public dismiss: Function;
 
+  public ftEnterpriseTrunking: boolean  = false;
+
   /* @ngInject */
   constructor(private PstnModel: PstnModel,
               private TrialPstnService,
@@ -43,7 +45,8 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
               private Analytics,
               private PstnServiceAddressService,
               private $translate: ng.translate.ITranslateService,
-              private HuronCompassService: HuronCompassService) {
+              private HuronCompassService: HuronCompassService,
+              private FeatureToggleService) {
     this.trialData = this.TrialPstnService.getData();
     this.SWIVEL = SWIVEL;
     this.parentTrialData = $scope.$parent.trialData;
@@ -56,6 +59,10 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
       this.addressFound = true;
       this.addressLoading = false;
     }
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then(result => {
+      this.ftEnterpriseTrunking = result;
+    });
   }
 
   public onProviderChange(reset?): void {
@@ -66,7 +73,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   }
 
   public onProviderReady(): void {
-    let carriers = this.PstnModel.getCarriers();
+    const carriers = this.PstnModel.getCarriers();
     if (carriers.length === 1) {
       carriers[0].selected = true;
       this.PstnModel.setProvider(carriers[0]);
@@ -99,7 +106,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
       code: ('' + value).slice(0, MIN_VALID_CODE),
     };
 
-    let params = {
+    const params = {
       npa: this.trialData.details.pstnNumberInfo.areaCode.code,
       count: MAX_DID_QUANTITY,
       sequential: false,
@@ -123,17 +130,17 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
 
   public addToCart(searchResultsModel): void {
     let reservation;
-    let promises: Array<any> = [];
+    const promises: any[] = [];
     _.forIn(searchResultsModel, (value, _key) => {
       if (value) {
-        let key = _.parseInt(<string>_key);
-        let searchResultsIndex = (this.paginateOptions.currentPage * this.paginateOptions.pageSize) + key;
+        const key = _.parseInt(<string>_key);
+        const searchResultsIndex = (this.paginateOptions.currentPage * this.paginateOptions.pageSize) + key;
         if (searchResultsIndex < this.searchResults.length && !this.trialData.details.pstnNumberInfo.numbers.includes(this.searchResults[searchResultsIndex])) {
-          let numbers = this.searchResults[searchResultsIndex];
+          const numbers = this.searchResults[searchResultsIndex];
           reservation = this.PstnService.reserveCarrierInventoryV2(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), numbers, this.PstnModel.isCustomerExists());
-          let promise = reservation
+          const promise = reservation
             .then((reservationData) => {
-              let order = {
+              const order = {
                 data: {
                   numbers: numbers,
                 },
@@ -196,17 +203,21 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
     if (!this.checkForInvalidTokens()) {
       // there are invalid tokens
       return true;
-    } else if (this.providerImplementation === this.SWIVEL && _.size(this.trialData.details.swivelNumbers) === 0) {
-      // no swivel numbers entered
-      return true;
-    } else if (this.providerImplementation !== this.SWIVEL && _.size(this.trialData.details.pstnNumberInfo.numbers) === 0) {
-      // no PSTN numbers
-      return true;
-    } else if (this.providerImplementation !== this.SWIVEL && !this.addressFound) {
+    } else if (this.providerSelected === true && this.providerImplementation === this.SWIVEL) {
+      if (!this.ftEnterpriseTrunking) {
+        return _.size(this.trialData.details.swivelNumbers) === 0;
+      } else {
+          // no swivel numbers needed
+        return false;
+      }
+    } else if (this.providerSelected === true && this.providerImplementation !== this.SWIVEL && _.size(this.trialData.details.pstnNumberInfo.numbers) !== 0) {
+      // PSTN numbers
+      return false;
+    } else if (this.providerSelected === true && this.providerImplementation !== this.SWIVEL && !this.addressFound) {
       return true;
     } else {
-      // have some valid numbers
-      return false;
+      // provider not selected or no valid numbers
+      return true;
     }
   }
 

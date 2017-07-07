@@ -35,13 +35,12 @@ export class PrivateTrunkPrereqService {
     }
   }
 
-  public getVerifiedDomains(): ng.IPromise<Array<any>> {
+  public getVerifiedDomains(): ng.IPromise<any[]> {
     return this.DomainManagementService.getVerifiedDomains().then(domains => {
       return _.chain(domains)
-        .filter({ status : 'verified' })
+        .filter(domain => domain.status === 'claimed' || domain.status === 'verified')
         .map('text')
         .value();
     });
   }
-
 }

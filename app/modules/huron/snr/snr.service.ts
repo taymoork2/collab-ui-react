@@ -12,13 +12,13 @@ export class SnrService {
     private PhoneNumberService: PhoneNumberService,
     private $resource: ng.resource.IResourceService,
     private HuronConfig) {
-    let saveAction: ng.resource.IActionDescriptor = {
+    const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
       headers: {
         'Access-Control-Expose-Headers': 'Location',
       },
     };
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
     this.snrService = <ISnrResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/remotedestinations/:remotedestinationId', {}, {
@@ -79,10 +79,10 @@ export class SnrService {
   }
 
   public getRandomString(): string {
-    let charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let randomString = '';
     for (let i = 0; i < 12; i++) {
-      let randIndex = Math.floor(Math.random() * charSet.length);
+      const randIndex = Math.floor(Math.random() * charSet.length);
       randomString += charSet.substring(randIndex, randIndex + 1);
     }
     return randomString;

@@ -32,9 +32,10 @@
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
     vm.clickUserDetailsService = clickUserDetailsService;
+    vm.clickRolesAndSecurity = clickRolesAndSecurity;
     vm.actionList = [];
     vm.hasSparkCall = false;
-
+    vm.enableRolesAndSecurityOption = false;
     var msgState = {
       name: $translate.instant('onboardModal.message'),
       icon: 'icon-circle-message',
@@ -76,12 +77,14 @@
       currentUserId: '',
       hasSparkCall: false,
     };
+    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
+      vm.enableRolesAndSecurityOption = enabled;
+    });
     init();
 
     /////////////////////////////
 
     function init() {
-
       $scope.$on('USER_LIST_UPDATED', function () {
         getCurrentUser();
       });
@@ -145,8 +148,12 @@
       $state.go('user-overview.' + feature.state);
     }
 
+    function clickRolesAndSecurity() {
+      $state.go('user-overview.roles-and-security');
+    }
+
     function clickUserDetailsService(feature) {
-      $state.go('user-overview.' + feature.state, { 'preferredLanguageDetails': preferredLanguageDetails });
+      $state.go('user-overview.' + feature.state, { preferredLanguageDetails: preferredLanguageDetails });
     }
 
     function getDisplayableServices(serviceName) {
@@ -233,7 +240,6 @@
     // update the list of services available to this user
     // this uses the entitlements returned from the getUser CI call.
     function initServices() {
-
       if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-room-moderation') || !vm.hasAccount) {
         if (hasLicense('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');
@@ -316,7 +322,5 @@
         });
       angular.element('.open').removeClass('open');
     }
-
-
   }
 })();

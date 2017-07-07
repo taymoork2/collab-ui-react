@@ -13,8 +13,10 @@
   <tags-input add-on-blur="true"
               on-tag-added="editTrialUsersCtrl.addUser()"
               on-tag-removed="editTrialUsersCtrl.removeUser()"
+              on-tag-removing="editTrialUsersCtrl.onTagRemoving()"
+              on-tag-adding="editTrialUsersCtrl.onTagAdding()"
               placeholder={{editTrialUsersCtrl.localizedAddEmailWatermark}}
-              ng-disabled="editTrialUsersCtrl.dirsyncEnabled === true"
+              ng-readonly="editTrialUsersCtrl.dirsyncEnabled === true"
               ng-model="editTrialUsersCtrl.emailTrialUsers"
               type="email"
               allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
@@ -25,13 +27,20 @@
 <div class="modal-footer">
   <button
     class="btn"
+    ng-show="editTrialUsersCtrl.dirsyncEnabled === false"
     ng-click="$dismiss()"
     translate="common.cancel">
   </button>
   <button
     class="btn btn--primary"
-    ng-disabled="editTrialUsersCtrl.dirsyncEnabled === true"
+    ng-show="editTrialUsersCtrl.dirsyncEnabled === false"
     ng-click="editTrialUsersCtrl.saveTrialUsers(); $close();"
     translate="common.save">
+  </button>
+  <button
+    class="btn btn--primary"
+    ng-show="editTrialUsersCtrl.dirsyncEnabled === true"
+    ng-click="$close();"
+    translate="common.close">
   </button>
 </div>

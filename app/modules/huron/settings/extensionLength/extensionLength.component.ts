@@ -8,6 +8,7 @@ class ExtensionLengthCtrl implements ng.IComponentController {
   public firstTimeSetup: boolean;
   public extensionLength: string;
   public huronSettingsData: HuronSettingsData;
+  public hasVoicemailService: boolean;
   public extensionsAssigned: boolean;
   public extensionLengthSavedFn: Function;
   public decreaseExtensionLengthFn: Function;
@@ -32,11 +33,15 @@ class ExtensionLengthCtrl implements ng.IComponentController {
     this.buildHelpText();
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { extensionLength } = changes;
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const { extensionLength, hasVoicemailService } = changes;
 
     if (extensionLength && extensionLength.currentValue) {
       this.originalExtLength = extensionLength.currentValue;
+    }
+
+    if (hasVoicemailService) {
+      this.buildHelpText();
     }
   }
 
@@ -89,8 +94,8 @@ class ExtensionLengthCtrl implements ng.IComponentController {
   }
 
   private buildExtensionLengthOptions(): string[] {
-    let options: string[] = [];
-    let minExtLength = this.extensionsAssigned ? _.toSafeInteger(this.extensionLength) : MIN_EXT_LENGTH;
+    const options: string[] = [];
+    const minExtLength = this.extensionsAssigned ? _.toSafeInteger(this.extensionLength) : MIN_EXT_LENGTH;
     for (let index = minExtLength; index <= MAX_EXT_LENGTH; index++) {
       options.push(_.toString(index));
     }
@@ -99,23 +104,37 @@ class ExtensionLengthCtrl implements ng.IComponentController {
 
   private buildHelpText(): void {
     if (this.extensionsAssigned) {
-      if (this.originalExtLength === MAX_EXT_LENGTH.toString()) {
+      if (this.hasVoicemailService) {
         this.showHelpText = true;
         this.isDisabled = true;
-        this.helpText = this.$translate.instant('serviceSetupModal.extensionLengthServicesHelpText');
-      } else if (this.originalExtLength === MIN_EXT_LENGTH.toString()) {
-        this.showHelpText = false;
+        this.helpText = this.$translate.instant('serviceSetupModal.extensionLengthDisabledVM');
       } else {
-        this.showHelpText = true;
-        if (_.toSafeInteger(this.extensionLength) === MIN_EXT_LENGTH + 1) {
-          this.helpText = this.$translate.instant('serviceSetupModal.extensionLengthSingleOptionHelpText', { minExtLength: MIN_EXT_LENGTH });
+        this.isDisabled = false;
+        if (this.originalExtLength === MAX_EXT_LENGTH.toString()) {
+          this.showHelpText = true;
+          this.isDisabled = true;
+          this.helpText = this.$translate.instant('serviceSetupModal.extensionLengthServicesHelpText');
+        } else if (this.originalExtLength === MIN_EXT_LENGTH.toString()) {
+          this.showHelpText = false;
         } else {
-          this.helpText = this.$translate.instant('serviceSetupModal.extensionLengthRangeOptionHelpText', {
-            minExtLength: MIN_EXT_LENGTH,
-            extLengthMinusOne: (_.toSafeInteger(this.extensionLength) - 1),
-          });
+          this.showHelpText = true;
+          if (_.toSafeInteger(this.extensionLength) === MIN_EXT_LENGTH + 1) {
+            this.helpText = this.$translate.instant('serviceSetupModal.extensionLengthSingleOptionHelpText', { minExtLength: MIN_EXT_LENGTH });
+          } else {
+            this.helpText = this.$translate.instant('serviceSetupModal.extensionLengthRangeOptionHelpText', {
+              minExtLength: MIN_EXT_LENGTH,
+              extLengthMinusOne: (_.toSafeInteger(this.extensionLength) - 1),
+            });
+          }
         }
       }
+    } else if (this.hasVoicemailService) {
+      this.showHelpText = true;
+      this.isDisabled = true;
+      this.helpText = this.$translate.instant('serviceSetupModal.extensionLengthDisabledVM');
+    } else {
+      this.showHelpText = false;
+      this.isDisabled = false;
     }
   }
 
@@ -170,6 +189,7 @@ export class ExtensionLengthComponent implements ng.IComponentOptions {
     extensionLength: '<',
     huronSettingsData: '<',
     extensionsAssigned: '<',
+    hasVoicemailService: '<',
     extensionLengthSavedFn: '&',
     decreaseExtensionLengthFn: '&',
     onChangeFn: '&',

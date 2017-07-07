@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function EdiscoveryNotificationService($window, $translate, $timeout) {
-
     var ReportNotification = $window.Notification;
 
     function show(report) {

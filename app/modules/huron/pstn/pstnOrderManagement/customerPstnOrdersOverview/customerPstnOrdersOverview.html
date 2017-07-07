@@ -3,10 +3,11 @@
     <div class="header-info" id="customer-info">
       <div class="header-info-wrap">
         <div class="header-title">
-          <span translate="pstnOrderOverview.orderHistory"></span>
+          <span translate="pstnOrderOverview.historyAndImports"></span>
         </div>
         <div ng-if="$ctrl.vendor !== 'undefined'">
-          <span translate="{{$ctrl.vendor}}"></span>
+          <span ng-if="$ctrl.vendor !== 'BYOPSTN'">{{$ctrl.vendor}}</span>
+          <span ng-if="$ctrl.vendor === 'BYOPSTN'" translate="pstnOrderOverview.privatePstnTrunk"></span>
         </div>
       </div>
     </div>

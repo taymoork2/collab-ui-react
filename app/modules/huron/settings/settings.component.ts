@@ -8,6 +8,7 @@ import { PstnService } from 'modules/huron/pstn/pstn.service';
 import { PstnModel } from 'modules/huron/pstn/pstn.model';
 import { PstnCarrier } from 'modules/huron/pstn/pstnProviders/pstnCarrier';
 import { IAvrilFeatures } from 'modules/huron/avril';
+import { SettingSetupInitService } from 'modules/huron/settings/init/settingSetupInitService';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
 
@@ -29,7 +30,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public loading: boolean = false;
   public processing: boolean = false;
   public showEmergencyServiceAddress: boolean = false;
-  public errors: Array<string> = [];
+  public errors: string[] = [];
   public voicemailTimeZone: IVoicemailTimeZone;
   public voicemailMessageAction;
   public voicemailToEmail;
@@ -39,6 +40,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public showVoiceMailDisableDialog: boolean = false;
   public supportsAvrilVoicemail: boolean = false;
   public supportsAvrilVoicemailMailbox: boolean = false;
+  public ishI1484: boolean;
 
   public huronSettingsData: HuronSettingsData;
 
@@ -58,6 +60,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private Config,
     private Orgservice,
     private FeatureToggleService,
+    private SettingSetupInitService: SettingSetupInitService,
   ) { }
 
   public $onInit(): void {
@@ -67,7 +70,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
       return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
     }).length > 0;
 
-    let params = {
+    const params = {
       basicInfo: true,
     };
     this.Orgservice.getOrg(data => {
@@ -106,6 +109,10 @@ class HuronSettingsCtrl implements ng.IComponentController {
     }
   }
 
+  public isMultiSelected() {
+    return this.SettingSetupInitService.getSelected() === 2;
+  }
+
   private initSettingsComponent(): ng.IPromise<any> {
     return this.HuronSettingsOptionsService.getOptions().then(options => this.settingsOptions = options)
     .then(() => {
@@ -119,6 +126,9 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmMailboxEnable)
       .then(result => this.supportsAvrilVoicemailMailbox = result);
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(result => this.ishI1484 = result);
 
     return this.$q.resolve();
   }
@@ -188,6 +198,11 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onCompanyMohChanged(companyMoh: string): void {
+    this.huronSettingsData.companyMoh = companyMoh;
+    this.checkForChanges();
+  }
+
   public onPreferredLanguageChanged(preferredLanguage: string): void {
     this.huronSettingsData.site.preferredLanguage = preferredLanguage;
     this.checkForChanges();
@@ -237,7 +252,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onExtensionRangeChanged(extensionRanges: Array<IExtensionRange>): void {
+  public onExtensionRangeChanged(extensionRanges: IExtensionRange[]): void {
     this.huronSettingsData.internalNumberRanges = extensionRanges;
     this.checkForChanges();
   }
@@ -277,7 +292,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   }
 
   public onVoicemailToEmailChanged(voicemailToEmail: boolean) {
-    _.set(this.huronSettingsData.voicemailToEmailSettings, 'voicemailToEmail', voicemailToEmail);
+    _.set(this.huronSettingsData, 'voicemailToEmailSettings.voicemailToEmail', voicemailToEmail);
     this.checkForChanges();
   }
 
@@ -301,17 +316,17 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onCompanyCallerIdFilter(filter: string): ng.IPromise<Array<IOption>> {
+  public onCompanyCallerIdFilter(filter: string): ng.IPromise<IOption[]> {
     return this.HuronSettingsOptionsService.loadCompanyCallerIdNumbers(filter)
       .then(numbers => this.settingsOptions.companyCallerIdOptions = numbers);
   }
 
-  public onCompanyVoicemailFilter(filter: string): ng.IPromise<Array<IOption>> {
+  public onCompanyVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
     return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
       .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
   }
 
-  public onEmergencyServiceNumberFilter(filter: string): ng.IPromise<Array<IEmergencyNumberOption>> {
+  public onEmergencyServiceNumberFilter(filter: string): ng.IPromise<IEmergencyNumberOption[]> {
     return this.HuronSettingsOptionsService.loadEmergencyServiceNumbers(filter)
       .then(numbers => this.settingsOptions.emergencyServiceNumberOptions = numbers);
   }
@@ -335,7 +350,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   }
 
   private setShowDialPlanChangedDialogFlag(): void {
-    let originalConfig = this.HuronSettingsService.getOriginalConfig();
+    const originalConfig = this.HuronSettingsService.getOriginalConfig();
     if (this.huronSettingsData.site.extensionLength !== originalConfig.site.extensionLength
       || this.huronSettingsData.site.steeringDigit !== originalConfig.site.steeringDigit
       || this.huronSettingsData.site.routingPrefix !== originalConfig.site.routingPrefix

@@ -1,5 +1,5 @@
 <div class="sq-places-page">
-  <cs-page-header title-name="{{::'tabs.placeTab' | translate}}"></cs-page-header>
+  <cs-page-header title-name="tabs.placeTab"></cs-page-header>
   <cs-page-sub-header ng-hide="sc.filteredView.isInState(sc.filteredView.emptydatasource)">
     <cs-page-sub-header-left>
       <cs-searchfilter filters="sc.filteredView.getFilters()" search-item-fn="sc.filteredView.setCurrentSearch(searchStr)"
@@ -16,7 +16,7 @@
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="content-container">
-    <div ng-if="sc.filteredView.isInState(sc.filteredView.searching)">
+    <div ng-if="sc.filteredView.isInState(sc.filteredView.searching) || sc.filteredView.isInState(sc.filteredView.initializing)">
       <div class="message-container">
         <div class="empty-devices-content">
           <div class="grid-refresh">

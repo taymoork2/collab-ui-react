@@ -10,15 +10,15 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     UserListService;
 
   var fakePartnerInfoData = {
-    'data': {
-      'partners': [{
-        'userName': 'fake-partner-email@example.com',
-        'displayName': 'fakeuser admin1',
-        'id': '2',
+    data: {
+      partners: [{
+        userName: 'fake-partner-email@example.com',
+        displayName: 'fakeuser admin1',
+        id: '2',
       }, {
-        'userName': 'fake-partner-email2@example.com',
-        'displayName': 'fakeuser admin2',
-        'id': '1',
+        userName: 'fake-partner-email2@example.com',
+        displayName: 'fakeuser admin2',
+        id: '1',
       }],
     },
   };
@@ -29,18 +29,18 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   };
 
   var fakeConferenceDataWithWebex = [{
-    'license': {
-      'licenseType': 'CONFERENCING',
-      'siteUrl': 'test.webex.com',
+    license: {
+      licenseType: 'CONFERENCING',
+      siteUrl: 'test.webex.com',
     },
   }, {
-    'license': {
-      'licenseType': 'CONFERENCING',
+    license: {
+      licenseType: 'CONFERENCING',
     },
   }];
 
   var fakeConferenceDataWithoutWebex = [{
-    'license': {},
+    license: {},
   }];
 
   afterEach(function () {
@@ -58,7 +58,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
   /* @ngInject */
   beforeEach(inject(function ($controller, _$httpBackend_, _$q_, _Authinfo_, _Notification_, _TrialService_, _UserListService_) {
-
     controller = $controller;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -88,7 +87,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   });
 
   describe('primary behaviors:', function () {
-
     describe('canShow():', function () {
       it('should return true if "Authinfo.isUserAdmin()" is true and "TrialInfo.getTrialIds()" is not empty and the logged in user is not the partner', function () {
         spyOn(TrialService, 'getTrialIds').and.returnValue(['fake-uuid-value-1']);
@@ -114,37 +112,32 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     describe('sendRequest():', function () {
       it('should have called "TrialService.notifyPartnerTrialExt()"', function () {
         var fakePartnerNotifyResponse = {
-          'data': {
-            'notifyPartnerEmailStatusList': [],
+          data: {
+            notifyPartnerEmailStatusList: [],
           },
         };
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
         controller.sendRequest().then(function () {
           expect(TrialService.notifyPartnerTrialExt).toHaveBeenCalled();
-
         });
       });
     });
   });
 
   describe('helper functions:', function () {
-
     describe('getPartnerInfo():', function () {
-
       describe('will resolve with partner data that...', function () {
         it('should have a "data.partners[0].displayName" property', function () {
           controller._helpers.getPartnerInfo().then(function () {
             expect(controller.partnerAdmin[0].userName).toBe('fake-partner-email@example.com');
             expect(controller.partnerAdmin[1].userName).toBe('fake-partner-email2@example.com');
-
           });
         });
       });
     });
 
     describe('getWebexSiteUrl():', function () {
-
       it('should return null without Conference Services', function () {
         spyOn(Authinfo, 'getConferenceServices').and.callFake(function () {
           return null;
@@ -179,7 +172,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
           expect(Notification.errorResponse.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
         });
-
       });
 
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners has no notifications', function () {
@@ -195,7 +187,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
           expect(Notification.error.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
         });
-
       });
 
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners has all failed notifications', function () {
@@ -217,7 +208,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
           expect(Notification.error.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
         });
-
       });
 
       it('should set requestResult to PARTIAL_FAILURE when the request to notify partners has some failed notifications', function () {
@@ -239,7 +229,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
           expect(Notification.error.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.PARTIAL_FAILURE);
         });
-
       });
 
       it('should set requestResult to SUCCESS when the request to notify partners has all successful notifications', function () {
@@ -261,7 +250,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
           expect(Notification.success.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.SUCCESS);
         });
-
       });
     });
   });

@@ -69,7 +69,7 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
 
         if (_.isArray(lines) && lines.length > 1 && _.isArray(lines[0])) {
           lines.shift();
-          let items: any[] = this.getItemsFromArray(lines);
+          const items: any[] = this.getItemsFromArray(lines);
           this.onImported({ numbers: items });
         }
       } catch (ex) {
@@ -83,7 +83,7 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
   }
 
   private getItemsFromArray(items: any[]): any[] {
-    let numbers: any[] = [];
+    const numbers: any[] = [];
     let hasError: boolean = false;
     _.forEach(items, (item) => {
       if (item.length < 7) {

@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AANotificationService($translate, Notification, AAConfigEnvMetricService, AAMetricNameService) {
-
     var service = {
       success: success,
       error: error,

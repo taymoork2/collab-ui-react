@@ -52,7 +52,7 @@ describe('Controller: Care Reports Controller', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -86,7 +86,6 @@ describe('Controller: Care Reports Controller', function () {
         DummyCareReportService: DummyCareReportService,
         CareReportsService: CareReportsService,
       });
-
     })
   );
 
@@ -137,7 +136,6 @@ describe('Controller: Care Reports Controller', function () {
   });
 
   describe('CareReportsController - Graph title', function () {
-
     it('should set title for dummydata as empty and todays date for actual data', function () {
       var title = moment().format('MMM D');
       $timeout(function () {
@@ -285,7 +283,6 @@ describe('Controller: Care Reports Controller', function () {
     });
 
     it('should ignore dirty data, if media type or time filters are updated', function (done) {
-
       controller.timeSelected = timeOptions[2];
       controller.mediaTypeSelected = mediaTypeOptions[0];
       controller.filtersUpdate();
@@ -308,7 +305,6 @@ describe('Controller: Care Reports Controller', function () {
     });
 
     it('should fetch data afresh, if media type or time filters are updated', function (done) {
-
       controller.tableData = [{ name: 'Test User' }];
       controller.tableDataStatus = 'set';
       controller.tableDataPromise = undefined;
@@ -344,10 +340,9 @@ describe('Controller: Care Reports Controller', function () {
   });
 
   describe('CareReportsController - Filters Update Errors', function () {
-
     var failureResponse = {
-      'status': 500,
-      'statusText': 'Intenal Server Error',
+      status: 500,
+      statusText: 'Intenal Server Error',
     };
 
     afterAll(function () {

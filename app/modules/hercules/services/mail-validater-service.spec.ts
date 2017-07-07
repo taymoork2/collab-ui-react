@@ -9,27 +9,27 @@ describe('MailValidatorService', () => {
   }));
 
   it('empty string is not ok', () => {
-    let str = '';
+    const str = '';
     expect(Service.isValidEmailCsv(str)).toBe(false);
   });
 
   it('single email is ok', () => {
-    let str = 'foo@bar.com';
+    const str = 'foo@bar.com';
     expect(Service.isValidEmailCsv(str)).toBe(true);
   });
 
   it('multiple email is ok', () => {
-    let str = 'foo@bar.com, yo@lo.no';
+    const str = 'foo@bar.com, yo@lo.no';
     expect(Service.isValidEmailCsv(str)).toBe(true);
   });
 
   it('single bad email is bad', () => {
-    let str = 'foo.bar.com';
+    const str = 'foo.bar.com';
     expect(Service.isValidEmailCsv(str)).toBe(false);
   });
 
   it('one of two bad emails is bad', () => {
-    let str = 'foo@bar.com, foo.bar.com';
+    const str = 'foo@bar.com, foo.bar.com';
     expect(Service.isValidEmailCsv(str)).toBe(false);
   });
 

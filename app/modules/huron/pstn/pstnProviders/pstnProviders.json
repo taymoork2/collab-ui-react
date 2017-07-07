@@ -2,29 +2,43 @@
     "name": "INTELEPEER",
     "logoSrc": "images/carriers/logo_intelepeer.svg",
     "logoAlt": "IntelePeer",
+    "countryCode": "US",
     "docSrc": "docs/carriers/IntelePeerVoicePackage.pdf",
     "features": [
         "intelepeerFeatures.feature1",
         "intelepeerFeatures.feature2",
         "intelepeerFeatures.feature3",
-        "intelepeerFeatures.feature4"
-    ]
+        "intelepeerFeatures.feature4",
+        "intelepeerFeatures.feature5"
+    ],
+    "note": "intelepeerFeatures.note"
 }, {
     "name": "TATA",
     "logoSrc": "images/carriers/logo_tata_comm.svg",
     "logoAlt": "Tata",
+    "countryCode": "US",
     "docSrc": "",
     "features": [
         "tataFeatures.feature1",
         "tataFeatures.feature2",
         "tataFeatures.feature3",
         "tataFeatures.feature4",
-        "tataFeatures.feature5"
-    ]
+        "tataFeatures.feature5",
+        "tataFeatures.feature6"
+    ],
+    "note": "tataFeatures.note"
+}, {
+    "name": "TATA",
+    "logoSrc": "images/carriers/logo_tata_comm.svg",
+    "logoAlt": "Tata",
+    "countryCode": "GB",
+    "docSrc": "",
+    "features": []
 }, {
     "name": "THINKTEL",
     "logoSrc": "images/carriers/logo_thinktel.svg",
     "logoAlt": "ThinkTel",
+    "countryCode": "CA",
     "docSrc": "",
     "features": [
         "thinktelFeatures.feature1",
@@ -33,17 +47,21 @@
         "thinktelFeatures.feature4",
         "thinktelFeatures.feature5",
         "thinktelFeatures.feature6"
-    ]
+    ],
+    "note": ""
 },{
     "name": "TELSTRA",
     "logoSrc": "images/carriers/logo_telstra.svg",
     "logoAlt": "Telstra",
+    "countryCode": "US",
     "docSrc": "",
-    "features": []
+    "features": [],
+    "note": ""
 }, {
     "name": "WESTUC",
     "logoSrc": "images/carriers/logo_westuc.svg",
     "logoAlt": "West Corporation",
+    "countryCode": "US",
     "docSrc": "",
     "features": [
         "westucFeatures.feature1",
@@ -52,5 +70,17 @@
         "westucFeatures.feature4",
         "westucFeatures.feature5",
         "westucFeatures.feature6"        
-    ]
+    ],
+    "note": ""
+}, {
+    "name": "BYOPSTN",
+    "countryCode": "US",
+    "docSrc": "",
+    "features": [
+        "byopstnFeatures.feature1",
+        "byopstnFeatures.feature2",
+        "byopstnFeatures.feature3",
+        "byopstnFeatures.feature4"
+    ],
+    "note": ""
 }]

@@ -15,7 +15,9 @@
       "actions": [{
         "play": {
           "description": "Welcome prompt",
-          "url": "file1.avi"
+          "url": "file1.avi",
+          "voice": "Vanessa",
+          "deleteUrl": "file1.avi"
         }
       }, {
         "route": {
@@ -107,25 +109,49 @@
       "conditional": {
         "expression":"var func = function () { if(this['Original-Caller-Number'] === '4252201227'){return true;} return false;};",
         "true":[{
-          "routeToQueue": { 
-            "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
-            "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
-            "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-            "queueInitialAnnouncement": "",
-            "queuePeriodicAnnouncements": [{
-              "queuePeriodicAnnouncement": "",
-              "queuePeriodicAnnouncementInterval": "45"
-            }],
-            "queueMaxTime": 15,
-            "queueFallback": {
-              "disconnect": {
-                "treatment": "none"
-              }
-            }
+          "routeToQueue": {
+          "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+          "language": "en_US",
+          "voice": "Vanessa",
+          "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+          "initialAnnouncement": {
+          "say": {
+          "value": "",
+          "voice": "Vanessa"
+          }
+          },
+          "periodicAnnouncementActions": [{
+          "periodicAnnouncement": {
+          "periodicMessage": {
+          "say": {
+          "value": "",
+          "voice": "Vanessa"
+          }
+          },
+          "periodicInterval": "45"
+          }
+          }],
+          "queueMaxTime": 15,
+          "queueFallback": {
+          "disconnect": {
+          "treatment": "none"
+          }
+          },
+          "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"play\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"play\",\"initialAnnouncementDescription\":\"\"}"
           }
         }]
       }
-    },   {
+    }, {
+      "conditional": {
+        "expression": "var%20func%20%3D%20function%20()%20%7Bvar%20checks%20%3D%20%5B%5D%3B%20checks.push('12069998765')%3B%20return%20checks.indexOf(this%5B'Original-Caller-Number'%5D)%20!%3D%3D%20-1%20%7D%3B",
+        "true":[{
+          "goto":{ 
+            "ceid":"goto ceid"
+          }
+        }]
+      }
+    },  
+      {
         "runActionsOnInput": {
           "description": "{\"uploadFile\":\"testFile.wav\"}",
           "inputType": 4,
@@ -179,11 +205,25 @@
       "routeToQueue": {
         "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
         "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-        "queueInitialAnnouncement": "",
-        "queuePeriodicAnnouncements": [{
-          "queuePeriodicAnnouncement": "",
-          "queuePeriodicAnnouncementInterval": "45"
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
         }],
         "queueMaxTime": 15,
         "queueFallback": {
@@ -196,11 +236,25 @@
       "routeToQueue": {
         "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
         "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-        "queueInitialAnnouncement": "",
-        "queuePeriodicAnnouncements": [{
-          "queuePeriodicAnnouncement": "",
-          "queuePeriodicAnnouncementInterval": "45"
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
         }],
         "queueMaxTime": 15,
         "queueFallback": {
@@ -214,11 +268,25 @@
       "routeToQueue": {
         "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
         "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-        "queueInitialAnnouncement": "",
-        "queuePeriodicAnnouncements": [{
-          "queuePeriodicAnnouncement": "",
-          "queuePeriodicAnnouncementInterval": "45"
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
         }],
         "queueMaxTime": 15,
         "queueFallback": {
@@ -232,11 +300,25 @@
       "routeToQueue": {
         "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
         "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-        "queueInitialAnnouncement": "",
-        "queuePeriodicAnnouncements": [{
-          "queuePeriodicAnnouncement": "",
-          "queuePeriodicAnnouncementInterval": "45"
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
         }],
         "queueMaxTime": 15,
         "queueFallback": {
@@ -266,7 +348,9 @@
       "actions": [{
         "play": {
           "description": "Welcome prompt",
-          "url": "file1.avi"
+          "url": "file1.avi",
+          "voice": "Vanessa",
+          "deleteUrl": "file1.avi"
         }
       }, {
         "route": {
@@ -299,13 +383,27 @@
         }
       }, {
         "routeToQueue": {
-          "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
-          "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-          "queueInitialAnnouncement": "",
-          "queuePeriodicAnnouncements": [{
-            "queuePeriodicAnnouncement": "",
-            "queuePeriodicAnnouncementInterval": "45"
-          }],
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
+        }],
           "queueMaxTime": 15,
           "queueFallback": {
             "disconnect": {
@@ -317,11 +415,25 @@
       }, {
       "routeToQueue": {
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
         "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-        "queueInitialAnnouncement": "",
-        "queuePeriodicAnnouncements": [{
-          "queuePeriodicAnnouncement": "",
-          "queuePeriodicAnnouncementInterval": "45"
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
         }],
         "queueMaxTime": 15,
         "queueFallback": {
@@ -335,11 +447,25 @@
     }, {
       "routeToQueue": {
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
         "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-        "queueInitialAnnouncement": "",
-        "queuePeriodicAnnouncements": [{
-          "queuePeriodicAnnouncement": "",
-          "queuePeriodicAnnouncementInterval": "45"
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
         }],
         "queueMaxTime": 15,
         "queueFallback": {
@@ -353,11 +479,25 @@
     }, {
       "routeToQueue": {
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
         "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-        "queueInitialAnnouncement": "",
-        "queuePeriodicAnnouncements": [{
-          "queuePeriodicAnnouncement": "",
-          "queuePeriodicAnnouncementInterval": "45"
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
         }],
         "queueMaxTime": 15,
         "queueFallback": {
@@ -388,7 +528,9 @@
       "actions": [{
         "play": {
           "description": "Welcome prompt",
-          "url": "file1.avi"
+          "url": "file1.avi",
+          "voice": "Vanessa",
+          "deleteUrl": "file1.avi"
         }
       }, {
         "route": {
@@ -421,13 +563,27 @@
         }
       }, {
         "routeToQueue": {
-          "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
-          "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-          "queueInitialAnnouncement": "",
-          "queuePeriodicAnnouncements": [{
-            "queuePeriodicAnnouncement": "",
-            "queuePeriodicAnnouncementInterval": "45"
-          }],
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
+        }],
           "queueMaxTime": 15,
           "queueFallback": {
             "disconnect": {
@@ -439,11 +595,25 @@
       }, {
       "routeToQueue": {
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
         "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-        "queueInitialAnnouncement": "",
-        "queuePeriodicAnnouncements": [{
-          "queuePeriodicAnnouncement": "",
-          "queuePeriodicAnnouncementInterval": "45"
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
         }],
         "queueMaxTime": 15,
         "queueFallback": {
@@ -457,11 +627,25 @@
     }, {
       "routeToQueue": {
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
         "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-        "queueInitialAnnouncement": "",
-        "queuePeriodicAnnouncements": [{
-          "queuePeriodicAnnouncement": "",
-          "queuePeriodicAnnouncementInterval": "45"
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
         }],
         "queueMaxTime": 15,
         "queueFallback": {
@@ -475,11 +659,25 @@
     }, {
       "routeToQueue": {
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "language": "en_US",
+        "voice": "Vanessa",
         "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-        "queueInitialAnnouncement": "",
-        "queuePeriodicAnnouncements": [{
-          "queuePeriodicAnnouncement": "",
-          "queuePeriodicAnnouncementInterval": "45"
+        "initialAnnouncement": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicAnnouncementActions": [{
+        "periodicAnnouncement": {
+        "periodicMessage": {
+        "say": {
+        "value": "",
+        "voice": "Vanessa"
+        }
+        },
+        "periodicInterval": "45"
+        }
         }],
         "queueMaxTime": 15,
         "queueFallback": {
@@ -1060,7 +1258,9 @@
           {
             "play": {
               "description": "Welcome prompt",
-              "url": "file1.avi"
+              "url": "file1.avi",
+              "voice" :"Vanessa",
+              "deleteUrl": "file1.avi"
             }
           },
           {

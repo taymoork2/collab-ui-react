@@ -10,7 +10,7 @@ export class SelectOn implements ng.IDirective {
   ) {}
 
   public link: ng.IDirectiveLinkFn = ($scope, $element, $attr: ISelectOnAttributes) => {
-    let select = (shouldSelect: boolean) => {
+    const select = (shouldSelect: boolean) => {
       if (shouldSelect) {
         this.$timeout(() => $element.select());
       }

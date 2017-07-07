@@ -5,7 +5,7 @@
     .controller('PstnReviewCtrl', PstnReviewCtrl);
 
   /* @ngInject */
-  function PstnReviewCtrl($q, $translate, $state, PstnModel, PstnService, PstnServiceAddressService, Notification) {
+  function PstnReviewCtrl($q, $translate, $state, $stateParams, PstnModel, PstnService, PstnServiceAddressService, Notification, Auth) {
     var vm = this;
     var NUMBER_ORDER = require('modules/huron/pstn').NUMBER_ORDER;
     var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
@@ -21,6 +21,7 @@
 
     vm.goToNumbers = goToNumbers;
     vm.placeOrder = placeOrder;
+    vm.refreshFn = refreshFn;
 
     vm.provider = PstnModel.getProvider();
 
@@ -29,7 +30,7 @@
     ////////////////////////
 
     function goToNumbers() {
-      if (vm.provider.apiImplementation !== "SWIVEL") {
+      if (vm.provider.apiImplementation !== 'SWIVEL') {
         goToOrderNumbers();
       } else {
         goToSwivelNumbers();
@@ -51,17 +52,21 @@
     }
 
     function createCustomerV2() {
-      return PstnService.createCustomerV2(
-        PstnModel.getCustomerId(),
-        PstnModel.getCustomerName(),
-        PstnModel.getCustomerFirstName(),
-        PstnModel.getCustomerLastName(),
-        PstnModel.getCustomerEmail(),
-        PstnModel.getProviderId(),
-        PstnModel.getIsTrial()
-      ).catch(function (response) {
-        Notification.errorResponse(response, 'PstnModel.customerCreateError');
-        return $q.reject(response);
+      return Auth.getCustomerAccount(PstnModel.getCustomerId()).then(function (org) {
+        var isTrial = isTrialCallOrRoom(_.get(org, 'data.customers[0]'));
+
+        return PstnService.createCustomerV2(
+          PstnModel.getCustomerId(),
+          PstnModel.getCustomerName(),
+          PstnModel.getCustomerFirstName(),
+          PstnModel.getCustomerLastName(),
+          PstnModel.getCustomerEmail(),
+          PstnModel.getProviderId(),
+          isTrial
+        ).catch(function (response) {
+          Notification.errorResponse(response, 'PstnModel.customerCreateError');
+          return $q.reject(response);
+        });
       });
     }
 
@@ -77,7 +82,7 @@
 
     function createSite() {
       // Only create site for API providers
-      if (vm.provider.apiImplementation !== "SWIVEL" && !PstnModel.isSiteExists()) {
+      if (vm.provider.apiImplementation !== 'SWIVEL' && !PstnModel.isSiteExists()) {
         return PstnServiceAddressService.createCustomerSite(PstnModel.getCustomerId(), PstnModel.getCustomerName(), PstnModel.getServiceAddress())
           .then(function () {
             PstnModel.setSiteExists(true);
@@ -198,6 +203,14 @@
       vm.placeOrderLoad = false;
     }
 
+    function refreshFn() {
+      if (_.isFunction($stateParams.refreshFn)) {
+        return $stateParams.refreshFn();
+      } else {
+        return $q.resolve(true);
+      }
+    }
+
     function placeOrder() {
       var promise = $q.resolve();
       startPlaceOrderLoad();
@@ -209,8 +222,17 @@
       promise
         .then(createSite)
         .then(createNumbers)
+        .then(refreshFn)
         .then(goToNextSteps)
         .finally(stopPlaceOrderLoad);
+    }
+
+    function isTrialCallOrRoom(customer) {
+      var isPaid = _.find(customer.licenses, function (license) {
+        return (license.licenseType === 'COMMUNICATION' && !license.isTrial) || (license.licenseType === 'SHARED_DEVICES' && !license.isTrial);
+      });
+
+      return _.isUndefined(isPaid);
     }
   }
 })();

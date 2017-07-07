@@ -90,6 +90,5 @@
           return $http.delete(dictionaryUrl + idPath + id);
         });
     }
-
   }
 })();

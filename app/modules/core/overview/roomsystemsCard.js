@@ -9,7 +9,6 @@
   function OverviewRoomSystemsCard(OverviewHelper, Authinfo) {
     return {
       createCard: function createCard() {
-
         var card = {};
         card.template = 'modules/core/overview/genericCard.tpl.html';
         card.icon = 'icon-circle-telepresence';
@@ -37,7 +36,6 @@
         };
 
         card.reportDataEventHandler = function (event, response) {
-
           if (!response.data.success) return;
           if (event.name == 'activeRoomsLoaded' && response.data.spanType == 'week' && response.data.intervalCount >= 2) {
             card.current = Math.round(response.data.data[response.data.data.length - 1].count);
@@ -46,10 +44,9 @@
         };
 
         card.licenseEventHandler = function (licenses) {
-
           card.allLicenses = licenses;
           card.trial = _.some(filterLicenses(licenses), {
-            'isTrial': true,
+            isTrial: true,
           });
 
           if (filterLicenses(licenses).length > 0) {

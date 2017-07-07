@@ -133,7 +133,6 @@ require('./_wizard.scss');
         }
         vm.current.step = steps[index];
       }
-
     }
     function init() {
       initCurrent();
@@ -290,6 +289,13 @@ require('./_wizard.scss');
           } else {
             nextStepSuccessful();
           }
+        } else if (getTab().name === 'meetingSettings') {
+          if (getStep().name === 'summary') {
+            $rootScope.$broadcast('wizard-meeting-settings-setup-save-event');
+            nextStepSuccessful();
+          } else {
+            nextStepSuccessful();
+          }
         } else {
           nextStepSuccessful();
         }
@@ -391,7 +397,7 @@ require('./_wizard.scss');
       }
 
       // enable/disable skip tab button
-      vm.showSkipTabBtn = (vm.isFirstTime() && (vm.current.tab.name === 'addUsers' || vm.current.tab.name === 'careSettings')
+      vm.showSkipTabBtn = (vm.isFirstTime() && (vm.current.tab.name === 'addUsers' || vm.current.tab.name === 'careSettings' || vm.current.tab.name === 'meetingSettings')
         && vm.isFirstStep());
     }
 
@@ -429,7 +435,6 @@ require('./_wizard.scss');
         vm.nextText = $translate.instant('common.save');
       }
     });
-
   }
 
   function crWizard() {
@@ -440,7 +445,7 @@ require('./_wizard.scss');
       scope: {
         tabs: '=',
         finish: '=',
-        isFirstTime: "=",
+        isFirstTime: '=',
       },
       templateUrl: 'modules/core/wizard/wizard.tpl.html',
     };
@@ -471,7 +476,6 @@ require('./_wizard.scss');
     return directive;
 
     function link(scope, element) {
-
       var cancelTabWatch = scope.$watch('wizard.current.tab', recompile);
       var cancelSubTabWatch = scope.$watch('wizard.current.subTab', recompile);
 
@@ -501,7 +505,6 @@ require('./_wizard.scss');
     return directive;
 
     function link(scope, element) {
-
       var cancelStepWatch = scope.$watch('wizard.current.step', recompile);
       var wizardNextTextWatch = scope.$watch('wizard.nextText', recompile);
 

@@ -27,11 +27,11 @@ describe('Service: Trial Service:', function () {
     spyOn(this.LogMetricsService, 'logMetrics');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
-      'trialId': 'fake-uuid-value-0',
+      trialId: 'fake-uuid-value-0',
     }, {
-      'trialId': 'fake-uuid-value-1',
+      trialId: 'fake-uuid-value-1',
     }, {
-      'trialId': 'fake-uuid-value-2',
+      trialId: 'fake-uuid-value-2',
     }]);
     this.$httpBackend.whenGET(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/trials').respond({
       activeDeviceTrials: 17,
@@ -189,14 +189,13 @@ describe('Service: Trial Service:', function () {
 
       it('should get state correcty from object', function () {
         this.testData.shippingInfo.state = {
-          'abbr': 'IL',
-          'state': 'Illinois',
+          abbr: 'IL',
+          state: 'Illinois',
         };
         spyOn(this.TrialDeviceService, 'getData').and.returnValue(this.testData);
         this.TrialService.getData();
         this.$httpBackend.expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/trials', function (data) {
           return JSON.parse(data).details.shippingInfo.state === 'IL';
-
         }).respond(200);
 
         this.TrialService.startTrial();
@@ -209,7 +208,6 @@ describe('Service: Trial Service:', function () {
         spyOn(this.TrialDeviceService, 'getData').and.returnValue(this.testData);
         this.TrialService.getData();
         this.$httpBackend.expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/trials', function (data) {
-
           return JSON.parse(data).details.shippingInfo.country === 'Canada';
         }).respond(200);
 
@@ -220,12 +218,11 @@ describe('Service: Trial Service:', function () {
 
       it('should get country correcty from object', function () {
         this.testData.shippingInfo.country = {
-          'country': 'Germany',
+          country: 'Germany',
         };
         spyOn(this.TrialDeviceService, 'getData').and.returnValue(this.testData);
         this.TrialService.getData();
         this.$httpBackend.expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/trials', function (data) {
-
           return JSON.parse(data).details.shippingInfo.country === 'Germany';
         }).respond(200);
 
@@ -233,7 +230,6 @@ describe('Service: Trial Service:', function () {
 
         expect(this.$httpBackend.flush).not.toThrow();
       });
-
     });
 
     describe('start trial with disabled trials', function () {
@@ -413,7 +409,6 @@ describe('Service: Trial Service:', function () {
                   expect(daysLeft).toBe(-1);
                 });
             });
-
           });
         });
       });

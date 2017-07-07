@@ -8,6 +8,7 @@ interface IUserProps {
     'squared-fusion-cal': string,
     'squared-fusion-uc': string,
     'squared-fusion-ec': string,
+    'spark-hybrid-impinterop': string,
   };
 }
 
@@ -48,7 +49,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
     this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId, resourceGroupId, serviceId } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
@@ -104,7 +105,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
 
   private setSelectedResourceGroup(resourceGroupId) {
 
-    let selectedGroup = _.find(this.options, (group: IResourceGroupOptionPair) => {
+    const selectedGroup = _.find(this.options, (group: IResourceGroupOptionPair) => {
       return group.value === resourceGroupId;
     });
 
@@ -122,7 +123,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   public setResourceGroupOnUser(resourceGroupId) {
 
     this.saving = true;
-    let props = {
+    const props = {
       userId: this.userId,
       resourceGroups: {},
     };
@@ -139,8 +140,8 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
       })
       .finally(() => {
         this.saving = false;
+        this.showButtons = false;
       });
-
   }
 
   public selectedResourceGroupChanged() {
@@ -157,7 +158,6 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   public save(): void {
     if (this.selectedResourceGroup !== this.currentResourceGroup) {
       this.setResourceGroupOnUser(this.selectedResourceGroup.value);
-      this.showButtons = false;
     }
   }
 

@@ -1,0 +1,38 @@
+{
+  "cluster": {
+    "id": "a050fcc7-9ade-4790-a06d-cca596910421",
+    "name": "MFA_TEST1",
+    "connectors": [{
+      "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
+      "connectorType": "mf_mgmt",
+      "upgradeState": "upgraded",
+      "hostname": "10.196.5.251"
+    }, {
+      "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
+      "connectorType": "mf_mgmt",
+      "hostname": "10.196.5.246"
+    }],
+    "releaseChannel": "DEV"
+  },
+  "clusters": [{
+    "id": "a050fcc7-9ade-4790-a06d-cca596910421",
+    "name": "MFA_TEST2"
+  }],
+  "hosts": [{
+    "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
+    "hostname": "10.196.5.251",
+    "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+  }, {
+    "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
+    "hostname": "10.196.5.246",
+    "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075"
+  }],
+  "selectModel": {
+    "10.196.5.251": "MFA_TEST2",
+    "10.196.5.246": "MFA_TEST2"
+  },
+  "selectModel2": {
+    "10.196.5.251": "MFA_TEST3",
+    "10.196.5.246": "MFA_TEST4"
+  }
+}

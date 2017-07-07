@@ -23,8 +23,8 @@ export class CertService {
   }
 
   public uploadCert(orgId: string, file: any): ng.IPromise<any> {
-    let deferred = this.$q.defer();
-    let reader = new this.$window.FileReader();
+    const deferred = this.$q.defer();
+    const reader = new this.$window.FileReader();
     reader.onloadend =  () => {
       this.$http.post(`${this.CertsUrl}/certificates?orgId=${orgId}`, {
         cert: this.Utils.Base64.encode(reader.result),
@@ -36,7 +36,7 @@ export class CertService {
   }
 
   public uploadCertificate(orgId: string, file: any): ng.IPromise<any> {
-    let deferred = this.$q.defer();
+    const deferred = this.$q.defer();
     this.$http.post(`${this.CertsUrl}/certificates?orgId=${orgId}`, {
       cert: this.Utils.Base64.encode(file),
     }).then(deferred.resolve, deferred.reject);

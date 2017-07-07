@@ -61,7 +61,6 @@ class FieldsetModalCtrl implements ng.IComponentController {
   public enableFieldsSelection: Boolean = false; //whether enable the fields selection
 
   private maxFieldsPerFieldsetAllowed: number = PropertyConstants.MAX_FIELDS_PER_FIELDSET_DEFAULT_VALUE; //maximum fields per fieldset allowed
-  private publiclyAccessibleMap: Object;       //Map for publiclyAccessible
 
   /* @ngInject */
   constructor(
@@ -104,11 +103,6 @@ class FieldsetModalCtrl implements ng.IComponentController {
     this.classificationMap['ENCRYPTED'] = this.localizedStrings['encrypted'];
     this.classificationMap['UNENCRYPTED'] = this.localizedStrings['unencrypted'];
     this.classificationMap['PII'] = this.localizedStrings['pii'];
-
-    //map publiclyAccessible to value that matches by api
-    this.publiclyAccessibleMap = {};
-    this.publiclyAccessibleMap[this.$translate.instant('context.dictionary.custom')] = false;
-    this.publiclyAccessibleMap[this.$translate.instant('context.dictonary.cisco')] = true;
 
     //check if it is create or eidt
     this.createMode = !Boolean(_.get(this.existingFieldsetData, 'id'));
@@ -164,7 +158,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
     this.actionInProgress = true;
     return this.ContextFieldsService.getFields()
       .then(data => {
-        let allFields = this.processedFields(data);
+        const allFields = this.processedFields(data);
         this.fields = this.getSelectedFields(allFields);
         this.allSelectableFields = this.searchOnlyAvailableFields(allFields);
         this.sortFields(this.allSelectableFields);
@@ -174,11 +168,6 @@ class FieldsetModalCtrl implements ng.IComponentController {
         this.actionInProgress = false;
         return this.$q.reject(err);
       });
-  }
-
-  public fixDataForApi() {
-    this.fieldsetData.publiclyAccessible = this.publiclyAccessibleMap[this.fieldsetData.publiclyAccessibleUI];
-    return this.fieldsetData;
   }
 
   /**
@@ -204,7 +193,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
 
   public update () {
     this.actionInProgress = true;
-    return this.ContextFieldsetsService.updateAndGetFieldset(this.fixDataForApi())
+    return this.ContextFieldsetsService.updateAndGetFieldset(this.fieldsetData)
       .then(data => {
         this.fieldsetData = _.cloneDeep(data);
         this.callback(this.fieldsetData);
@@ -249,8 +238,8 @@ class FieldsetModalCtrl implements ng.IComponentController {
    * @returns {boolean}
    */
   public invalidCharactersValidation(viewValue: string) {
-    let value = viewValue || '';
-    let regex = new RegExp(/^[0-9a-zA-Z-_.]*$/g);
+    const value = viewValue || '';
+    const regex = new RegExp(/^[0-9a-zA-Z-_.]*$/g);
     return regex.test(value);
   }
 
@@ -260,7 +249,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
    * @returns {boolean}
    */
   public uniqueIdValidation(viewValue: string) {
-    let value = viewValue || '';
+    const value = viewValue || '';
     return this.existingFieldsetIds.indexOf(value) === -1;
   }
 
@@ -320,7 +309,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
    * @returns {Object[]}
    */
   public getSelectedFields(fullFieldList: IFieldData[]) {
-    let selectedFields: IFieldData[] = [];
+    const selectedFields: IFieldData[] = [];
     for (let i = fullFieldList.length - 1; i >= 0; i--) {
       for (let j = 0; j < this.fieldsetData.fields.length; j++) {
         if (fullFieldList[i] && (fullFieldList[i].id === this.fieldsetData.fields[j])) {

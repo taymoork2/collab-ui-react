@@ -20,10 +20,8 @@
         });
       return false;
     };
-
   }
   angular
     .module('HDS')
     .controller('HDSUpgradeNowController', HDSUpgradeNowController);
-
 }());

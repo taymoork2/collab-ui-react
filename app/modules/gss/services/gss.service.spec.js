@@ -103,5 +103,4 @@ describe('Service: GSSService', function () {
       });
     $httpBackend.flush();
   });
-
 });

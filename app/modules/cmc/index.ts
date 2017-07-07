@@ -5,10 +5,11 @@ import { CmcDetailsSettingsComponent } from './settings/cmc-details-settings.com
 import UserDetailsModule from './user-menu/index';
 
 import { CmcService } from './cmc.service';
+import { CmcUserService } from './status/cmc.user-service';
 import { CmcServiceMock } from './cmc.service-mock';
 
 import './cmc.scss';
-let orgServiceModule = require('modules/core/scripts/services/org.service');
+const orgServiceModule = require('modules/core/scripts/services/org.service');
 
 export default angular
   .module('cmc', [
@@ -20,5 +21,6 @@ export default angular
   .component('cmcDetailsStatus', new CmcDetailsStatusComponent())
   .component('cmcDetailsSettings', new CmcDetailsSettingsComponent())
   .service('CmcService', CmcService)
+  .service('CmcUserService', CmcUserService)
   .service('CmcServiceMock', CmcServiceMock)
   .name;

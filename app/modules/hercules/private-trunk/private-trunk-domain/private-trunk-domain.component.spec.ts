@@ -4,8 +4,8 @@ describe('Component: PrivateTrunkDomain component', () => {
   const RADIO_OPTION2 = '#domainRadio2';
   const MULTI_SELECT = 'a.form-control';
 
-  let verifiedDomain: Array<string> = [ 'verified1.ept.org' ];
-  let options = [{
+  const verifiedDomain: string[] = [ 'verified1.ept.org' ];
+  const options = [{
     value: 'verified1.ept.org',
     label: 'verified1.ept.org',
     isSelected: true,

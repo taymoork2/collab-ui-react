@@ -2,11 +2,11 @@ import { Notification } from 'modules/core/notifications';
 
 export class DomainManagementService {
 
-  private _domainList: Array<{
+  private _domainList: {
     text: string,
     token: string,
     status: string,
-  }> = [];
+  }[] = [];
 
   private _domainListLoaded: boolean = false;
 
@@ -36,7 +36,7 @@ export class DomainManagementService {
     private Notification: Notification,
   ) {
 
-    let orgId = this.Authinfo.getOrgId();
+    const orgId = this.Authinfo.getOrgId();
 
     this._scomUrl = this.UrlConfig.getScomUrl() + '/' + orgId;
 
@@ -66,11 +66,11 @@ export class DomainManagementService {
     return this._states;
   }
 
-  public get domainList(): Array<{
+  public get domainList(): {
     text: string,
     token: string,
     status: string,
-  }> {
+  }[] {
     return this._domainList;
   }
 
@@ -83,7 +83,7 @@ export class DomainManagementService {
     //we always normalize to lowercase.
     domainToAdd = domainToAdd ? domainToAdd.toLowerCase() : domainToAdd;
 
-    let existingDomain = _.find(this._domainList, { text: domainToAdd });
+    const existingDomain = _.find(this._domainList, { text: domainToAdd });
 
     if ((!domainToAdd) || existingDomain) {
       return this.$q.reject(this.$translate.instant('domainManagement.add.invalidDomainAdded'));
@@ -97,8 +97,8 @@ export class DomainManagementService {
       return this.$q.reject();
     }
 
-    let existingDomain = _.find(this._domainList, { text: domain });
-    let requestData = {
+    const existingDomain = _.find(this._domainList, { text: domain });
+    const requestData = {
       domain: domain,
       removePending: (existingDomain && existingDomain.status === this._states.pending),
     };
@@ -131,7 +131,7 @@ export class DomainManagementService {
       claimDomain: false,
     })
     .then(() => {
-      let domainInList = _.find(this._domainList, { text: domain, status: this.states.pending });
+      const domainInList = _.find(this._domainList, { text: domain, status: this.states.pending });
       if (domainInList) {
         domainInList.status = this.states.verified;
       }
@@ -154,7 +154,7 @@ export class DomainManagementService {
     })
     .then(() => {
 
-      let claimedDomain = _.find(this._domainList, { text: domain, status: this.states.verified });
+      const claimedDomain = _.find(this._domainList, { text: domain, status: this.states.verified });
 
       if (claimedDomain) {
         claimedDomain.status = this.states.claimed;
@@ -171,7 +171,7 @@ export class DomainManagementService {
     }
     return this.$http.delete(this._claimDomainUrl + '/' + window.btoa(domain)).then(() => {
 
-      let claimedDomain = _.find(this._domainList, { text: domain, status: this.states.claimed });
+      const claimedDomain = _.find(this._domainList, { text: domain, status: this.states.claimed });
 
       if (claimedDomain) {
         claimedDomain.status = this.states.verified;
@@ -189,10 +189,10 @@ export class DomainManagementService {
       return this.$q.resolve(this._domainList);
     }
 
-    let scomUrl = this._scomUrl + (disableCache ? '?disableCache=true' : '');
+    const scomUrl = this._scomUrl + (disableCache ? '?disableCache=true' : '');
 
     return this.$http.get<any>(scomUrl).then(res => {
-      let data = res.data;
+      const data = res.data;
       this._domainList = [];
 
       this.loadDomainlist(data.domains, this.states.claimed, overrideIf => (overrideIf.status !== this.states.claimed));
@@ -214,7 +214,7 @@ export class DomainManagementService {
       domain: domain,
     }).then(res => {
 
-      let pendingDomain = _.find(this._domainList, { text: domain, status: this.states.pending });
+      const pendingDomain = _.find(this._domainList, { text: domain, status: this.states.pending });
 
       if (!pendingDomain) {
         this._domainList.push({
@@ -235,8 +235,8 @@ export class DomainManagementService {
 
     _.each(domainArray, dom => {
 
-      let domLower = dom.toLowerCase();
-      let alreadyAddedMatch = _.find(this._domainList, { text: domLower });
+      const domLower = dom.toLowerCase();
+      const alreadyAddedMatch = _.find(this._domainList, { text: domLower });
 
       if (!alreadyAddedMatch || (overridePredicate && overridePredicate(alreadyAddedMatch))) {
 

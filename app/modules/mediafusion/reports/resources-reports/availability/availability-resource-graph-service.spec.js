@@ -3,20 +3,20 @@
 describe('Service: Availability Resource GraphService', function () {
   var AvailabilityResourceGraphService;
   var allClusters = 'mediaFusion.metrics.allclusters';
-  var clusterId = "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3";
+  var clusterId = '615209ed-98a3-4ab3-a1aa-033e5a0c1dc3';
 
   var validateService = {
     validate: function () {},
   };
 
   var availabilityChart = {
-    period: "",
-    startDate: "",
+    period: '',
+    startDate: '',
   };
 
   var daterange = {
-    label: "Last 24 Hours",
-    value: "0",
+    label: 'Last 24 Hours',
+    value: '0',
   };
   var clusteravailabilityGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
@@ -43,15 +43,15 @@ describe('Service: Availability Resource GraphService', function () {
     var data = {
       data: [
         {
-          period: "mm",
+          period: 'mm',
           clusterCategories: [
             {
-              category: "Seong_Cluster",
+              category: 'Seong_Cluster',
               segments: [],
             },
           ],
-          startTime: "2016-09-20T10:20:14Z",
-          endTime: "2016-09-21T10:20:14Z",
+          startTime: '2016-09-20T10:20:14Z',
+          endTime: '2016-09-21T10:20:14Z',
         },
       ],
     };
@@ -60,14 +60,13 @@ describe('Service: Availability Resource GraphService', function () {
     expect(setAvailabilityGraphResponse.dataProvider).toEqual(
       [
         {
-          "category": "Seong_Cluster",
-          "segments": [],
+          category: 'Seong_Cluster',
+          segments: [],
         },
       ]);
   });
 
   it('setAvailabilityGraph should return an amchart object for mocked data successfully', function () {
-
     var setAvailabilityGraphResponse = AvailabilityResourceGraphService.setAvailabilityGraph(clusteravailabilityData, availabilityChart, clusterId, allClusters, daterange, IdMap);
     expect(setAvailabilityGraphResponse.dataProvider).toEqual(clusteravailabilityGraphData.clusteravailability[0].clusterCategories);
   });

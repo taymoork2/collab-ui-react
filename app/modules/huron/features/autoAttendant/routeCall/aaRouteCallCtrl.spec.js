@@ -15,17 +15,17 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   }];
 
   var sortedOptions = [{
-    "label": 'autoAttendant.phoneMenuRouteAA',
+    label: 'autoAttendant.phoneMenuRouteAA',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteHunt',
+    label: 'autoAttendant.phoneMenuRouteHunt',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteQueue',
+    label: 'autoAttendant.phoneMenuRouteQueue',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteToExtNum',
+    label: 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteUser',
+    label: 'autoAttendant.phoneMenuRouteUser',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteVM',
+    label: 'autoAttendant.phoneMenuRouteVM',
   }];
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
@@ -56,9 +56,7 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   });
 
   describe('setSelects', function () {
-
     it('should add a new keyAction object into selectedActions array', function () {
-
       controller = controller('AARouteCallMenuCtrl', {
         $scope: $scope,
       });
@@ -70,13 +68,11 @@ describe('Controller: AARouteCallMenuCtrl', function () {
       var i, action;
 
       for (i = 0; i < controller.options.length; i++) {
-
         action = AutoAttendantCeMenuModelService.newCeActionEntry(controller.options[i].value, '');
         controller.menuEntry.actions[0] = action;
         controller.setSelects();
         expect(controller.selected.label).toEqual(controller.options[i].label);
       }
-
     });
   });
 
@@ -86,7 +82,6 @@ describe('Controller: AARouteCallMenuCtrl', function () {
    */
   describe('Activate ', function () {
     it('test for sorted options', function () {
-
       controller = controller('AARouteCallMenuCtrl', {
         $scope: $scope,
       });
@@ -97,9 +92,6 @@ describe('Controller: AARouteCallMenuCtrl', function () {
       for (var i = 0; i < sortedOptions.length; i++) {
         expect(controller.options[i].label).toEqual(sortedOptions[i].label);
       }
-
     });
   });
-
-
 });

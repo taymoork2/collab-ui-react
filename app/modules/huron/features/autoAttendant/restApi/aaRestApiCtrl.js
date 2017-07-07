@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AARestApiCtrl($modal, $scope, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
-
     var vm = this;
 
     var doREST = 'doREST';
@@ -33,7 +32,7 @@
     }
 
     $scope.$on(
-      "$destroy",
+      '$destroy',
       function () {
         AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
       }

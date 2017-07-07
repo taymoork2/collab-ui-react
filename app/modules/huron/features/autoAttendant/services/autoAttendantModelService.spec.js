@@ -27,11 +27,11 @@ describe('Service: AAModelService', function () {
   describe('newAARecord', function () {
     it('should return an AARecord object', function () {
       var _aaRecord = AAModelService.newAARecord();
-      expect(_aaRecord.callExperienceName).toBe("");
+      expect(_aaRecord.callExperienceName).toBe('');
       expect(_aaRecord.assignedResources.length).toBe(0);
       expect(_aaRecord.actionSets.length).toBe(1);
       expect(_aaRecord.actionSets[0].actions.length).toBe(0);
-      expect(_aaRecord.actionSets[0].name).toBe("regularOpenActions");
+      expect(_aaRecord.actionSets[0].name).toBe('regularOpenActions');
     });
   });
 

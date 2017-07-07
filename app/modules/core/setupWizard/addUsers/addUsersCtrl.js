@@ -185,7 +185,6 @@
     };
 
     $scope.showStep = function (thisStep) {
-
       //remove other pages are tab highlight from view
       for (var stepNum in allSteps) {
         var step = allSteps[stepNum];
@@ -193,7 +192,6 @@
           $('#' + step).removeClass('ng-show');
           $('#' + step).addClass('ng-hide');
           $('#' + step + 'Tab').removeClass('tabHighlight');
-
         } else {
           $('#' + step).removeClass('ng-hide');
           $('#' + step).addClass('ng-show');
@@ -430,11 +428,9 @@
       };
       var isComplete = true;
       var callback = function (data, status) {
-
         if (data.success) {
           Log.info('User invitation sent successfully.', data.id);
           for (var i = 0; i < data.inviteResponse.length; i++) {
-
             var userResult = {
               email: data.inviteResponse[i].email,
               alertType: null,
@@ -478,7 +474,6 @@
             Notification.notify(successes, 'success');
             Notification.notify(errors, 'error');
           }
-
         } else {
           Notification.error('usersPage.errInvite', data);
           isComplete = false;
@@ -491,7 +486,6 @@
         if (isComplete) {
           resetUsersfield();
         }
-
       };
 
       if (typeof usersList !== 'undefined' && usersList.length > 0) {
@@ -505,11 +499,9 @@
           //update entitlements
           Userservice.inviteUsers(usersList, null, callback);
         }
-
       } else {
         Notification.error('usersPage.validEmailInput');
       }
-
     };
   }
 })();

@@ -7,30 +7,30 @@ describe('Component: pgEdit', () => {
   const CANCEL_BUTTON = 'button.ng-binding';
   const SEARCH_INPUT = 'input#search-member-box';
 
-  let getNumberSuggestionsFailureResp = {
+  const getNumberSuggestionsFailureResp = {
     data: 'Internal Server Error',
     status: 500,
     statusText: 'Internal Server Error',
   };
 
-  let pg = getJSONFixture('huron/json/features/pagingGroup/pgWithMembersAndInitiators.json');
-  let pg2 = getJSONFixture('huron/json/features/pagingGroup/pgWithEmptyInitiators.json');
-  let pgUpdated = getJSONFixture('huron/json/features/pagingGroup/pgUpdated.json');
-  let invalidName = 'Invalid &<>';
-  let validName = 'Valid$#@';
-  let pilotNumbers = getJSONFixture('huron/json/features/pagingGroup/numberList.json');
-  let updateFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
-  let membersList = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
+  const pg = getJSONFixture('huron/json/features/pagingGroup/pgWithMembersAndInitiators.json');
+  const pg2 = getJSONFixture('huron/json/features/pagingGroup/pgWithEmptyInitiators.json');
+  const pgUpdated = getJSONFixture('huron/json/features/pagingGroup/pgUpdated.json');
+  const invalidName = 'Invalid &<>';
+  const validName = 'Valid$#@';
+  const pilotNumbers = getJSONFixture('huron/json/features/pagingGroup/numberList.json');
+  const updateFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
+  const membersList = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
 
-  let fake_picture_path = 'https://09876/zyxwuv';
+  const fake_picture_path = 'https://09876/zyxwuv';
 
-  let pagingServiceFailureResp = {
+  const pagingServiceFailureResp = {
     data: 'Internal Server Error',
     status: 500,
     statusText: 'Internal Server Error',
   };
 
-  let placeResponse = {
+  const placeResponse = {
     uuid: '0002',
     sipAddress: '',
     displayName: 'peter desk',
@@ -38,7 +38,7 @@ describe('Component: pgEdit', () => {
     numbers: [],
   };
 
-  let userResponse = {
+  const userResponse = {
     id: '0001',
     name: {
       givenName: 'rtp2',
@@ -57,13 +57,13 @@ describe('Component: pgEdit', () => {
       }],
   };
 
-  let memberFailureResp = {
+  const memberFailureResp = {
     data: 'Not Found',
     status: 404,
     statusText: 'Not Found',
   };
 
-  let getMachineAcctResponse = {
+  const getMachineAcctResponse = {
     id: 'fake-userid',
     schemas: [],
     name: '',
@@ -73,7 +73,7 @@ describe('Component: pgEdit', () => {
     meta: {},
   };
 
-  let getMachineAcctResponse2 = {
+  const getMachineAcctResponse2 = {
     id: '0002',
     schemas: [],
     name: '',
@@ -83,17 +83,17 @@ describe('Component: pgEdit', () => {
     meta: {},
   };
 
-  let numberData = {
+  const numberData = {
     extension: '2222',
     extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f432',
   };
 
-  let numberData3 = {
+  const numberData3 = {
     extension: '2222',
     extensionUUID: undefined,
   };
 
-  let pgUpdate = {
+  const pgUpdate = {
     groupId: 'bbcd1234-abcd-abcd-abcddef123456',
     name: 'Test2',
     extension: undefined,
@@ -413,7 +413,7 @@ describe('Component: pgEdit', () => {
 
     it('should only display subset of fetched initiators if place phone is room device', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
-      let numberData2 = {
+      const numberData2 = {
         extension: '5002',
         extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f430',
       };
@@ -437,7 +437,7 @@ describe('Component: pgEdit', () => {
 
     it('should only display subset of fetched initiators if getMachineAcct failed', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
-      let numberData2 = {
+      const numberData2 = {
         extension: '5002',
         extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f430',
       };
@@ -460,7 +460,7 @@ describe('Component: pgEdit', () => {
 
     it('should be able to select and unselect a member and initiator', function () {
       this.controller.availableMembers = membersList;
-      let mem1 = _.cloneDeep(this.controller.availableMembers[0]);
+      const mem1 = _.cloneDeep(this.controller.availableMembers[0]);
       this.getUserDefer.resolve(userResponse);
       this.controller.selectMembers(mem1);
       this.$scope.$apply();
@@ -470,7 +470,7 @@ describe('Component: pgEdit', () => {
       expect(this.controller.members[0].picturePath).toEqual(fake_picture_path);
 
       this.controller.availableInitiators = membersList;
-      let initiator1 = _.cloneDeep(this.controller.availableInitiators[0]);
+      const initiator1 = _.cloneDeep(this.controller.availableInitiators[0]);
       this.getUserDefer.resolve(userResponse);
       this.controller.selectInitiators(initiator1);
       this.$scope.$apply();
@@ -479,7 +479,7 @@ describe('Component: pgEdit', () => {
       expect(this.controller.initiators[0].member.type).toEqual('USER_REAL_USER');
       expect(this.controller.initiators[0].picturePath).toEqual(fake_picture_path);
 
-      let memWithPic = {
+      const memWithPic = {
         member: mem1,
         picturePath: fake_picture_path,
       };
@@ -601,12 +601,12 @@ describe('Component: pgEdit', () => {
     it('incrementCount test', function () {
       this.controller.userCount = 0;
       this.controller.placeCount = 0;
-      let mem = _.cloneDeep(membersList[0]);
+      const mem = _.cloneDeep(membersList[0]);
       this.controller.incrementCount(mem);
       expect(this.controller.getUserCount()).toEqual(1);
       expect(this.controller.getPlaceCount()).toEqual(0);
 
-      let mem1 = _.cloneDeep(membersList[1]);
+      const mem1 = _.cloneDeep(membersList[1]);
       this.controller.incrementCount(mem1);
       expect(this.controller.getUserCount()).toEqual(1);
       expect(this.controller.getPlaceCount()).toEqual(1);
@@ -615,12 +615,12 @@ describe('Component: pgEdit', () => {
     it('decreaseCount test', function () {
       this.controller.userCount = 1;
       this.controller.placeCount = 1;
-      let mem = _.cloneDeep(membersList[0]);
+      const mem = _.cloneDeep(membersList[0]);
       this.controller.decreaseCount(mem);
       expect(this.controller.getUserCount()).toEqual(0);
       expect(this.controller.getPlaceCount()).toEqual(1);
 
-      let mem1 = _.cloneDeep(membersList[1]);
+      const mem1 = _.cloneDeep(membersList[1]);
       this.controller.decreaseCount(mem1);
       expect(this.controller.getUserCount()).toEqual(0);
       expect(this.controller.getPlaceCount()).toEqual(0);

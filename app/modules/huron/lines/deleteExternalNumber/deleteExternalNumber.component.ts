@@ -19,7 +19,7 @@ class DeleteExternalNumberCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    let _isApiImplementationSwivel = this.numberInfo.apiImplementation === 'SWIVEL' ? this.$translate.instant('linesPage.deleteNumberTextBYOP') :
+    const _isApiImplementationSwivel = this.numberInfo.apiImplementation === 'SWIVEL' ? this.$translate.instant('linesPage.deleteNumberTextBYOP') :
       this.$translate.instant('linesPage.deleteNumberTextStandard');
     this.deleteConfirmationMessage = this.$translate.instant('linesPage.deleteNumberTextBase', { isApiImplementationSwivel: _isApiImplementationSwivel });
   }
@@ -29,7 +29,7 @@ class DeleteExternalNumberCtrl implements ng.IComponentController {
   }
 
   public onDelete(): ng.IPromise<any> {
-    let numberObj = { number: this.numberInfo.externalNumber, uuid: null };
+    const numberObj = { number: this.numberInfo.externalNumber, uuid: null };
 
     return this.ExternalNumberService.deleteNumber(this.numberInfo.orgId, numberObj)
       .then(() => {

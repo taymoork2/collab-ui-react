@@ -1,0 +1,24 @@
+[{
+    "uuid": "123",
+    "name": "Home Office",
+    "routingPrefix": "8100",
+    "userCount": 10,
+    "placeCount": 3,
+    "isDefault": true
+  },
+  {
+    "uuid": "789",
+    "name": "myHome Office",
+    "routingPrefix": "8100",
+    "userCount": 10,
+    "placeCount": 3,
+    "isDefault": false
+  },
+  {
+    "uuid": "456",
+    "name": "Desk Phone",
+    "routingPrefix": "8100",
+    "userCount": 10,
+    "placeCount": 3,
+    "isDefault": false
+  }]

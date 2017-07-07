@@ -22,13 +22,14 @@
 
     vm.csOnboardingStatus = vm.status.UNKNOWN;
     vm.aaOnboardingStatus = vm.status.UNKNOWN;
+    vm.appOnboardingStatus = vm.status.UNKNOWN;
 
     vm.state = vm.ONBOARDED;
     vm.errorCount = 0;
 
     vm.RoutingType = {
-      PICK: "pick",
-      PUSH: "push",
+      PICK: 'pick',
+      PUSH: 'push',
     };
 
     vm.routingTypes = [
@@ -54,7 +55,7 @@
     $scope.$on('$locationChangeStart', function (event, next) {
       if ($scope.routingSelector.$dirty) {
         event.preventDefault();
-        var message = "sunlightDetails.settings.saveModal.BodyMsg2";
+        var message = 'sunlightDetails.settings.saveModal.BodyMsg2';
         vm.openSaveModal(message).result.then(function () {
           vm.updateRoutingType();
           gotoSelectedPage(next);
@@ -71,7 +72,7 @@
     }
 
     vm.openModal = function () {
-      var message = "sunlightDetails.settings.saveModal.BodyMsg1";
+      var message = 'sunlightDetails.settings.saveModal.BodyMsg1';
       vm.openSaveModal(message).result.then(vm.updateRoutingType);
     };
 
@@ -130,6 +131,9 @@
       }
       if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardAA = SunlightConfigService.aaOnboard();
+      }
+      if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
+        promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
       }
 
       $q.all(promises).then(function (results) {
@@ -205,16 +209,23 @@
     function getOnboardingStatus(result) {
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
       vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
+      vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
       vm.selectedRouting = _.get(result, 'data.routingType', vm.RoutingType.PICK);
       vm.savedRoutingType = vm.selectedRouting;
-      var onboardingStatus = vm.csOnboardingStatus;
-      if (Authinfo.isCareVoice()) {
-        // to give priority to pending status
-        if (vm.aaOnboardingStatus == vm.status.PENDING) {
-          onboardingStatus = vm.status.PENDING;
-        } else if (onboardingStatus === vm.status.SUCCESS) {
+
+      var onboardingStatus = vm.status.UNKNOWN;
+      if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
+        if (Authinfo.isCareVoice()) {
           onboardingStatus = vm.aaOnboardingStatus;
+        } else {
+          onboardingStatus = vm.status.SUCCESS;
         }
+      } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
+        onboardingStatus = vm.csOnboardingStatus;
+      } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
+        onboardingStatus = vm.appOnboardingStatus;
+      } else {
+        onboardingStatus = vm.status.UNKNOWN;
       }
       return onboardingStatus;
     }
@@ -236,7 +247,7 @@
           default:
             vm.state = vm.NOT_ONBOARDED;
         }
-        if (result.data.orgName === "" || !(_.get(result, 'data.orgName'))) {
+        if (result.data.orgName === '' || !(_.get(result, 'data.orgName'))) {
           result.data.orgName = Authinfo.getOrgName();
           SunlightConfigService.updateChatConfig(result.data).then(function (result) {
             Log.debug('Successfully updated org config with org name', result);
@@ -253,5 +264,4 @@
     }
     init();
   }
-
 })();

@@ -8,12 +8,12 @@ describe('Controller: aaBuilderNameCtrl', function () {
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
   var rawCeInfo = {
-    "callExperienceName": "AAA2",
-    "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b",
-    "assignedResources": [{
-      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
-      "type": "directoryNumber",
-      "trigger": "incomingCall",
+    callExperienceName: 'AAA2',
+    callExperienceURL: 'https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b',
+    assignedResources: [{
+      id: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
+      type: 'directoryNumber',
+      trigger: 'incomingCall',
     }],
   };
 
@@ -72,7 +72,6 @@ describe('Controller: aaBuilderNameCtrl', function () {
   });
 
   describe('saveAARecord', function () {
-
     beforeEach(function () {
       spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
       spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
@@ -89,13 +88,13 @@ describe('Controller: aaBuilderNameCtrl', function () {
       controller.ui.builder = {};
     });
 
-    it("should save a new aaRecord successfully", function () {
+    it('should save a new aaRecord successfully', function () {
       controller.name = testGroupName;
       controller.saveAARecord();
       expect(controller.ui.ceInfo.name).toEqual(testGroupName);
     });
 
-    it("should save a new aaRecord successfully on right arrow press", function () {
+    it('should save a new aaRecord successfully on right arrow press', function () {
       controller.name = testGroupName;
       controller.evalKeyPress(rightArrow);
       expect(controller.ui.ceInfo.name).toEqual(testGroupName);
@@ -160,18 +159,18 @@ describe('Controller: aaBuilderNameCtrl', function () {
     **** */
   });
 
-  it("should test the next Button when name is null", function () {
+  it('should test the next Button when name is null', function () {
     controller.name = '';
     expect(controller.nextButton()).toEqual(false);
   });
 
-  it("should test the next Button when name is not null", function () {
+  it('should test the next Button when name is not null', function () {
     controller.name = testGroupName;
     expect(controller.nextButton()).toEqual(true);
   });
 
-  it("should test the previous  Button", function () {
+  it('should test the previous  Button', function () {
     controller.name = testGroupName;
-    expect(controller.previousButton()).toEqual("hidden");
+    expect(controller.previousButton()).toEqual('hidden');
   });
 });

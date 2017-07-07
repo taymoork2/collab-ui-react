@@ -10,7 +10,6 @@ describe('KemService', function () {
   }));
 
   describe('getKemOption', function () {
-
     it('Nothing should return 0 option', function () {
       var actual = KemService.getKemOption();
       var expected = 'deviceOverviewPage.kemOptions.none';
@@ -49,7 +48,6 @@ describe('KemService', function () {
   });
 
   describe('isKEMAvailable', function () {
-
     it('Nothing should return false', function () {
       expect(KemService.isKEMAvailable()).toBeFalsy();
     });
@@ -61,6 +59,5 @@ describe('KemService', function () {
     it('Cisco 8831 should return false', function () {
       expect(KemService.isKEMAvailable('Cisco 8831')).toBeFalsy();
     });
-
   });
 });

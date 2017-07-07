@@ -115,7 +115,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public getMembers(members: IMemberData[]): void {
     _.forEach(members, (mem) => {
-      let memberWithPic: IMemberWithPicture = {
+      const memberWithPic: IMemberWithPicture = {
         member: {
           uuid: mem.memberId,
           type: (mem.type === USER) ? USER_REAL_USER : USER_PLACE,
@@ -161,7 +161,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public getInitiators(initiators: IInitiatorData[]): void {
     _.forEach(initiators, (mem) => {
-      let memberWithPic: IMemberWithPicture = {
+      const memberWithPic: IMemberWithPicture = {
         member: {
           uuid: mem.initiatorId,
           type: (mem.type === USER) ? USER_REAL_USER : USER_PLACE,
@@ -259,7 +259,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
     });
   }
 
-  public fetchMembers(memOrInit): ng.IPromise<Array<Member>> {
+  public fetchMembers(memOrInit): ng.IPromise<Member[]> {
     let searchStr: string;
     let availableList: Member [] = [];
     let selectedList: IMemberWithPicture [];
@@ -282,7 +282,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
           });
         });
 
-        let promises: Array<ng.IPromise<any>> = [];
+        const promises: ng.IPromise<any>[] = [];
         _.forEach(availableList, (item: any): void => {
           // If Place is a room device type, remove from availableMembers
           if (item.type === USER_PLACE) {
@@ -313,7 +313,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public selectMembers(member: Member): void {
     if (member) {
-      let memberWithPicture: IMemberWithPicture = {
+      const memberWithPicture: IMemberWithPicture = {
         member: member,
         picturePath: '',
       };
@@ -338,7 +338,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public selectInitiators(member: Member): void {
     if (member) {
-      let memberWithPicture: IMemberWithPicture = {
+      const memberWithPicture: IMemberWithPicture = {
         member: member,
         picturePath: '',
       };
@@ -454,7 +454,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
   public onChange(): void {
     this.errorNoIntiators = false;
     const reg = /[;"'&^></\\]/;
-    let invalidChar: Array<string> | null = this.name.match(reg);
+    const invalidChar: string[] | null = this.name.match(reg);
     this.errorNameInput = reg.test(this.name);
     if (this.errorNameInput) {
       this.pgNameErrorMassage = this.$translate.instant('pagingGroup.sayInvalidChar', { char: invalidChar }).replace('\\', '');
@@ -470,11 +470,11 @@ class PgEditComponentCtrl implements ng.IComponentController {
   }
 
   public saveForm(): void {
-    let emptyDeviceId: string[] = [];
-    let members: IMemberData[] = [];
-    let initiators: IInitiatorData[] = [];
+    const emptyDeviceId: string[] = [];
+    const members: IMemberData[] = [];
+    const initiators: IInitiatorData[] = [];
     _.forEach(this.members, function (mem) {
-      let member: IMemberData = <IMemberData> {
+      const member: IMemberData = <IMemberData> {
         memberId: mem.member.uuid,
         deviceIds: emptyDeviceId,
         type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
@@ -484,14 +484,14 @@ class PgEditComponentCtrl implements ng.IComponentController {
     //Populate Initiator data
     if (this.initiatorType === CUSTOM) {
       _.forEach(this.initiators, function (mem) {
-        let initiator: IInitiatorData = <IInitiatorData> {
+        const initiator: IInitiatorData = <IInitiatorData> {
           initiatorId: mem.member.uuid,
           type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
         };
         initiators.push(initiator);
       });
     }
-    let pg: IPagingGroup = <IPagingGroup>{
+    const pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
       extension: (this.number.extension === this.originalNumber.extension) ? undefined : this.number.extension,
       members: members,
@@ -585,16 +585,16 @@ class PgEditComponentCtrl implements ng.IComponentController {
   }
 
   public filterList() {
-    let str = this.searchStr.toLowerCase();
-    let filteredList = _.filter(this.members, (mem) => {
+    const str = this.searchStr.toLowerCase();
+    const filteredList = _.filter(this.members, (mem) => {
       return this.isMeetSearch(mem, str);
     });
     this.listOfDisplayMembers = _.sortBy(filteredList, str);
   }
 
   public filterListInitiator() {
-    let str = this.searchStrInitiator.toLowerCase();
-    let filteredList = _.filter(this.initiators, (mem) => {
+    const str = this.searchStrInitiator.toLowerCase();
+    const filteredList = _.filter(this.initiators, (mem) => {
       return this.isMeetSearch(mem, str);
     });
     this.listOfDisplayInitiators = _.sortBy(filteredList, str);

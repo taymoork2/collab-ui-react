@@ -4,7 +4,6 @@
   angular.module('Mediafusion').service('CallVolumeResourceGraphService', CallVolumeResourceGraphService);
   /* @ngInject */
   function CallVolumeResourceGraphService(CommonReportsGraphService, $translate, $rootScope) {
-
     var vm = this;
     vm.callVolumediv = 'callVolumediv';
     vm.COLUMN = 'column';
@@ -82,15 +81,15 @@
       var columnNames = {};
       if (cluster === vm.allClusters) {
         columnNames = {
-          'active_calls': vm.callLocalTitle,
-          'call_reject': vm.callRejectTitle,
-          'timestamp': vm.timeStamp,
+          active_calls: vm.callLocalTitle,
+          call_reject: vm.callRejectTitle,
+          timestamp: vm.timeStamp,
         };
       } else {
         columnNames = {
-          'active_calls': vm.callLocalTitle,
-          'call_reject': vm.callRedirectedClusterTitle,
-          'timestamp': vm.timeStamp,
+          active_calls: vm.callLocalTitle,
+          call_reject: vm.callRedirectedClusterTitle,
+          timestamp: vm.timeStamp,
         };
       }
       cluster = _.replace(cluster, /\s/g, '_');
@@ -165,6 +164,5 @@
       }
       return graphs;
     }
-
   }
 })();

@@ -13,7 +13,6 @@
 
   /* @ngInject */
   function ReadonlyInterceptor($q, $injector, $log) {
-
     var allowedList = [
       '/api/v1/metrics',
       '/api/v1/compliance/',
@@ -31,6 +30,8 @@
       '/channels',
       '/api/v1/internals/actions/invalidateUser/invoke',
       '/releaseChannels',
+      '/qlik-gtwy/api/v1/report/',
+      '/custportal/extensions/',
     ];
 
     var allowedState = [
@@ -80,5 +81,4 @@
       return _.includes(url, 'identity/scim/' + Authinfo.getUserOrgId() + '/v1/Users/' + Authinfo.getUserId());
     }
   }
-
 }());

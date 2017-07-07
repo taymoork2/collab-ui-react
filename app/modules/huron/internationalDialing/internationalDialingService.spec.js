@@ -62,5 +62,4 @@ describe('Service: InternationalDialing', function () {
       expect(isTrial.$$state.value).toBe(true);
     });
   });
-
 });

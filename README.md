@@ -1,8 +1,9 @@
 # Atlas Contribution Guide
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
 ## About
 
-Take a moment to familiarize yourself with the following rules, guidelines, and contribution process.
+Please take a moment to familiarize yourself with the following rules, guidelines, and contribution process.
 
 Learn more about project specifics:
 * [npm scripts](docs/npm-scripts.md)
@@ -143,15 +144,19 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
   * `git push <fork> <local-branch>`
   * On your fork, select your branch and click `Pull request` to create a new PR
   * Add appropriate reviewers using [@mention](https://github.com/blog/821-mention-somebody-they-re-notified)
-    * Add `@WebExSquared/atlas-web-jedi` for core team members if unsure who should review your PR
+    * Add appropriate reviewers using [@mention](https://github.com/blog/821-mention-somebody-they-re-notified)
+    * Add `@WebExSquared/atlas-web-core-team` for core team members
     * *(Note: your PR may automatically be picked up by @atlas-ui-bot-gen, who will @mention other contributors when feasible)*
-  * Respond to feedback and push new commits if necessary
+  * **Important:** *Please allow a reasonable time for a response before pushing your code.  Large commits will take longer to review.  Smaller commits can be reviewed quicker and make it easier for adjustments to the comments.*
+  * Respond to feedback requests and push changes as new commits
+  * `git push <fork> <local-branch>`
 
 ##### 7. Push to Gauntlet (build queue-ing tool) for validated merge (after approved review)
   * `git checkout master`
   * Your master branch should have no local commits. Reset your HEAD if need be with `git reset --hard HEAD`.
   * `git pull --rebase` to update your master branch with the latest from github
   * `git merge <local-branch>` (resolve conflicts if necessary)
+  * `git push -f <fork> master:<local-branch>` to update your fork's branch so your PR is properly reflected
   * `git push gauntlet master`
     * Use your CEC username and [internal password](https://sqbu-jenkins-01.cisco.com:8443/job/utilities/job/internal-utilities-password-changer/) (**:warning: it is not the same password as your CEC password :warning:**).
     * Consider putting your internal password into ~/.netrc

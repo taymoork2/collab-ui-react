@@ -41,25 +41,25 @@
 
     // TODO: below is the jason to recover initial state, remove it when at the very late stage of HDS dev
     var jsonTrialMode = {
-      "altHdsServers": [
+      altHdsServers: [
         {
-          "type": "kms",
-          "kmsServer": "customer.com",
-          "kmsServerMachineUUID": "e336ae2b-7afb-4e90-a023-61103e06a861",
-          "groupId": "755d989a-feef-404a-8669-085eb054afef",
-          "active": false,
+          type: 'kms',
+          kmsServer: 'customer.com',
+          kmsServerMachineUUID: 'e336ae2b-7afb-4e90-a023-61103e06a861',
+          groupId: '755d989a-feef-404a-8669-085eb054afef',
+          active: false,
         },
         {
-          "type": "adr",
-          "adrServer": "5f40d7be-da6b-4a10-9c6c-8b061aee053a",
-          "groupId": "755d989a-feef-404a-8669-085eb054afef",
-          "active": false,
+          type: 'adr',
+          adrServer: '5f40d7be-da6b-4a10-9c6c-8b061aee053a',
+          groupId: '755d989a-feef-404a-8669-085eb054afef',
+          active: false,
         },
         {
-          "type": "sec",
-          "securityService": "2d2bdeaf-3e63-4561-be2f-4ecc1a48dcd4",
-          "groupId": "755d989a-feef-404a-8669-085eb054afef",
-          "active": false,
+          type: 'sec',
+          securityService: '2d2bdeaf-3e63-4561-be2f-4ecc1a48dcd4',
+          groupId: '755d989a-feef-404a-8669-085eb054afef',
+          active: false,
         },
       ],
     };
@@ -156,7 +156,6 @@
               } else {
                 if (vm.dirsyncEnabled === true) {
                   setHDSDefaultForAltHDSServersGroup();
-                  getTrialUsersInfo();
                 }
               }
             } else {
@@ -182,7 +181,7 @@
                       server.groupId = vm.defaultHDSGroup.id;
                     });
                     var altHdsServersJson = {
-                      'altHdsServers': vm.altHdsServers,
+                      altHdsServers: vm.altHdsServers,
                     };
                     HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), altHdsServersJson)
                           .then(function () {
@@ -220,7 +219,7 @@
           });
         }
         var myJSON = {
-          'altHdsServers': vm.altHdsServers,
+          altHdsServers: vm.altHdsServers,
         };
         HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
           .then(function () {
@@ -307,7 +306,7 @@
               });
             }
             var myJSON = {
-              'altHdsServers': vm.altHdsServers,
+              altHdsServers: vm.altHdsServers,
             };
             HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
               .then(function () {

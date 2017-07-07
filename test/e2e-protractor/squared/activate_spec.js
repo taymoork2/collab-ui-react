@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Self Registration Activation Page', function () {
-
   beforeEach(function () {
     browser.ignoreSynchronization = false;
   });
@@ -42,7 +41,6 @@ describe('Self Registration Activation Page', function () {
     });
 
     describe('Desktop activation after code is invalidated', function () {
-
       it('should display without admin controls on navigation bar', function () {
         navigation.navigateTo('#/activate?eqp=' + encodeURIComponent(iosData.encryptedQueryParam));
         navigation.expectAdminSettingsNotDisplayed();

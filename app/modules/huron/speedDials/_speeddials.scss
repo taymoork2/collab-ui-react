@@ -5,6 +5,7 @@
 
   .sd-spacing-edit {
     @include vr-spacing(mr, 1);
+    word-break: break-word;
   }
 
   .sd-spacing-input {
@@ -30,6 +31,10 @@
 
       &:hover {
         color: $color-primary-base;
+      }
+
+      &.icon-info {
+        padding-left: 10px;
       }
     }
   }

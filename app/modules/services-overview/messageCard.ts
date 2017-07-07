@@ -5,9 +5,9 @@ export class ServicesOverviewMessageCard extends ServicesOverviewCard {
     return undefined;
   }
 
-  private _buttons: Array<ICardButton>;
+  private _buttons: ICardButton[];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     return this._buttons;
   }
 

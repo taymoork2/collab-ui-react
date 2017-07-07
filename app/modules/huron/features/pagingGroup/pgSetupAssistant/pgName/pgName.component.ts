@@ -9,7 +9,7 @@ class PagingGroupNameCtrl implements ng.IComponentController {
 
   public onChange(): void {
     const reg = /[;"'&^></\\]/;
-    let invalidChar: Array<string> | null = this.pagingGroupName.match(reg);
+    const invalidChar: string[] | null = this.pagingGroupName.match(reg);
     this.errorNameInput = reg.test(this.pagingGroupName);
     if (this.errorNameInput) {
       this.pgNameErrorMassage = this.$translate.instant('pagingGroup.sayInvalidChar', { char: invalidChar }).replace('\\', '');

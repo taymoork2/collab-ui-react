@@ -29,9 +29,9 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var menuId = 'menu0';
   var keyIndex = '0';
 
-  var fileNameInvalid = "ILTQq4.jpg";
-  var fileNameValid = "ILTQq4.wav";
-  var fileNameValid2 = "ILTQq5.wav";
+  var fileNameInvalid = 'ILTQq4.jpg';
+  var fileNameValid = 'ILTQq4.wav';
+  var fileNameValid2 = 'ILTQq5.wav';
   var fileSize = 41236;
   var fileSize2 = 43451;
   var fileSizeMax = 5 * 1024 * 1024;
@@ -63,7 +63,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
   };
   var variantUrlPlayback = 'recordingPlayBackUrl';
   var uploadUrl = 'https://clio-manager-intb.ciscospark.com/clio-manager/api/v1/recordings/media';
-  var voice = "Vanessa";
+  var voice = 'Vanessa';
   var fileDuration = '(00:39)';
   var fileDescription = {
     uploadFile: fileNameValid,
@@ -157,7 +157,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
   });
 
   describe('activate', function () {
-
     describe('routeToQueue activate functionality', function () {
       beforeEach(inject(function ($controller) {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
@@ -317,7 +316,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
   });
 
   describe('openModal', function () {
-
     describe('cancel modal', function () {
       it('should open and dismiss a cancel modal', function () {
         controller.openModal(controller.dialogModalTypes.cancel);
@@ -375,7 +373,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
   });
 
   describe('upload', function () {
-
     it('should not allow an empty file to upload', function () {
       spyOn(AAMediaUploadService, 'validateFile');
       controller.upload(undefined);
@@ -496,14 +493,14 @@ describe('Controller: AAMediaUploadCtrl', function () {
           it('should confirm an overwrite and change the file', function () {
             $httpBackend.whenPOST(uploadUrl).respond(200, true);
             expect(controller.uploadFile).toEqual(validFile.name);
-            expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
+            expect(controller.uploadDate).toMatch('[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]');
             controller.upload(validFile2);
             deferred.resolve(1);
             $scope.$digest();
             modal.resolve();
             $scope.$apply();
             expect(controller.uploadFile).toEqual(validFile2.name);
-            expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
+            expect(controller.uploadDate).toMatch('[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]');
             expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.MEDIA_UPLOAD, {
               sizeInMB: jasmine.any(Number),
               durationInSeconds: jasmine.any(Number),
@@ -590,7 +587,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
             modal.reject();
             $scope.$apply();
             expect(controller.uploadFile).toEqual(validFile.name);
-            expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
+            expect(controller.uploadDate).toMatch('[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]');
             expect(controller.state).toEqual(controller.UPLOADED);
             expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.MEDIA_UPLOAD, {
               sizeInMB: jasmine.any(Number),
@@ -650,7 +647,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
           $scope.$digest();
           $httpBackend.flush();
           expect(controller.uploadFile).toEqual(validFile.name);
-          expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
+          expect(controller.uploadDate).toMatch('[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]');
           expect(controller.state).toEqual(controller.UPLOADED);
           expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.MEDIA_UPLOAD, {
             sizeInMB: jasmine.any(Number),
@@ -701,7 +698,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
             orgid: jasmine.any(String),
           });
           expect(controller.uploadFile).toEqual(validFile.name);
-          expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
+          expect(controller.uploadDate).toMatch('[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]');
           expect(controller.state).toEqual(controller.UPLOADED);
         });
 
@@ -757,7 +754,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
       });
 
       expect(c.isSquishable()).toBeFalsy();
-
     });
     it('should test Squishabilty for two lanes', function () {
       var c;
@@ -772,7 +768,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
       });
 
       expect(c.isSquishable()).toBeFalsy();
-
     });
     it('should test Squishabilty for two lanes (holiday follows closedHours)', function () {
       var c;
@@ -789,7 +784,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
       });
 
       expect(c.isSquishable()).toBeFalsy();
-
     });
 
     it('should test Squishabilty for three lanes', function () {
@@ -807,7 +801,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
       });
 
       expect(c.isSquishable()).toBeFalsy();
-
     });
 
     it('should test Squishabilty for three lanes should be squished', function () {
@@ -825,10 +818,10 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
       menuEntry.actions.push(action);
 
-      ui.type = "MENU_OPTION_ANNOUNCEMENT";
+      ui.type = 'MENU_OPTION_ANNOUNCEMENT';
       ui.headers = [];
       ui.headers[0] = menuEntry;
-      ui.headers[0].type = "MENU_OPTION_ANNOUNCEMENT";
+      ui.headers[0].type = 'MENU_OPTION_ANNOUNCEMENT';
 
       $scope.menuKeyIndex = '';
       $scope.isMenuHeader = 'false';
@@ -838,7 +831,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
       });
 
       expect(c.isSquishable()).toBeTruthy();
-
     });
   });
 });

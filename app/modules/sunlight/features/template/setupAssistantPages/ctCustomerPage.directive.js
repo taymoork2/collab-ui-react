@@ -19,7 +19,7 @@
       link: function (scope, element) {
         element.bind('click', function () {
           //Remove active class from previous selection
-          $(".active").each(function () {
+          $('.active').each(function () {
             $(this).removeClass('active');
           });
 
@@ -166,6 +166,5 @@
       }
       return sorted;
     }
-
   }
 })();

@@ -53,7 +53,6 @@
         expect(TrackingId.clear).toHaveBeenCalled();
         expect(TrackingId.get()).toBeUndefined();
       });
-
     });
 
     describe('$stateChangeStart verify Terms Of Service acceptance', function () {
@@ -74,7 +73,6 @@
         expect(TOSService.hasAcceptedTOS).toHaveBeenCalled();
         expect(TOSService.openTOSModal).toHaveBeenCalled();
       });
-
     });
 
     describe('$stateChangeStart server-maintenance logic', function () {
@@ -133,9 +131,6 @@
           expect($state.go).toHaveBeenCalledWith('login');
         });
       });
-
     });
-
   });
-
 })();

@@ -6,16 +6,24 @@
     .controller('AtaDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, $scope, Notification, $stateParams, device) {
+      function ($modalInstance, $scope, Notification, FeatureToggleService, $stateParams, device) {
         var ata = this;
         var huronDeviceService = $stateParams.huronDeviceService;
 
         ata.device = device;
         ata.isLoading = false;
 
-        $scope.$$postDigest(function () {
-          $scope.$broadcast('rzSliderForceRender');
-        });
+        function init() {
+          FeatureToggleService.csdmAtaRebootGetStatus().then(function (response) {
+            ata.ataRebootWarningToggle = response;
+          });
+
+          $scope.$$postDigest(function () {
+            $scope.$broadcast('rzSliderForceRender');
+          });
+        }
+
+        init();
 
         /*
          * Default variables.
@@ -59,8 +67,8 @@
         /*
          * Color from the gradient.
          */
-        ata.selectedColor = "#049FD9";
-        ata.unselectedColor = "#EBEBEC";
+        ata.selectedColor = '#049FD9';
+        ata.unselectedColor = '#EBEBEC';
 
         /*
          * Reset values.
@@ -83,9 +91,8 @@
           huronDeviceService.setSettingsForAta(ata.device, settings).then(function () {
             ata.isLoading = false;
             $modalInstance.close();
-            Notification.success('ataSettings.saved');
+            Notification.success(ata.ataRebootWarningToggle ? 'ataSettings.savedReboot' : 'ataSettings.saved');
           });
-
         };
       }
     )

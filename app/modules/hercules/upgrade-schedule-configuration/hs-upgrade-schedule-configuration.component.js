@@ -133,7 +133,10 @@
       event.preventDefault();
       vm.syncing = true;
       return HybridServicesClusterService.postponeUpgradeSchedule(vm.clusterId, vm.upgradeSchedule.nextUpgradeWindow)
-        .then(updateUI);
+        .then(updateUI)
+        .then(function () {
+          Notification.success('hercules.settings.scheduleUpgrade.postponeSuccess', { datetime: moment(vm.upgradeSchedule.nextUpgradeWindow.startTime).tz(vm.upgradeSchedule.scheduleTimeZone).format('LLLL') });
+        });
     }
 
     function labelForTime(time) {
@@ -200,8 +203,8 @@
         })
         .map(function (zone) {
           return {
-            'label': labelForTimeZone(zone),
-            'value': zone,
+            label: labelForTimeZone(zone),
+            value: zone,
           };
         })
         .sort(function (a, b) {

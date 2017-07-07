@@ -49,8 +49,8 @@
 
       $q.all(promiseChain).then(
         function promisChainDone() {
-          var funcName = "promisChainDone()";
-          var logMsg = "";
+          var funcName = 'promisChainDone()';
+          var logMsg = '';
 
           // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
           // get the information needed for the webex reports index page
@@ -70,12 +70,12 @@
             webexSelected = vm.webexOptions[0];
           }
 
-          logMsg = funcName + ": " + "\n" +
-            "stateParamsSiteUrl=" + stateParamsSiteUrl + "\n" +
-            "stateParamsSiteUrlIndex=" + stateParamsSiteUrlIndex + "\n" +
-            "storageReportsSiteUrl=" + storageReportsSiteUrl + "\n" +
-            "storageReportsSiteUrlIndex=" + storageReportsSiteUrlIndex + "\n" +
-            "webexSelected=" + webexSelected;
+          logMsg = funcName + ': ' + '\n' +
+            'stateParamsSiteUrl=' + stateParamsSiteUrl + '\n' +
+            'stateParamsSiteUrlIndex=' + stateParamsSiteUrlIndex + '\n' +
+            'storageReportsSiteUrl=' + storageReportsSiteUrl + '\n' +
+            'storageReportsSiteUrlIndex=' + storageReportsSiteUrlIndex + '\n' +
+            'webexSelected=' + webexSelected;
           Log.debug(logMsg);
 
           vm.webexSelected = webexSelected;
@@ -101,15 +101,15 @@
     }
 
     function updateWebexReports() {
-      var funcName = "updateWebexReports()";
-      var logMsg = "";
+      var funcName = 'updateWebexReports()';
+      var logMsg = '';
 
       var storageReportsSiteUrl = LocalStorage.get('webexReportsSiteUrl');
       var webexSelected = vm.webexSelected;
 
-      logMsg = funcName + "\n" +
-        "storageReportsSiteUrl=" + storageReportsSiteUrl + "\n" +
-        "webexSelected=" + webexSelected;
+      logMsg = funcName + '\n' +
+        'storageReportsSiteUrl=' + storageReportsSiteUrl + '\n' +
+        'webexSelected=' + webexSelected;
       Log.debug(logMsg);
 
       vm.webexReportsObject = WebexReportService.initReportsObject(webexSelected);

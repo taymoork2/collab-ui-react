@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function Discovery($http, $q, UrlConfig) {
-
     var _discoveryPromise = null;
     var _contextDiscoveryUrl = UrlConfig.getContextDiscoveryServiceUrl();
 

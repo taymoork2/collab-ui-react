@@ -8,7 +8,7 @@ export type ConnectorType = 'c_mgmt' | 'c_cal' | 'c_ucmc' | 'mf_mgmt' | 'hds_app
 export type ConnectorUpgradeState = 'upgraded' | 'upgrading' | 'pending';
 export type DayOfWeek = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
 export type ExtendedConnectorState = ConnectorState | 'has_warning_alarms' | 'has_error_alarms' | 'not_registered' | 'no_nodes_registered';
-export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability' | 'ept' | 'squared-hybrid-impinterop';
+export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability' | 'ept' | 'spark-hybrid-impinterop';
 export type ServiceAlarmSeverity = 'error' | 'warning' | 'critical'; // TODO: check if that's really the only values
 export type ServiceSeverity = 0 | 1 | 2 | 3;
 export type ServiceSeverityLabel = 'ok' | 'unknown' | 'warning' | 'error';
@@ -22,6 +22,7 @@ export interface IFMSOrganization {
   id: string;
   resourceGroups: IResourceGroup[];
   url: string;
+  servicesUrl: string;
 }
 
 export interface IResourceGroup {
@@ -129,9 +130,9 @@ export interface IConnector {
 }
 
 export interface IConnectorStatus {
-  clusterSerials?: any[];
+  clusterSerials?: string[];
   initialized?: boolean;
-  maintenanceMode?: ConnectorMaintenanceMode;
+  maintenanceMode: ConnectorMaintenanceMode;
   operational: boolean;
   userCapacity?: number;
   services: {
@@ -184,8 +185,8 @@ export interface IConnectorAlarm {
   description: string;
   solution: string;
   solutionReplacementValues: {
-    text: string,
-    link: string,
+    text: string;
+    link: string;
   }[];
 }
 

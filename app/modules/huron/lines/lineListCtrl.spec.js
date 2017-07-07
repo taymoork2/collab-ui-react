@@ -5,9 +5,9 @@ describe('Controller: LineListCtrl', function () {
 
   var lines = getJSONFixture('huron/json/lines/numbers.json');
   var customerInfo = {
-    orgId: "91745f4e-308f-489e-8e7d-3f07b7df4f95",
-    customerName: "abcef",
-    customerAdminEmail: "abc@my.org",
+    orgId: '91745f4e-308f-489e-8e7d-3f07b7df4f95',
+    customerName: 'abcef',
+    customerAdminEmail: 'abc@my.org',
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -77,19 +77,6 @@ describe('Controller: LineListCtrl', function () {
       expect($scope.canShowExternalNumberDelete($scope.gridData[2])).toBeFalsy();
       expect($scope.canShowExternalNumberDelete($scope.gridData[3])).toBeTruthy();
     });
-
-    it('should not show Actions column if feature toggle is off', function () {
-      FeatureToggleService.supports.and.returnValue($q.resolve(false));
-      var controllerToggleOff = $controller('LinesListCtrl', {
-        $scope: $scope,
-      });
-
-      $scope.$apply();
-      $timeout.flush();
-
-      expect(controllerToggleOff.gridOptions.columnDefs.length).toBe(3);
-      expect(_.some(controllerToggleOff.gridOptions.columnDefs, function (col) { return col.name === 'actions'; })).toBeFalsy();
-    });
   });
 
   describe('filter', function () {
@@ -134,9 +121,9 @@ describe('Controller: LineListCtrl', function () {
       LineListService.getLineList.calls.reset();
 
       var sortColumns = [{
-        'name': 'internalnumber',
-        'sort': {
-          'direction': 'asc',
+        name: 'internalnumber',
+        sort: {
+          direction: 'asc',
         },
       }];
 
@@ -165,7 +152,6 @@ describe('Controller: LineListCtrl', function () {
   });
 
   describe('showProviderDetails, true case', function () {
-
     it('should change the state on reseller exists true', function () {
       controller.showProviderDetails();
 
@@ -175,9 +161,8 @@ describe('Controller: LineListCtrl', function () {
         customerEmail: customerInfo.customerAdminEmail,
         customerCommunicationLicenseIsTrial: true,
         customerRoomSystemsLicenseIsTrial: true,
+        refreshFn: controller.getLineList,
       });
     });
-
   });
-
 });

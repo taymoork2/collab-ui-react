@@ -5,22 +5,13 @@
   <h4 class="modal-title" translate="hercules.connectorUpgrade.title"></h4>
 </div>
 <div class="modal-body connector-upgrade-modal">
-  <p translate="hercules.connectorUpgrade.text"></p>
-  <ul ng-repeat="upgrade in ConnectorUpgradeCtrl.upgrades">
-    <li translate="hercules.connectorUpgrade.XtoY" translate-value-name="{{upgrade.connectorName}}" translate-value-version="{{upgrade.availableVersion}}"></li>
-  </ul>
-  <div class="spacing" ng-if="ConnectorUpgradeCtrl.upgrades.length === 1">
-    <p translate="hercules.connectorUpgrade.releaseNotes"></p>
-    <p ng-if="!ConnectorUpgradeCtrl.upgrades[0].releaseNotesUrl">{{ConnectorUpgradeCtrl.upgrades[0].releaseNotes}}</p>
-    <p ng-if="ConnectorUpgradeCtrl.upgrades[0].releaseNotesUrl"><a href="{{ConnectorUpgradeCtrl.upgrades[0].releaseNotesUrl}}" target="_blank" translate="hercules.connectorUpgrade.releaseNotesLink"></a></p>
-  </div>
-  <div ng-if="ConnectorUpgradeCtrl.upgrades.length > 1">
-    <p translate="hercules.connectorUpgrade.releaseNotes"></p>
-    <ul ng-repeat="upgrade in ConnectorUpgradeCtrl.upgrades">
-      <li ng-if="!upgrade.releaseNotesUrl">{{upgrade.connectorName}}: {{upgrade.releaseNotes}}</li>
-      <li ng-if="upgrade.releaseNotesUrl">{{upgrade.connectorName}}: <a href="{{upgrade.releaseNotesUrl}}" target="_blank" translate="hercules.connectorUpgrade.releaseNotesLink"></a></li>
-    </ul>
-  </div>
+  <p
+    translate="hercules.connectorUpgrade.text"
+    translate-value-name="{{ConnectorUpgradeCtrl.upgradeInfo.connectorName}}"
+    translate-value-version="{{ConnectorUpgradeCtrl.upgradeInfo.availableVersion}}"></p>
+  <h5 translate="hercules.connectorUpgrade.releaseNotes"></h5>
+  <p ng-if="!ConnectorUpgradeCtrl.upgradeInfo.releaseNotesUrl">{{ConnectorUpgradeCtrl.upgradeInfo.releaseNotes}}</p>
+  <p ng-if="ConnectorUpgradeCtrl.upgradeInfo.releaseNotesUrl"><a href="{{ConnectorUpgradeCtrl.upgradeInfo.releaseNotesUrl}}" target="_blank" translate="hercules.connectorUpgrade.releaseNotesLink"></a></p>
 </div>
 <div class="modal-footer">
   <button class="btn btn-default"

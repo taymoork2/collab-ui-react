@@ -1,0 +1,16 @@
+<div ng-form="lineLabelForm" class="cs-form" ng-if="$ctrl.lineLabelToggle">
+  <div class="cs-form__section">
+    <div class="section__info">
+      <h4 class="section__title" translate="lineLabel.title"></h4>
+      <p class="section__description" translate="lineLabel.description"></p>
+    </div>
+    <div class="section__content">
+      <input 
+        cs-input type="text" 
+        id="lineLabel" 
+        name="lineLabel" 
+        ng-model="$ctrl.lineLabel" 
+        maxlength="30">
+    </div>
+  </div>
+</div>

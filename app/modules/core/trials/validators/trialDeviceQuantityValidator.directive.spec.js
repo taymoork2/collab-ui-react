@@ -81,13 +81,10 @@ describe('Validator: DeviceQuantityValidator:', function () {
     );
     this.compileTemplate(this.element);
     this.input = this.$scope.form.device_sx10;
-
   });
 
   describe('Device quantity validators', function () {
-
     describe('Input quantity validators', function () {
-
       it('should set the quantity invalid if it\'s over max allowed', function () {
         var expectedError = this.$translate.instant('trialModal.call.invalidQuantity', { min: this.controller.deviceLimit.CISCO_SX10.min, max: this.controller.deviceLimit.CISCO_SX10.max });
         this.input.$setViewValue('5');
@@ -134,7 +131,6 @@ describe('Validator: DeviceQuantityValidator:', function () {
         this.input.$setViewValue('4');
         this.$scope.$digest();
       });
-
     });
     describe('Input type quantity validators', function () {
       it('should set the quantity invalid if the phone quantity is over the max allowed', function () {
@@ -159,7 +155,6 @@ describe('Validator: DeviceQuantityValidator:', function () {
     });
 
     describe('Input total quantity validators', function () {
-
       it('should set the quantity invalid if the total quantity is over the max allowed', function () {
         var expectedError = this.$translate.instant('trialModal.call.invalidTotalQuantity', { max: this.controller.deviceLimit.totalDevices.max });
         this.$rootScope.callTrial.getTypeQuantity = function () { return 3; };

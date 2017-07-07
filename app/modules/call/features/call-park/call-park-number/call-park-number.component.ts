@@ -31,14 +31,14 @@ class CallParkNumberCtrl implements ng.IComponentController {
     private CallParkService: CallParkService,
   ) {}
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { range } = changes;
     if (range && range.currentValue) {
       this.processCallParkNumberChanges(range);
     }
   }
 
-  private processCallParkNumberChanges(callParkChanges: ng.IChangesObject): void {
+  private processCallParkNumberChanges(callParkChanges: ng.IChangesObject<any>): void {
     if (_.isEqual(callParkChanges.currentValue.startRange, callParkChanges.currentValue.endRange) && callParkChanges.currentValue.startRange !== '') {
       this.rangeType = RangeType.SINGLE;
       this.singleNumber = callParkChanges.currentValue.startRange;
@@ -52,7 +52,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
     }
   }
 
-  public getRangeList(): ng.IPromise<Array<ICallParkRangeItem>> {
+  public getRangeList(): ng.IPromise<ICallParkRangeItem[]> {
     return this.CallParkService.getRangeList().then( ranges => {
       return ranges;
     });
@@ -68,7 +68,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
     });
   }
 
-  public getEndRangeList(startRange: string): ng.IPromise<Array<string>> {
+  public getEndRangeList(startRange: string): ng.IPromise<string[]> {
     return this.CallParkService.getEndRange(startRange).then( endRanges => {
       return _.drop(endRanges);
     });
@@ -83,7 +83,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
   }
 
   public onChangeSingleNumber(): void {
-    let range: ICallParkRangeItem = {
+    const range: ICallParkRangeItem = {
       startRange: this.singleNumber,
       endRange: this.singleNumber,
     };
@@ -95,7 +95,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
 
   public onChangeEndRange(): void {
     if (!_.isUndefined(this.startRange) && !_.isUndefined(this.endRange)) {
-      let range: ICallParkRangeItem = {
+      const range: ICallParkRangeItem = {
         startRange: this.startRange,
         endRange: this.endRange,
       };

@@ -22,7 +22,7 @@ export class KemService {
   }
 
   public getKemOption(kemNumber) {
-    let labels = this.getLabel();
+    const labels = this.getLabel();
     if (kemNumber >= 0 && kemNumber < labels.length) {
       return labels[kemNumber];
     } else {

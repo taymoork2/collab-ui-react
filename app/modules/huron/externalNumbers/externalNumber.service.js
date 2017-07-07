@@ -268,17 +268,17 @@
 
     function getCarrierInfo(customerId) {
       var _terminusDetail = _.find(terminusDetails, { customerId: customerId });
-      var _pstnCarrierId = _terminusDetail.pstnCarrierId;
+      var _pstnCarrierId = _.get(_terminusDetail, 'pstnCarrierId');
 
       if (_.isUndefined(_pstnCarrierId) || _pstnCarrierId === null) {
-        PstnService.getCustomerV2(customerId)
+        return PstnService.getCustomerV2(customerId)
         .then(function (response) {
           _pstnCarrierId = _.get(response, 'pstnCarrierId');
           if (_.isUndefined(_pstnCarrierId) || _pstnCarrierId === null) {
             return null;
           } else {
             _.assign(_terminusDetail, { pstnCarrierId: _pstnCarrierId });
-            return TerminusService.customerCarrier().get({
+            return TerminusService.carrier().get({
               carrierId: _pstnCarrierId,
             }).$promise;
           }
@@ -287,7 +287,7 @@
           return null;
         });
       } else {
-        return TerminusService.customerCarrier().get({
+        return TerminusService.carrier().get({
           carrierId: _pstnCarrierId,
         }).$promise;
       }

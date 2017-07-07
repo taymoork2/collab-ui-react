@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('UserRoleService', UserRoleService);
+  module.exports = UserRoleService;
 
   /* @ngInject */
   function UserRoleService($http, $interpolate, Authinfo, Config, UrlConfig) {

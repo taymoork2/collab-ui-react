@@ -11,7 +11,7 @@ interface ISiteResource extends ng.resource.IResourceClass<ng.resource.IResource
 
 export class HuronSiteService {
   private huronSiteService: ISiteResource;
-  private sitePickList: Array<string> = [
+  private sitePickList: string[] = [
     'uuid',
     'siteIndex',
     'siteCode',
@@ -41,11 +41,11 @@ export class HuronSiteService {
     private HuronConfig,
   ) {
 
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
-    let saveAction: ng.resource.IActionDescriptor = {
+    const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
       headers: {
         'Access-Control-Expose-Headers': 'Location',

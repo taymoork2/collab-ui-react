@@ -3,7 +3,6 @@
 var testModule = require('./index').default;
 
 describe('FeatureToggleService', function () {
-
   function init() {
     this.initModules(testModule);
     this.injectDependencies('$httpBackend', '$state', 'Authinfo', 'FeatureToggleService');
@@ -14,9 +13,11 @@ describe('FeatureToggleService', function () {
     this.userId = '1';
     this.userRegex = /.*\/feature\/api\/v1\/features\/users\.*/;
     this.identityMe = 'https://identity.webex.com/identity/scim/null/v1/Users/me';
+    this.huronToggleService = 'https://toggle.huron-int.com/toggle/api/v3/features/customers/export/developer/id';
 
     this.getUserMe = getJSONFixture('core/json/users/me.json');
     this.$httpBackend.whenGET(this.identityMe).respond(200, this.getUserMe);
+    this.$httpBackend.whenGET(this.huronToggleService).respond(200, []);
     this.getUserFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
   }
 
@@ -131,5 +132,4 @@ describe('FeatureToggleService', function () {
       expect(this.$state.go).toHaveBeenCalledWith('login');
     });
   });
-
 });

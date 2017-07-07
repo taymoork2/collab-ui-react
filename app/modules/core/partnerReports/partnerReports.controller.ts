@@ -27,7 +27,7 @@ class PartnerReportCtrl {
   private initialized: boolean = false;
 
   // reports filter
-  public filterArray: Array<IFilterObject>;
+  public filterArray: IFilterObject[];
   public readonly ALL: string;
   public readonly ENGAGEMENT: string;
   public readonly QUALITY: string;
@@ -65,7 +65,7 @@ class PartnerReportCtrl {
     };
 
     this.ReportService.getOverallActiveUserData(this.timeSelected);
-    this.ReportService.getCustomerList().then((response: Array<any>): void => {
+    this.ReportService.getCustomerList().then((response: any[]): void => {
       this.setAllDummyData();
       this.updateCustomerFilter(response);
       if (this.customerSelected.length > 0) {
@@ -222,11 +222,11 @@ class PartnerReportCtrl {
   public customerSingular = this.$translate.instant('reportsPage.customer');
   public customerPlural = this.$translate.instant('reportsPage.customers');
   public customerMax: number = 5;
-  public customerOptions: Array<IReportsCustomer> = [];
-  public customerSelected: Array<IReportsCustomer> = [];
+  public customerOptions: IReportsCustomer[] = [];
+  public customerSelected: IReportsCustomer[] = [];
 
   // Timefilter controls
-  public timeOptions: Array<ITimespan> = _.cloneDeep(this.ReportConstants.TIME_FILTER);
+  public timeOptions: ITimespan[] = _.cloneDeep(this.ReportConstants.TIME_FILTER);
   public timeSelected: ITimespan = this.timeOptions[0];
 
   // private functions
@@ -237,8 +237,8 @@ class PartnerReportCtrl {
     this.activeUserSecondaryReportOptions.display = false;
     this.$rootScope.$broadcast(this.activeUserSecondaryReportOptions.broadcast);
 
-    let promises: Array<ng.IPromise<any>> = [];
-    let activePromise: ng.IPromise<any> = this.ReportService.getActiveUserData(this.customerSelected, this.timeSelected).then((response: IActiveUserReturnData) => {
+    const promises: ng.IPromise<any>[] = [];
+    const activePromise: ng.IPromise<any> = this.ReportService.getActiveUserData(this.customerSelected, this.timeSelected).then((response: IActiveUserReturnData) => {
       if (_.isArray(response.popData) && _.isArray(response.graphData)) {
         this.activeUserReportOptions.state = this.ReportConstants.EMPTY;
         this.populationReportOptions.state = this.ReportConstants.EMPTY;
@@ -259,7 +259,7 @@ class PartnerReportCtrl {
     });
     promises.push(activePromise);
 
-    let tablePromise: ng.IPromise<any> = this.ReportService.getActiveTableData(this.customerSelected, this.timeSelected).then((response: Array<IActiveTableData>) => {
+    const tablePromise: ng.IPromise<any> = this.ReportService.getActiveTableData(this.customerSelected, this.timeSelected).then((response: IActiveTableData[]) => {
       this.activeUserSecondaryReportOptions.state = this.ReportConstants.EMPTY;
       if (_.isArray(response) && (response.length > 0)) {
         this.activeUserSecondaryReportOptions.table.data = response;
@@ -274,9 +274,9 @@ class PartnerReportCtrl {
     return this.$q.all(promises);
   }
 
-  private setActiveUserGraph(data: Array<IActiveUserData>): void {
+  private setActiveUserGraph(data: IActiveUserData[]): void {
     this.exportArrays.active = null;
-    let tempactive = this.GraphService.getActiveUsersGraph(data, this.charts.active);
+    const tempactive = this.GraphService.getActiveUsersGraph(data, this.charts.active);
     if (tempactive) {
       this.charts.active = tempactive;
       this.exportArrays.active = this.ReportPrintService.createExportMenu(this.charts.active);
@@ -284,9 +284,9 @@ class PartnerReportCtrl {
     }
   }
 
-  private setActivePopulationGraph(data: Array<IPopulationData>): void {
+  private setActivePopulationGraph(data: IPopulationData[]): void {
     this.exportArrays.population = null;
-    let tempPopulation = this.GraphService.getActiveUserPopulationGraph(data, this.charts.population);
+    const tempPopulation = this.GraphService.getActiveUserPopulationGraph(data, this.charts.population);
     if (tempPopulation) {
       this.charts.population = tempPopulation;
       this.exportArrays.population = this.ReportPrintService.createExportMenu(this.charts.population);
@@ -296,7 +296,7 @@ class PartnerReportCtrl {
 
   // endpoint controls
   private getRegisteredEndpoints(): void {
-    this.ReportService.getRegisteredEndpoints(this.customerSelected, this.timeSelected).then((response: Array<Array<IEndpointData>>) => {
+    this.ReportService.getRegisteredEndpoints(this.customerSelected, this.timeSelected).then((response: IEndpointData[][]) => {
       if (_.isArray(response)) {
         if (!_.isArray(response) || response.length === 0) {
           this.endpointReportOptions.state = this.ReportConstants.EMPTY;
@@ -312,7 +312,7 @@ class PartnerReportCtrl {
 
   // media controls
   private getMediaQualityReports(): void {
-    this.ReportService.getMediaQualityMetrics(this.customerSelected, this.timeSelected).then((response: Array<IMediaQualityData>) => {
+    this.ReportService.getMediaQualityMetrics(this.customerSelected, this.timeSelected).then((response: IMediaQualityData[]) => {
       if (_.isArray(response)) {
         this.setMediaQualityGraph(response);
         this.mediaReportOptions.state = this.ReportConstants.EMPTY;
@@ -323,9 +323,9 @@ class PartnerReportCtrl {
     });
   }
 
-  private setMediaQualityGraph(data: Array<IMediaQualityData>): void {
+  private setMediaQualityGraph(data: IMediaQualityData[]): void {
     this.exportArrays.media = null;
-    let tempMediaChart = this.GraphService.getMediaQualityGraph(data, this.charts.media);
+    const tempMediaChart = this.GraphService.getMediaQualityGraph(data, this.charts.media);
     if (tempMediaChart) {
       this.charts.media = tempMediaChart;
       this.exportArrays.media = this.ReportPrintService.createExportMenu(this.charts.media);
@@ -349,7 +349,7 @@ class PartnerReportCtrl {
 
   private setCallMetricsGraph(data: ICallMetricsData): void {
     this.exportArrays.metrics = null;
-    let tempMetricsChart = this.GraphService.getCallMetricsDonutChart(data, this.charts.metrics);
+    const tempMetricsChart = this.GraphService.getCallMetricsDonutChart(data, this.charts.metrics);
     if (tempMetricsChart) {
       this.charts.metrics = tempMetricsChart;
       this.exportArrays.metrics = this.ReportPrintService.createExportMenu(this.charts.metrics);
@@ -379,9 +379,9 @@ class PartnerReportCtrl {
   }
 
   // set customerOptions with all organizations managed by this partner
-  private updateCustomerFilter(orgsData: Array<any>): void {
-    let customers: Array<IReportsCustomer> = [];
-    let partnerId = this.Authinfo.getOrgId();
+  private updateCustomerFilter(orgsData: any[]): void {
+    let customers: IReportsCustomer[] = [];
+    const partnerId = this.Authinfo.getOrgId();
     let partnerAdded = false;
     // add all customer names to the customerOptions list
     // compensates for when partner's own org is returned by managedOrgs API

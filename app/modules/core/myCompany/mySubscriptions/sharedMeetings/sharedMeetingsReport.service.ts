@@ -75,7 +75,7 @@ export class SharedMeetingsReportService {
     }
   }
 
-  public setChartData(data: Array<ISharedMeetingData>, chart: any, filter: ISharedMeetingTimeFilter): any {
+  public setChartData(data: ISharedMeetingData[], chart: any, filter: ISharedMeetingTimeFilter): any {
     if (chart) {
       chart.categoryAxis.showFirstLabel = true;
       chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
@@ -95,8 +95,8 @@ export class SharedMeetingsReportService {
     return chart;
   }
 
-  private createChart(data: Array<ISharedMeetingData>, filter: ISharedMeetingTimeFilter): any {
-    let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE_AXIS);
+  private createChart(data: ISharedMeetingData[], filter: ISharedMeetingTimeFilter): any {
+    const catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE_AXIS);
     if (!_.isUndefined(filter) && filter.value === this.ONE_MONTH) {
       catAxis.showFirstLabel = false;
     }
@@ -104,16 +104,16 @@ export class SharedMeetingsReportService {
       catAxis.gridColor = this.chartColors.grayLightThree;
     }
 
-    let valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
+    const valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].integersOnly = true;
 
-    let chartCursor: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.CURSOR);
+    const chartCursor: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.CURSOR);
     chartCursor.valueLineAlpha = 1;
     chartCursor.valueLineEnabled = true;
     chartCursor.valueLineBalloonEnabled = true;
     chartCursor.cursorColor = this.chartColors.grayLightTwo;
 
-    let chartData: any = this.CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, this.createGraphs(data), this.CommonGraphService.DATE, catAxis);
+    const chartData: any = this.CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, this.createGraphs(data), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
     chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
     chartData.legend.fontSize = 12;
@@ -124,13 +124,13 @@ export class SharedMeetingsReportService {
     return AmCharts.makeChart(this.CHART_DIV, chartData);
   }
 
-  private createGraphs(data: Array<ISharedMeetingData>): Array<any> {
-    let colors: Array<string> = [this.chartColors.primaryBase, this.chartColors.negativeBase];
+  private createGraphs(data: ISharedMeetingData[]): any[] {
+    let colors: string[] = [this.chartColors.primaryBase, this.chartColors.negativeBase];
     if (!data[0].balloon) {
       colors = [this.chartColors.grayLightThree, this.chartColors.grayLightOne];
     }
 
-    let graphs: Array<any> = [];
+    const graphs: any[] = [];
     graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE));
     graphs[0].title = this.$translate.instant('sharedMeetingReports.concurrentMeetingsTitle');
     graphs[0].fillColors = colors[0];

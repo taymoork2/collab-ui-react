@@ -3,6 +3,9 @@ import { CallFeatureMember } from 'modules/call/features/shared/call-feature-mem
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { Notification } from 'modules/core/notifications';
 
+const ALTERNATE_TIMER_MIN: number = 2;
+const ALTERNATE_TIMER_MAX: number = 60;
+
 class HuntGroupCtrl implements ng.IComponentController {
   private static readonly PAGE_TRANSITION_TIMEOUT: number = 10;
 
@@ -13,7 +16,7 @@ class HuntGroupCtrl implements ng.IComponentController {
    // edit mode specific data
   public title: string;
   public huronFeaturesUrl: string = 'huronfeatures';
-  public memberProperties: Array<string> = ['name', 'number'];
+  public memberProperties: string[] = ['name', 'number'];
 
   //common data
   public form: ng.IFormController;
@@ -65,7 +68,7 @@ class HuntGroupCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public setHuntGroupNumbers(numbers: Array<HuntGroupNumber>): void {
+  public setHuntGroupNumbers(numbers: HuntGroupNumber[]): void {
     this.huntGroup.numbers = numbers;
     this.form.$setDirty();
     this.huntGroup.numbers.length > 0 ? this.form.$invalid = false : this.form.$invalid = true;
@@ -89,7 +92,7 @@ class HuntGroupCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public setHuntGroupMembers(members: Array<CallFeatureMember>): void {
+  public setHuntGroupMembers(members: CallFeatureMember[]): void {
     this.huntGroup.members = members;
     this.form.$setDirty();
     this.checkForChanges();
@@ -103,21 +106,42 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public setHuntGroupDestinationRule(destinationRule: DestinationRule): void {
     this.huntGroup.destinationRule = destinationRule;
-    this.form.$setDirty();
-    this.checkForChanges();
+    this.form.$setValidity('', false, this.form);
 
+    if (!_.isNull(this.huntGroup.alternateDestination.number) || !_.isNull(this.huntGroup.alternateDestination.numberUuid)) {
+      this.form.$setValidity('', true, this.form);
+    }
+
+    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_AUTOMATIC) {
+      this.huntGroup.sendToApp = false;
+    } else {
+      this.huntGroup.sendToApp = true;
+    }
+
+    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION || !_.isNull(this.huntGroup.alternateDestination.number) ) {
+      this.form.$setDirty();
+      this.checkForChanges();
+    }
   }
 
   public setHuntGroupFallbackDestination(fbDestination: FallbackDestination) {
     this.huntGroup.fallbackDestination = fbDestination;
+    if (_.isNull(_.get(fbDestination, 'number') || _.isUndefined(_.get(fbDestination, 'number')))) {
+      this.form.$setValidity('', false, this.form);
+    }
     this.form.$setDirty();
     this.checkForChanges();
   }
 
   public setHuntGroupAlternateDestination(aDestination: FallbackDestination) {
-    this.huntGroup.alternateDestination = aDestination;
-    this.form.$setDirty();
-    this.checkForChanges();
+    if ( aDestination.timer && !_.inRange( aDestination.timer, ALTERNATE_TIMER_MIN, ALTERNATE_TIMER_MAX + 1)) {
+      this.form.$setValidity('', false, this.form);
+    } else {
+      this.huntGroup.alternateDestination = aDestination;
+      this.form.$setValidity('', true, this.form);
+      this.form.$setDirty();
+      this.checkForChanges();
+    }
   }
 
   public cancelModal(): void {
@@ -160,14 +184,11 @@ class HuntGroupCtrl implements ng.IComponentController {
   public save(): void {
     this.saveInProcess = true;
 
-    if (this.huntGroup.destinationRule === DestinationRule.TYPEFALLBACKRULE_FALLBACK_DESTINATION) {
-      this.huntGroup.alternateDestination = new FallbackDestination();
-    }
-
     this.HuntGroupService.updateHuntGroup(this.huntGroup.uuid || '', this.huntGroup)
-    .then( () => {
+    .then((huntGroup: HuntGroup) => {
       this.Notification.success('huronHuntGroup.successUpdate', { huntGroupName: this.huntGroup.name } );
       this.title = this.huntGroup.name || '';
+      this.huntGroup = huntGroup;
     })
     .catch( (response) => {
       this.Notification.errorWithTrackingId(response);
@@ -220,7 +241,7 @@ class HuntGroupCtrl implements ng.IComponentController {
   }
 
   public nextButton($index): boolean {
-    let buttonStates = {
+    const buttonStates = {
       0: () => {
         return !_.isUndefined(_.get(this.huntGroup, 'name'));
       },
@@ -234,7 +255,8 @@ class HuntGroupCtrl implements ng.IComponentController {
         return _.get(this.huntGroup, 'members', []).length !== 0;
       },
       4: () => {
-        if (!_.isUndefined(_.get(this.huntGroup, 'fallbackDestination'))) {
+        const fbDestination = _.get(this.huntGroup, 'fallbackDestination');
+        if (!_.isUndefined(fbDestination) && !_.isNull(_.get(fbDestination, 'number')) ) {
           this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'enabled', 'add');
           return true;
         } else {
@@ -281,7 +303,7 @@ class HuntGroupCtrl implements ng.IComponentController {
   }
 
   public applyElement(element: HTMLCollectionOf<Element>, appliedClass, method): boolean | undefined {
-    let domElement: Element = _.get<Element>(element, '[0]');
+    const domElement: Element = _.get<Element>(element, '[0]');
     if (domElement) {
       switch (method) {
         case 'add':

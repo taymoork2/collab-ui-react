@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: AAScheduleInfoCtrl', function () {
-
   var controller;
   var AACalendarService, AAModelService, AAICalService;
   var $scope, $q;

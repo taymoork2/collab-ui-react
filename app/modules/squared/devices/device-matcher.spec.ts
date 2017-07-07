@@ -3,7 +3,7 @@ import { DeviceMatcher } from './device-matcher';
 
 describe('Service: DeviceMatcher', function () {
 
-  let createDevice = (): csdm.IDevice => {
+  const createDevice = (): csdm.IDevice => {
     return {
       isATA: true,
       ip: 'bbb',
@@ -34,7 +34,7 @@ describe('Service: DeviceMatcher', function () {
     };
   };
 
-  let test = {
+  const test = {
     device: createDevice(),
   };
 

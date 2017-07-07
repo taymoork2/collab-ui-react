@@ -3,7 +3,7 @@ describe('component: speedDial', () => {
   const DROPDOWN_LIST_ADD = '.actions-services li:nth-child(1) a';
 
   const INPUT_NAME = 'input[name="label"]';
-  const INPUT_NUMBER = 'div#speedDialsContainer input.phone-number';
+  const INPUT_NUMBER = 'input[name="phoneinput"]';
   const SAVE_BUTTON = 'button.btn--primary';
   const READ_ONLY = '.sd-readonly-wrapper .sd-label';
   const DROPDOWN_LIST_REORDER = '.actions-services li:nth-child(2) a';
@@ -21,7 +21,9 @@ describe('component: speedDial', () => {
       'Authinfo',
       'BlfURIValidation',
       'HuronConfig',
+      'UrlConfig',
       '$httpBackend',
+      'FeatureMemberService',
     );
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.callDestInputs = ['external', 'uri', 'custom'];
@@ -34,9 +36,10 @@ describe('component: speedDial', () => {
       speedDials: [],
     }));
     spyOn(this.SpeedDialService, 'updateSpeedDials').and.returnValue(this.$q.resolve());
+    spyOn(this.FeatureMemberService, 'getFullNameFromUser').and.returnValue(this.$q.resolve({ user: { displayName: 'John Doe' } }));
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     spyOn(this.HuronCustomerService, 'getVoiceCustomer').and.returnValue(this.$q.resolve({ uuid: '123', dialingPlanDetails: { regionCode: '', countryCode: '+1' } }));
-    this.$httpBackend.whenGET(this.HuronConfig.getCmiUrl() + '/common/customers/' + this.Authinfo.getOrgId() + '/users/12345').respond(200);
+    this.$httpBackend.whenGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/12345').respond(200);
   });
 
   afterEach(function () {

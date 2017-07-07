@@ -117,5 +117,4 @@ describe('Controller: PstnServiceAddressCtrl', function () {
       expect(controller.hasBackButton()).toEqual(true);
     });
   });
-
 });

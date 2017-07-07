@@ -11,14 +11,14 @@ export class GridSpinnerDirective implements ng.IDirective {
     $attr: IGridSpinnerAttributes,
   ) => {
 
-    let myScope = $scope.$new(true);
-    let spinnerElement = this.$compile(
+    const myScope = $scope.$new(true);
+    const spinnerElement = this.$compile(
       `<div class="grid-spinner" ng-if="showSpinner">
         <i class='icon icon-spinner icon-2x'></i>
       </div>`)(myScope);
     spinnerElement.appendTo($element);
 
-    let unwatch = $scope.$watch($attr.gridSpinner, (newValue, oldValue) => {
+    const unwatch = $scope.$watch($attr.gridSpinner, (newValue, oldValue) => {
       if (newValue !== oldValue || _.isUndefined(myScope.showSpinner)) {
         myScope.showSpinner = !!newValue;
       }

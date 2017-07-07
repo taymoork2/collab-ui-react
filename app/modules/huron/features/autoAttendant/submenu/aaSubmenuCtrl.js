@@ -17,7 +17,6 @@
 
   /* @ngInject */
   function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService) {
-
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -178,15 +177,14 @@
       // populate with data from an existing AA
       var entry = vm.menuEntry;
 
-      if (entry.type == "MENU_OPTION") {
-
+      if (entry.type == 'MENU_OPTION') {
         var entries = entry.entries;
         if (entries.length > 0) {
           // add the key/action pairs
           for (var j = 0; j < entries.length; j++) {
             var menuEntry = entries[j];
 
-            if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
+            if (menuEntry.actions.length > 0 && menuEntry.type == 'MENU_OPTION') {
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
               if (!_.isUndefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
@@ -203,8 +201,8 @@
                 }, menuEntry.actions[0]));
               } else {
                 keyAction.action = {};
-                keyAction.action.name = "";
-                keyAction.action.label = "";
+                keyAction.action.name = '';
+                keyAction.action.label = '';
               }
               vm.selectedActions.push(keyAction);
             }
@@ -217,7 +215,7 @@
 
     function addButtonZero() {
       var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      keyEntry.type = "MENU_OPTION";
+      keyEntry.type = 'MENU_OPTION';
       keyEntry.key = _.head(getAvailableKeys(''));
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);

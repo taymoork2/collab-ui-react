@@ -16,7 +16,7 @@ class DirSyncStatusRowController implements ng.IComponentController {
   public $onInit() {
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { enabled } = changes;
     if (enabled) {
       this.statusClass = enabled.currentValue ? 'success' : 'disabled';

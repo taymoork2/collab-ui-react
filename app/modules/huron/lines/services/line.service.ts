@@ -21,38 +21,40 @@ export class LineService {
     private HuronConfig,
   ) {
 
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
-    let saveAction: ng.resource.IActionDescriptor = {
+    const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
       headers: {
         'Access-Control-Expose-Headers': 'Location',
       },
     };
 
-    this.lineService = <ILineResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', {},
+    this.lineService = <ILineResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', { wide: false },
       {
         update: updateAction,
         save: saveAction,
       });
   }
 
-  public getLine(type: LineConsumerType, typeId: string, numberId: string): ng.IPromise<Line> {
+  public getLine(type: LineConsumerType, typeId: string, numberId: string, wide?: boolean): ng.IPromise<Line> {
     return this.lineService.get({
       customerId: this.Authinfo.getOrgId(),
       type: type,
       typeId: typeId,
       numberId: numberId,
+      wide: wide,
     }).$promise;
   }
 
-  public getLineList(type: LineConsumerType, typeId: string): ng.IPromise<Line[]> {
+  public getLineList(type: LineConsumerType, typeId: string, wide?: boolean): ng.IPromise<Line[]> {
     return this.lineService.get({
       customerId: this.Authinfo.getOrgId(),
       type: type,
       typeId: typeId,
+      wide: wide,
     }).$promise
     .then(lineList => {
       return _.get<Line[]>(lineList, 'numbers', []);

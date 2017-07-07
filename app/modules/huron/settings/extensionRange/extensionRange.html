@@ -17,6 +17,7 @@
       ng-maxlength="$ctrl.site.extensionLength"
       ng-minlength="$ctrl.site.extensionLength"
       ng-disabled="$ctrl.isDisabled(range)"
+      ng-attr-focus-on="$last && range.beginNumber === ''"
       cs-input-messages="$ctrl.messages"
       cs-input-warning="$ctrl.steeringDigitOverlap(range)"
       cs-input-warning-message="{{::'directoryNumberPanel.steeringDigitOverlapWarning' | translate}}"

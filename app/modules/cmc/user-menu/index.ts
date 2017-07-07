@@ -3,7 +3,7 @@ import { CmcUserDetailsSettingsComponent } from './user-details-settings.compone
 
 import notificationModule from 'modules/core/notifications/index';
 
-let orgServiceModule = require('modules/core/scripts/services/org.service');
+const orgServiceModule = require('modules/core/scripts/services/org.service');
 
 export default angular
   .module('cmc.user-details', [

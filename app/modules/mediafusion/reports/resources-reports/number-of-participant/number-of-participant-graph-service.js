@@ -4,7 +4,6 @@
   angular.module('Mediafusion').service('NumberOfParticipantGraphService', NumberOfParticipantGraphService);
   /* @ngInject */
   function NumberOfParticipantGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
-
     var numberOfParticipantdiv = 'numberOfParticipantdiv';
     var exportDiv = 'number-of-participant-div';
     var GUIDEAXIS = 'guideaxis';
@@ -127,7 +126,7 @@
       }
 
       var columnNames = {
-        'time': timeStamp,
+        time: timeStamp,
       };
       _.each(graphs, function (value) {
         if (value.title === 'onPremParticipants') {

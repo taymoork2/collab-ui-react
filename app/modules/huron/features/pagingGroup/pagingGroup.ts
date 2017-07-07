@@ -21,9 +21,9 @@ export interface IPagingGroup extends ng.resource.IResource<IPagingGroup> {
   groupId?: string;
   name: string;
   extension?: string | undefined;
-  members: Array<IMemberData>;
+  members: IMemberData[];
   initiatorType: string | undefined;
-  initiators: Array<IInitiatorData> | undefined;
+  initiators: IInitiatorData[] | undefined;
 }
 
 export interface IMemberWithPicture {

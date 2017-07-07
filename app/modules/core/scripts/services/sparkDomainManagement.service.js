@@ -23,8 +23,8 @@
 
       var domainName = domain + UrlConfig.getSparkDomainCheckUrl();
       var payload = {
-        'name': domainName,
-        'isVerifyDomainOnly': true,
+        name: domainName,
+        isVerifyDomainOnly: true,
       };
 
       return $http.post(sparksUrl, payload, {
@@ -39,8 +39,8 @@
 
       var domainName = domain + UrlConfig.getSparkDomainCheckUrl();
       var payload = {
-        'name': domainName,
-        'isVerifyDomainOnly': false,
+        name: domainName,
+        isVerifyDomainOnly: false,
       };
 
       return $http.post(sparksUrl, payload);

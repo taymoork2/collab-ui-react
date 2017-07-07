@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AARouteToExtNumCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
-
     var vm = this;
     var conditional = 'conditional';
 
@@ -65,7 +64,6 @@
       }
 
       vm.model.phoneNumberInput.phoneNumber = action.getValue();
-
     }
 
     function saveUiModel(data) {
@@ -91,14 +89,13 @@
       action.setValue(num);
 
       AACommonService.setPhoneMenuStatus(true);
-
     }
 
     // when the phone number is changed in the UI, save to model
     // the country select control doesn't offer a change element
     // we tried ng-change and it errored and didn't work
     $scope.$watch(
-      "aaRouteToExtNum.model.phoneNumberInput.phoneNumber",
+      'aaRouteToExtNum.model.phoneNumberInput.phoneNumber',
       function handlePhoneNumberChange(newValue, oldValue) {
         if (newValue != oldValue) {
           saveUiModel();
@@ -111,14 +108,13 @@
     });
 
     $scope.$on(
-      "$destroy",
+      '$destroy',
       function () {
         AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
       }
     );
 
     function checkForRouteToExt(action) {
-
       // make sure action is ExtNum not HG, User, etc
       if (!(action.getName() === rtExtNum)) {
         action.setName(rtExtNum);
@@ -128,7 +124,6 @@
     }
 
     function activate() {
-
       var ui = AAUiModelService.getUiModel();
 
       if ($scope.fromDecision) {
@@ -141,7 +136,6 @@
         if (!conditionalAction || conditionalAction.getName() !== conditional) {
           conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
           vm.menuEntry.actions[0] = conditionalAction;
-
         }
         if (!$scope.fromFallback) {
           if (!conditionalAction.then) {
@@ -152,7 +146,6 @@
           }
         }
       } else {
-
         if ($scope.fromRouteCall) {
           vm.uiMenu = ui[$scope.schedule];
           vm.menuEntry = vm.uiMenu.entries[$scope.index];
@@ -192,7 +185,6 @@
           // used by aaValidationService to identify this menu
 
           vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuKeyEntry.routeToId);
-
         }
       }
 
@@ -214,10 +206,8 @@
       }
 
       populateUiModel();
-
     }
 
     activate();
-
   }
 })();

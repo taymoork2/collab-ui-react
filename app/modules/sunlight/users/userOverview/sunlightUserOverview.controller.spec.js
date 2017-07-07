@@ -5,14 +5,14 @@ describe('sunlightUserOverviewCtrl', function () {
   var $q, sunlightConfigService, getUserInfoDeferred, updateUserInfoDeferred;
   var userInfo = getJSONFixture('sunlight/json/sunlightTestUser.json');
   var successResponse = {
-    'data': userInfo,
-    'status': 200,
-    'statusText': 'OK',
+    data: userInfo,
+    status: 200,
+    statusText: 'OK',
   };
 
   var failureResponse = {
-    'status': 500,
-    'statusText': 'Intenal Server Error',
+    status: 500,
+    statusText: 'Intenal Server Error',
   };
 
   beforeEach(angular.mock.module('Sunlight'));
@@ -103,7 +103,6 @@ describe('sunlightUserOverviewCtrl', function () {
   });
 
   it('should return a failure status when the updateUserInfo operation fails due to empty alias', function () {
-
     getUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
 

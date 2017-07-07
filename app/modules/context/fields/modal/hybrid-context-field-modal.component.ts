@@ -1,5 +1,6 @@
 import { Notification } from 'modules/core/notifications';
 import { ContextFieldsService } from 'modules/context/services/context-fields-service';
+import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 
 interface IFieldData {
   id: string;
@@ -7,12 +8,27 @@ interface IFieldData {
   classification: string;
   classificationUI: string;
   dataType: string;
+  dataTypeDefinition?: IDataTypeDefinition;
+  defaultValue?: any;
   dataTypeUI: string;
   translations: any;
   searchable: Boolean;
   lastUpdated?: string;
   publiclyAccessibleUI: string;
   publiclyAccessible: Boolean;
+}
+
+interface IDataTypeDefinition {
+  type: string;
+  enumerations?: string[];
+  translations?: any;
+  inactiveEnumerations?: string[];
+}
+
+interface IOption {
+  edit?: boolean;
+  value: string;
+  index: number;
 }
 
 class FieldModalCtrl implements ng.IComponentController {
@@ -25,7 +41,6 @@ class FieldModalCtrl implements ng.IComponentController {
   private dataTypeApiMap: Object;
   private classificationApiMap: Object;
   private classificationHelpTextMap: Object;
-  private publiclyAccessibleMap: Object;
 
   public dataTypeOptions: string[];
   public dataTypePlaceholder: string;
@@ -42,16 +57,43 @@ class FieldModalCtrl implements ng.IComponentController {
   public dismiss: Function;
   public createMode: Boolean;
   public fieldData: IFieldData;
+  public dataTypeDefinition: Object;
 
+  public optionsList: IOption[] = [];
+  public optionsListCopy: IOption[] = [];
+  public optionReorderListCopy: IOption[] = [];
+  public newOption: string;
+  public editingOption: boolean;
+  public addEnumOption: boolean;
+  public reorderEnumOptions: boolean;
+  public setDefaultEnumOption: boolean;
+  public optionValidators: Object;
+  public optionValidationMessages: Object;
+  public defaultOption: string;
+  public optionRadios: Object[];
+  public uniqueOptionCheckPassed: boolean = true;
+  public nonEmptyOptionCheckPassed: boolean = true;
+  public hasContextExpandedTypesToggle: boolean;
+  public inactiveOptionsList: IOption[] = [];
+  public existingFieldOptionsList: IOption[] = [];
+  public firstReordering: boolean = true;
+  public ENUM: string = 'enum';
+
+  public actionList: IActionItem[];
+  public actionListCopy: IActionItem[] = [];
   /* @ngInject */
   constructor(
     private Analytics,
     private $translate: ng.translate.ITranslateService,
+    private $timeout: ng.ITimeoutService,
     protected Notification: Notification,
     protected ContextFieldsService: ContextFieldsService,
+    protected dragularService,
+    protected $scope,
   ) {}
 
   public $onInit() {
+    this.$scope.forms = {};
     this.unencrypted = this.$translate.instant('context.dictionary.fieldPage.unencrypted');
     this.encrypted = this.$translate.instant('context.dictionary.fieldPage.encrypted');
     this.pii = this.$translate.instant('context.dictionary.fieldPage.piiEncrypted');
@@ -64,6 +106,9 @@ class FieldModalCtrl implements ng.IComponentController {
     this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.double')] = 'double';
     this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.integer')] = 'integer';
     this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.string')] = 'string';
+    if (this.hasContextExpandedTypesToggle) {
+      this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.enumString')] = 'string';
+    }
 
     // map encrypted type to value that is accepted by api
     this.classificationApiMap = {};
@@ -76,11 +121,6 @@ class FieldModalCtrl implements ng.IComponentController {
     this.classificationHelpTextMap[this.unencrypted] = this.$translate.instant('context.dictionary.fieldPage.unencryptedHelpText');
     this.classificationHelpTextMap[this.encrypted] = this.$translate.instant('context.dictionary.fieldPage.encryptedHelpText');
     this.classificationHelpTextMap[this.pii] = this.$translate.instant('context.dictionary.fieldPage.PiiEncryptedHelpText');
-
-    //map publiclyAccessible to value that matches by api
-    this.publiclyAccessibleMap = {};
-    this.publiclyAccessibleMap[this.$translate.instant('context.dictionary.custom')] = false;
-    this.publiclyAccessibleMap[this.$translate.instant('context.dictonary.cisco')] = true;
 
     // set up the options and placeholder for dataType
     this.dataTypeOptions = _.keys(this.dataTypeApiMap).sort();
@@ -122,6 +162,360 @@ class FieldModalCtrl implements ng.IComponentController {
       // make a copy to that changes to data isn't reflected in side panel as
       // new data is entered by user
       : _.cloneDeep(this.existingFieldData);
+
+
+    //copy the enum field options to the optionsList
+    if (this.fieldData.dataTypeDefinition) {
+      if (this.fieldData.dataTypeDefinition.enumerations) {
+        //remove the inactiveOptions from the enumeration for UI display
+        let activeEnumsList: string[] = [];
+        if (this.fieldData.dataTypeDefinition.inactiveEnumerations) {
+          activeEnumsList = _.difference(this.fieldData.dataTypeDefinition.enumerations, this.fieldData.dataTypeDefinition.inactiveEnumerations);
+          this.inactiveOptionsList = this.getOptionsListFromEnumerations(this.fieldData.dataTypeDefinition.inactiveEnumerations);
+        } else {
+          activeEnumsList = _.cloneDeep(this.fieldData.dataTypeDefinition.enumerations);
+        }
+
+        this.optionsList = this.getOptionsListFromEnumerations(activeEnumsList);
+        this.optionsListCopy = _.cloneDeep(this.optionsList);
+        this.existingFieldOptionsList = _.cloneDeep(this.optionsList);
+      }
+    }
+
+
+    this.optionValidationMessages = {
+      unique: this.$translate.instant('context.dictionary.fieldPage.optionUniqueError'),
+      required: this.$translate.instant('context.dictionary.fieldPage.optionRequired'),
+    };
+
+    this.optionValidators = {
+      unique: (optionValue: string) => this.uniqueOptionValidation(optionValue),
+    };
+
+    this.defaultOption = this.fieldData.defaultValue;
+    this.optionRadios = this.getOptionRadioList();
+
+
+    this.actionListCopy.push({
+      actionKey: 'context.dictionary.fieldPage.enumOptionsReorder',
+      actionFunction: this.setReorder.bind(this),
+    });
+
+    this.actionListCopy.push({
+      actionKey: 'context.dictionary.fieldPage.enumOptionsSetDefault',
+      actionFunction: this.setDefault.bind(this),
+    });
+
+    //set the actions
+    if (this.optionsListCopy) {
+      this.resetActionList();
+    }
+  }
+
+  private getOptionsListFromEnumerations(list: string[]) {
+    let optionsList: IOption[] = [];
+    optionsList = _.map(list, (enumeration, index) => {
+      return {
+        value: enumeration,
+        index: index,
+        edit: false,
+      };
+    });
+
+    return optionsList;
+  }
+
+  private getOptionRadioList() {
+    return _.map(this.optionsListCopy, option => {
+      return {
+        label: option.value,
+        value: option.value,
+        id: option.index,
+        name: option.value,
+      };
+    });
+  }
+
+  private addRemoveDefaultOptionToActionList(): void {
+    this.actionList.push({
+      actionKey: 'context.dictionary.fieldPage.enumOptionsRemoveDefault',
+      actionFunction: this.removeDefault.bind(this),
+    });
+  }
+
+
+  public setAddEnumOptions() {
+    const option = {
+      index: this.optionsList.length,
+      value: '',
+      edit: true,
+    };
+    this.optionsList.push(option);
+
+    this.setEdit(option, false);
+    this.addEnumOption = true;
+    this.$timeout(function () {
+      $('#option-' + option.index).focus();
+    }, 100);
+  }
+
+  public setEdit(option: IOption, isUpdate: boolean): void {
+    if (_.isObject(option) && _.has(option, 'value')) {
+      this.editingOption = true;
+      option.edit = true;
+
+      //for edit, need to update the optionsList to get the edit flag
+      if (isUpdate) {
+        this.optionsList = _.cloneDeep(this.optionsListCopy);
+      }
+      this.newOption = option.value;
+      this.actionList = [];
+    }
+  }
+
+  public setReorder(): void {
+    this.reorderEnumOptions = true;
+    this.actionList = [];
+
+    //keep a copy of the original list for later cancel
+    if (this.optionReorderListCopy) {
+      this.optionReorderListCopy.length = 0;
+    }
+    Array.prototype.push.apply(this.optionReorderListCopy, _.cloneDeep(this.optionsListCopy));
+
+    if (this.firstReordering) {
+      this.firstReordering = false;
+      this.dragularService('#optionList', {
+        classes: {
+          transit: 'options-reorder-transit',
+        },
+        containersModel: [this.optionsListCopy],
+        moves: () => {
+          return this.reorderEnumOptions;
+        },
+      });
+    }
+  }
+
+  public setDefault(): void {
+    this.setDefaultEnumOption = true;
+    this.actionList = [];
+  }
+
+  public removeDefault(): void {
+    this.defaultOption = '';
+    if (this.fieldData.defaultValue) {
+      this.fieldData.defaultValue = undefined;
+    }
+    this.resetActionList();
+    this.$scope.forms.newFieldForm.$setDirty();
+
+  }
+
+  private resetActionList(): void {
+    if (!this.isMinimumOptionsSet()) {
+      this.actionList = [];
+      return;
+    }
+    this.actionList = _.cloneDeep(this.actionListCopy);
+    this.updateActionList();
+  }
+
+  public saveOption(): void {
+    const option = _.find(this.optionsList, {
+      edit: true,
+    });
+    option.edit = false;
+
+    const optionOrig = _.cloneDeep(option);
+
+    option.value = this.newOption;
+    this.editingOption = false;
+    this.addEnumOption = false;
+
+    //update the defaultOption if the changed option is defaultValue
+    if (this.isDefaultOption(optionOrig) && !_.isEmpty(this.newOption)) {
+      this.defaultOption = this.newOption;
+      this.fieldData.defaultValue = this.defaultOption;
+    }
+
+    //update the inactiveOptionsList if the newValue is new value is marked inactive
+    if (!this.createMode) {
+      _.remove(this.inactiveOptionsList, deleteOption => {
+        return deleteOption.value === option.value;
+      });
+    }
+
+    this.updateDataTypeDefinition(this.optionsList);
+    this.optionsListCopy.length = 0;
+    Array.prototype.push.apply(this.optionsListCopy, _.cloneDeep(this.optionsList));
+    this.optionRadios = this.getOptionRadioList();
+    this.resetActionList();
+  }
+
+  public updateDataTypeDefinition(list: IOption[]) {
+    //update the dataTypeDefintion of fieldData
+    const dataTypeDefintion: IDataTypeDefinition = {
+      type: this.ENUM,
+    };
+
+    //combine with inactiveOptionsList
+    if (!this.createMode) {
+      list = _.concat(list, this.inactiveOptionsList);
+    }
+
+    const enumerations = _.map(list, option => {
+      return option.value;
+    });
+
+    const inactiveEnumerations = _.map(this.inactiveOptionsList, option => {
+      return option.value;
+    });
+
+    dataTypeDefintion.enumerations = enumerations;
+    dataTypeDefintion.translations = {
+      en_US: enumerations,
+    };
+    dataTypeDefintion.inactiveEnumerations = inactiveEnumerations;
+
+    this.fieldData.dataTypeDefinition = dataTypeDefintion;
+  }
+
+  private isExistingOption(option: IOption) {
+    const index =  _.findIndex(this.existingFieldOptionsList, existingOption => {
+      return existingOption.value === option.value;
+    });
+    return index !== -1;
+  }
+
+  public deleteOption(option, form: ng.IFormController): void {
+    _.remove(this.optionsList, function (current) {
+      return current.index === option.index;
+    });
+
+    if (!this.createMode && this.isExistingOption(option)) {
+      this.inactiveOptionsList = _.concat(this.inactiveOptionsList, option);
+    }
+
+    this.updateIndex(option.index);
+    this.updateDataTypeDefinition(this.optionsList);
+    this.optionsListCopy.length = 0;
+    Array.prototype.push.apply(this.optionsListCopy, this.optionsList);
+    this.optionRadios = this.getOptionRadioList();
+
+    //remove "Remove default" from action list and update the defaultValue
+    if (this.isDefaultOption(option)) {
+      this.defaultOption = '';
+      this.actionList.pop();
+      this.fieldData.defaultValue = undefined;
+    }
+
+    this.resetActionList();
+    form.$setDirty();
+  }
+
+  private updateIndex(removedIndex: number): void {
+    _.each(this.optionsList, function(option) {
+      if (option.index > removedIndex) {
+        option.index = option.index - 1;
+      }
+    });
+  }
+  public saveOptionsList(form: ng.IFormController): void {
+    if (this.reorderEnumOptions) {
+      this.updateDataTypeDefinition(this.optionsListCopy);
+      this.optionsList.length = 0;
+      Array.prototype.push.apply(this.optionsList, _.cloneDeep(this.optionsListCopy));
+      this.reorderEnumOptions = false;
+      this.optionReorderListCopy = [];
+      this.optionRadios = this.getOptionRadioList();
+    } else if (this.setDefaultEnumOption) {
+      this.setDefaultEnumOption = false;
+      this.fieldData.defaultValue = this.defaultOption;
+    }
+    form.$setDirty();
+    this.resetActionList();
+  }
+
+  private updateActionList(): void {
+    if (!_.isEmpty(this.defaultOption)) {
+      this.addRemoveDefaultOptionToActionList();
+    }
+  }
+
+  public isDefaultOption(option: IOption): boolean {
+    return this.defaultOption ? this.defaultOption === option.value : false;
+  }
+
+  public showDefaultFlag(): boolean {
+    return !_.isEmpty(this.defaultOption);
+  }
+
+  public cancelAddOption(): void {
+    this.addEnumOption = false;
+    this.editingOption = false;
+    this.uniqueOptionCheckPassed = true;
+    this.nonEmptyOptionCheckPassed = true;
+    this.resetActionList();
+    //reset optionsList to remove the just added new empty option
+    this.optionsList = _.cloneDeep(this.optionsListCopy);
+  }
+
+  public cancelEditOption(): void {
+    const option = _.find(this.optionsList, {
+      edit: true,
+    });
+    option.edit = false;
+
+    this.optionsListCopy = _.cloneDeep(this.optionsList);
+    this.editingOption = false;
+    this.uniqueOptionCheckPassed = true;
+    this.nonEmptyOptionCheckPassed = true;
+    this.resetActionList();
+  }
+
+  public showEditOptionIcons(): boolean {
+    return !this.editingOption && !this.reorderEnumOptions && !this.setDefaultEnumOption;
+  }
+
+  public showEditOptionsListIcons(): boolean {
+    return this.reorderEnumOptions || this.setDefaultEnumOption;
+  }
+
+  public showAddButton(): boolean {
+    return !this.addEnumOption && !this.editingOption && !this.reorderEnumOptions && !this.setDefaultEnumOption;
+  }
+
+  public cancelOptionsList(): void {
+    if (this.setDefaultEnumOption) {
+      this.defaultOption = '';
+    }
+
+    if (this.reorderEnumOptions) {
+      if (this.optionReorderListCopy) {
+        this.optionsListCopy.length = 0;
+        Array.prototype.push.apply(this.optionsListCopy, _.cloneDeep(this.optionReorderListCopy));
+      }
+    }
+    this.reorderEnumOptions = false;
+    this.setDefaultEnumOption = false;
+
+    this.resetActionList();
+  }
+
+  public isMinimumOptionsSet(): boolean {
+    return (this.optionsListCopy.length >= 2);
+  }
+
+  private isNotInSingleSelectEditingMode(): boolean {
+    return !this.addEnumOption && !this.editingOption && !this.reorderEnumOptions && !this.setDefaultEnumOption;
+  }
+
+  public isSingleSelectCheckPassed(): boolean {
+    if (this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString')) {
+      return this.isMinimumOptionsSet() && this.uniqueOptionCheckPassed && this.nonEmptyOptionCheckPassed && this.isNotInSingleSelectEditingMode();
+    }
+    return true;
   }
 
   public create() {
@@ -169,13 +563,25 @@ class FieldModalCtrl implements ng.IComponentController {
       this.fieldData.translations &&
       this.fieldData.translations.en_US &&
       this.fieldData.dataTypeUI &&
-      this.fieldData.classificationUI);
+      this.fieldData.classificationUI &&
+      this.isSingleSelectCheckPassed());
+  }
+
+  public saveOptionButtonEnabled() {
+    return Boolean(this.uniqueOptionCheckPassed &&
+      this.nonEmptyOptionCheckPassed);
   }
 
   public fixDataForApi() {
     this.fieldData.dataType = this.dataTypeApiMap[this.fieldData.dataTypeUI];
     this.fieldData.classification = this.classificationApiMap[this.fieldData.classificationUI];
-    this.fieldData.publiclyAccessible = this.publiclyAccessibleMap[this.fieldData.publiclyAccessibleUI];
+
+    if (this.fieldData.dataTypeUI !== this.$translate.instant('context.dictionary.dataTypes.enumString')) {
+      this.fieldData.dataTypeDefinition = undefined;
+      this.fieldData.defaultValue = undefined;
+    } else if (_.isEmpty(this.defaultOption)) {
+      this.fieldData.defaultValue = undefined;
+    }
 
     return this.fieldData;
   }
@@ -191,8 +597,38 @@ class FieldModalCtrl implements ng.IComponentController {
     return this.existingFieldIds.indexOf(value) === -1;
   }
 
+  public uniqueOptionValidation(optionValue: string) {
+    const value = optionValue || '';
+    const index =  _.findIndex(this.optionsListCopy, function (current) {
+      return current.value === value;
+    });
+
+    //handle when edit, allow the same value can be added
+    if (!this.addEnumOption) {
+      const existingOption = _.find(this.optionsListCopy, function (item) {
+        return item.edit === true;
+      });
+
+      if (existingOption.value === value) {
+        this.uniqueOptionCheckPassed = true;
+        this.nonEmptyOptionCheckPassed = !_.isEmpty(value);
+        return true;
+      }
+    }
+
+
+    this.uniqueOptionCheckPassed = index === -1;
+    this.nonEmptyOptionCheckPassed = !_.isEmpty(value);
+
+    return this.uniqueOptionCheckPassed;
+  }
+
   public classificationOnChange() {
     this.classificationHelpText = this.classificationHelpTextMap[this.fieldData.classificationUI];
+  }
+
+  public displaySingleSelectOptions() {
+    return this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString');
   }
 }
 
@@ -204,6 +640,7 @@ export class FieldModalComponent implements ng.IComponentOptions {
     existingFieldData: '<',
     callback: '<',
     dismiss: '&',
+    hasContextExpandedTypesToggle: '<',
   };
 }
 

@@ -2,18 +2,17 @@
 
 describe('Controller: ExternalNumberDetailCtrl', function () {
   var controller, $controller, $q, $scope, $state, $stateParams,
-    ModalService, ExternalNumberService, DialPlanService, Notification;
+    ExternalNumberService, DialPlanService, Notification;
 
-  var externalNumbers, modalDefer;
+  var externalNumbers;
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _$state_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _$state_, _ExternalNumberService_, _DialPlanService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
     $stateParams = _$stateParams_;
-    ModalService = _ModalService_;
     ExternalNumberService = _ExternalNumberService_;
     DialPlanService = _DialPlanService_;
     Notification = _Notification_;
@@ -24,24 +23,19 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     };
 
     externalNumbers = [{
-      'number': '123',
+      number: '123',
     }, {
-      'number': '456',
+      number: '456',
     }];
 
-    modalDefer = $q.defer();
     spyOn($state, 'go');
     spyOn(ExternalNumberService, 'deleteNumber').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'getAssignedNumbersV2').and.returnValue($q.resolve(externalNumbers));
     spyOn(ExternalNumberService, 'getUnassignedNumbersV2').and.returnValue($q.resolve());
-    spyOn(ExternalNumberService, 'getPendingNumbersAndOrders').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'getCarrierInfo').and.returnValue($q.resolve());
+    spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
 
-    spyOn(ModalService, 'open').and.returnValue({
-      result: modalDefer.promise,
-    });
-    spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
     spyOn(DialPlanService, 'getCustomerDialPlanCountryCode').and.returnValue($q.resolve('+1'));
 
@@ -59,12 +53,10 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     $scope = undefined;
     $state = undefined;
     $stateParams = undefined;
-    ModalService = undefined;
     ExternalNumberService = undefined;
     DialPlanService = undefined;
     Notification = undefined;
     externalNumbers = undefined;
-    modalDefer = undefined;
   });
 
   it('should load all the phone numbers', function () {
@@ -76,16 +68,15 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
       controller.listPhoneNumbers();
       $scope.$apply();
 
-      expect(ExternalNumberService.getPendingNumbersAndOrders).toHaveBeenCalledWith(
-        $stateParams.currentCustomer.customerOrgId);
+      expect(ExternalNumberService.refreshNumbers).toHaveBeenCalled();
     });
   });
 
   it('should refresh list of assigned phone numbers', function () {
     var newNumbers = externalNumbers.concat([{
-      'number': '789',
+      number: '789',
     }, {
-      'number': '000',
+      number: '000',
     }]);
     ExternalNumberService.getAssignedNumbersV2.and.returnValue($q.resolve(newNumbers));
     controller.listPhoneNumbers();
@@ -94,7 +85,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
   });
 
   it('should show no pending numbers on error', function () {
-    ExternalNumberService.getPendingNumbersAndOrders.and.returnValue($q.reject());
+    ExternalNumberService.refreshNumbers.and.returnValue($q.reject());
     controller.listPhoneNumbers();
     $scope.$apply();
     expect(Notification.errorResponse).toHaveBeenCalled();
@@ -109,14 +100,5 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     $scope.$apply();
     expect(controller.assignedNumbers).toEqual([]);
     expect(controller.unassignedNumbers).toEqual([]);
-  });
-
-  it('should not delete number on modal dismiss', function () {
-    controller.deleteNumber(externalNumbers[0]);
-    modalDefer.reject();
-    $scope.$apply();
-
-    expect(controller.assignedNumbers.length).toEqual(2);
-    expect(Notification.success).not.toHaveBeenCalled();
   });
 });

@@ -22,7 +22,7 @@ describe('Service: AAConfigEnvMetricService', function () {
     it('should call analytics trackEvent with prod from trackProdOrIntegNotifications', function () {
       spyOn(Config, 'isProd').and.returnValue(true);
       AAConfigEnvMetricService.trackProdNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', properties);
-      expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.UI_NOTIFICATION + ".error.prod", properties);
+      expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.UI_NOTIFICATION + '.error.prod', properties);
     });
 
     it('should call analytics trackEvent with integration from trackProdOrIntegNotifications', function () {

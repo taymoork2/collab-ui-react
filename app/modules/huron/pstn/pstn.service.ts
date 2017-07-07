@@ -1,4 +1,4 @@
-import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER } from './pstn.const';
+import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, SWIVEL } from './pstn.const';
 
 import { Notification } from 'modules/core/notifications/notification.service';
 import {
@@ -26,7 +26,7 @@ export class PstnService {
   ) { }
 
   public createCustomerV2(uuid: string, name: string, firstName: string, lastName: string, email: string, pstnCarrierId: string, trial: boolean): ng.IPromise<any> {
-    let payload = {
+    const payload = {
       uuid: uuid,
       name: name,
       firstName: firstName,
@@ -49,7 +49,7 @@ export class PstnService {
   }
 
   public createResellerV2(): ng.IPromise<any> {
-    let payload = {
+    const payload = {
       uuid: this.Authinfo.getCallPartnerOrgId(),
       email: this.Authinfo.getPrimaryEmail(),
     };
@@ -60,8 +60,17 @@ export class PstnService {
   }
 
   public updateCustomerCarrier(customerId: string, pstnCarrierId: string): ng.IPromise<any> {
-    let payload = {
+    const payload = {
       pstnCarrierId: pstnCarrierId,
+    };
+    return this.TerminusService.customer().update({
+      customerId: customerId,
+    }, payload).$promise;
+  }
+
+  public updateCustomerE911Signee(customerId: string): ng.IPromise<any> {
+    const payload = {
+      e911Signee: this.Authinfo.getUserId(),
     };
     return this.TerminusService.customer().update({
       customerId: customerId,
@@ -96,44 +105,44 @@ export class PstnService {
     }).$promise;
   }
 
-  public listDefaultCarriers(): ng.IPromise<Array<any>> {
+  public listDefaultCarriers(): ng.IPromise<any[]> {
     return this.TerminusService.carrier().query({
       service: PSTN,
       defaultOffer: true,
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
-  public listDefaultCarriersV2(): ng.IPromise<Array<any>> {
-    return this.TerminusService.carrierV2().query({
+  public listDefaultCarriersV2(): ng.IPromise<any[]> {
+    return this.TerminusService.carriersV2().query({
       service: PSTN,
       defaultOffer: true,
       country: this.PstnModel.getCountryCode(),
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
-  public listResellerCarriers(): ng.IPromise<Array<any>> {
+  public listResellerCarriers(): ng.IPromise<any[]> {
     return this.TerminusService.resellerCarrier().query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
-  public listResellerCarriersV2(): ng.IPromise<Array<any>> {
+  public listResellerCarriersV2(): ng.IPromise<any[]> {
     return this.TerminusService.resellerCarrierV2().query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
       country: this.PstnModel.getCountryCode(),
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
-  public listCustomerCarriers(customerId): ng.IPromise<Array<any>> {
-    return this.TerminusService.customerCarrier().query({
+  public listCustomerCarriers(customerId): ng.IPromise<any[]> {
+    return this.TerminusService.customerCarriers().query({
       customerId: customerId,
-    }).$promise.then(this.getCarrierDetails.bind(this));
+    }).$promise.then((response) => this.getCarrierDetails(response));
   }
 
   public getCarrierDetails(carriers): ng.IPromise<any> {
-    let promises: any = [];
+    const promises: any = [];
     _.forEach(carriers, (carrier) => {
-      let promise = this.TerminusService.carrier().get({
+      const promise = this.TerminusService.carrier().get({
         carrierId: carrier.uuid,
       }).$promise;
       promises.push(promise);
@@ -142,7 +151,7 @@ export class PstnService {
   }
 
   public getCarrierInventory(carrierId: string, state: string, npa: string): ng.IPromise<any> {
-    let config: any = {
+    const config: any = {
       carrierId: carrierId,
       numberType: NUMTYPE_DID,
     };
@@ -171,7 +180,7 @@ export class PstnService {
   }
 
   public searchCarrierInventory(carrierId: string, params: any): ng.IPromise<any> {
-    let paramObj = params || {};
+    const paramObj = params || {};
     paramObj.carrierId = carrierId;
     paramObj.numberType = NUMTYPE_DID;
     return this.TerminusService.carrierNumberV2().get(paramObj).$promise
@@ -179,14 +188,14 @@ export class PstnService {
   }
 
   public searchCarrierTollFreeInventory(carrierId: string, params: any): ng.IPromise<any> {
-    let paramObj = params || {};
+    const paramObj = params || {};
     paramObj.carrierId = carrierId;
     paramObj.numberType = NUMTYPE_TOLLFREE;
     return this.TerminusService.carrierNumberV2().get(paramObj).$promise
         .then(response => _.get(response, 'numbers', []));
   }
 
-  public reserveCarrierInventoryV2(customerId: string, carrierId: string, numbers: Array<string>, isCustomerExists: boolean): ng.IPromise<any> {
+  public reserveCarrierInventoryV2(customerId: string, carrierId: string, numbers: string[], isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -217,7 +226,7 @@ export class PstnService {
     }
   }
 
-  public releaseCarrierInventoryV2(customerId: string, reservationId: string | undefined, numbers: Array<string>, isCustomerExists: boolean): ng.IPromise<any> {
+  public releaseCarrierInventoryV2(customerId: string, reservationId: string | undefined, numbers: string[], isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -240,7 +249,7 @@ export class PstnService {
     }
   }
 
-  public releaseCarrierTollFreeInventory(customerId: string, _carrierId: string, numbers: Array<string>, reservationId: string | undefined, isCustomerExists: boolean): ng.IPromise<any> {
+  public releaseCarrierTollFreeInventory(customerId: string, _carrierId: string, numbers: string[], reservationId: string | undefined, isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -263,7 +272,7 @@ export class PstnService {
     }
   }
 
-  public reserveCarrierTollFreeInventory(customerId: string, carrierId: string, numbers: Array<string>, isCustomerExists: boolean): ng.IPromise<any> {
+  public reserveCarrierTollFreeInventory(customerId: string, carrierId: string, numbers: string[], isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -297,7 +306,7 @@ export class PstnService {
   public isCarrierSwivel(customerId: string): ng.IPromise<boolean> {
     return this.listCustomerCarriers(customerId).then(carriers => {
       if (_.isArray(carriers)) {
-        let carrier = _.find(carriers, {
+        const carrier = _.find(carriers, {
           name: TATA,
         });
         if (carrier) {
@@ -309,7 +318,7 @@ export class PstnService {
   }
 
   public orderBlock(customerId: string, _carrierId: string, npa: string, quantity: string, isSequential: boolean, nxx: string): ng.IPromise<any> {
-    let payload = {
+    const payload = {
       npa: npa,
       quantity: quantity,
       numberType: NUMTYPE_DID,
@@ -326,7 +335,7 @@ export class PstnService {
   }
 
   public orderTollFreeBlock(customerId: string, _carrierId: string, npa: string, quantity: number): ng.IPromise<any> {
-    let payload = {
+    const payload = {
       npa: npa,
       quantity: quantity,
       numberType: NUMTYPE_TOLLFREE,
@@ -338,15 +347,15 @@ export class PstnService {
     }, payload).$promise;
   }
 
-  public orderNumbers(customerId: string, carrierId: string, numbers: Array<string>): ng.IPromise<any> {
-    let promises: any = [];
-    let payload = {
+  public orderNumbers(customerId: string, carrierId: string, numbers: string[]): ng.IPromise<any> {
+    const promises: any = [];
+    const payload = {
       pstn: {
-        numbers: [] as Array<string>,
+        numbers: [] as string[],
       },
       tollFree: {
         numberType: NUMTYPE_TOLLFREE,
-        numbers: [] as Array<string>,
+        numbers: [] as string[],
       },
     };
     _.forEach(numbers, number => {
@@ -363,7 +372,7 @@ export class PstnService {
       }
     });
     if (payload.pstn.numbers.length > 0) {
-      let pstnPromise = this.TerminusService.customerCarrierDid().save({
+      const pstnPromise = this.TerminusService.customerCarrierDid().save({
           customerId: customerId,
           carrierId: carrierId,
           type: ORDER,
@@ -373,11 +382,11 @@ export class PstnService {
     return this.$q.all(promises);
   }
 
-  public orderNumbersV2(customerId: string, newNumberOrders: Array<IOrder>): ng.IPromise<any> {
-    let promises: any = [];
+  public orderNumbersV2(customerId: string, newNumberOrders: IOrder[]): ng.IPromise<any> {
+    const promises: any = [];
     _.forEach(newNumberOrders, order => {
       if (order.numberType === NUMTYPE_DID) {
-        let didOrderPromise = this.TerminusService.customerNumbersOrderV2().save({
+        const didOrderPromise = this.TerminusService.customerNumbersOrderV2().save({
             customerId: customerId,
           }, {
             reservationIds: [_.get(order, 'reservationId', '')],
@@ -386,7 +395,7 @@ export class PstnService {
           }).$promise;
         promises.push(didOrderPromise);
       } else if (order.numberType === NUMTYPE_TOLLFREE) {
-        let tollFreeOrderPromise = this.TerminusService.customerNumbersOrderV2().save({
+        const tollFreeOrderPromise = this.TerminusService.customerNumbersOrderV2().save({
           customerId: customerId,
         }, {
           reservationIds: [_.get(order, 'reservationId', '')],
@@ -401,35 +410,35 @@ export class PstnService {
     return this.$q.all(promises);
   }
 
-  public orderNumbersV2Swivel(customerId: string, numbers: Array<string>): ng.IPromise<any[]> {
-    let promises: Array<ng.IPromise<any>> = [];
+  public orderNumbersV2Swivel(customerId: string, numbers: string[]): ng.IPromise<any[]> {
+    const promises: ng.IPromise<any>[] = [];
     let tfnNumbers: string[] = [];
 
     tfnNumbers = _.remove(numbers, number => {
       return this.PhoneNumberService.getPhoneNumberType(number) === PhoneNumberType.TOLL_FREE;
     });
 
-    let tfnPayload = {
+    const tfnPayload = {
       numbers: tfnNumbers,
       numberType: NUMTYPE_TOLLFREE,
       createdBy: this.setCreatedBy(),
     };
 
-    let didPayload = {
+    const didPayload = {
       numbers: numbers,
       numberType: NUMTYPE_DID,
       createdBy: this.setCreatedBy(),
     };
 
     if (numbers.length > 0) {
-      let pstnPromise = this.TerminusService.customerNumbersOrderV2().save({
+      const pstnPromise = this.TerminusService.customerNumbersOrderV2().save({
           customerId: customerId,
       }, didPayload).$promise;
       promises.push(pstnPromise);
     }
 
     if (tfnNumbers.length > 0) {
-      let tollFreePromise = this.TerminusService.customerNumbersOrderV2().save({
+      const tollFreePromise = this.TerminusService.customerNumbersOrderV2().save({
           customerId: customerId,
       }, tfnPayload).$promise;
       promises.push(tollFreePromise);
@@ -437,21 +446,21 @@ export class PstnService {
     return this.$q.all(promises);
   }
 
-  public portNumbers(customerId: string, _carrierId: string, numbers: Array<string>): ng.IPromise<any> {
-    let promises: any = [];
+  public portNumbers(customerId: string, _carrierId: string, numbers: string[]): ng.IPromise<any> {
+    const promises: any = [];
     let tfnNumbers: any = [];
 
     tfnNumbers = _.remove(numbers, number => {
       return this.PhoneNumberService.getPhoneNumberType(number) === PhoneNumberType.TOLL_FREE;
     });
 
-    let tfnPayload = {
+    const tfnPayload = {
       numbers: tfnNumbers,
       numberType: NUMTYPE_TOLLFREE,
       createdBy: this.setCreatedBy(),
     };
 
-    let didPayload = {
+    const didPayload = {
       numbers: numbers,
       numberType: NUMTYPE_DID,
       createdBy: this.setCreatedBy(),
@@ -472,7 +481,7 @@ export class PstnService {
   }
 
   public listPendingOrders(customerId: string): ng.IPromise<any> {
-    let pendingOrders: any = [];
+    const pendingOrders: any = [];
     pendingOrders.push(
         this.queryPendingOrders(customerId, PSTN),
       );
@@ -488,11 +497,11 @@ export class PstnService {
     // numbers with the order list so we don't have to make another
     // backend call to get the details for each order.
   public listPendingOrdersWithDetail(customerId: string): ng.IPromise<any> {
-    let pendingOrdersWithDetail: any = [];
+    const pendingOrdersWithDetail: any = [];
     pendingOrdersWithDetail.push(
         this.queryPendingOrders(customerId, PSTN)
           .then(orders => {
-            let orderDetailPromises: any = [];
+            const orderDetailPromises: any = [];
             _.forEach(orders, (order) => {
               orderDetailPromises.push(
                 this.getOrder(customerId, order.uuid).then(orderDetail => {
@@ -505,7 +514,7 @@ export class PstnService {
     pendingOrdersWithDetail.push(
         this.queryPendingOrders(customerId, TYPE_PORT)
           .then(orders => {
-            let orderDetailPromises: any = [];
+            const orderDetailPromises: any = [];
             _.forEach(orders, (order) => {
               orderDetailPromises.push(
                 this.getOrder(customerId, order.uuid).then(orderDetail => {
@@ -537,11 +546,11 @@ export class PstnService {
     return this.TerminusService.customerNumbersOrderV2().query({
       customerId: customerId,
     }).$promise.then((orders) => {
-      let promises: any = [];
+      const promises: any = [];
         // Lookup each order and add the numbers to original response
       _.forEach(orders, order => {
         if (order.operation !== UPDATE && order.operation !== DELETE && order.operation !== ADD && order.operation !== AUDIT) {
-          let promise = this.getOrder(customerId, order.uuid).then(orderResponse => {
+          const promise = this.getOrder(customerId, order.uuid).then(orderResponse => {
             order.numbers = orderResponse.numbers;
             if (!_.isUndefined(orderResponse.attributes.npa) || !_.isUndefined(orderResponse.attributes.createdBy)) {
               order.attributes = orderResponse.attributes;
@@ -557,7 +566,7 @@ export class PstnService {
         return _.chain(response)
           .map((order: INumberOrder) => {
             if (order.operation !== UPDATE && order.operation !== DELETE && order.operation !== ADD && order.operation !== AUDIT) {
-              let newOrder: any = {
+              const newOrder: any = {
                 carrierOrderId: _.get(order, 'carrierOrderId'),
                 //not all orders have batches
                 carrierBatchId: _.get(order, 'carrierBatchId', null),
@@ -605,9 +614,11 @@ export class PstnService {
               }
 
               //create sort date and translate creation date
-              let orderDate = new Date(order.created);
+              const orderDate = new Date(order.created);
               newOrder.sortDate = orderDate.getTime();
               newOrder.created = (orderDate.getMonth() + 1) + '/' + orderDate.getDate() + '/' + orderDate.getFullYear();
+              const utcOrderDate  = orderDate.toUTCString().split(' ');
+              newOrder.formattedDate = utcOrderDate[2] + ' ' + utcOrderDate[1] + ', ' + utcOrderDate[3];
               //update order status and tooltip at number level since we combine same order with different batches
               _.forEach(newOrder.numbers, number => {
                 number.status = newOrder.status;
@@ -627,7 +638,7 @@ export class PstnService {
   }
 
   public translateStatusMessage(order): string | undefined {
-    let translations = {
+    const translations = {
       'Account Number and PIN Required': this.$translate.instant('pstnSetup.orderStatus.pinRequired'),
       'Address Mismatch': this.$translate.instant('pstnSetup.orderStatus.addressMismatch'),
       'BTN Mismatch': this.$translate.instant('pstnSetup.orderStatus.btnMismatch'),
@@ -651,10 +662,10 @@ export class PstnService {
   public displayBatchIdOnly(statusMessage): string {
     if (statusMessage.indexOf('Batch') >= 0) {
       if (statusMessage.indexOf(',') >= 0) {
-        let batchStatus = statusMessage.split(',');
-        let batchIdOnlyStatusMessage: any = [];
+        const batchStatus = statusMessage.split(',');
+        const batchIdOnlyStatusMessage: any = [];
         _.forEach(batchStatus, batchOnly => {
-          let batchId = (batchOnly.replace(/\D+/g, ''));
+          const batchId = (batchOnly.replace(/\D+/g, ''));
           batchIdOnlyStatusMessage.push(batchId);
         });
         return batchIdOnlyStatusMessage.toString();
@@ -665,16 +676,16 @@ export class PstnService {
   }
 
   public listPendingNumbers(customerId: string): ng.IPromise<any> {
-    let pendingNumbers: any = [];
+    const pendingNumbers: any = [];
 
     return this.listPendingOrders(customerId).then(orders => {
-      let promises: any = [];
+      const promises: any = [];
       _.forEach(orders, carrierOrder => {
         if (_.get(carrierOrder, 'operation') === AUDIT) {
           // noop. Don't get details of pending audit orders.
         } else if (_.get(carrierOrder, 'operation') === BLOCK_ORDER) {
           let areaCode, orderQuantity;
-          let promise = this.getOrder(customerId, carrierOrder.uuid).then(response => {
+          const promise = this.getOrder(customerId, carrierOrder.uuid).then(response => {
             if (!_.isUndefined(response.attributes.npa)) {
               areaCode = response.attributes.npa;
               orderQuantity = _.parseInt(response.attributes.quantity);
@@ -689,8 +700,8 @@ export class PstnService {
           });
           promises.push(promise);
         } else {
-          let promise = this.getOrder(customerId, carrierOrder.uuid).then(response => {
-            let orderNumbers = response.numbers;
+          const promise = this.getOrder(customerId, carrierOrder.uuid).then(response => {
+            const orderNumbers = response.numbers;
             _.forEach(orderNumbers, orderNumber => {
               if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
                 pendingNumbers.push({
@@ -737,9 +748,21 @@ export class PstnService {
     return this.PstnModel.getProvider();
   }
 
+  public isSwivelCustomerAndEsaUnsigned(customerId: string): ng.IPromise<boolean> {
+    return this.getCustomerV2(customerId).then((result) => {
+      if (_.has(result, PSTN_CARRIER_ID) && (!_.has(result, E911_SIGNEE) || _.get(result, E911_SIGNEE) === null)) {
+        const carriers = [{ uuid: result.pstnCarrierId }];
+        return this.getCarrierDetails(carriers).then((carrierDetails) => {
+          return (carrierDetails.length === 1 && carrierDetails[0].apiImplementation === SWIVEL);
+        });
+      }
+      return false;
+    });
+  }
+
   private setCreatedBy(): string {
     // Need who is creating the order
-    return this.Authinfo.isPartner() ? ADMINTYPE_PARTNER : ADMINTYPE_CUSTOMER;
+    return (this.Authinfo.isCustomerLaunchedFromPartner() || this.Authinfo.isPartner()) ? ADMINTYPE_PARTNER : ADMINTYPE_CUSTOMER;
   }
 
 }

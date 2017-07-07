@@ -9,7 +9,7 @@ describe('Class: DevicesController', () => {
     $rootScope?: ng.IScope,
   } | any = {};
 
-  let serverSideSearchRes = {
+  const serverSideSearchRes = {
     url1: { displayName: 'abc', isOnline: true },
     url2: { displayName: 'abcd' },
     url3: { displayName: 'abcde', isOnline: true },
@@ -33,7 +33,7 @@ describe('Class: DevicesController', () => {
     test.$rootScope = undefined;
   });
 
-  let initController = (bigOrg: boolean) => {
+  const initController = (bigOrg: boolean) => {
     spyOn(test.CsdmDataModelService, 'isBigOrg').and.returnValue(test.$q.resolve(bigOrg));
 
     test.controller = new FilteredView<csdm.IDevice>(new FilteredDeviceViewDataSource(test.CsdmDataModelService, test.$q),
@@ -68,7 +68,7 @@ describe('Class: DevicesController', () => {
       });
 
       it('should be in initializing state and then in showresult', () => {
-        expect(test.controller.isInState(test.controller.searching));
+        expect(test.controller.isInState(test.controller.initializing));
 
         test.$timeout.flush(10000);
         test.$rootScope.$digest();
@@ -103,7 +103,7 @@ describe('Class: DevicesController', () => {
 
       describe('before web request has returned', () => {
         it('should be in searching state and then in showresult', () => {
-          expect(test.controller.isInState(test.controller.searching));
+          expect(test.controller.isInState(test.controller.initializing));
 
           test.$timeout.flush(10000);
           test.$rootScope.$digest();

@@ -16,13 +16,13 @@ describe('Controller: AABuilderMainCtrl', function () {
   var combinedMenus = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
   var menuWithNewStep = combinedMenus['menuWithNewStep'];
   var rawCeInfo = {
-    "callExperienceName": "AAA2",
-    "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b",
-    "assignedResources": [{
-      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
-      "type": "directoryNumber",
-      "trigger": "incomingCall",
-      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
+    callExperienceName: 'AAA2',
+    callExperienceURL: 'https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b',
+    assignedResources: [{
+      id: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
+      type: 'directoryNumber',
+      trigger: 'incomingCall',
+      uuid: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
     }],
   };
 
@@ -61,7 +61,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AAUiScheduleService_,
     _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_, _$modalStack_) {
-
     $state = _$state_;
     $rootScope = _$rootScope_;
     $modalStack = _$modalStack_;
@@ -99,7 +98,7 @@ describe('Controller: AABuilderMainCtrl', function () {
         steeringDigit: '5',
         siteSteeringDigit: '6',
         siteCode: '200',
-        voicemailPilotNumber: "+16506679080",
+        voicemailPilotNumber: '+16506679080',
         timeZone: 'America/Los_Angeles',
       },
     };
@@ -170,50 +169,48 @@ describe('Controller: AABuilderMainCtrl', function () {
   describe('areAssignedResourcesDifferent', function () {
     it('should show no differences', function () {
       var a1 = [{
-        id: "408792221",
+        id: '408792221',
       }, {
-        id: "4087963542",
+        id: '4087963542',
       }, {
-        id: "40872655",
+        id: '40872655',
       }];
       var a2 = [{
-        id: "408792221",
+        id: '408792221',
       }, {
-        id: "4087963542",
+        id: '4087963542',
       }, {
-        id: "40872655",
+        id: '40872655',
       }];
 
-      var ret = controller.areAssignedResourcesDifferent(a1, a2, "id");
+      var ret = controller.areAssignedResourcesDifferent(a1, a2, 'id');
 
       $scope.$apply();
 
       expect(ret).toBe(false);
-
     });
 
     it('should show a difference', function () {
       var a1 = [{
-        id: "40892221",
+        id: '40892221',
       }, {
-        id: "4087963542",
+        id: '4087963542',
       }, {
-        id: "40872655",
+        id: '40872655',
       }];
       var a2 = [{
-        id: "408792221",
+        id: '408792221',
       }, {
-        id: "4087963542",
+        id: '4087963542',
       }, {
-        id: "40872655",
+        id: '40872655',
       }];
 
-      var ret = controller.areAssignedResourcesDifferent(a1, a2, "id");
+      var ret = controller.areAssignedResourcesDifferent(a1, a2, 'id');
 
       $scope.$apply();
 
       expect(ret).toBe(true);
-
     });
   });
 
@@ -227,10 +224,9 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should warn on CMI assignment failure on close', function () {
-
       // CMI assignment will fail when there is any bad number in the list
       $httpBackend.when('PUT', HuronConfig.getCmiV2Url() + '/customers/features/autoattendants/uuid/numbers').respond(function (method, url, data) {
-        if (JSON.stringify(data).indexOf("bad") > -1) {
+        if (JSON.stringify(data).indexOf('bad') > -1) {
           return [500, 'bad'];
         } else {
           return [200, 'good'];
@@ -239,12 +235,12 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       var resource = AutoAttendantCeInfoModelService.newResource();
       resource.setType(aCe.assignedResources.type);
-      resource.setId("bad");
-      resource.setNumber("bad");
+      resource.setId('bad');
+      resource.setNumber('bad');
 
       aaModel.aaRecord = _.cloneDeep(aCe);
       aaModel.aaRecord.assignedResources.push(resource);
-      aaModel.aaRecordUUID = "uuid";
+      aaModel.aaRecordUUID = 'uuid';
 
       var errorSpy = jasmine.createSpy('error');
       AANotificationService.error = errorSpy;
@@ -257,22 +253,19 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect(errorSpy).toHaveBeenCalled();
     });
-
   });
 
   describe('saveAANumberAssignmentWithErrorDetail', function () {
     it('should show error message when assigning number', function () {
-
       // for an external number query, return the number formatted with a +
       var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=&order=pattern&pattern=(.+)/;
       $httpBackend.whenGET(externalNumberQueryUri)
         .respond(function (method, url) {
-
           var pattern = decodeURI(url).match(new RegExp(externalNumberQueryUri))[1];
 
           var response = [{
-            'pattern': '+' + pattern.replace(/\D/g, ''),
-            'uuid': pattern.replace(/\D/g, '') + '-id',
+            pattern: '+' + pattern.replace(/\D/g, ''),
+            uuid: pattern.replace(/\D/g, '') + '-id',
           }];
 
           return [200, response];
@@ -281,7 +274,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AANotificationService, 'errorResponse');
       var resources = {
         workingResources: [],
-        failedResources: ["9999999991"],
+        failedResources: ['9999999991'],
       };
       spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.resolve(resources));
 
@@ -290,12 +283,10 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
 
       expect(AANotificationService.errorResponse).toHaveBeenCalled();
-
     });
   });
 
   describe('saveAARecords', function () {
-
     var createCeSpy;
     var updateCeSpy;
     var nameValidationSpy;
@@ -321,7 +312,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should save a new aaRecord successfully', function () {
-      aaModel.aaRecordUUID = "";
+      aaModel.aaRecordUUID = '';
       controller.saveAARecords();
       $scope.$apply();
 
@@ -341,9 +332,9 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should report failure if AutoAttendantCeService.createCe() failed', function () {
-      aaModel.aaRecordUUID = "";
+      aaModel.aaRecordUUID = '';
       createCeSpy.and.returnValue($q.reject({
-        statusText: "server error",
+        statusText: 'server error',
         status: 500,
       }));
       controller.saveAARecords();
@@ -410,7 +401,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       aaModel.aaRecords.push(rawCeInfo);
       aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
       updateCeSpy.and.returnValue($q.reject({
-        statusText: "server error",
+        statusText: 'server error',
         status: 500,
       }));
       controller.saveAARecords();
@@ -429,7 +420,6 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('selectAA', function () {
-
     var readCe;
 
     beforeEach(function () {
@@ -441,7 +431,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AADependencyService, 'notifyAANameChange');
       spyOn(AATrackChangeService, 'isChanged');
       spyOn(AATrackChangeService, 'track');
-
     });
 
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined', function () {
@@ -462,7 +451,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined and a template name is empty', function () {
       $scope.vm.aaModel = {};
-      $scope.vm.templateName = "";
+      $scope.vm.templateName = '';
       controller.selectAA('');
       $scope.$apply();
       expect(AAModelService.getNewAARecord).toHaveBeenCalled();
@@ -535,20 +524,17 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('setupTemplate', function () {
-
     beforeEach(function () {
       spyOn(AANotificationService, 'success');
       spyOn(AANotificationService, 'error');
-
     });
 
     it('should set up a say PhoneMenu open hours template using real template1', function () {
-
       $scope.vm.templateName = 'Basic';
       controller.setupTemplate();
 
       expect($scope.vm.ui.openHours['entries'].length).toEqual(2);
-      expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('say');
+      expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('play');
       expect($scope.vm.ui.openHours['entries'][1]['type']).toEqual('MENU_OPTION');
 
       expect($scope.vm.ui.openHours['entries'][1]['entries'].length).toEqual(1);
@@ -557,15 +543,14 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.ui.openHours['entries'][1]['entries'][0]['actions'].length).toEqual(1);
 
       expect($scope.vm.ui.isOpenHours).toEqual(true);
-
     });
 
     it('should set up a say say say open hours template using test template', function () {
       $scope.vm.templateDefinitions = [{
-        tname: "template2",
+        tname: 'template2',
         actions: [{
-          lane: "openHours",
-          actionset: ["play3", "play4", "play5"],
+          lane: 'openHours',
+          actionset: ['play3', 'play4', 'play5'],
         }],
       }];
       $scope.vm.templateName = 'template2';
@@ -579,13 +564,13 @@ describe('Controller: AABuilderMainCtrl', function () {
 
     it('should set up a say say open hours - say closed hours template', function () {
       $scope.vm.templateDefinitions = [{
-        tname: "template3",
+        tname: 'template3',
         actions: [{
           lane: 'openHours',
-          actionset: ["playOpen1", "playOpen2"],
+          actionset: ['playOpen1', 'playOpen2'],
         }, {
           lane: 'closedHours',
-          actionset: ["playClosed1"],
+          actionset: ['playClosed1'],
         }],
       }];
       $scope.vm.templateName = 'template3';
@@ -602,20 +587,17 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should fail to create template since template name is not valid', function () {
-
       $scope.vm.templateName = 'templateDoesNotExist';
       controller.setupTemplate();
 
       expect(AANotificationService.error).toHaveBeenCalledWith(
         'autoAttendant.errorInvalidTemplate', jasmine.any(Object)
       );
-
     });
 
     it('should fail to create template since template has no actions', function () {
-
       $scope.vm.templateDefinitions = [{
-        tname: "templateNoActions",
+        tname: 'templateNoActions',
       }];
 
       $scope.vm.templateName = 'templateNoActions';
@@ -624,18 +606,16 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AANotificationService.error).toHaveBeenCalledWith(
         'autoAttendant.errorInvalidTemplateDef', jasmine.any(Object)
       );
-
     });
 
     it('should fail to create template since template has no action set in closedHours lane', function () {
-
       $scope.vm.templateDefinitions = [{
-        tname: "templateMissingActionSet",
+        tname: 'templateMissingActionSet',
         actions: [{
-          lane: "openHours",
-          actionset: ["playOpen1", "playOpen2"],
+          lane: 'openHours',
+          actionset: ['playOpen1', 'playOpen2'],
         }, {
-          lane: "closedHours",
+          lane: 'closedHours',
         }],
       }];
 
@@ -645,7 +625,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AANotificationService.error).toHaveBeenCalledWith(
         'autoAttendant.errorInvalidTemplateDef', jasmine.any(Object)
       );
-
     });
 
     it('should NOT display add step icons on aa-builder-lane', function () {
@@ -656,13 +635,12 @@ describe('Controller: AABuilderMainCtrl', function () {
       $rootScope.$digest();
       expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
       expect(element.find('aa-new-step-info').hasClass('ng-show')).toBe(false);
-
     });
 
     it('should NOT display add step icons on aa-builder-actions', function () {
       $rootScope.schedule = 'openHours';
       $rootScope.index = 0;
-      element = $compile("<aa-builder-actions></aa-builder-actions>")($rootScope);
+      element = $compile('<aa-builder-actions></aa-builder-actions>')($rootScope);
 
       $rootScope.$digest();
       expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
@@ -674,7 +652,6 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('populateUiModel', function () {
-
     it('should initialize new openHours, closedHours and holidays menus successfully if they do not exist', function () {
       $scope.vm.aaModel = {};
       $scope.vm.aaModel.aaRecord = aCe;
@@ -696,11 +673,9 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.ui.isClosedHours).toEqual(true);
       expect($scope.vm.ui.isHolidays).toEqual(true);
     });
-
   });
 
   describe('saveUiModel', function () {
-
     beforeEach(function () {
       spyOn(AutoAttendantCeInfoModelService, 'setCeInfo');
       spyOn(AutoAttendantCeMenuModelService, 'updateCombinedMenu');
@@ -711,7 +686,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.ui = {};
       $scope.vm.ui.ceInfo = ce2CeInfo(rawCeInfo);
       $scope.vm.ui.builder = {};
-      $scope.vm.ui.builder.ceInfo_name = "AAA2";
+      $scope.vm.ui.builder.ceInfo_name = 'AAA2';
     });
 
     it('should write UI CeInfo into model', function () {
@@ -754,12 +729,11 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays, $scope.vm.ui.holidaysValue);
       expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'closedHours');
     });
-
   });
 
   describe('setAANameFocus', function () {
     it('should set model aaNameFocus variable to true', function () {
-      $scope.vm.aaNameFocus = "false";
+      $scope.vm.aaNameFocus = 'false';
       controller.setAANameFocus();
 
       expect($scope.vm.aaNameFocus).toEqual(true);
@@ -775,7 +749,6 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('save8To5Schedule', function () {
-
     var createScheduleDefer;
     var saveAARecordDefer;
 
@@ -793,7 +766,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should return and resolve a promise when successfully save a 8to5 schedule', function () {
-
       var saveSchedulePromise = controller.save8To5Schedule('AA');
 
       var promiseResolved = false;
@@ -812,7 +784,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should return and reject a promise when failed to save a 8to5 schedule', function () {
-
       var saveSchedulePromise = controller.save8To5Schedule('AA');
 
       var errorText = '';
@@ -832,11 +803,9 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AANotificationService.errorResponse).toHaveBeenCalled();
       expect(errorText).toBe('SAVE_SCHEDULE_FAILURE');
     });
-
   });
 
   describe('saveCeDefinition', function () {
-
     var saveAARecordDefer;
 
     beforeEach(function () {
@@ -850,7 +819,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should return and resolve a promise when successfully save a CE Definition', function () {
-
       var saveCeDefinitionPromise = controller.saveCeDefinition();
 
       var promiseResolved = false;
@@ -869,7 +837,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should return and reject a promise when failed to save a CE Definition', function () {
-
       var saveCeDefinitionPromise = controller.saveCeDefinition();
 
       var errorText = '';
@@ -884,11 +851,9 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect(errorText).toBe('CE_SAVE_FAILURE');
     });
-
   });
 
   describe('delete9To5Schedule', function () {
-
     var deleteCalendarDefer;
 
     beforeEach(function () {
@@ -904,7 +869,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should delete the predefined 9 to 5 schedule when there is a CE_SAVE_FAILURE', function () {
-
       controller.delete8To5Schedule('CE_SAVE_FAILURE');
       deleteCalendarDefer.resolve();
 
@@ -931,7 +895,6 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect(AACalendarService.deleteCalendar).not.toHaveBeenCalled();
     });
-
   });
 
   describe('Received AANameCreated Event', function () {

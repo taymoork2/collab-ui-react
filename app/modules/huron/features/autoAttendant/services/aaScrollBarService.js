@@ -7,8 +7,7 @@
 
   /* @ngInject */
   function AAScrollBar($timeout) {
-
-    var containerId = "#builderScrollContainer";
+    var containerId = '#builderScrollContainer';
     var timeoutDelayDefault = 0;
     var positionOffset = 90; //additional pixels for the vertical line x2 and the (+)
 
@@ -44,9 +43,6 @@
           }, 800);
         }
       }, timeoutDelay);
-
     }
-
   }
-
 })();

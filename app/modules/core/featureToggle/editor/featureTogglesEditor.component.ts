@@ -6,8 +6,8 @@ import { Notification } from 'modules/core/notifications/notification.service';
 class FeatureToggleEditorController implements ng.IComponentController {
 
   public me: IUser;
-  public preferences: Array<IUserPreference>;
-  public toggles: Array<IFeatureToggle>;
+  public preferences: IUserPreference[];
+  public toggles: IFeatureToggle[];
 
   public userDataDisplayKeys = ['displayName', 'name', 'id', 'userName', 'licenseID', 'entitlements', 'roles', 'userSettings'];
 
@@ -46,11 +46,11 @@ class FeatureToggleEditorController implements ng.IComponentController {
         this.pageTitle = this.$translate.instant('editFeatureToggles.title', { name: _.get(this, 'me.displayName', 'unknown') });
         return this.FeatureToggleEditorService.updateUserPreferences(this.me);
       })
-      .then((userPrefs: Array<IUserPreference>) => {
+      .then((userPrefs: IUserPreference[]) => {
         this.preferences = userPrefs;
         return this.FeatureToggleEditorService.getFeatureToggles(this.me.id);
       })
-      .then((toggles: Array<IFeatureToggle>) => {
+      .then((toggles: IFeatureToggle[]) => {
         this.toggles = toggles;
       })
       .catch((error) => {
@@ -115,7 +115,7 @@ class FeatureToggleEditorController implements ng.IComponentController {
             // reload all toggles
             return this.FeatureToggleEditorService.getFeatureToggles(this.me.id);
           })
-          .then((toggles: Array<IFeatureToggle>) => {
+          .then((toggles: IFeatureToggle[]) => {
             this.toggles = toggles;
           })
           .catch((error) => {
@@ -147,7 +147,7 @@ class FeatureToggleEditorController implements ng.IComponentController {
 
 //////////////////
 
-let templateUrl = require('modules/core/featureToggle/editor/featureTogglesEditor.html');
+const templateUrl = require('modules/core/featureToggle/editor/featureTogglesEditor.html');
 
 export class FeatureToggleEditorComponent implements ng.IComponentOptions {
   public controller = FeatureToggleEditorController;

@@ -6,7 +6,7 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
   public site: Site;
   public emergencyCallbackNumber: EmergencyCallbackNumber;
   public selectedNumber: IEmergencyNumberOption | null;
-  public externalNumberOptions: Array<IEmergencyNumberOption>;
+  public externalNumberOptions: IEmergencyNumberOption[];
   public onNumberFilterFn: Function;
   public onChangeFn: Function;
 
@@ -25,7 +25,7 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
     this.filterPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       emergencyCallbackNumber,
       externalNumberOptions,
@@ -88,7 +88,7 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
     });
   }
 
-  private checkNumberIsAssigned(currentValue: EmergencyCallbackNumber, existingOptions: Array<IEmergencyNumberOption>): Boolean {
+  private checkNumberIsAssigned(currentValue: EmergencyCallbackNumber, existingOptions: IEmergencyNumberOption[]): Boolean {
     return Boolean(_.find(existingOptions, { value: currentValue.uuid }));
   }
 

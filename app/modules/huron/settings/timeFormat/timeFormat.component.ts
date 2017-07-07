@@ -3,13 +3,13 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 class HuronTimeFormatCtrl implements ng.IComponentController {
   public timeFormat: string;
   public selected: IOption;
-  public timeFormatOptions: Array<IOption>;
+  public timeFormatOptions: IOption[];
   public onChangeFn: Function;
 
   /* @ngInject */
   constructor() {}
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { timeFormat } = changes;
     if (timeFormat && timeFormat.currentValue) {
       this.selected = _.find(this.timeFormatOptions, { value: this.timeFormat });

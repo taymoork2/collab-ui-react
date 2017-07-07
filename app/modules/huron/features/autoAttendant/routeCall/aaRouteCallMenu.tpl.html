@@ -3,7 +3,12 @@
     <cs-select ng-model="aaRouteCallMenu.selected" options="aaRouteCallMenu.options" labelfield="label" valuefield="value" placeholder="aaRouteCallMenu.actionPlaceholder" icon="icon-chevron-down" filter="false">
     </cs-select>
   </div>
-  <aa-help content=" {{ :: 'autoAttendant.routeCallPopover' | translate }} " metric="Route-Call-Choose-Action"></aa-help>
+  <div ng-if='aaRouteCallMenu.selected.value !== "route"'>
+    <aa-help content=" {{ :: 'autoAttendant.routeCallPopover' | translate }} " metric="Route-Call-Choose-Action"></aa-help>
+  </div>
+  <div ng-if='aaRouteCallMenu.selected.value === "route"'>
+    <aa-help content=" {{ :: 'autoAttendant.routeToPhoneNumberHelp' | translate }} " metric="Route-Call-Choose-Action"></aa-help>
+  </div>
 </div>
 
 <div class="row aa-flex-row">

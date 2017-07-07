@@ -1,8 +1,9 @@
 import { HuntGroupNumber } from 'modules/call/features/hunt-group';
 import { NumberService, INumber } from 'modules/huron/numbers';
 
+const NUMBER_FORMAT_ENTERPRISE_LINE = 'NUMBER_FORMAT_ENTERPRISE_LINE';
 class HuntGroupNumbersCtrl implements ng.IComponentController {
-  public numbers: Array<HuntGroupNumber>;
+  public numbers: HuntGroupNumber[];
   public isNew: boolean;
   public onChangeFn: Function;
   public onKeyPressFn: Function;
@@ -14,9 +15,9 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
     private NumberService: NumberService,
   ) {}
 
-  public getNumberList(value: string): ng.IPromise<Array<INumber>> {
+  public getNumberList(value: string): ng.IPromise<INumber[]> {
     return this.NumberService.getNumberList(value, undefined, false).then( numbers => {
-      let filteredNumbers = _.filter(numbers, (number) => {
+      const filteredNumbers = _.filter(numbers, (number) => {
         return this.isNewNumber(number.uuid);
       });
       if (filteredNumbers.length === 0) {
@@ -35,23 +36,24 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
       type: number.type,
       number: number.number,
     }));
+    this.onNumbersChanged(this.numbers);
   }
 
-  public removeNumber(number: HuntGroupNumber): void {
+  public removeNumber(hgnumber: HuntGroupNumber): void {
     _.remove<HuntGroupNumber>(this.numbers, (huntGroupNumber) => {
-      return huntGroupNumber.uuid === number.uuid;
+      return (huntGroupNumber.number === hgnumber.number || (huntGroupNumber.type.toString() === NUMBER_FORMAT_ENTERPRISE_LINE && huntGroupNumber.number.slice(hgnumber.number.length) === hgnumber.number));
     });
     this.onNumbersChanged(this.numbers);
   }
 
-  public onNumbersChanged(numbers: Array<HuntGroupNumber>): void {
+  public onNumbersChanged(numbers: HuntGroupNumber[]): void {
     this.onChangeFn({
       numbers: _.cloneDeep(numbers),
     });
   }
 
   private isNewNumber(uuid: string): boolean {
-    let existingNumbers = _.find(this.numbers, (number) => {
+    const existingNumbers = _.find(this.numbers, (number) => {
       return number.uuid === uuid;
     });
     return _.isUndefined(existingNumbers);

@@ -9,7 +9,6 @@
 
   /* @ngInject */
   function HttpRequestCanceller($q, $timeout) {
-
     var cancelPromises = [];
     var defaultTimeout = 20000;
 

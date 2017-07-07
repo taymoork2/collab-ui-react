@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 describe(' DummyCareReportService', function () {
   var dummyCareReportService;
@@ -7,7 +7,6 @@ describe(' DummyCareReportService', function () {
 
   beforeEach(inject(function (_DummyCareReportService_) {
     dummyCareReportService = _DummyCareReportService_;
-
   }));
 
   it('should get DummyReportingData for org for time selected last week', function () {
@@ -49,5 +48,4 @@ describe(' DummyCareReportService', function () {
       expect(moment(reportData.createdTime, 'MMM', true).isValid()).toBe(true);
     });
   });
-
 });

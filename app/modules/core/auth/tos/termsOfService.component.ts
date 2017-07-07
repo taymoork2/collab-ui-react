@@ -39,8 +39,8 @@ class TermsOfServiceCtrl implements ng.IComponentController {
   public $onInit(): void {
     // Load a copy of the ToS PDF that was converted to HTML. This WILL be out of date with what
     // is in the hosted PDF, but it looks nice and we can track the user scrolling to the bottom
-    let tosHtml: string = this.$templateCache.get<string>('modules/core/auth/tos/tos.html');
-    let tosStyle: string = this.$templateCache.get<string>('modules/core/auth/tos/tos-style.html');
+    const tosHtml: string = this.$templateCache.get<string>('modules/core/auth/tos/tos.html');
+    const tosStyle: string = this.$templateCache.get<string>('modules/core/auth/tos/tos-style.html');
 
     this.acceptingToS = false;
 
@@ -68,9 +68,9 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     // </style>`;
 
     // manually update the iframe content
-    let iframeDoc = <Document>this.$window.frames['tos-frame'].document;
-    let iframe = $(iframeDoc);
-    let style = $(tosStyle);
+    const iframeDoc = <Document>this.$window.frames['tos-frame'].document;
+    const iframe = $(iframeDoc);
+    const style = $(tosStyle);
     iframeDoc.open();
     iframeDoc.close();
     iframe.find('head').append(style);
@@ -89,7 +89,7 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     });
 
     iframe.delegate('a', 'click', (e: any) => {
-      let url = e.currentTarget.href;
+      const url = e.currentTarget.href;
       this.$log.log('Terms of Service opening external link to: ' + url);
       this.$window.open(url, '_blank');
       e.preventDefault();

@@ -17,17 +17,17 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
   public text = 'servicesOverview.cards.meeting.pmrText';
   public showText = false;
 
-  private _buttons: Array<ICardButton> = [];
+  private _buttons: ICardButton[] = [];
 
-  public getButtons(): Array<ICardButton> {
+  public getButtons(): ICardButton[] {
     if (this.active) {
       return _.take(this._buttons, 3);
     }
     return [];
   }
 
-  public updateWebexSiteList(data: Array<{ license: { siteUrl?: string,
-    linkedSiteUrl?: string } }>) {
+  public updateWebexSiteList(data: { license: { siteUrl?: string,
+    linkedSiteUrl?: string } }[]) {
     if (!data) {
       this.loading = false;
       return;
@@ -59,7 +59,7 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
     }
 
     promise.then((response) => {
-      let customerLicenses = _.get(response, 'data.customers[0].licenses', '');
+      const customerLicenses = _.get(response, 'data.customers[0].licenses', '');
       _.forEach(customerLicenses, (license) => {
         if (license['licenseType'] === 'CONFERENCING') {
           return this.showText = _.has(license, 'siteUrl');

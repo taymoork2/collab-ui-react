@@ -30,6 +30,5 @@
 
       Userservice.sendEmail($scope.email, $location.search().forward, callback);
     }
-
   }
 })();

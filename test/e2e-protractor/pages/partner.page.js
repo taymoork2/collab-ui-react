@@ -1,7 +1,6 @@
 'use strict';
 
 var PartnerHomePage = function () {
-
   var randomNumber = utils.randomId();
   var dateTime = utils.getDateTimeString();
   var trialName = 'Atlas_Test_UI_' + dateTime + '_' + randomNumber;

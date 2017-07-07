@@ -2,13 +2,13 @@ export class Customer {
   public uuid: string;
   public name: string;
   public servicePackage: string;
-  public links: Array<Link>;
+  public links: Link[];
 
   constructor(obj: {
     uuid: string,
     name: string,
     servicePackage: string,
-    links: Array<Link>,
+    links: Link[],
   }) {
     this.uuid = obj.uuid;
     this.name = obj.name;
@@ -36,7 +36,7 @@ export class CustomerVoice {
   public regionCode: string;
   public dialPlan?: DialPlan | null;
   public dialPlanDetails: DialPlanDetails;
-  public links: Array<Link>;
+  public links: Link[];
 
   constructor(obj: {
     uuid: string,
@@ -44,7 +44,7 @@ export class CustomerVoice {
     regionCode: string,
     dialPlan?: DialPlan | null,
     dialPlanDetails: DialPlanDetails,
-    links: Array<Link>,
+    links: Link[],
   }) {
     this.uuid = obj.uuid;
     this.name = obj.name;

@@ -4,7 +4,6 @@
   angular.module('Mediafusion').service('MeetingLocationAdoptionGraphService', MeetingLocationAdoptionGraphService);
   /* @ngInject */
   function MeetingLocationAdoptionGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
-
     var vm = this;
     vm.meetingLocationdiv = 'meetingLocationdiv';
     vm.exportDiv = 'meeting-location-div';
@@ -129,7 +128,7 @@
       }
 
       var columnNames = {
-        'time': vm.timeStamp,
+        time: vm.timeStamp,
       };
       var exportFields = [];
       _.each(graphs, function (value) {
@@ -153,9 +152,9 @@
 
       if (!isDummy) {
         graphs.push({
-          'title': vm.allOff,
-          'id': 'none',
-          'lineColor': 'transparent',
+          title: vm.allOff,
+          id: 'none',
+          lineColor: 'transparent',
         });
       }
 
@@ -168,11 +167,11 @@
       chartData.legend.useGraphSettings = true;
 
       chartData.legend.listeners = [{
-        'event': 'hideItem',
-        'method': legendHandler,
+        event: 'hideItem',
+        method: legendHandler,
       }, {
-        'event': 'showItem',
-        'method': legendHandler,
+        event: 'showItem',
+        method: legendHandler,
       }];
 
       var chart = AmCharts.makeChart(vm.meetingLocationdiv, chartData);
@@ -238,6 +237,5 @@
         });
       }
     }
-
   }
 })();

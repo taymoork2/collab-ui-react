@@ -56,7 +56,6 @@
             hostName: vm.selectedCluster,
           });
           Notification.error(vm.error);
-
         });
       } else {
         moveHost();
@@ -73,12 +72,10 @@
         });
         Notification.errorWithTrackingId(err, vm.error);
       });
-
     }
   }
 
   angular
     .module('Mediafusion')
     .controller('ReassignClusterControllerV2', ReassignClusterControllerV2);
-
 }());

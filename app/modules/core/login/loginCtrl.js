@@ -19,11 +19,9 @@
       PageParam.set(pageParam);
     }
 
-    if ($stateParams.customerOrgId && $stateParams.customerOrgName) {
-      SessionStorage.put('customerOrgName', $stateParams.customerOrgName);
+    if ($stateParams.customerOrgId) {
       SessionStorage.put('customerOrgId', $stateParams.customerOrgId);
-    } else if ($stateParams.partnerOrgId && $stateParams.partnerOrgName) {
-      SessionStorage.put('partnerOrgName', $stateParams.partnerOrgName);
+    } else if ($stateParams.partnerOrgId) {
       SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
     }
 
@@ -31,6 +29,11 @@
     // we want to allow the tab to get auth tokens from another logged in tab
     if (SessionStorage.get('logout')) {
       SessionStorage.remove('logout');
+    }
+
+    // Enable Atlas to seamlessly login (when already authenticated through CI) by allowing email parameter
+    if ($stateParams.email) {
+      Auth.redirectToLogin($stateParams.email);
     }
 
     if ($stateParams.bmmp_env) {
@@ -101,7 +104,6 @@
     } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
       Auth.redirectToLogin(null, queryParams.sso);
     }
-
   }
 
   module.exports = LoginCtrl;

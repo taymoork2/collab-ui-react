@@ -189,7 +189,7 @@ describe('Controller: Customer Reports Ctrl', function () {
           expect(label.text).toEqual(this.metricsLabels[index].text);
         });
 
-        const reportFilter: Array<IFilterObject> = _.cloneDeep(this.ctrlData.reportFilter);
+        const reportFilter: IFilterObject[] = _.cloneDeep(this.ctrlData.reportFilter);
         _.forEach(this.controller.filterArray, (filter: IFilterObject, index: number): void => {
           expect(filter.label).toEqual(reportFilter[index].label);
           expect(filter.id).toEqual(reportFilter[index].id);
@@ -309,7 +309,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       }));
       spyOn(this.SparkLineReportService, 'getDeviceData').and.returnValue(this.$q.resolve(_.cloneDeep(this.devicesJson.response)));
 
-      const lineResponse: Array<IMetricsData> = [];
+      const lineResponse: IMetricsData[] = [];
       for (let i = 0; i < 7; i++) {
         lineResponse.push(_.cloneDeep(this.metricsData.lineResponse));
       }
@@ -425,7 +425,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(this.controller.deviceDropdown.disabled).toEqual(false);
         expect(this.controller.deviceDropdown.selected).toEqual(this.devicesJson.response.filterArray[0]);
 
-        const reportFilter: Array<IFilterObject> = _.cloneDeep(this.ctrlData.reportFilter);
+        const reportFilter: IFilterObject[] = _.cloneDeep(this.ctrlData.reportFilter);
         _.forEach(this.controller.filterArray, (filter: IFilterObject, index: number): void => {
           expect(filter.label).toEqual(reportFilter[index].label);
           expect(filter.id).toEqual(reportFilter[index].id);

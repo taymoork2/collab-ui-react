@@ -23,7 +23,6 @@
     init();
 
     function init() {
-
       ResourceGroupService.getAllAsOptions()
         .then(function (options) {
           if (options.length > 0) {

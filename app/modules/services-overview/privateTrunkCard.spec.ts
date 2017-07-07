@@ -6,7 +6,7 @@ describe('ServicesOverviewPrivateTrunkCard ', () => {
   let HybridServicesClusterStatesService: HybridServicesClusterStatesService;
   let card: ServicesOverviewPrivateTrunkCard ;
   let PrivateTrunkPrereqService;
-  let resource = [{
+  const resource = [{
     url: 'https://bug.buggy.example.org',
     resourceId: '2d2c9bd4-2e7d-4c3b-b1b9-c7e172c93600',
     name: 'ACE Beta Lysaker',

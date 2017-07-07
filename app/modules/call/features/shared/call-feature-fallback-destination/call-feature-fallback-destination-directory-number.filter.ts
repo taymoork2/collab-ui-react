@@ -16,7 +16,7 @@ export function callFeatureFallbackDestinationDirectoryNumberFilter($translate, 
 
   function filter(number: any): string {
     let filteredNumber = _.get(number, 'pattern', '');
-    let externalNumber = _.get(number, 'alternateNumbers.externalNumber.pattern');
+    const externalNumber = _.get(number, 'alternateNumbers.externalNumber.pattern');
 
     if (externalNumber) {
       filteredNumber += ' ' + $translate.instant('common.and') + ' ' + PhoneNumberService.getNationalFormat(externalNumber);

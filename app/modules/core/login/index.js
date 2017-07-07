@@ -16,5 +16,4 @@ require('./_login.scss');
     require('modules/core/scripts/services/utils'),
   ]).directive('login', require('./login.directive'))
     .name;
-
 }());

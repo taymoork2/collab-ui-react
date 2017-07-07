@@ -1,7 +1,6 @@
 'use strict';
 
 describe('DeviceUsageService', function () {
-
   beforeEach(angular.mock.module('Core'));
 
   var DeviceUsageService;
@@ -27,7 +26,6 @@ describe('DeviceUsageService', function () {
     var baseTime = now;
     jasmine.clock().mockDate(baseTime);
     urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
-
   }));
 
   afterEach(function () {
@@ -36,49 +34,48 @@ describe('DeviceUsageService', function () {
   });
 
   describe('get usage data', function () {
-
     var usageDataResponse;
     var availableDataResponse;
 
     beforeEach(function () {
       var usageDataResponseDay1 = [
         {
-          "date": "2016-10-28T00:00:00.000Z",
-          "accountId": "*",
-          "category": "ce",
-          "model": "SX20",
-          "countryCode": "*",
-          "callCount": 6,
-          "callDuration": 2500,
+          date: '2016-10-28T00:00:00.000Z',
+          accountId: '*',
+          category: 'ce',
+          model: 'SX20',
+          countryCode: '*',
+          callCount: 6,
+          callDuration: 2500,
         },
         {
-          "date": "2016-10-28T00:00:00.000Z",
-          "accountId": "*",
-          "category": "ce",
-          "model": "MX700",
-          "countryCode": "*",
-          "callCount": 5,
-          "callDuration": 1000,
+          date: '2016-10-28T00:00:00.000Z',
+          accountId: '*',
+          category: 'ce',
+          model: 'MX700',
+          countryCode: '*',
+          callCount: 5,
+          callDuration: 1000,
         },
       ];
 
       var usageDataResponseDay2 = [
         {
-          "date": "2016-10-27T00:00:00.000Z",
-          "accountId": "*",
-          "category": "ce",
-          "model": "SX20",
-          "countryCode": "*",
-          "callCount": 4,
-          "callDuration": 500,
+          date: '2016-10-27T00:00:00.000Z',
+          accountId: '*',
+          category: 'ce',
+          model: 'SX20',
+          countryCode: '*',
+          callCount: 4,
+          callDuration: 500,
         }, {
-          "date": "2016-10-27T00:00:00.000Z",
-          "accountId": "*",
-          "category": "SparkBoard",
-          "model": "SparkBoard 55",
-          "countryCode": "*",
-          "callCount": 2,
-          "callDuration": 1000,
+          date: '2016-10-27T00:00:00.000Z',
+          accountId: '*',
+          category: 'SparkBoard',
+          model: 'SparkBoard 55',
+          countryCode: '*',
+          callCount: 2,
+          callDuration: 1000,
         },
       ];
 
@@ -86,20 +83,20 @@ describe('DeviceUsageService', function () {
 
       var usageDataResponseDay4 = [
         {
-          "date": "2016-10-25T00:00:00.000Z",
-          "accountId": "*",
-          "category": "ce",
-          "model": "SX20",
-          "countryCode": "*",
-          "callCount": 2,
-          "callDuration": 500,
+          date: '2016-10-25T00:00:00.000Z',
+          accountId: '*',
+          category: 'ce',
+          model: 'SX20',
+          countryCode: '*',
+          callCount: 2,
+          callDuration: 500,
         },
         {
-          "date": "2016-10-25T00:00:00.000Z",
-          "accountId": "*",
-          "category": "SparkBoard",
-          "model": "SparkBoard 55",
-          "countryCode": "*",
+          date: '2016-10-25T00:00:00.000Z',
+          accountId: '*',
+          category: 'SparkBoard',
+          model: 'SparkBoard 55',
+          countryCode: '*',
           // "callCount": 0, // missing callCount same as 0
           // "callDuration": 500  // missing callDuration same as 0
         },
@@ -113,24 +110,22 @@ describe('DeviceUsageService', function () {
 
       availableDataResponse = [
         {
-          "date": "2016-10-25T00:00:00.000Z",
-          "available": true,
+          date: '2016-10-25T00:00:00.000Z',
+          available: true,
         }, {
-          "date": "2016-10-26T00:00:00.000Z",
-          "available": false,
+          date: '2016-10-26T00:00:00.000Z',
+          available: false,
         }, {
-          "date": "2017-10-27T00:00:00.000Z",
-          "available": true,
+          date: '2017-10-27T00:00:00.000Z',
+          available: true,
         }, {
-          "date": "2017-10-28T00:00:00.000Z",
-          "available": true,
+          date: '2017-10-28T00:00:00.000Z',
+          available: true,
         },
       ];
-
     });
 
     it('reduces data to calculated totals pr day', function () {
-
       var expectedResult = [{
         callCount: 2,
         totalDuration: 500,
@@ -154,7 +149,7 @@ describe('DeviceUsageService', function () {
 
     it('replaces missing days with data indicating zero use', function () {
       spyOn(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.and.returnValue("1234");
+      Authinfo.getOrgId.and.returnValue('1234');
       var usageRequest = urlBase + '/1234/reports/device/usage?interval=day&from=2010-10-25&to=2016-10-28&categories=aggregate&countryCodes=aggregate&accounts=aggregate&models=aggregate';
       $httpBackend
         .when('GET', usageRequest)
@@ -189,45 +184,44 @@ describe('DeviceUsageService', function () {
 
       var dataResponse;
 
-      DeviceUsageService.getDataForRange("2010-10-25", "2016-10-28", 'day', [], 'backend').then(function (result) {
+      DeviceUsageService.getDataForRange('2010-10-25', '2016-10-28', 'day', [], 'backend').then(function (result) {
         dataResponse = result;
       });
       $httpBackend.flush();
       expect(dataResponse.reportItems).toEqual(expectedResult);
       expect(dataResponse.missingDays).toEqual({ missingDays: true, count: 1 });
-
     });
 
     it('calls backend to get least and most used', function () {
       var usageData1 =
         {
-          "date": "2016-10-25T00:00:00.000Z",
-          "accountId": "*",
-          "category": "ce",
-          "model": "SX20",
-          "countryCode": "*",
+          date: '2016-10-25T00:00:00.000Z',
+          accountId: '*',
+          category: 'ce',
+          model: 'SX20',
+          countryCode: '*',
           //"callCount": 2,         //missing
           //"callDuration": 500,    //missing
         };
       var usageData2 =
         {
-          "date": "2016-10-26T00:00:00.000Z",
-          "accountId": "*",
-          "category": "SparkBoard",
-          "model": "SparkBoard 55",
-          "countryCode": "*",
-          "callCount": 4,
-          "callDuration": 500,
+          date: '2016-10-26T00:00:00.000Z',
+          accountId: '*',
+          category: 'SparkBoard',
+          model: 'SparkBoard 55',
+          countryCode: '*',
+          callCount: 4,
+          callDuration: 500,
         };
       var usageData3 =
         {
-          "date": "2016-10-27T00:00:00.000Z",
-          "accountId": "*",
-          "category": "ce",
-          "model": "SX20",
-          "countryCode": "*",
-          "callCount": 6,
-          "callDuration": 500,
+          date: '2016-10-27T00:00:00.000Z',
+          accountId: '*',
+          category: 'ce',
+          model: 'SX20',
+          countryCode: '*',
+          callCount: 6,
+          callDuration: 500,
         };
 
       var usageData = [
@@ -238,38 +232,38 @@ describe('DeviceUsageService', function () {
 
       var peopleCount1 =
         {
-          "accountId": "2c179dba-75fc-48e5-8cdb-73cc78fc7fd3",
-          "callCount": 10,
-          "callDurationAvg": 1865,
-          "callDurationTotal": 19700,
-          "callMaxJoinedAvg": 1.25,
-          "callMxJoinedPeak": 3,
-          "CallTotalJoinedAvg": 1.25,
-          "category": "ce",
-          "countryCode": "*",
-          "date": "2016-10-27T00:00:00.000Z",
-          "model": "Room Kit",
-          "peopleCountAvg": 1.25,
-          "peopleCountPeak": 2,
-          "peopleCountTotal": 11,
+          accountId: '2c179dba-75fc-48e5-8cdb-73cc78fc7fd3',
+          callCount: 10,
+          callDurationAvg: 1865,
+          callDurationTotal: 19700,
+          callMaxJoinedAvg: 1.25,
+          callMxJoinedPeak: 3,
+          CallTotalJoinedAvg: 1.25,
+          category: 'ce',
+          countryCode: '*',
+          date: '2016-10-27T00:00:00.000Z',
+          model: 'Room Kit',
+          peopleCountAvg: 1.25,
+          peopleCountPeak: 2,
+          peopleCountTotal: 11,
         };
 
       var peopleCount2 =
         {
-          "accountId": "2c179dba-75fc-48e5-8cdb-73cc78fc7fd3",
-          "callCount": 10,
-          "callDurationAvg": 1865,
-          "callDurationTotal": 19700,
-          "callMaxJoinedAvg": 1.25,
-          "callMxJoinedPeak": 3,
-          "CallTotalJoinedAvg": 1.25,
-          "category": "ce",
-          "countryCode": "*",
-          "date": "2016-10-27T00:00:00.000Z",
-          "model": "Room Kit",
-          "peopleCountAvg": 1.25,
-          "peopleCountPeak": 2,
-          "peopleCountTotal": 11,
+          accountId: '2c179dba-75fc-48e5-8cdb-73cc78fc7fd3',
+          callCount: 10,
+          callDurationAvg: 1865,
+          callDurationTotal: 19700,
+          callMaxJoinedAvg: 1.25,
+          callMxJoinedPeak: 3,
+          CallTotalJoinedAvg: 1.25,
+          category: 'ce',
+          countryCode: '*',
+          date: '2016-10-27T00:00:00.000Z',
+          model: 'Room Kit',
+          peopleCountAvg: 1.25,
+          peopleCountPeak: 2,
+          peopleCountTotal: 11,
         };
 
       var peopleData = [
@@ -278,7 +272,7 @@ describe('DeviceUsageService', function () {
       ];
 
       spyOn(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.and.returnValue("1234");
+      Authinfo.getOrgId.and.returnValue('1234');
       var least = urlBase + '/1234/reports/device/usage/aggregate?interval=day&from=2010-10-25&to=2016-10-28&countryCodes=aggregate&models=__&orderBy=callDuration&descending=false&limit=20';
       $httpBackend
         .when('GET', least)
@@ -292,7 +286,7 @@ describe('DeviceUsageService', function () {
       var count = urlBase + '/1234/reports/device/usage/count?interval=day&from=2010-10-25&to=2016-10-28&models=__&excludeUnused=true';
       $httpBackend
         .when('GET', count)
-        .respond({ items: [{ date: "*", count: 42 }] });
+        .respond({ items: [{ date: '*', count: 42 }] });
 
       var peopleCount = urlBase + '/1234/reports/device/people_count/aggregate?interval=day&from=2010-10-25&to=2016-10-28&categories=aggregate';
       $httpBackend
@@ -310,7 +304,7 @@ describe('DeviceUsageService', function () {
         usageData3,
       ]);
 
-      DeviceUsageService.extractStats(usageData, "2010-10-25", "2016-10-28").then(function (result) {
+      DeviceUsageService.extractStats(usageData, '2010-10-25', '2016-10-28').then(function (result) {
         dataResponse = result;
       });
 
@@ -318,30 +312,29 @@ describe('DeviceUsageService', function () {
 
       expect(dataResponse.most).toEqual(extectedResult);
       expect(dataResponse.least).toEqual(extectedResult);
-
     });
 
     it('resolves name from accoundIds and returns result in same sequence as listed in devices request', function () {
       spyOn(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.and.returnValue("1234");
+      Authinfo.getOrgId.and.returnValue('1234');
       var devicesRequest = urlBase + '/1234/reports/devices?accountIds=1111,2222,3333,4444,5555';
       $httpBackend
         .when('GET', devicesRequest)
         .respond([
-            { displayName: "two", id: "2222", whatever: "whatever" },
-            { displayName: "four", id: "4444", whatever: "whatever" },
-            { displayName: "three", id: "3333", whatever: "whatever" },
-            { displayName: "one", id: "1111", whatever: "whatever" },
+            { displayName: 'two', id: '2222', whatever: 'whatever' },
+            { displayName: 'four', id: '4444', whatever: 'whatever' },
+            { displayName: 'three', id: '3333', whatever: 'whatever' },
+            { displayName: 'one', id: '1111', whatever: 'whatever' },
         ]);
 
       var result;
 
       var deviceIdsToResolve = [
-        { accountId: "1111" },
-        { accountId: "2222" },
-        { accountId: "3333" },
-        { accountId: "4444" },
-        { accountId: "5555" },
+        { accountId: '1111' },
+        { accountId: '2222' },
+        { accountId: '3333' },
+        { accountId: '4444' },
+        { accountId: '5555' },
       ];
       DeviceUsageService.resolveDeviceData(deviceIdsToResolve).then(function (data) {
         result = data;
@@ -349,11 +342,11 @@ describe('DeviceUsageService', function () {
       $httpBackend.flush();
 
       expect(result).toEqual([
-        { id: "1111", displayName: "one" },
-        { id: "2222", displayName: "two" },
-        { id: "3333", displayName: "three" },
-        { id: "4444", displayName: "four" },
-        { id: "5555", displayName: "reportsPage.usageReports.nameNotResolvedFor id=5555", info: 'reportsPage.usageReports.nameNotFoundFor device id=5555' },
+        { id: '1111', displayName: 'one' },
+        { id: '2222', displayName: 'two' },
+        { id: '3333', displayName: 'three' },
+        { id: '4444', displayName: 'four' },
+        { id: '5555', displayName: 'reportsPage.usageReports.nameNotResolvedFor id=5555', info: 'reportsPage.usageReports.nameNotFoundFor device id=5555' },
 
       ]);
     });

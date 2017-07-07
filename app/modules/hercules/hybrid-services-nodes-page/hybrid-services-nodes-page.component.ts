@@ -1,16 +1,17 @@
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService } from 'modules/core/modal';
-import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
+import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType, IConnectorProvisioning, ConnectorState } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface ISimplifiedConnector {
   alarms: IConnectorAlarm[];
-  connectorType: string;
+  connectorType: ConnectorType;
   hasUpgradeAvailable: boolean;
   id: string;
   maintenanceMode: ConnectorMaintenanceMode;
+  originalState: ConnectorState;
   service: string;
   status: IMergedStateSeverity;
   statusName: string;
@@ -22,6 +23,7 @@ interface ISimplifiedNode {
   name: string;
   serial: string;
   pendingTooltip: string;
+  platformVersion?: string;
   maintenanceMode: ConnectorMaintenanceMode;
   connectors: ISimplifiedConnector[];
 }
@@ -63,7 +65,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     this.fetchNodes = this.fetchNodes.bind(this);
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.loadCluster(clusterId.currentValue);
@@ -241,14 +243,14 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     return this.$q.all(promises);
   }
 
-  public openUpgradeModal(): void {
+  public openUpgradeModal(connectorType): void {
     this.$modal.open({
       templateUrl: 'modules/hercules/connector-upgrade-modal/connector-upgrade-modal.html',
       type: 'small',
       controller: 'ConnectorUpgradeController',
       controllerAs: 'ConnectorUpgradeCtrl',
       resolve: {
-        connectorTypes: () => this.connectorTypesWithUpgrade,
+        connectorType: () => connectorType,
         cluster: () => this.clusterCache,
       },
     })
@@ -259,20 +261,19 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   }
 
   private processData(cluster: ICluster, nodes: IHost[]): IData {
-    this.connectorTypesWithUpgrade = _.chain(cluster.provisioning)
-      .filter((provisioning) => {
-        return _.some(cluster.connectors, (connector) => {
-          // The code checks if the connector:
-          // has the right type
-          // is not currently upgrading
-          // version is different from the available version
-          return provisioning.connectorType === connector.connectorType &&
-                connector.upgradeState === 'upgraded' &&
-                provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
-        });
-      })
-      .map((provisioning) => provisioning.connectorType)
-      .value();
+    function hasUpgradeAvailable(provisioning: IConnectorProvisioning[], connector: IConnector): boolean {
+      const provisioningType = _.find(provisioning, { connectorType: connector.connectorType });
+      if (provisioningType) {
+        // Upgrade available if:
+        // - has the right type
+        // - is not currently upgrading
+        // - version is different from the available version
+        return provisioningType.connectorType === connector.connectorType &&
+          connector.upgradeState === 'upgraded' &&
+          !_.isUndefined(provisioningType.availableVersion) && connector.runningVersion !== provisioningType.availableVersion;
+      }
+      return false;
+    }
     const result: IData = {
       id: cluster.id,
       name: cluster.name,
@@ -281,16 +282,17 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
         .map((node) => {
           // We have to base the transformation on the connectors from `cluster`, not from `nodes` because of
           // https://sqbu-github.cisco.com/WebExSquared/fusion-management-service/issues/250
-          let connectors = _.chain(cluster.connectors)
+          const connectors = _.chain(cluster.connectors)
             .filter({ hostSerial: node.serial })
             .map(connector => {
               const mergedStatus = this.HybridServicesClusterStatesService.getMergedStateSeverity([connector]);
               const simplifiedConnector: ISimplifiedConnector = {
                 alarms: connector.alarms,
                 connectorType: connector.connectorType,
-                hasUpgradeAvailable: _.includes(this.connectorTypesWithUpgrade, connector.connectorType),
+                hasUpgradeAvailable: hasUpgradeAvailable(cluster.provisioning, connector),
                 id: connector.id,
                 maintenanceMode: this.getMaintenanceModeForConnector(connector),
+                originalState: connector.state,
                 service: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),
                 status: mergedStatus,
                 statusName: this.$translate.instant(`hercules.status.${mergedStatus.name}`),
@@ -305,12 +307,20 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
             name: node.hostname,
             serial: node.serial,
             pendingTooltip: this.$translate.instant(`hercules.nodesPage.pendingTooltip`, { date: moment(node.lastMaintenanceModeEnabledTimestamp).format('LLL') }),
+            platformVersion: node.platformVersion,
             maintenanceMode: node.maintenanceMode,
             connectors: connectors,
           };
         })
         .value(),
     };
+    this.connectorTypesWithUpgrade = _.chain(result.nodes)
+      .map((node) => node.connectors)
+      .flatten<ISimplifiedConnector>()
+      .filter((connector) => connector.hasUpgradeAvailable && connector.originalState !== 'offline')
+      .map((connector) => connector.connectorType)
+      .uniq()
+      .value();
     return result;
   }
 

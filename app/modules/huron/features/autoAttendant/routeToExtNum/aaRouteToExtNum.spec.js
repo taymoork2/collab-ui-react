@@ -71,7 +71,6 @@ describe('Controller: AARouteToExtNumCtrl', function () {
   }));
 
   describe('AARouteToExtNum', function () {
-
     it('should be able to create new key entry', function () {
       var controller = $controller('AARouteToExtNumCtrl', {
         $scope: $scope,
@@ -80,12 +79,10 @@ describe('Controller: AARouteToExtNumCtrl', function () {
       expect(controller).toBeDefined();
       expect(controller.menuKeyEntry.actions[0].name).toEqual('route');
       expect(controller.menuKeyEntry.actions[0].value).toEqual('');
-
     });
 
     describe('activate', function () {
       it('should read and display an existing entry', function () {
-
         var phoneNumber = '+14084744088';
 
         var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('route', phoneNumber);
@@ -105,7 +102,6 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
     describe('saveUiModel', function () {
       it('should write UI entry back into UI model', function () {
-
         var controller = $controller('AARouteToExtNumCtrl', {
           $scope: $scope,
         });
@@ -117,9 +113,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         $scope.$apply();
 
         expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber.replace(/\D/g, ''));
-
       });
-
     });
 
     describe('fromDecision', function () {
@@ -132,22 +126,18 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
         aaUiModel[schedule].entries[0].actions[0] = action;
-
       });
 
       it('should conditional action with then clause', function () {
-
         var controller = $controller('AARouteToExtNumCtrl', {
           $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].then).toBeDefined();
         expect(controller.menuEntry.actions[0].then.name).toEqual('route');
-
       });
 
       it('should create a condition action with then clause', function () {
-
         aaUiModel[schedule].entries[0].actions[0] = undefined;
 
         var controller = $controller('AARouteToExtNumCtrl', {
@@ -157,11 +147,9 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         expect(controller.menuEntry.actions[0].name).toEqual('conditional');
         expect(controller.menuEntry.actions[0].then).toBeDefined();
         expect(controller.menuEntry.actions[0].then.name).toEqual('route');
-
       });
 
       it('should change an action from routetoQueue to route', function () {
-
         aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
 
         var controller = $controller('AARouteToExtNumCtrl', {
@@ -171,9 +159,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         expect(controller.menuEntry.actions[0].name).toEqual('conditional');
         expect(controller.menuEntry.actions[0].then).toBeDefined();
         expect(controller.menuEntry.actions[0].then.name).toEqual('route');
-
       });
-
     });
 
     describe('fromRouteCall', function () {
@@ -183,11 +169,9 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
         aaUiModel[schedule].entries[0].actions = [];
-
       });
 
       it('should write phone number back into Ui Model from Route Call', function () {
-
         var phoneNumber = '14084744088';
 
         var controller = $controller('AARouteToExtNumCtrl', {
@@ -207,25 +191,21 @@ describe('Controller: AARouteToExtNumCtrl', function () {
       });
 
       it('should be able to create new AA entry from Route Call', function () {
-
         var controller = $controller('AARouteToExtNumCtrl', {
           $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('route');
         expect(controller.menuEntry.actions[0].value).toEqual('');
-
       });
     });
 
     describe('fromRouteCall overwrite', function () {
       beforeEach(function () {
-
         aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
 
         aaUiModel[schedule].entries[0].addAction(action);
-
       });
 
       it('should be able to create new external number from Route Call', function () {
@@ -237,13 +217,11 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         expect(controller.menuEntry.actions[0].name).toEqual('route');
         expect(controller.menuEntry.actions[0].value).toEqual('');
-
       });
     });
 
     describe('fromPhoneMenu_Queue_Fallback', function () {
       it('should be able to create new route entry from Queue Fallback of PhoneMenu', function () {
-
         var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
         var fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
         fallback.addAction(disconnect);

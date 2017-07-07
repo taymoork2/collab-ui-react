@@ -16,7 +16,6 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
     _WebExApiGatewayConstsService_,
     _SessionStorage_
   ) {
-
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
     SessionStorage = _SessionStorage_;
 
@@ -66,8 +65,8 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
     };
 
     csvConstructHttpsObj = WebExApiGatewayService.csvConstructHttpsObj(
-      "test.site.com",
-      "csvStatus"
+      'test.site.com',
+      'csvStatus'
     );
 
     expect(csvConstructHttpsObj.url).toEqual(expectedCsvHttpsObj.url);
@@ -85,8 +84,8 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
     };
 
     csvConstructHttpsObj = WebExApiGatewayService.csvConstructHttpsObj(
-      "test.site.com",
-      "csvExport"
+      'test.site.com',
+      'csvExport'
     );
 
     expect(csvConstructHttpsObj.url).toEqual(expectedCsvHttpsObj.url);
@@ -104,8 +103,8 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
     };
 
     csvConstructHttpsObj = WebExApiGatewayService.csvConstructHttpsObj(
-      "test.site.com",
-      "csvImport"
+      'test.site.com',
+      'csvImport'
     );
 
     expect(csvConstructHttpsObj.url).toEqual(expectedCsvHttpsObj.url);
@@ -134,14 +133,14 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
   };
 
   var fakeViewModel = {
-    'siteUrl': 'test.site.com',
-    'siteRow': {
-      'csvMock': {
-        'mockImport': true,
+    siteUrl: 'test.site.com',
+    siteRow: {
+      csvMock: {
+        mockImport: true,
       },
     },
-    'modal': {
-      'file': 'Some file content',
+    modal: {
+      file: 'Some file content',
     },
   };
 
@@ -154,7 +153,6 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     _WebExApiGatewayService_,
     _WebExApiGatewayConstsService_
   ) {
-
     $q = _$q_;
     $rootScope = _$rootScope_;
 
@@ -243,7 +241,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
 
   it('can return mock CSV status to be "none"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
+      'test.site.com',
       true,
       WebExApiGatewayConstsService.csvStates.none
     ).then(
@@ -260,14 +258,14 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     ); // WebExApiGatewayService.csvStatusReq().then()
 
     deferredCsvApiRequest.resolve({
-      "jobType": 0,
+      jobType: 0,
     });
     $rootScope.$apply();
   }));
 
   it('can return mock CSV status to be "exportInProgress"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
+      'test.site.com',
       true,
       WebExApiGatewayConstsService.csvStates.exportInProgress
     ).then(
@@ -283,8 +281,8 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     ); // WebExApiGatewayService.csvStatusReq().then()
 
     var fakeResult = {
-      "jobType": 2,
-      "request": 0,
+      jobType: 2,
+      request: 0,
     };
 
     deferredCsvApiRequest.resolve(fakeResult);
@@ -293,7 +291,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
 
   it('can return mock CSV status to be "exportCompletedNoErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
+      'test.site.com',
       true,
       WebExApiGatewayConstsService.csvStates.exportCompletedNoErr
     ).then(
@@ -309,15 +307,15 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     ); // WebExApiGatewayService.csvStatusReq().then()
 
     var fakeResult = {
-      "jobType": 2,
-      "request": 2,
-      "created": "03/23/16 12:41 AM",
-      "started": "03/23/16 12:41 AM",
-      "finished": "03/23/16 12:41 AM",
-      "totalRecords": 5,
-      "successRecords": 5,
-      "failedRecords": 0,
-      "exportFileLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl",
+      jobType: 2,
+      request: 2,
+      created: '03/23/16 12:41 AM',
+      started: '03/23/16 12:41 AM',
+      finished: '03/23/16 12:41 AM',
+      totalRecords: 5,
+      successRecords: 5,
+      failedRecords: 0,
+      exportFileLink: 'http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl',
     };
 
     deferredCsvApiRequest.resolve(fakeResult);
@@ -326,7 +324,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
 
   it('can return mock CSV status to be "exportCompletedWithErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
+      'test.site.com',
       true,
       WebExApiGatewayConstsService.csvStates.exportCompletedWithErr
     ).then(
@@ -342,15 +340,15 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     ); // WebExApiGatewayService.csvStatusReq().then()
 
     var fakeResult = {
-      "jobType": 2,
-      "request": 2,
-      "created": "03/23/16 12:41 AM",
-      "started": "03/23/16 12:41 AM",
-      "finished": "03/23/16 12:41 AM",
-      "totalRecords": 5,
-      "successRecords": 4,
-      "failedRecords": 1,
-      "exportFileLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl",
+      jobType: 2,
+      request: 2,
+      created: '03/23/16 12:41 AM',
+      started: '03/23/16 12:41 AM',
+      finished: '03/23/16 12:41 AM',
+      totalRecords: 5,
+      successRecords: 4,
+      failedRecords: 1,
+      exportFileLink: 'http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl',
     };
 
     deferredCsvApiRequest.resolve(fakeResult);
@@ -359,7 +357,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
 
   it('can return mock CSV status to be "importInProgress"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
+      'test.site.com',
       true,
       WebExApiGatewayConstsService.csvStates.importInProgress
     ).then(
@@ -375,8 +373,8 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     ); // WebExApiGatewayService.csvStatusReq().then()
 
     var fakeResult = {
-      "jobType": 1,
-      "request": 0,
+      jobType: 1,
+      request: 0,
     };
 
     deferredCsvApiRequest.resolve(fakeResult);
@@ -385,7 +383,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
 
   it('can return mock CSV status to be "importCompletedNoErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
+      'test.site.com',
       true,
       WebExApiGatewayConstsService.csvStates.importCompletedNoErr
     ).then(
@@ -401,14 +399,14 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     ); // WebExApiGatewayService.csvStatusReq().then()
 
     var fakeResult = {
-      "jobType": 1,
-      "request": 2,
-      "created": "03/23/16 12:41 AM",
-      "started": "03/23/16 12:41 AM",
-      "finished": "03/23/16 12:41 AM",
-      "totalRecords": 5,
-      "successRecords": 5,
-      "failedRecords": 0,
+      jobType: 1,
+      request: 2,
+      created: '03/23/16 12:41 AM',
+      started: '03/23/16 12:41 AM',
+      finished: '03/23/16 12:41 AM',
+      totalRecords: 5,
+      successRecords: 5,
+      failedRecords: 0,
     };
 
     deferredCsvApiRequest.resolve(fakeResult);
@@ -417,7 +415,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
 
   it('can return mock CSV status to be "importCompletedWithErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
+      'test.site.com',
       true,
       WebExApiGatewayConstsService.csvStates.importCompletedWithErr
     ).then(
@@ -433,15 +431,15 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     ); // WebExApiGatewayService.csvStatusReq().then()
 
     var fakeResult = {
-      "jobType": 1,
-      "request": 2,
-      "errorLogLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl",
-      "created": "03/23/16 12:41 AM",
-      "started": "03/23/16 12:41 AM",
-      "finished": "03/23/16 12:41 AM",
-      "totalRecords": 5,
-      "successRecords": 3,
-      "failedRecords": 2,
+      jobType: 1,
+      request: 2,
+      errorLogLink: 'http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl',
+      created: '03/23/16 12:41 AM',
+      started: '03/23/16 12:41 AM',
+      finished: '03/23/16 12:41 AM',
+      totalRecords: 5,
+      successRecords: 3,
+      failedRecords: 2,
     };
 
     deferredCsvApiRequest.resolve(fakeResult);
@@ -479,7 +477,6 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
       _$rootScope_,
       _WebExXmlApiFact_
     ) {
-
       $q = _$q_;
       $rootScope = _$rootScope_;
       WebExXmlApiFact = _WebExXmlApiFact_;
@@ -489,14 +486,14 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
       deferredEnableT30UnifiedAdminXml = $q.defer();
       deferredSiteInfoXml = $q.defer();
 
-      spyOn(WebExXmlApiFact, "getSessionTicket").and.returnValue(deferredSessionTicket.promise);
-      spyOn(WebExXmlApiFact, "getSiteVersion").and.returnValue(deferredVersionXml.promise);
-      spyOn(WebExXmlApiFact, "getSiteInfo").and.returnValue(deferredSiteInfoXml.promise);
+      spyOn(WebExXmlApiFact, 'getSessionTicket').and.returnValue(deferredSessionTicket.promise);
+      spyOn(WebExXmlApiFact, 'getSiteVersion').and.returnValue(deferredVersionXml.promise);
+      spyOn(WebExXmlApiFact, 'getSiteInfo').and.returnValue(deferredSiteInfoXml.promise);
     })
   );
 
   it('can check if site iframe supported (release order >= 400)', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.siteFunctions("test.site.com").then(
+    WebExApiGatewayService.siteFunctions('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(true);
@@ -507,7 +504,7 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
       }
     );
 
-    deferredSessionTicket.resolve("ticket");
+    deferredSessionTicket.resolve('ticket');
     $rootScope.$apply();
 
     deferredVersionXml.resolve(isIframeSupportedReleaseOrderXml);
@@ -525,7 +522,7 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
   }));
 
   it('can check if site is iframe supported (release order < 400; enableT30UnifiedAdmin = true', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.siteFunctions("test.site.com").then(
+    WebExApiGatewayService.siteFunctions('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(true);
@@ -536,7 +533,7 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
       }
     );
 
-    deferredSessionTicket.resolve("ticket");
+    deferredSessionTicket.resolve('ticket');
     $rootScope.$apply();
 
     deferredVersionXml.resolve(isNotIframeSupportedReleaseOrderXml);
@@ -554,7 +551,7 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
   }));
 
   it('can check if site is iframe supported (release order = null; enableT30UnifiedAdmin = true', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.siteFunctions("test.site.com").then(
+    WebExApiGatewayService.siteFunctions('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(true);
@@ -565,7 +562,7 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
       }
     );
 
-    deferredSessionTicket.resolve("ticket");
+    deferredSessionTicket.resolve('ticket');
     $rootScope.$apply();
 
     deferredVersionXml.resolve(isNullIframeSupportedReleaseOrderXml);
@@ -583,7 +580,7 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
   }));
 
   it('can check if site report is enabled', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.siteFunctions("test.site.com").then(
+    WebExApiGatewayService.siteFunctions('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isAdminReportEnabled = response.isAdminReportEnabled;
         expect(isAdminReportEnabled).toBe(true);
@@ -594,7 +591,7 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
       }
     );
 
-    deferredSessionTicket.resolve("ticket");
+    deferredSessionTicket.resolve('ticket');
     $rootScope.$apply();
 
     deferredVersionXml.resolve(isIframeSupportedReleaseOrderXml);
@@ -612,7 +609,7 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
   }));
 
   it('can check if site report is not enabled', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.siteFunctions("test.site.com").then(
+    WebExApiGatewayService.siteFunctions('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isAdminReportEnabled = response.isAdminReportEnabled;
         expect(isAdminReportEnabled).toBe(false);
@@ -623,7 +620,7 @@ describe('WebExApiGatewayService.siteFunctions() test', function () {
       }
     );
 
-    deferredSessionTicket.resolve("ticket");
+    deferredSessionTicket.resolve('ticket');
     $rootScope.$apply();
 
     deferredVersionXml.resolve(isIframeSupportedReleaseOrderXml);

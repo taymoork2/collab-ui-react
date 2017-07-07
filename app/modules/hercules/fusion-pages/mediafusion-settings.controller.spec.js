@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: MediafusionClusterSettingsController', function () {
-
   beforeEach(angular.mock.module('core.config'));
   beforeEach(angular.mock.module('core.org'));
   beforeEach(angular.mock.module('Squared'));

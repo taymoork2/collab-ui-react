@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Care Setup Assistant Ctrl', function () {
-
   var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, FeatureToggleService, $state, $stateParams, LogMetricsService;
   var Notification, $translate, _scomUrl, $httpBackend;
 
@@ -50,81 +49,81 @@ describe('Care Setup Assistant Ctrl', function () {
   };
 
   var duplicateFieldTypeData = {
-    'field1': {
+    field1: {
       attributes: [{
         name: 'type',
         value: { id: 'name' },
       }],
     },
-    'field2': {
+    field2: {
       attributes: [{
         name: 'type',
         value: { id: 'email' },
       }],
     },
-    'field3': {
+    field3: {
       attributes: [{
         name: 'type',
         value: { id: 'name' },
       }],
     },
-    'field4': {
+    field4: {
       attributes: [{
         name: 'type',
         value: { id: 'phone' },
       }],
     } };
   var customerInfoWithLongAttributeValue = {
-    'welcomeHeader': {
-      'attributes': [
-        { 'name': 'header', 'value': 'Welcome to' },
-        { 'name': 'organization', 'value': Array(52).join("c") },
+    welcomeHeader: {
+      attributes: [
+        { name: 'header', value: 'Welcome to' },
+        { name: 'organization', value: Array(52).join('c') },
       ],
     },
-    'field1': {
-      'attributes': [
-        { 'name': 'label', 'value': 'Name' },
-        { 'name': 'hintText', 'value': 'Something' },
-        { 'name': 'type', 'value': { id: 'name' } },
+    field1: {
+      attributes: [
+        { name: 'label', value: 'Name' },
+        { name: 'hintText', value: 'Something' },
+        { name: 'type', value: { id: 'name' } },
       ] },
-    'field2': {
-      'attributes': [
-        { 'name': 'label', 'value': 'Email' },
-        { 'name': 'hintText', 'value': Array(52).join("d") },
-        { 'name': 'type', 'value': { id: 'email' } },
+    field2: {
+      attributes: [
+        { name: 'label', value: 'Email' },
+        { name: 'hintText', value: Array(52).join('d') },
+        { name: 'type', value: { id: 'email' } },
       ] },
-    'field3': {
-      'attributes': [
-        { 'name': 'label', 'value': 'SomethingElse' },
-        { 'name': 'hintText', 'value': 'SomethingElse' },
-        { 'name': 'type', 'value': { id: 'custom' } },
+    field3: {
+      attributes: [
+        { name: 'label', value: 'SomethingElse' },
+        { name: 'hintText', value: 'SomethingElse' },
+        { name: 'type', value: { id: 'custom' } },
       ] },
   };
 
   var customerInfoWithInvalidAttributeValue = {
-    'welcomeHeader': {
-      'attributes': [
-        { 'name': 'header', 'value': 'Welcome to >' },
-        { 'name': 'organization', 'value': 'Sunlight Org' },
+    welcomeHeader: {
+      attributes: [
+        { name: 'header', value: 'Welcome to >' },
+        { name: 'organization', value: 'Sunlight Org' },
       ],
     },
-    'field1': {
-      'attributes': [
-        { 'name': 'label', 'value': 'Name <' },
-        { 'name': 'hintText', 'value': 'Something' },
-        { 'name': 'type', 'value': { id: 'name' } },
+    field1: {
+      attributes: [
+        { name: 'label', value: 'Name <' },
+        { name: 'hintText', value: 'Something' },
+        { name: 'type', value: { id: 'name' } },
       ] },
-    'field2': {
-      'attributes': [
-        { 'name': 'label', 'value': 'Email' },
-        { 'name': 'hintText', 'value': 'Something' },
-        { 'name': 'type', 'value': { id: 'email' } },
+    field2: {
+      attributes: [
+        { name: 'label', value: 'Email' },
+        { name: 'hintText', value: 'Something' },
+        { name: 'type', value: { id: 'email' } },
       ] },
-    'field3': {
-      'attributes': [
-        { 'name': 'label', 'value': 'SomethingElse' },
-        { 'name': 'hintText', 'value': 'SomethingElse' },
-        { 'name': 'type', 'value': { id: 'custom' } },
+    field3: {
+      attributes: [
+        { name: 'label', value: 'SomethingElse' },
+        { name: 'hintText', value: 'SomethingElse' },
+        { name: 'type', value: { id: 'custom' } },
       ] },
   };
 
@@ -178,7 +177,7 @@ describe('Care Setup Assistant Ctrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value('Authinfo', spiedAuthinfo);
   }));
 
   var intializeCtrl = function (template, isEditFeature) {
@@ -233,7 +232,7 @@ describe('Care Setup Assistant Ctrl', function () {
   function setPromptTime(time) {
     var defaultPromptTime = {
       label: 'careChatTpl.promptTimeOption1',
-      value: 60,
+      value: 30,
     };
 
     expect(controller.promptTime).toEqual(defaultPromptTime);
@@ -263,7 +262,6 @@ describe('Care Setup Assistant Ctrl', function () {
   }
 
   describe('should test the', function () {
-
     beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
       resolveTogglePromise();
@@ -271,17 +269,17 @@ describe('Care Setup Assistant Ctrl', function () {
       resolveLogoUrlPromise();
     });
 
-    it("it starts from the name page", function () {
+    it('it starts from the name page', function () {
       controller.currentState = controller.states[NAME_PAGE_INDEX];
       expect(controller.getPageIndex()).toEqual(NAME_PAGE_INDEX);
     });
 
-    it("behavior of navigation buttons", function () {
+    it('behavior of navigation buttons', function () {
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
       checkStateOfNavigationButtons(EMBED_CODE_PAGE_INDEX, true, 'hidden');
     });
 
-    it("keyboard functionality", function () {
+    it('keyboard functionality', function () {
       controller.evalKeyPress(escapeKey);
       expect($modal.open).toHaveBeenCalled();
     });
@@ -292,28 +290,28 @@ describe('Care Setup Assistant Ctrl', function () {
     beforeEach(function () {
       resolveTogglePromise();
     });
-    it("next button should be enabled when name is present", function () {
+    it('next button should be enabled when name is present', function () {
       controller.template.name = templateName;
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', true);
     });
 
-    it("next button should be disabled when name is not present", function () {
+    it('next button should be disabled when name is not present', function () {
       controller.template.name = '';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
 
-    it("next button should be disabled when name is more than 250 chars long", function () {
-      controller.template.name = Array(252).join("a");
+    it('next button should be disabled when name is more than 250 chars long', function () {
+      controller.template.name = Array(252).join('a');
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
 
-    it("next button should be disabled when name has any invalid character", function () {
-      controller.template.name = ">";
+    it('next button should be disabled when name has any invalid character', function () {
+      controller.template.name = '>';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
 
-    it("next button should be disabled when name has invalid character and length exceeds 250 chars", function () {
-      controller.template.name = Array(251).join("a") + "<";
+    it('next button should be disabled when name has invalid character and length exceeds 250 chars', function () {
+      controller.template.name = Array(251).join('a') + '<';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
   });
@@ -333,28 +331,28 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled if feedback comment is longer than 50 characters', function () {
-      controller.template.configuration.pages.feedback.fields.comment.displayText = Array(52).join("a");
+      controller.template.configuration.pages.feedback.fields.comment.displayText = Array(52).join('a');
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
     });
 
     it('next button should be disabled if feedback comment has any invalid character', function () {
-      controller.template.configuration.pages.feedback.fields.comment.displayText = "<";
+      controller.template.configuration.pages.feedback.fields.comment.displayText = '<';
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
     });
 
     it('next button should be disabled if feedback query is longer than 250 characters', function () {
-      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = Array(252).join("a");
+      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = Array(252).join('a');
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
     });
 
     it('next button should be disabled if feedback query has any invalid character', function () {
-      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = "<";
+      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = '<';
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
     });
 
     it('next button should be enabled if feedback comment and query are valid', function () {
-      controller.template.configuration.pages.feedback.fields.comment.displayText = "Feedback comment";
-      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = "Feedback query";
+      controller.template.configuration.pages.feedback.fields.comment.displayText = 'Feedback comment';
+      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = 'Feedback query';
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, true);
     });
   });
@@ -429,12 +427,12 @@ describe('Care Setup Assistant Ctrl', function () {
     beforeEach(function () {
       resolveTogglePromise();
     });
-    it("should have previous and next button enabled", function () {
+    it('should have previous and next button enabled', function () {
       checkStateOfNavigationButtons(OVERVIEW_PAGE_INDEX, true, true);
     });
 
-    it("should initialize all cards as enabled ", function () {
-      expect(controller.template.configuration.proactivePrompt.enabled).toBe(true);
+    it('should initialize all cards as enabled except proactive prompt ', function () {
+      expect(controller.template.configuration.proactivePrompt.enabled).toBe(false);
       expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);
       expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
@@ -443,13 +441,12 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('Customer Info Page', function () {
-
     beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
       resolveTogglePromise();
     });
 
-    it("should set the active item", function () {
+    it('should set the active item', function () {
       var returnObj = {
         attributes: [{
           name: 'header',
@@ -459,80 +456,80 @@ describe('Care Setup Assistant Ctrl', function () {
           value: OrgName,
         }],
       };
-      controller.setActiveItem("welcomeHeader");
+      controller.setActiveItem('welcomeHeader');
       expect(controller.activeItem).toEqual(returnObj);
     });
 
-    it("should not get the attribute param for incorrect param", function () {
-      var attrParam = controller.getAttributeParam("displaytext", "organization", "welcomeHeader");
+    it('should not get the attribute param for incorrect param', function () {
+      var attrParam = controller.getAttributeParam('displaytext', 'organization', 'welcomeHeader');
       expect(attrParam).toBe(undefined);
     });
 
-    it("should not get the attribute param for incorrect attribute", function () {
-      var attrParam = controller.getAttributeParam("label", "displaytext", "welcomeHeader");
+    it('should not get the attribute param for incorrect attribute', function () {
+      var attrParam = controller.getAttributeParam('label', 'displaytext', 'welcomeHeader');
       expect(attrParam).toBe(undefined);
     });
 
-    it("should not get the attribute param for incorrect field", function () {
-      var attrParam = controller.getAttributeParam("label", "organization", "field");
+    it('should not get the attribute param for incorrect field', function () {
+      var attrParam = controller.getAttributeParam('label', 'organization', 'field');
       expect(attrParam).toBe(undefined);
     });
 
-    it("should not get the attribute param for undefined field", function () {
-      var attrParam = controller.getAttributeParam("label", "organization", undefined);
+    it('should not get the attribute param for undefined field', function () {
+      var attrParam = controller.getAttributeParam('label', 'organization', undefined);
       expect(attrParam).toBe(undefined);
     });
 
-    it("should be true for dynamic field", function () {
-      var isDynamicRes = controller.isDynamicFieldType("field1");
+    it('should be true for dynamic field', function () {
+      var isDynamicRes = controller.isDynamicFieldType('field1');
       expect(isDynamicRes).toBe(true);
     });
 
-    it("should be false for static field", function () {
-      var isDynamicRes = controller.isDynamicFieldType("welcome");
+    it('should be false for static field', function () {
+      var isDynamicRes = controller.isDynamicFieldType('welcome');
       expect(isDynamicRes).toBe(false);
     });
 
-    it("should be true for static field", function () {
-      var isStaticRes = controller.isStaticFieldType("welcome");
+    it('should be true for static field', function () {
+      var isStaticRes = controller.isStaticFieldType('welcome');
       expect(isStaticRes).toBe(true);
     });
 
-    it("should be false for dynamic field", function () {
-      var isStaticRes = controller.isStaticFieldType("field1");
+    it('should be false for dynamic field', function () {
+      var isStaticRes = controller.isStaticFieldType('field1');
       expect(isStaticRes).toBe(false);
     });
 
-    it("should be false for undefined field", function () {
+    it('should be false for undefined field', function () {
       var isDynamicRes = controller.isDynamicFieldType(undefined);
       expect(isDynamicRes).toBe(false);
       var isStaticRes = controller.isStaticFieldType(undefined);
       expect(isStaticRes).toBe(false);
     });
 
-    it("should be true for defined object field", function () {
+    it('should be true for defined object field', function () {
       var testObj = {
-        "trees-14": "x-10000",
-        "trees-15": "x-20000",
-        "trees-16": "x-30000",
+        'trees-14': 'x-10000',
+        'trees-15': 'x-20000',
+        'trees-16': 'x-30000',
       };
-      var isDefinedRes = controller.isDefined(testObj, "trees-15");
+      var isDefinedRes = controller.isDefined(testObj, 'trees-15');
       expect(isDefinedRes).toBe(true);
     });
 
-    it("should be false for undefined object or field", function () {
+    it('should be false for undefined object or field', function () {
       var testObj = {
-        "trees-14": "x-10000",
-        "trees-15": "x-20000",
-        "trees-16": "",
+        'trees-14': 'x-10000',
+        'trees-15': 'x-20000',
+        'trees-16': '',
       };
-      var isDefinedRes = controller.isDefined(testObj, "trees-17");
+      var isDefinedRes = controller.isDefined(testObj, 'trees-17');
       expect(isDefinedRes).toBe(false);
-      isDefinedRes = controller.isDefined(testObj, "trees-16");
+      isDefinedRes = controller.isDefined(testObj, 'trees-16');
       expect(isDefinedRes).toBe(false);
     });
 
-    it("should add a new category token and clear the input field when a new token is added", function () {
+    it('should add a new category token and clear the input field when a new token is added', function () {
       var ENTER_KEYPRESS_EVENT = {
         which: 13,
       };
@@ -548,7 +545,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.categoryOptionTag).toEqual('');
     });
 
-    it("should not add invalid category", function () {
+    it('should not add invalid category', function () {
       var ENTER_KEYPRESS_EVENT = {
         which: 13,
       };
@@ -562,16 +559,16 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.categoryOptionTag).toEqual(errorString);
     });
 
-    it("should validate type for a unique field", function () {
+    it('should validate type for a unique field', function () {
       expect(controller.validateType({ id: 'name' })).toEqual(true);
     });
 
-    it("should identify a duplicate type configured", function () {
+    it('should identify a duplicate type configured', function () {
       controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
       expect(controller.validateType({ id: 'name' })).toEqual(false);
     });
 
-    it("next button should be enabled when required option is selected for category and category is not empty", function () {
+    it('next button should be enabled when required option is selected for category and category is not empty', function () {
       controller.currentState = 'customerInformation';
       controller.selectedMediaType = 'chat';
       (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'required';
@@ -579,7 +576,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.nextButton()).toEqual(true);
     });
 
-    it("next button should be enabled when optional is selected for category and category is not empty", function () {
+    it('next button should be enabled when optional is selected for category and category is not empty', function () {
       controller.currentState = 'customerInformation';
       controller.selectedMediaType = 'chat';
       (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'optional';
@@ -587,7 +584,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.nextButton()).toEqual(true);
     });
 
-    it("next button should be disabled when required option is selected for category and category is empty", function () {
+    it('next button should be disabled when required option is selected for category and category is empty', function () {
       controller.currentState = 'customerInformation';
       controller.selectedMediaType = 'chat';
       (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'required';
@@ -595,7 +592,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.nextButton()).toEqual(false);
     });
 
-    it("next button should be enabled when optional is selected for category and category is empty", function () {
+    it('next button should be enabled when optional is selected for category and category is empty', function () {
       controller.currentState = 'customerInformation';
       controller.selectedMediaType = 'chat';
       (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'optional';
@@ -604,17 +601,17 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
 
-    it("next button should get disabled when duplicate types are configured in customerInfo page", function () {
+    it('next button should get disabled when duplicate types are configured in customerInfo page', function () {
       controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
       expect(controller.nextButton()).toEqual(false);
     });
 
-    it("next button should get disabled when attributes of customerInfo: Static and Dynamic fields have value > 50 chars", function () {
+    it('next button should get disabled when attributes of customerInfo: Static and Dynamic fields have value > 50 chars', function () {
       controller.template.configuration.pages.customerInformation.fields = customerInfoWithLongAttributeValue;
       expect(controller.nextButton()).toEqual(false);
     });
 
-    it("next button should get disabled when attributes of customerInfo: Static and Dynamic fields have invalid characters", function () {
+    it('next button should get disabled when attributes of customerInfo: Static and Dynamic fields have invalid characters', function () {
       controller.template.configuration.pages.customerInformation.fields = customerInfoWithInvalidAttributeValue;
       expect(controller.nextButton()).toEqual(false);
     });
@@ -624,12 +621,13 @@ describe('Care Setup Assistant Ctrl', function () {
     beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
       resolveTogglePromise();
+      controller.template.configuration.proactivePrompt.enabled = true;
       controller.currentState = controller.states[PROACTIVE_PROMPT_PAGE_INDEX]; // set proactive prompt view
     });
 
-    it("should set default promptTime, promptTitle and promptMessage", function () {
+    it('should set default promptTime, promptTitle and promptMessage', function () {
       expect(controller.promptTime.label).toEqual('careChatTpl.promptTimeOption1');
-      expect(controller.promptTime.value).toEqual(60);
+      expect(controller.promptTime.value).toEqual(30);
       expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
         .toEqual(controller.orgName);
       expect(controller.template.configuration.proactivePrompt.fields.promptMessage.message)
@@ -637,35 +635,35 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('should disable the next button if promptTitle is more than 25 characters', function () {
-      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = Array(27).join("a");
+      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = Array(27).join('a');
       checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
     });
 
     it('should disable the next button if promptMessage is more than 100 characters', function () {
-      controller.template.configuration.proactivePrompt.fields.promptMessage.message = Array(102).join("a");
+      controller.template.configuration.proactivePrompt.fields.promptMessage.message = Array(102).join('a');
       checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
     });
 
     it('should disable the next button when promptTitle has any invalid character', function () {
-      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = ">";
+      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = '>';
       checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
     });
 
     it('should disable the next button when promptMessage has any invalid character', function () {
-      controller.template.configuration.proactivePrompt.fields.promptMessage.message = ">";
+      controller.template.configuration.proactivePrompt.fields.promptMessage.message = '>';
       checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
     });
 
     it('should enable the previous and next button if all the fields are valid', function () {
-      controller.template.configuration.proactivePrompt.fields.promptTime = 60;
-      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = "Need Help?";
-      controller.template.configuration.proactivePrompt.fields.promptMessage.message = "Chat with specialists.";
+      controller.template.configuration.proactivePrompt.fields.promptTime = 30;
+      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = 'Need Help?';
+      controller.template.configuration.proactivePrompt.fields.promptMessage.message = 'Chat with specialists.';
       checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, true);
     });
 
     it('should update the templateJSON with proactive prompt data', function () {
       var promptTime = {
-        label: "3 minute",
+        label: '3 minute',
         value: 180,
       };
 
@@ -688,6 +686,23 @@ describe('Care Setup Assistant Ctrl', function () {
     });
   });
 
+  describe('Proactive Prompt Page (when Org Name is > 50 characters', function () {
+    var LongOrgId = Array(52).join('a');
+    var spiedAuthinfos = {
+      getOrgId: jasmine.createSpy('getOrgId').and.returnValue(OrgId),
+      getOrgName: jasmine.createSpy('getOrgName').and.returnValue(LongOrgId),
+    };
+    beforeEach(angular.mock.module(function ($provide) {
+      $provide.value('Authinfo', spiedAuthinfos);
+    }));
+    beforeEach(inject(intializeCtrl()));
+
+    it('should set default promptTitle to Org Name (up-to first 50 characters only)', function () {
+      expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
+        .toEqual(controller.orgName.slice(0, 50));
+    });
+  });
+
   describe('Proactive Prompt Data for existing templates', function () {
     beforeEach(inject(intializeCtrl(existingTemplateData, true)));
     beforeEach(function () {
@@ -698,7 +713,7 @@ describe('Care Setup Assistant Ctrl', function () {
       var expectedJSON = {
         enabled: false,
         fields: {
-          promptTime: 60,
+          promptTime: 30,
           promptTitle: {
             displayText: controller.orgName,
           },
@@ -715,7 +730,7 @@ describe('Care Setup Assistant Ctrl', function () {
       var existingJSON = {
         enabled: false,
         fields: {
-          promptTime: 60,
+          promptTime: 30,
           promptTitle: {
             displayText: controller.orgName,
           },
@@ -739,7 +754,7 @@ describe('Care Setup Assistant Ctrl', function () {
       };
 
       var promptTime = {
-        label: "5 minutes",
+        label: '5 minutes',
         value: 300,
       };
 
@@ -800,12 +815,12 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('should disable the right btn if off hours message is more than 250 characters', function () {
-      controller.template.configuration.pages.offHours.message = Array(252).join("a");
+      controller.template.configuration.pages.offHours.message = Array(252).join('a');
       checkStateOfNavigationButtons(OFF_HOURS_PAGE_INDEX, true, false);
     });
 
     it('should disable the right btn if off hours message contains invalid characters', function () {
-      controller.template.configuration.pages.offHours.message = "<";
+      controller.template.configuration.pages.offHours.message = '<';
       checkStateOfNavigationButtons(OFF_HOURS_PAGE_INDEX, true, false);
     });
 
@@ -889,7 +904,6 @@ describe('Care Setup Assistant Ctrl', function () {
         },
       });
     });
-
   });
 
   describe('Summary Page', function () {
@@ -916,7 +930,7 @@ describe('Care Setup Assistant Ctrl', function () {
       $httpBackend.flush();
     });
 
-    it("should submit template successfully", function () {
+    it('should submit template successfully', function () {
       //by default, this flag is false
       expect(controller.saveCTErrorOccurred).toBeFalsy();
 
@@ -953,7 +967,7 @@ describe('Care Setup Assistant Ctrl', function () {
       $httpBackend.flush();
     });
 
-    it("should submit template successfully for Edit", function () {
+    it('should submit template successfully for Edit', function () {
       //by default, this flag is false
       expect(controller.saveCTErrorOccurred).toBeFalsy();
 
@@ -999,26 +1013,26 @@ describe('Care Setup Assistant Ctrl', function () {
     beforeEach(function () {
       controller.currentState = controller.states[CHAT_STATUS_MESSAGES_PAGE_INDEX];
     });
-    it("should have previous and next button enabled", function () {
-      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
-      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = "Chatting Message";
+    it('should have previous and next button enabled', function () {
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = 'Waiting Message';
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = 'Left Room Message';
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = 'Chatting Message';
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
     });
-    it("should have next button disabled if all the status messages are more than 25 characters", function () {
-      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(30).join("n");
-      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(30).join("n");
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join("n");
+    it('should have next button disabled if all the status messages are more than 25 characters', function () {
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(30).join('n');
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(30).join('n');
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join('n');
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
-    it("should have next button disabled if status message has invalid character", function () {
-      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "<";
+    it('should have next button disabled if status message has invalid character', function () {
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = '<';
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
-    it("should have next button disabled if any of the status messages are more than 25 characters", function () {
-      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
-      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join("n");
+    it('should have next button disabled if any of the status messages are more than 25 characters', function () {
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = 'Waiting Message';
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = 'Left Room Message';
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join('n');
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
   });
@@ -1034,17 +1048,17 @@ describe('Care Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
     });
 
-    it("next button should be disabled when unavailable msg is more than 250 characters", function () {
-      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = Array(252).join("a");
+    it('next button should be disabled when unavailable msg is more than 250 characters', function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = Array(252).join('a');
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
     });
 
-    it("next button should be disabled when unavailable msg has invalid characters", function () {
-      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = "<";
+    it('next button should be disabled when unavailable msg has invalid characters', function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = '<';
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
     });
 
-    it("next button should be enabled when unavailable msg is present", function () {
+    it('next button should be enabled when unavailable msg is present', function () {
       controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = templateName;
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
     });
@@ -1131,8 +1145,8 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.mediaType).toEqual('chatPlusCallback');
     });
 
-    it('should initialize all cards as enabled ', function () {
-      expect(controller.template.configuration.proactivePrompt.enabled).toBe(true);
+    it('should initialize all cards as enabled except proactive prompt ', function () {
+      expect(controller.template.configuration.proactivePrompt.enabled).toBe(false);
       expect(controller.template.configuration.pages.customerInformationChat.enabled).toBe(true);
       expect(controller.template.configuration.pages.customerInformationCallback.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);
@@ -1142,5 +1156,4 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.pages.feedbackCallback.enabled).toBe(true);
     });
   });
-
 });

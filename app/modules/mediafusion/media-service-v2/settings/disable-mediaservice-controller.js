@@ -2,16 +2,23 @@
   'use strict';
 
   /* @ngInject */
-  function DisableMediaServiceController(MediaClusterServiceV2, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptor, ClusterService) {
+  function DisableMediaServiceController(MediaClusterServiceV2, HybridServicesClusterService, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptorService) {
     var vm = this;
     vm.step = '1';
+    var deferred = $q.defer();
     vm.checkboxModel = false;
     vm.hadError = false;
-    vm.serviceId = "squared-fusion-media";
-    vm.clusters = ClusterService.getClustersByConnectorType('mf_mgmt');
-    vm.clusterNames = _.map(vm.clusters, 'name');
-    vm.clusterIds = _.map(vm.clusters, 'id');
-    vm.clusterNames.sort();
+    vm.serviceId = 'squared-fusion-media';
+    vm.isLoading = false;
+    vm.clusters = {};
+    vm.getClusterList = getClusterList;
+    vm.getClusterList();
+    deferred.promise.then(function () {
+      vm.isLoading = true;
+      vm.clusterNames = _.map(vm.clusters, 'name');
+      vm.clusterIds = _.map(vm.clusters, 'id');
+      vm.clusterNames.sort();
+    });
 
     vm.cancel = function () {
       $modalInstance.dismiss();
@@ -32,11 +39,12 @@
         });
         $modalInstance.close();
         if (!vm.hadError) {
-          ServiceDescriptor.disableService(vm.serviceId);
+          ServiceDescriptorService.disableService(vm.serviceId);
           MediaServiceActivationV2.setisMediaServiceEnabled(false);
 
           MediaServiceActivationV2.disableOrpheusForMediaFusion();
           MediaServiceActivationV2.deactivateHybridMedia();
+          MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
           $state.go('overview');
           Notification.success('mediaFusion.deactivate.success');
         } else {
@@ -48,6 +56,17 @@
       return undefined;
     };
 
+    function getClusterList() {
+      HybridServicesClusterService.getAll()
+      .then(function (clusters) {
+        vm.clusters = _.filter(clusters, {
+          targetType: 'mf_mgmt',
+        });
+        deferred.resolve(vm.clusters);
+      });
+      return deferred.promise;
+    }
+
     function deRegisterCluster() {
       var loopPromises = [];
       _.each(vm.clusterIds, function (id) {
@@ -56,7 +75,6 @@
       });
       return loopPromises;
     }
-
   }
 
   angular

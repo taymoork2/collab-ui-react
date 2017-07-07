@@ -45,7 +45,7 @@
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module(function (_$provide_) {
       $provide = _$provide_;
-      $provide.value("FeatureToggleService", featureToggleService);
+      $provide.value('FeatureToggleService', featureToggleService);
     }));
 
     beforeEach(inject(function (_$controller_, _$rootScope_, _$location_, _$q_, _Authinfo_, _Auth_, _UrlConfig_, _$injector_) {
@@ -116,7 +116,6 @@
       });
 
       describe('given user is not admin', function () {
-
         beforeEach(function () {
           UrlConfig.getMessengerServiceUrl = jasmine.createSpy('getMessengerServiceUrl').and.returnValue('msn');
           spyOn(Auth, 'authorize').and.callFake(function () {

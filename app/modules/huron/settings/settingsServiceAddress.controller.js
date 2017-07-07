@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function SettingsServiceAddressCtrl($q, $timeout, PstnServiceAddressService, PstnModel, Authinfo, Notification) {
-
     var vm = this;
     vm.validate = validate;
     vm.cancelEdit = cancelEdit;
@@ -97,7 +96,7 @@
         })
         .then(function () {
           Notification.success('settingsServiceAddress.saveSuccess');
-          vm.addressStatus = "PENDING";
+          vm.addressStatus = 'PENDING';
           origAddress = _.cloneDeep(vm.address);
           vm.addressFound = false;
         })

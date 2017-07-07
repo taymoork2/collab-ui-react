@@ -1,14 +1,11 @@
 'use strict';
 
-var featureToggle = require('../utils/featureToggle.utils');
-
 /* global LONG_TIMEOUT */
 
 describe('Partner flow', function () {
   var appWindow;
 
   describe('Login as partner admin user', function () {
-
     it('should login', function () {
       login.login('partner-admin', '#/partner/overview');
     });
@@ -42,7 +39,6 @@ describe('Partner flow', function () {
   });
 
   describe('Add Partner Trial', function () {
-
     it('should view all trials', function () {
       navigation.clickCustomers();
     });
@@ -105,11 +101,9 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(partner.newTrialRow);
       });
     }, LONG_TIMEOUT);
-
   });
 
   describe('Partner launches customer portal', function () {
-
     it('Launch customer portal via preview panel and display first time wizard', function () {
       appWindow = browser.getWindowHandle();
 
@@ -118,7 +112,6 @@ describe('Partner flow', function () {
       utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
-
         // backend services are slow to check userauthinfo/accounts
         utils.wait(wizard.wizard, LONG_TIMEOUT);
         utils.expectIsDisplayed(wizard.leftNav);
@@ -127,28 +120,16 @@ describe('Partner flow', function () {
     }, LONG_TIMEOUT);
 
     it('should navigate first time wizard', function () {
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
+      utils.waitForText(wizard.mainviewTitle, 'Plan Review');
       utils.click(wizard.beginBtn);
       utils.click(wizard.saveBtn);
-
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
-      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
-        // click "Save" instead of "Next" because there are no SSO steps
-        // goes to last tab because there is no Add Users
-        utils.click(wizard.saveBtn);
-      } else {
-        // TODO: remove when feature toggle is removed
-        utils.click(wizard.nextBtn);
-        utils.click(wizard.nextBtn);
-
-        utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
-        utils.expectIsDisplayed(wizard.skipBtn);
-        utils.click(wizard.nextBtn);
-        utils.click(wizard.saveBtn);
-      }
+      utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');
+      // click "Save" instead of "Next" because there are no SSO steps
+      // goes to last tab because there is no Add Users
+      utils.click(wizard.saveBtn);
       notifications.clearNotifications();
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
+      utils.waitForText(wizard.mainviewTitle, 'Get Started');
       utils.click(wizard.finishBtn);
 
       navigation.expectDriverCurrentUrl('overview');
@@ -165,7 +146,6 @@ describe('Partner flow', function () {
       utils.click(partner.newTrialRow);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
-
         // backend services are slow to check userauthinfo/accounts
         utils.wait(navigation.tabs, LONG_TIMEOUT);
         utils.expectIsDisplayed(navigation.tabs);
@@ -176,11 +156,9 @@ describe('Partner flow', function () {
       browser.close();
       browser.switchTo().window(appWindow);
     });
-
   }, LONG_TIMEOUT);
 
   describe('Partner launches its orgs portal', function () {
-
     it('should launch partners org view', function () {
       appWindow = browser.getWindowHandle();
 
@@ -190,7 +168,6 @@ describe('Partner flow', function () {
       utils.click(partner.launchButton);
 
       utils.switchToNewWindow().then(function () {
-
         navigation.expectDriverCurrentUrl('overview');
         // backend services are slow to check userauthinfo/accounts
         utils.wait(navigation.tabs, LONG_TIMEOUT);
@@ -203,7 +180,7 @@ describe('Partner flow', function () {
     }, LONG_TIMEOUT);
   });
 
-  describe("Delete the test customer", function () {
+  describe('Delete the test customer', function () {
     it('should login navigate to the test customer', function () {
       //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);

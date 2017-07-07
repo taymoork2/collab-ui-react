@@ -20,7 +20,7 @@ export class TelephonyNumberValidateService {
   public validatePhone(row) {
     let invalid, message = '';
 
-    let phone = _.trim(row.entity.phone);
+    const phone = _.trim(row.entity.phone);
     if (!phone.length) {
       invalid = true;
       message = this.getValidationMessage('fieldRequired', { field: 'Phone Number' });
@@ -39,7 +39,7 @@ export class TelephonyNumberValidateService {
   public validateLabel(row) {
     let invalid, message = '';
 
-    let label = _.trim(row.entity.label);
+    const label = _.trim(row.entity.label);
     if (!label.length) {
       invalid = true;
       message = this.getValidationMessage('fieldRequired', { field: 'Phone Label' });
@@ -55,7 +55,7 @@ export class TelephonyNumberValidateService {
   public validateAccessNumber(row) {
     let invalid, message = '';
 
-    let accessNumber = _.trim(row.entity.dnisNumberFormat);
+    const accessNumber = _.trim(row.entity.dnisNumberFormat);
     if (!accessNumber.length) {
       invalid = true;
       message = this.getValidationMessage('fieldRequired', { field: 'Access Number' });
@@ -147,7 +147,7 @@ export class TelephonyNumberValidateService {
 
       flag = v.validateFunc.apply(this, [row]);
       if (!flag) {
-        let elem = angular.element('#' + row.uid + '-' + k);
+        const elem = angular.element('#' + row.uid + '-' + k);
         (k === 'phone' || k === 'label' || k === 'dnisNumberFormat') ? elem.focus() : elem.find('.select-toggle').focus();
       }
 
@@ -162,8 +162,8 @@ export class TelephonyNumberValidateService {
       return;
     }
 
-    let key = row.entity.tollType.value + '_' + row.entity.defaultNumber.value;
-    let defaultNumber2RowsMapping = mappings.defaultNumber2RowsMapping;
+    const key = row.entity.tollType.value + '_' + row.entity.defaultNumber.value;
+    const defaultNumber2RowsMapping = mappings.defaultNumber2RowsMapping;
     if (!defaultNumber2RowsMapping[key]) {
       defaultNumber2RowsMapping[key] = [];
     }
@@ -175,8 +175,8 @@ export class TelephonyNumberValidateService {
       return;
     }
 
-    let key = row.entity.tollType.value + '_' + row.entity.globalListDisplay.value;
-    let globalDisplay2RowsMapping = mappings.globalDisplay2RowsMapping;
+    const key = row.entity.tollType.value + '_' + row.entity.globalListDisplay.value;
+    const globalDisplay2RowsMapping = mappings.globalDisplay2RowsMapping;
     if (!globalDisplay2RowsMapping[key]) {
       globalDisplay2RowsMapping[key] = [];
     }
@@ -184,8 +184,8 @@ export class TelephonyNumberValidateService {
   }
 
   private setDuplicatePhnNumberMapping(mappings, row) {
-    let key = row.entity.phone + '_' + row.entity.label + '_' + row.entity.dnisNumber;
-    let phoneEntity2RowsMapping = mappings.phoneEntity2RowsMapping;
+    const key = row.entity.phone + '_' + row.entity.label + '_' + row.entity.dnisNumber;
+    const phoneEntity2RowsMapping = mappings.phoneEntity2RowsMapping;
     if (!phoneEntity2RowsMapping[key]) {
       phoneEntity2RowsMapping[key] = [];
     }
@@ -193,15 +193,15 @@ export class TelephonyNumberValidateService {
   }
 
   private setConflictDnisNumberMapping(mappings, row) {
-    let dnisNumber2AttrsMapping = mappings.dnisNumber2AttrsMapping;
+    const dnisNumber2AttrsMapping = mappings.dnisNumber2AttrsMapping;
     let dnisAttrEntity = dnisNumber2AttrsMapping[row.entity.dnisNumber];
     !dnisAttrEntity ? dnisAttrEntity = [row] : dnisAttrEntity.push(row);
     dnisNumber2AttrsMapping[row.entity.dnisNumber] = dnisAttrEntity;
   }
 
   private setPhoneNumberDisplayMapping(mappings, row) {
-    let key = row.entity.phone;
-    let phoneNumber2RowsMapping = mappings.phoneNumber2RowsMapping;
+    const key = row.entity.phone;
+    const phoneNumber2RowsMapping = mappings.phoneNumber2RowsMapping;
     if (!phoneNumber2RowsMapping[key]) {
       phoneNumber2RowsMapping[key] = [];
     }
@@ -224,9 +224,9 @@ export class TelephonyNumberValidateService {
     const CCA_TOLL = this.constObject.CCA_TOLL;
     const CCA_TOLL_FREE = this.constObject.CCA_TOLL_FREE;
 
-    let defaultNumber2RowsMapping = mappings.defaultNumber2RowsMapping;
-    let defaultTollCount = defaultNumber2RowsMapping[CCA_TOLL + '_1'] ? defaultNumber2RowsMapping[CCA_TOLL + '_1'].length : 0;
-    let defaultTollFreeCount = defaultNumber2RowsMapping[CCA_TOLL_FREE + '_1'] ? defaultNumber2RowsMapping[CCA_TOLL_FREE + '_1'].length : 0;
+    const defaultNumber2RowsMapping = mappings.defaultNumber2RowsMapping;
+    const defaultTollCount = defaultNumber2RowsMapping[CCA_TOLL + '_1'] ? defaultNumber2RowsMapping[CCA_TOLL + '_1'].length : 0;
+    const defaultTollFreeCount = defaultNumber2RowsMapping[CCA_TOLL_FREE + '_1'] ? defaultNumber2RowsMapping[CCA_TOLL_FREE + '_1'].length : 0;
 
     let row, message = '';
     if (defaultTollCount === 0) {
@@ -253,8 +253,8 @@ export class TelephonyNumberValidateService {
   private validateGlobalDisplay(mappings) {
     const CCA_TOLL = this.constObject.CCA_TOLL;
 
-    let globalDisplay2RowsMapping = mappings.globalDisplay2RowsMapping;
-    let displayCount = globalDisplay2RowsMapping[CCA_TOLL + '_1'] ? globalDisplay2RowsMapping[CCA_TOLL + '_1'].length : 0;
+    const globalDisplay2RowsMapping = mappings.globalDisplay2RowsMapping;
+    const displayCount = globalDisplay2RowsMapping[CCA_TOLL + '_1'] ? globalDisplay2RowsMapping[CCA_TOLL + '_1'].length : 0;
 
     let row, message = '';
     if (displayCount === 0) {
@@ -311,12 +311,12 @@ export class TelephonyNumberValidateService {
         return true;
       }
 
-      let base_rows = _.filter(attrArray, (row: any) => {
+      const base_rows = _.filter(attrArray, (row: any) => {
         return row.entity.dataType === DATA_TYPE.IMPORT_TD || (telephonyDomainId !== '' && row.entity.dataType === DATA_TYPE.SUBMITTED);
       });
 
-      let base_row = (base_rows && base_rows.length) ? base_rows[0] : attrArray[0];
-      let conflict_rows = _.filter(attrArray, (row: any) => {
+      const base_row = (base_rows && base_rows.length) ? base_rows[0] : attrArray[0];
+      const conflict_rows = _.filter(attrArray, (row: any) => {
         return !_.isEqual(row.entity.tollType, base_row.entity.tollType) || !_.isEqual(row.entity.callType, base_row.entity.callType);
       });
 
@@ -324,8 +324,8 @@ export class TelephonyNumberValidateService {
         return true;
       }
 
-      let conflict_row = conflict_rows[0];
-      let key = !_.isEqual(conflict_row.entity.tollType, base_row.entity.tollType) ? 'tollType' : 'callType';
+      const conflict_row = conflict_rows[0];
+      const key = !_.isEqual(conflict_row.entity.tollType, base_row.entity.tollType) ? 'tollType' : 'callType';
 
       conflict_row.entity.isEdit = true;
       conflict_row.entity.validation[key].invalid = true;
@@ -359,7 +359,7 @@ export class TelephonyNumberValidateService {
     let result = 1, message = '', uid = '';
 
     _.forEach(mappings.phoneNumber2RowsMapping, (rowArray) => {
-      let displayRows = _.filter(rowArray, (row: any) => {
+      const displayRows = _.filter(rowArray, (row: any) => {
         return row.entity.isHidden.value === 'false';
       });
 

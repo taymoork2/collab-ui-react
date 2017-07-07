@@ -11,24 +11,24 @@ describe('Service: DirectoryNumberOptionsService', () => {
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
-    let internalNumbersResponse: IDirectoryNumber[] = [
+    const internalNumbersResponse: IDirectoryNumber[] = [
       { pattern: '12345' },
       { pattern: '67890' },
       { pattern: '75023' },
     ];
 
-    let internalNumbers: string[] = [
+    const internalNumbers: string[] = [
       '12345',
       '67890',
       '75023',
     ];
 
-    let externalNumbersResponse: IDirectoryNumber[] = [
+    const externalNumbersResponse: IDirectoryNumber[] = [
       { pattern: '+12345' },
       { pattern: '+67890' },
     ];
 
-    let externalNumbers: string[] = [
+    const externalNumbers: string[] = [
       '+12345',
       '+67890',
     ];
@@ -58,7 +58,7 @@ describe('Service: DirectoryNumberOptionsService', () => {
     it('should reject the promise on a failed response', function () {
       this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/internalnumberpools?directorynumber=&order=pattern')
         .respond(500);
-      let promise = this.DirectoryNumberOptionsService.getInternalNumberOptions();
+      const promise = this.DirectoryNumberOptionsService.getInternalNumberOptions();
       this.$httpBackend.flush();
       expect(promise).toBeRejected();
     });
@@ -77,7 +77,7 @@ describe('Service: DirectoryNumberOptionsService', () => {
     it('should reject the promise on a failed response', function () {
       this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern')
         .respond(500);
-      let promise = this.DirectoryNumberOptionsService.getExternalNumberOptions();
+      const promise = this.DirectoryNumberOptionsService.getExternalNumberOptions();
       this.$httpBackend.flush();
       expect(promise).toBeRejected();
     });

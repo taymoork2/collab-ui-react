@@ -1,11 +1,8 @@
 'use strict';
 
-var featureToggle = require('../utils/featureToggle.utils');
-
 /* global LONG_TIMEOUT */
 
 describe('WebEx Trial Creation', function () {
-
   var WEBEX_SITE_ACTIVATION_TIMEOUT = 50 * 60000;
 
   it('should login', function () {
@@ -68,7 +65,6 @@ describe('WebEx Trial Creation', function () {
       utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
-
         // backend services are slow to check userauthinfo/accounts
         utils.wait(wizard.wizard, LONG_TIMEOUT);
         utils.waitIsDisplayed(wizard.leftNav);
@@ -77,37 +73,22 @@ describe('WebEx Trial Creation', function () {
     }, LONG_TIMEOUT);
 
     it('should navigate first time wizard', function () {
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
+      utils.waitForText(wizard.mainviewTitle, 'Plan Review');
       utils.click(wizard.beginBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Message Settings');
+      utils.waitForText(wizard.mainviewTitle, 'Message Settings');
       utils.click(wizard.saveBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
-      utils.expectTextToBeSet(wizard.sipURLExample, 'These subdomains will be reserved for you:');
+      utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');
+      utils.waitForText(wizard.sipURLExample, 'These subdomains will be reserved for you:');
       utils.sendKeys(wizard.sipDomain, partner.newTrial.sipDomain + protractor.Key.ENTER);
       utils.click(wizard.saveCheckbox);
-
-      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
-        // click "Save" instead of "Next" because there are no SSO steps
-        // goes to last tab because there is no Add Users
-        utils.click(wizard.saveBtn);
-        notifications.assertSuccess('The Spark SIP Address has been successfully saved');
-      } else {
-        // TODO remove when feature toggle is removed
-        utils.click(wizard.nextBtn);
-        notifications.assertSuccess('The Spark SIP Address has been successfully saved');
-
-        utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
-        utils.click(wizard.nextBtn);
-
-        utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
-        utils.click(wizard.skipBtn);
-      }
-
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
+      // click "Save" instead of "Next" because there are no SSO steps
+      // goes to last tab because there is no Add Users
+      utils.click(wizard.saveBtn);
+      notifications.assertSuccess('The Spark SIP Address has been successfully saved');
+      utils.waitForText(wizard.mainviewTitle, 'Get Started');
       utils.click(wizard.finishBtn);
-
       navigation.expectDriverCurrentUrl('overview');
       utils.waitIsDisplayed(navigation.tabs);
     }, LONG_TIMEOUT);
@@ -115,10 +96,10 @@ describe('WebEx Trial Creation', function () {
     it('should open trial via services tab', function () {
       navigation.clickServicesTab();
       utils.click(partner.getMeetingLink(partner.newTrial.sipDomain));
-      utils.expectTextToBeSet(partner.pageHeaderTitle, 'WebEx Sites');
+      utils.waitForText(partner.pageHeaderTitle, 'WebEx Sites');
 
       utils.click(partner.getTrialConfigBtn(partner.newTrial.webexSiteURL));
-      utils.expectTextToBeSet(partner.pageHeaderTitle, 'Configure WebEx Site');
+      utils.waitForText(partner.pageHeaderTitle, 'Configure WebEx Site');
     });
 
     it('should close browser window', function () {

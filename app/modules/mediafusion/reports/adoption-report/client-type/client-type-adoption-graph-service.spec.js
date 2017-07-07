@@ -10,7 +10,7 @@ describe('Service: Client Type Adoption GraphService', function () {
 
   var clientTypeChart = {
     dataProvider: [],
-    startDuration: "",
+    startDuration: '',
     balloon: {
       enabled: false,
     },
@@ -25,8 +25,8 @@ describe('Service: Client Type Adoption GraphService', function () {
   };
 
   var daterange = {
-    label: "Last 24 Hours",
-    value: "0",
+    label: 'Last 24 Hours',
+    value: '0',
   };
   var clientTypeGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeGraphData.json');
 
@@ -43,10 +43,8 @@ describe('Service: Client Type Adoption GraphService', function () {
   });
 
   it('setClientTypeGraph should return an amchart object successfully', function () {
-
     var setClientTypeResponse = ClientTypeAdoptionGraphService.setClientTypeGraph(clientTypeGraphData, clientTypeChart, daterange);
     expect(setClientTypeResponse.graphs.length).toBe(10);
     expect(setClientTypeResponse.dataProvider).toEqual(clientTypeGraphData.clienttyperesponse);
   });
-
 });

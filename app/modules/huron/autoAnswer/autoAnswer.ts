@@ -56,7 +56,7 @@ export class AutoAnswerMember {
 }
 
 export class AutoAnswer {
-  public phones: Array<AutoAnswerPhone> = [];
+  public phones: AutoAnswerPhone[] = [];
   public member: AutoAnswerMember;
   public enabledForSharedLineMember: boolean = false;
   public ownerType: string;

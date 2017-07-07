@@ -12,6 +12,9 @@
     $rootScope.Utils = Utils;
     $rootScope.services = [];
     $rootScope.exporting = false;
+    var LOGIN_STATE = 'login';
+
+    setNewRelicRouteName(LOGIN_STATE);
 
     $rootScope.typeOfExport = {
       USER: 1,
@@ -33,7 +36,6 @@
     }
 
     $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
-
       if (typeof to.authenticate === 'undefined' || to.authenticate) {
         if (Authinfo.isInitialized()) {
           if (!Authinfo.isAllowedState(to.name)) {
@@ -61,7 +63,7 @@
           SessionStorage.putObject(StorageKeys.REQUESTED_QUERY_PARAMS, $location.search());
           HealthService.getHealthStatus()
             .then(function () {
-              $state.go('login');
+              $state.go(LOGIN_STATE);
             }).catch(function () {
               $state.go('server-maintenance');
             });
@@ -114,6 +116,8 @@
     );
 
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+      setNewRelicRouteName(toState.name);
+
       // TrackingId is generated/incremented on each request
       // Clear the current TrackingId when a new state is loaded
       TrackingId.clear();
@@ -153,5 +157,11 @@
       return result;
     }
 
+    function setNewRelicRouteName(name) {
+      if (typeof newrelic !== 'undefined') {
+        /* global newrelic */
+        newrelic.setCurrentRouteName(name);
+      }
+    }
   }
 })();

@@ -15,7 +15,7 @@ describe('cell-template-action', function () {
     $templateCache = _$templateCache_;
     $scope = _$rootScope_.$new();
     $compile = _$compile_;
-    html = $templateCache.get("modules/ediscovery/cell-template-action.html");
+    html = $templateCache.get('modules/ediscovery/cell-template-action.html');
   }));
 
   function compileHtml() {
@@ -24,7 +24,6 @@ describe('cell-template-action', function () {
   }
 
   describe('report symbol', function () {
-
     it('not displayed if report is not downloadable', function () {
       $scope.row = {
         entity: {
@@ -33,7 +32,7 @@ describe('cell-template-action', function () {
         },
       };
       compileHtml();
-      var download_icon_class = view.find(".icon-report");
+      var download_icon_class = view.find('.icon-report');
       expect(download_icon_class.length).toBe(0);
     });
 
@@ -46,52 +45,50 @@ describe('cell-template-action', function () {
         },
       };
       compileHtml();
-      var download_icon_class = view.find(".icon-report");
+      var download_icon_class = view.find('.icon-report');
       expect(download_icon_class.length).toBeGreaterThan(0);
     });
 
     it('displays downloading progress symbol if report is downloading for given id', function () {
       $scope.grid = {
         appScope: {
-          downloadingReportId: "1234",
+          downloadingReportId: '1234',
         },
       };
       $scope.row = {
         entity: {
-          id: "1234",
+          id: '1234',
           isDone: true,
           canBeDownloaded: true,
         },
       };
       compileHtml();
-      var spinner_icon_class = view.find(".icon-spinner");
+      var spinner_icon_class = view.find('.icon-spinner');
       expect(spinner_icon_class.length).toBeGreaterThan(0);
     });
 
     it('displays disabled report symbol if report is downloading for another id', function () {
       $scope.grid = {
         appScope: {
-          downloadingReportId: "9999",
+          downloadingReportId: '9999',
         },
       };
       $scope.row = {
         entity: {
-          id: "1234",
+          id: '1234',
           isDone: true,
           canBeDownloaded: true,
         },
       };
       compileHtml();
-      var download_icon_class = view.find(".icon-report");
+      var download_icon_class = view.find('.icon-report');
       expect(download_icon_class.length).toBeGreaterThan(0);
-      var disabled_icon_class = view.find(".disabled");
+      var disabled_icon_class = view.find('.disabled');
       expect(disabled_icon_class.length).toBeGreaterThan(0);
     });
-
   });
 
   describe('refresh symbol', function () {
-
     it('not displayed if report is not done', function () {
       $scope.row = {
         entity: {
@@ -99,7 +96,7 @@ describe('cell-template-action', function () {
         },
       };
       compileHtml();
-      var refresh_icon_class = view.find(".icon-refresh");
+      var refresh_icon_class = view.find('.icon-refresh');
       expect(refresh_icon_class.length).toBe(0);
     });
 
@@ -110,13 +107,12 @@ describe('cell-template-action', function () {
         },
       };
       compileHtml();
-      var refresh_icon_class = view.find(".icon-refresh");
+      var refresh_icon_class = view.find('.icon-refresh');
       expect(refresh_icon_class.length).toBeGreaterThan(0);
     });
   });
 
   describe('refresh symbol', function () {
-
     it('displays if report is done', function () {
       $scope.row = {
         entity: {
@@ -124,7 +120,7 @@ describe('cell-template-action', function () {
         },
       };
       compileHtml();
-      var refresh_icon_class = view.find(".icon-refresh");
+      var refresh_icon_class = view.find('.icon-refresh');
       expect(refresh_icon_class.length).toBeGreaterThan(0);
     });
 
@@ -135,14 +131,12 @@ describe('cell-template-action', function () {
         },
       };
       compileHtml();
-      var refresh_icon_class = view.find(".icon-refresh");
+      var refresh_icon_class = view.find('.icon-refresh');
       expect(refresh_icon_class.length).toBe(0);
     });
-
   });
 
   describe('info symbol', function () {
-
     it('displays if report is not done', function () {
       $scope.row = {
         entity: {
@@ -150,7 +144,7 @@ describe('cell-template-action', function () {
         },
       };
       compileHtml();
-      var info_icon_class = view.find(".icon-info-outline");
+      var info_icon_class = view.find('.icon-info-outline');
       expect(info_icon_class.length).toBeGreaterThan(0);
     });
 
@@ -161,10 +155,8 @@ describe('cell-template-action', function () {
         },
       };
       compileHtml();
-      var info_icon_class = view.find(".icon-info-outline");
+      var info_icon_class = view.find('.icon-info-outline');
       expect(info_icon_class.length).toBe(0);
     });
-
   });
-
 });

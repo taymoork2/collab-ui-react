@@ -6,7 +6,7 @@
     .controller('ResourceGroupSettingsController', ResourceGroupSettingsController);
 
   /* @ngInject */
-  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $translate, $state, HybridServicesClusterService, $modal) {
+  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $state, HybridServicesClusterService, $modal, FeatureToggleService) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.clusters = {
@@ -26,6 +26,11 @@
     vm.openAssignClustersModal = openAssignClustersModal;
     vm.handleKeypress = handleKeypress;
     vm.manageUsers = manageUsers;
+    vm.nameChangeEnabled = undefined;
+
+    FeatureToggleService.atlas2017NameChangeGetStatus().then(function (toggle) {
+      vm.nameChangeEnabled = toggle;
+    });
 
     loadResourceGroup($stateParams.id);
     determineIfRemoveAllowed();
@@ -35,9 +40,10 @@
         .then(function (group) {
           vm.group = group;
           vm.newGroupName = group.name;
-          vm.localizedTitle = $translate.instant('hercules.resourceGroupSettings.pageTitle', {
+          vm.title = 'hercules.resourceGroupSettings.pageTitle';
+          vm.titleValues = {
             groupName: group.name,
-          });
+          };
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.resourceGroupSettings.loadFailed');
@@ -61,9 +67,9 @@
       ResourceGroupService.setName(vm.group.id, newName)
         .then(function () {
           vm.group.name = newName;
-          vm.localizedTitle = $translate.instant('hercules.resourceGroupSettings.pageTitle', {
+          vm.titleValues = {
             groupName: newName,
-          });
+          };
           Notification.success('hercules.resourceGroupSettings.groupNameSaved');
         }, function (response) {
           if (response.status === 409) {

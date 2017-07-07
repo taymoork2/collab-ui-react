@@ -16,11 +16,16 @@
     ></span>
     <span
       translate="hercules.nodesPage.alertBannerTime"
-      translate-value-date="{{$ctrl.nextUpgradeStartTime}}"
+      translate-values="{date: $ctrl.nextUpgradeStartTime, count: $ctrl.connectorTypesWithUpgrade.length}"
+      translate-interpolation="messageformat"
     ></span>
+    <br>
     <span
+      class="upgrade-link"
+      ng-repeat="service in $ctrl.connectorTypesWithUpgrade"
       translate="hercules.nodesPage.alertBannerLink"
-      translate-value-onclick="$ctrl.openUpgradeModal()"
+      translate-value-service="{{::'hercules.shortConnectorNameFromConnectorType.'+service|translate}}"
+      translate-value-onclick="$ctrl.openUpgradeModal(service)"
       translate-compile
     ></span>
   </cs-alert-banner>
@@ -37,6 +42,7 @@
         <td colspan="4">
           <span class="nodename">{{::node.name}}</span>
           <div class="pull-right">
+            <span ng-if="node.platformVersion !== 'unknown'" class="node-serial" translate="hercules.nodesPage.platformVersion" translate-value-version="{{::node.platformVersion}}"></span>
             <span class="node-serial" translate="hercules.nodesPage.serial" translate-value-serial="{{::node.serial}}"></span>
             <span cs-dropdown>
               <button cs-dropdown-toggle class="actions-button btn--link dropdown-toggle" translate="common.actions"></button>
@@ -44,7 +50,7 @@
                 <li ng-if="$ctrl.displayMaintenanceModeMenuItem($ctrl.data.targetType) && node.maintenanceMode === 'off'">
                   <a ng-click="$ctrl.enableMaintenanceMode(node)">
                     <span translate="hercules.nodesPage.enableMaintenanceMode"></span>
-                    <i class="icon icon-question-circle" tooltip-placement="left" tooltip="{{::'Use maintenance mode to stop the connectors in this node and ignore alarms.'}}" tooltip-append-to-body="true"></i>
+                    <i class="icon icon-question-circle" tooltip-placement="left" tooltip="{{::'hercules.nodesPage.maintenanceModeTooltip' | translate}}" tooltip-append-to-body="true"></i>
                   </a>
                 </li>
                 <li ng-if="$ctrl.displayMaintenanceModeMenuItem($ctrl.data.targetType) && node.maintenanceMode !== 'off'">
@@ -76,12 +82,13 @@
         <td>{{::connector.service}}</td>
         <td>
           <cs-statusindicator ng-model="connector.status.cssClass"></cs-statusindicator>
-          {{::connector.statusName}}
-          <span class="badge badge--outline warning" ng-if="connector.maintenanceMode === 'on'" translate="hercules.fusion.list.maintenance"></span>
-          <span class="badge badge--outline" ng-if="connector.maintenanceMode === 'pending'" translate="hercules.fusion.list.pendingMaintenance"
+          <span class="status">{{::connector.statusName}}</span>
+          <span class="badge warning" ng-if="connector.maintenanceMode === 'on'" translate="hercules.fusion.list.maintenance"></span>
+          <span class="badge" ng-if="connector.maintenanceMode === 'pending'" translate="hercules.fusion.list.pendingMaintenance"
                 tooltip="{{::node.pendingTooltip}}" tooltip-trigger="mouseenter" tooltip-placement="top"></span>
-          <span class="badge badge--outline info" ng-if="connector.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
-          <span class="badge badge--outline" ng-if="connector.upgradeState !== 'upgraded'" translate="hercules.fusion.list.upgrading"></span>
+          <span class="badge info" ng-if="connector.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
+          <span class="badge" ng-if="connector.upgradeState === 'upgrading'" translate="hercules.fusion.list.upgrading"></span>
+          <span class="badge" ng-if="connector.upgradeState === 'pending'" translate="hercules.fusion.list.pending"></span>
         </td>
         <td>{{::connector.version}}</td>
       </tr>

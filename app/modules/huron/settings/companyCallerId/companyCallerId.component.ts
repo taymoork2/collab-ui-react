@@ -2,29 +2,33 @@ import { Site } from 'modules/huron/sites';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/huron/settings/companyCallerId';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { PstnModel } from 'modules/huron/pstn/pstn.model';
 
 class CompanyCallerId implements ng.IComponentController {
   public site: Site;
   public companyCallerId: CompanyNumber;
   public selectedNumber: string;
   public customerName: string;
-  public externalNumberOptions: Array<IOption>;
+  public externalNumberOptions: IOption[];
   public onChangeFn: Function;
   public onNumberFilter: Function;
   public companyCallerIdEnabled: boolean;
   public filterPlaceholder: string;
+  public countryCode: string;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private PhoneNumberService: PhoneNumberService,
+    private PstnModel: PstnModel,
   ) { }
 
   public $onInit(): void {
     this.filterPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
+    this.countryCode = this.PstnModel.getCountryCode();
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       companyCallerId,
       externalNumberOptions,
@@ -47,7 +51,7 @@ class CompanyCallerId implements ng.IComponentController {
   public onCompanyCallerIdToggled(toggleValue: boolean): void {
     if (toggleValue) {
       this.selectedNumber = _.get<string>(this.externalNumberOptions, '[0].value');
-      let companyNumber = new CompanyNumber({
+      const companyNumber = new CompanyNumber({
         name: this.customerName,
         pattern: this.selectedNumber,
         externalCallerIdType: ExternalCallerIdType.COMPANY_CALLER_ID_TYPE,
@@ -64,9 +68,9 @@ class CompanyCallerId implements ng.IComponentController {
 
   public onCompanyCallerIdNumberChanged(value): void {
     if (_.isObject(value)) {
-      this.companyCallerId.pattern = _.get<string>(value, 'value');
+      this.companyCallerId.pattern = this.PhoneNumberService.getE164Format(_.get<string>(value, 'value'));
     } else {
-      this.companyCallerId.pattern = value;
+      this.companyCallerId.pattern = this.PhoneNumberService.getE164Format(value);
     }
     this.onChange(this.companyCallerId);
   }
@@ -89,6 +93,7 @@ export class CompanyCallerIdComponent implements ng.IComponentOptions {
   public controller = CompanyCallerId;
   public templateUrl = 'modules/huron/settings/companyCallerId/companyCallerId.html';
   public bindings = {
+    isLocation: '<',
     site: '<',
     customerName: '<',
     companyCallerId: '<',

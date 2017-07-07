@@ -132,7 +132,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('$onInit > edit TD and sort number', function () {
-    let telephonyNumbers = [_.assign({}, this.telephonyNumber, { tollType: '' })];
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber, { tollType: '' })];
     telephonyNumbers.push(_.assign({}, this.telephonyNumber));
 
     updateTDAndShowNumber.apply(this, [telephonyNumbers]);
@@ -151,7 +151,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('changePhone > resetDuplicateRowValidation', function () {
-    let telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
     telephonyNumbers.push(_.assign({}, this.telephonyNumber, { defaultNumber: '0' }));
 
     updateTDAndShowNumber.apply(this, [telephonyNumbers]);
@@ -164,7 +164,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('changeLabel > resetDuplicateRowValidation', function () {
-    let telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
     telephonyNumbers.push(_.assign({}, this.telephonyNumber, { defaultNumber: '0' }));
 
     updateTDAndShowNumber.apply(this, [telephonyNumbers]);
@@ -177,7 +177,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('changeDnisNumber > resetDuplicateRowValidation', function () {
-    let telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
     telephonyNumbers.push(_.assign({}, this.telephonyNumber, { defaultNumber: '0' }));
 
     updateTDAndShowNumber.apply(this, [telephonyNumbers]);
@@ -272,7 +272,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('changeDefaultNumber > change the second number to Default Toll', function () {
-    let telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
     telephonyNumbers.push(_.assign({}, this.telephonyNumber, { defaultNumber: '0' }));
 
     updateTDAndShowNumber.apply(this, [telephonyNumbers]);
@@ -284,7 +284,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('changeDefaultNumber > change the second number to Default Toll Free', function () {
-    let telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
     _.assign(telephonyNumbers[0], { tollType: 'CCA Toll Free' });
     telephonyNumbers.push(_.assign({}, this.telephonyNumber, { tollType: 'CCA Toll Free', defaultNumber: '0' }));
 
@@ -346,7 +346,7 @@ describe('Component: gmTdNumbers', () => {
   it('delete Number > delete one number imported from TD', function () {
     updateTDAndShowNumber.apply(this);
 
-    let importTDNumbers = [ this.telephonyNumber ];
+    const importTDNumbers = [ this.telephonyNumber ];
     this.gemService.setStorage('currentTelephonyDomain', { importTDNumbers: importTDNumbers });
     this.controller.importTD();
     this.fakeModal.ok();
@@ -367,7 +367,7 @@ describe('Component: gmTdNumbers', () => {
   it('import TD', function () {
     updateTDAndShowNumber.apply(this);
 
-    let importTDNumbers = [ this.telephonyNumber ];
+    const importTDNumbers = [ this.telephonyNumber ];
     this.gemService.setStorage('currentTelephonyDomain', { importTDNumbers: importTDNumbers });
     this.controller.importTD();
     this.fakeModal.ok();
@@ -379,7 +379,7 @@ describe('Component: gmTdNumbers', () => {
   it('import CSV', function () {
     updateTDAndShowNumber.apply(this);
 
-    let number = _.assign({}, this.telephonyNumber, { country: 'US' });
+    const number = _.assign({}, this.telephonyNumber, { country: 'US' });
     delete number.countryId;
 
     this.controller.importNumberCSV([ number ]);
@@ -394,7 +394,7 @@ describe('Component: gmTdNumbers', () => {
     this.controller.submitLoading = true;
     this.controller.onEditTD();
 
-    let importTDNumbers = [ this.telephonyNumber ];
+    const importTDNumbers = [ this.telephonyNumber ];
     this.gemService.setStorage('currentTelephonyDomain', { importTDNumbers: importTDNumbers });
     this.controller.submitLoading = false;
     this.controller.importTD();
@@ -402,7 +402,7 @@ describe('Component: gmTdNumbers', () => {
     this.$scope.$apply();
 
     this.controller.onEditTD();
-    let currentTD = this.gemService.getStorage('currentTelephonyDomain');
+    const currentTD = this.gemService.getStorage('currentTelephonyDomain');
     currentTD.region = 'US';
 
     this.fakeModal.ok();
@@ -497,7 +497,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('submitTD > validateNumbersCount > exceed 300 numbers', function () {
-    let telephonyNumbers: any = [];
+    const telephonyNumbers: any = [];
     for (let i = 0; i < 301; i++) {
       telephonyNumbers.push(_.assign({}, this.telephonyNumber));
     }
@@ -508,7 +508,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('submitTD > validateDefaultNumber > have two default toll numbers', function () {
-    let telephonyNumbers: any = [];
+    const telephonyNumbers: any = [];
     for (let i = 0; i < 2; i++) {
       telephonyNumbers.push(_.assign({}, this.telephonyNumber));
     }
@@ -519,7 +519,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('submitTD > validateDefaultNumber > have two default toll free numbers', function () {
-    let telephonyNumbers: any = [_.assign({}, this.telephonyNumber)];
+    const telephonyNumbers: any = [_.assign({}, this.telephonyNumber)];
     for (let i = 0; i < 2; i++) {
       telephonyNumbers.push(_.assign({}, this.telephonyNumber, { tollType: 'CCA Toll Free' }));
     }
@@ -530,7 +530,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('submitTD > validateConflictDnisNumber > same access number have conflict toll type', function () {
-    let telephonyNumbers: any = [_.assign({}, this.telephonyNumber, { phone: '123456789' })];
+    const telephonyNumbers: any = [_.assign({}, this.telephonyNumber, { phone: '123456789' })];
     telephonyNumbers.push(_.assign({}, this.telephonyNumber, { tollType: 'CCA Toll Free' }));
     updateTDAndShowNumber.apply(this, [telephonyNumbers]);
 
@@ -539,7 +539,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('submitTD > validatePhoneNumberDisplay > same phone number are all display on client', function () {
-    let telephonyNumbers: any = [_.assign({}, this.telephonyNumber, { label: 'p11' })];
+    const telephonyNumbers: any = [_.assign({}, this.telephonyNumber, { label: 'p11' })];
     telephonyNumbers.push(_.assign({}, this.telephonyNumber, { defaultNumber: '0' }));
     updateTDAndShowNumber.apply(this, [telephonyNumbers]);
 
@@ -548,7 +548,7 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('submitTD successfully', function () {
-    let telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
     telephonyNumbers.push(_.assign({}, this.telephonyNumber, { phone: '22222222', defaultNumber: '0' }));
     telephonyNumbers.push(_.assign({}, this.telephonyNumber, { phone: '33333333', defaultNumber: '0' }));
 
@@ -557,7 +557,7 @@ describe('Component: gmTdNumbers', () => {
     this.rows[0].entity.phone = '00000000';
     this.controller.deleteNumber(this.rows[2]);
 
-    let number = _.assign({}, this.telephonyNumber, { phone: '44444444', country: 'US', defaultNumber: '0' });
+    const number = _.assign({}, this.telephonyNumber, { phone: '44444444', country: 'US', defaultNumber: '0' });
     delete number.countryId;
 
     this.controller.importNumberCSV([ number ]);
@@ -590,11 +590,11 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('$onInit > TelephonyNumberDataService initCountries', function () {
-    let telephonyNumbers = [_.assign({}, this.telephonyNumber)];
+    const telephonyNumbers = [_.assign({}, this.telephonyNumber)];
 
     updateTDAndShowNumber.apply(this, [telephonyNumbers]);
 
-    let gmCountry = {
+    const gmCountry = {
       countryOptions : { label: 'US', value: 1 },
       countryId2NameMapping : { 1: 'US' },
       countryName2IdMapping : { US: 1 },

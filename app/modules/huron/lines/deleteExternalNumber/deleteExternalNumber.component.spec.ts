@@ -6,7 +6,7 @@ describe('Componenent: deleteExternalNumber', () => {
   const ORG_ID = '12345';
   const EXTERNAL_NUMBER = '15679021234';
 
-  let numberInfo = {
+  const numberInfo = {
     orgId: ORG_ID,
     externalNumber: EXTERNAL_NUMBER,
     apiImplementation: 'INTELEPEER',

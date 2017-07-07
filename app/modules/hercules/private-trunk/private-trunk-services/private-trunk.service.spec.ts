@@ -1,5 +1,5 @@
 describe('Service: PrivateTrunkService', () => {
-  let privateTrunk =  getJSONFixture('hercules/private-trunk.json');
+  const privateTrunk =  getJSONFixture('hercules/private-trunk.json');
 
   beforeEach(function() {
     this.initModules('hercules.private-trunk-service');

@@ -53,7 +53,7 @@ export class DomainManageVerifyCtrl {
   }
 
   public verify() {
-    let start = moment();
+    const start = moment();
     this.DomainManagementService.verifyDomain(this._domain.text).then(() => {
       this.recordMetrics({
         msg: 'ok',

@@ -11,9 +11,12 @@
     var vm = this;
     var type = $stateParams.specificType || $stateParams.connectorType;
     var localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + type);
+    vm.actions = [];
     vm.deleteExpressway = deleteExpressway;
-    vm.showReassignHostDialog = showReassignHostDialog;
+    vm.goToNodesPage = goToNodesPage;
     vm.showDeregisterHostDialog = showDeregisterHostDialog;
+    vm.showNodeLink = showNodeLink;
+    vm.showReassignHostDialog = showReassignHostDialog;
 
     vm.getSeverity = HybridServicesClusterStatesService.getSeverity;
 
@@ -35,6 +38,7 @@
           hostname: vm.host.hostname,
         });
         vm.isHybridContextCluster = (cluster.targetType === 'cs_mgmt');
+        vm.actions = getActionsButton();
       }
     }, true);
 
@@ -104,34 +108,43 @@
         });
     }
 
-    vm.showNodeLink = function () {
+    function showNodeLink() {
       return vm.host.connectorType === 'mf_mgmt' && hasNodesViewFeatureToggle;
-    };
+    }
 
-    vm.goToNodesPage = function () {
+    function goToNodesPage() {
       $state.go('mediafusion-cluster.nodes', {
         id: cluster.id,
       });
-    };
+    }
 
-    vm.showAction = function () {
-      return vm.host.connectorType !== 'cs_mgmt' && vm.host.connectorType !== 'cs_context' && (vm.showHybridMediaAction() || vm.showHdsAction());
-    };
-
-    vm.showGoToHostAction = function () {
-      return vm.host.connectorType !== 'mf_mgmt';
-    };
-
-    vm.showHybridMediaAction = function () {
-      return !hasNodesViewFeatureToggle && vm.host.connectorType === 'mf_mgmt';
-    };
-
-    vm.showHdsAction = function () {
-      return !hasNodesViewFeatureToggle && vm.host.connectorType === 'hds_app';
-    };
-
-    vm.showDeleteNodeAction = function () {
-      return ((vm.host.state === 'offline' && vm.host.connectorType === 'c_mgmt'));
-    };
+    function getActionsButton() {
+      var actions = [];
+      if (!hasNodesViewFeatureToggle && vm.host.connectorType !== 'mf_mgmt') {
+        actions.push({
+          href: 'https://' + vm.host.hostname + '/',
+          textKey: 'hercules.connectors.goToHost',
+        });
+      }
+      if (!hasNodesViewFeatureToggle && vm.host.connectorType === 'mf_mgmt') {
+        actions.push({
+          click: showReassignHostDialog,
+          textKey: 'hercules.connectors.moveNode',
+        });
+      }
+      if (!hasNodesViewFeatureToggle && (vm.host.connectorType === 'mf_mgmt' || vm.host.connectorType === 'hds_app')) {
+        actions.push({
+          click: showDeregisterHostDialog,
+          textKey: 'hercules.connectors.deregisterNode',
+        });
+      }
+      if (!hasNodesViewFeatureToggle && vm.host.state === 'offline' && vm.host.connectorType === 'c_mgmt') {
+        actions.push({
+          click: deleteExpressway,
+          textKey: 'hercules.connectors.removeNode',
+        });
+      }
+      return actions;
+    }
   }
 }());

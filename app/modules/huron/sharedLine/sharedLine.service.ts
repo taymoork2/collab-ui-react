@@ -21,11 +21,11 @@ export class SharedLineService {
     private HuronConfig,
   ) {
 
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
-    let saveAction: ng.resource.IActionDescriptor = {
+    const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
       headers: {
         'Access-Control-Expose-Headers': 'Location',
@@ -129,7 +129,7 @@ export class SharedLineService {
       sharedLineId: sharedLineId,
     }).$promise
     .then(sharedLinePhoneList => {
-      let sharedLinePhones = _.get<SharedLinePhone[]>(sharedLinePhoneList, 'phones', []);
+      const sharedLinePhones = _.get<SharedLinePhone[]>(sharedLinePhoneList, 'phones', []);
       return _.map(sharedLinePhones, (phone) => {
         return new SharedLinePhone({
           uuid: phone.uuid,
@@ -140,7 +140,7 @@ export class SharedLineService {
     });
   }
 
-  public updateSharedLinePhoneList(type: LineConsumerType, typeId: string, numberId: string, sharedLineId: string, data: Array<SharedLinePhoneListItem>): ng.IPromise<void> {
+  public updateSharedLinePhoneList(type: LineConsumerType, typeId: string, numberId: string, sharedLineId: string, data: SharedLinePhoneListItem[]): ng.IPromise<void> {
     return this.sharedLinePhoneResource.update({
       customerId: this.Authinfo.getOrgId(),
       type: type,

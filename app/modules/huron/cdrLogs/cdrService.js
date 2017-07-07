@@ -16,10 +16,10 @@
     var calledDevice = 'called_deviceName';
     var callingNumber = 'calling_partyNumber';
     var calledNumber = 'called_partyNumber';
-    var emptyId = "00000000000000000000000000000000";
+    var emptyId = '00000000000000000000000000000000';
     var serverHosts = ['SME-01', 'SME-02', 'CMS-01', 'CMS-02'];
 
-    var retryError = "ElasticSearch GET request failed for reason: Observable onError";
+    var retryError = 'ElasticSearch GET request failed for reason: Observable onError';
     var cancelPromise = null;
     var currentJob = null;
     var cdrUrl = null;
@@ -98,7 +98,7 @@
     }
 
     function query(model, logstashPath) {
-      cdrUrl = UrlConfig.getCdrUrl() + logstashPath + "/_search?pretty";
+      cdrUrl = UrlConfig.getCdrUrl() + logstashPath + '/_search?pretty';
       proxyData = [];
       if (cancelPromise !== null && cancelPromise !== undefined) {
         cancelPromise.resolve(ABORT);
@@ -322,7 +322,6 @@
               (call[j].dataParam.remoteSessionID === cdrArray[i].dataParam[REMOTE] && emptyId !== cdrArray[i].dataParam[REMOTE]) ||
               (call[j].dataParam.localSessionID === cdrArray[i].dataParam[REMOTE] && emptyId !== cdrArray[i].dataParam[REMOTE]) ||
               (call[j].dataParam.remoteSessionID === cdrArray[i].dataParam[LOCAL] && emptyId !== cdrArray[i].dataParam[LOCAL])) {
-
               call.push(cdrArray[i]);
               cdrArray.splice(i, 1);
               if (cdrArray.length > 0) {
@@ -346,14 +345,14 @@
       var tempArray = [];
       while (call.length > 0) {
         x++;
-        call[0].name = "call" + callNum + "CDR" + x;
+        call[0].name = 'call' + callNum + 'CDR' + x;
         tempArray.push(call[0]);
         call.splice(0, 1);
         for (var i = 0; i < call.length; i++) {
           if (call[i].dataParam.localSessionID === (tempArray[0].dataParam.localSessionID && call[i].dataParam.remoteSessionID === tempArray[0].dataParam.remoteSessionID) ||
             (call[i].dataParam.remoteSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.localSessionID === tempArray[0].dataParam.remoteSessionID)) {
             x++;
-            call[0].name = "call" + callNum + "CDR" + x;
+            call[0].name = 'call' + callNum + 'CDR' + x;
             tempArray.push(call[i]);
             call.splice(i, 1);
             if (call.length > 0) {
@@ -374,7 +373,7 @@
       var defer = $q.defer();
       if (thisJob === currentJob) {
         $http({
-          method: "POST",
+          method: 'POST',
           url: cdrUrl,
           data: query,
           timeout: cancelPromise.promise,
@@ -384,7 +383,7 @@
           // if this specific error is received, retry once; error cause unknown
           if (response.status === 500 && response.data === retryError) {
             $http({
-              method: "POST",
+              method: 'POST',
               url: cdrUrl,
               data: query,
               timeout: cancelPromise.promise,
@@ -392,21 +391,21 @@
               defer.resolve(secondaryResponse);
             }).catch(function (secondaryResponse) {
               defer.reject({
-                'response': secondaryResponse.data,
-                'status': secondaryResponse.status,
+                response: secondaryResponse.data,
+                status: secondaryResponse.status,
               });
             });
           } else {
             defer.reject({
-              'response': response.data,
-              'status': response.status,
+              response: response.data,
+              status: response.status,
             });
           }
         });
       } else {
         defer.reject({
-          'response': "",
-          'status': -1,
+          response: '',
+          status: -1,
         });
       }
 

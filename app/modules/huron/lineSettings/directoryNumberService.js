@@ -98,7 +98,6 @@
           dn.callForwardAll.voicemailEnabled = data.callForwardAll.voicemailEnabled;
           if (typeof data.callForwardAll.destination !== 'undefined') {
             dn.callForwardAll.destination = data.callForwardAll.destination;
-
           }
 
           dn.callForwardBusy.intVoiceMailEnabled = data.callForwardBusy.intVoiceMailEnabled;
@@ -173,26 +172,26 @@
 
       // TODO: remove directory number once CMI has been fixed
       var alternateNumber = {
-        'alternateNumberType': '+E.164 Number',
-        'numMask': pattern,
-        'routePartition': {
-          'name': routePartition,
+        alternateNumberType: '+E.164 Number',
+        numMask: pattern,
+        routePartition: {
+          name: routePartition,
         },
-        'addLocalRoutePartition': true,
+        addLocalRoutePartition: true,
       };
 
       return AlternateNumberService.save({
         customerId: Authinfo.getOrgId(),
         directoryNumberId: dnUuid,
       }, alternateNumber, function (data, headers) {
-        data.uuid = headers('location').split("/").pop();
+        data.uuid = headers('location').split('/').pop();
         return data;
       }).$promise;
     }
 
     function updateAlternateNumber(dnUuid, altNumUuid, pattern) {
       var alternateNumber = {
-        'numMask': pattern,
+        numMask: pattern,
       };
 
       return AlternateNumberService.update({
@@ -212,6 +211,5 @@
         alternateNumberId: altNumUuid,
       }).$promise;
     }
-
   }
 })();

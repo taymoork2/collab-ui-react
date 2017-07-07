@@ -26,7 +26,7 @@ export class PrivateTrunkService {
     private Authinfo,
     private HuronConfig,
   ) {
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
@@ -77,7 +77,7 @@ export class PrivateTrunkService {
     }).$promise;
   }
 
-  public listPrivateTrunkResources(): ng.IPromise<Array<IPrivateTrunkResource>> {
+  public listPrivateTrunkResources(): ng.IPromise<IPrivateTrunkResource[]> {
     return this.privateTrunkResourceService.get({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
@@ -105,7 +105,7 @@ export class PrivateTrunkService {
   public removePrivateTrunkResources(): void {
     this.listPrivateTrunkResources().then((res) => {
       if (res) {
-        let resources = _.get(res, 'resources');
+        const resources = _.get(res, 'resources');
         _.forEach(resources, dest => {
           this.removePrivateTrunkResource(dest.uuid || '');
         });

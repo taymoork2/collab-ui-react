@@ -8,7 +8,7 @@ export class PlaceCallOverviewData {
 
 export class PlaceCallOverviewService {
   private placeCallOverviewDataCopy: PlaceCallOverviewData;
-  private errors: Array<any> = [];
+  private errors: any[] = [];
   private DEFAULT_LANG: string = 'en_US';
 
   /* @ngInject */
@@ -26,7 +26,7 @@ export class PlaceCallOverviewService {
       if (this.ServiceSetup.sites.length !== 0) {
         return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
         .then(site => {
-          let siteLanguage = _.get(site, 'preferredLanguage');
+          const siteLanguage = _.get(site, 'preferredLanguage');
           return siteLanguage ? siteLanguage : this.DEFAULT_LANG;
         });
       }
@@ -40,7 +40,7 @@ export class PlaceCallOverviewService {
   }
 
   public getCmiPlaceInfo(placesId) {
-    let queryString = {
+    const queryString = {
       customerId: this.Authinfo.getOrgId(),
       placesId: placesId,
     };
@@ -48,20 +48,20 @@ export class PlaceCallOverviewService {
   }
 
   public updateCmiPlacePreferredLanguage(placesId, placePreferredLanguage) {
-    let queryString = {
+    const queryString = {
       customerId: this.Authinfo.getOrgId(),
       placesId: placesId,
     };
-    let requestBody = {
+    const requestBody = {
       preferredLanguage: placePreferredLanguage,
     };
     return this.PlacesService.update(queryString, requestBody).$promise;
   }
 
   public getPlaceCallOverviewData(placesId): ng.IPromise<PlaceCallOverviewData> {
-    let placeCallOverviewData = new PlaceCallOverviewData();
+    const placeCallOverviewData = new PlaceCallOverviewData();
     this.errors = [];
-    let promises: Array<ng.IPromise<any>> = [];
+    const promises: ng.IPromise<any>[] = [];
     promises.push(this.getOrganizationLevelLanguage());
     promises.push(this.getSiteLanguages());
     promises.push(this.getCmiPlaceInfo(placesId));
@@ -70,11 +70,11 @@ export class PlaceCallOverviewService {
         this.Notification.notify(this.errors, 'preferredLanguage.failedToFetchSiteLanguages');
         return this.$q.reject();
       }
-      let siteLevelPreferredLanguage = data[0];
-      let languages = data[1];
-      let placesPreferredLanguage = data[2]['preferredLanguage'];
-      let organizationLanguage = this.findPreferredLanguageByCode(languages, siteLevelPreferredLanguage);
-      let defaultPreferredLanugage = this.getDefaultPreferredLanguage(organizationLanguage['label']);
+      const siteLevelPreferredLanguage = data[0];
+      const languages = data[1];
+      const placesPreferredLanguage = data[2]['preferredLanguage'];
+      const organizationLanguage = this.findPreferredLanguageByCode(languages, siteLevelPreferredLanguage);
+      const defaultPreferredLanugage = this.getDefaultPreferredLanguage(organizationLanguage['label']);
       placeCallOverviewData.siteLevelPreferredLanguage = siteLevelPreferredLanguage;
       placeCallOverviewData.preferredLanguageOptions = this.setOrgPrefLanguageInOptions(defaultPreferredLanugage, languages);
       placeCallOverviewData.placesPreferredLanguage = placesPreferredLanguage;
@@ -105,11 +105,11 @@ export class PlaceCallOverviewService {
   }
 
   private getDefaultPreferredLanguage(organizationLevelLanguage): any {
-    let defaultPrefix: string = this.$translate.instant('preferredLanguage.organizationSettingLabel');
-    let translatedLanguageLabel: string = organizationLevelLanguage ?
+    const defaultPrefix: string = this.$translate.instant('preferredLanguage.organizationSettingLabel');
+    const translatedLanguageLabel: string = organizationLevelLanguage ?
                                         this.$translate.instant(organizationLevelLanguage) :
                                         'languages.englishAmerican';
-    let defaultLanguage = {
+    const defaultLanguage = {
       label: defaultPrefix + translatedLanguageLabel,
       value: '',
     };

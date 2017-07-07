@@ -9,7 +9,7 @@ export interface IHuntGroupListItem {
   uuid: string;
   name: string;
   memberCount: number;
-  numbers: Array<HuntGroupNumber>;
+  numbers: HuntGroupNumber[];
 }
 
 interface IHuntGroupResource extends ng.resource.IResourceClass<ng.resource.IResource<HuntGroup>> {
@@ -22,7 +22,7 @@ const NUMBER_FORMAT_DIRECT_LINE: string = 'NUMBER_FORMAT_DIRECT_LINE';
 export class HuntGroupService {
   private huntGroupResource: IHuntGroupResource;
   private huntGroupCopy: HuntGroup;
-  private huntGroupProperties: Array<string> = ['uuid', 'name', 'huntMethod', 'maxRingSecs', 'maxWaitMins', 'sendToApp', 'destinationRule', 'numbers', 'fallbackDestination', 'alternateDestination', 'members'];
+  private huntGroupProperties: string[] = ['uuid', 'name', 'huntMethod', 'maxRingSecs', 'maxWaitMins', 'sendToApp', 'destinationRule', 'numbers', 'fallbackDestination', 'alternateDestination', 'members'];
 
   /* @ngInject */
   constructor(
@@ -34,11 +34,11 @@ export class HuntGroupService {
     private $translate: ng.translate.ITranslateService,
   ) {
 
-    let updateAction: ng.resource.IActionDescriptor = {
+    const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
-    let saveAction: ng.resource.IActionDescriptor = {
+    const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
       headers: {
         'Access-Control-Expose-Headers': 'Location',
@@ -67,7 +67,7 @@ export class HuntGroupService {
         huntGroupId: huntGroupId,
       }).$promise
       .then( (huntGroupResource) => {
-        let huntGroup = new HuntGroup(_.pick<HuntGroup, HuntGroup>(huntGroupResource, this.huntGroupProperties));
+        const huntGroup = new HuntGroup(_.pick<HuntGroup, HuntGroup>(huntGroupResource, this.huntGroupProperties));
         // TODO (jlowery): remove when CMI normalizes fallbackDestination payloads across APIs
         huntGroup.fallbackDestination = new FallbackDestination({
           memberUuid: _.get<string>(huntGroupResource.fallbackDestination, 'uuid'),
@@ -76,6 +76,8 @@ export class HuntGroupService {
           numberUuid: _.get<string>(huntGroupResource.fallbackDestination, 'numberUuid'),
           sendToVoicemail: _.get<boolean>(huntGroupResource.fallbackDestination, 'sendToVoicemail'),
         });
+        huntGroup.fallbackDestination.name =  _.isNull(huntGroup.fallbackDestination.name) ? _.get<string>(huntGroupResource.fallbackDestination, 'userName') : huntGroup.fallbackDestination.name;
+
         huntGroup.alternateDestination = new FallbackDestination({
           memberUuid: _.get<string>(huntGroupResource.alternateDestination, 'uuid'),
           name: _.get<string>(huntGroupResource.alternateDestination, 'memberName'),
@@ -84,9 +86,10 @@ export class HuntGroupService {
           sendToVoicemail: _.get<boolean>(huntGroupResource.alternateDestination, 'sendToVoicemail'),
           timer: _.get<number>(huntGroupResource.alternateDestination, 'timer'),
         });
+        huntGroup.alternateDestination.name =  _.isNull(huntGroup.alternateDestination.name) ? _.get<string>(huntGroupResource.alternateDestination, 'userName') : huntGroup.alternateDestination.name;
 
-        let huntGroupMembers: Array<CallFeatureMember> = this.consolidateMembers(huntGroupResource.members);
-        let promises: Array<ng.IPromise<CallFeatureMember>> = [];
+        const huntGroupMembers: CallFeatureMember[] = this.consolidateMembers(huntGroupResource.members);
+        const promises: ng.IPromise<CallFeatureMember>[] = [];
         _.forEach(huntGroupMembers, member => {
           promises.push(this.FeatureMemberService.getMemberPicture(member.memberItemId || '')
             .then(response => {
@@ -121,12 +124,12 @@ export class HuntGroupService {
    *
    * @memberOf HuntGroupService
    */
-  private consolidateMembers(members: Array<CallFeatureMember>): Array<CallFeatureMember> {
-    let consolidatedMembers: Array<CallFeatureMember> = [];
-    let groupedMembers = _.groupBy(members, 'numberUuid');
+  private consolidateMembers(members: CallFeatureMember[]): CallFeatureMember[] {
+    const consolidatedMembers: CallFeatureMember[] = [];
+    const groupedMembers = _.groupBy(members, 'numberUuid');
     _.forEach(groupedMembers, group => {
       if (group.length > 1) {
-        let sharedLine = new CallFeatureMember({
+        const sharedLine = new CallFeatureMember({
           uuid: _.get<string>(group[0], 'numberUuid'),
           name: this.$translate.instant('huronHuntGroup.sharedLine'),
           showName: true,

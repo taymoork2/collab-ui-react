@@ -7,17 +7,16 @@
 
     /* @ngInject */
   function DeviceUsageModelService(Authinfo, UrlConfig, $http, $q, $timeout) {
-
     var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
     var timeoutInMillis = 20000;
 
     var modelsToValueMap = {
       out: {
-        'MX200': ['MX200 G2'],
-        'MX300': ['MX300 G2'],
-        'MX700': ['MX700', 'MX700ST'],
-        'MX800': ['MX800', 'MX800D', 'MX800ST'],
+        MX200: ['MX200 G2'],
+        MX300: ['MX300 G2'],
+        MX700: ['MX700', 'MX700ST'],
+        MX800: ['MX800', 'MX800D', 'MX800ST'],
       },
       in: {
         'MX200 G2': 'MX200',

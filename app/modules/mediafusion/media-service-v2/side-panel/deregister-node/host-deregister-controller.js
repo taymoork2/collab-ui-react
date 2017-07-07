@@ -28,5 +28,4 @@
   angular
     .module('Mediafusion')
     .controller('HostDeregisterControllerV2', HostDeregisterControllerV2);
-
 }());

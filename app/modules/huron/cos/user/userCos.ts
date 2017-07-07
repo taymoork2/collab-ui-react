@@ -7,11 +7,11 @@ export interface IRestriction {
 
 export interface IUserCos {
   url: string | null;
-  user?: Array<IRestriction>;
-  place?: Array<IRestriction>;
-  customer: Array<IRestriction>;
+  user?: IRestriction[];
+  place?: IRestriction[];
+  customer: IRestriction[];
 }
 
 export interface IDialPlan {
-  premiumNumbers: Array<string>;
+  premiumNumbers: string[];
 }

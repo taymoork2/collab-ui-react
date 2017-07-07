@@ -15,8 +15,8 @@ class CallPickupNameCtrl implements ng.IComponentController {
   }
 
   public onChange(): void {
-    let scope = this;
-    let reg = /^$|^[A-Za-z\-\_\d\s]+$/;
+    const scope = this;
+    const reg = /^$|^[A-Za-z\-\_\d\s]+$/;
     this.uniquePickupName(this.callPickupName).then(function(unique){
       scope.errorNameInput = !reg.test(scope.callPickupName) || !unique;
       scope.onUpdate({

@@ -53,8 +53,8 @@ describe('Component: privateTrunkDestination component', () => {
   });
 
   it('should verify second SIP destination is set', function() {
-    let destination = 'sipConnector.org';
-    let name = 'SIP Connector Remote';
+    const destination = 'sipConnector.org';
+    const name = 'SIP Connector Remote';
 
     expect(this.view).toContainElement(RADIO_OPTION1);
     this.view.find(RADIO_OPTION1).click().click();
@@ -70,7 +70,7 @@ describe('Component: privateTrunkDestination component', () => {
   });
 
   it('should set only the name of existing hybrid destination', function() {
-    let name = 'SIP Connector Remote';
+    const name = 'SIP Connector Remote';
     expect(this.view).toContainElement(RADIO_OPTION2);
     this.view.find(RADIO_OPTION2).click().click();
     expect(this.view.find(RADIO_OPTION2)).toBeChecked();
@@ -87,42 +87,42 @@ describe('Component: privateTrunkDestination component', () => {
   });
 
   it('invalidate SIP destination address having  char _', function() {
-    let testAddress = 'ABC_test-123.com';
+    const testAddress = 'ABC_test-123.com';
     expect(this.controller.invalidCharactersValidation(testAddress)).toBeFalsy();
   });
 
   it('validate SIP destination address having valid chars', function() {
-    let testAddress = 'ABC-test-123.com';
+    const testAddress = 'ABC-test-123.com';
     expect(this.controller.invalidCharactersValidation(testAddress)).toBeTruthy();
   });
 
   it('invalidate SIP destination port', function() {
-    let testAddress = 'ABC-test-123.com:65536';
+    const testAddress = 'ABC-test-123.com:65536';
     expect(this.controller.portValidation(testAddress)).toBeFalsy();
   });
 
   it('validate SIP destination port', function() {
-    let testAddress = 'ABC-test-123.com:5061';
+    const testAddress = 'ABC-test-123.com:5061';
     expect(this.controller.portValidation(testAddress)).toBeTruthy();
   });
 
   it('validate SIP destination port', function() {
-    let testAddress = 'ABC-test-123.com:5061';
+    const testAddress = 'ABC-test-123.com:5061';
     expect(this.controller.uniqueDomainValidation(testAddress)).toBeTruthy();
   });
 
   it('invalidate SIP destination IP address input', function() {
-    let testAddress = '10.89.123.1:5061';
+    const testAddress = '10.89.123.1:5061';
     expect(this.controller.invalidCharactersValidation(testAddress)).toBeFalsy();
   });
 
   it('validate SIP destination domain with numeric input', function() {
-    let testAddress = 'aa10.aa.com:5061';
+    const testAddress = 'aa10.aa.com:5061';
     expect(this.controller.invalidCharactersValidation(testAddress)).toBeTruthy();
   });
 
   it('validate SIP destination domain part length not exceed 63', function() {
-    let testAddress = 'aaaa0123456789-0123456789-0123456789-0123456789-0123456789-012345.aa.com:5061';
+    const testAddress = 'aaaa0123456789-0123456789-0123456789-0123456789-0123456789-012345.aa.com:5061';
     expect(this.controller.invalidCharactersValidation(testAddress)).toBeFalsy();
   });
 });

@@ -2,23 +2,17 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2($modal, $state, $translate, Authinfo, HybridServicesClusterService) {
-
+  function MediaServiceControllerV2($modal, $state, $stateParams, Authinfo, HybridServicesClusterService) {
     var vm = this;
-    vm.backState = 'services-overview';
+    vm.backState = $stateParams.backState || 'services-overview';
 
     // Added for cs-page-header
-    vm.pageTitle = $translate.instant('mediaFusion.page_title');
     vm.tabs = [
-      /*{
-            title: $translate.instant('common.metrics'),
-            state: 'media-service.metrics',
-          },*/
       {
-        title: $translate.instant('common.resources'),
+        title: 'common.resources',
         state: 'media-service-v2.list',
       }, {
-        title: $translate.instant('common.settings'),
+        title: 'common.settings',
         state: 'media-service-v2.settings',
       },
     ];
@@ -51,7 +45,6 @@
             });
         }
       });
-
   }
 
   angular

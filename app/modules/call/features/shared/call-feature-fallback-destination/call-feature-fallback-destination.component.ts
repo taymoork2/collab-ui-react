@@ -11,7 +11,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public isNew: boolean;
   public onChangeFn: Function;
 
-  public callDestInputs: Array<string> = ['internal', 'external'];
+  public callDestInputs: string[] = ['internal', 'external'];
 
   public selectedReversionNumber: any;
   public showMember: boolean;
@@ -19,6 +19,8 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public directoryNumber: any;
   public hasVoicemail: boolean = false;
   public thumbnailSrc: string | undefined = undefined;
+  public isAlternate: boolean;
+  public index: string = '';
 
   /* @ngInject */
   constructor(
@@ -29,8 +31,8 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     private CallFeatureFallbackDestinationService: CallFeatureFallbackDestinationService,
   ) {}
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { fallbackDestination, showReversionLookup } = changes;
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const { fallbackDestination, showReversionLookup, isAlternate } = changes;
     if (fallbackDestination && fallbackDestination.currentValue) {
       this.processCallFeatureFallbackDestChanges(fallbackDestination);
     }
@@ -40,9 +42,14 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
         this.fallbackDestForm.$setValidity('', false, this.fallbackDestForm);
       }
     }
+
+    if (isAlternate && isAlternate.currentValue) {
+      this.isAlternate = isAlternate.currentValue;
+      this.index = (this.isAlternate) ? '1' : '';
+    }
   }
 
-  private processCallFeatureFallbackDestChanges(fallbackDestinationChanges: ng.IChangesObject): void {
+  private processCallFeatureFallbackDestChanges(fallbackDestinationChanges: ng.IChangesObject<any>): void {
     if (_.isNull(fallbackDestinationChanges.currentValue.number) && _.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
       this.showMember = false;
       this.showReversionLookup = (this.fallbackDestination.number || this.fallbackDestination.numberUuid) ? false : true;
@@ -71,7 +78,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     }
   }
 
-  public getMemberList(value: any): ng.IPromise<Array<any>> {
+  public getMemberList(value: any): ng.IPromise<any[]> {
     if (isNaN(value)) {
       return this.MemberService.getMemberList(value, true).then( members => {
         return members;
@@ -104,6 +111,9 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
         sendToVoicemail: false,
       });
     }
+    if (this.isAlternate) {
+      fallbackDestination.timer = 5;
+    }
     this.onChangeFn({
       fallbackDestination: fallbackDestination,
     });
@@ -117,18 +127,22 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
         number: model,
         numberUuid: null,
         sendToVoicemail: false,
+        timer: this.isAlternate ? 5 : null,
       }),
     });
   }
 
   public onChangeSendToVoicemail(): void {
-    let fallbackDestination = new FallbackDestination({
+    const fallbackDestination = new FallbackDestination({
       name: this.fallbackDestination.name,
       numberUuid: this.fallbackDestination.numberUuid,
       number: this.fallbackDestination.number,
       memberUuid: this.fallbackDestination.memberUuid,
       sendToVoicemail: this.fallbackDestination.sendToVoicemail,
     });
+    if (this.isAlternate) {
+      fallbackDestination.timer = this.fallbackDestination.timer;
+    }
     this.onChangeFn({
       fallbackDestination: fallbackDestination,
     });
@@ -141,6 +155,9 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     this.fallbackDestForm.$setDirty();
     this.fallbackDestForm.$setValidity('', false, this.fallbackDestForm);
     this.thumbnailSrc = undefined;
+    this.onChangeFn({
+      fallbackDestination: new FallbackDestination(),
+    });
   }
 
   private getPrimaryNumber(member: Member): Line {
@@ -158,6 +175,7 @@ export class CallFeatureFallbackDestinationComponent implements ng.IComponentOpt
     fallbackDestination: '<',
     showReversionLookup: '<',
     isNew: '<',
+    isAlternate: '<',
     onChangeFn: '&',
   };
 }

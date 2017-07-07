@@ -56,7 +56,7 @@ describe('Component: gmImportTd', () => {
   }
 
   function setParameter(key, value) {
-    let preData = {
+    const preData = {
       links: [],
       content: {
         health: { code: 200, status: 'OK' },
@@ -76,7 +76,7 @@ describe('Component: gmImportTd', () => {
     });
 
     it('should return correct data when call TelephonyDomainService.getRegionDomains', function () {
-      let data = setParameter.call(this, 'content.data.body', this.regions);
+      const data = setParameter.call(this, 'content.data.body', this.regions);
       this.TelephonyDomainService.getRegionDomains.and.returnValue(this.$q.resolve(data));
 
       initComponent.apply(this);

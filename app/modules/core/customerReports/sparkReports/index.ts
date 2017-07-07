@@ -5,6 +5,7 @@ import reportServices from 'modules/core/partnerReports/commonReportServices/ind
 import reportCard from 'modules/core/partnerReports/reportCard/index';
 import reportFilter from 'modules/core/partnerReports/reportFilter/index';
 import reportSlider from 'modules/core/partnerReports/reportSlider/index';
+import learnMoreBanner from 'modules/bmmp/learn-more-banner/index';
 
 import { DummySparkDataService } from './dummySparkData.service';
 import { SparkGraphService } from './sparkGraph.service';
@@ -16,6 +17,7 @@ export default angular
   .module('reports.sparkReports', [
     cards,
     featureToggle,
+    learnMoreBanner,
     notifications,
     reportCard,
     reportFilter,

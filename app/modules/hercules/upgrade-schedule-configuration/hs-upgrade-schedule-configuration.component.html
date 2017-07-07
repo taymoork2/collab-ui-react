@@ -32,7 +32,12 @@
     >
   </cs-select>
 </div>
-<p>
-  <span translate="hercules.settings.scheduleUpgrade.postponeLabel"></span><br>
-  <strong class="upgrade-schedule-next-time">{{$ctrl.upgradeSchedule.nextUpgradeWindow.startTime | date:'MMM d, y h:mm a':$ctrl.nextUpdateOffset}}</strong> <a href="#" ng-click="$ctrl.postpone($event)" translate="hercules.settings.scheduleUpgrade.postponeAction" ng-if="!$ctrl.upgradeSchedule.moratoria.length > 0"></a>
-</p>
+<div class="postpone-section">
+  <div class="postpone-section-left">
+    <div class="icon icon-info"></div>
+  </div>
+  <div class="postpone-section-right">
+    <div translate="hercules.settings.scheduleUpgrade.postponeLabel"></div>
+    <span class="upgrade-schedule-next-time">{{$ctrl.upgradeSchedule.nextUpgradeWindow.startTime | date:'MMM d, y h:mm a':$ctrl.nextUpdateOffset}}</span> <a href="#" ng-click="$ctrl.postpone($event)" translate="hercules.settings.scheduleUpgrade.postponeAction" ng-if="!$ctrl.upgradeSchedule.moratoria.length > 0"></a>
+  </div>
+</div>

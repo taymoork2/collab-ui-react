@@ -1,88 +1,104 @@
 describe('Controller: HeaderCtrl', function () {
-  var $scope, $controller;
-  var controller, Utils, Authinfo;
+  beforeEach(function () {
+    this.initModules('Core');
+    this.injectDependencies(
+      '$controller',
+      '$q',
+      '$scope',
+      'Authinfo',
+      'FeatureToggleService',
+      'ProPackService',
+      'Utils'
+    );
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
+    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
 
-  function dependencies($rootScope, _$controller_, _Utils_, _Authinfo_) {
-    $scope = $rootScope.$new();
-    $controller = _$controller_;
-    Utils = _Utils_;
-    Authinfo = _Authinfo_;
-  }
-
-  function initSpies() {
-    spyOn(Utils, 'isAdminPage');
-  }
-
-  function initController() {
-    controller = $controller('HeaderCtrl', {
-      $scope: $scope,
-    });
-    $scope.$apply();
-  }
-
-  beforeEach(inject(dependencies));
-  beforeEach(initSpies);
+    this.initController = function () {
+      this.controller = this.$controller('HeaderCtrl', {
+        $scope: this.$scope,
+      });
+      this.$scope.$apply();
+    };
+  });
 
   describe('is Admin Page', function () {
-    beforeEach(setAdminPageSpy(true));
-    beforeEach(initController);
+    beforeEach(function () {
+      spyOn(this.Utils, 'isAdminPage').and.returnValue(true);
+      this.initController();
+    });
+
     describe('and is customer admin', function () {
       beforeEach(function () {
-        spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(false);
-        spyOn(Authinfo, 'isPartnerSalesAdmin').and.returnValue(false);
+        spyOn(this.Authinfo, 'isPartnerAdmin').and.returnValue(false);
+        spyOn(this.Authinfo, 'isPartnerSalesAdmin').and.returnValue(false);
       });
+
       it('should show my company page button', function () {
-        expect(controller.showMyCompany()).toBe(true);
+        expect(this.controller.showMyCompany()).toBe(true);
       });
+
       it('should hide company name', function () {
-        expect(controller.showOrgName()).toBe(false);
+        expect(this.controller.showOrgName()).toBe(false);
       });
     });
 
     describe('and is partner admin', function () {
       beforeEach(function () {
-        spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);
-        spyOn(Authinfo, 'isPartnerSalesAdmin').and.returnValue(false);
+        spyOn(this.Authinfo, 'isPartnerAdmin').and.returnValue(true);
+        spyOn(this.Authinfo, 'isPartnerSalesAdmin').and.returnValue(false);
       });
+
       it('should hide my company page button', function () {
-        expect(controller.showMyCompany()).toBe(false);
+        expect(this.controller.showMyCompany()).toBe(false);
       });
+
       it('should show company name', function () {
-        expect(controller.showOrgName()).toBe(true);
+        expect(this.controller.showOrgName()).toBe(true);
       });
     });
 
     describe('and is isPartnerSalesAdmin admin', function () {
       beforeEach(function () {
-        spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(false);
-        spyOn(Authinfo, 'isPartnerSalesAdmin').and.returnValue(true);
+        spyOn(this.Authinfo, 'isPartnerAdmin').and.returnValue(false);
+        spyOn(this.Authinfo, 'isPartnerSalesAdmin').and.returnValue(true);
       });
+
       it('should hide my company page button', function () {
-        expect(controller.showMyCompany()).toBe(false);
+        expect(this.controller.showMyCompany()).toBe(false);
       });
+
       it('should show company name', function () {
-        expect(controller.showOrgName()).toBe(true);
+        expect(this.controller.showOrgName()).toBe(true);
       });
     });
-
   });
 
   describe('Non-Admin Page', function () {
-    beforeEach(setAdminPageSpy(false));
-    beforeEach(initController);
-
     it('should not show my company page button', function () {
-      expect(controller.showMyCompany()).toBe(false);
+      spyOn(this.Utils, 'isAdminPage').and.returnValue(false);
+      this.initController();
+      expect(this.controller.showMyCompany()).toBe(false);
     });
   });
 
-  function setAdminPageSpy(isAdminPage) {
-    return function () {
-      Utils.isAdminPage.and.returnValue(isAdminPage);
-    };
-  }
+  describe('2017 name update', function () {
+    it('should default headerTitle to loginPage.title', function () {
+      this.initController();
+      expect(this.controller.headerTitle).toEqual('loginPage.title');
+    });
+
+    it('should set headerTitle to loginPage.titleNew when atlas2017NameChangeGetStatus is true', function () {
+      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.headerTitle).toEqual('loginPage.titleNew');
+    });
+
+    it('should set headerTitle to loginPage.titlePro when atlas2017NameChangeGetStatus and hasProPackPurchased is true', function () {
+      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+      this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.headerTitle).toEqual('loginPage.titlePro');
+    });
+  });
 });

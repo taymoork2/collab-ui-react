@@ -12,7 +12,7 @@ describe('Controller: HuronFeatureAADependsCtrl', function () {
     $scope = $rootScope.$new();
 
     $stateParams = {
-      detailsFeatureName: "AA for example",
+      detailsFeatureName: 'AA for example',
       detailsDependsList: 'AA depend one, AA depend two',
     };
 
@@ -23,7 +23,6 @@ describe('Controller: HuronFeatureAADependsCtrl', function () {
         $stateParams: $stateParams,
       });
     };
-
   }));
 
   it('should create AADependsCtrl', function () {
@@ -31,6 +30,5 @@ describe('Controller: HuronFeatureAADependsCtrl', function () {
 
     expect(controller.featureName).toEqual($stateParams.detailsFeatureName);
     expect(controller.dependsNames).toEqual($stateParams.detailsDependsList);
-
   });
 });

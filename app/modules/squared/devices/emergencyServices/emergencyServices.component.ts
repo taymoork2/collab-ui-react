@@ -34,7 +34,7 @@ export class EmergencyServicesCtrl {
   }
 
   public $onInit(): void {
-    let data = this.EmergencyServicesService.getInitialData();
+    const data = this.EmergencyServicesService.getInitialData();
     this.emergency = data.emergency;
     this.currentDevice = data.currentDevice;
     this.locationLabel = data.locationLabel;
@@ -142,7 +142,7 @@ export class EmergencyServicesCtrl {
     if (!_.isEqual(this.emergency.emergencyAddress, this.EmergencyServicesService.getOriginalConfig().emergencyAddress)) {
       this.loading = true;
       this.loadingText = this.$translate.instant('spacesPage.validatingAddr');
-      let saveData = _.cloneDeep(this.emergency.emergencyAddress);
+      const saveData = _.cloneDeep(this.emergency.emergencyAddress);
       if (_.get(saveData, 'state.abbreviation')) {
         saveData.state = <string>_.get(saveData, 'state.abbreviation');
       }

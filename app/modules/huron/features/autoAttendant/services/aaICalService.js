@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function AAICalService(ical) {
-
     var service = {
       createCalendar: createCalendar,
       getDefaultRange: getDefaultRange,
@@ -106,9 +105,9 @@
             vevent.addPropertyWithValue('priority', '10');
             date = getNextOpenDate(hoursRange.days);
             dateData = {
-              'year': date.year(),
-              'month': date.month(),
-              'date': date.date(),
+              year: date.year(),
+              month: date.month(),
+              date: date.date(),
             };
             starttime = moment(hoursRange.starttime, 'hh:mm A').set(dateData);
             endtime = moment(hoursRange.endtime, 'hh:mm A').set(dateData);
@@ -122,40 +121,40 @@
             if (hoursRange.exactDate) {
               date = moment(hoursRange.date, 'YYYY-MM-DD');
               dateData = {
-                'year': date.year(),
-                'month': date.month(),
-                'date': date.date(),
+                year: date.year(),
+                month: date.month(),
+                date: date.date(),
               };
             } else {
               //Find the first occurrence of the rule
               date = getNextOccurrenceHolidays(hoursRange);
               dateData = {
-                'year': date.year(),
-                'month': date.month(),
-                'date': date.date(),
+                year: date.year(),
+                month: date.month(),
+                date: date.date(),
               };
               //Save the rule in the description
               description += ';' + hoursRange.month.number + ';' + hoursRange.rank.number + ';' + hoursRange.day.abbr;
             }
             if (hoursRange.allDay) {
               startData = {
-                'hours': 0,
-                'minutes': 0,
+                hours: 0,
+                minutes: 0,
               };
               endData = {
-                'hours': 24,
-                'minutes': 0,
+                hours: 24,
+                minutes: 0,
               };
             } else {
               var time = moment(hoursRange.starttime, 'hh:mm A');
               startData = {
-                'hours': time.hours(),
-                'minutes': time.minutes(),
+                hours: time.hours(),
+                minutes: time.minutes(),
               };
               time = moment(hoursRange.endtime, 'hh:mm A');
               endData = {
-                'hours': time.hours(),
-                'minutes': time.minutes(),
+                hours: time.hours(),
+                minutes: time.minutes(),
               };
             }
             starttime = moment().set(dateData).set(startData);
@@ -328,7 +327,6 @@
       var holidayRanges = [];
 
       _.forEach(calendar.getAllSubcomponents('vevent'), function (vevent) {
-
         var summary = vevent.getFirstPropertyValue('summary');
 
         var dtstart = vevent.getFirstPropertyValue('dtstart');
@@ -385,7 +383,6 @@
           }
           holidayRanges.push(hoursRange);
         }
-
       });
       holidayRanges.sort(function (holiday1, holiday2) {
         var date1 = moment(holiday1.date, 'YYYY-MM-DD');

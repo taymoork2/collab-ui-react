@@ -78,10 +78,6 @@
       margin-top: 1.5rem;
     }
 
-    .cs-input-group {
-      padding-left: 1rem;
-    }
-
     a:focus {
       outline: none;
       box-shadow: none;
@@ -219,12 +215,9 @@
           color: #4f5051;
         }
 
-        .search-box {
-          padding-left: 0px;
-        }
-
         .query-row {
           padding-right: 0.5rem;
+          padding-left: 0.5rem;
         }
 
         .search-button {
@@ -447,6 +440,28 @@
 
           .results-spacing {
             margin-top: 16px;
+          }
+
+          .search-results-key {
+            font-size: .875rem;
+            color: $gray-dark-3;
+          }
+
+          .copy {
+            a {
+              font-size: .875rem;
+            }
+
+            i {
+              color: $gray-light-1;
+              font-size: 1.5rem;
+              vertical-align: middle;
+              display: inline-block;
+            }
+          }
+
+          .copy:hover i {
+            color: $gray-base;
           }
         }
 

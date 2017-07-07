@@ -63,7 +63,6 @@ describe('ChooseAccountTypeCtrl: Ctrl', function () {
     };
 
     describe('when selected shared account type', function () {
-
       beforeEach(function () {
         accountType = 'shared';
         initControllerAndValues();
@@ -80,7 +79,6 @@ describe('ChooseAccountTypeCtrl: Ctrl', function () {
     });
 
     describe('when selected personal account type', function () {
-
       beforeEach(function () {
         accountType = 'personal';
         initControllerAndValues();

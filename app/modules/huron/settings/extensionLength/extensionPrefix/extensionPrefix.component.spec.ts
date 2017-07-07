@@ -9,10 +9,19 @@ describe('Component: extensionPrefix', () => {
     this.initModules(extensionPrefixModule);
     this.injectDependencies(
       '$scope',
+      'Authinfo',
+      'Orgservice',
+      '$httpBackend',
     );
 
     this.$scope.onChangeFn = jasmine.createSpy('close');
     this.$scope.onChangeFn = jasmine.createSpy('dismiss');
+
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
+    spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
+      callback({}, 200);
+    });
+    this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
 
     this.compileComponent('ucExtensionPrefixModal', {
       newExtensionLength: 'newExtensionLength',

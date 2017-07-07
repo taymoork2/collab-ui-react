@@ -7,7 +7,7 @@ describe('Service: IdleTimeoutService: ', function () {
   beforeEach(() => {
     angular.mock.module(idleTimeoutModule);
     angular.mock.module($provide => {
-      let Auth = {
+      const Auth = {
         isLoggedIn: () => true,
         logout: () => { },
       };
@@ -70,7 +70,7 @@ describe('Service: IdleTimeoutService: ', function () {
     });
 
     it('reset the timer with user action', () => {
-      let element = angular.element(IdleTimeoutService.$document);
+      const element = angular.element(IdleTimeoutService.$document);
       expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Starting Tab Timer');
       $timeout.flush(1100000);
       element.triggerHandler('keydown');

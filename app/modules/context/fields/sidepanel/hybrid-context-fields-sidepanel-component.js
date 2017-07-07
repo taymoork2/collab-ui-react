@@ -16,13 +16,11 @@ require('./_fields-sidepanel.scss');
 
   /* @ngInject */
   function ContextFieldsSidepanelCtrl(Analytics, ContextFieldsService, ContextFieldsetsService, Notification, $filter, ModalService, $state, $translate) {
-
     var vm = this;
     vm.associatedFieldsets = [];
     vm.fetchFailure = false;
     vm.fetchInProgress = false;
     vm.searchable = true;
-    vm.lastUpdated = $filter('date')(vm.field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
     vm.publiclyAccessible = false; //indicate whether the field is base or custom field
     vm.inUse = true;
     vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldPage.inUseTooltip');

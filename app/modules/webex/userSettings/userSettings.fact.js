@@ -17,7 +17,6 @@
     WebexUserSettingsSvc,
     WebExXmlApiInfoSvc
   ) {
-
     var loading = {
       reloadBtn: false,
       reloadBtn2: false,
@@ -47,8 +46,8 @@
         }
 
         if (
-          ($stateParams.currentUser.name.givenName === "") &&
-          ($stateParams.currentUser.name.familyName === "")
+          ($stateParams.currentUser.name.givenName === '') &&
+          ($stateParams.currentUser.name.familyName === '')
         ) {
           return $stateParams.currentUser.userName;
         }
@@ -58,7 +57,7 @@
 
       getFamilyName: function () {
         if (!$stateParams.currentUser.name || $stateParams.currentUser.displayName) {
-          return "";
+          return '';
         }
 
         return $stateParams.currentUser.name.familyName;
@@ -98,24 +97,24 @@
         WebexUserSettingsSvc.disableSave2 = false;
         WebexUserSettingsSvc.isT31Site = false;
 
-        WebexUserSettingsSvc.trainingCenter.handsOnLabAdmin.label = $translate.instant("webexUserSettingLabels.handsOnLabAdminLabel");
-        WebexUserSettingsSvc.eventCenter.optimizeBandwidthUsage.label = $translate.instant("webexUserSettingLabels.optimizeBandwidthUsageLabel");
-        WebexUserSettingsSvc.otherPrivilegesSection.label = $translate("webexUserSettingLabels.OtherPrivilegesLabel");
-        WebexUserSettingsSvc.pmr.label = $translate.instant("webexUserSettingLabels.pmrLabel");
+        WebexUserSettingsSvc.trainingCenter.handsOnLabAdmin.label = $translate.instant('webexUserSettingLabels.handsOnLabAdminLabel');
+        WebexUserSettingsSvc.eventCenter.optimizeBandwidthUsage.label = $translate.instant('webexUserSettingLabels.optimizeBandwidthUsageLabel');
+        WebexUserSettingsSvc.otherPrivilegesSection.label = $translate('webexUserSettingLabels.OtherPrivilegesLabel');
+        WebexUserSettingsSvc.pmr.label = $translate.instant('webexUserSettingLabels.pmrLabel');
 
-        WebexUserSettingsSvc.videoSettings.label = $translate.instant("webexUserSettingLabels.videoSettingsLabel");
-        WebexUserSettingsSvc.videoSettings.hiQualVideo.label = $translate.instant("webexUserSettingLabels.hiQualVideoLabel");
-        WebexUserSettingsSvc.videoSettings.hiQualVideo.hiDefVideo.label = $translate.instant("webexUserSettingLabels.hiDefVideoLabel");
+        WebexUserSettingsSvc.videoSettings.label = $translate.instant('webexUserSettingLabels.videoSettingsLabel');
+        WebexUserSettingsSvc.videoSettings.hiQualVideo.label = $translate.instant('webexUserSettingLabels.hiQualVideoLabel');
+        WebexUserSettingsSvc.videoSettings.hiQualVideo.hiDefVideo.label = $translate.instant('webexUserSettingLabels.hiDefVideoLabel');
 
-        WebexUserSettingsSvc.telephonyPriviledge.label = $translate.instant("webexUserSettingLabels.telephonyPrivilegesLabel");
-        WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.label = $translate.instant("webexUserSettingLabels.callInTeleconfLabel");
-        WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label = $translate.instant("webexUserSettingLabels.tollOnlyLabel");
-        WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label = $translate.instant("webexUserSettingLabels.tollAndTollFreeLabel");
-        WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.label = $translate.instant("webexUserSettingLabels.teleconfViaGlobalCallinLabel");
-        WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.label = $translate.instant("webexUserSettingLabels.teleCLIAuthEnabledLabel");
-        WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.label = $translate.instant("webexUserSettingLabels.callBackTeleconfLabel");
-        WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label = $translate.instant("webexUserSettingLabels.globalCallBackTeleconfLabel");
-        WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.label = $translate.instant("webexUserSettingLabels.integratedVoIPLaabel");
+        WebexUserSettingsSvc.telephonyPriviledge.label = $translate.instant('webexUserSettingLabels.telephonyPrivilegesLabel');
+        WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.label = $translate.instant('webexUserSettingLabels.callInTeleconfLabel');
+        WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label = $translate.instant('webexUserSettingLabels.tollOnlyLabel');
+        WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label = $translate.instant('webexUserSettingLabels.tollAndTollFreeLabel');
+        WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.label = $translate.instant('webexUserSettingLabels.teleconfViaGlobalCallinLabel');
+        WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.label = $translate.instant('webexUserSettingLabels.teleCLIAuthEnabledLabel');
+        WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.label = $translate.instant('webexUserSettingLabels.callBackTeleconfLabel');
+        WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label = $translate.instant('webexUserSettingLabels.globalCallBackTeleconfLabel');
+        WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.label = $translate.instant('webexUserSettingLabels.integratedVoIPLaabel');
 
         return WebexUserSettingsSvc;
       }, // initUserSettingsModel()
@@ -125,7 +124,7 @@
         webexSiteName,
         webexAdminSessionTicket
       ) {
-        WebExXmlApiInfoSvc.xmlApiUrl = "https://" + webexSiteUrl + "/WBXService/XMLService";
+        WebExXmlApiInfoSvc.xmlApiUrl = 'https://' + webexSiteUrl + '/WBXService/XMLService';
         WebExXmlApiInfoSvc.webexSiteName = webexSiteName;
         WebExXmlApiInfoSvc.webexAdminID = Authinfo.getPrimaryEmail();
         WebExXmlApiInfoSvc.webexAdminSessionTicket = webexAdminSessionTicket;
@@ -136,17 +135,17 @@
       //N.B. Purpose: If neither are checked, and PMR is on,
       //then show error.
       hasProOrStdMeetingCenter: function (sessionTypes) {
-        $log.log("YURE sessionTypes=" + JSON.stringify(sessionTypes));
+        $log.log('YURE sessionTypes=' + JSON.stringify(sessionTypes));
         var hasProOrStdMeetingCenter = false;
         sessionTypes.forEach(function (item) {
           var mca = item.meetingCenterApplicable;
           var sn = item.sessionName;
           var sessionNameisSTDorPRO =
-            (sn === "PRO" ||
-              sn === "STD");
+            (sn === 'PRO' ||
+              sn === 'STD');
           var sessionEnabled = item.sessionEnabled;
-          $log.log("DESS sessionEnabled=" + sessionEnabled);
-          $log.log("DESSN sessionName=" + sn + " mca=" + mca);
+          $log.log('DESS sessionEnabled=' + sessionEnabled);
+          $log.log('DESSN sessionName=' + sn + ' mca=' + mca);
           if (sessionEnabled && sessionNameisSTDorPRO && mca) {
             hasProOrStdMeetingCenter = true;
           }
@@ -160,10 +159,10 @@
 
         var userInfoJson = WebexUserSettingsSvc.userInfo.bodyJson;
 
-        WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_meetingCenter);
-        WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_trainingCenter);
-        WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_eventCenter);
-        WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_supportCenter);
+        WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx = ('true' == userInfoJson.use_supportedServices.use_meetingCenter);
+        WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx = ('true' == userInfoJson.use_supportedServices.use_trainingCenter);
+        WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx = ('true' == userInfoJson.use_supportedServices.use_eventCenter);
+        WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx = ('true' == userInfoJson.use_supportedServices.use_supportCenter);
 
         // logMsg = funcName + "\n" +
         //   "meetingCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx + "\n" +
@@ -232,22 +231,22 @@
                   if (WebexUserSettingsSvc.meetingCenter.serviceType == siteMtgServiceType) {
                     meetingCenterApplicable = true;
                   } else if (WebexUserSettingsSvc.eventCenter.serviceType == siteMtgServiceType) {
-                    if ("AUO" != siteMtgProductCodePrefix) {
+                    if ('AUO' != siteMtgProductCodePrefix) {
                       eventCenterApplicable = true;
                     }
                   } else if (WebexUserSettingsSvc.trainingCenter.serviceType == siteMtgServiceType) {
-                    if ("AUO" != siteMtgProductCodePrefix) {
+                    if ('AUO' != siteMtgProductCodePrefix) {
                       trainingCenterApplicable = true;
                     }
                   } else if (WebexUserSettingsSvc.supportCenter.serviceType == siteMtgServiceType) {
                     if (
-                      ("SMT" != siteMtgProductCodePrefix) &&
-                      ("AUO" != siteMtgProductCodePrefix)
+                      ('SMT' != siteMtgProductCodePrefix) &&
+                      ('AUO' != siteMtgProductCodePrefix)
                     ) {
                       supportCenterApplicable = true;
                     }
                   }
-                  if ("RAS" === siteMtgProductCodePrefix) {
+                  if ('RAS' === siteMtgProductCodePrefix) {
                     meetingCenterApplicable = false;
                     trainingCenterApplicable = false;
                     eventCenterApplicable = false;
@@ -258,7 +257,7 @@
               ); // siteMtgServiceTypes.forEach()
 
               var sessionType = {
-                id: "sessionType-" + siteMtgServiceTypeID,
+                id: 'sessionType-' + siteMtgServiceTypeID,
                 sessionTypeId: siteMtgServiceTypeID,
                 sessionName: siteMtgProductCodePrefix,
                 sessionDescription: siteMtgDisplayName,
@@ -314,16 +313,16 @@
         // var siteVersionInfoJson = WebexUserSettingsSvc.siteVersionInfo.bodyJson;
 
         // Start of Telephony privileges
-        WebexUserSettingsSvc.telephonyPriviledge.hybridVoipOnly.isSiteEnabled = ("true" === siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridVoipOnly);
+        WebexUserSettingsSvc.telephonyPriviledge.hybridVoipOnly.isSiteEnabled = ('true' === siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridVoipOnly);
 
         WebexUserSettingsSvc.telephonyPriviledge.hybridAudio.isSiteEnabled = (
-          "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference
+          'true' == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference
         );
 
-        WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "false" && //not TSP audio
-          siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_meetingPlace.ns1_persistentTSP == "false"); // not MP audio
+        WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == 'false' && //not TSP audio
+          siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_meetingPlace.ns1_persistentTSP == 'false'); // not MP audio
 
-        WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isTspAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "true");
+        WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isTspAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == 'true');
 
         // logMsg = funcName + ": " + "\n" +
         //   "Hybrid audio=" + WebexUserSettingsSvc.telephonyPriviledge.hybridAudio.isSiteEnabled + "\n" +
@@ -333,19 +332,19 @@
 
         // Start of call-in teleconf
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled = (
-          "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing
+          'true' == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.toll.value = (
-          "true" == userInfoJson.use_privilege.use_teleConfCallIn
+          'true' == userInfoJson.use_privilege.use_teleConfCallIn
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled = (
-          "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing
+          'true' == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.tollFree.value = (
-          "true" == userInfoJson.use_privilege.use_teleConfTollFreeCallIn
+          'true' == userInfoJson.use_privilege.use_teleConfTollFreeCallIn
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = (
@@ -362,19 +361,19 @@
         }
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled = (
-          "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_intlCallInTeleconferencing
+          'true' == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_intlCallInTeleconferencing
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.value = (
-          "true" == userInfoJson.use_privilege.use_teleConfCallInInternational
+          'true' == userInfoJson.use_privilege.use_teleConfCallInInternational
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.isSiteEnabled = (
-          "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_teleCLIAuthEnabled
+          'true' == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_teleCLIAuthEnabled
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.value = (
-          "true" == userInfoJson.use_privilege.use_teleCLIAuthEnabled
+          'true' == userInfoJson.use_privilege.use_teleCLIAuthEnabled
         );
 
         // logMsg = funcName + ": " + "\n" +
@@ -392,37 +391,37 @@
         // End of call-in teleconf
 
         WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.isSiteEnabled = (
-          "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callBackTeleconferencing
+          'true' == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callBackTeleconferencing
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.value = (
-          "true" == userInfoJson.use_privilege.use_teleConfCallOut
+          'true' == userInfoJson.use_privilege.use_teleConfCallOut
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled = (
-          "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_intlCallBackTeleconferencing
+          'true' == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_intlCallBackTeleconferencing
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value = (
-          "true" == userInfoJson.use_privilege.use_teleConfCallOutInternational
+          'true' == userInfoJson.use_privilege.use_teleConfCallOutInternational
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = (
-          "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_supportOtherTypeTeleconf
+          'true' == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_supportOtherTypeTeleconf
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.otherTeleconfServices.value = (
-          "true" == userInfoJson.use_privilege.use_otherTelephony
+          'true' == userInfoJson.use_privilege.use_otherTelephony
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.otherTeleconfServices.label = siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_otherTeleServiceName;
 
         WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.isSiteEnabled = (
-          "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_internetPhone
+          'true' == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_internetPhone
         );
 
         WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = (
-          "true" == userInfoJson.use_privilege.use_voiceOverIp
+          'true' == userInfoJson.use_privilege.use_voiceOverIp
         );
 
         // logMsg = funcName + ": " + "\n" +
@@ -443,58 +442,58 @@
 
         var enablePMRSiteLevel = siteInfoJson.ns1_siteInstance.ns1_siteCommonOptions.ns1_enablePersonalMeetingRoom;
         WebexUserSettingsSvc.pmr.isSiteEnabled = (
-          "true" == enablePMRSiteLevel
+          'true' == enablePMRSiteLevel
         );
 
         WebexUserSettingsSvc.pmr.value = (
-          "true" == userInfoJson.use_privilege.use_isEnablePMR
+          'true' == userInfoJson.use_privilege.use_isEnablePMR
         );
         // $log.log("PMR = " + WebexUserSettingsSvc.pmr.value);
 
         WebexUserSettingsSvc.cmr.value = (
-          "true" == userInfoJson.use_privilege.use_isEnableCET
+          'true' == userInfoJson.use_privilege.use_isEnableCET
         );
         // $log.log("CMR = " + WebexUserSettingsSvc.cmr.value);
 
         // Start of Video privileges
         WebexUserSettingsSvc.videoSettings.hiQualVideo.isSiteEnabled = (
-          "true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HQvideo
+          'true' == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HQvideo
         );
 
         WebexUserSettingsSvc.videoSettings.hiQualVideo.value = (
-          "true" == userInfoJson.use_privilege.use_HQvideo
+          'true' == userInfoJson.use_privilege.use_HQvideo
         );
 
         if (!WebexUserSettingsSvc.videoSettings.hiQualVideo.isSiteEnabled) {
           WebexUserSettingsSvc.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = false;
         } else {
           WebexUserSettingsSvc.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = (
-            "true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HDvideo
+            'true' == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HDvideo
           );
         }
 
         WebexUserSettingsSvc.videoSettings.hiQualVideo.hiDefVideo.value = (
-          "true" == userInfoJson.use_privilege.use_HDvideo
+          'true' == userInfoJson.use_privilege.use_HDvideo
         );
         // End of Video privileges
 
         // Start of Event Center
         WebexUserSettingsSvc.eventCenter.optimizeBandwidthUsage.isSiteEnabled = (
-          ("true" == siteInfoJson.ns1_siteInstance.ns1_supportedServices.ns1_eventCenter.ns1_optimizeAttendeeBandwidthUsage)
+          ('true' == siteInfoJson.ns1_siteInstance.ns1_supportedServices.ns1_eventCenter.ns1_optimizeAttendeeBandwidthUsage)
         );
 
         WebexUserSettingsSvc.eventCenter.optimizeBandwidthUsage.value = (
-          "true" == userInfoJson.use_eventCenter.use_optimizeAttendeeBandwidthUsage
+          'true' == userInfoJson.use_eventCenter.use_optimizeAttendeeBandwidthUsage
         );
         // End of Event Center
 
         // Start of Training Center privileges
         WebexUserSettingsSvc.trainingCenter.handsOnLabAdmin.isSiteEnabled = (
-          ("true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab)
+          ('true' == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab)
         );
 
         WebexUserSettingsSvc.trainingCenter.handsOnLabAdmin.value = (
-          "true" == userInfoJson.use_privilege.use_labAdmin
+          'true' == userInfoJson.use_privilege.use_labAdmin
         );
         // End of Training Center privileges
       }, // updateUserSettingsModelPart3()
@@ -543,35 +542,34 @@
 
         Auth.getCustomerAccount(Authinfo.getOrgId()).then(
           function getValidLicensesSuccess(response) {
-            var funcName = "getOrgLicensesSuccess()";
-            var logMsg = "";
+            var funcName = 'getOrgLicensesSuccess()';
+            var logMsg = '';
 
             var currSite = $stateParams.site;
             var userLicenses = $stateParams.currentUser.licenseID;
             var orgLicenses = WebExUtilsFact.getOrgWebexLicenses(response);
 
             if (0 >= orgLicenses.size) {
-              logMsg = funcName + "\n" +
-                "ERROR - no org licenses found in Atlas!" + "\n" +
-                "userName=" + $stateParams.currentUser.userName + "\n" +
-                "userLicenses=" + JSON.stringify(userLicenses) + "\n" +
-                "currSite=" + currSite;
+              logMsg = funcName + '\n' +
+                'ERROR - no org licenses found in Atlas!' + '\n' +
+                'userName=' + $stateParams.currentUser.userName + '\n' +
+                'userLicenses=' + JSON.stringify(userLicenses) + '\n' +
+                'currSite=' + currSite;
               $log.log(logMsg);
             } else {
               _.forEach(userLicenses,
                 function (userLicense) {
-                  var userLicenseItems = userLicense.split("_");
+                  var userLicenseItems = userLicense.split('_');
                   var userLicenseType = userLicenseItems[0];
 
                   // only check for webex center type of license
                   if (
-                    ("EE" == userLicenseType) ||
-                    ("MC" == userLicenseType) ||
-                    ("EC" == userLicenseType) ||
-                    ("SC" == userLicenseType) ||
-                    ("TC" == userLicenseType)
+                    ('EE' == userLicenseType) ||
+                    ('MC' == userLicenseType) ||
+                    ('EC' == userLicenseType) ||
+                    ('SC' == userLicenseType) ||
+                    ('TC' == userLicenseType)
                   ) {
-
                     var userLicenseSiteUrl = userLicenseItems[userLicenseItems.length - 1];
 
                     // check that the license is for the current site
@@ -580,7 +578,7 @@
                       orgLicenses.forEach(
                         function (orgLicense) {
                           if (userLicense == orgLicense.licenseId) {
-                            if ("EE" == userLicenseType) {
+                            if ('EE' == userLicenseType) {
                               WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas = true;
                               WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas = true;
                               WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas = true;
@@ -611,13 +609,12 @@
               !WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas &&
               !WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas
             ) {
-
-              logMsg = funcName + "\n" +
-                "ERROR - no WebEx center entitlement in Atlas" + "\n" +
-                "userName=" + $stateParams.currentUser.userName + "\n" +
-                "userLicenses=" + JSON.stringify(userLicenses) + "\n" +
-                "orgLicenses=" + JSON.stringify(orgLicenses) + "\n" +
-                "currSite=" + currSite;
+              logMsg = funcName + '\n' +
+                'ERROR - no WebEx center entitlement in Atlas' + '\n' +
+                'userName=' + $stateParams.currentUser.userName + '\n' +
+                'userLicenses=' + JSON.stringify(userLicenses) + '\n' +
+                'orgLicenses=' + JSON.stringify(orgLicenses) + '\n' +
+                'currSite=' + currSite;
               $log.log(logMsg);
             }
 
@@ -625,11 +622,11 @@
           }, // getOrgLicensesSuccess()
 
           function getOrgLicensesError(response) {
-            var funcName = "getOrgLicensesError()";
-            var logMsg = "";
+            var funcName = 'getOrgLicensesError()';
+            var logMsg = '';
 
-            logMsg = funcName + ": " + "\n" +
-              "response=" + JSON.stringify(response);
+            logMsg = funcName + ': ' + '\n' +
+              'response=' + JSON.stringify(response);
             $log.log(logMsg);
 
             _self.getUserSettingsFromWebEx();
@@ -663,8 +660,8 @@
 
             _self.getSiteVersionInfoXml().then(
               function getSiteVersionInfoXmlSuccess(siteVersionInfoXml) {
-                var funcName = "getSiteVersionInfoXmlSuccess()";
-                var logMsg = "";
+                var funcName = 'getSiteVersionInfoXmlSuccess()';
+                var logMsg = '';
 
                 var siteVersionInfo = WebExUtilsFact.validateSiteVersionXmlData(siteVersionInfoXml);
                 var trainReleaseJsonObj = WebExUtilsFact.getSiteVersion(siteVersionInfo);
@@ -676,9 +673,9 @@
                   (400 <= +trainReleaseOrder)
                 );
 
-                logMsg = funcName + ": " + "\n" +
-                  "trainReleaseVersion=" + trainReleaseVersion + "\n" +
-                  "trainReleaseOrder=" + trainReleaseOrder;
+                logMsg = funcName + ': ' + '\n' +
+                  'trainReleaseVersion=' + trainReleaseVersion + '\n' +
+                  'trainReleaseOrder=' + trainReleaseOrder;
                 $log.log(logMsg);
 
                 WebexUserSettingsSvc.siteVersionInfo = siteVersionInfo;
@@ -698,8 +695,8 @@
           }, // getSessionTicketSuccess()
 
           function getSessionTicketError(errId) {
-            var funcName = "initPanel().getSessionTicketError()";
-            var logMsg = "";
+            var funcName = 'initPanel().getSessionTicketError()';
+            var logMsg = '';
 
             /*
             logMsg = funcName + ": " + "failed to get session ticket" + "\n" +
@@ -714,11 +711,11 @@
               null
             );
 
-            logMsg = funcName + ": " + "\n" +
-              "hasLoadError=" + WebexUserSettingsSvc.hasLoadError + "\n" +
-              "errMsg=" + WebexUserSettingsSvc.errMsg + "\n" +
-              "allowRetry=" + WebexUserSettingsSvc.allowRetry + "\n" +
-              "sessionTicketErr=" + WebexUserSettingsSvc.sessionTicketErr;
+            logMsg = funcName + ': ' + '\n' +
+              'hasLoadError=' + WebexUserSettingsSvc.hasLoadError + '\n' +
+              'errMsg=' + WebexUserSettingsSvc.errMsg + '\n' +
+              'allowRetry=' + WebexUserSettingsSvc.allowRetry + '\n' +
+              'sessionTicketErr=' + WebexUserSettingsSvc.sessionTicketErr;
             $log.log(logMsg);
           } // getSessionTicketError
         ); // WebExUserSettingsFact.getSessionTicket().then()
@@ -745,19 +742,18 @@
 
         _self.getUserSettingsInfoXml().then(
           function getUserSettingsInfoXmlSuccess(getInfoResult) {
-            var funcName = "getUserSettingsInfoSuccess()";
-            var logMsg = "";
+            var funcName = 'getUserSettingsInfoSuccess()';
+            var logMsg = '';
 
             WebexUserSettingsSvc.userInfo = WebExUtilsFact.validateUserInfoXmlData(getInfoResult.userInfoXml);
             WebexUserSettingsSvc.siteInfo = WebExUtilsFact.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
             WebexUserSettingsSvc.meetingTypesInfo = WebExUtilsFact.validateMeetingTypesInfoXmlData(getInfoResult.meetingTypesInfoXml);
 
             if (
-              ("" === WebexUserSettingsSvc.userInfo.errId) &&
-              ("" === WebexUserSettingsSvc.siteInfo.errId) &&
-              ("" === WebexUserSettingsSvc.meetingTypesInfo.errId)
+              ('' === WebexUserSettingsSvc.userInfo.errId) &&
+              ('' === WebexUserSettingsSvc.siteInfo.errId) &&
+              ('' === WebexUserSettingsSvc.meetingTypesInfo.errId)
             ) {
-
               _self.updateCenterLicenseEntitlements();
 
               var isValidLicenseEntitlement = (
@@ -768,18 +764,18 @@
               );
 
               if (!isValidLicenseEntitlement) {
-                logMsg = funcName + "\n" +
-                  "ERROR - entitlement mismatch detected!" + "\n" +
-                  "\n" +
-                  "meetingCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx + "\n" +
-                  "trainingCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx + "\n" +
-                  "eventCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx + "\n" +
-                  "supportCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx + "\n" +
-                  "\n" +
-                  "meetingCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas + "\n" +
-                  "trainingCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas + "\n" +
-                  "eventCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas + "\n" +
-                  "supportCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas;
+                logMsg = funcName + '\n' +
+                  'ERROR - entitlement mismatch detected!' + '\n' +
+                  '\n' +
+                  'meetingCenter.isEntitledOnWebEx=' + WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx + '\n' +
+                  'trainingCenter.isEntitledOnWebEx=' + WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx + '\n' +
+                  'eventCenter.isEntitledOnWebEx=' + WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx + '\n' +
+                  'supportCenter.isEntitledOnWebEx=' + WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx + '\n' +
+                  '\n' +
+                  'meetingCenter.isEntitledOnAtlas=' + WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas + '\n' +
+                  'trainingCenter.isEntitledOnAtlas=' + WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas + '\n' +
+                  'eventCenter.isEntitledOnAtlas=' + WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas + '\n' +
+                  'supportCenter.isEntitledOnAtlas=' + WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas;
                 $log.log(logMsg);
 
                 if (allowSessionMismatch) {
@@ -789,7 +785,7 @@
 
               if (!isValidLicenseEntitlement) {
                 _self.setLoadingErrorDisplay(
-                  "defaultDbMismatchError",
+                  'defaultDbMismatchError',
                   false,
                   true,
                   form
@@ -813,19 +809,19 @@
                 }
               }
             } else { // has invalid xml data
-              logMsg = funcName + ": " + "\n" +
-                "userInfo.errId=" + WebexUserSettingsSvc.userInfo.errId + "\n" +
-                "userInfo.errReason=" + WebexUserSettingsSvc.userInfo.errReason + "\n" +
-                "siteInfo.errId=" + WebexUserSettingsSvc.siteInfo.errId + "\n" +
-                "siteInfo.errReason=" + WebexUserSettingsSvc.siteInfo.errReason + "\n" +
-                "meetingTypesInfo.errId=" + WebexUserSettingsSvc.meetingTypesInfo.errId + "\n" +
-                "meetingTypesInfo.errReason=" + WebexUserSettingsSvc.meetingTypesInfo.errReason;
+              logMsg = funcName + ': ' + '\n' +
+                'userInfo.errId=' + WebexUserSettingsSvc.userInfo.errId + '\n' +
+                'userInfo.errReason=' + WebexUserSettingsSvc.userInfo.errReason + '\n' +
+                'siteInfo.errId=' + WebexUserSettingsSvc.siteInfo.errId + '\n' +
+                'siteInfo.errReason=' + WebexUserSettingsSvc.siteInfo.errReason + '\n' +
+                'meetingTypesInfo.errId=' + WebexUserSettingsSvc.meetingTypesInfo.errId + '\n' +
+                'meetingTypesInfo.errReason=' + WebexUserSettingsSvc.meetingTypesInfo.errReason;
               $log.log(logMsg);
 
-              var errId = "";
-              if ("" !== WebexUserSettingsSvc.userInfo.errId) {
+              var errId = '';
+              if ('' !== WebexUserSettingsSvc.userInfo.errId) {
                 errId = WebexUserSettingsSvc.userInfo.errId;
-              } else if ("" !== WebexUserSettingsSvc.siteInfo.errId) {
+              } else if ('' !== WebexUserSettingsSvc.siteInfo.errId) {
                 errId = WebexUserSettingsSvc.siteInfo.errId;
               } else {
                 errId = WebexUserSettingsSvc.meetingTypesInfo.errId;
@@ -838,11 +834,11 @@
                 form
               );
 
-              logMsg = funcName + ": " + "\n" +
-                "hasLoadError=" + WebexUserSettingsSvc.hasLoadError + "\n" +
-                "errMsg=" + WebexUserSettingsSvc.errMsg + "\n" +
-                "allowRetry=" + WebexUserSettingsSvc.allowRetry + "\n" +
-                "sessionTicketErr=" + WebexUserSettingsSvc.sessionTicketErr;
+              logMsg = funcName + ': ' + '\n' +
+                'hasLoadError=' + WebexUserSettingsSvc.hasLoadError + '\n' +
+                'errMsg=' + WebexUserSettingsSvc.errMsg + '\n' +
+                'allowRetry=' + WebexUserSettingsSvc.allowRetry + '\n' +
+                'sessionTicketErr=' + WebexUserSettingsSvc.sessionTicketErr;
               $log.log(logMsg);
             } // has invalid xml data
 
@@ -851,10 +847,10 @@
           }, // getUserSettingsInfoXmlSuccess()
 
           function getUserSettingsInfoXmlError(getInfoResult) {
-            var funcName = "getUserSettingsInfoXmlError()";
-            var logMsg = "";
+            var funcName = 'getUserSettingsInfoXmlError()';
+            var logMsg = '';
 
-            logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
+            logMsg = funcName + ': ' + 'getInfoResult=' + JSON.stringify(getInfoResult);
             $log.log(logMsg);
 
             _self.setLoadingErrorDisplay(
@@ -905,11 +901,11 @@
 
         var userSettings = {
           meetingTypes: [],
-          meetingCenter: "false",
-          trainingCenter: "false",
-          supportCenter: "false",
-          eventCenter: "false",
-          salesCenter: "false",
+          meetingCenter: 'false',
+          trainingCenter: 'false',
+          supportCenter: 'false',
+          eventCenter: 'false',
+          salesCenter: 'false',
         };
 
         // go through the session types
@@ -918,11 +914,11 @@
             if (sessionType.sessionEnabled) {
               userSettings.meetingTypes.push(sessionType.sessionTypeId);
 
-              if (userSettings.meetingCenter === "false") userSettings.meetingCenter = sessionType.meetingCenterApplicable ? "true" : "false";
-              if (userSettings.trainingCenter === "false") userSettings.trainingCenter = sessionType.trainingCenterApplicable ? "true" : "false";
-              if (userSettings.supportCenter === "false") userSettings.supportCenter = sessionType.supportCenterApplicable ? "true" : "false";
-              if (userSettings.eventCenter === "false") userSettings.eventCenter = sessionType.eventCenterApplicable ? "true" : "false";
-              if (userSettings.salesCenter === "false") userSettings.salesCenter = sessionType.salesCenterApplicable ? "true" : "false";
+              if (userSettings.meetingCenter === 'false') userSettings.meetingCenter = sessionType.meetingCenterApplicable ? 'true' : 'false';
+              if (userSettings.trainingCenter === 'false') userSettings.trainingCenter = sessionType.trainingCenterApplicable ? 'true' : 'false';
+              if (userSettings.supportCenter === 'false') userSettings.supportCenter = sessionType.supportCenterApplicable ? 'true' : 'false';
+              if (userSettings.eventCenter === 'false') userSettings.eventCenter = sessionType.eventCenterApplicable ? 'true' : 'false';
+              if (userSettings.salesCenter === 'false') userSettings.salesCenter = sessionType.salesCenterApplicable ? 'true' : 'false';
             }
           } // chkSessionType()
         ); // WebexUserSettingsSvc.sessionTypes.forEach()
@@ -931,7 +927,6 @@
           (blockSaveDueToNoSession()) ||
           (blockSaveDueToPMR())
         ) {
-
           return;
         }
 
@@ -941,7 +936,7 @@
               form,
               result,
               true,
-              "webexUserSettings.sessionEnablementUpdateSuccess"
+              'webexUserSettings.sessionEnablementUpdateSuccess'
             );
           }, // updateUserSettingsSuccess()
 
@@ -962,27 +957,23 @@
           if (!allowSessionMismatch) {
             if (
               (WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx) &&
-              (userSettings.meetingCenter != "true")
+              (userSettings.meetingCenter != 'true')
             ) {
-
               blockSave = true;
             } else if (
               (WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx) &&
-              (userSettings.trainingCenter != "true")
+              (userSettings.trainingCenter != 'true')
             ) {
-
               blockSave = true;
             } else if (
               (WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx) &&
-              (userSettings.eventCenter != "true")
+              (userSettings.eventCenter != 'true')
             ) {
-
               blockSave = true;
             } else if (
               (WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx) &&
-              (userSettings.supportCenter != "true")
+              (userSettings.supportCenter != 'true')
             ) {
-
               blockSave = true;
             }
           }
@@ -992,7 +983,7 @@
             loading.saveBtn2 = false;
             WebexUserSettingsSvc.disableCancel = false;
             WebexUserSettingsSvc.disableCancel2 = false;
-            errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
+            errMessage = $translate.instant('webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled');
             Notification.notify([errMessage], 'error');
           }
 
@@ -1016,7 +1007,7 @@
             loading.saveBtn2 = false;
             WebexUserSettingsSvc.disableCancel = false;
             WebexUserSettingsSvc.disableCancel2 = false;
-            errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
+            errMessage = $translate.instant('webexUserSettings.mustHavePROorSTDifPMRenabled');
             Notification.notify([errMessage], 'error');
           }
 
@@ -1103,7 +1094,7 @@
         if ((WebexUserSettingsSvc.pmr.value === true) && (WebexUserSettingsSvc.cmr.value === true) && //if enabling both PM and CMR
           WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio && //and site is WebEx audio
           !WebexUserSettingsSvc.telephonyPriviledge.hybridAudio.isSiteEnabled) { //but does not support hybrid audio
-          notificationMsg = $translate.instant("webexUserSettings.pmrErrorHybridAudio"); //show an error
+          notificationMsg = $translate.instant('webexUserSettings.pmrErrorHybridAudio'); //show an error
           WebexUserSettingsSvc.pmr.value = false; //un-check the PMR option
           _self.notifyError(notificationMsg);
           okToUpdate = false;
@@ -1113,14 +1104,14 @@
           if (WebexUserSettingsSvc.isT31Site) {
             if ((WebexUserSettingsSvc.pmr.value === true) && (WebexUserSettingsSvc.cmr.value === true) && //if enabling PMR and CMR
               (WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value === false && WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value === false)) { //require both hybrid audio and integrated voip
-              notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivilegesHybridVOIP");
+              notificationMsg = $translate.instant('webexUserSettings.pmrErrorTelephonyPrivilegesHybridVOIP');
               _self.notifyError(notificationMsg);
               okToUpdate = false;
             }
           } else {
             if ((WebexUserSettingsSvc.pmr.value === true) && (WebexUserSettingsSvc.cmr.value === true) && //if enabling both PMR and CMR
               (WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value === false)) { //and if call in is disabled
-              notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges"); //show error
+              notificationMsg = $translate.instant('webexUserSettings.pmrErrorTelephonyPrivileges'); //show error
               _self.notifyError(notificationMsg);
               okToUpdate = false;
             }
@@ -1134,7 +1125,7 @@
                 form,
                 result,
                 false,
-                "webexUserSettings.privilegesUpdateSuccess"
+                'webexUserSettings.privilegesUpdateSuccess'
               );
             }, // updateUserSettings2Success()
 
@@ -1146,7 +1137,7 @@
       }, // updateUserSettings2()
 
       notifyError: function (notificationMsg) {
-        var updateStatus = "error";
+        var updateStatus = 'error';
         Notification.notify([notificationMsg], updateStatus);
         loading.saveBtn2 = false;
         WebexUserSettingsSvc.disableCancel2 = false;
@@ -1169,7 +1160,7 @@
         */
 
         var resultJson = WebExUtilsFact.validateXmlData(
-          "Update user settings2 result",
+          'Update user settings2 result',
           result,
           null,
           null
@@ -1179,19 +1170,19 @@
         //   JSON.stringify(resultJson);
         // $log.log(logMsg);
 
-        var updateStatus = "success";
+        var updateStatus = 'success';
         var notificationMsg = $translate.instant(successMsg);
 
         // verify whether the update request completed without error
-        if ("" === resultJson.errId) {
+        if ('' === resultJson.errId) {
           if (flushWaf) {
             WebExXmlApiFact.flushWafCache(WebExXmlApiInfoSvc).then(
               function flushWafCacheSuccess() { //success
-                $log.log("Flush success");
+                $log.log('Flush success');
               }, // flushWafCacheSuccess()
 
               function flushWafCacheError() { //fail
-                $log.log("Flush error");
+                $log.log('Flush error');
               } // flushWafCacheError()
             );
           }
@@ -1199,7 +1190,7 @@
           form.$dirty = false;
           form.$setPristine();
         } else {
-          updateStatus = "error";
+          updateStatus = 'error';
           notificationMsg = this.getErrMsg(
             resultJson.errId,
             resultJson.headerJson.serv_header.serv_response.serv_value
@@ -1213,7 +1204,7 @@
         WebexUserSettingsSvc.disableCancel2 = false;
 
         //If this is a read only admin and WebEx returns "Access denied, additional privileges are required"
-        if (resultJson.errId == "000001" && _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
+        if (resultJson.errId == '000001' && _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
           Notification.notifyReadOnly(resultJson.errId);
         } else {
           Notification.notify([notificationMsg], updateStatus);
@@ -1221,10 +1212,10 @@
       }, // processUpdateResponse()
 
       processNoUpdateResponse: function (result) {
-        var funcName = "processNoUpdateResponse()";
-        var logMsg = "";
+        var funcName = 'processNoUpdateResponse()';
+        var logMsg = '';
 
-        logMsg = funcName + ": " + "result=" + "\n" + result;
+        logMsg = funcName + ': ' + 'result=' + '\n' + result;
         $log.log(logMsg);
 
         loading.saveBtn = false;
@@ -1246,34 +1237,34 @@
         //   "errValue=" + errValue;
         // $log.log(logMsg);
 
-        var errMsg = "";
+        var errMsg = '';
 
         if (
           (null == errId) ||
-          ("" === errId)
+          ('' === errId)
         ) {
           errMsg = $translate.instant('webexUserSettingsAccessErrors.defaultAccessError');
         } else if (
-          ("000000" === errId) ||
-          ("000029" === errId) ||
-          ("000035" === errId) ||
-          ("999999" === errId)
+          ('000000' === errId) ||
+          ('000029' === errId) ||
+          ('000035' === errId) ||
+          ('999999' === errId)
         ) {
           errMsg = $translate.instant('webexUserSettingsAccessErrors.defaultProcessError');
-        } else if ("030048" == errId) {
+        } else if ('030048' == errId) {
           errMsg = $translate.instant('webexUserSettingsAccessErrors.defaultNotWebExAdminError');
-        } else if ("030001" == errId) {
+        } else if ('030001' == errId) {
           var familyName = this.getFamilyName();
           var givenName = this.getGivenName();
 
           errMsg = $translate.instant(
-            "webexUserSettingsAccessErrors.030001", {
+            'webexUserSettingsAccessErrors.030001', {
               givenName: givenName,
               familyName: familyName,
             }
           );
-        } else if ("110055" == errId) {
-          var sessionTypeName = "???";
+        } else if ('110055' == errId) {
+          var sessionTypeName = '???';
 
           WebexUserSettingsSvc.sessionTypes.forEach(
             function chkSessionType(sessionType) {
@@ -1294,7 +1285,7 @@
           // $log.log(logMsg);
 
           errMsg = $translate.instant(
-            "webexUserSettingsAccessErrors.110055", {
+            'webexUserSettingsAccessErrors.110055', {
               sessionTypeName: sessionTypeName,
             }
           );
@@ -1316,7 +1307,7 @@
 
       getSiteUrl: function () {
         if (!$stateParams.site) {
-          return "";
+          return '';
         }
         return $stateParams.site;
       }, //getSiteUrl

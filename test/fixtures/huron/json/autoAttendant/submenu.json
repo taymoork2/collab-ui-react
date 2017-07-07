@@ -7,6 +7,10 @@
       "type": "directoryNumber",
       "trigger": "incomingCall"
     }],
+	"defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    },
     "actionSets": [{
       "name": "openHours",
       "actions": [{
@@ -17,18 +21,11 @@
       }, {
         "runActionsOnInput": {
           "description": "",
-          "language": "en_US",
           "voice": "",
+          "language": "en_us",
           "prompts": {
             "description": "",
-            "playList": [
-
-            ],
-            "sayList": [{
-              "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions."
-            }, {
-              "value": "To repeat this menu, press 0."
-            }]
+            "announcements": [{ "say": { "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.", "voice": "Vanessa" } }]
           },
           "attempts": 3,
           "inputs": [{
@@ -44,18 +41,11 @@
             "actions": [{
               "runActionsOnInput": {
                 "description": "",
-                "language": "en_US",
                 "voice": "",
+                "language": "en_us",
                 "prompts": {
                   "description": "",
-                  "playList": [
-
-                  ],
-                  "sayList": [{
-                    "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones."
-                  }, {
-                    "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star"
-                  }]
+                  "announcements": [{ "say": { "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.", "voice": "Vanessa" } }]
                 },
                 "attempts": 2,
                 "inputs": [{
@@ -104,6 +94,10 @@
       "id": "81005005",
       "number": "5005"
     }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    },
     "actionSets": [{
       "name": "openHours",
       "actions": [{
@@ -114,15 +108,11 @@
       }, {
         "runActionsOnInput": {
           "description": "",
-          "language": "en_US",
           "voice": "",
+          "language": "en_us",
           "prompts": {
             "description": "",
-            "sayList": [{
-              "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions."
-            }, {
-              "value": "To repeat this menu, press 0."
-            }]
+            "announcements": [{ "say": { "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.", "voice": "Vanessa" } }]
           },
           "attempts": 3,
           "inputs": [{
@@ -138,15 +128,11 @@
             "actions": [{
               "runActionsOnInput": {
                 "description": "",
-                "language": "en_US",
                 "voice": "",
+                "language": "en_us",
                 "prompts": {
                   "description": "",
-                  "sayList": [{
-                    "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones."
-                  }, {
-                    "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star"
-                  }]
+                  "announcements": [{ "say": { "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.", "voice": "Vanessa" } }]
                 },
                 "attempts": 2,
                 "incompleteInputActions": [{
@@ -186,6 +172,10 @@
       "type": "directoryNumber",
       "trigger": "incomingCall"
     }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    },
     "actionSets": [{
       "name": "openHours",
       "actions": [{
@@ -196,18 +186,11 @@
       }, {
         "runActionsOnInput": {
           "description": "",
-          "language": "en_US",
           "voice": "",
+          "language": "en_us",
           "prompts": {
             "description": "",
-            "playList": [
-
-            ],
-            "sayList": [{
-              "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions."
-            }, {
-              "value": "To repeat this menu, press 0."
-            }]
+            "announcements": [{ "say": { "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.", "voice": "Vanessa" } }]
           },
           "attempts": 3,
           "inputs": [{
@@ -223,18 +206,11 @@
             "actions": [{
               "runActionsOnInput": {
                 "description": "",
-                "language": "en_US",
                 "voice": "",
+                "language": "en_us",
                 "prompts": {
                   "description": "",
-                  "playList": [
-
-                  ],
-                  "sayList": [{
-                    "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones."
-                  }, {
-                    "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star"
-                  }]
+                  "announcements": [{ "say": { "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.", "voice": "Vanessa" } }]
                 },
                 "attempts": 2,
                 "inputs": [{
@@ -245,15 +221,10 @@
                       "inputType": 2,
                       "description": "",
                       "repeats": 2,
-                      "language": "en_US",
                       "voice": "",
+                      "language": "en_us",
                       "prompts": {
-                        "playList": [
-
-                        ],
-                        "sayList": [{
-                          "value": "If you know your party's extension, please enter it now."
-                        }]
+                        "announcements": [{ "say": { "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.", "voice": "Vanessa" } }]
                       },
                       "attempts": 3,
                       "minNumberOfCharacters": 4,
@@ -310,6 +281,10 @@
       "id": "81005005",
       "number": "5005"
     }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    },
     "actionSets": [{
       "name": "openHours",
       "actions": [{
@@ -320,15 +295,11 @@
       }, {
         "runActionsOnInput": {
           "description": "",
-          "language": "en_US",
           "voice": "",
+          "language": "en_us",
           "prompts": {
             "description": "",
-            "sayList": [{
-              "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions."
-            }, {
-              "value": "To repeat this menu, press 0."
-            }]
+            "announcements": [{ "say": { "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.", "voice": "Vanessa" } }]
           },
           "attempts": 3,
           "inputs": [{
@@ -344,15 +315,11 @@
             "actions": [{
               "runActionsOnInput": {
                 "description": "",
-                "language": "en_US",
                 "voice": "",
+                "language": "en_us",
                 "prompts": {
                   "description": "",
-                  "sayList": [{
-                    "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones."
-                  }, {
-                    "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star"
-                  }]
+                  "announcements": [{ "say": { "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.", "voice": "Vanessa" } }]
                 },
                 "attempts": 2,
                 "incompleteInputActions": [{
@@ -364,27 +331,29 @@
                   "description": "Input Option 4: dial by extension",
                   "input": "4",
                   "actions": [{
+                  
                     "runActionsOnInput": {
                       "inputType": 2,
                       "repeats": 2,
-                      "language": "en_US",
                       "voice": "",
+                      "language": "en_us",
                       "prompts": {
-                        "sayList": [{
-                          "value": "If you know your party's extension, please enter it now."
-                        }]
+                      "announcements": [{ "say": { "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions." } }]
                       },
                       "attempts": 3,
                        "description":"",
                       "minNumberOfCharacters": 4,
                       "maxNumberOfCharacters": 4,
+                      
                       "rawInputActions": [{
+                      
                         "routeToExtension": {
                           "description": "",
                           "destination": "$Input"
                         }
                       }]
                     }
+                    
                   }]
                 }]
               }

@@ -71,7 +71,6 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
   }));
 
   describe('aaRouteToSip', function () {
-
     it('should be able to create new key entry', function () {
       var controller = $controller('AARouteToSipEndpointCtrl', {
         $scope: $scope,
@@ -80,12 +79,10 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
       expect(controller).toBeDefined();
       expect(controller.menuKeyEntry.actions[0].name).toEqual('routeToSipEndpoint');
       expect(controller.menuKeyEntry.actions[0].value).toEqual('');
-
     });
 
     describe('activate', function () {
       it('should read and display an existing entry', function () {
-
         var sipInput = 'sip:shwegupt@go.webex.com';
 
         var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('routeToSipEndpoint', sipInput);
@@ -160,29 +157,25 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
         controller.updateUiModel();
         $scope.$apply();
 
-        expect(controller.menuEntry.actions[0].value).toEqual("sip:shwegupt@go.webex.com");
+        expect(controller.menuEntry.actions[0].value).toEqual('sip:shwegupt@go.webex.com');
       });
 
       it('should be able to create new AA entry from Route Call', function () {
-
         var controller = $controller('AARouteToSipEndpointCtrl', {
           $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('routeToSipEndpoint');
         expect(controller.menuEntry.actions[0].value).toEqual('');
-
       });
     });
 
     describe('fromRouteCall overwrite', function () {
       beforeEach(function () {
-
         aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
 
         aaUiModel[schedule].entries[0].addAction(action);
-
       });
 
       it('should be able to create new external number from Route Call', function () {
@@ -194,13 +187,11 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
 
         expect(controller.menuEntry.actions[0].name).toEqual('routeToSipEndpoint');
         expect(controller.menuEntry.actions[0].value).toEqual('');
-
       });
     });
 
     describe('fromPhoneMenu_Queue_Fallback', function () {
       it('should be able to create new route entry from Queue Fallback of PhoneMenu', function () {
-
         var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
         var fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
         fallback.addAction(disconnect);

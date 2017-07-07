@@ -1,7 +1,7 @@
 import { IFilterObject } from '../partnerReportInterfaces';
 
 class ReportFilterCtrl {
-  public filterArray: Array<IFilterObject>;
+  public filterArray: IFilterObject[];
   private open: boolean = false;
 
   /* @ngInject */
@@ -23,7 +23,7 @@ class ReportFilterCtrl {
   }
 
   public select(filterObject: IFilterObject): void {
-    let location = _.findIndex(this.filterArray, filterObject);
+    const location = _.findIndex(this.filterArray, filterObject);
     if (location > -1) {
       _.forEach(this.filterArray, (object: IFilterObject, index: number): void => {
         if (index === location) {

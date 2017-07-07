@@ -1,5 +1,4 @@
 describe('HybridServicesHostDetailsController: ', function () {
-
   var $controller, $modal, $rootScope, $scope, $stateParams, controller, ClusterService, HybridServicesClusterStatesService;
 
   beforeEach(angular.mock.module('Hercules'));
@@ -56,7 +55,6 @@ describe('HybridServicesHostDetailsController: ', function () {
       hasNodesViewFeatureToggle: false,
     });
     $scope.$apply();
-
   }));
 
   it('should open the correct modal window when showReassignHostDialog() is called', function () {
@@ -92,16 +90,13 @@ describe('HybridServicesHostDetailsController: ', function () {
   it('should support HDS connector parsing', function () {
     expect(controller.host.connectorType).toBe('hds_app');
     expect(controller.host.state).toBe('running');
-    expect(controller.showHdsAction()).toBe(true);
-    expect(controller.showGoToHostAction()).toBe(true);
+    expect(controller.actions.length).toBe(2);
   });
 
   it('should support HDS connector offline function', function () {
     controller.host = {};
     controller.host.state = 'offline';
     controller.host.connectorType = 'hds_app';
-    expect(controller.showHdsAction()).toBe(true);
-    expect(controller.showGoToHostAction()).toBe(true);
+    expect(controller.actions.length).toBe(2);
   });
-
 });

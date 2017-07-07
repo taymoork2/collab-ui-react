@@ -3,7 +3,7 @@
 describe('Configuring Contact Center services per user', function () {
   // We need to use an existing user since only they will have an activated profile'
   var testUser = 'kabru.sikkim@outlook.com';
-  var userAlias = "SunlightE2EUserAlias";
+  var userAlias = 'SunlightE2EUserAlias';
 
   xit('should login as an account admin', function () {
     login.login('contactcenter-admin', '#/users');
@@ -36,5 +36,4 @@ describe('Configuring Contact Center services per user', function () {
     utils.click(users.sunlightUserOverviewSave);
     notifications.assertSuccess('Information has been updated successfully for user ' + testUser);
   });
-
 });

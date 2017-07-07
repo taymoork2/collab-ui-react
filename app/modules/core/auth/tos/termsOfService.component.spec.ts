@@ -48,7 +48,7 @@ describe('TermsOfService', () => {
     describe('agree()', function () {
 
       it('should record the ToS agreement ', function () {
-        let promise = this.controller.agree();
+        const promise = this.controller.agree();
         promise
           .then(() => {
             expect(this.TOSService.dismissModal).toHaveBeenCalled();
@@ -90,8 +90,8 @@ describe('TermsOfService', () => {
     });
 
     it('should have content in the ToS iframe', function () {
-      let iframeDoc = <Document>this.$window.frames['tos-frame'].document;
-      let iframe = $(iframeDoc);
+      const iframeDoc = <Document>this.$window.frames['tos-frame'].document;
+      const iframe = $(iframeDoc);
       expect(iframe.find('.heading img')).toExist();
     });
 
@@ -101,7 +101,7 @@ describe('TermsOfService', () => {
     });
 
     it('should call $ctrl.disagree when disagree button is pressed', function () {
-      let btn = this.view.find(DISAGREE_BTN);
+      const btn = this.view.find(DISAGREE_BTN);
       btn.click();
       expect(this.controller.disagree).toHaveBeenCalled();
     });
@@ -110,7 +110,7 @@ describe('TermsOfService', () => {
       this.controller.hasReadAggreement = false;
       this.$scope.$apply();
 
-      let btn = this.view.find(AGREE_BTN);
+      const btn = this.view.find(AGREE_BTN);
       expect(btn).toBeDisabled();
       expect(this.controller.agree).not.toHaveBeenCalled();
     });
@@ -119,7 +119,7 @@ describe('TermsOfService', () => {
       this.controller.hasReadAggreement = true;
       this.$scope.$apply();
 
-      let btn = this.view.find(AGREE_BTN);
+      const btn = this.view.find(AGREE_BTN);
       expect(btn).not.toBeDisabled();
       btn.click();
       expect(this.controller.agree).toHaveBeenCalled();
@@ -128,8 +128,8 @@ describe('TermsOfService', () => {
     it('should disable decline button and show accept as loading button after accepting while waiting for acceptTOS to complete', function () {
       this.controller.hasReadAggreement = true;
       this.$scope.$apply();
-      let acceptBtn = this.view.find(AGREE_BTN);
-      let disagreeBtn = this.view.find(DISAGREE_BTN);
+      const acceptBtn = this.view.find(AGREE_BTN);
+      const disagreeBtn = this.view.find(DISAGREE_BTN);
 
       expect(acceptBtn).not.toBeDisabled();
       expect(disagreeBtn).not.toBeDisabled();
@@ -143,7 +143,7 @@ describe('TermsOfService', () => {
 
     // note - this test does not work in PhantomJS :(
     xit('should only enable Accept button when user has scrolled to bottom of ToS', function () {
-      let btn = this.view.find(AGREE_BTN);
+      const btn = this.view.find(AGREE_BTN);
 
       expect(this.controller.hasReadAggreement).toBeFalsy();
       expect(btn).toBeDisabled();
@@ -152,9 +152,9 @@ describe('TermsOfService', () => {
       // since iframe container height will be bigger then the content height (0),
       // this acts as if the user scrolled to the bottom of the ToS
       this.view.find('.tos-container').height(500);
-      let frame = this.$window.frames['tos-frame'];
-      let iframeDoc = <Document>frame.document;
-      let scrollEvent = iframeDoc.createEvent('CustomEvent'); // MUST be 'CustomEvent'
+      const frame = this.$window.frames['tos-frame'];
+      const iframeDoc = <Document>frame.document;
+      const scrollEvent = iframeDoc.createEvent('CustomEvent'); // MUST be 'CustomEvent'
       scrollEvent.initCustomEvent('scroll', false, false, null);
       iframeDoc.dispatchEvent(scrollEvent);
 

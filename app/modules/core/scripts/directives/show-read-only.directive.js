@@ -5,7 +5,6 @@ require('./_show-read-only.scss');
 
   /* @ngInject */
   function ShowReadOnly(Authinfo, $translate, $window) {
-
     function link(scope, element) {
       if (Authinfo.isReadOnlyAdmin()) {
         var wrapper = angular.element('.wrapper');
@@ -20,7 +19,6 @@ require('./_show-read-only.scss');
           childList: true,
           subtree: true,
         });
-
       }
     }
 
@@ -28,7 +26,6 @@ require('./_show-read-only.scss');
       restrict: 'A',
       link: link,
     };
-
   }
 
   angular.module('Core').directive('showReadOnly', ShowReadOnly);

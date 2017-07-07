@@ -25,7 +25,8 @@
   </div>
 
   <div>
-    <p class="smallprint" translate="hercules.settings.hybridCalendarCommon.smallprint"></p>
+    <p ng-if="!vm.nameChangeEnabled" class="smallprint" translate="hercules.settings.hybridCalendarCommon.smallprint"></p>
+    <p ng-if="vm.nameChangeEnabled" class="smallprint" translate="hercules.settings.hybridCalendarCommon.smallprintNew"></p>
   </div>
 </div>
 

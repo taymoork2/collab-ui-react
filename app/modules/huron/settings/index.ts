@@ -1,4 +1,8 @@
 import { HuronSettingsComponent } from './settings.component';
+import { SettingSetupInitComponent } from 'modules/huron/settings/init/settingSetupInit.component';
+import { SettingSetupInitService } from 'modules/huron/settings/init/settingSetupInitService';
+
+//module dependancy names
 import huronSettingsServiceModule from 'modules/huron/settings/services';
 import numberServiceModule from 'modules/huron/numbers';
 import dialPlanServiceModule from 'modules/huron/dialPlans';
@@ -17,11 +21,13 @@ import dateFormatModule from 'modules/huron/settings/dateFormat';
 import defaultCountryModule from 'modules/huron/settings/defaultCountry';
 import cosRestrictionModule from 'modules/huron/settings/cos';
 import companyCallerIdModule from 'modules/huron/settings/companyCallerId';
+import companyMohModule from 'modules/huron/settings/companyMoh';
 import emergencyServiceNumberModule from 'modules/huron/settings/emergencyServiceNumber';
 import emergencyServiceAddressModule from 'modules/huron/settings/emergencyServiceAddress';
 import externalTransferModule from 'modules/huron/settings/externalCallTransfer';
 import phoneNumberModule from 'modules/huron/phoneNumber';
 import featureToggleServiceModule from 'modules/core/featureToggle';
+import pstnAreaService from 'modules/huron/pstn/pstnAreaService';
 
 export default angular
   .module('huron.settings', [
@@ -30,7 +36,6 @@ export default angular
     require('angular-translate'),
     require('modules/huron/pstn/pstn.service').default,
     require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.service'),
-    require('modules/huron/pstnSetup/pstnSetupStates.service'),
     require('modules/huron/settings/voicemailMessageAction.service'),
     numberServiceModule,
     dialPlanServiceModule,
@@ -53,8 +58,12 @@ export default angular
     emergencyServiceAddressModule,
     externalTransferModule,
     phoneNumberModule,
+    companyMohModule,
     huronSettingsServiceModule,
     featureToggleServiceModule,
+    pstnAreaService,
   ])
   .component('ucSettings', new HuronSettingsComponent())
+  .component('ucSettingsInit', new SettingSetupInitComponent())
+  .service('SettingSetupInitService', SettingSetupInitService)
   .name;

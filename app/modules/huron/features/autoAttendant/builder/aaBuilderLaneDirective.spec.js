@@ -38,8 +38,8 @@ describe('Directive: aaBuilderLane', function () {
     element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("aa-add-step-icon");
-    expect(element.html()).not.toContain("aa-builder-actions");
+    expect(element.html()).toContain('aa-add-step-icon');
+    expect(element.html()).not.toContain('aa-builder-actions');
   });
 
   it('should contain aa-builder-actions when aaUiModel[openHours] is not empty', function () {
@@ -55,7 +55,7 @@ describe('Directive: aaBuilderLane', function () {
 
     $rootScope.$digest();
 
-    expect(element.html()).toContain("aa-add-step-icon");
-    expect(element.html()).toContain("aa-builder-actions");
+    expect(element.html()).toContain('aa-add-step-icon');
+    expect(element.html()).toContain('aa-builder-actions');
   });
 });

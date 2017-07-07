@@ -5,6 +5,8 @@ import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterpr
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
+import './_hybrid-service-cluster-list.scss';
+
 export interface IGridApiScope extends ng.IScope {
   gridApi?: any;
 }
@@ -19,6 +21,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   public clusterListGridOptions = {};
   public getSeverity = this.HybridServicesClusterStatesService.getSeverity;
   public getStatusIndicatorCSSClass = this.HybridServicesClusterStatesService.getStatusIndicatorCSSClass;
+  public firstLoad = true;
 
   private serviceId: HybridServiceId;
   private connectorType: ConnectorType | undefined;
@@ -95,13 +98,15 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     if (this.serviceId === 'ept') {
       this.clusterList = this.EnterprisePrivateTrunkService.getAllResources();
     }
+    this.firstLoad = false;
   }
 
   protected updateClusters() {
     if (this.connectorType === undefined) {
+      this.firstLoad = false;
       return;
     }
-    if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc') {
+    if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc' || this.serviceId === 'spark-hybrid-impinterop') {
       this.HybridServicesClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
         .then((clusters) => {
           this.clusterList = this.calculateMaintenanceModeLabel(clusters);
@@ -110,19 +115,24 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
           if (this.connectorType !== undefined) {
             this.clusterList = this.calculateMaintenanceModeLabel(this.ClusterService.getClustersByConnectorType(this.connectorType));
           }
+        })
+        .finally(() => {
+          this.firstLoad = false;
         });
     } else if (this.serviceId === 'spark-hybrid-datasecurity' ||
       this.serviceId === 'squared-fusion-media' ||
       this.serviceId === 'contact-center-context') {
       this.clusterList = this.calculateMaintenanceModeLabel(this.ClusterService.getClustersByConnectorType(this.connectorType));
+      this.firstLoad = false;
     }
   }
 
   private goToSidepanel(clusterId: string) {
-    let routeMap = {
+    const routeMap = {
       ept: 'private-trunk-sidepanel',
       'squared-fusion-cal': 'expressway-cluster-sidepanel',
       'squared-fusion-uc': 'expressway-cluster-sidepanel',
+      'spark-hybrid-impinterop': 'expressway-cluster-sidepanel',
       'squared-fusion-media': 'media-cluster-details',
       'spark-hybrid-datasecurity': 'hds-cluster-details',
       'contact-center-context': 'context-cluster-sidepanel',

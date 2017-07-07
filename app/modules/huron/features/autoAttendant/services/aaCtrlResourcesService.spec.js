@@ -15,7 +15,6 @@ describe('Service: AAMediaUploadService', function () {
   });
 
   describe('getCtrlToResourceMap', function () {
-
     it('should get the resource map', function () {
       expect(AACtrlResourcesService.getCtrlToResourceMap()).toEqual({});
     });
