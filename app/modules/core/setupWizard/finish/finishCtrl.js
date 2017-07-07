@@ -5,7 +5,8 @@
     .controller('WizardFinishCtrl', WizardFinishCtrl);
 
   /* @ngInject */
-  function WizardFinishCtrl($scope, $q, $translate, Notification) {
+  function WizardFinishCtrl($q, $scope, $translate, Notification, SetupWizardService) {
+    $scope.sendEmailModel = false;
     $scope.initNext = function () {
       var deferred = $q.defer();
       if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {
@@ -23,6 +24,11 @@
       }
       deferred.resolve();
       return deferred.promise;
+    };
+
+    // Currently we are differentiating trial migration orders for WebEx meeting sites setup by a prefix/suffix of 'ordersimp' in the users email.
+    $scope.isOrderSimplificationToggled = function () {
+      return SetupWizardService.isOrderSimplificationToggled();
     };
   }
 })();

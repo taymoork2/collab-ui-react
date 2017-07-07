@@ -6,7 +6,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Utils) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
@@ -223,12 +223,7 @@ require('./_setup-wizard.scss');
     }
 
     function showMeetingSettingsTab(userEmail) {
-      if (_.isEmpty(userEmail)) {
-        return false;
-      }
-
-      // Currently we are deferentiating trial migration orders for WebEx meeting sites setup by a prefix/suffix of 'ordersimp' in the users email.
-      return _.toLower(userEmail.split('+')[1]) === 'ordersimp@gmail.com' || _.toLower(userEmail.split('+')[0]) === 'ordersimp' || _.toLower(userEmail.split('-')[0]) === 'ordersimp';
+      return SetupWizardService.isOrderSimplificationToggled(userEmail);
     }
 
     function hasWebexMeetingTrial() {
@@ -298,7 +293,7 @@ require('./_setup-wizard.scss');
 
     function initFinishTab(tabs) {
       if (!Authinfo.isSetupDone()) {
-        tabs.push({
+        var tab = {
           name: 'finish',
           label: 'firstTimeWizard.finish',
           description: 'firstTimeWizard.finishSub',
@@ -309,7 +304,12 @@ require('./_setup-wizard.scss');
             name: 'init',
             template: 'modules/core/setupWizard/finish/finish.tpl.html',
           }],
-        });
+        };
+
+        if (showMeetingSettingsTab(Authinfo.getUserName())) {
+          tab.title = 'firstTimeWizard.activateAndBeginBilling';
+        }
+        tabs.push(tab);
       }
     }
 
