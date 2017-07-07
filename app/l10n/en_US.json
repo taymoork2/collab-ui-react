@@ -689,7 +689,7 @@
     "scheduledFrom": "Scheduled From",
     "placeholder-date": "Choose a Day",
     "meetingDetails": "Meeting Details",
-    "hostNameAndId":"Host Name / Host ID",
+    "hostNameAndId": "Host Name / Host ID",
     "siteIdAndName": "Site ID / Site Name",
     "search-info-title": "Search for a meeting",
     "placeholder-text": "Search email or meeting number",
@@ -2404,10 +2404,12 @@
       },
       "documentation": {
         "heading": "Documentation and Software",
+        "headingDoc": "Documentation",
+        "headingSoftware": "Software",
         "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
         "downloadExpressway": "Download Cisco Expressway software from <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a>.",
-        "downloadDemoEcp": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a> <b><i>OR</b></i> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo {{serviceName}} software</a>."
+        "downloadDemoEcp": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a> (Full capacity and used for production deployment of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> (Limited capacity, lifespan, and lower CPU requirement for demo deployment of Hybrid Media)"
       },
       "call": {
         "domainVerification": "Domain Verification",
@@ -3227,9 +3229,9 @@
       "requestFailed": "Request Failed: Tracking ID {{trackingId}}"
     },
     "encryption": {
-      "instructions" : "After downloading your report, use this password to open the .zip file. You can also access the password by clicking on the key icon in the reports list.",
+      "instructions": "After downloading your report, use this password to open the .zip file. You can also access the password by clicking on the key icon in the reports list.",
       "instructionsShort": "After downloading your report, use this password to open the .zip file.",
-      "passwordFor" : "Password for {{reportName}}",
+      "passwordFor": "Password for {{reportName}}",
       "tooltipContact": "Contact {{name}} to access this report.",
       "unableGetPassword": "Unable to get the password"
     },
