@@ -42,7 +42,7 @@ export class LineOverviewService {
     private FeatureToggleService,
   ) {}
 
-  public get(consumerType: LineConsumerType, ownerId: string, numberId: string = '', wide: boolean = false): ng.IPromise<LineOverviewData> {
+  public get(consumerType: LineConsumerType, ownerId: string, numberId: string = '', wide: boolean = true): ng.IPromise<LineOverviewData> {
     const lineOverviewData = new LineOverviewData();
     this.errors = [];
     const promises: ng.IPromise<any>[] = [];
