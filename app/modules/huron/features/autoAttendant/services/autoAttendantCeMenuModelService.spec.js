@@ -176,7 +176,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var customMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _customMenu);
 
       expect(welcomeMenuSuccess).toBe(true);
-
       expect(customMenuSuccess).toBe(true);
       expect(angular.equals(_ceRecord, ceCustom)).toBe(true);
     });
