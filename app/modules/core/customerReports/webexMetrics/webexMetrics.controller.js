@@ -28,6 +28,7 @@
     vm.webexMetrics = {};
     vm.isNoData = false;
     vm.selectEnable = true;
+    vm.reportType = 'WebEx';
 
     vm.webexMetrics.views = [
       {
@@ -187,24 +188,26 @@
       };
 
       var viewType = _.get(vm, 'reportView.view');
-      var getWebExReportData = _.get(QlikService, 'getWebExReportQBSfor' + viewType + 'Url');
+      var getWebExReportData = _.get(QlikService, 'getReportQBSUrl');
 
       if (!_.isFunction(getWebExReportData)) {
         return;
       }
-      getWebExReportData(userInfo).then(function (data) {
-        vm.webexMetrics.appData = {
-          ticket: data.ticket,
-          appId: vm.reportView.appName,
-          node: data.host,
-          qrp: data.qlik_reverse_proxy,
-          persistent: data.isPersistent,
-          vID: data.siteId,
-        };
-        var QlikMashupChartsUrl = _.get(QlikService, 'getWebExReportAppfor' + viewType + 'Url')(vm.webexMetrics.appData.qrp);
-        vm.webexMetrics.appData.url = QlikMashupChartsUrl;
+      getWebExReportData(vm.reportType, viewType, userInfo).then(function (data) {
+        if (!_.isUndefined(data)) {
+          vm.webexMetrics.appData = {
+            ticket: data.ticket,
+            appId: vm.reportView.appName,
+            node: data.host,
+            qrp: data.qlik_reverse_proxy,
+            persistent: data.isPersistent,
+            vID: data.siteId,
+          };
+          var QlikMashupChartsUrl = _.get(QlikService, 'getWebExReportAppfor' + viewType + 'Url')(vm.webexMetrics.appData.qrp);
+          vm.webexMetrics.appData.url = QlikMashupChartsUrl;
 
-        loadUrlAndIframe(QlikMashupChartsUrl);
+          loadUrlAndIframe(QlikMashupChartsUrl);
+        }
       })
       .catch(function (error) {
         Notification.errorWithTrackingId(error, 'common.error');

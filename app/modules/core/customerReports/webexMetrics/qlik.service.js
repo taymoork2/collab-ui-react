@@ -8,7 +8,7 @@
     .name;
 
   /* @ngInject */
-  function QlikService($http, $q, UrlConfig) {
+  function QlikService($http, $injector, $q, Config, UrlConfig) {
     var service = {
       getWebExReportQBSforBaseUrl: getWebExReportQBSforBaseUrl,
       getWebExReportQBSforPremiumUrl: getWebExReportQBSforPremiumUrl,
@@ -18,6 +18,7 @@
       getSparkReportQBSforPremiumUrl: getSparkReportQBSforPremiumUrl,
       getSparkReportAppforBaseUrl: getSparkReportAppforBaseUrl,
       getSparkReportAppforPremiumUrl: getSparkReportAppforPremiumUrl,
+      getReportQBSUrl: getReportQBSUrl,
     };
 
     return service;
@@ -25,9 +26,57 @@
     function extractData(response) {
       return response.data;
     }
+
     function catchError(error) {
       return $q.reject(error);
     }
+
+    function specifyReportQBS(isError, result, reportType, viewType, data) {
+      if (Config.getEnv() === 'prod') {
+        if (!isError) {
+          var resultData = _.get(result, 'data');
+          var siteId = _.get(result, 'siteId');
+          if (!siteId) {
+            return callReportQBSBTS(reportType, viewType, data);
+          } else {
+            return resultData;
+          }
+        } else {
+          return callReportQBSBTS(reportType, viewType, data);
+        }
+      } else if (isError) {
+        return catchError(result);
+      } else {
+        return result.data;
+      }
+    }
+
+    function callReportQBSBTS(reportType, viewType, data) {
+      var QlikService = $injector.get('QlikService');
+      var getQBSBTSData = _.get(QlikService, 'get' + reportType + 'ReportQBSfor' + viewType + 'Url');
+      if (!_.isFunction(getQBSBTSData)) {
+        return;
+      }
+      return getQBSBTSData(data, 'integration');
+    }
+
+    function getReportQBSUrl(reportType, viewType, data, env) {
+      var specifyEnv = {};
+      if (!_.isUndefined(env)) {
+        specifyEnv.env = env;
+      }
+      var getReportData = _.get(UrlConfig, 'get' + reportType + 'ReportQBSfor' + viewType + 'Url');
+      if (!_.isFunction(getReportData)) {
+        return;
+      }
+      var url = getReportData(specifyEnv);
+      return $http.post(url, data).then(function (response) {
+        return specifyReportQBS(false, response, reportType, viewType, data);
+      }).catch(function (error) {
+        return specifyReportQBS(true, error, reportType, viewType, data);
+      });
+    }
+
     function getWebExReportQBSforBaseUrl(data) {
       var url = UrlConfig.getWebExReportQBSforBaseUrl();
       return $http.post(url, data).then(extractData).catch(catchError);
@@ -37,6 +86,7 @@
       var url = UrlConfig.getWebExReportQBSforPremiumUrl();
       return $http.post(url, data).then(extractData).catch(catchError);
     }
+
     function getWebExReportAppforBaseUrl(qrp) {
       return UrlConfig.getWebExReportAppforBaseUrl(qrp);
     }
