@@ -105,7 +105,9 @@ require('./_user-roles.scss');
           return $q.reject();
         }
       })
-      .then(ProPackService.hasProPackPurchased)
+      .then(function () {
+        return ProPackService.hasProPackPurchased();
+      })
       .then(function (proPackagePurchased) {
         $scope.isProPack = proPackagePurchased;
       });
