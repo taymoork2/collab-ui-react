@@ -1,5 +1,13 @@
 <div class="sq-places-page-overview">
   <div ui-view="header"></div>
+  <cs-sp-buttons ng-class="{invisible: !$ctrl.onPrefLanguageChange}">
+  <button cs-btn loading="$ctrl.prefLanguageSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePreferredLanguage()" ng-disabled="$ctrl.prefLanguageSaveInProcess" type="click">
+    <span translate="common.save"></span>
+  </button>
+  <button cs-btn ng-click="$ctrl.onCancelPreferredLanguage()">
+    <span translate="common.cancel"></span>
+  </button>
+</cs-sp-buttons>
   <cs-sp-container>
     <cs-sp-section>
       <section-title
@@ -22,6 +30,33 @@
         on-generate-fn="$ctrl.onGenerateOtpFn()"
         on-show-device-detail-fn="$ctrl.showDeviceDetails(device)">
       </uc-device-list>
+    </cs-sp-section>
+    <cs-sp-section ng-if="$ctrl.isprov3698 || $ctrl.ishI1484">
+      <section-title title-key="preferredLanguage.placeDetails"></section-title>
+      <div class="feature-list">
+        <ul>
+            <li class="feature" ng-if="$ctrl.ishI1484 && $ctrl.hasSparkCall">
+              <a ng-click="$ctrl.openPanel()">
+                <span class="feature-name" translate="usersPreview.location"></span>
+                <span class="feature-details feature-label">{{$ctrl.placeLocation}}</span>
+                  <i class="feature-arrow"></i>
+              </a>
+            </li>
+            <li class="feature" ng-if="::!$ctrl.dirsyncEnabled">
+              <a ng-if="$ctrl.preferredLanguage" ng-click="$ctrl.openPreferredLanguage()">
+                <span class="feature-name" translate="serviceSetupModal.preferredLanguage"></span>
+                <span class="feature-details feature-label">
+                  {{$ctrl.preferredLanguage.label}}
+                </span>
+                <i class="feature-arrow"></i>
+              </a>
+              <span ng-if="!$ctrl.preferredLanguage" class="feature-name" translate="serviceSetupModal.preferredLanguage"></span>
+              <span ng-if="!$ctrl.preferredLanguage"class="feature-details feature-label">
+                {{'usersPreview.notConfigured' | translate}}
+              </span>
+            </li>
+        </ul>
+      </div>
     </cs-sp-section>
 
     <cs-sp-section ng-if="$ctrl.showDeviceSettings">

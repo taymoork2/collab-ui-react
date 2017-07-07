@@ -1,8 +1,14 @@
-import { IFeature } from '../../../core/components/featureList/featureList.component';
-import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
+import { IFeature } from 'modules/core/components/featureList/featureList.component';
+import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import IPlace = csdm.IPlace;
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { PlaceCallOverviewService, PlaceCallOverviewData } from 'modules/squared/places/callOverview/placeCallOverview.service';
+import { LocationsService } from 'modules/call/locations/locations.service';
+import {
+  IPreferredLanguageFeature, PreferredLanguageFeature, IPreferredLanugageOption,
+} from 'modules/huron/preferredLanguage';
+import { Notification } from 'modules/core/notifications';
 
 interface IDevice {
 }
@@ -17,11 +23,25 @@ class PlaceOverview implements ng.IComponentController {
   private csdmHybridCalendarFeature = false;
   private hybridCalendarEnabledOnOrg = false;
   private hybridCallEnabledOnOrg = false;
+  public generateCodeIsDisabled = true;
+  public hasSparkCall: boolean;
+  public displayDescription: string;
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminUserDetails;
   private showDeviceSettings = false;
+
+  public ishI1484: boolean = false;
+  public isprov3698: boolean = false;
+
+  public placeLocation: string;
+  public placeCallOverviewData: PlaceCallOverviewData;
+  public prefLanguageSaveInProcess: boolean = false;
+  public preferredLanguage: IPreferredLanugageOption[];
+  public plIsLoaded: boolean = false;
+
+  public preferredLanguageFeature: IPreferredLanguageFeature = new PreferredLanguageFeature();
 
   /* @ngInject */
   constructor(
@@ -34,18 +54,109 @@ class PlaceOverview implements ng.IComponentController {
     private CsdmDataModelService: ICsdmDataModelService,
     private FeatureToggleService,
     private ServiceDescriptorService: ServiceDescriptorService,
-    private Notification,
     private Userservice,
     private WizardFactory,
     private CsdmUpgradeChannelService,
+    public LocationsService: LocationsService,
+    private PlaceCallOverviewService: PlaceCallOverviewService,
+    private Notification: Notification,
   ) {
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.$stateParams.currentPlace.cisUuid);
     CsdmDataModelService.reloadItem(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
+    this.displayPlace(this.$stateParams.currentPlace);
+    this.hasSparkCall = this.hasEntitlement('ciscouc');
   }
 
   public $onInit(): void {
-    this.displayPlace(this.$stateParams.currentPlace);
+    if (this.hasSparkCall) {
+      this.initPlaceCallOverviewData();
+      this.initActions();
+    }
     this.fetchAsyncSettings();
+    this.setDisplayDescription();
+    this.loadFeatureToggles();
+    this.getPlaceLocation();
+    this.initPreferredLanguage();
+  }
+
+  public initPlaceCallOverviewData(): void {
+    this.PlaceCallOverviewService.getPlaceCallOverviewData(this.currentPlace.cisUuid)
+        .then( placeCallOverviewData => {
+          this.placeCallOverviewData = placeCallOverviewData;
+          this.preferredLanguage = placeCallOverviewData.preferredLanguage;
+          this.preferredLanguageFeature.languageOptions = placeCallOverviewData.preferredLanguageOptions;
+          this.preferredLanguageFeature.save = this.savePreferredLanguage.bind(this);
+        }).finally(() => {
+          this.plIsLoaded = true;
+        });
+  }
+
+  public initPreferredLanguage() {
+    this.preferredLanguageFeature.languageOptions = this.PlaceCallOverviewService.getSiteLanguages();
+    this.preferredLanguageFeature.hasSparkCall = this.hasSparkCall;
+    this.preferredLanguageFeature.currentUserId = this.currentPlace.cisUuid;
+    this.PlaceCallOverviewService.getPlaceCallOverviewData(this.currentPlace.cisUuid)
+        .then( placeCallOverviewData => {
+          this.preferredLanguageFeature.selectedLanguageCode = placeCallOverviewData.preferredLanguage.value;
+        });
+    this.PlaceCallOverviewService.getSiteLanguages().then( (langOptions: IPreferredLanugageOption[]) => {
+      this.preferredLanguageFeature.languageOptions = langOptions;
+    });
+  }
+
+  private initActions(): void {
+    if (this.currentPlace.type === 'huron') {
+      this.actionList = [{
+        actionKey: 'usersPreview.addNewLinePreview',
+        actionFunction: () => {
+          this.$state.go('place-overview.communication.line-overview');
+        },
+      }];
+    }
+  }
+
+  public getPlaceLocation(): void {
+    this.LocationsService.getLocation('123').then(result => {
+      this.placeLocation = result.name;
+    });
+  }
+
+  private loadFeatureToggles(): ng.IPromise<any> {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(result => this.ishI1484 = result);
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.prov3698)
+      .then(result => this.isprov3698 = result);
+    return this.$q.resolve();
+  }
+
+  public openPanel(): void {
+    this.$state.go('place-overview.placeLocationDetails');
+  }
+
+  public openPreferredLanguage(): void {
+    this.$state.go('place-overview.preferredLanguage', { preferredLanguageFeature: this.preferredLanguageFeature });
+  }
+
+  private setDisplayDescription() {
+    this.displayDescription = this.hasSparkCall ?
+        this.$translate.instant('preferredLanguage.description', {
+          module: this.$translate.instant('preferredLanguage.placeModule'),
+        }) :
+        this.$translate.instant('preferredLanguage.descriptionForCloudberryDevice');
+  }
+
+  public savePreferredLanguage(prefLang): void {
+    this.prefLanguageSaveInProcess = true;
+    if (!this.PlaceCallOverviewService.checkForPreferredLanguageChanges(prefLang)) {
+      this.PlaceCallOverviewService.updateCmiPlacePreferredLanguage(this.currentPlace.cisUuid, prefLang.value)
+        .then(() => {
+          this.preferredLanguageFeature.selectedLanguageCode = prefLang.value;
+          this.$state.go('place-overview', { preferredLanguageFeature: this.preferredLanguageFeature }, { reload: true });
+        })
+        .catch(error => {
+          this.Notification.errorResponse(error, 'preferredLanguage.failedToSaveChanges');
+        });
+    }
   }
 
   private displayPlace(newPlace: IPlace) {

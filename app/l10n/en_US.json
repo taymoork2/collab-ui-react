@@ -4190,6 +4190,7 @@
     "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:",
     "userModule": "user",
     "placeModule": "place",
+    "placeDetails":"Place Details",
     "saveModal": {
       "title": "Save Settings",
       "message1": "Changing the language will cause all devices for this user to reboot and may take a few minutes.",
