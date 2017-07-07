@@ -1,6 +1,6 @@
 'use strict';
 
-describe('SetupWizardCtrl', function () {
+xdescribe('SetupWizardCtrl', function () {
   beforeEach(function () {
     this.initModules('Core');
 
@@ -13,7 +13,8 @@ describe('SetupWizardCtrl', function () {
       'Authinfo',
       'FeatureToggleService',
       'Orgservice',
-      'DirSyncService'
+      'DirSyncService',
+      'SetupWizardService'
     );
 
     this.usageFixture = getJSONFixture('core/json/organizations/usage.json');
@@ -24,6 +25,8 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
+    spyOn(this.Authinfo, 'isCare').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'isOrderSimplificationToggled').and.returnValue(true);
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES',
     }]);

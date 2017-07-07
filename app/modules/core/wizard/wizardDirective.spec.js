@@ -2,7 +2,7 @@
 
 describe('Controller: WizardCtrl', function () {
   var controller, $scope, $state, $q, $translate, tabs, Userservice,
-    FeatureToggleService, ServiceSetup, rootScope, Authinfo;
+    FeatureToggleService, ServiceSetup, rootScope, Authinfo, SetupWizardService;
 
   var getUserMe, getMyFeatureToggles;
 
@@ -64,7 +64,7 @@ describe('Controller: WizardCtrl', function () {
   ];
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_,
-    $stateParams, _Userservice_, _FeatureToggleService_, _ServiceSetup_, _Authinfo_) {
+    $stateParams, _Userservice_, _FeatureToggleService_, _ServiceSetup_, _SetupWizardService_, _Authinfo_) {
     rootScope = $rootScope;
     $scope = rootScope.$new();
     $scope.tabs = tabs;
@@ -74,6 +74,7 @@ describe('Controller: WizardCtrl', function () {
     Userservice = _Userservice_;
     ServiceSetup = _ServiceSetup_;
     FeatureToggleService = _FeatureToggleService_;
+    SetupWizardService = _SetupWizardService_;
     Authinfo = _Authinfo_;
 
     getUserMe = getJSONFixture('core/json/users/me.json');
@@ -83,6 +84,7 @@ describe('Controller: WizardCtrl', function () {
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(getMyFeatureToggles);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(SetupWizardService, 'isOrderSimplificationToggled').and.returnValue(true);
     spyOn(Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'COMMUNICATION',
     }]);
