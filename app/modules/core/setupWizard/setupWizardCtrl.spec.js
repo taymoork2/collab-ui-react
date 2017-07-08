@@ -1,6 +1,6 @@
 'use strict';
 
-xdescribe('SetupWizardCtrl', function () {
+describe('SetupWizardCtrl', function () {
   beforeEach(function () {
     this.initModules('Core');
 
@@ -24,7 +24,6 @@ xdescribe('SetupWizardCtrl', function () {
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(this.Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
-    spyOn(this.Authinfo, 'isCare').and.returnValue(false);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
     spyOn(this.SetupWizardService, 'isOrderSimplificationToggled').and.returnValue(true);
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
@@ -96,12 +95,16 @@ xdescribe('SetupWizardCtrl', function () {
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(initController);
 
-    it('the wizard should have 5 macro-level steps', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 6 macro-level steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('planReview should have a single substep', function () {
       this.expectSubStepOrder('planReview', ['init']);
+    });
+
+    it('meetingSettings should have three steps', function () {
+      this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'summary']);
     });
 
     it('messagingSetup should have a single substep', function () {
@@ -124,7 +127,7 @@ xdescribe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should not have the finish step', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'messagingSetup', 'enterpriseSettings']);
     });
   });
 
@@ -136,8 +139,8 @@ xdescribe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have 5 steps', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 6 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('serviceSetup should have a single substep', function () {
@@ -151,8 +154,8 @@ xdescribe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have 5 tabs', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 6 tabs', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
@@ -162,8 +165,8 @@ xdescribe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have 5 tabs', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 6 tabs', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
@@ -174,8 +177,8 @@ xdescribe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have the 6 steps', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
+    it('the wizard should have the 7 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
     });
 
     it('careSettings should have a single substep', function () {
@@ -189,8 +192,8 @@ xdescribe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have the 6 steps', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
+    it('the wizard should have the 7 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
     });
   });
 
@@ -201,8 +204,8 @@ xdescribe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have the 5 steps', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
+    it('the wizard should have the 6 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
     });
   });
 
@@ -211,16 +214,16 @@ xdescribe('SetupWizardCtrl', function () {
       this.Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue(this.$q.resolve(this.usageOnlySharedDevicesFixture));
     });
 
-    it('the wizard should have 4 tabs and no SSO setup if FTW', function () {
+    it('the wizard should have 5 tabs and no SSO setup if FTW', function () {
       _.set(this.$state, 'current.data.firstTimeSetup', true);
 
       this.initController();
-      this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings', 'finish']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
     });
-    it('the wizard should have 4 tabs and SSO setup if accessed through settings', function () {
+    it('the wizard should have 5 tabs and SSO setup if accessed through settings', function () {
       this.initController();
-      this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings', 'finish']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
   });
@@ -240,9 +243,10 @@ xdescribe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should have a lot of settings', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
       this.expectSubStepOrder('planReview', ['init']);
       this.expectSubStepOrder('serviceSetup', ['setup', 'init']);
+      this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('messagingSetup', ['setup']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);
